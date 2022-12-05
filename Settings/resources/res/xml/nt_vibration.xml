@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:settings="http://schemas.android.com/apk/res-auto" android:title="@string/nt_vibration_title" android:key="nt_vibration_title" settings:keywords="@string/nt_vibration_title">
+    <Preference android:title="@string/vibrate_when_ringing_title" android:key="vibrate_for_calls" android:fragment="com.android.settings.sound.VibrateForCallsPreferenceFragment" settings:controller="com.android.settings.sound.VibrateForCallsPreferenceController" settings:keywords="@string/keywords_vibrate_for_calls"/>
+    <SwitchPreference android:title="@string/nt_notification_vibration_title" android:key="nt_notification_vibration" settings:keywords="@string/nt_notification_vibration_title"/>
+    <SwitchPreference android:title="@string/nt_touch_feedback_title" android:key="vibrate_on_touch" android:summary="@string/vibrate_on_touch_summary" settings:keywords="@string/keywords_vibrate_on_touch"/>
+</PreferenceScreen>

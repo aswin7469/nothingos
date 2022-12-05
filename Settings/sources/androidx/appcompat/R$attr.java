@@ -1,0 +1,48 @@
+package androidx.appcompat;
+/* loaded from: classes.dex */
+public final class R$attr {
+    public static final int actionBarPopupTheme = 2130968606;
+    public static final int actionBarSize = 2130968607;
+    public static final int actionBarStyle = 2130968609;
+    public static final int actionBarTabBarStyle = 2130968610;
+    public static final int actionBarTabStyle = 2130968611;
+    public static final int actionBarTabTextStyle = 2130968612;
+    public static final int actionBarTheme = 2130968613;
+    public static final int actionBarWidgetTheme = 2130968614;
+    public static final int actionDropDownStyle = 2130968617;
+    public static final int actionModePopupWindowStyle = 2130968629;
+    public static final int actionModeStyle = 2130968633;
+    public static final int actionOverflowButtonStyle = 2130968636;
+    public static final int actionOverflowMenuStyle = 2130968637;
+    public static final int alertDialogCenterButtons = 2130968644;
+    public static final int alertDialogStyle = 2130968645;
+    public static final int alertDialogTheme = 2130968646;
+    public static final int autoCompleteTextViewStyle = 2130968669;
+    public static final int buttonStyle = 2130968738;
+    public static final int checkboxStyle = 2130968753;
+    public static final int colorAccent = 2130968805;
+    public static final int colorButtonNormal = 2130968807;
+    public static final int colorControlActivated = 2130968808;
+    public static final int colorControlHighlight = 2130968809;
+    public static final int colorControlNormal = 2130968810;
+    public static final int colorPrimary = 2130968818;
+    public static final int colorPrimaryDark = 2130968819;
+    public static final int colorSwitchThumbNormal = 2130968825;
+    public static final int dialogTheme = 2130968905;
+    public static final int dropDownListViewStyle = 2130968931;
+    public static final int editTextStyle = 2130968938;
+    public static final int imageButtonStyle = 2130969086;
+    public static final int isLightTheme = 2130969100;
+    public static final int listMenuViewStyle = 2130969218;
+    public static final int listPopupWindowStyle = 2130969219;
+    public static final int panelMenuListTheme = 2130969426;
+    public static final int radioButtonStyle = 2130969481;
+    public static final int ratingBarStyle = 2130969483;
+    public static final int searchViewStyle = 2130969509;
+    public static final int seekBarStyle = 2130969515;
+    public static final int spinnerStyle = 2130969554;
+    public static final int switchStyle = 2130969713;
+    public static final int textColorSearchUrl = 2130969774;
+    public static final int toolbarNavigationButtonStyle = 2130969828;
+    public static final int toolbarStyle = 2130969829;
+}

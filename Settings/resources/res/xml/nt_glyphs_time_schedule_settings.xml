@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:settings="http://schemas.android.com/apk/res-auto" android:persistent="false" android:title="@string/nt_glyphs_bed_time_schedule_title" android:key="key_main_screen">
+    <com.nt.settings.glyphs.widget.GlyphsPreference android:title="@string/nt_glyphs_time_schedule_features" android:selectable="false" android:order="-30" settings:title_font_size="@dimen/glyphs_bedtime_title_size"/>
+    <com.android.settings.widget.SettingsMainSwitchPreference android:title="@string/nt_glyphs_bed_time_schedule_title" android:key="key_glyphs_time_schedule_switch" android:order="-20" settings:controller="com.nt.settings.glyphs.GlyphsScheduleTimeSwitchPreferenceController"/>
+    <PreferenceCategory android:title="@string/nt_glyphs_category_time_title" android:key="key_time_category">
+        <com.android.settingslib.RestrictedPreference android:title="@string/nt_glyphs_schedule_start_time" android:key="key_time_start" android:summary="@string/summary_placeholder" settings:controller="com.nt.settings.glyphs.BedCustomStartTimePreferenceController" settings:userRestriction="no_config_date_time"/>
+        <com.android.settingslib.RestrictedPreference android:title="@string/nt_glyphs_schedule_start_end" android:key="key_time_end" android:summary="@string/summary_placeholder" settings:controller="com.nt.settings.glyphs.BedCustomEndTimePreferenceController" settings:userRestriction="no_config_date_time"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/nt_glyphs_category_repeat_title" android:key="key_repeat_category">
+        <com.nt.settings.glyphs.widget.WeekCheckBoxPreference android:key="key_repeat_weeks" settings:controller="com.nt.settings.glyphs.BedWeekPreferenceController"/>
+        <com.nt.settings.glyphs.widget.GlyphsPreference android:title="" android:selectable="false" android:key="key_repeat_select_dec" settings:title_font_size="@dimen/glyphs_bedtime_repeat_selected_title_size"/>
+    </PreferenceCategory>
+</PreferenceScreen>

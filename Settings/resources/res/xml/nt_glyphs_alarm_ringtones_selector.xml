@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:settings="http://schemas.android.com/apk/res-auto" android:persistent="false" android:title="@string/nt_glyphs_alarm_sound_title" android:key="glyphs_alarm_list" settings:searchable="false">
+    <Preference android:icon="@drawable/ic_add_contact" android:title="@string/nt_glyphs_alarm_add_sound_title" android:key="glyphs_add_alarm" settings:controller="com.nt.settings.glyphs.pick.GlyphsAddAlarmController" settings:searchable="false"/>
+</PreferenceScreen>

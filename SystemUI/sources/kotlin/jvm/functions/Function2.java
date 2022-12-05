@@ -1,0 +1,9 @@
+package kotlin.jvm.functions;
+
+import kotlin.Function;
+/* compiled from: Functions.kt */
+/* loaded from: classes2.dex */
+public interface Function2<P1, P2, R> extends Function<R> {
+    /* renamed from: invoke */
+    R mo1950invoke(P1 p1, P2 p2);
+}

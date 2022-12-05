@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:gravity="center_vertical" android:orientation="horizontal" android:background="?android:attr/selectableItemBackground" android:paddingLeft="?android:attr/listPreferredItemPaddingLeft" android:paddingRight="?android:attr/listPreferredItemPaddingRight" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="?android:attr/listPreferredItemHeight" android:paddingStart="?android:attr/listPreferredItemPaddingStart" android:paddingEnd="?android:attr/listPreferredItemPaddingEnd">
+    <ImageView android:layout_gravity="center" android:id="@+id/img_contact_icon" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+    <RelativeLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:layout_marginBottom="6dp" android:layout_weight="1" android:layout_marginEnd="6dp">
+        <TextView android:textAppearance="?android:attr/textAppearanceLarge" android:ellipsize="marquee" android:id="@+id/tv_contact_name" android:fadingEdge="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="true"/>
+        <TextView android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="?android:attr/textColorSecondary" android:id="@+id/tv_ringtone_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxLines="4" android:layout_below="@+id/tv_contact_name" android:layout_alignStart="@+id/tv_contact_name"/>
+    </RelativeLayout>
+    <LinearLayout android:gravity="center_vertical" android:orientation="vertical" android:id="@android:id/widget_frame" android:layout_width="wrap_content" android:layout_height="match_parent"/>
+</LinearLayout>

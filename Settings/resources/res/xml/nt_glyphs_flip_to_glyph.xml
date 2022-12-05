@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:settings="http://schemas.android.com/apk/res-auto" android:title="@string/nt_glyphs_flip_to_glyph_title">
+    <Preference android:title="@string/nt_glyphs_flip_to_glyph_desc"/>
+    <com.android.settingslib.widget.IllustrationPreference settings:lottie_rawRes="@drawable/quickly_open_camera" settings:searchable="false"/>
+    <SwitchPreference android:title="@string/nt_use_filp_to_glyph" android:key="nt_use_filp_switch" settings:controller="com.nt.settings.glyphs.GlyphsFilpToGlyphSwitchPreferenceController"/>
+</PreferenceScreen>

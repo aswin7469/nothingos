@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:background="@drawable/sar_round_edge" android:layout_width="match_parent" android:layout_height="wrap_content">
+    <TextView android:textSize="@dimen/sar_dialog_title_textsize" android:textStyle="bold" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginLeft="@dimen/sar_dialog_layout_margin_20" android:layout_marginTop="@dimen/sar_dialog_layout_margin_10" android:text="@string/sar_dialog_title"/>
+    <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <TextView android:textSize="@dimen/sar_dialog_message_textsize" android:layout_gravity="center" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/sar_dialog_layout_margin_20" android:text="@string/sar_dialog_head_message"/>
+        <TextView android:textSize="@dimen/sar_dialog_message_textsize" android:layout_gravity="center" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/sar_dialog_layout_margin_20" android:text="@string/sar_dialog_body_message"/>
+    </LinearLayout>
+    <Button android:textColor="@color/sar_dialog_button_text_color" android:layout_gravity="right" android:id="@+id/bt_ok" android:background="@color/sar_dialog_button_background_color" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/sar_dialog_layout_margin_20" android:layout_marginRight="@dimen/sar_dialog_layout_margin_20" android:layout_marginBottom="@dimen/sar_dialog_layout_margin_10" android:text="@string/sar_dialog_ok"/>
+</LinearLayout>

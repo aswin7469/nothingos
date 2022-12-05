@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content">
+    <LinearLayout android:orientation="vertical" android:padding="8dp" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <RadioGroup android:id="@+id/bluetooth_lhdc_audio_quality_radio_group" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginStart="@dimen/developer_option_dialog_margin_start">
+            <include android:id="@+id/bluetooth_lhdc_audio_quality_low0" layout="@layout/preference_widget_dialog_radiobutton"/>
+            <include android:id="@+id/bluetooth_lhdc_audio_quality_low1" layout="@layout/preference_widget_dialog_radiobutton"/>
+            <include android:id="@+id/bluetooth_lhdc_audio_quality_low2" layout="@layout/preference_widget_dialog_radiobutton"/>
+            <include android:id="@+id/bluetooth_lhdc_audio_quality_low3" layout="@layout/preference_widget_dialog_radiobutton"/>
+            <include android:id="@+id/bluetooth_lhdc_audio_quality_low4" layout="@layout/preference_widget_dialog_radiobutton"/>
+            <include android:id="@+id/bluetooth_lhdc_audio_quality_low" layout="@layout/preference_widget_dialog_radiobutton"/>
+            <include android:id="@+id/bluetooth_lhdc_audio_quality_mid" layout="@layout/preference_widget_dialog_radiobutton"/>
+            <include android:id="@+id/bluetooth_lhdc_audio_quality_high" layout="@layout/preference_widget_dialog_radiobutton"/>
+            <include android:id="@+id/bluetooth_lhdc_audio_quality_high1" layout="@layout/preference_widget_dialog_radiobutton"/>
+            <include android:id="@+id/bluetooth_lhdc_audio_quality_best_effort" layout="@layout/preference_widget_dialog_radiobutton"/>
+        </RadioGroup>
+        <include android:id="@+id/bluetooth_audio_codec_help_info" layout="@layout/preference_widget_dialog_summary"/>
+    </LinearLayout>
+</ScrollView>

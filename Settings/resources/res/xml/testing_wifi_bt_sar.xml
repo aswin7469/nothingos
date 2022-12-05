@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:title="@string/testing_wifi_bt_sar" android:key="parent">
+    <Preference android:title="@string/testing_wifi_sar">
+        <intent android:targetPackage="com.android.settings" android:action="android.intent.action.MAIN" android:targetClass="com.android.settings.sar.WifiSarTest"/>
+    </Preference>
+</PreferenceScreen>

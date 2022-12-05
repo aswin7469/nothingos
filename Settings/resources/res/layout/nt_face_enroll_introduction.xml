@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:fitsSystemWindows="true" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_marginStart="24dp" android:layout_marginEnd="24dp">
+    <TextView android:textSize="34dp" android:id="@+id/introduction_title" android:paddingTop="56dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nt_face_enroll_introduction_title" android:fontFamily="NDot57"/>
+    <TextView android:textSize="16dp" android:id="@+id/introduction_summary" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="32dp" android:text="@string/nt_face_enroll_introduction_summary" android:layout_below="@+id/introduction_title"/>
+    <ImageView android:layout_width="248dp" android:layout_height="248dp" android:layout_marginTop="80dp" android:src="@drawable/face_introduction" android:layout_below="@+id/introduction_summary" android:layout_centerHorizontal="true"/>
+</RelativeLayout>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.nothingos.systemui.qs.CameraModeView xmlns:android="http://schemas.android.com/apk/res/android" android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="48dp">
+    <ImageView android:id="@+id/camera_img" android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/camera_privacy"/>
+    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginLeft="20dp" android:text="@string/camera_mode_portrait_mode" android:layout_weight="1"/>
+    <Switch android:id="@+id/camera_mode_check" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+</com.nothingos.systemui.qs.CameraModeView>

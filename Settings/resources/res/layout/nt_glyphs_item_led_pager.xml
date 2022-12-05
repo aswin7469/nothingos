@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" android:background="@drawable/bg_glyphs_led" android:clipChildren="false" android:layout_width="179dp" android:layout_height="375dp">
+    <ImageView android:layout_gravity="left" android:id="@+id/img_led1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="9.77dp" android:layout_marginTop="8dp" android:src="@drawable/ic_default_led1"/>
+    <ImageView android:layout_gravity="right" android:id="@+id/img_led2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="19.33dp" android:layout_marginRight="21.91dp" android:src="@drawable/ic_default_led2"/>
+    <ImageView android:layout_gravity="center_horizontal" android:id="@+id/img_led3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="85.14dp" android:src="@drawable/ic_default_led3"/>
+    <ImageView android:layout_gravity="center_horizontal" android:id="@+id/img_led4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="301.0781dp" android:src="@drawable/ic_default_led4"/>
+    <ImageView android:layout_gravity="center_horizontal" android:id="@+id/img_led5" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="358.4141dp" android:src="@drawable/ic_default_led5"/>
+</FrameLayout>

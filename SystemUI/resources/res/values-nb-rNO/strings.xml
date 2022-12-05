@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="camera_mode_portrait_mode">Portrettmodus</string>
+    <string name="click_again">Klikk på nytt</string>
+    <string name="empty_shade_text">Ingen varsler</string>
+    <string name="mic_mode_ambient_sound">Omgivelser</string>
+    <string name="mic_mode_standard">Normal</string>
+    <string name="mic_mode_voice_focus">Stemmefokus</string>
+    <string name="nt_face_recognition_error">Gjenkjente ikke ansiktet. Systemfeil.</string>
+    <string name="nt_face_recognition_fail">Gjenkjente ikke ansiktet. Prøv på nytt.</string>
+    <string name="nt_face_recognition_timeout">Trykk på ikonet og prøv på nytt</string>
+    <string name="quick_settings_batteryshare_label">Batterideling</string>
+    <string name="quick_settings_glyphs_label">Glyphs</string>
+    <string name="swipe_again">Sveip på nytt</string>
+</resources>

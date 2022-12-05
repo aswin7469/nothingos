@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/buttonPanel" android:layout_width="match_parent" android:layout_height="wrap_content" android:fillViewport="true" android:scrollIndicators="bottom|top" style="?attr/buttonBarStyle">
+    <androidx.appcompat.widget.ButtonBarLayout android:gravity="bottom" android:orientation="horizontal" android:paddingLeft="24dp" android:paddingRight="24dp" android:paddingBottom="30dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layoutDirection="locale">
+        <Button android:textSize="14dp" android:textColor="@color/nt_alert_dialog_button_text_color" android:id="@android:id/button3" android:background="@null" android:paddingLeft="15dp" android:paddingRight="15dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:minWidth="0dp" android:textAllCaps="false"/>
+        <android.widget.Space android:id="@+id/spacer" android:visibility="invisible" android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/>
+        <Button android:textSize="14dp" android:textColor="@color/nt_alert_dialog_button_text_color" android:id="@android:id/button2" android:background="@null" android:paddingLeft="15dp" android:paddingRight="15dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:minWidth="0dp" android:textAllCaps="false"/>
+        <Button android:textSize="14dp" android:textColor="@color/nt_alert_dialog_button_text_color" android:id="@android:id/button1" android:background="@null" android:paddingLeft="15dp" android:paddingRight="15dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:minWidth="0dp" android:textAllCaps="false" android:layout_marginStart="10dp"/>
+    </androidx.appcompat.widget.ButtonBarLayout>
+</ScrollView>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="camera_mode_portrait_mode">Portré mód</string>
+    <string name="click_again">Kattintás újra</string>
+    <string name="empty_shade_text">Nincs értesítés</string>
+    <string name="mic_mode_ambient_sound">Környezet</string>
+    <string name="mic_mode_standard">Normál</string>
+    <string name="mic_mode_voice_focus">Hangfókusz</string>
+    <string name="nt_face_recognition_error">Az arc nem azonosítható. Rendszerhiba.</string>
+    <string name="nt_face_recognition_fail">Az arc nem azonosítható. Próbálja újra.</string>
+    <string name="nt_face_recognition_timeout">Koppintson az ikonra, és próbálja újra</string>
+    <string name="quick_settings_batteryshare_label">Akkumulátor megosztás</string>
+    <string name="quick_settings_glyphs_label">Glyphs</string>
+    <string name="swipe_again">Pöccintés újra</string>
+</resources>

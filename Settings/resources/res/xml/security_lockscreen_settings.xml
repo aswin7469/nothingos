@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:settings="http://schemas.android.com/apk/res-auto" android:title="@string/lockscreen_settings_title">
+    <PreferenceCategory android:title="@string/lockscreen_settings_what_to_show_category" android:key="lockscreen_what_to_show">
+        <com.android.settings.RestrictedListPreference android:title="@string/lock_screen_notifications_title" android:key="security_setting_lock_screen_notif" android:summary="@string/summary_placeholder" settings:keywords="@string/keywords_lock_screen_notif"/>
+        <SwitchPreference android:title="@string/lockscreen_bypass_title" android:key="security_dispaly_lockscreen_bypass" android:summary="@string/lockscreen_bypass_summary" settings:controller="com.android.settings.biometrics.face.FaceSettingsLockscreenBypassPreferenceController" settings:searchable="false"/>
+        <com.android.settingslib.RestrictedSwitchPreference android:title="@string/user_add_on_lockscreen_menu" android:key="security_lockscreen_add_users_when_locked" settings:controller="com.android.settings.users.AddUserWhenLockedPreferenceController"/>
+        <SwitchPreference android:title="@string/nt_aod_show_weather_title" android:key="lockscreen_one_glance_controls_switch" settings:controller="com.nt.settings.keyguard.NtOneGlancePreferenceController"/>
+        <com.android.settingslib.RestrictedPreference android:title="@string/owner_info_settings_title" android:key="owner_info_settings" android:summary="@string/owner_info_settings_summary"/>
+        <SwitchPreference android:title="@string/lockscreen_privacy_wallet_setting_toggle" android:key="lockscreen_privacy_wallet_switch" android:summary="@string/lockscreen_privacy_wallet_summary" settings:controller="com.android.settings.display.WalletPrivacyPreferenceController"/>
+        <SwitchPreference android:title="@string/lockscreen_privacy_controls_setting_toggle" android:key="lockscreen_privacy_controls_switch" android:summary="@string/lockscreen_privacy_controls_summary" settings:controller="com.android.settings.display.ControlsPrivacyPreferenceController"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/nt_aod_when_to_show_title">
+        <com.android.settings.widget.PrimarySwitchPreference android:title="@string/nt_aod_title" android:key="ambient_display_always_on" android:fragment="com.nt.settings.aod.NtAODDisplayModeSettingsFragment" settings:controller="com.android.settings.display.AmbientDisplayAlwaysOnPreferenceController" settings:userRestriction="no_ambient_display"/>
+    </PreferenceCategory>
+    <SwitchPreference android:title="@string/nt_tap_show_lock_screen" android:key="nt_tap_to_wake" settings:controller="com.nt.settings.system.NtNewTapToWakePreferenceController" settings:keywords="@string/nt_tap_show_lock_screen"/>
+    <SwitchPreference android:title="@string/nt_lift_show_lock_screen" android:key="lockscreen_lift_to_wake" settings:controller="com.nt.settings.system.NtNewLiftToWakePreferenceController" settings:keywords="@string/nt_lift_show_lock_screen"/>
+    <SwitchPreference android:title="@string/doze_title" android:key="ambient_display_notification" android:summary="@string/doze_summary" settings:controller="com.android.settings.display.AmbientDisplayNotificationsPreferenceController"/>
+    <PreferenceCategory android:title="@string/profile_section_header" android:key="security_setting_lock_screen_notif_work_header" android:order="1001" settings:searchable="false">
+        <com.android.settings.RestrictedListPreference android:title="@string/locked_work_profile_notification_title" android:key="security_setting_lock_screen_notif_work" android:summary="@string/summary_placeholder" settings:searchable="false"/>
+    </PreferenceCategory>
+</PreferenceScreen>

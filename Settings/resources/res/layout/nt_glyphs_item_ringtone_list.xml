@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="horizontal" android:background="?android:attr/selectableItemBackground" android:paddingLeft="24dp" android:paddingTop="16dp" android:paddingRight="24dp" android:paddingBottom="16dp" android:layout_width="match_parent" android:layout_height="wrap_content">
+    <RadioButton android:textSize="20sp" android:textColor="@color/nt_glyphs_guide_settings_title_color" android:gravity="center" android:id="@+id/cb_file_name" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_toRightOf="@+id/img_contact_icon" android:textDirection="ltr" android:layoutDirection="rtl"/>
+</RelativeLayout>

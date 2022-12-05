@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:settings="http://schemas.android.com/apk/res-auto" android:persistent="false" android:title="@string/nt_glyphs_ringtones">
+    <Preference android:icon="@drawable/ic_default_ringtone" android:title="@string/nt_default_ringtones_title" android:key="key_glyphs_ringtones" android:summary="@string/summary_placeholder" android:order="-10" android:dialogTitle="@string/nt_default_ringtones_title" settings:controller="com.nt.settings.glyphs.ringtone.GlyphsRingtonesSelectPreferenceController" settings:keywords="@string/nt_default_ringtones_title"/>
+    <PreferenceCategory android:title="@string/nt_glyphs_custom_contact_ringtone" android:key="key_custom_category" settings:isPreferenceVisible="false">
+        <com.nt.settings.glyphs.widget.GlyphsContactsListPreference android:persistent="false" android:key="key_glyphs_custom_ringtones" android:order="-5" settings:controller="com.nt.settings.glyphs.GlyphsCustomRingtonesPreferenceController"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/nt_glyphs_all_contacts" android:key="key_all_category">
+        <com.nt.settings.glyphs.widget.GlyphsContactsListPreference android:persistent="false" android:key="key_glyphs_default_ringtones" android:order="-1" settings:controller="com.nt.settings.glyphs.GlyphsDefaultRingtonesPreferenceController"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/nt_glyphs_contact_search_tip" android:key="key_search_category" settings:isPreferenceVisible="false">
+        <com.nt.settings.glyphs.widget.GlyphsContactsListPreference android:persistent="false" android:key="key_glyphs_search_ringtones" android:order="1"/>
+    </PreferenceCategory>
+</PreferenceScreen>

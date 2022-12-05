@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:settings="http://schemas.android.com/apk/res-auto" android:title="@string/nt_aod_when_to_show_title">
+    <PreferenceCategory android:title="@string/nt_aod_when_to_show_title" android:key="nt_aod_when_to_show_title">
+        <com.android.settingslib.widget.MainSwitchPreference android:title="@string/nt_aod_title" android:key="ambient_display_always_on" settings:controller="com.nt.settings.aod.NtAODSwitchPreferenceController" settings:userRestriction="no_ambient_display"/>
+        <DropDownPreference android:entries="@array/aod_display_mode" android:title="@string/nt_aod_display_schedule_title" android:key="aod_display_mode" android:summary="%s" android:entryValues="@array/aod_display_mode" settings:allowDividerAbove="true"/>
+        <com.android.settingslib.RestrictedPreference android:title="@string/nt_aod_start_time_title" android:key="nt_aod_start_time" android:summary="@string/summary_placeholder" settings:userRestriction="no_config_aod_time"/>
+        <com.android.settingslib.RestrictedPreference android:title="@string/nt_aod_end_time_title" android:key="nt_aod_end_time" android:summary="@string/summary_placeholder" settings:userRestriction="no_config_aod_time"/>
+    </PreferenceCategory>
+</PreferenceScreen>

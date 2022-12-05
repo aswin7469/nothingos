@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="horizontal" android:background="?android:attr/colorBackground" android:paddingTop="16dp" android:paddingBottom="16dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="29dp" android:paddingEnd="24dp">
+    <ImageView android:layout_gravity="center_vertical" android:id="@+id/layout_wifi_item_icon_imageview" android:background="@drawable/ic_add" android:layout_width="14dp" android:layout_height="14dp"/>
+    <TextView android:textSize="18sp" android:textColor="#f0f2f2" android:layout_gravity="center_vertical" android:id="@+id/layout_wifi_item_title_textview" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/see_all_wifi_network" android:fontFamily="Roboto" android:layout_marginStart="28dp"/>
+</LinearLayout>

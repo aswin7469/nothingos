@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:settings="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+    <FrameLayout android:id="@+id/pinned_header" android:background="?android:attr/colorBackground" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+    <FrameLayout android:clipChildren="true" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <androidx.recyclerview.widget.RecyclerView android:id="@+id/apps_list" android:visibility="invisible" android:scrollbars="none" android:clipToPadding="false" android:layout_width="match_parent" android:layout_height="wrap_content" settings:fastScrollEnabled="true" settings:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable" settings:fastScrollHorizontalTrackDrawable="@drawable/line_drawable" settings:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable" settings:fastScrollVerticalTrackDrawable="@drawable/line_drawable"/>
+        <TextView android:textAppearance="?android:attr/textAppearanceLarge" android:gravity="center" android:id="@android:id/empty" android:visibility="invisible" android:layout_width="match_parent" android:layout_height="0dp" android:text="@string/no_applications" android:textAlignment="gravity"/>
+        <include layout="@layout/loading_container"/>
+    </FrameLayout>
+</LinearLayout>

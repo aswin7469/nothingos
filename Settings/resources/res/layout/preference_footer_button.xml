@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content">
+    <RelativeLayout android:layout_gravity="center" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:layout_marginBottom="6dp" android:layout_weight="1" android:layout_marginStart="15dp" android:layout_marginEnd="6dp">
+        <TextView android:textAppearance="?android:attr/textAppearanceLarge" android:textSize="14sp" android:ellipsize="marquee" android:id="@android:id/title" android:fadingEdge="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="true"/>
+        <TextView android:textAppearance="?android:attr/textAppearanceSmall" android:textSize="16sp" android:textColor="?android:attr/textColorSecondary" android:id="@android:id/summary" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxLines="4" android:layout_below="@android:id/title" android:layout_alignStart="@android:id/title"/>
+    </RelativeLayout>
+    <androidx.appcompat.widget.AppCompatButton android:textSize="14sp" android:textColor="@color/nt_glyphs_ringtone_footer_button_text_color" android:gravity="center" android:layout_gravity="center" android:id="@+id/btn_set" android:background="@drawable/btn_ringtone_settings" android:paddingLeft="16dp" android:paddingRight="16dp" android:layout_width="wrap_content" android:layout_height="40dp" android:layout_margin="20dp" android:text="@string/nt_glyphs_set_ringtone" android:textAllCaps="false"/>
+</FrameLayout>

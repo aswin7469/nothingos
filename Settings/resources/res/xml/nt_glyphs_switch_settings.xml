@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:settings="http://schemas.android.com/apk/res-auto" android:persistent="false" android:title="@string/reduce_bright_colors_preference_title" android:key="key_main_screen">
+    <com.nt.settings.glyphs.widget.GlyphsAnimPreviewPreference android:key="key_preview_image"/>
+    <SwitchPreference android:title="@string/glyphs_activate_switch_title" android:key="glyphs_switch"/>
+    <com.android.settingslib.widget.FooterPreference android:selectable="false" android:key="key_features"/>
+</PreferenceScreen>

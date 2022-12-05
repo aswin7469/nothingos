@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:settings="http://schemas.android.com/apk/res-auto" android:title="@string/nt_privacy_experience_improvement_programs_label">
+    <com.android.settings.widget.PrimarySwitchPreference android:title="@string/nt_data_collection" android:key="nt_data_collection" android:summary="@string/nt_data_collection_summary" android:fragment="com.nt.settings.security.NtPrivacyUserExperienceProgramFragment" settings:controller="com.nt.settings.security.NtDataCollectionPreferenceController"/>
+    <com.android.settings.widget.PrimarySwitchPreference android:title="@string/nt_privacy_system_stability_program_title" android:key="nt_system_stability_program" android:summary="@string/nt_privacy_system_stability_program_summary" android:fragment="com.nt.settings.security.NtPrivacySystemStabilityProgramFragment" settings:controller="com.nt.settings.security.NtPrivacySystemStabilityProgramPreferenceController"/>
+</PreferenceScreen>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.qs.QuickStatusBarHeader xmlns:android="http://schemas.android.com/apk/res/android" android:layout_gravity="fill" android:id="@+id/header" android:background="@android:color/transparent" android:paddingTop="0dp" android:clickable="false" android:clipChildren="false" android:clipToPadding="false" android:layout_width="match_parent" android:layout_height="wrap_content" android:baselineAligned="false" android:paddingStart="0dp" android:paddingEnd="0dp" android:elevation="4dp">
+    <include android:visibility="gone" layout="@layout/quick_status_bar_header_date_privacy"/>
+    <include layout="@layout/qs_status_bar"/>
+    <RelativeLayout android:layout_gravity="top" android:id="@+id/qs_container" android:paddingTop="@dimen/qs_status_bar_height" android:clipChildren="false" android:clipToPadding="false" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <include android:visibility="gone" layout="@layout/quick_qs_status_icons"/>
+        <com.android.systemui.qs.QuickQSPanel android:id="@+id/quick_qs_panel" android:paddingBottom="@dimen/qqs_padding_bottom" android:focusable="true" android:clipChildren="false" android:clipToPadding="false" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/qqs_layout_margin_top" android:layout_below="@+id/quick_qs_status_icons" android:importantForAccessibility="yes" android:accessibilityTraversalAfter="@+id/quick_qs_status_icons"/>
+        <ImageView android:id="@+id/arrow_down" android:paddingTop="5dp" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/arrow_down" android:layout_below="@+id/quick_qs_panel" android:layout_centerHorizontal="true"/>
+    </RelativeLayout>
+</com.android.systemui.qs.QuickStatusBarHeader>

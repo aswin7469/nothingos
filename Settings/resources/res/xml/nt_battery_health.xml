@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:settings="http://schemas.android.com/apk/res-auto" android:title="@string/nt_battery_health_title" android:key="nt_battery_health_settings" settings:keywords="@string/nt_battery_health_title" settings:searchable="false">
+    <SwitchPreference android:title="@string/nt_battery_health_title" android:key="nt_battery_health_toggle" settings:keywords="@string/nt_battery_health_title" settings:searchable="false"/>
+    <com.android.settingslib.widget.FooterPreference android:title="@string/nt_battery_health_summary" android:selectable="false" android:key="nt_battery_health_footer" settings:searchable="false"/>
+</PreferenceScreen>

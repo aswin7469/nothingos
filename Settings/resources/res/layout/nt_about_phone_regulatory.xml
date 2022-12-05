@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="56dp" android:paddingStart="24dp">
+        <TextView android:layout_marginTop="12dp" android:layout_marginBottom="28dp" android:text="@string/nt_regulatory_phone" style="@style/nt_about_phone_regulatory_text_label"/>
+        <TextView android:textSize="16sp" android:layout_width="0dp" android:layout_marginTop="12dp" android:layout_marginBottom="28dp" android:text="@string/nt_regulatory_phone_model" android:layout_weight="0.7" android:textFontWeight="400" style="@style/nt_about_phone_regulatory_text_detail"/>
+    </LinearLayout>
+    <include layout="@layout/horizontal_divider"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="24dp">
+        <TextView android:text="@string/nt_regulatory_europe" style="@style/nt_about_phone_regulatory_text_label"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.7" android:paddingEnd="1px">
+            <ImageView android:layout_gravity="center_vertical" android:layout_width="0dp" android:src="@drawable/nt_europe" android:layout_weight="0.47" style="@style/nt_about_phone_regulatory_image"/>
+            <TextView android:layout_gravity="center_vertical" android:layout_width="0dp" android:text="@string/nt_regulatory_europe_detail" android:layout_weight="0.53" android:layout_marginStart="39px" style="@style/nt_about_phone_regulatory_text_detail"/>
+        </LinearLayout>
+    </LinearLayout>
+    <include layout="@layout/horizontal_divider"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="24dp">
+        <TextView android:text="@string/nt_regulatory_uk" style="@style/nt_about_phone_regulatory_text_label"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.7" android:paddingEnd="149px">
+            <ImageView android:layout_gravity="center_vertical" android:layout_width="0dp" android:src="@drawable/nt_uk" android:layout_weight="0.32" style="@style/nt_about_phone_regulatory_image"/>
+            <TextView android:layout_gravity="center_vertical" android:layout_width="0dp" android:text="@string/nt_regulatory_europe_detail" android:layout_weight="0.68" android:layout_marginStart="39px" style="@style/nt_about_phone_regulatory_text_detail"/>
+        </LinearLayout>
+    </LinearLayout>
+    <include layout="@layout/horizontal_divider"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="24dp">
+        <TextView android:text="@string/nt_regulatory_india" style="@style/nt_about_phone_regulatory_text_label"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.7" android:paddingEnd="149px">
+            <ImageView android:layout_gravity="center_vertical" android:layout_width="0dp" android:src="@drawable/nt_india" android:layout_weight="0.32" style="@style/nt_about_phone_regulatory_image"/>
+            <TextView android:layout_gravity="center_vertical" android:layout_width="0dp" android:text="@string/nt_regulatory_india_detail" android:layout_weight="0.68" android:layout_marginStart="39px" style="@style/nt_about_phone_regulatory_text_detail"/>
+        </LinearLayout>
+    </LinearLayout>
+    <include layout="@layout/horizontal_divider"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="24dp">
+        <TextView android:text="@string/nt_regulatory_malaysia" style="@style/nt_about_phone_regulatory_text_label"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.7">
+            <ImageView android:src="@drawable/nt_malaysia" style="@style/nt_about_phone_regulatory_image"/>
+        </LinearLayout>
+    </LinearLayout>
+    <include layout="@layout/horizontal_divider"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="24dp">
+        <TextView android:text="@string/nt_regulatory_australia" style="@style/nt_about_phone_regulatory_text_label"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.7">
+            <ImageView android:src="@drawable/nt_australia" style="@style/nt_about_phone_regulatory_image"/>
+        </LinearLayout>
+    </LinearLayout>
+    <include layout="@layout/horizontal_divider"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="24dp">
+        <TextView android:text="@string/nt_regulatory_japan" style="@style/nt_about_phone_regulatory_text_label"/>
+        <LinearLayout android:orientation="vertical" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.7" android:paddingEnd="57px">
+            <TextView android:layout_marginBottom="42px" android:text="@string/nt_regulatory_japan_detail" style="@style/nt_about_phone_regulatory_text_detail"/>
+            <ImageView android:layout_marginTop="0dp" android:layout_marginBottom="42px" android:src="@drawable/nt_japan1" style="@style/nt_about_phone_regulatory_image"/>
+            <ImageView android:layout_marginTop="0dp" android:src="@drawable/nt_japan2" style="@style/nt_about_phone_regulatory_image"/>
+        </LinearLayout>
+    </LinearLayout>
+    <include layout="@layout/horizontal_divider"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="24dp">
+        <TextView android:text="@string/nt_regulatory_taiwan" style="@style/nt_about_phone_regulatory_text_label"/>
+        <LinearLayout android:orientation="vertical" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.7">
+            <TextView android:id="@+id/nt_about_regulatory_taiwan_detail" android:layout_marginBottom="42px" android:text="@string/summary_placeholder" style="@style/nt_about_phone_regulatory_text_detail"/>
+            <LinearLayout android:paddingBottom="24dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:paddingEnd="260px">
+                <ImageView android:layout_gravity="center_vertical" android:layout_width="0dp" android:layout_height="wrap_content" android:src="@drawable/nt_taiwan" android:layout_weight="0.36"/>
+                <TextView android:layout_gravity="center_vertical" android:layout_width="0dp" android:layout_marginTop="0dp" android:layout_marginBottom="0dp" android:text="@string/nt_regulatory_taiwan_detail_2" android:layout_weight="0.64" android:layout_marginStart="26px" style="@style/nt_about_phone_regulatory_text_detail"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <include layout="@layout/horizontal_divider"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="24dp">
+        <TextView android:text="@string/nt_regulatory_singapore" style="@style/nt_about_phone_regulatory_text_label"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.7">
+            <ImageView android:src="@drawable/nt_singapore" style="@style/nt_about_phone_regulatory_image"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

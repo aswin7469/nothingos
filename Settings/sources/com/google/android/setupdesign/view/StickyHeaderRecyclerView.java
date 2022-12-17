@@ -8,10 +8,10 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
-/* loaded from: classes2.dex */
+
 public class StickyHeaderRecyclerView extends HeaderRecyclerView {
-    private View sticky;
     private int statusBarInset = 0;
+    private View sticky;
     private final RectF stickyRect = new RectF();
 
     public StickyHeaderRecyclerView(Context context) {
@@ -26,22 +26,19 @@ public class StickyHeaderRecyclerView extends HeaderRecyclerView {
         super(context, attributeSet, i);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.recyclerview.widget.RecyclerView, android.view.ViewGroup, android.view.View
+    /* access modifiers changed from: protected */
     public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         View header;
         super.onLayout(z, i, i2, i3, i4);
         if (this.sticky == null) {
             updateStickyView();
         }
-        if (this.sticky == null || (header = getHeader()) == null || header.getHeight() != 0) {
-            return;
+        if (this.sticky != null && (header = getHeader()) != null && header.getHeight() == 0) {
+            header.layout(0, -header.getMeasuredHeight(), header.getMeasuredWidth(), 0);
         }
-        header.layout(0, -header.getMeasuredHeight(), header.getMeasuredWidth(), 0);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.recyclerview.widget.RecyclerView, android.view.View
+    /* access modifiers changed from: protected */
     public void onMeasure(int i, int i2) {
         super.onMeasure(i, i2);
         if (this.sticky != null) {
@@ -56,16 +53,20 @@ public class StickyHeaderRecyclerView extends HeaderRecyclerView {
         }
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView, android.view.View
     public void draw(Canvas canvas) {
+        View view;
         super.draw(canvas);
         if (this.sticky != null) {
             View header = getHeader();
             int save = canvas.save();
-            View view = header != null ? header : this.sticky;
+            if (header != null) {
+                view = header;
+            } else {
+                view = this.sticky;
+            }
             int top = header != null ? this.sticky.getTop() : 0;
             if (view.getTop() + top < this.statusBarInset || !view.isShown()) {
-                this.stickyRect.set(0.0f, (-top) + this.statusBarInset, view.getWidth(), (view.getHeight() - top) + this.statusBarInset);
+                this.stickyRect.set(0.0f, (float) ((-top) + this.statusBarInset), (float) view.getWidth(), (float) ((view.getHeight() - top) + this.statusBarInset));
                 canvas.translate(0.0f, this.stickyRect.top);
                 canvas.clipRect(0, 0, view.getWidth(), view.getHeight());
                 view.draw(canvas);
@@ -76,7 +77,6 @@ public class StickyHeaderRecyclerView extends HeaderRecyclerView {
         }
     }
 
-    @Override // android.view.View
     @TargetApi(21)
     public WindowInsets onApplyWindowInsets(WindowInsets windowInsets) {
         if (getFitsSystemWindows()) {
@@ -86,13 +86,12 @@ public class StickyHeaderRecyclerView extends HeaderRecyclerView {
         return windowInsets;
     }
 
-    @Override // android.view.ViewGroup, android.view.View
     public boolean dispatchTouchEvent(MotionEvent motionEvent) {
-        if (this.stickyRect.contains(motionEvent.getX(), motionEvent.getY())) {
-            RectF rectF = this.stickyRect;
-            motionEvent.offsetLocation(-rectF.left, -rectF.top);
-            return getHeader().dispatchTouchEvent(motionEvent);
+        if (!this.stickyRect.contains(motionEvent.getX(), motionEvent.getY())) {
+            return super.dispatchTouchEvent(motionEvent);
         }
-        return super.dispatchTouchEvent(motionEvent);
+        RectF rectF = this.stickyRect;
+        motionEvent.offsetLocation(-rectF.left, -rectF.top);
+        return getHeader().dispatchTouchEvent(motionEvent);
     }
 }

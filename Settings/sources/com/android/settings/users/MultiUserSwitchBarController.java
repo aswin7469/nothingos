@@ -9,20 +9,18 @@ import com.android.settingslib.RestrictedLockUtilsInternal;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnStart;
 import com.android.settingslib.core.lifecycle.events.OnStop;
-/* loaded from: classes.dex */
+
 public class MultiUserSwitchBarController implements SwitchWidgetController.OnSwitchChangeListener, LifecycleObserver, OnStart, OnStop {
     private final Context mContext;
     private final OnMultiUserSwitchChangedListener mListener;
     final SwitchWidgetController mSwitchBar;
     private final UserCapabilities mUserCapabilities;
 
-    /* loaded from: classes.dex */
     interface OnMultiUserSwitchChangedListener {
         void onMultiUserSwitchChanged(boolean z);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public MultiUserSwitchBarController(Context context, SwitchWidgetController switchWidgetController, OnMultiUserSwitchChangedListener onMultiUserSwitchChangedListener) {
+    MultiUserSwitchBarController(Context context, SwitchWidgetController switchWidgetController, OnMultiUserSwitchChangedListener onMultiUserSwitchChangedListener) {
         this.mContext = context;
         this.mSwitchBar = switchWidgetController;
         this.mListener = onMultiUserSwitchChangedListener;
@@ -38,17 +36,14 @@ public class MultiUserSwitchBarController implements SwitchWidgetController.OnSw
         switchWidgetController.setListener(this);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStart
     public void onStart() {
         this.mSwitchBar.startListening();
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStop
     public void onStop() {
         this.mSwitchBar.stopListening();
     }
 
-    @Override // com.android.settings.widget.SwitchWidgetController.OnSwitchChangeListener
     public boolean onSwitchToggled(boolean z) {
         OnMultiUserSwitchChangedListener onMultiUserSwitchChangedListener;
         Log.d("MultiUserSwitchBarCtrl", "Toggling multi-user feature enabled state to: " + z);

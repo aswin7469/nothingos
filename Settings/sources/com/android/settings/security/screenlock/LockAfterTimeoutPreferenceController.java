@@ -1,6 +1,7 @@
 package com.android.settings.security.screenlock;
 
 import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.os.UserHandle;
 import android.provider.Settings;
@@ -8,21 +9,20 @@ import android.text.TextUtils;
 import android.util.Log;
 import androidx.preference.Preference;
 import com.android.internal.widget.LockPatternUtils;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settings.display.TimeoutListPreference;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settings.security.trustagent.TrustAgentManager;
 import com.android.settingslib.RestrictedLockUtilsInternal;
 import com.android.settingslib.core.AbstractPreferenceController;
-/* loaded from: classes.dex */
+
 public class LockAfterTimeoutPreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin, Preference.OnPreferenceChangeListener {
     private final DevicePolicyManager mDPM;
     private final LockPatternUtils mLockPatternUtils;
     private final TrustAgentManager mTrustAgentManager;
     private final int mUserId;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "lock_after_timeout";
     }
@@ -35,23 +35,23 @@ public class LockAfterTimeoutPreferenceController extends AbstractPreferenceCont
         this.mTrustAgentManager = FeatureFactory.getFactory(context).getSecurityFeatureProvider().getTrustAgentManager();
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         if (!this.mLockPatternUtils.isSecure(this.mUserId)) {
             return false;
         }
         int keyguardStoredPasswordQuality = this.mLockPatternUtils.getKeyguardStoredPasswordQuality(this.mUserId);
-        return keyguardStoredPasswordQuality == 65536 || keyguardStoredPasswordQuality == 131072 || keyguardStoredPasswordQuality == 196608 || keyguardStoredPasswordQuality == 262144 || keyguardStoredPasswordQuality == 327680 || keyguardStoredPasswordQuality == 393216 || keyguardStoredPasswordQuality == 524288;
+        if (keyguardStoredPasswordQuality == 65536 || keyguardStoredPasswordQuality == 131072 || keyguardStoredPasswordQuality == 196608 || keyguardStoredPasswordQuality == 262144 || keyguardStoredPasswordQuality == 327680 || keyguardStoredPasswordQuality == 393216 || keyguardStoredPasswordQuality == 524288) {
+            return true;
+        }
+        return false;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         TimeoutListPreference timeoutListPreference = (TimeoutListPreference) preference;
         setupLockAfterPreference(timeoutListPreference);
         updateLockAfterPreferenceSummary(timeoutListPreference);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         try {
             Settings.Secure.putInt(this.mContext.getContentResolver(), "lock_screen_lock_after_timeout", Integer.parseInt((String) obj));
@@ -64,18 +64,18 @@ public class LockAfterTimeoutPreferenceController extends AbstractPreferenceCont
     }
 
     private void setupLockAfterPreference(TimeoutListPreference timeoutListPreference) {
-        timeoutListPreference.setValue(String.valueOf(Settings.Secure.getLong(this.mContext.getContentResolver(), "lock_screen_lock_after_timeout", 5000L)));
+        timeoutListPreference.setValue(String.valueOf(Settings.Secure.getLong(this.mContext.getContentResolver(), "lock_screen_lock_after_timeout", 5000)));
         if (this.mDPM != null) {
-            timeoutListPreference.removeUnusableTimeouts(Math.max(0L, this.mDPM.getMaximumTimeToLock(null, UserHandle.myUserId()) - Math.max(0, Settings.System.getInt(this.mContext.getContentResolver(), "screen_off_timeout", 0))), RestrictedLockUtilsInternal.checkIfMaximumTimeToLockIsSet(this.mContext));
+            timeoutListPreference.removeUnusableTimeouts(Math.max(0, this.mDPM.getMaximumTimeToLock((ComponentName) null, UserHandle.myUserId()) - ((long) Math.max(0, Settings.System.getInt(this.mContext.getContentResolver(), "screen_off_timeout", 0)))), RestrictedLockUtilsInternal.checkIfMaximumTimeToLockIsSet(this.mContext));
         }
     }
 
     private void updateLockAfterPreferenceSummary(TimeoutListPreference timeoutListPreference) {
-        CharSequence string;
+        String str;
         if (timeoutListPreference.isDisabledByAdmin()) {
-            string = this.mContext.getText(R.string.disabled_by_policy_title);
+            str = this.mDPM.getResources().getString("Settings.DISABLED_BY_IT_ADMIN_TITLE", new LockAfterTimeoutPreferenceController$$ExternalSyntheticLambda0(this));
         } else {
-            long j = Settings.Secure.getLong(this.mContext.getContentResolver(), "lock_screen_lock_after_timeout", 5000L);
+            long j = Settings.Secure.getLong(this.mContext.getContentResolver(), "lock_screen_lock_after_timeout", 5000);
             CharSequence[] entries = timeoutListPreference.getEntries();
             CharSequence[] entryValues = timeoutListPreference.getEntryValues();
             int i = 0;
@@ -85,16 +85,19 @@ public class LockAfterTimeoutPreferenceController extends AbstractPreferenceCont
                 }
             }
             CharSequence activeTrustAgentLabel = this.mTrustAgentManager.getActiveTrustAgentLabel(this.mContext, this.mLockPatternUtils);
-            if (!TextUtils.isEmpty(activeTrustAgentLabel)) {
-                if (Long.valueOf(entryValues[i].toString()).longValue() == 0) {
-                    string = this.mContext.getString(R.string.lock_immediately_summary_with_exception, activeTrustAgentLabel);
-                } else {
-                    string = this.mContext.getString(R.string.lock_after_timeout_summary_with_exception, entries[i], activeTrustAgentLabel);
-                }
+            if (TextUtils.isEmpty(activeTrustAgentLabel)) {
+                str = this.mContext.getString(R$string.lock_after_timeout_summary, new Object[]{entries[i]});
+            } else if (Long.valueOf(entryValues[i].toString()).longValue() == 0) {
+                str = this.mContext.getString(R$string.lock_immediately_summary_with_exception, new Object[]{activeTrustAgentLabel});
             } else {
-                string = this.mContext.getString(R.string.lock_after_timeout_summary, entries[i]);
+                str = this.mContext.getString(R$string.lock_after_timeout_summary_with_exception, new Object[]{entries[i], activeTrustAgentLabel});
             }
         }
-        timeoutListPreference.setSummary(string);
+        timeoutListPreference.setSummary(str);
+    }
+
+    /* access modifiers changed from: private */
+    public /* synthetic */ String lambda$updateLockAfterPreferenceSummary$0() {
+        return this.mContext.getString(R$string.disabled_by_policy_title);
     }
 }

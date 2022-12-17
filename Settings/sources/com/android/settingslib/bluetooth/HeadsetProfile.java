@@ -12,31 +12,31 @@ import android.util.Log;
 import com.android.settingslib.R$string;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class HeadsetProfile implements LocalBluetoothProfile {
     static final ParcelUuid[] UUIDS = {BluetoothUuid.HSP, BluetoothUuid.HFP};
     private final BluetoothAdapter mBluetoothAdapter;
-    private final CachedBluetoothDeviceManager mDeviceManager;
-    private boolean mIsProfileReady;
-    private final LocalBluetoothProfileManager mProfileManager;
-    private BluetoothHeadset mService;
+    /* access modifiers changed from: private */
+    public final CachedBluetoothDeviceManager mDeviceManager;
+    /* access modifiers changed from: private */
+    public boolean mIsProfileReady;
+    /* access modifiers changed from: private */
+    public final LocalBluetoothProfileManager mProfileManager;
+    /* access modifiers changed from: private */
+    public BluetoothHeadset mService;
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean accessProfileEnabled() {
         return true;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getDrawableResource(BluetoothClass bluetoothClass) {
-        return 17302329;
+        return 17302337;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getOrdinal() {
         return 0;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getProfileId() {
         return 1;
     }
@@ -45,12 +45,10 @@ public class HeadsetProfile implements LocalBluetoothProfile {
         return "HEADSET";
     }
 
-    /* loaded from: classes.dex */
     private final class HeadsetServiceListener implements BluetoothProfile.ServiceListener {
         private HeadsetServiceListener() {
         }
 
-        @Override // android.bluetooth.BluetoothProfile.ServiceListener
         public void onServiceConnected(int i, BluetoothProfile bluetoothProfile) {
             HeadsetProfile.this.mService = (BluetoothHeadset) bluetoothProfile;
             List<BluetoothDevice> connectedDevices = HeadsetProfile.this.mService.getConnectedDevices();
@@ -68,20 +66,17 @@ public class HeadsetProfile implements LocalBluetoothProfile {
             HeadsetProfile.this.mProfileManager.callServiceConnectedListeners();
         }
 
-        @Override // android.bluetooth.BluetoothProfile.ServiceListener
         public void onServiceDisconnected(int i) {
             HeadsetProfile.this.mProfileManager.callServiceDisconnectedListeners();
             HeadsetProfile.this.mIsProfileReady = false;
         }
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean isProfileReady() {
         return this.mIsProfileReady;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public HeadsetProfile(Context context, CachedBluetoothDeviceManager cachedBluetoothDeviceManager, LocalBluetoothProfileManager localBluetoothProfileManager) {
+    HeadsetProfile(Context context, CachedBluetoothDeviceManager cachedBluetoothDeviceManager, LocalBluetoothProfileManager localBluetoothProfileManager) {
         this.mDeviceManager = cachedBluetoothDeviceManager;
         this.mProfileManager = localBluetoothProfileManager;
         BluetoothAdapter defaultAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -89,7 +84,6 @@ public class HeadsetProfile implements LocalBluetoothProfile {
         defaultAdapter.getProfileProxy(context, new HeadsetServiceListener(), 1);
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getConnectionStatus(BluetoothDevice bluetoothDevice) {
         BluetoothHeadset bluetoothHeadset = this.mService;
         if (bluetoothHeadset == null) {
@@ -110,11 +104,15 @@ public class HeadsetProfile implements LocalBluetoothProfile {
     }
 
     public BluetoothDevice getActiveDevice() {
-        BluetoothHeadset bluetoothHeadset = this.mService;
-        if (bluetoothHeadset == null) {
+        BluetoothAdapter bluetoothAdapter = this.mBluetoothAdapter;
+        if (bluetoothAdapter == null) {
             return null;
         }
-        return bluetoothHeadset.getActiveDevice();
+        List activeDevices = bluetoothAdapter.getActiveDevices(1);
+        if (activeDevices.size() > 0) {
+            return (BluetoothDevice) activeDevices.get(0);
+        }
+        return null;
     }
 
     public int getAudioState(BluetoothDevice bluetoothDevice) {
@@ -125,33 +123,36 @@ public class HeadsetProfile implements LocalBluetoothProfile {
         return bluetoothHeadset.getAudioState(bluetoothDevice);
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean isEnabled(BluetoothDevice bluetoothDevice) {
         BluetoothHeadset bluetoothHeadset = this.mService;
-        return bluetoothHeadset != null && bluetoothHeadset.getConnectionPolicy(bluetoothDevice) > 0;
+        if (bluetoothHeadset != null && bluetoothHeadset.getConnectionPolicy(bluetoothDevice) > 0) {
+            return true;
+        }
+        return false;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean setEnabled(BluetoothDevice bluetoothDevice, boolean z) {
         BluetoothHeadset bluetoothHeadset = this.mService;
         if (bluetoothHeadset == null) {
             return false;
         }
-        if (z) {
-            if (bluetoothHeadset.getConnectionPolicy(bluetoothDevice) >= 100) {
-                return false;
-            }
+        if (!z) {
+            return bluetoothHeadset.setConnectionPolicy(bluetoothDevice, 0);
+        }
+        if (bluetoothHeadset.getConnectionPolicy(bluetoothDevice) < 100) {
             return this.mService.setConnectionPolicy(bluetoothDevice, 100);
         }
-        return bluetoothHeadset.setConnectionPolicy(bluetoothDevice, 0);
+        return false;
     }
 
     public List<BluetoothDevice> getConnectedDevices() {
         BluetoothHeadset bluetoothHeadset = this.mService;
-        return bluetoothHeadset == null ? new ArrayList(0) : bluetoothHeadset.getDevicesMatchingConnectionStates(new int[]{2, 1, 3});
+        if (bluetoothHeadset == null) {
+            return new ArrayList(0);
+        }
+        return bluetoothHeadset.getDevicesMatchingConnectionStates(new int[]{2, 1, 3});
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getNameResource(BluetoothDevice bluetoothDevice) {
         return R$string.bluetooth_profile_headset;
     }
@@ -159,54 +160,55 @@ public class HeadsetProfile implements LocalBluetoothProfile {
     public boolean supportEq(BluetoothDevice bluetoothDevice) {
         Log.d("HeadsetProfile", " execute supportEq()");
         BluetoothHeadset bluetoothHeadset = this.mService;
-        if (bluetoothHeadset == null) {
-            Log.d("HeadsetProfile", "mService is null.");
-            return false;
+        if (bluetoothHeadset != null) {
+            return bluetoothHeadset.isEqSupported(bluetoothDevice);
         }
-        return bluetoothHeadset.isEqSupported(bluetoothDevice);
+        Log.d("HeadsetProfile", "mService is null.");
+        return false;
     }
 
     public boolean getLowLatencyMode(BluetoothDevice bluetoothDevice) {
         Log.d("HeadsetProfile", " execute getLowLatencyMode()");
         BluetoothHeadset bluetoothHeadset = this.mService;
-        if (bluetoothHeadset == null) {
-            Log.d("HeadsetProfile", "mService is null.");
-            return false;
+        if (bluetoothHeadset != null) {
+            return bluetoothHeadset.getLowLatencyMode(bluetoothDevice);
         }
-        return bluetoothHeadset.getLowLatencyMode(bluetoothDevice);
+        Log.d("HeadsetProfile", "mService is null.");
+        return false;
     }
 
     public boolean getEqMode(BluetoothDevice bluetoothDevice) {
         Log.d("HeadsetProfile", " execute getEqMode()");
         BluetoothHeadset bluetoothHeadset = this.mService;
-        if (bluetoothHeadset == null) {
-            Log.d("HeadsetProfile", "mService is null.");
-            return false;
+        if (bluetoothHeadset != null) {
+            return bluetoothHeadset.getEqMode(bluetoothDevice);
         }
-        return bluetoothHeadset.getEqMode(bluetoothDevice);
+        Log.d("HeadsetProfile", "mService is null.");
+        return false;
     }
 
     public boolean setLowLatencyMode(BluetoothDevice bluetoothDevice, boolean z) {
         Log.d("HeadsetProfile", " execute setLowLatencyMode()");
         BluetoothHeadset bluetoothHeadset = this.mService;
-        if (bluetoothHeadset == null) {
-            Log.d("HeadsetProfile", "mService is null.");
-            return false;
+        if (bluetoothHeadset != null) {
+            return bluetoothHeadset.setLowLatencyMode(bluetoothDevice, z);
         }
-        return bluetoothHeadset.setLowLatencyMode(bluetoothDevice, z);
+        Log.d("HeadsetProfile", "mService is null.");
+        return false;
     }
 
     public boolean setEqMode(BluetoothDevice bluetoothDevice, boolean z) {
         Log.d("HeadsetProfile", " execute setEqMode()");
         BluetoothHeadset bluetoothHeadset = this.mService;
-        if (bluetoothHeadset == null) {
-            Log.d("HeadsetProfile", "mService is null.");
-            return false;
+        if (bluetoothHeadset != null) {
+            return bluetoothHeadset.setEqMode(bluetoothDevice, z);
         }
-        return bluetoothHeadset.setEqMode(bluetoothDevice, z);
+        Log.d("HeadsetProfile", "mService is null.");
+        return false;
     }
 
-    protected void finalize() {
+    /* access modifiers changed from: protected */
+    public void finalize() {
         Log.d("HeadsetProfile", "finalize()");
         if (this.mService != null) {
             try {

@@ -1,13 +1,13 @@
 package androidx.appcompat.widget;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.accessibility.AccessibilityEvent;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.R$attr;
@@ -18,7 +18,7 @@ import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.ViewPropertyAnimatorCompat;
-/* loaded from: classes.dex */
+
 public class ActionBarContextView extends AbsActionBarView {
     private View mClose;
     private View mCloseButton;
@@ -33,43 +33,36 @@ public class ActionBarContextView extends AbsActionBarView {
     private int mTitleStyleRes;
     private TextView mTitleView;
 
-    @Override // android.view.ViewGroup
     public boolean shouldDelayChildPressedState() {
         return false;
     }
 
-    @Override // androidx.appcompat.widget.AbsActionBarView
     public /* bridge */ /* synthetic */ int getAnimatedVisibility() {
         return super.getAnimatedVisibility();
     }
 
-    @Override // androidx.appcompat.widget.AbsActionBarView
     public /* bridge */ /* synthetic */ int getContentHeight() {
         return super.getContentHeight();
     }
 
-    @Override // androidx.appcompat.widget.AbsActionBarView, android.view.View
     public /* bridge */ /* synthetic */ boolean onHoverEvent(MotionEvent motionEvent) {
         return super.onHoverEvent(motionEvent);
     }
 
-    @Override // androidx.appcompat.widget.AbsActionBarView, android.view.View
     public /* bridge */ /* synthetic */ boolean onTouchEvent(MotionEvent motionEvent) {
         return super.onTouchEvent(motionEvent);
     }
 
-    @Override // androidx.appcompat.widget.AbsActionBarView, android.view.View
     public /* bridge */ /* synthetic */ void setVisibility(int i) {
         super.setVisibility(i);
     }
 
-    @Override // androidx.appcompat.widget.AbsActionBarView
     public /* bridge */ /* synthetic */ ViewPropertyAnimatorCompat setupAnimatorToVisibility(int i, long j) {
         return super.setupAnimatorToVisibility(i, j);
     }
 
     public ActionBarContextView(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public ActionBarContextView(Context context, AttributeSet attributeSet) {
@@ -87,7 +80,6 @@ public class ActionBarContextView extends AbsActionBarView {
         obtainStyledAttributes.recycle();
     }
 
-    @Override // android.view.ViewGroup, android.view.View
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         ActionMenuPresenter actionMenuPresenter = this.mActionMenuPresenter;
@@ -97,7 +89,6 @@ public class ActionBarContextView extends AbsActionBarView {
         }
     }
 
-    @Override // androidx.appcompat.widget.AbsActionBarView
     public void setContentHeight(int i) {
         this.mContentHeight = i;
     }
@@ -109,7 +100,7 @@ public class ActionBarContextView extends AbsActionBarView {
             removeView(view2);
         }
         this.mCustomView = view;
-        if (view != null && (linearLayout = this.mTitleLayout) != null) {
+        if (!(view == null || (linearLayout = this.mTitleLayout) == null)) {
             removeView(linearLayout);
             this.mTitleLayout = null;
         }
@@ -122,6 +113,7 @@ public class ActionBarContextView extends AbsActionBarView {
     public void setTitle(CharSequence charSequence) {
         this.mTitle = charSequence;
         initTitle();
+        ViewCompat.setAccessibilityPaneTitle(this, charSequence);
     }
 
     public void setSubtitle(CharSequence charSequence) {
@@ -170,7 +162,7 @@ public class ActionBarContextView extends AbsActionBarView {
     public void initForMode(final ActionMode actionMode) {
         View view = this.mClose;
         if (view == null) {
-            View inflate = LayoutInflater.from(getContext()).inflate(this.mCloseItemLayout, (ViewGroup) this, false);
+            View inflate = LayoutInflater.from(getContext()).inflate(this.mCloseItemLayout, this, false);
             this.mClose = inflate;
             addView(inflate);
         } else if (view.getParent() == null) {
@@ -178,9 +170,8 @@ public class ActionBarContextView extends AbsActionBarView {
         }
         View findViewById = this.mClose.findViewById(R$id.action_mode_close_button);
         this.mCloseButton = findViewById;
-        findViewById.setOnClickListener(new View.OnClickListener() { // from class: androidx.appcompat.widget.ActionBarContextView.1
-            @Override // android.view.View.OnClickListener
-            public void onClick(View view2) {
+        findViewById.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
                 actionMode.finish();
             }
         });
@@ -196,7 +187,7 @@ public class ActionBarContextView extends AbsActionBarView {
         menuBuilder.addMenuPresenter(this.mActionMenuPresenter, this.mPopupContext);
         ActionMenuView actionMenuView = (ActionMenuView) this.mActionMenuPresenter.getMenuView(this);
         this.mMenuView = actionMenuView;
-        ViewCompat.setBackground(actionMenuView, null);
+        ViewCompat.setBackground(actionMenuView, (Drawable) null);
         addView(this.mMenuView, layoutParams);
     }
 
@@ -213,7 +204,7 @@ public class ActionBarContextView extends AbsActionBarView {
         this.mActionMenuPresenter = null;
         View view = this.mCloseButton;
         if (view != null) {
-            view.setOnClickListener(null);
+            view.setOnClickListener((View.OnClickListener) null);
         }
     }
 
@@ -225,24 +216,21 @@ public class ActionBarContextView extends AbsActionBarView {
         return false;
     }
 
-    @Override // android.view.ViewGroup
-    protected ViewGroup.LayoutParams generateDefaultLayoutParams() {
+    /* access modifiers changed from: protected */
+    public ViewGroup.LayoutParams generateDefaultLayoutParams() {
         return new ViewGroup.MarginLayoutParams(-1, -2);
     }
 
-    @Override // android.view.ViewGroup
     public ViewGroup.LayoutParams generateLayoutParams(AttributeSet attributeSet) {
         return new ViewGroup.MarginLayoutParams(getContext(), attributeSet);
     }
 
-    @Override // android.view.View
-    protected void onMeasure(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         int i3 = 1073741824;
         if (View.MeasureSpec.getMode(i) != 1073741824) {
             throw new IllegalStateException(getClass().getSimpleName() + " can only be used with android:layout_width=\"match_parent\" (or fill_parent)");
-        } else if (View.MeasureSpec.getMode(i2) == 0) {
-            throw new IllegalStateException(getClass().getSimpleName() + " can only be used with android:layout_height=\"wrap_content\"");
-        } else {
+        } else if (View.MeasureSpec.getMode(i2) != 0) {
             int size = View.MeasureSpec.getSize(i);
             int i4 = this.mContentHeight;
             if (i4 <= 0) {
@@ -306,17 +294,19 @@ public class ActionBarContextView extends AbsActionBarView {
                 return;
             }
             setMeasuredDimension(size, i4);
+        } else {
+            throw new IllegalStateException(getClass().getSimpleName() + " can only be used with android:layout_height=\"wrap_content\"");
         }
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         boolean isLayoutRtl = ViewUtils.isLayoutRtl(this);
         int paddingRight = isLayoutRtl ? (i3 - i) - getPaddingRight() : getPaddingLeft();
         int paddingTop = getPaddingTop();
         int paddingTop2 = ((i4 - i2) - getPaddingTop()) - getPaddingBottom();
         View view = this.mClose;
-        if (view != null && view.getVisibility() != 8) {
+        if (!(view == null || view.getVisibility() == 8)) {
             ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) this.mClose.getLayoutParams();
             int i5 = isLayoutRtl ? marginLayoutParams.rightMargin : marginLayoutParams.leftMargin;
             int i6 = isLayoutRtl ? marginLayoutParams.leftMargin : marginLayoutParams.rightMargin;
@@ -325,7 +315,7 @@ public class ActionBarContextView extends AbsActionBarView {
         }
         int i7 = paddingRight;
         LinearLayout linearLayout = this.mTitleLayout;
-        if (linearLayout != null && this.mCustomView == null && linearLayout.getVisibility() != 8) {
+        if (!(linearLayout == null || this.mCustomView != null || linearLayout.getVisibility() == 8)) {
             i7 += positionChild(this.mTitleLayout, i7, paddingTop, paddingTop2, isLayoutRtl);
         }
         int i8 = i7;
@@ -338,18 +328,6 @@ public class ActionBarContextView extends AbsActionBarView {
         if (actionMenuView != null) {
             positionChild(actionMenuView, paddingLeft, paddingTop, paddingTop2, !isLayoutRtl);
         }
-    }
-
-    @Override // android.view.View
-    public void onInitializeAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
-        if (accessibilityEvent.getEventType() == 32) {
-            accessibilityEvent.setSource(this);
-            accessibilityEvent.setClassName(getClass().getName());
-            accessibilityEvent.setPackageName(getContext().getPackageName());
-            accessibilityEvent.setContentDescription(this.mTitle);
-            return;
-        }
-        super.onInitializeAccessibilityEvent(accessibilityEvent);
     }
 
     public void setTitleOptional(boolean z) {

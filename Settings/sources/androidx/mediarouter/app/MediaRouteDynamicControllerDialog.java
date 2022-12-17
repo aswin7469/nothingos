@@ -3,23 +3,20 @@ package androidx.mediarouter.app;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.os.SystemClock;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
-import android.support.v4.media.MediaDescriptionCompat;
-import android.support.v4.media.MediaMetadataCompat;
-import android.support.v4.media.session.MediaControllerCompat;
-import android.support.v4.media.session.MediaSessionCompat;
+import android.support.p000v4.media.MediaDescriptionCompat;
+import android.support.p000v4.media.MediaMetadataCompat;
+import android.support.p000v4.media.session.MediaControllerCompat;
+import android.support.p000v4.media.session.MediaSessionCompat;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -49,7 +46,6 @@ import androidx.mediarouter.R$string;
 import androidx.mediarouter.media.MediaRouteProvider;
 import androidx.mediarouter.media.MediaRouteSelector;
 import androidx.mediarouter.media.MediaRouter;
-import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.io.BufferedInputStream;
@@ -64,7 +60,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
     static final boolean DEBUG = Log.isLoggable("MediaRouteCtrlDialog", 3);
     RecyclerAdapter mAdapter;
@@ -81,6 +77,7 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
     MediaControllerCallback mControllerCallback;
     private boolean mCreated;
     MediaDescriptionCompat mDescription;
+    final boolean mEnableGroupVolumeUX;
     FetchArtTask mFetchArtTask;
     final List<MediaRouter.RouteInfo> mGroupableRoutes;
     final Handler mHandler;
@@ -112,54 +109,62 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
         this(context, 0);
     }
 
-    /* JADX WARN: Illegal instructions before constructor call */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public MediaRouteDynamicControllerDialog(Context context, int theme) {
-        super(r2, MediaRouterThemeHelper.createThemedDialogStyle(r2));
-        Context createThemedDialogContext = MediaRouterThemeHelper.createThemedDialogContext(context, theme, false);
-        this.mSelector = MediaRouteSelector.EMPTY;
-        this.mMemberRoutes = new ArrayList();
-        this.mGroupableRoutes = new ArrayList();
-        this.mTransferableRoutes = new ArrayList();
-        this.mUngroupableRoutes = new ArrayList();
-        this.mHandler = new Handler() { // from class: androidx.mediarouter.app.MediaRouteDynamicControllerDialog.1
-            @Override // android.os.Handler
-            public void handleMessage(Message message) {
-                int i = message.what;
-                if (i == 1) {
-                    MediaRouteDynamicControllerDialog.this.updateRoutesView();
-                } else if (i != 2) {
-                } else {
-                    MediaRouteDynamicControllerDialog mediaRouteDynamicControllerDialog = MediaRouteDynamicControllerDialog.this;
-                    if (mediaRouteDynamicControllerDialog.mRouteForVolumeUpdatingByUser == null) {
-                        return;
-                    }
-                    mediaRouteDynamicControllerDialog.mRouteForVolumeUpdatingByUser = null;
-                    mediaRouteDynamicControllerDialog.updateViewsIfNeeded();
-                }
-            }
-        };
-        Context context2 = getContext();
-        this.mContext = context2;
-        MediaRouter mediaRouter = MediaRouter.getInstance(context2);
-        this.mRouter = mediaRouter;
-        this.mCallback = new MediaRouterCallback();
-        this.mSelectedRoute = mediaRouter.getSelectedRoute();
-        this.mControllerCallback = new MediaControllerCallback();
-        setMediaSession(mediaRouter.getMediaSessionToken());
+    /* JADX WARNING: Illegal instructions before constructor call */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public MediaRouteDynamicControllerDialog(android.content.Context r2, int r3) {
+        /*
+            r1 = this;
+            r0 = 0
+            android.content.Context r2 = androidx.mediarouter.app.MediaRouterThemeHelper.createThemedDialogContext(r2, r3, r0)
+            int r3 = androidx.mediarouter.app.MediaRouterThemeHelper.createThemedDialogStyle(r2)
+            r1.<init>(r2, r3)
+            androidx.mediarouter.media.MediaRouteSelector r2 = androidx.mediarouter.media.MediaRouteSelector.EMPTY
+            r1.mSelector = r2
+            java.util.ArrayList r2 = new java.util.ArrayList
+            r2.<init>()
+            r1.mMemberRoutes = r2
+            java.util.ArrayList r2 = new java.util.ArrayList
+            r2.<init>()
+            r1.mGroupableRoutes = r2
+            java.util.ArrayList r2 = new java.util.ArrayList
+            r2.<init>()
+            r1.mTransferableRoutes = r2
+            java.util.ArrayList r2 = new java.util.ArrayList
+            r2.<init>()
+            r1.mUngroupableRoutes = r2
+            androidx.mediarouter.app.MediaRouteDynamicControllerDialog$1 r2 = new androidx.mediarouter.app.MediaRouteDynamicControllerDialog$1
+            r2.<init>()
+            r1.mHandler = r2
+            android.content.Context r2 = r1.getContext()
+            r1.mContext = r2
+            androidx.mediarouter.media.MediaRouter r2 = androidx.mediarouter.media.MediaRouter.getInstance(r2)
+            r1.mRouter = r2
+            boolean r3 = androidx.mediarouter.media.MediaRouter.isGroupVolumeUxEnabled()
+            r1.mEnableGroupVolumeUX = r3
+            androidx.mediarouter.app.MediaRouteDynamicControllerDialog$MediaRouterCallback r3 = new androidx.mediarouter.app.MediaRouteDynamicControllerDialog$MediaRouterCallback
+            r3.<init>()
+            r1.mCallback = r3
+            androidx.mediarouter.media.MediaRouter$RouteInfo r3 = r2.getSelectedRoute()
+            r1.mSelectedRoute = r3
+            androidx.mediarouter.app.MediaRouteDynamicControllerDialog$MediaControllerCallback r3 = new androidx.mediarouter.app.MediaRouteDynamicControllerDialog$MediaControllerCallback
+            r3.<init>()
+            r1.mControllerCallback = r3
+            android.support.v4.media.session.MediaSessionCompat$Token r2 = r2.getMediaSessionToken()
+            r1.setMediaSession(r2)
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.mediarouter.app.MediaRouteDynamicControllerDialog.<init>(android.content.Context, int):void");
     }
 
-    private void setMediaSession(MediaSessionCompat.Token sessionToken) {
+    private void setMediaSession(MediaSessionCompat.Token token) {
         MediaControllerCompat mediaControllerCompat = this.mMediaController;
         MediaDescriptionCompat mediaDescriptionCompat = null;
         if (mediaControllerCompat != null) {
             mediaControllerCompat.unregisterCallback(this.mControllerCallback);
             this.mMediaController = null;
         }
-        if (sessionToken != null && this.mAttachedToWindow) {
-            MediaControllerCompat mediaControllerCompat2 = new MediaControllerCompat(this.mContext, sessionToken);
+        if (token != null && this.mAttachedToWindow) {
+            MediaControllerCompat mediaControllerCompat2 = new MediaControllerCompat(this.mContext, token);
             this.mMediaController = mediaControllerCompat2;
             mediaControllerCompat2.registerCallback(this.mControllerCallback);
             MediaMetadataCompat metadata = this.mMediaController.getMetadata();
@@ -172,55 +177,49 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
         }
     }
 
-    public void setRouteSelector(MediaRouteSelector selector) {
-        if (selector == null) {
+    public void setRouteSelector(MediaRouteSelector mediaRouteSelector) {
+        if (mediaRouteSelector == null) {
             throw new IllegalArgumentException("selector must not be null");
-        }
-        if (this.mSelector.equals(selector)) {
-            return;
-        }
-        this.mSelector = selector;
-        if (!this.mAttachedToWindow) {
-            return;
-        }
-        this.mRouter.removeCallback(this.mCallback);
-        this.mRouter.addCallback(selector, this.mCallback, 1);
-        updateRoutes();
-    }
-
-    public void onFilterRoutes(List<MediaRouter.RouteInfo> routes) {
-        for (int size = routes.size() - 1; size >= 0; size--) {
-            if (!onFilterRoute(routes.get(size))) {
-                routes.remove(size);
+        } else if (!this.mSelector.equals(mediaRouteSelector)) {
+            this.mSelector = mediaRouteSelector;
+            if (this.mAttachedToWindow) {
+                this.mRouter.removeCallback(this.mCallback);
+                this.mRouter.addCallback(mediaRouteSelector, this.mCallback, 1);
+                updateRoutes();
             }
         }
     }
 
-    public boolean onFilterRoute(MediaRouter.RouteInfo route) {
-        return !route.isDefaultOrBluetooth() && route.isEnabled() && route.matchesSelector(this.mSelector) && this.mSelectedRoute != route;
+    public void onFilterRoutes(List<MediaRouter.RouteInfo> list) {
+        for (int size = list.size() - 1; size >= 0; size--) {
+            if (!onFilterRoute(list.get(size))) {
+                list.remove(size);
+            }
+        }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.appcompat.app.AppCompatDialog, android.app.Dialog
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public boolean onFilterRoute(MediaRouter.RouteInfo routeInfo) {
+        return !routeInfo.isDefaultOrBluetooth() && routeInfo.isEnabled() && routeInfo.matchesSelector(this.mSelector) && this.mSelectedRoute != routeInfo;
+    }
+
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
         setContentView(R$layout.mr_cast_dialog);
         MediaRouterThemeHelper.setDialogBackgroundColor(this.mContext, this);
         ImageButton imageButton = (ImageButton) findViewById(R$id.mr_cast_close_button);
         this.mCloseButton = imageButton;
         imageButton.setColorFilter(-1);
-        this.mCloseButton.setOnClickListener(new View.OnClickListener() { // from class: androidx.mediarouter.app.MediaRouteDynamicControllerDialog.2
-            @Override // android.view.View.OnClickListener
-            public void onClick(View v) {
+        this.mCloseButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
                 MediaRouteDynamicControllerDialog.this.dismiss();
             }
         });
         Button button = (Button) findViewById(R$id.mr_cast_stop_button);
         this.mStopCastingButton = button;
         button.setTextColor(-1);
-        this.mStopCastingButton.setOnClickListener(new View.OnClickListener() { // from class: androidx.mediarouter.app.MediaRouteDynamicControllerDialog.3
-            @Override // android.view.View.OnClickListener
-            public void onClick(View v) {
+        this.mStopCastingButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
                 if (MediaRouteDynamicControllerDialog.this.mSelectedRoute.isSelected()) {
                     MediaRouteDynamicControllerDialog.this.mRouter.unselect(2);
                 }
@@ -249,7 +248,7 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
         updateLayout();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void updateLayout() {
         getWindow().setLayout(MediaRouteDialogHelper.getDialogWidthForDynamicGroup(this.mContext), MediaRouteDialogHelper.getDialogHeight(this.mContext));
         this.mArtIconBitmap = null;
@@ -259,7 +258,6 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
         updateRoutesView();
     }
 
-    @Override // android.app.Dialog, android.view.Window.Callback
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         this.mAttachedToWindow = true;
@@ -268,20 +266,20 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
         setMediaSession(this.mRouter.getMediaSessionToken());
     }
 
-    @Override // android.app.Dialog, android.view.Window.Callback
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         this.mAttachedToWindow = false;
         this.mRouter.removeCallback(this.mCallback);
-        this.mHandler.removeCallbacksAndMessages(null);
-        setMediaSession(null);
+        this.mHandler.removeCallbacksAndMessages((Object) null);
+        setMediaSession((MediaSessionCompat.Token) null);
     }
 
     static boolean isBitmapRecycled(Bitmap bitmap) {
         return bitmap != null && bitmap.isRecycled();
     }
 
-    void reloadIconIfNeeded() {
+    /* access modifiers changed from: package-private */
+    public void reloadIconIfNeeded() {
         MediaDescriptionCompat mediaDescriptionCompat = this.mDescription;
         Uri uri = null;
         Bitmap iconBitmap = mediaDescriptionCompat == null ? null : mediaDescriptionCompat.getIconBitmap();
@@ -304,7 +302,8 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
         }
     }
 
-    void clearLoadedBitmap() {
+    /* access modifiers changed from: package-private */
+    public void clearLoadedBitmap() {
         this.mArtIconIsLoaded = false;
         this.mArtIconLoadedBitmap = null;
         this.mArtIconBackgroundColor = 0;
@@ -317,7 +316,8 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
         return !this.mCreated;
     }
 
-    void updateViewsIfNeeded() {
+    /* access modifiers changed from: package-private */
+    public void updateViewsIfNeeded() {
         if (this.mUpdateRoutesViewDeferred) {
             updateRoutesView();
         }
@@ -326,7 +326,8 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
         }
     }
 
-    void updateMetadataViews() {
+    /* access modifiers changed from: package-private */
+    public void updateMetadataViews() {
         if (shouldDeferUpdateViews()) {
             this.mUpdateMetadataViewsDeferred = true;
             return;
@@ -336,23 +337,19 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
             dismiss();
         }
         CharSequence charSequence = null;
-        if (this.mArtIconIsLoaded && !isBitmapRecycled(this.mArtIconLoadedBitmap) && this.mArtIconLoadedBitmap != null) {
-            this.mArtView.setVisibility(0);
-            this.mArtView.setImageBitmap(this.mArtIconLoadedBitmap);
-            this.mArtView.setBackgroundColor(this.mArtIconBackgroundColor);
-            this.mMetadataBlackScrim.setVisibility(0);
-            if (Build.VERSION.SDK_INT >= 17) {
-                this.mMetadataBackground.setImageBitmap(blurBitmap(this.mArtIconLoadedBitmap, 10.0f, this.mContext));
-            } else {
-                this.mMetadataBackground.setImageBitmap(Bitmap.createBitmap(this.mArtIconLoadedBitmap));
-            }
-        } else {
+        if (!this.mArtIconIsLoaded || isBitmapRecycled(this.mArtIconLoadedBitmap) || this.mArtIconLoadedBitmap == null) {
             if (isBitmapRecycled(this.mArtIconLoadedBitmap)) {
                 Log.w("MediaRouteCtrlDialog", "Can't set artwork image with recycled bitmap: " + this.mArtIconLoadedBitmap);
             }
             this.mArtView.setVisibility(8);
             this.mMetadataBlackScrim.setVisibility(8);
-            this.mMetadataBackground.setImageBitmap(null);
+            this.mMetadataBackground.setImageBitmap((Bitmap) null);
+        } else {
+            this.mArtView.setVisibility(0);
+            this.mArtView.setImageBitmap(this.mArtIconLoadedBitmap);
+            this.mArtView.setBackgroundColor(this.mArtIconBackgroundColor);
+            this.mMetadataBlackScrim.setVisibility(0);
+            this.mMetadataBackground.setImageBitmap(blurBitmap(this.mArtIconLoadedBitmap, 10.0f, this.mContext));
         }
         clearLoadedBitmap();
         MediaDescriptionCompat mediaDescriptionCompat = this.mDescription;
@@ -376,19 +373,16 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
         this.mSubtitleView.setVisibility(8);
     }
 
-    static void setLayoutHeight(View view, int height) {
+    static void setLayoutHeight(View view, int i) {
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-        layoutParams.height = height;
+        layoutParams.height = i;
         view.setLayoutParams(layoutParams);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class VolumeChangeListener implements SeekBar.OnSeekBarChangeListener {
+    private class VolumeChangeListener implements SeekBar.OnSeekBarChangeListener {
         VolumeChangeListener() {
         }
 
-        @Override // android.widget.SeekBar.OnSeekBarChangeListener
         public void onStartTrackingTouch(SeekBar seekBar) {
             MediaRouteDynamicControllerDialog mediaRouteDynamicControllerDialog = MediaRouteDynamicControllerDialog.this;
             if (mediaRouteDynamicControllerDialog.mRouteForVolumeUpdatingByUser != null) {
@@ -397,68 +391,68 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
             MediaRouteDynamicControllerDialog.this.mRouteForVolumeUpdatingByUser = (MediaRouter.RouteInfo) seekBar.getTag();
         }
 
-        @Override // android.widget.SeekBar.OnSeekBarChangeListener
         public void onStopTrackingTouch(SeekBar seekBar) {
-            MediaRouteDynamicControllerDialog.this.mHandler.sendEmptyMessageDelayed(2, 500L);
+            MediaRouteDynamicControllerDialog.this.mHandler.sendEmptyMessageDelayed(2, 500);
         }
 
-        @Override // android.widget.SeekBar.OnSeekBarChangeListener
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            if (fromUser) {
+        public void onProgressChanged(SeekBar seekBar, int i, boolean z) {
+            if (z) {
                 MediaRouter.RouteInfo routeInfo = (MediaRouter.RouteInfo) seekBar.getTag();
                 MediaRouteVolumeSliderHolder mediaRouteVolumeSliderHolder = MediaRouteDynamicControllerDialog.this.mVolumeSliderHolderMap.get(routeInfo.getId());
                 if (mediaRouteVolumeSliderHolder != null) {
-                    mediaRouteVolumeSliderHolder.setMute(progress == 0);
+                    mediaRouteVolumeSliderHolder.setMute(i == 0);
                 }
-                routeInfo.requestSetVolume(progress);
+                routeInfo.requestSetVolume(i);
             }
         }
     }
 
-    List<MediaRouter.RouteInfo> getCurrentGroupableRoutes() {
+    /* access modifiers changed from: package-private */
+    public List<MediaRouter.RouteInfo> getCurrentGroupableRoutes() {
         ArrayList arrayList = new ArrayList();
-        for (MediaRouter.RouteInfo routeInfo : this.mSelectedRoute.getProvider().getRoutes()) {
-            MediaRouter.RouteInfo.DynamicGroupState dynamicGroupState = this.mSelectedRoute.getDynamicGroupState(routeInfo);
+        for (MediaRouter.RouteInfo next : this.mSelectedRoute.getProvider().getRoutes()) {
+            MediaRouter.RouteInfo.DynamicGroupState dynamicGroupState = this.mSelectedRoute.getDynamicGroupState(next);
             if (dynamicGroupState != null && dynamicGroupState.isGroupable()) {
-                arrayList.add(routeInfo);
+                arrayList.add(next);
             }
         }
         return arrayList;
     }
 
-    void updateRoutesView() {
-        if (this.mAttachedToWindow) {
-            if (SystemClock.uptimeMillis() - this.mLastUpdateTime >= 300) {
-                if (shouldDeferUpdateViews()) {
-                    this.mUpdateRoutesViewDeferred = true;
-                    return;
-                }
-                this.mUpdateRoutesViewDeferred = false;
-                if (!this.mSelectedRoute.isSelected() || this.mSelectedRoute.isDefaultOrBluetooth()) {
-                    dismiss();
-                }
-                this.mLastUpdateTime = SystemClock.uptimeMillis();
-                this.mAdapter.notifyAdapterDataSetChanged();
-                return;
-            }
+    /* access modifiers changed from: package-private */
+    public void updateRoutesView() {
+        if (!this.mAttachedToWindow) {
+            return;
+        }
+        if (SystemClock.uptimeMillis() - this.mLastUpdateTime < 300) {
             this.mHandler.removeMessages(1);
             this.mHandler.sendEmptyMessageAtTime(1, this.mLastUpdateTime + 300);
+        } else if (shouldDeferUpdateViews()) {
+            this.mUpdateRoutesViewDeferred = true;
+        } else {
+            this.mUpdateRoutesViewDeferred = false;
+            if (!this.mSelectedRoute.isSelected() || this.mSelectedRoute.isDefaultOrBluetooth()) {
+                dismiss();
+            }
+            this.mLastUpdateTime = SystemClock.uptimeMillis();
+            this.mAdapter.notifyAdapterDataSetChanged();
         }
     }
 
-    void updateRoutes() {
+    /* access modifiers changed from: package-private */
+    public void updateRoutes() {
         this.mMemberRoutes.clear();
         this.mGroupableRoutes.clear();
         this.mTransferableRoutes.clear();
         this.mMemberRoutes.addAll(this.mSelectedRoute.getMemberRoutes());
-        for (MediaRouter.RouteInfo routeInfo : this.mSelectedRoute.getProvider().getRoutes()) {
-            MediaRouter.RouteInfo.DynamicGroupState dynamicGroupState = this.mSelectedRoute.getDynamicGroupState(routeInfo);
+        for (MediaRouter.RouteInfo next : this.mSelectedRoute.getProvider().getRoutes()) {
+            MediaRouter.RouteInfo.DynamicGroupState dynamicGroupState = this.mSelectedRoute.getDynamicGroupState(next);
             if (dynamicGroupState != null) {
                 if (dynamicGroupState.isGroupable()) {
-                    this.mGroupableRoutes.add(routeInfo);
+                    this.mGroupableRoutes.add(next);
                 }
                 if (dynamicGroupState.isTransferable()) {
-                    this.mTransferableRoutes.add(routeInfo);
+                    this.mTransferableRoutes.add(next);
                 }
             }
         }
@@ -472,12 +466,12 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
         this.mAdapter.updateItems();
     }
 
-    private static Bitmap blurBitmap(Bitmap bitmap, float radius, Context context) {
+    private static Bitmap blurBitmap(Bitmap bitmap, float f, Context context) {
         RenderScript create = RenderScript.create(context);
         Allocation createFromBitmap = Allocation.createFromBitmap(create, bitmap);
         Allocation createTyped = Allocation.createTyped(create, createFromBitmap.getType());
         ScriptIntrinsicBlur create2 = ScriptIntrinsicBlur.create(create, Element.U8_4(create));
-        create2.setRadius(radius);
+        create2.setRadius(f);
         create2.setInput(createFromBitmap);
         create2.forEach(createTyped);
         Bitmap copy = bitmap.copy(bitmap.getConfig(), true);
@@ -489,67 +483,72 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
         return copy;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public abstract class MediaRouteVolumeSliderHolder extends RecyclerView.ViewHolder {
+    private abstract class MediaRouteVolumeSliderHolder extends RecyclerView.ViewHolder {
         final ImageButton mMuteButton;
         MediaRouter.RouteInfo mRoute;
         final MediaRouteVolumeSlider mVolumeSlider;
 
-        MediaRouteVolumeSliderHolder(View itemView, ImageButton muteButton, MediaRouteVolumeSlider volumeSlider) {
-            super(itemView);
-            this.mMuteButton = muteButton;
-            this.mVolumeSlider = volumeSlider;
-            muteButton.setImageDrawable(MediaRouterThemeHelper.getMuteButtonDrawableIcon(MediaRouteDynamicControllerDialog.this.mContext));
-            MediaRouterThemeHelper.setVolumeSliderColor(MediaRouteDynamicControllerDialog.this.mContext, volumeSlider);
+        MediaRouteVolumeSliderHolder(View view, ImageButton imageButton, MediaRouteVolumeSlider mediaRouteVolumeSlider) {
+            super(view);
+            this.mMuteButton = imageButton;
+            this.mVolumeSlider = mediaRouteVolumeSlider;
+            imageButton.setImageDrawable(MediaRouterThemeHelper.getMuteButtonDrawableIcon(MediaRouteDynamicControllerDialog.this.mContext));
+            MediaRouterThemeHelper.setVolumeSliderColor(MediaRouteDynamicControllerDialog.this.mContext, mediaRouteVolumeSlider);
         }
 
-        void bindRouteVolumeSliderHolder(MediaRouter.RouteInfo route) {
-            this.mRoute = route;
-            int volume = route.getVolume();
+        /* access modifiers changed from: package-private */
+        public void bindRouteVolumeSliderHolder(MediaRouter.RouteInfo routeInfo) {
+            this.mRoute = routeInfo;
+            int volume = routeInfo.getVolume();
             this.mMuteButton.setActivated(volume == 0);
-            this.mMuteButton.setOnClickListener(new View.OnClickListener() { // from class: androidx.mediarouter.app.MediaRouteDynamicControllerDialog.MediaRouteVolumeSliderHolder.1
-                @Override // android.view.View.OnClickListener
-                public void onClick(View v) {
+            this.mMuteButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    int i;
                     MediaRouteDynamicControllerDialog mediaRouteDynamicControllerDialog = MediaRouteDynamicControllerDialog.this;
                     if (mediaRouteDynamicControllerDialog.mRouteForVolumeUpdatingByUser != null) {
                         mediaRouteDynamicControllerDialog.mHandler.removeMessages(2);
                     }
                     MediaRouteVolumeSliderHolder mediaRouteVolumeSliderHolder = MediaRouteVolumeSliderHolder.this;
                     MediaRouteDynamicControllerDialog.this.mRouteForVolumeUpdatingByUser = mediaRouteVolumeSliderHolder.mRoute;
-                    boolean z = !v.isActivated();
-                    int unmutedVolume = z ? 0 : MediaRouteVolumeSliderHolder.this.getUnmutedVolume();
+                    boolean z = !view.isActivated();
+                    if (z) {
+                        i = 0;
+                    } else {
+                        i = MediaRouteVolumeSliderHolder.this.getUnmutedVolume();
+                    }
                     MediaRouteVolumeSliderHolder.this.setMute(z);
-                    MediaRouteVolumeSliderHolder.this.mVolumeSlider.setProgress(unmutedVolume);
-                    MediaRouteVolumeSliderHolder.this.mRoute.requestSetVolume(unmutedVolume);
-                    MediaRouteDynamicControllerDialog.this.mHandler.sendEmptyMessageDelayed(2, 500L);
+                    MediaRouteVolumeSliderHolder.this.mVolumeSlider.setProgress(i);
+                    MediaRouteVolumeSliderHolder.this.mRoute.requestSetVolume(i);
+                    MediaRouteDynamicControllerDialog.this.mHandler.sendEmptyMessageDelayed(2, 500);
                 }
             });
             this.mVolumeSlider.setTag(this.mRoute);
-            this.mVolumeSlider.setMax(route.getVolumeMax());
+            this.mVolumeSlider.setMax(routeInfo.getVolumeMax());
             this.mVolumeSlider.setProgress(volume);
             this.mVolumeSlider.setOnSeekBarChangeListener(MediaRouteDynamicControllerDialog.this.mVolumeChangeListener);
         }
 
-        void updateVolume() {
+        /* access modifiers changed from: package-private */
+        public void updateVolume() {
             int volume = this.mRoute.getVolume();
             setMute(volume == 0);
             this.mVolumeSlider.setProgress(volume);
         }
 
-        void setMute(boolean mute) {
-            if (this.mMuteButton.isActivated() == mute) {
-                return;
-            }
-            this.mMuteButton.setActivated(mute);
-            if (mute) {
-                MediaRouteDynamicControllerDialog.this.mUnmutedVolumeMap.put(this.mRoute.getId(), Integer.valueOf(this.mVolumeSlider.getProgress()));
-            } else {
-                MediaRouteDynamicControllerDialog.this.mUnmutedVolumeMap.remove(this.mRoute.getId());
+        /* access modifiers changed from: package-private */
+        public void setMute(boolean z) {
+            if (this.mMuteButton.isActivated() != z) {
+                this.mMuteButton.setActivated(z);
+                if (z) {
+                    MediaRouteDynamicControllerDialog.this.mUnmutedVolumeMap.put(this.mRoute.getId(), Integer.valueOf(this.mVolumeSlider.getProgress()));
+                } else {
+                    MediaRouteDynamicControllerDialog.this.mUnmutedVolumeMap.remove(this.mRoute.getId());
+                }
             }
         }
 
-        int getUnmutedVolume() {
+        /* access modifiers changed from: package-private */
+        public int getUnmutedVolume() {
             Integer num = MediaRouteDynamicControllerDialog.this.mUnmutedVolumeMap.get(this.mRoute.getId());
             if (num == null) {
                 return 1;
@@ -558,18 +557,16 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public final class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private final class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+        private final Interpolator mAccelerateDecelerateInterpolator;
         private final Drawable mDefaultIcon;
         private Item mGroupVolumeItem;
         private final LayoutInflater mInflater;
+        private final ArrayList<Item> mItems = new ArrayList<>();
         private final int mLayoutAnimationDurationMs;
         private final Drawable mSpeakerGroupIcon;
         private final Drawable mSpeakerIcon;
         private final Drawable mTvIcon;
-        private final ArrayList<Item> mItems = new ArrayList<>();
-        private final Interpolator mAccelerateDecelerateInterpolator = new AccelerateDecelerateInterpolator();
 
         RecyclerAdapter() {
             this.mInflater = LayoutInflater.from(MediaRouteDynamicControllerDialog.this.mContext);
@@ -578,87 +575,90 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
             this.mSpeakerIcon = MediaRouterThemeHelper.getSpeakerDrawableIcon(MediaRouteDynamicControllerDialog.this.mContext);
             this.mSpeakerGroupIcon = MediaRouterThemeHelper.getSpeakerGroupDrawableIcon(MediaRouteDynamicControllerDialog.this.mContext);
             this.mLayoutAnimationDurationMs = MediaRouteDynamicControllerDialog.this.mContext.getResources().getInteger(R$integer.mr_cast_volume_slider_layout_animation_duration_ms);
+            this.mAccelerateDecelerateInterpolator = new AccelerateDecelerateInterpolator();
             updateItems();
         }
 
-        boolean isGroupVolumeNeeded() {
-            return MediaRouteDynamicControllerDialog.this.mSelectedRoute.getMemberRoutes().size() > 1;
+        /* access modifiers changed from: package-private */
+        public boolean isGroupVolumeNeeded() {
+            MediaRouteDynamicControllerDialog mediaRouteDynamicControllerDialog = MediaRouteDynamicControllerDialog.this;
+            return mediaRouteDynamicControllerDialog.mEnableGroupVolumeUX && mediaRouteDynamicControllerDialog.mSelectedRoute.getMemberRoutes().size() > 1;
         }
 
-        void animateLayoutHeight(final View view, final int targetHeight) {
-            final int i = view.getLayoutParams().height;
-            Animation animation = new Animation() { // from class: androidx.mediarouter.app.MediaRouteDynamicControllerDialog.RecyclerAdapter.1
-                @Override // android.view.animation.Animation
-                protected void applyTransformation(float interpolatedTime, Transformation t) {
-                    int i2 = targetHeight;
-                    int i3 = i;
-                    MediaRouteDynamicControllerDialog.setLayoutHeight(view, i3 + ((int) ((i2 - i3) * interpolatedTime)));
+        /* access modifiers changed from: package-private */
+        public void animateLayoutHeight(final View view, final int i) {
+            final int i2 = view.getLayoutParams().height;
+            C02621 r1 = new Animation() {
+                /* access modifiers changed from: protected */
+                public void applyTransformation(float f, Transformation transformation) {
+                    int i = i;
+                    int i2 = i2;
+                    MediaRouteDynamicControllerDialog.setLayoutHeight(view, i2 + ((int) (((float) (i - i2)) * f)));
                 }
             };
-            animation.setAnimationListener(new Animation.AnimationListener() { // from class: androidx.mediarouter.app.MediaRouteDynamicControllerDialog.RecyclerAdapter.2
-                @Override // android.view.animation.Animation.AnimationListener
-                public void onAnimationRepeat(Animation animation2) {
+            r1.setAnimationListener(new Animation.AnimationListener() {
+                public void onAnimationRepeat(Animation animation) {
                 }
 
-                @Override // android.view.animation.Animation.AnimationListener
-                public void onAnimationStart(Animation animation2) {
+                public void onAnimationStart(Animation animation) {
                     MediaRouteDynamicControllerDialog.this.mIsAnimatingVolumeSliderLayout = true;
                 }
 
-                @Override // android.view.animation.Animation.AnimationListener
-                public void onAnimationEnd(Animation animation2) {
+                public void onAnimationEnd(Animation animation) {
                     MediaRouteDynamicControllerDialog mediaRouteDynamicControllerDialog = MediaRouteDynamicControllerDialog.this;
                     mediaRouteDynamicControllerDialog.mIsAnimatingVolumeSliderLayout = false;
                     mediaRouteDynamicControllerDialog.updateViewsIfNeeded();
                 }
             });
-            animation.setDuration(this.mLayoutAnimationDurationMs);
-            animation.setInterpolator(this.mAccelerateDecelerateInterpolator);
-            view.startAnimation(animation);
+            r1.setDuration((long) this.mLayoutAnimationDurationMs);
+            r1.setInterpolator(this.mAccelerateDecelerateInterpolator);
+            view.startAnimation(r1);
         }
 
-        void mayUpdateGroupVolume(MediaRouter.RouteInfo route, boolean selected) {
+        /* access modifiers changed from: package-private */
+        public void mayUpdateGroupVolume(MediaRouter.RouteInfo routeInfo, boolean z) {
             List<MediaRouter.RouteInfo> memberRoutes = MediaRouteDynamicControllerDialog.this.mSelectedRoute.getMemberRoutes();
-            boolean z = true;
+            boolean z2 = true;
             int max = Math.max(1, memberRoutes.size());
             int i = -1;
-            if (route.isGroup()) {
-                for (MediaRouter.RouteInfo routeInfo : route.getMemberRoutes()) {
-                    if (memberRoutes.contains(routeInfo) != selected) {
-                        max += selected ? 1 : -1;
+            if (routeInfo.isGroup()) {
+                for (MediaRouter.RouteInfo contains : routeInfo.getMemberRoutes()) {
+                    if (memberRoutes.contains(contains) != z) {
+                        max += z ? 1 : -1;
                     }
                 }
             } else {
-                if (selected) {
+                if (z) {
                     i = 1;
                 }
                 max += i;
             }
             boolean isGroupVolumeNeeded = isGroupVolumeNeeded();
+            MediaRouteDynamicControllerDialog mediaRouteDynamicControllerDialog = MediaRouteDynamicControllerDialog.this;
             int i2 = 0;
-            if (max < 2) {
-                z = false;
+            if (!mediaRouteDynamicControllerDialog.mEnableGroupVolumeUX || max < 2) {
+                z2 = false;
             }
-            if (isGroupVolumeNeeded != z) {
-                RecyclerView.ViewHolder findViewHolderForAdapterPosition = MediaRouteDynamicControllerDialog.this.mRecyclerView.findViewHolderForAdapterPosition(0);
-                if (!(findViewHolderForAdapterPosition instanceof GroupVolumeViewHolder)) {
-                    return;
+            if (isGroupVolumeNeeded != z2) {
+                RecyclerView.ViewHolder findViewHolderForAdapterPosition = mediaRouteDynamicControllerDialog.mRecyclerView.findViewHolderForAdapterPosition(0);
+                if (findViewHolderForAdapterPosition instanceof GroupVolumeViewHolder) {
+                    GroupVolumeViewHolder groupVolumeViewHolder = (GroupVolumeViewHolder) findViewHolderForAdapterPosition;
+                    View view = groupVolumeViewHolder.itemView;
+                    if (z2) {
+                        i2 = groupVolumeViewHolder.getExpandedHeight();
+                    }
+                    animateLayoutHeight(view, i2);
                 }
-                GroupVolumeViewHolder groupVolumeViewHolder = (GroupVolumeViewHolder) findViewHolderForAdapterPosition;
-                View view = groupVolumeViewHolder.itemView;
-                if (z) {
-                    i2 = groupVolumeViewHolder.getExpandedHeight();
-                }
-                animateLayoutHeight(view, i2);
             }
         }
 
-        void updateItems() {
+        /* access modifiers changed from: package-private */
+        public void updateItems() {
             this.mItems.clear();
             this.mGroupVolumeItem = new Item(MediaRouteDynamicControllerDialog.this.mSelectedRoute, 1);
             if (!MediaRouteDynamicControllerDialog.this.mMemberRoutes.isEmpty()) {
-                for (MediaRouter.RouteInfo routeInfo : MediaRouteDynamicControllerDialog.this.mMemberRoutes) {
-                    this.mItems.add(new Item(routeInfo, 3));
+                for (MediaRouter.RouteInfo item : MediaRouteDynamicControllerDialog.this.mMemberRoutes) {
+                    this.mItems.add(new Item(item, 3));
                 }
             } else {
                 this.mItems.add(new Item(MediaRouteDynamicControllerDialog.this.mSelectedRoute, 3));
@@ -666,8 +666,8 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
             boolean z = false;
             if (!MediaRouteDynamicControllerDialog.this.mGroupableRoutes.isEmpty()) {
                 boolean z2 = false;
-                for (MediaRouter.RouteInfo routeInfo2 : MediaRouteDynamicControllerDialog.this.mGroupableRoutes) {
-                    if (!MediaRouteDynamicControllerDialog.this.mMemberRoutes.contains(routeInfo2)) {
+                for (MediaRouter.RouteInfo next : MediaRouteDynamicControllerDialog.this.mGroupableRoutes) {
+                    if (!MediaRouteDynamicControllerDialog.this.mMemberRoutes.contains(next)) {
                         if (!z2) {
                             MediaRouteProvider.DynamicGroupRouteController dynamicGroupController = MediaRouteDynamicControllerDialog.this.mSelectedRoute.getDynamicGroupController();
                             String groupableSelectionTitle = dynamicGroupController != null ? dynamicGroupController.getGroupableSelectionTitle() : null;
@@ -677,16 +677,16 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
                             this.mItems.add(new Item(groupableSelectionTitle, 2));
                             z2 = true;
                         }
-                        this.mItems.add(new Item(routeInfo2, 3));
+                        this.mItems.add(new Item(next, 3));
                     }
                 }
             }
             if (!MediaRouteDynamicControllerDialog.this.mTransferableRoutes.isEmpty()) {
-                for (MediaRouter.RouteInfo routeInfo3 : MediaRouteDynamicControllerDialog.this.mTransferableRoutes) {
-                    MediaRouter.RouteInfo routeInfo4 = MediaRouteDynamicControllerDialog.this.mSelectedRoute;
-                    if (routeInfo4 != routeInfo3) {
+                for (MediaRouter.RouteInfo next2 : MediaRouteDynamicControllerDialog.this.mTransferableRoutes) {
+                    MediaRouter.RouteInfo routeInfo = MediaRouteDynamicControllerDialog.this.mSelectedRoute;
+                    if (routeInfo != next2) {
                         if (!z) {
-                            MediaRouteProvider.DynamicGroupRouteController dynamicGroupController2 = routeInfo4.getDynamicGroupController();
+                            MediaRouteProvider.DynamicGroupRouteController dynamicGroupController2 = routeInfo.getDynamicGroupController();
                             String transferableSectionTitle = dynamicGroupController2 != null ? dynamicGroupController2.getTransferableSectionTitle() : null;
                             if (TextUtils.isEmpty(transferableSectionTitle)) {
                                 transferableSectionTitle = MediaRouteDynamicControllerDialog.this.mContext.getString(R$string.mr_dialog_transferable_header);
@@ -694,74 +694,71 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
                             this.mItems.add(new Item(transferableSectionTitle, 2));
                             z = true;
                         }
-                        this.mItems.add(new Item(routeInfo3, 4));
+                        this.mItems.add(new Item(next2, 4));
                     }
                 }
             }
             notifyAdapterDataSetChanged();
         }
 
-        void notifyAdapterDataSetChanged() {
+        /* access modifiers changed from: package-private */
+        public void notifyAdapterDataSetChanged() {
             MediaRouteDynamicControllerDialog.this.mUngroupableRoutes.clear();
             MediaRouteDynamicControllerDialog mediaRouteDynamicControllerDialog = MediaRouteDynamicControllerDialog.this;
             mediaRouteDynamicControllerDialog.mUngroupableRoutes.addAll(MediaRouteDialogHelper.getItemsRemoved(mediaRouteDynamicControllerDialog.mGroupableRoutes, mediaRouteDynamicControllerDialog.getCurrentGroupableRoutes()));
             notifyDataSetChanged();
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.Adapter
-        /* renamed from: onCreateViewHolder */
-        public RecyclerView.ViewHolder mo960onCreateViewHolder(ViewGroup parent, int viewType) {
-            if (viewType != 1) {
-                if (viewType == 2) {
-                    return new HeaderViewHolder(this.mInflater.inflate(R$layout.mr_cast_header_item, parent, false));
-                }
-                if (viewType == 3) {
-                    return new RouteViewHolder(this.mInflater.inflate(R$layout.mr_cast_route_item, parent, false));
-                }
-                if (viewType == 4) {
-                    return new GroupViewHolder(this.mInflater.inflate(R$layout.mr_cast_group_item, parent, false));
-                }
-                Log.w("MediaRouteCtrlDialog", "Cannot create ViewHolder because of wrong view type");
-                return null;
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+            if (i == 1) {
+                return new GroupVolumeViewHolder(this.mInflater.inflate(R$layout.mr_cast_group_volume_item, viewGroup, false));
             }
-            return new GroupVolumeViewHolder(this.mInflater.inflate(R$layout.mr_cast_group_volume_item, parent, false));
+            if (i == 2) {
+                return new HeaderViewHolder(this.mInflater.inflate(R$layout.mr_cast_header_item, viewGroup, false));
+            }
+            if (i == 3) {
+                return new RouteViewHolder(this.mInflater.inflate(R$layout.mr_cast_route_item, viewGroup, false));
+            }
+            if (i == 4) {
+                return new GroupViewHolder(this.mInflater.inflate(R$layout.mr_cast_group_item, viewGroup, false));
+            }
+            Log.w("MediaRouteCtrlDialog", "Cannot create ViewHolder because of wrong view type");
+            return null;
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.Adapter
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            int itemViewType = getItemViewType(position);
-            Item item = getItem(position);
+        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i) {
+            int itemViewType = getItemViewType(i);
+            Item item = getItem(i);
             if (itemViewType == 1) {
-                MediaRouteDynamicControllerDialog.this.mVolumeSliderHolderMap.put(((MediaRouter.RouteInfo) item.getData()).getId(), (MediaRouteVolumeSliderHolder) holder);
-                ((GroupVolumeViewHolder) holder).bindGroupVolumeViewHolder(item);
+                MediaRouteDynamicControllerDialog.this.mVolumeSliderHolderMap.put(((MediaRouter.RouteInfo) item.getData()).getId(), (MediaRouteVolumeSliderHolder) viewHolder);
+                ((GroupVolumeViewHolder) viewHolder).bindGroupVolumeViewHolder(item);
             } else if (itemViewType == 2) {
-                ((HeaderViewHolder) holder).bindHeaderViewHolder(item);
+                ((HeaderViewHolder) viewHolder).bindHeaderViewHolder(item);
             } else if (itemViewType == 3) {
-                MediaRouteDynamicControllerDialog.this.mVolumeSliderHolderMap.put(((MediaRouter.RouteInfo) item.getData()).getId(), (MediaRouteVolumeSliderHolder) holder);
-                ((RouteViewHolder) holder).bindRouteViewHolder(item);
-            } else if (itemViewType == 4) {
-                ((GroupViewHolder) holder).bindGroupViewHolder(item);
-            } else {
+                MediaRouteDynamicControllerDialog.this.mVolumeSliderHolderMap.put(((MediaRouter.RouteInfo) item.getData()).getId(), (MediaRouteVolumeSliderHolder) viewHolder);
+                ((RouteViewHolder) viewHolder).bindRouteViewHolder(item);
+            } else if (itemViewType != 4) {
                 Log.w("MediaRouteCtrlDialog", "Cannot bind item to ViewHolder because of wrong view type");
+            } else {
+                ((GroupViewHolder) viewHolder).bindGroupViewHolder(item);
             }
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.Adapter
-        public void onViewRecycled(RecyclerView.ViewHolder holder) {
-            super.onViewRecycled(holder);
-            MediaRouteDynamicControllerDialog.this.mVolumeSliderHolderMap.values().remove(holder);
+        public void onViewRecycled(RecyclerView.ViewHolder viewHolder) {
+            super.onViewRecycled(viewHolder);
+            MediaRouteDynamicControllerDialog.this.mVolumeSliderHolderMap.values().remove(viewHolder);
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.Adapter
         public int getItemCount() {
             return this.mItems.size() + 1;
         }
 
-        Drawable getIconDrawable(MediaRouter.RouteInfo route) {
-            Uri iconUri = route.getIconUri();
+        /* access modifiers changed from: package-private */
+        public Drawable getIconDrawable(MediaRouter.RouteInfo routeInfo) {
+            Uri iconUri = routeInfo.getIconUri();
             if (iconUri != null) {
                 try {
-                    Drawable createFromStream = Drawable.createFromStream(MediaRouteDynamicControllerDialog.this.mContext.getContentResolver().openInputStream(iconUri), null);
+                    Drawable createFromStream = Drawable.createFromStream(MediaRouteDynamicControllerDialog.this.mContext.getContentResolver().openInputStream(iconUri), (String) null);
                     if (createFromStream != null) {
                         return createFromStream;
                     }
@@ -769,44 +766,41 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
                     Log.w("MediaRouteCtrlDialog", "Failed to load " + iconUri, e);
                 }
             }
-            return getDefaultIconDrawable(route);
+            return getDefaultIconDrawable(routeInfo);
         }
 
-        private Drawable getDefaultIconDrawable(MediaRouter.RouteInfo route) {
-            int deviceType = route.getDeviceType();
-            if (deviceType != 1) {
-                if (deviceType == 2) {
-                    return this.mSpeakerIcon;
-                }
-                if (route.isGroup()) {
-                    return this.mSpeakerGroupIcon;
-                }
-                return this.mDefaultIcon;
+        private Drawable getDefaultIconDrawable(MediaRouter.RouteInfo routeInfo) {
+            int deviceType = routeInfo.getDeviceType();
+            if (deviceType == 1) {
+                return this.mTvIcon;
             }
-            return this.mTvIcon;
+            if (deviceType == 2) {
+                return this.mSpeakerIcon;
+            }
+            if (routeInfo.isGroup()) {
+                return this.mSpeakerGroupIcon;
+            }
+            return this.mDefaultIcon;
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.Adapter
-        public int getItemViewType(int position) {
-            return getItem(position).getType();
+        public int getItemViewType(int i) {
+            return getItem(i).getType();
         }
 
-        public Item getItem(int position) {
-            if (position == 0) {
+        public Item getItem(int i) {
+            if (i == 0) {
                 return this.mGroupVolumeItem;
             }
-            return this.mItems.get(position - 1);
+            return this.mItems.get(i - 1);
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        /* loaded from: classes.dex */
-        public class Item {
+        private class Item {
             private final Object mData;
             private final int mType;
 
-            Item(Object data, int type) {
-                this.mData = data;
-                this.mType = type;
+            Item(Object obj, int i) {
+                this.mData = obj;
+                this.mType = i;
             }
 
             public Object getData() {
@@ -818,15 +812,13 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        /* loaded from: classes.dex */
-        public class GroupVolumeViewHolder extends MediaRouteVolumeSliderHolder {
+        private class GroupVolumeViewHolder extends MediaRouteVolumeSliderHolder {
             private final int mExpandedHeight;
             private final TextView mTextView;
 
-            GroupVolumeViewHolder(View itemView) {
-                super(itemView, (ImageButton) itemView.findViewById(R$id.mr_cast_mute_button), (MediaRouteVolumeSlider) itemView.findViewById(R$id.mr_cast_volume_slider));
-                this.mTextView = (TextView) itemView.findViewById(R$id.mr_group_volume_route_name);
+            GroupVolumeViewHolder(View view) {
+                super(view, (ImageButton) view.findViewById(R$id.mr_cast_mute_button), (MediaRouteVolumeSlider) view.findViewById(R$id.mr_cast_volume_slider));
+                this.mTextView = (TextView) view.findViewById(R$id.mr_group_volume_route_name);
                 Resources resources = MediaRouteDynamicControllerDialog.this.mContext.getResources();
                 DisplayMetrics displayMetrics = resources.getDisplayMetrics();
                 TypedValue typedValue = new TypedValue();
@@ -834,45 +826,45 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
                 this.mExpandedHeight = (int) typedValue.getDimension(displayMetrics);
             }
 
-            void bindGroupVolumeViewHolder(Item item) {
+            /* access modifiers changed from: package-private */
+            public void bindGroupVolumeViewHolder(Item item) {
                 MediaRouteDynamicControllerDialog.setLayoutHeight(this.itemView, RecyclerAdapter.this.isGroupVolumeNeeded() ? this.mExpandedHeight : 0);
                 MediaRouter.RouteInfo routeInfo = (MediaRouter.RouteInfo) item.getData();
                 super.bindRouteVolumeSliderHolder(routeInfo);
                 this.mTextView.setText(routeInfo.getName());
             }
 
-            int getExpandedHeight() {
+            /* access modifiers changed from: package-private */
+            public int getExpandedHeight() {
                 return this.mExpandedHeight;
             }
         }
 
-        /* loaded from: classes.dex */
         private class HeaderViewHolder extends RecyclerView.ViewHolder {
             private final TextView mTextView;
 
-            HeaderViewHolder(View itemView) {
-                super(itemView);
-                this.mTextView = (TextView) itemView.findViewById(R$id.mr_cast_header_name);
+            HeaderViewHolder(View view) {
+                super(view);
+                this.mTextView = (TextView) view.findViewById(R$id.mr_cast_header_name);
             }
 
-            void bindHeaderViewHolder(Item item) {
+            /* access modifiers changed from: package-private */
+            public void bindHeaderViewHolder(Item item) {
                 this.mTextView.setText(item.getData().toString());
             }
         }
 
-        /* loaded from: classes.dex */
         private class RouteViewHolder extends MediaRouteVolumeSliderHolder {
             final CheckBox mCheckBox;
+            final int mCollapsedLayoutHeight;
             final float mDisabledAlpha;
             final int mExpandedLayoutHeight;
             final ImageView mImageView;
             final View mItemView;
             final ProgressBar mProgressBar;
             final TextView mTextView;
-            final RelativeLayout mVolumeSliderLayout;
-            final View.OnClickListener mViewClickListener = new View.OnClickListener() { // from class: androidx.mediarouter.app.MediaRouteDynamicControllerDialog.RecyclerAdapter.RouteViewHolder.1
-                @Override // android.view.View.OnClickListener
-                public void onClick(View v) {
+            final View.OnClickListener mViewClickListener = new View.OnClickListener() {
+                public void onClick(View view) {
                     RouteViewHolder routeViewHolder = RouteViewHolder.this;
                     boolean z = !routeViewHolder.isSelected(routeViewHolder.mRoute);
                     boolean isGroup = RouteViewHolder.this.mRoute.isGroup();
@@ -886,9 +878,9 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
                     RouteViewHolder.this.showSelectingProgress(z, !isGroup);
                     if (isGroup) {
                         List<MediaRouter.RouteInfo> memberRoutes = MediaRouteDynamicControllerDialog.this.mSelectedRoute.getMemberRoutes();
-                        for (MediaRouter.RouteInfo routeInfo : RouteViewHolder.this.mRoute.getMemberRoutes()) {
-                            if (memberRoutes.contains(routeInfo) != z) {
-                                MediaRouteVolumeSliderHolder mediaRouteVolumeSliderHolder = MediaRouteDynamicControllerDialog.this.mVolumeSliderHolderMap.get(routeInfo.getId());
+                        for (MediaRouter.RouteInfo next : RouteViewHolder.this.mRoute.getMemberRoutes()) {
+                            if (memberRoutes.contains(next) != z) {
+                                MediaRouteVolumeSliderHolder mediaRouteVolumeSliderHolder = MediaRouteDynamicControllerDialog.this.mVolumeSliderHolderMap.get(next.getId());
                                 if (mediaRouteVolumeSliderHolder instanceof RouteViewHolder) {
                                     ((RouteViewHolder) mediaRouteVolumeSliderHolder).showSelectingProgress(z, true);
                                 }
@@ -899,17 +891,17 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
                     RecyclerAdapter.this.mayUpdateGroupVolume(routeViewHolder4.mRoute, z);
                 }
             };
-            final int mCollapsedLayoutHeight = 0;
+            final RelativeLayout mVolumeSliderLayout;
 
-            RouteViewHolder(View itemView) {
-                super(itemView, (ImageButton) itemView.findViewById(R$id.mr_cast_mute_button), (MediaRouteVolumeSlider) itemView.findViewById(R$id.mr_cast_volume_slider));
-                this.mItemView = itemView;
-                this.mImageView = (ImageView) itemView.findViewById(R$id.mr_cast_route_icon);
-                ProgressBar progressBar = (ProgressBar) itemView.findViewById(R$id.mr_cast_route_progress_bar);
+            RouteViewHolder(View view) {
+                super(view, (ImageButton) view.findViewById(R$id.mr_cast_mute_button), (MediaRouteVolumeSlider) view.findViewById(R$id.mr_cast_volume_slider));
+                this.mItemView = view;
+                this.mImageView = (ImageView) view.findViewById(R$id.mr_cast_route_icon);
+                ProgressBar progressBar = (ProgressBar) view.findViewById(R$id.mr_cast_route_progress_bar);
                 this.mProgressBar = progressBar;
-                this.mTextView = (TextView) itemView.findViewById(R$id.mr_cast_route_name);
-                this.mVolumeSliderLayout = (RelativeLayout) itemView.findViewById(R$id.mr_cast_volume_layout);
-                CheckBox checkBox = (CheckBox) itemView.findViewById(R$id.mr_cast_checkbox);
+                this.mTextView = (TextView) view.findViewById(R$id.mr_cast_route_name);
+                this.mVolumeSliderLayout = (RelativeLayout) view.findViewById(R$id.mr_cast_volume_layout);
+                CheckBox checkBox = (CheckBox) view.findViewById(R$id.mr_cast_checkbox);
                 this.mCheckBox = checkBox;
                 checkBox.setButtonDrawable(MediaRouterThemeHelper.getCheckBoxDrawableIcon(MediaRouteDynamicControllerDialog.this.mContext));
                 MediaRouterThemeHelper.setIndeterminateProgressBarColor(MediaRouteDynamicControllerDialog.this.mContext, progressBar);
@@ -919,31 +911,40 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
                 TypedValue typedValue = new TypedValue();
                 resources.getValue(R$dimen.mr_dynamic_dialog_row_height, typedValue, true);
                 this.mExpandedLayoutHeight = (int) typedValue.getDimension(displayMetrics);
+                this.mCollapsedLayoutHeight = 0;
             }
 
-            boolean isSelected(MediaRouter.RouteInfo route) {
-                if (route.isSelected()) {
+            /* access modifiers changed from: package-private */
+            public boolean isSelected(MediaRouter.RouteInfo routeInfo) {
+                if (routeInfo.isSelected()) {
                     return true;
                 }
-                MediaRouter.RouteInfo.DynamicGroupState dynamicGroupState = MediaRouteDynamicControllerDialog.this.mSelectedRoute.getDynamicGroupState(route);
-                return dynamicGroupState != null && dynamicGroupState.getSelectionState() == 3;
+                MediaRouter.RouteInfo.DynamicGroupState dynamicGroupState = MediaRouteDynamicControllerDialog.this.mSelectedRoute.getDynamicGroupState(routeInfo);
+                if (dynamicGroupState == null || dynamicGroupState.getSelectionState() != 3) {
+                    return false;
+                }
+                return true;
             }
 
-            private boolean isEnabled(MediaRouter.RouteInfo route) {
-                if (MediaRouteDynamicControllerDialog.this.mUngroupableRoutes.contains(route)) {
+            private boolean isEnabled(MediaRouter.RouteInfo routeInfo) {
+                if (MediaRouteDynamicControllerDialog.this.mUngroupableRoutes.contains(routeInfo)) {
                     return false;
                 }
-                if (isSelected(route) && MediaRouteDynamicControllerDialog.this.mSelectedRoute.getMemberRoutes().size() < 2) {
+                if (isSelected(routeInfo) && MediaRouteDynamicControllerDialog.this.mSelectedRoute.getMemberRoutes().size() < 2) {
                     return false;
                 }
-                if (!isSelected(route)) {
+                if (!isSelected(routeInfo)) {
                     return true;
                 }
-                MediaRouter.RouteInfo.DynamicGroupState dynamicGroupState = MediaRouteDynamicControllerDialog.this.mSelectedRoute.getDynamicGroupState(route);
-                return dynamicGroupState != null && dynamicGroupState.isUnselectable();
+                MediaRouter.RouteInfo.DynamicGroupState dynamicGroupState = MediaRouteDynamicControllerDialog.this.mSelectedRoute.getDynamicGroupState(routeInfo);
+                if (dynamicGroupState == null || !dynamicGroupState.isUnselectable()) {
+                    return false;
+                }
+                return true;
             }
 
-            void bindRouteViewHolder(Item item) {
+            /* access modifiers changed from: package-private */
+            public void bindRouteViewHolder(Item item) {
                 MediaRouter.RouteInfo routeInfo = (MediaRouter.RouteInfo) item.getData();
                 if (routeInfo == MediaRouteDynamicControllerDialog.this.mSelectedRoute && routeInfo.getMemberRoutes().size() > 0) {
                     Iterator<MediaRouter.RouteInfo> it = routeInfo.getMemberRoutes().iterator();
@@ -988,21 +989,21 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
                 checkBox.setAlpha(f);
             }
 
-            void showSelectingProgress(boolean selected, boolean shouldChangeHeight) {
+            /* access modifiers changed from: package-private */
+            public void showSelectingProgress(boolean z, boolean z2) {
                 this.mCheckBox.setEnabled(false);
                 this.mItemView.setEnabled(false);
-                this.mCheckBox.setChecked(selected);
-                if (selected) {
+                this.mCheckBox.setChecked(z);
+                if (z) {
                     this.mImageView.setVisibility(4);
                     this.mProgressBar.setVisibility(0);
                 }
-                if (shouldChangeHeight) {
-                    RecyclerAdapter.this.animateLayoutHeight(this.mVolumeSliderLayout, selected ? this.mExpandedLayoutHeight : this.mCollapsedLayoutHeight);
+                if (z2) {
+                    RecyclerAdapter.this.animateLayoutHeight(this.mVolumeSliderLayout, z ? this.mExpandedLayoutHeight : this.mCollapsedLayoutHeight);
                 }
             }
         }
 
-        /* loaded from: classes.dex */
         private class GroupViewHolder extends RecyclerView.ViewHolder {
             final float mDisabledAlpha;
             final ImageView mImageView;
@@ -1011,30 +1012,30 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
             MediaRouter.RouteInfo mRoute;
             final TextView mTextView;
 
-            GroupViewHolder(View itemView) {
-                super(itemView);
-                this.mItemView = itemView;
-                this.mImageView = (ImageView) itemView.findViewById(R$id.mr_cast_group_icon);
-                ProgressBar progressBar = (ProgressBar) itemView.findViewById(R$id.mr_cast_group_progress_bar);
+            GroupViewHolder(View view) {
+                super(view);
+                this.mItemView = view;
+                this.mImageView = (ImageView) view.findViewById(R$id.mr_cast_group_icon);
+                ProgressBar progressBar = (ProgressBar) view.findViewById(R$id.mr_cast_group_progress_bar);
                 this.mProgressBar = progressBar;
-                this.mTextView = (TextView) itemView.findViewById(R$id.mr_cast_group_name);
+                this.mTextView = (TextView) view.findViewById(R$id.mr_cast_group_name);
                 this.mDisabledAlpha = MediaRouterThemeHelper.getDisabledAlpha(MediaRouteDynamicControllerDialog.this.mContext);
                 MediaRouterThemeHelper.setIndeterminateProgressBarColor(MediaRouteDynamicControllerDialog.this.mContext, progressBar);
             }
 
-            private boolean isEnabled(MediaRouter.RouteInfo route) {
+            private boolean isEnabled(MediaRouter.RouteInfo routeInfo) {
                 List<MediaRouter.RouteInfo> memberRoutes = MediaRouteDynamicControllerDialog.this.mSelectedRoute.getMemberRoutes();
-                return (memberRoutes.size() == 1 && memberRoutes.get(0) == route) ? false : true;
+                return (memberRoutes.size() == 1 && memberRoutes.get(0) == routeInfo) ? false : true;
             }
 
-            void bindGroupViewHolder(Item item) {
+            /* access modifiers changed from: package-private */
+            public void bindGroupViewHolder(Item item) {
                 MediaRouter.RouteInfo routeInfo = (MediaRouter.RouteInfo) item.getData();
                 this.mRoute = routeInfo;
                 this.mImageView.setVisibility(0);
                 this.mProgressBar.setVisibility(4);
                 this.mItemView.setAlpha(isEnabled(routeInfo) ? 1.0f : this.mDisabledAlpha);
-                this.mItemView.setOnClickListener(new View.OnClickListener() { // from class: androidx.mediarouter.app.MediaRouteDynamicControllerDialog.RecyclerAdapter.GroupViewHolder.1
-                    @Override // android.view.View.OnClickListener
+                this.mItemView.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View view) {
                         GroupViewHolder groupViewHolder = GroupViewHolder.this;
                         MediaRouteDynamicControllerDialog.this.mRouter.transferToRoute(groupViewHolder.mRoute);
@@ -1048,43 +1049,41 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public final class MediaRouterCallback extends MediaRouter.Callback {
+    private final class MediaRouterCallback extends MediaRouter.Callback {
         MediaRouterCallback() {
         }
 
-        @Override // androidx.mediarouter.media.MediaRouter.Callback
-        public void onRouteAdded(MediaRouter router, MediaRouter.RouteInfo info) {
+        public void onRouteAdded(MediaRouter mediaRouter, MediaRouter.RouteInfo routeInfo) {
             MediaRouteDynamicControllerDialog.this.updateRoutesView();
         }
 
-        @Override // androidx.mediarouter.media.MediaRouter.Callback
-        public void onRouteRemoved(MediaRouter router, MediaRouter.RouteInfo info) {
+        public void onRouteRemoved(MediaRouter mediaRouter, MediaRouter.RouteInfo routeInfo) {
             MediaRouteDynamicControllerDialog.this.updateRoutesView();
         }
 
-        @Override // androidx.mediarouter.media.MediaRouter.Callback
-        public void onRouteSelected(MediaRouter router, MediaRouter.RouteInfo route) {
+        public void onRouteSelected(MediaRouter mediaRouter, MediaRouter.RouteInfo routeInfo) {
             MediaRouteDynamicControllerDialog mediaRouteDynamicControllerDialog = MediaRouteDynamicControllerDialog.this;
-            mediaRouteDynamicControllerDialog.mSelectedRoute = route;
+            mediaRouteDynamicControllerDialog.mSelectedRoute = routeInfo;
             mediaRouteDynamicControllerDialog.mIsSelectingRoute = false;
             mediaRouteDynamicControllerDialog.updateViewsIfNeeded();
             MediaRouteDynamicControllerDialog.this.updateRoutes();
         }
 
-        @Override // androidx.mediarouter.media.MediaRouter.Callback
-        public void onRouteUnselected(MediaRouter router, MediaRouter.RouteInfo route) {
+        public void onRouteUnselected(MediaRouter mediaRouter, MediaRouter.RouteInfo routeInfo) {
             MediaRouteDynamicControllerDialog.this.updateRoutesView();
         }
 
-        @Override // androidx.mediarouter.media.MediaRouter.Callback
-        public void onRouteChanged(MediaRouter router, MediaRouter.RouteInfo route) {
+        public void onRouteChanged(MediaRouter mediaRouter, MediaRouter.RouteInfo routeInfo) {
             boolean z;
             MediaRouter.RouteInfo.DynamicGroupState dynamicGroupState;
-            if (route == MediaRouteDynamicControllerDialog.this.mSelectedRoute && route.getDynamicGroupController() != null) {
-                for (MediaRouter.RouteInfo routeInfo : route.getProvider().getRoutes()) {
-                    if (!MediaRouteDynamicControllerDialog.this.mSelectedRoute.getMemberRoutes().contains(routeInfo) && (dynamicGroupState = MediaRouteDynamicControllerDialog.this.mSelectedRoute.getDynamicGroupState(routeInfo)) != null && dynamicGroupState.isGroupable() && !MediaRouteDynamicControllerDialog.this.mGroupableRoutes.contains(routeInfo)) {
+            if (routeInfo == MediaRouteDynamicControllerDialog.this.mSelectedRoute && routeInfo.getDynamicGroupController() != null) {
+                Iterator<MediaRouter.RouteInfo> it = routeInfo.getProvider().getRoutes().iterator();
+                while (true) {
+                    if (!it.hasNext()) {
+                        break;
+                    }
+                    MediaRouter.RouteInfo next = it.next();
+                    if (!MediaRouteDynamicControllerDialog.this.mSelectedRoute.getMemberRoutes().contains(next) && (dynamicGroupState = MediaRouteDynamicControllerDialog.this.mSelectedRoute.getDynamicGroupState(next)) != null && dynamicGroupState.isGroupable() && !MediaRouteDynamicControllerDialog.this.mGroupableRoutes.contains(next)) {
                         z = true;
                         break;
                     }
@@ -1099,28 +1098,23 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
             MediaRouteDynamicControllerDialog.this.updateRoutesView();
         }
 
-        @Override // androidx.mediarouter.media.MediaRouter.Callback
-        public void onRouteVolumeChanged(MediaRouter router, MediaRouter.RouteInfo route) {
+        public void onRouteVolumeChanged(MediaRouter mediaRouter, MediaRouter.RouteInfo routeInfo) {
             MediaRouteVolumeSliderHolder mediaRouteVolumeSliderHolder;
-            int volume = route.getVolume();
+            int volume = routeInfo.getVolume();
             if (MediaRouteDynamicControllerDialog.DEBUG) {
                 Log.d("MediaRouteCtrlDialog", "onRouteVolumeChanged(), route.getVolume:" + volume);
             }
             MediaRouteDynamicControllerDialog mediaRouteDynamicControllerDialog = MediaRouteDynamicControllerDialog.this;
-            if (mediaRouteDynamicControllerDialog.mRouteForVolumeUpdatingByUser == route || (mediaRouteVolumeSliderHolder = mediaRouteDynamicControllerDialog.mVolumeSliderHolderMap.get(route.getId())) == null) {
-                return;
+            if (mediaRouteDynamicControllerDialog.mRouteForVolumeUpdatingByUser != routeInfo && (mediaRouteVolumeSliderHolder = mediaRouteDynamicControllerDialog.mVolumeSliderHolderMap.get(routeInfo.getId())) != null) {
+                mediaRouteVolumeSliderHolder.updateVolume();
             }
-            mediaRouteVolumeSliderHolder.updateVolume();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public final class MediaControllerCallback extends MediaControllerCompat.Callback {
+    private final class MediaControllerCallback extends MediaControllerCompat.Callback {
         MediaControllerCallback() {
         }
 
-        @Override // android.support.v4.media.session.MediaControllerCompat.Callback
         public void onSessionDestroyed() {
             MediaRouteDynamicControllerDialog mediaRouteDynamicControllerDialog = MediaRouteDynamicControllerDialog.this;
             MediaControllerCompat mediaControllerCompat = mediaRouteDynamicControllerDialog.mMediaController;
@@ -1130,17 +1124,14 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
             }
         }
 
-        @Override // android.support.v4.media.session.MediaControllerCompat.Callback
-        public void onMetadataChanged(MediaMetadataCompat metadata) {
-            MediaRouteDynamicControllerDialog.this.mDescription = metadata == null ? null : metadata.getDescription();
+        public void onMetadataChanged(MediaMetadataCompat mediaMetadataCompat) {
+            MediaRouteDynamicControllerDialog.this.mDescription = mediaMetadataCompat == null ? null : mediaMetadataCompat.getDescription();
             MediaRouteDynamicControllerDialog.this.reloadIconIfNeeded();
             MediaRouteDynamicControllerDialog.this.updateMetadataViews();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class FetchArtTask extends AsyncTask<Void, Void, Bitmap> {
+    private class FetchArtTask extends AsyncTask<Void, Void, Bitmap> {
         private int mBackgroundColor;
         private final Bitmap mIconBitmap;
         private final Uri mIconUri;
@@ -1158,149 +1149,188 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
             this.mIconUri = mediaDescriptionCompat2 != null ? mediaDescriptionCompat2.getIconUri() : uri;
         }
 
-        Bitmap getIconBitmap() {
+        /* access modifiers changed from: package-private */
+        public Bitmap getIconBitmap() {
             return this.mIconBitmap;
         }
 
-        Uri getIconUri() {
+        /* access modifiers changed from: package-private */
+        public Uri getIconUri() {
             return this.mIconUri;
         }
 
-        @Override // android.os.AsyncTask
-        protected void onPreExecute() {
+        /* access modifiers changed from: protected */
+        public void onPreExecute() {
             MediaRouteDynamicControllerDialog.this.clearLoadedBitmap();
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        /* JADX WARN: Multi-variable type inference failed */
-        /* JADX WARN: Removed duplicated region for block: B:74:0x00d0  */
-        /* JADX WARN: Removed duplicated region for block: B:76:0x00e5  */
-        /* JADX WARN: Type inference failed for: r4v0 */
-        /* JADX WARN: Type inference failed for: r4v1 */
-        /* JADX WARN: Type inference failed for: r4v2, types: [java.io.InputStream] */
-        @Override // android.os.AsyncTask
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
-        public Bitmap doInBackground(Void... arg) {
-            InputStream inputStream;
-            Bitmap bitmap = this.mIconBitmap;
-            int i = 0;
-            ?? r4 = 0;
-            if (bitmap == null) {
-                Uri uri = this.mIconUri;
-                try {
-                    if (uri != null) {
-                        try {
-                            inputStream = openInputStreamByScheme(uri);
-                            try {
-                                if (inputStream == null) {
-                                    Log.w("MediaRouteCtrlDialog", "Unable to open: " + this.mIconUri);
-                                    if (inputStream != null) {
-                                        try {
-                                            inputStream.close();
-                                        } catch (IOException unused) {
-                                        }
-                                    }
-                                    return null;
-                                }
-                                BitmapFactory.Options options = new BitmapFactory.Options();
-                                options.inJustDecodeBounds = true;
-                                BitmapFactory.decodeStream(inputStream, null, options);
-                                if (options.outWidth == 0 || options.outHeight == 0) {
-                                    try {
-                                        inputStream.close();
-                                    } catch (IOException unused2) {
-                                    }
-                                    return null;
-                                }
-                                try {
-                                    inputStream.reset();
-                                } catch (IOException unused3) {
-                                    inputStream.close();
-                                    inputStream = openInputStreamByScheme(this.mIconUri);
-                                    if (inputStream == null) {
-                                        Log.w("MediaRouteCtrlDialog", "Unable to open: " + this.mIconUri);
-                                        if (inputStream != null) {
-                                            try {
-                                                inputStream.close();
-                                            } catch (IOException unused4) {
-                                            }
-                                        }
-                                        return null;
-                                    }
-                                }
-                                options.inJustDecodeBounds = false;
-                                options.inSampleSize = Math.max(1, Integer.highestOneBit(options.outHeight / MediaRouteDynamicControllerDialog.this.mContext.getResources().getDimensionPixelSize(R$dimen.mr_cast_meta_art_size)));
-                                if (isCancelled()) {
-                                    try {
-                                        inputStream.close();
-                                    } catch (IOException unused5) {
-                                    }
-                                    return null;
-                                }
-                                Bitmap decodeStream = BitmapFactory.decodeStream(inputStream, null, options);
-                                try {
-                                    inputStream.close();
-                                } catch (IOException unused6) {
-                                }
-                                bitmap = decodeStream;
-                            } catch (IOException e) {
-                                e = e;
-                                Log.w("MediaRouteCtrlDialog", "Unable to open: " + this.mIconUri, e);
-                                if (inputStream != null) {
-                                    try {
-                                        inputStream.close();
-                                    } catch (IOException unused7) {
-                                    }
-                                }
-                                bitmap = null;
-                                if (!MediaRouteDynamicControllerDialog.isBitmapRecycled(bitmap)) {
-                                }
-                            }
-                        } catch (IOException e2) {
-                            e = e2;
-                            inputStream = null;
-                        } catch (Throwable th) {
-                            th = th;
-                            if (r4 != 0) {
-                                try {
-                                    r4.close();
-                                } catch (IOException unused8) {
-                                }
-                            }
-                            throw th;
-                        }
-                    }
-                    bitmap = null;
-                } catch (Throwable th2) {
-                    th = th2;
-                    r4 = uri;
-                }
-            }
-            if (!MediaRouteDynamicControllerDialog.isBitmapRecycled(bitmap)) {
-                Log.w("MediaRouteCtrlDialog", "Can't use recycled bitmap: " + bitmap);
-                return null;
-            }
-            if (bitmap != null && bitmap.getWidth() < bitmap.getHeight()) {
-                Palette generate = new Palette.Builder(bitmap).maximumColorCount(1).generate();
-                if (!generate.getSwatches().isEmpty()) {
-                    i = ((Palette.Swatch) generate.getSwatches().get(0)).getRgb();
-                }
-                this.mBackgroundColor = i;
-            }
-            return bitmap;
+        /* access modifiers changed from: protected */
+        /* JADX WARNING: Failed to process nested try/catch */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:21:0x0048 */
+        /* JADX WARNING: Removed duplicated region for block: B:24:0x0053 A[Catch:{ IOException -> 0x00a1 }] */
+        /* JADX WARNING: Removed duplicated region for block: B:54:0x00bd A[SYNTHETIC, Splitter:B:54:0x00bd] */
+        /* JADX WARNING: Removed duplicated region for block: B:59:0x00c5 A[SYNTHETIC, Splitter:B:59:0x00c5] */
+        /* JADX WARNING: Removed duplicated region for block: B:67:0x00d0  */
+        /* JADX WARNING: Removed duplicated region for block: B:69:0x00e5 A[ADDED_TO_REGION] */
+        /* Code decompiled incorrectly, please refer to instructions dump. */
+        public android.graphics.Bitmap doInBackground(java.lang.Void... r9) {
+            /*
+                r8 = this;
+                java.lang.String r9 = "Unable to open: "
+                android.graphics.Bitmap r0 = r8.mIconBitmap
+                r1 = 0
+                r2 = 1
+                java.lang.String r3 = "MediaRouteCtrlDialog"
+                r4 = 0
+                if (r0 == 0) goto L_0x000d
+                goto L_0x00ca
+            L_0x000d:
+                android.net.Uri r0 = r8.mIconUri
+                if (r0 == 0) goto L_0x00c9
+                java.io.InputStream r0 = r8.openInputStreamByScheme(r0)     // Catch:{ IOException -> 0x00a5, all -> 0x00a3 }
+                if (r0 != 0) goto L_0x0031
+                java.lang.StringBuilder r5 = new java.lang.StringBuilder     // Catch:{ IOException -> 0x00a1 }
+                r5.<init>()     // Catch:{ IOException -> 0x00a1 }
+                r5.append(r9)     // Catch:{ IOException -> 0x00a1 }
+                android.net.Uri r6 = r8.mIconUri     // Catch:{ IOException -> 0x00a1 }
+                r5.append(r6)     // Catch:{ IOException -> 0x00a1 }
+                java.lang.String r5 = r5.toString()     // Catch:{ IOException -> 0x00a1 }
+                android.util.Log.w(r3, r5)     // Catch:{ IOException -> 0x00a1 }
+                if (r0 == 0) goto L_0x0030
+                r0.close()     // Catch:{ IOException -> 0x0030 }
+            L_0x0030:
+                return r4
+            L_0x0031:
+                android.graphics.BitmapFactory$Options r5 = new android.graphics.BitmapFactory$Options     // Catch:{ IOException -> 0x00a1 }
+                r5.<init>()     // Catch:{ IOException -> 0x00a1 }
+                r5.inJustDecodeBounds = r2     // Catch:{ IOException -> 0x00a1 }
+                android.graphics.BitmapFactory.decodeStream(r0, r4, r5)     // Catch:{ IOException -> 0x00a1 }
+                int r6 = r5.outWidth     // Catch:{ IOException -> 0x00a1 }
+                if (r6 == 0) goto L_0x009d
+                int r6 = r5.outHeight     // Catch:{ IOException -> 0x00a1 }
+                if (r6 != 0) goto L_0x0044
+                goto L_0x009d
+            L_0x0044:
+                r0.reset()     // Catch:{ IOException -> 0x0048 }
+                goto L_0x006d
+            L_0x0048:
+                r0.close()     // Catch:{ IOException -> 0x00a1 }
+                android.net.Uri r6 = r8.mIconUri     // Catch:{ IOException -> 0x00a1 }
+                java.io.InputStream r0 = r8.openInputStreamByScheme(r6)     // Catch:{ IOException -> 0x00a1 }
+                if (r0 != 0) goto L_0x006d
+                java.lang.StringBuilder r5 = new java.lang.StringBuilder     // Catch:{ IOException -> 0x00a1 }
+                r5.<init>()     // Catch:{ IOException -> 0x00a1 }
+                r5.append(r9)     // Catch:{ IOException -> 0x00a1 }
+                android.net.Uri r6 = r8.mIconUri     // Catch:{ IOException -> 0x00a1 }
+                r5.append(r6)     // Catch:{ IOException -> 0x00a1 }
+                java.lang.String r5 = r5.toString()     // Catch:{ IOException -> 0x00a1 }
+                android.util.Log.w(r3, r5)     // Catch:{ IOException -> 0x00a1 }
+                if (r0 == 0) goto L_0x006c
+                r0.close()     // Catch:{ IOException -> 0x006c }
+            L_0x006c:
+                return r4
+            L_0x006d:
+                r5.inJustDecodeBounds = r1     // Catch:{ IOException -> 0x00a1 }
+                androidx.mediarouter.app.MediaRouteDynamicControllerDialog r6 = androidx.mediarouter.app.MediaRouteDynamicControllerDialog.this     // Catch:{ IOException -> 0x00a1 }
+                android.content.Context r6 = r6.mContext     // Catch:{ IOException -> 0x00a1 }
+                android.content.res.Resources r6 = r6.getResources()     // Catch:{ IOException -> 0x00a1 }
+                int r7 = androidx.mediarouter.R$dimen.mr_cast_meta_art_size     // Catch:{ IOException -> 0x00a1 }
+                int r6 = r6.getDimensionPixelSize(r7)     // Catch:{ IOException -> 0x00a1 }
+                int r7 = r5.outHeight     // Catch:{ IOException -> 0x00a1 }
+                int r7 = r7 / r6
+                int r6 = java.lang.Integer.highestOneBit(r7)     // Catch:{ IOException -> 0x00a1 }
+                int r6 = java.lang.Math.max(r2, r6)     // Catch:{ IOException -> 0x00a1 }
+                r5.inSampleSize = r6     // Catch:{ IOException -> 0x00a1 }
+                boolean r6 = r8.isCancelled()     // Catch:{ IOException -> 0x00a1 }
+                if (r6 == 0) goto L_0x0094
+                r0.close()     // Catch:{ IOException -> 0x0093 }
+            L_0x0093:
+                return r4
+            L_0x0094:
+                android.graphics.Bitmap r9 = android.graphics.BitmapFactory.decodeStream(r0, r4, r5)     // Catch:{ IOException -> 0x00a1 }
+                r0.close()     // Catch:{ IOException -> 0x009b }
+            L_0x009b:
+                r0 = r9
+                goto L_0x00ca
+            L_0x009d:
+                r0.close()     // Catch:{ IOException -> 0x00a0 }
+            L_0x00a0:
+                return r4
+            L_0x00a1:
+                r5 = move-exception
+                goto L_0x00a7
+            L_0x00a3:
+                r8 = move-exception
+                goto L_0x00c3
+            L_0x00a5:
+                r5 = move-exception
+                r0 = r4
+            L_0x00a7:
+                java.lang.StringBuilder r6 = new java.lang.StringBuilder     // Catch:{ all -> 0x00c1 }
+                r6.<init>()     // Catch:{ all -> 0x00c1 }
+                r6.append(r9)     // Catch:{ all -> 0x00c1 }
+                android.net.Uri r9 = r8.mIconUri     // Catch:{ all -> 0x00c1 }
+                r6.append(r9)     // Catch:{ all -> 0x00c1 }
+                java.lang.String r9 = r6.toString()     // Catch:{ all -> 0x00c1 }
+                android.util.Log.w(r3, r9, r5)     // Catch:{ all -> 0x00c1 }
+                if (r0 == 0) goto L_0x00c9
+                r0.close()     // Catch:{ IOException -> 0x00c9 }
+                goto L_0x00c9
+            L_0x00c1:
+                r8 = move-exception
+                r4 = r0
+            L_0x00c3:
+                if (r4 == 0) goto L_0x00c8
+                r4.close()     // Catch:{ IOException -> 0x00c8 }
+            L_0x00c8:
+                throw r8
+            L_0x00c9:
+                r0 = r4
+            L_0x00ca:
+                boolean r9 = androidx.mediarouter.app.MediaRouteDynamicControllerDialog.isBitmapRecycled(r0)
+                if (r9 == 0) goto L_0x00e5
+                java.lang.StringBuilder r8 = new java.lang.StringBuilder
+                r8.<init>()
+                java.lang.String r9 = "Can't use recycled bitmap: "
+                r8.append(r9)
+                r8.append(r0)
+                java.lang.String r8 = r8.toString()
+                android.util.Log.w(r3, r8)
+                return r4
+            L_0x00e5:
+                if (r0 == 0) goto L_0x0119
+                int r9 = r0.getWidth()
+                int r3 = r0.getHeight()
+                if (r9 >= r3) goto L_0x0119
+                androidx.palette.graphics.Palette$Builder r9 = new androidx.palette.graphics.Palette$Builder
+                r9.<init>(r0)
+                androidx.palette.graphics.Palette$Builder r9 = r9.maximumColorCount(r2)
+                androidx.palette.graphics.Palette r9 = r9.generate()
+                java.util.List r2 = r9.getSwatches()
+                boolean r2 = r2.isEmpty()
+                if (r2 == 0) goto L_0x0109
+                goto L_0x0117
+            L_0x0109:
+                java.util.List r9 = r9.getSwatches()
+                java.lang.Object r9 = r9.get(r1)
+                androidx.palette.graphics.Palette$Swatch r9 = (androidx.palette.graphics.Palette.Swatch) r9
+                int r1 = r9.getRgb()
+            L_0x0117:
+                r8.mBackgroundColor = r1
+            L_0x0119:
+                return r0
+            */
+            throw new UnsupportedOperationException("Method not decompiled: androidx.mediarouter.app.MediaRouteDynamicControllerDialog.FetchArtTask.doInBackground(java.lang.Void[]):android.graphics.Bitmap");
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // android.os.AsyncTask
-        public void onPostExecute(Bitmap art) {
+        /* access modifiers changed from: protected */
+        public void onPostExecute(Bitmap bitmap) {
             MediaRouteDynamicControllerDialog mediaRouteDynamicControllerDialog = MediaRouteDynamicControllerDialog.this;
             mediaRouteDynamicControllerDialog.mFetchArtTask = null;
             if (!ObjectsCompat.equals(mediaRouteDynamicControllerDialog.mArtIconBitmap, this.mIconBitmap) || !ObjectsCompat.equals(MediaRouteDynamicControllerDialog.this.mArtIconUri, this.mIconUri)) {
                 MediaRouteDynamicControllerDialog mediaRouteDynamicControllerDialog2 = MediaRouteDynamicControllerDialog.this;
                 mediaRouteDynamicControllerDialog2.mArtIconBitmap = this.mIconBitmap;
-                mediaRouteDynamicControllerDialog2.mArtIconLoadedBitmap = art;
+                mediaRouteDynamicControllerDialog2.mArtIconLoadedBitmap = bitmap;
                 mediaRouteDynamicControllerDialog2.mArtIconUri = this.mIconUri;
                 mediaRouteDynamicControllerDialog2.mArtIconBackgroundColor = this.mBackgroundColor;
                 mediaRouteDynamicControllerDialog2.mArtIconIsLoaded = true;
@@ -1309,34 +1339,31 @@ public class MediaRouteDynamicControllerDialog extends AppCompatDialog {
         }
 
         private InputStream openInputStreamByScheme(Uri uri) throws IOException {
-            InputStream openInputStream;
+            InputStream inputStream;
             String lowerCase = uri.getScheme().toLowerCase();
             if ("android.resource".equals(lowerCase) || "content".equals(lowerCase) || "file".equals(lowerCase)) {
-                openInputStream = MediaRouteDynamicControllerDialog.this.mContext.getContentResolver().openInputStream(uri);
+                inputStream = MediaRouteDynamicControllerDialog.this.mContext.getContentResolver().openInputStream(uri);
             } else {
                 URLConnection openConnection = new URL(uri.toString()).openConnection();
                 openConnection.setConnectTimeout(30000);
                 openConnection.setReadTimeout(30000);
-                openInputStream = openConnection.getInputStream();
+                inputStream = openConnection.getInputStream();
             }
-            if (openInputStream == null) {
+            if (inputStream == null) {
                 return null;
             }
-            return new BufferedInputStream(openInputStream);
+            return new BufferedInputStream(inputStream);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static final class RouteComparator implements Comparator<MediaRouter.RouteInfo> {
+    static final class RouteComparator implements Comparator<MediaRouter.RouteInfo> {
         static final RouteComparator sInstance = new RouteComparator();
 
         RouteComparator() {
         }
 
-        @Override // java.util.Comparator
-        public int compare(MediaRouter.RouteInfo lhs, MediaRouter.RouteInfo rhs) {
-            return lhs.getName().compareToIgnoreCase(rhs.getName());
+        public int compare(MediaRouter.RouteInfo routeInfo, MediaRouter.RouteInfo routeInfo2) {
+            return routeInfo.getName().compareToIgnoreCase(routeInfo2.getName());
         }
     }
 }

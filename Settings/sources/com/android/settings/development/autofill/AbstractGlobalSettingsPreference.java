@@ -8,34 +8,25 @@ import android.view.View;
 import android.widget.EditText;
 import com.android.settings.Utils;
 import com.android.settingslib.CustomEditTextPreferenceCompat;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public abstract class AbstractGlobalSettingsPreference extends CustomEditTextPreferenceCompat {
+
+abstract class AbstractGlobalSettingsPreference extends CustomEditTextPreferenceCompat {
     private final int mDefaultValue;
     private final String mKey;
     private final AutofillDeveloperSettingsObserver mObserver;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public AbstractGlobalSettingsPreference(Context context, AttributeSet attributeSet, String str, int i) {
+    protected AbstractGlobalSettingsPreference(Context context, AttributeSet attributeSet, String str, int i) {
         super(context, attributeSet);
         this.mKey = str;
         this.mDefaultValue = i;
-        this.mObserver = new AutofillDeveloperSettingsObserver(context, new Runnable() { // from class: com.android.settings.development.autofill.AbstractGlobalSettingsPreference$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                AbstractGlobalSettingsPreference.this.lambda$new$0();
-            }
-        });
+        this.mObserver = new AutofillDeveloperSettingsObserver(context, new AbstractGlobalSettingsPreference$$ExternalSyntheticLambda0(this));
     }
 
-    @Override // androidx.preference.Preference
     public void onAttached() {
         super.onAttached();
         this.mObserver.register();
         lambda$new$0();
     }
 
-    @Override // androidx.preference.Preference
     public void onDetached() {
         this.mObserver.unregister();
         super.onDetached();
@@ -45,14 +36,14 @@ public abstract class AbstractGlobalSettingsPreference extends CustomEditTextPre
         return Integer.toString(Settings.Global.getInt(getContext().getContentResolver(), this.mKey, this.mDefaultValue));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     /* renamed from: updateSummary */
     public void lambda$new$0() {
-        setSummary(getCurrentValue());
+        setSummary((CharSequence) getCurrentValue());
     }
 
-    @Override // com.android.settingslib.CustomEditTextPreferenceCompat
-    protected void onBindDialogView(View view) {
+    /* access modifiers changed from: protected */
+    public void onBindDialogView(View view) {
         super.onBindDialogView(view);
         EditText editText = (EditText) view.findViewById(16908291);
         if (editText != null) {
@@ -62,8 +53,8 @@ public abstract class AbstractGlobalSettingsPreference extends CustomEditTextPre
         }
     }
 
-    @Override // com.android.settingslib.CustomEditTextPreferenceCompat
-    protected void onDialogClosed(boolean z) {
+    /* access modifiers changed from: protected */
+    public void onDialogClosed(boolean z) {
         if (z) {
             String text = getText();
             int i = this.mDefaultValue;

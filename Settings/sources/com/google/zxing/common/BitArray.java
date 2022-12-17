@@ -1,5 +1,5 @@
 package com.google.zxing.common;
-/* loaded from: classes2.dex */
+
 public final class BitArray {
     private int[] bits;
     private int size;
@@ -94,10 +94,11 @@ public final class BitArray {
 
     public boolean isRange(int i, int i2, boolean z) {
         int i3;
-        if (i2 >= i) {
-            if (i2 == i) {
-                return true;
-            }
+        if (i2 < i) {
+            throw new IllegalArgumentException();
+        } else if (i2 == i) {
+            return true;
+        } else {
             int i4 = i2 - 1;
             int i5 = i >> 5;
             int i6 = i4 >> 5;
@@ -125,7 +126,6 @@ public final class BitArray {
             }
             return true;
         }
-        throw new IllegalArgumentException();
     }
 
     public void appendBit(boolean z) {
@@ -167,11 +167,12 @@ public final class BitArray {
             int i = 0;
             while (true) {
                 int[] iArr = this.bits;
-                if (i >= iArr.length) {
+                if (i < iArr.length) {
+                    iArr[i] = iArr[i] ^ bitArray.bits[i];
+                    i++;
+                } else {
                     return;
                 }
-                iArr[i] = iArr[i] ^ bitArray.bits[i];
-                i++;
             }
         } else {
             throw new IllegalArgumentException("Sizes don't match");
@@ -208,7 +209,7 @@ public final class BitArray {
     }
 
     private static int[] makeArray(int i) {
-        return new int[(i + 31) >> 5];
+        return new int[((i + 31) >> 5)];
     }
 
     public String toString() {

@@ -8,34 +8,40 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.util.Log;
 import com.android.settingslib.R$string;
+import com.android.settingslib.Utils;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class HearingAidProfile implements LocalBluetoothProfile {
-    private static boolean V = true;
+    /* access modifiers changed from: private */
+
+    /* renamed from: V */
+    public static boolean f230V = true;
     private final BluetoothAdapter mBluetoothAdapter;
     private Context mContext;
-    private final CachedBluetoothDeviceManager mDeviceManager;
-    private boolean mIsProfileReady;
-    private final LocalBluetoothProfileManager mProfileManager;
-    private BluetoothHearingAid mService;
+    /* access modifiers changed from: private */
+    public final CachedBluetoothDeviceManager mDeviceManager;
+    /* access modifiers changed from: private */
+    public boolean mIsProfileReady;
+    /* access modifiers changed from: private */
+    public final LocalBluetoothProfileManager mProfileManager;
+    /* access modifiers changed from: private */
+    public BluetoothHearingAid mService;
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean accessProfileEnabled() {
         return false;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getDrawableResource(BluetoothClass bluetoothClass) {
-        return 17302330;
+        return 17302338;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getOrdinal() {
         return 1;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getProfileId() {
         return 21;
     }
@@ -44,12 +50,10 @@ public class HearingAidProfile implements LocalBluetoothProfile {
         return "HearingAid";
     }
 
-    /* loaded from: classes.dex */
     private final class HearingAidServiceListener implements BluetoothProfile.ServiceListener {
         private HearingAidServiceListener() {
         }
 
-        @Override // android.bluetooth.BluetoothProfile.ServiceListener
         public void onServiceConnected(int i, BluetoothProfile bluetoothProfile) {
             HearingAidProfile.this.mService = (BluetoothHearingAid) bluetoothProfile;
             List<BluetoothDevice> connectedDevices = HearingAidProfile.this.mService.getConnectedDevices();
@@ -57,7 +61,7 @@ public class HearingAidProfile implements LocalBluetoothProfile {
                 BluetoothDevice remove = connectedDevices.remove(0);
                 CachedBluetoothDevice findDevice = HearingAidProfile.this.mDeviceManager.findDevice(remove);
                 if (findDevice == null) {
-                    if (HearingAidProfile.V) {
+                    if (HearingAidProfile.f230V) {
                         Log.d("HearingAidProfile", "HearingAidProfile found new device: " + remove);
                     }
                     findDevice = HearingAidProfile.this.mDeviceManager.addDevice(remove);
@@ -70,19 +74,16 @@ public class HearingAidProfile implements LocalBluetoothProfile {
             HearingAidProfile.this.mProfileManager.callServiceConnectedListeners();
         }
 
-        @Override // android.bluetooth.BluetoothProfile.ServiceListener
         public void onServiceDisconnected(int i) {
             HearingAidProfile.this.mIsProfileReady = false;
         }
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean isProfileReady() {
         return this.mIsProfileReady;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public HearingAidProfile(Context context, CachedBluetoothDeviceManager cachedBluetoothDeviceManager, LocalBluetoothProfileManager localBluetoothProfileManager) {
+    HearingAidProfile(Context context, CachedBluetoothDeviceManager cachedBluetoothDeviceManager, LocalBluetoothProfileManager localBluetoothProfileManager) {
         this.mContext = context;
         this.mDeviceManager = cachedBluetoothDeviceManager;
         this.mProfileManager = localBluetoothProfileManager;
@@ -103,7 +104,6 @@ public class HearingAidProfile implements LocalBluetoothProfile {
         return bluetoothHearingAid.getDevicesMatchingConnectionStates(iArr);
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getConnectionStatus(BluetoothDevice bluetoothDevice) {
         BluetoothHearingAid bluetoothHearingAid = this.mService;
         if (bluetoothHearingAid == null) {
@@ -113,56 +113,92 @@ public class HearingAidProfile implements LocalBluetoothProfile {
     }
 
     public boolean setActiveDevice(BluetoothDevice bluetoothDevice) {
-        BluetoothAdapter bluetoothAdapter = this.mBluetoothAdapter;
-        if (bluetoothAdapter == null) {
+        if (this.mBluetoothAdapter == null) {
             return false;
         }
+        boolean isAudioModeOngoingCall = Utils.isAudioModeOngoingCall(this.mContext);
         if (bluetoothDevice == null) {
-            return bluetoothAdapter.removeActiveDevice(2);
+            return this.mBluetoothAdapter.removeActiveDevice(isAudioModeOngoingCall);
         }
-        return bluetoothAdapter.setActiveDevice(bluetoothDevice, 2);
+        return this.mBluetoothAdapter.setActiveDevice(bluetoothDevice, isAudioModeOngoingCall ? 1 : 0);
     }
 
     public List<BluetoothDevice> getActiveDevices() {
-        BluetoothHearingAid bluetoothHearingAid = this.mService;
-        return bluetoothHearingAid == null ? new ArrayList() : bluetoothHearingAid.getActiveDevices();
+        BluetoothAdapter bluetoothAdapter = this.mBluetoothAdapter;
+        if (bluetoothAdapter == null) {
+            return new ArrayList();
+        }
+        return bluetoothAdapter.getActiveDevices(21);
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean isEnabled(BluetoothDevice bluetoothDevice) {
         BluetoothHearingAid bluetoothHearingAid = this.mService;
-        return (bluetoothHearingAid == null || bluetoothDevice == null || bluetoothHearingAid.getConnectionPolicy(bluetoothDevice) <= 0) ? false : true;
+        if (bluetoothHearingAid == null || bluetoothDevice == null || bluetoothHearingAid.getConnectionPolicy(bluetoothDevice) <= 0) {
+            return false;
+        }
+        return true;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean setEnabled(BluetoothDevice bluetoothDevice, boolean z) {
         BluetoothHearingAid bluetoothHearingAid = this.mService;
         if (bluetoothHearingAid == null || bluetoothDevice == null) {
             return false;
         }
-        if (z) {
-            if (bluetoothHearingAid.getConnectionPolicy(bluetoothDevice) >= 100) {
-                return false;
-            }
+        if (!z) {
+            return bluetoothHearingAid.setConnectionPolicy(bluetoothDevice, 0);
+        }
+        if (bluetoothHearingAid.getConnectionPolicy(bluetoothDevice) < 100) {
             return this.mService.setConnectionPolicy(bluetoothDevice, 100);
         }
-        return bluetoothHearingAid.setConnectionPolicy(bluetoothDevice, 0);
+        return false;
     }
 
     public long getHiSyncId(BluetoothDevice bluetoothDevice) {
         BluetoothHearingAid bluetoothHearingAid = this.mService;
         if (bluetoothHearingAid == null || bluetoothDevice == null) {
-            return 0L;
+            return 0;
         }
         return bluetoothHearingAid.getHiSyncId(bluetoothDevice);
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
+    public int getDeviceSide(BluetoothDevice bluetoothDevice) {
+        BluetoothHearingAid bluetoothHearingAid = this.mService;
+        if (bluetoothHearingAid == null) {
+            Log.w("HearingAidProfile", "Proxy not attached to HearingAidService");
+            return -1;
+        }
+        try {
+            Method declaredMethod = bluetoothHearingAid.getClass().getDeclaredMethod("getDeviceSideInternal", new Class[]{BluetoothDevice.class});
+            declaredMethod.setAccessible(true);
+            return ((Integer) declaredMethod.invoke(this.mService, new Object[]{bluetoothDevice})).intValue();
+        } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            Log.e("HearingAidProfile", "fail to get getDeviceSideInternal\n" + e.toString() + "\n" + Log.getStackTraceString(new Throwable()));
+            return -1;
+        }
+    }
+
+    public int getDeviceMode(BluetoothDevice bluetoothDevice) {
+        BluetoothHearingAid bluetoothHearingAid = this.mService;
+        if (bluetoothHearingAid == null) {
+            Log.w("HearingAidProfile", "Proxy not attached to HearingAidService");
+            return -1;
+        }
+        try {
+            Method declaredMethod = bluetoothHearingAid.getClass().getDeclaredMethod("getDeviceModeInternal", new Class[]{BluetoothDevice.class});
+            declaredMethod.setAccessible(true);
+            return ((Integer) declaredMethod.invoke(this.mService, new Object[]{bluetoothDevice})).intValue();
+        } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            Log.e("HearingAidProfile", "fail to get getDeviceModeInternal\n" + e.toString() + "\n" + Log.getStackTraceString(new Throwable()));
+            return -1;
+        }
+    }
+
     public int getNameResource(BluetoothDevice bluetoothDevice) {
         return R$string.bluetooth_profile_hearing_aid;
     }
 
-    protected void finalize() {
+    /* access modifiers changed from: protected */
+    public void finalize() {
         Log.d("HearingAidProfile", "finalize()");
         if (this.mService != null) {
             try {

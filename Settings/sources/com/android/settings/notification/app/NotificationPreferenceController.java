@@ -14,8 +14,20 @@ import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.core.AbstractPreferenceController;
 import java.util.Comparator;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public abstract class NotificationPreferenceController extends AbstractPreferenceController {
+    public static final Comparator<NotificationChannel> CHANNEL_COMPARATOR = new NotificationPreferenceController$$ExternalSyntheticLambda0();
+    public static final Comparator<NotificationChannelGroup> CHANNEL_GROUP_COMPARATOR = new Comparator<NotificationChannelGroup>() {
+        public int compare(NotificationChannelGroup notificationChannelGroup, NotificationChannelGroup notificationChannelGroup2) {
+            if (notificationChannelGroup.getId() == null && notificationChannelGroup2.getId() != null) {
+                return 1;
+            }
+            if (notificationChannelGroup2.getId() != null || notificationChannelGroup.getId() == null) {
+                return notificationChannelGroup.getId().compareTo(notificationChannelGroup2.getId());
+            }
+            return -1;
+        }
+    };
     protected RestrictedLockUtils.EnforcedAdmin mAdmin;
     protected NotificationBackend.AppRow mAppRow;
     protected final NotificationBackend mBackend;
@@ -28,21 +40,13 @@ public abstract class NotificationPreferenceController extends AbstractPreferenc
     protected final PackageManager mPm;
     protected List<String> mPreferenceFilter;
     protected final UserManager mUm;
-    public static final Comparator<NotificationChannelGroup> CHANNEL_GROUP_COMPARATOR = new Comparator<NotificationChannelGroup>() { // from class: com.android.settings.notification.app.NotificationPreferenceController.1
-        @Override // java.util.Comparator
-        public int compare(NotificationChannelGroup notificationChannelGroup, NotificationChannelGroup notificationChannelGroup2) {
-            if (notificationChannelGroup.getId() != null || notificationChannelGroup2.getId() == null) {
-                if (notificationChannelGroup2.getId() == null && notificationChannelGroup.getId() != null) {
-                    return -1;
-                }
-                return notificationChannelGroup.getId().compareTo(notificationChannelGroup2.getId());
-            }
-            return 1;
-        }
-    };
-    public static final Comparator<NotificationChannel> CHANNEL_COMPARATOR = NotificationPreferenceController$$ExternalSyntheticLambda0.INSTANCE;
+    boolean overrideCanBlock;
+    boolean overrideCanBlockValue;
+    boolean overrideCanConfigure;
+    boolean overrideCanConfigureValue;
 
-    abstract boolean isIncludedInFilter();
+    /* access modifiers changed from: package-private */
+    public abstract boolean isIncludedInFilter();
 
     public NotificationPreferenceController(Context context, NotificationBackend notificationBackend) {
         super(context);
@@ -53,23 +57,25 @@ public abstract class NotificationPreferenceController extends AbstractPreferenc
         this.mPm = context.getPackageManager();
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         NotificationBackend.AppRow appRow = this.mAppRow;
-        if (appRow != null && !appRow.banned) {
-            NotificationChannelGroup notificationChannelGroup = this.mChannelGroup;
-            if (notificationChannelGroup != null && notificationChannelGroup.isBlocked()) {
-                return false;
-            }
-            if (this.mChannel == null) {
-                return true;
-            }
-            return (this.mPreferenceFilter == null || isIncludedInFilter()) && this.mChannel.getImportance() != 0;
+        if (appRow == null || appRow.banned) {
+            return false;
+        }
+        NotificationChannelGroup notificationChannelGroup = this.mChannelGroup;
+        if (notificationChannelGroup != null && notificationChannelGroup.isBlocked()) {
+            return false;
+        }
+        if (this.mChannel == null) {
+            return true;
+        }
+        if ((this.mPreferenceFilter == null || isIncludedInFilter()) && this.mChannel.getImportance() != 0) {
+            return true;
         }
         return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onResume(NotificationBackend.AppRow appRow, NotificationChannel notificationChannel, NotificationChannelGroup notificationChannelGroup, Drawable drawable, ShortcutInfo shortcutInfo, RestrictedLockUtils.EnforcedAdmin enforcedAdmin, List<String> list) {
         this.mAppRow = appRow;
         this.mChannel = notificationChannel;
@@ -80,7 +86,7 @@ public abstract class NotificationPreferenceController extends AbstractPreferenc
         this.mPreferenceFilter = list;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean checkCanBeVisible(int i) {
         NotificationChannel notificationChannel = this.mChannel;
         if (notificationChannel == null) {
@@ -88,63 +94,116 @@ public abstract class NotificationPreferenceController extends AbstractPreferenc
             return false;
         }
         int importance = notificationChannel.getImportance();
-        return importance == -1000 || importance >= i;
+        if (importance == -1000) {
+            return true;
+        }
+        if (importance >= i) {
+            return true;
+        }
+        return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void saveChannel() {
         NotificationBackend.AppRow appRow;
         NotificationChannel notificationChannel = this.mChannel;
-        if (notificationChannel == null || (appRow = this.mAppRow) == null) {
-            return;
+        if (notificationChannel != null && (appRow = this.mAppRow) != null) {
+            this.mBackend.updateChannel(appRow.pkg, appRow.uid, notificationChannel);
         }
-        this.mBackend.updateChannel(appRow.pkg, appRow.uid, notificationChannel);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean isChannelBlockable() {
         return isChannelBlockable(this.mChannel);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean isChannelBlockable(NotificationChannel notificationChannel) {
-        if (notificationChannel == null || this.mAppRow == null) {
+        NotificationBackend.AppRow appRow;
+        if (this.overrideCanBlock) {
+            return this.overrideCanBlockValue;
+        }
+        if (this.overrideCanConfigure) {
+            return this.overrideCanConfigureValue;
+        }
+        if (notificationChannel == null || (appRow = this.mAppRow) == null) {
             return false;
         }
-        return (notificationChannel.isImportanceLockedByCriticalDeviceFunction() || notificationChannel.isImportanceLockedByOEM()) ? notificationChannel.getImportance() == 0 : notificationChannel.isBlockable() || !this.mAppRow.systemApp || notificationChannel.getImportance() == 0;
+        if (appRow.lockedImportance) {
+            if (notificationChannel.isBlockable() || notificationChannel.getImportance() == 0) {
+                return true;
+            }
+            return false;
+        } else if (notificationChannel.isBlockable() || !this.mAppRow.systemApp || notificationChannel.getImportance() == 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
+    public boolean isAppBlockable() {
+        if (this.overrideCanBlock) {
+            return this.overrideCanBlockValue;
+        }
+        if (this.overrideCanConfigure) {
+            return this.overrideCanConfigureValue;
+        }
+        NotificationBackend.AppRow appRow = this.mAppRow;
+        if (appRow == null) {
+            return true;
+        }
+        boolean z = appRow.systemApp;
+        if (!(!z || (z && appRow.banned)) || appRow.lockedImportance) {
+            return false;
+        }
+        return true;
+    }
+
+    /* access modifiers changed from: protected */
     public boolean isChannelConfigurable(NotificationChannel notificationChannel) {
-        if (notificationChannel == null || this.mAppRow == null) {
+        NotificationBackend.AppRow appRow;
+        if (this.overrideCanConfigure) {
+            return this.overrideCanConfigureValue;
+        }
+        if (notificationChannel == null || (appRow = this.mAppRow) == null) {
             return false;
         }
-        return !notificationChannel.isImportanceLockedByOEM();
+        if (!appRow.lockedImportance || notificationChannel.isBlockable()) {
+            return true;
+        }
+        return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean isChannelGroupBlockable() {
         return isChannelGroupBlockable(this.mChannelGroup);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean isChannelGroupBlockable(NotificationChannelGroup notificationChannelGroup) {
         NotificationBackend.AppRow appRow;
+        if (this.overrideCanBlock) {
+            return this.overrideCanBlockValue;
+        }
+        if (this.overrideCanConfigure) {
+            return this.overrideCanConfigureValue;
+        }
         if (notificationChannelGroup == null || (appRow = this.mAppRow) == null) {
             return false;
         }
-        if (appRow.systemApp) {
+        if (appRow.systemApp || appRow.lockedImportance) {
             return notificationChannelGroup.isBlocked();
         }
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean hasValidGroup() {
         return this.mChannelGroup != null;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public final boolean isDefaultChannel() {
         NotificationChannel notificationChannel = this.mChannel;
         if (notificationChannel == null) {
@@ -153,7 +212,7 @@ public abstract class NotificationPreferenceController extends AbstractPreferenc
         return "miscellaneous".equals(notificationChannel.getId());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ int lambda$static$0(NotificationChannel notificationChannel, NotificationChannel notificationChannel2) {
         if (notificationChannel.isDeleted() != notificationChannel2.isDeleted()) {
             return Boolean.compare(notificationChannel.isDeleted(), notificationChannel2.isDeleted());
@@ -161,9 +220,9 @@ public abstract class NotificationPreferenceController extends AbstractPreferenc
         if (notificationChannel.getId().equals("miscellaneous")) {
             return 1;
         }
-        if (!notificationChannel2.getId().equals("miscellaneous")) {
-            return notificationChannel.getId().compareTo(notificationChannel2.getId());
+        if (notificationChannel2.getId().equals("miscellaneous")) {
+            return -1;
         }
-        return -1;
+        return notificationChannel.getId().compareTo(notificationChannel2.getId());
     }
 }

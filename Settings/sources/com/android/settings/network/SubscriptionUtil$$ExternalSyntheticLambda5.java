@@ -1,18 +1,18 @@
 package com.android.settings.network;
 
 import com.android.settings.network.SubscriptionUtil;
-import java.util.function.Function;
-/* loaded from: classes.dex */
-public final /* synthetic */ class SubscriptionUtil$$ExternalSyntheticLambda5 implements Function {
-    public static final /* synthetic */ SubscriptionUtil$$ExternalSyntheticLambda5 INSTANCE = new SubscriptionUtil$$ExternalSyntheticLambda5();
+import java.util.Set;
+import java.util.function.Predicate;
 
-    private /* synthetic */ SubscriptionUtil$$ExternalSyntheticLambda5() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class SubscriptionUtil$$ExternalSyntheticLambda5 implements Predicate {
+    public final /* synthetic */ Set f$0;
+
+    public /* synthetic */ SubscriptionUtil$$ExternalSyntheticLambda5(Set set) {
+        this.f$0 = set;
     }
 
-    @Override // java.util.function.Function
-    public final Object apply(Object obj) {
-        CharSequence charSequence;
-        charSequence = ((SubscriptionUtil.C1DisplayInfo) obj).uniqueName;
-        return charSequence;
+    public final boolean test(Object obj) {
+        return SubscriptionUtil.lambda$getNtUniqueSubscriptionDisplayNames$23(this.f$0, (SubscriptionUtil.AnonymousClass2DisplayInfo) obj);
     }
 }

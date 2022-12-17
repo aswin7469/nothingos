@@ -2,46 +2,40 @@ package com.google.common.collect;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableCollection;
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import com.google.errorprone.annotations.concurrent.LazyInit;
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
-/* loaded from: classes2.dex */
+
 public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements Set<E> {
-    @LazyInit
     private transient ImmutableList<E> asList;
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static boolean shouldTrim(int i, int i2) {
+    private static boolean shouldTrim(int i, int i2) {
         return i < (i2 >> 1) + (i2 >> 2);
     }
 
-    boolean isHashCodeFast() {
+    /* access modifiers changed from: package-private */
+    public boolean isHashCodeFast() {
         return false;
     }
 
-    @Override // com.google.common.collect.ImmutableCollection, java.util.AbstractCollection, java.util.Collection, java.lang.Iterable
-    /* renamed from: iterator */
-    public /* bridge */ /* synthetic */ Iterator mo831iterator() {
-        return mo759iterator();
-    }
+    public abstract UnmodifiableIterator<E> iterator();
 
-    public static <E> ImmutableSet<E> of() {
+    /* renamed from: of */
+    public static <E> ImmutableSet<E> m28of() {
         return RegularImmutableSet.EMPTY;
     }
 
-    public static <E> ImmutableSet<E> of(E e) {
+    /* renamed from: of */
+    public static <E> ImmutableSet<E> m29of(E e) {
         return new SingletonImmutableSet(e);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static <E> ImmutableSet<E> construct(int i, Object... objArr) {
-        if (i != 0) {
-            if (i == 1) {
-                return of(objArr[0]);
-            }
+    private static <E> ImmutableSet<E> construct(int i, Object... objArr) {
+        if (i == 0) {
+            return m28of();
+        }
+        if (i != 1) {
             int chooseTableSize = chooseTableSize(i);
             Object[] objArr2 = new Object[chooseTableSize];
             int i2 = chooseTableSize - 1;
@@ -69,26 +63,30 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
             }
             Arrays.fill(objArr, i4, i, (Object) null);
             if (i4 == 1) {
-                return new SingletonImmutableSet(objArr[0], i3);
-            }
-            if (chooseTableSize(i4) < chooseTableSize / 2) {
+                Object obj2 = objArr[0];
+                Objects.requireNonNull(obj2);
+                return new SingletonImmutableSet(obj2);
+            } else if (chooseTableSize(i4) < chooseTableSize / 2) {
                 return construct(i4, objArr);
+            } else {
+                if (shouldTrim(i4, objArr.length)) {
+                    objArr = Arrays.copyOf(objArr, i4);
+                }
+                return new RegularImmutableSet(objArr, i3, objArr2, i2, i4);
             }
-            if (shouldTrim(i4, objArr.length)) {
-                objArr = Arrays.copyOf(objArr, i4);
-            }
-            return new RegularImmutableSet(objArr, i3, objArr2, i2, i4);
+        } else {
+            Object obj3 = objArr[0];
+            Objects.requireNonNull(obj3);
+            return m29of(obj3);
         }
-        return of();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static int chooseTableSize(int i) {
+    static int chooseTableSize(int i) {
         int max = Math.max(i, 2);
         boolean z = true;
         if (max < 751619276) {
             int highestOneBit = Integer.highestOneBit(max - 1) << 1;
-            while (highestOneBit * 0.7d < max) {
+            while (((double) highestOneBit) * 0.7d < ((double) max)) {
                 highestOneBit <<= 1;
             }
             return highestOneBit;
@@ -102,47 +100,47 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
 
     public static <E> ImmutableSet<E> copyOf(E[] eArr) {
         int length = eArr.length;
-        if (length != 0) {
-            if (length == 1) {
-                return of((Object) eArr[0]);
-            }
+        if (length == 0) {
+            return m28of();
+        }
+        if (length != 1) {
             return construct(eArr.length, (Object[]) eArr.clone());
         }
-        return of();
+        return m29of(eArr[0]);
     }
 
-    @Override // java.util.Collection, java.util.Set
+    ImmutableSet() {
+    }
+
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;
         }
-        if ((obj instanceof ImmutableSet) && isHashCodeFast() && ((ImmutableSet) obj).isHashCodeFast() && hashCode() != obj.hashCode()) {
-            return false;
+        if (!(obj instanceof ImmutableSet) || !isHashCodeFast() || !((ImmutableSet) obj).isHashCodeFast() || hashCode() == obj.hashCode()) {
+            return Sets.equalsImpl(this, obj);
         }
-        return Sets.equalsImpl(this, obj);
+        return false;
     }
 
-    @Override // java.util.Collection, java.util.Set
     public int hashCode() {
         return Sets.hashCodeImpl(this);
     }
 
-    @Override // com.google.common.collect.ImmutableCollection
     public ImmutableList<E> asList() {
         ImmutableList<E> immutableList = this.asList;
-        if (immutableList == null) {
-            ImmutableList<E> createAsList = createAsList();
-            this.asList = createAsList;
-            return createAsList;
+        if (immutableList != null) {
+            return immutableList;
         }
-        return immutableList;
+        ImmutableList<E> createAsList = createAsList();
+        this.asList = createAsList;
+        return createAsList;
     }
 
-    ImmutableList<E> createAsList() {
+    /* access modifiers changed from: package-private */
+    public ImmutableList<E> createAsList() {
         return ImmutableList.asImmutableList(toArray());
     }
 
-    /* loaded from: classes2.dex */
     private static class SerializedForm implements Serializable {
         private static final long serialVersionUID = 0;
         final Object[] elements;
@@ -151,107 +149,67 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
             this.elements = objArr;
         }
 
-        Object readResolve() {
+        /* access modifiers changed from: package-private */
+        public Object readResolve() {
             return ImmutableSet.copyOf(this.elements);
         }
     }
 
-    @Override // com.google.common.collect.ImmutableCollection
-    Object writeReplace() {
+    /* access modifiers changed from: package-private */
+    public Object writeReplace() {
         return new SerializedForm(toArray());
     }
 
-    public static <E> Builder<E> builder() {
-        return new Builder<>();
-    }
-
-    /* loaded from: classes2.dex */
     public static class Builder<E> extends ImmutableCollection.ArrayBasedBuilder<E> {
         private int hashCode;
         Object[] hashTable;
-
-        /* JADX WARN: Multi-variable type inference failed */
-        @Override // com.google.common.collect.ImmutableCollection.ArrayBasedBuilder, com.google.common.collect.ImmutableCollection.Builder
-        @CanIgnoreReturnValue
-        /* renamed from: add */
-        public /* bridge */ /* synthetic */ ImmutableCollection.Builder mo798add(Object obj) {
-            return mo798add((Builder<E>) obj);
-        }
 
         public Builder() {
             super(4);
         }
 
-        @Override // com.google.common.collect.ImmutableCollection.ArrayBasedBuilder, com.google.common.collect.ImmutableCollection.Builder
-        @CanIgnoreReturnValue
-        /* renamed from: add  reason: collision with other method in class */
-        public Builder<E> mo798add(E e) {
+        public Builder<E> add(E e) {
             Preconditions.checkNotNull(e);
-            if (this.hashTable != null && ImmutableSet.chooseTableSize(this.size) <= this.hashTable.length) {
-                addDeduping(e);
+            if (this.hashTable == null || ImmutableSet.chooseTableSize(this.size) > this.hashTable.length) {
+                this.hashTable = null;
+                super.add(e);
                 return this;
             }
-            this.hashTable = null;
-            super.mo798add((Builder<E>) e);
+            addDeduping(e);
             return this;
         }
 
-        @Override // com.google.common.collect.ImmutableCollection.ArrayBasedBuilder
-        @CanIgnoreReturnValue
         public Builder<E> add(E... eArr) {
             if (this.hashTable != null) {
-                for (E e : eArr) {
-                    mo798add((Builder<E>) e);
+                for (E add : eArr) {
+                    add((Object) add);
                 }
             } else {
-                super.add((Object[]) eArr);
+                super.add(eArr);
             }
             return this;
         }
 
         private void addDeduping(E e) {
+            Objects.requireNonNull(this.hashTable);
             int length = this.hashTable.length - 1;
-            int hashCode = e.hashCode();
-            int smear = Hashing.smear(hashCode);
+            int hashCode2 = e.hashCode();
+            int smear = Hashing.smear(hashCode2);
             while (true) {
                 int i = smear & length;
                 Object[] objArr = this.hashTable;
                 Object obj = objArr[i];
                 if (obj == null) {
                     objArr[i] = e;
-                    this.hashCode += hashCode;
-                    super.mo798add((Builder<E>) e);
+                    this.hashCode += hashCode2;
+                    super.add(e);
                     return;
-                } else if (obj.equals(e)) {
-                    return;
-                } else {
+                } else if (!obj.equals(e)) {
                     smear = i + 1;
-                }
-            }
-        }
-
-        /* renamed from: build */
-        public ImmutableSet<E> mo799build() {
-            ImmutableSet<E> construct;
-            int i = this.size;
-            if (i != 0) {
-                if (i == 1) {
-                    return ImmutableSet.of(this.contents[0]);
-                }
-                if (this.hashTable == null || ImmutableSet.chooseTableSize(i) != this.hashTable.length) {
-                    construct = ImmutableSet.construct(this.size, this.contents);
-                    this.size = construct.size();
                 } else {
-                    Object[] copyOf = ImmutableSet.shouldTrim(this.size, this.contents.length) ? Arrays.copyOf(this.contents, this.size) : this.contents;
-                    int i2 = this.hashCode;
-                    Object[] objArr = this.hashTable;
-                    construct = new RegularImmutableSet<>(copyOf, i2, objArr, objArr.length - 1, this.size);
+                    return;
                 }
-                this.forceCopy = true;
-                this.hashTable = null;
-                return construct;
             }
-            return ImmutableSet.of();
         }
     }
 }

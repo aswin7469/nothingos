@@ -11,27 +11,26 @@ import android.util.Log;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$array;
+import com.android.settings.R$string;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.development.DeveloperOptionsPreferenceController;
-/* loaded from: classes.dex */
+
 public class CachedAppsFreezerPreferenceController extends DeveloperOptionsPreferenceController implements Preference.OnPreferenceChangeListener, PreferenceControllerMixin {
     private static final String CACHED_APPS_FREEZER_KEY = "cached_apps_freezer";
     private final String[] mListSummaries;
     private final String[] mListValues;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return CACHED_APPS_FREEZER_KEY;
     }
 
     public CachedAppsFreezerPreferenceController(Context context) {
         super(context);
-        this.mListValues = context.getResources().getStringArray(R.array.cached_apps_freezer_values);
-        this.mListSummaries = context.getResources().getStringArray(R.array.cached_apps_freezer_entries);
+        this.mListValues = context.getResources().getStringArray(R$array.cached_apps_freezer_values);
+        this.mListSummaries = context.getResources().getStringArray(R$array.cached_apps_freezer_entries);
     }
 
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         try {
             return ActivityManager.getService().isAppFreezerSupported();
@@ -41,46 +40,34 @@ public class CachedAppsFreezerPreferenceController extends DeveloperOptionsPrefe
         }
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
-        if (!obj.equals(Settings.Global.getString(this.mContext.getContentResolver(), CACHED_APPS_FREEZER_KEY))) {
-            new AlertDialog.Builder(this.mContext).setMessage(R.string.cached_apps_freezer_reboot_dialog_text).setPositiveButton(17039370, getRebootDialogOkListener(obj)).setNegativeButton(17039360, getRebootDialogCancelListener()).create().show();
+        if (obj.equals(Settings.Global.getString(this.mContext.getContentResolver(), CACHED_APPS_FREEZER_KEY))) {
             return true;
         }
+        new AlertDialog.Builder(this.mContext).setMessage(R$string.cached_apps_freezer_reboot_dialog_text).setPositiveButton(17039370, getRebootDialogOkListener(obj)).setNegativeButton(17039360, getRebootDialogCancelListener()).create().show();
         return true;
     }
 
-    private DialogInterface.OnClickListener getRebootDialogOkListener(final Object obj) {
-        return new DialogInterface.OnClickListener() { // from class: com.android.settings.development.CachedAppsFreezerPreferenceController$$ExternalSyntheticLambda1
-            @Override // android.content.DialogInterface.OnClickListener
-            public final void onClick(DialogInterface dialogInterface, int i) {
-                CachedAppsFreezerPreferenceController.this.lambda$getRebootDialogOkListener$0(obj, dialogInterface, i);
-            }
-        };
+    private DialogInterface.OnClickListener getRebootDialogOkListener(Object obj) {
+        return new CachedAppsFreezerPreferenceController$$ExternalSyntheticLambda0(this, obj);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$getRebootDialogOkListener$0(Object obj, DialogInterface dialogInterface, int i) {
         Settings.Global.putString(this.mContext.getContentResolver(), CACHED_APPS_FREEZER_KEY, obj.toString());
         updateState(this.mPreference);
-        ((PowerManager) this.mContext.getSystemService(PowerManager.class)).reboot(null);
+        ((PowerManager) this.mContext.getSystemService(PowerManager.class)).reboot((String) null);
     }
 
     private DialogInterface.OnClickListener getRebootDialogCancelListener() {
-        return new DialogInterface.OnClickListener() { // from class: com.android.settings.development.CachedAppsFreezerPreferenceController$$ExternalSyntheticLambda0
-            @Override // android.content.DialogInterface.OnClickListener
-            public final void onClick(DialogInterface dialogInterface, int i) {
-                CachedAppsFreezerPreferenceController.this.lambda$getRebootDialogCancelListener$1(dialogInterface, i);
-            }
-        };
+        return new CachedAppsFreezerPreferenceController$$ExternalSyntheticLambda1(this);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$getRebootDialogCancelListener$1(DialogInterface dialogInterface, int i) {
         updateState(this.mPreference);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         ListPreference listPreference = (ListPreference) preference;
         String string = Settings.Global.getString(this.mContext.getContentResolver(), CACHED_APPS_FREEZER_KEY);
@@ -101,7 +88,6 @@ public class CachedAppsFreezerPreferenceController extends DeveloperOptionsPrefe
         listPreference.setSummary(this.mListSummaries[i]);
     }
 
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController
     public void onDeveloperOptionsDisabled() {
         super.onDeveloperOptionsDisabled();
         Settings.Global.putString(this.mContext.getContentResolver(), CACHED_APPS_FREEZER_KEY, this.mListValues[0].toString());

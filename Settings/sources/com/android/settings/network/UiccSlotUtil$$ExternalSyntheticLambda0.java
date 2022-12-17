@@ -1,18 +1,18 @@
 package com.android.settings.network;
 
-import android.telephony.UiccSlotInfo;
-import java.util.function.IntFunction;
-/* loaded from: classes.dex */
-public final /* synthetic */ class UiccSlotUtil$$ExternalSyntheticLambda0 implements IntFunction {
-    public static final /* synthetic */ UiccSlotUtil$$ExternalSyntheticLambda0 INSTANCE = new UiccSlotUtil$$ExternalSyntheticLambda0();
+import android.telephony.UiccSlotMapping;
+import java.util.Collection;
+import java.util.function.Predicate;
 
-    private /* synthetic */ UiccSlotUtil$$ExternalSyntheticLambda0() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class UiccSlotUtil$$ExternalSyntheticLambda0 implements Predicate {
+    public final /* synthetic */ Collection f$0;
+
+    public /* synthetic */ UiccSlotUtil$$ExternalSyntheticLambda0(Collection collection) {
+        this.f$0 = collection;
     }
 
-    @Override // java.util.function.IntFunction
-    public final Object apply(int i) {
-        UiccSlotInfo[] lambda$getSlotInfos$1;
-        lambda$getSlotInfos$1 = UiccSlotUtil.lambda$getSlotInfos$1(i);
-        return lambda$getSlotInfos$1;
+    public final boolean test(Object obj) {
+        return UiccSlotUtil.lambda$getExcludedLogicalSlotIndex$4(this.f$0, (UiccSlotMapping) obj);
     }
 }

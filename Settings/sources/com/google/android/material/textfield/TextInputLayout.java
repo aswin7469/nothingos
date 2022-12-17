@@ -1,18 +1,16 @@
 package com.google.android.material.textfield;
 
-import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.Editable;
@@ -21,10 +19,10 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseArray;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStructure;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -33,7 +31,6 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.AppCompatDrawableManager;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.DrawableUtils;
-import androidx.appcompat.widget.TintTypedArray;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.text.BidiFormatter;
@@ -43,43 +40,42 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.core.widget.TextViewCompat;
 import androidx.customview.view.AbsSavedState;
+import androidx.transition.Fade;
+import androidx.transition.TransitionManager;
 import com.google.android.material.R$attr;
 import com.google.android.material.R$color;
 import com.google.android.material.R$dimen;
 import com.google.android.material.R$id;
-import com.google.android.material.R$layout;
 import com.google.android.material.R$string;
 import com.google.android.material.R$style;
-import com.google.android.material.R$styleable;
 import com.google.android.material.animation.AnimationUtils;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.internal.CheckableImageButton;
 import com.google.android.material.internal.CollapsingTextHelper;
 import com.google.android.material.internal.DescendantOffsetUtils;
-import com.google.android.material.internal.ThemeEnforcement;
 import com.google.android.material.internal.ViewUtils;
 import com.google.android.material.resources.MaterialResources;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.ShapeAppearanceModel;
-import com.google.android.material.theme.overlay.MaterialThemeOverlay;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-/* loaded from: classes2.dex */
+
 public class TextInputLayout extends LinearLayout {
     private static final int DEF_STYLE_RES = R$style.Widget_Design_TextInputLayout;
     private ValueAnimator animator;
+    private boolean areCornerRadiiRtl;
     private MaterialShapeDrawable boxBackground;
     private int boxBackgroundColor;
     private int boxBackgroundMode;
     private int boxCollapsedPaddingTopPx;
-    private int boxLabelCutoutHeight;
     private final int boxLabelCutoutPaddingPx;
     private int boxStrokeColor;
     private int boxStrokeWidthDefaultPx;
     private int boxStrokeWidthFocusedPx;
     private int boxStrokeWidthPx;
-    private MaterialShapeDrawable boxUnderline;
+    private MaterialShapeDrawable boxUnderlineDefault;
+    private MaterialShapeDrawable boxUnderlineFocused;
     final CollapsingTextHelper collapsingTextHelper;
     boolean counterEnabled;
     private int counterMaxLength;
@@ -105,19 +101,17 @@ public class TextInputLayout extends LinearLayout {
     private View.OnLongClickListener endIconOnLongClickListener;
     private ColorStateList endIconTintList;
     private PorterDuff.Mode endIconTintMode;
-    private final CheckableImageButton endIconView;
+    /* access modifiers changed from: private */
+    public final CheckableImageButton endIconView;
     private final LinearLayout endLayout;
     private View.OnLongClickListener errorIconOnLongClickListener;
     private ColorStateList errorIconTintList;
+    private PorterDuff.Mode errorIconTintMode;
     private final CheckableImageButton errorIconView;
     private boolean expandedHintEnabled;
     private int focusedFilledBackgroundColor;
     private int focusedStrokeColor;
     private ColorStateList focusedTextColor;
-    private boolean hasEndIconTintList;
-    private boolean hasEndIconTintMode;
-    private boolean hasStartIconTintList;
-    private boolean hasStartIconTintMode;
     private CharSequence hint;
     private boolean hintAnimationEnabled;
     private boolean hintEnabled;
@@ -125,28 +119,36 @@ public class TextInputLayout extends LinearLayout {
     private int hoveredFilledBackgroundColor;
     private int hoveredStrokeColor;
     private boolean inDrawableStateChanged;
-    private final IndicatorViewController indicatorViewController;
+    /* access modifiers changed from: private */
+    public final IndicatorViewController indicatorViewController;
     private final FrameLayout inputFrame;
     private boolean isProvidingHint;
+    private int maxEms;
     private int maxWidth;
+    private int minEms;
     private int minWidth;
     private Drawable originalEditTextEndDrawable;
     private CharSequence originalHint;
-    private boolean placeholderEnabled;
+    /* access modifiers changed from: private */
+    public boolean placeholderEnabled;
+    private Fade placeholderFadeIn;
+    private Fade placeholderFadeOut;
     private CharSequence placeholderText;
     private int placeholderTextAppearance;
     private ColorStateList placeholderTextColor;
     private TextView placeholderTextView;
     private CharSequence prefixText;
     private final TextView prefixTextView;
-    private boolean restoringSavedState;
+    /* access modifiers changed from: private */
+    public boolean restoringSavedState;
     private ShapeAppearanceModel shapeAppearanceModel;
     private Drawable startDummyDrawable;
     private int startDummyDrawableWidth;
     private View.OnLongClickListener startIconOnLongClickListener;
     private ColorStateList startIconTintList;
     private PorterDuff.Mode startIconTintMode;
-    private final CheckableImageButton startIconView;
+    /* access modifiers changed from: private */
+    public final CheckableImageButton startIconView;
     private final LinearLayout startLayout;
     private ColorStateList strokeErrorColor;
     private CharSequence suffixText;
@@ -156,363 +158,698 @@ public class TextInputLayout extends LinearLayout {
     private final RectF tmpRectF;
     private Typeface typeface;
 
-    /* loaded from: classes2.dex */
     public interface OnEditTextAttachedListener {
         void onEditTextAttached(TextInputLayout textInputLayout);
     }
 
-    /* loaded from: classes2.dex */
     public interface OnEndIconChangedListener {
         void onEndIconChanged(TextInputLayout textInputLayout, int i);
     }
 
     public TextInputLayout(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public TextInputLayout(Context context, AttributeSet attributeSet) {
         this(context, attributeSet, R$attr.textInputStyle);
     }
 
-    /* JADX WARN: Illegal instructions before constructor call */
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Type inference failed for: r2v150 */
-    /* JADX WARN: Type inference failed for: r2v46 */
-    /* JADX WARN: Type inference failed for: r2v47, types: [boolean, int] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public TextInputLayout(Context context, AttributeSet attributeSet, int i) {
-        super(MaterialThemeOverlay.wrap(context, attributeSet, i, r9), attributeSet, i);
-        int i2;
-        ?? r2;
-        int i3 = DEF_STYLE_RES;
-        this.minWidth = -1;
-        this.maxWidth = -1;
-        this.indicatorViewController = new IndicatorViewController(this);
-        this.tmpRect = new Rect();
-        this.tmpBoundsRect = new Rect();
-        this.tmpRectF = new RectF();
-        this.editTextAttachedListeners = new LinkedHashSet<>();
-        this.endIconMode = 0;
-        SparseArray<EndIconDelegate> sparseArray = new SparseArray<>();
-        this.endIconDelegates = sparseArray;
-        this.endIconChangedListeners = new LinkedHashSet<>();
-        CollapsingTextHelper collapsingTextHelper = new CollapsingTextHelper(this);
-        this.collapsingTextHelper = collapsingTextHelper;
-        Context context2 = getContext();
-        setOrientation(1);
-        setWillNotDraw(false);
-        setAddStatesFromChildren(true);
-        FrameLayout frameLayout = new FrameLayout(context2);
-        this.inputFrame = frameLayout;
-        frameLayout.setAddStatesFromChildren(true);
-        addView(frameLayout);
-        LinearLayout linearLayout = new LinearLayout(context2);
-        this.startLayout = linearLayout;
-        linearLayout.setOrientation(0);
-        linearLayout.setLayoutParams(new FrameLayout.LayoutParams(-2, -1, 8388611));
-        frameLayout.addView(linearLayout);
-        LinearLayout linearLayout2 = new LinearLayout(context2);
-        this.endLayout = linearLayout2;
-        linearLayout2.setOrientation(0);
-        linearLayout2.setLayoutParams(new FrameLayout.LayoutParams(-2, -1, 8388613));
-        frameLayout.addView(linearLayout2);
-        FrameLayout frameLayout2 = new FrameLayout(context2);
-        this.endIconFrame = frameLayout2;
-        frameLayout2.setLayoutParams(new FrameLayout.LayoutParams(-2, -1));
-        TimeInterpolator timeInterpolator = AnimationUtils.LINEAR_INTERPOLATOR;
-        collapsingTextHelper.setTextSizeInterpolator(timeInterpolator);
-        collapsingTextHelper.setPositionInterpolator(timeInterpolator);
-        collapsingTextHelper.setCollapsedTextGravity(8388659);
-        int[] iArr = R$styleable.TextInputLayout;
-        int i4 = R$styleable.TextInputLayout_counterTextAppearance;
-        int i5 = R$styleable.TextInputLayout_counterOverflowTextAppearance;
-        int i6 = R$styleable.TextInputLayout_errorTextAppearance;
-        int i7 = R$styleable.TextInputLayout_helperTextTextAppearance;
-        int i8 = R$styleable.TextInputLayout_hintTextAppearance;
-        TintTypedArray obtainTintedStyledAttributes = ThemeEnforcement.obtainTintedStyledAttributes(context2, attributeSet, iArr, i, i3, i4, i5, i6, i7, i8);
-        this.hintEnabled = obtainTintedStyledAttributes.getBoolean(R$styleable.TextInputLayout_hintEnabled, true);
-        setHint(obtainTintedStyledAttributes.getText(R$styleable.TextInputLayout_android_hint));
-        this.hintAnimationEnabled = obtainTintedStyledAttributes.getBoolean(R$styleable.TextInputLayout_hintAnimationEnabled, true);
-        this.expandedHintEnabled = obtainTintedStyledAttributes.getBoolean(R$styleable.TextInputLayout_expandedHintEnabled, true);
-        int i9 = R$styleable.TextInputLayout_android_minWidth;
-        if (obtainTintedStyledAttributes.hasValue(i9)) {
-            i2 = -1;
-            setMinWidth(obtainTintedStyledAttributes.getDimensionPixelSize(i9, -1));
-        } else {
-            i2 = -1;
-        }
-        int i10 = R$styleable.TextInputLayout_android_maxWidth;
-        if (obtainTintedStyledAttributes.hasValue(i10)) {
-            setMaxWidth(obtainTintedStyledAttributes.getDimensionPixelSize(i10, i2));
-        }
-        this.shapeAppearanceModel = ShapeAppearanceModel.builder(context2, attributeSet, i, i3).build();
-        this.boxLabelCutoutPaddingPx = context2.getResources().getDimensionPixelOffset(R$dimen.mtrl_textinput_box_label_cutout_padding);
-        this.boxCollapsedPaddingTopPx = obtainTintedStyledAttributes.getDimensionPixelOffset(R$styleable.TextInputLayout_boxCollapsedPaddingTop, 0);
-        this.boxStrokeWidthDefaultPx = obtainTintedStyledAttributes.getDimensionPixelSize(R$styleable.TextInputLayout_boxStrokeWidth, context2.getResources().getDimensionPixelSize(R$dimen.mtrl_textinput_box_stroke_width_default));
-        this.boxStrokeWidthFocusedPx = obtainTintedStyledAttributes.getDimensionPixelSize(R$styleable.TextInputLayout_boxStrokeWidthFocused, context2.getResources().getDimensionPixelSize(R$dimen.mtrl_textinput_box_stroke_width_focused));
-        this.boxStrokeWidthPx = this.boxStrokeWidthDefaultPx;
-        float dimension = obtainTintedStyledAttributes.getDimension(R$styleable.TextInputLayout_boxCornerRadiusTopStart, -1.0f);
-        float dimension2 = obtainTintedStyledAttributes.getDimension(R$styleable.TextInputLayout_boxCornerRadiusTopEnd, -1.0f);
-        float dimension3 = obtainTintedStyledAttributes.getDimension(R$styleable.TextInputLayout_boxCornerRadiusBottomEnd, -1.0f);
-        float dimension4 = obtainTintedStyledAttributes.getDimension(R$styleable.TextInputLayout_boxCornerRadiusBottomStart, -1.0f);
-        ShapeAppearanceModel.Builder builder = this.shapeAppearanceModel.toBuilder();
-        if (dimension >= 0.0f) {
-            builder.setTopLeftCornerSize(dimension);
-        }
-        if (dimension2 >= 0.0f) {
-            builder.setTopRightCornerSize(dimension2);
-        }
-        if (dimension3 >= 0.0f) {
-            builder.setBottomRightCornerSize(dimension3);
-        }
-        if (dimension4 >= 0.0f) {
-            builder.setBottomLeftCornerSize(dimension4);
-        }
-        this.shapeAppearanceModel = builder.build();
-        ColorStateList colorStateList = MaterialResources.getColorStateList(context2, obtainTintedStyledAttributes, R$styleable.TextInputLayout_boxBackgroundColor);
-        if (colorStateList != null) {
-            int defaultColor = colorStateList.getDefaultColor();
-            this.defaultFilledBackgroundColor = defaultColor;
-            this.boxBackgroundColor = defaultColor;
-            if (colorStateList.isStateful()) {
-                this.disabledFilledBackgroundColor = colorStateList.getColorForState(new int[]{-16842910}, -1);
-                this.focusedFilledBackgroundColor = colorStateList.getColorForState(new int[]{16842908, 16842910}, -1);
-                this.hoveredFilledBackgroundColor = colorStateList.getColorForState(new int[]{16843623, 16842910}, -1);
-            } else {
-                this.focusedFilledBackgroundColor = this.defaultFilledBackgroundColor;
-                ColorStateList colorStateList2 = AppCompatResources.getColorStateList(context2, R$color.mtrl_filled_background_color);
-                this.disabledFilledBackgroundColor = colorStateList2.getColorForState(new int[]{-16842910}, -1);
-                this.hoveredFilledBackgroundColor = colorStateList2.getColorForState(new int[]{16843623}, -1);
-            }
-        } else {
-            this.boxBackgroundColor = 0;
-            this.defaultFilledBackgroundColor = 0;
-            this.disabledFilledBackgroundColor = 0;
-            this.focusedFilledBackgroundColor = 0;
-            this.hoveredFilledBackgroundColor = 0;
-        }
-        int i11 = R$styleable.TextInputLayout_android_textColorHint;
-        if (obtainTintedStyledAttributes.hasValue(i11)) {
-            ColorStateList colorStateList3 = obtainTintedStyledAttributes.getColorStateList(i11);
-            this.focusedTextColor = colorStateList3;
-            this.defaultHintTextColor = colorStateList3;
-        }
-        int i12 = R$styleable.TextInputLayout_boxStrokeColor;
-        ColorStateList colorStateList4 = MaterialResources.getColorStateList(context2, obtainTintedStyledAttributes, i12);
-        this.focusedStrokeColor = obtainTintedStyledAttributes.getColor(i12, 0);
-        this.defaultStrokeColor = ContextCompat.getColor(context2, R$color.mtrl_textinput_default_box_stroke_color);
-        this.disabledColor = ContextCompat.getColor(context2, R$color.mtrl_textinput_disabled_color);
-        this.hoveredStrokeColor = ContextCompat.getColor(context2, R$color.mtrl_textinput_hovered_box_stroke_color);
-        if (colorStateList4 != null) {
-            setBoxStrokeColorStateList(colorStateList4);
-        }
-        int i13 = R$styleable.TextInputLayout_boxStrokeErrorColor;
-        if (obtainTintedStyledAttributes.hasValue(i13)) {
-            setBoxStrokeErrorColor(MaterialResources.getColorStateList(context2, obtainTintedStyledAttributes, i13));
-        }
-        if (obtainTintedStyledAttributes.getResourceId(i8, -1) != -1) {
-            r2 = 0;
-            setHintTextAppearance(obtainTintedStyledAttributes.getResourceId(i8, 0));
-        } else {
-            r2 = 0;
-        }
-        int i14 = r2 == true ? 1 : 0;
-        int i15 = r2 == true ? 1 : 0;
-        int resourceId = obtainTintedStyledAttributes.getResourceId(i6, i14);
-        CharSequence text = obtainTintedStyledAttributes.getText(R$styleable.TextInputLayout_errorContentDescription);
-        boolean z = obtainTintedStyledAttributes.getBoolean(R$styleable.TextInputLayout_errorEnabled, r2);
-        LayoutInflater from = LayoutInflater.from(getContext());
-        int i16 = R$layout.design_text_input_end_icon;
-        CheckableImageButton checkableImageButton = (CheckableImageButton) from.inflate(i16, linearLayout2, (boolean) r2);
-        this.errorIconView = checkableImageButton;
-        checkableImageButton.setId(R$id.text_input_error_icon);
-        checkableImageButton.setVisibility(8);
-        if (MaterialResources.isFontScaleAtLeast1_3(context2)) {
-            MarginLayoutParamsCompat.setMarginStart((ViewGroup.MarginLayoutParams) checkableImageButton.getLayoutParams(), r2);
-        }
-        int i17 = R$styleable.TextInputLayout_errorIconDrawable;
-        if (obtainTintedStyledAttributes.hasValue(i17)) {
-            setErrorIconDrawable(obtainTintedStyledAttributes.getDrawable(i17));
-        }
-        int i18 = R$styleable.TextInputLayout_errorIconTint;
-        if (obtainTintedStyledAttributes.hasValue(i18)) {
-            setErrorIconTintList(MaterialResources.getColorStateList(context2, obtainTintedStyledAttributes, i18));
-        }
-        int i19 = R$styleable.TextInputLayout_errorIconTintMode;
-        if (obtainTintedStyledAttributes.hasValue(i19)) {
-            setErrorIconTintMode(ViewUtils.parseTintMode(obtainTintedStyledAttributes.getInt(i19, -1), null));
-        }
-        checkableImageButton.setContentDescription(getResources().getText(R$string.error_icon_content_description));
-        ViewCompat.setImportantForAccessibility(checkableImageButton, 2);
-        checkableImageButton.setClickable(false);
-        checkableImageButton.setPressable(false);
-        checkableImageButton.setFocusable(false);
-        int resourceId2 = obtainTintedStyledAttributes.getResourceId(i7, 0);
-        boolean z2 = obtainTintedStyledAttributes.getBoolean(R$styleable.TextInputLayout_helperTextEnabled, false);
-        CharSequence text2 = obtainTintedStyledAttributes.getText(R$styleable.TextInputLayout_helperText);
-        int resourceId3 = obtainTintedStyledAttributes.getResourceId(R$styleable.TextInputLayout_placeholderTextAppearance, 0);
-        CharSequence text3 = obtainTintedStyledAttributes.getText(R$styleable.TextInputLayout_placeholderText);
-        int resourceId4 = obtainTintedStyledAttributes.getResourceId(R$styleable.TextInputLayout_prefixTextAppearance, 0);
-        CharSequence text4 = obtainTintedStyledAttributes.getText(R$styleable.TextInputLayout_prefixText);
-        int resourceId5 = obtainTintedStyledAttributes.getResourceId(R$styleable.TextInputLayout_suffixTextAppearance, 0);
-        CharSequence text5 = obtainTintedStyledAttributes.getText(R$styleable.TextInputLayout_suffixText);
-        boolean z3 = obtainTintedStyledAttributes.getBoolean(R$styleable.TextInputLayout_counterEnabled, false);
-        setCounterMaxLength(obtainTintedStyledAttributes.getInt(R$styleable.TextInputLayout_counterMaxLength, -1));
-        this.counterTextAppearance = obtainTintedStyledAttributes.getResourceId(i4, 0);
-        this.counterOverflowTextAppearance = obtainTintedStyledAttributes.getResourceId(i5, 0);
-        CheckableImageButton checkableImageButton2 = (CheckableImageButton) LayoutInflater.from(getContext()).inflate(R$layout.design_text_input_start_icon, (ViewGroup) linearLayout, false);
-        this.startIconView = checkableImageButton2;
-        checkableImageButton2.setVisibility(8);
-        if (MaterialResources.isFontScaleAtLeast1_3(context2)) {
-            MarginLayoutParamsCompat.setMarginEnd((ViewGroup.MarginLayoutParams) checkableImageButton2.getLayoutParams(), 0);
-        }
-        setStartIconOnClickListener(null);
-        setStartIconOnLongClickListener(null);
-        int i20 = R$styleable.TextInputLayout_startIconDrawable;
-        if (obtainTintedStyledAttributes.hasValue(i20)) {
-            setStartIconDrawable(obtainTintedStyledAttributes.getDrawable(i20));
-            int i21 = R$styleable.TextInputLayout_startIconContentDescription;
-            if (obtainTintedStyledAttributes.hasValue(i21)) {
-                setStartIconContentDescription(obtainTintedStyledAttributes.getText(i21));
-            }
-            setStartIconCheckable(obtainTintedStyledAttributes.getBoolean(R$styleable.TextInputLayout_startIconCheckable, true));
-        }
-        int i22 = R$styleable.TextInputLayout_startIconTint;
-        if (obtainTintedStyledAttributes.hasValue(i22)) {
-            setStartIconTintList(MaterialResources.getColorStateList(context2, obtainTintedStyledAttributes, i22));
-        }
-        int i23 = R$styleable.TextInputLayout_startIconTintMode;
-        if (obtainTintedStyledAttributes.hasValue(i23)) {
-            setStartIconTintMode(ViewUtils.parseTintMode(obtainTintedStyledAttributes.getInt(i23, -1), null));
-        }
-        setBoxBackgroundMode(obtainTintedStyledAttributes.getInt(R$styleable.TextInputLayout_boxBackgroundMode, 0));
-        CheckableImageButton checkableImageButton3 = (CheckableImageButton) LayoutInflater.from(getContext()).inflate(i16, (ViewGroup) frameLayout2, false);
-        this.endIconView = checkableImageButton3;
-        frameLayout2.addView(checkableImageButton3);
-        checkableImageButton3.setVisibility(8);
-        if (MaterialResources.isFontScaleAtLeast1_3(context2)) {
-            MarginLayoutParamsCompat.setMarginStart((ViewGroup.MarginLayoutParams) checkableImageButton3.getLayoutParams(), 0);
-        }
-        sparseArray.append(-1, new CustomEndIconDelegate(this));
-        sparseArray.append(0, new NoEndIconDelegate(this));
-        sparseArray.append(1, new PasswordToggleEndIconDelegate(this));
-        sparseArray.append(2, new ClearTextEndIconDelegate(this));
-        sparseArray.append(3, new DropdownMenuEndIconDelegate(this));
-        int i24 = R$styleable.TextInputLayout_endIconMode;
-        if (obtainTintedStyledAttributes.hasValue(i24)) {
-            setEndIconMode(obtainTintedStyledAttributes.getInt(i24, 0));
-            int i25 = R$styleable.TextInputLayout_endIconDrawable;
-            if (obtainTintedStyledAttributes.hasValue(i25)) {
-                setEndIconDrawable(obtainTintedStyledAttributes.getDrawable(i25));
-            }
-            int i26 = R$styleable.TextInputLayout_endIconContentDescription;
-            if (obtainTintedStyledAttributes.hasValue(i26)) {
-                setEndIconContentDescription(obtainTintedStyledAttributes.getText(i26));
-            }
-            setEndIconCheckable(obtainTintedStyledAttributes.getBoolean(R$styleable.TextInputLayout_endIconCheckable, true));
-        } else {
-            int i27 = R$styleable.TextInputLayout_passwordToggleEnabled;
-            if (obtainTintedStyledAttributes.hasValue(i27)) {
-                setEndIconMode(obtainTintedStyledAttributes.getBoolean(i27, false) ? 1 : 0);
-                setEndIconDrawable(obtainTintedStyledAttributes.getDrawable(R$styleable.TextInputLayout_passwordToggleDrawable));
-                setEndIconContentDescription(obtainTintedStyledAttributes.getText(R$styleable.TextInputLayout_passwordToggleContentDescription));
-                int i28 = R$styleable.TextInputLayout_passwordToggleTint;
-                if (obtainTintedStyledAttributes.hasValue(i28)) {
-                    setEndIconTintList(MaterialResources.getColorStateList(context2, obtainTintedStyledAttributes, i28));
-                }
-                int i29 = R$styleable.TextInputLayout_passwordToggleTintMode;
-                if (obtainTintedStyledAttributes.hasValue(i29)) {
-                    setEndIconTintMode(ViewUtils.parseTintMode(obtainTintedStyledAttributes.getInt(i29, -1), null));
-                }
-            }
-        }
-        if (!obtainTintedStyledAttributes.hasValue(R$styleable.TextInputLayout_passwordToggleEnabled)) {
-            int i30 = R$styleable.TextInputLayout_endIconTint;
-            if (obtainTintedStyledAttributes.hasValue(i30)) {
-                setEndIconTintList(MaterialResources.getColorStateList(context2, obtainTintedStyledAttributes, i30));
-            }
-            int i31 = R$styleable.TextInputLayout_endIconTintMode;
-            if (obtainTintedStyledAttributes.hasValue(i31)) {
-                setEndIconTintMode(ViewUtils.parseTintMode(obtainTintedStyledAttributes.getInt(i31, -1), null));
-            }
-        }
-        AppCompatTextView appCompatTextView = new AppCompatTextView(context2);
-        this.prefixTextView = appCompatTextView;
-        appCompatTextView.setId(R$id.textinput_prefix_text);
-        appCompatTextView.setLayoutParams(new FrameLayout.LayoutParams(-2, -2));
-        ViewCompat.setAccessibilityLiveRegion(appCompatTextView, 1);
-        linearLayout.addView(checkableImageButton2);
-        linearLayout.addView(appCompatTextView);
-        AppCompatTextView appCompatTextView2 = new AppCompatTextView(context2);
-        this.suffixTextView = appCompatTextView2;
-        appCompatTextView2.setId(R$id.textinput_suffix_text);
-        appCompatTextView2.setLayoutParams(new FrameLayout.LayoutParams(-2, -2, 80));
-        ViewCompat.setAccessibilityLiveRegion(appCompatTextView2, 1);
-        linearLayout2.addView(appCompatTextView2);
-        linearLayout2.addView(checkableImageButton);
-        linearLayout2.addView(frameLayout2);
-        setHelperTextEnabled(z2);
-        setHelperText(text2);
-        setHelperTextTextAppearance(resourceId2);
-        setErrorEnabled(z);
-        setErrorTextAppearance(resourceId);
-        setErrorContentDescription(text);
-        setCounterTextAppearance(this.counterTextAppearance);
-        setCounterOverflowTextAppearance(this.counterOverflowTextAppearance);
-        setPlaceholderText(text3);
-        setPlaceholderTextAppearance(resourceId3);
-        setPrefixText(text4);
-        setPrefixTextAppearance(resourceId4);
-        setSuffixText(text5);
-        setSuffixTextAppearance(resourceId5);
-        int i32 = R$styleable.TextInputLayout_errorTextColor;
-        if (obtainTintedStyledAttributes.hasValue(i32)) {
-            setErrorTextColor(obtainTintedStyledAttributes.getColorStateList(i32));
-        }
-        int i33 = R$styleable.TextInputLayout_helperTextTextColor;
-        if (obtainTintedStyledAttributes.hasValue(i33)) {
-            setHelperTextColor(obtainTintedStyledAttributes.getColorStateList(i33));
-        }
-        int i34 = R$styleable.TextInputLayout_hintTextColor;
-        if (obtainTintedStyledAttributes.hasValue(i34)) {
-            setHintTextColor(obtainTintedStyledAttributes.getColorStateList(i34));
-        }
-        int i35 = R$styleable.TextInputLayout_counterTextColor;
-        if (obtainTintedStyledAttributes.hasValue(i35)) {
-            setCounterTextColor(obtainTintedStyledAttributes.getColorStateList(i35));
-        }
-        int i36 = R$styleable.TextInputLayout_counterOverflowTextColor;
-        if (obtainTintedStyledAttributes.hasValue(i36)) {
-            setCounterOverflowTextColor(obtainTintedStyledAttributes.getColorStateList(i36));
-        }
-        int i37 = R$styleable.TextInputLayout_placeholderTextColor;
-        if (obtainTintedStyledAttributes.hasValue(i37)) {
-            setPlaceholderTextColor(obtainTintedStyledAttributes.getColorStateList(i37));
-        }
-        int i38 = R$styleable.TextInputLayout_prefixTextColor;
-        if (obtainTintedStyledAttributes.hasValue(i38)) {
-            setPrefixTextColor(obtainTintedStyledAttributes.getColorStateList(i38));
-        }
-        int i39 = R$styleable.TextInputLayout_suffixTextColor;
-        if (obtainTintedStyledAttributes.hasValue(i39)) {
-            setSuffixTextColor(obtainTintedStyledAttributes.getColorStateList(i39));
-        }
-        setCounterEnabled(z3);
-        setEnabled(obtainTintedStyledAttributes.getBoolean(R$styleable.TextInputLayout_android_enabled, true));
-        obtainTintedStyledAttributes.recycle();
-        ViewCompat.setImportantForAccessibility(this, 2);
-        if (Build.VERSION.SDK_INT >= 26) {
-            ViewCompat.setImportantForAutofill(this, 1);
-        }
+    /* JADX WARNING: Illegal instructions before constructor call */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public TextInputLayout(android.content.Context r33, android.util.AttributeSet r34, int r35) {
+        /*
+            r32 = this;
+            r0 = r32
+            r7 = r34
+            r8 = r35
+            int r9 = DEF_STYLE_RES
+            r1 = r33
+            android.content.Context r1 = com.google.android.material.theme.overlay.MaterialThemeOverlay.wrap(r1, r7, r8, r9)
+            r0.<init>(r1, r7, r8)
+            r10 = -1
+            r0.minEms = r10
+            r0.maxEms = r10
+            r0.minWidth = r10
+            r0.maxWidth = r10
+            com.google.android.material.textfield.IndicatorViewController r1 = new com.google.android.material.textfield.IndicatorViewController
+            r1.<init>(r0)
+            r0.indicatorViewController = r1
+            android.graphics.Rect r1 = new android.graphics.Rect
+            r1.<init>()
+            r0.tmpRect = r1
+            android.graphics.Rect r1 = new android.graphics.Rect
+            r1.<init>()
+            r0.tmpBoundsRect = r1
+            android.graphics.RectF r1 = new android.graphics.RectF
+            r1.<init>()
+            r0.tmpRectF = r1
+            java.util.LinkedHashSet r1 = new java.util.LinkedHashSet
+            r1.<init>()
+            r0.editTextAttachedListeners = r1
+            r11 = 0
+            r0.endIconMode = r11
+            android.util.SparseArray r12 = new android.util.SparseArray
+            r12.<init>()
+            r0.endIconDelegates = r12
+            java.util.LinkedHashSet r1 = new java.util.LinkedHashSet
+            r1.<init>()
+            r0.endIconChangedListeners = r1
+            com.google.android.material.internal.CollapsingTextHelper r1 = new com.google.android.material.internal.CollapsingTextHelper
+            r1.<init>(r0)
+            r0.collapsingTextHelper = r1
+            android.content.Context r13 = r32.getContext()
+            r14 = 1
+            r0.setOrientation(r14)
+            r0.setWillNotDraw(r11)
+            r0.setAddStatesFromChildren(r14)
+            android.widget.FrameLayout r15 = new android.widget.FrameLayout
+            r15.<init>(r13)
+            r0.inputFrame = r15
+            android.widget.FrameLayout r6 = new android.widget.FrameLayout
+            r6.<init>(r13)
+            r0.endIconFrame = r6
+            android.widget.LinearLayout r5 = new android.widget.LinearLayout
+            r5.<init>(r13)
+            r0.startLayout = r5
+            android.widget.LinearLayout r4 = new android.widget.LinearLayout
+            r4.<init>(r13)
+            r0.endLayout = r4
+            androidx.appcompat.widget.AppCompatTextView r3 = new androidx.appcompat.widget.AppCompatTextView
+            r3.<init>(r13)
+            r0.prefixTextView = r3
+            androidx.appcompat.widget.AppCompatTextView r2 = new androidx.appcompat.widget.AppCompatTextView
+            r2.<init>(r13)
+            r0.suffixTextView = r2
+            r10 = 8
+            r5.setVisibility(r10)
+            r4.setVisibility(r10)
+            r6.setVisibility(r10)
+            r3.setVisibility(r10)
+            r2.setVisibility(r10)
+            android.view.LayoutInflater r10 = android.view.LayoutInflater.from(r13)
+            int r14 = com.google.android.material.R$layout.design_text_input_start_icon
+            android.view.View r14 = r10.inflate(r14, r5, r11)
+            com.google.android.material.internal.CheckableImageButton r14 = (com.google.android.material.internal.CheckableImageButton) r14
+            r0.startIconView = r14
+            r17 = r2
+            int r2 = com.google.android.material.R$layout.design_text_input_end_icon
+            android.view.View r18 = r10.inflate(r2, r4, r11)
+            r19 = r12
+            r12 = r18
+            com.google.android.material.internal.CheckableImageButton r12 = (com.google.android.material.internal.CheckableImageButton) r12
+            r0.errorIconView = r12
+            android.view.View r2 = r10.inflate(r2, r6, r11)
+            r10 = r2
+            com.google.android.material.internal.CheckableImageButton r10 = (com.google.android.material.internal.CheckableImageButton) r10
+            r0.endIconView = r10
+            r2 = 1
+            r15.setAddStatesFromChildren(r2)
+            r5.setOrientation(r11)
+            android.widget.FrameLayout$LayoutParams r2 = new android.widget.FrameLayout$LayoutParams
+            r11 = -2
+            r20 = r3
+            r3 = 8388611(0x800003, float:1.1754948E-38)
+            r21 = r15
+            r15 = -1
+            r2.<init>(r11, r15, r3)
+            r5.setLayoutParams(r2)
+            r2 = 0
+            r4.setOrientation(r2)
+            android.widget.FrameLayout$LayoutParams r2 = new android.widget.FrameLayout$LayoutParams
+            r3 = 8388613(0x800005, float:1.175495E-38)
+            r2.<init>(r11, r15, r3)
+            r4.setLayoutParams(r2)
+            android.widget.FrameLayout$LayoutParams r2 = new android.widget.FrameLayout$LayoutParams
+            r2.<init>(r11, r15)
+            r6.setLayoutParams(r2)
+            android.animation.TimeInterpolator r2 = com.google.android.material.animation.AnimationUtils.LINEAR_INTERPOLATOR
+            r1.setTextSizeInterpolator(r2)
+            r1.setPositionInterpolator(r2)
+            r2 = 8388659(0x800033, float:1.1755015E-38)
+            r1.setCollapsedTextGravity(r2)
+            int[] r3 = com.google.android.material.R$styleable.TextInputLayout
+            r1 = 5
+            int[] r15 = new int[r1]
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_counterTextAppearance
+            r1 = 0
+            r15[r1] = r2
+            int r1 = com.google.android.material.R$styleable.TextInputLayout_counterOverflowTextAppearance
+            r16 = 1
+            r15[r16] = r1
+            int r11 = com.google.android.material.R$styleable.TextInputLayout_errorTextAppearance
+            r22 = r10
+            r10 = 2
+            r15[r10] = r11
+            int r10 = com.google.android.material.R$styleable.TextInputLayout_helperTextTextAppearance
+            r23 = r14
+            r14 = 3
+            r15[r14] = r10
+            int r14 = com.google.android.material.R$styleable.TextInputLayout_hintTextAppearance
+            r24 = 4
+            r15[r24] = r14
+            r25 = r1
+            r1 = r13
+            r27 = r2
+            r26 = r17
+            r2 = r34
+            r28 = r20
+            r29 = r4
+            r4 = r35
+            r30 = r5
+            r5 = r9
+            r31 = r6
+            r6 = r15
+            androidx.appcompat.widget.TintTypedArray r1 = com.google.android.material.internal.ThemeEnforcement.obtainTintedStyledAttributes(r1, r2, r3, r4, r5, r6)
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_hintEnabled
+            r3 = 1
+            boolean r2 = r1.getBoolean(r2, r3)
+            r0.hintEnabled = r2
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_android_hint
+            java.lang.CharSequence r2 = r1.getText(r2)
+            r0.setHint((java.lang.CharSequence) r2)
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_hintAnimationEnabled
+            boolean r2 = r1.getBoolean(r2, r3)
+            r0.hintAnimationEnabled = r2
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_expandedHintEnabled
+            boolean r2 = r1.getBoolean(r2, r3)
+            r0.expandedHintEnabled = r2
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_android_minEms
+            boolean r3 = r1.hasValue(r2)
+            if (r3 == 0) goto L_0x0172
+            r3 = -1
+            int r2 = r1.getInt(r2, r3)
+            r0.setMinEms(r2)
+            goto L_0x0182
+        L_0x0172:
+            r3 = -1
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_android_minWidth
+            boolean r4 = r1.hasValue(r2)
+            if (r4 == 0) goto L_0x0182
+            int r2 = r1.getDimensionPixelSize(r2, r3)
+            r0.setMinWidth(r2)
+        L_0x0182:
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_android_maxEms
+            boolean r4 = r1.hasValue(r2)
+            if (r4 == 0) goto L_0x0192
+            int r2 = r1.getInt(r2, r3)
+            r0.setMaxEms(r2)
+            goto L_0x01a1
+        L_0x0192:
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_android_maxWidth
+            boolean r4 = r1.hasValue(r2)
+            if (r4 == 0) goto L_0x01a1
+            int r2 = r1.getDimensionPixelSize(r2, r3)
+            r0.setMaxWidth(r2)
+        L_0x01a1:
+            com.google.android.material.shape.ShapeAppearanceModel$Builder r2 = com.google.android.material.shape.ShapeAppearanceModel.builder((android.content.Context) r13, (android.util.AttributeSet) r7, (int) r8, (int) r9)
+            com.google.android.material.shape.ShapeAppearanceModel r2 = r2.build()
+            r0.shapeAppearanceModel = r2
+            android.content.res.Resources r2 = r13.getResources()
+            int r3 = com.google.android.material.R$dimen.mtrl_textinput_box_label_cutout_padding
+            int r2 = r2.getDimensionPixelOffset(r3)
+            r0.boxLabelCutoutPaddingPx = r2
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_boxCollapsedPaddingTop
+            r3 = 0
+            int r2 = r1.getDimensionPixelOffset(r2, r3)
+            r0.boxCollapsedPaddingTopPx = r2
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_boxStrokeWidth
+            android.content.res.Resources r3 = r13.getResources()
+            int r4 = com.google.android.material.R$dimen.mtrl_textinput_box_stroke_width_default
+            int r3 = r3.getDimensionPixelSize(r4)
+            int r2 = r1.getDimensionPixelSize(r2, r3)
+            r0.boxStrokeWidthDefaultPx = r2
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_boxStrokeWidthFocused
+            android.content.res.Resources r3 = r13.getResources()
+            int r4 = com.google.android.material.R$dimen.mtrl_textinput_box_stroke_width_focused
+            int r3 = r3.getDimensionPixelSize(r4)
+            int r2 = r1.getDimensionPixelSize(r2, r3)
+            r0.boxStrokeWidthFocusedPx = r2
+            int r2 = r0.boxStrokeWidthDefaultPx
+            r0.boxStrokeWidthPx = r2
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_boxCornerRadiusTopStart
+            r3 = -1082130432(0xffffffffbf800000, float:-1.0)
+            float r2 = r1.getDimension(r2, r3)
+            int r4 = com.google.android.material.R$styleable.TextInputLayout_boxCornerRadiusTopEnd
+            float r4 = r1.getDimension(r4, r3)
+            int r5 = com.google.android.material.R$styleable.TextInputLayout_boxCornerRadiusBottomEnd
+            float r5 = r1.getDimension(r5, r3)
+            int r6 = com.google.android.material.R$styleable.TextInputLayout_boxCornerRadiusBottomStart
+            float r3 = r1.getDimension(r6, r3)
+            com.google.android.material.shape.ShapeAppearanceModel r6 = r0.shapeAppearanceModel
+            com.google.android.material.shape.ShapeAppearanceModel$Builder r6 = r6.toBuilder()
+            r7 = 0
+            int r8 = (r2 > r7 ? 1 : (r2 == r7 ? 0 : -1))
+            if (r8 < 0) goto L_0x0210
+            r6.setTopLeftCornerSize((float) r2)
+        L_0x0210:
+            int r2 = (r4 > r7 ? 1 : (r4 == r7 ? 0 : -1))
+            if (r2 < 0) goto L_0x0217
+            r6.setTopRightCornerSize((float) r4)
+        L_0x0217:
+            int r2 = (r5 > r7 ? 1 : (r5 == r7 ? 0 : -1))
+            if (r2 < 0) goto L_0x021e
+            r6.setBottomRightCornerSize((float) r5)
+        L_0x021e:
+            int r2 = (r3 > r7 ? 1 : (r3 == r7 ? 0 : -1))
+            if (r2 < 0) goto L_0x0225
+            r6.setBottomLeftCornerSize((float) r3)
+        L_0x0225:
+            com.google.android.material.shape.ShapeAppearanceModel r2 = r6.build()
+            r0.shapeAppearanceModel = r2
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_boxBackgroundColor
+            android.content.res.ColorStateList r2 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r13, (androidx.appcompat.widget.TintTypedArray) r1, (int) r2)
+            if (r2 == 0) goto L_0x028e
+            int r3 = r2.getDefaultColor()
+            r0.defaultFilledBackgroundColor = r3
+            r0.boxBackgroundColor = r3
+            boolean r3 = r2.isStateful()
+            r4 = -16842910(0xfffffffffefeff62, float:-1.6947497E38)
+            if (r3 == 0) goto L_0x0269
+            r3 = 1
+            int[] r5 = new int[r3]
+            r3 = 0
+            r5[r3] = r4
+            r3 = -1
+            int r4 = r2.getColorForState(r5, r3)
+            r0.disabledFilledBackgroundColor = r4
+            r4 = 2
+            int[] r5 = new int[r4]
+            r5 = {16842908, 16842910} // fill-array
+            int r5 = r2.getColorForState(r5, r3)
+            r0.focusedFilledBackgroundColor = r5
+            int[] r5 = new int[r4]
+            r5 = {16843623, 16842910} // fill-array
+            int r2 = r2.getColorForState(r5, r3)
+            r0.hoveredFilledBackgroundColor = r2
+            goto L_0x0299
+        L_0x0269:
+            r3 = -1
+            int r2 = r0.defaultFilledBackgroundColor
+            r0.focusedFilledBackgroundColor = r2
+            int r2 = com.google.android.material.R$color.mtrl_filled_background_color
+            android.content.res.ColorStateList r2 = androidx.appcompat.content.res.AppCompatResources.getColorStateList(r13, r2)
+            r5 = 1
+            int[] r6 = new int[r5]
+            r7 = 0
+            r6[r7] = r4
+            int r4 = r2.getColorForState(r6, r3)
+            r0.disabledFilledBackgroundColor = r4
+            int[] r4 = new int[r5]
+            r5 = 16843623(0x1010367, float:2.3696E-38)
+            r4[r7] = r5
+            int r2 = r2.getColorForState(r4, r3)
+            r0.hoveredFilledBackgroundColor = r2
+            goto L_0x0299
+        L_0x028e:
+            r7 = 0
+            r0.boxBackgroundColor = r7
+            r0.defaultFilledBackgroundColor = r7
+            r0.disabledFilledBackgroundColor = r7
+            r0.focusedFilledBackgroundColor = r7
+            r0.hoveredFilledBackgroundColor = r7
+        L_0x0299:
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_android_textColorHint
+            boolean r3 = r1.hasValue(r2)
+            if (r3 == 0) goto L_0x02a9
+            android.content.res.ColorStateList r2 = r1.getColorStateList(r2)
+            r0.focusedTextColor = r2
+            r0.defaultHintTextColor = r2
+        L_0x02a9:
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_boxStrokeColor
+            android.content.res.ColorStateList r3 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r13, (androidx.appcompat.widget.TintTypedArray) r1, (int) r2)
+            r4 = 0
+            int r2 = r1.getColor(r2, r4)
+            r0.focusedStrokeColor = r2
+            int r2 = com.google.android.material.R$color.mtrl_textinput_default_box_stroke_color
+            int r2 = androidx.core.content.ContextCompat.getColor(r13, r2)
+            r0.defaultStrokeColor = r2
+            int r2 = com.google.android.material.R$color.mtrl_textinput_disabled_color
+            int r2 = androidx.core.content.ContextCompat.getColor(r13, r2)
+            r0.disabledColor = r2
+            int r2 = com.google.android.material.R$color.mtrl_textinput_hovered_box_stroke_color
+            int r2 = androidx.core.content.ContextCompat.getColor(r13, r2)
+            r0.hoveredStrokeColor = r2
+            if (r3 == 0) goto L_0x02d3
+            r0.setBoxStrokeColorStateList(r3)
+        L_0x02d3:
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_boxStrokeErrorColor
+            boolean r3 = r1.hasValue(r2)
+            if (r3 == 0) goto L_0x02e2
+            android.content.res.ColorStateList r2 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r13, (androidx.appcompat.widget.TintTypedArray) r1, (int) r2)
+            r0.setBoxStrokeErrorColor(r2)
+        L_0x02e2:
+            r2 = -1
+            int r3 = r1.getResourceId(r14, r2)
+            if (r3 == r2) goto L_0x02f2
+            r2 = 0
+            int r3 = r1.getResourceId(r14, r2)
+            r0.setHintTextAppearance(r3)
+            goto L_0x02f3
+        L_0x02f2:
+            r2 = 0
+        L_0x02f3:
+            int r3 = r1.getResourceId(r11, r2)
+            int r4 = com.google.android.material.R$styleable.TextInputLayout_errorContentDescription
+            java.lang.CharSequence r4 = r1.getText(r4)
+            int r5 = com.google.android.material.R$styleable.TextInputLayout_errorEnabled
+            boolean r5 = r1.getBoolean(r5, r2)
+            int r6 = com.google.android.material.R$id.text_input_error_icon
+            r12.setId(r6)
+            boolean r6 = com.google.android.material.resources.MaterialResources.isFontScaleAtLeast1_3(r13)
+            if (r6 == 0) goto L_0x0317
+            android.view.ViewGroup$LayoutParams r6 = r12.getLayoutParams()
+            android.view.ViewGroup$MarginLayoutParams r6 = (android.view.ViewGroup.MarginLayoutParams) r6
+            androidx.core.view.MarginLayoutParamsCompat.setMarginStart(r6, r2)
+        L_0x0317:
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_errorIconTint
+            boolean r6 = r1.hasValue(r2)
+            if (r6 == 0) goto L_0x0325
+            android.content.res.ColorStateList r2 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r13, (androidx.appcompat.widget.TintTypedArray) r1, (int) r2)
+            r0.errorIconTintList = r2
+        L_0x0325:
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_errorIconTintMode
+            boolean r6 = r1.hasValue(r2)
+            r7 = 0
+            if (r6 == 0) goto L_0x0339
+            r6 = -1
+            int r2 = r1.getInt(r2, r6)
+            android.graphics.PorterDuff$Mode r2 = com.google.android.material.internal.ViewUtils.parseTintMode(r2, r7)
+            r0.errorIconTintMode = r2
+        L_0x0339:
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_errorIconDrawable
+            boolean r6 = r1.hasValue(r2)
+            if (r6 == 0) goto L_0x0348
+            android.graphics.drawable.Drawable r2 = r1.getDrawable(r2)
+            r0.setErrorIconDrawable((android.graphics.drawable.Drawable) r2)
+        L_0x0348:
+            android.content.res.Resources r2 = r32.getResources()
+            int r6 = com.google.android.material.R$string.error_icon_content_description
+            java.lang.CharSequence r2 = r2.getText(r6)
+            r12.setContentDescription(r2)
+            r2 = 2
+            androidx.core.view.ViewCompat.setImportantForAccessibility(r12, r2)
+            r2 = 0
+            r12.setClickable(r2)
+            r12.setPressable(r2)
+            r12.setFocusable(r2)
+            int r6 = r1.getResourceId(r10, r2)
+            int r8 = com.google.android.material.R$styleable.TextInputLayout_helperTextEnabled
+            boolean r8 = r1.getBoolean(r8, r2)
+            int r9 = com.google.android.material.R$styleable.TextInputLayout_helperText
+            java.lang.CharSequence r9 = r1.getText(r9)
+            int r10 = com.google.android.material.R$styleable.TextInputLayout_placeholderTextAppearance
+            int r10 = r1.getResourceId(r10, r2)
+            int r11 = com.google.android.material.R$styleable.TextInputLayout_placeholderText
+            java.lang.CharSequence r11 = r1.getText(r11)
+            int r14 = com.google.android.material.R$styleable.TextInputLayout_prefixTextAppearance
+            int r14 = r1.getResourceId(r14, r2)
+            int r15 = com.google.android.material.R$styleable.TextInputLayout_prefixText
+            java.lang.CharSequence r15 = r1.getText(r15)
+            int r7 = com.google.android.material.R$styleable.TextInputLayout_suffixTextAppearance
+            int r7 = r1.getResourceId(r7, r2)
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_suffixText
+            java.lang.CharSequence r2 = r1.getText(r2)
+            r35 = r2
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_counterEnabled
+            r17 = r15
+            r15 = 0
+            boolean r2 = r1.getBoolean(r2, r15)
+            int r15 = com.google.android.material.R$styleable.TextInputLayout_counterMaxLength
+            r20 = r9
+            r9 = -1
+            int r15 = r1.getInt(r15, r9)
+            r0.setCounterMaxLength(r15)
+            r9 = r27
+            r15 = 0
+            int r9 = r1.getResourceId(r9, r15)
+            r0.counterTextAppearance = r9
+            r9 = r25
+            int r9 = r1.getResourceId(r9, r15)
+            r0.counterOverflowTextAppearance = r9
+            boolean r9 = com.google.android.material.resources.MaterialResources.isFontScaleAtLeast1_3(r13)
+            if (r9 == 0) goto L_0x03ce
+            android.view.ViewGroup$LayoutParams r9 = r23.getLayoutParams()
+            android.view.ViewGroup$MarginLayoutParams r9 = (android.view.ViewGroup.MarginLayoutParams) r9
+            androidx.core.view.MarginLayoutParamsCompat.setMarginEnd(r9, r15)
+        L_0x03ce:
+            r9 = 0
+            r0.setStartIconOnClickListener(r9)
+            r0.setStartIconOnLongClickListener(r9)
+            int r9 = com.google.android.material.R$styleable.TextInputLayout_startIconTint
+            boolean r15 = r1.hasValue(r9)
+            if (r15 == 0) goto L_0x03e3
+            android.content.res.ColorStateList r9 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r13, (androidx.appcompat.widget.TintTypedArray) r1, (int) r9)
+            r0.startIconTintList = r9
+        L_0x03e3:
+            int r9 = com.google.android.material.R$styleable.TextInputLayout_startIconTintMode
+            boolean r15 = r1.hasValue(r9)
+            if (r15 == 0) goto L_0x03f7
+            r15 = -1
+            int r9 = r1.getInt(r9, r15)
+            r15 = 0
+            android.graphics.PorterDuff$Mode r9 = com.google.android.material.internal.ViewUtils.parseTintMode(r9, r15)
+            r0.startIconTintMode = r9
+        L_0x03f7:
+            int r9 = com.google.android.material.R$styleable.TextInputLayout_startIconDrawable
+            boolean r15 = r1.hasValue(r9)
+            if (r15 == 0) goto L_0x041f
+            android.graphics.drawable.Drawable r9 = r1.getDrawable(r9)
+            r0.setStartIconDrawable((android.graphics.drawable.Drawable) r9)
+            int r9 = com.google.android.material.R$styleable.TextInputLayout_startIconContentDescription
+            boolean r15 = r1.hasValue(r9)
+            if (r15 == 0) goto L_0x0415
+            java.lang.CharSequence r9 = r1.getText(r9)
+            r0.setStartIconContentDescription((java.lang.CharSequence) r9)
+        L_0x0415:
+            int r9 = com.google.android.material.R$styleable.TextInputLayout_startIconCheckable
+            r15 = 1
+            boolean r9 = r1.getBoolean(r9, r15)
+            r0.setStartIconCheckable(r9)
+        L_0x041f:
+            int r9 = com.google.android.material.R$styleable.TextInputLayout_boxBackgroundMode
+            r15 = 0
+            int r9 = r1.getInt(r9, r15)
+            r0.setBoxBackgroundMode(r9)
+            boolean r9 = com.google.android.material.resources.MaterialResources.isFontScaleAtLeast1_3(r13)
+            if (r9 == 0) goto L_0x0438
+            android.view.ViewGroup$LayoutParams r9 = r22.getLayoutParams()
+            android.view.ViewGroup$MarginLayoutParams r9 = (android.view.ViewGroup.MarginLayoutParams) r9
+            androidx.core.view.MarginLayoutParamsCompat.setMarginStart(r9, r15)
+        L_0x0438:
+            int r9 = com.google.android.material.R$styleable.TextInputLayout_endIconDrawable
+            int r9 = r1.getResourceId(r9, r15)
+            com.google.android.material.textfield.CustomEndIconDelegate r15 = new com.google.android.material.textfield.CustomEndIconDelegate
+            r15.<init>(r0, r9)
+            r24 = r2
+            r2 = r19
+            r19 = r5
+            r5 = -1
+            r2.append(r5, r15)
+            com.google.android.material.textfield.NoEndIconDelegate r5 = new com.google.android.material.textfield.NoEndIconDelegate
+            r5.<init>(r0)
+            r15 = 0
+            r2.append(r15, r5)
+            com.google.android.material.textfield.PasswordToggleEndIconDelegate r5 = new com.google.android.material.textfield.PasswordToggleEndIconDelegate
+            if (r9 != 0) goto L_0x0463
+            r25 = r8
+            int r8 = com.google.android.material.R$styleable.TextInputLayout_passwordToggleDrawable
+            int r8 = r1.getResourceId(r8, r15)
+            goto L_0x0466
+        L_0x0463:
+            r25 = r8
+            r8 = r9
+        L_0x0466:
+            r5.<init>(r0, r8)
+            r8 = 1
+            r2.append(r8, r5)
+            com.google.android.material.textfield.ClearTextEndIconDelegate r5 = new com.google.android.material.textfield.ClearTextEndIconDelegate
+            r5.<init>(r0, r9)
+            r8 = 2
+            r2.append(r8, r5)
+            com.google.android.material.textfield.DropdownMenuEndIconDelegate r5 = new com.google.android.material.textfield.DropdownMenuEndIconDelegate
+            r5.<init>(r0, r9)
+            r8 = 3
+            r2.append(r8, r5)
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_passwordToggleEnabled
+            boolean r5 = r1.hasValue(r2)
+            if (r5 != 0) goto L_0x04a9
+            int r5 = com.google.android.material.R$styleable.TextInputLayout_endIconTint
+            boolean r8 = r1.hasValue(r5)
+            if (r8 == 0) goto L_0x0495
+            android.content.res.ColorStateList r5 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r13, (androidx.appcompat.widget.TintTypedArray) r1, (int) r5)
+            r0.endIconTintList = r5
+        L_0x0495:
+            int r5 = com.google.android.material.R$styleable.TextInputLayout_endIconTintMode
+            boolean r8 = r1.hasValue(r5)
+            if (r8 == 0) goto L_0x04a9
+            r8 = -1
+            int r5 = r1.getInt(r5, r8)
+            r8 = 0
+            android.graphics.PorterDuff$Mode r5 = com.google.android.material.internal.ViewUtils.parseTintMode(r5, r8)
+            r0.endIconTintMode = r5
+        L_0x04a9:
+            int r5 = com.google.android.material.R$styleable.TextInputLayout_endIconMode
+            boolean r8 = r1.hasValue(r5)
+            if (r8 == 0) goto L_0x04d3
+            r8 = 0
+            int r2 = r1.getInt(r5, r8)
+            r0.setEndIconMode(r2)
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_endIconContentDescription
+            boolean r5 = r1.hasValue(r2)
+            if (r5 == 0) goto L_0x04c8
+            java.lang.CharSequence r2 = r1.getText(r2)
+            r0.setEndIconContentDescription((java.lang.CharSequence) r2)
+        L_0x04c8:
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_endIconCheckable
+            r5 = 1
+            boolean r2 = r1.getBoolean(r2, r5)
+            r0.setEndIconCheckable(r2)
+            goto L_0x050c
+        L_0x04d3:
+            boolean r5 = r1.hasValue(r2)
+            if (r5 == 0) goto L_0x050c
+            int r5 = com.google.android.material.R$styleable.TextInputLayout_passwordToggleTint
+            boolean r8 = r1.hasValue(r5)
+            if (r8 == 0) goto L_0x04e7
+            android.content.res.ColorStateList r5 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r13, (androidx.appcompat.widget.TintTypedArray) r1, (int) r5)
+            r0.endIconTintList = r5
+        L_0x04e7:
+            int r5 = com.google.android.material.R$styleable.TextInputLayout_passwordToggleTintMode
+            boolean r8 = r1.hasValue(r5)
+            if (r8 == 0) goto L_0x04fb
+            r8 = -1
+            int r5 = r1.getInt(r5, r8)
+            r8 = 0
+            android.graphics.PorterDuff$Mode r5 = com.google.android.material.internal.ViewUtils.parseTintMode(r5, r8)
+            r0.endIconTintMode = r5
+        L_0x04fb:
+            r5 = 0
+            boolean r2 = r1.getBoolean(r2, r5)
+            r0.setEndIconMode(r2)
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_passwordToggleContentDescription
+            java.lang.CharSequence r2 = r1.getText(r2)
+            r0.setEndIconContentDescription((java.lang.CharSequence) r2)
+        L_0x050c:
+            int r2 = com.google.android.material.R$id.textinput_prefix_text
+            r5 = r28
+            r5.setId(r2)
+            android.widget.FrameLayout$LayoutParams r2 = new android.widget.FrameLayout$LayoutParams
+            r8 = -2
+            r2.<init>(r8, r8)
+            r5.setLayoutParams(r2)
+            r2 = 1
+            androidx.core.view.ViewCompat.setAccessibilityLiveRegion(r5, r2)
+            int r9 = com.google.android.material.R$id.textinput_suffix_text
+            r13 = r26
+            r13.setId(r9)
+            android.widget.FrameLayout$LayoutParams r9 = new android.widget.FrameLayout$LayoutParams
+            r15 = 80
+            r9.<init>(r8, r8, r15)
+            r13.setLayoutParams(r9)
+            androidx.core.view.ViewCompat.setAccessibilityLiveRegion(r13, r2)
+            r0.setErrorContentDescription(r4)
+            int r2 = r0.counterOverflowTextAppearance
+            r0.setCounterOverflowTextAppearance(r2)
+            r0.setHelperTextTextAppearance(r6)
+            r0.setErrorTextAppearance(r3)
+            int r2 = r0.counterTextAppearance
+            r0.setCounterTextAppearance(r2)
+            r0.setPlaceholderText(r11)
+            r0.setPlaceholderTextAppearance(r10)
+            r0.setPrefixTextAppearance(r14)
+            r0.setSuffixTextAppearance(r7)
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_errorTextColor
+            boolean r3 = r1.hasValue(r2)
+            if (r3 == 0) goto L_0x0562
+            android.content.res.ColorStateList r2 = r1.getColorStateList(r2)
+            r0.setErrorTextColor(r2)
+        L_0x0562:
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_helperTextTextColor
+            boolean r3 = r1.hasValue(r2)
+            if (r3 == 0) goto L_0x0571
+            android.content.res.ColorStateList r2 = r1.getColorStateList(r2)
+            r0.setHelperTextColor(r2)
+        L_0x0571:
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_hintTextColor
+            boolean r3 = r1.hasValue(r2)
+            if (r3 == 0) goto L_0x0580
+            android.content.res.ColorStateList r2 = r1.getColorStateList(r2)
+            r0.setHintTextColor(r2)
+        L_0x0580:
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_counterTextColor
+            boolean r3 = r1.hasValue(r2)
+            if (r3 == 0) goto L_0x058f
+            android.content.res.ColorStateList r2 = r1.getColorStateList(r2)
+            r0.setCounterTextColor(r2)
+        L_0x058f:
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_counterOverflowTextColor
+            boolean r3 = r1.hasValue(r2)
+            if (r3 == 0) goto L_0x059e
+            android.content.res.ColorStateList r2 = r1.getColorStateList(r2)
+            r0.setCounterOverflowTextColor(r2)
+        L_0x059e:
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_placeholderTextColor
+            boolean r3 = r1.hasValue(r2)
+            if (r3 == 0) goto L_0x05ad
+            android.content.res.ColorStateList r2 = r1.getColorStateList(r2)
+            r0.setPlaceholderTextColor(r2)
+        L_0x05ad:
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_prefixTextColor
+            boolean r3 = r1.hasValue(r2)
+            if (r3 == 0) goto L_0x05bc
+            android.content.res.ColorStateList r2 = r1.getColorStateList(r2)
+            r0.setPrefixTextColor(r2)
+        L_0x05bc:
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_suffixTextColor
+            boolean r3 = r1.hasValue(r2)
+            if (r3 == 0) goto L_0x05cb
+            android.content.res.ColorStateList r2 = r1.getColorStateList(r2)
+            r0.setSuffixTextColor(r2)
+        L_0x05cb:
+            int r2 = com.google.android.material.R$styleable.TextInputLayout_android_enabled
+            r3 = 1
+            boolean r2 = r1.getBoolean(r2, r3)
+            r0.setEnabled(r2)
+            r1.recycle()
+            r1 = 2
+            androidx.core.view.ViewCompat.setImportantForAccessibility(r0, r1)
+            androidx.core.view.ViewCompat.setImportantForAutofill(r0, r3)
+            r14 = r23
+            r1 = r30
+            r1.addView(r14)
+            r1.addView(r5)
+            r3 = r22
+            r2 = r31
+            r2.addView(r3)
+            r3 = r29
+            r3.addView(r13)
+            r3.addView(r12)
+            r3.addView(r2)
+            r2 = r21
+            r2.addView(r1)
+            r2.addView(r3)
+            r0.addView(r2)
+            r1 = r25
+            r0.setHelperTextEnabled(r1)
+            r1 = r19
+            r0.setErrorEnabled(r1)
+            r1 = r24
+            r0.setCounterEnabled(r1)
+            r1 = r20
+            r0.setHelperText(r1)
+            r1 = r17
+            r0.setPrefixText(r1)
+            r1 = r35
+            r0.setSuffixText(r1)
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.google.android.material.textfield.TextInputLayout.<init>(android.content.Context, android.util.AttributeSet, int):void");
     }
 
-    @Override // android.view.ViewGroup
     public void addView(View view, int i, ViewGroup.LayoutParams layoutParams) {
         if (view instanceof EditText) {
             FrameLayout.LayoutParams layoutParams2 = new FrameLayout.LayoutParams(layoutParams);
-            layoutParams2.gravity = (layoutParams2.gravity & (-113)) | 16;
+            layoutParams2.gravity = (layoutParams2.gravity & -113) | 16;
             this.inputFrame.addView(view, layoutParams2);
             this.inputFrame.setLayoutParams(layoutParams);
             updateInputLayoutMargins();
@@ -522,7 +859,7 @@ public class TextInputLayout extends LinearLayout {
         super.addView(view, i, layoutParams);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public MaterialShapeDrawable getBoxBackground() {
         int i = this.boxBackgroundMode;
         if (i == 1 || i == 2) {
@@ -532,14 +869,12 @@ public class TextInputLayout extends LinearLayout {
     }
 
     public void setBoxBackgroundMode(int i) {
-        if (i == this.boxBackgroundMode) {
-            return;
+        if (i != this.boxBackgroundMode) {
+            this.boxBackgroundMode = i;
+            if (this.editText != null) {
+                onApplyBoxBackgroundMode();
+            }
         }
-        this.boxBackgroundMode = i;
-        if (this.editText == null) {
-            return;
-        }
-        onApplyBoxBackgroundMode();
     }
 
     public int getBoxBackgroundMode() {
@@ -561,17 +896,20 @@ public class TextInputLayout extends LinearLayout {
         int i = this.boxBackgroundMode;
         if (i == 0) {
             this.boxBackground = null;
-            this.boxUnderline = null;
+            this.boxUnderlineDefault = null;
+            this.boxUnderlineFocused = null;
         } else if (i == 1) {
             this.boxBackground = new MaterialShapeDrawable(this.shapeAppearanceModel);
-            this.boxUnderline = new MaterialShapeDrawable();
+            this.boxUnderlineDefault = new MaterialShapeDrawable();
+            this.boxUnderlineFocused = new MaterialShapeDrawable();
         } else if (i == 2) {
-            if (this.hintEnabled && !(this.boxBackground instanceof CutoutDrawable)) {
-                this.boxBackground = new CutoutDrawable(this.shapeAppearanceModel);
-            } else {
+            if (!this.hintEnabled || (this.boxBackground instanceof CutoutDrawable)) {
                 this.boxBackground = new MaterialShapeDrawable(this.shapeAppearanceModel);
+            } else {
+                this.boxBackground = new CutoutDrawable(this.shapeAppearanceModel);
             }
-            this.boxUnderline = null;
+            this.boxUnderlineDefault = null;
+            this.boxUnderlineFocused = null;
         } else {
             throw new IllegalArgumentException(this.boxBackgroundMode + " is illegal; only @BoxBackgroundMode constants are supported.");
         }
@@ -584,33 +922,39 @@ public class TextInputLayout extends LinearLayout {
     }
 
     private boolean shouldUseEditTextBackgroundForBoxBackground() {
-        EditText editText = this.editText;
-        return (editText == null || this.boxBackground == null || editText.getBackground() != null || this.boxBackgroundMode == 0) ? false : true;
+        EditText editText2 = this.editText;
+        return (editText2 == null || this.boxBackground == null || editText2.getBackground() != null || this.boxBackgroundMode == 0) ? false : true;
     }
 
     private void updateBoxCollapsedPaddingTop() {
-        if (this.boxBackgroundMode == 1) {
-            if (MaterialResources.isFontScaleAtLeast2_0(getContext())) {
-                this.boxCollapsedPaddingTopPx = getResources().getDimensionPixelSize(R$dimen.material_font_2_0_box_collapsed_padding_top);
-            } else if (!MaterialResources.isFontScaleAtLeast1_3(getContext())) {
-            } else {
-                this.boxCollapsedPaddingTopPx = getResources().getDimensionPixelSize(R$dimen.material_font_1_3_box_collapsed_padding_top);
-            }
+        if (this.boxBackgroundMode != 1) {
+            return;
+        }
+        if (MaterialResources.isFontScaleAtLeast2_0(getContext())) {
+            this.boxCollapsedPaddingTopPx = getResources().getDimensionPixelSize(R$dimen.material_font_2_0_box_collapsed_padding_top);
+        } else if (MaterialResources.isFontScaleAtLeast1_3(getContext())) {
+            this.boxCollapsedPaddingTopPx = getResources().getDimensionPixelSize(R$dimen.material_font_1_3_box_collapsed_padding_top);
         }
     }
 
     private void adjustFilledEditTextPaddingForLargeFont() {
-        if (this.editText == null || this.boxBackgroundMode != 1) {
-            return;
+        if (this.editText != null && this.boxBackgroundMode == 1) {
+            if (MaterialResources.isFontScaleAtLeast2_0(getContext())) {
+                EditText editText2 = this.editText;
+                ViewCompat.setPaddingRelative(editText2, ViewCompat.getPaddingStart(editText2), getResources().getDimensionPixelSize(R$dimen.material_filled_edittext_font_2_0_padding_top), ViewCompat.getPaddingEnd(this.editText), getResources().getDimensionPixelSize(R$dimen.material_filled_edittext_font_2_0_padding_bottom));
+            } else if (MaterialResources.isFontScaleAtLeast1_3(getContext())) {
+                EditText editText3 = this.editText;
+                ViewCompat.setPaddingRelative(editText3, ViewCompat.getPaddingStart(editText3), getResources().getDimensionPixelSize(R$dimen.material_filled_edittext_font_1_3_padding_top), ViewCompat.getPaddingEnd(this.editText), getResources().getDimensionPixelSize(R$dimen.material_filled_edittext_font_1_3_padding_bottom));
+            }
         }
-        if (MaterialResources.isFontScaleAtLeast2_0(getContext())) {
-            EditText editText = this.editText;
-            ViewCompat.setPaddingRelative(editText, ViewCompat.getPaddingStart(editText), getResources().getDimensionPixelSize(R$dimen.material_filled_edittext_font_2_0_padding_top), ViewCompat.getPaddingEnd(this.editText), getResources().getDimensionPixelSize(R$dimen.material_filled_edittext_font_2_0_padding_bottom));
-        } else if (!MaterialResources.isFontScaleAtLeast1_3(getContext())) {
-        } else {
-            EditText editText2 = this.editText;
-            ViewCompat.setPaddingRelative(editText2, ViewCompat.getPaddingStart(editText2), getResources().getDimensionPixelSize(R$dimen.material_filled_edittext_font_1_3_padding_top), ViewCompat.getPaddingEnd(this.editText), getResources().getDimensionPixelSize(R$dimen.material_filled_edittext_font_1_3_padding_bottom));
-        }
+    }
+
+    public void setBoxCollapsedPaddingTop(int i) {
+        this.boxCollapsedPaddingTopPx = i;
+    }
+
+    public int getBoxCollapsedPaddingTop() {
+        return this.boxCollapsedPaddingTopPx;
     }
 
     public void setBoxStrokeWidthResource(int i) {
@@ -701,32 +1045,61 @@ public class TextInputLayout extends LinearLayout {
         return this.boxBackgroundColor;
     }
 
+    public void setBoxCornerRadii(float f, float f2, float f3, float f4) {
+        boolean isLayoutRtl = ViewUtils.isLayoutRtl(this);
+        this.areCornerRadiiRtl = isLayoutRtl;
+        float f5 = isLayoutRtl ? f2 : f;
+        if (!isLayoutRtl) {
+            f = f2;
+        }
+        float f6 = isLayoutRtl ? f4 : f3;
+        if (!isLayoutRtl) {
+            f3 = f4;
+        }
+        MaterialShapeDrawable materialShapeDrawable = this.boxBackground;
+        if (materialShapeDrawable == null || materialShapeDrawable.getTopLeftCornerResolvedSize() != f5 || this.boxBackground.getTopRightCornerResolvedSize() != f || this.boxBackground.getBottomLeftCornerResolvedSize() != f6 || this.boxBackground.getBottomRightCornerResolvedSize() != f3) {
+            this.shapeAppearanceModel = this.shapeAppearanceModel.toBuilder().setTopLeftCornerSize(f5).setTopRightCornerSize(f).setBottomLeftCornerSize(f6).setBottomRightCornerSize(f3).build();
+            applyBoxAttributes();
+        }
+    }
+
     public float getBoxCornerRadiusTopStart() {
-        return this.boxBackground.getTopLeftCornerResolvedSize();
+        if (ViewUtils.isLayoutRtl(this)) {
+            return this.shapeAppearanceModel.getTopRightCornerSize().getCornerSize(this.tmpRectF);
+        }
+        return this.shapeAppearanceModel.getTopLeftCornerSize().getCornerSize(this.tmpRectF);
     }
 
     public float getBoxCornerRadiusTopEnd() {
-        return this.boxBackground.getTopRightCornerResolvedSize();
+        if (ViewUtils.isLayoutRtl(this)) {
+            return this.shapeAppearanceModel.getTopLeftCornerSize().getCornerSize(this.tmpRectF);
+        }
+        return this.shapeAppearanceModel.getTopRightCornerSize().getCornerSize(this.tmpRectF);
     }
 
     public float getBoxCornerRadiusBottomEnd() {
-        return this.boxBackground.getBottomLeftCornerResolvedSize();
+        if (ViewUtils.isLayoutRtl(this)) {
+            return this.shapeAppearanceModel.getBottomLeftCornerSize().getCornerSize(this.tmpRectF);
+        }
+        return this.shapeAppearanceModel.getBottomRightCornerSize().getCornerSize(this.tmpRectF);
     }
 
     public float getBoxCornerRadiusBottomStart() {
-        return this.boxBackground.getBottomRightCornerResolvedSize();
+        if (ViewUtils.isLayoutRtl(this)) {
+            return this.shapeAppearanceModel.getBottomRightCornerSize().getCornerSize(this.tmpRectF);
+        }
+        return this.shapeAppearanceModel.getBottomLeftCornerSize().getCornerSize(this.tmpRectF);
     }
 
-    public void setTypeface(Typeface typeface) {
-        if (typeface != this.typeface) {
-            this.typeface = typeface;
-            this.collapsingTextHelper.setTypefaces(typeface);
-            this.indicatorViewController.setTypefaces(typeface);
+    public void setTypeface(Typeface typeface2) {
+        if (typeface2 != this.typeface) {
+            this.typeface = typeface2;
+            this.collapsingTextHelper.setTypefaces(typeface2);
+            this.indicatorViewController.setTypefaces(typeface2);
             TextView textView = this.counterView;
-            if (textView == null) {
-                return;
+            if (textView != null) {
+                textView.setTypeface(typeface2);
             }
-            textView.setTypeface(typeface);
         }
     }
 
@@ -734,132 +1107,138 @@ public class TextInputLayout extends LinearLayout {
         return this.typeface;
     }
 
-    @Override // android.view.ViewGroup, android.view.View
     @TargetApi(26)
     public void dispatchProvideAutofillStructure(ViewStructure viewStructure, int i) {
-        EditText editText = this.editText;
-        if (editText == null) {
+        EditText editText2 = this.editText;
+        if (editText2 == null) {
             super.dispatchProvideAutofillStructure(viewStructure, i);
             return;
         }
         if (this.originalHint != null) {
             boolean z = this.isProvidingHint;
             this.isProvidingHint = false;
-            CharSequence hint = editText.getHint();
+            CharSequence hint2 = editText2.getHint();
             this.editText.setHint(this.originalHint);
             try {
                 super.dispatchProvideAutofillStructure(viewStructure, i);
-                return;
             } finally {
-                this.editText.setHint(hint);
+                this.editText.setHint(hint2);
                 this.isProvidingHint = z;
             }
-        }
-        viewStructure.setAutofillId(getAutofillId());
-        onProvideAutofillStructure(viewStructure, i);
-        onProvideAutofillVirtualStructure(viewStructure, i);
-        viewStructure.setChildCount(this.inputFrame.getChildCount());
-        for (int i2 = 0; i2 < this.inputFrame.getChildCount(); i2++) {
-            View childAt = this.inputFrame.getChildAt(i2);
-            ViewStructure newChild = viewStructure.newChild(i2);
-            childAt.dispatchProvideAutofillStructure(newChild, i);
-            if (childAt == this.editText) {
-                newChild.setHint(getHint());
+        } else {
+            viewStructure.setAutofillId(getAutofillId());
+            onProvideAutofillStructure(viewStructure, i);
+            onProvideAutofillVirtualStructure(viewStructure, i);
+            viewStructure.setChildCount(this.inputFrame.getChildCount());
+            for (int i2 = 0; i2 < this.inputFrame.getChildCount(); i2++) {
+                View childAt = this.inputFrame.getChildAt(i2);
+                ViewStructure newChild = viewStructure.newChild(i2);
+                childAt.dispatchProvideAutofillStructure(newChild, i);
+                if (childAt == this.editText) {
+                    newChild.setHint(getHint());
+                }
             }
         }
     }
 
-    private void setEditText(EditText editText) {
-        if (this.editText != null) {
-            throw new IllegalArgumentException("We already have an EditText, can only have one");
-        }
-        if (this.endIconMode != 3 && !(editText instanceof TextInputEditText)) {
-            Log.i("TextInputLayout", "EditText added is not a TextInputEditText. Please switch to using that class instead.");
-        }
-        this.editText = editText;
-        setMinWidth(this.minWidth);
-        setMaxWidth(this.maxWidth);
-        onApplyBoxBackgroundMode();
-        setTextInputAccessibilityDelegate(new AccessibilityDelegate(this));
-        this.collapsingTextHelper.setTypefaces(this.editText.getTypeface());
-        this.collapsingTextHelper.setExpandedTextSize(this.editText.getTextSize());
-        int gravity = this.editText.getGravity();
-        this.collapsingTextHelper.setCollapsedTextGravity((gravity & (-113)) | 48);
-        this.collapsingTextHelper.setExpandedTextGravity(gravity);
-        this.editText.addTextChangedListener(new TextWatcher() { // from class: com.google.android.material.textfield.TextInputLayout.1
-            @Override // android.text.TextWatcher
-            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+    private void setEditText(EditText editText2) {
+        if (this.editText == null) {
+            if (this.endIconMode != 3 && !(editText2 instanceof TextInputEditText)) {
+                Log.i("TextInputLayout", "EditText added is not a TextInputEditText. Please switch to using that class instead.");
             }
-
-            @Override // android.text.TextWatcher
-            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+            this.editText = editText2;
+            int i = this.minEms;
+            if (i != -1) {
+                setMinEms(i);
+            } else {
+                setMinWidth(this.minWidth);
             }
-
-            @Override // android.text.TextWatcher
-            public void afterTextChanged(Editable editable) {
-                TextInputLayout textInputLayout = TextInputLayout.this;
-                textInputLayout.updateLabelState(!textInputLayout.restoringSavedState);
-                TextInputLayout textInputLayout2 = TextInputLayout.this;
-                if (textInputLayout2.counterEnabled) {
-                    textInputLayout2.updateCounter(editable.length());
+            int i2 = this.maxEms;
+            if (i2 != -1) {
+                setMaxEms(i2);
+            } else {
+                setMaxWidth(this.maxWidth);
+            }
+            onApplyBoxBackgroundMode();
+            setTextInputAccessibilityDelegate(new AccessibilityDelegate(this));
+            this.collapsingTextHelper.setTypefaces(this.editText.getTypeface());
+            this.collapsingTextHelper.setExpandedTextSize(this.editText.getTextSize());
+            this.collapsingTextHelper.setExpandedLetterSpacing(this.editText.getLetterSpacing());
+            int gravity = this.editText.getGravity();
+            this.collapsingTextHelper.setCollapsedTextGravity((gravity & -113) | 48);
+            this.collapsingTextHelper.setExpandedTextGravity(gravity);
+            this.editText.addTextChangedListener(new TextWatcher() {
+                public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
                 }
-                if (TextInputLayout.this.placeholderEnabled) {
-                    TextInputLayout.this.updatePlaceholderText(editable.length());
+
+                public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
                 }
+
+                public void afterTextChanged(Editable editable) {
+                    TextInputLayout textInputLayout = TextInputLayout.this;
+                    textInputLayout.updateLabelState(!textInputLayout.restoringSavedState);
+                    TextInputLayout textInputLayout2 = TextInputLayout.this;
+                    if (textInputLayout2.counterEnabled) {
+                        textInputLayout2.updateCounter(editable.length());
+                    }
+                    if (TextInputLayout.this.placeholderEnabled) {
+                        TextInputLayout.this.updatePlaceholderText(editable.length());
+                    }
+                }
+            });
+            if (this.defaultHintTextColor == null) {
+                this.defaultHintTextColor = this.editText.getHintTextColors();
             }
-        });
-        if (this.defaultHintTextColor == null) {
-            this.defaultHintTextColor = this.editText.getHintTextColors();
-        }
-        if (this.hintEnabled) {
-            if (TextUtils.isEmpty(this.hint)) {
-                CharSequence hint = this.editText.getHint();
-                this.originalHint = hint;
-                setHint(hint);
-                this.editText.setHint((CharSequence) null);
+            if (this.hintEnabled) {
+                if (TextUtils.isEmpty(this.hint)) {
+                    CharSequence hint2 = this.editText.getHint();
+                    this.originalHint = hint2;
+                    setHint(hint2);
+                    this.editText.setHint((CharSequence) null);
+                }
+                this.isProvidingHint = true;
             }
-            this.isProvidingHint = true;
+            if (this.counterView != null) {
+                updateCounter(this.editText.getText().length());
+            }
+            updateEditTextBackground();
+            this.indicatorViewController.adjustIndicatorPadding();
+            this.startLayout.bringToFront();
+            this.endLayout.bringToFront();
+            this.endIconFrame.bringToFront();
+            this.errorIconView.bringToFront();
+            dispatchOnEditTextAttached();
+            updatePrefixTextViewPadding();
+            updateSuffixTextViewPadding();
+            if (!isEnabled()) {
+                editText2.setEnabled(false);
+            }
+            updateLabelState(false, true);
+            return;
         }
-        if (this.counterView != null) {
-            updateCounter(this.editText.getText().length());
-        }
-        updateEditTextBackground();
-        this.indicatorViewController.adjustIndicatorPadding();
-        this.startLayout.bringToFront();
-        this.endLayout.bringToFront();
-        this.endIconFrame.bringToFront();
-        this.errorIconView.bringToFront();
-        dispatchOnEditTextAttached();
-        updatePrefixTextViewPadding();
-        updateSuffixTextViewPadding();
-        if (!isEnabled()) {
-            editText.setEnabled(false);
-        }
-        updateLabelState(false, true);
+        throw new IllegalArgumentException("We already have an EditText, can only have one");
     }
 
     private void updateInputLayoutMargins() {
         if (this.boxBackgroundMode != 1) {
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.inputFrame.getLayoutParams();
             int calculateLabelMarginTop = calculateLabelMarginTop();
-            if (calculateLabelMarginTop == layoutParams.topMargin) {
-                return;
+            if (calculateLabelMarginTop != layoutParams.topMargin) {
+                layoutParams.topMargin = calculateLabelMarginTop;
+                this.inputFrame.requestLayout();
             }
-            layoutParams.topMargin = calculateLabelMarginTop;
-            this.inputFrame.requestLayout();
         }
     }
 
-    @Override // android.widget.LinearLayout, android.view.View
     public int getBaseline() {
-        EditText editText = this.editText;
-        if (editText != null) {
-            return editText.getBaseline() + getPaddingTop() + calculateLabelMarginTop();
+        EditText editText2 = this.editText;
+        if (editText2 != null) {
+            return editText2.getBaseline() + getPaddingTop() + calculateLabelMarginTop();
         }
         return super.getBaseline();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void updateLabelState(boolean z) {
         updateLabelState(z, false);
     }
@@ -867,11 +1246,12 @@ public class TextInputLayout extends LinearLayout {
     private void updateLabelState(boolean z, boolean z2) {
         ColorStateList colorStateList;
         TextView textView;
+        int i;
         boolean isEnabled = isEnabled();
-        EditText editText = this.editText;
-        boolean z3 = editText != null && !TextUtils.isEmpty(editText.getText());
         EditText editText2 = this.editText;
-        boolean z4 = editText2 != null && editText2.hasFocus();
+        boolean z3 = editText2 != null && !TextUtils.isEmpty(editText2.getText());
+        EditText editText3 = this.editText;
+        boolean z4 = editText3 != null && editText3.hasFocus();
         boolean errorShouldBeShown = this.indicatorViewController.errorShouldBeShown();
         ColorStateList colorStateList2 = this.defaultHintTextColor;
         if (colorStateList2 != null) {
@@ -880,9 +1260,13 @@ public class TextInputLayout extends LinearLayout {
         }
         if (!isEnabled) {
             ColorStateList colorStateList3 = this.defaultHintTextColor;
-            int colorForState = colorStateList3 != null ? colorStateList3.getColorForState(new int[]{-16842910}, this.disabledColor) : this.disabledColor;
-            this.collapsingTextHelper.setCollapsedTextColor(ColorStateList.valueOf(colorForState));
-            this.collapsingTextHelper.setExpandedTextColor(ColorStateList.valueOf(colorForState));
+            if (colorStateList3 != null) {
+                i = colorStateList3.getColorForState(new int[]{-16842910}, this.disabledColor);
+            } else {
+                i = this.disabledColor;
+            }
+            this.collapsingTextHelper.setCollapsedTextColor(ColorStateList.valueOf(i));
+            this.collapsingTextHelper.setExpandedTextColor(ColorStateList.valueOf(i));
         } else if (errorShouldBeShown) {
             this.collapsingTextHelper.setCollapsedTextColor(this.indicatorViewController.getErrorViewTextColors());
         } else if (this.counterOverflowed && (textView = this.counterView) != null) {
@@ -891,12 +1275,10 @@ public class TextInputLayout extends LinearLayout {
             this.collapsingTextHelper.setCollapsedTextColor(colorStateList);
         }
         if (z3 || !this.expandedHintEnabled || (isEnabled() && z4)) {
-            if (!z2 && !this.hintExpanded) {
-                return;
+            if (z2 || this.hintExpanded) {
+                collapseHint(z);
             }
-            collapseHint(z);
-        } else if (!z2 && this.hintExpanded) {
-        } else {
+        } else if (z2 || !this.hintExpanded) {
             expandHint(z);
         }
     }
@@ -905,13 +1287,36 @@ public class TextInputLayout extends LinearLayout {
         return this.editText;
     }
 
+    public void setMinEms(int i) {
+        this.minEms = i;
+        EditText editText2 = this.editText;
+        if (editText2 != null && i != -1) {
+            editText2.setMinEms(i);
+        }
+    }
+
+    public int getMinEms() {
+        return this.minEms;
+    }
+
+    public void setMaxEms(int i) {
+        this.maxEms = i;
+        EditText editText2 = this.editText;
+        if (editText2 != null && i != -1) {
+            editText2.setMaxEms(i);
+        }
+    }
+
+    public int getMaxEms() {
+        return this.maxEms;
+    }
+
     public void setMinWidth(int i) {
         this.minWidth = i;
-        EditText editText = this.editText;
-        if (editText == null || i == -1) {
-            return;
+        EditText editText2 = this.editText;
+        if (editText2 != null && i != -1) {
+            editText2.setMinWidth(i);
         }
-        editText.setMinWidth(i);
     }
 
     public void setMinWidthResource(int i) {
@@ -924,11 +1329,10 @@ public class TextInputLayout extends LinearLayout {
 
     public void setMaxWidth(int i) {
         this.maxWidth = i;
-        EditText editText = this.editText;
-        if (editText == null || i == -1) {
-            return;
+        EditText editText2 = this.editText;
+        if (editText2 != null && i != -1) {
+            editText2.setMaxWidth(i);
         }
-        editText.setMaxWidth(i);
     }
 
     public void setMaxWidthResource(int i) {
@@ -954,10 +1358,9 @@ public class TextInputLayout extends LinearLayout {
         if (!TextUtils.equals(charSequence, this.hint)) {
             this.hint = charSequence;
             this.collapsingTextHelper.setText(charSequence);
-            if (this.hintExpanded) {
-                return;
+            if (!this.hintExpanded) {
+                openCutout();
             }
-            openCutout();
         }
     }
 
@@ -976,21 +1379,20 @@ public class TextInputLayout extends LinearLayout {
                 if (!TextUtils.isEmpty(this.hint) && TextUtils.isEmpty(this.editText.getHint())) {
                     this.editText.setHint(this.hint);
                 }
-                setHintInternal(null);
+                setHintInternal((CharSequence) null);
             } else {
-                CharSequence hint = this.editText.getHint();
-                if (!TextUtils.isEmpty(hint)) {
+                CharSequence hint2 = this.editText.getHint();
+                if (!TextUtils.isEmpty(hint2)) {
                     if (TextUtils.isEmpty(this.hint)) {
-                        setHint(hint);
+                        setHint(hint2);
                     }
                     this.editText.setHint((CharSequence) null);
                 }
                 this.isProvidingHint = true;
             }
-            if (this.editText == null) {
-                return;
+            if (this.editText != null) {
+                updateInputLayoutMargins();
             }
-            updateInputLayoutMargins();
         }
     }
 
@@ -1013,10 +1415,9 @@ public class TextInputLayout extends LinearLayout {
                 this.collapsingTextHelper.setCollapsedTextColor(colorStateList);
             }
             this.focusedTextColor = colorStateList;
-            if (this.editText == null) {
-                return;
+            if (this.editText != null) {
+                updateLabelState(false);
             }
-            updateLabelState(false);
         }
     }
 
@@ -1065,17 +1466,14 @@ public class TextInputLayout extends LinearLayout {
     }
 
     public void setHelperText(CharSequence charSequence) {
-        if (TextUtils.isEmpty(charSequence)) {
+        if (!TextUtils.isEmpty(charSequence)) {
             if (!isHelperTextEnabled()) {
-                return;
+                setHelperTextEnabled(true);
             }
+            this.indicatorViewController.showHelper(charSequence);
+        } else if (isHelperTextEnabled()) {
             setHelperTextEnabled(false);
-            return;
         }
-        if (!isHelperTextEnabled()) {
-            setHelperTextEnabled(true);
-        }
-        this.indicatorViewController.showHelper(charSequence);
     }
 
     public boolean isHelperTextEnabled() {
@@ -1096,10 +1494,11 @@ public class TextInputLayout extends LinearLayout {
 
     public void setError(CharSequence charSequence) {
         if (!this.indicatorViewController.isErrorEnabled()) {
-            if (TextUtils.isEmpty(charSequence)) {
+            if (!TextUtils.isEmpty(charSequence)) {
+                setErrorEnabled(true);
+            } else {
                 return;
             }
-            setErrorEnabled(true);
         }
         if (!TextUtils.isEmpty(charSequence)) {
             this.indicatorViewController.showError(charSequence);
@@ -1115,7 +1514,8 @@ public class TextInputLayout extends LinearLayout {
 
     public void setErrorIconDrawable(Drawable drawable) {
         this.errorIconView.setImageDrawable(drawable);
-        setErrorIconVisible(drawable != null && this.indicatorViewController.isErrorEnabled());
+        updateErrorIconVisibility();
+        applyIconTint(this.errorIconView, this.errorIconTintList, this.errorIconTintMode);
     }
 
     public Drawable getErrorIconDrawable() {
@@ -1123,25 +1523,16 @@ public class TextInputLayout extends LinearLayout {
     }
 
     public void setErrorIconTintList(ColorStateList colorStateList) {
-        this.errorIconTintList = colorStateList;
-        Drawable drawable = this.errorIconView.getDrawable();
-        if (drawable != null) {
-            drawable = DrawableCompat.wrap(drawable).mutate();
-            DrawableCompat.setTintList(drawable, colorStateList);
-        }
-        if (this.errorIconView.getDrawable() != drawable) {
-            this.errorIconView.setImageDrawable(drawable);
+        if (this.errorIconTintList != colorStateList) {
+            this.errorIconTintList = colorStateList;
+            applyIconTint(this.errorIconView, colorStateList, this.errorIconTintMode);
         }
     }
 
     public void setErrorIconTintMode(PorterDuff.Mode mode) {
-        Drawable drawable = this.errorIconView.getDrawable();
-        if (drawable != null) {
-            drawable = DrawableCompat.wrap(drawable).mutate();
-            DrawableCompat.setTintMode(drawable, mode);
-        }
-        if (this.errorIconView.getDrawable() != drawable) {
-            this.errorIconView.setImageDrawable(drawable);
+        if (this.errorIconTintMode != mode) {
+            this.errorIconTintMode = mode;
+            applyIconTint(this.errorIconView, this.errorIconTintList, mode);
         }
     }
 
@@ -1151,9 +1542,9 @@ public class TextInputLayout extends LinearLayout {
                 AppCompatTextView appCompatTextView = new AppCompatTextView(getContext());
                 this.counterView = appCompatTextView;
                 appCompatTextView.setId(R$id.textinput_counter);
-                Typeface typeface = this.typeface;
-                if (typeface != null) {
-                    this.counterView.setTypeface(typeface);
+                Typeface typeface2 = this.typeface;
+                if (typeface2 != null) {
+                    this.counterView.setTypeface(typeface2);
                 }
                 this.counterView.setMaxLines(1);
                 this.indicatorViewController.addIndicator(this.counterView, 2);
@@ -1211,26 +1602,26 @@ public class TextInputLayout extends LinearLayout {
             } else {
                 this.counterMaxLength = -1;
             }
-            if (!this.counterEnabled) {
-                return;
+            if (this.counterEnabled) {
+                updateCounter();
             }
-            updateCounter();
         }
     }
 
     private void updateCounter() {
         if (this.counterView != null) {
-            EditText editText = this.editText;
-            updateCounter(editText == null ? 0 : editText.getText().length());
+            EditText editText2 = this.editText;
+            updateCounter(editText2 == null ? 0 : editText2.getText().length());
         }
     }
 
-    void updateCounter(int i) {
+    /* access modifiers changed from: package-private */
+    public void updateCounter(int i) {
         boolean z = this.counterOverflowed;
         int i2 = this.counterMaxLength;
         if (i2 == -1) {
             this.counterView.setText(String.valueOf(i));
-            this.counterView.setContentDescription(null);
+            this.counterView.setContentDescription((CharSequence) null);
             this.counterOverflowed = false;
         } else {
             this.counterOverflowed = i > i2;
@@ -1238,22 +1629,39 @@ public class TextInputLayout extends LinearLayout {
             if (z != this.counterOverflowed) {
                 updateCounterTextAppearanceAndColor();
             }
-            this.counterView.setText(BidiFormatter.getInstance().unicodeWrap(getContext().getString(R$string.character_counter_pattern, Integer.valueOf(i), Integer.valueOf(this.counterMaxLength))));
+            this.counterView.setText(BidiFormatter.getInstance().unicodeWrap(getContext().getString(R$string.character_counter_pattern, new Object[]{Integer.valueOf(i), Integer.valueOf(this.counterMaxLength)})));
         }
-        if (this.editText == null || z == this.counterOverflowed) {
-            return;
+        if (this.editText != null && z != this.counterOverflowed) {
+            updateLabelState(false);
+            updateTextInputBoxState();
+            updateEditTextBackground();
         }
-        updateLabelState(false);
-        updateTextInputBoxState();
-        updateEditTextBackground();
     }
 
     private static void updateCounterContentDescription(Context context, TextView textView, int i, int i2, boolean z) {
-        textView.setContentDescription(context.getString(z ? R$string.character_counter_overflowed_content_description : R$string.character_counter_content_description, Integer.valueOf(i), Integer.valueOf(i2)));
+        int i3;
+        if (z) {
+            i3 = R$string.character_counter_overflowed_content_description;
+        } else {
+            i3 = R$string.character_counter_content_description;
+        }
+        textView.setContentDescription(context.getString(i3, new Object[]{Integer.valueOf(i), Integer.valueOf(i2)}));
     }
 
     public void setPlaceholderText(CharSequence charSequence) {
-        if (this.placeholderEnabled && TextUtils.isEmpty(charSequence)) {
+        if (this.placeholderTextView == null) {
+            AppCompatTextView appCompatTextView = new AppCompatTextView(getContext());
+            this.placeholderTextView = appCompatTextView;
+            appCompatTextView.setId(R$id.textinput_placeholder);
+            ViewCompat.setImportantForAccessibility(this.placeholderTextView, 2);
+            Fade createPlaceholderFadeTransition = createPlaceholderFadeTransition();
+            this.placeholderFadeIn = createPlaceholderFadeTransition;
+            createPlaceholderFadeTransition.setStartDelay(67);
+            this.placeholderFadeOut = createPlaceholderFadeTransition();
+            setPlaceholderTextAppearance(this.placeholderTextAppearance);
+            setPlaceholderTextColor(this.placeholderTextColor);
+        }
+        if (TextUtils.isEmpty(charSequence)) {
             setPlaceholderTextEnabled(false);
         } else {
             if (!this.placeholderEnabled) {
@@ -1272,55 +1680,55 @@ public class TextInputLayout extends LinearLayout {
     }
 
     private void setPlaceholderTextEnabled(boolean z) {
-        if (this.placeholderEnabled == z) {
-            return;
+        if (this.placeholderEnabled != z) {
+            if (z) {
+                addPlaceholderTextView();
+            } else {
+                removePlaceholderTextView();
+                this.placeholderTextView = null;
+            }
+            this.placeholderEnabled = z;
         }
-        if (z) {
-            AppCompatTextView appCompatTextView = new AppCompatTextView(getContext());
-            this.placeholderTextView = appCompatTextView;
-            appCompatTextView.setId(R$id.textinput_placeholder);
-            ViewCompat.setAccessibilityLiveRegion(this.placeholderTextView, 1);
-            setPlaceholderTextAppearance(this.placeholderTextAppearance);
-            setPlaceholderTextColor(this.placeholderTextColor);
-            addPlaceholderTextView();
-        } else {
-            removePlaceholderTextView();
-            this.placeholderTextView = null;
-        }
-        this.placeholderEnabled = z;
+    }
+
+    private Fade createPlaceholderFadeTransition() {
+        Fade fade = new Fade();
+        fade.setDuration(87);
+        fade.setInterpolator(AnimationUtils.LINEAR_INTERPOLATOR);
+        return fade;
     }
 
     private void updatePlaceholderText() {
-        EditText editText = this.editText;
-        updatePlaceholderText(editText == null ? 0 : editText.getText().length());
+        EditText editText2 = this.editText;
+        updatePlaceholderText(editText2 == null ? 0 : editText2.getText().length());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updatePlaceholderText(int i) {
-        if (i == 0 && !this.hintExpanded) {
-            showPlaceholderText();
-        } else {
+        if (i != 0 || this.hintExpanded) {
             hidePlaceholderText();
+        } else {
+            showPlaceholderText();
         }
     }
 
     private void showPlaceholderText() {
-        TextView textView = this.placeholderTextView;
-        if (textView == null || !this.placeholderEnabled) {
-            return;
+        if (this.placeholderTextView != null && this.placeholderEnabled && !TextUtils.isEmpty(this.placeholderText)) {
+            this.placeholderTextView.setText(this.placeholderText);
+            TransitionManager.beginDelayedTransition(this.inputFrame, this.placeholderFadeIn);
+            this.placeholderTextView.setVisibility(0);
+            this.placeholderTextView.bringToFront();
+            announceForAccessibility(this.placeholderText);
         }
-        textView.setText(this.placeholderText);
-        this.placeholderTextView.setVisibility(0);
-        this.placeholderTextView.bringToFront();
     }
 
     private void hidePlaceholderText() {
         TextView textView = this.placeholderTextView;
-        if (textView == null || !this.placeholderEnabled) {
-            return;
+        if (textView != null && this.placeholderEnabled) {
+            textView.setText((CharSequence) null);
+            TransitionManager.beginDelayedTransition(this.inputFrame, this.placeholderFadeOut);
+            this.placeholderTextView.setVisibility(4);
         }
-        textView.setText((CharSequence) null);
-        this.placeholderTextView.setVisibility(4);
     }
 
     private void addPlaceholderTextView() {
@@ -1342,10 +1750,9 @@ public class TextInputLayout extends LinearLayout {
         if (this.placeholderTextColor != colorStateList) {
             this.placeholderTextColor = colorStateList;
             TextView textView = this.placeholderTextView;
-            if (textView == null || colorStateList == null) {
-                return;
+            if (textView != null && colorStateList != null) {
+                textView.setTextColor(colorStateList);
             }
-            textView.setTextColor(colorStateList);
         }
     }
 
@@ -1380,7 +1787,9 @@ public class TextInputLayout extends LinearLayout {
     }
 
     private void updatePrefixTextVisibility() {
-        this.prefixTextView.setVisibility((this.prefixText == null || isHintExpanded()) ? 8 : 0);
+        int i = (this.prefixText == null || isHintExpanded()) ? 8 : 0;
+        updateStartLayoutVisibility();
+        this.prefixTextView.setVisibility(i);
         updateDummyDrawables();
     }
 
@@ -1397,10 +1806,9 @@ public class TextInputLayout extends LinearLayout {
     }
 
     private void updatePrefixTextViewPadding() {
-        if (this.editText == null) {
-            return;
+        if (this.editText != null) {
+            ViewCompat.setPaddingRelative(this.prefixTextView, isStartIconVisible() ? 0 : ViewCompat.getPaddingStart(this.editText), this.editText.getCompoundPaddingTop(), getContext().getResources().getDimensionPixelSize(R$dimen.material_input_text_to_prefix_suffix_padding), this.editText.getCompoundPaddingBottom());
         }
-        ViewCompat.setPaddingRelative(this.prefixTextView, isStartIconVisible() ? 0 : ViewCompat.getPaddingStart(this.editText), this.editText.getCompoundPaddingTop(), getContext().getResources().getDimensionPixelSize(R$dimen.material_input_text_to_prefix_suffix_padding), this.editText.getCompoundPaddingBottom());
     }
 
     public void setSuffixText(CharSequence charSequence) {
@@ -1419,16 +1827,17 @@ public class TextInputLayout extends LinearLayout {
 
     private void updateSuffixTextVisibility() {
         int visibility = this.suffixTextView.getVisibility();
-        int i = 0;
-        boolean z = this.suffixText != null && !isHintExpanded();
-        TextView textView = this.suffixTextView;
-        if (!z) {
-            i = 8;
+        boolean z = false;
+        int i = (this.suffixText == null || isHintExpanded()) ? 8 : 0;
+        if (visibility != i) {
+            EndIconDelegate endIconDelegate = getEndIconDelegate();
+            if (i == 0) {
+                z = true;
+            }
+            endIconDelegate.onSuffixVisibilityChanged(z);
         }
-        textView.setVisibility(i);
-        if (visibility != this.suffixTextView.getVisibility()) {
-            getEndIconDelegate().onSuffixVisibilityChanged(z);
-        }
+        updateEndLayoutVisibility();
+        this.suffixTextView.setVisibility(i);
         updateDummyDrawables();
     }
 
@@ -1445,13 +1854,11 @@ public class TextInputLayout extends LinearLayout {
     }
 
     private void updateSuffixTextViewPadding() {
-        if (this.editText == null) {
-            return;
+        if (this.editText != null) {
+            ViewCompat.setPaddingRelative(this.suffixTextView, getContext().getResources().getDimensionPixelSize(R$dimen.material_input_text_to_prefix_suffix_padding), this.editText.getPaddingTop(), (isEndIconVisible() || isErrorIconVisible()) ? 0 : ViewCompat.getPaddingEnd(this.editText), this.editText.getPaddingBottom());
         }
-        ViewCompat.setPaddingRelative(this.suffixTextView, getContext().getResources().getDimensionPixelSize(R$dimen.material_input_text_to_prefix_suffix_padding), this.editText.getPaddingTop(), (isEndIconVisible() || isErrorIconVisible()) ? 0 : ViewCompat.getPaddingEnd(this.editText), this.editText.getPaddingBottom());
     }
 
-    @Override // android.view.View
     public void setEnabled(boolean z) {
         recursiveSetEnabled(this, z);
         super.setEnabled(z);
@@ -1472,7 +1879,8 @@ public class TextInputLayout extends LinearLayout {
         return this.counterMaxLength;
     }
 
-    CharSequence getCounterOverflowDescription() {
+    /* access modifiers changed from: package-private */
+    public CharSequence getCounterOverflowDescription() {
         TextView textView;
         if (!this.counterEnabled || !this.counterOverflowed || (textView = this.counterView) == null) {
             return null;
@@ -1489,27 +1897,20 @@ public class TextInputLayout extends LinearLayout {
             if (!this.counterOverflowed && (colorStateList2 = this.counterTextColor) != null) {
                 this.counterView.setTextColor(colorStateList2);
             }
-            if (!this.counterOverflowed || (colorStateList = this.counterOverflowTextColor) == null) {
-                return;
+            if (this.counterOverflowed && (colorStateList = this.counterOverflowTextColor) != null) {
+                this.counterView.setTextColor(colorStateList);
             }
-            this.counterView.setTextColor(colorStateList);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* JADX WARN: Code restructure failed: missing block: B:7:0x0015, code lost:
-        if (r3.getTextColors().getDefaultColor() == (-65281)) goto L8;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* access modifiers changed from: package-private */
     public void setTextAppearanceCompatWithErrorFallback(TextView textView, int i) {
         boolean z = true;
         try {
             TextViewCompat.setTextAppearance(textView, i);
-            if (Build.VERSION.SDK_INT >= 23) {
+            if (textView.getTextColors().getDefaultColor() != -65281) {
+                z = false;
             }
-            z = false;
         } catch (Exception unused) {
         }
         if (z) {
@@ -1524,7 +1925,7 @@ public class TextInputLayout extends LinearLayout {
             return 0;
         }
         int i = this.boxBackgroundMode;
-        if (i == 0 || i == 1) {
+        if (i == 0) {
             collapsedTextHeight = this.collapsingTextHelper.getCollapsedTextHeight();
         } else if (i != 2) {
             return 0;
@@ -1535,28 +1936,29 @@ public class TextInputLayout extends LinearLayout {
     }
 
     private Rect calculateCollapsedTextBounds(Rect rect) {
-        if (this.editText == null) {
-            throw new IllegalStateException();
-        }
-        Rect rect2 = this.tmpBoundsRect;
-        boolean z = ViewCompat.getLayoutDirection(this) == 1;
-        rect2.bottom = rect.bottom;
-        int i = this.boxBackgroundMode;
-        if (i == 1) {
-            rect2.left = getLabelLeftBoundAlightWithPrefix(rect.left, z);
-            rect2.top = rect.top + this.boxCollapsedPaddingTopPx;
-            rect2.right = getLabelRightBoundAlignedWithSuffix(rect.right, z);
-            return rect2;
-        } else if (i == 2) {
-            rect2.left = rect.left + this.editText.getPaddingLeft();
-            rect2.top = rect.top - calculateLabelMarginTop();
-            rect2.right = rect.right - this.editText.getPaddingRight();
-            return rect2;
+        if (this.editText != null) {
+            Rect rect2 = this.tmpBoundsRect;
+            boolean isLayoutRtl = ViewUtils.isLayoutRtl(this);
+            rect2.bottom = rect.bottom;
+            int i = this.boxBackgroundMode;
+            if (i == 1) {
+                rect2.left = getLabelLeftBoundAlightWithPrefix(rect.left, isLayoutRtl);
+                rect2.top = rect.top + this.boxCollapsedPaddingTopPx;
+                rect2.right = getLabelRightBoundAlignedWithSuffix(rect.right, isLayoutRtl);
+                return rect2;
+            } else if (i != 2) {
+                rect2.left = getLabelLeftBoundAlightWithPrefix(rect.left, isLayoutRtl);
+                rect2.top = getPaddingTop();
+                rect2.right = getLabelRightBoundAlignedWithSuffix(rect.right, isLayoutRtl);
+                return rect2;
+            } else {
+                rect2.left = rect.left + this.editText.getPaddingLeft();
+                rect2.top = rect.top - calculateLabelMarginTop();
+                rect2.right = rect.right - this.editText.getPaddingRight();
+                return rect2;
+            }
         } else {
-            rect2.left = getLabelLeftBoundAlightWithPrefix(rect.left, z);
-            rect2.top = getPaddingTop();
-            rect2.right = getLabelRightBoundAlignedWithSuffix(rect.right, z);
-            return rect2;
+            throw new IllegalStateException();
         }
     }
 
@@ -1571,67 +1973,81 @@ public class TextInputLayout extends LinearLayout {
     }
 
     private Rect calculateExpandedTextBounds(Rect rect) {
-        if (this.editText == null) {
-            throw new IllegalStateException();
+        if (this.editText != null) {
+            Rect rect2 = this.tmpBoundsRect;
+            float expandedTextHeight = this.collapsingTextHelper.getExpandedTextHeight();
+            rect2.left = rect.left + this.editText.getCompoundPaddingLeft();
+            rect2.top = calculateExpandedLabelTop(rect, expandedTextHeight);
+            rect2.right = rect.right - this.editText.getCompoundPaddingRight();
+            rect2.bottom = calculateExpandedLabelBottom(rect, rect2, expandedTextHeight);
+            return rect2;
         }
-        Rect rect2 = this.tmpBoundsRect;
-        float expandedTextHeight = this.collapsingTextHelper.getExpandedTextHeight();
-        rect2.left = rect.left + this.editText.getCompoundPaddingLeft();
-        rect2.top = calculateExpandedLabelTop(rect, expandedTextHeight);
-        rect2.right = rect.right - this.editText.getCompoundPaddingRight();
-        rect2.bottom = calculateExpandedLabelBottom(rect, rect2, expandedTextHeight);
-        return rect2;
+        throw new IllegalStateException();
     }
 
     private int calculateExpandedLabelTop(Rect rect, float f) {
         if (isSingleLineFilledTextField()) {
-            return (int) (rect.centerY() - (f / 2.0f));
+            return (int) (((float) rect.centerY()) - (f / 2.0f));
         }
         return rect.top + this.editText.getCompoundPaddingTop();
     }
 
     private int calculateExpandedLabelBottom(Rect rect, Rect rect2, float f) {
         if (isSingleLineFilledTextField()) {
-            return (int) (rect2.top + f);
+            return (int) (((float) rect2.top) + f);
         }
         return rect.bottom - this.editText.getCompoundPaddingBottom();
     }
 
     private boolean isSingleLineFilledTextField() {
-        return this.boxBackgroundMode == 1 && (Build.VERSION.SDK_INT < 16 || this.editText.getMinLines() <= 1);
+        if (this.boxBackgroundMode != 1 || this.editText.getMinLines() > 1) {
+            return false;
+        }
+        return true;
     }
 
     private int calculateBoxBackgroundColor() {
-        return this.boxBackgroundMode == 1 ? MaterialColors.layer(MaterialColors.getColor(this, R$attr.colorSurface, 0), this.boxBackgroundColor) : this.boxBackgroundColor;
+        return this.boxBackgroundMode == 1 ? MaterialColors.layer(MaterialColors.getColor((View) this, R$attr.colorSurface, 0), this.boxBackgroundColor) : this.boxBackgroundColor;
     }
 
     private void applyBoxAttributes() {
         MaterialShapeDrawable materialShapeDrawable = this.boxBackground;
-        if (materialShapeDrawable == null) {
-            return;
+        if (materialShapeDrawable != null) {
+            ShapeAppearanceModel shapeAppearanceModel2 = materialShapeDrawable.getShapeAppearanceModel();
+            ShapeAppearanceModel shapeAppearanceModel3 = this.shapeAppearanceModel;
+            if (shapeAppearanceModel2 != shapeAppearanceModel3) {
+                this.boxBackground.setShapeAppearanceModel(shapeAppearanceModel3);
+                updateDropdownMenuBackground();
+            }
+            if (canDrawOutlineStroke()) {
+                this.boxBackground.setStroke((float) this.boxStrokeWidthPx, this.boxStrokeColor);
+            }
+            int calculateBoxBackgroundColor = calculateBoxBackgroundColor();
+            this.boxBackgroundColor = calculateBoxBackgroundColor;
+            this.boxBackground.setFillColor(ColorStateList.valueOf(calculateBoxBackgroundColor));
+            if (this.endIconMode == 3) {
+                this.editText.getBackground().invalidateSelf();
+            }
+            applyBoxUnderlineAttributes();
+            invalidate();
         }
-        materialShapeDrawable.setShapeAppearanceModel(this.shapeAppearanceModel);
-        if (canDrawOutlineStroke()) {
-            this.boxBackground.setStroke(this.boxStrokeWidthPx, this.boxStrokeColor);
-        }
-        int calculateBoxBackgroundColor = calculateBoxBackgroundColor();
-        this.boxBackgroundColor = calculateBoxBackgroundColor;
-        this.boxBackground.setFillColor(ColorStateList.valueOf(calculateBoxBackgroundColor));
-        if (this.endIconMode == 3) {
-            this.editText.getBackground().invalidateSelf();
-        }
-        applyBoxUnderlineAttributes();
-        invalidate();
     }
 
     private void applyBoxUnderlineAttributes() {
-        if (this.boxUnderline == null) {
-            return;
+        ColorStateList colorStateList;
+        if (this.boxUnderlineDefault != null && this.boxUnderlineFocused != null) {
+            if (canDrawStroke()) {
+                MaterialShapeDrawable materialShapeDrawable = this.boxUnderlineDefault;
+                if (this.editText.isFocused()) {
+                    colorStateList = ColorStateList.valueOf(this.defaultStrokeColor);
+                } else {
+                    colorStateList = ColorStateList.valueOf(this.boxStrokeColor);
+                }
+                materialShapeDrawable.setFillColor(colorStateList);
+                this.boxUnderlineFocused.setFillColor(ColorStateList.valueOf(this.boxStrokeColor));
+            }
+            invalidate();
         }
-        if (canDrawStroke()) {
-            this.boxUnderline.setFillColor(ColorStateList.valueOf(this.boxStrokeColor));
-        }
-        invalidate();
     }
 
     private boolean canDrawOutlineStroke() {
@@ -1642,47 +2058,43 @@ public class TextInputLayout extends LinearLayout {
         return this.boxStrokeWidthPx > -1 && this.boxStrokeColor != 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void updateEditTextBackground() {
-        Drawable background;
-        TextView textView;
-        EditText editText = this.editText;
-        if (editText == null || this.boxBackgroundMode != 0 || (background = editText.getBackground()) == null) {
-            return;
-        }
-        if (DrawableUtils.canSafelyMutateDrawable(background)) {
-            background = background.mutate();
-        }
-        if (this.indicatorViewController.errorShouldBeShown()) {
-            background.setColorFilter(AppCompatDrawableManager.getPorterDuffColorFilter(this.indicatorViewController.getErrorViewCurrentTextColor(), PorterDuff.Mode.SRC_IN));
-        } else if (this.counterOverflowed && (textView = this.counterView) != null) {
-            background.setColorFilter(AppCompatDrawableManager.getPorterDuffColorFilter(textView.getCurrentTextColor(), PorterDuff.Mode.SRC_IN));
-        } else {
-            DrawableCompat.clearColorFilter(background);
-            this.editText.refreshDrawableState();
+    private void updateDropdownMenuBackground() {
+        if (this.endIconMode == 3 && this.boxBackgroundMode == 2) {
+            ((DropdownMenuEndIconDelegate) this.endIconDelegates.get(3)).updateOutlinedRippleEffect((AutoCompleteTextView) this.editText);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes2.dex */
-    public static class SavedState extends AbsSavedState {
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.ClassLoaderCreator<SavedState>() { // from class: com.google.android.material.textfield.TextInputLayout.SavedState.1
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.ClassLoaderCreator
-            /* renamed from: createFromParcel */
-            public SavedState mo722createFromParcel(Parcel parcel, ClassLoader classLoader) {
+    /* access modifiers changed from: package-private */
+    public void updateEditTextBackground() {
+        Drawable background;
+        TextView textView;
+        EditText editText2 = this.editText;
+        if (editText2 != null && this.boxBackgroundMode == 0 && (background = editText2.getBackground()) != null) {
+            if (DrawableUtils.canSafelyMutateDrawable(background)) {
+                background = background.mutate();
+            }
+            if (this.indicatorViewController.errorShouldBeShown()) {
+                background.setColorFilter(AppCompatDrawableManager.getPorterDuffColorFilter(this.indicatorViewController.getErrorViewCurrentTextColor(), PorterDuff.Mode.SRC_IN));
+            } else if (!this.counterOverflowed || (textView = this.counterView) == null) {
+                DrawableCompat.clearColorFilter(background);
+                this.editText.refreshDrawableState();
+            } else {
+                background.setColorFilter(AppCompatDrawableManager.getPorterDuffColorFilter(textView.getCurrentTextColor(), PorterDuff.Mode.SRC_IN));
+            }
+        }
+    }
+
+    static class SavedState extends AbsSavedState {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.ClassLoaderCreator<SavedState>() {
+            public SavedState createFromParcel(Parcel parcel, ClassLoader classLoader) {
                 return new SavedState(parcel, classLoader);
             }
 
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: createFromParcel */
-            public SavedState mo721createFromParcel(Parcel parcel) {
-                return new SavedState(parcel, null);
+            public SavedState createFromParcel(Parcel parcel) {
+                return new SavedState(parcel, (ClassLoader) null);
             }
 
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: newArray */
-            public SavedState[] mo723newArray(int i) {
+            public SavedState[] newArray(int i) {
                 return new SavedState[i];
             }
         };
@@ -1705,7 +2117,6 @@ public class TextInputLayout extends LinearLayout {
             this.placeholderText = (CharSequence) TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(parcel);
         }
 
-        @Override // androidx.customview.view.AbsSavedState, android.os.Parcelable
         public void writeToParcel(Parcel parcel, int i) {
             super.writeToParcel(parcel, i);
             TextUtils.writeToParcel(this.error, parcel, i);
@@ -1716,11 +2127,10 @@ public class TextInputLayout extends LinearLayout {
         }
 
         public String toString() {
-            return "TextInputLayout.SavedState{" + Integer.toHexString(System.identityHashCode(this)) + " error=" + ((Object) this.error) + " hint=" + ((Object) this.hintText) + " helperText=" + ((Object) this.helperText) + " placeholderText=" + ((Object) this.placeholderText) + "}";
+            return "TextInputLayout.SavedState{" + Integer.toHexString(System.identityHashCode(this)) + " error=" + this.error + " hint=" + this.hintText + " helperText=" + this.helperText + " placeholderText=" + this.placeholderText + "}";
         }
     }
 
-    @Override // android.view.View
     public Parcelable onSaveInstanceState() {
         SavedState savedState = new SavedState(super.onSaveInstanceState());
         if (this.indicatorViewController.errorShouldBeShown()) {
@@ -1733,8 +2143,8 @@ public class TextInputLayout extends LinearLayout {
         return savedState;
     }
 
-    @Override // android.view.View
-    protected void onRestoreInstanceState(Parcelable parcelable) {
+    /* access modifiers changed from: protected */
+    public void onRestoreInstanceState(Parcelable parcelable) {
         if (!(parcelable instanceof SavedState)) {
             super.onRestoreInstanceState(parcelable);
             return;
@@ -1743,8 +2153,7 @@ public class TextInputLayout extends LinearLayout {
         super.onRestoreInstanceState(savedState.getSuperState());
         setError(savedState.error);
         if (savedState.isEndIconChecked) {
-            this.endIconView.post(new Runnable() { // from class: com.google.android.material.textfield.TextInputLayout.2
-                @Override // java.lang.Runnable
+            this.endIconView.post(new Runnable() {
                 public void run() {
                     TextInputLayout.this.endIconView.performClick();
                     TextInputLayout.this.endIconView.jumpDrawablesToCurrentState();
@@ -1757,8 +2166,8 @@ public class TextInputLayout extends LinearLayout {
         requestLayout();
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void dispatchRestoreInstanceState(SparseArray<Parcelable> sparseArray) {
+    /* access modifiers changed from: protected */
+    public void dispatchRestoreInstanceState(SparseArray<Parcelable> sparseArray) {
         this.restoringSavedState = true;
         super.dispatchRestoreInstanceState(sparseArray);
         this.restoringSavedState = false;
@@ -1789,14 +2198,38 @@ public class TextInputLayout extends LinearLayout {
         }
     }
 
-    @Override // android.widget.LinearLayout, android.view.View
-    protected void onMeasure(int i, int i2) {
+    public void onRtlPropertiesChanged(int i) {
+        super.onRtlPropertiesChanged(i);
+        boolean z = false;
+        boolean z2 = i == 1;
+        boolean z3 = this.areCornerRadiiRtl;
+        if (z2 != z3) {
+            if (z2 && !z3) {
+                z = true;
+            }
+            float cornerSize = this.shapeAppearanceModel.getTopLeftCornerSize().getCornerSize(this.tmpRectF);
+            float cornerSize2 = this.shapeAppearanceModel.getTopRightCornerSize().getCornerSize(this.tmpRectF);
+            float cornerSize3 = this.shapeAppearanceModel.getBottomLeftCornerSize().getCornerSize(this.tmpRectF);
+            float cornerSize4 = this.shapeAppearanceModel.getBottomRightCornerSize().getCornerSize(this.tmpRectF);
+            float f = z ? cornerSize : cornerSize2;
+            if (z) {
+                cornerSize = cornerSize2;
+            }
+            float f2 = z ? cornerSize3 : cornerSize4;
+            if (z) {
+                cornerSize3 = cornerSize4;
+            }
+            setBoxCornerRadii(f, cornerSize, f2, cornerSize3);
+        }
+    }
+
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         super.onMeasure(i, i2);
         boolean updateEditTextHeightBasedOnIcon = updateEditTextHeightBasedOnIcon();
         boolean updateDummyDrawables = updateDummyDrawables();
         if (updateEditTextHeightBasedOnIcon || updateDummyDrawables) {
-            this.editText.post(new Runnable() { // from class: com.google.android.material.textfield.TextInputLayout.3
-                @Override // java.lang.Runnable
+            this.editText.post(new Runnable() {
                 public void run() {
                     TextInputLayout.this.editText.requestLayout();
                 }
@@ -1809,20 +2242,19 @@ public class TextInputLayout extends LinearLayout {
 
     private boolean updateEditTextHeightBasedOnIcon() {
         int max;
-        if (this.editText != null && this.editText.getMeasuredHeight() < (max = Math.max(this.endLayout.getMeasuredHeight(), this.startLayout.getMeasuredHeight()))) {
-            this.editText.setMinimumHeight(max);
-            return true;
+        if (this.editText == null || this.editText.getMeasuredHeight() >= (max = Math.max(this.endLayout.getMeasuredHeight(), this.startLayout.getMeasuredHeight()))) {
+            return false;
         }
-        return false;
+        this.editText.setMinimumHeight(max);
+        return true;
     }
 
     private void updatePlaceholderMeasurementsBasedOnEditText() {
-        EditText editText;
-        if (this.placeholderTextView == null || (editText = this.editText) == null) {
-            return;
+        EditText editText2;
+        if (this.placeholderTextView != null && (editText2 = this.editText) != null) {
+            this.placeholderTextView.setGravity(editText2.getGravity());
+            this.placeholderTextView.setPadding(this.editText.getCompoundPaddingLeft(), this.editText.getCompoundPaddingTop(), this.editText.getCompoundPaddingRight(), this.editText.getCompoundPaddingBottom());
         }
-        this.placeholderTextView.setGravity(editText.getGravity());
-        this.placeholderTextView.setPadding(this.editText.getCompoundPaddingLeft(), this.editText.getCompoundPaddingTop(), this.editText.getCompoundPaddingRight(), this.editText.getCompoundPaddingBottom());
     }
 
     public void setStartIconDrawable(int i) {
@@ -1832,13 +2264,14 @@ public class TextInputLayout extends LinearLayout {
     public void setStartIconDrawable(Drawable drawable) {
         this.startIconView.setImageDrawable(drawable);
         if (drawable != null) {
+            applyIconTint(this.startIconView, this.startIconTintList, this.startIconTintMode);
             setStartIconVisible(true);
             refreshStartIconDrawableState();
             return;
         }
         setStartIconVisible(false);
-        setStartIconOnClickListener(null);
-        setStartIconOnLongClickListener(null);
+        setStartIconOnClickListener((View.OnClickListener) null);
+        setStartIconOnLongClickListener((View.OnLongClickListener) null);
         setStartIconContentDescription((CharSequence) null);
     }
 
@@ -1858,6 +2291,7 @@ public class TextInputLayout extends LinearLayout {
     public void setStartIconVisible(boolean z) {
         if (isStartIconVisible() != z) {
             this.startIconView.setVisibility(z ? 0 : 8);
+            updateStartLayoutVisibility();
             updatePrefixTextViewPadding();
             updateDummyDrawables();
         }
@@ -1892,30 +2326,30 @@ public class TextInputLayout extends LinearLayout {
     public void setStartIconTintList(ColorStateList colorStateList) {
         if (this.startIconTintList != colorStateList) {
             this.startIconTintList = colorStateList;
-            this.hasStartIconTintList = true;
-            applyStartIconTint();
+            applyIconTint(this.startIconView, colorStateList, this.startIconTintMode);
         }
     }
 
     public void setStartIconTintMode(PorterDuff.Mode mode) {
         if (this.startIconTintMode != mode) {
             this.startIconTintMode = mode;
-            this.hasStartIconTintMode = true;
-            applyStartIconTint();
+            applyIconTint(this.startIconView, this.startIconTintList, mode);
         }
     }
 
     public void setEndIconMode(int i) {
         int i2 = this.endIconMode;
-        this.endIconMode = i;
-        dispatchOnEndIconChanged(i2);
-        setEndIconVisible(i != 0);
-        if (getEndIconDelegate().isBoxBackgroundModeSupported(this.boxBackgroundMode)) {
-            getEndIconDelegate().initialize();
-            applyEndIconTint();
-            return;
+        if (i2 != i) {
+            this.endIconMode = i;
+            dispatchOnEndIconChanged(i2);
+            setEndIconVisible(i != 0);
+            if (getEndIconDelegate().isBoxBackgroundModeSupported(this.boxBackgroundMode)) {
+                getEndIconDelegate().initialize();
+                applyIconTint(this.endIconView, this.endIconTintList, this.endIconTintMode);
+                return;
+            }
+            throw new IllegalStateException("The current box background mode " + this.boxBackgroundMode + " is not supported by the end icon mode " + i);
         }
-        throw new IllegalStateException("The current box background mode " + this.boxBackgroundMode + " is not supported by the end icon mode " + i);
     }
 
     public int getEndIconMode() {
@@ -1947,6 +2381,7 @@ public class TextInputLayout extends LinearLayout {
     public void setEndIconVisible(boolean z) {
         if (isEndIconVisible() != z) {
             this.endIconView.setVisibility(z ? 0 : 8);
+            updateEndLayoutVisibility();
             updateSuffixTextViewPadding();
             updateDummyDrawables();
         }
@@ -1974,7 +2409,10 @@ public class TextInputLayout extends LinearLayout {
 
     public void setEndIconDrawable(Drawable drawable) {
         this.endIconView.setImageDrawable(drawable);
-        refreshEndIconDrawableState();
+        if (drawable != null) {
+            applyIconTint(this.endIconView, this.endIconTintList, this.endIconTintMode);
+            refreshEndIconDrawableState();
+        }
     }
 
     public Drawable getEndIconDrawable() {
@@ -1998,16 +2436,14 @@ public class TextInputLayout extends LinearLayout {
     public void setEndIconTintList(ColorStateList colorStateList) {
         if (this.endIconTintList != colorStateList) {
             this.endIconTintList = colorStateList;
-            this.hasEndIconTintList = true;
-            applyEndIconTint();
+            applyIconTint(this.endIconView, colorStateList, this.endIconTintMode);
         }
     }
 
     public void setEndIconTintMode(PorterDuff.Mode mode) {
         if (this.endIconTintMode != mode) {
             this.endIconTintMode = mode;
-            this.hasEndIconTintMode = true;
-            applyEndIconTint();
+            applyIconTint(this.endIconView, this.endIconTintList, mode);
         }
     }
 
@@ -2056,8 +2492,7 @@ public class TextInputLayout extends LinearLayout {
     public void setPasswordVisibilityToggleEnabled(boolean z) {
         if (z && this.endIconMode != 1) {
             setEndIconMode(1);
-        } else if (z) {
-        } else {
+        } else if (!z) {
             setEndIconMode(0);
         }
     }
@@ -2065,25 +2500,44 @@ public class TextInputLayout extends LinearLayout {
     @Deprecated
     public void setPasswordVisibilityToggleTintList(ColorStateList colorStateList) {
         this.endIconTintList = colorStateList;
-        this.hasEndIconTintList = true;
-        applyEndIconTint();
+        applyIconTint(this.endIconView, colorStateList, this.endIconTintMode);
     }
 
     @Deprecated
     public void setPasswordVisibilityToggleTintMode(PorterDuff.Mode mode) {
         this.endIconTintMode = mode;
-        this.hasEndIconTintMode = true;
-        applyEndIconTint();
+        applyIconTint(this.endIconView, this.endIconTintList, mode);
     }
 
     public void setTextInputAccessibilityDelegate(AccessibilityDelegate accessibilityDelegate) {
-        EditText editText = this.editText;
-        if (editText != null) {
-            ViewCompat.setAccessibilityDelegate(editText, accessibilityDelegate);
+        EditText editText2 = this.editText;
+        if (editText2 != null) {
+            ViewCompat.setAccessibilityDelegate(editText2, accessibilityDelegate);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    private void updateEndLayoutVisibility() {
+        int i = 8;
+        this.endIconFrame.setVisibility((this.endIconView.getVisibility() != 0 || isErrorIconVisible()) ? 8 : 0);
+        boolean z = isEndIconVisible() || isErrorIconVisible() || !((this.suffixText == null || isHintExpanded()) ? true : false);
+        LinearLayout linearLayout = this.endLayout;
+        if (z) {
+            i = 0;
+        }
+        linearLayout.setVisibility(i);
+    }
+
+    private void updateStartLayoutVisibility() {
+        int i = 8;
+        boolean z = this.startIconView.getVisibility() == 0 || !((this.prefixText == null || isHintExpanded()) ? true : false);
+        LinearLayout linearLayout = this.startLayout;
+        if (z) {
+            i = 0;
+        }
+        linearLayout.setVisibility(i);
+    }
+
+    /* access modifiers changed from: package-private */
     public CheckableImageButton getEndIconView() {
         return this.endIconView;
     }
@@ -2094,14 +2548,10 @@ public class TextInputLayout extends LinearLayout {
     }
 
     private void dispatchOnEditTextAttached() {
-        Iterator<OnEditTextAttachedListener> it = this.editTextAttachedListeners.iterator();
+        Iterator it = this.editTextAttachedListeners.iterator();
         while (it.hasNext()) {
-            it.next().onEditTextAttached(this);
+            ((OnEditTextAttachedListener) it.next()).onEditTextAttached(this);
         }
-    }
-
-    private void applyStartIconTint() {
-        applyIconTint(this.startIconView, this.hasStartIconTintList, this.startIconTintList, this.hasStartIconTintMode, this.startIconTintMode);
     }
 
     private boolean hasEndIcon() {
@@ -2109,97 +2559,160 @@ public class TextInputLayout extends LinearLayout {
     }
 
     private void dispatchOnEndIconChanged(int i) {
-        Iterator<OnEndIconChangedListener> it = this.endIconChangedListeners.iterator();
+        Iterator it = this.endIconChangedListeners.iterator();
         while (it.hasNext()) {
-            it.next().onEndIconChanged(this, i);
+            ((OnEndIconChangedListener) it.next()).onEndIconChanged(this, i);
         }
     }
 
     private void tintEndIconOnError(boolean z) {
-        if (z && getEndIconDrawable() != null) {
-            Drawable mutate = DrawableCompat.wrap(getEndIconDrawable()).mutate();
-            DrawableCompat.setTint(mutate, this.indicatorViewController.getErrorViewCurrentTextColor());
-            this.endIconView.setImageDrawable(mutate);
+        if (!z || getEndIconDrawable() == null) {
+            applyIconTint(this.endIconView, this.endIconTintList, this.endIconTintMode);
             return;
         }
-        applyEndIconTint();
+        Drawable mutate = DrawableCompat.wrap(getEndIconDrawable()).mutate();
+        DrawableCompat.setTint(mutate, this.indicatorViewController.getErrorViewCurrentTextColor());
+        this.endIconView.setImageDrawable(mutate);
     }
 
-    private void applyEndIconTint() {
-        applyIconTint(this.endIconView, this.hasEndIconTintList, this.endIconTintList, this.hasEndIconTintMode, this.endIconTintMode);
-    }
-
+    /* JADX WARNING: Removed duplicated region for block: B:20:0x0069  */
+    /* JADX WARNING: Removed duplicated region for block: B:34:0x00d1  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
     private boolean updateDummyDrawables() {
-        boolean z;
-        if (this.editText == null) {
-            return false;
-        }
-        boolean z2 = true;
-        if (shouldUpdateStartDummyDrawable()) {
-            int measuredWidth = this.startLayout.getMeasuredWidth() - this.editText.getPaddingLeft();
-            if (this.startDummyDrawable == null || this.startDummyDrawableWidth != measuredWidth) {
-                ColorDrawable colorDrawable = new ColorDrawable();
-                this.startDummyDrawable = colorDrawable;
-                this.startDummyDrawableWidth = measuredWidth;
-                colorDrawable.setBounds(0, 0, measuredWidth, 1);
-            }
-            Drawable[] compoundDrawablesRelative = TextViewCompat.getCompoundDrawablesRelative(this.editText);
-            Drawable drawable = compoundDrawablesRelative[0];
-            Drawable drawable2 = this.startDummyDrawable;
-            if (drawable != drawable2) {
-                TextViewCompat.setCompoundDrawablesRelative(this.editText, drawable2, compoundDrawablesRelative[1], compoundDrawablesRelative[2], compoundDrawablesRelative[3]);
-                z = true;
-            }
-            z = false;
-        } else {
-            if (this.startDummyDrawable != null) {
-                Drawable[] compoundDrawablesRelative2 = TextViewCompat.getCompoundDrawablesRelative(this.editText);
-                TextViewCompat.setCompoundDrawablesRelative(this.editText, null, compoundDrawablesRelative2[1], compoundDrawablesRelative2[2], compoundDrawablesRelative2[3]);
-                this.startDummyDrawable = null;
-                z = true;
-            }
-            z = false;
-        }
-        if (shouldUpdateEndDummyDrawable()) {
-            int measuredWidth2 = this.suffixTextView.getMeasuredWidth() - this.editText.getPaddingRight();
-            CheckableImageButton endIconToUpdateDummyDrawable = getEndIconToUpdateDummyDrawable();
-            if (endIconToUpdateDummyDrawable != null) {
-                measuredWidth2 = measuredWidth2 + endIconToUpdateDummyDrawable.getMeasuredWidth() + MarginLayoutParamsCompat.getMarginStart((ViewGroup.MarginLayoutParams) endIconToUpdateDummyDrawable.getLayoutParams());
-            }
-            Drawable[] compoundDrawablesRelative3 = TextViewCompat.getCompoundDrawablesRelative(this.editText);
-            Drawable drawable3 = this.endDummyDrawable;
-            if (drawable3 != null && this.endDummyDrawableWidth != measuredWidth2) {
-                this.endDummyDrawableWidth = measuredWidth2;
-                drawable3.setBounds(0, 0, measuredWidth2, 1);
-                TextViewCompat.setCompoundDrawablesRelative(this.editText, compoundDrawablesRelative3[0], compoundDrawablesRelative3[1], this.endDummyDrawable, compoundDrawablesRelative3[3]);
-            } else {
-                if (drawable3 == null) {
-                    ColorDrawable colorDrawable2 = new ColorDrawable();
-                    this.endDummyDrawable = colorDrawable2;
-                    this.endDummyDrawableWidth = measuredWidth2;
-                    colorDrawable2.setBounds(0, 0, measuredWidth2, 1);
-                }
-                Drawable drawable4 = compoundDrawablesRelative3[2];
-                Drawable drawable5 = this.endDummyDrawable;
-                if (drawable4 != drawable5) {
-                    this.originalEditTextEndDrawable = compoundDrawablesRelative3[2];
-                    TextViewCompat.setCompoundDrawablesRelative(this.editText, compoundDrawablesRelative3[0], compoundDrawablesRelative3[1], drawable5, compoundDrawablesRelative3[3]);
-                } else {
-                    z2 = z;
-                }
-            }
-        } else if (this.endDummyDrawable == null) {
-            return z;
-        } else {
-            Drawable[] compoundDrawablesRelative4 = TextViewCompat.getCompoundDrawablesRelative(this.editText);
-            if (compoundDrawablesRelative4[2] == this.endDummyDrawable) {
-                TextViewCompat.setCompoundDrawablesRelative(this.editText, compoundDrawablesRelative4[0], compoundDrawablesRelative4[1], this.originalEditTextEndDrawable, compoundDrawablesRelative4[3]);
-            } else {
-                z2 = z;
-            }
-            this.endDummyDrawable = null;
-        }
-        return z2;
+        /*
+            r10 = this;
+            android.widget.EditText r0 = r10.editText
+            r1 = 0
+            if (r0 != 0) goto L_0x0006
+            return r1
+        L_0x0006:
+            boolean r0 = r10.shouldUpdateStartDummyDrawable()
+            r2 = 0
+            r3 = 2
+            r4 = 3
+            r5 = 1
+            if (r0 == 0) goto L_0x0049
+            android.widget.LinearLayout r0 = r10.startLayout
+            int r0 = r0.getMeasuredWidth()
+            android.widget.EditText r6 = r10.editText
+            int r6 = r6.getPaddingLeft()
+            int r0 = r0 - r6
+            android.graphics.drawable.Drawable r6 = r10.startDummyDrawable
+            if (r6 == 0) goto L_0x0025
+            int r6 = r10.startDummyDrawableWidth
+            if (r6 == r0) goto L_0x0031
+        L_0x0025:
+            android.graphics.drawable.ColorDrawable r6 = new android.graphics.drawable.ColorDrawable
+            r6.<init>()
+            r10.startDummyDrawable = r6
+            r10.startDummyDrawableWidth = r0
+            r6.setBounds(r1, r1, r0, r5)
+        L_0x0031:
+            android.widget.EditText r0 = r10.editText
+            android.graphics.drawable.Drawable[] r0 = androidx.core.widget.TextViewCompat.getCompoundDrawablesRelative(r0)
+            r6 = r0[r1]
+            android.graphics.drawable.Drawable r7 = r10.startDummyDrawable
+            if (r6 == r7) goto L_0x0062
+            android.widget.EditText r6 = r10.editText
+            r8 = r0[r5]
+            r9 = r0[r3]
+            r0 = r0[r4]
+            androidx.core.widget.TextViewCompat.setCompoundDrawablesRelative(r6, r7, r8, r9, r0)
+            goto L_0x0060
+        L_0x0049:
+            android.graphics.drawable.Drawable r0 = r10.startDummyDrawable
+            if (r0 == 0) goto L_0x0062
+            android.widget.EditText r0 = r10.editText
+            android.graphics.drawable.Drawable[] r0 = androidx.core.widget.TextViewCompat.getCompoundDrawablesRelative(r0)
+            android.widget.EditText r6 = r10.editText
+            r7 = r0[r5]
+            r8 = r0[r3]
+            r0 = r0[r4]
+            androidx.core.widget.TextViewCompat.setCompoundDrawablesRelative(r6, r2, r7, r8, r0)
+            r10.startDummyDrawable = r2
+        L_0x0060:
+            r0 = r5
+            goto L_0x0063
+        L_0x0062:
+            r0 = r1
+        L_0x0063:
+            boolean r6 = r10.shouldUpdateEndDummyDrawable()
+            if (r6 == 0) goto L_0x00d1
+            android.widget.TextView r2 = r10.suffixTextView
+            int r2 = r2.getMeasuredWidth()
+            android.widget.EditText r6 = r10.editText
+            int r6 = r6.getPaddingRight()
+            int r2 = r2 - r6
+            com.google.android.material.internal.CheckableImageButton r6 = r10.getEndIconToUpdateDummyDrawable()
+            if (r6 == 0) goto L_0x008c
+            int r7 = r6.getMeasuredWidth()
+            int r2 = r2 + r7
+            android.view.ViewGroup$LayoutParams r6 = r6.getLayoutParams()
+            android.view.ViewGroup$MarginLayoutParams r6 = (android.view.ViewGroup.MarginLayoutParams) r6
+            int r6 = androidx.core.view.MarginLayoutParamsCompat.getMarginStart(r6)
+            int r2 = r2 + r6
+        L_0x008c:
+            android.widget.EditText r6 = r10.editText
+            android.graphics.drawable.Drawable[] r6 = androidx.core.widget.TextViewCompat.getCompoundDrawablesRelative(r6)
+            android.graphics.drawable.Drawable r7 = r10.endDummyDrawable
+            if (r7 == 0) goto L_0x00ad
+            int r8 = r10.endDummyDrawableWidth
+            if (r8 == r2) goto L_0x00ad
+            r10.endDummyDrawableWidth = r2
+            r7.setBounds(r1, r1, r2, r5)
+            android.widget.EditText r0 = r10.editText
+            r1 = r6[r1]
+            r2 = r6[r5]
+            android.graphics.drawable.Drawable r10 = r10.endDummyDrawable
+            r3 = r6[r4]
+            androidx.core.widget.TextViewCompat.setCompoundDrawablesRelative(r0, r1, r2, r10, r3)
+            goto L_0x00f2
+        L_0x00ad:
+            if (r7 != 0) goto L_0x00bb
+            android.graphics.drawable.ColorDrawable r7 = new android.graphics.drawable.ColorDrawable
+            r7.<init>()
+            r10.endDummyDrawable = r7
+            r10.endDummyDrawableWidth = r2
+            r7.setBounds(r1, r1, r2, r5)
+        L_0x00bb:
+            r2 = r6[r3]
+            android.graphics.drawable.Drawable r3 = r10.endDummyDrawable
+            if (r2 == r3) goto L_0x00cf
+            r10.originalEditTextEndDrawable = r2
+            android.widget.EditText r10 = r10.editText
+            r0 = r6[r1]
+            r1 = r6[r5]
+            r2 = r6[r4]
+            androidx.core.widget.TextViewCompat.setCompoundDrawablesRelative(r10, r0, r1, r3, r2)
+            goto L_0x00f2
+        L_0x00cf:
+            r5 = r0
+            goto L_0x00f2
+        L_0x00d1:
+            android.graphics.drawable.Drawable r6 = r10.endDummyDrawable
+            if (r6 == 0) goto L_0x00f3
+            android.widget.EditText r6 = r10.editText
+            android.graphics.drawable.Drawable[] r6 = androidx.core.widget.TextViewCompat.getCompoundDrawablesRelative(r6)
+            r3 = r6[r3]
+            android.graphics.drawable.Drawable r7 = r10.endDummyDrawable
+            if (r3 != r7) goto L_0x00ef
+            android.widget.EditText r0 = r10.editText
+            r1 = r6[r1]
+            r3 = r6[r5]
+            android.graphics.drawable.Drawable r7 = r10.originalEditTextEndDrawable
+            r4 = r6[r4]
+            androidx.core.widget.TextViewCompat.setCompoundDrawablesRelative(r0, r1, r3, r7, r4)
+            goto L_0x00f0
+        L_0x00ef:
+            r5 = r0
+        L_0x00f0:
+            r10.endDummyDrawable = r2
+        L_0x00f2:
+            r0 = r5
+        L_0x00f3:
+            return r0
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.google.android.material.textfield.TextInputLayout.updateDummyDrawables():boolean");
     }
 
     private boolean shouldUpdateStartDummyDrawable() {
@@ -2214,20 +2727,22 @@ public class TextInputLayout extends LinearLayout {
         if (this.errorIconView.getVisibility() == 0) {
             return this.errorIconView;
         }
-        if (hasEndIcon() && isEndIconVisible()) {
-            return this.endIconView;
+        if (!hasEndIcon() || !isEndIconVisible()) {
+            return null;
         }
-        return null;
+        return this.endIconView;
     }
 
-    private void applyIconTint(CheckableImageButton checkableImageButton, boolean z, ColorStateList colorStateList, boolean z2, PorterDuff.Mode mode) {
+    private void applyIconTint(CheckableImageButton checkableImageButton, ColorStateList colorStateList, PorterDuff.Mode mode) {
         Drawable drawable = checkableImageButton.getDrawable();
-        if (drawable != null && (z || z2)) {
+        if (drawable != null) {
             drawable = DrawableCompat.wrap(drawable).mutate();
-            if (z) {
+            if (colorStateList == null || !colorStateList.isStateful()) {
                 DrawableCompat.setTintList(drawable, colorStateList);
+            } else {
+                DrawableCompat.setTintList(drawable, ColorStateList.valueOf(colorStateList.getColorForState(mergeIconState(checkableImageButton), colorStateList.getDefaultColor())));
             }
-            if (z2) {
+            if (mode != null) {
                 DrawableCompat.setTintMode(drawable, mode);
             }
         }
@@ -2264,44 +2779,52 @@ public class TextInputLayout extends LinearLayout {
         ViewCompat.setImportantForAccessibility(checkableImageButton, i);
     }
 
-    @Override // android.widget.LinearLayout, android.view.ViewGroup, android.view.View
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
-        EditText editText = this.editText;
-        if (editText != null) {
+        EditText editText2 = this.editText;
+        if (editText2 != null) {
             Rect rect = this.tmpRect;
-            DescendantOffsetUtils.getDescendantRect(this, editText, rect);
+            DescendantOffsetUtils.getDescendantRect(this, editText2, rect);
             updateBoxUnderlineBounds(rect);
-            if (!this.hintEnabled) {
-                return;
+            if (this.hintEnabled) {
+                this.collapsingTextHelper.setExpandedTextSize(this.editText.getTextSize());
+                int gravity = this.editText.getGravity();
+                this.collapsingTextHelper.setCollapsedTextGravity((gravity & -113) | 48);
+                this.collapsingTextHelper.setExpandedTextGravity(gravity);
+                this.collapsingTextHelper.setCollapsedBounds(calculateCollapsedTextBounds(rect));
+                this.collapsingTextHelper.setExpandedBounds(calculateExpandedTextBounds(rect));
+                this.collapsingTextHelper.recalculate();
+                if (cutoutEnabled() && !this.hintExpanded) {
+                    openCutout();
+                }
             }
-            this.collapsingTextHelper.setExpandedTextSize(this.editText.getTextSize());
-            int gravity = this.editText.getGravity();
-            this.collapsingTextHelper.setCollapsedTextGravity((gravity & (-113)) | 48);
-            this.collapsingTextHelper.setExpandedTextGravity(gravity);
-            this.collapsingTextHelper.setCollapsedBounds(calculateCollapsedTextBounds(rect));
-            this.collapsingTextHelper.setExpandedBounds(calculateExpandedTextBounds(rect));
-            this.collapsingTextHelper.recalculate();
-            if (!cutoutEnabled() || this.hintExpanded) {
-                return;
-            }
-            openCutout();
         }
     }
 
     private void updateBoxUnderlineBounds(Rect rect) {
-        MaterialShapeDrawable materialShapeDrawable = this.boxUnderline;
+        MaterialShapeDrawable materialShapeDrawable = this.boxUnderlineDefault;
         if (materialShapeDrawable != null) {
             int i = rect.bottom;
-            materialShapeDrawable.setBounds(rect.left, i - this.boxStrokeWidthFocusedPx, rect.right, i);
+            materialShapeDrawable.setBounds(rect.left, i - this.boxStrokeWidthDefaultPx, rect.right, i);
+        }
+        MaterialShapeDrawable materialShapeDrawable2 = this.boxUnderlineFocused;
+        if (materialShapeDrawable2 != null) {
+            int i2 = rect.bottom;
+            materialShapeDrawable2.setBounds(rect.left, i2 - this.boxStrokeWidthFocusedPx, rect.right, i2);
         }
     }
 
-    @Override // android.view.View
     public void draw(Canvas canvas) {
         super.draw(canvas);
         drawHint(canvas);
         drawBoxUnderline(canvas);
+    }
+
+    /* access modifiers changed from: protected */
+    public void onConfigurationChanged(Configuration configuration) {
+        super.onConfigurationChanged(configuration);
+        this.collapsingTextHelper.maybeUpdateFontWeightAdjustment(configuration);
     }
 
     private void drawHint(Canvas canvas) {
@@ -2311,11 +2834,18 @@ public class TextInputLayout extends LinearLayout {
     }
 
     private void drawBoxUnderline(Canvas canvas) {
-        MaterialShapeDrawable materialShapeDrawable = this.boxUnderline;
-        if (materialShapeDrawable != null) {
-            Rect bounds = materialShapeDrawable.getBounds();
-            bounds.top = bounds.bottom - this.boxStrokeWidthPx;
-            this.boxUnderline.draw(canvas);
+        MaterialShapeDrawable materialShapeDrawable;
+        if (this.boxUnderlineFocused != null && (materialShapeDrawable = this.boxUnderlineDefault) != null) {
+            materialShapeDrawable.draw(canvas);
+            if (this.editText.isFocused()) {
+                Rect bounds = this.boxUnderlineFocused.getBounds();
+                Rect bounds2 = this.boxUnderlineDefault.getBounds();
+                float expansionFraction = this.collapsingTextHelper.getExpansionFraction();
+                int centerX = bounds2.centerX();
+                bounds.left = AnimationUtils.lerp(centerX, bounds2.left, expansionFraction);
+                bounds.right = AnimationUtils.lerp(centerX, bounds2.right, expansionFraction);
+                this.boxUnderlineFocused.draw(canvas);
+            }
         }
     }
 
@@ -2324,10 +2854,10 @@ public class TextInputLayout extends LinearLayout {
         if (valueAnimator != null && valueAnimator.isRunning()) {
             this.animator.cancel();
         }
-        if (z && this.hintAnimationEnabled) {
-            animateToExpansionFraction(1.0f);
-        } else {
+        if (!z || !this.hintAnimationEnabled) {
             this.collapsingTextHelper.setExpansionFraction(1.0f);
+        } else {
+            animateToExpansionFraction(1.0f);
         }
         this.hintExpanded = false;
         if (cutoutEnabled()) {
@@ -2343,26 +2873,20 @@ public class TextInputLayout extends LinearLayout {
     }
 
     private void openCutout() {
-        if (!cutoutEnabled()) {
-            return;
+        if (cutoutEnabled()) {
+            RectF rectF = this.tmpRectF;
+            this.collapsingTextHelper.getCollapsedTextActualBounds(rectF, this.editText.getWidth(), this.editText.getGravity());
+            applyCutoutPadding(rectF);
+            rectF.offset((float) (-getPaddingLeft()), (((float) (-getPaddingTop())) - (rectF.height() / 2.0f)) + ((float) this.boxStrokeWidthPx));
+            ((CutoutDrawable) this.boxBackground).setCutout(rectF);
         }
-        RectF rectF = this.tmpRectF;
-        this.collapsingTextHelper.getCollapsedTextActualBounds(rectF, this.editText.getWidth(), this.editText.getGravity());
-        applyCutoutPadding(rectF);
-        int i = this.boxStrokeWidthPx;
-        this.boxLabelCutoutHeight = i;
-        rectF.top = 0.0f;
-        rectF.bottom = i;
-        rectF.offset(-getPaddingLeft(), 0.0f);
-        ((CutoutDrawable) this.boxBackground).setCutout(rectF);
     }
 
-    private void updateCutout() {
-        if (!cutoutEnabled() || this.hintExpanded || this.boxLabelCutoutHeight == this.boxStrokeWidthPx) {
-            return;
+    private void recalculateCutout() {
+        if (cutoutEnabled() && !this.hintExpanded) {
+            closeCutout();
+            openCutout();
         }
-        closeCutout();
-        openCutout();
     }
 
     private void closeCutout() {
@@ -2374,101 +2898,178 @@ public class TextInputLayout extends LinearLayout {
     private void applyCutoutPadding(RectF rectF) {
         float f = rectF.left;
         int i = this.boxLabelCutoutPaddingPx;
-        rectF.left = f - i;
-        rectF.right += i;
+        rectF.left = f - ((float) i);
+        rectF.right += (float) i;
     }
 
-    boolean cutoutIsOpen() {
+    /* access modifiers changed from: package-private */
+    public boolean cutoutIsOpen() {
         return cutoutEnabled() && ((CutoutDrawable) this.boxBackground).hasCutout();
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void drawableStateChanged() {
-        if (this.inDrawableStateChanged) {
-            return;
-        }
-        boolean z = true;
-        this.inDrawableStateChanged = true;
-        super.drawableStateChanged();
-        int[] drawableState = getDrawableState();
-        CollapsingTextHelper collapsingTextHelper = this.collapsingTextHelper;
-        boolean state = collapsingTextHelper != null ? collapsingTextHelper.setState(drawableState) | false : false;
-        if (this.editText != null) {
-            if (!ViewCompat.isLaidOut(this) || !isEnabled()) {
-                z = false;
+    /* access modifiers changed from: protected */
+    public void drawableStateChanged() {
+        if (!this.inDrawableStateChanged) {
+            boolean z = true;
+            this.inDrawableStateChanged = true;
+            super.drawableStateChanged();
+            int[] drawableState = getDrawableState();
+            CollapsingTextHelper collapsingTextHelper2 = this.collapsingTextHelper;
+            boolean state = collapsingTextHelper2 != null ? collapsingTextHelper2.setState(drawableState) | false : false;
+            if (this.editText != null) {
+                if (!ViewCompat.isLaidOut(this) || !isEnabled()) {
+                    z = false;
+                }
+                updateLabelState(z);
             }
-            updateLabelState(z);
+            updateEditTextBackground();
+            updateTextInputBoxState();
+            if (state) {
+                invalidate();
+            }
+            this.inDrawableStateChanged = false;
         }
-        updateEditTextBackground();
-        updateTextInputBoxState();
-        if (state) {
-            invalidate();
-        }
-        this.inDrawableStateChanged = false;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
+    /* JADX WARNING: Code restructure failed: missing block: B:6:0x0012, code lost:
+        r0 = r5.editText;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
     public void updateTextInputBoxState() {
-        TextView textView;
-        EditText editText;
-        EditText editText2;
-        if (this.boxBackground == null || this.boxBackgroundMode == 0) {
-            return;
-        }
-        boolean z = false;
-        boolean z2 = isFocused() || ((editText2 = this.editText) != null && editText2.hasFocus());
-        boolean z3 = isHovered() || ((editText = this.editText) != null && editText.isHovered());
-        if (!isEnabled()) {
-            this.boxStrokeColor = this.disabledColor;
-        } else if (this.indicatorViewController.errorShouldBeShown()) {
-            if (this.strokeErrorColor != null) {
-                updateStrokeErrorColor(z2, z3);
-            } else {
-                this.boxStrokeColor = this.indicatorViewController.getErrorViewCurrentTextColor();
-            }
-        } else if (!this.counterOverflowed || (textView = this.counterView) == null) {
-            if (z2) {
-                this.boxStrokeColor = this.focusedStrokeColor;
-            } else if (z3) {
-                this.boxStrokeColor = this.hoveredStrokeColor;
-            } else {
-                this.boxStrokeColor = this.defaultStrokeColor;
-            }
-        } else if (this.strokeErrorColor != null) {
-            updateStrokeErrorColor(z2, z3);
-        } else {
-            this.boxStrokeColor = textView.getCurrentTextColor();
-        }
-        if (getErrorIconDrawable() != null && this.indicatorViewController.isErrorEnabled() && this.indicatorViewController.errorShouldBeShown()) {
-            z = true;
-        }
-        setErrorIconVisible(z);
-        refreshErrorIconDrawableState();
-        refreshStartIconDrawableState();
-        refreshEndIconDrawableState();
-        if (getEndIconDelegate().shouldTintIconOnError()) {
-            tintEndIconOnError(this.indicatorViewController.errorShouldBeShown());
-        }
-        if (z2 && isEnabled()) {
-            this.boxStrokeWidthPx = this.boxStrokeWidthFocusedPx;
-        } else {
-            this.boxStrokeWidthPx = this.boxStrokeWidthDefaultPx;
-        }
-        if (this.boxBackgroundMode == 2) {
-            updateCutout();
-        }
-        if (this.boxBackgroundMode == 1) {
-            if (!isEnabled()) {
-                this.boxBackgroundColor = this.disabledFilledBackgroundColor;
-            } else if (z3 && !z2) {
-                this.boxBackgroundColor = this.hoveredFilledBackgroundColor;
-            } else if (z2) {
-                this.boxBackgroundColor = this.focusedFilledBackgroundColor;
-            } else {
-                this.boxBackgroundColor = this.defaultFilledBackgroundColor;
-            }
-        }
-        applyBoxAttributes();
+        /*
+            r5 = this;
+            com.google.android.material.shape.MaterialShapeDrawable r0 = r5.boxBackground
+            if (r0 == 0) goto L_0x00e2
+            int r0 = r5.boxBackgroundMode
+            if (r0 != 0) goto L_0x000a
+            goto L_0x00e2
+        L_0x000a:
+            boolean r0 = r5.isFocused()
+            r1 = 0
+            r2 = 1
+            if (r0 != 0) goto L_0x001f
+            android.widget.EditText r0 = r5.editText
+            if (r0 == 0) goto L_0x001d
+            boolean r0 = r0.hasFocus()
+            if (r0 == 0) goto L_0x001d
+            goto L_0x001f
+        L_0x001d:
+            r0 = r1
+            goto L_0x0020
+        L_0x001f:
+            r0 = r2
+        L_0x0020:
+            boolean r3 = r5.isHovered()
+            if (r3 != 0) goto L_0x0030
+            android.widget.EditText r3 = r5.editText
+            if (r3 == 0) goto L_0x0031
+            boolean r3 = r3.isHovered()
+            if (r3 == 0) goto L_0x0031
+        L_0x0030:
+            r1 = r2
+        L_0x0031:
+            boolean r3 = r5.isEnabled()
+            if (r3 != 0) goto L_0x003c
+            int r3 = r5.disabledColor
+            r5.boxStrokeColor = r3
+            goto L_0x007e
+        L_0x003c:
+            com.google.android.material.textfield.IndicatorViewController r3 = r5.indicatorViewController
+            boolean r3 = r3.errorShouldBeShown()
+            if (r3 == 0) goto L_0x0055
+            android.content.res.ColorStateList r3 = r5.strokeErrorColor
+            if (r3 == 0) goto L_0x004c
+            r5.updateStrokeErrorColor(r0, r1)
+            goto L_0x007e
+        L_0x004c:
+            com.google.android.material.textfield.IndicatorViewController r3 = r5.indicatorViewController
+            int r3 = r3.getErrorViewCurrentTextColor()
+            r5.boxStrokeColor = r3
+            goto L_0x007e
+        L_0x0055:
+            boolean r3 = r5.counterOverflowed
+            if (r3 == 0) goto L_0x006c
+            android.widget.TextView r3 = r5.counterView
+            if (r3 == 0) goto L_0x006c
+            android.content.res.ColorStateList r4 = r5.strokeErrorColor
+            if (r4 == 0) goto L_0x0065
+            r5.updateStrokeErrorColor(r0, r1)
+            goto L_0x007e
+        L_0x0065:
+            int r3 = r3.getCurrentTextColor()
+            r5.boxStrokeColor = r3
+            goto L_0x007e
+        L_0x006c:
+            if (r0 == 0) goto L_0x0073
+            int r3 = r5.focusedStrokeColor
+            r5.boxStrokeColor = r3
+            goto L_0x007e
+        L_0x0073:
+            if (r1 == 0) goto L_0x007a
+            int r3 = r5.hoveredStrokeColor
+            r5.boxStrokeColor = r3
+            goto L_0x007e
+        L_0x007a:
+            int r3 = r5.defaultStrokeColor
+            r5.boxStrokeColor = r3
+        L_0x007e:
+            r5.updateErrorIconVisibility()
+            r5.refreshErrorIconDrawableState()
+            r5.refreshStartIconDrawableState()
+            r5.refreshEndIconDrawableState()
+            com.google.android.material.textfield.EndIconDelegate r3 = r5.getEndIconDelegate()
+            boolean r3 = r3.shouldTintIconOnError()
+            if (r3 == 0) goto L_0x009d
+            com.google.android.material.textfield.IndicatorViewController r3 = r5.indicatorViewController
+            boolean r3 = r3.errorShouldBeShown()
+            r5.tintEndIconOnError(r3)
+        L_0x009d:
+            int r3 = r5.boxBackgroundMode
+            r4 = 2
+            if (r3 != r4) goto L_0x00bc
+            int r3 = r5.boxStrokeWidthPx
+            if (r0 == 0) goto L_0x00b1
+            boolean r4 = r5.isEnabled()
+            if (r4 == 0) goto L_0x00b1
+            int r4 = r5.boxStrokeWidthFocusedPx
+            r5.boxStrokeWidthPx = r4
+            goto L_0x00b5
+        L_0x00b1:
+            int r4 = r5.boxStrokeWidthDefaultPx
+            r5.boxStrokeWidthPx = r4
+        L_0x00b5:
+            int r4 = r5.boxStrokeWidthPx
+            if (r4 == r3) goto L_0x00bc
+            r5.recalculateCutout()
+        L_0x00bc:
+            int r3 = r5.boxBackgroundMode
+            if (r3 != r2) goto L_0x00df
+            boolean r2 = r5.isEnabled()
+            if (r2 != 0) goto L_0x00cb
+            int r0 = r5.disabledFilledBackgroundColor
+            r5.boxBackgroundColor = r0
+            goto L_0x00df
+        L_0x00cb:
+            if (r1 == 0) goto L_0x00d4
+            if (r0 != 0) goto L_0x00d4
+            int r0 = r5.hoveredFilledBackgroundColor
+            r5.boxBackgroundColor = r0
+            goto L_0x00df
+        L_0x00d4:
+            if (r0 == 0) goto L_0x00db
+            int r0 = r5.focusedFilledBackgroundColor
+            r5.boxBackgroundColor = r0
+            goto L_0x00df
+        L_0x00db:
+            int r0 = r5.defaultFilledBackgroundColor
+            r5.boxBackgroundColor = r0
+        L_0x00df:
+            r5.applyBoxAttributes()
+        L_0x00e2:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.google.android.material.textfield.TextInputLayout.updateTextInputBoxState():void");
     }
 
     private void updateStrokeErrorColor(boolean z, boolean z2) {
@@ -2484,14 +3085,15 @@ public class TextInputLayout extends LinearLayout {
         }
     }
 
-    private void setErrorIconVisible(boolean z) {
+    private void updateErrorIconVisibility() {
         int i = 0;
-        this.errorIconView.setVisibility(z ? 0 : 8);
-        FrameLayout frameLayout = this.endIconFrame;
-        if (z) {
+        boolean z = getErrorIconDrawable() != null && this.indicatorViewController.isErrorEnabled() && this.indicatorViewController.errorShouldBeShown();
+        CheckableImageButton checkableImageButton = this.errorIconView;
+        if (!z) {
             i = 8;
         }
-        frameLayout.setVisibility(i);
+        checkableImageButton.setVisibility(i);
+        updateEndLayoutVisibility();
         updateSuffixTextViewPadding();
         if (!hasEndIcon()) {
             updateDummyDrawables();
@@ -2504,13 +3106,12 @@ public class TextInputLayout extends LinearLayout {
 
     private void refreshIconDrawableState(CheckableImageButton checkableImageButton, ColorStateList colorStateList) {
         Drawable drawable = checkableImageButton.getDrawable();
-        if (checkableImageButton.getDrawable() == null || colorStateList == null || !colorStateList.isStateful()) {
-            return;
+        if (checkableImageButton.getDrawable() != null && colorStateList != null && colorStateList.isStateful()) {
+            int colorForState = colorStateList.getColorForState(mergeIconState(checkableImageButton), colorStateList.getDefaultColor());
+            Drawable mutate = DrawableCompat.wrap(drawable).mutate();
+            DrawableCompat.setTintList(mutate, ColorStateList.valueOf(colorForState));
+            checkableImageButton.setImageDrawable(mutate);
         }
-        int colorForState = colorStateList.getColorForState(mergeIconState(checkableImageButton), colorStateList.getDefaultColor());
-        Drawable mutate = DrawableCompat.wrap(drawable).mutate();
-        DrawableCompat.setTintList(mutate, ColorStateList.valueOf(colorForState));
-        checkableImageButton.setImageDrawable(mutate);
     }
 
     private int[] mergeIconState(CheckableImageButton checkableImageButton) {
@@ -2527,10 +3128,10 @@ public class TextInputLayout extends LinearLayout {
         if (valueAnimator != null && valueAnimator.isRunning()) {
             this.animator.cancel();
         }
-        if (z && this.hintAnimationEnabled) {
-            animateToExpansionFraction(0.0f);
-        } else {
+        if (!z || !this.hintAnimationEnabled) {
             this.collapsingTextHelper.setExpansionFraction(0.0f);
+        } else {
+            animateToExpansionFraction(0.0f);
         }
         if (cutoutEnabled() && ((CutoutDrawable) this.boxBackground).hasCutout()) {
             closeCutout();
@@ -2541,47 +3142,50 @@ public class TextInputLayout extends LinearLayout {
         updateSuffixTextVisibility();
     }
 
-    void animateToExpansionFraction(float f) {
-        if (this.collapsingTextHelper.getExpansionFraction() == f) {
-            return;
+    /* access modifiers changed from: package-private */
+    public void animateToExpansionFraction(float f) {
+        if (this.collapsingTextHelper.getExpansionFraction() != f) {
+            if (this.animator == null) {
+                ValueAnimator valueAnimator = new ValueAnimator();
+                this.animator = valueAnimator;
+                valueAnimator.setInterpolator(AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR);
+                this.animator.setDuration(167);
+                this.animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                        TextInputLayout.this.collapsingTextHelper.setExpansionFraction(((Float) valueAnimator.getAnimatedValue()).floatValue());
+                    }
+                });
+            }
+            this.animator.setFloatValues(new float[]{this.collapsingTextHelper.getExpansionFraction(), f});
+            this.animator.start();
         }
-        if (this.animator == null) {
-            ValueAnimator valueAnimator = new ValueAnimator();
-            this.animator = valueAnimator;
-            valueAnimator.setInterpolator(AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR);
-            this.animator.setDuration(167L);
-            this.animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.google.android.material.textfield.TextInputLayout.4
-                @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-                public void onAnimationUpdate(ValueAnimator valueAnimator2) {
-                    TextInputLayout.this.collapsingTextHelper.setExpansionFraction(((Float) valueAnimator2.getAnimatedValue()).floatValue());
-                }
-            });
-        }
-        this.animator.setFloatValues(this.collapsingTextHelper.getExpansionFraction(), f);
-        this.animator.start();
     }
 
-    final boolean isHintExpanded() {
+    /* access modifiers changed from: package-private */
+    public final boolean isHintExpanded() {
         return this.hintExpanded;
     }
 
-    final boolean isHelperTextDisplayed() {
+    /* access modifiers changed from: package-private */
+    public final boolean isHelperTextDisplayed() {
         return this.indicatorViewController.helperTextIsDisplayed();
     }
 
-    final int getHintCurrentCollapsedTextColor() {
+    /* access modifiers changed from: package-private */
+    public final int getHintCurrentCollapsedTextColor() {
         return this.collapsingTextHelper.getCurrentCollapsedTextColor();
     }
 
-    final float getHintCollapsedTextHeight() {
+    /* access modifiers changed from: package-private */
+    public final float getHintCollapsedTextHeight() {
         return this.collapsingTextHelper.getCollapsedTextHeight();
     }
 
-    final int getErrorTextCurrentColor() {
+    /* access modifiers changed from: package-private */
+    public final int getErrorTextCurrentColor() {
         return this.indicatorViewController.getErrorViewCurrentTextColor();
     }
 
-    /* loaded from: classes2.dex */
     public static class AccessibilityDelegate extends AccessibilityDelegateCompat {
         private final TextInputLayout layout;
 
@@ -2589,11 +3193,10 @@ public class TextInputLayout extends LinearLayout {
             this.layout = textInputLayout;
         }
 
-        @Override // androidx.core.view.AccessibilityDelegateCompat
         public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
             super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfoCompat);
             EditText editText = this.layout.getEditText();
-            CharSequence text = editText != null ? editText.getText() : null;
+            Editable text = editText != null ? editText.getText() : null;
             CharSequence hint = this.layout.getHint();
             CharSequence error = this.layout.getError();
             CharSequence placeholderText = this.layout.getPlaceholderText();
@@ -2603,43 +3206,46 @@ public class TextInputLayout extends LinearLayout {
             boolean z2 = !TextUtils.isEmpty(hint);
             boolean z3 = !this.layout.isHintExpanded();
             boolean z4 = !TextUtils.isEmpty(error);
-            boolean z5 = z4 || !TextUtils.isEmpty(counterOverflowDescription);
+            boolean z5 = false;
+            boolean z6 = z4 || !TextUtils.isEmpty(counterOverflowDescription);
+            if (this.layout.getPrefixTextView().getVisibility() == 0) {
+                z5 = true;
+            }
             String charSequence = z2 ? hint.toString() : "";
+            if (z5) {
+                accessibilityNodeInfoCompat.setLabelFor(this.layout.getPrefixTextView());
+                accessibilityNodeInfoCompat.setTraversalAfter(this.layout.getPrefixTextView());
+            } else {
+                accessibilityNodeInfoCompat.setTraversalAfter(this.layout.startIconView);
+            }
             if (z) {
                 accessibilityNodeInfoCompat.setText(text);
             } else if (!TextUtils.isEmpty(charSequence)) {
                 accessibilityNodeInfoCompat.setText(charSequence);
                 if (z3 && placeholderText != null) {
-                    accessibilityNodeInfoCompat.setText(charSequence + ", " + ((Object) placeholderText));
+                    accessibilityNodeInfoCompat.setText(charSequence + ", " + placeholderText);
                 }
             } else if (placeholderText != null) {
                 accessibilityNodeInfoCompat.setText(placeholderText);
             }
             if (!TextUtils.isEmpty(charSequence)) {
-                if (Build.VERSION.SDK_INT >= 26) {
-                    accessibilityNodeInfoCompat.setHintText(charSequence);
-                } else {
-                    if (z) {
-                        charSequence = ((Object) text) + ", " + charSequence;
-                    }
-                    accessibilityNodeInfoCompat.setText(charSequence);
-                }
+                accessibilityNodeInfoCompat.setHintText(charSequence);
                 accessibilityNodeInfoCompat.setShowingHintText(!z);
             }
             if (text == null || text.length() != counterMaxLength) {
                 counterMaxLength = -1;
             }
             accessibilityNodeInfoCompat.setMaxTextLength(counterMaxLength);
-            if (z5) {
+            if (z6) {
                 if (!z4) {
                     error = counterOverflowDescription;
                 }
                 accessibilityNodeInfoCompat.setError(error);
             }
-            if (Build.VERSION.SDK_INT < 17 || editText == null) {
-                return;
+            View helperTextView = this.layout.indicatorViewController.getHelperTextView();
+            if (helperTextView != null) {
+                accessibilityNodeInfoCompat.setLabelFor(helperTextView);
             }
-            editText.setLabelFor(R$id.textinput_helper_text);
         }
     }
 }

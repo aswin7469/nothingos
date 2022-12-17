@@ -3,28 +3,24 @@ package com.android.settings.inputmethod;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
-import com.android.settings.R;
+import com.android.settings.R$xml;
 import com.android.settings.dashboard.DashboardFragment;
-/* loaded from: classes.dex */
+
 public class InputMethodAndSubtypeEnabler extends DashboardFragment {
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "InputMethodAndSubtypeEnabler";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 60;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.input_methods_subtype;
+        return R$xml.input_methods_subtype;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         ((InputMethodAndSubtypePreferenceController) use(InputMethodAndSubtypePreferenceController.class)).initialize(this, getStringExtraFromIntentOrArguments("input_method_id"));
@@ -36,13 +32,12 @@ public class InputMethodAndSubtypeEnabler extends DashboardFragment {
             return stringExtra;
         }
         Bundle arguments = getArguments();
-        if (arguments != null) {
-            return arguments.getString(str);
+        if (arguments == null) {
+            return null;
         }
-        return null;
+        return arguments.getString(str);
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, androidx.fragment.app.Fragment
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
         String stringExtraFromIntentOrArguments = getStringExtraFromIntentOrArguments("android.intent.extra.TITLE");

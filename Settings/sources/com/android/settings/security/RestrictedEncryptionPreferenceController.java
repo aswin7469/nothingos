@@ -5,7 +5,7 @@ import android.os.UserHandle;
 import android.os.UserManager;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.core.AbstractPreferenceController;
-/* loaded from: classes.dex */
+
 public abstract class RestrictedEncryptionPreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin {
     private final UserHandle mUserHandle = UserHandle.of(UserHandle.myUserId());
     protected final UserManager mUserManager;
@@ -17,7 +17,6 @@ public abstract class RestrictedEncryptionPreferenceController extends AbstractP
         this.mUserRestriction = str;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return !this.mUserManager.hasBaseUserRestriction(this.mUserRestriction, this.mUserHandle);
     }

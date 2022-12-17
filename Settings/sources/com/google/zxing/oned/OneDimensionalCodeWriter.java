@@ -6,7 +6,7 @@ import com.google.zxing.Writer;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import java.util.Map;
-/* loaded from: classes2.dex */
+
 public abstract class OneDimensionalCodeWriter implements Writer {
     public abstract boolean[] encode(String str);
 
@@ -14,20 +14,19 @@ public abstract class OneDimensionalCodeWriter implements Writer {
         return 10;
     }
 
-    @Override // com.google.zxing.Writer
     public BitMatrix encode(String str, BarcodeFormat barcodeFormat, int i, int i2, Map<EncodeHintType, ?> map) throws WriterException {
         Integer num;
-        if (!str.isEmpty()) {
-            if (i < 0 || i2 < 0) {
-                throw new IllegalArgumentException("Negative size is not allowed. Input: " + i + 'x' + i2);
-            }
+        if (str.isEmpty()) {
+            throw new IllegalArgumentException("Found empty contents");
+        } else if (i < 0 || i2 < 0) {
+            throw new IllegalArgumentException("Negative size is not allowed. Input: " + i + 'x' + i2);
+        } else {
             int defaultMargin = getDefaultMargin();
-            if (map != null && (num = (Integer) map.get(EncodeHintType.MARGIN)) != null) {
+            if (!(map == null || (num = (Integer) map.get(EncodeHintType.MARGIN)) == null)) {
                 defaultMargin = num.intValue();
             }
             return renderResult(encode(str), i, i2, defaultMargin);
         }
-        throw new IllegalArgumentException("Found empty contents");
     }
 
     private static BitMatrix renderResult(boolean[] zArr, int i, int i2, int i3) {
@@ -49,8 +48,7 @@ public abstract class OneDimensionalCodeWriter implements Writer {
         return bitMatrix;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public static int appendPattern(boolean[] zArr, int i, int[] iArr, boolean z) {
+    protected static int appendPattern(boolean[] zArr, int i, int[] iArr, boolean z) {
         int i2 = 0;
         for (int i3 : iArr) {
             int i4 = 0;

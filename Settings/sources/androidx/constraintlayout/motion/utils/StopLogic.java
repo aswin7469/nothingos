@@ -1,7 +1,7 @@
 package androidx.constraintlayout.motion.utils;
 
 import androidx.constraintlayout.motion.widget.MotionInterpolator;
-/* loaded from: classes.dex */
+
 public class StopLogic extends MotionInterpolator {
     private boolean mBackwards = false;
     private float mLastPosition;
@@ -32,20 +32,20 @@ public class StopLogic extends MotionInterpolator {
             }
             f -= f4;
             f4 = this.mStage2Duration;
-            if (f >= f4) {
-                if (i == 2) {
-                    return this.mStage2EndPosition;
-                }
+            if (f < f4) {
+                f2 = this.mStage2Velocity;
+                f3 = this.mStage3Velocity;
+            } else if (i == 2) {
+                return this.mStage2EndPosition;
+            } else {
                 float f5 = f - f4;
                 float f6 = this.mStage3Duration;
-                if (f5 < f6) {
-                    float f7 = this.mStage3Velocity;
-                    return f7 - ((f5 * f7) / f6);
+                if (f5 >= f6) {
+                    return this.mStage3EndPosition;
                 }
-                return this.mStage3EndPosition;
+                float f7 = this.mStage3Velocity;
+                return f7 - ((f5 * f7) / f6);
             }
-            f2 = this.mStage2Velocity;
-            f3 = this.mStage3Velocity;
         }
         return f2 + (((f3 - f2) * f) / f4);
     }
@@ -71,12 +71,12 @@ public class StopLogic extends MotionInterpolator {
         } else {
             float f8 = f4 - f5;
             float f9 = this.mStage3Duration;
-            if (f8 < f9) {
-                float f10 = this.mStage2EndPosition;
-                float f11 = this.mStage3Velocity;
-                return (f10 + (f11 * f8)) - (((f11 * f8) * f8) / (f9 * 2.0f));
+            if (f8 >= f9) {
+                return this.mStage3EndPosition;
             }
-            return this.mStage3EndPosition;
+            float f10 = this.mStage2EndPosition;
+            float f11 = this.mStage3Velocity;
+            return (f10 + (f11 * f8)) - (((f11 * f8) * f8) / (f9 * 2.0f));
         }
     }
 
@@ -91,7 +91,6 @@ public class StopLogic extends MotionInterpolator {
         }
     }
 
-    @Override // android.animation.TimeInterpolator
     public float getInterpolation(float f) {
         float calcY = calcY(f);
         this.mLastPosition = f;
@@ -100,7 +99,6 @@ public class StopLogic extends MotionInterpolator {
         return z ? f2 - calcY : f2 + calcY;
     }
 
-    @Override // androidx.constraintlayout.motion.widget.MotionInterpolator
     public float getVelocity() {
         return getVelocity(this.mLastPosition);
     }
@@ -113,7 +111,7 @@ public class StopLogic extends MotionInterpolator {
         float f6 = f / f3;
         float f7 = (f6 * f) / 2.0f;
         if (f < 0.0f) {
-            float sqrt = (float) Math.sqrt((f2 - ((((-f) / f3) * f) / 2.0f)) * f3);
+            float sqrt = (float) Math.sqrt((double) ((f2 - ((((-f) / f3) * f) / 2.0f)) * f3));
             if (sqrt < f4) {
                 this.mType = "backward accelerate, decelerate";
                 this.mNumberOfStages = 2;
@@ -165,7 +163,7 @@ public class StopLogic extends MotionInterpolator {
                 this.mStage2Duration = f6;
                 return;
             }
-            float sqrt2 = (float) Math.sqrt((f3 * f2) + ((f * f) / 2.0f));
+            float sqrt2 = (float) Math.sqrt((double) ((f3 * f2) + ((f * f) / 2.0f)));
             float f15 = (sqrt2 - f) / f3;
             this.mStage1Duration = f15;
             float f16 = sqrt2 / f3;

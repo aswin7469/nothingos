@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.PreferenceViewHolder;
 import com.android.internal.R;
-/* loaded from: classes.dex */
+
 public class DisabledCheckBoxPreference extends CheckBoxPreference {
     private View mCheckBox;
     private boolean mEnabledCheckBox;
@@ -32,7 +32,7 @@ public class DisabledCheckBoxPreference extends CheckBoxPreference {
 
     public DisabledCheckBoxPreference(Context context) {
         super(context);
-        setupDisabledCheckBoxPreference(context, null, 0, 0);
+        setupDisabledCheckBoxPreference(context, (AttributeSet) null, 0, 0);
     }
 
     private void setupDisabledCheckBoxPreference(Context context, AttributeSet attributeSet, int i, int i2) {
@@ -51,14 +51,12 @@ public class DisabledCheckBoxPreference extends CheckBoxPreference {
     public void enableCheckbox(boolean z) {
         View view;
         this.mEnabledCheckBox = z;
-        if (this.mViewHolder == null || (view = this.mCheckBox) == null) {
-            return;
+        if (this.mViewHolder != null && (view = this.mCheckBox) != null) {
+            view.setEnabled(z);
+            this.mViewHolder.itemView.setEnabled(this.mEnabledCheckBox);
         }
-        view.setEnabled(z);
-        this.mViewHolder.itemView.setEnabled(this.mEnabledCheckBox);
     }
 
-    @Override // androidx.preference.CheckBoxPreference, androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         this.mViewHolder = preferenceViewHolder;
@@ -72,8 +70,7 @@ public class DisabledCheckBoxPreference extends CheckBoxPreference {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.CheckBoxPreference, androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public void performClick(View view) {
         if (this.mEnabledCheckBox) {
             super.performClick(view);

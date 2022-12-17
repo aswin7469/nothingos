@@ -5,7 +5,7 @@ import com.airbnb.lottie.model.content.ShapeTrimPath;
 import com.airbnb.lottie.model.layer.BaseLayer;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class TrimPathContent implements Content, BaseKeyframeAnimation.AnimationListener {
     private final BaseKeyframeAnimation<?, Float> endAnimation;
     private final boolean hidden;
@@ -15,7 +15,6 @@ public class TrimPathContent implements Content, BaseKeyframeAnimation.Animation
     private final BaseKeyframeAnimation<?, Float> startAnimation;
     private final ShapeTrimPath.Type type;
 
-    @Override // com.airbnb.lottie.animation.content.Content
     public void setContents(List<Content> list, List<Content> list2) {
     }
 
@@ -23,33 +22,32 @@ public class TrimPathContent implements Content, BaseKeyframeAnimation.Animation
         this.name = shapeTrimPath.getName();
         this.hidden = shapeTrimPath.isHidden();
         this.type = shapeTrimPath.getType();
-        BaseKeyframeAnimation<Float, Float> mo180createAnimation = shapeTrimPath.getStart().mo180createAnimation();
-        this.startAnimation = mo180createAnimation;
-        BaseKeyframeAnimation<Float, Float> mo180createAnimation2 = shapeTrimPath.getEnd().mo180createAnimation();
-        this.endAnimation = mo180createAnimation2;
-        BaseKeyframeAnimation<Float, Float> mo180createAnimation3 = shapeTrimPath.getOffset().mo180createAnimation();
-        this.offsetAnimation = mo180createAnimation3;
-        baseLayer.addAnimation(mo180createAnimation);
-        baseLayer.addAnimation(mo180createAnimation2);
-        baseLayer.addAnimation(mo180createAnimation3);
-        mo180createAnimation.addUpdateListener(this);
-        mo180createAnimation2.addUpdateListener(this);
-        mo180createAnimation3.addUpdateListener(this);
+        BaseKeyframeAnimation<Float, Float> createAnimation = shapeTrimPath.getStart().createAnimation();
+        this.startAnimation = createAnimation;
+        BaseKeyframeAnimation<Float, Float> createAnimation2 = shapeTrimPath.getEnd().createAnimation();
+        this.endAnimation = createAnimation2;
+        BaseKeyframeAnimation<Float, Float> createAnimation3 = shapeTrimPath.getOffset().createAnimation();
+        this.offsetAnimation = createAnimation3;
+        baseLayer.addAnimation(createAnimation);
+        baseLayer.addAnimation(createAnimation2);
+        baseLayer.addAnimation(createAnimation3);
+        createAnimation.addUpdateListener(this);
+        createAnimation2.addUpdateListener(this);
+        createAnimation3.addUpdateListener(this);
     }
 
-    @Override // com.airbnb.lottie.animation.keyframe.BaseKeyframeAnimation.AnimationListener
     public void onValueChanged() {
         for (int i = 0; i < this.listeners.size(); i++) {
             this.listeners.get(i).onValueChanged();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void addListener(BaseKeyframeAnimation.AnimationListener animationListener) {
         this.listeners.add(animationListener);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public ShapeTrimPath.Type getType() {
         return this.type;
     }

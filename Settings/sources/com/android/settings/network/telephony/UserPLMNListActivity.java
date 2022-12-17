@@ -22,10 +22,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import androidx.constraintlayout.widget.R$styleable;
 import com.android.internal.telephony.uicc.IccUtils;
 import com.android.internal.telephony.uicc.PlmnActRecord;
-import com.android.settings.R;
+import com.android.settings.R$array;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,20 +36,19 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.codeaurora.internal.IExtTelephony;
-/* loaded from: classes.dex */
+
 public class UserPLMNListActivity extends PreferenceActivity implements DialogInterface.OnCancelListener {
+    /* access modifiers changed from: private */
+    public boolean mAirplaneModeOn = false;
     private IExtTelephony mExtTelephony;
-    private UPLMNInfoWithEf mOldInfo;
-    private List<UPLMNInfoWithEf> mUPLMNList;
-    private PreferenceScreen mUPLMNListContainer;
-    private Map<Preference, UPLMNInfoWithEf> mPreferenceMap = new LinkedHashMap();
-    private int mNumRec = 0;
-    private boolean mAirplaneModeOn = false;
-    private int mPhoneId = 0;
+    /* access modifiers changed from: private */
+    public MyHandler mHandler = new MyHandler();
     protected boolean mIsForeground = false;
-    private MyHandler mHandler = new MyHandler();
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() { // from class: com.android.settings.network.telephony.UserPLMNListActivity.1
-        @Override // android.content.BroadcastReceiver
+    private int mNumRec = 0;
+    private UPLMNInfoWithEf mOldInfo;
+    private int mPhoneId = 0;
+    private Map<Preference, UPLMNInfoWithEf> mPreferenceMap = new LinkedHashMap();
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if ("android.intent.action.AIRPLANE_MODE".equals(action)) {
@@ -58,14 +58,14 @@ public class UserPLMNListActivity extends PreferenceActivity implements DialogIn
                 if (intent.getBooleanExtra("exception", false)) {
                     UserPLMNListActivity.log("ACTION_READ_EF_BROADCAST with exception");
                     Message obtainMessage = UserPLMNListActivity.this.mHandler.obtainMessage();
+                    MyHandler unused = UserPLMNListActivity.this.mHandler;
                     obtainMessage.what = 0;
                     obtainMessage.obj = new AsyncResult((Object) null, (Object) null, new Exception());
                     UserPLMNListActivity.this.mHandler.sendMessage(obtainMessage);
                     return;
                 }
                 UserPLMNListActivity.this.handleGetEFDone(intent.getByteArrayExtra("payload"));
-            } else if (!"com.qualcomm.qti.intent.action.ACTION_WRITE_EF_RESULT".equals(action)) {
-            } else {
+            } else if ("com.qualcomm.qti.intent.action.ACTION_WRITE_EF_RESULT".equals(action)) {
                 if (intent.getBooleanExtra("exception", false)) {
                     UserPLMNListActivity.log("ACTION_WRITE_EF_BROADCAST with exception");
                 } else {
@@ -75,6 +75,10 @@ public class UserPLMNListActivity extends PreferenceActivity implements DialogIn
             }
         }
     };
+    /* access modifiers changed from: private */
+    public List<UPLMNInfoWithEf> mUPLMNList;
+    /* access modifiers changed from: private */
+    public PreferenceScreen mUPLMNListContainer;
 
     private int convertAccessTech2NetworkMode(int i) {
         int i2 = (i & 16384) != 0 ? 8 : 0;
@@ -98,34 +102,33 @@ public class UserPLMNListActivity extends PreferenceActivity implements DialogIn
         return (i & 2) != 0 ? i2 | 64 : i2;
     }
 
-    @Override // android.app.Activity
-    protected Dialog onCreateDialog(int i) {
+    /* access modifiers changed from: protected */
+    public Dialog onCreateDialog(int i) {
         ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle(getText(R.string.uplmn_settings_title));
+        progressDialog.setTitle(getText(R$string.uplmn_settings_title));
         progressDialog.setIndeterminate(true);
         if (i == 99) {
             progressDialog.setCancelable(true);
             progressDialog.setOnCancelListener(this);
-            progressDialog.setMessage(getText(R.string.reading_settings));
+            progressDialog.setMessage(getText(R$string.reading_settings));
             return progressDialog;
         } else if (i != 100) {
             return null;
         } else {
             progressDialog.setCancelable(false);
-            progressDialog.setMessage(getText(R.string.updating_settings));
+            progressDialog.setMessage(getText(R$string.updating_settings));
             return progressDialog;
         }
     }
 
-    @Override // android.content.DialogInterface.OnCancelListener
     public void onCancel(DialogInterface dialogInterface) {
         finish();
     }
 
-    @Override // android.preference.PreferenceActivity, android.app.Activity
-    protected void onCreate(Bundle bundle) {
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        addPreferencesFromResource(R.xml.uplmn_settings);
+        addPreferencesFromResource(R$xml.uplmn_settings);
         this.mUPLMNListContainer = (PreferenceScreen) findPreference("button_uplmn_list_key");
         this.mPhoneId = SubscriptionManager.getPhoneId(getIntent().getIntExtra("android.telephony.extra.SUBSCRIPTION_INDEX", -1));
         this.mExtTelephony = IExtTelephony.Stub.asInterface(ServiceManager.getService("qti.radio.extphone"));
@@ -136,13 +139,12 @@ public class UserPLMNListActivity extends PreferenceActivity implements DialogIn
         registerReceiver(this.mReceiver, intentFilter);
     }
 
-    @Override // android.preference.PreferenceActivity, android.app.ListActivity, android.app.Activity
-    protected void onDestroy() {
+    /* access modifiers changed from: protected */
+    public void onDestroy() {
         super.onDestroy();
         unregisterReceiver(this.mReceiver);
     }
 
-    @Override // android.app.Activity
     public void onResume() {
         super.onResume();
         boolean z = true;
@@ -155,20 +157,17 @@ public class UserPLMNListActivity extends PreferenceActivity implements DialogIn
         this.mAirplaneModeOn = z;
     }
 
-    @Override // android.app.Activity
     public void onPause() {
         super.onPause();
         this.mIsForeground = false;
     }
 
-    @Override // android.app.Activity
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        menu.add(0, 1, 0, R.string.uplmn_list_setting_add_plmn).setShowAsAction(1);
+        menu.add(0, 1, 0, R$string.uplmn_list_setting_add_plmn).setShowAsAction(1);
         return true;
     }
 
-    @Override // android.app.Activity
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (menu != null) {
             menu.setGroupEnabled(0, !this.mAirplaneModeOn);
@@ -176,7 +175,6 @@ public class UserPLMNListActivity extends PreferenceActivity implements DialogIn
         return super.onPrepareOptionsMenu(menu);
     }
 
-    @Override // android.preference.PreferenceActivity, android.app.Activity
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         int itemId = menuItem.getItemId();
         if (itemId != 1) {
@@ -193,16 +191,15 @@ public class UserPLMNListActivity extends PreferenceActivity implements DialogIn
             intent.putExtra("uplmn_service", 0);
             intent.putExtra("uplmn_add", true);
             intent.putExtra("uplmn_size", this.mUPLMNList.size());
-            startActivityForResult(intent, R$styleable.Constraint_layout_goneMarginRight);
+            startActivityForResult(intent, 101);
         }
         return super.onOptionsItemSelected(menuItem);
     }
 
     private void showReadingDialog() {
-        if (!this.mIsForeground || !hasGetIccFileHandler()) {
-            return;
+        if (this.mIsForeground && hasGetIccFileHandler()) {
+            showDialog(99);
         }
-        showDialog(99);
     }
 
     private void showSavingDialog() {
@@ -229,7 +226,7 @@ public class UserPLMNListActivity extends PreferenceActivity implements DialogIn
         setScreenEnabled();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void getUPLMNInfoFromEf() {
         log("UPLMNInfoFromEf Start read...");
         if (!readEfFromIcc(28512)) {
@@ -240,10 +237,10 @@ public class UserPLMNListActivity extends PreferenceActivity implements DialogIn
     private boolean hasGetIccFileHandler() {
         try {
             IExtTelephony iExtTelephony = this.mExtTelephony;
-            if (iExtTelephony == null) {
-                return false;
+            if (iExtTelephony != null) {
+                return iExtTelephony.hasGetIccFileHandler(this.mPhoneId, 1);
             }
-            return iExtTelephony.hasGetIccFileHandler(this.mPhoneId, 1);
+            return false;
         } catch (RemoteException | NullPointerException e) {
             Log.e("UserPLMNListActivity", "hasGetIccFileHandler Exception: ", e);
             return false;
@@ -253,10 +250,10 @@ public class UserPLMNListActivity extends PreferenceActivity implements DialogIn
     private boolean readEfFromIcc(int i) {
         try {
             IExtTelephony iExtTelephony = this.mExtTelephony;
-            if (iExtTelephony == null) {
-                return false;
+            if (iExtTelephony != null) {
+                return iExtTelephony.readEfFromIcc(this.mPhoneId, 1, i);
             }
-            return iExtTelephony.readEfFromIcc(this.mPhoneId, 1, i);
+            return false;
         } catch (RemoteException | NullPointerException e) {
             Log.e("UserPLMNListActivity", "readEfFromIcc Exception: ", e);
             return false;
@@ -266,17 +263,17 @@ public class UserPLMNListActivity extends PreferenceActivity implements DialogIn
     private boolean writeEfToIcc(byte[] bArr, int i) {
         try {
             IExtTelephony iExtTelephony = this.mExtTelephony;
-            if (iExtTelephony == null) {
-                return false;
+            if (iExtTelephony != null) {
+                return iExtTelephony.writeEfToIcc(this.mPhoneId, 1, i, bArr);
             }
-            return iExtTelephony.writeEfToIcc(this.mPhoneId, 1, i, bArr);
+            return false;
         } catch (RemoteException | NullPointerException e) {
             Log.e("UserPLMNListActivity", "writeEfToIcc Exception: ", e);
             return false;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void refreshUPLMNListPreference(ArrayList<UPLMNInfoWithEf> arrayList) {
         if (this.mUPLMNListContainer.getPreferenceCount() != 0) {
             this.mUPLMNListContainer.removeAll();
@@ -297,10 +294,10 @@ public class UserPLMNListActivity extends PreferenceActivity implements DialogIn
         }
         if (arrayList == null || arrayList.size() == 0) {
             log("refreshUPLMNListPreference : NULL UPLMN list!");
-            if (arrayList != null) {
+            if (arrayList == null) {
+                this.mUPLMNList = new ArrayList();
                 return;
             }
-            this.mUPLMNList = new ArrayList();
             return;
         }
         Iterator<UPLMNInfoWithEf> it = arrayList.iterator();
@@ -311,9 +308,7 @@ public class UserPLMNListActivity extends PreferenceActivity implements DialogIn
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public class UPLMNInfoWithEf {
+    class UPLMNInfoWithEf {
         private int mNetworkMode;
         private String mOperatorNumeric;
         private int mPriority;
@@ -349,13 +344,10 @@ public class UserPLMNListActivity extends PreferenceActivity implements DialogIn
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public class PriorityCompare implements Comparator<UPLMNInfoWithEf> {
+    class PriorityCompare implements Comparator<UPLMNInfoWithEf> {
         PriorityCompare() {
         }
 
-        @Override // java.util.Comparator
         public int compare(UPLMNInfoWithEf uPLMNInfoWithEf, UPLMNInfoWithEf uPLMNInfoWithEf2) {
             return uPLMNInfoWithEf.getPriority() - uPLMNInfoWithEf2.getPriority();
         }
@@ -370,7 +362,6 @@ public class UserPLMNListActivity extends PreferenceActivity implements DialogIn
         this.mPreferenceMap.put(preference, uPLMNInfoWithEf);
     }
 
-    @Override // android.preference.PreferenceActivity
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
         Intent intent = new Intent(this, UserPLMNEditorActivity.class);
         UPLMNInfoWithEf uPLMNInfoWithEf = this.mPreferenceMap.get(preference);
@@ -380,12 +371,12 @@ public class UserPLMNListActivity extends PreferenceActivity implements DialogIn
         intent.putExtra("uplmn_service", uPLMNInfoWithEf.getNetworMode());
         intent.putExtra("uplmn_add", false);
         intent.putExtra("uplmn_size", this.mUPLMNList.size());
-        startActivityForResult(intent, R$styleable.Constraint_layout_goneMarginStart);
+        startActivityForResult(intent, 102);
         return true;
     }
 
-    @Override // android.preference.PreferenceActivity, android.app.Activity
-    protected void onActivityResult(int i, int i2, Intent intent) {
+    /* access modifiers changed from: protected */
+    public void onActivityResult(int i, int i2, Intent intent) {
         log("resultCode = " + i2 + ", requestCode = " + i);
         if (intent != null) {
             UPLMNInfoWithEf createNetworkInfofromIntent = createNetworkInfofromIntent(intent);
@@ -395,8 +386,7 @@ public class UserPLMNListActivity extends PreferenceActivity implements DialogIn
             } else {
                 if (i == 101) {
                     handleAddList(createNetworkInfofromIntent);
-                } else if (i != 102) {
-                } else {
+                } else if (i == 102) {
                     handleSetUPLMN(handleModifiedList(createNetworkInfofromIntent, this.mOldInfo));
                 }
             }
@@ -412,40 +402,44 @@ public class UserPLMNListActivity extends PreferenceActivity implements DialogIn
             str = str + "f";
         }
         byte[] hexStringToBytes = IccUtils.hexStringToBytes(str);
-        return new byte[]{(byte) ((hexStringToBytes[0] >> 4) | ((hexStringToBytes[0] << 4) & 240)), (byte) ((hexStringToBytes[1] >> 4) | ((hexStringToBytes[2] << 4) & 240)), (byte) ((hexStringToBytes[1] & 15) | (hexStringToBytes[2] & 240))};
+        byte b = hexStringToBytes[0];
+        byte b2 = hexStringToBytes[2];
+        return new byte[]{(byte) (((b << 4) & 240) | (b >> 4)), (byte) ((hexStringToBytes[1] >> 4) | ((b2 << 4) & 240)), (byte) ((hexStringToBytes[1] & 15) | (b2 & 240))};
     }
 
     private void handleSetUPLMN(ArrayList<UPLMNInfoWithEf> arrayList) {
-        int i;
-        int i2;
         showSavingDialog();
-        byte[] bArr = new byte[this.mNumRec * 5];
-        for (int i3 = 0; i3 < this.mNumRec; i3++) {
-            int i4 = i3 * 5;
-            bArr[i4] = -1;
-            bArr[i4 + 1] = -1;
-            bArr[i4 + 2] = -1;
-            bArr[i4 + 3] = 0;
-            bArr[i4 + 4] = 0;
+        byte[] bArr = new byte[(this.mNumRec * 5)];
+        for (int i = 0; i < this.mNumRec; i++) {
+            int i2 = i * 5;
+            bArr[i2] = -1;
+            bArr[i2 + 1] = -1;
+            bArr[i2 + 2] = -1;
+            bArr[i2 + 3] = 0;
+            bArr[i2 + 4] = 0;
         }
-        for (int i5 = 0; i5 < arrayList.size() && i5 < this.mNumRec; i5++) {
-            UPLMNInfoWithEf uPLMNInfoWithEf = arrayList.get(i5);
+        int i3 = 0;
+        while (i3 < arrayList.size() && i3 < this.mNumRec) {
+            UPLMNInfoWithEf uPLMNInfoWithEf = arrayList.get(i3);
             String operatorNumeric = uPLMNInfoWithEf.getOperatorNumeric();
             if (TextUtils.isEmpty(operatorNumeric)) {
                 break;
             }
             log("strOperNumeric = " + operatorNumeric);
-            int i6 = i5 * 5;
-            System.arraycopy(stringToBcdPlmn(operatorNumeric), 0, bArr, i6, 3);
-            log("data[0] = " + ((int) bArr[i6]));
-            log("data[1] = " + ((int) bArr[i6 + 1]));
-            log("data[2] = " + ((int) bArr[i6 + 2]));
+            int i4 = i3 * 5;
+            System.arraycopy(stringToBcdPlmn(operatorNumeric), 0, bArr, i4, 3);
+            log("data[0] = " + bArr[i4]);
+            log("data[1] = " + bArr[i4 + 1]);
+            log("data[2] = " + bArr[i4 + 2]);
             int convertNetworkMode2AccessTech = convertNetworkMode2AccessTech(uPLMNInfoWithEf.getNetworMode());
-            bArr[i6 + 3] = (byte) (convertNetworkMode2AccessTech >> 8);
-            bArr[i6 + 4] = (byte) (convertNetworkMode2AccessTech & 255);
+            int i5 = i4 + 3;
+            bArr[i5] = (byte) (convertNetworkMode2AccessTech >> 8);
+            int i6 = i4 + 4;
+            bArr[i6] = (byte) (convertNetworkMode2AccessTech & 255);
             log("accessTech = " + convertNetworkMode2AccessTech);
-            log("data[3] = " + ((int) bArr[i]));
-            log("data[4] = " + ((int) bArr[i2]));
+            log("data[3] = " + bArr[i5]);
+            log("data[4] = " + bArr[i6]);
+            i3++;
         }
         log("update EFuplmn Start.");
         writeEfToIcc(bArr, 28512);
@@ -454,7 +448,7 @@ public class UserPLMNListActivity extends PreferenceActivity implements DialogIn
     private void handleAddList(UPLMNInfoWithEf uPLMNInfoWithEf) {
         log("handleAddList: add new network: " + uPLMNInfoWithEf);
         dumpUPLMNInfo(this.mUPLMNList);
-        ArrayList<UPLMNInfoWithEf> arrayList = new ArrayList<>();
+        ArrayList arrayList = new ArrayList();
         for (int i = 0; i < this.mUPLMNList.size(); i++) {
             arrayList.add(this.mUPLMNList.get(i));
         }
@@ -517,26 +511,24 @@ public class UserPLMNListActivity extends PreferenceActivity implements DialogIn
         for (int i = 0; i < this.mUPLMNList.size(); i++) {
             arrayList.add(this.mUPLMNList.get(i));
         }
-        arrayList.remove(binarySearch);
-        uPLMNInfoWithEf.setOperatorNumeric(null);
+        if (binarySearch >= 0) {
+            arrayList.remove(binarySearch);
+        }
+        uPLMNInfoWithEf.setOperatorNumeric((String) null);
         arrayList.add(uPLMNInfoWithEf);
         updateListPriority(arrayList);
         dumpUPLMNInfo(arrayList);
         return arrayList;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class MyHandler extends Handler {
+    private class MyHandler extends Handler {
         private MyHandler() {
         }
 
-        @Override // android.os.Handler
         public void handleMessage(Message message) {
-            if (message.what != 0) {
-                return;
+            if (message.what == 0) {
+                handleGetUPLMNList(message);
             }
-            handleGetUPLMNList(message);
         }
 
         public void handleGetUPLMNList(Message message) {
@@ -549,15 +541,15 @@ public class UserPLMNListActivity extends PreferenceActivity implements DialogIn
                 userPLMNListActivity2.onFinished(userPLMNListActivity2.mUPLMNListContainer, false);
             }
             AsyncResult asyncResult = (AsyncResult) message.obj;
-            if (asyncResult.exception == null) {
-                UserPLMNListActivity.this.refreshUPLMNListPreference((ArrayList) asyncResult.result);
+            if (asyncResult.exception != null) {
+                UserPLMNListActivity.log("handleGetUPLMNList with exception = " + asyncResult.exception);
+                if (UserPLMNListActivity.this.mUPLMNList == null) {
+                    UserPLMNListActivity.this.mUPLMNList = new ArrayList();
+                    return;
+                }
                 return;
             }
-            UserPLMNListActivity.log("handleGetUPLMNList with exception = " + asyncResult.exception);
-            if (UserPLMNListActivity.this.mUPLMNList != null) {
-                return;
-            }
-            UserPLMNListActivity.this.mUPLMNList = new ArrayList();
+            UserPLMNListActivity.this.refreshUPLMNListPreference((ArrayList) asyncResult.result);
         }
     }
 
@@ -587,21 +579,21 @@ public class UserPLMNListActivity extends PreferenceActivity implements DialogIn
     private String getNetworkModeString(int i, String str) {
         Log.d("UserPLMNListActivity", "plmn = " + str);
         int convertEFMode2Ap = UserPLMNEditorActivity.convertEFMode2Ap(i);
-        for (String str2 : getResources().getStringArray(R.array.uplmn_cu_mcc_mnc_values)) {
-            if (str.equals(str2)) {
-                return getResources().getStringArray(R.array.uplmn_prefer_network_mode_w_choices)[convertEFMode2Ap];
+        for (String equals : getResources().getStringArray(R$array.uplmn_cu_mcc_mnc_values)) {
+            if (str.equals(equals)) {
+                return getResources().getStringArray(R$array.uplmn_prefer_network_mode_w_choices)[convertEFMode2Ap];
             }
         }
-        return getResources().getStringArray(R.array.uplmn_prefer_network_mode_td_choices)[convertEFMode2Ap];
+        return getResources().getStringArray(R$array.uplmn_prefer_network_mode_td_choices)[convertEFMode2Ap];
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setScreenEnabled() {
         getPreferenceScreen().setEnabled(!this.mAirplaneModeOn);
         invalidateOptionsMenu();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static void log(String str) {
         Log.d("UserPLMNListActivity", str);
     }

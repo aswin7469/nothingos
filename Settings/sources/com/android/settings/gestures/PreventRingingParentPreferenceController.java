@@ -9,46 +9,31 @@ import android.os.Handler;
 import android.provider.Settings;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.TogglePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
-import com.android.settings.widget.PrimarySwitchPreference;
+import com.android.settingslib.PrimarySwitchPreference;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnStart;
 import com.android.settingslib.core.lifecycle.events.OnStop;
-/* loaded from: classes.dex */
+
 public class PreventRingingParentPreferenceController extends TogglePreferenceController implements LifecycleObserver, OnStart, OnStop {
     static final int KEY_CHORD_POWER_VOLUME_UP_MUTE_TOGGLE = 1;
     final String SECURE_KEY = "volume_hush_gesture";
     private PrimarySwitchPreference mPreference;
     private SettingObserver mSettingObserver;
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -57,19 +42,19 @@ public class PreventRingingParentPreferenceController extends TogglePreferenceCo
         super(context, str);
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = (PrimarySwitchPreference) preferenceScreen.findPreference(getPreferenceKey());
         this.mSettingObserver = new SettingObserver(this.mPreference);
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean isChecked() {
-        return isVolumePowerKeyChordSetToHush() && Settings.Secure.getInt(this.mContext.getContentResolver(), "volume_hush_gesture", 1) != 0;
+        if (isVolumePowerKeyChordSetToHush() && Settings.Secure.getInt(this.mContext.getContentResolver(), "volume_hush_gesture", 1) != 0) {
+            return true;
+        }
+        return false;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean setChecked(boolean z) {
         int i = 1;
         int i2 = Settings.Secure.getInt(this.mContext.getContentResolver(), "volume_hush_gesture", 1);
@@ -83,50 +68,53 @@ public class PreventRingingParentPreferenceController extends TogglePreferenceCo
         return Settings.Secure.putInt(contentResolver, "volume_hush_gesture", i);
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
-        CharSequence text;
+        CharSequence charSequence;
         super.updateState(preference);
         int i = Settings.Secure.getInt(this.mContext.getContentResolver(), "volume_hush_gesture", 1);
         if (isVolumePowerKeyChordSetToHush()) {
             if (i == 1) {
-                text = this.mContext.getText(R.string.prevent_ringing_option_vibrate_summary);
-            } else if (i == 2) {
-                text = this.mContext.getText(R.string.prevent_ringing_option_mute_summary);
+                charSequence = this.mContext.getText(R$string.prevent_ringing_option_vibrate_summary);
+            } else if (i != 2) {
+                charSequence = this.mContext.getText(R$string.switch_off_text);
             } else {
-                text = this.mContext.getText(R.string.switch_off_text);
+                charSequence = this.mContext.getText(R$string.prevent_ringing_option_mute_summary);
             }
             preference.setEnabled(true);
             this.mPreference.setSwitchEnabled(true);
         } else {
-            text = this.mContext.getText(R.string.prevent_ringing_option_unavailable_lpp_summary);
+            charSequence = this.mContext.getText(R$string.prevent_ringing_option_unavailable_lpp_summary);
             preference.setEnabled(false);
             this.mPreference.setSwitchEnabled(false);
         }
-        preference.setSummary(text);
+        preference.setSummary(charSequence);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
-        if (!this.mContext.getResources().getBoolean(17891702)) {
+        if (!this.mContext.getResources().getBoolean(17891830)) {
             return 3;
         }
         if (isVolumePowerKeyChordSetToHush()) {
             return 0;
         }
-        return this.mContext.getResources().getBoolean(17891587) ? 5 : 3;
+        if (this.mContext.getResources().getBoolean(17891698)) {
+            return 5;
+        }
+        return 3;
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStart
+    public int getSliceHighlightMenuRes() {
+        return R$string.menu_key_sound;
+    }
+
     public void onStart() {
         SettingObserver settingObserver = this.mSettingObserver;
         if (settingObserver != null) {
             settingObserver.register(this.mContext.getContentResolver());
-            this.mSettingObserver.onChange(false, null);
+            this.mSettingObserver.onChange(false, (Uri) null);
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStop
     public void onStop() {
         SettingObserver settingObserver = this.mSettingObserver;
         if (settingObserver != null) {
@@ -135,14 +123,13 @@ public class PreventRingingParentPreferenceController extends TogglePreferenceCo
     }
 
     private boolean isVolumePowerKeyChordSetToHush() {
-        return Settings.Global.getInt(this.mContext.getContentResolver(), "key_chord_power_volume_up", this.mContext.getResources().getInteger(17694833)) == 1;
+        return Settings.Global.getInt(this.mContext.getContentResolver(), "key_chord_power_volume_up", this.mContext.getResources().getInteger(17694842)) == 1;
     }
 
-    /* loaded from: classes.dex */
     private class SettingObserver extends ContentObserver {
+        private final Uri mKeyChordVolumePowerUpUri = Settings.Global.getUriFor("key_chord_power_volume_up");
         private final Preference mPreference;
         private final Uri mVolumeHushGestureUri = Settings.Secure.getUriFor("volume_hush_gesture");
-        private final Uri mKeyChordVolumePowerUpUri = Settings.Global.getUriFor("key_chord_power_volume_up");
 
         SettingObserver(Preference preference) {
             super(new Handler());
@@ -158,7 +145,6 @@ public class PreventRingingParentPreferenceController extends TogglePreferenceCo
             contentResolver.unregisterContentObserver(this);
         }
 
-        @Override // android.database.ContentObserver
         public void onChange(boolean z, Uri uri) {
             super.onChange(z, uri);
             if (uri == null || this.mVolumeHushGestureUri.equals(uri) || this.mKeyChordVolumePowerUpUri.equals(uri)) {

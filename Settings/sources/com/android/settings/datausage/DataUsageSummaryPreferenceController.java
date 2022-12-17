@@ -13,15 +13,16 @@ import android.telephony.SubscriptionPlan;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.RecurrenceRule;
+import android.view.View;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import com.android.internal.util.CollectionUtils;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settings.datausage.lib.DataUsageLib;
 import com.android.settings.network.ProxySubscriptionManager;
+import com.android.settings.network.telephony.DomesticRoamUtils;
 import com.android.settings.network.telephony.TelephonyBasePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settings.widget.EntityHeaderController;
 import com.android.settingslib.NetworkPolicyEditor;
 import com.android.settingslib.core.lifecycle.Lifecycle;
@@ -33,7 +34,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
-/* loaded from: classes.dex */
+
 public class DataUsageSummaryPreferenceController extends TelephonyBasePreferenceController implements PreferenceControllerMixin, LifecycleObserver, OnStart {
     private static final String KEY = "status_header";
     private static final long PETA = 1000000000000000L;
@@ -68,42 +69,30 @@ public class DataUsageSummaryPreferenceController extends TelephonyBasePreferenc
         return j >= 0 && j < PETA;
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -121,22 +110,28 @@ public class DataUsageSummaryPreferenceController extends TelephonyBasePreferenc
         this.mDataUsageController = null;
     }
 
-    private void updateConfiguration(Context context, int i, SubscriptionInfo subscriptionInfo) {
+    /* access modifiers changed from: protected */
+    public void updateConfiguration(Context context, int i, SubscriptionInfo subscriptionInfo) {
         this.mPolicyEditor = new NetworkPolicyEditor((NetworkPolicyManager) context.getSystemService(NetworkPolicyManager.class));
-        DataUsageController dataUsageController = new DataUsageController(context);
-        this.mDataUsageController = dataUsageController;
-        dataUsageController.setSubscriptionId(i);
+        DataUsageController createDataUsageController = createDataUsageController(context);
+        this.mDataUsageController = createDataUsageController;
+        createDataUsageController.setSubscriptionId(i);
         this.mDataInfoController = new DataUsageInfoController();
         if (subscriptionInfo != null) {
-            this.mDataUsageTemplate = R.string.cell_data_template;
+            this.mDataUsageTemplate = R$string.cell_data_template;
             this.mDefaultTemplate = DataUsageLib.getMobileTemplate(context, i);
         } else if (DataUsageUtils.hasWifiRadio(context)) {
-            this.mDataUsageTemplate = R.string.wifi_data_template;
-            this.mDefaultTemplate = NetworkTemplate.buildTemplateWifi(NetworkTemplate.WIFI_NETWORKID_ALL, (String) null);
+            this.mDataUsageTemplate = R$string.wifi_data_template;
+            this.mDefaultTemplate = new NetworkTemplate.Builder(4).build();
         } else {
-            this.mDataUsageTemplate = R.string.ethernet_data_template;
+            this.mDataUsageTemplate = R$string.ethernet_data_template;
             this.mDefaultTemplate = DataUsageUtils.getDefaultTemplate(context, i);
         }
+    }
+
+    /* access modifiers changed from: package-private */
+    public DataUsageController createDataUsageController(Context context) {
+        return new DataUsageController(context);
     }
 
     DataUsageSummaryPreferenceController(DataUsageController dataUsageController, DataUsageInfoController dataUsageInfoController, NetworkTemplate networkTemplate, NetworkPolicyEditor networkPolicyEditor, int i, Activity activity, Lifecycle lifecycle, EntityHeaderController entityHeaderController, PreferenceFragmentCompat preferenceFragmentCompat, int i2) {
@@ -153,85 +148,78 @@ public class DataUsageSummaryPreferenceController extends TelephonyBasePreferenc
         this.mSubId = i2;
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStart
     public void onStart() {
         if (this.mEntityHeaderController == null) {
-            this.mEntityHeaderController = EntityHeaderController.newInstance((Activity) this.mContext, this.mFragment, null);
+            this.mEntityHeaderController = EntityHeaderController.newInstance((Activity) this.mContext, this.mFragment, (View) null);
         }
         this.mEntityHeaderController.setRecyclerView(this.mFragment.getListView(), this.mLifecycle);
     }
 
-    List<SubscriptionPlan> getSubscriptionPlans(int i) {
+    /* access modifiers changed from: package-private */
+    public List<SubscriptionPlan> getSubscriptionPlans(int i) {
         return ProxySubscriptionManager.getInstance(this.mContext).get().getSubscriptionPlans(i);
     }
 
-    SubscriptionInfo getSubscriptionInfo(int i) {
+    /* access modifiers changed from: protected */
+    public SubscriptionInfo getSubscriptionInfo(int i) {
         if (!this.mHasMobileData) {
             return null;
         }
         return ProxySubscriptionManager.getInstance(this.mContext).getAccessibleSubscriptionInfo(i);
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.network.telephony.TelephonyAvailabilityCallback
     public int getAvailabilityStatus(int i) {
         return (getSubscriptionInfo(i) != null || DataUsageUtils.hasWifiRadio(this.mContext)) ? 0 : 2;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         DataUsageSummaryPreference dataUsageSummaryPreference = (DataUsageSummaryPreference) preference;
         SubscriptionInfo subscriptionInfo = getSubscriptionInfo(this.mSubId);
         if (this.mDataUsageController == null) {
             updateConfiguration(this.mContext, this.mSubId, subscriptionInfo);
         }
-        this.mHistoricalUsageLevel = ThreadUtils.postOnBackgroundThread(new Callable() { // from class: com.android.settings.datausage.DataUsageSummaryPreferenceController$$ExternalSyntheticLambda0
-            @Override // java.util.concurrent.Callable
-            public final Object call() {
-                Object lambda$updateState$0;
-                lambda$updateState$0 = DataUsageSummaryPreferenceController.this.lambda$updateState$0();
-                return lambda$updateState$0;
-            }
-        });
+        this.mHistoricalUsageLevel = ThreadUtils.postOnBackgroundThread((Callable) new DataUsageSummaryPreferenceController$$ExternalSyntheticLambda0(this));
         DataUsageController.DataUsageInfo dataUsageInfo = this.mDataUsageController.getDataUsageInfo(this.mDefaultTemplate);
         long j = dataUsageInfo.usageLevel;
         if (subscriptionInfo != null) {
             this.mDataInfoController.updateDataLimit(dataUsageInfo, this.mPolicyEditor.getPolicy(this.mDefaultTemplate));
-            dataUsageSummaryPreference.setWifiMode(false, null, false);
+            dataUsageSummaryPreference.setWifiMode(false, (String) null, false);
             refreshDataplanInfo(dataUsageInfo, subscriptionInfo);
             long j2 = dataUsageInfo.warningLevel;
             if (j2 > 0 && dataUsageInfo.limitLevel > 0) {
-                dataUsageSummaryPreference.setLimitInfo(TextUtils.expandTemplate(this.mContext.getText(R.string.cell_data_warning_and_limit), DataUsageUtils.formatDataUsage(this.mContext, dataUsageInfo.warningLevel), DataUsageUtils.formatDataUsage(this.mContext, dataUsageInfo.limitLevel)));
+                dataUsageSummaryPreference.setLimitInfo(TextUtils.expandTemplate(this.mContext.getText(R$string.cell_data_warning_and_limit), new CharSequence[]{DataUsageUtils.formatDataUsage(this.mContext, dataUsageInfo.warningLevel), DataUsageUtils.formatDataUsage(this.mContext, dataUsageInfo.limitLevel)}));
             } else if (j2 > 0) {
-                dataUsageSummaryPreference.setLimitInfo(TextUtils.expandTemplate(this.mContext.getText(R.string.cell_data_warning), DataUsageUtils.formatDataUsage(this.mContext, dataUsageInfo.warningLevel)));
+                dataUsageSummaryPreference.setLimitInfo(TextUtils.expandTemplate(this.mContext.getText(R$string.cell_data_warning), new CharSequence[]{DataUsageUtils.formatDataUsage(this.mContext, dataUsageInfo.warningLevel)}));
             } else if (dataUsageInfo.limitLevel > 0) {
-                dataUsageSummaryPreference.setLimitInfo(TextUtils.expandTemplate(this.mContext.getText(R.string.cell_data_limit), DataUsageUtils.formatDataUsage(this.mContext, dataUsageInfo.limitLevel)));
+                dataUsageSummaryPreference.setLimitInfo(TextUtils.expandTemplate(this.mContext.getText(R$string.cell_data_limit), new CharSequence[]{DataUsageUtils.formatDataUsage(this.mContext, dataUsageInfo.limitLevel)}));
             } else {
-                dataUsageSummaryPreference.setLimitInfo(null);
+                dataUsageSummaryPreference.setLimitInfo((CharSequence) null);
             }
             if (this.mDataplanUse <= 0 && this.mSnapshotTime < 0) {
                 Log.d(TAG, "Display data usage from history");
                 this.mDataplanUse = displayUsageLevel(j);
-                this.mSnapshotTime = -1L;
+                this.mSnapshotTime = -1;
             }
             dataUsageSummaryPreference.setUsageNumbers(this.mDataplanUse, this.mDataplanSize, this.mHasMobileData);
             if (this.mDataBarSize <= 0) {
                 dataUsageSummaryPreference.setChartEnabled(false);
             } else {
                 dataUsageSummaryPreference.setChartEnabled(true);
-                dataUsageSummaryPreference.setLabels(DataUsageUtils.formatDataUsage(this.mContext, 0L), DataUsageUtils.formatDataUsage(this.mContext, this.mDataBarSize));
+                dataUsageSummaryPreference.setLabels(DataUsageUtils.formatDataUsage(this.mContext, 0), DataUsageUtils.formatDataUsage(this.mContext, this.mDataBarSize));
                 dataUsageSummaryPreference.setProgress(((float) this.mDataplanUse) / ((float) this.mDataBarSize));
             }
             dataUsageSummaryPreference.setUsageInfo(this.mCycleEnd, this.mSnapshotTime, this.mCarrierName, this.mDataplanCount, this.mManageSubscriptionIntent);
             return;
         }
         dataUsageSummaryPreference.setWifiMode(true, dataUsageInfo.period, false);
-        dataUsageSummaryPreference.setLimitInfo(null);
-        dataUsageSummaryPreference.setUsageNumbers(displayUsageLevel(j), -1L, true);
+        dataUsageSummaryPreference.setLimitInfo((CharSequence) null);
+        DataUsageSummaryPreference dataUsageSummaryPreference2 = dataUsageSummaryPreference;
+        dataUsageSummaryPreference2.setUsageNumbers(displayUsageLevel(j), -1, true);
         dataUsageSummaryPreference.setChartEnabled(false);
-        dataUsageSummaryPreference.setUsageInfo(dataUsageInfo.cycleEnd, -1L, null, 0, null);
+        dataUsageSummaryPreference2.setUsageInfo(dataUsageInfo.cycleEnd, -1, (CharSequence) null, 0, (Intent) null);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ Object lambda$updateState$0() throws Exception {
         return Long.valueOf(this.mDataUsageController.getHistoricalUsageLevel(this.mDefaultTemplate));
     }
@@ -249,16 +237,20 @@ public class DataUsageSummaryPreferenceController extends TelephonyBasePreferenc
 
     private void refreshDataplanInfo(DataUsageController.DataUsageInfo dataUsageInfo, SubscriptionInfo subscriptionInfo) {
         ZonedDateTime zonedDateTime;
+        String registeredOperatorName;
         this.mCarrierName = null;
         this.mDataplanCount = 0;
-        this.mDataplanSize = -1L;
+        this.mDataplanSize = -1;
         this.mDataBarSize = this.mDataInfoController.getSummaryLimit(dataUsageInfo);
         this.mDataplanUse = dataUsageInfo.usageLevel;
         this.mCycleStart = dataUsageInfo.cycleStart;
         this.mCycleEnd = dataUsageInfo.cycleEnd;
-        this.mSnapshotTime = -1L;
+        this.mSnapshotTime = -1;
         if (subscriptionInfo != null && this.mHasMobileData) {
             this.mCarrierName = subscriptionInfo.getCarrierName();
+            if (DomesticRoamUtils.isFeatureEnabled(this.mContext) && "" != (registeredOperatorName = DomesticRoamUtils.getRegisteredOperatorName(this.mContext, subscriptionInfo.getSubscriptionId()))) {
+                this.mCarrierName = registeredOperatorName;
+            }
             List<SubscriptionPlan> subscriptionPlans = getSubscriptionPlans(this.mSubId);
             SubscriptionPlan primaryPlan = getPrimaryPlan(subscriptionPlans);
             if (primaryPlan != null) {
@@ -266,12 +258,12 @@ public class DataUsageSummaryPreferenceController extends TelephonyBasePreferenc
                 long dataLimitBytes = primaryPlan.getDataLimitBytes();
                 this.mDataplanSize = dataLimitBytes;
                 if (unlimited(dataLimitBytes)) {
-                    this.mDataplanSize = -1L;
+                    this.mDataplanSize = -1;
                 }
                 this.mDataBarSize = this.mDataplanSize;
                 this.mDataplanUse = primaryPlan.getDataUsageBytes();
                 RecurrenceRule cycleRule = primaryPlan.getCycleRule();
-                if (cycleRule != null && (zonedDateTime = cycleRule.start) != null && cycleRule.end != null) {
+                if (!(cycleRule == null || (zonedDateTime = cycleRule.start) == null || cycleRule.end == null)) {
                     this.mCycleStart = zonedDateTime.toEpochSecond() * 1000;
                     this.mCycleEnd = cycleRule.end.toEpochSecond() * 1000;
                 }
@@ -282,7 +274,8 @@ public class DataUsageSummaryPreferenceController extends TelephonyBasePreferenc
         Log.i(TAG, "Have " + this.mDataplanCount + " plans, dflt sub-id " + this.mSubId + ", intent " + this.mManageSubscriptionIntent);
     }
 
-    Intent createManageSubscriptionIntent(int i) {
+    /* access modifiers changed from: package-private */
+    public Intent createManageSubscriptionIntent(int i) {
         String str;
         try {
             str = INetworkPolicyManager.Stub.asInterface(ServiceManager.getService("netpolicy")).getSubscriptionPlansOwner(i);
@@ -290,16 +283,16 @@ public class DataUsageSummaryPreferenceController extends TelephonyBasePreferenc
             Log.w(TAG, "Fail to get subscription plan owner for subId " + i, e);
             str = "";
         }
-        if (!TextUtils.isEmpty(str) && !getSubscriptionPlans(i).isEmpty()) {
-            Intent intent = new Intent("android.telephony.action.MANAGE_SUBSCRIPTION_PLANS");
-            intent.setPackage(str);
-            intent.putExtra("android.telephony.extra.SUBSCRIPTION_INDEX", i);
-            if (!this.mContext.getPackageManager().queryIntentActivities(intent, 65536).isEmpty()) {
-                return intent;
-            }
+        if (TextUtils.isEmpty(str) || getSubscriptionPlans(i).isEmpty()) {
             return null;
         }
-        return null;
+        Intent intent = new Intent("android.telephony.action.MANAGE_SUBSCRIPTION_PLANS");
+        intent.setPackage(str);
+        intent.putExtra("android.telephony.extra.SUBSCRIPTION_INDEX", i);
+        if (this.mContext.getPackageManager().queryIntentActivities(intent, 65536).isEmpty()) {
+            return null;
+        }
+        return intent;
     }
 
     private static SubscriptionPlan getPrimaryPlan(List<SubscriptionPlan> list) {
@@ -307,9 +300,9 @@ public class DataUsageSummaryPreferenceController extends TelephonyBasePreferenc
             return null;
         }
         SubscriptionPlan subscriptionPlan = list.get(0);
-        if (subscriptionPlan.getDataLimitBytes() > 0 && validSize(subscriptionPlan.getDataUsageBytes()) && subscriptionPlan.getCycleRule() != null) {
-            return subscriptionPlan;
+        if (subscriptionPlan.getDataLimitBytes() <= 0 || !validSize(subscriptionPlan.getDataUsageBytes()) || subscriptionPlan.getCycleRule() == null) {
+            return null;
         }
-        return null;
+        return subscriptionPlan;
     }
 }

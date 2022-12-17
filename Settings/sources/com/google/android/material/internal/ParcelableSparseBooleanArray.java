@@ -3,13 +3,10 @@ package com.google.android.material.internal;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.SparseBooleanArray;
-/* loaded from: classes2.dex */
+
 public class ParcelableSparseBooleanArray extends SparseBooleanArray implements Parcelable {
-    public static final Parcelable.Creator<ParcelableSparseBooleanArray> CREATOR = new Parcelable.Creator<ParcelableSparseBooleanArray>() { // from class: com.google.android.material.internal.ParcelableSparseBooleanArray.1
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: createFromParcel */
-        public ParcelableSparseBooleanArray mo696createFromParcel(Parcel parcel) {
+    public static final Parcelable.Creator<ParcelableSparseBooleanArray> CREATOR = new Parcelable.Creator<ParcelableSparseBooleanArray>() {
+        public ParcelableSparseBooleanArray createFromParcel(Parcel parcel) {
             int readInt = parcel.readInt();
             ParcelableSparseBooleanArray parcelableSparseBooleanArray = new ParcelableSparseBooleanArray(readInt);
             int[] iArr = new int[readInt];
@@ -22,15 +19,11 @@ public class ParcelableSparseBooleanArray extends SparseBooleanArray implements 
             return parcelableSparseBooleanArray;
         }
 
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: newArray */
-        public ParcelableSparseBooleanArray[] mo697newArray(int i) {
+        public ParcelableSparseBooleanArray[] newArray(int i) {
             return new ParcelableSparseBooleanArray[i];
         }
     };
 
-    @Override // android.os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -42,7 +35,6 @@ public class ParcelableSparseBooleanArray extends SparseBooleanArray implements 
         super(i);
     }
 
-    @Override // android.os.Parcelable
     public void writeToParcel(Parcel parcel, int i) {
         int[] iArr = new int[size()];
         boolean[] zArr = new boolean[size()];

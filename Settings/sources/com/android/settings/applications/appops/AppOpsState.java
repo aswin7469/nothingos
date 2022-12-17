@@ -3,7 +3,6 @@ package com.android.settings.applications.appops;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -12,83 +11,81 @@ import android.os.Parcelable;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.util.SparseArray;
-import androidx.appcompat.R$styleable;
-import com.android.settings.R;
+import com.android.settings.R$array;
+import com.android.settings.R$string;
 import java.io.File;
 import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class AppOpsState {
     public static final OpsTemplate[] ALL_TEMPLATES;
     public static final OpsTemplate DEVICE_TEMPLATE;
+    public static final Comparator<AppOpEntry> LABEL_COMPARATOR = new Comparator<AppOpEntry>() {
+        private final Collator sCollator = Collator.getInstance();
+
+        public int compare(AppOpEntry appOpEntry, AppOpEntry appOpEntry2) {
+            return this.sCollator.compare(appOpEntry.getAppEntry().getLabel(), appOpEntry2.getAppEntry().getLabel());
+        }
+    };
     public static final OpsTemplate LOCATION_TEMPLATE;
     public static final OpsTemplate MEDIA_TEMPLATE;
     public static final OpsTemplate MESSAGING_TEMPLATE;
     public static final OpsTemplate PERSONAL_TEMPLATE;
+    public static final Comparator<AppOpEntry> RECENCY_COMPARATOR = new Comparator<AppOpEntry>() {
+        private final Collator sCollator = Collator.getInstance();
+
+        public int compare(AppOpEntry appOpEntry, AppOpEntry appOpEntry2) {
+            if (appOpEntry.getSwitchOrder() != appOpEntry2.getSwitchOrder()) {
+                if (appOpEntry.getSwitchOrder() < appOpEntry2.getSwitchOrder()) {
+                    return -1;
+                }
+                return 1;
+            } else if (appOpEntry.isRunning() != appOpEntry2.isRunning()) {
+                if (appOpEntry.isRunning()) {
+                    return -1;
+                }
+                return 1;
+            } else if (appOpEntry.getTime() == appOpEntry2.getTime()) {
+                return this.sCollator.compare(appOpEntry.getAppEntry().getLabel(), appOpEntry2.getAppEntry().getLabel());
+            } else {
+                if (appOpEntry.getTime() > appOpEntry2.getTime()) {
+                    return -1;
+                }
+                return 1;
+            }
+        }
+    };
     public static final OpsTemplate RUN_IN_BACKGROUND_TEMPLATE;
     final AppOpsManager mAppOps;
     final Context mContext;
     final CharSequence[] mOpLabels;
     final CharSequence[] mOpSummaries;
     final PackageManager mPm;
-    public static final Comparator<AppOpEntry> RECENCY_COMPARATOR = new Comparator<AppOpEntry>() { // from class: com.android.settings.applications.appops.AppOpsState.1
-        private final Collator sCollator = Collator.getInstance();
-
-        @Override // java.util.Comparator
-        public int compare(AppOpEntry appOpEntry, AppOpEntry appOpEntry2) {
-            if (appOpEntry.getSwitchOrder() != appOpEntry2.getSwitchOrder()) {
-                return appOpEntry.getSwitchOrder() < appOpEntry2.getSwitchOrder() ? -1 : 1;
-            } else if (appOpEntry.isRunning() != appOpEntry2.isRunning()) {
-                return appOpEntry.isRunning() ? -1 : 1;
-            } else if (appOpEntry.getTime() == appOpEntry2.getTime()) {
-                return this.sCollator.compare(appOpEntry.getAppEntry().getLabel(), appOpEntry2.getAppEntry().getLabel());
-            } else {
-                return appOpEntry.getTime() > appOpEntry2.getTime() ? -1 : 1;
-            }
-        }
-    };
-    public static final Comparator<AppOpEntry> LABEL_COMPARATOR = new Comparator<AppOpEntry>() { // from class: com.android.settings.applications.appops.AppOpsState.2
-        private final Collator sCollator = Collator.getInstance();
-
-        @Override // java.util.Comparator
-        public int compare(AppOpEntry appOpEntry, AppOpEntry appOpEntry2) {
-            return this.sCollator.compare(appOpEntry.getAppEntry().getLabel(), appOpEntry2.getAppEntry().getLabel());
-        }
-    };
 
     public AppOpsState(Context context) {
         this.mContext = context;
         this.mAppOps = (AppOpsManager) context.getSystemService("appops");
         this.mPm = context.getPackageManager();
-        this.mOpSummaries = context.getResources().getTextArray(R.array.app_ops_summaries);
-        this.mOpLabels = context.getResources().getTextArray(R.array.app_ops_labels);
+        this.mOpSummaries = context.getResources().getTextArray(R$array.app_ops_summaries);
+        this.mOpLabels = context.getResources().getTextArray(R$array.app_ops_labels);
     }
 
-    /* loaded from: classes.dex */
     public static class OpsTemplate implements Parcelable {
-        public static final Parcelable.Creator<OpsTemplate> CREATOR = new Parcelable.Creator<OpsTemplate>() { // from class: com.android.settings.applications.appops.AppOpsState.OpsTemplate.1
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: createFromParcel */
-            public OpsTemplate mo244createFromParcel(Parcel parcel) {
+        public static final Parcelable.Creator<OpsTemplate> CREATOR = new Parcelable.Creator<OpsTemplate>() {
+            public OpsTemplate createFromParcel(Parcel parcel) {
                 return new OpsTemplate(parcel);
             }
 
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: newArray */
-            public OpsTemplate[] mo245newArray(int i) {
+            public OpsTemplate[] newArray(int i) {
                 return new OpsTemplate[i];
             }
         };
         public final int[] ops;
         public final boolean[] showPerms;
 
-        @Override // android.os.Parcelable
         public int describeContents() {
             return 0;
         }
@@ -103,7 +100,6 @@ public class AppOpsState {
             this.showPerms = parcel.createBooleanArray();
         }
 
-        @Override // android.os.Parcelable
         public void writeToParcel(Parcel parcel, int i) {
             parcel.writeIntArray(this.ops);
             parcel.writeBooleanArray(this.showPerms);
@@ -126,16 +122,15 @@ public class AppOpsState {
         ALL_TEMPLATES = new OpsTemplate[]{opsTemplate, opsTemplate2, opsTemplate3, opsTemplate4, opsTemplate5, opsTemplate6};
     }
 
-    /* loaded from: classes.dex */
     public static class AppEntry {
         private final File mApkFile;
         private Drawable mIcon;
         private final ApplicationInfo mInfo;
         private String mLabel;
         private boolean mMounted;
-        private final AppOpsState mState;
-        private final SparseArray<AppOpsManager.OpEntry> mOps = new SparseArray<>();
         private final SparseArray<AppOpEntry> mOpSwitches = new SparseArray<>();
+        private final SparseArray<AppOpsManager.OpEntry> mOps = new SparseArray<>();
+        private final AppOpsState mState;
 
         public AppEntry(AppOpsState appOpsState, ApplicationInfo applicationInfo) {
             this.mState = appOpsState;
@@ -190,21 +185,22 @@ public class AppOpsState {
             return this.mLabel;
         }
 
-        void loadLabel(Context context) {
-            if (this.mLabel == null || !this.mMounted) {
-                if (!this.mApkFile.exists()) {
-                    this.mMounted = false;
-                    this.mLabel = this.mInfo.packageName;
-                    return;
-                }
-                this.mMounted = true;
-                CharSequence loadLabel = this.mInfo.loadLabel(context.getPackageManager());
-                this.mLabel = loadLabel != null ? loadLabel.toString() : this.mInfo.packageName;
+        /* access modifiers changed from: package-private */
+        public void loadLabel(Context context) {
+            if (this.mLabel != null && this.mMounted) {
+                return;
             }
+            if (!this.mApkFile.exists()) {
+                this.mMounted = false;
+                this.mLabel = this.mInfo.packageName;
+                return;
+            }
+            this.mMounted = true;
+            CharSequence loadLabel = this.mInfo.loadLabel(context.getPackageManager());
+            this.mLabel = loadLabel != null ? loadLabel.toString() : this.mInfo.packageName;
         }
     }
 
-    /* loaded from: classes.dex */
     public static class AppOpEntry {
         private final AppEntry mApp;
         private final ArrayList<AppOpsManager.OpEntry> mOps;
@@ -273,12 +269,12 @@ public class AppOpsState {
 
         public CharSequence getTimeText(Resources resources, boolean z) {
             if (isRunning()) {
-                return resources.getText(R.string.app_ops_running);
+                return resources.getText(R$string.app_ops_running);
             }
             if (getTime() > 0) {
-                return DateUtils.getRelativeTimeSpanString(getTime(), System.currentTimeMillis(), 60000L, 262144);
+                return DateUtils.getRelativeTimeSpanString(getTime(), System.currentTimeMillis(), 60000, 262144);
             }
-            return z ? resources.getText(R.string.app_ops_never_used) : "";
+            return z ? resources.getText(R$string.app_ops_never_used) : "";
         }
 
         public boolean isRunning() {
@@ -323,186 +319,324 @@ public class AppOpsState {
 
     private AppEntry getAppEntry(Context context, HashMap<String, AppEntry> hashMap, String str, ApplicationInfo applicationInfo) {
         AppEntry appEntry = hashMap.get(str);
-        if (appEntry == null) {
-            if (applicationInfo == null) {
-                try {
-                    applicationInfo = this.mPm.getApplicationInfo(str, 4194816);
-                } catch (PackageManager.NameNotFoundException unused) {
-                    Log.w("AppOpsState", "Unable to find info for package " + str);
-                    return null;
-                }
-            }
-            AppEntry appEntry2 = new AppEntry(this, applicationInfo);
-            appEntry2.loadLabel(context);
-            hashMap.put(str, appEntry2);
-            return appEntry2;
+        if (appEntry != null) {
+            return appEntry;
         }
-        return appEntry;
+        if (applicationInfo == null) {
+            try {
+                applicationInfo = this.mPm.getApplicationInfo(str, 4194816);
+            } catch (PackageManager.NameNotFoundException unused) {
+                Log.w("AppOpsState", "Unable to find info for package " + str);
+                return null;
+            }
+        }
+        AppEntry appEntry2 = new AppEntry(this, applicationInfo);
+        appEntry2.loadLabel(context);
+        hashMap.put(str, appEntry2);
+        return appEntry2;
     }
 
-    public List<AppOpEntry> buildState(OpsTemplate opsTemplate, int i, String str, Comparator<AppOpEntry> comparator) {
-        int[] iArr;
-        List packagesForOps;
-        List<PackageInfo> packagesHoldingPermissions;
-        int i2;
-        List<PackageInfo> list;
-        int i3;
-        int i4;
-        AppEntry appEntry;
-        PackageInfo packageInfo;
-        int i5;
-        List<PackageInfo> list2;
-        AppOpsManager.PackageOps packageOps;
-        int i6;
-        AppEntry appEntry2;
-        PackageInfo packageInfo2;
-        List<PackageInfo> list3;
-        AppOpsManager.PackageOps packageOps2;
-        String opToPermission;
-        AppOpsState appOpsState = this;
-        Context context = appOpsState.mContext;
-        HashMap<String, AppEntry> hashMap = new HashMap<>();
-        ArrayList arrayList = new ArrayList();
-        ArrayList arrayList2 = new ArrayList();
-        ArrayList arrayList3 = new ArrayList();
-        int[] iArr2 = new int[R$styleable.AppCompatTheme_viewInflaterClass];
-        int i7 = 0;
-        int i8 = 0;
-        while (true) {
-            iArr = opsTemplate.ops;
-            if (i8 >= iArr.length) {
-                break;
-            }
-            if (opsTemplate.showPerms[i8] && (opToPermission = AppOpsManager.opToPermission(iArr[i8])) != null && !arrayList2.contains(opToPermission)) {
-                arrayList2.add(opToPermission);
-                arrayList3.add(Integer.valueOf(opsTemplate.ops[i8]));
-                iArr2[opsTemplate.ops[i8]] = i8;
-            }
-            i8++;
-        }
-        if (str != null) {
-            packagesForOps = appOpsState.mAppOps.getOpsForPackage(i, str, iArr);
-        } else {
-            packagesForOps = appOpsState.mAppOps.getPackagesForOps(iArr);
-        }
-        List list4 = packagesForOps;
-        AppOpsManager.PackageOps packageOps3 = null;
-        if (list4 != null) {
-            int i9 = 0;
-            while (i9 < list4.size()) {
-                AppOpsManager.PackageOps packageOps4 = (AppOpsManager.PackageOps) list4.get(i9);
-                AppEntry appEntry3 = appOpsState.getAppEntry(context, hashMap, packageOps4.getPackageName(), packageOps3);
-                if (appEntry3 != null) {
-                    int i10 = 0;
-                    while (i10 < packageOps4.getOps().size()) {
-                        AppOpsManager.OpEntry opEntry = (AppOpsManager.OpEntry) packageOps4.getOps().get(i10);
-                        addOp(arrayList, packageOps4, appEntry3, opEntry, str == null, str == null ? 0 : iArr2[opEntry.getOp()]);
-                        i10++;
-                        packageOps3 = packageOps3;
-                        list4 = list4;
-                        i9 = i9;
-                    }
-                }
-                i9++;
-                packageOps3 = packageOps3;
-                list4 = list4;
-            }
-        }
-        AppOpsManager.PackageOps packageOps5 = packageOps3;
-        if (str != null) {
-            packagesHoldingPermissions = new ArrayList<>();
-            try {
-                packagesHoldingPermissions.add(appOpsState.mPm.getPackageInfo(str, 4096));
-            } catch (PackageManager.NameNotFoundException unused) {
-            }
-        } else {
-            String[] strArr = new String[arrayList2.size()];
-            arrayList2.toArray(strArr);
-            packagesHoldingPermissions = appOpsState.mPm.getPackagesHoldingPermissions(strArr, 0);
-        }
-        List<PackageInfo> list5 = packagesHoldingPermissions;
-        int i11 = 0;
-        while (i11 < list5.size()) {
-            PackageInfo packageInfo3 = list5.get(i11);
-            AppEntry appEntry4 = appOpsState.getAppEntry(context, hashMap, packageInfo3.packageName, packageInfo3.applicationInfo);
-            if (appEntry4 == null || packageInfo3.requestedPermissions == null) {
-                i2 = i11;
-                list = list5;
-                i3 = i7;
-            } else {
-                int i12 = i7;
-                AppOpsManager.PackageOps packageOps6 = packageOps5;
-                AppOpsManager.PackageOps packageOps7 = packageOps6;
-                while (i12 < packageInfo3.requestedPermissions.length) {
-                    int[] iArr3 = packageInfo3.requestedPermissionsFlags;
-                    if (iArr3 == null || (iArr3[i12] & 2) != 0) {
-                        AppOpsManager.PackageOps packageOps8 = packageOps7;
-                        int i13 = 0;
-                        while (i13 < arrayList2.size()) {
-                            int i14 = i11;
-                            if (((String) arrayList2.get(i13)).equals(packageInfo3.requestedPermissions[i12]) && !appEntry4.hasOp(((Integer) arrayList3.get(i13)).intValue())) {
-                                if (packageOps6 == null) {
-                                    AppOpsManager.PackageOps arrayList4 = new ArrayList();
-                                    i6 = i12;
-                                    packageOps2 = arrayList4;
-                                    packageOps = new AppOpsManager.PackageOps(packageInfo3.packageName, packageInfo3.applicationInfo.uid, arrayList4);
-                                } else {
-                                    i6 = i12;
-                                    packageOps = packageOps8;
-                                    packageOps2 = packageOps6;
-                                }
-                                AppOpsManager.OpEntry opEntry2 = new AppOpsManager.OpEntry(((Integer) arrayList3.get(i13)).intValue(), 0, Collections.emptyMap());
-                                packageOps2.add(opEntry2);
-                                appEntry2 = appEntry4;
-                                packageInfo2 = packageInfo3;
-                                AppOpsManager.PackageOps packageOps9 = packageOps2;
-                                list3 = list5;
-                                addOp(arrayList, packageOps, appEntry4, opEntry2, str == null, str == null ? 0 : iArr2[opEntry2.getOp()]);
-                                packageOps6 = packageOps9;
-                            } else {
-                                packageOps = packageOps8;
-                                i6 = i12;
-                                appEntry2 = appEntry4;
-                                packageInfo2 = packageInfo3;
-                                list3 = list5;
-                            }
-                            i13++;
-                            list5 = list3;
-                            i11 = i14;
-                            i12 = i6;
-                            packageOps8 = packageOps;
-                            appEntry4 = appEntry2;
-                            packageInfo3 = packageInfo2;
-                        }
-                        i4 = i12;
-                        appEntry = appEntry4;
-                        packageInfo = packageInfo3;
-                        i5 = i11;
-                        list2 = list5;
-                        packageOps7 = packageOps8;
-                    } else {
-                        i4 = i12;
-                        appEntry = appEntry4;
-                        packageInfo = packageInfo3;
-                        i5 = i11;
-                        list2 = list5;
-                    }
-                    i12 = i4 + 1;
-                    list5 = list2;
-                    i11 = i5;
-                    appEntry4 = appEntry;
-                    packageInfo3 = packageInfo;
-                }
-                i2 = i11;
-                list = list5;
-                i3 = 0;
-            }
-            i11 = i2 + 1;
-            i7 = i3;
-            list5 = list;
-            appOpsState = this;
-        }
-        Collections.sort(arrayList, comparator);
-        return arrayList;
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r5v15, resolved type: java.util.ArrayList} */
+    /* JADX WARNING: type inference failed for: r5v11, types: [java.util.List] */
+    /* JADX WARNING: type inference failed for: r5v13 */
+    /* JADX WARNING: Multi-variable type inference failed */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public java.util.List<com.android.settings.applications.appops.AppOpsState.AppOpEntry> buildState(com.android.settings.applications.appops.AppOpsState.OpsTemplate r27, int r28, java.lang.String r29, java.util.Comparator<com.android.settings.applications.appops.AppOpsState.AppOpEntry> r30) {
+        /*
+            r26 = this;
+            r7 = r26
+            r0 = r27
+            r8 = r29
+            android.content.Context r9 = r7.mContext
+            java.util.HashMap r10 = new java.util.HashMap
+            r10.<init>()
+            java.util.ArrayList r11 = new java.util.ArrayList
+            r11.<init>()
+            java.util.ArrayList r12 = new java.util.ArrayList
+            r12.<init>()
+            java.util.ArrayList r13 = new java.util.ArrayList
+            r13.<init>()
+            r1 = 121(0x79, float:1.7E-43)
+            int[] r14 = new int[r1]
+            r15 = 0
+            r1 = r15
+        L_0x0022:
+            int[] r2 = r0.ops
+            int r3 = r2.length
+            if (r1 >= r3) goto L_0x0052
+            boolean[] r3 = r0.showPerms
+            boolean r3 = r3[r1]
+            if (r3 == 0) goto L_0x004f
+            r2 = r2[r1]
+            java.lang.String r2 = android.app.AppOpsManager.opToPermission(r2)
+            if (r2 == 0) goto L_0x004f
+            boolean r3 = r12.contains(r2)
+            if (r3 != 0) goto L_0x004f
+            r12.add(r2)
+            int[] r2 = r0.ops
+            r2 = r2[r1]
+            java.lang.Integer r2 = java.lang.Integer.valueOf(r2)
+            r13.add(r2)
+            int[] r2 = r0.ops
+            r2 = r2[r1]
+            r14[r2] = r1
+        L_0x004f:
+            int r1 = r1 + 1
+            goto L_0x0022
+        L_0x0052:
+            if (r8 == 0) goto L_0x005d
+            android.app.AppOpsManager r0 = r7.mAppOps
+            r1 = r28
+            java.util.List r0 = r0.getOpsForPackage(r1, r8, r2)
+            goto L_0x0063
+        L_0x005d:
+            android.app.AppOpsManager r0 = r7.mAppOps
+            java.util.List r0 = r0.getPackagesForOps(r2)
+        L_0x0063:
+            r6 = r0
+            r5 = 0
+            r16 = 1
+            if (r6 == 0) goto L_0x00dc
+            r4 = r15
+        L_0x006a:
+            int r0 = r6.size()
+            if (r4 >= r0) goto L_0x00dc
+            java.lang.Object r0 = r6.get(r4)
+            r17 = r0
+            android.app.AppOpsManager$PackageOps r17 = (android.app.AppOpsManager.PackageOps) r17
+            java.lang.String r0 = r17.getPackageName()
+            com.android.settings.applications.appops.AppOpsState$AppEntry r18 = r7.getAppEntry(r9, r10, r0, r5)
+            if (r18 != 0) goto L_0x0089
+        L_0x0082:
+            r23 = r4
+            r19 = r5
+            r20 = r6
+            goto L_0x00d5
+        L_0x0089:
+            r3 = r15
+        L_0x008a:
+            java.util.List r0 = r17.getOps()
+            int r0 = r0.size()
+            if (r3 >= r0) goto L_0x0082
+            java.util.List r0 = r17.getOps()
+            java.lang.Object r0 = r0.get(r3)
+            r19 = r0
+            android.app.AppOpsManager$OpEntry r19 = (android.app.AppOpsManager.OpEntry) r19
+            if (r8 != 0) goto L_0x00a5
+            r20 = r16
+            goto L_0x00a7
+        L_0x00a5:
+            r20 = r15
+        L_0x00a7:
+            if (r8 != 0) goto L_0x00ac
+            r21 = r15
+            goto L_0x00b4
+        L_0x00ac:
+            int r0 = r19.getOp()
+            r0 = r14[r0]
+            r21 = r0
+        L_0x00b4:
+            r0 = r26
+            r1 = r11
+            r2 = r17
+            r22 = r3
+            r3 = r18
+            r23 = r4
+            r4 = r19
+            r19 = r5
+            r5 = r20
+            r20 = r6
+            r6 = r21
+            r0.addOp(r1, r2, r3, r4, r5, r6)
+            int r3 = r22 + 1
+            r5 = r19
+            r6 = r20
+            r4 = r23
+            goto L_0x008a
+        L_0x00d5:
+            int r4 = r23 + 1
+            r5 = r19
+            r6 = r20
+            goto L_0x006a
+        L_0x00dc:
+            r19 = r5
+            if (r8 == 0) goto L_0x00f1
+            java.util.ArrayList r0 = new java.util.ArrayList
+            r0.<init>()
+            android.content.pm.PackageManager r1 = r7.mPm     // Catch:{ NameNotFoundException -> 0x0100 }
+            r2 = 4096(0x1000, float:5.74E-42)
+            android.content.pm.PackageInfo r1 = r1.getPackageInfo(r8, r2)     // Catch:{ NameNotFoundException -> 0x0100 }
+            r0.add(r1)     // Catch:{ NameNotFoundException -> 0x0100 }
+            goto L_0x0100
+        L_0x00f1:
+            int r0 = r12.size()
+            java.lang.String[] r0 = new java.lang.String[r0]
+            r12.toArray(r0)
+            android.content.pm.PackageManager r1 = r7.mPm
+            java.util.List r0 = r1.getPackagesHoldingPermissions(r0, r15)
+        L_0x0100:
+            r6 = r0
+            r5 = r15
+        L_0x0102:
+            int r0 = r6.size()
+            if (r5 >= r0) goto L_0x021b
+            java.lang.Object r0 = r6.get(r5)
+            r4 = r0
+            android.content.pm.PackageInfo r4 = (android.content.pm.PackageInfo) r4
+            java.lang.String r0 = r4.packageName
+            android.content.pm.ApplicationInfo r1 = r4.applicationInfo
+            com.android.settings.applications.appops.AppOpsState$AppEntry r3 = r7.getAppEntry(r9, r10, r0, r1)
+            if (r3 != 0) goto L_0x011b
+            goto L_0x020d
+        L_0x011b:
+            java.lang.String[] r0 = r4.requestedPermissions
+            if (r0 == 0) goto L_0x020d
+            r2 = r15
+            r0 = r19
+            r1 = r0
+        L_0x0123:
+            java.lang.String[] r15 = r4.requestedPermissions
+            int r15 = r15.length
+            if (r2 >= r15) goto L_0x0207
+            int[] r15 = r4.requestedPermissionsFlags
+            if (r15 == 0) goto L_0x013f
+            r15 = r15[r2]
+            r15 = r15 & 2
+            if (r15 != 0) goto L_0x013f
+            r20 = r2
+            r24 = r3
+            r25 = r4
+            r18 = r5
+            r17 = r6
+            r7 = 0
+            goto L_0x01f9
+        L_0x013f:
+            r27 = r1
+            r15 = 0
+        L_0x0142:
+            int r1 = r12.size()
+            if (r15 >= r1) goto L_0x01ec
+            java.lang.Object r1 = r12.get(r15)
+            java.lang.String r1 = (java.lang.String) r1
+            r18 = r5
+            java.lang.String[] r5 = r4.requestedPermissions
+            r5 = r5[r2]
+            boolean r1 = r1.equals(r5)
+            if (r1 != 0) goto L_0x015b
+            goto L_0x016b
+        L_0x015b:
+            java.lang.Object r1 = r13.get(r15)
+            java.lang.Integer r1 = (java.lang.Integer) r1
+            int r1 = r1.intValue()
+            boolean r1 = r3.hasOp(r1)
+            if (r1 == 0) goto L_0x0178
+        L_0x016b:
+            r21 = r27
+            r20 = r2
+            r24 = r3
+            r25 = r4
+            r17 = r6
+            r7 = 0
+            goto L_0x01da
+        L_0x0178:
+            if (r0 != 0) goto L_0x0190
+            java.util.ArrayList r0 = new java.util.ArrayList
+            r0.<init>()
+            android.app.AppOpsManager$PackageOps r1 = new android.app.AppOpsManager$PackageOps
+            java.lang.String r5 = r4.packageName
+            r20 = r2
+            android.content.pm.ApplicationInfo r2 = r4.applicationInfo
+            int r2 = r2.uid
+            r1.<init>(r5, r2, r0)
+            r5 = r0
+            r21 = r1
+            goto L_0x0195
+        L_0x0190:
+            r20 = r2
+            r21 = r27
+            r5 = r0
+        L_0x0195:
+            android.app.AppOpsManager$OpEntry r2 = new android.app.AppOpsManager$OpEntry
+            java.lang.Object r0 = r13.get(r15)
+            java.lang.Integer r0 = (java.lang.Integer) r0
+            int r0 = r0.intValue()
+            java.util.Map r1 = java.util.Collections.emptyMap()
+            r7 = 0
+            r2.<init>(r0, r7, r1)
+            r5.add(r2)
+            if (r8 != 0) goto L_0x01b1
+            r17 = r16
+            goto L_0x01b3
+        L_0x01b1:
+            r17 = r7
+        L_0x01b3:
+            if (r8 != 0) goto L_0x01b8
+            r22 = r7
+            goto L_0x01c0
+        L_0x01b8:
+            int r0 = r2.getOp()
+            r0 = r14[r0]
+            r22 = r0
+        L_0x01c0:
+            r0 = r26
+            r1 = r11
+            r23 = r2
+            r2 = r21
+            r24 = r3
+            r25 = r4
+            r4 = r23
+            r23 = r5
+            r5 = r17
+            r17 = r6
+            r6 = r22
+            r0.addOp(r1, r2, r3, r4, r5, r6)
+            r0 = r23
+        L_0x01da:
+            int r15 = r15 + 1
+            r7 = r26
+            r6 = r17
+            r5 = r18
+            r2 = r20
+            r27 = r21
+            r3 = r24
+            r4 = r25
+            goto L_0x0142
+        L_0x01ec:
+            r20 = r2
+            r24 = r3
+            r25 = r4
+            r18 = r5
+            r17 = r6
+            r7 = 0
+            r1 = r27
+        L_0x01f9:
+            int r2 = r20 + 1
+            r7 = r26
+            r6 = r17
+            r5 = r18
+            r3 = r24
+            r4 = r25
+            goto L_0x0123
+        L_0x0207:
+            r18 = r5
+            r17 = r6
+            r7 = 0
+            goto L_0x0212
+        L_0x020d:
+            r18 = r5
+            r17 = r6
+            r7 = r15
+        L_0x0212:
+            int r5 = r18 + 1
+            r15 = r7
+            r6 = r17
+            r7 = r26
+            goto L_0x0102
+        L_0x021b:
+            r0 = r30
+            java.util.Collections.sort(r11, r0)
+            return r11
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.applications.appops.AppOpsState.buildState(com.android.settings.applications.appops.AppOpsState$OpsTemplate, int, java.lang.String, java.util.Comparator):java.util.List");
     }
 }

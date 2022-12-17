@@ -34,7 +34,7 @@
     </array>
     <array name="app_install_location_entries">
         <item>စက်တွင်းသိုလှောင်ကိရိယာ</item>
-        <item>ဖယ်ရှား၍ရသောSDကတ်</item>
+        <item>ဖယ်ရှား၍ရသော SD ကတ်</item>
         <item>စနစ်အား ဆုံးဖြတ်ပါစေ</item>
     </array>
     <array name="app_ops_categories">
@@ -196,6 +196,8 @@
         <item>ရက်ပေါင်း ၆၀ ထက်ကျော်သော</item>
         <item>ရက်ပေါင်း ၉၀ ထက်ကျော်သော</item>
     </array>
+    <array name="avatar_image_descriptions">
+    </array>
     <array name="battery_labels">
         <item>၀%</item>
         <item>၅၀%</item>
@@ -260,6 +262,8 @@
         <item>၄၈.၀ kHz</item>
         <item>၈၈.၂ kHz</item>
         <item>၉၆.၀ kHz</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
         <item>စနစ်ရွေးချယ်မှုကို အသုံးပြုပါ (မူရင်း)</item>
@@ -267,6 +271,8 @@
         <item>၄၈.၀ kHz</item>
         <item>၈၈.၂ kHz</item>
         <item>၉၆.၀ kHz</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
         <item>စနစ်ရွေးချယ်မှုကို အသုံးပြုပါ (မူရင်း)</item>
@@ -277,6 +283,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive အသံ</item>
         <item>Qualcomm® aptX™ TWS+ အသံ</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
         <item>စနစ်ရွေးချယ်မှုကို အသုံးပြုပါ (မူရင်း)</item>
@@ -287,6 +297,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive အသံ</item>
         <item>Qualcomm® aptX™ TWS+ အသံ</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -320,7 +334,7 @@
         <item>စနစ်မူရင်းကို အသုံးပြုရန်− %1$d</item>
         <item>၁</item>
         <item>၂</item>
-        <item>၃</item>
+        <item>3</item>
         <item>၄</item>
         <item>၅</item>
     </array>
@@ -343,17 +357,10 @@
         <item>မြှင့်တင်ရန်</item>
         <item>နှိမ့်ချရန်</item>
     </array>
-    <array name="captioning_font_size_selector_summaries">
-        <item>အလွန်သေးသော စာသားအရွယ်အစား</item>
-        <item>သေးသော စာသားအရွယ်အစား</item>
-        <item>မူရင်း စာသားအရွယ်အစား</item>
-        <item>ကြီးသော စာသားအရွယ်အစား</item>
-        <item>အလွန်ကြီးသော စာသားအရွယ်အစား</item>
-    </array>
     <array name="captioning_font_size_selector_titles">
         <item>အလွန်သေးရန်</item>
         <item>သေး</item>
-        <item>မူလ</item>
+        <item>အလယ်အလတ်</item>
         <item>အကြီးစား</item>
         <item>အလွန်ကြီးရန်</item>
     </array>
@@ -485,6 +492,14 @@
         <item>IMSI</item>
         <item>GID</item>
         <item>ICCID</item>
+    </array>
+    <array name="nfc_payment_favor">
+        <item>အမြဲ</item>
+        <item>အခြားငွေပေးချရေး အက်ပ် ပွင့်နေချိန်မှအပ</item>
+    </array>
+    <array name="nfc_payment_favor_values">
+        <item>@null</item>
+        <item>1</item>
     </array>
     <array name="overlay_display_devices_entries">
         <item>မရှိ</item>
@@ -618,17 +633,20 @@
         <item>စတုဂံမဟုတ်သော ဖောက်ရန်အပိုင်းကို အပြာရောင်ဖြင့်ဆွဲပါ</item>
         <item>စမ်းသပ်ထားသော ပုံဆွဲရန်ညွှန်ကြားချက်များကို အစိမ်းရောင်ဖြင့် အသားပေး ဖော်ပြပါ</item>
     </array>
-    <array name="sim_color_light">
-        <item>@color/SIM_color_cyan</item>
-        <item>@color/SIM_color_blue800</item>
-        <item>@color/SIM_color_green800</item>
-        <item>@color/SIM_color_purple800</item>
-        <item>@color/SIM_color_pink800</item>
-        <item>@color/SIM_color_orange</item>
-    </array>
     <array name="swipe_direction_values">
         <item>1</item>
         <item>@null</item>
+    </array>
+    <array name="switch_to_user_zero_when_docked_timeout_entries">
+        <item>ဘယ်တော့မှ</item>
+        <item>၁ မိနစ်နောက်ပိုင်း</item>
+        <item>၅ မိနစ်နောက်ပိုင်း</item>
+    </array>
+    <array name="tare_modifiers_subfactors">
+        <item>အားသွင်းနေသည်</item>
+        <item>မှေးထားခြင်း</item>
+        <item>ပါဝါချွေတာမုဒ်</item>
+        <item>လုပ်ဆောင်မှု အခြေအနေ</item>
     </array>
     <array name="timezone_filters">
         <item>အမေရိကား</item>

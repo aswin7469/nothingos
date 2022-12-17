@@ -8,24 +8,22 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 import androidx.fragment.app.FragmentTransaction;
-import com.android.settings.R;
+import com.android.settings.R$id;
 import com.android.settings.wifi.dpp.WifiDppAddDeviceFragment;
 import com.android.settings.wifi.dpp.WifiDppQrCodeScannerFragment;
 import com.android.settings.wifi.dpp.WifiNetworkConfig;
 import com.android.settings.wifi.dpp.WifiNetworkListFragment;
-/* loaded from: classes.dex */
+
 public class WifiDppConfiguratorActivity extends WifiDppBaseActivity implements WifiNetworkConfig.Retriever, WifiDppQrCodeScannerFragment.OnScanWifiDppSuccessListener, WifiDppAddDeviceFragment.OnClickChooseDifferentNetworkListener, WifiNetworkListFragment.OnChooseNetworkListener {
     private WifiQrCode mWifiDppQrCode;
     private int[] mWifiDppRemoteBandSupport;
     private WifiNetworkConfig mWifiNetworkConfig;
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1595;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.wifi.dpp.WifiDppBaseActivity, com.android.settings.core.InstrumentedActivity, com.android.settingslib.core.lifecycle.ObservableActivity, androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         if (bundle != null) {
@@ -34,78 +32,112 @@ public class WifiDppConfiguratorActivity extends WifiDppBaseActivity implements 
         }
     }
 
-    @Override // com.android.settings.wifi.dpp.WifiDppBaseActivity
-    protected void handleIntent(final Intent intent) {
-        String action = intent != null ? intent.getAction() : null;
-        if (action == null) {
-            finish();
-            return;
-        }
-        char c = 65535;
-        boolean z = false;
-        switch (action.hashCode()) {
-            case -902592152:
-                if (action.equals("android.settings.PROCESS_WIFI_EASY_CONNECT_URI")) {
-                    c = 0;
-                    break;
-                }
-                break;
-            case 360935630:
-                if (action.equals("android.settings.WIFI_DPP_CONFIGURATOR_QR_CODE_GENERATOR")) {
-                    c = 1;
-                    break;
-                }
-                break;
-            case 1361318585:
-                if (action.equals("android.settings.WIFI_DPP_CONFIGURATOR_QR_CODE_SCANNER")) {
-                    c = 2;
-                    break;
-                }
-                break;
-        }
-        switch (c) {
-            case 0:
-                WifiDppUtils.showLockScreen(this, new Runnable() { // from class: com.android.settings.wifi.dpp.WifiDppConfiguratorActivity$$ExternalSyntheticLambda0
-                    @Override // java.lang.Runnable
-                    public final void run() {
-                        WifiDppConfiguratorActivity.this.lambda$handleIntent$0(intent);
-                    }
-                });
-                break;
-            case 1:
-                WifiNetworkConfig validConfigOrNull = WifiNetworkConfig.getValidConfigOrNull(intent);
-                if (validConfigOrNull != null) {
-                    this.mWifiNetworkConfig = validConfigOrNull;
-                    showQrCodeGeneratorFragment();
-                    break;
-                }
-                z = true;
-                break;
-            case 2:
-                WifiNetworkConfig validConfigOrNull2 = WifiNetworkConfig.getValidConfigOrNull(intent);
-                if (validConfigOrNull2 != null) {
-                    this.mWifiNetworkConfig = validConfigOrNull2;
-                    showQrCodeScannerFragment();
-                    break;
-                }
-                z = true;
-                break;
-            default:
-                Log.e("WifiDppConfiguratorActivity", "Launch with an invalid action");
-                z = true;
-                break;
-        }
-        if (!z) {
-            return;
-        }
-        finish();
+    /* access modifiers changed from: protected */
+    /* JADX WARNING: Can't fix incorrect switch cases order */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void handleIntent(android.content.Intent r6) {
+        /*
+            r5 = this;
+            if (r6 == 0) goto L_0x0007
+            java.lang.String r0 = r6.getAction()
+            goto L_0x0008
+        L_0x0007:
+            r0 = 0
+        L_0x0008:
+            if (r0 != 0) goto L_0x000e
+            r5.finish()
+            return
+        L_0x000e:
+            r1 = -1
+            int r2 = r0.hashCode()
+            r3 = 0
+            r4 = 1
+            switch(r2) {
+                case -902592152: goto L_0x002f;
+                case 360935630: goto L_0x0024;
+                case 1361318585: goto L_0x0019;
+                default: goto L_0x0018;
+            }
+        L_0x0018:
+            goto L_0x0039
+        L_0x0019:
+            java.lang.String r2 = "android.settings.WIFI_DPP_CONFIGURATOR_QR_CODE_SCANNER"
+            boolean r0 = r0.equals(r2)
+            if (r0 != 0) goto L_0x0022
+            goto L_0x0039
+        L_0x0022:
+            r1 = 2
+            goto L_0x0039
+        L_0x0024:
+            java.lang.String r2 = "android.settings.WIFI_DPP_CONFIGURATOR_QR_CODE_GENERATOR"
+            boolean r0 = r0.equals(r2)
+            if (r0 != 0) goto L_0x002d
+            goto L_0x0039
+        L_0x002d:
+            r1 = r4
+            goto L_0x0039
+        L_0x002f:
+            java.lang.String r2 = "android.settings.PROCESS_WIFI_EASY_CONNECT_URI"
+            boolean r0 = r0.equals(r2)
+            if (r0 != 0) goto L_0x0038
+            goto L_0x0039
+        L_0x0038:
+            r1 = r3
+        L_0x0039:
+            switch(r1) {
+                case 0: goto L_0x005f;
+                case 1: goto L_0x0052;
+                case 2: goto L_0x0045;
+                default: goto L_0x003c;
+            }
+        L_0x003c:
+            java.lang.String r6 = "WifiDppConfiguratorActivity"
+            java.lang.String r0 = "Launch with an invalid action"
+            android.util.Log.e(r6, r0)
+        L_0x0043:
+            r3 = r4
+            goto L_0x0067
+        L_0x0045:
+            com.android.settings.wifi.dpp.WifiNetworkConfig r6 = com.android.settings.wifi.dpp.WifiNetworkConfig.getValidConfigOrNull(r6)
+            if (r6 != 0) goto L_0x004c
+        L_0x004b:
+            goto L_0x0043
+        L_0x004c:
+            r5.mWifiNetworkConfig = r6
+            r5.showQrCodeScannerFragment()
+            goto L_0x0067
+        L_0x0052:
+            com.android.settings.wifi.dpp.WifiNetworkConfig r6 = com.android.settings.wifi.dpp.WifiNetworkConfig.getValidConfigOrNull(r6)
+            if (r6 != 0) goto L_0x0059
+            goto L_0x004b
+        L_0x0059:
+            r5.mWifiNetworkConfig = r6
+            r5.showQrCodeGeneratorFragment()
+            goto L_0x0067
+        L_0x005f:
+            com.android.settings.wifi.dpp.WifiDppConfiguratorActivity$$ExternalSyntheticLambda0 r0 = new com.android.settings.wifi.dpp.WifiDppConfiguratorActivity$$ExternalSyntheticLambda0
+            r0.<init>(r5, r6)
+            com.android.settings.wifi.dpp.WifiDppUtils.showLockScreen(r5, r0)
+        L_0x0067:
+            if (r3 == 0) goto L_0x006c
+            r5.finish()
+        L_0x006c:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.wifi.dpp.WifiDppConfiguratorActivity.handleIntent(android.content.Intent):void");
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     /* renamed from: handleActionProcessWifiEasyConnectUriIntent */
     public void lambda$handleIntent$0(Intent intent) {
+        String str;
         Uri data = intent.getData();
-        this.mWifiDppQrCode = WifiQrCode.getValidWifiDppQrCodeOrNull(data == null ? null : data.toString());
+        if (data == null) {
+            str = null;
+        } else {
+            str = data.toString();
+        }
+        this.mWifiDppQrCode = WifiQrCode.getValidWifiDppQrCodeOrNull(str);
         this.mWifiDppRemoteBandSupport = intent.getIntArrayExtra("android.provider.extra.EASY_CONNECT_BAND_LIST");
         boolean isWifiDppEnabled = WifiDppUtils.isWifiDppEnabled(this);
         if (!isWifiDppEnabled) {
@@ -132,10 +164,9 @@ public class WifiDppConfiguratorActivity extends WifiDppBaseActivity implements 
         if (wifiDppQrCodeScannerFragment == null) {
             WifiDppQrCodeScannerFragment wifiDppQrCodeScannerFragment2 = new WifiDppQrCodeScannerFragment();
             FragmentTransaction beginTransaction = this.mFragmentManager.beginTransaction();
-            beginTransaction.replace(R.id.fragment_container, wifiDppQrCodeScannerFragment2, "qr_code_scanner_fragment");
+            beginTransaction.replace(R$id.fragment_container, wifiDppQrCodeScannerFragment2, "qr_code_scanner_fragment");
             beginTransaction.commit();
-        } else if (wifiDppQrCodeScannerFragment.isVisible()) {
-        } else {
+        } else if (!wifiDppQrCodeScannerFragment.isVisible()) {
             this.mFragmentManager.popBackStackImmediate();
         }
     }
@@ -145,10 +176,9 @@ public class WifiDppConfiguratorActivity extends WifiDppBaseActivity implements 
         if (wifiDppQrCodeGeneratorFragment == null) {
             WifiDppQrCodeGeneratorFragment wifiDppQrCodeGeneratorFragment2 = new WifiDppQrCodeGeneratorFragment();
             FragmentTransaction beginTransaction = this.mFragmentManager.beginTransaction();
-            beginTransaction.replace(R.id.fragment_container, wifiDppQrCodeGeneratorFragment2, "qr_code_generator_fragment");
+            beginTransaction.replace(R$id.fragment_container, wifiDppQrCodeGeneratorFragment2, "qr_code_generator_fragment");
             beginTransaction.commit();
-        } else if (wifiDppQrCodeGeneratorFragment.isVisible()) {
-        } else {
+        } else if (!wifiDppQrCodeGeneratorFragment.isVisible()) {
             this.mFragmentManager.popBackStackImmediate();
         }
     }
@@ -158,13 +188,12 @@ public class WifiDppConfiguratorActivity extends WifiDppBaseActivity implements 
         if (wifiDppChooseSavedWifiNetworkFragment == null) {
             WifiDppChooseSavedWifiNetworkFragment wifiDppChooseSavedWifiNetworkFragment2 = new WifiDppChooseSavedWifiNetworkFragment();
             FragmentTransaction beginTransaction = this.mFragmentManager.beginTransaction();
-            beginTransaction.replace(R.id.fragment_container, wifiDppChooseSavedWifiNetworkFragment2, "choose_saved_wifi_network_fragment");
+            beginTransaction.replace(R$id.fragment_container, wifiDppChooseSavedWifiNetworkFragment2, "choose_saved_wifi_network_fragment");
             if (z) {
-                beginTransaction.addToBackStack(null);
+                beginTransaction.addToBackStack((String) null);
             }
             beginTransaction.commit();
-        } else if (wifiDppChooseSavedWifiNetworkFragment.isVisible()) {
-        } else {
+        } else if (!wifiDppChooseSavedWifiNetworkFragment.isVisible()) {
             this.mFragmentManager.popBackStackImmediate();
         }
     }
@@ -174,28 +203,27 @@ public class WifiDppConfiguratorActivity extends WifiDppBaseActivity implements 
         if (wifiDppAddDeviceFragment == null) {
             WifiDppAddDeviceFragment wifiDppAddDeviceFragment2 = new WifiDppAddDeviceFragment();
             FragmentTransaction beginTransaction = this.mFragmentManager.beginTransaction();
-            beginTransaction.replace(R.id.fragment_container, wifiDppAddDeviceFragment2, "add_device_fragment");
+            beginTransaction.replace(R$id.fragment_container, wifiDppAddDeviceFragment2, "add_device_fragment");
             if (z) {
-                beginTransaction.addToBackStack(null);
+                beginTransaction.addToBackStack((String) null);
             }
             beginTransaction.commit();
-        } else if (wifiDppAddDeviceFragment.isVisible()) {
-        } else {
+        } else if (!wifiDppAddDeviceFragment.isVisible()) {
             this.mFragmentManager.popBackStackImmediate();
         }
     }
 
-    @Override // com.android.settings.wifi.dpp.WifiNetworkConfig.Retriever
     public WifiNetworkConfig getWifiNetworkConfig() {
         return this.mWifiNetworkConfig;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public WifiQrCode getWifiDppQrCode() {
         return this.mWifiDppQrCode;
     }
 
-    boolean setWifiNetworkConfig(WifiNetworkConfig wifiNetworkConfig) {
+    /* access modifiers changed from: package-private */
+    public boolean setWifiNetworkConfig(WifiNetworkConfig wifiNetworkConfig) {
         if (!WifiNetworkConfig.isValidConfig(wifiNetworkConfig)) {
             return false;
         }
@@ -203,26 +231,24 @@ public class WifiDppConfiguratorActivity extends WifiDppBaseActivity implements 
         return true;
     }
 
-    boolean setWifiDppQrCode(WifiQrCode wifiQrCode) {
-        if (wifiQrCode != null && "DPP".equals(wifiQrCode.getScheme())) {
-            this.mWifiDppQrCode = new WifiQrCode(wifiQrCode.getQrCode());
-            return true;
+    /* access modifiers changed from: package-private */
+    public boolean setWifiDppQrCode(WifiQrCode wifiQrCode) {
+        if (wifiQrCode == null || !"DPP".equals(wifiQrCode.getScheme())) {
+            return false;
         }
-        return false;
+        this.mWifiDppQrCode = new WifiQrCode(wifiQrCode.getQrCode());
+        return true;
     }
 
-    @Override // com.android.settings.wifi.dpp.WifiDppQrCodeScannerFragment.OnScanWifiDppSuccessListener
     public void onScanWifiDppSuccess(WifiQrCode wifiQrCode) {
         this.mWifiDppQrCode = wifiQrCode;
         showAddDeviceFragment(true);
     }
 
-    @Override // com.android.settings.wifi.dpp.WifiDppAddDeviceFragment.OnClickChooseDifferentNetworkListener
     public void onClickChooseDifferentNetwork() {
         showChooseSavedWifiNetworkFragment(true);
     }
 
-    @Override // androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
     public void onSaveInstanceState(Bundle bundle) {
         WifiQrCode wifiQrCode = this.mWifiDppQrCode;
         if (wifiQrCode != null) {
@@ -240,7 +266,6 @@ public class WifiDppConfiguratorActivity extends WifiDppBaseActivity implements 
         super.onSaveInstanceState(bundle);
     }
 
-    @Override // com.android.settings.wifi.dpp.WifiNetworkListFragment.OnChooseNetworkListener
     public void onChooseNetwork(WifiNetworkConfig wifiNetworkConfig) {
         this.mWifiNetworkConfig = new WifiNetworkConfig(wifiNetworkConfig);
         showAddDeviceFragment(true);
@@ -249,14 +274,14 @@ public class WifiDppConfiguratorActivity extends WifiDppBaseActivity implements 
     private WifiNetworkConfig getConnectedWifiNetworkConfigOrNull() {
         WifiInfo connectionInfo;
         WifiManager wifiManager = (WifiManager) getSystemService(WifiManager.class);
-        if (wifiManager.isWifiEnabled() && (connectionInfo = wifiManager.getConnectionInfo()) != null) {
-            int networkId = connectionInfo.getNetworkId();
-            for (WifiConfiguration wifiConfiguration : wifiManager.getConfiguredNetworks()) {
-                if (wifiConfiguration.networkId == networkId) {
-                    return WifiNetworkConfig.getValidConfigOrNull(WifiDppUtils.getSecurityString(wifiConfiguration), wifiConfiguration.getPrintableSsid(), wifiConfiguration.preSharedKey, wifiConfiguration.hiddenSSID, wifiConfiguration.networkId, false);
-                }
-            }
+        if (!wifiManager.isWifiEnabled() || (connectionInfo = wifiManager.getConnectionInfo()) == null) {
             return null;
+        }
+        int networkId = connectionInfo.getNetworkId();
+        for (WifiConfiguration next : wifiManager.getConfiguredNetworks()) {
+            if (next.networkId == networkId) {
+                return WifiNetworkConfig.getValidConfigOrNull(WifiDppUtils.getSecurityString(next), next.getPrintableSsid(), next.preSharedKey, next.hiddenSSID, next.networkId, false);
+            }
         }
         return null;
     }

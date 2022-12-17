@@ -3,12 +3,11 @@ package com.airbnb.lottie.parser;
 import com.airbnb.lottie.model.content.MergePaths;
 import com.airbnb.lottie.parser.moshi.JsonReader;
 import java.io.IOException;
-/* loaded from: classes.dex */
-class MergePathsParser {
-    private static final JsonReader.Options NAMES = JsonReader.Options.of("nm", "mm", "hd");
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static MergePaths parse(JsonReader jsonReader) throws IOException {
+class MergePathsParser {
+    private static final JsonReader.Options NAMES = JsonReader.Options.m9of("nm", "mm", "hd");
+
+    static MergePaths parse(JsonReader jsonReader) throws IOException {
         String str = null;
         boolean z = false;
         MergePaths.MergePathsMode mergePathsMode = null;
@@ -18,11 +17,11 @@ class MergePathsParser {
                 str = jsonReader.nextString();
             } else if (selectName == 1) {
                 mergePathsMode = MergePaths.MergePathsMode.forId(jsonReader.nextInt());
-            } else if (selectName == 2) {
-                z = jsonReader.nextBoolean();
-            } else {
+            } else if (selectName != 2) {
                 jsonReader.skipName();
                 jsonReader.skipValue();
+            } else {
+                z = jsonReader.nextBoolean();
             }
         }
         return new MergePaths(str, mergePathsMode, z);

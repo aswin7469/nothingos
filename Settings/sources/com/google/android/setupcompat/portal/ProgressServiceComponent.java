@@ -4,13 +4,10 @@ import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
 import com.google.android.setupcompat.internal.Preconditions;
-/* loaded from: classes2.dex */
+
 public class ProgressServiceComponent implements Parcelable {
-    public static final Parcelable.Creator<ProgressServiceComponent> CREATOR = new Parcelable.Creator<ProgressServiceComponent>() { // from class: com.google.android.setupcompat.portal.ProgressServiceComponent.1
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: createFromParcel */
-        public ProgressServiceComponent mo733createFromParcel(Parcel parcel) {
+    public static final Parcelable.Creator<ProgressServiceComponent> CREATOR = new Parcelable.Creator<ProgressServiceComponent>() {
+        public ProgressServiceComponent createFromParcel(Parcel parcel) {
             boolean z = false;
             Builder itemClickIntent = ProgressServiceComponent.newBuilder().setPackageName(parcel.readString()).setTaskName(parcel.readString()).setSilentMode(parcel.readInt() == 1).setDisplayName(parcel.readInt()).setDisplayIcon(parcel.readInt()).setServiceIntent((Intent) parcel.readParcelable(Intent.class.getClassLoader())).setItemClickIntent((Intent) parcel.readParcelable(Intent.class.getClassLoader()));
             if (parcel.readInt() == 1) {
@@ -19,10 +16,7 @@ public class ProgressServiceComponent implements Parcelable {
             return itemClickIntent.setAutoRebind(z).setTimeoutForReRegister(parcel.readLong()).build();
         }
 
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: newArray */
-        public ProgressServiceComponent[] mo734newArray(int i) {
+        public ProgressServiceComponent[] newArray(int i) {
             return new ProgressServiceComponent[i];
         }
     };
@@ -36,7 +30,6 @@ public class ProgressServiceComponent implements Parcelable {
     private final String taskName;
     private final long timeoutForReRegister;
 
-    @Override // android.os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -93,7 +86,6 @@ public class ProgressServiceComponent implements Parcelable {
         return this.itemClickIntent;
     }
 
-    @Override // android.os.Parcelable
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(getPackageName());
         parcel.writeString(getTaskName());
@@ -106,7 +98,6 @@ public class ProgressServiceComponent implements Parcelable {
         parcel.writeLong(getTimeoutForReRegister());
     }
 
-    /* loaded from: classes2.dex */
     public static class Builder {
         private boolean autoRebind;
         private int displayIconResId;
@@ -182,7 +173,7 @@ public class ProgressServiceComponent implements Parcelable {
         private Builder() {
             this.isSilent = false;
             this.autoRebind = true;
-            this.timeoutForReRegister = 0L;
+            this.timeoutForReRegister = 0;
         }
     }
 }

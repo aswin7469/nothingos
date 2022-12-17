@@ -2,16 +2,17 @@ package com.google.zxing;
 
 import com.google.zxing.common.BitArray;
 import com.google.zxing.common.BitMatrix;
-/* loaded from: classes2.dex */
+
 public final class BinaryBitmap {
     private final Binarizer binarizer;
     private BitMatrix matrix;
 
-    public BinaryBitmap(Binarizer binarizer) {
-        if (binarizer == null) {
-            throw new IllegalArgumentException("Binarizer must be non-null.");
+    public BinaryBitmap(Binarizer binarizer2) {
+        if (binarizer2 != null) {
+            this.binarizer = binarizer2;
+            return;
         }
-        this.binarizer = binarizer;
+        throw new IllegalArgumentException("Binarizer must be non-null.");
     }
 
     public int getWidth() {

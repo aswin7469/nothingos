@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-/* loaded from: classes.dex */
+
 public class ConditionManager {
     private final Context mAppContext;
     final List<ConditionalCardController> mCardControllers = new ArrayList();
@@ -27,13 +27,13 @@ public class ConditionManager {
 
     public List<ContextualCard> getDisplayableCards() {
         ArrayList arrayList = new ArrayList();
-        ArrayList<Future> arrayList2 = new ArrayList();
-        for (ConditionalCardController conditionalCardController : this.mCardControllers) {
-            arrayList2.add(ThreadUtils.postOnBackgroundThread(new DisplayableChecker(getController(conditionalCardController.getId()))));
+        ArrayList<Future> arrayList2 = new ArrayList<>();
+        for (ConditionalCardController id : this.mCardControllers) {
+            arrayList2.add(ThreadUtils.postOnBackgroundThread((Callable) new DisplayableChecker(getController(id.getId()))));
         }
         for (Future future : arrayList2) {
             try {
-                ContextualCard contextualCard = (ContextualCard) future.get(20L, TimeUnit.MILLISECONDS);
+                ContextualCard contextualCard = (ContextualCard) future.get(20, TimeUnit.MILLISECONDS);
                 if (contextualCard != null) {
                     arrayList.add(contextualCard);
                 }
@@ -57,8 +57,8 @@ public class ConditionManager {
             Log.d("ConditionManager", "Already listening to condition state changes, skipping monitor setup");
         } else {
             this.mIsListeningToStateChange = true;
-            for (ConditionalCardController conditionalCardController : this.mCardControllers) {
-                conditionalCardController.startMonitoringStateChange();
+            for (ConditionalCardController startMonitoringStateChange : this.mCardControllers) {
+                startMonitoringStateChange.startMonitoringStateChange();
             }
         }
         onConditionChanged();
@@ -69,13 +69,13 @@ public class ConditionManager {
             Log.d("ConditionManager", "Not listening to condition state changes, skipping");
             return;
         }
-        for (ConditionalCardController conditionalCardController : this.mCardControllers) {
-            conditionalCardController.stopMonitoringStateChange();
+        for (ConditionalCardController stopMonitoringStateChange : this.mCardControllers) {
+            stopMonitoringStateChange.stopMonitoringStateChange();
         }
         this.mIsListeningToStateChange = false;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void onConditionChanged() {
         ConditionListener conditionListener = this.mListener;
         if (conditionListener != null) {
@@ -86,7 +86,7 @@ public class ConditionManager {
     private <T extends ConditionalCardController> T getController(long j) {
         Iterator<ConditionalCardController> it = this.mCardControllers.iterator();
         while (it.hasNext()) {
-            T t = (T) it.next();
+            T t = (ConditionalCardController) it.next();
             if (t.getId() == j) {
                 return t;
             }
@@ -108,7 +108,6 @@ public class ConditionManager {
         this.mCardControllers.add(new GrayscaleConditionController(this.mAppContext, this));
     }
 
-    /* loaded from: classes.dex */
     public static class DisplayableChecker implements Callable<ContextualCard> {
         private final ConditionalCardController mController;
 
@@ -116,10 +115,7 @@ public class ConditionManager {
             this.mController = conditionalCardController;
         }
 
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // java.util.concurrent.Callable
-        /* renamed from: call */
-        public ContextualCard mo386call() throws Exception {
+        public ContextualCard call() throws Exception {
             if (this.mController.isDisplayable()) {
                 return this.mController.buildContextualCard();
             }

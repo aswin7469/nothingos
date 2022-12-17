@@ -8,38 +8,40 @@ import android.view.View;
 import android.widget.ImageButton;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
-import com.android.settings.R;
+import com.android.internal.annotations.VisibleForTesting;
+import com.android.settings.R$drawable;
+import com.android.settings.R$id;
+import com.android.settings.R$string;
 import com.android.settings.wifi.dpp.WifiDppUtils;
 import com.android.settingslib.R$layout;
-/* loaded from: classes.dex */
+import com.android.settingslib.wifi.WifiEnterpriseRestrictionUtils;
+
 public class AddWifiNetworkPreference extends Preference {
-    private final Drawable mScanIconDrawable = getDrawable(R.drawable.ic_scan_24dp);
+    @VisibleForTesting
+    boolean mIsAddWifiConfigAllow;
+    private final Drawable mScanIconDrawable = getDrawable(R$drawable.ic_scan_24dp);
 
     public AddWifiNetworkPreference(Context context) {
         super(context);
         setLayoutResource(R$layout.preference_access_point);
-        setWidgetLayoutResource(R.layout.wifi_button_preference_widget);
-        setIcon(R.drawable.ic_add_24dp);
-        setTitle(R.string.wifi_add_network);
+        setWidgetLayoutResource(com.android.settings.R$layout.wifi_button_preference_widget);
+        setIcon(R$drawable.ic_add_24dp);
+        setTitle(R$string.wifi_add_network);
+        this.mIsAddWifiConfigAllow = WifiEnterpriseRestrictionUtils.isAddWifiConfigAllowed(context);
+        updatePreferenceForRestriction();
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
-        ImageButton imageButton = (ImageButton) preferenceViewHolder.findViewById(R.id.button_icon);
+        ImageButton imageButton = (ImageButton) preferenceViewHolder.findViewById(R$id.button_icon);
         imageButton.setImageDrawable(this.mScanIconDrawable);
-        imageButton.setContentDescription(getContext().getString(R.string.wifi_dpp_scan_qr_code));
-        imageButton.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.wifi.AddWifiNetworkPreference$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                AddWifiNetworkPreference.this.lambda$onBindViewHolder$0(view);
-            }
-        });
+        imageButton.setContentDescription(getContext().getString(R$string.wifi_dpp_scan_qr_code));
+        imageButton.setOnClickListener(new AddWifiNetworkPreference$$ExternalSyntheticLambda0(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onBindViewHolder$0(View view) {
-        getContext().startActivity(WifiDppUtils.getEnrolleeQrCodeScannerIntent(null));
+        getContext().startActivity(WifiDppUtils.getEnrolleeQrCodeScannerIntent(getContext(), (String) null));
     }
 
     private Drawable getDrawable(int i) {
@@ -48,6 +50,15 @@ public class AddWifiNetworkPreference extends Preference {
         } catch (Resources.NotFoundException unused) {
             Log.e("AddWifiNetworkPreference", "Resource does not exist: " + i);
             return null;
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    @VisibleForTesting
+    public void updatePreferenceForRestriction() {
+        if (!this.mIsAddWifiConfigAllow) {
+            setEnabled(false);
+            setSummary(R$string.not_allowed_by_ent);
         }
     }
 }

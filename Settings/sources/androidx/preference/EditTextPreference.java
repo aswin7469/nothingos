@@ -9,12 +9,11 @@ import android.util.AttributeSet;
 import android.widget.EditText;
 import androidx.core.content.res.TypedArrayUtils;
 import androidx.preference.Preference;
-/* loaded from: classes.dex */
+
 public class EditTextPreference extends DialogPreference {
     private OnBindEditTextListener mOnBindEditTextListener;
     private String mText;
 
-    /* loaded from: classes.dex */
     public interface OnBindEditTextListener {
         void onBindEditText(EditText editText);
     }
@@ -38,7 +37,7 @@ public class EditTextPreference extends DialogPreference {
     }
 
     public EditTextPreference(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public void setText(String str) {
@@ -56,23 +55,21 @@ public class EditTextPreference extends DialogPreference {
         return this.mText;
     }
 
-    @Override // androidx.preference.Preference
-    protected Object onGetDefaultValue(TypedArray typedArray, int i) {
+    /* access modifiers changed from: protected */
+    public Object onGetDefaultValue(TypedArray typedArray, int i) {
         return typedArray.getString(i);
     }
 
-    @Override // androidx.preference.Preference
-    protected void onSetInitialValue(Object obj) {
+    /* access modifiers changed from: protected */
+    public void onSetInitialValue(Object obj) {
         setText(getPersistedString((String) obj));
     }
 
-    @Override // androidx.preference.Preference
     public boolean shouldDisableDependents() {
         return TextUtils.isEmpty(this.mText) || super.shouldDisableDependents();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public Parcelable onSaveInstanceState() {
         Parcelable onSaveInstanceState = super.onSaveInstanceState();
         if (isPersistent()) {
@@ -83,8 +80,7 @@ public class EditTextPreference extends DialogPreference {
         return savedState;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public void onRestoreInstanceState(Parcelable parcelable) {
         if (parcelable == null || !parcelable.getClass().equals(SavedState.class)) {
             super.onRestoreInstanceState(parcelable);
@@ -99,26 +95,18 @@ public class EditTextPreference extends DialogPreference {
         this.mOnBindEditTextListener = onBindEditTextListener;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public OnBindEditTextListener getOnBindEditTextListener() {
         return this.mOnBindEditTextListener;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class SavedState extends Preference.BaseSavedState {
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() { // from class: androidx.preference.EditTextPreference.SavedState.1
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: createFromParcel */
-            public SavedState mo113createFromParcel(Parcel parcel) {
+    private static class SavedState extends Preference.BaseSavedState {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel parcel) {
                 return new SavedState(parcel);
             }
 
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: newArray */
-            public SavedState[] mo114newArray(int i) {
+            public SavedState[] newArray(int i) {
                 return new SavedState[i];
             }
         };
@@ -133,14 +121,12 @@ public class EditTextPreference extends DialogPreference {
             super(parcelable);
         }
 
-        @Override // android.view.AbsSavedState, android.os.Parcelable
         public void writeToParcel(Parcel parcel, int i) {
             super.writeToParcel(parcel, i);
             parcel.writeString(this.mText);
         }
     }
 
-    /* loaded from: classes.dex */
     public static final class SimpleSummaryProvider implements Preference.SummaryProvider<EditTextPreference> {
         private static SimpleSummaryProvider sSimpleSummaryProvider;
 
@@ -154,7 +140,6 @@ public class EditTextPreference extends DialogPreference {
             return sSimpleSummaryProvider;
         }
 
-        @Override // androidx.preference.Preference.SummaryProvider
         public CharSequence provideSummary(EditTextPreference editTextPreference) {
             if (TextUtils.isEmpty(editTextPreference.getText())) {
                 return editTextPreference.getContext().getString(R$string.not_set);

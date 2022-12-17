@@ -1,8 +1,8 @@
 package com.android.settings.security;
 
 import android.content.Context;
-import android.os.UserManager;
-import com.android.settings.R;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.dashboard.DashboardFragment;
 import com.android.settings.search.BaseSearchIndexProvider;
 import com.android.settings.widget.PreferenceCategoryController;
@@ -11,57 +11,51 @@ import com.android.settingslib.core.lifecycle.Lifecycle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class EncryptionAndCredential extends DashboardFragment {
-    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R.xml.encryption_and_credential) { // from class: com.android.settings.security.EncryptionAndCredential.1
-        @Override // com.android.settings.search.BaseSearchIndexProvider
-        public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
-            return EncryptionAndCredential.buildPreferenceControllers(context, null);
+    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R$xml.encryption_and_credential) {
+        /* access modifiers changed from: protected */
+        public boolean isPageSearchEnabled(Context context) {
+            return true;
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // com.android.settings.search.BaseSearchIndexProvider
-        public boolean isPageSearchEnabled(Context context) {
-            return ((UserManager) context.getSystemService("user")).isAdminUser();
+        public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+            return EncryptionAndCredential.buildPreferenceControllers(context, (Lifecycle) null);
         }
     };
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "EncryptionAndCredential";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 846;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment
-    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+    /* access modifiers changed from: protected */
+    public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
         return buildPreferenceControllers(context, getSettingsLifecycle());
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.encryption_and_credential;
+        return R$xml.encryption_and_credential;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static List<AbstractPreferenceController> buildPreferenceControllers(Context context, Lifecycle lifecycle) {
         ArrayList arrayList = new ArrayList();
         EncryptionStatusPreferenceController encryptionStatusPreferenceController = new EncryptionStatusPreferenceController(context, EncryptionStatusPreferenceController.PREF_KEY_ENCRYPTION_DETAIL_PAGE);
         arrayList.add(encryptionStatusPreferenceController);
-        arrayList.add(new PreferenceCategoryController(context, "encryption_and_credentials_status_category").setChildren(Arrays.asList(encryptionStatusPreferenceController)));
+        arrayList.add(new PreferenceCategoryController(context, "encryption_and_credentials_status_category").setChildren(Arrays.asList(new AbstractPreferenceController[]{encryptionStatusPreferenceController})));
         arrayList.add(new UserCredentialsPreferenceController(context));
         arrayList.add(new ResetCredentialsPreferenceController(context, lifecycle));
         arrayList.add(new InstallCertificatePreferenceController(context));
         return arrayList;
     }
 
-    @Override // com.android.settings.support.actionbar.HelpResourceProvider
     public int getHelpResource() {
-        return R.string.help_url_encryption;
+        return R$string.help_url_encryption;
     }
 }

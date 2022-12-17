@@ -4,10 +4,9 @@ import android.app.usage.NetworkStats;
 import android.app.usage.NetworkStatsManager;
 import android.content.Context;
 import android.net.NetworkTemplate;
-import android.os.RemoteException;
 import android.util.Log;
 import androidx.loader.content.AsyncTaskLoader;
-/* loaded from: classes.dex */
+
 public class NetworkStatsSummaryLoader extends AsyncTaskLoader<NetworkStats> {
     private final long mEnd;
     private final NetworkStatsManager mNetworkStatsManager;
@@ -22,45 +21,42 @@ public class NetworkStatsSummaryLoader extends AsyncTaskLoader<NetworkStats> {
         this.mNetworkStatsManager = (NetworkStatsManager) builder.mContext.getSystemService("netstats");
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.loader.content.Loader
+    /* access modifiers changed from: protected */
     public void onStartLoading() {
         super.onStartLoading();
         forceLoad();
     }
 
-    /* JADX WARN: Can't rename method to resolve collision */
-    @Override // androidx.loader.content.AsyncTaskLoader
-    /* renamed from: loadInBackground */
-    public NetworkStats mo611loadInBackground() {
+    public NetworkStats loadInBackground() {
         try {
             return this.mNetworkStatsManager.querySummary(this.mNetworkTemplate, this.mStart, this.mEnd);
-        } catch (RemoteException e) {
+        } catch (RuntimeException e) {
             Log.e("NetworkDetailLoader", "Exception querying network detail.", e);
             return null;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.loader.content.Loader
+    /* access modifiers changed from: protected */
     public void onStopLoading() {
         super.onStopLoading();
         cancelLoad();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.loader.content.Loader
+    /* access modifiers changed from: protected */
     public void onReset() {
         super.onReset();
         cancelLoad();
     }
 
-    /* loaded from: classes.dex */
     public static class Builder {
-        private final Context mContext;
-        private long mEnd;
-        private NetworkTemplate mNetworkTemplate;
-        private long mStart;
+        /* access modifiers changed from: private */
+        public final Context mContext;
+        /* access modifiers changed from: private */
+        public long mEnd;
+        /* access modifiers changed from: private */
+        public NetworkTemplate mNetworkTemplate;
+        /* access modifiers changed from: private */
+        public long mStart;
 
         public Builder(Context context) {
             this.mContext = context;

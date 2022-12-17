@@ -1,17 +1,16 @@
 package com.android.wifitrackerlib;
 
-import android.net.wifi.WifiConfiguration;
-import com.android.wifitrackerlib.StandardWifiEntry;
-import java.util.function.Function;
-/* loaded from: classes.dex */
-public final /* synthetic */ class SavedNetworkTracker$$ExternalSyntheticLambda5 implements Function {
-    public static final /* synthetic */ SavedNetworkTracker$$ExternalSyntheticLambda5 INSTANCE = new SavedNetworkTracker$$ExternalSyntheticLambda5();
+import com.android.wifitrackerlib.SavedNetworkTracker;
 
-    private /* synthetic */ SavedNetworkTracker$$ExternalSyntheticLambda5() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class SavedNetworkTracker$$ExternalSyntheticLambda5 implements Runnable {
+    public final /* synthetic */ SavedNetworkTracker.SavedNetworkTrackerCallback f$0;
+
+    public /* synthetic */ SavedNetworkTracker$$ExternalSyntheticLambda5(SavedNetworkTracker.SavedNetworkTrackerCallback savedNetworkTrackerCallback) {
+        this.f$0 = savedNetworkTrackerCallback;
     }
 
-    @Override // java.util.function.Function
-    public final Object apply(Object obj) {
-        return new StandardWifiEntry.StandardWifiEntryKey((WifiConfiguration) obj);
+    public final void run() {
+        this.f$0.onSavedWifiEntriesChanged();
     }
 }

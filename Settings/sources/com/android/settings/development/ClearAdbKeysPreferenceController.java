@@ -13,12 +13,11 @@ import androidx.preference.PreferenceScreen;
 import com.android.settings.Utils;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.development.DeveloperOptionsPreferenceController;
-/* loaded from: classes.dex */
+
 public class ClearAdbKeysPreferenceController extends DeveloperOptionsPreferenceController implements PreferenceControllerMixin {
     private final IAdbManager mAdbManager = IAdbManager.Stub.asInterface(ServiceManager.getService("adb"));
     private final DevelopmentSettingsDashboardFragment mFragment;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "clear_adb_keys";
     }
@@ -28,31 +27,26 @@ public class ClearAdbKeysPreferenceController extends DeveloperOptionsPreference
         this.mFragment = developmentSettingsDashboardFragment;
     }
 
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return ((Boolean) AdbProperties.secure().orElse(Boolean.FALSE)).booleanValue();
     }
 
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
-        if (this.mPreference == null || isAdminUser()) {
-            return;
+        if (this.mPreference != null && !isAdminUser()) {
+            this.mPreference.setEnabled(false);
         }
-        this.mPreference.setEnabled(false);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
-        if (!Utils.isMonkeyRunning() && TextUtils.equals(preference.getKey(), getPreferenceKey())) {
-            ClearAdbKeysWarningDialog.show(this.mFragment);
-            return true;
+        if (Utils.isMonkeyRunning() || !TextUtils.equals(preference.getKey(), getPreferenceKey())) {
+            return false;
         }
-        return false;
+        ClearAdbKeysWarningDialog.show(this.mFragment);
+        return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController
+    /* access modifiers changed from: protected */
     public void onDeveloperOptionsSwitchEnabled() {
         if (isAdminUser()) {
             this.mPreference.setEnabled(true);
@@ -67,7 +61,8 @@ public class ClearAdbKeysPreferenceController extends DeveloperOptionsPreference
         }
     }
 
-    boolean isAdminUser() {
+    /* access modifiers changed from: package-private */
+    public boolean isAdminUser() {
         return ((UserManager) this.mContext.getSystemService("user")).isAdminUser();
     }
 }

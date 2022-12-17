@@ -8,16 +8,18 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Log;
-import com.android.settings.R;
+import com.android.settings.R$color;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class AnimationParticle {
     private int mAnimationState;
     private final int mAssignedColor;
     private final int mBorderWidth;
     private final Rect mBounds;
     private float mCurrentAngle;
+    private float mCurrentSize = 10.0f;
     private final int mErrorColor;
+    private final ArgbEvaluator mEvaluator;
     private final int mIndex;
     private int mLastAnimationState;
     private final Listener mListener;
@@ -25,13 +27,10 @@ public class AnimationParticle {
     private final Paint mPaint;
     private float mRingAdjustRate;
     private float mRingCompletionTime;
-    private float mCurrentSize = 10.0f;
     private float mRotationSpeed = 0.8f;
     private float mSweepAngle = 0.0f;
     private float mSweepRate = 240.0f;
-    private final ArgbEvaluator mEvaluator = new ArgbEvaluator();
 
-    /* loaded from: classes.dex */
     public interface Listener {
         void onRingCompleted(int i);
     }
@@ -39,10 +38,11 @@ public class AnimationParticle {
     public AnimationParticle(Context context, Listener listener, Rect rect, int i, int i2, int i3, List<Integer> list) {
         this.mBounds = rect;
         this.mBorderWidth = i;
-        this.mErrorColor = context.getResources().getColor(R.color.face_anim_particle_error, context.getTheme());
+        this.mEvaluator = new ArgbEvaluator();
+        this.mErrorColor = context.getResources().getColor(R$color.face_anim_particle_error, context.getTheme());
         this.mIndex = i2;
         this.mListener = listener;
-        float f = i2 / i3;
+        float f = ((float) i2) / ((float) i3);
         this.mCurrentAngle = f * 2.0f * 3.1415927f;
         this.mOffsetTimeSec = f * 1.25f * 2.0f * 3.1415927f;
         Paint paint = new Paint();
@@ -92,9 +92,7 @@ public class AnimationParticle {
             this.mRotationSpeed = f3 + (2.0f * f);
         }
         this.mCurrentAngle += f * this.mRotationSpeed;
-        float sin = (((float) Math.sin((f2 * 6.2831855f) + this.mOffsetTimeSec)) * 5.0f) + 15.0f;
-        this.mCurrentSize = sin;
-        this.mCurrentSize = ((sin - 10.0f) * f4) + 10.0f;
+        this.mCurrentSize = ((((((float) Math.sin((double) ((f2 * 6.2831855f) + this.mOffsetTimeSec))) * 5.0f) + 15.0f) - 10.0f) * f4) + 10.0f;
         int i2 = this.mAssignedColor;
         if (this.mAnimationState == 3) {
             i2 = ((Integer) this.mEvaluator.evaluate(1.0f - f4, Integer.valueOf(i2), Integer.valueOf(this.mErrorColor))).intValue();
@@ -150,16 +148,16 @@ public class AnimationParticle {
 
     private void drawDot(Canvas canvas) {
         Rect rect = this.mBounds;
-        float exactCenterX = (rect.right - rect.exactCenterX()) - this.mBorderWidth;
+        float exactCenterX = (((float) rect.right) - rect.exactCenterX()) - ((float) this.mBorderWidth);
         Rect rect2 = this.mBounds;
-        canvas.drawCircle(this.mBounds.exactCenterX() + (exactCenterX * ((float) Math.cos(this.mCurrentAngle))), this.mBounds.exactCenterY() + (((rect2.bottom - rect2.exactCenterY()) - this.mBorderWidth) * ((float) Math.sin(this.mCurrentAngle))), this.mCurrentSize, this.mPaint);
+        canvas.drawCircle(this.mBounds.exactCenterX() + (exactCenterX * ((float) Math.cos((double) this.mCurrentAngle))), this.mBounds.exactCenterY() + (((((float) rect2.bottom) - rect2.exactCenterY()) - ((float) this.mBorderWidth)) * ((float) Math.sin((double) this.mCurrentAngle))), this.mCurrentSize, this.mPaint);
     }
 
     private void drawRing(Canvas canvas) {
         int i = this.mBorderWidth;
-        RectF rectF = new RectF(i, i, this.mBounds.width() - this.mBorderWidth, this.mBounds.height() - this.mBorderWidth);
+        RectF rectF = new RectF((float) i, (float) i, (float) (this.mBounds.width() - this.mBorderWidth), (float) (this.mBounds.height() - this.mBorderWidth));
         Path path = new Path();
-        path.arcTo(rectF, (float) Math.toDegrees(this.mCurrentAngle), this.mSweepAngle);
+        path.arcTo(rectF, (float) Math.toDegrees((double) this.mCurrentAngle), this.mSweepAngle);
         canvas.drawPath(path, this.mPaint);
     }
 }

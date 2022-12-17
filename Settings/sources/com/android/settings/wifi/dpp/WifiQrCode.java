@@ -4,7 +4,7 @@ import android.text.TextUtils;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
-/* loaded from: classes.dex */
+
 public class WifiQrCode {
     private String mInformation;
     private String mPublicKey;
@@ -13,29 +13,31 @@ public class WifiQrCode {
     private WifiNetworkConfig mWifiNetworkConfig;
 
     public WifiQrCode(String str) throws IllegalArgumentException {
-        if (TextUtils.isEmpty(str)) {
-            throw new IllegalArgumentException("Empty QR code");
-        }
-        this.mQrCode = str;
-        if (str.startsWith("DPP:")) {
-            this.mScheme = "DPP";
-            parseWifiDppQrCode(str);
-        } else if (str.startsWith("WIFI:")) {
-            this.mScheme = "WIFI";
-            parseZxingWifiQrCode(str);
+        if (!TextUtils.isEmpty(str)) {
+            this.mQrCode = str;
+            if (str.startsWith("DPP:")) {
+                this.mScheme = "DPP";
+                parseWifiDppQrCode(str);
+            } else if (str.startsWith("WIFI:")) {
+                this.mScheme = "WIFI";
+                parseZxingWifiQrCode(str);
+            } else {
+                throw new IllegalArgumentException("Invalid scheme");
+            }
         } else {
-            throw new IllegalArgumentException("Invalid scheme");
+            throw new IllegalArgumentException("Empty QR code");
         }
     }
 
     private void parseWifiDppQrCode(String str) throws IllegalArgumentException {
         List<String> keyValueList = getKeyValueList(str, "DPP:", ";");
         String valueOrNull = getValueOrNull(keyValueList, "K:");
-        if (TextUtils.isEmpty(valueOrNull)) {
-            throw new IllegalArgumentException("Invalid format");
+        if (!TextUtils.isEmpty(valueOrNull)) {
+            this.mPublicKey = valueOrNull;
+            this.mInformation = getValueOrNull(keyValueList, "I:");
+            return;
         }
-        this.mPublicKey = valueOrNull;
-        this.mInformation = getValueOrNull(keyValueList, "I:");
+        throw new IllegalArgumentException("Invalid format");
     }
 
     private void parseZxingWifiQrCode(String str) throws IllegalArgumentException {
@@ -45,10 +47,9 @@ public class WifiQrCode {
         String valueOrNull3 = getValueOrNull(keyValueList, "P:");
         WifiNetworkConfig validConfigOrNull = WifiNetworkConfig.getValidConfigOrNull(removeBackSlash(valueOrNull), removeBackSlash(valueOrNull2), removeBackSlash(valueOrNull3), "true".equalsIgnoreCase(getValueOrNull(keyValueList, "H:")), -1, false);
         this.mWifiNetworkConfig = validConfigOrNull;
-        if (validConfigOrNull != null) {
-            return;
+        if (validConfigOrNull == null) {
+            throw new IllegalArgumentException("Invalid format");
         }
-        throw new IllegalArgumentException("Invalid format");
     }
 
     private List<String> getKeyValueList(String str, String str2, String str3) {
@@ -57,16 +58,16 @@ public class WifiQrCode {
     }
 
     private String getValueOrNull(List<String> list, String str) {
-        for (String str2 : list) {
-            if (str2.startsWith(str)) {
-                return str2.substring(str.length());
+        for (String next : list) {
+            if (next.startsWith(str)) {
+                return next.substring(str.length());
             }
         }
         return null;
     }
 
-    String removeBackSlash(String str) {
-        char[] charArray;
+    /* access modifiers changed from: package-private */
+    public String removeBackSlash(String str) {
         if (str == null) {
             return null;
         }
@@ -85,7 +86,7 @@ public class WifiQrCode {
         return sb.toString();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public String getQrCode() {
         return this.mQrCode;
     }
@@ -94,7 +95,8 @@ public class WifiQrCode {
         return this.mScheme;
     }
 
-    String getPublicKey() {
+    /* access modifiers changed from: package-private */
+    public String getPublicKey() {
         return this.mPublicKey;
     }
 
@@ -102,7 +104,7 @@ public class WifiQrCode {
         return this.mInformation;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public WifiNetworkConfig getWifiNetworkConfig() {
         WifiNetworkConfig wifiNetworkConfig = this.mWifiNetworkConfig;
         if (wifiNetworkConfig == null) {
@@ -111,16 +113,14 @@ public class WifiQrCode {
         return new WifiNetworkConfig(wifiNetworkConfig);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static WifiQrCode getValidWifiDppQrCodeOrNull(String str) {
-        WifiQrCode wifiQrCode;
+    static WifiQrCode getValidWifiDppQrCodeOrNull(String str) {
         try {
-            wifiQrCode = new WifiQrCode(str);
+            WifiQrCode wifiQrCode = new WifiQrCode(str);
+            if ("DPP".equals(wifiQrCode.getScheme())) {
+                return wifiQrCode;
+            }
+            return null;
         } catch (IllegalArgumentException unused) {
         }
-        if ("DPP".equals(wifiQrCode.getScheme())) {
-            return wifiQrCode;
-        }
-        return null;
     }
 }

@@ -2,7 +2,7 @@ package com.android.settingslib.bluetooth;
 
 import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
-/* loaded from: classes.dex */
+
 public interface LocalBluetoothProfile {
     boolean accessProfileEnabled();
 

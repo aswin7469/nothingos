@@ -1,11 +1,11 @@
 package androidx.recyclerview.widget;
-/* loaded from: classes.dex */
+
 public interface ListUpdateCallback {
-    void onChanged(int position, int count, Object payload);
+    void onChanged(int i, int i2, Object obj);
 
-    void onInserted(int position, int count);
+    void onInserted(int i, int i2);
 
-    void onMoved(int fromPosition, int toPosition);
+    void onMoved(int i, int i2);
 
-    void onRemoved(int position, int count);
+    void onRemoved(int i, int i2);
 }

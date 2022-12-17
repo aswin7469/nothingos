@@ -4,12 +4,12 @@ import android.content.Context;
 import android.util.AttributeSet;
 import com.google.android.material.R$attr;
 import com.google.android.material.R$style;
-/* loaded from: classes2.dex */
+
 public final class CircularProgressIndicator extends BaseProgressIndicator<CircularProgressIndicatorSpec> {
     public static final int DEF_STYLE_RES = R$style.Widget_MaterialComponents_CircularProgressIndicator;
 
     public CircularProgressIndicator(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public CircularProgressIndicator(Context context, AttributeSet attributeSet) {
@@ -21,8 +21,7 @@ public final class CircularProgressIndicator extends BaseProgressIndicator<Circu
         initializeDrawables();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // com.google.android.material.progressindicator.BaseProgressIndicator
+    /* access modifiers changed from: package-private */
     public CircularProgressIndicatorSpec createSpec(Context context, AttributeSet attributeSet) {
         return new CircularProgressIndicatorSpec(context, attributeSet);
     }
@@ -32,7 +31,6 @@ public final class CircularProgressIndicator extends BaseProgressIndicator<Circu
         setProgressDrawable(DeterminateDrawable.createCircularDrawable(getContext(), (CircularProgressIndicatorSpec) this.spec));
     }
 
-    @Override // com.google.android.material.progressindicator.BaseProgressIndicator
     public void setTrackThickness(int i) {
         super.setTrackThickness(i);
         ((CircularProgressIndicatorSpec) this.spec).validateSpec();

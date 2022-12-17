@@ -11,12 +11,17 @@ import com.google.zxing.oned.rss.expanded.RSSExpandedReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
-/* loaded from: classes2.dex */
+
 public final class MultiFormatOneDReader extends OneDReader {
     private final OneDReader[] readers;
 
     public MultiFormatOneDReader(Map<DecodeHintType, ?> map) {
-        Collection collection = map == null ? null : (Collection) map.get(DecodeHintType.POSSIBLE_FORMATS);
+        Collection collection;
+        if (map == null) {
+            collection = null;
+        } else {
+            collection = (Collection) map.get(DecodeHintType.POSSIBLE_FORMATS);
+        }
         boolean z = (map == null || map.get(DecodeHintType.ASSUME_CODE_39_CHECK_DIGIT) == null) ? false : true;
         ArrayList arrayList = new ArrayList();
         if (collection != null) {
@@ -58,22 +63,22 @@ public final class MultiFormatOneDReader extends OneDReader {
         this.readers = (OneDReader[]) arrayList.toArray(new OneDReader[arrayList.size()]);
     }
 
-    @Override // com.google.zxing.oned.OneDReader
     public Result decodeRow(int i, BitArray bitArray, Map<DecodeHintType, ?> map) throws NotFoundException {
         OneDReader[] oneDReaderArr = this.readers;
-        for (int i2 = 0; i2 < oneDReaderArr.length; i2++) {
+        int i2 = 0;
+        while (i2 < oneDReaderArr.length) {
             try {
                 return oneDReaderArr[i2].decodeRow(i, bitArray, map);
             } catch (ReaderException unused) {
+                i2++;
             }
         }
         throw NotFoundException.getNotFoundInstance();
     }
 
-    @Override // com.google.zxing.oned.OneDReader, com.google.zxing.Reader
     public void reset() {
-        for (OneDReader oneDReader : this.readers) {
-            oneDReader.reset();
+        for (OneDReader reset : this.readers) {
+            reset.reset();
         }
     }
 }

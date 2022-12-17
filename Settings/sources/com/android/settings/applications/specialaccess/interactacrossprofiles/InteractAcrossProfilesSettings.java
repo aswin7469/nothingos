@@ -14,7 +14,8 @@ import android.util.Pair;
 import android.view.View;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.applications.AppInfoBase;
 import com.android.settings.search.BaseSearchIndexProvider;
 import com.android.settings.widget.EmptyTextSettings;
@@ -22,22 +23,19 @@ import com.android.settingslib.widget.AppPreference;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Predicate;
-/* loaded from: classes.dex */
+
 public class InteractAcrossProfilesSettings extends EmptyTextSettings {
-    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R.xml.interact_across_profiles);
+    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R$xml.interact_across_profiles);
     private Context mContext;
     private CrossProfileApps mCrossProfileApps;
     private IconDrawableFactory mIconDrawableFactory;
     private PackageManager mPackageManager;
     private UserManager mUserManager;
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1829;
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         Context context = getContext();
@@ -48,16 +46,16 @@ public class InteractAcrossProfilesSettings extends EmptyTextSettings {
         this.mCrossProfileApps = (CrossProfileApps) this.mContext.getSystemService(CrossProfileApps.class);
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
         PreferenceScreen preferenceScreen = getPreferenceScreen();
         preferenceScreen.removeAll();
+        replaceEnterprisePreferenceScreenTitle("Settings.CONNECTED_WORK_AND_PERSONAL_APPS_TITLE", R$string.interact_across_profiles_title);
         ArrayList<Pair<ApplicationInfo, UserHandle>> collectConfigurableApps = collectConfigurableApps(this.mPackageManager, this.mUserManager, this.mCrossProfileApps);
         Context prefContext = getPrefContext();
         Iterator<Pair<ApplicationInfo, UserHandle>> it = collectConfigurableApps.iterator();
         while (it.hasNext()) {
-            Pair<ApplicationInfo, UserHandle> next = it.next();
+            Pair next = it.next();
             final ApplicationInfo applicationInfo = (ApplicationInfo) next.first;
             UserHandle userHandle = (UserHandle) next.second;
             final String str = applicationInfo.packageName;
@@ -66,30 +64,33 @@ public class InteractAcrossProfilesSettings extends EmptyTextSettings {
             appPreference.setIcon(this.mIconDrawableFactory.getBadgedIcon(applicationInfo, userHandle.getIdentifier()));
             appPreference.setTitle(this.mPackageManager.getUserBadgedLabel(loadLabel, userHandle));
             appPreference.setSummary(InteractAcrossProfilesDetails.getPreferenceSummary(prefContext, str));
-            appPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() { // from class: com.android.settings.applications.specialaccess.interactacrossprofiles.InteractAcrossProfilesSettings.1
-                @Override // androidx.preference.Preference.OnPreferenceClickListener
+            appPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
-                    int i = R.string.interact_across_profiles_title;
-                    String str2 = str;
-                    int i2 = applicationInfo.uid;
+                    String string = InteractAcrossProfilesSettings.this.mDevicePolicyManager.getResources().getString("Settings.CONNECTED_WORK_AND_PERSONAL_APPS_TITLE", new InteractAcrossProfilesSettings$1$$ExternalSyntheticLambda0(this));
+                    String str = str;
+                    int i = applicationInfo.uid;
                     InteractAcrossProfilesSettings interactAcrossProfilesSettings = InteractAcrossProfilesSettings.this;
-                    AppInfoBase.startAppInfoFragment(InteractAcrossProfilesDetails.class, i, str2, i2, interactAcrossProfilesSettings, -1, interactAcrossProfilesSettings.getMetricsCategory());
+                    AppInfoBase.startAppInfoFragment(InteractAcrossProfilesDetails.class, string, str, i, interactAcrossProfilesSettings, -1, interactAcrossProfilesSettings.getMetricsCategory());
                     return true;
+                }
+
+                /* access modifiers changed from: private */
+                public /* synthetic */ String lambda$onPreferenceClick$0() {
+                    return InteractAcrossProfilesSettings.this.getString(R$string.interact_across_profiles_title);
                 }
             });
             preferenceScreen.addPreference(appPreference);
         }
     }
 
-    @Override // com.android.settings.widget.EmptyTextSettings, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
-        setEmptyText(R.string.interact_across_profiles_empty_text);
+        setEmptyText(R$string.interact_across_profiles_empty_text);
     }
 
-    @Override // com.android.settings.core.InstrumentedPreferenceFragment
-    protected int getPreferenceScreenResId() {
-        return R.xml.interact_across_profiles;
+    /* access modifiers changed from: protected */
+    public int getPreferenceScreenResId() {
+        return R$xml.interact_across_profiles;
     }
 
     static ArrayList<Pair<ApplicationInfo, UserHandle>> collectConfigurableApps(PackageManager packageManager, UserManager userManager, CrossProfileApps crossProfileApps) {
@@ -102,9 +103,9 @@ public class InteractAcrossProfilesSettings extends EmptyTextSettings {
             return new ArrayList<>();
         }
         ArrayList<Pair<ApplicationInfo, UserHandle>> arrayList = new ArrayList<>();
-        for (PackageInfo packageInfo : getAllInstalledPackages(packageManager, profileParent, workProfile)) {
-            if (crossProfileApps.canUserAttemptToConfigureInteractAcrossProfiles(packageInfo.packageName)) {
-                arrayList.add(new Pair<>(packageInfo.applicationInfo, profileParent));
+        for (PackageInfo next : getAllInstalledPackages(packageManager, profileParent, workProfile)) {
+            if (crossProfileApps.canUserAttemptToConfigureInteractAcrossProfiles(next.packageName)) {
+                arrayList.add(new Pair(next.applicationInfo, profileParent));
             }
         }
         return arrayList;
@@ -114,51 +115,30 @@ public class InteractAcrossProfilesSettings extends EmptyTextSettings {
         List installedPackagesAsUser = packageManager.getInstalledPackagesAsUser(1, userHandle.getIdentifier());
         List<PackageInfo> installedPackagesAsUser2 = packageManager.getInstalledPackagesAsUser(1, userHandle2.getIdentifier());
         ArrayList arrayList = new ArrayList(installedPackagesAsUser);
-        for (final PackageInfo packageInfo : installedPackagesAsUser2) {
-            if (arrayList.stream().noneMatch(new Predicate() { // from class: com.android.settings.applications.specialaccess.interactacrossprofiles.InteractAcrossProfilesSettings$$ExternalSyntheticLambda1
-                @Override // java.util.function.Predicate
-                public final boolean test(Object obj) {
-                    boolean lambda$getAllInstalledPackages$0;
-                    lambda$getAllInstalledPackages$0 = InteractAcrossProfilesSettings.lambda$getAllInstalledPackages$0(packageInfo, (PackageInfo) obj);
-                    return lambda$getAllInstalledPackages$0;
-                }
-            })) {
+        for (PackageInfo packageInfo : installedPackagesAsUser2) {
+            if (arrayList.stream().noneMatch(new InteractAcrossProfilesSettings$$ExternalSyntheticLambda1(packageInfo))) {
                 arrayList.add(packageInfo);
             }
         }
         return arrayList;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ boolean lambda$getAllInstalledPackages$0(PackageInfo packageInfo, PackageInfo packageInfo2) {
-        return packageInfo.packageName.equals(packageInfo2.packageName);
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static int getNumberOfEnabledApps(final Context context, PackageManager packageManager, UserManager userManager, final CrossProfileApps crossProfileApps) {
+    static int getNumberOfEnabledApps(Context context, PackageManager packageManager, UserManager userManager, CrossProfileApps crossProfileApps) {
         UserHandle workProfile = getWorkProfile(userManager);
         if (workProfile == null || userManager.getProfileParent(workProfile) == null) {
             return 0;
         }
         ArrayList<Pair<ApplicationInfo, UserHandle>> collectConfigurableApps = collectConfigurableApps(packageManager, userManager, crossProfileApps);
-        collectConfigurableApps.removeIf(new Predicate() { // from class: com.android.settings.applications.specialaccess.interactacrossprofiles.InteractAcrossProfilesSettings$$ExternalSyntheticLambda0
-            @Override // java.util.function.Predicate
-            public final boolean test(Object obj) {
-                boolean lambda$getNumberOfEnabledApps$1;
-                lambda$getNumberOfEnabledApps$1 = InteractAcrossProfilesSettings.lambda$getNumberOfEnabledApps$1(context, crossProfileApps, (Pair) obj);
-                return lambda$getNumberOfEnabledApps$1;
-            }
-        });
+        collectConfigurableApps.removeIf(new InteractAcrossProfilesSettings$$ExternalSyntheticLambda0(context, crossProfileApps));
         return collectConfigurableApps.size();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ boolean lambda$getNumberOfEnabledApps$1(Context context, CrossProfileApps crossProfileApps, Pair pair) {
         return !InteractAcrossProfilesDetails.isInteractAcrossProfilesEnabled(context, ((ApplicationInfo) pair.first).packageName) || !crossProfileApps.canConfigureInteractAcrossProfiles(((ApplicationInfo) pair.first).packageName);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static UserHandle getWorkProfile(UserManager userManager) {
+    static UserHandle getWorkProfile(UserManager userManager) {
         for (UserInfo userInfo : userManager.getProfiles(UserHandle.myUserId())) {
             if (userManager.isManagedProfile(userInfo.id)) {
                 return userInfo.getUserHandle();

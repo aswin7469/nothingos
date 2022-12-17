@@ -1,5 +1,6 @@
 package com.android.settingslib.bluetooth;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
@@ -20,33 +21,34 @@ import com.android.settingslib.R$string;
 import com.android.settingslib.widget.AdaptiveIcon;
 import com.android.settingslib.widget.AdaptiveOutlineDrawable;
 import java.io.IOException;
-/* loaded from: classes.dex */
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class BluetoothUtils {
     private static ErrorListener sErrorListener;
 
-    /* loaded from: classes.dex */
     public interface ErrorListener {
         void onShowError(Context context, String str, int i);
     }
 
     public static int getConnectionStateSummary(int i) {
-        if (i != 0) {
-            if (i == 1) {
-                return R$string.bluetooth_connecting;
-            }
-            if (i == 2) {
-                return R$string.bluetooth_connected;
-            }
-            if (i == 3) {
-                return R$string.bluetooth_disconnecting;
-            }
+        if (i == 0) {
+            return R$string.bluetooth_disconnected;
+        }
+        if (i == 1) {
+            return R$string.bluetooth_connecting;
+        }
+        if (i == 2) {
+            return R$string.bluetooth_connected;
+        }
+        if (i != 3) {
             return 0;
         }
-        return R$string.bluetooth_disconnected;
+        return R$string.bluetooth_disconnecting;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static void showError(Context context, String str, int i) {
+    static void showError(Context context, String str, int i) {
         ErrorListener errorListener = sErrorListener;
         if (errorListener != null) {
             errorListener.onShowError(context, str, i);
@@ -62,36 +64,36 @@ public class BluetoothUtils {
         if (btClass != null) {
             int majorDeviceClass = btClass.getMajorDeviceClass();
             if (majorDeviceClass == 256) {
-                return new Pair<>(getBluetoothDrawable(context, 17302331), context.getString(R$string.bluetooth_talkback_computer));
+                return new Pair<>(getBluetoothDrawable(context, 17302339), context.getString(R$string.bluetooth_talkback_computer));
             }
             if (majorDeviceClass == 512) {
-                return new Pair<>(getBluetoothDrawable(context, 17302807), context.getString(R$string.bluetooth_talkback_phone));
+                return new Pair<>(getBluetoothDrawable(context, 17302817), context.getString(R$string.bluetooth_talkback_phone));
             }
             if (majorDeviceClass == 1280) {
                 return new Pair<>(getBluetoothDrawable(context, HidProfile.getHidClassDrawable(btClass)), context.getString(R$string.bluetooth_talkback_input_peripheral));
             }
             if (majorDeviceClass == 1536) {
-                return new Pair<>(getBluetoothDrawable(context, 17302839), context.getString(R$string.bluetooth_talkback_imaging));
+                return new Pair<>(getBluetoothDrawable(context, 17302850), context.getString(R$string.bluetooth_talkback_imaging));
             }
-            if ((btClass.getClassOfDevice() & 16384) == 16384) {
+            if (!cachedBluetoothDevice.isLeAudioEnabled() && (btClass.getClassOfDevice() & 16384) == 16384) {
                 return new Pair<>(getBluetoothDrawable(context, R$drawable.ic_adv_audio), context.getString(R$string.bluetooth_talkback_group));
             }
         }
-        for (LocalBluetoothProfile localBluetoothProfile : cachedBluetoothDevice.getProfiles()) {
-            int drawableResource = localBluetoothProfile.getDrawableResource(btClass);
-            if (drawableResource != 0) {
-                return new Pair<>(getBluetoothDrawable(context, drawableResource), null);
+        for (LocalBluetoothProfile drawableResource : cachedBluetoothDevice.getProfiles()) {
+            int drawableResource2 = drawableResource.getDrawableResource(btClass);
+            if (drawableResource2 != 0) {
+                return new Pair<>(getBluetoothDrawable(context, drawableResource2), (Object) null);
             }
         }
         if (btClass != null) {
-            if (btClass.doesClassMatch(0)) {
-                return new Pair<>(getBluetoothDrawable(context, 17302329), context.getString(R$string.bluetooth_talkback_headset));
+            if (doesClassMatch(btClass, 0)) {
+                return new Pair<>(getBluetoothDrawable(context, 17302337), context.getString(R$string.bluetooth_talkback_headset));
             }
-            if (btClass.doesClassMatch(1)) {
-                return new Pair<>(getBluetoothDrawable(context, 17302328), context.getString(R$string.bluetooth_talkback_headphone));
+            if (doesClassMatch(btClass, 1)) {
+                return new Pair<>(getBluetoothDrawable(context, 17302336), context.getString(R$string.bluetooth_talkback_headphone));
             }
         }
-        return new Pair<>(getBluetoothDrawable(context, 17302837).mutate(), context.getString(R$string.bluetooth_talkback_bluetooth));
+        return new Pair<>(getBluetoothDrawable(context, 17302848).mutate(), context.getString(R$string.bluetooth_talkback_bluetooth));
     }
 
     public static Drawable getBluetoothDrawable(Context context, int i) {
@@ -134,7 +136,6 @@ public class BluetoothUtils {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uriMetaData);
                 if (bitmap != null) {
                     Bitmap createScaledBitmap = Bitmap.createScaledBitmap(bitmap, dimensionPixelSize, dimensionPixelSize, false);
-                    Log.d("BluetoothUtils", "getBtDrawableWithDescription: iconSize " + dimensionPixelSize + " ori " + bitmap.getByteCount() + " new " + createScaledBitmap.getByteCount());
                     bitmap.recycle();
                     return new Pair<>(new BitmapDrawable(resources, createScaledBitmap), (String) btClassDrawableWithDescription.second);
                 }
@@ -198,5 +199,37 @@ public class BluetoothUtils {
             return null;
         }
         return Uri.parse(stringMetaData);
+    }
+
+    public static String getControlUriMetaData(BluetoothDevice bluetoothDevice) {
+        return extraTagValue("HEARABLE_CONTROL_SLICE_WITH_WIDTH", getStringMetaData(bluetoothDevice, 25));
+    }
+
+    @SuppressLint({"NewApi"})
+    private static boolean doesClassMatch(BluetoothClass bluetoothClass, int i) {
+        return bluetoothClass.doesClassMatch(i);
+    }
+
+    private static String extraTagValue(String str, String str2) {
+        if (TextUtils.isEmpty(str2)) {
+            return null;
+        }
+        Matcher matcher = Pattern.compile(generateExpressionWithTag(str, "(.*?)")).matcher(str2);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
+    }
+
+    private static String getTagStart(String str) {
+        return String.format(Locale.ENGLISH, "<%s>", new Object[]{str});
+    }
+
+    private static String getTagEnd(String str) {
+        return String.format(Locale.ENGLISH, "</%s>", new Object[]{str});
+    }
+
+    private static String generateExpressionWithTag(String str, String str2) {
+        return getTagStart(str) + str2 + getTagEnd(str);
     }
 }

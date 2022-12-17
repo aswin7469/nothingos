@@ -9,8 +9,7 @@ import android.view.View;
 import com.google.android.setupcompat.R$styleable;
 import com.google.android.setupcompat.logging.CustomEvent;
 import java.util.Locale;
-import java.util.Objects;
-/* loaded from: classes2.dex */
+
 public final class FooterButton implements View.OnClickListener {
     private OnButtonEventListener buttonListener;
     private final int buttonType;
@@ -24,9 +23,7 @@ public final class FooterButton implements View.OnClickListener {
     private int theme;
     private int visibility;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes2.dex */
-    public interface OnButtonEventListener {
+    interface OnButtonEventListener {
         void onEnabledChanged(boolean z);
 
         void onTextChanged(CharSequence charSequence);
@@ -46,15 +43,15 @@ public final class FooterButton implements View.OnClickListener {
         obtainStyledAttributes.recycle();
     }
 
-    private FooterButton(CharSequence charSequence, View.OnClickListener onClickListener, int i, int i2, Locale locale, int i3) {
+    private FooterButton(CharSequence charSequence, View.OnClickListener onClickListener2, int i, int i2, Locale locale2, int i3) {
         this.enabled = true;
         this.visibility = 0;
         this.clickCount = 0;
         this.text = charSequence;
-        this.onClickListener = onClickListener;
+        this.onClickListener = onClickListener2;
         this.buttonType = i;
         this.theme = i2;
-        this.locale = locale;
+        this.locale = locale2;
         this.direction = i3;
     }
 
@@ -62,8 +59,8 @@ public final class FooterButton implements View.OnClickListener {
         return this.text;
     }
 
-    public void setOnClickListener(View.OnClickListener onClickListener) {
-        this.onClickListener = onClickListener;
+    public void setOnClickListener(View.OnClickListener onClickListener2) {
+        this.onClickListener = onClickListener2;
     }
 
     public View.OnClickListener getOnClickListenerWhenDisabled() {
@@ -114,26 +111,28 @@ public final class FooterButton implements View.OnClickListener {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setOnButtonEventListener(OnButtonEventListener onButtonEventListener) {
-        Objects.requireNonNull(onButtonEventListener, "Event listener of footer button may not be null.");
-        this.buttonListener = onButtonEventListener;
+        if (onButtonEventListener != null) {
+            this.buttonListener = onButtonEventListener;
+            return;
+        }
+        throw new NullPointerException("Event listener of footer button may not be null.");
     }
 
-    @Override // android.view.View.OnClickListener
     public void onClick(View view) {
-        View.OnClickListener onClickListener = this.onClickListener;
-        if (onClickListener != null) {
+        View.OnClickListener onClickListener2 = this.onClickListener;
+        if (onClickListener2 != null) {
             this.clickCount++;
-            onClickListener.onClick(view);
+            onClickListener2.onClick(view);
         }
     }
 
     private int getButtonTypeValue(int i) {
-        if (i < 0 || i > 8) {
-            throw new IllegalArgumentException("Not a ButtonType");
+        if (i >= 0 && i <= 8) {
+            return i;
         }
-        return i;
+        throw new IllegalArgumentException("Not a ButtonType");
     }
 
     private String getButtonTypeName() {
@@ -168,18 +167,22 @@ public final class FooterButton implements View.OnClickListener {
         return persistableBundle;
     }
 
-    /* loaded from: classes2.dex */
     public static class Builder {
-        private final Context context;
-        private String text = "";
-        private Locale locale = null;
-        private int direction = -1;
-        private View.OnClickListener onClickListener = null;
         private int buttonType = 0;
+        private final Context context;
+        private int direction = -1;
+        private Locale locale = null;
+        private View.OnClickListener onClickListener = null;
+        private String text = "";
         private int theme = 0;
 
-        public Builder(Context context) {
-            this.context = context;
+        public Builder(Context context2) {
+            this.context = context2;
+        }
+
+        public Builder setText(String str) {
+            this.text = str;
+            return this;
         }
 
         public Builder setText(int i) {
@@ -187,8 +190,8 @@ public final class FooterButton implements View.OnClickListener {
             return this;
         }
 
-        public Builder setListener(View.OnClickListener onClickListener) {
-            this.onClickListener = onClickListener;
+        public Builder setListener(View.OnClickListener onClickListener2) {
+            this.onClickListener = onClickListener2;
             return this;
         }
 

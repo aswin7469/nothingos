@@ -3,13 +3,13 @@ package com.android.settings.accessibility;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.provider.Settings;
-import com.android.settings.R;
+import com.android.settings.R$array;
 import com.google.common.primitives.Ints;
-/* loaded from: classes.dex */
+
 public final class MagnificationCapabilities {
     public static String getSummary(Context context, int i) {
-        String[] stringArray = context.getResources().getStringArray(R.array.magnification_mode_summaries);
-        int indexOf = Ints.indexOf(context.getResources().getIntArray(R.array.magnification_mode_values), i);
+        String[] stringArray = context.getResources().getStringArray(R$array.magnification_mode_summaries);
+        int indexOf = Ints.indexOf(context.getResources().getIntArray(R$array.magnification_mode_values), i);
         if (indexOf == -1) {
             indexOf = 0;
         }

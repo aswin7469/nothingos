@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.util.Log;
 import android.view.Window;
 import com.google.android.material.transition.platform.MaterialSharedAxis;
@@ -13,7 +12,7 @@ import com.google.android.setupcompat.partnerconfig.PartnerConfigHelper;
 import com.google.android.setupcompat.util.BuildCompatUtils;
 import com.google.android.setupdesign.R$anim;
 import com.google.android.setupdesign.util.ThemeHelper;
-/* loaded from: classes2.dex */
+
 public class TransitionHelper {
     static boolean isFinishCalled = false;
     static boolean isStartActivity = false;
@@ -33,22 +32,14 @@ public class TransitionHelper {
             activity.overridePendingTransition(R$anim.sud_pre_p_activity_close_enter, R$anim.sud_pre_p_activity_close_exit);
         } else if (i == -1) {
             activity.overridePendingTransition(0, 0);
-        } else if (i != 5) {
-        } else {
-            if (Build.VERSION.SDK_INT >= 21) {
-                if (getConfigTransitionType(activity) != 1) {
-                    return;
-                }
-                Window window = activity.getWindow();
-                if (window != null) {
-                    window.setReenterTransition(new MaterialSharedAxis(0, false));
-                    window.setReturnTransition(new MaterialSharedAxis(0, false));
-                    return;
-                }
-                Log.w("TransitionHelper", "applyBackwardTransition: Invalid window=" + window);
+        } else if (i == 5 && getConfigTransitionType(activity) == 1) {
+            Window window = activity.getWindow();
+            if (window != null) {
+                window.setReenterTransition(new MaterialSharedAxis(0, false));
+                window.setReturnTransition(new MaterialSharedAxis(0, false));
                 return;
             }
-            Log.w("TransitionHelper", "This API is supported from Android Sdk 21");
+            Log.w("TransitionHelper", "applyBackwardTransition: Invalid window=" + window);
         }
     }
 

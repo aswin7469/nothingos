@@ -11,31 +11,29 @@ import android.os.ParcelUuid;
 import android.util.Log;
 import com.android.settingslib.R$string;
 import java.util.List;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public final class HfpClientProfile implements LocalBluetoothProfile {
-    static final ParcelUuid[] SRC_UUIDS = {BluetoothUuid.HSP_AG, BluetoothUuid.HFP_AG};
-    private final CachedBluetoothDeviceManager mDeviceManager;
-    private boolean mIsProfileReady;
-    private final LocalBluetoothProfileManager mProfileManager;
-    private BluetoothHeadsetClient mService;
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
+final class HfpClientProfile implements LocalBluetoothProfile {
+    static final ParcelUuid[] SRC_UUIDS = {BluetoothUuid.HSP_AG, BluetoothUuid.HFP_AG};
+    /* access modifiers changed from: private */
+    public final CachedBluetoothDeviceManager mDeviceManager;
+    /* access modifiers changed from: private */
+    public boolean mIsProfileReady;
+    private final LocalBluetoothProfileManager mProfileManager;
+    /* access modifiers changed from: private */
+    public BluetoothHeadsetClient mService;
+
     public boolean accessProfileEnabled() {
         return true;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getDrawableResource(BluetoothClass bluetoothClass) {
-        return 17302329;
+        return 17302337;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getOrdinal() {
         return 0;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getProfileId() {
         return 16;
     }
@@ -44,12 +42,10 @@ public final class HfpClientProfile implements LocalBluetoothProfile {
         return "HEADSET_CLIENT";
     }
 
-    /* loaded from: classes.dex */
     private final class HfpClientServiceListener implements BluetoothProfile.ServiceListener {
         private HfpClientServiceListener() {
         }
 
-        @Override // android.bluetooth.BluetoothProfile.ServiceListener
         public void onServiceConnected(int i, BluetoothProfile bluetoothProfile) {
             HfpClientProfile.this.mService = (BluetoothHeadsetClient) bluetoothProfile;
             List connectedDevices = HfpClientProfile.this.mService.getConnectedDevices();
@@ -66,25 +62,21 @@ public final class HfpClientProfile implements LocalBluetoothProfile {
             HfpClientProfile.this.mIsProfileReady = true;
         }
 
-        @Override // android.bluetooth.BluetoothProfile.ServiceListener
         public void onServiceDisconnected(int i) {
             HfpClientProfile.this.mIsProfileReady = false;
         }
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean isProfileReady() {
         return this.mIsProfileReady;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public HfpClientProfile(Context context, CachedBluetoothDeviceManager cachedBluetoothDeviceManager, LocalBluetoothProfileManager localBluetoothProfileManager) {
+    HfpClientProfile(Context context, CachedBluetoothDeviceManager cachedBluetoothDeviceManager, LocalBluetoothProfileManager localBluetoothProfileManager) {
         this.mDeviceManager = cachedBluetoothDeviceManager;
         this.mProfileManager = localBluetoothProfileManager;
         BluetoothAdapter.getDefaultAdapter().getProfileProxy(context, new HfpClientServiceListener(), 16);
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getConnectionStatus(BluetoothDevice bluetoothDevice) {
         BluetoothHeadsetClient bluetoothHeadsetClient = this.mService;
         if (bluetoothHeadsetClient == null) {
@@ -93,33 +85,34 @@ public final class HfpClientProfile implements LocalBluetoothProfile {
         return bluetoothHeadsetClient.getConnectionState(bluetoothDevice);
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean isEnabled(BluetoothDevice bluetoothDevice) {
         BluetoothHeadsetClient bluetoothHeadsetClient = this.mService;
-        return bluetoothHeadsetClient != null && bluetoothHeadsetClient.getConnectionPolicy(bluetoothDevice) > 0;
+        if (bluetoothHeadsetClient != null && bluetoothHeadsetClient.getConnectionPolicy(bluetoothDevice) > 0) {
+            return true;
+        }
+        return false;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean setEnabled(BluetoothDevice bluetoothDevice, boolean z) {
         BluetoothHeadsetClient bluetoothHeadsetClient = this.mService;
         if (bluetoothHeadsetClient == null) {
             return false;
         }
-        if (z) {
-            if (bluetoothHeadsetClient.getConnectionPolicy(bluetoothDevice) >= 100) {
-                return false;
-            }
+        if (!z) {
+            return bluetoothHeadsetClient.setConnectionPolicy(bluetoothDevice, 0);
+        }
+        if (bluetoothHeadsetClient.getConnectionPolicy(bluetoothDevice) < 100) {
             return this.mService.setConnectionPolicy(bluetoothDevice, 100);
         }
-        return bluetoothHeadsetClient.setConnectionPolicy(bluetoothDevice, 0);
+        return false;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getNameResource(BluetoothDevice bluetoothDevice) {
         return R$string.bluetooth_profile_headset;
     }
 
-    protected void finalize() {
+    /* access modifiers changed from: protected */
+    public void finalize() {
         Log.d("HfpClientProfile", "finalize()");
         if (this.mService != null) {
             try {

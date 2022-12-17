@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import androidx.constraintlayout.widget.ConstraintAttribute;
 import java.util.HashMap;
 import java.util.HashSet;
-/* loaded from: classes.dex */
+
 public abstract class Key {
     public static int UNSET = -1;
     HashMap<String, ConstraintAttribute> mCustomConstraints;
@@ -16,10 +16,10 @@ public abstract class Key {
 
     public abstract void addValues(HashMap<String, SplineSet> hashMap);
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public abstract void getAttributeNames(HashSet<String> hashSet);
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public abstract void load(Context context, AttributeSet attributeSet);
 
     public void setInterpolation(HashMap<String, Integer> hashMap) {
@@ -31,7 +31,7 @@ public abstract class Key {
         this.mTargetId = i;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean matches(String str) {
         String str2 = this.mTargetString;
         if (str2 == null || str == null) {

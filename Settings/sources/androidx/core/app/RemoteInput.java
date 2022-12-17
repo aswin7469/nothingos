@@ -1,10 +1,9 @@
 package androidx.core.app;
 
 import android.app.RemoteInput;
-import android.os.Build;
 import android.os.Bundle;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public final class RemoteInput {
     private final boolean mAllowFreeFormTextInput;
     private final Set<String> mAllowedDataTypes;
@@ -46,29 +45,44 @@ public final class RemoteInput {
         return this.mExtras;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static android.app.RemoteInput[] fromCompat(RemoteInput[] srcArray) {
-        if (srcArray == null) {
+    static android.app.RemoteInput[] fromCompat(RemoteInput[] remoteInputArr) {
+        if (remoteInputArr == null) {
             return null;
         }
-        android.app.RemoteInput[] remoteInputArr = new android.app.RemoteInput[srcArray.length];
-        for (int i = 0; i < srcArray.length; i++) {
-            remoteInputArr[i] = fromCompat(srcArray[i]);
+        android.app.RemoteInput[] remoteInputArr2 = new android.app.RemoteInput[remoteInputArr.length];
+        for (int i = 0; i < remoteInputArr.length; i++) {
+            remoteInputArr2[i] = fromCompat(remoteInputArr[i]);
         }
-        return remoteInputArr;
+        return remoteInputArr2;
     }
 
-    static android.app.RemoteInput fromCompat(RemoteInput src) {
-        Set<String> allowedDataTypes;
-        RemoteInput.Builder addExtras = new RemoteInput.Builder(src.getResultKey()).setLabel(src.getLabel()).setChoices(src.getChoices()).setAllowFreeFormInput(src.getAllowFreeFormInput()).addExtras(src.getExtras());
-        if (Build.VERSION.SDK_INT >= 26 && (allowedDataTypes = src.getAllowedDataTypes()) != null) {
-            for (String str : allowedDataTypes) {
-                addExtras.setAllowDataType(str, true);
+    static android.app.RemoteInput fromCompat(RemoteInput remoteInput) {
+        return Api20Impl.fromCompat(remoteInput);
+    }
+
+    static class Api26Impl {
+        static RemoteInput.Builder setAllowDataType(RemoteInput.Builder builder, String str, boolean z) {
+            return builder.setAllowDataType(str, z);
+        }
+    }
+
+    static class Api20Impl {
+        public static android.app.RemoteInput fromCompat(RemoteInput remoteInput) {
+            RemoteInput.Builder addExtras = new RemoteInput.Builder(remoteInput.getResultKey()).setLabel(remoteInput.getLabel()).setChoices(remoteInput.getChoices()).setAllowFreeFormInput(remoteInput.getAllowFreeFormInput()).addExtras(remoteInput.getExtras());
+            Set<String> allowedDataTypes = remoteInput.getAllowedDataTypes();
+            if (allowedDataTypes != null) {
+                for (String allowDataType : allowedDataTypes) {
+                    Api26Impl.setAllowDataType(addExtras, allowDataType, true);
+                }
             }
+            Api29Impl.setEditChoicesBeforeSending(addExtras, remoteInput.getEditChoicesBeforeSending());
+            return addExtras.build();
         }
-        if (Build.VERSION.SDK_INT >= 29) {
-            addExtras.setEditChoicesBeforeSending(src.getEditChoicesBeforeSending());
+    }
+
+    static class Api29Impl {
+        static RemoteInput.Builder setEditChoicesBeforeSending(RemoteInput.Builder builder, int i) {
+            return builder.setEditChoicesBeforeSending(i);
         }
-        return addExtras.build();
     }
 }

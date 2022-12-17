@@ -7,18 +7,23 @@ import android.os.Bundle;
 import com.android.settings.biometrics.face.FaceEnrollParentalConsent;
 import com.android.settings.biometrics.fingerprint.FingerprintEnrollParentalConsent;
 import com.google.android.setupcompat.util.WizardManagerHelper;
-/* loaded from: classes.dex */
+
 public class ParentalConsentHelper {
     private Boolean mConsentFace;
     private Boolean mConsentFingerprint;
     private long mGkPwHandle;
-    private final boolean mRequireFace;
-    private final boolean mRequireFingerprint;
+    private boolean mRequireFace;
+    private boolean mRequireFingerprint;
 
     public ParentalConsentHelper(boolean z, boolean z2, Long l) {
         this.mRequireFace = z;
         this.mRequireFingerprint = z2;
-        this.mGkPwHandle = l != null ? l.longValue() : 0L;
+        this.mGkPwHandle = l != null ? l.longValue() : 0;
+    }
+
+    public void setConsentRequirement(boolean z, boolean z2) {
+        this.mRequireFace = z;
+        this.mRequireFingerprint = z2;
     }
 
     public void updateGatekeeperHandle(Intent intent) {
@@ -46,26 +51,26 @@ public class ParentalConsentHelper {
 
     public boolean launchNext(Activity activity, int i) {
         Intent nextConsentIntent = getNextConsentIntent(activity);
-        if (nextConsentIntent != null) {
-            WizardManagerHelper.copyWizardManagerExtras(activity.getIntent(), nextConsentIntent);
-            long j = this.mGkPwHandle;
-            if (j != 0) {
-                nextConsentIntent.putExtra("gk_pw_handle", j);
-            }
-            activity.startActivityForResult(nextConsentIntent, i);
-            return true;
+        if (nextConsentIntent == null) {
+            return false;
         }
-        return false;
+        WizardManagerHelper.copyWizardManagerExtras(activity.getIntent(), nextConsentIntent);
+        long j = this.mGkPwHandle;
+        if (j != 0) {
+            nextConsentIntent.putExtra("gk_pw_handle", j);
+        }
+        activity.startActivityForResult(nextConsentIntent, i);
+        return true;
     }
 
     private Intent getNextConsentIntent(Context context) {
         if (this.mRequireFace && this.mConsentFace == null) {
             return new Intent(context, FaceEnrollParentalConsent.class);
         }
-        if (this.mRequireFingerprint && this.mConsentFingerprint == null) {
-            return new Intent(context, FingerprintEnrollParentalConsent.class);
+        if (!this.mRequireFingerprint || this.mConsentFingerprint != null) {
+            return null;
         }
-        return null;
+        return new Intent(context, FingerprintEnrollParentalConsent.class);
     }
 
     public Bundle getConsentResult() {

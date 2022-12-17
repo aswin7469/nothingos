@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:settings="http://schemas.android.com/apk/res-auto" android:title="@string/storage_settings">
-    <com.android.settings.widget.CardPreference android:icon="@drawable/ic_files_go_round" android:title="@string/storage_free_up_space_title" android:key="free_up_space" android:summary="@string/storage_free_up_space_summary" android:order="4"/>
+<PreferenceScreen xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:title="@string/storage_settings">
+    <com.android.settings.widget.CardPreference android:title="@string/storage_free_up_space_title" android:key="free_up_space" android:summary="@string/storage_free_up_space_summary" android:order="4" app:controller="com.android.settings.deviceinfo.storage.ManageStoragePreferenceController"/>
     <Preference android:icon="@drawable/ic_folder_vd_theme_24" android:title="@string/storage_files" android:key="pref_public_storage" android:order="100"/>
     <com.android.settings.deviceinfo.StorageItemPreference android:icon="@drawable/ic_photo_library" android:title="@string/storage_images" android:key="pref_images" android:order="101"/>
     <com.android.settings.deviceinfo.StorageItemPreference android:icon="@drawable/ic_local_movies" android:title="@string/storage_videos" android:key="pref_videos" android:order="102"/>

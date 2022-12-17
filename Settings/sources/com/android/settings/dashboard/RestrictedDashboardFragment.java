@@ -13,24 +13,24 @@ import android.os.UserManager;
 import android.view.View;
 import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.enterprise.ActionDisabledByAdminDialogHelper;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.RestrictedLockUtilsInternal;
-/* loaded from: classes.dex */
+
 public abstract class RestrictedDashboardFragment extends DashboardFragment {
     private AlertDialog mActionDisabledDialog;
-    private boolean mChallengeRequested;
-    private boolean mChallengeSucceeded;
+    /* access modifiers changed from: private */
+    public boolean mChallengeRequested;
+    /* access modifiers changed from: private */
+    public boolean mChallengeSucceeded;
     private TextView mEmptyTextView;
     private RestrictedLockUtils.EnforcedAdmin mEnforcedAdmin;
     private boolean mIsAdminUser;
+    private boolean mOnlyAvailableForAdmins = false;
     private final String mRestrictionKey;
     private RestrictionsManager mRestrictionsManager;
-    private UserManager mUserManager;
-    private boolean mOnlyAvailableForAdmins = false;
-    private BroadcastReceiver mScreenOffReceiver = new BroadcastReceiver() { // from class: com.android.settings.dashboard.RestrictedDashboardFragment.1
-        @Override // android.content.BroadcastReceiver
+    private BroadcastReceiver mScreenOffReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if (!RestrictedDashboardFragment.this.mChallengeRequested) {
                 RestrictedDashboardFragment.this.mChallengeSucceeded = false;
@@ -38,12 +38,12 @@ public abstract class RestrictedDashboardFragment extends DashboardFragment {
             }
         }
     };
+    private UserManager mUserManager;
 
     public RestrictedDashboardFragment(String str) {
         this.mRestrictionKey = str;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         this.mRestrictionsManager = (RestrictionsManager) getSystemService("restrictions");
@@ -59,13 +59,11 @@ public abstract class RestrictedDashboardFragment extends DashboardFragment {
         getActivity().registerReceiver(this.mScreenOffReceiver, intentFilter);
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, androidx.fragment.app.Fragment
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
         this.mEmptyTextView = initEmptyTextView();
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         if (getActivity().isChangingConfigurations()) {
@@ -74,7 +72,6 @@ public abstract class RestrictedDashboardFragment extends DashboardFragment {
         }
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
         if (shouldBeProviderProtected(this.mRestrictionKey)) {
@@ -82,13 +79,11 @@ public abstract class RestrictedDashboardFragment extends DashboardFragment {
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onDestroy() {
         getActivity().unregisterReceiver(this.mScreenOffReceiver);
         super.onDestroy();
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onActivityResult(int i, int i2, Intent intent) {
         if (i != 12309) {
             super.onActivityResult(i, i2, intent);
@@ -102,35 +97,44 @@ public abstract class RestrictedDashboardFragment extends DashboardFragment {
 
     private void ensurePin() {
         Intent createLocalApprovalIntent;
-        if (this.mChallengeSucceeded || this.mChallengeRequested || !this.mRestrictionsManager.hasRestrictionsProvider() || (createLocalApprovalIntent = this.mRestrictionsManager.createLocalApprovalIntent()) == null) {
-            return;
+        if (!this.mChallengeSucceeded && !this.mChallengeRequested && this.mRestrictionsManager.hasRestrictionsProvider() && (createLocalApprovalIntent = this.mRestrictionsManager.createLocalApprovalIntent()) != null) {
+            this.mChallengeRequested = true;
+            this.mChallengeSucceeded = false;
+            PersistableBundle persistableBundle = new PersistableBundle();
+            persistableBundle.putString("android.request.mesg", getResources().getString(R$string.restr_pin_enter_admin_pin));
+            createLocalApprovalIntent.putExtra("android.content.extra.REQUEST_BUNDLE", persistableBundle);
+            startActivityForResult(createLocalApprovalIntent, 12309);
         }
-        this.mChallengeRequested = true;
-        this.mChallengeSucceeded = false;
-        PersistableBundle persistableBundle = new PersistableBundle();
-        persistableBundle.putString("android.request.mesg", getResources().getString(R.string.restr_pin_enter_admin_pin));
-        createLocalApprovalIntent.putExtra("android.content.extra.REQUEST_BUNDLE", persistableBundle);
-        startActivityForResult(createLocalApprovalIntent, 12309);
     }
 
-    protected boolean isRestrictedAndNotProviderProtected() {
+    /* access modifiers changed from: protected */
+    public boolean isRestrictedAndNotProviderProtected() {
         String str = this.mRestrictionKey;
-        return str != null && !"restrict_if_overridable".equals(str) && this.mUserManager.hasUserRestriction(this.mRestrictionKey) && !this.mRestrictionsManager.hasRestrictionsProvider();
+        if (str == null || "restrict_if_overridable".equals(str) || !this.mUserManager.hasUserRestriction(this.mRestrictionKey) || this.mRestrictionsManager.hasRestrictionsProvider()) {
+            return false;
+        }
+        return true;
     }
 
-    protected boolean hasChallengeSucceeded() {
+    /* access modifiers changed from: protected */
+    public boolean hasChallengeSucceeded() {
         boolean z = this.mChallengeRequested;
         return (z && this.mChallengeSucceeded) || !z;
     }
 
-    protected boolean shouldBeProviderProtected(String str) {
+    /* access modifiers changed from: protected */
+    public boolean shouldBeProviderProtected(String str) {
         if (str == null) {
             return false;
         }
-        return ("restrict_if_overridable".equals(str) || this.mUserManager.hasUserRestriction(this.mRestrictionKey)) && this.mRestrictionsManager.hasRestrictionsProvider();
+        if (!("restrict_if_overridable".equals(str) || this.mUserManager.hasUserRestriction(this.mRestrictionKey)) || !this.mRestrictionsManager.hasRestrictionsProvider()) {
+            return false;
+        }
+        return true;
     }
 
-    protected TextView initEmptyTextView() {
+    /* access modifiers changed from: protected */
+    public TextView initEmptyTextView() {
         return (TextView) getActivity().findViewById(16908292);
     }
 
@@ -147,29 +151,23 @@ public abstract class RestrictedDashboardFragment extends DashboardFragment {
         return this.mEmptyTextView;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.SettingsPreferenceFragment
+    /* access modifiers changed from: protected */
     public void onDataSetChanged() {
         AlertDialog alertDialog;
         highlightPreferenceIfNeeded();
-        if (isUiRestrictedByOnlyAdmin() && ((alertDialog = this.mActionDisabledDialog) == null || !alertDialog.isShowing())) {
-            this.mActionDisabledDialog = new ActionDisabledByAdminDialogHelper(getActivity()).prepareDialogBuilder(this.mRestrictionKey, getRestrictionEnforcedAdmin()).setOnDismissListener(new DialogInterface.OnDismissListener() { // from class: com.android.settings.dashboard.RestrictedDashboardFragment$$ExternalSyntheticLambda0
-                @Override // android.content.DialogInterface.OnDismissListener
-                public final void onDismiss(DialogInterface dialogInterface) {
-                    RestrictedDashboardFragment.this.lambda$onDataSetChanged$0(dialogInterface);
-                }
-            }).show();
-            setEmptyView(new View(getContext()));
-        } else {
+        if (!isUiRestrictedByOnlyAdmin() || ((alertDialog = this.mActionDisabledDialog) != null && alertDialog.isShowing())) {
             TextView textView = this.mEmptyTextView;
             if (textView != null) {
                 setEmptyView(textView);
             }
+        } else {
+            this.mActionDisabledDialog = new ActionDisabledByAdminDialogHelper(getActivity()).prepareDialogBuilder(this.mRestrictionKey, getRestrictionEnforcedAdmin()).setOnDismissListener(new RestrictedDashboardFragment$$ExternalSyntheticLambda0(this)).show();
+            setEmptyView(new View(getContext()));
         }
         super.onDataSetChanged();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onDataSetChanged$0(DialogInterface dialogInterface) {
         getActivity().finish();
     }
@@ -178,12 +176,12 @@ public abstract class RestrictedDashboardFragment extends DashboardFragment {
         this.mOnlyAvailableForAdmins = z;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean isUiRestricted() {
         return isRestrictedAndNotProviderProtected() || !hasChallengeSucceeded() || (!this.mIsAdminUser && this.mOnlyAvailableForAdmins);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean isUiRestrictedByOnlyAdmin() {
         return isUiRestricted() && !this.mUserManager.hasBaseUserRestriction(this.mRestrictionKey, UserHandle.of(UserHandle.myUserId())) && (this.mIsAdminUser || !this.mOnlyAvailableForAdmins);
     }

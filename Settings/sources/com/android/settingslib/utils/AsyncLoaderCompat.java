@@ -2,18 +2,18 @@ package com.android.settingslib.utils;
 
 import android.content.Context;
 import androidx.loader.content.AsyncTaskLoader;
-/* loaded from: classes.dex */
+
 public abstract class AsyncLoaderCompat<T> extends AsyncTaskLoader<T> {
     private T mResult;
 
-    protected abstract void onDiscardResult(T t);
+    /* access modifiers changed from: protected */
+    public abstract void onDiscardResult(T t);
 
     public AsyncLoaderCompat(Context context) {
         super(context);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.loader.content.Loader
+    /* access modifiers changed from: protected */
     public void onStartLoading() {
         T t = this.mResult;
         if (t != null) {
@@ -24,34 +24,27 @@ public abstract class AsyncLoaderCompat<T> extends AsyncTaskLoader<T> {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.loader.content.Loader
+    /* access modifiers changed from: protected */
     public void onStopLoading() {
         cancelLoad();
     }
 
-    @Override // androidx.loader.content.Loader
     public void deliverResult(T t) {
-        if (isReset()) {
-            if (t == null) {
-                return;
+        if (!isReset()) {
+            T t2 = this.mResult;
+            this.mResult = t;
+            if (isStarted()) {
+                super.deliverResult(t);
             }
+            if (t2 != null && t2 != this.mResult) {
+                onDiscardResult(t2);
+            }
+        } else if (t != null) {
             onDiscardResult(t);
-            return;
         }
-        T t2 = this.mResult;
-        this.mResult = t;
-        if (isStarted()) {
-            super.deliverResult(t);
-        }
-        if (t2 == null || t2 == this.mResult) {
-            return;
-        }
-        onDiscardResult(t2);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.loader.content.Loader
+    /* access modifiers changed from: protected */
     public void onReset() {
         super.onReset();
         onStopLoading();
@@ -62,7 +55,6 @@ public abstract class AsyncLoaderCompat<T> extends AsyncTaskLoader<T> {
         this.mResult = null;
     }
 
-    @Override // androidx.loader.content.AsyncTaskLoader
     public void onCanceled(T t) {
         super.onCanceled(t);
         if (t != null) {

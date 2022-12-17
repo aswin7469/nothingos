@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:settings="http://schemas.android.com/apk/res-auto" android:persistent="false" android:title="@string/nt_glyphs_default_ringtone" settings:searchable="false">
-    <com.nt.settings.glyphs.widget.GlyphsRingtoneSelectorPreference android:key="key_glyphs_ringtone_selector" android:order="-130" settings:isLoop="true"/>
-    <SwitchPreference android:title="@string/nt_glyphs_ringtone_sound_only" android:key="key_glyphs_switch_sound_only" android:summary="@string/nt_glyphs_sound_only_switch_summary" android:order="-120"/>
-</PreferenceScreen>

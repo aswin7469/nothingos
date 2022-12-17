@@ -1,7 +1,8 @@
 package com.android.settings.enterprise;
 
+import android.content.Context;
 import java.util.Date;
-/* loaded from: classes.dex */
+
 public interface EnterprisePrivacyFeatureProvider {
     CharSequence getDeviceOwnerDisclosure();
 
@@ -41,5 +42,5 @@ public interface EnterprisePrivacyFeatureProvider {
 
     boolean showParentalControls();
 
-    boolean showWorkPolicyInfo();
+    boolean showWorkPolicyInfo(Context context);
 }

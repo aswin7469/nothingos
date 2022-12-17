@@ -4,18 +4,18 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import com.android.settings.R;
+import com.android.settings.R$color;
 import com.android.settings.biometrics.BiometricEnrollSidecar;
 import com.android.settings.biometrics.face.AnimationParticle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class ParticleCollection implements BiometricEnrollSidecar.Listener {
-    private Listener mListener;
-    private int mState;
-    private final AnimationParticle.Listener mParticleListener = new AnimationParticle.Listener() { // from class: com.android.settings.biometrics.face.ParticleCollection.1
-        @Override // com.android.settings.biometrics.face.AnimationParticle.Listener
+    /* access modifiers changed from: private */
+    public Listener mListener;
+    private final List<AnimationParticle> mParticleList = new ArrayList();
+    private final AnimationParticle.Listener mParticleListener = new AnimationParticle.Listener() {
         public void onRingCompleted(int i) {
             boolean isEmpty = ParticleCollection.this.mPrimariesInProgress.isEmpty();
             int i2 = 0;
@@ -29,25 +29,22 @@ public class ParticleCollection implements BiometricEnrollSidecar.Listener {
                     i2++;
                 }
             }
-            if (!ParticleCollection.this.mPrimariesInProgress.isEmpty() || isEmpty) {
-                return;
+            if (ParticleCollection.this.mPrimariesInProgress.isEmpty() && !isEmpty) {
+                ParticleCollection.this.mListener.onEnrolled();
             }
-            ParticleCollection.this.mListener.onEnrolled();
         }
     };
-    private final List<AnimationParticle> mParticleList = new ArrayList();
-    private final List<Integer> mPrimariesInProgress = new ArrayList(Arrays.asList(0, 4, 8));
+    /* access modifiers changed from: private */
+    public final List<Integer> mPrimariesInProgress;
+    private int mState;
 
-    /* loaded from: classes.dex */
     public interface Listener {
         void onEnrolled();
     }
 
-    @Override // com.android.settings.biometrics.BiometricEnrollSidecar.Listener
     public void onEnrollmentError(int i, CharSequence charSequence) {
     }
 
-    @Override // com.android.settings.biometrics.BiometricEnrollSidecar.Listener
     public void onEnrollmentHelp(int i, CharSequence charSequence) {
     }
 
@@ -56,10 +53,11 @@ public class ParticleCollection implements BiometricEnrollSidecar.Listener {
         ArrayList arrayList = new ArrayList();
         Resources.Theme theme = context.getTheme();
         Resources resources = context.getResources();
-        arrayList.add(Integer.valueOf(resources.getColor(R.color.face_anim_particle_color_1, theme)));
-        arrayList.add(Integer.valueOf(resources.getColor(R.color.face_anim_particle_color_2, theme)));
-        arrayList.add(Integer.valueOf(resources.getColor(R.color.face_anim_particle_color_3, theme)));
-        arrayList.add(Integer.valueOf(resources.getColor(R.color.face_anim_particle_color_4, theme)));
+        arrayList.add(Integer.valueOf(resources.getColor(R$color.face_anim_particle_color_1, theme)));
+        arrayList.add(Integer.valueOf(resources.getColor(R$color.face_anim_particle_color_2, theme)));
+        arrayList.add(Integer.valueOf(resources.getColor(R$color.face_anim_particle_color_3, theme)));
+        arrayList.add(Integer.valueOf(resources.getColor(R$color.face_anim_particle_color_4, theme)));
+        this.mPrimariesInProgress = new ArrayList(Arrays.asList(new Integer[]{0, 4, 8}));
         int[] iArr = {3, 7, 11, 2, 6, 10, 1, 5, 9, 0, 4, 8};
         for (int i2 = 0; i2 < 12; i2++) {
             AnimationParticle animationParticle = new AnimationParticle(context, this.mParticleListener, rect, i, iArr[i2], 12, arrayList);
@@ -92,7 +90,6 @@ public class ParticleCollection implements BiometricEnrollSidecar.Listener {
         }
     }
 
-    @Override // com.android.settings.biometrics.BiometricEnrollSidecar.Listener
     public void onEnrollmentProgressChange(int i, int i2) {
         if (i2 == 0) {
             updateState(4);

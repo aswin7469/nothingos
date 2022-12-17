@@ -9,16 +9,14 @@ import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.RestrictedLockUtilsInternal;
 import com.android.settingslib.RestrictedSwitchPreference;
 import com.android.settingslib.core.AbstractPreferenceController;
-/* loaded from: classes.dex */
+
 public class AutoTimePreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin, Preference.OnPreferenceChangeListener {
     private final UpdateTimeAndDateCallback mCallback;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "auto_time";
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return true;
     }
@@ -28,19 +26,16 @@ public class AutoTimePreferenceController extends AbstractPreferenceController i
         this.mCallback = updateTimeAndDateCallback;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
-        if (!(preference instanceof RestrictedSwitchPreference)) {
-            return;
+        if (preference instanceof RestrictedSwitchPreference) {
+            RestrictedSwitchPreference restrictedSwitchPreference = (RestrictedSwitchPreference) preference;
+            if (!restrictedSwitchPreference.isDisabledByAdmin()) {
+                restrictedSwitchPreference.setDisabledByAdmin(getEnforcedAdminProperty());
+            }
+            restrictedSwitchPreference.setChecked(isEnabled());
         }
-        RestrictedSwitchPreference restrictedSwitchPreference = (RestrictedSwitchPreference) preference;
-        if (!restrictedSwitchPreference.isDisabledByAdmin()) {
-            restrictedSwitchPreference.setDisabledByAdmin(getEnforcedAdminProperty());
-        }
-        restrictedSwitchPreference.setChecked(isEnabled());
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         Settings.Global.putInt(this.mContext.getContentResolver(), "auto_time", ((Boolean) obj).booleanValue() ? 1 : 0);
         this.mCallback.updateTimeAndDateDisplay(this.mContext);

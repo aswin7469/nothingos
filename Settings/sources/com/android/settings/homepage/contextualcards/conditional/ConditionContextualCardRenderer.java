@@ -7,30 +7,29 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
 import com.android.settings.homepage.contextualcards.ContextualCard;
 import com.android.settings.homepage.contextualcards.ContextualCardRenderer;
 import com.android.settings.homepage.contextualcards.ControllerRendererPool;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
-/* loaded from: classes.dex */
+
 public class ConditionContextualCardRenderer implements ContextualCardRenderer {
+    public static final int VIEW_TYPE_FULL_WIDTH = R$layout.conditional_card_full_tile;
+    public static final int VIEW_TYPE_HALF_WIDTH = R$layout.conditional_card_half_tile;
     private final Context mContext;
     private final ControllerRendererPool mControllerRendererPool;
-    public static final int VIEW_TYPE_HALF_WIDTH = R.layout.conditional_card_half_tile;
-    public static final int VIEW_TYPE_FULL_WIDTH = R.layout.conditional_card_full_tile;
 
     public ConditionContextualCardRenderer(Context context, ControllerRendererPool controllerRendererPool) {
         this.mContext = context;
         this.mControllerRendererPool = controllerRendererPool;
     }
 
-    @Override // com.android.settings.homepage.contextualcards.ContextualCardRenderer
     public RecyclerView.ViewHolder createViewHolder(View view, int i) {
         return new ConditionalCardHolder(view);
     }
 
-    @Override // com.android.settings.homepage.contextualcards.ContextualCardRenderer
     public void bindView(RecyclerView.ViewHolder viewHolder, ContextualCard contextualCard) {
         ConditionalCardHolder conditionalCardHolder = (ConditionalCardHolder) viewHolder;
         ConditionalContextualCard conditionalContextualCard = (ConditionalContextualCard) contextualCard;
@@ -41,16 +40,11 @@ public class ConditionContextualCardRenderer implements ContextualCardRenderer {
         initializeActionButton(conditionalCardHolder, conditionalContextualCard, metricsFeatureProvider);
     }
 
-    private void initializePrimaryClick(ConditionalCardHolder conditionalCardHolder, final ConditionalContextualCard conditionalContextualCard, final MetricsFeatureProvider metricsFeatureProvider) {
-        conditionalCardHolder.itemView.findViewById(R.id.content).setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.homepage.contextualcards.conditional.ConditionContextualCardRenderer$$ExternalSyntheticLambda1
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                ConditionContextualCardRenderer.this.lambda$initializePrimaryClick$0(metricsFeatureProvider, conditionalContextualCard, view);
-            }
-        });
+    private void initializePrimaryClick(ConditionalCardHolder conditionalCardHolder, ConditionalContextualCard conditionalContextualCard, MetricsFeatureProvider metricsFeatureProvider) {
+        conditionalCardHolder.itemView.findViewById(R$id.content).setOnClickListener(new ConditionContextualCardRenderer$$ExternalSyntheticLambda0(this, metricsFeatureProvider, conditionalContextualCard));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$initializePrimaryClick$0(MetricsFeatureProvider metricsFeatureProvider, ConditionalContextualCard conditionalContextualCard, View view) {
         metricsFeatureProvider.action(this.mContext, 375, conditionalContextualCard.getMetricsConstant());
         this.mControllerRendererPool.getController(this.mContext, conditionalContextualCard.getCardType()).onPrimaryClick(conditionalContextualCard);
@@ -62,31 +56,25 @@ public class ConditionContextualCardRenderer implements ContextualCardRenderer {
         conditionalCardHolder.summary.setText(conditionalContextualCard.getSummaryText());
     }
 
-    private void initializeActionButton(ConditionalCardHolder conditionalCardHolder, final ConditionalContextualCard conditionalContextualCard, final MetricsFeatureProvider metricsFeatureProvider) {
+    private void initializeActionButton(ConditionalCardHolder conditionalCardHolder, ConditionalContextualCard conditionalContextualCard, MetricsFeatureProvider metricsFeatureProvider) {
         CharSequence actionText = conditionalContextualCard.getActionText();
         boolean z = !TextUtils.isEmpty(actionText);
-        Button button = (Button) conditionalCardHolder.itemView.findViewById(R.id.first_action);
+        Button button = (Button) conditionalCardHolder.itemView.findViewById(R$id.first_action);
         if (z) {
             button.setVisibility(0);
             button.setText(actionText);
-            button.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.homepage.contextualcards.conditional.ConditionContextualCardRenderer$$ExternalSyntheticLambda0
-                @Override // android.view.View.OnClickListener
-                public final void onClick(View view) {
-                    ConditionContextualCardRenderer.this.lambda$initializeActionButton$1(metricsFeatureProvider, conditionalContextualCard, view);
-                }
-            });
+            button.setOnClickListener(new ConditionContextualCardRenderer$$ExternalSyntheticLambda1(this, metricsFeatureProvider, conditionalContextualCard));
             return;
         }
         button.setVisibility(8);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$initializeActionButton$1(MetricsFeatureProvider metricsFeatureProvider, ConditionalContextualCard conditionalContextualCard, View view) {
         metricsFeatureProvider.action(view.getContext(), 376, conditionalContextualCard.getMetricsConstant());
         this.mControllerRendererPool.getController(this.mContext, conditionalContextualCard.getCardType()).onActionClick(conditionalContextualCard);
     }
 
-    /* loaded from: classes.dex */
     public static class ConditionalCardHolder extends RecyclerView.ViewHolder {
         public final ImageView icon;
         public final TextView summary;

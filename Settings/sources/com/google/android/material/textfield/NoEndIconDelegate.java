@@ -1,18 +1,16 @@
 package com.google.android.material.textfield;
 
 import android.graphics.drawable.Drawable;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes2.dex */
-public class NoEndIconDelegate extends EndIconDelegate {
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public NoEndIconDelegate(TextInputLayout textInputLayout) {
-        super(textInputLayout);
+import android.view.View;
+
+class NoEndIconDelegate extends EndIconDelegate {
+    NoEndIconDelegate(TextInputLayout textInputLayout) {
+        super(textInputLayout, 0);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // com.google.android.material.textfield.EndIconDelegate
+    /* access modifiers changed from: package-private */
     public void initialize() {
-        this.textInputLayout.setEndIconOnClickListener(null);
+        this.textInputLayout.setEndIconOnClickListener((View.OnClickListener) null);
         this.textInputLayout.setEndIconDrawable((Drawable) null);
         this.textInputLayout.setEndIconContentDescription((CharSequence) null);
     }

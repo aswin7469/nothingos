@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.xmlpull.v1.XmlPullParserException;
-/* loaded from: classes.dex */
+
 public class BaseSearchIndexProvider implements Indexable$SearchIndexProvider {
     private int mXmlRes;
 
@@ -24,12 +24,11 @@ public class BaseSearchIndexProvider implements Indexable$SearchIndexProvider {
         return null;
     }
 
-    @Override // com.android.settingslib.search.Indexable$SearchIndexProvider
     public List<SearchIndexableRaw> getRawDataToIndex(Context context, boolean z) {
         return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean isPageSearchEnabled(Context context) {
         return true;
     }
@@ -39,39 +38,35 @@ public class BaseSearchIndexProvider implements Indexable$SearchIndexProvider {
     }
 
     public BaseSearchIndexProvider(int i) {
-        this.mXmlRes = 0;
         this.mXmlRes = i;
     }
 
-    @Override // com.android.settingslib.search.Indexable$SearchIndexProvider
     public List<SearchIndexableResource> getXmlResourcesToIndex(Context context, boolean z) {
-        if (this.mXmlRes != 0) {
-            SearchIndexableResource searchIndexableResource = new SearchIndexableResource(context);
-            searchIndexableResource.xmlResId = this.mXmlRes;
-            return Arrays.asList(searchIndexableResource);
+        if (this.mXmlRes == 0) {
+            return null;
         }
-        return null;
+        SearchIndexableResource searchIndexableResource = new SearchIndexableResource(context);
+        searchIndexableResource.xmlResId = this.mXmlRes;
+        return Arrays.asList(new SearchIndexableResource[]{searchIndexableResource});
     }
 
-    @Override // com.android.settingslib.search.Indexable$SearchIndexProvider
     public List<SearchIndexableRaw> getDynamicRawDataToIndex(Context context, boolean z) {
         List<AbstractPreferenceController> preferenceControllers;
         ArrayList arrayList = new ArrayList();
         if (isPageSearchEnabled(context) && (preferenceControllers = getPreferenceControllers(context)) != null && !preferenceControllers.isEmpty()) {
-            for (AbstractPreferenceController abstractPreferenceController : preferenceControllers) {
-                if (abstractPreferenceController instanceof PreferenceControllerMixin) {
-                    ((PreferenceControllerMixin) abstractPreferenceController).updateDynamicRawDataToIndex(arrayList);
-                } else if (abstractPreferenceController instanceof BasePreferenceController) {
-                    ((BasePreferenceController) abstractPreferenceController).updateDynamicRawDataToIndex(arrayList);
+            for (AbstractPreferenceController next : preferenceControllers) {
+                if (next instanceof PreferenceControllerMixin) {
+                    ((PreferenceControllerMixin) next).updateDynamicRawDataToIndex(arrayList);
+                } else if (next instanceof BasePreferenceController) {
+                    ((BasePreferenceController) next).updateDynamicRawDataToIndex(arrayList);
                 } else {
-                    Log.e("BaseSearchIndex", abstractPreferenceController.getClass().getName() + " must implement " + PreferenceControllerMixin.class.getName() + " treating the dynamic indexable");
+                    Log.e("BaseSearchIndex", next.getClass().getName() + " must implement " + PreferenceControllerMixin.class.getName() + " treating the dynamic indexable");
                 }
             }
         }
         return arrayList;
     }
 
-    @Override // com.android.settingslib.search.Indexable$SearchIndexProvider
     public List<String> getNonIndexableKeys(Context context) {
         if (!isPageSearchEnabled(context)) {
             return getNonIndexableKeysFromXml(context, true);
@@ -80,14 +75,14 @@ public class BaseSearchIndexProvider implements Indexable$SearchIndexProvider {
         arrayList.addAll(getNonIndexableKeysFromXml(context, false));
         List<AbstractPreferenceController> preferenceControllers = getPreferenceControllers(context);
         if (preferenceControllers != null && !preferenceControllers.isEmpty()) {
-            for (AbstractPreferenceController abstractPreferenceController : preferenceControllers) {
-                if (abstractPreferenceController instanceof PreferenceControllerMixin) {
-                    ((PreferenceControllerMixin) abstractPreferenceController).updateNonIndexableKeys(arrayList);
-                } else if (abstractPreferenceController instanceof BasePreferenceController) {
-                    ((BasePreferenceController) abstractPreferenceController).updateNonIndexableKeys(arrayList);
+            for (AbstractPreferenceController next : preferenceControllers) {
+                if (next instanceof PreferenceControllerMixin) {
+                    ((PreferenceControllerMixin) next).updateNonIndexableKeys(arrayList);
+                } else if (next instanceof BasePreferenceController) {
+                    ((BasePreferenceController) next).updateNonIndexableKeys(arrayList);
                 } else {
-                    Log.e("BaseSearchIndex", abstractPreferenceController.getClass().getName() + " must implement " + PreferenceControllerMixin.class.getName() + " treating the key non-indexable");
-                    arrayList.add(abstractPreferenceController.getPreferenceKey());
+                    Log.e("BaseSearchIndex", next.getClass().getName() + " must implement " + PreferenceControllerMixin.class.getName() + " treating the key non-indexable");
+                    arrayList.add(next.getPreferenceKey());
                 }
             }
         }
@@ -137,9 +132,9 @@ public class BaseSearchIndexProvider implements Indexable$SearchIndexProvider {
     private List<String> getKeysFromXml(Context context, int i, boolean z) {
         ArrayList arrayList = new ArrayList();
         try {
-            for (Bundle bundle : PreferenceXmlParserUtils.extractMetadata(context, i, 515)) {
-                if (z || !bundle.getBoolean("searchable", true)) {
-                    arrayList.add(bundle.getString("key"));
+            for (Bundle next : PreferenceXmlParserUtils.extractMetadata(context, i, 515)) {
+                if (z || !next.getBoolean("searchable", true)) {
+                    arrayList.add(next.getString("key"));
                 }
             }
         } catch (IOException | XmlPullParserException unused) {

@@ -11,35 +11,32 @@ import android.os.ParcelUuid;
 import android.util.Log;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.settingslib.R$string;
-/* loaded from: classes.dex */
+
 public class PbapServerProfile implements LocalBluetoothProfile {
     @VisibleForTesting
     public static final String NAME = "PBAP Server";
     static final ParcelUuid[] PBAB_CLIENT_UUIDS = {BluetoothUuid.HSP, BluetoothUuid.HFP, BluetoothUuid.PBAP_PCE};
-    private boolean mIsProfileReady;
-    private BluetoothPbap mService;
+    /* access modifiers changed from: private */
+    public boolean mIsProfileReady;
+    /* access modifiers changed from: private */
+    public BluetoothPbap mService;
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean accessProfileEnabled() {
         return true;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getDrawableResource(BluetoothClass bluetoothClass) {
-        return 17302807;
+        return 17302817;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getOrdinal() {
         return 6;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getProfileId() {
         return 6;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean isEnabled(BluetoothDevice bluetoothDevice) {
         return false;
     }
@@ -48,34 +45,28 @@ public class PbapServerProfile implements LocalBluetoothProfile {
         return NAME;
     }
 
-    /* loaded from: classes.dex */
     private final class PbapServiceListener implements BluetoothProfile.ServiceListener {
         private PbapServiceListener() {
         }
 
-        @Override // android.bluetooth.BluetoothProfile.ServiceListener
         public void onServiceConnected(int i, BluetoothProfile bluetoothProfile) {
             PbapServerProfile.this.mService = (BluetoothPbap) bluetoothProfile;
             PbapServerProfile.this.mIsProfileReady = true;
         }
 
-        @Override // android.bluetooth.BluetoothProfile.ServiceListener
         public void onServiceDisconnected(int i) {
             PbapServerProfile.this.mIsProfileReady = false;
         }
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean isProfileReady() {
         return this.mIsProfileReady;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public PbapServerProfile(Context context) {
+    PbapServerProfile(Context context) {
         BluetoothAdapter.getDefaultAdapter().getProfileProxy(context, new PbapServiceListener(), 6);
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getConnectionStatus(BluetoothDevice bluetoothDevice) {
         BluetoothPbap bluetoothPbap = this.mService;
         if (bluetoothPbap == null) {
@@ -84,7 +75,6 @@ public class PbapServerProfile implements LocalBluetoothProfile {
         return bluetoothPbap.getConnectionState(bluetoothDevice);
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean setEnabled(BluetoothDevice bluetoothDevice, boolean z) {
         BluetoothPbap bluetoothPbap = this.mService;
         if (bluetoothPbap != null && !z) {
@@ -93,12 +83,12 @@ public class PbapServerProfile implements LocalBluetoothProfile {
         return false;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getNameResource(BluetoothDevice bluetoothDevice) {
         return R$string.bluetooth_profile_pbap;
     }
 
-    protected void finalize() {
+    /* access modifiers changed from: protected */
+    public void finalize() {
         Log.d("PbapServerProfile", "finalize()");
         if (this.mService != null) {
             try {

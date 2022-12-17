@@ -5,17 +5,16 @@ import android.app.NotificationChannelGroup;
 import android.content.Context;
 import android.widget.Switch;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settings.notification.NotificationBackend;
 import com.android.settings.notification.app.NotificationSettings;
 import com.android.settings.widget.SettingsMainSwitchPreference;
 import com.android.settingslib.widget.OnMainSwitchChangeListener;
-/* loaded from: classes.dex */
+
 public class BlockPreferenceController extends NotificationPreferenceController implements PreferenceControllerMixin, OnMainSwitchChangeListener {
     private NotificationSettings.DependentFieldListener mDependentFieldListener;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "block";
     }
@@ -25,20 +24,21 @@ public class BlockPreferenceController extends NotificationPreferenceController 
         this.mDependentFieldListener = dependentFieldListener;
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         if (this.mAppRow == null) {
             return false;
         }
-        return this.mPreferenceFilter == null || isIncludedInFilter();
+        if (this.mPreferenceFilter == null || isIncludedInFilter()) {
+            return true;
+        }
+        return false;
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController
-    boolean isIncludedInFilter() {
+    /* access modifiers changed from: package-private */
+    public boolean isIncludedInFilter() {
         return this.mPreferenceFilter.contains("importance");
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         SettingsMainSwitchPreference settingsMainSwitchPreference = (SettingsMainSwitchPreference) preference;
         if (settingsMainSwitchPreference != null) {
@@ -50,17 +50,14 @@ public class BlockPreferenceController extends NotificationPreferenceController 
             }
             settingsMainSwitchPreference.setDisabledByAdmin(this.mAdmin);
             boolean z = false;
-            if (this.mChannel != null && !isChannelBlockable()) {
+            if (this.mChannel != null && (!isChannelBlockable() || !isChannelConfigurable(this.mChannel))) {
                 settingsMainSwitchPreference.setSwitchBarEnabled(false);
             }
             if (this.mChannelGroup != null && !isChannelGroupBlockable()) {
                 settingsMainSwitchPreference.setSwitchBarEnabled(false);
             }
-            if (this.mChannel == null) {
-                NotificationBackend.AppRow appRow = this.mAppRow;
-                if (appRow.systemApp && (!appRow.banned || appRow.lockedImportance)) {
-                    settingsMainSwitchPreference.setSwitchBarEnabled(false);
-                }
+            if (this.mChannel == null && !isAppBlockable()) {
+                settingsMainSwitchPreference.setSwitchBarEnabled(false);
             }
             NotificationChannel notificationChannel = this.mChannel;
             if (notificationChannel != null) {
@@ -82,20 +79,21 @@ public class BlockPreferenceController extends NotificationPreferenceController 
         }
     }
 
-    @Override // com.android.settingslib.widget.OnMainSwitchChangeListener
-    public void onSwitchChanged(Switch r3, boolean z) {
-        int max;
+    public void onSwitchChanged(Switch switchR, boolean z) {
+        int i;
         boolean z2 = !z;
         NotificationChannel notificationChannel = this.mChannel;
         if (notificationChannel != null) {
             int importance = notificationChannel.getImportance();
             if (z2 || importance == 0) {
                 if (z2) {
-                    max = 0;
+                    i = 0;
+                } else if (isDefaultChannel()) {
+                    i = -1000;
                 } else {
-                    max = isDefaultChannel() ? -1000 : Math.max(this.mChannel.getOriginalImportance(), 2);
+                    i = Math.max(this.mChannel.getOriginalImportance(), 2);
                 }
-                this.mChannel.setImportance(max);
+                this.mChannel.setImportance(i);
                 saveChannel();
             }
             NotificationBackend notificationBackend = this.mBackend;
@@ -125,10 +123,11 @@ public class BlockPreferenceController extends NotificationPreferenceController 
         this.mDependentFieldListener.onFieldValueChanged();
     }
 
-    String getSwitchBarText() {
+    /* access modifiers changed from: package-private */
+    public String getSwitchBarText() {
         CharSequence charSequence;
         if (this.mChannel != null) {
-            return ((NotificationPreferenceController) this).mContext.getString(R.string.notification_content_block_title);
+            return this.mContext.getString(R$string.notification_content_block_title);
         }
         NotificationChannelGroup notificationChannelGroup = this.mChannelGroup;
         if (notificationChannelGroup != null) {
@@ -136,6 +135,6 @@ public class BlockPreferenceController extends NotificationPreferenceController 
         } else {
             charSequence = this.mAppRow.label;
         }
-        return ((NotificationPreferenceController) this).mContext.getString(R.string.notification_app_switch_label, charSequence);
+        return this.mContext.getString(R$string.notification_app_switch_label, new Object[]{charSequence});
     }
 }

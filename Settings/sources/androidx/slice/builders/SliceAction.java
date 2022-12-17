@@ -4,66 +4,60 @@ import android.app.PendingIntent;
 import androidx.core.graphics.drawable.IconCompat;
 import androidx.slice.Slice;
 import androidx.slice.core.SliceActionImpl;
-/* loaded from: classes.dex */
+
 public class SliceAction implements androidx.slice.core.SliceAction {
     private final SliceActionImpl mSliceAction;
 
-    public SliceAction(PendingIntent action, IconCompat actionIcon, int imageMode, CharSequence actionTitle) {
-        this.mSliceAction = new SliceActionImpl(action, actionIcon, imageMode, actionTitle);
+    public SliceAction(PendingIntent pendingIntent, IconCompat iconCompat, int i, CharSequence charSequence) {
+        this.mSliceAction = new SliceActionImpl(pendingIntent, iconCompat, i, charSequence);
     }
 
-    public SliceAction(PendingIntent action, IconCompat actionIcon, CharSequence actionTitle, boolean isChecked) {
-        this.mSliceAction = new SliceActionImpl(action, actionIcon, actionTitle, isChecked);
+    public SliceAction(PendingIntent pendingIntent, IconCompat iconCompat, CharSequence charSequence, boolean z) {
+        this.mSliceAction = new SliceActionImpl(pendingIntent, iconCompat, charSequence, z);
     }
 
-    public SliceAction(PendingIntent action, CharSequence actionTitle, boolean isChecked) {
-        this.mSliceAction = new SliceActionImpl(action, actionTitle, isChecked);
+    public SliceAction(PendingIntent pendingIntent, CharSequence charSequence, boolean z) {
+        this.mSliceAction = new SliceActionImpl(pendingIntent, charSequence, z);
     }
 
-    public static SliceAction create(PendingIntent action, IconCompat actionIcon, int imageMode, CharSequence actionTitle) {
-        return new SliceAction(action, actionIcon, imageMode, actionTitle);
+    public static SliceAction create(PendingIntent pendingIntent, IconCompat iconCompat, int i, CharSequence charSequence) {
+        return new SliceAction(pendingIntent, iconCompat, i, charSequence);
     }
 
-    public static SliceAction createDeeplink(PendingIntent action, IconCompat actionIcon, int imageMode, CharSequence actionTitle) {
-        SliceAction sliceAction = new SliceAction(action, actionIcon, imageMode, actionTitle);
+    public static SliceAction createDeeplink(PendingIntent pendingIntent, IconCompat iconCompat, int i, CharSequence charSequence) {
+        SliceAction sliceAction = new SliceAction(pendingIntent, iconCompat, i, charSequence);
         sliceAction.mSliceAction.setActivity(true);
         return sliceAction;
     }
 
-    public static SliceAction createToggle(PendingIntent action, CharSequence actionTitle, boolean isChecked) {
-        return new SliceAction(action, actionTitle, isChecked);
+    public static SliceAction createToggle(PendingIntent pendingIntent, CharSequence charSequence, boolean z) {
+        return new SliceAction(pendingIntent, charSequence, z);
     }
 
-    public static SliceAction createToggle(PendingIntent action, IconCompat actionIcon, CharSequence actionTitle, boolean isChecked) {
-        return new SliceAction(action, actionIcon, actionTitle, isChecked);
+    public static SliceAction createToggle(PendingIntent pendingIntent, IconCompat iconCompat, CharSequence charSequence, boolean z) {
+        return new SliceAction(pendingIntent, iconCompat, charSequence, z);
     }
 
-    @Override // androidx.slice.core.SliceAction
     public PendingIntent getAction() {
         return this.mSliceAction.getAction();
     }
 
-    @Override // androidx.slice.core.SliceAction
     public IconCompat getIcon() {
         return this.mSliceAction.getIcon();
     }
 
-    @Override // androidx.slice.core.SliceAction
     public CharSequence getTitle() {
         return this.mSliceAction.getTitle();
     }
 
-    @Override // androidx.slice.core.SliceAction
     public int getPriority() {
         return this.mSliceAction.getPriority();
     }
 
-    @Override // androidx.slice.core.SliceAction
     public boolean isToggle() {
         return this.mSliceAction.isToggle();
     }
 
-    @Override // androidx.slice.core.SliceAction
     public int getImageMode() {
         return this.mSliceAction.getImageMode();
     }

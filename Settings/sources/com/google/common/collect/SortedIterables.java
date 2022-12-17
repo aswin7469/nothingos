@@ -3,7 +3,7 @@ package com.google.common.collect;
 import com.google.common.base.Preconditions;
 import java.util.Comparator;
 import java.util.SortedSet;
-/* loaded from: classes2.dex */
+
 final class SortedIterables {
     public static boolean hasSameComparator(Comparator<?> comparator, Iterable<?> iterable) {
         Comparator comparator2;

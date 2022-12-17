@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import com.android.settings.overlay.FeatureFactory;
 import java.util.List;
-/* loaded from: classes.dex */
+
 class SlicesIndexer implements Runnable {
     private Context mContext;
     private SlicesDatabaseHelper mHelper;
@@ -16,12 +16,11 @@ class SlicesIndexer implements Runnable {
         this.mHelper = SlicesDatabaseHelper.getInstance(context);
     }
 
-    @Override // java.lang.Runnable
     public void run() {
         indexSliceData();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void indexSliceData() {
         if (this.mHelper.isSliceDataIndexed()) {
             Log.d("SlicesIndexer", "Slices already indexed - returning.");
@@ -41,29 +40,32 @@ class SlicesIndexer implements Runnable {
         }
     }
 
-    List<SliceData> getSliceData() {
+    /* access modifiers changed from: package-private */
+    public List<SliceData> getSliceData() {
         return FeatureFactory.getFactory(this.mContext).getSlicesFeatureProvider().getSliceDataConverter(this.mContext).getSliceData();
     }
 
-    void insertSliceData(SQLiteDatabase sQLiteDatabase, List<SliceData> list) {
-        for (SliceData sliceData : list) {
+    /* access modifiers changed from: package-private */
+    public void insertSliceData(SQLiteDatabase sQLiteDatabase, List<SliceData> list) {
+        for (SliceData next : list) {
             ContentValues contentValues = new ContentValues();
-            contentValues.put("key", sliceData.getKey());
-            contentValues.put("slice_uri", sliceData.getUri().toSafeString());
-            contentValues.put("title", sliceData.getTitle());
-            contentValues.put("summary", sliceData.getSummary());
-            CharSequence screenTitle = sliceData.getScreenTitle();
+            contentValues.put("key", next.getKey());
+            contentValues.put("slice_uri", next.getUri().toString());
+            contentValues.put("title", next.getTitle());
+            contentValues.put("summary", next.getSummary());
+            CharSequence screenTitle = next.getScreenTitle();
             if (screenTitle != null) {
                 contentValues.put("screentitle", screenTitle.toString());
             }
-            contentValues.put("keywords", sliceData.getKeywords());
-            contentValues.put("icon", Integer.valueOf(sliceData.getIconResource()));
-            contentValues.put("fragment", sliceData.getFragmentClassName());
-            contentValues.put("controller", sliceData.getPreferenceController());
-            contentValues.put("slice_type", Integer.valueOf(sliceData.getSliceType()));
-            contentValues.put("unavailable_slice_subtitle", sliceData.getUnavailableSliceSubtitle());
-            contentValues.put("public_slice", Boolean.valueOf(sliceData.isPublicSlice()));
-            sQLiteDatabase.replaceOrThrow("slices_index", null, contentValues);
+            contentValues.put("keywords", next.getKeywords());
+            contentValues.put("icon", Integer.valueOf(next.getIconResource()));
+            contentValues.put("fragment", next.getFragmentClassName());
+            contentValues.put("controller", next.getPreferenceController());
+            contentValues.put("slice_type", Integer.valueOf(next.getSliceType()));
+            contentValues.put("unavailable_slice_subtitle", next.getUnavailableSliceSubtitle());
+            contentValues.put("public_slice", Boolean.valueOf(next.isPublicSlice()));
+            contentValues.put("highlight_menu", Integer.valueOf(next.getHighlightMenuRes()));
+            sQLiteDatabase.replaceOrThrow("slices_index", (String) null, contentValues);
         }
     }
 }

@@ -3,17 +3,18 @@ package com.android.settingslib;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import com.android.settingslib.RestrictedLockUtilsInternal;
-/* loaded from: classes.dex */
-public final /* synthetic */ class RestrictedLockUtilsInternal$$ExternalSyntheticLambda1 implements RestrictedLockUtilsInternal.LockSettingCheck {
-    public static final /* synthetic */ RestrictedLockUtilsInternal$$ExternalSyntheticLambda1 INSTANCE = new RestrictedLockUtilsInternal$$ExternalSyntheticLambda1();
 
-    private /* synthetic */ RestrictedLockUtilsInternal$$ExternalSyntheticLambda1() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class RestrictedLockUtilsInternal$$ExternalSyntheticLambda1 implements RestrictedLockUtilsInternal.LockSettingCheck {
+    public final /* synthetic */ int f$0;
+    public final /* synthetic */ int f$1;
+
+    public /* synthetic */ RestrictedLockUtilsInternal$$ExternalSyntheticLambda1(int i, int i2) {
+        this.f$0 = i;
+        this.f$1 = i2;
     }
 
-    @Override // com.android.settingslib.RestrictedLockUtilsInternal.LockSettingCheck
     public final boolean isEnforcing(DevicePolicyManager devicePolicyManager, ComponentName componentName, int i) {
-        boolean lambda$checkIfPasswordQualityIsSet$1;
-        lambda$checkIfPasswordQualityIsSet$1 = RestrictedLockUtilsInternal.lambda$checkIfPasswordQualityIsSet$1(devicePolicyManager, componentName, i);
-        return lambda$checkIfPasswordQualityIsSet$1;
+        return RestrictedLockUtilsInternal.lambda$checkIfKeyguardFeaturesDisabled$0(this.f$0, this.f$1, devicePolicyManager, componentName, i);
     }
 }

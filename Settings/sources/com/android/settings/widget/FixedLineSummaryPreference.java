@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
 import com.android.settings.R$styleable;
-/* loaded from: classes.dex */
+
 public class FixedLineSummaryPreference extends Preference {
     private int mSummaryLineCount;
 
@@ -24,7 +24,6 @@ public class FixedLineSummaryPreference extends Preference {
         obtainStyledAttributes.recycle();
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         TextView textView = (TextView) preferenceViewHolder.findViewById(16908304);

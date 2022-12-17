@@ -7,14 +7,15 @@ import com.android.settingslib.core.instrumentation.Instrumentable;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
 import com.android.settingslib.core.instrumentation.VisibilityLoggerMixin;
 import com.android.settingslib.core.lifecycle.ObservableDialogFragment;
-/* loaded from: classes.dex */
+
 public abstract class InstrumentedDialogFragment extends ObservableDialogFragment implements Instrumentable {
     protected final DialogCreatable mDialogCreatable;
     protected int mDialogId;
-    protected MetricsFeatureProvider mMetricsFeatureProvider;
+    /* access modifiers changed from: protected */
+    public MetricsFeatureProvider mMetricsFeatureProvider;
 
     public InstrumentedDialogFragment() {
-        this(null, 0);
+        this((DialogCreatable) null, 0);
     }
 
     public InstrumentedDialogFragment(DialogCreatable dialogCreatable, int i) {
@@ -22,7 +23,6 @@ public abstract class InstrumentedDialogFragment extends ObservableDialogFragmen
         this.mDialogId = i;
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableDialogFragment, androidx.fragment.app.DialogFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         this.mMetricsFeatureProvider = FeatureFactory.getFactory(context).getMetricsFeatureProvider();

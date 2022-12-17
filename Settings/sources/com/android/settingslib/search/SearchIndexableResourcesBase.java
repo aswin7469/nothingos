@@ -12,6 +12,7 @@ import com.android.settings.applications.specialaccess.deviceadmin.DeviceAdminSe
 import com.android.settings.applications.specialaccess.interactacrossprofiles.InteractAcrossProfilesSettings;
 import com.android.settings.applications.specialaccess.pictureinpicture.PictureInPictureSettings;
 import com.android.settings.applications.specialaccess.premiumsms.PremiumSmsAccess;
+import com.android.settings.applications.specialaccess.turnscreenon.TurnScreenOnSettings;
 import com.android.settings.applications.specialaccess.vrlistener.VrListenerSettings;
 import com.android.settings.backup.BackupSettingsFragment;
 import com.android.settings.backup.PrivacySettings;
@@ -34,6 +35,8 @@ import com.android.settings.deviceinfo.aboutphone.MyDeviceInfoFragment;
 import com.android.settings.deviceinfo.firmwareversion.FirmwareVersionSettings;
 import com.android.settings.deviceinfo.hardwareinfo.HardwareInfoFragment;
 import com.android.settings.display.ColorModePreferenceFragment;
+import com.android.settings.display.DeviceStateAutoRotateDetailsFragment;
+import com.android.settings.display.ScreenResolutionFragment;
 import com.android.settings.display.SmartAutoRotatePreferenceFragment;
 import com.android.settings.display.ToggleFontSizePreferenceFragment;
 import com.android.settings.dream.DreamSettings;
@@ -54,7 +57,6 @@ import com.android.settings.gestures.TapScreenGestureSettings;
 import com.android.settings.inputmethod.AvailableVirtualKeyboardFragment;
 import com.android.settings.inputmethod.PhysicalKeyboardFragment;
 import com.android.settings.inputmethod.UserDictionaryList;
-import com.android.settings.inputmethod.VirtualKeyboardFragment;
 import com.android.settings.language.LanguageAndInputSettings;
 import com.android.settings.localepicker.LocaleListEditor;
 import com.android.settings.location.LocationSettings;
@@ -68,6 +70,7 @@ import com.android.settings.notification.ConfigureNotificationSettings;
 import com.android.settings.notification.NotificationAccessSettings;
 import com.android.settings.notification.SoundSettings;
 import com.android.settings.notification.SoundWorkSettings;
+import com.android.settings.notification.SpatialAudioSettings;
 import com.android.settings.notification.app.AppBubbleNotificationSettings;
 import com.android.settings.notification.zen.ZenAccessSettings;
 import com.android.settings.notification.zen.ZenModeAutomationSettings;
@@ -86,6 +89,7 @@ import com.android.settings.security.EncryptionAndCredential;
 import com.android.settings.security.InstallCertificateFromStorage;
 import com.android.settings.security.LockscreenDashboardFragment;
 import com.android.settings.security.ScreenPinningSettings;
+import com.android.settings.security.SecurityAdvancedSettings;
 import com.android.settings.security.SecuritySettings;
 import com.android.settings.security.screenlock.ScreenLockSettings;
 import com.android.settings.security.trustagent.TrustAgentSettings;
@@ -99,22 +103,13 @@ import com.android.settings.wallpaper.WallpaperSuggestionActivity;
 import com.android.settings.wifi.ConfigureWifiSettings;
 import com.android.settings.wifi.WifiSettings;
 import com.android.settings.wifi.tether.WifiTetherSettings;
-import com.nt.settings.about.NtAboutPhoneRegulatoryFragment;
-import com.nt.settings.about.NtAboutPhoneSoftwareInfoFragment;
-import com.nt.settings.apps.NtAssistantSettingsFragment;
-import com.nt.settings.display.NtScreenRefreshRateFragment;
-import com.nt.settings.face.NtFaceSettings;
-import com.nt.settings.fuelgauge.NtBatteryHealthFragment;
-import com.nt.settings.fuelgauge.NtBatteryShareFragment;
-import com.nt.settings.glyphs.GlyphsSettingsFragment;
-import com.nt.settings.security.NtPrivacyExperienceImprovementProgramsFragment;
-import com.nt.settings.security.NtPrivacySystemStabilityProgramFragment;
-import com.nt.settings.security.NtPrivacyUserExperienceProgramFragment;
-import com.nt.settings.sound.NtVibrationSettings;
+import com.nothing.settings.game.GameNotificationDisplay;
+import com.nothing.settings.game.GameSettings;
+import com.nothing.settings.glyphs.notification.GlyphConversationListFragment;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public class SearchIndexableResourcesBase implements SearchIndexableResources {
     private final Set<SearchIndexableData> mProviders = new HashSet();
 
@@ -131,6 +126,7 @@ public class SearchIndexableResourcesBase implements SearchIndexableResources {
         addIndex(new SearchIndexableData(InteractAcrossProfilesSettings.class, InteractAcrossProfilesSettings.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(PictureInPictureSettings.class, PictureInPictureSettings.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(PremiumSmsAccess.class, PremiumSmsAccess.SEARCH_INDEX_DATA_PROVIDER));
+        addIndex(new SearchIndexableData(TurnScreenOnSettings.class, TurnScreenOnSettings.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(VrListenerSettings.class, VrListenerSettings.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(BackupSettingsFragment.class, BackupSettingsFragment.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(PrivacySettings.class, PrivacySettings.SEARCH_INDEX_DATA_PROVIDER));
@@ -153,6 +149,8 @@ public class SearchIndexableResourcesBase implements SearchIndexableResources {
         addIndex(new SearchIndexableData(FirmwareVersionSettings.class, FirmwareVersionSettings.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(HardwareInfoFragment.class, HardwareInfoFragment.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(ColorModePreferenceFragment.class, ColorModePreferenceFragment.SEARCH_INDEX_DATA_PROVIDER));
+        addIndex(new SearchIndexableData(DeviceStateAutoRotateDetailsFragment.class, DeviceStateAutoRotateDetailsFragment.SEARCH_INDEX_DATA_PROVIDER));
+        addIndex(new SearchIndexableData(ScreenResolutionFragment.class, ScreenResolutionFragment.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(SmartAutoRotatePreferenceFragment.class, SmartAutoRotatePreferenceFragment.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(ToggleFontSizePreferenceFragment.class, ToggleFontSizePreferenceFragment.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(DreamSettings.class, DreamSettings.SEARCH_INDEX_DATA_PROVIDER));
@@ -173,7 +171,6 @@ public class SearchIndexableResourcesBase implements SearchIndexableResources {
         addIndex(new SearchIndexableData(AvailableVirtualKeyboardFragment.class, AvailableVirtualKeyboardFragment.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(PhysicalKeyboardFragment.class, PhysicalKeyboardFragment.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(UserDictionaryList.class, UserDictionaryList.SEARCH_INDEX_DATA_PROVIDER));
-        addIndex(new SearchIndexableData(VirtualKeyboardFragment.class, VirtualKeyboardFragment.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(LanguageAndInputSettings.class, LanguageAndInputSettings.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(LocaleListEditor.class, LocaleListEditor.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(LocationSettings.class, LocationSettings.SEARCH_INDEX_DATA_PROVIDER));
@@ -187,6 +184,7 @@ public class SearchIndexableResourcesBase implements SearchIndexableResources {
         addIndex(new SearchIndexableData(NotificationAccessSettings.class, NotificationAccessSettings.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(SoundSettings.class, SoundSettings.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(SoundWorkSettings.class, SoundWorkSettings.SEARCH_INDEX_DATA_PROVIDER));
+        addIndex(new SearchIndexableData(SpatialAudioSettings.class, SpatialAudioSettings.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(AppBubbleNotificationSettings.class, AppBubbleNotificationSettings.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(ZenAccessSettings.class, ZenAccessSettings.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(ZenModeAutomationSettings.class, ZenModeAutomationSettings.SEARCH_INDEX_DATA_PROVIDER));
@@ -205,6 +203,7 @@ public class SearchIndexableResourcesBase implements SearchIndexableResources {
         addIndex(new SearchIndexableData(InstallCertificateFromStorage.class, InstallCertificateFromStorage.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(LockscreenDashboardFragment.class, LockscreenDashboardFragment.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(ScreenPinningSettings.class, ScreenPinningSettings.SEARCH_INDEX_DATA_PROVIDER));
+        addIndex(new SearchIndexableData(SecurityAdvancedSettings.class, SecurityAdvancedSettings.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(SecuritySettings.class, SecuritySettings.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(ScreenLockSettings.class, ScreenLockSettings.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(TrustAgentSettings.class, TrustAgentSettings.SEARCH_INDEX_DATA_PROVIDER));
@@ -218,25 +217,15 @@ public class SearchIndexableResourcesBase implements SearchIndexableResources {
         addIndex(new SearchIndexableData(ConfigureWifiSettings.class, ConfigureWifiSettings.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(WifiSettings.class, WifiSettings.SEARCH_INDEX_DATA_PROVIDER));
         addIndex(new SearchIndexableData(WifiTetherSettings.class, WifiTetherSettings.SEARCH_INDEX_DATA_PROVIDER));
-        addIndex(new SearchIndexableData(NtAboutPhoneRegulatoryFragment.class, NtAboutPhoneRegulatoryFragment.SEARCH_INDEX_DATA_PROVIDER));
-        addIndex(new SearchIndexableData(NtAboutPhoneSoftwareInfoFragment.class, NtAboutPhoneSoftwareInfoFragment.SEARCH_INDEX_DATA_PROVIDER));
-        addIndex(new SearchIndexableData(NtAssistantSettingsFragment.class, NtAssistantSettingsFragment.SEARCH_INDEX_DATA_PROVIDER));
-        addIndex(new SearchIndexableData(NtScreenRefreshRateFragment.class, NtScreenRefreshRateFragment.SEARCH_INDEX_DATA_PROVIDER));
-        addIndex(new SearchIndexableData(NtFaceSettings.class, NtFaceSettings.SEARCH_INDEX_DATA_PROVIDER));
-        addIndex(new SearchIndexableData(NtBatteryHealthFragment.class, NtBatteryHealthFragment.SEARCH_INDEX_DATA_PROVIDER));
-        addIndex(new SearchIndexableData(NtBatteryShareFragment.class, NtBatteryShareFragment.SEARCH_INDEX_DATA_PROVIDER));
-        addIndex(new SearchIndexableData(GlyphsSettingsFragment.class, GlyphsSettingsFragment.SEARCH_INDEX_DATA_PROVIDER));
-        addIndex(new SearchIndexableData(NtPrivacyExperienceImprovementProgramsFragment.class, NtPrivacyExperienceImprovementProgramsFragment.SEARCH_INDEX_DATA_PROVIDER));
-        addIndex(new SearchIndexableData(NtPrivacySystemStabilityProgramFragment.class, NtPrivacySystemStabilityProgramFragment.SEARCH_INDEX_DATA_PROVIDER));
-        addIndex(new SearchIndexableData(NtPrivacyUserExperienceProgramFragment.class, NtPrivacyUserExperienceProgramFragment.SEARCH_INDEX_DATA_PROVIDER));
-        addIndex(new SearchIndexableData(NtVibrationSettings.class, NtVibrationSettings.SEARCH_INDEX_DATA_PROVIDER));
+        addIndex(new SearchIndexableData(GameNotificationDisplay.class, GameNotificationDisplay.SEARCH_INDEX_DATA_PROVIDER));
+        addIndex(new SearchIndexableData(GameSettings.class, GameSettings.SEARCH_INDEX_DATA_PROVIDER));
+        addIndex(new SearchIndexableData(GlyphConversationListFragment.class, GlyphConversationListFragment.SEARCH_INDEX_DATA_PROVIDER));
     }
 
     public void addIndex(SearchIndexableData searchIndexableData) {
         this.mProviders.add(searchIndexableData);
     }
 
-    @Override // com.android.settingslib.search.SearchIndexableResources
     public Collection<SearchIndexableData> getProviderValues() {
         return this.mProviders;
     }

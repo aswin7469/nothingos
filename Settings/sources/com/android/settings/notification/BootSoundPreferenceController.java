@@ -5,14 +5,13 @@ import android.os.SystemProperties;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.SwitchPreference;
-import com.android.settings.R;
+import com.android.settings.R$bool;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.core.AbstractPreferenceController;
-/* loaded from: classes.dex */
+
 public class BootSoundPreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin {
     static final String PROPERTY_BOOT_SOUNDS = "persist.sys.bootanim.play_sound";
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "boot_sounds";
     }
@@ -21,7 +20,6 @@ public class BootSoundPreferenceController extends AbstractPreferenceController 
         super(context);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         if (isAvailable()) {
@@ -29,17 +27,15 @@ public class BootSoundPreferenceController extends AbstractPreferenceController 
         }
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
-        if ("boot_sounds".equals(preference.getKey())) {
-            SystemProperties.set(PROPERTY_BOOT_SOUNDS, ((SwitchPreference) preference).isChecked() ? "1" : "0");
+        if (!"boot_sounds".equals(preference.getKey())) {
             return false;
         }
+        SystemProperties.set(PROPERTY_BOOT_SOUNDS, ((SwitchPreference) preference).isChecked() ? "1" : "0");
         return false;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
-        return this.mContext.getResources().getBoolean(R.bool.has_boot_sounds);
+        return this.mContext.getResources().getBoolean(R$bool.has_boot_sounds);
     }
 }

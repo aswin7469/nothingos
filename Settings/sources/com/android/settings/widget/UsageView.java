@@ -14,17 +14,18 @@ import com.android.settingslib.R$id;
 import com.android.settingslib.R$layout;
 import com.android.settingslib.R$styleable;
 import java.util.Locale;
-/* loaded from: classes.dex */
+
 public class UsageView extends FrameLayout {
+    private final TextView[] mBottomLabels;
     private final TextView[] mLabels;
-    private final UsageGraph mUsageGraph = (UsageGraph) findViewById(R$id.usage_graph);
-    private final TextView[] mBottomLabels = {(TextView) findViewById(R$id.label_start), (TextView) findViewById(R$id.label_end)};
+    private final UsageGraph mUsageGraph = ((UsageGraph) findViewById(R$id.usage_graph));
 
     public UsageView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         LayoutInflater.from(context).inflate(R$layout.usage_view, this);
         TextView[] textViewArr = {(TextView) findViewById(R$id.label_bottom), (TextView) findViewById(R$id.label_middle), (TextView) findViewById(R$id.label_top)};
         this.mLabels = textViewArr;
+        this.mBottomLabels = new TextView[]{(TextView) findViewById(R$id.label_start), (TextView) findViewById(R$id.label_end)};
         TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.UsageView, 0, 0);
         int i = R$styleable.UsageView_sideLabels;
         if (obtainStyledAttributes.hasValue(i)) {
@@ -37,11 +38,11 @@ public class UsageView extends FrameLayout {
         int i3 = R$styleable.UsageView_textColor;
         if (obtainStyledAttributes.hasValue(i3)) {
             int color = obtainStyledAttributes.getColor(i3, 0);
-            for (TextView textView : textViewArr) {
-                textView.setTextColor(color);
+            for (TextView textColor : textViewArr) {
+                textColor.setTextColor(color);
             }
-            for (TextView textView2 : this.mBottomLabels) {
-                textView2.setTextColor(color);
+            for (TextView textColor2 : this.mBottomLabels) {
+                textColor2.setTextColor(color);
             }
         }
         int i4 = R$styleable.UsageView_android_gravity;
@@ -115,11 +116,12 @@ public class UsageView extends FrameLayout {
             int i = 0;
             while (true) {
                 TextView[] textViewArr = this.mLabels;
-                if (i >= textViewArr.length) {
+                if (i < textViewArr.length) {
+                    textViewArr[i].setText(charSequenceArr[i]);
+                    i++;
+                } else {
                     return;
                 }
-                textViewArr[i].setText(charSequenceArr[i]);
-                i++;
             }
         } else {
             throw new IllegalArgumentException("Invalid number of labels");
@@ -131,11 +133,12 @@ public class UsageView extends FrameLayout {
             int i = 0;
             while (true) {
                 TextView[] textViewArr = this.mBottomLabels;
-                if (i >= textViewArr.length) {
+                if (i < textViewArr.length) {
+                    textViewArr[i].setText(charSequenceArr[i]);
+                    i++;
+                } else {
                     return;
                 }
-                textViewArr[i].setText(charSequenceArr[i]);
-                i++;
             }
         } else {
             throw new IllegalArgumentException("Invalid number of labels");

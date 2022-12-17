@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
-/* loaded from: classes.dex */
+
 public class FaceSquareFrameLayout extends FrameLayout {
     public FaceSquareFrameLayout(Context context) {
         super(context);
@@ -22,7 +22,6 @@ public class FaceSquareFrameLayout extends FrameLayout {
         super(context, attributeSet, i, i2);
     }
 
-    @Override // android.widget.FrameLayout, android.view.View
     public void onMeasure(int i, int i2) {
         int size = View.MeasureSpec.getSize(i);
         setMeasuredDimension(size, size);

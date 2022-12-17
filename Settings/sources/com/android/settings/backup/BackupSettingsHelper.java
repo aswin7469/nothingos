@@ -9,10 +9,10 @@ import android.os.UserHandle;
 import android.os.UserManager;
 import android.text.TextUtils;
 import android.util.Log;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.Settings;
 import java.net.URISyntaxException;
-/* loaded from: classes.dex */
+
 public class BackupSettingsHelper {
     private IBackupManager mBackupManager = IBackupManager.Stub.asInterface(ServiceManager.getService("backup"));
     private Context mContext;
@@ -22,15 +22,21 @@ public class BackupSettingsHelper {
     }
 
     public String getSummary() {
-        if (((UserManager) this.mContext.getSystemService("user")).getUserProfiles().size() == 1) {
-            try {
-                return this.mContext.getText(this.mBackupManager.isBackupEnabled() ? R.string.backup_summary_state_on : R.string.backup_summary_state_off).toString();
-            } catch (RemoteException e) {
-                Log.e("BackupSettingsHelper", "Error getting isBackupEnabled", e);
-                return null;
-            }
+        int i;
+        if (((UserManager) this.mContext.getSystemService("user")).getUserProfiles().size() != 1) {
+            return null;
         }
-        return null;
+        try {
+            if (this.mBackupManager.isBackupEnabled()) {
+                i = R$string.backup_summary_state_on;
+            } else {
+                i = R$string.backup_summary_state_off;
+            }
+            return this.mContext.getText(i).toString();
+        } catch (RemoteException e) {
+            Log.e("BackupSettingsHelper", "Error getting isBackupEnabled", e);
+            return null;
+        }
     }
 
     public Intent getIntentForBackupSettings() {
@@ -43,31 +49,31 @@ public class BackupSettingsHelper {
 
     public CharSequence getLabelForBackupSettings() {
         CharSequence labelFromBackupTransport = getLabelFromBackupTransport();
-        return TextUtils.isEmpty(labelFromBackupTransport) ? this.mContext.getString(R.string.privacy_settings_title) : labelFromBackupTransport;
+        return TextUtils.isEmpty(labelFromBackupTransport) ? this.mContext.getString(R$string.privacy_settings_title) : labelFromBackupTransport;
     }
 
     public String getSummaryForBackupSettings() {
         String summaryFromBackupTransport = getSummaryFromBackupTransport();
-        return summaryFromBackupTransport == null ? this.mContext.getString(R.string.backup_configure_account_default_summary) : summaryFromBackupTransport;
+        return summaryFromBackupTransport == null ? this.mContext.getString(R$string.backup_configure_account_default_summary) : summaryFromBackupTransport;
     }
 
     public boolean isBackupProvidedByManufacturer() {
         if (Log.isLoggable("BackupSettingsHelper", 3)) {
             Log.d("BackupSettingsHelper", "Checking if intent provided by manufacturer");
         }
-        String string = this.mContext.getResources().getString(R.string.config_backup_settings_intent);
+        String string = this.mContext.getResources().getString(R$string.config_backup_settings_intent);
         return string != null && !string.isEmpty();
     }
 
     public String getLabelProvidedByManufacturer() {
-        return this.mContext.getResources().getString(R.string.config_backup_settings_label);
+        return this.mContext.getResources().getString(R$string.config_backup_settings_label);
     }
 
     public Intent getIntentProvidedByManufacturer() {
         if (Log.isLoggable("BackupSettingsHelper", 3)) {
             Log.d("BackupSettingsHelper", "Getting a backup settings intent provided by manufacturer");
         }
-        String string = this.mContext.getResources().getString(R.string.config_backup_settings_intent);
+        String string = this.mContext.getResources().getString(R$string.config_backup_settings_intent);
         if (string == null || string.isEmpty()) {
             return null;
         }
@@ -79,7 +85,8 @@ public class BackupSettingsHelper {
         }
     }
 
-    Intent getIntentForBackupSettingsFromTransport() {
+    /* access modifiers changed from: package-private */
+    public Intent getIntentForBackupSettingsFromTransport() {
         Intent intentFromBackupTransport = getIntentFromBackupTransport();
         if (intentFromBackupTransport != null) {
             intentFromBackupTransport.putExtra("backup_services_available", isBackupServiceActive());
@@ -91,7 +98,7 @@ public class BackupSettingsHelper {
         return new Intent(this.mContext, Settings.PrivacySettingsActivity.class);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isIntentProvidedByTransport() {
         Intent intentFromBackupTransport = getIntentFromBackupTransport();
         return (intentFromBackupTransport == null || intentFromBackupTransport.resolveActivity(this.mContext.getPackageManager()) == null) ? false : true;
@@ -123,11 +130,12 @@ public class BackupSettingsHelper {
         }
     }
 
-    CharSequence getLabelFromBackupTransport() {
+    /* access modifiers changed from: package-private */
+    public CharSequence getLabelFromBackupTransport() {
         try {
             CharSequence dataManagementLabelForUser = this.mBackupManager.getDataManagementLabelForUser(UserHandle.myUserId(), this.mBackupManager.getCurrentTransport());
             if (Log.isLoggable("BackupSettingsHelper", 3)) {
-                Log.d("BackupSettingsHelper", "Received the backup settings label from backup transport: " + ((Object) dataManagementLabelForUser));
+                Log.d("BackupSettingsHelper", "Received the backup settings label from backup transport: " + dataManagementLabelForUser);
             }
             return dataManagementLabelForUser;
         } catch (RemoteException e) {
@@ -136,7 +144,8 @@ public class BackupSettingsHelper {
         }
     }
 
-    String getSummaryFromBackupTransport() {
+    /* access modifiers changed from: package-private */
+    public String getSummaryFromBackupTransport() {
         try {
             IBackupManager iBackupManager = this.mBackupManager;
             String destinationString = iBackupManager.getDestinationString(iBackupManager.getCurrentTransport());

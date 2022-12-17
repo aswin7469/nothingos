@@ -12,15 +12,13 @@ import android.util.Log;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-/* loaded from: classes.dex */
+
 public class PrivacySettingsUtils {
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static boolean isAdminUser(Context context) {
+    static boolean isAdminUser(Context context) {
         return UserManager.get(context).isAdminUser();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static boolean isInvisibleKey(Context context, String str) {
+    static boolean isInvisibleKey(Context context, String str) {
         Set<String> invisibleKey = getInvisibleKey(context);
         if (Log.isLoggable("PrivacySettingsUtils", 3)) {
             Log.d("PrivacySettingsUtils", "keysToRemove size=" + invisibleKey.size() + " keysToRemove=" + invisibleKey);
@@ -68,14 +66,14 @@ public class PrivacySettingsUtils {
     }
 
     private static Intent validatedActivityIntent(Context context, Intent intent, String str) {
-        if (intent != null) {
-            List<ResolveInfo> queryIntentActivities = context.getPackageManager().queryIntentActivities(intent, 0);
-            if (queryIntentActivities != null && !queryIntentActivities.isEmpty()) {
-                return intent;
-            }
-            Log.e("PrivacySettingsUtils", "Backup " + str + " intent " + ((Object) null) + " fails to resolve; ignoring");
-            return null;
+        if (intent == null) {
+            return intent;
         }
-        return intent;
+        List<ResolveInfo> queryIntentActivities = context.getPackageManager().queryIntentActivities(intent, 0);
+        if (queryIntentActivities != null && !queryIntentActivities.isEmpty()) {
+            return intent;
+        }
+        Log.e("PrivacySettingsUtils", "Backup " + str + " intent " + null + " fails to resolve; ignoring");
+        return null;
     }
 }

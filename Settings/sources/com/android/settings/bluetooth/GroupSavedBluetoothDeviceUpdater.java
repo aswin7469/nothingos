@@ -12,12 +12,12 @@ import com.android.settingslib.bluetooth.CachedBluetoothDeviceManager;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class GroupSavedBluetoothDeviceUpdater extends GroupBluetoothDeviceUpdater implements Preference.OnPreferenceClickListener {
     private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-    @Override // com.android.settings.bluetooth.BluetoothDeviceUpdater
-    protected String getPreferenceKey() {
+    /* access modifiers changed from: protected */
+    public String getPreferenceKey() {
         return "saved_group_bt";
     }
 
@@ -25,16 +25,15 @@ public class GroupSavedBluetoothDeviceUpdater extends GroupBluetoothDeviceUpdate
         super(context, dashboardFragment, devicePreferenceCallback);
     }
 
-    @Override // com.android.settings.bluetooth.BluetoothDeviceUpdater
     public void forceUpdate() {
         if (this.mBluetoothAdapter.isEnabled()) {
             CachedBluetoothDeviceManager cachedDeviceManager = this.mLocalManager.getCachedDeviceManager();
             List<BluetoothDevice> mostRecentlyConnectedDevices = this.mBluetoothAdapter.getMostRecentlyConnectedDevices();
             removePreferenceIfNecessary(mostRecentlyConnectedDevices, cachedDeviceManager);
-            for (BluetoothDevice bluetoothDevice : mostRecentlyConnectedDevices) {
-                CachedBluetoothDevice findDevice = cachedDeviceManager.findDevice(bluetoothDevice);
-                if (findDevice != null) {
-                    update(findDevice);
+            for (BluetoothDevice findDevice : mostRecentlyConnectedDevices) {
+                CachedBluetoothDevice findDevice2 = cachedDeviceManager.findDevice(findDevice);
+                if (findDevice2 != null) {
+                    update(findDevice2);
                 }
             }
             return;
@@ -65,7 +64,6 @@ public class GroupSavedBluetoothDeviceUpdater extends GroupBluetoothDeviceUpdate
         }
     }
 
-    @Override // com.android.settings.bluetooth.BluetoothDeviceUpdater
     public void update(CachedBluetoothDevice cachedBluetoothDevice) {
         if (isFilterMatched(cachedBluetoothDevice)) {
             addPreference(cachedBluetoothDevice, 3);
@@ -74,7 +72,6 @@ public class GroupSavedBluetoothDeviceUpdater extends GroupBluetoothDeviceUpdate
         }
     }
 
-    @Override // com.android.settings.bluetooth.BluetoothDeviceUpdater
     public boolean isFilterMatched(CachedBluetoothDevice cachedBluetoothDevice) {
         BluetoothDevice device = cachedBluetoothDevice.getDevice();
         if (GroupBluetoothDeviceUpdater.DBG) {
@@ -87,10 +84,12 @@ public class GroupSavedBluetoothDeviceUpdater extends GroupBluetoothDeviceUpdate
             sb.append(device.getBondState() == 12);
             Log.d("GroupSavedBluetoothDeviceUpdater", sb.toString());
         }
-        return device.getBondState() == 12 && !device.isConnected() && isGroupDevice(cachedBluetoothDevice);
+        if (device.getBondState() != 12 || device.isConnected() || !isGroupDevice(cachedBluetoothDevice)) {
+            return false;
+        }
+        return true;
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceClickListener
     public boolean onPreferenceClick(Preference preference) {
         this.mMetricsFeatureProvider.logClickedPreference(preference, this.mFragment.getMetricsCategory());
         ((BluetoothDevicePreference) preference).getBluetoothDevice().connect();

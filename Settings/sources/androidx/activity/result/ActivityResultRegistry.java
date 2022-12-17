@@ -14,54 +14,71 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
-/* loaded from: classes.dex */
+
 public abstract class ActivityResultRegistry {
-    private Random mRandom = new Random();
-    private final Map<Integer, String> mRcToKey = new HashMap();
-    private final Map<String, Integer> mKeyToRc = new HashMap();
-    private final Map<String, LifecycleContainer> mKeyToLifecycleContainers = new HashMap();
     final transient Map<String, CallbackAndContract<?>> mKeyToCallback = new HashMap();
+    private final Map<String, LifecycleContainer> mKeyToLifecycleContainers = new HashMap();
+    final Map<String, Integer> mKeyToRc = new HashMap();
+    ArrayList<String> mLaunchedKeys = new ArrayList<>();
     final Map<String, Object> mParsedPendingResults = new HashMap();
     final Bundle mPendingResults = new Bundle();
+    private Random mRandom = new Random();
+    private final Map<Integer, String> mRcToKey = new HashMap();
 
     public abstract <I, O> void onLaunch(int i, ActivityResultContract<I, O> activityResultContract, @SuppressLint({"UnknownNullness"}) I i2, ActivityOptionsCompat activityOptionsCompat);
 
-    /* renamed from: androidx.activity.result.ActivityResultRegistry$1  reason: invalid class name */
-    /* loaded from: classes.dex */
-    class AnonymousClass1 implements LifecycleEventObserver {
-        final /* synthetic */ ActivityResultRegistry this$0;
-        final /* synthetic */ ActivityResultCallback val$callback;
-        final /* synthetic */ ActivityResultContract val$contract;
-        final /* synthetic */ String val$key;
-
-        @Override // androidx.lifecycle.LifecycleEventObserver
-        public void onStateChanged(LifecycleOwner lifecycleOwner, Lifecycle.Event event) {
-            if (Lifecycle.Event.ON_START.equals(event)) {
-                this.this$0.mKeyToCallback.put(this.val$key, new CallbackAndContract<>(this.val$callback, this.val$contract));
-                if (this.this$0.mParsedPendingResults.containsKey(this.val$key)) {
-                    Object obj = this.this$0.mParsedPendingResults.get(this.val$key);
-                    this.this$0.mParsedPendingResults.remove(this.val$key);
-                    this.val$callback.onActivityResult(obj);
-                }
-                ActivityResult activityResult = (ActivityResult) this.this$0.mPendingResults.getParcelable(this.val$key);
-                if (activityResult == null) {
-                    return;
-                }
-                this.this$0.mPendingResults.remove(this.val$key);
-                this.val$callback.onActivityResult(this.val$contract.mo101parseResult(activityResult.getResultCode(), activityResult.getData()));
-            } else if (Lifecycle.Event.ON_STOP.equals(event)) {
-                this.this$0.mKeyToCallback.remove(this.val$key);
-            } else if (!Lifecycle.Event.ON_DESTROY.equals(event)) {
-            } else {
-                this.this$0.unregister(this.val$key);
+    public final <I, O> ActivityResultLauncher<I> register(final String str, LifecycleOwner lifecycleOwner, final ActivityResultContract<I, O> activityResultContract, final ActivityResultCallback<O> activityResultCallback) {
+        Lifecycle lifecycle = lifecycleOwner.getLifecycle();
+        if (!lifecycle.getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+            registerKey(str);
+            LifecycleContainer lifecycleContainer = this.mKeyToLifecycleContainers.get(str);
+            if (lifecycleContainer == null) {
+                lifecycleContainer = new LifecycleContainer(lifecycle);
             }
+            lifecycleContainer.addObserver(new LifecycleEventObserver() {
+                public void onStateChanged(LifecycleOwner lifecycleOwner, Lifecycle.Event event) {
+                    if (Lifecycle.Event.ON_START.equals(event)) {
+                        ActivityResultRegistry.this.mKeyToCallback.put(str, new CallbackAndContract(activityResultCallback, activityResultContract));
+                        if (ActivityResultRegistry.this.mParsedPendingResults.containsKey(str)) {
+                            Object obj = ActivityResultRegistry.this.mParsedPendingResults.get(str);
+                            ActivityResultRegistry.this.mParsedPendingResults.remove(str);
+                            activityResultCallback.onActivityResult(obj);
+                        }
+                        ActivityResult activityResult = (ActivityResult) ActivityResultRegistry.this.mPendingResults.getParcelable(str);
+                        if (activityResult != null) {
+                            ActivityResultRegistry.this.mPendingResults.remove(str);
+                            activityResultCallback.onActivityResult(activityResultContract.parseResult(activityResult.getResultCode(), activityResult.getData()));
+                        }
+                    } else if (Lifecycle.Event.ON_STOP.equals(event)) {
+                        ActivityResultRegistry.this.mKeyToCallback.remove(str);
+                    } else if (Lifecycle.Event.ON_DESTROY.equals(event)) {
+                        ActivityResultRegistry.this.unregister(str);
+                    }
+                }
+            });
+            this.mKeyToLifecycleContainers.put(str, lifecycleContainer);
+            return new ActivityResultLauncher<I>() {
+                public void launch(I i, ActivityOptionsCompat activityOptionsCompat) {
+                    Integer num = ActivityResultRegistry.this.mKeyToRc.get(str);
+                    if (num != null) {
+                        ActivityResultRegistry.this.mLaunchedKeys.add(str);
+                        ActivityResultRegistry.this.onLaunch(num.intValue(), activityResultContract, i, activityOptionsCompat);
+                        return;
+                    }
+                    throw new IllegalStateException("Attempting to launch an unregistered ActivityResultLauncher with contract " + activityResultContract + " and input " + i + ". You must ensure the ActivityResultLauncher is registered before calling launch().");
+                }
+
+                public void unregister() {
+                    ActivityResultRegistry.this.unregister(str);
+                }
+            };
         }
+        throw new IllegalStateException("LifecycleOwner " + lifecycleOwner + " is attempting to register while current state is " + lifecycle.getCurrentState() + ". LifecycleOwners must call register before they are STARTED.");
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
     public final <I, O> ActivityResultLauncher<I> register(final String str, final ActivityResultContract<I, O> activityResultContract, ActivityResultCallback<O> activityResultCallback) {
-        final int registerKey = registerKey(str);
-        this.mKeyToCallback.put(str, new CallbackAndContract<>(activityResultCallback, activityResultContract));
+        registerKey(str);
+        this.mKeyToCallback.put(str, new CallbackAndContract(activityResultCallback, activityResultContract));
         if (this.mParsedPendingResults.containsKey(str)) {
             Object obj = this.mParsedPendingResults.get(str);
             this.mParsedPendingResults.remove(str);
@@ -70,24 +87,29 @@ public abstract class ActivityResultRegistry {
         ActivityResult activityResult = (ActivityResult) this.mPendingResults.getParcelable(str);
         if (activityResult != null) {
             this.mPendingResults.remove(str);
-            activityResultCallback.onActivityResult(activityResultContract.mo101parseResult(activityResult.getResultCode(), activityResult.getData()));
+            activityResultCallback.onActivityResult(activityResultContract.parseResult(activityResult.getResultCode(), activityResult.getData()));
         }
-        return new ActivityResultLauncher<I>() { // from class: androidx.activity.result.ActivityResultRegistry.3
-            @Override // androidx.activity.result.ActivityResultLauncher
+        return new ActivityResultLauncher<I>() {
             public void launch(I i, ActivityOptionsCompat activityOptionsCompat) {
-                ActivityResultRegistry.this.onLaunch(registerKey, activityResultContract, i, activityOptionsCompat);
+                Integer num = ActivityResultRegistry.this.mKeyToRc.get(str);
+                if (num != null) {
+                    ActivityResultRegistry.this.mLaunchedKeys.add(str);
+                    ActivityResultRegistry.this.onLaunch(num.intValue(), activityResultContract, i, activityOptionsCompat);
+                    return;
+                }
+                throw new IllegalStateException("Attempting to launch an unregistered ActivityResultLauncher with contract " + activityResultContract + " and input " + i + ". You must ensure the ActivityResultLauncher is registered before calling launch().");
             }
 
-            @Override // androidx.activity.result.ActivityResultLauncher
             public void unregister() {
                 ActivityResultRegistry.this.unregister(str);
             }
         };
     }
 
-    final void unregister(String str) {
-        Integer remove = this.mKeyToRc.remove(str);
-        if (remove != null) {
+    /* access modifiers changed from: package-private */
+    public final void unregister(String str) {
+        Integer remove;
+        if (!this.mLaunchedKeys.contains(str) && (remove = this.mKeyToRc.remove(str)) != null) {
             this.mRcToKey.remove(remove);
         }
         this.mKeyToCallback.remove(str);
@@ -107,27 +129,33 @@ public abstract class ActivityResultRegistry {
     }
 
     public final void onSaveInstanceState(Bundle bundle) {
-        bundle.putIntegerArrayList("KEY_COMPONENT_ACTIVITY_REGISTERED_RCS", new ArrayList<>(this.mRcToKey.keySet()));
-        bundle.putStringArrayList("KEY_COMPONENT_ACTIVITY_REGISTERED_KEYS", new ArrayList<>(this.mRcToKey.values()));
+        bundle.putIntegerArrayList("KEY_COMPONENT_ACTIVITY_REGISTERED_RCS", new ArrayList(this.mKeyToRc.values()));
+        bundle.putStringArrayList("KEY_COMPONENT_ACTIVITY_REGISTERED_KEYS", new ArrayList(this.mKeyToRc.keySet()));
+        bundle.putStringArrayList("KEY_COMPONENT_ACTIVITY_LAUNCHED_KEYS", new ArrayList(this.mLaunchedKeys));
         bundle.putBundle("KEY_COMPONENT_ACTIVITY_PENDING_RESULT", (Bundle) this.mPendingResults.clone());
         bundle.putSerializable("KEY_COMPONENT_ACTIVITY_RANDOM_OBJECT", this.mRandom);
     }
 
     public final void onRestoreInstanceState(Bundle bundle) {
-        if (bundle == null) {
-            return;
+        if (bundle != null) {
+            ArrayList<Integer> integerArrayList = bundle.getIntegerArrayList("KEY_COMPONENT_ACTIVITY_REGISTERED_RCS");
+            ArrayList<String> stringArrayList = bundle.getStringArrayList("KEY_COMPONENT_ACTIVITY_REGISTERED_KEYS");
+            if (stringArrayList != null && integerArrayList != null) {
+                this.mLaunchedKeys = bundle.getStringArrayList("KEY_COMPONENT_ACTIVITY_LAUNCHED_KEYS");
+                this.mRandom = (Random) bundle.getSerializable("KEY_COMPONENT_ACTIVITY_RANDOM_OBJECT");
+                this.mPendingResults.putAll(bundle.getBundle("KEY_COMPONENT_ACTIVITY_PENDING_RESULT"));
+                for (int i = 0; i < stringArrayList.size(); i++) {
+                    String str = stringArrayList.get(i);
+                    if (this.mKeyToRc.containsKey(str)) {
+                        Integer remove = this.mKeyToRc.remove(str);
+                        if (!this.mPendingResults.containsKey(str)) {
+                            this.mRcToKey.remove(remove);
+                        }
+                    }
+                    bindRcKey(integerArrayList.get(i).intValue(), stringArrayList.get(i));
+                }
+            }
         }
-        ArrayList<Integer> integerArrayList = bundle.getIntegerArrayList("KEY_COMPONENT_ACTIVITY_REGISTERED_RCS");
-        ArrayList<String> stringArrayList = bundle.getStringArrayList("KEY_COMPONENT_ACTIVITY_REGISTERED_KEYS");
-        if (stringArrayList == null || integerArrayList == null) {
-            return;
-        }
-        int size = stringArrayList.size();
-        for (int i = 0; i < size; i++) {
-            bindRcKey(integerArrayList.get(i).intValue(), stringArrayList.get(i));
-        }
-        this.mRandom = (Random) bundle.getSerializable("KEY_COMPONENT_ACTIVITY_RANDOM_OBJECT");
-        this.mPendingResults.putAll(bundle.getBundle("KEY_COMPONENT_ACTIVITY_PENDING_RESULT"));
     }
 
     public final boolean dispatchResult(int i, int i2, Intent intent) {
@@ -135,17 +163,19 @@ public abstract class ActivityResultRegistry {
         if (str == null) {
             return false;
         }
+        this.mLaunchedKeys.remove(str);
         doDispatch(str, i2, intent, this.mKeyToCallback.get(str));
         return true;
     }
 
     public final <O> boolean dispatchResult(int i, @SuppressLint({"UnknownNullness"}) O o) {
-        ActivityResultCallback<?> activityResultCallback;
+        ActivityResultCallback<O> activityResultCallback;
         String str = this.mRcToKey.get(Integer.valueOf(i));
         if (str == null) {
             return false;
         }
-        CallbackAndContract<?> callbackAndContract = this.mKeyToCallback.get(str);
+        this.mLaunchedKeys.remove(str);
+        CallbackAndContract callbackAndContract = this.mKeyToCallback.get(str);
         if (callbackAndContract == null || (activityResultCallback = callbackAndContract.mCallback) == null) {
             this.mPendingResults.remove(str);
             this.mParsedPendingResults.put(str, o);
@@ -157,33 +187,28 @@ public abstract class ActivityResultRegistry {
 
     private <O> void doDispatch(String str, int i, Intent intent, CallbackAndContract<O> callbackAndContract) {
         ActivityResultCallback<O> activityResultCallback;
-        if (callbackAndContract != null && (activityResultCallback = callbackAndContract.mCallback) != null) {
-            activityResultCallback.onActivityResult(callbackAndContract.mContract.mo101parseResult(i, intent));
+        if (callbackAndContract == null || (activityResultCallback = callbackAndContract.mCallback) == null) {
+            this.mParsedPendingResults.remove(str);
+            this.mPendingResults.putParcelable(str, new ActivityResult(i, intent));
             return;
         }
-        this.mParsedPendingResults.remove(str);
-        this.mPendingResults.putParcelable(str, new ActivityResult(i, intent));
+        activityResultCallback.onActivityResult(callbackAndContract.mContract.parseResult(i, intent));
     }
 
-    private int registerKey(String str) {
-        Integer num = this.mKeyToRc.get(str);
-        if (num != null) {
-            return num.intValue();
+    private void registerKey(String str) {
+        if (this.mKeyToRc.get(str) == null) {
+            bindRcKey(generateRandomNumber(), str);
         }
-        int generateRandomNumber = generateRandomNumber();
-        bindRcKey(generateRandomNumber, str);
-        return generateRandomNumber;
     }
 
     private int generateRandomNumber() {
         int nextInt = this.mRandom.nextInt(2147418112);
         while (true) {
             int i = nextInt + 65536;
-            if (this.mRcToKey.containsKey(Integer.valueOf(i))) {
-                nextInt = this.mRandom.nextInt(2147418112);
-            } else {
+            if (!this.mRcToKey.containsKey(Integer.valueOf(i))) {
                 return i;
             }
+            nextInt = this.mRandom.nextInt(2147418112);
         }
     }
 
@@ -192,9 +217,7 @@ public abstract class ActivityResultRegistry {
         this.mKeyToRc.put(str, Integer.valueOf(i));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class CallbackAndContract<O> {
+    private static class CallbackAndContract<O> {
         final ActivityResultCallback<O> mCallback;
         final ActivityResultContract<?, O> mContract;
 
@@ -204,13 +227,22 @@ public abstract class ActivityResultRegistry {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class LifecycleContainer {
+    private static class LifecycleContainer {
         final Lifecycle mLifecycle;
-        private final ArrayList<LifecycleEventObserver> mObservers;
+        private final ArrayList<LifecycleEventObserver> mObservers = new ArrayList<>();
 
-        void clearObservers() {
+        LifecycleContainer(Lifecycle lifecycle) {
+            this.mLifecycle = lifecycle;
+        }
+
+        /* access modifiers changed from: package-private */
+        public void addObserver(LifecycleEventObserver lifecycleEventObserver) {
+            this.mLifecycle.addObserver(lifecycleEventObserver);
+            this.mObservers.add(lifecycleEventObserver);
+        }
+
+        /* access modifiers changed from: package-private */
+        public void clearObservers() {
             Iterator<LifecycleEventObserver> it = this.mObservers.iterator();
             while (it.hasNext()) {
                 this.mLifecycle.removeObserver(it.next());

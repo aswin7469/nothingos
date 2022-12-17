@@ -8,7 +8,7 @@ import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import com.android.settingslib.R$array;
-/* loaded from: classes.dex */
+
 public abstract class AbstractLogdSizePreferenceController extends DeveloperOptionsPreferenceController implements Preference.OnPreferenceChangeListener {
     static final String DEFAULT_SNET_TAG = "I";
     static final String LOW_RAM_CONFIG_PROPERTY_KEY = "ro.config.low_ram";
@@ -18,7 +18,6 @@ public abstract class AbstractLogdSizePreferenceController extends DeveloperOpti
     static final String SELECT_LOGD_SNET_TAG_PROPERTY = "persist.log.tag.snet_event_log";
     private ListPreference mLogdSize;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "select_logd_size";
     }
@@ -27,7 +26,6 @@ public abstract class AbstractLogdSizePreferenceController extends DeveloperOpti
         super(context);
     }
 
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         if (isAvailable()) {
@@ -35,18 +33,20 @@ public abstract class AbstractLogdSizePreferenceController extends DeveloperOpti
         }
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
-        if (preference == this.mLogdSize) {
-            writeLogdSizeOption(obj);
-            return true;
+        if (preference != this.mLogdSize) {
+            return false;
         }
-        return false;
+        writeLogdSizeOption(obj);
+        return true;
     }
 
     private String defaultLogdSizeValue() {
         String str = SystemProperties.get("ro.logd.size");
-        return (str == null || str.length() == 0) ? SystemProperties.get(LOW_RAM_CONFIG_PROPERTY_KEY).equals("true") ? SELECT_LOGD_MINIMUM_SIZE_VALUE : SELECT_LOGD_DEFAULT_SIZE_VALUE : str;
+        if (str == null || str.length() == 0) {
+            return SystemProperties.get(LOW_RAM_CONFIG_PROPERTY_KEY).equals("true") ? SELECT_LOGD_MINIMUM_SIZE_VALUE : SELECT_LOGD_DEFAULT_SIZE_VALUE;
+        }
+        return str;
     }
 
     public void updateLogdSizeValues() {
@@ -71,10 +71,14 @@ public abstract class AbstractLogdSizePreferenceController extends DeveloperOpti
                 i = 1;
             }
             String[] stringArray3 = this.mContext.getResources().getStringArray(R$array.select_logd_size_summaries);
-            for (int i3 = 0; i3 < stringArray2.length; i3++) {
-                if (str2.equals(stringArray[i3]) || str2.equals(stringArray2[i3])) {
-                    i = i3;
+            int i3 = 0;
+            while (true) {
+                if (i3 >= stringArray2.length) {
                     break;
+                } else if (str2.equals(stringArray[i3]) || str2.equals(stringArray2[i3])) {
+                    i = i3;
+                } else {
+                    i3++;
                 }
             }
             this.mLogdSize.setValue(stringArray[i]);

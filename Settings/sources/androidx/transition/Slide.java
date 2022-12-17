@@ -13,88 +13,76 @@ import android.view.animation.DecelerateInterpolator;
 import androidx.core.content.res.TypedArrayUtils;
 import androidx.core.view.ViewCompat;
 import org.xmlpull.v1.XmlPullParser;
-/* loaded from: classes.dex */
+
 public class Slide extends Visibility {
+    private static final TimeInterpolator sAccelerate = new AccelerateInterpolator();
+    private static final CalculateSlide sCalculateBottom = new CalculateSlideVertical() {
+        public float getGoneY(ViewGroup viewGroup, View view) {
+            return view.getTranslationY() + ((float) viewGroup.getHeight());
+        }
+    };
+    private static final CalculateSlide sCalculateEnd = new CalculateSlideHorizontal() {
+        public float getGoneX(ViewGroup viewGroup, View view) {
+            boolean z = true;
+            if (ViewCompat.getLayoutDirection(viewGroup) != 1) {
+                z = false;
+            }
+            if (z) {
+                return view.getTranslationX() - ((float) viewGroup.getWidth());
+            }
+            return view.getTranslationX() + ((float) viewGroup.getWidth());
+        }
+    };
+    private static final CalculateSlide sCalculateLeft = new CalculateSlideHorizontal() {
+        public float getGoneX(ViewGroup viewGroup, View view) {
+            return view.getTranslationX() - ((float) viewGroup.getWidth());
+        }
+    };
+    private static final CalculateSlide sCalculateRight = new CalculateSlideHorizontal() {
+        public float getGoneX(ViewGroup viewGroup, View view) {
+            return view.getTranslationX() + ((float) viewGroup.getWidth());
+        }
+    };
+    private static final CalculateSlide sCalculateStart = new CalculateSlideHorizontal() {
+        public float getGoneX(ViewGroup viewGroup, View view) {
+            boolean z = true;
+            if (ViewCompat.getLayoutDirection(viewGroup) != 1) {
+                z = false;
+            }
+            if (z) {
+                return view.getTranslationX() + ((float) viewGroup.getWidth());
+            }
+            return view.getTranslationX() - ((float) viewGroup.getWidth());
+        }
+    };
+    private static final CalculateSlide sCalculateTop = new CalculateSlideVertical() {
+        public float getGoneY(ViewGroup viewGroup, View view) {
+            return view.getTranslationY() - ((float) viewGroup.getHeight());
+        }
+    };
+    private static final TimeInterpolator sDecelerate = new DecelerateInterpolator();
     private CalculateSlide mSlideCalculator = sCalculateBottom;
     private int mSlideEdge = 80;
-    private static final TimeInterpolator sDecelerate = new DecelerateInterpolator();
-    private static final TimeInterpolator sAccelerate = new AccelerateInterpolator();
-    private static final CalculateSlide sCalculateLeft = new CalculateSlideHorizontal() { // from class: androidx.transition.Slide.1
-        @Override // androidx.transition.Slide.CalculateSlide
-        public float getGoneX(ViewGroup viewGroup, View view) {
-            return view.getTranslationX() - viewGroup.getWidth();
-        }
-    };
-    private static final CalculateSlide sCalculateStart = new CalculateSlideHorizontal() { // from class: androidx.transition.Slide.2
-        @Override // androidx.transition.Slide.CalculateSlide
-        public float getGoneX(ViewGroup viewGroup, View view) {
-            boolean z = true;
-            if (ViewCompat.getLayoutDirection(viewGroup) != 1) {
-                z = false;
-            }
-            if (z) {
-                return view.getTranslationX() + viewGroup.getWidth();
-            }
-            return view.getTranslationX() - viewGroup.getWidth();
-        }
-    };
-    private static final CalculateSlide sCalculateTop = new CalculateSlideVertical() { // from class: androidx.transition.Slide.3
-        @Override // androidx.transition.Slide.CalculateSlide
-        public float getGoneY(ViewGroup viewGroup, View view) {
-            return view.getTranslationY() - viewGroup.getHeight();
-        }
-    };
-    private static final CalculateSlide sCalculateRight = new CalculateSlideHorizontal() { // from class: androidx.transition.Slide.4
-        @Override // androidx.transition.Slide.CalculateSlide
-        public float getGoneX(ViewGroup viewGroup, View view) {
-            return view.getTranslationX() + viewGroup.getWidth();
-        }
-    };
-    private static final CalculateSlide sCalculateEnd = new CalculateSlideHorizontal() { // from class: androidx.transition.Slide.5
-        @Override // androidx.transition.Slide.CalculateSlide
-        public float getGoneX(ViewGroup viewGroup, View view) {
-            boolean z = true;
-            if (ViewCompat.getLayoutDirection(viewGroup) != 1) {
-                z = false;
-            }
-            if (z) {
-                return view.getTranslationX() - viewGroup.getWidth();
-            }
-            return view.getTranslationX() + viewGroup.getWidth();
-        }
-    };
-    private static final CalculateSlide sCalculateBottom = new CalculateSlideVertical() { // from class: androidx.transition.Slide.6
-        @Override // androidx.transition.Slide.CalculateSlide
-        public float getGoneY(ViewGroup viewGroup, View view) {
-            return view.getTranslationY() + viewGroup.getHeight();
-        }
-    };
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public interface CalculateSlide {
+    private interface CalculateSlide {
         float getGoneX(ViewGroup viewGroup, View view);
 
         float getGoneY(ViewGroup viewGroup, View view);
     }
 
-    /* loaded from: classes.dex */
     private static abstract class CalculateSlideHorizontal implements CalculateSlide {
         private CalculateSlideHorizontal() {
         }
 
-        @Override // androidx.transition.Slide.CalculateSlide
         public float getGoneY(ViewGroup viewGroup, View view) {
             return view.getTranslationY();
         }
     }
 
-    /* loaded from: classes.dex */
     private static abstract class CalculateSlideVertical implements CalculateSlide {
         private CalculateSlideVertical() {
         }
 
-        @Override // androidx.transition.Slide.CalculateSlide
         public float getGoneX(ViewGroup viewGroup, View view) {
             return view.getTranslationX();
         }
@@ -119,13 +107,11 @@ public class Slide extends Visibility {
         transitionValues.values.put("android:slide:screenPosition", iArr);
     }
 
-    @Override // androidx.transition.Visibility, androidx.transition.Transition
     public void captureStartValues(TransitionValues transitionValues) {
         super.captureStartValues(transitionValues);
         captureValues(transitionValues);
     }
 
-    @Override // androidx.transition.Visibility, androidx.transition.Transition
     public void captureEndValues(TransitionValues transitionValues) {
         super.captureEndValues(transitionValues);
         captureValues(transitionValues);
@@ -153,7 +139,6 @@ public class Slide extends Visibility {
         setPropagation(sidePropagation);
     }
 
-    @Override // androidx.transition.Visibility
     public Animator onAppear(ViewGroup viewGroup, View view, TransitionValues transitionValues, TransitionValues transitionValues2) {
         if (transitionValues2 == null) {
             return null;
@@ -164,7 +149,6 @@ public class Slide extends Visibility {
         return TranslationAnimationCreator.createAnimation(view, transitionValues2, iArr[0], iArr[1], this.mSlideCalculator.getGoneX(viewGroup, view), this.mSlideCalculator.getGoneY(viewGroup, view), translationX, translationY, sDecelerate, this);
     }
 
-    @Override // androidx.transition.Visibility
     public Animator onDisappear(ViewGroup viewGroup, View view, TransitionValues transitionValues, TransitionValues transitionValues2) {
         if (transitionValues == null) {
             return null;

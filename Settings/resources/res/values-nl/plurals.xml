@@ -5,12 +5,12 @@
         <item quantity="other">%d dagen geleden</item>
     </plurals>
     <plurals name="abc_slice_duration_min">
-        <item quantity="one">%d min geleden</item>
-        <item quantity="other">%d min geleden</item>
+        <item quantity="one">%d min geleden</item>
+        <item quantity="other">%d min geleden</item>
     </plurals>
     <plurals name="abc_slice_duration_years">
-        <item quantity="one">%d jaar geleden</item>
-        <item quantity="other">%d jaar geleden</item>
+        <item quantity="one">%d jr geleden</item>
+        <item quantity="other">%d jr geleden</item>
     </plurals>
     <plurals name="accessibility_usage_summary">
         <item quantity="one">1 app heeft volledige toegang tot je apparaat</item>
@@ -137,12 +137,12 @@
         <item quantity="other">%d apps gekoppeld</item>
     </plurals>
     <plurals name="location_app_permission_summary_location_on">
-        <item quantity="one">%1$d van %2$d apps heeft toegang tot de locatie</item>
-        <item quantity="other">%1$d van %2$d apps hebben toegang tot de locatie</item>
+        <item quantity="one">%1$d van %2$d apps heeft locatietoegang</item>
+        <item quantity="other">%1$d van %2$d apps hebben locatietoegang</item>
     </plurals>
     <plurals name="location_settings_summary_location_on">
-        <item quantity="one">Aan: %1$d app heeft toegang tot de locatie</item>
-        <item quantity="other">Aan: %1$d apps hebben toegang tot de locatie</item>
+        <item quantity="one">Aan: %1$d app heeft locatietoegang</item>
+        <item quantity="other">Aan: %1$d apps hebben locatietoegang</item>
     </plurals>
     <plurals name="lockpassword_password_requires_letters">
         <item quantity="one">Moet ten minste één letter bevatten</item>
@@ -234,11 +234,11 @@
     </plurals>
     <plurals name="notifications_sent_daily">
         <item quantity="one">~%d melding per dag</item>
-        <item quantity="other">~%d meldingen per dag</item>
+        <item quantity="other">~%,d meldingen per dag</item>
     </plurals>
     <plurals name="notifications_sent_weekly">
         <item quantity="one">~%d melding per week</item>
-        <item quantity="other">~%d meldingen per week</item>
+        <item quantity="other">~%,d meldingen per week</item>
     </plurals>
     <plurals name="number_of_device_admins">
         <item quantity="one">%d actieve app</item>
@@ -320,14 +320,6 @@
         <item quantity="one">Certificaat vertrouwen of verwijderen</item>
         <item quantity="other">Certificaten vertrouwen of verwijderen</item>
     </plurals>
-    <plurals name="ssl_ca_cert_info_message">
-        <item quantity="one">%s heeft een certificeringsinstantie voor je werkprofiel geïnstalleerd, waardoor dit domein activiteit in het werknetwerk kan bijhouden, waaronder e-mails, apps en beveiligde websites.\n\nNeem contact op met je beheerder voor meer informatie over dit certificaat.</item>
-        <item quantity="other">%s heeft certificeringsinstanties voor je werkprofiel geïnstalleerd, waardoor dit domein activiteit in het werknetwerk kan bijhouden, waaronder e-mails, apps en beveiligde websites.\n\nNeem contact op met je beheerder voor meer informatie over deze certificaten.</item>
-    </plurals>
-    <plurals name="ssl_ca_cert_info_message_device_owner">
-        <item quantity="one">%s heeft een certificeringsinstantie geïnstalleerd op je apparaat, waardoor dit domein activiteit in het apparaatnetwerk kan bijhouden, waaronder e-mails, apps en beveiligde websites.\n\nNeem contact op met je beheerder voor meer informatie over dit certificaat.</item>
-        <item quantity="other">%s heeft certificeringsinstanties geïnstalleerd op je apparaat, waardoor dit domein activiteit in het apparaatnetwerk kan bijhouden, waaronder e-mails, apps en beveiligde websites.\n\nNeem contact op met je beheerder voor meer informatie over deze certificaten.</item>
-    </plurals>
     <plurals name="ssl_ca_cert_settings_button">
         <item quantity="one">Certificaat controleren</item>
         <item quantity="other">Certificaten controleren</item>
@@ -359,10 +351,6 @@
     <plurals name="wifi_saved_passpoint_access_points_summary">
         <item quantity="one">1 abonnement</item>
         <item quantity="other">%d abonnementen</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d apparaat verbonden</item>
-        <item quantity="other">%1$d apparaten verbonden</item>
     </plurals>
     <plurals name="wrong_pin_code">
         <item quantity="one">Onjuiste pincode voor simkaart. Je hebt nog %d poging over voordat je contact met je provider moet opnemen om je apparaat te ontgrendelen.</item>

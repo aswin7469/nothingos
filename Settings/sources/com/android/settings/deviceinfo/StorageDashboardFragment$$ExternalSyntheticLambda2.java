@@ -1,18 +1,11 @@
 package com.android.settings.deviceinfo;
 
 import com.android.settingslib.core.AbstractPreferenceController;
-import java.util.function.Predicate;
-/* loaded from: classes.dex */
-public final /* synthetic */ class StorageDashboardFragment$$ExternalSyntheticLambda2 implements Predicate {
-    public static final /* synthetic */ StorageDashboardFragment$$ExternalSyntheticLambda2 INSTANCE = new StorageDashboardFragment$$ExternalSyntheticLambda2();
+import java.util.function.Function;
 
-    private /* synthetic */ StorageDashboardFragment$$ExternalSyntheticLambda2() {
-    }
-
-    @Override // java.util.function.Predicate
-    public final boolean test(Object obj) {
-        boolean lambda$setSecondaryUsersVisible$1;
-        lambda$setSecondaryUsersVisible$1 = StorageDashboardFragment.lambda$setSecondaryUsersVisible$1((AbstractPreferenceController) obj);
-        return lambda$setSecondaryUsersVisible$1;
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class StorageDashboardFragment$$ExternalSyntheticLambda2 implements Function {
+    public final Object apply(Object obj) {
+        return StorageDashboardFragment.lambda$setSecondaryUsersVisible$2((AbstractPreferenceController) obj);
     }
 }

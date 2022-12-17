@@ -12,10 +12,11 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-/* loaded from: classes.dex */
+
 public class CredentialManagementAppPolicyPreference extends Preference {
     private final Context mContext;
     private String mCredentialManagerPackageName;
@@ -26,23 +27,17 @@ public class CredentialManagementAppPolicyPreference extends Preference {
 
     public CredentialManagementAppPolicyPreference(Context context) {
         super(context);
-        setLayoutResource(R.layout.credential_management_app_policy);
+        setLayoutResource(R$layout.credential_management_app_policy);
         this.mContext = context;
     }
 
-    @Override // androidx.preference.Preference
-    public void onBindViewHolder(final PreferenceViewHolder preferenceViewHolder) {
+    public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
-        this.mExecutor.execute(new Runnable() { // from class: com.android.settings.security.CredentialManagementAppPolicyPreference$$ExternalSyntheticLambda1
-            @Override // java.lang.Runnable
-            public final void run() {
-                CredentialManagementAppPolicyPreference.this.lambda$onBindViewHolder$1(preferenceViewHolder);
-            }
-        });
+        this.mExecutor.execute(new C1341x82e16143(this, preferenceViewHolder));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onBindViewHolder$1(final PreferenceViewHolder preferenceViewHolder) {
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$onBindViewHolder$1(PreferenceViewHolder preferenceViewHolder) {
         try {
             IKeyChainService service = KeyChain.bind(this.mContext).getService();
             this.mHasCredentialManagerPackage = service.hasCredentialManagementApp();
@@ -51,19 +46,14 @@ public class CredentialManagementAppPolicyPreference extends Preference {
         } catch (RemoteException | InterruptedException unused) {
             Log.e("CredentialManagementApp", "Unable to display credential management app policy");
         }
-        this.mHandler.post(new Runnable() { // from class: com.android.settings.security.CredentialManagementAppPolicyPreference$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                CredentialManagementAppPolicyPreference.this.lambda$onBindViewHolder$0(preferenceViewHolder);
-            }
-        });
+        this.mHandler.post(new C1342x82e16144(this, preferenceViewHolder));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     /* renamed from: displayPolicy */
     public void lambda$onBindViewHolder$0(PreferenceViewHolder preferenceViewHolder) {
         if (this.mHasCredentialManagerPackage) {
-            RecyclerView recyclerView = (RecyclerView) preferenceViewHolder.findViewById(R.id.recycler_view);
+            RecyclerView recyclerView = (RecyclerView) preferenceViewHolder.findViewById(R$id.recycler_view);
             recyclerView.setLayoutManager(new LinearLayoutManager(this.mContext));
             recyclerView.setAdapter(new CredentialManagementAppAdapter(this.mContext, this.mCredentialManagerPackageName, this.mCredentialManagerPolicy.getAppAndUriMappings(), false, true));
         }

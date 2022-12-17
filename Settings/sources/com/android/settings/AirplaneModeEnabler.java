@@ -3,6 +3,7 @@ package com.android.settings;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Looper;
+import android.os.SystemProperties;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.telephony.PhoneStateListener;
@@ -15,19 +16,18 @@ import com.android.settings.overlay.FeatureFactory;
 import com.android.settingslib.WirelessUtils;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class AirplaneModeEnabler extends GlobalSettingsChangeListener {
     private final Context mContext;
     private final MetricsFeatureProvider mMetricsFeatureProvider;
     private OnAirplaneModeChangedListener mOnAirplaneModeChangedListener;
-    PhoneStateListener mPhoneStateListener = new PhoneStateListener(Looper.getMainLooper()) { // from class: com.android.settings.AirplaneModeEnabler.1
+    PhoneStateListener mPhoneStateListener = new PhoneStateListener(Looper.getMainLooper()) {
         public void onRadioPowerStateChanged(int i) {
             AirplaneModeEnabler.this.onAirplaneModeChanged();
         }
     };
     private TelephonyManager mTelephonyManager;
 
-    /* loaded from: classes.dex */
     public interface OnAirplaneModeChangedListener {
         void onAirplaneModeChanged(boolean z);
     }
@@ -40,7 +40,6 @@ public class AirplaneModeEnabler extends GlobalSettingsChangeListener {
         this.mTelephonyManager = (TelephonyManager) context.getSystemService(TelephonyManager.class);
     }
 
-    @Override // com.android.settings.network.GlobalSettingsChangeListener
     public void onChanged(String str) {
         onAirplaneModeChanged();
     }
@@ -64,12 +63,16 @@ public class AirplaneModeEnabler extends GlobalSettingsChangeListener {
         this.mContext.sendBroadcastAsUser(intent, UserHandle.ALL);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void onAirplaneModeChanged() {
         OnAirplaneModeChangedListener onAirplaneModeChangedListener = this.mOnAirplaneModeChangedListener;
         if (onAirplaneModeChangedListener != null) {
             onAirplaneModeChangedListener.onAirplaneModeChanged(isAirplaneModeOn());
         }
+    }
+
+    public boolean isInScbm() {
+        return SystemProperties.getBoolean("ril.inscbm", false);
     }
 
     public boolean isInEcmMode() {
@@ -80,8 +83,8 @@ public class AirplaneModeEnabler extends GlobalSettingsChangeListener {
         if (activeSubscriptionsInfo == null) {
             return false;
         }
-        for (SubscriptionInfo subscriptionInfo : activeSubscriptionsInfo) {
-            TelephonyManager createForSubscriptionId = this.mTelephonyManager.createForSubscriptionId(subscriptionInfo.getSubscriptionId());
+        for (SubscriptionInfo subscriptionId : activeSubscriptionsInfo) {
+            TelephonyManager createForSubscriptionId = this.mTelephonyManager.createForSubscriptionId(subscriptionId.getSubscriptionId());
             if (createForSubscriptionId != null && createForSubscriptionId.getEmergencyCallbackMode()) {
                 return true;
             }
@@ -90,16 +93,16 @@ public class AirplaneModeEnabler extends GlobalSettingsChangeListener {
     }
 
     public void setAirplaneMode(boolean z) {
-        if (isInEcmMode()) {
-            Log.d("AirplaneModeEnabler", "ECM airplane mode=" + z);
+        if (isInEcmMode() || isInScbm()) {
+            Log.d("AirplaneModeEnabler", "Emergency mode airplane mode=" + z);
             return;
         }
         this.mMetricsFeatureProvider.action(this.mContext, 177, z);
         setAirplaneModeOn(z);
     }
 
-    public void setAirplaneModeInECM(boolean z, boolean z2) {
-        Log.d("AirplaneModeEnabler", "Exist ECM=" + z + ", with airplane mode=" + z2);
+    public void setAirplaneModeInEmergencyMode(boolean z, boolean z2) {
+        Log.d("AirplaneModeEnabler", "Exist Emergency Mode=" + z + ", with airplane mode=" + z2);
         if (z) {
             setAirplaneModeOn(z2);
         } else {

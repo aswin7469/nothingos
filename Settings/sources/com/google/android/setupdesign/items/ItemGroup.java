@@ -8,12 +8,12 @@ import com.google.android.setupdesign.items.ItemHierarchy;
 import com.google.android.setupdesign.items.ItemInflater;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes2.dex */
+
 public class ItemGroup extends AbstractItemHierarchy implements ItemInflater.ItemParent, ItemHierarchy.Observer {
     private final List<ItemHierarchy> children = new ArrayList();
-    private final SparseIntArray hierarchyStart = new SparseIntArray();
     private int count = 0;
     private boolean dirty = false;
+    private final SparseIntArray hierarchyStart = new SparseIntArray();
 
     private static int binarySearch(SparseIntArray sparseIntArray, int i) {
         int size = sparseIntArray.size() - 1;
@@ -49,24 +49,21 @@ public class ItemGroup extends AbstractItemHierarchy implements ItemInflater.Ite
         super(context, attributeSet);
     }
 
-    @Override // com.google.android.setupdesign.items.ItemInflater.ItemParent
     public void addChild(ItemHierarchy itemHierarchy) {
         this.dirty = true;
         this.children.add(itemHierarchy);
         itemHierarchy.registerObserver(this);
-        int count = itemHierarchy.getCount();
-        if (count > 0) {
-            notifyItemRangeInserted(getChildPosition(itemHierarchy), count);
+        int count2 = itemHierarchy.getCount();
+        if (count2 > 0) {
+            notifyItemRangeInserted(getChildPosition(itemHierarchy), count2);
         }
     }
 
-    @Override // com.google.android.setupdesign.items.ItemHierarchy
     public int getCount() {
         updateDataIfNeeded();
         return this.count;
     }
 
-    @Override // com.google.android.setupdesign.items.ItemHierarchy
     public IItem getItemAt(int i) {
         int itemIndex = getItemIndex(i);
         return this.children.get(itemIndex).getItemAt(i - this.hierarchyStart.get(itemIndex));
@@ -78,19 +75,18 @@ public class ItemGroup extends AbstractItemHierarchy implements ItemInflater.Ite
 
     private int getChildPosition(int i) {
         updateDataIfNeeded();
-        if (i != -1) {
-            int size = this.children.size();
-            int i2 = -1;
-            while (i2 < 0 && i < size) {
-                i2 = this.hierarchyStart.get(i, -1);
-                i++;
-            }
-            return i2 < 0 ? getCount() : i2;
+        if (i == -1) {
+            return -1;
         }
-        return -1;
+        int size = this.children.size();
+        int i2 = -1;
+        while (i2 < 0 && i < size) {
+            i2 = this.hierarchyStart.get(i, -1);
+            i++;
+        }
+        return i2 < 0 ? getCount() : i2;
     }
 
-    @Override // com.google.android.setupdesign.items.ItemHierarchy.Observer
     public void onItemRangeChanged(ItemHierarchy itemHierarchy, int i, int i2) {
         int childPosition = getChildPosition(itemHierarchy);
         if (childPosition >= 0) {
@@ -100,7 +96,6 @@ public class ItemGroup extends AbstractItemHierarchy implements ItemInflater.Ite
         Log.e("ItemGroup", "Unexpected child change " + itemHierarchy);
     }
 
-    @Override // com.google.android.setupdesign.items.ItemHierarchy.Observer
     public void onItemRangeInserted(ItemHierarchy itemHierarchy, int i, int i2) {
         this.dirty = true;
         int childPosition = getChildPosition(itemHierarchy);
@@ -132,9 +127,9 @@ public class ItemGroup extends AbstractItemHierarchy implements ItemInflater.Ite
             throw new IndexOutOfBoundsException("size=" + this.count + "; index=" + i);
         }
         int binarySearch = binarySearch(this.hierarchyStart, i);
-        if (binarySearch < 0) {
-            throw new IllegalStateException("Cannot have item start index < 0");
+        if (binarySearch >= 0) {
+            return binarySearch;
         }
-        return binarySearch;
+        throw new IllegalStateException("Cannot have item start index < 0");
     }
 }

@@ -8,15 +8,14 @@ import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class CallsSimListDialogFragment extends SimListDialogFragment {
-    @Override // com.android.settings.sim.SimListDialogFragment, com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1708;
     }
 
-    @Override // com.android.settings.sim.SimListDialogFragment
-    protected List<SubscriptionInfo> getCurrentSubscriptions() {
+    /* access modifiers changed from: protected */
+    public List<SubscriptionInfo> getCurrentSubscriptions() {
         Context context = getContext();
         SubscriptionManager subscriptionManager = (SubscriptionManager) context.getSystemService(SubscriptionManager.class);
         TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(TelephonyManager.class);
@@ -25,10 +24,10 @@ public class CallsSimListDialogFragment extends SimListDialogFragment {
         if (callCapablePhoneAccounts == null) {
             return arrayList;
         }
-        for (PhoneAccountHandle phoneAccountHandle : callCapablePhoneAccounts) {
-            int subscriptionId = telephonyManager.getSubscriptionId(phoneAccountHandle);
-            if (subscriptionId != -1) {
-                arrayList.add(subscriptionManager.getActiveSubscriptionInfo(subscriptionId));
+        for (PhoneAccountHandle subscriptionId : callCapablePhoneAccounts) {
+            int subscriptionId2 = telephonyManager.getSubscriptionId(subscriptionId);
+            if (subscriptionId2 != -1) {
+                arrayList.add(subscriptionManager.getActiveSubscriptionInfo(subscriptionId2));
             }
         }
         return arrayList;

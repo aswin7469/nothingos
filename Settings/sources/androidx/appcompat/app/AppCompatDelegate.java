@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import androidx.collection.ArraySet;
 import java.lang.ref.WeakReference;
 import java.util.Iterator;
-/* loaded from: classes.dex */
+
 public abstract class AppCompatDelegate {
     private static final ArraySet<WeakReference<AppCompatDelegate>> sActivityDelegates = new ArraySet<>();
     private static final Object sActivityDelegatesLock = new Object();
@@ -74,6 +74,9 @@ public abstract class AppCompatDelegate {
         return new AppCompatDelegateImpl(dialog, appCompatCallback);
     }
 
+    AppCompatDelegate() {
+    }
+
     public Context attachBaseContext2(Context context) {
         attachBaseContext(context);
         return context;
@@ -83,16 +86,14 @@ public abstract class AppCompatDelegate {
         return sDefaultNightMode;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static void addActiveDelegate(AppCompatDelegate appCompatDelegate) {
+    static void addActiveDelegate(AppCompatDelegate appCompatDelegate) {
         synchronized (sActivityDelegatesLock) {
             removeDelegateFromActives(appCompatDelegate);
-            sActivityDelegates.add(new WeakReference<>(appCompatDelegate));
+            sActivityDelegates.add(new WeakReference(appCompatDelegate));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static void removeActivityDelegate(AppCompatDelegate appCompatDelegate) {
+    static void removeActivityDelegate(AppCompatDelegate appCompatDelegate) {
         synchronized (sActivityDelegatesLock) {
             removeDelegateFromActives(appCompatDelegate);
         }
@@ -102,7 +103,7 @@ public abstract class AppCompatDelegate {
         synchronized (sActivityDelegatesLock) {
             Iterator<WeakReference<AppCompatDelegate>> it = sActivityDelegates.iterator();
             while (it.hasNext()) {
-                AppCompatDelegate appCompatDelegate2 = it.next().get();
+                AppCompatDelegate appCompatDelegate2 = (AppCompatDelegate) it.next().get();
                 if (appCompatDelegate2 == appCompatDelegate || appCompatDelegate2 == null) {
                     it.remove();
                 }

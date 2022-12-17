@@ -7,52 +7,51 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import androidx.preference.PreferenceViewHolder;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
 import com.android.settingslib.HelpUtils;
 import com.android.settingslib.RestrictedPreference;
-/* loaded from: classes.dex */
+
 public class VpnInfoPreference extends RestrictedPreference implements View.OnClickListener {
     private String mHelpUrl;
     private boolean mIsInsecureVpn = false;
 
-    @Override // com.android.settingslib.RestrictedPreference, com.android.settingslib.widget.TwoTargetPreference
-    protected boolean shouldHideSecondTarget() {
+    /* access modifiers changed from: protected */
+    public boolean shouldHideSecondTarget() {
         return false;
     }
 
     public VpnInfoPreference(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.mHelpUrl = context.getString(R.string.help_url_insecure_vpn);
+        this.mHelpUrl = context.getString(R$string.help_url_insecure_vpn);
     }
 
-    @Override // com.android.settingslib.RestrictedPreference, com.android.settingslib.widget.TwoTargetPreference
-    protected int getSecondTargetResId() {
-        return R.layout.preference_widget_warning;
+    /* access modifiers changed from: protected */
+    public int getSecondTargetResId() {
+        return R$layout.preference_widget_warning;
     }
 
-    @Override // com.android.settingslib.RestrictedPreference, com.android.settingslib.widget.TwoTargetPreference, androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
-        View findViewById = preferenceViewHolder.findViewById(R.id.warning_button);
-        if (this.mIsInsecureVpn && !TextUtils.isEmpty(this.mHelpUrl)) {
-            findViewById.setVisibility(0);
-            findViewById.setOnClickListener(this);
-            findViewById.setEnabled(true);
-        } else {
+        View findViewById = preferenceViewHolder.findViewById(R$id.warning_button);
+        if (!this.mIsInsecureVpn || TextUtils.isEmpty(this.mHelpUrl)) {
             findViewById.setVisibility(8);
             findViewById.setOnClickListener(this);
             findViewById.setEnabled(false);
+        } else {
+            findViewById.setVisibility(0);
+            findViewById.setOnClickListener(this);
+            findViewById.setEnabled(true);
         }
-        preferenceViewHolder.findViewById(R.id.two_target_divider).setVisibility(8);
+        preferenceViewHolder.findViewById(R$id.two_target_divider).setVisibility(8);
     }
 
-    @Override // android.view.View.OnClickListener
     public void onClick(View view) {
         Intent helpIntent;
-        if (view.getId() != R.id.warning_button || (helpIntent = HelpUtils.getHelpIntent(getContext(), this.mHelpUrl, getClass().getName())) == null) {
-            return;
+        if (view.getId() == R$id.warning_button && (helpIntent = HelpUtils.getHelpIntent(getContext(), this.mHelpUrl, getClass().getName())) != null) {
+            ((Activity) getContext()).startActivityForResult(helpIntent, 0);
         }
-        ((Activity) getContext()).startActivityForResult(helpIntent, 0);
     }
 
     public void setInsecureVpn(boolean z) {

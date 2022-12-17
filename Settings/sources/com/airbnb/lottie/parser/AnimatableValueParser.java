@@ -14,7 +14,7 @@ import com.airbnb.lottie.utils.Utils;
 import com.airbnb.lottie.value.Keyframe;
 import java.io.IOException;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class AnimatableValueParser {
     public static AnimatableFloatValue parseFloat(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
         return parseFloat(jsonReader, lottieComposition, true);
@@ -24,38 +24,31 @@ public class AnimatableValueParser {
         return new AnimatableFloatValue(parse(jsonReader, z ? Utils.dpScale() : 1.0f, lottieComposition, FloatParser.INSTANCE));
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static AnimatableIntegerValue parseInteger(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
+    static AnimatableIntegerValue parseInteger(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
         return new AnimatableIntegerValue(parse(jsonReader, lottieComposition, IntegerParser.INSTANCE));
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static AnimatablePointValue parsePoint(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
+    static AnimatablePointValue parsePoint(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
         return new AnimatablePointValue(parse(jsonReader, Utils.dpScale(), lottieComposition, PointFParser.INSTANCE));
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static AnimatableScaleValue parseScale(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
+    static AnimatableScaleValue parseScale(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
         return new AnimatableScaleValue(parse(jsonReader, lottieComposition, ScaleXYParser.INSTANCE));
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static AnimatableShapeValue parseShapeData(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
+    static AnimatableShapeValue parseShapeData(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
         return new AnimatableShapeValue(parse(jsonReader, Utils.dpScale(), lottieComposition, ShapeDataParser.INSTANCE));
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static AnimatableTextFrame parseDocumentData(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
+    static AnimatableTextFrame parseDocumentData(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
         return new AnimatableTextFrame(parse(jsonReader, lottieComposition, DocumentDataParser.INSTANCE));
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static AnimatableColorValue parseColor(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
+    static AnimatableColorValue parseColor(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
         return new AnimatableColorValue(parse(jsonReader, lottieComposition, ColorParser.INSTANCE));
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static AnimatableGradientColorValue parseGradientColor(JsonReader jsonReader, LottieComposition lottieComposition, int i) throws IOException {
+    static AnimatableGradientColorValue parseGradientColor(JsonReader jsonReader, LottieComposition lottieComposition, int i) throws IOException {
         return new AnimatableGradientColorValue(parse(jsonReader, lottieComposition, new GradientColorParser(i)));
     }
 

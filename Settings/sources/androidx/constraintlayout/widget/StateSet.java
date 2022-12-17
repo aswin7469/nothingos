@@ -10,13 +10,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
-/* loaded from: classes.dex */
+
 public class StateSet {
-    int mDefaultState = -1;
-    int mCurrentStateId = -1;
-    int mCurrentConstraintNumber = -1;
-    private SparseArray<State> mStateList = new SparseArray<>();
     private SparseArray<ConstraintSet> mConstraintSetMap = new SparseArray<>();
+    int mCurrentConstraintNumber = -1;
+    int mCurrentStateId = -1;
+    int mDefaultState = -1;
+    private SparseArray<State> mStateList = new SparseArray<>();
 
     public StateSet(Context context, XmlPullParser xmlPullParser) {
         load(context, xmlPullParser);
@@ -66,17 +66,17 @@ public class StateSet {
                             }
                             break;
                     }
-                    if (c != 0 && c != 1) {
+                    if (!(c == 0 || c == 1)) {
                         if (c == 2) {
                             state = new State(context, xmlPullParser);
                             this.mStateList.put(state.mId, state);
-                        } else if (c == 3) {
+                        } else if (c != 3) {
+                            Log.v("ConstraintLayoutStates", "unknown tag " + name);
+                        } else {
                             Variant variant = new Variant(context, xmlPullParser);
                             if (state != null) {
                                 state.add(variant);
                             }
-                        } else {
-                            Log.v("ConstraintLayoutStates", "unknown tag " + name);
                         }
                     }
                 } else if (eventType != 3) {
@@ -86,15 +86,15 @@ public class StateSet {
                 }
                 eventType = xmlPullParser.next();
             }
-        } catch (IOException e) {
+        } catch (XmlPullParserException e) {
             e.printStackTrace();
-        } catch (XmlPullParserException e2) {
+        } catch (IOException e2) {
             e2.printStackTrace();
         }
     }
 
     public int stateGetConstraintID(int i, int i2, int i3) {
-        return updateConstraints(-1, i, i2, i3);
+        return updateConstraints(-1, i, (float) i2, (float) i3);
     }
 
     public int convertToConstraintSet(int i, int i2, float f, float f2) {
@@ -102,67 +102,67 @@ public class StateSet {
         if (state == null) {
             return i2;
         }
-        if (f == -1.0f || f2 == -1.0f) {
-            if (state.mConstraintID == i) {
-                return i;
-            }
+        if (f != -1.0f && f2 != -1.0f) {
+            Variant variant = null;
             Iterator<Variant> it = state.mVariants.iterator();
             while (it.hasNext()) {
-                if (i == it.next().mConstraintID) {
+                Variant next = it.next();
+                if (next.match(f, f2)) {
+                    if (i == next.mConstraintID) {
+                        return i;
+                    }
+                    variant = next;
+                }
+            }
+            if (variant != null) {
+                return variant.mConstraintID;
+            }
+            return state.mConstraintID;
+        } else if (state.mConstraintID == i) {
+            return i;
+        } else {
+            Iterator<Variant> it2 = state.mVariants.iterator();
+            while (it2.hasNext()) {
+                if (i == it2.next().mConstraintID) {
                     return i;
                 }
             }
             return state.mConstraintID;
         }
-        Variant variant = null;
-        Iterator<Variant> it2 = state.mVariants.iterator();
-        while (it2.hasNext()) {
-            Variant next = it2.next();
-            if (next.match(f, f2)) {
-                if (i == next.mConstraintID) {
-                    return i;
-                }
-                variant = next;
-            }
-        }
-        if (variant != null) {
-            return variant.mConstraintID;
-        }
-        return state.mConstraintID;
     }
 
     public int updateConstraints(int i, int i2, float f, float f2) {
         State state;
         int findMatch;
-        if (i != i2) {
-            State state2 = this.mStateList.get(i2);
-            if (state2 == null) {
+        if (i == i2) {
+            if (i2 == -1) {
+                state = this.mStateList.valueAt(0);
+            } else {
+                state = this.mStateList.get(this.mCurrentStateId);
+            }
+            if (state == null) {
                 return -1;
             }
-            int findMatch2 = state2.findMatch(f, f2);
-            return findMatch2 == -1 ? state2.mConstraintID : state2.mVariants.get(findMatch2).mConstraintID;
+            if ((this.mCurrentConstraintNumber == -1 || !state.mVariants.get(i).match(f, f2)) && i != (findMatch = state.findMatch(f, f2))) {
+                return findMatch == -1 ? state.mConstraintID : state.mVariants.get(findMatch).mConstraintID;
+            }
+            return i;
         }
-        if (i2 == -1) {
-            state = this.mStateList.valueAt(0);
-        } else {
-            state = this.mStateList.get(this.mCurrentStateId);
-        }
-        if (state == null) {
+        State state2 = this.mStateList.get(i2);
+        if (state2 == null) {
             return -1;
         }
-        return ((this.mCurrentConstraintNumber == -1 || !state.mVariants.get(i).match(f, f2)) && i != (findMatch = state.findMatch(f, f2))) ? findMatch == -1 ? state.mConstraintID : state.mVariants.get(findMatch).mConstraintID : i;
+        int findMatch2 = state2.findMatch(f, f2);
+        return findMatch2 == -1 ? state2.mConstraintID : state2.mVariants.get(findMatch2).mConstraintID;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class State {
-        int mConstraintID;
+    static class State {
+        int mConstraintID = -1;
         int mId;
         boolean mIsLayout;
         ArrayList<Variant> mVariants = new ArrayList<>();
 
         public State(Context context, XmlPullParser xmlPullParser) {
-            this.mConstraintID = -1;
             this.mIsLayout = false;
             TypedArray obtainStyledAttributes = context.obtainStyledAttributes(Xml.asAttributeSet(xmlPullParser), R$styleable.State);
             int indexCount = obtainStyledAttributes.getIndexCount();
@@ -182,7 +182,8 @@ public class StateSet {
             obtainStyledAttributes.recycle();
         }
 
-        void add(Variant variant) {
+        /* access modifiers changed from: package-private */
+        public void add(Variant variant) {
             this.mVariants.add(variant);
         }
 
@@ -196,22 +197,15 @@ public class StateSet {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class Variant {
-        int mConstraintID;
+    static class Variant {
+        int mConstraintID = -1;
         boolean mIsLayout;
-        float mMaxHeight;
-        float mMaxWidth;
-        float mMinHeight;
-        float mMinWidth;
+        float mMaxHeight = Float.NaN;
+        float mMaxWidth = Float.NaN;
+        float mMinHeight = Float.NaN;
+        float mMinWidth = Float.NaN;
 
         public Variant(Context context, XmlPullParser xmlPullParser) {
-            this.mMinWidth = Float.NaN;
-            this.mMinHeight = Float.NaN;
-            this.mMaxWidth = Float.NaN;
-            this.mMaxHeight = Float.NaN;
-            this.mConstraintID = -1;
             this.mIsLayout = false;
             TypedArray obtainStyledAttributes = context.obtainStyledAttributes(Xml.asAttributeSet(xmlPullParser), R$styleable.Variant);
             int indexCount = obtainStyledAttributes.getIndexCount();
@@ -239,15 +233,19 @@ public class StateSet {
             obtainStyledAttributes.recycle();
         }
 
-        boolean match(float f, float f2) {
-            if (Float.isNaN(this.mMinWidth) || f >= this.mMinWidth) {
-                if (!Float.isNaN(this.mMinHeight) && f2 < this.mMinHeight) {
-                    return false;
-                }
-                if (!Float.isNaN(this.mMaxWidth) && f > this.mMaxWidth) {
-                    return false;
-                }
-                return Float.isNaN(this.mMaxHeight) || f2 <= this.mMaxHeight;
+        /* access modifiers changed from: package-private */
+        public boolean match(float f, float f2) {
+            if (!Float.isNaN(this.mMinWidth) && f < this.mMinWidth) {
+                return false;
+            }
+            if (!Float.isNaN(this.mMinHeight) && f2 < this.mMinHeight) {
+                return false;
+            }
+            if (!Float.isNaN(this.mMaxWidth) && f > this.mMaxWidth) {
+                return false;
+            }
+            if (Float.isNaN(this.mMaxHeight) || f2 <= this.mMaxHeight) {
+                return true;
             }
             return false;
         }

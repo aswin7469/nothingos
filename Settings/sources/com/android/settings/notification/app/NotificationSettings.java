@@ -1,12 +1,12 @@
 package com.android.settings.notification.app;
 
+import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.NotificationChannel;
 import android.app.NotificationChannelGroup;
 import android.app.NotificationManager;
-import android.app.role.RoleManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -28,7 +28,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.Toast;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$string;
 import com.android.settings.dashboard.DashboardFragment;
 import com.android.settings.notification.NotificationBackend;
 import com.android.settingslib.RestrictedLockUtils;
@@ -36,34 +37,26 @@ import com.android.settingslib.RestrictedLockUtilsInternal;
 import com.android.settingslib.notification.ConversationIconFactory;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public abstract class NotificationSettings extends DashboardFragment {
-    private static final boolean DEBUG = Log.isLoggable("NotifiSettingsBase", 3);
+    /* access modifiers changed from: private */
+    public static final boolean DEBUG = Log.isLoggable("NotifiSettingsBase", 3);
     protected NotificationBackend.AppRow mAppRow;
     protected Bundle mArgs;
+    protected NotificationBackend mBackend = new NotificationBackend();
     protected NotificationChannel mChannel;
     protected NotificationChannelGroup mChannelGroup;
     protected Context mContext;
+    protected List<NotificationPreferenceController> mControllers = new ArrayList();
     protected Drawable mConversationDrawable;
     protected ShortcutInfo mConversationInfo;
+    protected DependentFieldListener mDependentFieldListener = new DependentFieldListener();
     protected Intent mIntent;
-    private ViewGroup mLayoutView;
+    /* access modifiers changed from: private */
+    public ViewGroup mLayoutView;
     protected boolean mListeningToPackageRemove;
     protected NotificationManager mNm;
-    protected String mPkg;
-    protected PackageInfo mPkgInfo;
-    protected PackageManager mPm;
-    protected List<String> mPreferenceFilter;
-    protected RoleManager mRm;
-    protected RestrictedLockUtils.EnforcedAdmin mSuspendedAppsAdmin;
-    protected int mUid;
-    protected int mUserId;
-    protected NotificationBackend mBackend = new NotificationBackend();
-    protected boolean mShowLegacyChannelConfig = false;
-    protected List<NotificationPreferenceController> mControllers = new ArrayList();
-    protected DependentFieldListener mDependentFieldListener = new DependentFieldListener();
-    private final ViewTreeObserver.OnGlobalLayoutListener mOnGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() { // from class: com.android.settings.notification.app.NotificationSettings.1
-        @Override // android.view.ViewTreeObserver.OnGlobalLayoutListener
+    private final ViewTreeObserver.OnGlobalLayoutListener mOnGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         public void onGlobalLayout() {
             NotificationSettings.this.animateIn();
             if (NotificationSettings.this.mLayoutView != null) {
@@ -71,8 +64,7 @@ public abstract class NotificationSettings extends DashboardFragment {
             }
         }
     };
-    protected final BroadcastReceiver mPackageRemovedReceiver = new BroadcastReceiver() { // from class: com.android.settings.notification.app.NotificationSettings.2
-        @Override // android.content.BroadcastReceiver
+    protected final BroadcastReceiver mPackageRemovedReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String schemeSpecificPart = intent.getData().getSchemeSpecificPart();
             PackageInfo packageInfo = NotificationSettings.this.mPkgInfo;
@@ -84,33 +76,41 @@ public abstract class NotificationSettings extends DashboardFragment {
             }
         }
     };
+    protected String mPkg;
+    protected PackageInfo mPkgInfo;
+    protected PackageManager mPm;
+    protected List<String> mPreferenceFilter;
+    protected boolean mShowLegacyChannelConfig = false;
+    protected RestrictedLockUtils.EnforcedAdmin mSuspendedAppsAdmin;
+    protected int mUid;
+    protected int mUserId;
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
-        String stringExtra;
-        int intExtra;
+        String str;
+        int i;
+        Class cls = ConversationHeaderPreferenceController.class;
+        Class cls2 = HeaderPreferenceController.class;
         super.onAttach(context);
         this.mContext = getActivity();
         this.mIntent = getActivity().getIntent();
         this.mArgs = getArguments();
         this.mPm = getPackageManager();
         this.mNm = NotificationManager.from(this.mContext);
-        this.mRm = (RoleManager) this.mContext.getSystemService(RoleManager.class);
         Bundle bundle = this.mArgs;
-        if (bundle != null && bundle.containsKey("package")) {
-            stringExtra = this.mArgs.getString("package");
+        if (bundle == null || !bundle.containsKey("package")) {
+            str = this.mIntent.getStringExtra("android.provider.extra.APP_PACKAGE");
         } else {
-            stringExtra = this.mIntent.getStringExtra("android.provider.extra.APP_PACKAGE");
+            str = this.mArgs.getString("package");
         }
-        this.mPkg = stringExtra;
+        this.mPkg = str;
         Bundle bundle2 = this.mArgs;
-        if (bundle2 != null && bundle2.containsKey("uid")) {
-            intExtra = this.mArgs.getInt("uid");
+        if (bundle2 == null || !bundle2.containsKey("uid")) {
+            i = this.mIntent.getIntExtra("app_uid", -1);
         } else {
-            intExtra = this.mIntent.getIntExtra("app_uid", -1);
+            i = this.mArgs.getInt("uid");
         }
-        this.mUid = intExtra;
-        if (intExtra < 0) {
+        this.mUid = i;
+        if (i < 0) {
             try {
                 this.mUid = this.mPm.getPackageUid(this.mPkg, 0);
             } catch (PackageManager.NameNotFoundException unused) {
@@ -127,19 +127,18 @@ public abstract class NotificationSettings extends DashboardFragment {
             loadChannelGroup();
             loadPreferencesFilter();
             collectConfigActivities();
-            if (use(HeaderPreferenceController.class) != null) {
-                getSettingsLifecycle().addObserver((LifecycleObserver) use(HeaderPreferenceController.class));
+            if (use(cls2) != null) {
+                getSettingsLifecycle().addObserver((LifecycleObserver) use(cls2));
             }
-            if (use(ConversationHeaderPreferenceController.class) != null) {
-                getSettingsLifecycle().addObserver((LifecycleObserver) use(ConversationHeaderPreferenceController.class));
+            if (use(cls) != null) {
+                getSettingsLifecycle().addObserver((LifecycleObserver) use(cls));
             }
-            for (NotificationPreferenceController notificationPreferenceController : this.mControllers) {
-                notificationPreferenceController.onResume(this.mAppRow, this.mChannel, this.mChannelGroup, null, null, this.mSuspendedAppsAdmin, this.mPreferenceFilter);
+            for (NotificationPreferenceController onResume : this.mControllers) {
+                onResume.onResume(this.mAppRow, this.mChannel, this.mChannelGroup, (Drawable) null, (ShortcutInfo) null, this.mSuspendedAppsAdmin, this.mPreferenceFilter);
             }
         }
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         if (this.mIntent == null && this.mArgs == null) {
@@ -153,13 +152,11 @@ public abstract class NotificationSettings extends DashboardFragment {
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onDestroy() {
         stopListeningToPackageRemove();
         super.onDestroy();
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
         if (this.mUid < 0 || TextUtils.isEmpty(this.mPkg) || this.mPkgInfo == null || this.mAppRow == null) {
@@ -180,30 +177,30 @@ public abstract class NotificationSettings extends DashboardFragment {
         collectConfigActivities();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void animatePanel() {
         if (this.mPreferenceFilter != null) {
-            ViewGroup viewGroup = (ViewGroup) getActivity().findViewById(R.id.main_content);
+            ViewGroup viewGroup = (ViewGroup) getActivity().findViewById(R$id.main_content);
             this.mLayoutView = viewGroup;
             viewGroup.getViewTreeObserver().addOnGlobalLayoutListener(this.mOnGlobalLayoutListener);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void animateIn() {
         ViewGroup viewGroup = this.mLayoutView;
-        AnimatorSet buildAnimatorSet = buildAnimatorSet(viewGroup, viewGroup.getHeight(), 0.0f, 0.0f, 1.0f, 250);
+        AnimatorSet buildAnimatorSet = buildAnimatorSet(viewGroup, (float) viewGroup.getHeight(), 0.0f, 0.0f, 1.0f, 250);
         ValueAnimator valueAnimator = new ValueAnimator();
-        valueAnimator.setFloatValues(0.0f, 1.0f);
+        valueAnimator.setFloatValues(new float[]{0.0f, 1.0f});
         buildAnimatorSet.play(valueAnimator);
         buildAnimatorSet.start();
     }
 
     private static AnimatorSet buildAnimatorSet(View view, float f, float f2, float f3, float f4, int i) {
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setDuration(i);
+        animatorSet.setDuration((long) i);
         animatorSet.setInterpolator(new DecelerateInterpolator());
-        animatorSet.playTogether(ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, f, f2), ObjectAnimator.ofFloat(view, View.ALPHA, f3, f4));
+        animatorSet.playTogether(new Animator[]{ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, new float[]{f, f2}), ObjectAnimator.ofFloat(view, View.ALPHA, new float[]{f3, f4})});
         return animatorSet;
     }
 
@@ -214,63 +211,99 @@ public abstract class NotificationSettings extends DashboardFragment {
 
     private void loadChannel() {
         Intent intent = getActivity().getIntent();
-        String str = null;
         String stringExtra = intent != null ? intent.getStringExtra("android.provider.extra.CHANNEL_ID") : null;
         if (stringExtra == null && intent != null) {
             Bundle bundleExtra = intent.getBundleExtra(":settings:show_fragment_args");
             stringExtra = bundleExtra != null ? bundleExtra.getString("android.provider.extra.CHANNEL_ID") : null;
         }
-        if (intent != null) {
-            str = intent.getStringExtra("android.provider.extra.CONVERSATION_ID");
+        NotificationChannel channel = this.mBackend.getChannel(this.mPkg, this.mUid, stringExtra, intent != null ? intent.getStringExtra("android.provider.extra.CONVERSATION_ID") : null);
+        this.mChannel = channel;
+        if (channel == null) {
+            this.mBackend.getChannel(this.mPkg, this.mUid, stringExtra, (String) null);
         }
-        this.mChannel = this.mBackend.getChannel(this.mPkg, this.mUid, stringExtra, str);
     }
 
     private void loadConversation() {
         NotificationChannel notificationChannel = this.mChannel;
-        if (notificationChannel == null || TextUtils.isEmpty(notificationChannel.getConversationId()) || this.mChannel.isDemoted()) {
-            return;
+        if (notificationChannel != null && !TextUtils.isEmpty(notificationChannel.getConversationId()) && !this.mChannel.isDemoted()) {
+            ShortcutInfo conversationInfo = this.mBackend.getConversationInfo(this.mContext, this.mPkg, this.mUid, this.mChannel.getConversationId());
+            this.mConversationInfo = conversationInfo;
+            if (conversationInfo != null) {
+                NotificationBackend notificationBackend = this.mBackend;
+                Context context = this.mContext;
+                NotificationBackend.AppRow appRow = this.mAppRow;
+                this.mConversationDrawable = notificationBackend.getConversationDrawable(context, conversationInfo, appRow.pkg, appRow.uid, this.mChannel.isImportantConversation());
+            }
         }
-        ShortcutInfo conversationInfo = this.mBackend.getConversationInfo(this.mContext, this.mPkg, this.mUid, this.mChannel.getConversationId());
-        this.mConversationInfo = conversationInfo;
-        if (conversationInfo == null) {
-            return;
-        }
-        NotificationBackend notificationBackend = this.mBackend;
-        Context context = this.mContext;
-        NotificationBackend.AppRow appRow = this.mAppRow;
-        this.mConversationDrawable = notificationBackend.getConversationDrawable(context, conversationInfo, appRow.pkg, appRow.uid, this.mChannel.isImportantConversation());
     }
 
     private void loadAppRow() {
-        this.mAppRow = this.mBackend.loadAppRow(this.mContext, this.mPm, this.mRm, this.mPkgInfo);
+        this.mAppRow = this.mBackend.loadAppRow(this.mContext, this.mPm, this.mPkgInfo);
     }
 
+    /* JADX WARNING: Code restructure failed: missing block: B:2:0x0010, code lost:
+        r0 = r5.mChannel;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
     private void loadChannelGroup() {
-        NotificationChannelGroup group;
-        NotificationChannel notificationChannel;
-        NotificationBackend notificationBackend = this.mBackend;
-        NotificationBackend.AppRow appRow = this.mAppRow;
-        boolean z = notificationBackend.onlyHasDefaultChannel(appRow.pkg, appRow.uid) || ((notificationChannel = this.mChannel) != null && "miscellaneous".equals(notificationChannel.getId()));
-        this.mShowLegacyChannelConfig = z;
-        if (z) {
-            NotificationBackend notificationBackend2 = this.mBackend;
-            NotificationBackend.AppRow appRow2 = this.mAppRow;
-            this.mChannel = notificationBackend2.getChannel(appRow2.pkg, appRow2.uid, "miscellaneous", null);
-        }
-        NotificationChannel notificationChannel2 = this.mChannel;
-        if (notificationChannel2 == null || TextUtils.isEmpty(notificationChannel2.getGroup()) || (group = this.mBackend.getGroup(this.mPkg, this.mUid, this.mChannel.getGroup())) == null) {
-            return;
-        }
-        this.mChannelGroup = group;
+        /*
+            r5 = this;
+            com.android.settings.notification.NotificationBackend r0 = r5.mBackend
+            com.android.settings.notification.NotificationBackend$AppRow r1 = r5.mAppRow
+            java.lang.String r2 = r1.pkg
+            int r1 = r1.uid
+            boolean r0 = r0.onlyHasDefaultChannel(r2, r1)
+            java.lang.String r1 = "miscellaneous"
+            if (r0 != 0) goto L_0x0021
+            android.app.NotificationChannel r0 = r5.mChannel
+            if (r0 == 0) goto L_0x001f
+            java.lang.String r0 = r0.getId()
+            boolean r0 = r1.equals(r0)
+            if (r0 == 0) goto L_0x001f
+            goto L_0x0021
+        L_0x001f:
+            r0 = 0
+            goto L_0x0022
+        L_0x0021:
+            r0 = 1
+        L_0x0022:
+            r5.mShowLegacyChannelConfig = r0
+            if (r0 == 0) goto L_0x0035
+            com.android.settings.notification.NotificationBackend r0 = r5.mBackend
+            com.android.settings.notification.NotificationBackend$AppRow r2 = r5.mAppRow
+            java.lang.String r3 = r2.pkg
+            int r2 = r2.uid
+            r4 = 0
+            android.app.NotificationChannel r0 = r0.getChannel(r3, r2, r1, r4)
+            r5.mChannel = r0
+        L_0x0035:
+            android.app.NotificationChannel r0 = r5.mChannel
+            if (r0 == 0) goto L_0x0057
+            java.lang.String r0 = r0.getGroup()
+            boolean r0 = android.text.TextUtils.isEmpty(r0)
+            if (r0 != 0) goto L_0x0057
+            com.android.settings.notification.NotificationBackend r0 = r5.mBackend
+            java.lang.String r1 = r5.mPkg
+            int r2 = r5.mUid
+            android.app.NotificationChannel r3 = r5.mChannel
+            java.lang.String r3 = r3.getGroup()
+            android.app.NotificationChannelGroup r0 = r0.getGroup(r1, r2, r3)
+            if (r0 == 0) goto L_0x0057
+            r5.mChannelGroup = r0
+        L_0x0057:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.notification.app.NotificationSettings.loadChannelGroup():void");
     }
 
-    protected void toastAndFinish() {
-        Toast.makeText(this.mContext, R.string.app_not_found_dlg_text, 0).show();
+    /* access modifiers changed from: protected */
+    public void toastAndFinish() {
+        Toast.makeText(this.mContext, R$string.app_not_found_dlg_text, 0).show();
         getActivity().finish();
     }
 
-    protected void collectConfigActivities() {
+    /* access modifiers changed from: protected */
+    public void collectConfigActivities() {
         Intent intent = new Intent("android.intent.action.MAIN").addCategory("android.intent.category.NOTIFICATION_PREFERENCES").setPackage(this.mAppRow.pkg);
         List<ResolveInfo> queryIntentActivities = this.mPm.queryIntentActivities(intent, 0);
         if (DEBUG) {
@@ -284,12 +317,8 @@ public abstract class NotificationSettings extends DashboardFragment {
         for (ResolveInfo resolveInfo : queryIntentActivities) {
             ActivityInfo activityInfo = resolveInfo.activityInfo;
             NotificationBackend.AppRow appRow = this.mAppRow;
-            if (appRow.settingsIntent != null) {
-                if (DEBUG) {
-                    Log.d("NotifiSettingsBase", "Ignoring duplicate notification preference activity (" + activityInfo.name + ") for package " + activityInfo.packageName);
-                }
-            } else {
-                appRow.settingsIntent = intent.setPackage(null).setClassName(activityInfo.packageName, activityInfo.name);
+            if (appRow.settingsIntent == null) {
+                appRow.settingsIntent = intent.setPackage((String) null).setClassName(activityInfo.packageName, activityInfo.name).addFlags(268435456);
                 NotificationChannel notificationChannel = this.mChannel;
                 if (notificationChannel != null) {
                     this.mAppRow.settingsIntent.putExtra("android.intent.extra.CHANNEL_ID", notificationChannel.getId());
@@ -298,54 +327,60 @@ public abstract class NotificationSettings extends DashboardFragment {
                 if (notificationChannelGroup != null) {
                     this.mAppRow.settingsIntent.putExtra("android.intent.extra.CHANNEL_GROUP_ID", notificationChannelGroup.getId());
                 }
+            } else if (DEBUG) {
+                Log.d("NotifiSettingsBase", "Ignoring duplicate notification preference activity (" + activityInfo.name + ") for package " + activityInfo.packageName);
             }
         }
     }
 
     private PackageInfo findPackageInfo(String str, int i) {
         String[] packagesForUid;
-        if (str != null && i >= 0 && (packagesForUid = this.mPm.getPackagesForUid(i)) != null) {
-            for (String str2 : packagesForUid) {
-                if (str.equals(str2)) {
+        if (!(str == null || i < 0 || (packagesForUid = this.mPm.getPackagesForUid(i)) == null)) {
+            int length = packagesForUid.length;
+            int i2 = 0;
+            while (i2 < length) {
+                if (str.equals(packagesForUid[i2])) {
                     try {
-                        return this.mPm.getPackageInfo(str, 64);
+                        return this.mPm.getPackageInfo(str, 4160);
                     } catch (PackageManager.NameNotFoundException e) {
                         Log.w("NotifiSettingsBase", "Failed to load package " + str, e);
                     }
+                } else {
+                    i2++;
                 }
             }
         }
         return null;
     }
 
-    protected void startListeningToPackageRemove() {
-        if (this.mListeningToPackageRemove) {
-            return;
-        }
-        this.mListeningToPackageRemove = true;
-        IntentFilter intentFilter = new IntentFilter("android.intent.action.PACKAGE_REMOVED");
-        intentFilter.addDataScheme("package");
-        getContext().registerReceiver(this.mPackageRemovedReceiver, intentFilter);
-    }
-
-    protected void stopListeningToPackageRemove() {
+    /* access modifiers changed from: protected */
+    public void startListeningToPackageRemove() {
         if (!this.mListeningToPackageRemove) {
-            return;
+            this.mListeningToPackageRemove = true;
+            IntentFilter intentFilter = new IntentFilter("android.intent.action.PACKAGE_REMOVED");
+            intentFilter.addDataScheme("package");
+            getContext().registerReceiver(this.mPackageRemovedReceiver, intentFilter);
         }
-        this.mListeningToPackageRemove = false;
-        getContext().unregisterReceiver(this.mPackageRemovedReceiver);
     }
 
-    protected void onPackageRemoved() {
+    /* access modifiers changed from: protected */
+    public void stopListeningToPackageRemove() {
+        if (this.mListeningToPackageRemove) {
+            this.mListeningToPackageRemove = false;
+            getContext().unregisterReceiver(this.mPackageRemovedReceiver);
+        }
+    }
+
+    /* access modifiers changed from: protected */
+    public void onPackageRemoved() {
         getActivity().finishAndRemoveTask();
     }
 
-    /* loaded from: classes.dex */
     protected class DependentFieldListener {
         protected DependentFieldListener() {
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
+        /* access modifiers changed from: protected */
         public void onFieldValueChanged() {
             NotificationSettings notificationSettings = NotificationSettings.this;
             Drawable drawable = notificationSettings.mConversationDrawable;
@@ -353,8 +388,8 @@ public abstract class NotificationSettings extends DashboardFragment {
                 ((ConversationIconFactory.ConversationIconDrawable) drawable).setImportant(notificationSettings.mChannel.isImportantConversation());
             }
             PreferenceScreen preferenceScreen = NotificationSettings.this.getPreferenceScreen();
-            for (NotificationPreferenceController notificationPreferenceController : NotificationSettings.this.mControllers) {
-                notificationPreferenceController.displayPreference(preferenceScreen);
+            for (NotificationPreferenceController displayPreference : NotificationSettings.this.mControllers) {
+                displayPreference.displayPreference(preferenceScreen);
             }
             NotificationSettings.this.updatePreferenceStates();
         }

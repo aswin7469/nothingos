@@ -1,5 +1,5 @@
 package androidx.constraintlayout.solver;
-/* loaded from: classes.dex */
+
 interface Pools$Pool<T> {
     T acquire();
 

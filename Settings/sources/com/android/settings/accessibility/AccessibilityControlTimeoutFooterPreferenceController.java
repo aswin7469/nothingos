@@ -2,46 +2,33 @@ package com.android.settings.accessibility;
 
 import android.content.Context;
 import android.content.IntentFilter;
-import com.android.settings.R;
-import com.android.settings.slices.SliceBackgroundWorker;
-/* loaded from: classes.dex */
-public class AccessibilityControlTimeoutFooterPreferenceController extends AccessibilityFooterPreferenceController {
-    @Override // com.android.settings.accessibility.AccessibilityFooterPreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
+import com.android.settings.R$string;
 
-    @Override // com.android.settings.accessibility.AccessibilityFooterPreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+public class AccessibilityControlTimeoutFooterPreferenceController extends AccessibilityFooterPreferenceController {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.accessibility.AccessibilityFooterPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.accessibility.AccessibilityFooterPreferenceController, com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.accessibility.AccessibilityFooterPreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.accessibility.AccessibilityFooterPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.accessibility.AccessibilityFooterPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.accessibility.AccessibilityFooterPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -50,13 +37,18 @@ public class AccessibilityControlTimeoutFooterPreferenceController extends Acces
         super(context, str);
     }
 
-    @Override // com.android.settings.accessibility.AccessibilityFooterPreferenceController
-    protected String getLabelName() {
-        return this.mContext.getString(R.string.accessibility_setting_item_control_timeout_title);
+    /* access modifiers changed from: protected */
+    public String getLearnMoreText() {
+        return this.mContext.getString(R$string.f138x14ac221a);
     }
 
-    @Override // com.android.settings.accessibility.AccessibilityFooterPreferenceController
-    protected int getHelpResource() {
-        return R.string.help_url_timeout;
+    /* access modifiers changed from: protected */
+    public String getIntroductionTitle() {
+        return this.mContext.getString(R$string.accessibility_control_timeout_about_title);
+    }
+
+    /* access modifiers changed from: protected */
+    public int getHelpResource() {
+        return R$string.help_url_timeout;
     }
 }

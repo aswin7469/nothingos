@@ -4,16 +4,14 @@ import android.os.HidlSupport;
 import android.os.HwBinder;
 import android.os.HwParcel;
 import android.os.IHwBinder;
-import android.os.IHwInterface;
 import android.os.RemoteException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Objects;
-/* loaded from: classes.dex */
+
 public interface IDumpstateDevice extends android.hardware.dumpstate.V1_0.IDumpstateDevice {
     boolean getVerboseLoggingEnabled() throws RemoteException;
 
-    @Override // android.hardware.dumpstate.V1_0.IDumpstateDevice
     ArrayList<String> interfaceChain() throws RemoteException;
 
     void setVerboseLoggingEnabled(boolean z) throws RemoteException;
@@ -22,9 +20,9 @@ public interface IDumpstateDevice extends android.hardware.dumpstate.V1_0.IDumps
         if (iHwBinder == null) {
             return null;
         }
-        IHwInterface queryLocalInterface = iHwBinder.queryLocalInterface("android.hardware.dumpstate@1.1::IDumpstateDevice");
+        IDumpstateDevice queryLocalInterface = iHwBinder.queryLocalInterface("android.hardware.dumpstate@1.1::IDumpstateDevice");
         if (queryLocalInterface != null && (queryLocalInterface instanceof IDumpstateDevice)) {
-            return (IDumpstateDevice) queryLocalInterface;
+            return queryLocalInterface;
         }
         Proxy proxy = new Proxy(iHwBinder);
         try {
@@ -47,7 +45,6 @@ public interface IDumpstateDevice extends android.hardware.dumpstate.V1_0.IDumps
         return getService("default", z);
     }
 
-    /* loaded from: classes.dex */
     public static final class Proxy implements IDumpstateDevice {
         private IHwBinder mRemote;
 
@@ -76,7 +73,6 @@ public interface IDumpstateDevice extends android.hardware.dumpstate.V1_0.IDumps
             return asBinder().hashCode();
         }
 
-        @Override // android.hardware.dumpstate.V1_1.IDumpstateDevice
         public void setVerboseLoggingEnabled(boolean z) throws RemoteException {
             HwParcel hwParcel = new HwParcel();
             hwParcel.writeInterfaceToken("android.hardware.dumpstate@1.1::IDumpstateDevice");
@@ -91,7 +87,6 @@ public interface IDumpstateDevice extends android.hardware.dumpstate.V1_0.IDumps
             }
         }
 
-        @Override // android.hardware.dumpstate.V1_1.IDumpstateDevice
         public boolean getVerboseLoggingEnabled() throws RemoteException {
             HwParcel hwParcel = new HwParcel();
             hwParcel.writeInterfaceToken("android.hardware.dumpstate@1.1::IDumpstateDevice");
@@ -106,7 +101,6 @@ public interface IDumpstateDevice extends android.hardware.dumpstate.V1_0.IDumps
             }
         }
 
-        @Override // android.hardware.dumpstate.V1_1.IDumpstateDevice, android.hardware.dumpstate.V1_0.IDumpstateDevice
         public ArrayList<String> interfaceChain() throws RemoteException {
             HwParcel hwParcel = new HwParcel();
             hwParcel.writeInterfaceToken("android.hidl.base@1.0::IBase");

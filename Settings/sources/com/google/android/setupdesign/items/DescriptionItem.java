@@ -6,8 +6,8 @@ import android.view.View;
 import android.widget.TextView;
 import com.google.android.setupdesign.R$id;
 import com.google.android.setupdesign.util.DescriptionStyler;
+
 @Deprecated
-/* loaded from: classes2.dex */
 public class DescriptionItem extends Item {
     private boolean partnerDescriptionHeavyStyle = false;
     private boolean partnerDescriptionLightStyle = false;
@@ -27,14 +27,12 @@ public class DescriptionItem extends Item {
         return this.partnerDescriptionLightStyle;
     }
 
-    @Override // com.google.android.setupdesign.items.Item, com.google.android.setupdesign.items.IItem
     public void onBindView(View view) {
         super.onBindView(view);
         TextView textView = (TextView) view.findViewById(R$id.sud_items_title);
         if (shouldApplyPartnerDescriptionHeavyStyle()) {
             DescriptionStyler.applyPartnerCustomizationHeavyStyle(textView);
-        } else if (!shouldApplyPartnerDescriptionLightStyle()) {
-        } else {
+        } else if (shouldApplyPartnerDescriptionLightStyle()) {
             DescriptionStyler.applyPartnerCustomizationLightStyle(textView);
         }
     }

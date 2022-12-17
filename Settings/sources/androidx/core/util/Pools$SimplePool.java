@@ -1,48 +1,47 @@
 package androidx.core.util;
-/* loaded from: classes.dex */
+
 public class Pools$SimplePool<T> implements Pools$Pool<T> {
     private final Object[] mPool;
     private int mPoolSize;
 
-    public Pools$SimplePool(int maxPoolSize) {
-        if (maxPoolSize <= 0) {
-            throw new IllegalArgumentException("The max pool size must be > 0");
+    public Pools$SimplePool(int i) {
+        if (i > 0) {
+            this.mPool = new Object[i];
+            return;
         }
-        this.mPool = new Object[maxPoolSize];
+        throw new IllegalArgumentException("The max pool size must be > 0");
     }
 
-    @Override // androidx.core.util.Pools$Pool
     public T acquire() {
         int i = this.mPoolSize;
-        if (i > 0) {
-            int i2 = i - 1;
+        if (i <= 0) {
+            return null;
+        }
+        int i2 = i - 1;
+        T[] tArr = this.mPool;
+        T t = tArr[i2];
+        tArr[i2] = null;
+        this.mPoolSize = i - 1;
+        return t;
+    }
+
+    public boolean release(T t) {
+        if (!isInPool(t)) {
+            int i = this.mPoolSize;
             Object[] objArr = this.mPool;
-            T t = (T) objArr[i2];
-            objArr[i2] = null;
-            this.mPoolSize = i - 1;
-            return t;
+            if (i >= objArr.length) {
+                return false;
+            }
+            objArr[i] = t;
+            this.mPoolSize = i + 1;
+            return true;
         }
-        return null;
+        throw new IllegalStateException("Already in the pool!");
     }
 
-    @Override // androidx.core.util.Pools$Pool
-    public boolean release(T instance) {
-        if (isInPool(instance)) {
-            throw new IllegalStateException("Already in the pool!");
-        }
-        int i = this.mPoolSize;
-        Object[] objArr = this.mPool;
-        if (i >= objArr.length) {
-            return false;
-        }
-        objArr[i] = instance;
-        this.mPoolSize = i + 1;
-        return true;
-    }
-
-    private boolean isInPool(T instance) {
+    private boolean isInPool(T t) {
         for (int i = 0; i < this.mPoolSize; i++) {
-            if (this.mPool[i] == instance) {
+            if (this.mPool[i] == t) {
                 return true;
             }
         }

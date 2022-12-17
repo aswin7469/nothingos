@@ -14,18 +14,19 @@ import com.android.settingslib.R$layout;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.RestrictedPreferenceHelper;
 import com.android.settingslib.Utils;
-/* loaded from: classes.dex */
+
 public class BubblePreference extends Preference implements View.OnClickListener {
     private ButtonViewHolder mBubbleAllButton;
     private ButtonViewHolder mBubbleNoneButton;
     private ButtonViewHolder mBubbleSelectedButton;
-    private Context mContext;
+    /* access modifiers changed from: private */
+    public Context mContext;
     RestrictedPreferenceHelper mHelper;
     private int mSelectedPreference;
     private boolean mSelectedVisible;
 
     public BubblePreference(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public BubblePreference(Context context, AttributeSet attributeSet) {
@@ -64,7 +65,6 @@ public class BubblePreference extends Preference implements View.OnClickListener
         notifyChanged();
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         boolean isDisabledByAdmin = this.mHelper.isDisabledByAdmin();
@@ -108,7 +108,6 @@ public class BubblePreference extends Preference implements View.OnClickListener
         findViewById4.setVisibility(i);
     }
 
-    @Override // android.view.View.OnClickListener
     public void onClick(View view) {
         int intValue = ((Integer) view.getTag()).intValue();
         callChangeListener(Integer.valueOf(intValue));
@@ -123,7 +122,6 @@ public class BubblePreference extends Preference implements View.OnClickListener
         buttonViewHolder.setSelected(context, z);
     }
 
-    /* loaded from: classes.dex */
     private class ButtonViewHolder {
         private int mId;
         private ImageView mImageView;
@@ -137,25 +135,26 @@ public class BubblePreference extends Preference implements View.OnClickListener
             this.mId = i;
         }
 
-        void setSelected(Context context, boolean z) {
+        /* access modifiers changed from: package-private */
+        public void setSelected(Context context, boolean z) {
             int i;
-            ColorStateList colorAttr;
+            ColorStateList colorStateList;
             View view = this.mView;
-            Context context2 = BubblePreference.this.mContext;
+            Context r1 = BubblePreference.this.mContext;
             if (z) {
                 i = R$drawable.button_border_selected;
             } else {
                 i = R$drawable.button_border_unselected;
             }
-            view.setBackground(context2.getDrawable(i));
+            view.setBackground(r1.getDrawable(i));
             this.mView.setSelected(z);
             if (z) {
-                colorAttr = Utils.getColorAccent(context);
+                colorStateList = Utils.getColorAccent(context);
             } else {
-                colorAttr = Utils.getColorAttr(context, 16842806);
+                colorStateList = Utils.getColorAttr(context, 16842806);
             }
-            this.mImageView.setImageTintList(colorAttr);
-            this.mTextView.setTextColor(colorAttr);
+            this.mImageView.setImageTintList(colorStateList);
+            this.mTextView.setTextColor(colorStateList);
         }
     }
 }

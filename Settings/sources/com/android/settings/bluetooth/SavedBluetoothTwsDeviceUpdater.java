@@ -5,10 +5,10 @@ import android.content.Context;
 import com.android.settings.connecteddevice.DevicePreferenceCallback;
 import com.android.settings.dashboard.DashboardFragment;
 import com.android.settingslib.bluetooth.CachedBluetoothDevice;
-/* loaded from: classes.dex */
+
 public class SavedBluetoothTwsDeviceUpdater extends BluetoothDeviceUpdater {
-    @Override // com.android.settings.bluetooth.BluetoothDeviceUpdater
-    protected String getPreferenceKey() {
+    /* access modifiers changed from: protected */
+    public String getPreferenceKey() {
         return "saved_bt_tws";
     }
 
@@ -16,7 +16,6 @@ public class SavedBluetoothTwsDeviceUpdater extends BluetoothDeviceUpdater {
         super(context, dashboardFragment, devicePreferenceCallback);
     }
 
-    @Override // com.android.settings.bluetooth.BluetoothDeviceUpdater
     public boolean isFilterMatched(CachedBluetoothDevice cachedBluetoothDevice) {
         BluetoothDevice device = cachedBluetoothDevice.getDevice();
         return device.getBondState() == 12 && !device.isConnected() && device.isTwsPlusDevice() && !isGroupDevice(cachedBluetoothDevice) && !isPrivateAddr(cachedBluetoothDevice);

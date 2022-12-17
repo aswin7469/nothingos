@@ -1,8 +1,9 @@
 package com.android.settingslib.search;
 
 import android.content.Context;
-/* loaded from: classes.dex */
-public class SearchIndexableRaw extends android.provider.SearchIndexableData {
+import android.provider.SearchIndexableData;
+
+public class SearchIndexableRaw extends SearchIndexableData {
     public String entries;
     public String keywords;
     public String screenTitle;

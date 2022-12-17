@@ -3,7 +3,7 @@ package androidx.preference;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
-/* loaded from: classes.dex */
+
 public class ListPreferenceDialogFragmentCompat extends PreferenceDialogFragmentCompat {
     int mClickedDialogEntryIndex;
     private CharSequence[] mEntries;
@@ -17,7 +17,6 @@ public class ListPreferenceDialogFragmentCompat extends PreferenceDialogFragment
         return listPreferenceDialogFragmentCompat;
     }
 
-    @Override // androidx.preference.PreferenceDialogFragmentCompat, androidx.fragment.app.DialogFragment, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         if (bundle == null) {
@@ -35,7 +34,6 @@ public class ListPreferenceDialogFragmentCompat extends PreferenceDialogFragment
         this.mEntryValues = bundle.getCharSequenceArray("ListPreferenceDialogFragment.entryValues");
     }
 
-    @Override // androidx.preference.PreferenceDialogFragmentCompat, androidx.fragment.app.DialogFragment, androidx.fragment.app.Fragment
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         bundle.putInt("ListPreferenceDialogFragment.index", this.mClickedDialogEntryIndex);
@@ -47,12 +45,10 @@ public class ListPreferenceDialogFragmentCompat extends PreferenceDialogFragment
         return (ListPreference) getPreference();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.PreferenceDialogFragmentCompat
+    /* access modifiers changed from: protected */
     public void onPrepareDialogBuilder(AlertDialog.Builder builder) {
         super.onPrepareDialogBuilder(builder);
-        builder.setSingleChoiceItems(this.mEntries, this.mClickedDialogEntryIndex, new DialogInterface.OnClickListener() { // from class: androidx.preference.ListPreferenceDialogFragmentCompat.1
-            @Override // android.content.DialogInterface.OnClickListener
+        builder.setSingleChoiceItems(this.mEntries, this.mClickedDialogEntryIndex, (DialogInterface.OnClickListener) new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
                 ListPreferenceDialogFragmentCompat listPreferenceDialogFragmentCompat = ListPreferenceDialogFragmentCompat.this;
                 listPreferenceDialogFragmentCompat.mClickedDialogEntryIndex = i;
@@ -63,17 +59,14 @@ public class ListPreferenceDialogFragmentCompat extends PreferenceDialogFragment
         builder.setPositiveButton((CharSequence) null, (DialogInterface.OnClickListener) null);
     }
 
-    @Override // androidx.preference.PreferenceDialogFragmentCompat
     public void onDialogClosed(boolean z) {
         int i;
-        if (!z || (i = this.mClickedDialogEntryIndex) < 0) {
-            return;
+        if (z && (i = this.mClickedDialogEntryIndex) >= 0) {
+            String charSequence = this.mEntryValues[i].toString();
+            ListPreference listPreference = getListPreference();
+            if (listPreference.callChangeListener(charSequence)) {
+                listPreference.setValue(charSequence);
+            }
         }
-        String charSequence = this.mEntryValues[i].toString();
-        ListPreference listPreference = getListPreference();
-        if (!listPreference.callChangeListener(charSequence)) {
-            return;
-        }
-        listPreference.setValue(charSequence);
     }
 }

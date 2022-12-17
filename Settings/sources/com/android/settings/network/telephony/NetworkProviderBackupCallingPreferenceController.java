@@ -8,11 +8,10 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceScreen;
 import com.android.settings.core.BasePreferenceController;
 import com.android.settings.network.SubscriptionUtil;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.core.lifecycle.Lifecycle;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class NetworkProviderBackupCallingPreferenceController extends BasePreferenceController implements LifecycleObserver {
     private static final String KEY_PREFERENCE_CATEGORY = "provider_model_backup_calling_category";
     private static final String TAG = "NetProvBackupCallingCtrl";
@@ -21,42 +20,30 @@ public class NetworkProviderBackupCallingPreferenceController extends BasePrefer
     private PreferenceScreen mPreferenceScreen;
     private List<SubscriptionInfo> mSubscriptionList;
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -65,7 +52,8 @@ public class NetworkProviderBackupCallingPreferenceController extends BasePrefer
         super(context, str);
     }
 
-    protected NetworkProviderBackupCallingGroup createBackupCallingControllerForSub(Lifecycle lifecycle, List<SubscriptionInfo> list) {
+    /* access modifiers changed from: protected */
+    public NetworkProviderBackupCallingGroup createBackupCallingControllerForSub(Lifecycle lifecycle, List<SubscriptionInfo> list) {
         return new NetworkProviderBackupCallingGroup(this.mContext, lifecycle, list, KEY_PREFERENCE_CATEGORY);
     }
 
@@ -79,13 +67,14 @@ public class NetworkProviderBackupCallingPreferenceController extends BasePrefer
         return SubscriptionUtil.getActiveSubscriptions((SubscriptionManager) this.mContext.getSystemService(SubscriptionManager.class));
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         List<SubscriptionInfo> list;
-        return (this.mNetworkProviderBackupCallingGroup == null || (list = this.mSubscriptionList) == null || list.size() < 2) ? 2 : 0;
+        if (this.mNetworkProviderBackupCallingGroup == null || (list = this.mSubscriptionList) == null || list.size() < 2) {
+            return 2;
+        }
+        return 0;
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreferenceScreen = preferenceScreen;

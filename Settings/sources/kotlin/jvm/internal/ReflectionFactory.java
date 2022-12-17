@@ -1,6 +1,22 @@
 package kotlin.jvm.internal;
-/* loaded from: classes2.dex */
+
+import kotlin.reflect.KClass;
+import kotlin.reflect.KDeclarationContainer;
+import kotlin.reflect.KFunction;
+
 public class ReflectionFactory {
+    public KFunction function(FunctionReference functionReference) {
+        return functionReference;
+    }
+
+    public KDeclarationContainer getOrCreateKotlinPackage(Class cls, String str) {
+        return new PackageReference(cls, str);
+    }
+
+    public KClass getOrCreateKotlinClass(Class cls) {
+        return new ClassReference(cls);
+    }
+
     public String renderLambdaToString(Lambda lambda) {
         return renderLambdaToString((FunctionBase) lambda);
     }

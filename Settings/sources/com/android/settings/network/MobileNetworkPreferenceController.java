@@ -18,40 +18,31 @@ import androidx.lifecycle.OnLifecycleEvent;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import com.android.settings.core.PreferenceControllerMixin;
-import com.android.settings.network.telephony.MobileNetworkActivity;
 import com.android.settingslib.RestrictedLockUtilsInternal;
 import com.android.settingslib.RestrictedPreference;
 import com.android.settingslib.Utils;
 import com.android.settingslib.core.AbstractPreferenceController;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class MobileNetworkPreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin, LifecycleObserver {
     static final String KEY_MOBILE_NETWORK_SETTINGS = "mobile_network_settings";
+    private BroadcastReceiver mAirplanModeChangedReceiver;
     private final boolean mIsSecondaryUser;
-    private Preference mPreference;
-    private SubscriptionManager mSubscriptionManager;
-    private String mSummary;
-    MobileNetworkTelephonyCallback mTelephonyCallback;
-    private final TelephonyManager mTelephonyManager;
-    private final UserManager mUserManager;
-    private final SubscriptionManager.OnSubscriptionsChangedListener mOnSubscriptionsChangeListener = new SubscriptionManager.OnSubscriptionsChangedListener() { // from class: com.android.settings.network.MobileNetworkPreferenceController.2
-        @Override // android.telephony.SubscriptionManager.OnSubscriptionsChangedListener
+    private final SubscriptionManager.OnSubscriptionsChangedListener mOnSubscriptionsChangeListener = new SubscriptionManager.OnSubscriptionsChangedListener() {
         public void onSubscriptionsChanged() {
             MobileNetworkPreferenceController.this.updateDisplayName();
             MobileNetworkPreferenceController mobileNetworkPreferenceController = MobileNetworkPreferenceController.this;
             mobileNetworkPreferenceController.updateState(mobileNetworkPreferenceController.mPreference);
         }
     };
-    private BroadcastReceiver mAirplanModeChangedReceiver = new BroadcastReceiver() { // from class: com.android.settings.network.MobileNetworkPreferenceController.1
-        @Override // android.content.BroadcastReceiver
-        public void onReceive(Context context, Intent intent) {
-            MobileNetworkPreferenceController.this.updateDisplayName();
-            MobileNetworkPreferenceController mobileNetworkPreferenceController = MobileNetworkPreferenceController.this;
-            mobileNetworkPreferenceController.updateState(mobileNetworkPreferenceController.mPreference);
-        }
-    };
+    /* access modifiers changed from: private */
+    public Preference mPreference;
+    private SubscriptionManager mSubscriptionManager;
+    private String mSummary;
+    MobileNetworkTelephonyCallback mTelephonyCallback;
+    private final TelephonyManager mTelephonyManager;
+    private final UserManager mUserManager;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return KEY_MOBILE_NETWORK_SETTINGS;
     }
@@ -62,10 +53,16 @@ public class MobileNetworkPreferenceController extends AbstractPreferenceControl
         this.mUserManager = userManager;
         this.mTelephonyManager = (TelephonyManager) context.getSystemService("phone");
         this.mIsSecondaryUser = !userManager.isAdminUser();
+        this.mAirplanModeChangedReceiver = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                MobileNetworkPreferenceController.this.updateDisplayName();
+                MobileNetworkPreferenceController mobileNetworkPreferenceController = MobileNetworkPreferenceController.this;
+                mobileNetworkPreferenceController.updateState(mobileNetworkPreferenceController.mPreference);
+            }
+        };
         this.mSubscriptionManager = SubscriptionManager.from(context);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return !isUserRestricted() && !Utils.isWifiOnly(this.mContext);
     }
@@ -74,18 +71,15 @@ public class MobileNetworkPreferenceController extends AbstractPreferenceControl
         return this.mIsSecondaryUser || RestrictedLockUtilsInternal.hasBaseUserRestriction(this.mContext, "no_config_mobile_networks", UserHandle.myUserId());
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = preferenceScreen.findPreference(getPreferenceKey());
     }
 
-    /* loaded from: classes.dex */
     class MobileNetworkTelephonyCallback extends TelephonyCallback implements TelephonyCallback.ServiceStateListener {
         MobileNetworkTelephonyCallback() {
         }
 
-        @Override // android.telephony.TelephonyCallback.ServiceStateListener
         public void onServiceStateChanged(ServiceState serviceState) {
             MobileNetworkPreferenceController.this.updateDisplayName();
             MobileNetworkPreferenceController mobileNetworkPreferenceController = MobileNetworkPreferenceController.this;
@@ -111,26 +105,26 @@ public class MobileNetworkPreferenceController extends AbstractPreferenceControl
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateDisplayName() {
         if (this.mPreference != null) {
             List<SubscriptionInfo> activeSubscriptionInfoList = this.mSubscriptionManager.getActiveSubscriptionInfoList();
-            if (activeSubscriptionInfoList != null && !activeSubscriptionInfoList.isEmpty()) {
-                boolean z = false;
-                StringBuilder sb = new StringBuilder();
-                for (SubscriptionInfo subscriptionInfo : activeSubscriptionInfoList) {
-                    if (isSubscriptionInService(subscriptionInfo.getSubscriptionId())) {
-                        if (z) {
-                            sb.append(", ");
-                        }
-                        sb.append(this.mTelephonyManager.getNetworkOperatorName(subscriptionInfo.getSubscriptionId()));
-                        z = true;
-                    }
-                }
-                this.mSummary = sb.toString();
+            if (activeSubscriptionInfoList == null || activeSubscriptionInfoList.isEmpty()) {
+                this.mSummary = this.mTelephonyManager.getNetworkOperatorName();
                 return;
             }
-            this.mSummary = this.mTelephonyManager.getNetworkOperatorName();
+            boolean z = false;
+            StringBuilder sb = new StringBuilder();
+            for (SubscriptionInfo next : activeSubscriptionInfoList) {
+                if (isSubscriptionInService(next.getSubscriptionId())) {
+                    if (z) {
+                        sb.append(", ");
+                    }
+                    sb.append(this.mTelephonyManager.getNetworkOperatorName(next.getSubscriptionId()));
+                    z = true;
+                }
+            }
+            this.mSummary = sb.toString();
         }
     }
 
@@ -152,7 +146,6 @@ public class MobileNetworkPreferenceController extends AbstractPreferenceControl
         }
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         if (!(preference instanceof RestrictedPreference) || !((RestrictedPreference) preference).isDisabledByAdmin()) {
@@ -164,18 +157,17 @@ public class MobileNetworkPreferenceController extends AbstractPreferenceControl
         }
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
-        if (KEY_MOBILE_NETWORK_SETTINGS.equals(preference.getKey())) {
-            this.mContext.startActivity(new Intent(this.mContext, MobileNetworkActivity.class));
-            return true;
+        if (!KEY_MOBILE_NETWORK_SETTINGS.equals(preference.getKey())) {
+            return false;
         }
-        return false;
+        Intent intent = new Intent("android.settings.NETWORK_OPERATOR_SETTINGS");
+        intent.setPackage("com.android.settings");
+        this.mContext.startActivity(intent);
+        return true;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    /* renamed from: getSummary */
-    public CharSequence mo485getSummary() {
+    public CharSequence getSummary() {
         return this.mSummary;
     }
 }

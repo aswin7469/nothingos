@@ -6,7 +6,7 @@ import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceScreen;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.core.AbstractPreferenceController;
-/* loaded from: classes.dex */
+
 public abstract class P2pCategoryPreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin {
     protected PreferenceGroup mCategory;
 
@@ -14,12 +14,10 @@ public abstract class P2pCategoryPreferenceController extends AbstractPreference
         super(context);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return this.mCategory.getPreferenceCount() > 0;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         this.mCategory = (PreferenceGroup) preferenceScreen.findPreference(getPreferenceKey());
         super.displayPreference(preferenceScreen);

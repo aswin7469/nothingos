@@ -9,9 +9,8 @@ import com.android.settings.development.BluetoothA2dpConfigStore;
 import com.android.settingslib.core.lifecycle.Lifecycle;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class BluetoothQualityDialogPreferenceController extends AbstractBluetoothDialogPreferenceController {
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "bluetooth_a2dp_ldac_playback_quality";
     }
@@ -20,26 +19,24 @@ public class BluetoothQualityDialogPreferenceController extends AbstractBluetoot
         super(context, lifecycle, bluetoothA2dpConfigStore);
     }
 
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         ((BaseBluetoothDialogPreference) this.mPreference).setCallback(this);
     }
 
-    @Override // com.android.settings.development.bluetooth.AbstractBluetoothDialogPreferenceController
-    protected void writeConfigurationValues(int i) {
-        this.mBluetoothA2dpConfigStore.setCodecSpecific1Value((i == 0 || i == 1 || i == 2 || i == 3) ? i + 1000 : 0L);
+    /* access modifiers changed from: protected */
+    public void writeConfigurationValues(int i) {
+        this.mBluetoothA2dpConfigStore.setCodecSpecific1Value((i == 0 || i == 1 || i == 2 || i == 3) ? (long) (i + 1000) : 0);
     }
 
-    @Override // com.android.settings.development.bluetooth.AbstractBluetoothDialogPreferenceController
-    protected int getCurrentIndexByConfig(BluetoothCodecConfig bluetoothCodecConfig) {
+    /* access modifiers changed from: protected */
+    public int getCurrentIndexByConfig(BluetoothCodecConfig bluetoothCodecConfig) {
         if (bluetoothCodecConfig == null) {
             Log.e("BtQualityCtr", "Unable to get current config index. Config is null.");
         }
         return convertCfgToBtnIndex((int) bluetoothCodecConfig.getCodecSpecific1());
     }
 
-    @Override // com.android.settings.development.bluetooth.BaseBluetoothDialogPreference.Callback
     public List<Integer> getSelectableIndex() {
         ArrayList arrayList = new ArrayList();
         for (int i = 0; i < 4; i++) {
@@ -48,25 +45,24 @@ public class BluetoothQualityDialogPreferenceController extends AbstractBluetoot
         return arrayList;
     }
 
-    @Override // com.android.settings.development.bluetooth.AbstractBluetoothDialogPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         BluetoothCodecConfig currentCodecConfig = getCurrentCodecConfig();
-        if (currentCodecConfig != null && currentCodecConfig.getCodecType() == 4) {
-            preference.setEnabled(true);
+        if (currentCodecConfig == null || currentCodecConfig.getCodecType() != 4) {
+            preference.setEnabled(false);
+            preference.setSummary((CharSequence) "");
             return;
         }
-        preference.setEnabled(false);
-        preference.setSummary("");
+        preference.setEnabled(true);
     }
 
-    @Override // com.android.settings.development.bluetooth.AbstractBluetoothDialogPreferenceController
     public void onHDAudioEnabled(boolean z) {
         Log.d("BtQualityCtr", "onHDAudioEnabled: " + z);
         this.mPreference.setEnabled(z);
     }
 
-    int convertCfgToBtnIndex(int i) {
+    /* access modifiers changed from: package-private */
+    public int convertCfgToBtnIndex(int i) {
         int i2 = i - 1000;
         return i2 < 0 ? getDefaultIndex() : i2;
     }

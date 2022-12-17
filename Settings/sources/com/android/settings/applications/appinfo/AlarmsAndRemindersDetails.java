@@ -8,15 +8,16 @@ import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.Settings;
-import com.android.settings.applications.AppInfoBase;
 import com.android.settings.applications.AppInfoWithHeader;
 import com.android.settings.applications.AppStateAlarmsAndRemindersBridge;
+import com.android.settings.applications.AppStateBaseBridge;
 import com.android.settingslib.RestrictedSwitchPreference;
 import com.android.settingslib.applications.ApplicationsState;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
-/* loaded from: classes.dex */
+
 public class AlarmsAndRemindersDetails extends AppInfoWithHeader implements Preference.OnPreferenceChangeListener {
     private AppStateAlarmsAndRemindersBridge mAppBridge;
     private AppOpsManager mAppOpsManager;
@@ -24,27 +25,31 @@ public class AlarmsAndRemindersDetails extends AppInfoWithHeader implements Pref
     private RestrictedSwitchPreference mSwitchPref;
     private volatile Boolean mUncommittedState;
 
-    @Override // com.android.settings.applications.AppInfoBase
-    protected AlertDialog createDialog(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public AlertDialog createDialog(int i, int i2) {
         return null;
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1869;
     }
 
     public static CharSequence getSummary(Context context, ApplicationsState.AppEntry appEntry) {
-        AppStateAlarmsAndRemindersBridge appStateAlarmsAndRemindersBridge = new AppStateAlarmsAndRemindersBridge(context, null, null);
+        int i;
+        AppStateAlarmsAndRemindersBridge appStateAlarmsAndRemindersBridge = new AppStateAlarmsAndRemindersBridge(context, (ApplicationsState) null, (AppStateBaseBridge.Callback) null);
         ApplicationInfo applicationInfo = appEntry.info;
-        return context.getString(appStateAlarmsAndRemindersBridge.createPermissionState(applicationInfo.packageName, applicationInfo.uid).isAllowed() ? R.string.app_permission_summary_allowed : R.string.app_permission_summary_not_allowed);
+        if (appStateAlarmsAndRemindersBridge.createPermissionState(applicationInfo.packageName, applicationInfo.uid).isAllowed()) {
+            i = R$string.app_permission_summary_allowed;
+        } else {
+            i = R$string.app_permission_summary_not_allowed;
+        }
+        return context.getString(i);
     }
 
-    @Override // com.android.settings.applications.AppInfoBase, com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         FragmentActivity activity = getActivity();
-        this.mAppBridge = new AppStateAlarmsAndRemindersBridge(activity, ((AppInfoBase) this).mState, null);
+        this.mAppBridge = new AppStateAlarmsAndRemindersBridge(activity, this.mState, (AppStateBaseBridge.Callback) null);
         this.mAppOpsManager = (AppOpsManager) activity.getSystemService(AppOpsManager.class);
         if (bundle != null) {
             this.mUncommittedState = (Boolean) bundle.get("uncommitted_state");
@@ -52,13 +57,12 @@ public class AlarmsAndRemindersDetails extends AppInfoWithHeader implements Pref
                 setResult(this.mUncommittedState.booleanValue() ? -1 : 0);
             }
         }
-        addPreferencesFromResource(R.xml.alarms_and_reminders);
+        addPreferencesFromResource(R$xml.alarms_and_reminders);
         RestrictedSwitchPreference restrictedSwitchPreference = (RestrictedSwitchPreference) findPreference("alarms_and_reminders_switch");
         this.mSwitchPref = restrictedSwitchPreference;
         restrictedSwitchPreference.setOnPreferenceChangeListener(this);
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         if (this.mUncommittedState != null) {
@@ -66,21 +70,20 @@ public class AlarmsAndRemindersDetails extends AppInfoWithHeader implements Pref
         }
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         int i = 0;
-        if (preference == this.mSwitchPref) {
-            this.mUncommittedState = (Boolean) obj;
-            if (isAppSpecific()) {
-                if (this.mUncommittedState.booleanValue()) {
-                    i = -1;
-                }
-                setResult(i);
-            }
-            refreshUi();
-            return true;
+        if (preference != this.mSwitchPref) {
+            return false;
         }
-        return false;
+        this.mUncommittedState = (Boolean) obj;
+        if (isAppSpecific()) {
+            if (this.mUncommittedState.booleanValue()) {
+                i = -1;
+            }
+            setResult(i);
+        }
+        refreshUi();
+        return true;
     }
 
     private void setCanScheduleAlarms(boolean z) {
@@ -96,19 +99,17 @@ public class AlarmsAndRemindersDetails extends AppInfoWithHeader implements Pref
         return Settings.AlarmsAndRemindersAppActivity.class.getName().equals(getIntent().getComponent().getClassName());
     }
 
-    @Override // com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onPause() {
         super.onPause();
-        if (getActivity().isChangingConfigurations() || this.mPermissionState == null || this.mUncommittedState == null || this.mUncommittedState.booleanValue() == this.mPermissionState.isAllowed()) {
-            return;
+        if (!getActivity().isChangingConfigurations() && this.mPermissionState != null && this.mUncommittedState != null && this.mUncommittedState.booleanValue() != this.mPermissionState.isAllowed()) {
+            setCanScheduleAlarms(this.mUncommittedState.booleanValue());
+            logPermissionChange(this.mUncommittedState.booleanValue(), this.mPackageName);
+            this.mUncommittedState = null;
         }
-        setCanScheduleAlarms(this.mUncommittedState.booleanValue());
-        logPermissionChange(this.mUncommittedState.booleanValue(), this.mPackageName);
-        this.mUncommittedState = null;
     }
 
-    @Override // com.android.settings.applications.AppInfoBase
-    protected boolean refreshUi() {
+    /* access modifiers changed from: protected */
+    public boolean refreshUi() {
         ApplicationInfo applicationInfo;
         PackageInfo packageInfo = this.mPackageInfo;
         if (packageInfo == null || (applicationInfo = packageInfo.applicationInfo) == null) {

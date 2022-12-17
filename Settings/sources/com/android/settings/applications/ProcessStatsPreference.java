@@ -5,21 +5,22 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.text.TextUtils;
 import android.text.format.Formatter;
+import android.util.AttributeSet;
 import android.util.Log;
 import com.android.settingslib.widget.AppPreference;
-/* loaded from: classes.dex */
+
 public class ProcessStatsPreference extends AppPreference {
     private ProcStatsPackageEntry mEntry;
 
     public ProcessStatsPreference(Context context) {
-        super(context, null);
+        super(context, (AttributeSet) null);
     }
 
     public void init(ProcStatsPackageEntry procStatsPackageEntry, PackageManager packageManager, double d, double d2, double d3, boolean z) {
         double d4;
         this.mEntry = procStatsPackageEntry;
         String str = TextUtils.isEmpty(procStatsPackageEntry.mUiLabel) ? procStatsPackageEntry.mPackage : procStatsPackageEntry.mUiLabel;
-        setTitle(str);
+        setTitle((CharSequence) str);
         if (TextUtils.isEmpty(str)) {
             Log.d("ProcessStatsPreference", "PackageEntry contained no package name or uiLabel");
         }
@@ -38,9 +39,9 @@ public class ProcessStatsPreference extends AppPreference {
             }
             d4 = d5 * d2;
         } else {
-            d4 = (z2 ? procStatsPackageEntry.mMaxRunMem : procStatsPackageEntry.mMaxBgMem) * d3 * 1024.0d;
+            d4 = ((double) (z2 ? procStatsPackageEntry.mMaxRunMem : procStatsPackageEntry.mMaxBgMem)) * d3 * 1024.0d;
         }
-        setSummary(Formatter.formatShortFileSize(getContext(), (long) d4));
+        setSummary((CharSequence) Formatter.formatShortFileSize(getContext(), (long) d4));
         setProgress((int) ((d4 * 100.0d) / d));
     }
 

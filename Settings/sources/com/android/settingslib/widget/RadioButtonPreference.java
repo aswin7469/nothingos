@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.PreferenceViewHolder;
-/* loaded from: classes.dex */
+
 public class RadioButtonPreference extends CheckBoxPreference {
     private View mAppendix;
     private int mAppendixVisibility;
@@ -16,7 +16,6 @@ public class RadioButtonPreference extends CheckBoxPreference {
     private View.OnClickListener mExtraWidgetOnClickListener;
     private OnClickListener mListener;
 
-    /* loaded from: classes.dex */
     public interface OnClickListener {
         void onRadioButtonClicked(RadioButtonPreference radioButtonPreference);
     }
@@ -36,14 +35,9 @@ public class RadioButtonPreference extends CheckBoxPreference {
     }
 
     public RadioButtonPreference(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
-    public void setOnClickListener(OnClickListener onClickListener) {
-        this.mListener = onClickListener;
-    }
-
-    @Override // androidx.preference.TwoStatePreference, androidx.preference.Preference
     public void onClick() {
         OnClickListener onClickListener = this.mListener;
         if (onClickListener != null) {
@@ -51,7 +45,6 @@ public class RadioButtonPreference extends CheckBoxPreference {
         }
     }
 
-    @Override // androidx.preference.CheckBoxPreference, androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         int i;
         super.onBindViewHolder(preferenceViewHolder);
@@ -60,7 +53,7 @@ public class RadioButtonPreference extends CheckBoxPreference {
             findViewById.setVisibility(TextUtils.isEmpty(getSummary()) ? 8 : 0);
             View findViewById2 = preferenceViewHolder.findViewById(R$id.appendix);
             this.mAppendix = findViewById2;
-            if (findViewById2 != null && (i = this.mAppendixVisibility) != -1) {
+            if (!(findViewById2 == null || (i = this.mAppendixVisibility) == -1)) {
                 findViewById2.setVisibility(i);
             }
         }
@@ -69,22 +62,13 @@ public class RadioButtonPreference extends CheckBoxPreference {
         setExtraWidgetOnClickListener(this.mExtraWidgetOnClickListener);
     }
 
-    public void setAppendixVisibility(int i) {
-        View view = this.mAppendix;
-        if (view != null) {
-            view.setVisibility(i);
-        }
-        this.mAppendixVisibility = i;
-    }
-
     public void setExtraWidgetOnClickListener(View.OnClickListener onClickListener) {
         this.mExtraWidgetOnClickListener = onClickListener;
         ImageView imageView = this.mExtraWidget;
-        if (imageView == null || this.mExtraWidgetContainer == null) {
-            return;
+        if (imageView != null && this.mExtraWidgetContainer != null) {
+            imageView.setOnClickListener(onClickListener);
+            this.mExtraWidgetContainer.setVisibility(this.mExtraWidgetOnClickListener != null ? 0 : 8);
         }
-        imageView.setOnClickListener(onClickListener);
-        this.mExtraWidgetContainer.setVisibility(this.mExtraWidgetOnClickListener != null ? 0 : 8);
     }
 
     private void init() {

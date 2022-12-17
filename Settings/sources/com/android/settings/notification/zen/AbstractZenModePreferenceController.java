@@ -21,7 +21,7 @@ import com.android.settingslib.core.lifecycle.Lifecycle;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnPause;
 import com.android.settingslib.core.lifecycle.events.OnResume;
-/* loaded from: classes.dex */
+
 public abstract class AbstractZenModePreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin, LifecycleObserver, OnResume, OnPause {
     protected static ZenModeConfigWrapper mZenModeConfigWrapper;
     final String KEY;
@@ -43,12 +43,10 @@ public abstract class AbstractZenModePreferenceController extends AbstractPrefer
         this.mBackend = ZenModeBackend.getInstance(context);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return this.KEY;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mScreen = preferenceScreen;
@@ -61,16 +59,14 @@ public abstract class AbstractZenModePreferenceController extends AbstractPrefer
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnResume
     public void onResume() {
         SettingObserver settingObserver = this.mSettingObserver;
         if (settingObserver != null) {
             settingObserver.register(this.mContext.getContentResolver());
-            this.mSettingObserver.onChange(false, null);
+            this.mSettingObserver.onChange(false, (Uri) null);
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnPause
     public void onPause() {
         SettingObserver settingObserver = this.mSettingObserver;
         if (settingObserver != null) {
@@ -78,33 +74,31 @@ public abstract class AbstractZenModePreferenceController extends AbstractPrefer
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public NotificationManager.Policy getPolicy() {
         return this.mNotificationManager.getNotificationPolicy();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public ZenModeConfig getZenModeConfig() {
         return this.mNotificationManager.getZenModeConfig();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public int getZenMode() {
         return Settings.Global.getInt(this.mContext.getContentResolver(), "zen_mode", this.mBackend.mZenMode);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public int getZenDuration() {
         return Settings.Secure.getInt(this.mContext.getContentResolver(), "zen_duration", 0);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public class SettingObserver extends ContentObserver {
-        private Preference mPreference;
-        private final Uri ZEN_MODE_URI = Settings.Global.getUriFor("zen_mode");
+    class SettingObserver extends ContentObserver {
         private final Uri ZEN_MODE_CONFIG_ETAG_URI = Settings.Global.getUriFor("zen_mode_config_etag");
         private final Uri ZEN_MODE_DURATION_URI = Settings.Secure.getUriFor("zen_duration");
+        private final Uri ZEN_MODE_URI = Settings.Global.getUriFor("zen_mode");
+        private Preference mPreference;
 
         public SettingObserver() {
             super(new Handler());
@@ -124,7 +118,6 @@ public abstract class AbstractZenModePreferenceController extends AbstractPrefer
             contentResolver.unregisterContentObserver(this);
         }
 
-        @Override // android.database.ContentObserver
         public void onChange(boolean z, Uri uri) {
             super.onChange(z, uri);
             if (uri == null || this.ZEN_MODE_URI.equals(uri) || this.ZEN_MODE_CONFIG_ETAG_URI.equals(uri) || this.ZEN_MODE_DURATION_URI.equals(uri)) {
@@ -140,7 +133,6 @@ public abstract class AbstractZenModePreferenceController extends AbstractPrefer
         }
     }
 
-    /* loaded from: classes.dex */
     static class ZenModeConfigWrapper {
         private final Context mContext;
 
@@ -148,17 +140,17 @@ public abstract class AbstractZenModePreferenceController extends AbstractPrefer
             this.mContext = context;
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
+        /* access modifiers changed from: protected */
         public String getOwnerCaption(String str) {
             return ZenModeConfig.getOwnerCaption(this.mContext, str);
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
+        /* access modifiers changed from: protected */
         public boolean isTimeRule(Uri uri) {
             return ZenModeConfig.isValidEventConditionId(uri) || ZenModeConfig.isValidScheduleConditionId(uri);
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
+        /* access modifiers changed from: protected */
         public CharSequence getFormattedTime(long j, int i) {
             return ZenModeConfig.getFormattedTime(this.mContext, j, isToday(j), i);
         }
@@ -167,38 +159,38 @@ public abstract class AbstractZenModePreferenceController extends AbstractPrefer
             return ZenModeConfig.isToday(j);
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
+        /* access modifiers changed from: protected */
         public long parseManualRuleTime(Uri uri) {
             return ZenModeConfig.tryParseCountdownConditionId(uri);
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
+        /* access modifiers changed from: protected */
         public long parseAutomaticRuleEndTime(Uri uri) {
             if (ZenModeConfig.isValidEventConditionId(uri)) {
                 return Long.MAX_VALUE;
             }
             if (!ZenModeConfig.isValidScheduleConditionId(uri)) {
-                return -1L;
+                return -1;
             }
             ScheduleCalendar scheduleCalendar = ZenModeConfig.toScheduleCalendar(uri);
             long nextChangeTime = scheduleCalendar.getNextChangeTime(System.currentTimeMillis());
             if (scheduleCalendar.exitAtAlarm()) {
-                long nextAlarm = AbstractZenModePreferenceController.getNextAlarm(this.mContext);
-                scheduleCalendar.maybeSetNextAlarm(System.currentTimeMillis(), nextAlarm);
+                long r2 = AbstractZenModePreferenceController.getNextAlarm(this.mContext);
+                scheduleCalendar.maybeSetNextAlarm(System.currentTimeMillis(), r2);
                 if (scheduleCalendar.shouldExitForAlarm(nextChangeTime)) {
-                    return nextAlarm;
+                    return r2;
                 }
             }
             return nextChangeTime;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static long getNextAlarm(Context context) {
         AlarmManager.AlarmClockInfo nextAlarmClock = ((AlarmManager) context.getSystemService("alarm")).getNextAlarmClock(ActivityManager.getCurrentUser());
         if (nextAlarmClock != null) {
             return nextAlarmClock.getTriggerTime();
         }
-        return 0L;
+        return 0;
     }
 }

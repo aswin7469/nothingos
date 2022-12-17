@@ -1,7 +1,6 @@
 package com.google.android.setupdesign.accessibility;
 
 import android.graphics.Rect;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Layout;
 import android.text.Spanned;
@@ -17,69 +16,50 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.core.view.accessibility.AccessibilityNodeProviderCompat;
 import androidx.customview.widget.ExploreByTouchHelper;
 import java.util.List;
-/* loaded from: classes2.dex */
+
 public class LinkAccessibilityHelper extends AccessibilityDelegateCompat {
     private final AccessibilityDelegateCompat delegate;
 
-    /* JADX WARN: Illegal instructions before constructor call */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     public LinkAccessibilityHelper(TextView textView) {
-        this(r3);
-        AccessibilityDelegateCompat preOLinkAccessibilityHelper;
-        if (Build.VERSION.SDK_INT >= 26) {
-            preOLinkAccessibilityHelper = new AccessibilityDelegateCompat();
-        } else {
-            preOLinkAccessibilityHelper = new PreOLinkAccessibilityHelper(textView);
-        }
+        this(new AccessibilityDelegateCompat());
     }
 
     LinkAccessibilityHelper(AccessibilityDelegateCompat accessibilityDelegateCompat) {
         this.delegate = accessibilityDelegateCompat;
     }
 
-    @Override // androidx.core.view.AccessibilityDelegateCompat
     public void sendAccessibilityEvent(View view, int i) {
         this.delegate.sendAccessibilityEvent(view, i);
     }
 
-    @Override // androidx.core.view.AccessibilityDelegateCompat
     public void sendAccessibilityEventUnchecked(View view, AccessibilityEvent accessibilityEvent) {
         this.delegate.sendAccessibilityEventUnchecked(view, accessibilityEvent);
     }
 
-    @Override // androidx.core.view.AccessibilityDelegateCompat
     public boolean dispatchPopulateAccessibilityEvent(View view, AccessibilityEvent accessibilityEvent) {
         return this.delegate.dispatchPopulateAccessibilityEvent(view, accessibilityEvent);
     }
 
-    @Override // androidx.core.view.AccessibilityDelegateCompat
     public void onPopulateAccessibilityEvent(View view, AccessibilityEvent accessibilityEvent) {
         this.delegate.onPopulateAccessibilityEvent(view, accessibilityEvent);
     }
 
-    @Override // androidx.core.view.AccessibilityDelegateCompat
     public void onInitializeAccessibilityEvent(View view, AccessibilityEvent accessibilityEvent) {
         this.delegate.onInitializeAccessibilityEvent(view, accessibilityEvent);
     }
 
-    @Override // androidx.core.view.AccessibilityDelegateCompat
     public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
         this.delegate.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfoCompat);
     }
 
-    @Override // androidx.core.view.AccessibilityDelegateCompat
     public boolean onRequestSendAccessibilityEvent(ViewGroup viewGroup, View view, AccessibilityEvent accessibilityEvent) {
         return this.delegate.onRequestSendAccessibilityEvent(viewGroup, view, accessibilityEvent);
     }
 
-    @Override // androidx.core.view.AccessibilityDelegateCompat
     public AccessibilityNodeProviderCompat getAccessibilityNodeProvider(View view) {
         return this.delegate.getAccessibilityNodeProvider(view);
     }
 
-    @Override // androidx.core.view.AccessibilityDelegateCompat
     public boolean performAccessibilityAction(View view, int i, Bundle bundle) {
         return this.delegate.performAccessibilityAction(view, i, bundle);
     }
@@ -89,44 +69,38 @@ public class LinkAccessibilityHelper extends AccessibilityDelegateCompat {
         return (accessibilityDelegateCompat instanceof ExploreByTouchHelper) && ((ExploreByTouchHelper) accessibilityDelegateCompat).dispatchHoverEvent(motionEvent);
     }
 
-    /* loaded from: classes2.dex */
     static class PreOLinkAccessibilityHelper extends ExploreByTouchHelper {
-        private final Rect tempRect = new Rect();
+        private final Rect tempRect;
         private final TextView view;
 
-        PreOLinkAccessibilityHelper(TextView textView) {
-            super(textView);
-            this.view = textView;
-        }
-
-        @Override // androidx.customview.widget.ExploreByTouchHelper
-        protected int getVirtualViewAt(float f, float f2) {
+        /* access modifiers changed from: protected */
+        public int getVirtualViewAt(float f, float f2) {
             CharSequence text = this.view.getText();
-            if (text instanceof Spanned) {
-                Spanned spanned = (Spanned) text;
-                int offsetForPosition = getOffsetForPosition(this.view, f, f2);
-                ClickableSpan[] clickableSpanArr = (ClickableSpan[]) spanned.getSpans(offsetForPosition, offsetForPosition, ClickableSpan.class);
-                if (clickableSpanArr.length != 1) {
-                    return Integer.MIN_VALUE;
-                }
+            if (!(text instanceof Spanned)) {
+                return Integer.MIN_VALUE;
+            }
+            Spanned spanned = (Spanned) text;
+            int offsetForPosition = getOffsetForPosition(this.view, f, f2);
+            ClickableSpan[] clickableSpanArr = (ClickableSpan[]) spanned.getSpans(offsetForPosition, offsetForPosition, ClickableSpan.class);
+            if (clickableSpanArr.length == 1) {
                 return spanned.getSpanStart(clickableSpanArr[0]);
             }
             return Integer.MIN_VALUE;
         }
 
-        @Override // androidx.customview.widget.ExploreByTouchHelper
-        protected void getVisibleVirtualViews(List<Integer> list) {
+        /* access modifiers changed from: protected */
+        public void getVisibleVirtualViews(List<Integer> list) {
             CharSequence text = this.view.getText();
             if (text instanceof Spanned) {
                 Spanned spanned = (Spanned) text;
-                for (ClickableSpan clickableSpan : (ClickableSpan[]) spanned.getSpans(0, spanned.length(), ClickableSpan.class)) {
-                    list.add(Integer.valueOf(spanned.getSpanStart(clickableSpan)));
+                for (ClickableSpan spanStart : (ClickableSpan[]) spanned.getSpans(0, spanned.length(), ClickableSpan.class)) {
+                    list.add(Integer.valueOf(spanned.getSpanStart(spanStart)));
                 }
             }
         }
 
-        @Override // androidx.customview.widget.ExploreByTouchHelper
-        protected void onPopulateEventForVirtualView(int i, AccessibilityEvent accessibilityEvent) {
+        /* access modifiers changed from: protected */
+        public void onPopulateEventForVirtualView(int i, AccessibilityEvent accessibilityEvent) {
             ClickableSpan spanForOffset = getSpanForOffset(i);
             if (spanForOffset != null) {
                 accessibilityEvent.setContentDescription(getTextForSpan(spanForOffset));
@@ -136,8 +110,8 @@ public class LinkAccessibilityHelper extends AccessibilityDelegateCompat {
             accessibilityEvent.setContentDescription(this.view.getText());
         }
 
-        @Override // androidx.customview.widget.ExploreByTouchHelper
-        protected void onPopulateNodeForVirtualView(int i, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
+        /* access modifiers changed from: protected */
+        public void onPopulateNodeForVirtualView(int i, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
             ClickableSpan spanForOffset = getSpanForOffset(i);
             if (spanForOffset != null) {
                 accessibilityNodeInfoCompat.setContentDescription(getTextForSpan(spanForOffset));
@@ -156,27 +130,27 @@ public class LinkAccessibilityHelper extends AccessibilityDelegateCompat {
             accessibilityNodeInfoCompat.addAction(16);
         }
 
-        @Override // androidx.customview.widget.ExploreByTouchHelper
-        protected boolean onPerformActionForVirtualView(int i, int i2, Bundle bundle) {
-            if (i2 == 16) {
-                ClickableSpan spanForOffset = getSpanForOffset(i);
-                if (spanForOffset != null) {
-                    spanForOffset.onClick(this.view);
-                    return true;
-                }
-                Log.e("LinkAccessibilityHelper", "LinkSpan is null for offset: " + i);
+        /* access modifiers changed from: protected */
+        public boolean onPerformActionForVirtualView(int i, int i2, Bundle bundle) {
+            if (i2 != 16) {
                 return false;
             }
+            ClickableSpan spanForOffset = getSpanForOffset(i);
+            if (spanForOffset != null) {
+                spanForOffset.onClick(this.view);
+                return true;
+            }
+            Log.e("LinkAccessibilityHelper", "LinkSpan is null for offset: " + i);
             return false;
         }
 
         private ClickableSpan getSpanForOffset(int i) {
             CharSequence text = this.view.getText();
-            if (text instanceof Spanned) {
-                ClickableSpan[] clickableSpanArr = (ClickableSpan[]) ((Spanned) text).getSpans(i, i, ClickableSpan.class);
-                if (clickableSpanArr.length != 1) {
-                    return null;
-                }
+            if (!(text instanceof Spanned)) {
+                return null;
+            }
+            ClickableSpan[] clickableSpanArr = (ClickableSpan[]) ((Spanned) text).getSpans(i, i, ClickableSpan.class);
+            if (clickableSpanArr.length == 1) {
                 return clickableSpanArr[0];
             }
             return null;
@@ -184,11 +158,11 @@ public class LinkAccessibilityHelper extends AccessibilityDelegateCompat {
 
         private CharSequence getTextForSpan(ClickableSpan clickableSpan) {
             CharSequence text = this.view.getText();
-            if (text instanceof Spanned) {
-                Spanned spanned = (Spanned) text;
-                return spanned.subSequence(spanned.getSpanStart(clickableSpan), spanned.getSpanEnd(clickableSpan));
+            if (!(text instanceof Spanned)) {
+                return text;
             }
-            return text;
+            Spanned spanned = (Spanned) text;
+            return spanned.subSequence(spanned.getSpanStart(clickableSpan), spanned.getSpanEnd(clickableSpan));
         }
 
         private Rect getBoundsForSpan(ClickableSpan clickableSpan, Rect rect) {
@@ -225,11 +199,11 @@ public class LinkAccessibilityHelper extends AccessibilityDelegateCompat {
         }
 
         private static float convertToLocalHorizontalCoordinate(TextView textView, float f) {
-            return Math.min((textView.getWidth() - textView.getTotalPaddingRight()) - 1, Math.max(0.0f, f - textView.getTotalPaddingLeft())) + textView.getScrollX();
+            return Math.min((float) ((textView.getWidth() - textView.getTotalPaddingRight()) - 1), Math.max(0.0f, f - ((float) textView.getTotalPaddingLeft()))) + ((float) textView.getScrollX());
         }
 
         private static int getLineAtCoordinate(TextView textView, float f) {
-            return textView.getLayout().getLineForVertical((int) (Math.min((textView.getHeight() - textView.getTotalPaddingBottom()) - 1, Math.max(0.0f, f - textView.getTotalPaddingTop())) + textView.getScrollY()));
+            return textView.getLayout().getLineForVertical((int) (Math.min((float) ((textView.getHeight() - textView.getTotalPaddingBottom()) - 1), Math.max(0.0f, f - ((float) textView.getTotalPaddingTop()))) + ((float) textView.getScrollY())));
         }
 
         private static int getOffsetAtCoordinate(TextView textView, int i, float f) {

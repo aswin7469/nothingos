@@ -24,79 +24,84 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.ListFragment;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
-import com.android.settings.R;
+import com.android.settings.R$drawable;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
 import com.android.settings.core.SubSettingLauncher;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settingslib.core.instrumentation.Instrumentable;
 import com.android.settingslib.core.instrumentation.VisibilityLoggerMixin;
-/* loaded from: classes.dex */
+
 public class UserDictionarySettings extends ListFragment implements Instrumentable, LoaderManager.LoaderCallbacks<Cursor> {
     private Cursor mCursor;
     private String mLocale;
     private VisibilityLoggerMixin mVisibilityLoggerMixin;
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 514;
     }
 
-    @Override // androidx.loader.app.LoaderManager.LoaderCallbacks
     public void onLoaderReset(Loader<Cursor> loader) {
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
+        String str;
+        String str2;
         super.onCreate(bundle);
         this.mVisibilityLoggerMixin = new VisibilityLoggerMixin(getMetricsCategory(), FeatureFactory.getFactory(getContext()).getMetricsFeatureProvider());
         Intent intent = getActivity().getIntent();
-        String stringExtra = intent == null ? null : intent.getStringExtra("locale");
-        Bundle arguments = getArguments();
-        String string = arguments == null ? null : arguments.getString("locale");
-        if (string != null) {
-            stringExtra = string;
-        } else if (stringExtra == null) {
-            stringExtra = null;
+        if (intent == null) {
+            str = null;
+        } else {
+            str = intent.getStringExtra("locale");
         }
-        this.mLocale = stringExtra;
+        Bundle arguments = getArguments();
+        if (arguments == null) {
+            str2 = null;
+        } else {
+            str2 = arguments.getString("locale");
+        }
+        if (str2 != null) {
+            str = str2;
+        } else if (str == null) {
+            str = null;
+        }
+        this.mLocale = str;
         setHasOptionsMenu(true);
-        getLoaderManager().initLoader(1, null, this);
+        getLoaderManager().initLoader(1, (Bundle) null, this);
     }
 
-    @Override // androidx.fragment.app.ListFragment, androidx.fragment.app.Fragment
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
         FragmentActivity activity = getActivity();
-        int i = R.string.user_dict_settings_title;
+        int i = R$string.user_dict_settings_title;
         activity.setTitle(i);
         ActionBar actionBar = getActivity().getActionBar();
         if (actionBar != null) {
             actionBar.setTitle(i);
             actionBar.setSubtitle(UserDictionarySettingsUtils.getLocaleDisplayName(getActivity(), this.mLocale));
         }
-        return layoutInflater.inflate(17367264, viewGroup, false);
+        return layoutInflater.inflate(17367275, viewGroup, false);
     }
 
-    @Override // androidx.fragment.app.ListFragment, androidx.fragment.app.Fragment
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
         TextView textView = (TextView) getView().findViewById(16908292);
-        textView.setText(R.string.user_dict_settings_empty_text);
+        textView.setText(R$string.user_dict_settings_empty_text);
         ListView listView = getListView();
         listView.setFastScrollEnabled(true);
         listView.setEmptyView(textView);
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
         this.mVisibilityLoggerMixin.onResume();
-        getLoaderManager().restartLoader(1, null, this);
+        getLoaderManager().restartLoader(1, (Bundle) null, this);
     }
 
     private ListAdapter createAdapter() {
-        return new MyAdapter(getActivity(), R.layout.user_dictionary_item, this.mCursor, new String[]{"word", "shortcut"}, new int[]{16908308, 16908309});
+        return new MyAdapter(getActivity(), R$layout.user_dictionary_item, this.mCursor, new String[]{"word", "shortcut"}, new int[]{16908308, 16908309});
     }
 
-    @Override // androidx.fragment.app.ListFragment
     public void onListItemClick(ListView listView, View view, int i, long j) {
         String word = getWord(i);
         String shortcut = getShortcut(i);
@@ -105,21 +110,18 @@ public class UserDictionarySettings extends ListFragment implements Instrumentab
         }
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-        menu.add(0, 1, 0, R.string.user_dict_settings_add_menu_title).setIcon(R.drawable.ic_add_24dp).setShowAsAction(5);
+        menu.add(0, 1, 0, R$string.user_dict_settings_add_menu_title).setIcon(R$drawable.ic_add_24dp).setShowAsAction(5);
     }
 
-    @Override // androidx.fragment.app.Fragment
     public boolean onOptionsItemSelected(MenuItem menuItem) {
-        if (menuItem.getItemId() == 1) {
-            showAddOrEditDialog(null, null);
-            return true;
+        if (menuItem.getItemId() != 1) {
+            return false;
         }
-        return false;
+        showAddOrEditDialog((String) null, (String) null);
+        return true;
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onPause() {
         super.onPause();
         this.mVisibilityLoggerMixin.onPause();
@@ -131,7 +133,7 @@ public class UserDictionarySettings extends ListFragment implements Instrumentab
         bundle.putString("word", str);
         bundle.putString("shortcut", str2);
         bundle.putString("locale", this.mLocale);
-        new SubSettingLauncher(getContext()).setDestination(UserDictionaryAddWordFragment.class.getName()).setArguments(bundle).setTitleRes(R.string.user_dict_settings_add_dialog_title).setSourceMetricsCategory(getMetricsCategory()).launch();
+        new SubSettingLauncher(getContext()).setDestination(UserDictionaryAddWordFragment.class.getName()).setArguments(bundle).setTitleRes(R$string.user_dict_settings_add_dialog_title).setSourceMetricsCategory(getMetricsCategory()).launch();
     }
 
     private String getWord(int i) {
@@ -163,55 +165,49 @@ public class UserDictionarySettings extends ListFragment implements Instrumentab
     public static void deleteWord(String str, String str2, ContentResolver contentResolver) {
         if (TextUtils.isEmpty(str2)) {
             contentResolver.delete(UserDictionary.Words.CONTENT_URI, "word=? AND shortcut is null OR shortcut=''", new String[]{str});
-        } else {
-            contentResolver.delete(UserDictionary.Words.CONTENT_URI, "word=? AND shortcut=?", new String[]{str, str2});
+            return;
         }
+        contentResolver.delete(UserDictionary.Words.CONTENT_URI, "word=? AND shortcut=?", new String[]{str, str2});
     }
 
-    @Override // androidx.loader.app.LoaderManager.LoaderCallbacks
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return new UserDictionaryCursorLoader(getContext(), this.mLocale);
     }
 
-    @Override // androidx.loader.app.LoaderManager.LoaderCallbacks
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         this.mCursor = cursor;
         getListView().setAdapter(createAdapter());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class MyAdapter extends SimpleCursorAdapter implements SectionIndexer {
+    private static class MyAdapter extends SimpleCursorAdapter implements SectionIndexer {
         private AlphabetIndexer mIndexer;
         private final SimpleCursorAdapter.ViewBinder mViewBinder;
 
         public MyAdapter(Context context, int i, Cursor cursor, String[] strArr, int[] iArr) {
             super(context, i, cursor, strArr, iArr);
-            SimpleCursorAdapter.ViewBinder viewBinder = new SimpleCursorAdapter.ViewBinder() { // from class: com.android.settings.inputmethod.UserDictionarySettings.MyAdapter.1
-                @Override // android.widget.SimpleCursorAdapter.ViewBinder
-                public boolean setViewValue(View view, Cursor cursor2, int i2) {
-                    if (i2 == 2) {
-                        String string = cursor2.getString(2);
-                        if (TextUtils.isEmpty(string)) {
-                            view.setVisibility(8);
-                        } else {
-                            ((TextView) view).setText(string);
-                            view.setVisibility(0);
-                        }
-                        view.invalidate();
-                        return true;
+            C10251 r2 = new SimpleCursorAdapter.ViewBinder() {
+                public boolean setViewValue(View view, Cursor cursor, int i) {
+                    if (i != 2) {
+                        return false;
                     }
-                    return false;
+                    String string = cursor.getString(2);
+                    if (TextUtils.isEmpty(string)) {
+                        view.setVisibility(8);
+                    } else {
+                        ((TextView) view).setText(string);
+                        view.setVisibility(0);
+                    }
+                    view.invalidate();
+                    return true;
                 }
             };
-            this.mViewBinder = viewBinder;
+            this.mViewBinder = r2;
             if (cursor != null) {
-                this.mIndexer = new AlphabetIndexer(cursor, cursor.getColumnIndexOrThrow("word"), context.getString(17040254));
+                this.mIndexer = new AlphabetIndexer(cursor, cursor.getColumnIndexOrThrow("word"), context.getString(17040318));
             }
-            setViewBinder(viewBinder);
+            setViewBinder(r2);
         }
 
-        @Override // android.widget.SectionIndexer
         public int getPositionForSection(int i) {
             AlphabetIndexer alphabetIndexer = this.mIndexer;
             if (alphabetIndexer == null) {
@@ -220,7 +216,6 @@ public class UserDictionarySettings extends ListFragment implements Instrumentab
             return alphabetIndexer.getPositionForSection(i);
         }
 
-        @Override // android.widget.SectionIndexer
         public int getSectionForPosition(int i) {
             AlphabetIndexer alphabetIndexer = this.mIndexer;
             if (alphabetIndexer == null) {
@@ -229,7 +224,6 @@ public class UserDictionarySettings extends ListFragment implements Instrumentab
             return alphabetIndexer.getSectionForPosition(i);
         }
 
-        @Override // android.widget.SectionIndexer
         public Object[] getSections() {
             AlphabetIndexer alphabetIndexer = this.mIndexer;
             if (alphabetIndexer == null) {

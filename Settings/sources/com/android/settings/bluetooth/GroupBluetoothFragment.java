@@ -2,7 +2,7 @@ package com.android.settings.bluetooth;
 
 import android.content.Context;
 import android.util.Log;
-import com.android.settings.R;
+import com.android.settings.R$xml;
 import com.android.settings.connecteddevice.ConnectedDeviceDashboardFragment;
 import com.android.settings.dashboard.RestrictedDashboardFragment;
 import com.android.settingslib.bluetooth.BluetoothCallback;
@@ -11,7 +11,7 @@ import com.android.settingslib.core.AbstractPreferenceController;
 import com.android.settingslib.core.lifecycle.Lifecycle;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class GroupBluetoothFragment extends RestrictedDashboardFragment implements BluetoothCallback {
     private static final boolean DBG = ConnectedDeviceDashboardFragment.DBG_GROUP;
     private Context mCtx;
@@ -19,13 +19,11 @@ public class GroupBluetoothFragment extends RestrictedDashboardFragment implemen
     private GroupUtils mGroupUtils;
     protected LocalBluetoothManager mLocalManager;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "GroupBluetoothFragment";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 0;
     }
@@ -34,7 +32,6 @@ public class GroupBluetoothFragment extends RestrictedDashboardFragment implemen
         super("no_config_bluetooth");
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
         this.mGroupId = getArguments().getInt("group_id");
         this.mCtx = context;
@@ -51,19 +48,18 @@ public class GroupBluetoothFragment extends RestrictedDashboardFragment implemen
         use(GroupBluetoothDetailsButtonsController.class);
     }
 
-    @Override // com.android.settings.dashboard.RestrictedDashboardFragment, com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
         finishFragmentIfNecessary();
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, androidx.fragment.app.Fragment
     public void onDetach() {
         super.onDetach();
         this.mLocalManager.getEventManager().unregisterCallback(this);
     }
 
-    void finishFragmentIfNecessary() {
+    /* access modifiers changed from: package-private */
+    public void finishFragmentIfNecessary() {
         int i = this.mGroupId;
         if (i < 0 || this.mGroupUtils.isHideGroupOptions(i)) {
             Log.w("GroupBluetoothFragment", "finishFragment");
@@ -71,14 +67,13 @@ public class GroupBluetoothFragment extends RestrictedDashboardFragment implemen
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.bluetooth_group_details_fragment;
+        return R$xml.bluetooth_group_details_fragment;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment
-    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+    /* access modifiers changed from: protected */
+    public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
         if (DBG) {
             Log.d("GroupBluetoothFragment", "createPreferenceControllers mGroupId " + this.mGroupId);
         }
@@ -91,7 +86,6 @@ public class GroupBluetoothFragment extends RestrictedDashboardFragment implemen
         return arrayList;
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public void onBluetoothStateChanged(int i) {
         if (DBG) {
             Log.d("GroupBluetoothFragment", "onBluetoothStateChanged bluetoothState " + i);

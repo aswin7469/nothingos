@@ -7,7 +7,7 @@ import android.content.IntentFilter;
 import android.util.Log;
 import com.android.settings.Utils;
 import com.android.settings.homepage.contextualcards.slices.BatteryFixSlice;
-/* loaded from: classes.dex */
+
 public class BatteryBroadcastReceiver extends BroadcastReceiver {
     int mBatteryHealth;
     String mBatteryLevel;
@@ -15,7 +15,6 @@ public class BatteryBroadcastReceiver extends BroadcastReceiver {
     String mBatteryStatus;
     private Context mContext;
 
-    /* loaded from: classes.dex */
     public interface OnBatteryChangedListener {
         void onBatteryChanged(int i);
     }
@@ -24,7 +23,6 @@ public class BatteryBroadcastReceiver extends BroadcastReceiver {
         this.mContext = context;
     }
 
-    @Override // android.content.BroadcastReceiver
     public void onReceive(Context context, Intent intent) {
         updateBatteryStatus(intent, false);
     }
@@ -45,10 +43,10 @@ public class BatteryBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void updateBatteryStatus(Intent intent, boolean z) {
-        if (intent != null && this.mBatteryListener != null) {
+        if (!(intent == null || this.mBatteryListener == null)) {
             if ("android.intent.action.BATTERY_CHANGED".equals(intent.getAction())) {
                 String batteryPercentage = Utils.getBatteryPercentage(intent);
-                String batteryStatus = com.android.settingslib.Utils.getBatteryStatus(this.mContext, intent);
+                String batteryStatus = com.android.settingslib.Utils.getBatteryStatus(this.mContext, intent, false);
                 int intExtra = intent.getIntExtra("health", 1);
                 if (!Utils.isBatteryPresent(intent)) {
                     Log.w("BatteryBroadcastRcvr", "Problem reading the battery meter.");

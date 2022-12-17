@@ -2,16 +2,14 @@ package androidx.constraintlayout.solver.widgets;
 
 import java.util.Arrays;
 import java.util.HashMap;
-/* loaded from: classes.dex */
+
 public class HelperWidget extends ConstraintWidget implements Helper {
     public ConstraintWidget[] mWidgets = new ConstraintWidget[4];
     public int mWidgetsCount = 0;
 
-    @Override // androidx.constraintlayout.solver.widgets.Helper
     public void updateConstraints(ConstraintWidgetContainer constraintWidgetContainer) {
     }
 
-    @Override // androidx.constraintlayout.solver.widgets.Helper
     public void add(ConstraintWidget constraintWidget) {
         int i = this.mWidgetsCount + 1;
         ConstraintWidget[] constraintWidgetArr = this.mWidgets;
@@ -24,7 +22,6 @@ public class HelperWidget extends ConstraintWidget implements Helper {
         this.mWidgetsCount = i2 + 1;
     }
 
-    @Override // androidx.constraintlayout.solver.widgets.ConstraintWidget
     public void copy(ConstraintWidget constraintWidget, HashMap<ConstraintWidget, ConstraintWidget> hashMap) {
         super.copy(constraintWidget, hashMap);
         HelperWidget helperWidget = (HelperWidget) constraintWidget;
@@ -36,7 +33,6 @@ public class HelperWidget extends ConstraintWidget implements Helper {
         this.mWidgetsCount = helperWidget.mWidgetsCount;
     }
 
-    @Override // androidx.constraintlayout.solver.widgets.Helper
     public void removeAllIds() {
         this.mWidgetsCount = 0;
         Arrays.fill(this.mWidgets, (Object) null);

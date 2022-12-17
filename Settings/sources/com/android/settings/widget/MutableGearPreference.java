@@ -4,9 +4,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import androidx.preference.PreferenceViewHolder;
-import com.android.settings.R;
+import com.android.settings.R$id;
 import com.android.settingslib.utils.ColorUtil;
-/* loaded from: classes.dex */
+
 public class MutableGearPreference extends GearPreference {
     private Context mContext;
     private int mDisabledAlphaValue;
@@ -27,10 +27,9 @@ public class MutableGearPreference extends GearPreference {
         this.mGearState = z;
     }
 
-    @Override // com.android.settings.widget.GearPreference, com.android.settingslib.RestrictedPreference, com.android.settingslib.widget.TwoTargetPreference, androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
-        this.mGear = (ImageView) preferenceViewHolder.findViewById(R.id.settings_button);
+        this.mGear = (ImageView) preferenceViewHolder.findViewById(R$id.settings_button);
         setGearEnabled(this.mGearState);
     }
 }

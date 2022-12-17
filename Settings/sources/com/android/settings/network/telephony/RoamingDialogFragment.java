@@ -8,52 +8,63 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.telephony.CarrierConfigManager;
 import android.telephony.TelephonyManager;
-import com.android.settings.R;
+import com.android.settings.R$string;
+import com.android.settings.R$style;
 import com.android.settings.core.instrumentation.InstrumentedDialogFragment;
-/* loaded from: classes.dex */
+
 public class RoamingDialogFragment extends InstrumentedDialogFragment implements DialogInterface.OnClickListener {
     private CarrierConfigManager mCarrierConfigManager;
     private int mSubId;
+    private int mType;
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1583;
     }
 
-    public static RoamingDialogFragment newInstance(int i) {
+    public static RoamingDialogFragment newInstance(int i, int i2) {
         RoamingDialogFragment roamingDialogFragment = new RoamingDialogFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt("sub_id_key", i);
+        bundle.putInt("dialog_type", i);
+        bundle.putInt("sub_id_key", i2);
         roamingDialogFragment.setArguments(bundle);
         return roamingDialogFragment;
     }
 
-    @Override // com.android.settings.core.instrumentation.InstrumentedDialogFragment, com.android.settingslib.core.lifecycle.ObservableDialogFragment, androidx.fragment.app.DialogFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         this.mSubId = getArguments().getInt("sub_id_key");
         this.mCarrierConfigManager = (CarrierConfigManager) context.getSystemService(CarrierConfigManager.class);
     }
 
-    @Override // androidx.fragment.app.DialogFragment
     public Dialog onCreateDialog(Bundle bundle) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        int i = R.string.roaming_alert_title;
-        int i2 = R.string.roaming_warning;
-        PersistableBundle configForSubId = this.mCarrierConfigManager.getConfigForSubId(this.mSubId);
-        if (configForSubId != null && configForSubId.getBoolean("check_pricing_with_carrier_data_roaming_bool")) {
-            i2 = R.string.roaming_check_price_warning;
+        this.mType = getArguments().getInt("dialog_type");
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R$style.TelephonyToggleAlertDialog);
+        int i = this.mType;
+        if (i == 0) {
+            int i2 = R$string.roaming_warning;
+            PersistableBundle configForSubId = this.mCarrierConfigManager.getConfigForSubId(this.mSubId);
+            if (configForSubId != null && configForSubId.getBoolean("check_pricing_with_carrier_data_roaming_bool")) {
+                i2 = R$string.roaming_check_price_warning;
+            }
+            builder.setMessage(getResources().getString(i2)).setTitle(getResources().getString(R$string.roaming_alert_title));
+        } else if (i == 1) {
+            builder.setTitle(R$string.roaming_disable_title).setMessage(R$string.roaming_disable_dialog_ciwlan_call);
         }
-        builder.setMessage(getResources().getString(i2)).setTitle(i).setIconAttribute(16843605).setPositiveButton(17039379, this).setNegativeButton(17039369, this);
+        builder.setIconAttribute(16843605).setPositiveButton(17039379, this).setNegativeButton(17039369, this);
         return builder.create();
     }
 
-    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialogInterface, int i) {
-        TelephonyManager createForSubscriptionId;
-        if (i != -1 || (createForSubscriptionId = ((TelephonyManager) getContext().getSystemService(TelephonyManager.class)).createForSubscriptionId(this.mSubId)) == null) {
-            return;
+        TelephonyManager createForSubscriptionId = ((TelephonyManager) getContext().getSystemService(TelephonyManager.class)).createForSubscriptionId(this.mSubId);
+        if (createForSubscriptionId != null) {
+            int i2 = this.mType;
+            if (i2 != 0) {
+                if (i2 == 1 && i == -1) {
+                    createForSubscriptionId.setDataRoamingEnabled(false);
+                }
+            } else if (i == -1) {
+                createForSubscriptionId.setDataRoamingEnabled(true);
+            }
         }
-        createForSubscriptionId.setDataRoamingEnabled(true);
     }
 }

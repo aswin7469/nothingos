@@ -6,7 +6,7 @@ import android.graphics.RectF;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-/* loaded from: classes2.dex */
+
 public class DescendantOffsetUtils {
     private static final ThreadLocal<Matrix> matrix = new ThreadLocal<>();
     private static final ThreadLocal<RectF> rectF = new ThreadLocal<>();
@@ -42,9 +42,9 @@ public class DescendantOffsetUtils {
         if ((parent instanceof View) && parent != viewParent) {
             View view2 = (View) parent;
             offsetDescendantMatrix(viewParent, view2, matrix2);
-            matrix2.preTranslate(-view2.getScrollX(), -view2.getScrollY());
+            matrix2.preTranslate((float) (-view2.getScrollX()), (float) (-view2.getScrollY()));
         }
-        matrix2.preTranslate(view.getLeft(), view.getTop());
+        matrix2.preTranslate((float) view.getLeft(), (float) view.getTop());
         if (!view.getMatrix().isIdentity()) {
             matrix2.preConcat(view.getMatrix());
         }

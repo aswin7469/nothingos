@@ -7,7 +7,7 @@ import com.google.zxing.common.DecoderResult;
 import com.google.zxing.common.reedsolomon.GenericGF;
 import com.google.zxing.common.reedsolomon.ReedSolomonDecoder;
 import com.google.zxing.common.reedsolomon.ReedSolomonException;
-/* loaded from: classes2.dex */
+
 public final class Decoder {
     private final ReedSolomonDecoder rsDecoder = new ReedSolomonDecoder(GenericGF.DATA_MATRIX_FIELD_256);
 
@@ -16,16 +16,16 @@ public final class Decoder {
         DataBlock[] dataBlocks = DataBlock.getDataBlocks(bitMatrixParser.readCodewords(), bitMatrixParser.getVersion());
         int length = dataBlocks.length;
         int i = 0;
-        for (DataBlock dataBlock : dataBlocks) {
-            i += dataBlock.getNumDataCodewords();
+        for (DataBlock numDataCodewords : dataBlocks) {
+            i += numDataCodewords.getNumDataCodewords();
         }
         byte[] bArr = new byte[i];
         for (int i2 = 0; i2 < length; i2++) {
-            DataBlock dataBlock2 = dataBlocks[i2];
-            byte[] codewords = dataBlock2.getCodewords();
-            int numDataCodewords = dataBlock2.getNumDataCodewords();
-            correctErrors(codewords, numDataCodewords);
-            for (int i3 = 0; i3 < numDataCodewords; i3++) {
+            DataBlock dataBlock = dataBlocks[i2];
+            byte[] codewords = dataBlock.getCodewords();
+            int numDataCodewords2 = dataBlock.getNumDataCodewords();
+            correctErrors(codewords, numDataCodewords2);
+            for (int i3 = 0; i3 < numDataCodewords2; i3++) {
                 bArr[(i3 * length) + i2] = codewords[i3];
             }
         }

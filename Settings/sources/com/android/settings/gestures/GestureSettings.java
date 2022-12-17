@@ -2,41 +2,35 @@ package com.android.settings.gestures;
 
 import android.content.Context;
 import android.hardware.display.AmbientDisplayConfiguration;
-import com.android.settings.R;
+import com.android.settings.R$xml;
 import com.android.settings.dashboard.DashboardFragment;
 import com.android.settings.search.BaseSearchIndexProvider;
-import com.android.settingslib.core.AbstractPreferenceController;
-import com.android.settingslib.core.lifecycle.Lifecycle;
-import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class GestureSettings extends DashboardFragment {
-    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R.xml.gestures) { // from class: com.android.settings.gestures.GestureSettings.1
-        @Override // com.android.settings.search.BaseSearchIndexProvider
-        public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
-            return GestureSettings.buildPreferenceControllers(context, null);
+    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R$xml.gestures) {
+        public List<String> getNonIndexableKeys(Context context) {
+            List<String> nonIndexableKeys = super.getNonIndexableKeys(context);
+            nonIndexableKeys.add("gesture_prevent_ringing_summary");
+            return nonIndexableKeys;
         }
     };
     private AmbientDisplayConfiguration mAmbientDisplayConfig;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "GestureSettings";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 459;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.gestures;
+        return R$xml.gestures;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         ((AssistGestureSettingsPreferenceController) use(AssistGestureSettingsPreferenceController.class)).setAssistOnly(false);
@@ -49,15 +43,5 @@ public class GestureSettings extends DashboardFragment {
             this.mAmbientDisplayConfig = new AmbientDisplayConfiguration(context);
         }
         return this.mAmbientDisplayConfig;
-    }
-
-    @Override // com.android.settings.dashboard.DashboardFragment
-    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
-        return buildPreferenceControllers(context, getSettingsLifecycle());
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public static List<AbstractPreferenceController> buildPreferenceControllers(Context context, Lifecycle lifecycle) {
-        return new ArrayList();
     }
 }

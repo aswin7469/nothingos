@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent">
+<ScrollView xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:layout_width="match_parent" android:layout_height="match_parent">
     <LinearLayout android:layout_marginTop="18dp" style="@style/info_layout">
         <RelativeLayout style="@style/info_layout_sar">
             <TextView android:text="@string/wifi_sar_manul_label" style="@style/info_label_sar"/>
-            <Switch android:id="@+id/wifi_sar_manul_mode_sw" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerVertical="true" android:layout_alignParentEnd="true"/>
+            <com.nothing.p006ui.support.NtCustSwitch android:id="@+id/wifi_sar_manul_mode_sw" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerVertical="true" android:layout_alignParentEnd="true"/>
         </RelativeLayout>
         <RelativeLayout style="@style/info_layout_sar">
             <TextView android:text="@string/wifi_sar_modem_active" style="@style/info_label_sar"/>
-            <Switch android:id="@+id/wifi_sar_modem_active_sw" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerVertical="true" android:layout_alignParentEnd="true"/>
+            <com.nothing.p006ui.support.NtCustSwitch android:id="@+id/wifi_sar_modem_active_sw" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerVertical="true" android:layout_alignParentEnd="true"/>
         </RelativeLayout>
         <RelativeLayout style="@style/info_layout_sar">
             <TextView android:text="@string/wifi_sar_bt_on" style="@style/info_label_sar"/>
-            <Switch android:id="@+id/wifi_sar_bt_connected_sw" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerVertical="true" android:layout_alignParentEnd="true"/>
+            <com.nothing.p006ui.support.NtCustSwitch android:id="@+id/wifi_sar_bt_connected_sw" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerVertical="true" android:layout_alignParentEnd="true"/>
         </RelativeLayout>
         <RelativeLayout style="@style/info_layout_sar">
             <TextView android:text="@string/wifi_sar_sensor_near" style="@style/info_label_sar"/>
-            <Switch android:id="@+id/wifi_sar_sensor_near_sw" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerVertical="true" android:layout_alignParentEnd="true"/>
+            <com.nothing.p006ui.support.NtCustSwitch android:id="@+id/wifi_sar_sensor_near_sw" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerVertical="true" android:layout_alignParentEnd="true"/>
         </RelativeLayout>
         <RelativeLayout style="@style/info_layout_sar">
             <TextView android:text="@string/wifi_sar_earpiece_on" style="@style/info_label_sar"/>
-            <Switch android:id="@+id/wifi_sar_earpiece_on_sw" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerVertical="true" android:layout_alignParentEnd="true"/>
+            <com.nothing.p006ui.support.NtCustSwitch android:id="@+id/wifi_sar_earpiece_on_sw" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerVertical="true" android:layout_alignParentEnd="true"/>
         </RelativeLayout>
         <RelativeLayout style="@style/info_layout_sar">
             <TextView android:text="@string/wifi_sar_wifi_band" style="@style/info_label_sar"/>
-            <Switch android:id="@+id/wifi_sar_wifi_band_sw" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerVertical="true" android:layout_alignParentEnd="true"/>
+            <com.nothing.p006ui.support.NtCustSwitch android:id="@+id/wifi_sar_wifi_band_sw" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerVertical="true" android:layout_alignParentEnd="true"/>
         </RelativeLayout>
         <RelativeLayout style="@style/info_layout_sar">
             <TextView android:id="@+id/wifi_sar_get_sar_set_tv" android:text="@string/wifi_sar_get_sar_set" style="@style/info_label_sar"/>

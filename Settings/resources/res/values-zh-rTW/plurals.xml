@@ -234,11 +234,11 @@
     </plurals>
     <plurals name="notifications_sent_daily">
         <item quantity="one">每天大約 %d 則通知</item>
-        <item quantity="other">每天大約 %d 則通知</item>
+        <item quantity="other">每天大約 %,d 則通知</item>
     </plurals>
     <plurals name="notifications_sent_weekly">
         <item quantity="one">每週大約 %d 則通知</item>
-        <item quantity="other">每週大約 %d 則通知</item>
+        <item quantity="other">每週大約 %,d 則通知</item>
     </plurals>
     <plurals name="number_of_device_admins">
         <item quantity="one">%d 個使用中的應用程式</item>
@@ -320,14 +320,6 @@
         <item quantity="one">設為信任的憑證或移除憑證</item>
         <item quantity="other">設為信任的憑證或移除憑證</item>
     </plurals>
-    <plurals name="ssl_ca_cert_info_message">
-        <item quantity="one">%s 已為你的工作資料夾安裝憑證授權單位憑證，該憑證將能監控你的工作網路活動，包括電子郵件、應用程式和安全的網站。\n\n如要進一步瞭解這個憑證，請與你的管理員聯絡。</item>
-        <item quantity="other">%s 已為你的工作資料夾安裝多個憑證授權單位憑證，這些憑證將能監控你的工作網路活動，包括電子郵件、應用程式和安全的網站。\n\n如要進一步瞭解這些憑證，請與你的管理員聯絡。</item>
-    </plurals>
-    <plurals name="ssl_ca_cert_info_message_device_owner">
-        <item quantity="one">%s 已在你的裝置上安裝憑證授權單位憑證，該憑證將能監控你的裝置網路活動，包括電子郵件、應用程式和安全的網站。\n\n如要進一步瞭解這個憑證，請與你的管理員聯絡。</item>
-        <item quantity="other">%s 已在你的裝置上安裝多個憑證授權單位憑證，這些憑證將能監控你的裝置網路活動，包括電子郵件、應用程式和安全的網站。\n\n如要進一步瞭解這些憑證，請與你的管理員聯絡。</item>
-    </plurals>
     <plurals name="ssl_ca_cert_settings_button">
         <item quantity="one">查看憑證</item>
         <item quantity="other">查看憑證</item>
@@ -359,10 +351,6 @@
     <plurals name="wifi_saved_passpoint_access_points_summary">
         <item quantity="one">1 項訂閱內容</item>
         <item quantity="other">%d 項訂閱內容</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d 個已連線的裝置</item>
-        <item quantity="other">%1$d 個已連線的裝置</item>
     </plurals>
     <plurals name="wrong_pin_code">
         <item quantity="one">SIM 卡的 PIN 碼輸入錯誤，你還可以再試 %d 次。如果仍然失敗，就必須請電信業者為裝置解鎖。</item>

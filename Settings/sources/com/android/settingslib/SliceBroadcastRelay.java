@@ -12,7 +12,7 @@ import android.os.UserHandle;
 import android.util.ArraySet;
 import android.util.Log;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public class SliceBroadcastRelay {
     private static final Set<Uri> sRegisteredUris = new ArraySet();
 
@@ -29,14 +29,13 @@ public class SliceBroadcastRelay {
 
     public static void unregisterReceivers(Context context, Uri uri) {
         Set<Uri> set = sRegisteredUris;
-        if (!set.contains(uri)) {
-            return;
+        if (set.contains(uri)) {
+            Log.d("SliceBroadcastRelay", "Unregistering uri broadcast relay: " + uri);
+            Intent intent = new Intent("com.android.settingslib.action.UNREGISTER_SLICE_RECEIVER");
+            intent.setPackage("com.android.systemui");
+            intent.putExtra("uri", ContentProvider.maybeAddUserId(uri, Process.myUserHandle().getIdentifier()));
+            context.sendBroadcastAsUser(intent, UserHandle.SYSTEM);
+            set.remove(uri);
         }
-        Log.d("SliceBroadcastRelay", "Unregistering uri broadcast relay: " + uri);
-        Intent intent = new Intent("com.android.settingslib.action.UNREGISTER_SLICE_RECEIVER");
-        intent.setPackage("com.android.systemui");
-        intent.putExtra("uri", ContentProvider.maybeAddUserId(uri, Process.myUserHandle().getIdentifier()));
-        context.sendBroadcastAsUser(intent, UserHandle.SYSTEM);
-        set.remove(uri);
     }
 }

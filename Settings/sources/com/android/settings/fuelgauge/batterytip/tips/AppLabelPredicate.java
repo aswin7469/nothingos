@@ -4,7 +4,7 @@ import android.content.Context;
 import com.android.settings.Utils;
 import com.android.settings.fuelgauge.batterytip.AppInfo;
 import java.util.function.Predicate;
-/* loaded from: classes.dex */
+
 public class AppLabelPredicate implements Predicate<AppInfo> {
     private static AppLabelPredicate sInstance;
     private Context mContext;
@@ -20,7 +20,6 @@ public class AppLabelPredicate implements Predicate<AppInfo> {
         this.mContext = context;
     }
 
-    @Override // java.util.function.Predicate
     public boolean test(AppInfo appInfo) {
         return Utils.getApplicationLabel(this.mContext, appInfo.packageName) == null;
     }

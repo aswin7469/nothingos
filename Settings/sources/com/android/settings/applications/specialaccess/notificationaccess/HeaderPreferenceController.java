@@ -1,5 +1,6 @@
 package com.android.settings.applications.specialaccess.notificationaccess;
 
+import android.app.Activity;
 import android.companion.ICompanionDeviceManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -10,17 +11,16 @@ import android.util.IconDrawableFactory;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$id;
 import com.android.settings.core.BasePreferenceController;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settings.dashboard.DashboardFragment;
 import com.android.settings.notification.NotificationBackend;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settings.widget.EntityHeaderController;
 import com.android.settingslib.applications.AppUtils;
 import com.android.settingslib.bluetooth.LocalBluetoothManager;
 import com.android.settingslib.widget.LayoutPreference;
-/* loaded from: classes.dex */
+
 public class HeaderPreferenceController extends BasePreferenceController implements PreferenceControllerMixin, LifecycleObserver {
     private LocalBluetoothManager mBm;
     private ICompanionDeviceManager mCdm;
@@ -32,47 +32,34 @@ public class HeaderPreferenceController extends BasePreferenceController impleme
     private CharSequence mServiceName;
     private int mUserId;
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return 0;
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -121,19 +108,17 @@ public class HeaderPreferenceController extends BasePreferenceController impleme
         return this;
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
-        if (this.mFragment == null) {
-            return;
+        if (this.mFragment != null) {
+            FragmentActivity activity = this.mFragment.getActivity();
+            DashboardFragment dashboardFragment = this.mFragment;
+            int i = R$id.entity_header;
+            EntityHeaderController newInstance = EntityHeaderController.newInstance(activity, dashboardFragment, ((LayoutPreference) preferenceScreen.findPreference(getPreferenceKey())).findViewById(i));
+            this.mHeaderController = newInstance;
+            EntityHeaderController summary = newInstance.setRecyclerView(this.mFragment.getListView(), this.mFragment.getSettingsLifecycle()).setIcon(IconDrawableFactory.newInstance(this.mFragment.getActivity()).getBadgedIcon(this.mPackageInfo.applicationInfo)).setLabel(this.mPackageInfo.applicationInfo.loadLabel(this.mPm)).setSummary(this.mServiceName);
+            new NotificationBackend();
+            summary.setSecondSummary(NotificationBackend.getDeviceList(this.mCdm, this.mBm, this.mCn.getPackageName(), this.mUserId)).setIsInstantApp(AppUtils.isInstant(this.mPackageInfo.applicationInfo)).setPackageName(this.mPackageInfo.packageName).setUid(this.mPackageInfo.applicationInfo.uid).setHasAppInfoLink(true).setButtonActions(0, 0).done((Activity) this.mFragment.getActivity(), this.mContext).findViewById(i).setVisibility(0);
         }
-        FragmentActivity activity = this.mFragment.getActivity();
-        DashboardFragment dashboardFragment = this.mFragment;
-        int i = R.id.entity_header;
-        EntityHeaderController newInstance = EntityHeaderController.newInstance(activity, dashboardFragment, ((LayoutPreference) preferenceScreen.findPreference(getPreferenceKey())).findViewById(i));
-        this.mHeaderController = newInstance;
-        EntityHeaderController summary = newInstance.setRecyclerView(this.mFragment.getListView(), this.mFragment.getSettingsLifecycle()).setIcon(IconDrawableFactory.newInstance(this.mFragment.getActivity()).getBadgedIcon(this.mPackageInfo.applicationInfo)).setLabel(this.mPackageInfo.applicationInfo.loadLabel(this.mPm)).setSummary(this.mServiceName);
-        new NotificationBackend();
-        summary.setSecondSummary(NotificationBackend.getDeviceList(this.mCdm, this.mBm, this.mCn.getPackageName(), this.mUserId)).setIsInstantApp(AppUtils.isInstant(this.mPackageInfo.applicationInfo)).setPackageName(this.mPackageInfo.packageName).setUid(this.mPackageInfo.applicationInfo.uid).setHasAppInfoLink(true).setButtonActions(0, 0).done(this.mFragment.getActivity(), this.mContext).findViewById(i).setVisibility(0);
     }
 }

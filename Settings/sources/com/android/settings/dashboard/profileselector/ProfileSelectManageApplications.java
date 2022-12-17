@@ -3,9 +3,8 @@ package com.android.settings.dashboard.profileselector;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import com.android.settings.applications.manageapplications.ManageApplications;
-/* loaded from: classes.dex */
+
 public class ProfileSelectManageApplications extends ProfileSelectFragment {
-    @Override // com.android.settings.dashboard.profileselector.ProfileSelectFragment
     public Fragment[] getFragments() {
         Bundle deepCopy = getArguments() != null ? getArguments().deepCopy() : new Bundle();
         deepCopy.putInt("profile", 2);
@@ -16,5 +15,9 @@ public class ProfileSelectManageApplications extends ProfileSelectFragment {
         ManageApplications manageApplications2 = new ManageApplications();
         manageApplications2.setArguments(arguments);
         return new Fragment[]{manageApplications2, manageApplications};
+    }
+
+    public int getTitleResId() {
+        return ManageApplications.getTitleResId(getActivity().getIntent(), getArguments());
     }
 }

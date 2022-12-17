@@ -6,36 +6,22 @@ import android.content.res.Resources;
 import android.provider.Settings;
 import android.telephony.SubscriptionManager;
 import com.android.internal.annotations.VisibleForTesting;
+import com.android.settings.R$string;
 import com.android.settings.core.TogglePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
-/* loaded from: classes.dex */
-public class CellularFallbackPreferenceController extends TogglePreferenceController {
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+public class CellularFallbackPreferenceController extends TogglePreferenceController {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -44,33 +30,39 @@ public class CellularFallbackPreferenceController extends TogglePreferenceContro
         super(context, str);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return avoidBadWifiConfig() ? 3 : 0;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean isChecked() {
         return avoidBadWifiCurrentSettings();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean setChecked(boolean z) {
         return Settings.Global.putString(this.mContext.getContentResolver(), "network_avoid_bad_wifi", z ? "1" : null);
     }
 
-    private boolean avoidBadWifiConfig() {
-        int activeDataSubscriptionId = getActiveDataSubscriptionId();
-        return activeDataSubscriptionId == -1 || getResourcesForSubId(activeDataSubscriptionId).getInteger(17694870) == 1;
+    public int getSliceHighlightMenuRes() {
+        return R$string.menu_key_network;
     }
 
+    private boolean avoidBadWifiConfig() {
+        int activeDataSubscriptionId = getActiveDataSubscriptionId();
+        if (activeDataSubscriptionId == -1 || getResourcesForSubId(activeDataSubscriptionId).getInteger(17694884) == 1) {
+            return true;
+        }
+        return false;
+    }
+
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    int getActiveDataSubscriptionId() {
+    public int getActiveDataSubscriptionId() {
         return SubscriptionManager.getActiveDataSubscriptionId();
     }
 
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    Resources getResourcesForSubId(int i) {
+    public Resources getResourcesForSubId(int i) {
         return SubscriptionManager.getResourcesForSubId(this.mContext, i);
     }
 

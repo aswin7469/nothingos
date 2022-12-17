@@ -13,13 +13,11 @@ import androidx.lifecycle.OnLifecycleEvent;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.TogglePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
-import com.android.settingslib.core.AbstractPreferenceController;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-/* loaded from: classes.dex */
+
 public class UwbPreferenceController extends TogglePreferenceController implements UwbManager.AdapterStateCallback, LifecycleObserver {
     @VisibleForTesting
     static final String KEY_UWB_SETTINGS = "uwb_settings";
@@ -29,36 +27,23 @@ public class UwbPreferenceController extends TogglePreferenceController implemen
     boolean mAirplaneModeOn;
     private final Executor mExecutor = Executors.newSingleThreadExecutor();
     private final Handler mHandler;
-    private Preference mPreference;
+    /* access modifiers changed from: private */
+    public Preference mPreference;
     @VisibleForTesting
     UwbManager mUwbManager;
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -70,12 +55,11 @@ public class UwbPreferenceController extends TogglePreferenceController implemen
             this.mUwbManager = (UwbManager) context.getSystemService(UwbManager.class);
         }
         this.mAirplaneModeOn = Settings.Global.getInt(this.mContext.getContentResolver(), "airplane_mode_on", 0) == 1;
-        this.mAirplaneModeChangedReceiver = new BroadcastReceiver() { // from class: com.android.settings.uwb.UwbPreferenceController.1
-            @Override // android.content.BroadcastReceiver
-            public void onReceive(Context context2, Intent intent) {
+        this.mAirplaneModeChangedReceiver = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
                 UwbPreferenceController uwbPreferenceController = UwbPreferenceController.this;
                 boolean z = false;
-                if (Settings.Global.getInt(((AbstractPreferenceController) uwbPreferenceController).mContext.getContentResolver(), "airplane_mode_on", 0) == 1) {
+                if (Settings.Global.getInt(uwbPreferenceController.mContext.getContentResolver(), "airplane_mode_on", 0) == 1) {
                     z = true;
                 }
                 uwbPreferenceController.mAirplaneModeOn = z;
@@ -85,12 +69,12 @@ public class UwbPreferenceController extends TogglePreferenceController implemen
         };
     }
 
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    boolean isUwbSupportedOnDevice() {
+    public boolean isUwbSupportedOnDevice() {
         return this.mContext.getPackageManager().hasSystemFeature("android.hardware.uwb");
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         if (!isUwbSupportedOnDevice()) {
             return 3;
@@ -98,19 +82,16 @@ public class UwbPreferenceController extends TogglePreferenceController implemen
         return this.mAirplaneModeOn ? 5 : 0;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = preferenceScreen.findPreference(getPreferenceKey());
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean isChecked() {
         int adapterState = this.mUwbManager.getAdapterState();
         return adapterState == 2 || adapterState == 1;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean setChecked(boolean z) {
         this.mAirplaneModeOn = Settings.Global.getInt(this.mContext.getContentResolver(), "airplane_mode_on", 0) == 1;
         if (isUwbSupportedOnDevice()) {
@@ -123,18 +104,13 @@ public class UwbPreferenceController extends TogglePreferenceController implemen
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onStateChanged$0() {
         updateState(this.mPreference);
     }
 
     public void onStateChanged(int i, int i2) {
-        this.mHandler.post(new Runnable() { // from class: com.android.settings.uwb.UwbPreferenceController$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                UwbPreferenceController.this.lambda$onStateChanged$0();
-            }
-        });
+        this.mHandler.post(new UwbPreferenceController$$ExternalSyntheticLambda0(this));
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
@@ -160,19 +136,20 @@ public class UwbPreferenceController extends TogglePreferenceController implemen
         }
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         preference.setEnabled(!this.mAirplaneModeOn);
         refreshSummary(preference);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    /* renamed from: getSummary */
-    public CharSequence mo485getSummary() {
+    public CharSequence getSummary() {
         if (this.mAirplaneModeOn) {
-            return this.mContext.getResources().getString(R.string.uwb_settings_summary_airplane_mode);
+            return this.mContext.getResources().getString(R$string.uwb_settings_summary_airplane_mode);
         }
-        return this.mContext.getResources().getString(R.string.uwb_settings_summary);
+        return this.mContext.getResources().getString(R$string.uwb_settings_summary);
+    }
+
+    public int getSliceHighlightMenuRes() {
+        return R$string.menu_key_connected_devices;
     }
 }

@@ -3,12 +3,12 @@ package com.google.zxing.pdf417.encoder;
 import com.google.zxing.WriterException;
 import java.math.BigInteger;
 import java.util.Arrays;
-/* loaded from: classes2.dex */
+
 final class PDF417HighLevelEncoder {
     private static final byte[] MIXED;
+    private static final byte[] PUNCTUATION = new byte[128];
     private static final byte[] TEXT_MIXED_RAW = {48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 38, 13, 9, 44, 58, 35, 45, 46, 36, 47, 43, 37, 42, 61, 94, 0, 32, 0, 0, 0};
     private static final byte[] TEXT_PUNCTUATION_RAW = {59, 60, 62, 64, 91, 92, 93, 95, 96, 126, 33, 13, 9, 44, 58, 10, 45, 46, 36, 47, 34, 124, 42, 40, 41, 63, 123, 125, 39, 0};
-    private static final byte[] PUNCTUATION = new byte[128];
 
     private static boolean isAlphaLower(char c) {
         return c == ' ' || (c >= 'a' && c <= 'z');
@@ -23,7 +23,7 @@ final class PDF417HighLevelEncoder {
     }
 
     private static boolean isText(char c) {
-        return c == '\t' || c == '\n' || c == '\r' || (c >= ' ' && c <= '~');
+        return c == 9 || c == 10 || c == 13 || (c >= ' ' && c <= '~');
     }
 
     static {
@@ -62,8 +62,7 @@ final class PDF417HighLevelEncoder {
         return str.getBytes();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static String encodeHighLevel(String str, Compaction compaction) throws WriterException {
+    static String encodeHighLevel(String str, Compaction compaction) throws WriterException {
         StringBuilder sb = new StringBuilder(str.length());
         int length = str.length();
         if (compaction == Compaction.TEXT) {
@@ -72,7 +71,7 @@ final class PDF417HighLevelEncoder {
             byte[] bytesForMessage = getBytesForMessage(str);
             encodeBinary(bytesForMessage, 0, bytesForMessage.length, 1, sb);
         } else if (compaction == Compaction.NUMERIC) {
-            sb.append((char) 902);
+            sb.append(902);
             encodeNumeric(str, 0, length, sb);
         } else {
             byte[] bArr = null;
@@ -82,7 +81,7 @@ final class PDF417HighLevelEncoder {
             while (i < length) {
                 int determineConsecutiveDigitCount = determineConsecutiveDigitCount(str, i);
                 if (determineConsecutiveDigitCount >= 13) {
-                    sb.append((char) 902);
+                    sb.append(902);
                     encodeNumeric(str, i, determineConsecutiveDigitCount, sb);
                     i += determineConsecutiveDigitCount;
                     i3 = 2;
@@ -91,7 +90,7 @@ final class PDF417HighLevelEncoder {
                     int determineConsecutiveTextCount = determineConsecutiveTextCount(str, i);
                     if (determineConsecutiveTextCount >= 5 || determineConsecutiveDigitCount == length) {
                         if (i3 != 0) {
-                            sb.append((char) 900);
+                            sb.append(900);
                             i2 = 0;
                             i3 = 0;
                         }
@@ -120,119 +119,197 @@ final class PDF417HighLevelEncoder {
         return sb.toString();
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:21:0x00f6 A[EDGE_INSN: B:21:0x00f6->B:22:0x00f6 ?: BREAK  , SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:40:0x0011 A[SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private static int encodeText(CharSequence charSequence, int i, int i2, StringBuilder sb, int i3) {
-        StringBuilder sb2 = new StringBuilder(i2);
-        int i4 = i3;
-        int i5 = 0;
-        while (true) {
-            int i6 = i + i5;
-            char charAt = charSequence.charAt(i6);
-            if (i4 != 0) {
-                if (i4 != 1) {
-                    if (i4 == 2) {
-                        if (isMixed(charAt)) {
-                            sb2.append((char) MIXED[charAt]);
-                        } else if (isAlphaUpper(charAt)) {
-                            sb2.append((char) 28);
-                            i4 = 0;
-                        } else if (isAlphaLower(charAt)) {
-                            sb2.append((char) 27);
-                            i4 = 1;
-                        } else {
-                            int i7 = i6 + 1;
-                            if (i7 < i2 && isPunctuation(charSequence.charAt(i7))) {
-                                i4 = 3;
-                                sb2.append((char) 25);
-                            } else {
-                                sb2.append((char) 29);
-                                sb2.append((char) PUNCTUATION[charAt]);
-                            }
-                        }
-                    } else if (isPunctuation(charAt)) {
-                        sb2.append((char) PUNCTUATION[charAt]);
-                    } else {
-                        sb2.append((char) 29);
-                        i4 = 0;
-                    }
-                } else if (isAlphaLower(charAt)) {
-                    if (charAt == ' ') {
-                        sb2.append((char) 26);
-                    } else {
-                        sb2.append((char) (charAt - 'a'));
-                    }
-                } else if (isAlphaUpper(charAt)) {
-                    sb2.append((char) 27);
-                    sb2.append((char) (charAt - 'A'));
-                } else if (isMixed(charAt)) {
-                    sb2.append((char) 28);
-                    i4 = 2;
-                } else {
-                    sb2.append((char) 29);
-                    sb2.append((char) PUNCTUATION[charAt]);
-                }
-                i5++;
-                if (i5 < i2) {
-                    break;
-                }
-            } else {
-                if (isAlphaUpper(charAt)) {
-                    if (charAt == ' ') {
-                        sb2.append((char) 26);
-                    } else {
-                        sb2.append((char) (charAt - 'A'));
-                    }
-                } else if (isAlphaLower(charAt)) {
-                    sb2.append((char) 27);
-                    i4 = 1;
-                } else if (isMixed(charAt)) {
-                    sb2.append((char) 28);
-                    i4 = 2;
-                } else {
-                    sb2.append((char) 29);
-                    sb2.append((char) PUNCTUATION[charAt]);
-                }
-                i5++;
-                if (i5 < i2) {
-                }
-            }
-        }
-        int length = sb2.length();
-        char c = 0;
-        for (int i8 = 0; i8 < length; i8++) {
-            if (i8 % 2 != 0) {
-                c = (char) ((c * 30) + sb2.charAt(i8));
-                sb.append(c);
-            } else {
-                c = sb2.charAt(i8);
-            }
-        }
-        if (length % 2 != 0) {
-            sb.append((char) ((c * 30) + 29));
-        }
-        return i4;
+    /* JADX WARNING: Removed duplicated region for block: B:68:0x00f6 A[EDGE_INSN: B:68:0x00f6->B:53:0x00f6 ?: BREAK  , SYNTHETIC] */
+    /* JADX WARNING: Removed duplicated region for block: B:73:0x0011 A[SYNTHETIC] */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private static int encodeText(java.lang.CharSequence r16, int r17, int r18, java.lang.StringBuilder r19, int r20) {
+        /*
+            r0 = r16
+            r1 = r18
+            r2 = r19
+            java.lang.StringBuilder r3 = new java.lang.StringBuilder
+            r3.<init>(r1)
+            r4 = 2
+            r5 = 0
+            r6 = 1
+            r7 = r20
+            r8 = r5
+        L_0x0011:
+            int r9 = r17 + r8
+            char r10 = r0.charAt(r9)
+            r11 = 26
+            r12 = 32
+            r13 = 28
+            r14 = 27
+            r15 = 29
+            if (r7 == 0) goto L_0x00bc
+            if (r7 == r6) goto L_0x0083
+            if (r7 == r4) goto L_0x003c
+            boolean r9 = isPunctuation(r10)
+            if (r9 == 0) goto L_0x0037
+            byte[] r9 = PUNCTUATION
+            byte r9 = r9[r10]
+            char r9 = (char) r9
+            r3.append(r9)
+            goto L_0x00f2
+        L_0x0037:
+            r3.append(r15)
+        L_0x003a:
+            r7 = r5
+            goto L_0x0011
+        L_0x003c:
+            boolean r11 = isMixed(r10)
+            if (r11 == 0) goto L_0x004c
+            byte[] r9 = MIXED
+            byte r9 = r9[r10]
+            char r9 = (char) r9
+            r3.append(r9)
+            goto L_0x00f2
+        L_0x004c:
+            boolean r11 = isAlphaUpper(r10)
+            if (r11 == 0) goto L_0x0056
+            r3.append(r13)
+            goto L_0x003a
+        L_0x0056:
+            boolean r11 = isAlphaLower(r10)
+            if (r11 == 0) goto L_0x0061
+            r3.append(r14)
+            goto L_0x00d8
+        L_0x0061:
+            int r9 = r9 + 1
+            if (r9 >= r1) goto L_0x0076
+            char r9 = r0.charAt(r9)
+            boolean r9 = isPunctuation(r9)
+            if (r9 == 0) goto L_0x0076
+            r7 = 3
+            r9 = 25
+            r3.append(r9)
+            goto L_0x0011
+        L_0x0076:
+            r3.append(r15)
+            byte[] r9 = PUNCTUATION
+            byte r9 = r9[r10]
+            char r9 = (char) r9
+            r3.append(r9)
+            goto L_0x00f2
+        L_0x0083:
+            boolean r9 = isAlphaLower(r10)
+            if (r9 == 0) goto L_0x0096
+            if (r10 != r12) goto L_0x008f
+            r3.append(r11)
+            goto L_0x00f2
+        L_0x008f:
+            int r10 = r10 + -97
+            char r9 = (char) r10
+            r3.append(r9)
+            goto L_0x00f2
+        L_0x0096:
+            boolean r9 = isAlphaUpper(r10)
+            if (r9 == 0) goto L_0x00a6
+            r3.append(r14)
+            int r10 = r10 + -65
+            char r9 = (char) r10
+            r3.append(r9)
+            goto L_0x00f2
+        L_0x00a6:
+            boolean r9 = isMixed(r10)
+            if (r9 == 0) goto L_0x00b0
+            r3.append(r13)
+            goto L_0x00e4
+        L_0x00b0:
+            r3.append(r15)
+            byte[] r9 = PUNCTUATION
+            byte r9 = r9[r10]
+            char r9 = (char) r9
+            r3.append(r9)
+            goto L_0x00f2
+        L_0x00bc:
+            boolean r9 = isAlphaUpper(r10)
+            if (r9 == 0) goto L_0x00cf
+            if (r10 != r12) goto L_0x00c8
+            r3.append(r11)
+            goto L_0x00f2
+        L_0x00c8:
+            int r10 = r10 + -65
+            char r9 = (char) r10
+            r3.append(r9)
+            goto L_0x00f2
+        L_0x00cf:
+            boolean r9 = isAlphaLower(r10)
+            if (r9 == 0) goto L_0x00db
+            r3.append(r14)
+        L_0x00d8:
+            r7 = r6
+            goto L_0x0011
+        L_0x00db:
+            boolean r9 = isMixed(r10)
+            if (r9 == 0) goto L_0x00e7
+            r3.append(r13)
+        L_0x00e4:
+            r7 = r4
+            goto L_0x0011
+        L_0x00e7:
+            r3.append(r15)
+            byte[] r9 = PUNCTUATION
+            byte r9 = r9[r10]
+            char r9 = (char) r9
+            r3.append(r9)
+        L_0x00f2:
+            int r8 = r8 + 1
+            if (r8 < r1) goto L_0x0011
+            int r0 = r3.length()
+            r1 = r5
+            r8 = r1
+        L_0x00fc:
+            if (r1 >= r0) goto L_0x011a
+            int r9 = r1 % 2
+            if (r9 == 0) goto L_0x0104
+            r9 = r6
+            goto L_0x0105
+        L_0x0104:
+            r9 = r5
+        L_0x0105:
+            if (r9 == 0) goto L_0x0113
+            int r8 = r8 * 30
+            char r9 = r3.charAt(r1)
+            int r8 = r8 + r9
+            char r8 = (char) r8
+            r2.append(r8)
+            goto L_0x0117
+        L_0x0113:
+            char r8 = r3.charAt(r1)
+        L_0x0117:
+            int r1 = r1 + 1
+            goto L_0x00fc
+        L_0x011a:
+            int r0 = r0 % r4
+            if (r0 == 0) goto L_0x0124
+            int r8 = r8 * 30
+            int r8 = r8 + r15
+            char r0 = (char) r8
+            r2.append(r0)
+        L_0x0124:
+            return r7
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.pdf417.encoder.PDF417HighLevelEncoder.encodeText(java.lang.CharSequence, int, int, java.lang.StringBuilder, int):int");
     }
 
     private static void encodeBinary(byte[] bArr, int i, int i2, int i3, StringBuilder sb) {
         int i4;
         if (i2 == 1 && i3 == 0) {
-            sb.append((char) 913);
+            sb.append(913);
         }
         if (i2 >= 6) {
-            sb.append((char) 924);
+            sb.append(924);
             char[] cArr = new char[5];
             i4 = i;
             while ((i + i2) - i4 >= 6) {
                 long j = 0;
                 for (int i5 = 0; i5 < 6; i5++) {
-                    j = (j << 8) + (bArr[i4 + i5] & 255);
+                    j = (j << 8) + ((long) (bArr[i4 + i5] & 255));
                 }
                 for (int i6 = 0; i6 < 5; i6++) {
-                    cArr[i6] = (char) (j % 900);
+                    cArr[i6] = (char) ((int) (j % 900));
                     j /= 900;
                 }
                 for (int i7 = 4; i7 >= 0; i7--) {
@@ -245,7 +322,7 @@ final class PDF417HighLevelEncoder {
         }
         int i8 = i + i2;
         if (i4 < i8) {
-            sb.append((char) 901);
+            sb.append(901);
         }
         while (i4 < i8) {
             sb.append((char) (bArr[i4] & 255));
@@ -255,8 +332,8 @@ final class PDF417HighLevelEncoder {
 
     private static void encodeNumeric(String str, int i, int i2, StringBuilder sb) {
         StringBuilder sb2 = new StringBuilder((i2 / 3) + 1);
-        BigInteger valueOf = BigInteger.valueOf(900L);
-        BigInteger valueOf2 = BigInteger.valueOf(0L);
+        BigInteger valueOf = BigInteger.valueOf(900);
+        BigInteger valueOf2 = BigInteger.valueOf(0);
         int i3 = 0;
         while (i3 < i2 - 1) {
             sb2.setLength(0);
@@ -301,12 +378,6 @@ final class PDF417HighLevelEncoder {
         return i2;
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:32:0x0027, code lost:
-        return (r1 - r7) - r3;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     private static int determineConsecutiveTextCount(CharSequence charSequence, int i) {
         int length = charSequence.length();
         int i2 = i;
@@ -320,6 +391,9 @@ final class PDF417HighLevelEncoder {
                     charAt = charSequence.charAt(i2);
                 }
             }
+            if (i3 >= 13) {
+                return (i2 - i) - i3;
+            }
             if (i3 <= 0) {
                 if (!isText(charSequence.charAt(i2))) {
                     break;
@@ -330,36 +404,83 @@ final class PDF417HighLevelEncoder {
         return i2 - i;
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:34:0x003f, code lost:
-        return r1 - r9;
+    /* JADX WARNING: Code restructure failed: missing block: B:17:0x0030, code lost:
+        r3 = r3 + 1;
      */
-    /* JADX WARN: Code restructure failed: missing block: B:39:0x0026, code lost:
-        return r1 - r9;
+    /* JADX WARNING: Code restructure failed: missing block: B:7:0x0017, code lost:
+        r4 = r4 + 1;
      */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private static int determineConsecutiveBinaryCount(CharSequence charSequence, byte[] bArr, int i) throws WriterException {
-        int i2;
-        int i3;
-        int length = charSequence.length();
-        int i4 = i;
-        while (i4 < length) {
-            char charAt = charSequence.charAt(i4);
-            int i5 = 0;
-            int i6 = 0;
-            while (i6 < 13 && isDigit(charAt) && (i3 = i4 + (i6 = i6 + 1)) < length) {
-                charAt = charSequence.charAt(i3);
-            }
-            while (i5 < 5 && isText(charAt) && (i2 = i4 + (i5 = i5 + 1)) < length) {
-                charAt = charSequence.charAt(i2);
-            }
-            char charAt2 = charSequence.charAt(i4);
-            if (bArr[i4] == 63 && charAt2 != '?') {
-                throw new WriterException("Non-encodable character detected: " + charAt2 + " (Unicode: " + ((int) charAt2) + ')');
-            }
-            i4++;
-        }
-        return i4 - i;
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private static int determineConsecutiveBinaryCount(java.lang.CharSequence r7, byte[] r8, int r9) throws com.google.zxing.WriterException {
+        /*
+            int r0 = r7.length()
+            r1 = r9
+        L_0x0005:
+            if (r1 >= r0) goto L_0x0074
+            char r2 = r7.charAt(r1)
+            r3 = 0
+            r4 = r3
+        L_0x000d:
+            r5 = 13
+            if (r4 >= r5) goto L_0x0023
+            boolean r6 = isDigit(r2)
+            if (r6 == 0) goto L_0x0023
+            int r4 = r4 + 1
+            int r6 = r1 + r4
+            if (r6 < r0) goto L_0x001e
+            goto L_0x0023
+        L_0x001e:
+            char r2 = r7.charAt(r6)
+            goto L_0x000d
+        L_0x0023:
+            if (r4 < r5) goto L_0x0027
+            int r1 = r1 - r9
+            return r1
+        L_0x0027:
+            r4 = 5
+            if (r3 >= r4) goto L_0x003c
+            boolean r2 = isText(r2)
+            if (r2 == 0) goto L_0x003c
+            int r3 = r3 + 1
+            int r2 = r1 + r3
+            if (r2 < r0) goto L_0x0037
+            goto L_0x003c
+        L_0x0037:
+            char r2 = r7.charAt(r2)
+            goto L_0x0027
+        L_0x003c:
+            if (r3 < r4) goto L_0x0040
+            int r1 = r1 - r9
+            return r1
+        L_0x0040:
+            char r2 = r7.charAt(r1)
+            byte r3 = r8[r1]
+            r4 = 63
+            if (r3 != r4) goto L_0x0071
+            if (r2 != r4) goto L_0x004d
+            goto L_0x0071
+        L_0x004d:
+            com.google.zxing.WriterException r7 = new com.google.zxing.WriterException
+            java.lang.StringBuilder r8 = new java.lang.StringBuilder
+            r8.<init>()
+            java.lang.String r9 = "Non-encodable character detected: "
+            r8.append(r9)
+            r8.append(r2)
+            java.lang.String r9 = " (Unicode: "
+            r8.append(r9)
+            r8.append(r2)
+            r9 = 41
+            r8.append(r9)
+            java.lang.String r8 = r8.toString()
+            r7.<init>((java.lang.String) r8)
+            throw r7
+        L_0x0071:
+            int r1 = r1 + 1
+            goto L_0x0005
+        L_0x0074:
+            int r1 = r1 - r9
+            return r1
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.pdf417.encoder.PDF417HighLevelEncoder.determineConsecutiveBinaryCount(java.lang.CharSequence, byte[], int):int");
     }
 }

@@ -4,7 +4,7 @@ import android.content.Context;
 import com.google.android.setupcompat.internal.Preconditions;
 import com.google.android.setupcompat.internal.SetupCompatServiceInvoker;
 import com.google.android.setupcompat.logging.internal.MetricBundleConverter;
-/* loaded from: classes2.dex */
+
 public class SetupMetricsLogger {
     public static void logCustomEvent(Context context, CustomEvent customEvent) {
         Preconditions.checkNotNull(context, "Context cannot be null.");

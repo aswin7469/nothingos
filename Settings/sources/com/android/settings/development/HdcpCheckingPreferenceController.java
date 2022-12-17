@@ -6,18 +6,17 @@ import android.os.SystemProperties;
 import android.text.TextUtils;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$array;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.development.DeveloperOptionsPreferenceController;
 import com.android.settingslib.development.SystemPropPoker;
-/* loaded from: classes.dex */
+
 public class HdcpCheckingPreferenceController extends DeveloperOptionsPreferenceController implements Preference.OnPreferenceChangeListener, PreferenceControllerMixin {
     static final String HDCP_CHECKING_PROPERTY = "persist.sys.hdcp_checking";
     static final String USER_BUILD_TYPE = "user";
-    private final String[] mListValues = this.mContext.getResources().getStringArray(R.array.hdcp_checking_values);
-    private final String[] mListSummaries = this.mContext.getResources().getStringArray(R.array.hdcp_checking_summaries);
+    private final String[] mListSummaries = this.mContext.getResources().getStringArray(R$array.hdcp_checking_summaries);
+    private final String[] mListValues = this.mContext.getResources().getStringArray(R$array.hdcp_checking_values);
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "hdcp_checking";
     }
@@ -26,12 +25,10 @@ public class HdcpCheckingPreferenceController extends DeveloperOptionsPreference
         super(context);
     }
 
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return !TextUtils.equals(USER_BUILD_TYPE, getBuildType());
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         SystemProperties.set(HDCP_CHECKING_PROPERTY, obj.toString());
         updateHdcpValues((ListPreference) this.mPreference);
@@ -39,7 +36,6 @@ public class HdcpCheckingPreferenceController extends DeveloperOptionsPreference
         return true;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         updateHdcpValues((ListPreference) this.mPreference);
     }

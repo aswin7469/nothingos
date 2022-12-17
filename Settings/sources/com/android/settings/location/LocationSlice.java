@@ -8,17 +8,16 @@ import androidx.core.graphics.drawable.IconCompat;
 import androidx.slice.Slice;
 import androidx.slice.builders.ListBuilder;
 import androidx.slice.builders.SliceAction;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.SubSettings;
 import com.android.settings.slices.CustomSliceRegistry;
 import com.android.settings.slices.CustomSliceable;
 import com.android.settings.slices.SliceBuilderUtils;
 import com.android.settingslib.Utils;
-/* loaded from: classes.dex */
+
 public class LocationSlice implements CustomSliceable {
     private final Context mContext;
 
-    @Override // com.android.settings.slices.CustomSliceable
     public void onNotifyChange(Intent intent) {
     }
 
@@ -26,22 +25,23 @@ public class LocationSlice implements CustomSliceable {
         this.mContext = context;
     }
 
-    @Override // com.android.settings.slices.CustomSliceable
     public Slice getSlice() {
-        IconCompat createWithResource = IconCompat.createWithResource(this.mContext, 17302854);
-        CharSequence text = this.mContext.getText(R.string.location_settings_title);
-        return new ListBuilder(this.mContext, CustomSliceRegistry.LOCATION_SLICE_URI, -1L).setAccentColor(Utils.getColorAccentDefaultColor(this.mContext)).addRow(new ListBuilder.RowBuilder().setTitle(text).setTitleItem(createWithResource, 0).setPrimaryAction(SliceAction.createDeeplink(getPrimaryAction(), createWithResource, 0, text))).build();
+        IconCompat createWithResource = IconCompat.createWithResource(this.mContext, 17302864);
+        CharSequence text = this.mContext.getText(R$string.location_settings_title);
+        return new ListBuilder(this.mContext, CustomSliceRegistry.LOCATION_SLICE_URI, -1).setAccentColor(Utils.getColorAccentDefaultColor(this.mContext)).addRow(new ListBuilder.RowBuilder().setTitle(text).setTitleItem(createWithResource, 0).setPrimaryAction(SliceAction.createDeeplink(getPrimaryAction(), createWithResource, 0, text))).build();
     }
 
-    @Override // com.android.settings.slices.CustomSliceable
     public Uri getUri() {
         return CustomSliceRegistry.LOCATION_SLICE_URI;
     }
 
-    @Override // com.android.settings.slices.CustomSliceable
     public Intent getIntent() {
-        String charSequence = this.mContext.getText(R.string.location_settings_title).toString();
-        return SliceBuilderUtils.buildSearchResultPageIntent(this.mContext, LocationSettings.class.getName(), "location", charSequence, 63).setClassName(this.mContext.getPackageName(), SubSettings.class.getName()).setData(new Uri.Builder().appendPath("location").build());
+        String charSequence = this.mContext.getText(R$string.location_settings_title).toString();
+        return SliceBuilderUtils.buildSearchResultPageIntent(this.mContext, LocationSettings.class.getName(), "location", charSequence, 63, (CustomSliceable) this).setClassName(this.mContext.getPackageName(), SubSettings.class.getName()).setData(new Uri.Builder().appendPath("location").build());
+    }
+
+    public int getSliceHighlightMenuRes() {
+        return R$string.menu_key_location;
     }
 
     private PendingIntent getPrimaryAction() {

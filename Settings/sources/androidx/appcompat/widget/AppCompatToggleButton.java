@@ -4,16 +4,17 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.text.InputFilter;
 import android.util.AttributeSet;
 import android.widget.ToggleButton;
-import androidx.core.view.TintableBackgroundView;
-/* loaded from: classes.dex */
-public class AppCompatToggleButton extends ToggleButton implements TintableBackgroundView {
+
+public class AppCompatToggleButton extends ToggleButton {
+    private AppCompatEmojiTextHelper mAppCompatEmojiTextHelper;
     private final AppCompatBackgroundHelper mBackgroundTintHelper;
     private final AppCompatTextHelper mTextHelper;
 
     public AppCompatToggleButton(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public AppCompatToggleButton(Context context, AttributeSet attributeSet) {
@@ -29,9 +30,9 @@ public class AppCompatToggleButton extends ToggleButton implements TintableBackg
         AppCompatTextHelper appCompatTextHelper = new AppCompatTextHelper(this);
         this.mTextHelper = appCompatTextHelper;
         appCompatTextHelper.loadFromAttributes(attributeSet, i);
+        getEmojiTextViewHelper().loadFromAttributes(attributeSet, i);
     }
 
-    @Override // android.view.View
     public void setBackgroundResource(int i) {
         super.setBackgroundResource(i);
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
@@ -40,7 +41,6 @@ public class AppCompatToggleButton extends ToggleButton implements TintableBackg
         }
     }
 
-    @Override // android.widget.ToggleButton, android.view.View
     public void setBackgroundDrawable(Drawable drawable) {
         super.setBackgroundDrawable(drawable);
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
@@ -49,7 +49,6 @@ public class AppCompatToggleButton extends ToggleButton implements TintableBackg
         }
     }
 
-    @Override // androidx.core.view.TintableBackgroundView
     public void setSupportBackgroundTintList(ColorStateList colorStateList) {
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
         if (appCompatBackgroundHelper != null) {
@@ -57,7 +56,6 @@ public class AppCompatToggleButton extends ToggleButton implements TintableBackg
         }
     }
 
-    @Override // androidx.core.view.TintableBackgroundView
     public ColorStateList getSupportBackgroundTintList() {
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
         if (appCompatBackgroundHelper != null) {
@@ -66,7 +64,6 @@ public class AppCompatToggleButton extends ToggleButton implements TintableBackg
         return null;
     }
 
-    @Override // androidx.core.view.TintableBackgroundView
     public void setSupportBackgroundTintMode(PorterDuff.Mode mode) {
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
         if (appCompatBackgroundHelper != null) {
@@ -74,7 +71,6 @@ public class AppCompatToggleButton extends ToggleButton implements TintableBackg
         }
     }
 
-    @Override // androidx.core.view.TintableBackgroundView
     public PorterDuff.Mode getSupportBackgroundTintMode() {
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
         if (appCompatBackgroundHelper != null) {
@@ -83,8 +79,8 @@ public class AppCompatToggleButton extends ToggleButton implements TintableBackg
         return null;
     }
 
-    @Override // android.widget.ToggleButton, android.widget.CompoundButton, android.widget.TextView, android.view.View
-    protected void drawableStateChanged() {
+    /* access modifiers changed from: protected */
+    public void drawableStateChanged() {
         super.drawableStateChanged();
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
         if (appCompatBackgroundHelper != null) {
@@ -94,5 +90,25 @@ public class AppCompatToggleButton extends ToggleButton implements TintableBackg
         if (appCompatTextHelper != null) {
             appCompatTextHelper.applyCompoundDrawablesTints();
         }
+    }
+
+    public void setFilters(InputFilter[] inputFilterArr) {
+        super.setFilters(getEmojiTextViewHelper().getFilters(inputFilterArr));
+    }
+
+    private AppCompatEmojiTextHelper getEmojiTextViewHelper() {
+        if (this.mAppCompatEmojiTextHelper == null) {
+            this.mAppCompatEmojiTextHelper = new AppCompatEmojiTextHelper(this);
+        }
+        return this.mAppCompatEmojiTextHelper;
+    }
+
+    public void setAllCaps(boolean z) {
+        super.setAllCaps(z);
+        getEmojiTextViewHelper().setAllCaps(z);
+    }
+
+    public void setEmojiCompatEnabled(boolean z) {
+        getEmojiTextViewHelper().setEnabled(z);
     }
 }

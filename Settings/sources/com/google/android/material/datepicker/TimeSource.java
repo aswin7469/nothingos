@@ -2,9 +2,9 @@ package com.google.android.material.datepicker;
 
 import java.util.Calendar;
 import java.util.TimeZone;
-/* loaded from: classes.dex */
+
 class TimeSource {
-    private static final TimeSource SYSTEM_TIME_SOURCE = new TimeSource(null, null);
+    private static final TimeSource SYSTEM_TIME_SOURCE = new TimeSource((Long) null, (TimeZone) null);
     private final Long fixedTimeMs;
     private final TimeZone fixedTimeZone;
 
@@ -13,22 +13,22 @@ class TimeSource {
         this.fixedTimeZone = timeZone;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static TimeSource system() {
+    static TimeSource system() {
         return SYSTEM_TIME_SOURCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public Calendar now() {
         return now(this.fixedTimeZone);
     }
 
-    Calendar now(TimeZone timeZone) {
-        Calendar calendar = timeZone == null ? Calendar.getInstance() : Calendar.getInstance(timeZone);
+    /* access modifiers changed from: package-private */
+    public Calendar now(TimeZone timeZone) {
+        Calendar instance = timeZone == null ? Calendar.getInstance() : Calendar.getInstance(timeZone);
         Long l = this.fixedTimeMs;
         if (l != null) {
-            calendar.setTimeInMillis(l.longValue());
+            instance.setTimeInMillis(l.longValue());
         }
-        return calendar;
+        return instance;
     }
 }

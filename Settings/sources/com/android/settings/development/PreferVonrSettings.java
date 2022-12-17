@@ -14,7 +14,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import com.android.ims.ImsException;
 import com.android.ims.ImsManager;
-import com.android.settings.R;
+import com.android.settings.R$xml;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.network.SubscriptionUtil;
 import com.android.settings.network.SubscriptionsChangeListener;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public class PreferVonrSettings extends SettingsPreferenceFragment implements SubscriptionsChangeListener.SubscriptionsChangeListenerClient {
     private SubscriptionsChangeListener mChangeListener;
     private Context mContext;
@@ -35,16 +35,13 @@ public class PreferVonrSettings extends SettingsPreferenceFragment implements Su
     private SubscriptionManager mSubscriptionManager;
     private TelephonyManager mTelephonyManager;
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 39;
     }
 
-    @Override // com.android.settings.network.SubscriptionsChangeListener.SubscriptionsChangeListenerClient
     public void onAirplaneModeChanged(boolean z) {
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         Log.d("PreferVonrSettings", "onCreate");
@@ -52,7 +49,7 @@ public class PreferVonrSettings extends SettingsPreferenceFragment implements Su
             setPreferenceScreen(getPreferenceManager().createPreferenceScreen(getContext()));
         }
         this.mPreferenceScreen = getPreferenceScreen();
-        addPreferencesFromResource(R.xml.prefer_vonr_list);
+        addPreferencesFromResource(R$xml.prefer_vonr_list);
         Context prefContext = getPrefContext();
         this.mContext = prefContext;
         this.mSubscriptionManager = (SubscriptionManager) prefContext.getSystemService(SubscriptionManager.class);
@@ -63,7 +60,6 @@ public class PreferVonrSettings extends SettingsPreferenceFragment implements Su
         this.mSharedPreferences = context.getSharedPreferences(context.getPackageName(), 0);
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     public void onResume() {
         Log.d("PreferVonrSettings", "onResume");
@@ -72,7 +68,6 @@ public class PreferVonrSettings extends SettingsPreferenceFragment implements Su
         update();
     }
 
-    @Override // com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     public void onPause() {
         super.onPause();
@@ -102,11 +97,11 @@ public class PreferVonrSettings extends SettingsPreferenceFragment implements Su
                 Log.d("PreferVonrSettings", "add preference for slot: " + i + " subId: " + subscriptionId);
             } else {
                 Log.d("PreferVonrSettings", "sub info is null, add null preference for slot: " + i);
-                this.mPreferenceList.add(i, null);
+                this.mPreferenceList.add(i, (Object) null);
             }
         }
-        for (RestrictedSwitchPreference restrictedSwitchPreference : map.values()) {
-            this.mPreferenceScreen.removePreference(restrictedSwitchPreference);
+        for (RestrictedSwitchPreference removePreference : map.values()) {
+            this.mPreferenceScreen.removePreference(removePreference);
         }
     }
 
@@ -117,13 +112,13 @@ public class PreferVonrSettings extends SettingsPreferenceFragment implements Su
     }
 
     private boolean isVoNrSwitchChecked(int i) {
-        ImsManager imsManager = ImsManager.getInstance(this.mContext, i);
-        boolean isEnhanced4gLteModeSettingEnabledByUser = imsManager.isEnhanced4gLteModeSettingEnabledByUser();
+        ImsManager instance = ImsManager.getInstance(this.mContext, i);
+        boolean isEnhanced4gLteModeSettingEnabledByUser = instance.isEnhanced4gLteModeSettingEnabledByUser();
         boolean z = false;
         if (!isEnhanced4gLteModeSettingEnabledByUser) {
             return false;
         }
-        boolean isImsOverNrEnabledByPlatform = imsManager.isImsOverNrEnabledByPlatform();
+        boolean isImsOverNrEnabledByPlatform = instance.isImsOverNrEnabledByPlatform();
         if (this.mSharedPreferences.getInt("vonr_mode_" + i, -1) == 1) {
             z = true;
         }
@@ -132,30 +127,28 @@ public class PreferVonrSettings extends SettingsPreferenceFragment implements Su
     }
 
     private void maybeChangeNrCapability(int i) {
-        ImsManager imsManager = ImsManager.getInstance(this.mContext, i);
-        boolean isEnhanced4gLteModeSettingEnabledByUser = imsManager.isEnhanced4gLteModeSettingEnabledByUser();
-        boolean isImsOverNrEnabledByPlatform = imsManager.isImsOverNrEnabledByPlatform();
+        ImsManager instance = ImsManager.getInstance(this.mContext, i);
+        boolean isEnhanced4gLteModeSettingEnabledByUser = instance.isEnhanced4gLteModeSettingEnabledByUser();
+        boolean isImsOverNrEnabledByPlatform = instance.isImsOverNrEnabledByPlatform();
         boolean z = true;
         if (this.mSharedPreferences.getInt("vonr_mode_" + i, -1) != 1) {
             z = false;
         }
-        if (isEnhanced4gLteModeSettingEnabledByUser || !z || isImsOverNrEnabledByPlatform) {
-            return;
+        if (!isEnhanced4gLteModeSettingEnabledByUser && z && !isImsOverNrEnabledByPlatform) {
+            changeNrCapability(instance, false);
         }
-        changeNrCapability(imsManager, false);
     }
 
-    @Override // com.android.settings.core.InstrumentedPreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.preference.PreferenceManager.OnPreferenceTreeClickListener
     public boolean onPreferenceTreeClick(Preference preference) {
         int indexOf = this.mPreferenceList.indexOf(preference);
         RestrictedSwitchPreference restrictedSwitchPreference = (RestrictedSwitchPreference) preference;
         Log.d("PreferVonrSettings", "onPreferenceTreeClick, preference isChecked: " + restrictedSwitchPreference.isChecked() + " for slot: " + indexOf);
-        ImsManager imsManager = ImsManager.getInstance(this.mContext, indexOf);
-        if (!imsManager.isEnhanced4gLteModeSettingEnabledByUser()) {
+        ImsManager instance = ImsManager.getInstance(this.mContext, indexOf);
+        if (!instance.isEnhanced4gLteModeSettingEnabledByUser()) {
             Log.d("PreferVonrSettings", "onPreferenceTreeClick, ims is disabled, ignore the request");
             return false;
         }
-        changeNrCapability(imsManager, restrictedSwitchPreference.isChecked());
+        changeNrCapability(instance, restrictedSwitchPreference.isChecked());
         savePreferenceForSlot(indexOf, restrictedSwitchPreference.isChecked());
         return super.onPreferenceTreeClick(preference);
     }
@@ -176,7 +169,6 @@ public class PreferVonrSettings extends SettingsPreferenceFragment implements Su
         }
     }
 
-    @Override // com.android.settings.network.SubscriptionsChangeListener.SubscriptionsChangeListenerClient
     public void onSubscriptionsChanged() {
         SubscriptionInfo next;
         Iterator<SubscriptionInfo> it = SubscriptionUtil.getAvailableSubscriptions(this.mContext).iterator();

@@ -2,7 +2,7 @@ package com.google.android.material.shape;
 
 import android.graphics.RectF;
 import java.util.Arrays;
-/* loaded from: classes2.dex */
+
 public final class RelativeCornerSize implements CornerSize {
     private final float percent;
 
@@ -10,7 +10,6 @@ public final class RelativeCornerSize implements CornerSize {
         this.percent = f;
     }
 
-    @Override // com.google.android.material.shape.CornerSize
     public float getCornerSize(RectF rectF) {
         return this.percent * rectF.height();
     }
@@ -19,7 +18,13 @@ public final class RelativeCornerSize implements CornerSize {
         if (this == obj) {
             return true;
         }
-        return (obj instanceof RelativeCornerSize) && this.percent == ((RelativeCornerSize) obj).percent;
+        if (!(obj instanceof RelativeCornerSize)) {
+            return false;
+        }
+        if (this.percent == ((RelativeCornerSize) obj).percent) {
+            return true;
+        }
+        return false;
     }
 
     public int hashCode() {

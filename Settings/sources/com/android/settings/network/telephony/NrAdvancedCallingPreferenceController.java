@@ -11,48 +11,35 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.SwitchPreference;
 import com.android.internal.telephony.util.ArrayUtils;
-import com.android.settings.slices.SliceBackgroundWorker;
-import com.android.settingslib.core.AbstractPreferenceController;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnStart;
 import com.android.settingslib.core.lifecycle.events.OnStop;
-/* loaded from: classes.dex */
+
 public class NrAdvancedCallingPreferenceController extends TelephonyTogglePreferenceController implements LifecycleObserver, OnStart, OnStop {
     private static final String TAG = "VoNrSettings";
-    private Integer mCallState;
-    Preference mPreference;
-    private PhoneCallStateTelephonyCallback mTelephonyCallback;
-    private TelephonyManager mTelephonyManager;
-    private boolean mIsVonrVisibleFromCarrierConfig = false;
-    private boolean mIsNrEnableFromCarrierConfig = false;
+    /* access modifiers changed from: private */
+    public Integer mCallState;
     private boolean mHas5gCapability = false;
+    private boolean mIsNrEnableFromCarrierConfig = false;
+    private boolean mIsVonrEnabledFromCarrierConfig = false;
+    private boolean mIsVonrVisibleFromCarrierConfig = false;
+    Preference mPreference;
+    /* access modifiers changed from: private */
+    public PhoneCallStateTelephonyCallback mTelephonyCallback;
+    private TelephonyManager mTelephonyManager;
 
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -79,52 +66,44 @@ public class NrAdvancedCallingPreferenceController extends TelephonyTogglePrefer
         if (carrierConfigForSubId == null) {
             return this;
         }
+        this.mIsVonrEnabledFromCarrierConfig = carrierConfigForSubId.getBoolean("vonr_enabled_bool");
         this.mIsVonrVisibleFromCarrierConfig = carrierConfigForSubId.getBoolean("vonr_setting_visibility_bool");
         this.mIsNrEnableFromCarrierConfig = !ArrayUtils.isEmpty(carrierConfigForSubId.getIntArray("carrier_nr_availabilities_int_array"));
-        Log.d(TAG, "mHas5gCapability: " + this.mHas5gCapability + ",mIsNrEnabledFromCarrierConfig: " + this.mIsNrEnableFromCarrierConfig + ",mIsVonrVisibleFromCarrierConfig: " + this.mIsVonrVisibleFromCarrierConfig);
+        Log.d(TAG, "mHas5gCapability: " + this.mHas5gCapability + ",mIsNrEnabledFromCarrierConfig: " + this.mIsNrEnableFromCarrierConfig + ",mIsVonrEnabledFromCarrierConfig: " + this.mIsVonrEnabledFromCarrierConfig + ",mIsVonrVisibleFromCarrierConfig: " + this.mIsVonrVisibleFromCarrierConfig);
         return this;
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.network.telephony.TelephonyAvailabilityCallback
     public int getAvailabilityStatus(int i) {
         init(i);
-        return (!this.mHas5gCapability || !this.mIsNrEnableFromCarrierConfig || !this.mIsVonrVisibleFromCarrierConfig) ? 2 : 0;
+        return (!this.mHas5gCapability || !this.mIsNrEnableFromCarrierConfig || !this.mIsVonrEnabledFromCarrierConfig || !this.mIsVonrVisibleFromCarrierConfig) ? 2 : 0;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = preferenceScreen.findPreference(getPreferenceKey());
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStart
     public void onStart() {
         PhoneCallStateTelephonyCallback phoneCallStateTelephonyCallback = this.mTelephonyCallback;
-        if (phoneCallStateTelephonyCallback == null) {
-            return;
+        if (phoneCallStateTelephonyCallback != null) {
+            phoneCallStateTelephonyCallback.register(this.mTelephonyManager);
         }
-        phoneCallStateTelephonyCallback.register(this.mTelephonyManager);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStop
     public void onStop() {
         PhoneCallStateTelephonyCallback phoneCallStateTelephonyCallback = this.mTelephonyCallback;
-        if (phoneCallStateTelephonyCallback == null) {
-            return;
+        if (phoneCallStateTelephonyCallback != null) {
+            phoneCallStateTelephonyCallback.unregister();
         }
-        phoneCallStateTelephonyCallback.unregister();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
-        if (preference == null) {
-            return;
+        if (preference != null) {
+            ((SwitchPreference) preference).setEnabled(isUserControlAllowed());
         }
-        ((SwitchPreference) preference).setEnabled(isUserControlAllowed());
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean setChecked(boolean z) {
         if (!SubscriptionManager.isValidSubscriptionId(this.mSubId)) {
             return false;
@@ -138,12 +117,12 @@ public class NrAdvancedCallingPreferenceController extends TelephonyTogglePrefer
         return false;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean isChecked() {
         return this.mTelephonyManager.isVoNrEnabled();
     }
 
-    protected boolean isCallStateIdle() {
+    /* access modifiers changed from: protected */
+    public boolean isCallStateIdle() {
         Integer num = this.mCallState;
         return num != null && num.intValue() == 0;
     }
@@ -152,15 +131,12 @@ public class NrAdvancedCallingPreferenceController extends TelephonyTogglePrefer
         return isCallStateIdle();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class PhoneCallStateTelephonyCallback extends TelephonyCallback implements TelephonyCallback.CallStateListener {
+    private class PhoneCallStateTelephonyCallback extends TelephonyCallback implements TelephonyCallback.CallStateListener {
         private TelephonyManager mLocalTelephonyManager;
 
         private PhoneCallStateTelephonyCallback() {
         }
 
-        @Override // android.telephony.TelephonyCallback.CallStateListener
         public void onCallStateChanged(int i) {
             NrAdvancedCallingPreferenceController.this.mCallState = Integer.valueOf(i);
             NrAdvancedCallingPreferenceController nrAdvancedCallingPreferenceController = NrAdvancedCallingPreferenceController.this;
@@ -170,7 +146,7 @@ public class NrAdvancedCallingPreferenceController extends TelephonyTogglePrefer
         public void register(TelephonyManager telephonyManager) {
             this.mLocalTelephonyManager = telephonyManager;
             NrAdvancedCallingPreferenceController.this.mCallState = Integer.valueOf(telephonyManager.getCallState());
-            this.mLocalTelephonyManager.registerTelephonyCallback(((AbstractPreferenceController) NrAdvancedCallingPreferenceController.this).mContext.getMainExecutor(), NrAdvancedCallingPreferenceController.this.mTelephonyCallback);
+            this.mLocalTelephonyManager.registerTelephonyCallback(NrAdvancedCallingPreferenceController.this.mContext.getMainExecutor(), NrAdvancedCallingPreferenceController.this.mTelephonyCallback);
         }
 
         public void unregister() {

@@ -9,11 +9,10 @@ import android.text.TextUtils;
 import com.android.settings.Utils;
 import com.android.settings.applications.defaultapps.DefaultAutofillPicker;
 import com.android.settingslib.applications.DefaultAppInfo;
-/* loaded from: classes.dex */
+
 public class DefaultWorkAutofillPreferenceController extends DefaultAutofillPreferenceController {
     private final UserHandle mUserHandle = Utils.getManagedProfile(this.mUserManager);
 
-    @Override // com.android.settings.applications.defaultapps.DefaultAutofillPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "default_autofill_work";
     }
@@ -22,7 +21,6 @@ public class DefaultWorkAutofillPreferenceController extends DefaultAutofillPref
         super(context);
     }
 
-    @Override // com.android.settings.applications.defaultapps.DefaultAutofillPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         if (this.mUserHandle == null) {
             return false;
@@ -30,8 +28,8 @@ public class DefaultWorkAutofillPreferenceController extends DefaultAutofillPref
         return super.isAvailable();
     }
 
-    @Override // com.android.settings.applications.defaultapps.DefaultAutofillPreferenceController, com.android.settings.applications.defaultapps.DefaultAppPreferenceController
-    protected DefaultAppInfo getDefaultAppInfo() {
+    /* access modifiers changed from: protected */
+    public DefaultAppInfo getDefaultAppInfo() {
         String stringForUser = Settings.Secure.getStringForUser(this.mContext.getContentResolver(), "autofill_service", this.mUserHandle.getIdentifier());
         if (!TextUtils.isEmpty(stringForUser)) {
             return new DefaultAppInfo(this.mContext, this.mPackageManager, this.mUserHandle.getIdentifier(), ComponentName.unflattenFromString(stringForUser));
@@ -39,16 +37,16 @@ public class DefaultWorkAutofillPreferenceController extends DefaultAutofillPref
         return null;
     }
 
-    @Override // com.android.settings.applications.defaultapps.DefaultAutofillPreferenceController, com.android.settings.applications.defaultapps.DefaultAppPreferenceController
-    protected Intent getSettingIntent(DefaultAppInfo defaultAppInfo) {
+    /* access modifiers changed from: protected */
+    public Intent getSettingIntent(DefaultAppInfo defaultAppInfo) {
         if (defaultAppInfo == null) {
             return null;
         }
         return new DefaultAutofillPicker.AutofillSettingIntentProvider(this.mContext, this.mUserHandle.getIdentifier(), defaultAppInfo.getKey()).getIntent();
     }
 
-    @Override // com.android.settings.applications.defaultapps.DefaultAppPreferenceController
-    protected void startActivity(Intent intent) {
+    /* access modifiers changed from: protected */
+    public void startActivity(Intent intent) {
         this.mContext.startActivityAsUser(intent, this.mUserHandle);
     }
 }

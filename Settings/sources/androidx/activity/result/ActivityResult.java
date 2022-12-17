@@ -4,28 +4,21 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
+
 @SuppressLint({"BanParcelableUsage"})
-/* loaded from: classes.dex */
 public final class ActivityResult implements Parcelable {
-    public static final Parcelable.Creator<ActivityResult> CREATOR = new Parcelable.Creator<ActivityResult>() { // from class: androidx.activity.result.ActivityResult.1
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: createFromParcel */
-        public ActivityResult mo22createFromParcel(Parcel parcel) {
+    public static final Parcelable.Creator<ActivityResult> CREATOR = new Parcelable.Creator<ActivityResult>() {
+        public ActivityResult createFromParcel(Parcel parcel) {
             return new ActivityResult(parcel);
         }
 
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: newArray */
-        public ActivityResult[] mo23newArray(int i) {
+        public ActivityResult[] newArray(int i) {
             return new ActivityResult[i];
         }
     };
     private final Intent mData;
     private final int mResultCode;
 
-    @Override // android.os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -53,10 +46,12 @@ public final class ActivityResult implements Parcelable {
     }
 
     public static String resultCodeToString(int i) {
-        return i != -1 ? i != 0 ? String.valueOf(i) : "RESULT_CANCELED" : "RESULT_OK";
+        if (i != -1) {
+            return i != 0 ? String.valueOf(i) : "RESULT_CANCELED";
+        }
+        return "RESULT_OK";
     }
 
-    @Override // android.os.Parcelable
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeInt(this.mResultCode);
         parcel.writeInt(this.mData == null ? 0 : 1);

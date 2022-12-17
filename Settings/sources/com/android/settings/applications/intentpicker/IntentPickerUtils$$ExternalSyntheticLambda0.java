@@ -1,18 +1,17 @@
 package com.android.settings.applications.intentpicker;
 
 import java.util.Map;
-import java.util.function.Function;
-/* loaded from: classes.dex */
-public final /* synthetic */ class IntentPickerUtils$$ExternalSyntheticLambda0 implements Function {
-    public static final /* synthetic */ IntentPickerUtils$$ExternalSyntheticLambda0 INSTANCE = new IntentPickerUtils$$ExternalSyntheticLambda0();
+import java.util.function.Predicate;
 
-    private /* synthetic */ IntentPickerUtils$$ExternalSyntheticLambda0() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class IntentPickerUtils$$ExternalSyntheticLambda0 implements Predicate {
+    public final /* synthetic */ int f$0;
+
+    public /* synthetic */ IntentPickerUtils$$ExternalSyntheticLambda0(int i) {
+        this.f$0 = i;
     }
 
-    @Override // java.util.function.Function
-    public final Object apply(Object obj) {
-        String lambda$getLinksList$1;
-        lambda$getLinksList$1 = IntentPickerUtils.lambda$getLinksList$1((Map.Entry) obj);
-        return lambda$getLinksList$1;
+    public final boolean test(Object obj) {
+        return IntentPickerUtils.lambda$getLinksList$0(this.f$0, (Map.Entry) obj);
     }
 }

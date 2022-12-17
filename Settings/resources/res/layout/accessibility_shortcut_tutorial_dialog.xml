@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:scrollbarStyle="outsideOverlay" android:gravity="center" android:layout_width="match_parent" android:layout_height="wrap_content" android:textDirection="locale">
+<ScrollView xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:scrollbarStyle="outsideOverlay" android:gravity="center" android:layout_width="match_parent" android:layout_height="wrap_content" android:textDirection="locale">
     <LinearLayout android:orientation="vertical" android:padding="24dp" android:layout_width="match_parent" android:layout_height="wrap_content">
         <TextSwitcher android:id="@+id/title" android:layout_width="match_parent" android:layout_height="wrap_content" android:measureAllChildren="false"/>
         <androidx.viewpager.widget.ViewPager android:id="@+id/view_pager" android:paddingTop="16dp" android:paddingBottom="16dp" android:layout_width="match_parent" android:layout_height="176dp"/>

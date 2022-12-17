@@ -9,56 +9,44 @@ import androidx.lifecycle.OnLifecycleEvent;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.settings.R;
+import com.android.settings.R$plurals;
+import com.android.settings.R$string;
 import com.android.settings.Utils;
 import com.android.settings.biometrics.BiometricStatusPreferenceController;
-import com.android.settings.biometrics.ParentalControlsUtils;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.RestrictedPreference;
-/* loaded from: classes.dex */
+
 public class FingerprintStatusPreferenceController extends BiometricStatusPreferenceController implements LifecycleObserver {
     private static final String KEY_FINGERPRINT_SETTINGS = "fingerprint_settings";
     protected final FingerprintManager mFingerprintManager;
+    private final FingerprintStatusUtils mFingerprintStatusUtils;
     @VisibleForTesting
     RestrictedPreference mPreference;
 
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController, com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -68,7 +56,7 @@ public class FingerprintStatusPreferenceController extends BiometricStatusPrefer
     }
 
     public FingerprintStatusPreferenceController(Context context, String str) {
-        this(context, str, null);
+        this(context, str, (Lifecycle) null);
     }
 
     public FingerprintStatusPreferenceController(Context context, Lifecycle lifecycle) {
@@ -77,7 +65,9 @@ public class FingerprintStatusPreferenceController extends BiometricStatusPrefer
 
     public FingerprintStatusPreferenceController(Context context, String str, Lifecycle lifecycle) {
         super(context, str);
-        this.mFingerprintManager = Utils.getFingerprintManagerOrNull(context);
+        FingerprintManager fingerprintManagerOrNull = Utils.getFingerprintManagerOrNull(context);
+        this.mFingerprintManager = fingerprintManagerOrNull;
+        this.mFingerprintStatusUtils = new FingerprintStatusUtils(context, fingerprintManagerOrNull, getUserId());
         if (lifecycle != null) {
             lifecycle.addObserver(this);
         }
@@ -88,58 +78,57 @@ public class FingerprintStatusPreferenceController extends BiometricStatusPrefer
         updateStateInternal();
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = (RestrictedPreference) preferenceScreen.findPreference(this.mPreferenceKey);
     }
 
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController
-    protected boolean isDeviceSupported() {
-        return !Utils.isMultipleBiometricsSupported(this.mContext) && Utils.hasFingerprintHardware(this.mContext);
+    /* access modifiers changed from: protected */
+    public boolean isDeviceSupported() {
+        return this.mFingerprintStatusUtils.isAvailable();
     }
 
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController
-    protected boolean hasEnrolledBiometrics() {
+    /* access modifiers changed from: protected */
+    public boolean hasEnrolledBiometrics() {
         return this.mFingerprintManager.hasEnrolledFingerprints(getUserId());
     }
 
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         updateStateInternal();
     }
 
     private void updateStateInternal() {
-        updateStateInternal(ParentalControlsUtils.parentConsentRequired(this.mContext, 2));
+        updateStateInternal(this.mFingerprintStatusUtils.getDisablingAdmin());
     }
 
+    /* access modifiers changed from: protected */
+    public String getSettingsClassName() {
+        return this.mFingerprintStatusUtils.getSettingsClassName();
+    }
+
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    void updateStateInternal(RestrictedLockUtils.EnforcedAdmin enforcedAdmin) {
+    public void updateStateInternal(RestrictedLockUtils.EnforcedAdmin enforcedAdmin) {
         RestrictedPreference restrictedPreference = this.mPreference;
         if (restrictedPreference != null) {
             restrictedPreference.setDisabledByAdmin(enforcedAdmin);
         }
     }
 
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController
-    protected String getSummaryTextEnrolled() {
+    /* access modifiers changed from: protected */
+    public String getSummaryTextEnrolled() {
         int size = this.mFingerprintManager.getEnrolledFingerprints(getUserId()).size();
-        return this.mContext.getResources().getQuantityString(R.plurals.security_settings_fingerprint_preference_summary, size, Integer.valueOf(size));
+        return this.mContext.getResources().getQuantityString(R$plurals.security_settings_fingerprint_preference_summary, size, new Object[]{Integer.valueOf(size)});
     }
 
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController
-    protected String getSummaryTextNoneEnrolled() {
-        return this.mContext.getString(R.string.security_settings_fingerprint_preference_summary_none);
+    /* access modifiers changed from: protected */
+    public String getSummaryTextNoneEnrolled() {
+        return this.mContext.getString(R$string.security_settings_fingerprint_preference_summary_none);
     }
 
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController
-    protected String getSettingsClassName() {
-        return FingerprintSettings.class.getName();
-    }
-
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController
-    protected String getEnrollClassName() {
+    /* access modifiers changed from: protected */
+    public String getEnrollClassName() {
         return FingerprintEnrollIntroduction.class.getName();
     }
 }

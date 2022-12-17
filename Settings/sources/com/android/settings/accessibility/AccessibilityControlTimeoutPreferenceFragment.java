@@ -2,7 +2,9 @@ package com.android.settings.accessibility;
 
 import android.content.Context;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$array;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.accessibility.AccessibilityTimeoutController;
 import com.android.settings.dashboard.DashboardFragment;
 import com.android.settings.search.BaseSearchIndexProvider;
@@ -11,35 +13,30 @@ import com.android.settingslib.core.lifecycle.Lifecycle;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public final class AccessibilityControlTimeoutPreferenceFragment extends DashboardFragment implements AccessibilityTimeoutController.OnChangeListener {
-    private static final List<AbstractPreferenceController> sControllers = new ArrayList();
-    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R.xml.accessibility_control_timeout_settings) { // from class: com.android.settings.accessibility.AccessibilityControlTimeoutPreferenceFragment.1
-        @Override // com.android.settings.search.BaseSearchIndexProvider
+    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R$xml.accessibility_control_timeout_settings) {
         public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
-            return AccessibilityControlTimeoutPreferenceFragment.buildPreferenceControllers(context, null);
+            return AccessibilityControlTimeoutPreferenceFragment.buildPreferenceControllers(context, (Lifecycle) null);
         }
     };
+    private static final List<AbstractPreferenceController> sControllers = new ArrayList();
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "AccessibilityControlTimeoutPreferenceFragment";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
-        return 2;
+        return 1898;
     }
 
-    @Override // com.android.settings.accessibility.AccessibilityTimeoutController.OnChangeListener
     public void onCheckedChanged(Preference preference) {
-        for (AbstractPreferenceController abstractPreferenceController : sControllers) {
-            abstractPreferenceController.updateState(preference);
+        for (AbstractPreferenceController updateState : sControllers) {
+            updateState.updateState(preference);
         }
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
         Iterator<AbstractPreferenceController> it = buildPreferenceControllers(getPrefContext(), getSettingsLifecycle()).iterator();
@@ -48,36 +45,34 @@ public final class AccessibilityControlTimeoutPreferenceFragment extends Dashboa
         }
     }
 
-    @Override // com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onPause() {
         super.onPause();
         Iterator<AbstractPreferenceController> it = buildPreferenceControllers(getPrefContext(), getSettingsLifecycle()).iterator();
         while (it.hasNext()) {
-            ((AccessibilityTimeoutController) it.next()).setOnChangeListener(null);
+            ((AccessibilityTimeoutController) it.next()).setOnChangeListener((AccessibilityTimeoutController.OnChangeListener) null);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.accessibility_control_timeout_settings;
+        return R$xml.accessibility_control_timeout_settings;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment
-    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+    /* access modifiers changed from: protected */
+    public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
         return buildPreferenceControllers(context, getSettingsLifecycle());
     }
 
-    @Override // com.android.settings.support.actionbar.HelpResourceProvider
     public int getHelpResource() {
-        return R.string.help_url_timeout;
+        return R$string.help_url_timeout;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static List<AbstractPreferenceController> buildPreferenceControllers(Context context, Lifecycle lifecycle) {
         if (sControllers.size() == 0) {
-            for (String str : context.getResources().getStringArray(R.array.accessibility_timeout_control_selector_keys)) {
-                sControllers.add(new AccessibilityTimeoutController(context, lifecycle, str));
+            String[] stringArray = context.getResources().getStringArray(R$array.accessibility_timeout_control_selector_keys);
+            for (String accessibilityTimeoutController : stringArray) {
+                sControllers.add(new AccessibilityTimeoutController(context, lifecycle, accessibilityTimeoutController));
             }
         }
         return sControllers;

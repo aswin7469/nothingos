@@ -5,7 +5,7 @@ import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 import android.os.UserManager;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.Utils;
 import com.android.settings.core.InstrumentedPreferenceFragment;
 import com.android.settings.core.PreferenceControllerMixin;
@@ -17,7 +17,7 @@ import com.android.settings.fuelgauge.batterytip.tips.UnrestrictAppTip;
 import com.android.settingslib.RestrictedPreference;
 import com.android.settingslib.core.AbstractPreferenceController;
 import com.android.settingslib.fuelgauge.PowerAllowlistBackend;
-/* loaded from: classes.dex */
+
 public class BackgroundActivityPreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin {
     static final String KEY_BACKGROUND_ACTIVITY = "background_activity";
     private final AppOpsManager mAppOpsManager;
@@ -29,7 +29,6 @@ public class BackgroundActivityPreferenceController extends AbstractPreferenceCo
     private final int mUid;
     private final UserManager mUserManager;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return KEY_BACKGROUND_ACTIVITY;
     }
@@ -50,26 +49,22 @@ public class BackgroundActivityPreferenceController extends AbstractPreferenceCo
         this.mBatteryUtils = BatteryUtils.getInstance(context);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
-        if (((RestrictedPreference) preference).isDisabledByAdmin()) {
-            return;
+        if (!((RestrictedPreference) preference).isDisabledByAdmin()) {
+            int checkOpNoThrow = this.mAppOpsManager.checkOpNoThrow(70, this.mUid, this.mTargetPackage);
+            if (this.mPowerAllowlistBackend.isAllowlisted(this.mTargetPackage) || checkOpNoThrow == 2 || Utils.isProfileOrDeviceOwner(this.mUserManager, this.mDpm, this.mTargetPackage)) {
+                preference.setEnabled(false);
+            } else {
+                preference.setEnabled(true);
+            }
+            updateSummary(preference);
         }
-        int checkOpNoThrow = this.mAppOpsManager.checkOpNoThrow(70, this.mUid, this.mTargetPackage);
-        if (this.mPowerAllowlistBackend.isAllowlisted(this.mTargetPackage) || checkOpNoThrow == 2 || Utils.isProfileOrDeviceOwner(this.mUserManager, this.mDpm, this.mTargetPackage)) {
-            preference.setEnabled(false);
-        } else {
-            preference.setEnabled(true);
-        }
-        updateSummary(preference);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return this.mTargetPackage != null;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
         if (KEY_BACKGROUND_ACTIVITY.equals(preference.getKey())) {
             boolean z = true;
@@ -84,12 +79,12 @@ public class BackgroundActivityPreferenceController extends AbstractPreferenceCo
     public void updateSummary(Preference preference) {
         int i;
         if (this.mPowerAllowlistBackend.isAllowlisted(this.mTargetPackage)) {
-            preference.setSummary(R.string.background_activity_summary_allowlisted);
+            preference.setSummary(R$string.background_activity_summary_allowlisted);
             return;
         }
         int checkOpNoThrow = this.mAppOpsManager.checkOpNoThrow(70, this.mUid, this.mTargetPackage);
         if (checkOpNoThrow == 2) {
-            preference.setSummary(R.string.background_activity_summary_disabled);
+            preference.setSummary(R$string.background_activity_summary_disabled);
             return;
         }
         boolean z = true;
@@ -97,22 +92,23 @@ public class BackgroundActivityPreferenceController extends AbstractPreferenceCo
             z = false;
         }
         if (z) {
-            i = R.string.restricted_true_label;
+            i = R$string.restricted_true_label;
         } else {
-            i = R.string.restricted_false_label;
+            i = R$string.restricted_false_label;
         }
         preference.setSummary(i);
     }
 
-    void showDialog(boolean z) {
-        BatteryTip restrictAppTip;
+    /* access modifiers changed from: package-private */
+    public void showDialog(boolean z) {
+        BatteryTip batteryTip;
         AppInfo build = new AppInfo.Builder().setUid(this.mUid).setPackageName(this.mTargetPackage).build();
         if (z) {
-            restrictAppTip = new UnrestrictAppTip(0, build);
+            batteryTip = new UnrestrictAppTip(0, build);
         } else {
-            restrictAppTip = new RestrictAppTip(0, build);
+            batteryTip = new RestrictAppTip(0, build);
         }
-        BatteryTipDialogFragment newInstance = BatteryTipDialogFragment.newInstance(restrictAppTip, this.mFragment.getMetricsCategory());
+        BatteryTipDialogFragment newInstance = BatteryTipDialogFragment.newInstance(batteryTip, this.mFragment.getMetricsCategory());
         newInstance.setTargetFragment(this.mFragment, 0);
         newInstance.show(this.mFragment.getFragmentManager(), "BgActivityPrefContr");
     }

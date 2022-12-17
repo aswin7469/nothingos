@@ -1,18 +1,19 @@
 package com.android.settings.shortcut;
 
 import android.content.pm.ResolveInfo;
-import java.util.Comparator;
-/* loaded from: classes.dex */
-public final /* synthetic */ class CreateShortcutPreferenceController$$ExternalSyntheticLambda1 implements Comparator {
-    public static final /* synthetic */ CreateShortcutPreferenceController$$ExternalSyntheticLambda1 INSTANCE = new CreateShortcutPreferenceController$$ExternalSyntheticLambda1();
+import androidx.preference.Preference;
 
-    private /* synthetic */ CreateShortcutPreferenceController$$ExternalSyntheticLambda1() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class CreateShortcutPreferenceController$$ExternalSyntheticLambda1 implements Preference.OnPreferenceClickListener {
+    public final /* synthetic */ CreateShortcutPreferenceController f$0;
+    public final /* synthetic */ ResolveInfo f$1;
+
+    public /* synthetic */ CreateShortcutPreferenceController$$ExternalSyntheticLambda1(CreateShortcutPreferenceController createShortcutPreferenceController, ResolveInfo resolveInfo) {
+        this.f$0 = createShortcutPreferenceController;
+        this.f$1 = resolveInfo;
     }
 
-    @Override // java.util.Comparator
-    public final int compare(Object obj, Object obj2) {
-        int lambda$static$1;
-        lambda$static$1 = CreateShortcutPreferenceController.lambda$static$1((ResolveInfo) obj, (ResolveInfo) obj2);
-        return lambda$static$1;
+    public final boolean onPreferenceClick(Preference preference) {
+        return this.f$0.lambda$updateState$0(this.f$1, preference);
     }
 }

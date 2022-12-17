@@ -14,7 +14,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-/* loaded from: classes.dex */
+
 public class MobileNetworkSummaryStatus {
     private boolean mDisableReEntranceUpdate;
     private Future<Boolean> mIsEuiccConfiguable;
@@ -25,41 +25,20 @@ public class MobileNetworkSummaryStatus {
     private Future<Map<Integer, CharSequence>> mUniqueNameMapping;
     private Map<Integer, CharSequence> mUniqueNameMappingCache;
 
-    public void update(final Context context, Consumer<MobileNetworkSummaryStatus> consumer) {
+    public void update(Context context, Consumer<MobileNetworkSummaryStatus> consumer) {
         if (this.mDisableReEntranceUpdate) {
             Log.d("MobileNetworkSummaryStatus", "network summary query ignored");
-            if (consumer == null) {
+            if (consumer != null) {
+                consumer.accept(this);
                 return;
             }
-            consumer.accept(this);
             return;
         }
         this.mDisableReEntranceUpdate = true;
         Log.d("MobileNetworkSummaryStatus", "network summary query");
-        this.mIsEuiccConfiguable = ThreadUtils.postOnBackgroundThread(new Callable() { // from class: com.android.settings.network.MobileNetworkSummaryStatus$$ExternalSyntheticLambda1
-            @Override // java.util.concurrent.Callable
-            public final Object call() {
-                Object lambda$update$0;
-                lambda$update$0 = MobileNetworkSummaryStatus.this.lambda$update$0(context);
-                return lambda$update$0;
-            }
-        });
-        this.mUniqueNameMapping = ThreadUtils.postOnBackgroundThread(new Callable() { // from class: com.android.settings.network.MobileNetworkSummaryStatus$$ExternalSyntheticLambda2
-            @Override // java.util.concurrent.Callable
-            public final Object call() {
-                Object lambda$update$1;
-                lambda$update$1 = MobileNetworkSummaryStatus.this.lambda$update$1(context);
-                return lambda$update$1;
-            }
-        });
-        this.mIsPsimDisableSupported = ThreadUtils.postOnBackgroundThread(new Callable() { // from class: com.android.settings.network.MobileNetworkSummaryStatus$$ExternalSyntheticLambda0
-            @Override // java.util.concurrent.Callable
-            public final Object call() {
-                Object lambda$update$2;
-                lambda$update$2 = MobileNetworkSummaryStatus.this.lambda$update$2(context);
-                return lambda$update$2;
-            }
-        });
+        this.mIsEuiccConfiguable = ThreadUtils.postOnBackgroundThread((Callable) new MobileNetworkSummaryStatus$$ExternalSyntheticLambda0(this, context));
+        this.mUniqueNameMapping = ThreadUtils.postOnBackgroundThread((Callable) new MobileNetworkSummaryStatus$$ExternalSyntheticLambda1(this, context));
+        this.mIsPsimDisableSupported = ThreadUtils.postOnBackgroundThread((Callable) new MobileNetworkSummaryStatus$$ExternalSyntheticLambda2(this, context));
         this.mSubscriptionList = getSubscriptions(context);
         if (consumer != null) {
             consumer.accept(this);
@@ -67,12 +46,12 @@ public class MobileNetworkSummaryStatus {
         this.mDisableReEntranceUpdate = false;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ Object lambda$update$0(Context context) throws Exception {
         return Boolean.valueOf(isEuiccConfiguable(context));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ Object lambda$update$2(Context context) throws Exception {
         return Boolean.valueOf(isPhysicalSimDisableSupported(context));
     }
@@ -133,10 +112,10 @@ public class MobileNetworkSummaryStatus {
     }
 
     private List<SubscriptionAnnotation> getSubscriptions(Context context) {
-        return (List) new SelectableSubscriptions(context, true).addFinisher(new SubscriptionGrouping()).call().stream().filter(MobileNetworkSummaryStatus$$ExternalSyntheticLambda3.INSTANCE).collect(Collectors.toList());
+        return (List) new SelectableSubscriptions(context, true).addFinisher(new SubscriptionGrouping()).call().stream().filter(new MobileNetworkSummaryStatus$$ExternalSyntheticLambda3()).collect(Collectors.toList());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     /* renamed from: getUniqueNameForDisplay */
     public Map<Integer, CharSequence> lambda$update$1(Context context) {
         return SubscriptionUtil.getUniqueSubscriptionDisplayNames(context);

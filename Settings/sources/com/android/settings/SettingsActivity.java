@@ -2,6 +2,7 @@ package com.android.settings;
 
 import android.app.ActionBar;
 import android.app.ActivityManager;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -12,6 +13,8 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Icon;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.UserHandle;
 import android.os.UserManager;
@@ -35,10 +38,13 @@ import com.android.settings.core.SettingsBaseActivity;
 import com.android.settings.core.SubSettingLauncher;
 import com.android.settings.core.gateway.SettingsGateway;
 import com.android.settings.dashboard.DashboardFeatureProvider;
+import com.android.settings.homepage.DeepLinkHomepageActivityInternal;
 import com.android.settings.homepage.TopLevelSettings;
 import com.android.settings.overlay.FeatureFactory;
+import com.android.settings.password.PasswordUtils;
 import com.android.settings.wfd.WifiDisplaySettings;
 import com.android.settings.widget.SettingsMainSwitchBar;
+import com.android.settingslib.activityembedding.ActivityEmbeddingUtils;
 import com.android.settingslib.core.instrumentation.Instrumentable;
 import com.android.settingslib.core.instrumentation.SharedPreferencesLogger;
 import com.android.settingslib.development.DevelopmentSettingsEnabler;
@@ -46,31 +52,30 @@ import com.android.settingslib.drawer.DashboardCategory;
 import com.google.android.setupcompat.util.WizardManagerHelper;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class SettingsActivity extends SettingsBaseActivity implements PreferenceManager.OnPreferenceTreeClickListener, PreferenceFragmentCompat.OnPreferenceStartFragmentCallback, ButtonBarHandler, FragmentManager.OnBackStackChangedListener {
+    private BroadcastReceiver mBatteryInfoReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            boolean isBatteryPresent;
+            if ("android.intent.action.BATTERY_CHANGED".equals(intent.getAction()) && SettingsActivity.this.mBatteryPresent != (isBatteryPresent = Utils.isBatteryPresent(intent))) {
+                SettingsActivity.this.mBatteryPresent = isBatteryPresent;
+                SettingsActivity.this.updateTilesList();
+            }
+        }
+    };
+    /* access modifiers changed from: private */
+    public boolean mBatteryPresent = true;
+    private ArrayList<DashboardCategory> mCategories = new ArrayList<>();
     private DashboardFeatureProvider mDashboardFeatureProvider;
     private BroadcastReceiver mDevelopmentSettingsListener;
     private String mFragmentClass;
+    private String mHighlightMenuKey;
     private CharSequence mInitialTitle;
     private int mInitialTitleResId;
     private SettingsMainSwitchBar mMainSwitch;
     private Button mNextButton;
     private SmqSettings mSMQ;
-    private boolean mBatteryPresent = true;
-    private BroadcastReceiver mBatteryInfoReceiver = new BroadcastReceiver() { // from class: com.android.settings.SettingsActivity.1
-        @Override // android.content.BroadcastReceiver
-        public void onReceive(Context context, Intent intent) {
-            boolean isBatteryPresent;
-            if (!"android.intent.action.BATTERY_CHANGED".equals(intent.getAction()) || SettingsActivity.this.mBatteryPresent == (isBatteryPresent = Utils.isBatteryPresent(intent))) {
-                return;
-            }
-            SettingsActivity.this.mBatteryPresent = isBatteryPresent;
-            SettingsActivity.this.updateTilesList();
-        }
-    };
-    private ArrayList<DashboardCategory> mCategories = new ArrayList<>();
 
-    @Override // androidx.preference.PreferenceManager.OnPreferenceTreeClickListener
     public boolean onPreferenceTreeClick(Preference preference) {
         return false;
     }
@@ -79,13 +84,11 @@ public class SettingsActivity extends SettingsBaseActivity implements Preference
         return this.mMainSwitch;
     }
 
-    @Override // androidx.preference.PreferenceFragmentCompat.OnPreferenceStartFragmentCallback
     public boolean onPreferenceStartFragment(PreferenceFragmentCompat preferenceFragmentCompat, Preference preference) {
         new SubSettingLauncher(this).setDestination(preference.getFragment()).setArguments(preference.getExtras()).setSourceMetricsCategory(preferenceFragmentCompat instanceof Instrumentable ? ((Instrumentable) preferenceFragmentCompat).getMetricsCategory() : 0).setTitleRes(-1).launch();
         return true;
     }
 
-    @Override // android.content.ContextWrapper, android.content.Context
     public SharedPreferences getSharedPreferences(String str, int i) {
         if (str.equals(getPackageName() + "_preferences")) {
             return new SharedPreferencesLogger(this, getMetricsTag(), FeatureFactory.getFactory(this).getMetricsFeatureProvider());
@@ -102,25 +105,34 @@ public class SettingsActivity extends SettingsBaseActivity implements Preference
         return initialFragmentName.startsWith("com.android.settings.") ? initialFragmentName.replace("com.android.settings.", "") : initialFragmentName;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.core.SettingsBaseActivity, androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
-        View findViewById;
-        super.onCreate(bundle);
-        Log.d("SettingsActivity", "Starting onCreate");
-        System.currentTimeMillis();
-        this.mDashboardFeatureProvider = FeatureFactory.getFactory(this).getDashboardFeatureProvider(this);
         getMetaData();
         Intent intent = getIntent();
+        if (!shouldShowTwoPaneDeepLink(intent) || !tryStartTwoPaneDeepLink(intent)) {
+            super.onCreate(bundle);
+            Log.d("SettingsActivity", "Starting onCreate");
+            createUiFromIntent(bundle, intent);
+            return;
+        }
+        finish();
+        super.onCreate(bundle);
+    }
+
+    /* access modifiers changed from: protected */
+    public void createUiFromIntent(Bundle bundle, Intent intent) {
+        View findViewById;
+        System.currentTimeMillis();
+        this.mDashboardFeatureProvider = FeatureFactory.getFactory(this).getDashboardFeatureProvider(this);
         if (intent.hasExtra("settings:ui_options")) {
             getWindow().setUiOptions(intent.getIntExtra("settings:ui_options", 0));
         }
         this.mSMQ = new SmqSettings(getApplicationContext());
         String initialFragmentName = getInitialFragmentName(intent);
-        if (((this instanceof SubSettings) || intent.getBooleanExtra(":settings:show_fragment_as_subsetting", false)) && !WizardManagerHelper.isAnySetupWizard(getIntent())) {
-            setTheme(R.style.Theme_SubSettings);
+        if (isSubSettings(intent) && !WizardManagerHelper.isAnySetupWizard(getIntent())) {
+            setTheme(R$style.Theme_SubSettings);
         }
-        setContentView(R.layout.settings_main_prefs);
+        setContentView(R$layout.settings_main_prefs);
         getSupportFragmentManager().addOnBackStackChangedListener(this);
         if (bundle != null) {
             setTitleFromIntent(intent);
@@ -133,117 +145,183 @@ public class SettingsActivity extends SettingsBaseActivity implements Preference
         } else {
             launchSettingFragment(initialFragmentName, intent);
         }
-        boolean isAnySetupWizard = WizardManagerHelper.isAnySetupWizard(getIntent());
+        boolean isActionBarButtonEnabled = isActionBarButtonEnabled(intent);
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(!isAnySetupWizard);
-            actionBar.setHomeButtonEnabled(!isAnySetupWizard);
+            actionBar.setDisplayHomeAsUpEnabled(isActionBarButtonEnabled);
+            actionBar.setHomeButtonEnabled(isActionBarButtonEnabled);
             actionBar.setDisplayShowTitleEnabled(true);
         }
-        SettingsMainSwitchBar settingsMainSwitchBar = (SettingsMainSwitchBar) findViewById(R.id.switch_bar);
+        SettingsMainSwitchBar settingsMainSwitchBar = (SettingsMainSwitchBar) findViewById(R$id.switch_bar);
         this.mMainSwitch = settingsMainSwitchBar;
         if (settingsMainSwitchBar != null) {
             settingsMainSwitchBar.setMetricsTag(getMetricsTag());
-            this.mMainSwitch.setTranslationZ(findViewById(R.id.main_content).getTranslationZ() + 1.0f);
+            this.mMainSwitch.setTranslationZ(findViewById(R$id.main_content).getTranslationZ() + 1.0f);
         }
-        if (!intent.getBooleanExtra("extra_prefs_show_button_bar", false) || (findViewById = findViewById(R.id.button_bar)) == null) {
-            return;
-        }
-        findViewById.setVisibility(0);
-        Button button = (Button) findViewById(R.id.back_button);
-        button.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.SettingsActivity$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                SettingsActivity.this.lambda$onCreate$0(view);
+        if (intent.getBooleanExtra("extra_prefs_show_button_bar", false) && (findViewById = findViewById(R$id.button_bar)) != null) {
+            findViewById.setVisibility(0);
+            Button button = (Button) findViewById(R$id.back_button);
+            button.setOnClickListener(new SettingsActivity$$ExternalSyntheticLambda1(this));
+            Button button2 = (Button) findViewById(R$id.skip_button);
+            button2.setOnClickListener(new SettingsActivity$$ExternalSyntheticLambda2(this));
+            Button button3 = (Button) findViewById(R$id.next_button);
+            this.mNextButton = button3;
+            button3.setOnClickListener(new SettingsActivity$$ExternalSyntheticLambda3(this));
+            if (intent.hasExtra("extra_prefs_set_next_text")) {
+                String stringExtra = intent.getStringExtra("extra_prefs_set_next_text");
+                if (TextUtils.isEmpty(stringExtra)) {
+                    this.mNextButton.setVisibility(8);
+                } else {
+                    this.mNextButton.setText(stringExtra);
+                }
             }
-        });
-        Button button2 = (Button) findViewById(R.id.skip_button);
-        button2.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.SettingsActivity$$ExternalSyntheticLambda2
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                SettingsActivity.this.lambda$onCreate$1(view);
+            if (intent.hasExtra("extra_prefs_set_back_text")) {
+                String stringExtra2 = intent.getStringExtra("extra_prefs_set_back_text");
+                if (TextUtils.isEmpty(stringExtra2)) {
+                    button.setVisibility(8);
+                } else {
+                    button.setText(stringExtra2);
+                }
             }
-        });
-        Button button3 = (Button) findViewById(R.id.next_button);
-        this.mNextButton = button3;
-        button3.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.SettingsActivity$$ExternalSyntheticLambda1
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                SettingsActivity.this.lambda$onCreate$2(view);
-            }
-        });
-        if (intent.hasExtra("extra_prefs_set_next_text")) {
-            String stringExtra = intent.getStringExtra("extra_prefs_set_next_text");
-            if (TextUtils.isEmpty(stringExtra)) {
-                this.mNextButton.setVisibility(8);
-            } else {
-                this.mNextButton.setText(stringExtra);
+            if (intent.getBooleanExtra("extra_prefs_show_skip", false)) {
+                button2.setVisibility(0);
             }
         }
-        if (intent.hasExtra("extra_prefs_set_back_text")) {
-            String stringExtra2 = intent.getStringExtra("extra_prefs_set_back_text");
-            if (TextUtils.isEmpty(stringExtra2)) {
-                button.setVisibility(8);
-            } else {
-                button.setText(stringExtra2);
-            }
-        }
-        if (!intent.getBooleanExtra("extra_prefs_show_skip", false)) {
-            return;
-        }
-        button2.setVisibility(0);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onCreate$0(View view) {
-        setResult(0, null);
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$createUiFromIntent$0(View view) {
+        setResult(0, (Intent) null);
         finish();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onCreate$1(View view) {
-        setResult(-1, null);
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$createUiFromIntent$1(View view) {
+        setResult(-1, (Intent) null);
         finish();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onCreate$2(View view) {
-        setResult(-1, null);
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$createUiFromIntent$2(View view) {
+        setResult(-1, (Intent) null);
         finish();
+    }
+
+    private boolean isActionBarButtonEnabled(Intent intent) {
+        if (WizardManagerHelper.isAnySetupWizard(intent)) {
+            return false;
+        }
+        return !ActivityEmbeddingUtils.shouldHideNavigateUpButton(this, intent.getBooleanExtra(":settings:is_second_layer_page", false));
+    }
+
+    private boolean isSubSettings(Intent intent) {
+        if ((this instanceof SubSettings) || intent.getBooleanExtra(":settings:show_fragment_as_subsetting", false)) {
+            return true;
+        }
+        return false;
+    }
+
+    public static Intent getTrampolineIntent(Intent intent, String str) {
+        Intent intent2 = new Intent(intent);
+        Intent replaceExtras = new Intent("android.settings.SETTINGS_EMBED_DEEP_LINK_ACTIVITY").setPackage("com.android.settings").replaceExtras(intent2);
+        replaceExtras.putExtra("settings_large_screen_deep_link_intent_data", intent2.getData());
+        intent2.setData((Uri) null);
+        replaceExtras.putExtra("android.provider.extra.SETTINGS_EMBEDDED_DEEP_LINK_INTENT_URI", intent2.toUri(1));
+        replaceExtras.putExtra("android.provider.extra.SETTINGS_EMBEDDED_DEEP_LINK_HIGHLIGHT_MENU_KEY", str);
+        replaceExtras.addFlags(33554432);
+        return replaceExtras;
+    }
+
+    private boolean tryStartTwoPaneDeepLink(Intent intent) {
+        Intent intent2;
+        Class<DeepLinkHomepageActivityInternal> cls = DeepLinkHomepageActivityInternal.class;
+        intent.putExtra("initial_calling_package", PasswordUtils.getCallingAppPackageName(getActivityToken()));
+        if (intent.getBooleanExtra("is_from_slice", false)) {
+            String stringExtra = intent.getStringExtra("android.provider.extra.SETTINGS_EMBEDDED_DEEP_LINK_HIGHLIGHT_MENU_KEY");
+            if (!TextUtils.isEmpty(stringExtra)) {
+                this.mHighlightMenuKey = stringExtra;
+            }
+            intent2 = getTrampolineIntent(intent, this.mHighlightMenuKey);
+            intent2.setClass(this, cls);
+        } else {
+            intent2 = getTrampolineIntent(intent, this.mHighlightMenuKey);
+        }
+        try {
+            UserManager userManager = (UserManager) getSystemService(UserManager.class);
+            if (userManager.getUserInfo(getUser().getIdentifier()).isManagedProfile()) {
+                intent2.setClass(this, cls).putExtra("user_handle", getUser());
+                startActivityAsUser(intent2, userManager.getPrimaryUser().getUserHandle());
+                return true;
+            }
+            startActivity(intent2);
+            return true;
+        } catch (ActivityNotFoundException unused) {
+            Log.e("SettingsActivity", "Deep link homepage is not available to show 2-pane UI");
+            return false;
+        }
+    }
+
+    private boolean shouldShowTwoPaneDeepLink(Intent intent) {
+        if (!com.android.settings.activityembedding.ActivityEmbeddingUtils.isEmbeddingActivityEnabled(this)) {
+            return false;
+        }
+        if ((!isTaskRoot() && (intent.getFlags() & 268435456) == 0) || intent.getAction() == null) {
+            return false;
+        }
+        if (intent.resolveActivityInfo(getPackageManager(), 65536).launchMode == 3) {
+            Log.w("SettingsActivity", "launchMode: singleInstance");
+            return false;
+        } else if (intent.getBooleanExtra("is_from_slice", false)) {
+            return true;
+        } else {
+            if (!isSubSettings(intent) && !intent.getBooleanExtra("is_from_settings_homepage", false) && !TextUtils.equals(intent.getAction(), "android.intent.action.CREATE_SHORTCUT")) {
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public String getInitialCallingPackage() {
+        String callingAppPackageName = PasswordUtils.getCallingAppPackageName(getActivityToken());
+        if (!TextUtils.equals(callingAppPackageName, getPackageName())) {
+            return callingAppPackageName;
+        }
+        String stringExtra = getIntent().getStringExtra("initial_calling_package");
+        return TextUtils.isEmpty(stringExtra) ? callingAppPackageName : stringExtra;
     }
 
     public String getInitialFragmentName(Intent intent) {
         return intent.getStringExtra(":settings:show_fragment");
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.app.Activity, android.view.ContextThemeWrapper
+    /* access modifiers changed from: protected */
     public void onApplyThemeResource(Resources.Theme theme, int i, boolean z) {
-        theme.applyStyle(R.style.SetupWizardPartnerResource, true);
+        theme.applyStyle(R$style.SetupWizardPartnerResource, true);
         super.onApplyThemeResource(theme, i, z);
     }
 
-    @Override // androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, android.app.Activity
-    protected void onActivityResult(int i, int i2, Intent intent) {
+    /* access modifiers changed from: protected */
+    public void onActivityResult(int i, int i2, Intent intent) {
         super.onActivityResult(i, i2, intent);
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
         if (fragments != null) {
-            for (Fragment fragment : fragments) {
-                if (fragment instanceof OnActivityResultListener) {
-                    fragment.onActivityResult(i, i2, intent);
+            for (Fragment next : fragments) {
+                if (next instanceof OnActivityResultListener) {
+                    next.onActivityResult(i, i2, intent);
                 }
             }
         }
     }
 
-    void launchSettingFragment(String str, Intent intent) {
+    /* access modifiers changed from: package-private */
+    public void launchSettingFragment(String str, Intent intent) {
         if (str != null) {
             setTitleFromIntent(intent);
             switchToFragment(str, intent.getBundleExtra(":settings:show_fragment_args"), true, this.mInitialTitleResId, this.mInitialTitle);
             return;
         }
-        this.mInitialTitleResId = R.string.dashboard_title;
-        switchToFragment(TopLevelSettings.class.getName(), null, false, this.mInitialTitleResId, this.mInitialTitle);
+        this.mInitialTitleResId = R$string.dashboard_title;
+        switchToFragment(TopLevelSettings.class.getName(), (Bundle) null, false, this.mInitialTitleResId, this.mInitialTitle);
     }
 
     private void setTitleFromIntent(Intent intent) {
@@ -262,6 +340,8 @@ public class SettingsActivity extends SettingsBaseActivity implements Preference
                     return;
                 } catch (PackageManager.NameNotFoundException unused) {
                     Log.w("SettingsActivity", "Could not find package" + stringExtra);
+                } catch (Resources.NotFoundException unused2) {
+                    Log.w("SettingsActivity", "Could not find title resource in " + stringExtra);
                 }
             } else {
                 setTitle(this.mInitialTitleResId);
@@ -278,7 +358,6 @@ public class SettingsActivity extends SettingsBaseActivity implements Preference
         Log.d("SettingsActivity", "Done setting title");
     }
 
-    @Override // androidx.fragment.app.FragmentManager.OnBackStackChangedListener
     public void onBackStackChanged() {
         setTitleFromBackStack();
     }
@@ -289,47 +368,44 @@ public class SettingsActivity extends SettingsBaseActivity implements Preference
             int i = this.mInitialTitleResId;
             if (i > 0) {
                 setTitle(i);
-                return;
             } else {
                 setTitle(this.mInitialTitle);
-                return;
             }
+        } else {
+            setTitleFromBackStackEntry(getSupportFragmentManager().getBackStackEntryAt(backStackEntryCount - 1));
         }
-        setTitleFromBackStackEntry(getSupportFragmentManager().getBackStackEntryAt(backStackEntryCount - 1));
     }
 
     private void setTitleFromBackStackEntry(FragmentManager.BackStackEntry backStackEntry) {
-        CharSequence breadCrumbTitle;
+        CharSequence charSequence;
         int breadCrumbTitleRes = backStackEntry.getBreadCrumbTitleRes();
         if (breadCrumbTitleRes > 0) {
-            breadCrumbTitle = getText(breadCrumbTitleRes);
+            charSequence = getText(breadCrumbTitleRes);
         } else {
-            breadCrumbTitle = backStackEntry.getBreadCrumbTitle();
+            charSequence = backStackEntry.getBreadCrumbTitle();
         }
-        if (breadCrumbTitle != null) {
-            setTitle(breadCrumbTitle);
+        if (charSequence != null) {
+            setTitle(charSequence);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         saveState(bundle);
     }
 
-    void saveState(Bundle bundle) {
+    /* access modifiers changed from: package-private */
+    public void saveState(Bundle bundle) {
         if (this.mCategories.size() > 0) {
             bundle.putParcelableArrayList(":settings:categories", this.mCategories);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.fragment.app.FragmentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onResume() {
         super.onResume();
-        this.mDevelopmentSettingsListener = new BroadcastReceiver() { // from class: com.android.settings.SettingsActivity.2
-            @Override // android.content.BroadcastReceiver
+        this.mDevelopmentSettingsListener = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 SettingsActivity.this.updateTilesList();
             }
@@ -339,55 +415,52 @@ public class SettingsActivity extends SettingsBaseActivity implements Preference
         updateTilesList();
     }
 
-    @Override // com.android.settings.core.SettingsBaseActivity, androidx.fragment.app.FragmentActivity, android.app.Activity
-    protected void onPause() {
+    /* access modifiers changed from: protected */
+    public void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(this.mDevelopmentSettingsListener);
         this.mDevelopmentSettingsListener = null;
         unregisterReceiver(this.mBatteryInfoReceiver);
     }
 
-    @Override // android.app.Activity
     public void setTaskDescription(ActivityManager.TaskDescription taskDescription) {
-        taskDescription.setIcon(Icon.createWithResource(this, R.drawable.ic_launcher_settings));
+        taskDescription.setIcon(Icon.createWithResource(this, R$drawable.ic_launcher_settings));
         super.setTaskDescription(taskDescription);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean isValidFragment(String str) {
         int i = 0;
         while (true) {
             String[] strArr = SettingsGateway.ENTRY_FRAGMENTS;
-            if (i < strArr.length) {
-                if (strArr[i].equals(str)) {
-                    return true;
-                }
-                i++;
-            } else {
+            if (i >= strArr.length) {
                 return false;
             }
+            if (strArr[i].equals(str)) {
+                return true;
+            }
+            i++;
         }
     }
 
-    @Override // android.app.Activity
     public Intent getIntent() {
         Bundle bundle;
         Intent intent = super.getIntent();
         String startingFragmentClass = getStartingFragmentClass(intent);
-        if (startingFragmentClass != null) {
-            Intent intent2 = new Intent(intent);
-            intent2.putExtra(":settings:show_fragment", startingFragmentClass);
-            Bundle bundleExtra = intent.getBundleExtra(":settings:show_fragment_args");
-            if (bundleExtra != null) {
-                bundle = new Bundle(bundleExtra);
-            } else {
-                bundle = new Bundle();
-            }
-            bundle.putParcelable("intent", intent);
-            intent2.putExtra(":settings:show_fragment_args", bundle);
-            return intent2;
+        if (startingFragmentClass == null) {
+            return intent;
         }
-        return intent;
+        Intent intent2 = new Intent(intent);
+        intent2.putExtra(":settings:show_fragment", startingFragmentClass);
+        Bundle bundleExtra = intent.getBundleExtra(":settings:show_fragment_args");
+        if (bundleExtra != null) {
+            bundle = new Bundle(bundleExtra);
+        } else {
+            bundle = new Bundle();
+        }
+        bundle.putParcelable("intent", intent);
+        intent2.putExtra(":settings:show_fragment_args", bundle);
+        return intent2;
     }
 
     private String getStartingFragmentClass(Intent intent) {
@@ -404,16 +477,15 @@ public class SettingsActivity extends SettingsBaseActivity implements Preference
 
     public void finishPreferencePanel(int i, Intent intent) {
         setResult(i, intent);
-        if (intent != null && intent.getBooleanExtra(AppButtonsPreferenceController.KEY_REMOVE_TASK_WHEN_FINISHING, false)) {
-            finishAndRemoveTask();
-        } else {
+        if (intent == null || !intent.getBooleanExtra(AppButtonsPreferenceController.KEY_REMOVE_TASK_WHEN_FINISHING, false)) {
             finish();
+        } else {
+            finishAndRemoveTask();
         }
     }
 
     private void switchToFragment(String str, Bundle bundle, boolean z, int i, CharSequence charSequence) {
-        String name;
-        int i2 = R.string.qtifeedback_intent_action;
+        int i2 = R$string.qtifeedback_intent_action;
         if (str.equals(getString(i2))) {
             Intent intent = new Intent(getString(i2));
             intent.addCategory("android.intent.category.DEFAULT");
@@ -422,96 +494,63 @@ public class SettingsActivity extends SettingsBaseActivity implements Preference
             return;
         }
         Log.d("SettingsActivity", "Switching to fragment " + str);
-        if (z && !isValidFragment(str)) {
-            throw new IllegalArgumentException("Invalid fragment for this activity: " + str);
-        }
-        try {
-            Class<?> loadClass = getClassLoader().loadClass(str);
-            loadClass.getPackage();
-            name = loadClass.getName();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        if (!TextUtils.isEmpty(name) && name.startsWith("com.nt.settings")) {
-            try {
-                Fragment instantiate = Fragment.instantiate(this, str, bundle);
+        if (!z || isValidFragment(str)) {
+            Fragment targetFragment = Utils.getTargetFragment(this, str, bundle);
+            if (targetFragment != null) {
                 FragmentTransaction beginTransaction = getSupportFragmentManager().beginTransaction();
-                beginTransaction.replace(R.id.main_content, instantiate);
+                beginTransaction.replace(R$id.main_content, targetFragment);
                 if (i > 0) {
                     beginTransaction.setBreadCrumbTitle(i);
                 } else if (charSequence != null) {
                     beginTransaction.setBreadCrumbTitle(charSequence);
                 }
                 beginTransaction.commitAllowingStateLoss();
-            } catch (ClassCastException e2) {
-                Log.e("SettingsActivity", "@_@ switchToFragment ---- ClassCastException: " + e2.getMessage());
-                Log.i("SettingsActivity", "@_@ switchToFragment ---- try switch to android.app.Fragment");
-                android.app.Fragment instantiate2 = android.app.Fragment.instantiate(this, str, bundle);
-                android.app.FragmentTransaction beginTransaction2 = getFragmentManager().beginTransaction();
-                beginTransaction2.replace(R.id.main_content, instantiate2);
-                if (i > 0) {
-                    beginTransaction2.setBreadCrumbTitle(i);
-                } else if (charSequence != null) {
-                    beginTransaction2.setBreadCrumbTitle(charSequence);
-                }
-                beginTransaction2.commitAllowingStateLoss();
+                getSupportFragmentManager().executePendingTransactions();
+                Log.d("SettingsActivity", "Executed frag manager pendingTransactions");
+                return;
             }
-            getFragmentManager().executePendingTransactions();
             return;
         }
-        Log.d("SettingsActivity", "launch fragmentName:" + name);
-        Fragment targetFragment = Utils.getTargetFragment(this, str, bundle);
-        if (targetFragment == null) {
-            return;
-        }
-        FragmentTransaction beginTransaction3 = getSupportFragmentManager().beginTransaction();
-        beginTransaction3.replace(R.id.main_content, targetFragment);
-        if (i > 0) {
-            beginTransaction3.setBreadCrumbTitle(i);
-        } else if (charSequence != null) {
-            beginTransaction3.setBreadCrumbTitle(charSequence);
-        }
-        beginTransaction3.commitAllowingStateLoss();
-        getSupportFragmentManager().executePendingTransactions();
-        Log.d("SettingsActivity", "Executed frag manager pendingTransactions");
+        throw new IllegalArgumentException("Invalid fragment for this activity: " + str);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateTilesList() {
-        new Thread(new Runnable() { // from class: com.android.settings.SettingsActivity.3
-            @Override // java.lang.Runnable
-            public void run() {
-                SettingsActivity.this.doUpdateTilesList();
-            }
-        }).start();
+        AsyncTask.execute(new SettingsActivity$$ExternalSyntheticLambda0(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public void doUpdateTilesList() {
+    /* access modifiers changed from: private */
+    /* renamed from: doUpdateTilesList */
+    public void lambda$updateTilesList$3() {
+        Class<Settings.DataUsageSummaryActivity> cls = Settings.DataUsageSummaryActivity.class;
         PackageManager packageManager = getPackageManager();
         boolean isAdminUser = UserManager.get(this).isAdminUser();
         String packageName = getPackageName();
         StringBuilder sb = new StringBuilder();
-        boolean z = setTileEnabled(sb, new ComponentName(packageName, Settings.WifiDisplaySettingsActivity.class.getName()), WifiDisplaySettings.isAvailable(this), isAdminUser) || (setTileEnabled(sb, new ComponentName(packageName, Settings.DevelopmentSettingsDashboardActivity.class.getName()), DevelopmentSettingsEnabler.isDevelopmentSettingsEnabled(this) && !Utils.isMonkeyRunning(), isAdminUser) || (setTileEnabled(sb, new ComponentName(packageName, Settings.UserSettingsActivity.class.getName()), UserManager.supportsMultipleUsers() && !Utils.isMonkeyRunning(), isAdminUser) || (setTileEnabled(sb, new ComponentName(packageName, Settings.DataUsageSummaryActivity.class.getName()), Utils.isBandwidthControlEnabled(), isAdminUser) || (setTileEnabled(sb, new ComponentName(packageName, Settings.PowerUsageSummaryActivity.class.getName()), this.mBatteryPresent, isAdminUser) || (setTileEnabled(sb, new ComponentName(packageName, Settings.ConnectedDeviceDashboardActivity.class.getName()), UserManager.isDeviceInDemoMode(this) ^ true, isAdminUser) || (setTileEnabled(sb, new ComponentName(packageName, Settings.DataUsageSummaryActivity.class.getName()), Utils.isBandwidthControlEnabled(), isAdminUser) || (setTileEnabled(sb, new ComponentName(packageName, Settings.BluetoothSettingsActivity.class.getName()), packageManager.hasSystemFeature("android.hardware.bluetooth"), isAdminUser) || (setTileEnabled(sb, new ComponentName(packageName, Settings.WifiSettingsActivity.class.getName()), packageManager.hasSystemFeature("android.hardware.wifi"), isAdminUser)))))))));
+        boolean z = setTileEnabled(sb, new ComponentName(packageName, Settings.BluetoothSettingsActivity.class.getName()), packageManager.hasSystemFeature("android.hardware.bluetooth"), isAdminUser) || (setTileEnabled(sb, new ComponentName(packageName, Settings.WifiSettingsActivity.class.getName()), packageManager.hasSystemFeature("android.hardware.wifi"), isAdminUser));
+        this.mSMQ.isShowSmqSettings();
+        boolean z2 = setTileEnabled(sb, new ComponentName(packageName, Settings.WifiDisplaySettingsActivity.class.getName()), WifiDisplaySettings.isAvailable(this), isAdminUser) || (setTileEnabled(sb, new ComponentName(packageName, Settings.DevelopmentSettingsDashboardActivity.class.getName()), DevelopmentSettingsEnabler.isDevelopmentSettingsEnabled(this) && !Utils.isMonkeyRunning(), isAdminUser) || (setTileEnabled(sb, new ComponentName(packageName, Settings.UserSettingsActivity.class.getName()), UserManager.supportsMultipleUsers() && !Utils.isMonkeyRunning(), isAdminUser) || (setTileEnabled(sb, new ComponentName(packageName, cls.getName()), Utils.isBandwidthControlEnabled(), isAdminUser) || (setTileEnabled(sb, new ComponentName(packageName, Settings.PowerUsageSummaryActivity.class.getName()), this.mBatteryPresent, isAdminUser) || (setTileEnabled(sb, new ComponentName(packageName, Settings.ConnectedDeviceDashboardActivity.class.getName()), UserManager.isDeviceInDemoMode(this) ^ true, isAdminUser) || (setTileEnabled(sb, new ComponentName(packageName, cls.getName()), Utils.isBandwidthControlEnabled(), isAdminUser) || z))))));
         if (!isAdminUser) {
             List<DashboardCategory> allCategories = this.mDashboardFeatureProvider.getAllCategories();
             synchronized (allCategories) {
-                for (DashboardCategory dashboardCategory : allCategories) {
-                    int tilesCount = dashboardCategory.getTilesCount();
+                for (DashboardCategory next : allCategories) {
+                    int tilesCount = next.getTilesCount();
                     for (int i = 0; i < tilesCount; i++) {
-                        ComponentName component = dashboardCategory.getTile(i).getIntent().getComponent();
+                        ComponentName component = next.getTile(i).getIntent().getComponent();
                         boolean contains = ArrayUtils.contains(SettingsGateway.SETTINGS_FOR_RESTRICTED, component.getClassName());
                         if (packageName.equals(component.getPackageName()) && !contains) {
-                            if (!setTileEnabled(sb, component, false, isAdminUser) && !z) {
-                                z = false;
+                            if (!setTileEnabled(sb, component, false, isAdminUser)) {
+                                if (!z2) {
+                                    z2 = false;
+                                }
                             }
-                            z = true;
+                            z2 = true;
                         }
                     }
                 }
             }
         }
-        if (z) {
+        if (z2) {
             Log.d("SettingsActivity", "Enabled state changed for some tiles, reloading all categories " + sb.toString());
             this.mCategoryMixin.updateCategories();
             return;
@@ -532,39 +571,25 @@ public class SettingsActivity extends SettingsBaseActivity implements Preference
     }
 
     private void getMetaData() {
-        Bundle bundle;
         try {
             ActivityInfo activityInfo = getPackageManager().getActivityInfo(getComponentName(), 128);
-            if (activityInfo != null && (bundle = activityInfo.metaData) != null) {
-                this.mFragmentClass = bundle.getString("com.android.settings.FRAGMENT_CLASS");
+            if (activityInfo != null) {
+                Bundle bundle = activityInfo.metaData;
+                if (bundle != null) {
+                    this.mFragmentClass = bundle.getString("com.android.settings.FRAGMENT_CLASS");
+                    this.mHighlightMenuKey = activityInfo.metaData.getString("com.android.settings.HIGHLIGHT_MENU_KEY");
+                }
             }
         } catch (PackageManager.NameNotFoundException unused) {
             Log.d("SettingsActivity", "Cannot get Metadata for: " + getComponentName().toString());
         }
     }
 
-    @Override // com.android.settings.ButtonBarHandler
     public boolean hasNextButton() {
         return this.mNextButton != null;
     }
 
-    @Override // com.android.settings.ButtonBarHandler
     public Button getNextButton() {
         return this.mNextButton;
-    }
-
-    public boolean onPreferenceStartFragment(com.nt.settings.SettingsPreferenceFragment settingsPreferenceFragment, android.preference.Preference preference) {
-        startPreferencePanel(settingsPreferenceFragment, preference.getFragment(), preference.getExtras(), -1, preference.getTitle(), null, 0);
-        return true;
-    }
-
-    public void startPreferencePanel(android.app.Fragment fragment, String str, Bundle bundle, int i, CharSequence charSequence, android.app.Fragment fragment2, int i2) {
-        String str2;
-        if (i < 0) {
-            str2 = charSequence != null ? charSequence.toString() : "";
-        } else {
-            str2 = null;
-        }
-        Utils.startWithFragment(this, str, bundle, fragment2, i2, i, str2);
     }
 }

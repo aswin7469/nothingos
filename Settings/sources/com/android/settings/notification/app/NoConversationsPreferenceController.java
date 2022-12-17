@@ -1,86 +1,25 @@
 package com.android.settings.notification.app;
 
-import android.app.people.IPeopleManager;
 import android.content.Context;
-import android.os.AsyncTask;
-import android.os.RemoteException;
-import android.service.notification.ConversationChannelWrapper;
-import android.util.Log;
-import androidx.preference.Preference;
-import com.android.settings.R;
-import com.android.settings.notification.NotificationBackend;
 import com.android.settingslib.core.AbstractPreferenceController;
-import com.android.settingslib.widget.LayoutPreference;
-/* loaded from: classes.dex */
-public class NoConversationsPreferenceController extends ConversationListPreferenceController {
-    private static String TAG = "NoConversationsPC";
-    private int mConversationCount = 0;
-    private IPeopleManager mPs;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
+class NoConversationsPreferenceController extends AbstractPreferenceController {
+    private boolean mIsAvailable = false;
+
     public String getPreferenceKey() {
         return "no_conversations";
     }
 
-    @Override // com.android.settings.notification.app.ConversationListPreferenceController
-    Preference getSummaryPreference() {
-        return null;
+    NoConversationsPreferenceController(Context context) {
+        super(context);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
-        return true;
+        return this.mIsAvailable;
     }
 
-    @Override // com.android.settings.notification.app.ConversationListPreferenceController
-    boolean matchesFilter(ConversationChannelWrapper conversationChannelWrapper) {
-        return false;
-    }
-
-    static /* synthetic */ int access$012(NoConversationsPreferenceController noConversationsPreferenceController, int i) {
-        int i2 = noConversationsPreferenceController.mConversationCount + i;
-        noConversationsPreferenceController.mConversationCount = i2;
-        return i2;
-    }
-
-    public NoConversationsPreferenceController(Context context, NotificationBackend notificationBackend, IPeopleManager iPeopleManager) {
-        super(context, notificationBackend);
-        this.mPs = iPeopleManager;
-    }
-
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    public void updateState(final Preference preference) {
-        final LayoutPreference layoutPreference = (LayoutPreference) preference;
-        new AsyncTask<Void, Void, Void>() { // from class: com.android.settings.notification.app.NoConversationsPreferenceController.1
-            /* JADX INFO: Access modifiers changed from: protected */
-            @Override // android.os.AsyncTask
-            public Void doInBackground(Void... voidArr) {
-                NoConversationsPreferenceController noConversationsPreferenceController = NoConversationsPreferenceController.this;
-                noConversationsPreferenceController.mConversationCount = noConversationsPreferenceController.mBackend.getConversations(false).getList().size();
-                try {
-                    NoConversationsPreferenceController noConversationsPreferenceController2 = NoConversationsPreferenceController.this;
-                    NoConversationsPreferenceController.access$012(noConversationsPreferenceController2, noConversationsPreferenceController2.mPs.getRecentConversations().getList().size());
-                    return null;
-                } catch (RemoteException e) {
-                    Log.w(NoConversationsPreferenceController.TAG, "Error calling PS", e);
-                    return null;
-                }
-            }
-
-            /* JADX INFO: Access modifiers changed from: protected */
-            @Override // android.os.AsyncTask
-            public void onPostExecute(Void r3) {
-                if (((AbstractPreferenceController) NoConversationsPreferenceController.this).mContext == null) {
-                    return;
-                }
-                boolean z = false;
-                layoutPreference.findViewById(R.id.onboarding).setVisibility(NoConversationsPreferenceController.this.mConversationCount == 0 ? 0 : 8);
-                Preference preference2 = preference;
-                if (NoConversationsPreferenceController.this.mConversationCount == 0) {
-                    z = true;
-                }
-                preference2.setVisible(z);
-            }
-        }.execute(new Void[0]);
+    /* access modifiers changed from: package-private */
+    public void setAvailable(boolean z) {
+        this.mIsAvailable = z;
     }
 }

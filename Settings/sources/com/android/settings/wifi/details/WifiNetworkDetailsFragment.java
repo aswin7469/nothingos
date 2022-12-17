@@ -17,7 +17,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.Utils;
 import com.android.settings.dashboard.RestrictedDashboardFragment;
 import com.android.settings.overlay.FeatureFactory;
@@ -37,7 +38,7 @@ import com.android.wifitrackerlib.WifiEntry;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class WifiNetworkDetailsFragment extends RestrictedDashboardFragment implements WifiDialog2.WifiDialog2Listener {
     List<AbstractPreferenceController> mControllers;
     boolean mIsUiRestricted;
@@ -46,18 +47,15 @@ public class WifiNetworkDetailsFragment extends RestrictedDashboardFragment impl
     private List<WifiDialog2.WifiDialog2Listener> mWifiDialogListeners = new ArrayList();
     private HandlerThread mWorkerThread;
 
-    @Override // com.android.settings.SettingsPreferenceFragment, com.android.settings.DialogCreatable
     public int getDialogMetricsCategory(int i) {
         return i == 1 ? 603 : 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "WifiNetworkDetailsFrg";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 849;
     }
@@ -66,14 +64,12 @@ public class WifiNetworkDetailsFragment extends RestrictedDashboardFragment impl
         super("no_config_wifi");
     }
 
-    @Override // com.android.settings.dashboard.RestrictedDashboardFragment, com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setIfOnlyAvailableForAdmins(true);
         this.mIsUiRestricted = isUiRestricted();
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onStart() {
         super.onStart();
         if (this.mIsUiRestricted) {
@@ -81,27 +77,25 @@ public class WifiNetworkDetailsFragment extends RestrictedDashboardFragment impl
         }
     }
 
-    void restrictUi() {
+    /* access modifiers changed from: package-private */
+    public void restrictUi() {
         clearWifiEntryCallback();
         if (!isUiRestrictedByOnlyAdmin()) {
-            getEmptyTextView().setText(R.string.wifi_empty_list_user_restricted);
+            getEmptyTextView().setText(R$string.wifi_empty_list_user_restricted);
         }
         getPreferenceScreen().removeAll();
     }
 
-    @Override // com.android.settings.dashboard.RestrictedDashboardFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onDestroy() {
         this.mWorkerThread.quit();
         super.onDestroy();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.wifi_network_details_fragment2;
+        return R$xml.wifi_network_details_fragment2;
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, com.android.settings.DialogCreatable
     public Dialog onCreateDialog(int i) {
         if (getActivity() == null || this.mWifiDetailPreferenceController2 == null) {
             return null;
@@ -109,47 +103,44 @@ public class WifiNetworkDetailsFragment extends RestrictedDashboardFragment impl
         return WifiDialog2.createModal(getActivity(), this, this.mNetworkDetailsTracker.getWifiEntry(), 2);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         if (!this.mIsUiRestricted && isEditable()) {
-            MenuItem add = menu.add(0, 1, 0, R.string.wifi_modify);
-            add.setIcon(17302768);
+            MenuItem add = menu.add(0, 1, 0, R$string.wifi_modify);
+            add.setIcon(17302779);
             add.setShowAsAction(2);
         }
         super.onCreateOptionsMenu(menu, menuInflater);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public boolean onOptionsItemSelected(MenuItem menuItem) {
-        if (menuItem.getItemId() == 1) {
-            if (!this.mWifiDetailPreferenceController2.canModifyNetwork()) {
-                RestrictedLockUtils.EnforcedAdmin deviceOwner = RestrictedLockUtilsInternal.getDeviceOwner(getContext());
-                if (deviceOwner == null) {
-                    DevicePolicyManager devicePolicyManager = (DevicePolicyManager) getContext().getSystemService("device_policy");
-                    int managedProfileId = Utils.getManagedProfileId((UserManager) getContext().getSystemService("user"), UserHandle.myUserId());
-                    if (managedProfileId != -10000) {
-                        deviceOwner = new RestrictedLockUtils.EnforcedAdmin(devicePolicyManager.getProfileOwnerAsUser(managedProfileId), null, UserHandle.of(managedProfileId));
-                    }
-                }
-                RestrictedLockUtils.sendShowAdminSupportDetailsIntent(getContext(), deviceOwner);
-            } else {
-                showDialog(1);
-            }
-            return true;
+        if (menuItem.getItemId() != 1) {
+            return super.onOptionsItemSelected(menuItem);
         }
-        return super.onOptionsItemSelected(menuItem);
+        if (!this.mWifiDetailPreferenceController2.canModifyNetwork()) {
+            RestrictedLockUtils.EnforcedAdmin deviceOwner = RestrictedLockUtilsInternal.getDeviceOwner(getContext());
+            if (deviceOwner == null) {
+                DevicePolicyManager devicePolicyManager = (DevicePolicyManager) getContext().getSystemService("device_policy");
+                int managedProfileId = Utils.getManagedProfileId((UserManager) getContext().getSystemService("user"), UserHandle.myUserId());
+                if (managedProfileId != -10000) {
+                    deviceOwner = new RestrictedLockUtils.EnforcedAdmin(devicePolicyManager.getProfileOwnerAsUser(managedProfileId), (String) null, UserHandle.of(managedProfileId));
+                }
+            }
+            RestrictedLockUtils.sendShowAdminSupportDetailsIntent(getContext(), deviceOwner);
+        } else {
+            showDialog(1);
+        }
+        return true;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment
-    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+    /* access modifiers changed from: protected */
+    public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
         this.mControllers = new ArrayList();
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(ConnectivityManager.class);
         setupNetworksDetailTracker();
         WifiEntry wifiEntry = this.mNetworkDetailsTracker.getWifiEntry();
         WifiSecondSummaryController2 wifiSecondSummaryController2 = new WifiSecondSummaryController2(context);
         wifiSecondSummaryController2.setWifiEntry(wifiEntry);
         this.mControllers.add(wifiSecondSummaryController2);
-        WifiDetailPreferenceController2 newInstance = WifiDetailPreferenceController2.newInstance(wifiEntry, connectivityManager, context, this, new Handler(Looper.getMainLooper()), getSettingsLifecycle(), (WifiManager) context.getSystemService(WifiManager.class), this.mMetricsFeatureProvider);
+        WifiDetailPreferenceController2 newInstance = WifiDetailPreferenceController2.newInstance(wifiEntry, (ConnectivityManager) context.getSystemService(ConnectivityManager.class), context, this, new Handler(Looper.getMainLooper()), getSettingsLifecycle(), (WifiManager) context.getSystemService(WifiManager.class), this.mMetricsFeatureProvider);
         this.mWifiDetailPreferenceController2 = newInstance;
         this.mControllers.add(newInstance);
         WifiAutoConnectPreferenceController2 wifiAutoConnectPreferenceController2 = new WifiAutoConnectPreferenceController2(context);
@@ -172,35 +163,33 @@ public class WifiNetworkDetailsFragment extends RestrictedDashboardFragment impl
         return this.mControllers;
     }
 
-    @Override // com.android.settings.wifi.WifiDialog2.WifiDialog2Listener
     public void onSubmit(WifiDialog2 wifiDialog2) {
-        for (WifiDialog2.WifiDialog2Listener wifiDialog2Listener : this.mWifiDialogListeners) {
-            wifiDialog2Listener.onSubmit(wifiDialog2);
+        for (WifiDialog2.WifiDialog2Listener onSubmit : this.mWifiDialogListeners) {
+            onSubmit.onSubmit(wifiDialog2);
         }
     }
 
+    /* JADX WARNING: type inference failed for: r6v0, types: [com.android.settings.wifi.details.WifiNetworkDetailsFragment$1, java.time.Clock] */
     private void setupNetworksDetailTracker() {
-        if (this.mNetworkDetailsTracker != null) {
-            return;
+        if (this.mNetworkDetailsTracker == null) {
+            Context context = getContext();
+            HandlerThread handlerThread = new HandlerThread("WifiNetworkDetailsFrg{" + Integer.toHexString(System.identityHashCode(this)) + "}", 10);
+            this.mWorkerThread = handlerThread;
+            handlerThread.start();
+            this.mNetworkDetailsTracker = FeatureFactory.getFactory(context).getWifiTrackerLibProvider().createNetworkDetailsTracker(getSettingsLifecycle(), context, new Handler(Looper.getMainLooper()), this.mWorkerThread.getThreadHandler(), new SimpleClock(ZoneOffset.UTC) {
+                public long millis() {
+                    return SystemClock.elapsedRealtime();
+                }
+            }, 15000, 10000, getArguments().getString("key_chosen_wifientry_key"));
         }
-        Context context = getContext();
-        HandlerThread handlerThread = new HandlerThread("WifiNetworkDetailsFrg{" + Integer.toHexString(System.identityHashCode(this)) + "}", 10);
-        this.mWorkerThread = handlerThread;
-        handlerThread.start();
-        this.mNetworkDetailsTracker = FeatureFactory.getFactory(context).getWifiTrackerLibProvider().createNetworkDetailsTracker(getSettingsLifecycle(), context, new Handler(Looper.getMainLooper()), this.mWorkerThread.getThreadHandler(), new SimpleClock(ZoneOffset.UTC) { // from class: com.android.settings.wifi.details.WifiNetworkDetailsFragment.1
-            public long millis() {
-                return SystemClock.elapsedRealtime();
-            }
-        }, 15000L, 10000L, getArguments().getString("key_chosen_wifientry_key"));
     }
 
     private void clearWifiEntryCallback() {
         WifiEntry wifiEntry;
         NetworkDetailsTracker networkDetailsTracker = this.mNetworkDetailsTracker;
-        if (networkDetailsTracker == null || (wifiEntry = networkDetailsTracker.getWifiEntry()) == null) {
-            return;
+        if (networkDetailsTracker != null && (wifiEntry = networkDetailsTracker.getWifiEntry()) != null) {
+            wifiEntry.setListener((WifiEntry.WifiEntryCallback) null);
         }
-        wifiEntry.setListener(null);
     }
 
     private boolean isEditable() {
@@ -217,11 +206,12 @@ public class WifiNetworkDetailsFragment extends RestrictedDashboardFragment impl
         displayPreferenceControllers();
     }
 
-    protected void displayPreferenceControllers() {
+    /* access modifiers changed from: protected */
+    public void displayPreferenceControllers() {
         PreferenceScreen preferenceScreen = getPreferenceScreen();
-        for (AbstractPreferenceController abstractPreferenceController : this.mControllers) {
-            if (!(abstractPreferenceController instanceof WifiDetailPreferenceController2)) {
-                abstractPreferenceController.displayPreference(preferenceScreen);
+        for (AbstractPreferenceController next : this.mControllers) {
+            if (!(next instanceof WifiDetailPreferenceController2)) {
+                next.displayPreference(preferenceScreen);
             }
         }
     }

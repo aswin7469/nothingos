@@ -4,21 +4,14 @@ import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
 import java.util.Arrays;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes2.dex */
-public class TimeModel implements Parcelable {
-    public static final Parcelable.Creator<TimeModel> CREATOR = new Parcelable.Creator<TimeModel>() { // from class: com.google.android.material.timepicker.TimeModel.1
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: createFromParcel */
-        public TimeModel mo724createFromParcel(Parcel parcel) {
+
+class TimeModel implements Parcelable {
+    public static final Parcelable.Creator<TimeModel> CREATOR = new Parcelable.Creator<TimeModel>() {
+        public TimeModel createFromParcel(Parcel parcel) {
             return new TimeModel(parcel);
         }
 
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: newArray */
-        public TimeModel[] mo725newArray(int i) {
+        public TimeModel[] newArray(int i) {
             return new TimeModel[i];
         }
     };
@@ -34,7 +27,6 @@ public class TimeModel implements Parcelable {
         return i >= 12 ? 1 : 0;
     }
 
-    @Override // android.os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -73,10 +65,12 @@ public class TimeModel implements Parcelable {
             return false;
         }
         TimeModel timeModel = (TimeModel) obj;
-        return this.hour == timeModel.hour && this.minute == timeModel.minute && this.format == timeModel.format && this.selection == timeModel.selection;
+        if (this.hour == timeModel.hour && this.minute == timeModel.minute && this.format == timeModel.format && this.selection == timeModel.selection) {
+            return true;
+        }
+        return false;
     }
 
-    @Override // android.os.Parcelable
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeInt(this.hour);
         parcel.writeInt(this.minute);
@@ -89,6 +83,6 @@ public class TimeModel implements Parcelable {
     }
 
     public static String formatText(Resources resources, CharSequence charSequence, String str) {
-        return String.format(resources.getConfiguration().locale, str, Integer.valueOf(Integer.parseInt(String.valueOf(charSequence))));
+        return String.format(resources.getConfiguration().locale, str, new Object[]{Integer.valueOf(Integer.parseInt(String.valueOf(charSequence)))});
     }
 }

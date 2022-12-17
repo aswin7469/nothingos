@@ -7,21 +7,21 @@ import android.util.FeatureFlagUtils;
 import android.util.Pair;
 import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settings.widget.ValidatedEditTextPreference;
 import com.android.settings.wifi.WifiUtils;
 import com.android.settings.wifi.tether.WifiTetherBasePreferenceController;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
 import java.util.UUID;
-/* loaded from: classes.dex */
+
 public class WifiTetherPasswordPreferenceController extends WifiTetherBasePreferenceController implements ValidatedEditTextPreference.Validator {
     private final MetricsFeatureProvider mMetricsFeatureProvider;
     private String mPassword;
     private int mSecurityType;
 
     private boolean isNoPasswordSecurityrType(int i) {
-        return i == 0 || i == 4;
+        return i == 0 || i == 4 || i == 5;
     }
 
     WifiTetherPasswordPreferenceController(Context context, WifiTetherBasePreferenceController.OnTetherConfigUpdateListener onTetherConfigUpdateListener, MetricsFeatureProvider metricsFeatureProvider) {
@@ -34,18 +34,16 @@ public class WifiTetherPasswordPreferenceController extends WifiTetherBasePrefer
         this.mMetricsFeatureProvider = FeatureFactory.getFactory(context).getMetricsFeatureProvider();
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return FeatureFlagUtils.isEnabled(this.mContext, "settings_tether_all_in_one") ? "wifi_tether_network_password_2" : "wifi_tether_network_password";
     }
 
-    @Override // com.android.settings.wifi.tether.WifiTetherBasePreferenceController
     public void updateDisplay() {
         SoftApConfiguration softApConfiguration = this.mWifiManager.getSoftApConfiguration();
-        if (!isNoPasswordSecurityrType(softApConfiguration.getSecurityType()) && TextUtils.isEmpty(softApConfiguration.getPassphrase())) {
-            this.mPassword = generateRandomPassword();
-        } else {
+        if (isNoPasswordSecurityrType(softApConfiguration.getSecurityType()) || !TextUtils.isEmpty(softApConfiguration.getPassphrase())) {
             this.mPassword = softApConfiguration.getPassphrase();
+        } else {
+            this.mPassword = generateRandomPassword();
         }
         this.mSecurityType = softApConfiguration.getSecurityType();
         ((ValidatedEditTextPreference) this.mPreference).setValidator(this);
@@ -54,11 +52,10 @@ public class WifiTetherPasswordPreferenceController extends WifiTetherBasePrefer
         updatePasswordDisplay((EditTextPreference) this.mPreference);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         String str = (String) obj;
         if (!TextUtils.equals(this.mPassword, str)) {
-            this.mMetricsFeatureProvider.action(this.mContext, 1737, new Pair[0]);
+            this.mMetricsFeatureProvider.action(this.mContext, 1737, (Pair<Integer, Object>[]) new Pair[0]);
         }
         this.mPassword = str;
         updatePasswordDisplay((EditTextPreference) this.mPreference);
@@ -82,7 +79,6 @@ public class WifiTetherPasswordPreferenceController extends WifiTetherBasePrefer
         this.mPreference.setVisible(!isNoPasswordSecurityrType(i));
     }
 
-    @Override // com.android.settings.widget.ValidatedEditTextPreference.Validator
     public boolean isTextValid(String str) {
         return WifiUtils.isHotspotPasswordValid(str, this.mSecurityType);
     }
@@ -97,12 +93,12 @@ public class WifiTetherPasswordPreferenceController extends WifiTetherBasePrefer
         validatedEditTextPreference.setText(this.mPassword);
         if (!TextUtils.isEmpty(this.mPassword)) {
             validatedEditTextPreference.setIsSummaryPassword(true);
-            validatedEditTextPreference.setSummary(this.mPassword);
+            validatedEditTextPreference.setSummary((CharSequence) this.mPassword);
             validatedEditTextPreference.setVisible(true);
             return;
         }
         validatedEditTextPreference.setIsSummaryPassword(false);
-        validatedEditTextPreference.setSummary(R.string.wifi_hotspot_no_password_subtext);
+        validatedEditTextPreference.setSummary(R$string.wifi_hotspot_no_password_subtext);
         validatedEditTextPreference.setVisible(false);
     }
 }

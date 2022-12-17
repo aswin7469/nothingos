@@ -5,14 +5,13 @@ import com.google.zxing.ChecksumException;
 import com.google.zxing.FormatException;
 import com.google.zxing.NotFoundException;
 import com.google.zxing.common.BitArray;
-/* loaded from: classes2.dex */
+
 public final class UPCEReader extends UPCEANReader {
     private static final int[] MIDDLE_END_PATTERN = {1, 1, 1, 1, 1, 1};
     private static final int[][] NUMSYS_AND_CHECK_DIGIT_PATTERNS = {new int[]{56, 52, 50, 49, 44, 38, 35, 42, 41, 37}, new int[]{7, 11, 13, 14, 19, 25, 28, 21, 22, 26}};
     private final int[] decodeMiddleCounters = new int[4];
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.google.zxing.oned.UPCEANReader
+    /* access modifiers changed from: protected */
     public int decodeMiddle(BitArray bitArray, int[] iArr, StringBuilder sb) throws NotFoundException {
         int[] iArr2 = this.decodeMiddleCounters;
         iArr2[0] = 0;
@@ -36,13 +35,12 @@ public final class UPCEReader extends UPCEANReader {
         return i;
     }
 
-    @Override // com.google.zxing.oned.UPCEANReader
-    protected int[] decodeEnd(BitArray bitArray, int i) throws NotFoundException {
+    /* access modifiers changed from: protected */
+    public int[] decodeEnd(BitArray bitArray, int i) throws NotFoundException {
         return UPCEANReader.findGuardPattern(bitArray, i, true, MIDDLE_END_PATTERN);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.google.zxing.oned.UPCEANReader
+    /* access modifiers changed from: protected */
     public boolean checkChecksum(String str) throws FormatException, ChecksumException {
         return super.checkChecksum(convertUPCEtoUPCA(str));
     }
@@ -60,8 +58,8 @@ public final class UPCEReader extends UPCEANReader {
         throw NotFoundException.getNotFoundInstance();
     }
 
-    @Override // com.google.zxing.oned.UPCEANReader
-    BarcodeFormat getBarcodeFormat() {
+    /* access modifiers changed from: package-private */
+    public BarcodeFormat getBarcodeFormat() {
         return BarcodeFormat.UPC_E;
     }
 

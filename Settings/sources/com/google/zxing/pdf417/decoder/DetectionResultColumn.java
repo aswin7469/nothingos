@@ -1,18 +1,17 @@
 package com.google.zxing.pdf417.decoder;
 
 import java.util.Formatter;
-/* loaded from: classes2.dex */
+
 class DetectionResultColumn {
     private final BoundingBox boundingBox;
     private final Codeword[] codewords;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public DetectionResultColumn(BoundingBox boundingBox) {
-        this.boundingBox = new BoundingBox(boundingBox);
-        this.codewords = new Codeword[(boundingBox.getMaxY() - boundingBox.getMinY()) + 1];
+    DetectionResultColumn(BoundingBox boundingBox2) {
+        this.boundingBox = new BoundingBox(boundingBox2);
+        this.codewords = new Codeword[((boundingBox2.getMaxY() - boundingBox2.getMinY()) + 1)];
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public final Codeword getCodewordNearby(int i) {
         Codeword codeword;
         Codeword codeword2;
@@ -34,41 +33,40 @@ class DetectionResultColumn {
         return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public final int imageRowToCodewordIndex(int i) {
         return i - this.boundingBox.getMinY();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public final void setCodeword(int i, Codeword codeword) {
         this.codewords[imageRowToCodewordIndex(i)] = codeword;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public final Codeword getCodeword(int i) {
         return this.codewords[imageRowToCodewordIndex(i)];
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public final BoundingBox getBoundingBox() {
         return this.boundingBox;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public final Codeword[] getCodewords() {
         return this.codewords;
     }
 
     public String toString() {
-        Codeword[] codewordArr;
         Formatter formatter = new Formatter();
         int i = 0;
         for (Codeword codeword : this.codewords) {
             if (codeword == null) {
-                formatter.format("%3d:    |   \n", Integer.valueOf(i));
+                formatter.format("%3d:    |   \n", new Object[]{Integer.valueOf(i)});
                 i++;
             } else {
-                formatter.format("%3d: %3d|%3d\n", Integer.valueOf(i), Integer.valueOf(codeword.getRowNumber()), Integer.valueOf(codeword.getValue()));
+                formatter.format("%3d: %3d|%3d\n", new Object[]{Integer.valueOf(i), Integer.valueOf(codeword.getRowNumber()), Integer.valueOf(codeword.getValue())});
                 i++;
             }
         }

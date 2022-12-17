@@ -9,16 +9,16 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
-/* loaded from: classes.dex */
+import com.android.settings.R$drawable;
+
 public class ProgressDialogFragment extends DialogFragment {
     private OnDismissCallback mDismissCallback;
 
-    /* loaded from: classes.dex */
     public interface OnDismissCallback {
         void onProgressDialogDismiss();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ boolean lambda$onCreateDialog$0(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
         return 4 == i;
     }
@@ -46,17 +46,16 @@ public class ProgressDialogFragment extends DialogFragment {
         }
     }
 
-    @Override // android.app.DialogFragment
     public Dialog onCreateDialog(Bundle bundle) {
         ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.getWindow().setBackgroundDrawableResource(R$drawable.sim_progress_dialog_rounded_bg);
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setMessage(getArguments().getString("title"));
-        progressDialog.setOnKeyListener(ProgressDialogFragment$$ExternalSyntheticLambda0.INSTANCE);
+        progressDialog.setOnKeyListener(new ProgressDialogFragment$$ExternalSyntheticLambda0());
         return progressDialog;
     }
 
-    @Override // android.app.DialogFragment, android.content.DialogInterface.OnDismissListener
     public void onDismiss(DialogInterface dialogInterface) {
         super.onDismiss(dialogInterface);
         OnDismissCallback onDismissCallback = this.mDismissCallback;

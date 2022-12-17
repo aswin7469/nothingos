@@ -1,16 +1,14 @@
 package com.android.settings.wifi.details2;
 
-import java.net.InetAddress;
-import java.util.function.Function;
-/* loaded from: classes.dex */
-public final /* synthetic */ class WifiDetailPreferenceController2$$ExternalSyntheticLambda8 implements Function {
-    public static final /* synthetic */ WifiDetailPreferenceController2$$ExternalSyntheticLambda8 INSTANCE = new WifiDetailPreferenceController2$$ExternalSyntheticLambda8();
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class WifiDetailPreferenceController2$$ExternalSyntheticLambda8 implements Runnable {
+    public final /* synthetic */ WifiDetailPreferenceController2 f$0;
 
-    private /* synthetic */ WifiDetailPreferenceController2$$ExternalSyntheticLambda8() {
+    public /* synthetic */ WifiDetailPreferenceController2$$ExternalSyntheticLambda8(WifiDetailPreferenceController2 wifiDetailPreferenceController2) {
+        this.f$0 = wifiDetailPreferenceController2;
     }
 
-    @Override // java.util.function.Function
-    public final Object apply(Object obj) {
-        return ((InetAddress) obj).getHostAddress();
+    public final void run() {
+        this.f$0.lambda$shareNetwork$7();
     }
 }

@@ -5,7 +5,7 @@ import android.content.Context;
 import android.hardware.biometrics.ParentalControlsUtilsInternal;
 import android.os.UserHandle;
 import android.text.TextUtils;
-/* loaded from: classes.dex */
+
 public final class ActionDisabledByAdminControllerFactory {
     public static ActionDisabledByAdminController createInstance(Context context, String str, DeviceAdminStringProvider deviceAdminStringProvider, UserHandle userHandle) {
         if (doesBiometricRequireParentalConsent(context, str)) {

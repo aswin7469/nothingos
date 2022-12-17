@@ -6,7 +6,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import com.android.settings.widget.DisabledCheckBoxPreference;
 import com.android.settingslib.core.lifecycle.Lifecycle;
-/* loaded from: classes.dex */
+
 public class ZenModeVisEffectPreferenceController extends AbstractZenModePreferenceController implements Preference.OnPreferenceChangeListener {
     protected final int mEffect;
     protected final String mKey;
@@ -22,26 +22,22 @@ public class ZenModeVisEffectPreferenceController extends AbstractZenModePrefere
         this.mParentSuppressedEffects = iArr;
     }
 
-    @Override // com.android.settings.notification.zen.AbstractZenModePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return this.mKey;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         if (this.mEffect == 8) {
-            return this.mContext.getResources().getBoolean(17891577);
+            return this.mContext.getResources().getBoolean(17891684);
         }
         return true;
     }
 
-    @Override // com.android.settings.notification.zen.AbstractZenModePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         this.mScreen = preferenceScreen;
         super.displayPreference(preferenceScreen);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         boolean z;
         super.updateState(preference);
@@ -49,8 +45,8 @@ public class ZenModeVisEffectPreferenceController extends AbstractZenModePrefere
         int[] iArr = this.mParentSuppressedEffects;
         if (iArr != null) {
             z = false;
-            for (int i : iArr) {
-                z |= this.mBackend.isVisualEffectSuppressed(i);
+            for (int isVisualEffectSuppressed2 : iArr) {
+                z |= this.mBackend.isVisualEffectSuppressed(isVisualEffectSuppressed2);
             }
         } else {
             z = false;
@@ -65,7 +61,6 @@ public class ZenModeVisEffectPreferenceController extends AbstractZenModePrefere
         ((CheckBoxPreference) preference).setChecked(isVisualEffectSuppressed);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         boolean booleanValue = ((Boolean) obj).booleanValue();
         this.mMetricsFeatureProvider.action(this.mContext, this.mMetricsCategory, booleanValue);

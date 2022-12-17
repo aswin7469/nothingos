@@ -10,7 +10,7 @@ import androidx.preference.Preference;
 import com.android.settings.Utils;
 import com.android.settings.core.SubSettingLauncher;
 import com.android.settingslib.widget.AppPreference;
-/* loaded from: classes.dex */
+
 public class AccountTypePreference extends AppPreference implements Preference.OnPreferenceClickListener {
     private final String mFragment;
     private final Bundle mFragmentArguments;
@@ -31,39 +31,36 @@ public class AccountTypePreference extends AppPreference implements Preference.O
         this.mFragmentArguments = bundle;
         this.mMetricsCategory = i;
         setKey(buildKey(account));
-        setTitle(str3);
+        setTitle((CharSequence) str3);
         setSummary(charSequence);
         setIcon(drawable);
         setOnPreferenceClickListener(this);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceClickListener
     public boolean onPreferenceClick(Preference preference) {
-        if (this.mFragment != null) {
-            UserManager userManager = (UserManager) getContext().getSystemService("user");
-            UserHandle userHandle = (UserHandle) this.mFragmentArguments.getParcelable("android.intent.extra.USER");
-            if (userHandle != null && Utils.startQuietModeDialogIfNecessary(getContext(), userManager, userHandle.getIdentifier())) {
-                return true;
-            }
-            if (userHandle != null && Utils.unlockWorkProfileIfNecessary(getContext(), userHandle.getIdentifier())) {
-                return true;
-            }
-            new SubSettingLauncher(getContext()).setDestination(this.mFragment).setArguments(this.mFragmentArguments).setTitleRes(this.mTitleResPackageName, this.mTitleResId).setSourceMetricsCategory(this.mMetricsCategory).launch();
+        if (this.mFragment == null) {
+            return false;
+        }
+        UserManager userManager = (UserManager) getContext().getSystemService("user");
+        UserHandle userHandle = (UserHandle) this.mFragmentArguments.getParcelable("android.intent.extra.USER");
+        if (userHandle != null && Utils.startQuietModeDialogIfNecessary(getContext(), userManager, userHandle.getIdentifier())) {
             return true;
         }
-        return false;
+        if (userHandle != null && Utils.unlockWorkProfileIfNecessary(getContext(), userHandle.getIdentifier())) {
+            return true;
+        }
+        new SubSettingLauncher(getContext()).setDestination(this.mFragment).setArguments(this.mFragmentArguments).setTitleRes(this.mTitleResPackageName, this.mTitleResId).setSourceMetricsCategory(this.mMetricsCategory).launch();
+        return true;
     }
 
     public static String buildKey(Account account) {
         return String.valueOf(account.hashCode());
     }
 
-    @Override // androidx.preference.Preference
     public CharSequence getTitle() {
         return this.mTitle;
     }
 
-    @Override // androidx.preference.Preference
     public CharSequence getSummary() {
         return this.mSummary;
     }

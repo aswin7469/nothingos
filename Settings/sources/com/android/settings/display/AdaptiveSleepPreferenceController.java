@@ -10,14 +10,13 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.bluetooth.RestrictionUtils;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.RestrictedSwitchPreference;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
-import com.nt.settings.utils.NtSettingsVibrateUtils;
-/* loaded from: classes.dex */
+
 public class AdaptiveSleepPreferenceController {
     private final Context mContext;
     private final MetricsFeatureProvider mMetricsFeatureProvider;
@@ -56,43 +55,42 @@ public class AdaptiveSleepPreferenceController {
         this.mPreference.setEnabled(hasSufficientPermission(this.mPackageManager) && !isCameraLocked() && !isPowerSaveMode());
     }
 
-    void initializePreference() {
+    /* access modifiers changed from: package-private */
+    public void initializePreference() {
         if (this.mPreference == null) {
             RestrictedSwitchPreference restrictedSwitchPreference = new RestrictedSwitchPreference(this.mContext);
             this.mPreference = restrictedSwitchPreference;
-            restrictedSwitchPreference.setTitle(R.string.adaptive_sleep_title);
-            this.mPreference.setSummary(R.string.adaptive_sleep_description);
+            restrictedSwitchPreference.setTitle(R$string.adaptive_sleep_title);
+            this.mPreference.setSummary(R$string.adaptive_sleep_description);
             this.mPreference.setChecked(isChecked());
             this.mPreference.setKey("adaptive_sleep");
-            this.mPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() { // from class: com.android.settings.display.AdaptiveSleepPreferenceController$$ExternalSyntheticLambda0
-                @Override // androidx.preference.Preference.OnPreferenceClickListener
-                public final boolean onPreferenceClick(Preference preference) {
-                    boolean lambda$initializePreference$0;
-                    lambda$initializePreference$0 = AdaptiveSleepPreferenceController.this.lambda$initializePreference$0(preference);
-                    return lambda$initializePreference$0;
-                }
-            });
+            this.mPreference.setOnPreferenceClickListener(new AdaptiveSleepPreferenceController$$ExternalSyntheticLambda0(this));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ boolean lambda$initializePreference$0(Preference preference) {
-        NtSettingsVibrateUtils.getInstance(preference.getContext()).playSwitchVibrate();
         boolean isChecked = ((RestrictedSwitchPreference) preference).isChecked();
         this.mMetricsFeatureProvider.action(this.mContext, 1755, isChecked);
         Settings.Secure.putInt(this.mContext.getContentResolver(), "adaptive_sleep", isChecked ? 1 : 0);
         return true;
     }
 
-    boolean isChecked() {
-        return hasSufficientPermission(this.mContext.getPackageManager()) && !isCameraLocked() && !isPowerSaveMode() && Settings.Secure.getInt(this.mContext.getContentResolver(), "adaptive_sleep", 0) != 0;
+    /* access modifiers changed from: package-private */
+    public boolean isChecked() {
+        if (!hasSufficientPermission(this.mContext.getPackageManager()) || isCameraLocked() || isPowerSaveMode() || Settings.Secure.getInt(this.mContext.getContentResolver(), "adaptive_sleep", 0) == 0) {
+            return false;
+        }
+        return true;
     }
 
-    boolean isCameraLocked() {
+    /* access modifiers changed from: package-private */
+    public boolean isCameraLocked() {
         return this.mPrivacyManager.isSensorPrivacyEnabled(2);
     }
 
-    boolean isPowerSaveMode() {
+    /* access modifiers changed from: package-private */
+    public boolean isPowerSaveMode() {
         return this.mPowerManager.isPowerSaveMode();
     }
 
@@ -100,20 +98,21 @@ public class AdaptiveSleepPreferenceController {
         return isAdaptiveSleepSupported(context) ? 1 : 3;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static boolean isAdaptiveSleepSupported(Context context) {
-        return context.getResources().getBoolean(17891341) && isAttentionServiceAvailable(context);
+    static boolean isAdaptiveSleepSupported(Context context) {
+        return context.getResources().getBoolean(17891343) && isAttentionServiceAvailable(context);
     }
 
     private static boolean isAttentionServiceAvailable(Context context) {
         ResolveInfo resolveService;
         PackageManager packageManager = context.getPackageManager();
         String attentionServicePackageName = packageManager.getAttentionServicePackageName();
-        return (TextUtils.isEmpty(attentionServicePackageName) || (resolveService = packageManager.resolveService(new Intent("android.service.attention.AttentionService").setPackage(attentionServicePackageName), 1048576)) == null || resolveService.serviceInfo == null) ? false : true;
+        if (TextUtils.isEmpty(attentionServicePackageName) || (resolveService = packageManager.resolveService(new Intent("android.service.attention.AttentionService").setPackage(attentionServicePackageName), 1048576)) == null || resolveService.serviceInfo == null) {
+            return false;
+        }
+        return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static boolean hasSufficientPermission(PackageManager packageManager) {
+    static boolean hasSufficientPermission(PackageManager packageManager) {
         String attentionServicePackageName = packageManager.getAttentionServicePackageName();
         return attentionServicePackageName != null && packageManager.checkPermission("android.permission.CAMERA", attentionServicePackageName) == 0;
     }

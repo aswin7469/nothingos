@@ -1,15 +1,11 @@
 package com.android.settings.network;
 
-import java.util.function.Function;
-/* loaded from: classes.dex */
-public final /* synthetic */ class ProviderModelSliceHelper$$ExternalSyntheticLambda1 implements Function {
-    public static final /* synthetic */ ProviderModelSliceHelper$$ExternalSyntheticLambda1 INSTANCE = new ProviderModelSliceHelper$$ExternalSyntheticLambda1();
+import com.android.settings.wifi.slice.WifiSliceItem;
+import java.util.function.Predicate;
 
-    private /* synthetic */ ProviderModelSliceHelper$$ExternalSyntheticLambda1() {
-    }
-
-    @Override // java.util.function.Function
-    public final Object apply(Object obj) {
-        return ((String) obj).trim();
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class ProviderModelSliceHelper$$ExternalSyntheticLambda1 implements Predicate {
+    public final boolean test(Object obj) {
+        return ProviderModelSliceHelper.lambda$getConnectedWifiItem$0((WifiSliceItem) obj);
     }
 }

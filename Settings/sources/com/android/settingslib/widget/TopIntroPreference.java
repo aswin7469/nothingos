@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
-/* loaded from: classes.dex */
+
 public class TopIntroPreference extends Preference {
     public TopIntroPreference(Context context) {
         super(context);
@@ -18,7 +18,6 @@ public class TopIntroPreference extends Preference {
         setSelectable(false);
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         preferenceViewHolder.setDividerAllowedAbove(false);

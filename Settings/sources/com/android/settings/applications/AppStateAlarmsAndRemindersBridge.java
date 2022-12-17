@@ -14,14 +14,12 @@ import com.android.settings.applications.AppStateBaseBridge;
 import com.android.settingslib.applications.ApplicationsState;
 import java.util.ArrayList;
 import libcore.util.EmptyArray;
-/* loaded from: classes.dex */
+
 public class AppStateAlarmsAndRemindersBridge extends AppStateBaseBridge {
-    public static final ApplicationsState.AppFilter FILTER_CLOCK_APPS = new ApplicationsState.AppFilter() { // from class: com.android.settings.applications.AppStateAlarmsAndRemindersBridge.1
-        @Override // com.android.settingslib.applications.ApplicationsState.AppFilter
+    public static final ApplicationsState.AppFilter FILTER_CLOCK_APPS = new ApplicationsState.AppFilter() {
         public void init() {
         }
 
-        @Override // com.android.settingslib.applications.ApplicationsState.AppFilter
         public boolean filterApp(ApplicationsState.AppEntry appEntry) {
             Object obj = appEntry.extraInfo;
             if (obj instanceof AlarmsAndRemindersState) {
@@ -47,7 +45,7 @@ public class AppStateAlarmsAndRemindersBridge extends AppStateBaseBridge {
     }
 
     private boolean isChangeEnabled(String str, int i) {
-        return CompatChanges.isChangeEnabled(171306433L, str, UserHandle.of(i));
+        return CompatChanges.isChangeEnabled(171306433, str, UserHandle.of(i));
     }
 
     public AlarmsAndRemindersState createPermissionState(String str, int i) {
@@ -55,13 +53,13 @@ public class AppStateAlarmsAndRemindersBridge extends AppStateBaseBridge {
         return new AlarmsAndRemindersState(ArrayUtils.contains(this.mRequesterPackages, str) && isChangeEnabled(str, userId), this.mAlarmManager.hasScheduleExactAlarm(str, userId));
     }
 
-    @Override // com.android.settings.applications.AppStateBaseBridge
-    protected void updateExtraInfo(ApplicationsState.AppEntry appEntry, String str, int i) {
+    /* access modifiers changed from: protected */
+    public void updateExtraInfo(ApplicationsState.AppEntry appEntry, String str, int i) {
         appEntry.extraInfo = createPermissionState(str, i);
     }
 
-    @Override // com.android.settings.applications.AppStateBaseBridge
-    protected void loadAllExtraInfo() {
+    /* access modifiers changed from: protected */
+    public void loadAllExtraInfo() {
         ArrayList<ApplicationsState.AppEntry> allApps = this.mAppSession.getAllApps();
         for (int i = 0; i < allApps.size(); i++) {
             ApplicationsState.AppEntry appEntry = allApps.get(i);
@@ -70,7 +68,6 @@ public class AppStateAlarmsAndRemindersBridge extends AppStateBaseBridge {
         }
     }
 
-    /* loaded from: classes.dex */
     public static class AlarmsAndRemindersState {
         private boolean mPermissionGranted;
         private boolean mPermissionRequested;

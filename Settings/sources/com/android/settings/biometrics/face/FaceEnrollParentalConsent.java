@@ -3,52 +3,48 @@ package com.android.settings.biometrics.face;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import com.android.settings.R;
-/* loaded from: classes.dex */
-public class FaceEnrollParentalConsent extends FaceEnrollIntroduction {
-    public static final int[] CONSENT_STRING_RESOURCES = {R.string.security_settings_face_enroll_consent_introduction_title, R.string.security_settings_face_enroll_introduction_consent_message, R.string.security_settings_face_enroll_introduction_info_consent_glasses, R.string.security_settings_face_enroll_introduction_info_consent_looking, R.string.security_settings_face_enroll_introduction_info_consent_gaze, R.string.security_settings_face_enroll_introduction_how_consent_message, R.string.security_settings_face_enroll_introduction_control_consent_title, R.string.security_settings_face_enroll_introduction_control_consent_message};
+import com.android.settings.R$string;
 
-    @Override // com.android.settings.biometrics.face.FaceEnrollIntroduction
-    protected boolean generateChallengeOnCreate() {
+public class FaceEnrollParentalConsent extends FaceEnrollIntroduction {
+    public static final int[] CONSENT_STRING_RESOURCES = {R$string.security_settings_face_enroll_consent_introduction_title, R$string.security_settings_face_enroll_introduction_consent_message, R$string.security_settings_face_enroll_introduction_info_consent_glasses, R$string.security_settings_face_enroll_introduction_info_consent_looking, R$string.security_settings_face_enroll_introduction_info_consent_gaze, R$string.security_settings_face_enroll_introduction_how_consent_message, R$string.security_settings_face_enroll_introduction_control_consent_title, R$string.f149xf37cee4f};
+
+    /* access modifiers changed from: protected */
+    public boolean generateChallengeOnCreate() {
         return false;
     }
 
-    @Override // com.android.settings.biometrics.face.FaceEnrollIntroduction, com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1893;
     }
 
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction
-    protected boolean onSetOrConfirmCredentials(Intent intent) {
+    /* access modifiers changed from: protected */
+    public boolean onSetOrConfirmCredentials(Intent intent) {
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.biometrics.face.FaceEnrollIntroduction, com.android.settings.biometrics.BiometricEnrollIntroduction, com.android.settings.biometrics.BiometricEnrollBase, com.android.settings.core.InstrumentedActivity, com.android.settingslib.core.lifecycle.ObservableActivity, androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setDescriptionText(R.string.security_settings_face_enroll_introduction_consent_message);
+        setDescriptionText(R$string.security_settings_face_enroll_introduction_consent_message);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction
+    /* access modifiers changed from: protected */
     public void onNextButtonClick(View view) {
         onConsentResult(true);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.biometrics.face.FaceEnrollIntroduction, com.android.settings.biometrics.BiometricEnrollIntroduction
+    /* access modifiers changed from: protected */
     public void onSkipButtonClick(View view) {
         onConsentResult(false);
     }
 
-    @Override // com.android.settings.biometrics.face.FaceEnrollIntroduction, com.android.settings.biometrics.BiometricEnrollIntroduction
-    protected void onEnrollmentSkipped(Intent intent) {
+    /* access modifiers changed from: protected */
+    public void onEnrollmentSkipped(Intent intent) {
         onConsentResult(false);
     }
 
-    @Override // com.android.settings.biometrics.face.FaceEnrollIntroduction, com.android.settings.biometrics.BiometricEnrollIntroduction
-    protected void onFinishedEnrolling(Intent intent) {
+    /* access modifiers changed from: protected */
+    public void onFinishedEnrolling(Intent intent) {
         onConsentResult(true);
     }
 
@@ -59,38 +55,38 @@ public class FaceEnrollParentalConsent extends FaceEnrollIntroduction {
         finish();
     }
 
-    @Override // com.android.settings.biometrics.face.FaceEnrollIntroduction
-    protected int getInfoMessageGlasses() {
-        return R.string.security_settings_face_enroll_introduction_info_consent_glasses;
+    /* access modifiers changed from: protected */
+    public int getInfoMessageGlasses() {
+        return R$string.security_settings_face_enroll_introduction_info_consent_glasses;
     }
 
-    @Override // com.android.settings.biometrics.face.FaceEnrollIntroduction
-    protected int getInfoMessageLooking() {
-        return R.string.security_settings_face_enroll_introduction_info_consent_looking;
+    /* access modifiers changed from: protected */
+    public int getInfoMessageLooking() {
+        return R$string.security_settings_face_enroll_introduction_info_consent_looking;
     }
 
-    @Override // com.android.settings.biometrics.face.FaceEnrollIntroduction
-    protected int getInfoMessageRequireEyes() {
-        return R.string.security_settings_face_enroll_introduction_info_consent_gaze;
+    /* access modifiers changed from: protected */
+    public int getInfoMessageRequireEyes() {
+        return R$string.security_settings_face_enroll_introduction_info_consent_gaze;
     }
 
-    @Override // com.android.settings.biometrics.face.FaceEnrollIntroduction
-    protected int getHowMessage() {
-        return R.string.security_settings_face_enroll_introduction_how_consent_message;
+    /* access modifiers changed from: protected */
+    public int getHowMessage() {
+        return R$string.security_settings_face_enroll_introduction_how_consent_message;
     }
 
-    @Override // com.android.settings.biometrics.face.FaceEnrollIntroduction
-    protected int getInControlTitle() {
-        return R.string.security_settings_face_enroll_introduction_control_consent_title;
+    /* access modifiers changed from: protected */
+    public int getInControlTitle() {
+        return R$string.security_settings_face_enroll_introduction_control_consent_title;
     }
 
-    @Override // com.android.settings.biometrics.face.FaceEnrollIntroduction
-    protected int getInControlMessage() {
-        return R.string.security_settings_face_enroll_introduction_control_consent_message;
+    /* access modifiers changed from: protected */
+    public int getInControlMessage() {
+        return R$string.f149xf37cee4f;
     }
 
-    @Override // com.android.settings.biometrics.face.FaceEnrollIntroduction, com.android.settings.biometrics.BiometricEnrollIntroduction
-    protected int getHeaderResDefault() {
-        return R.string.security_settings_face_enroll_consent_introduction_title;
+    /* access modifiers changed from: protected */
+    public int getHeaderResDefault() {
+        return R$string.security_settings_face_enroll_consent_introduction_title;
     }
 }

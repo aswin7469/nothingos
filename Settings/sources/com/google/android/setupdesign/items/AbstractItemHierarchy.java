@@ -8,37 +8,34 @@ import com.google.android.setupdesign.R$styleable;
 import com.google.android.setupdesign.items.ItemHierarchy;
 import java.util.ArrayList;
 import java.util.Iterator;
-/* loaded from: classes2.dex */
+
 public abstract class AbstractItemHierarchy implements ItemHierarchy {
-    private int id;
-    private final ArrayList<ItemHierarchy.Observer> observers;
+
+    /* renamed from: id */
+    private int f243id = -1;
+    private final ArrayList<ItemHierarchy.Observer> observers = new ArrayList<>();
 
     public AbstractItemHierarchy() {
-        this.observers = new ArrayList<>();
-        this.id = -1;
     }
 
     public AbstractItemHierarchy(Context context, AttributeSet attributeSet) {
-        this.observers = new ArrayList<>();
-        this.id = -1;
         TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.SudAbstractItem);
-        this.id = obtainStyledAttributes.getResourceId(R$styleable.SudAbstractItem_android_id, -1);
+        this.f243id = obtainStyledAttributes.getResourceId(R$styleable.SudAbstractItem_android_id, -1);
         obtainStyledAttributes.recycle();
     }
 
     public void setId(int i) {
-        this.id = i;
+        this.f243id = i;
     }
 
     public int getId() {
-        return this.id;
+        return this.f243id;
     }
 
     public int getViewId() {
         return getId();
     }
 
-    @Override // com.google.android.setupdesign.items.ItemHierarchy
     public void registerObserver(ItemHierarchy.Observer observer) {
         this.observers.add(observer);
     }

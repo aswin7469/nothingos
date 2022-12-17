@@ -9,7 +9,7 @@ import com.airbnb.lottie.model.animatable.AnimatableGradientColorValue;
 import com.airbnb.lottie.model.animatable.AnimatableIntegerValue;
 import com.airbnb.lottie.model.animatable.AnimatablePointValue;
 import com.airbnb.lottie.model.layer.BaseLayer;
-/* loaded from: classes.dex */
+
 public class GradientFill implements ContentModel {
     private final AnimatablePointValue endPoint;
     private final Path.FillType fillType;
@@ -22,9 +22,9 @@ public class GradientFill implements ContentModel {
     private final AnimatableIntegerValue opacity;
     private final AnimatablePointValue startPoint;
 
-    public GradientFill(String str, GradientType gradientType, Path.FillType fillType, AnimatableGradientColorValue animatableGradientColorValue, AnimatableIntegerValue animatableIntegerValue, AnimatablePointValue animatablePointValue, AnimatablePointValue animatablePointValue2, AnimatableFloatValue animatableFloatValue, AnimatableFloatValue animatableFloatValue2, boolean z) {
-        this.gradientType = gradientType;
-        this.fillType = fillType;
+    public GradientFill(String str, GradientType gradientType2, Path.FillType fillType2, AnimatableGradientColorValue animatableGradientColorValue, AnimatableIntegerValue animatableIntegerValue, AnimatablePointValue animatablePointValue, AnimatablePointValue animatablePointValue2, AnimatableFloatValue animatableFloatValue, AnimatableFloatValue animatableFloatValue2, boolean z) {
+        this.gradientType = gradientType2;
+        this.fillType = fillType2;
         this.gradientColor = animatableGradientColorValue;
         this.opacity = animatableIntegerValue;
         this.startPoint = animatablePointValue;
@@ -67,7 +67,6 @@ public class GradientFill implements ContentModel {
         return this.hidden;
     }
 
-    @Override // com.airbnb.lottie.model.content.ContentModel
     public Content toContent(LottieDrawable lottieDrawable, BaseLayer baseLayer) {
         return new GradientFillContent(lottieDrawable, baseLayer, this);
     }

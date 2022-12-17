@@ -9,8 +9,8 @@ import android.os.PowerManager;
 import android.os.PowerWhitelistManager;
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$string;
+
 public class RequestIgnoreBatteryOptimizations extends AlertActivity implements DialogInterface.OnClickListener {
     private String mPackageName;
     private PowerWhitelistManager mPowerWhitelistManager;
@@ -19,7 +19,8 @@ public class RequestIgnoreBatteryOptimizations extends AlertActivity implements 
     }
 
     public void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+        RequestIgnoreBatteryOptimizations.super.onCreate(bundle);
+        getWindow().addSystemFlags(524288);
         this.mPowerWhitelistManager = (PowerWhitelistManager) getSystemService(PowerWhitelistManager.class);
         Uri data = getIntent().getData();
         if (data == null) {
@@ -35,19 +36,18 @@ public class RequestIgnoreBatteryOptimizations extends AlertActivity implements 
         } else if (((PowerManager) getSystemService(PowerManager.class)).isIgnoringBatteryOptimizations(this.mPackageName)) {
             debugLog("Not should prompt, already ignoring optimizations: " + this.mPackageName);
             finish();
+        } else if (getPackageManager().checkPermission("android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS", this.mPackageName) != 0) {
+            debugLog("Requested package " + this.mPackageName + " does not hold permission " + "android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS");
+            finish();
         } else {
             try {
                 ApplicationInfo applicationInfo = getPackageManager().getApplicationInfo(this.mPackageName, 0);
-                if (getPackageManager().checkPermission("android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS", this.mPackageName) != 0) {
-                    debugLog("Requested package " + this.mPackageName + " does not hold permission android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS");
-                    finish();
-                    return;
-                }
-                AlertController.AlertParams alertParams = ((AlertActivity) this).mAlertParams;
-                alertParams.mTitle = getText(R.string.high_power_prompt_title);
-                alertParams.mMessage = getString(R.string.high_power_prompt_body, new Object[]{applicationInfo.loadLabel(getPackageManager())});
-                alertParams.mPositiveButtonText = getText(R.string.allow);
-                alertParams.mNegativeButtonText = getText(R.string.deny);
+                AlertController.AlertParams alertParams = this.mAlertParams;
+                CharSequence loadSafeLabel = applicationInfo.loadSafeLabel(getPackageManager(), 1000.0f, 5);
+                alertParams.mTitle = getText(R$string.high_power_prompt_title);
+                alertParams.mMessage = getString(R$string.high_power_prompt_body, new Object[]{loadSafeLabel});
+                alertParams.mPositiveButtonText = getText(R$string.allow);
+                alertParams.mNegativeButtonText = getText(R$string.deny);
                 alertParams.mPositiveButtonListener = this;
                 alertParams.mNegativeButtonListener = this;
                 setupAlert();
@@ -58,16 +58,9 @@ public class RequestIgnoreBatteryOptimizations extends AlertActivity implements 
         }
     }
 
-    protected void onStart() {
-        super.onStart();
-        getWindow().addSystemFlags(524288);
-    }
-
-    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialogInterface, int i) {
-        if (i != -1) {
-            return;
+        if (i == -1) {
+            this.mPowerWhitelistManager.addToWhitelist(this.mPackageName);
         }
-        this.mPowerWhitelistManager.addToWhitelist(this.mPackageName);
     }
 }

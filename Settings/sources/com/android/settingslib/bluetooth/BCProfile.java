@@ -8,26 +8,29 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothProfile;
 import android.bluetooth.BluetoothSyncHelper;
 import android.content.Context;
-import android.os.ParcelUuid;
 import android.util.Log;
 import androidx.annotation.Keep;
 import com.android.settingslib.R$string;
 import java.util.ArrayList;
 import java.util.List;
+
 @Keep
-/* loaded from: classes.dex */
 public class BCProfile implements LocalBluetoothProfile {
     static final String NAME = "BCProfile";
     private static final int ORDINAL = 1;
     private static final String TAG = "BCProfile";
-    private static boolean V = true;
+
+    /* renamed from: V */
+    private static boolean f226V = true;
     private Context mContext;
     private final CachedBluetoothDeviceManager mDeviceManager;
-    private boolean mIsProfileReady;
-    private final LocalBluetoothProfileManager mProfileManager;
-    private BluetoothSyncHelper mService;
+    /* access modifiers changed from: private */
+    public boolean mIsProfileReady;
+    /* access modifiers changed from: private */
+    public final LocalBluetoothProfileManager mProfileManager;
+    /* access modifiers changed from: private */
+    public BluetoothSyncHelper mService;
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean accessProfileEnabled() {
         return true;
     }
@@ -36,31 +39,26 @@ public class BCProfile implements LocalBluetoothProfile {
         return 100;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getDrawableResource(BluetoothClass bluetoothClass) {
-        return 17302330;
+        return 17302338;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getOrdinal() {
         return 1;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getProfileId() {
-        return 27;
+        return 35;
     }
 
     public String toString() {
         return "BCProfile";
     }
 
-    /* loaded from: classes.dex */
     private final class BassclientServiceListener implements BluetoothProfile.ServiceListener {
         private BassclientServiceListener() {
         }
 
-        @Override // android.bluetooth.BluetoothProfile.ServiceListener
         public void onServiceConnected(int i, BluetoothProfile bluetoothProfile) {
             Log.d("BCProfile", "BassclientService connected");
             BCProfile.this.mService = (BluetoothSyncHelper) bluetoothProfile;
@@ -68,45 +66,44 @@ public class BCProfile implements LocalBluetoothProfile {
             BCProfile.this.mProfileManager.callServiceConnectedListeners();
         }
 
-        @Override // android.bluetooth.BluetoothProfile.ServiceListener
         public void onServiceDisconnected(int i) {
             Log.d("BCProfile", "BassclientService disconnected");
             BCProfile.this.mIsProfileReady = false;
         }
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean isProfileReady() {
         return this.mIsProfileReady;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean setEnabled(BluetoothDevice bluetoothDevice, boolean z) {
         BluetoothSyncHelper bluetoothSyncHelper = this.mService;
         if (bluetoothSyncHelper == null) {
             return false;
         }
-        if (z) {
-            Log.d("BCProfile", "BCProfile: " + bluetoothDevice + ":" + z);
-            if (this.mService.getConnectionPolicy(bluetoothDevice) >= 100) {
-                return false;
-            }
+        if (!z) {
+            return bluetoothSyncHelper.setConnectionPolicy(bluetoothDevice, 0);
+        }
+        Log.d("BCProfile", "BCProfile: " + bluetoothDevice + ":" + z);
+        if (this.mService.getConnectionPolicy(bluetoothDevice) < 100) {
             return this.mService.setConnectionPolicy(bluetoothDevice, 100);
         }
-        return bluetoothSyncHelper.setConnectionPolicy(bluetoothDevice, 0);
+        return false;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean isEnabled(BluetoothDevice bluetoothDevice) {
         BluetoothSyncHelper bluetoothSyncHelper = this.mService;
-        return bluetoothSyncHelper != null && bluetoothSyncHelper.getConnectionPolicy(bluetoothDevice) > 0;
+        if (bluetoothSyncHelper != null && bluetoothSyncHelper.getConnectionPolicy(bluetoothDevice) > 0) {
+            return true;
+        }
+        return false;
     }
 
     BCProfile(Context context, CachedBluetoothDeviceManager cachedBluetoothDeviceManager, LocalBluetoothProfileManager localBluetoothProfileManager) {
         this.mContext = context;
         this.mDeviceManager = cachedBluetoothDeviceManager;
         this.mProfileManager = localBluetoothProfileManager;
-        BluetoothAdapter.getDefaultAdapter().getProfileProxy(context, new BassclientServiceListener(), 27);
+        BluetoothAdapter.getDefaultAdapter().getProfileProxy(context, new BassclientServiceListener(), 35);
     }
 
     public boolean isAutoConnectable() {
@@ -154,7 +151,6 @@ public class BCProfile implements LocalBluetoothProfile {
         return this.mService.disconnect(bluetoothDevice);
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getConnectionStatus(BluetoothDevice bluetoothDevice) {
         BluetoothSyncHelper bluetoothSyncHelper = this.mService;
         if (bluetoothSyncHelper == null) {
@@ -173,49 +169,45 @@ public class BCProfile implements LocalBluetoothProfile {
 
     public void setPreferred(BluetoothDevice bluetoothDevice, boolean z) {
         BluetoothSyncHelper bluetoothSyncHelper = this.mService;
-        if (bluetoothSyncHelper == null) {
-            return;
-        }
-        if (z) {
-            if (bluetoothSyncHelper.getConnectionPolicy(bluetoothDevice) == 100) {
-                return;
+        if (bluetoothSyncHelper != null) {
+            if (!z) {
+                bluetoothSyncHelper.setConnectionPolicy(bluetoothDevice, -1);
+            } else if (bluetoothSyncHelper.getConnectionPolicy(bluetoothDevice) != 100) {
+                this.mService.setConnectionPolicy(bluetoothDevice, 100);
             }
-            this.mService.setConnectionPolicy(bluetoothDevice, 100);
-            return;
         }
-        bluetoothSyncHelper.setConnectionPolicy(bluetoothDevice, -1);
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getNameResource(BluetoothDevice bluetoothDevice) {
         return R$string.bluetooth_profile_bc;
     }
 
     public BleBroadcastAudioScanAssistManager getBSAManager(BluetoothDevice bluetoothDevice, BleBroadcastAudioScanAssistCallback bleBroadcastAudioScanAssistCallback) {
         BluetoothSyncHelper bluetoothSyncHelper = this.mService;
-        if (bluetoothSyncHelper == null) {
-            Log.d("BCProfile", "getBroadcastAudioScanAssistManager: service is null");
-            return null;
+        if (bluetoothSyncHelper != null) {
+            return bluetoothSyncHelper.getBleBroadcastAudioScanAssistManager(bluetoothDevice, bleBroadcastAudioScanAssistCallback);
         }
-        return bluetoothSyncHelper.getBleBroadcastAudioScanAssistManager(bluetoothDevice, bleBroadcastAudioScanAssistCallback);
+        Log.d("BCProfile", "getBroadcastAudioScanAssistManager: service is null");
+        return null;
     }
 
     public int getSummaryResourceForDevice(BluetoothDevice bluetoothDevice) {
         int connectionStatus = getConnectionStatus(bluetoothDevice);
-        if (connectionStatus != 0) {
-            if (connectionStatus == 2) {
-                return R$string.bluetooth_bc_profile_summary_connected;
-            }
+        if (connectionStatus == 0) {
+            return R$string.bluetooth_bc_profile_summary_use_for;
+        }
+        if (connectionStatus != 2) {
             return BluetoothUtils.getConnectionStateSummary(connectionStatus);
         }
-        return R$string.bluetooth_bc_profile_summary_use_for;
+        return R$string.bluetooth_bc_profile_summary_connected;
     }
 
-    protected void finalize() {
+    /* access modifiers changed from: protected */
+    public void finalize() {
         Log.d("BCProfile", "finalize()");
         if (this.mService != null) {
             try {
-                BluetoothAdapter.getDefaultAdapter().closeProfileProxy(27, this.mService);
+                BluetoothAdapter.getDefaultAdapter().closeProfileProxy(35, this.mService);
                 this.mService = null;
             } catch (Throwable th) {
                 Log.w("BCProfile", "Error cleaning up BAss client proxy", th);
@@ -224,26 +216,57 @@ public class BCProfile implements LocalBluetoothProfile {
     }
 
     static boolean isBCSupported() {
-        Log.d("BCProfile", "BassClientProfile: isBCSupported returns true");
+        Log.d("BCProfile", "BassClientProfile: isBCSupported returns " + true);
         return true;
     }
 
-    public static boolean isBASeeker(BluetoothDevice bluetoothDevice) {
-        ParcelUuid[] uuids = bluetoothDevice != null ? bluetoothDevice.getUuids() : null;
-        ParcelUuid fromString = ParcelUuid.fromString("0000184F-0000-1000-8000-00805F9B34FB");
-        boolean z = false;
-        z = false;
-        if (isBCSupported() && uuids != null) {
-            boolean z2 = false;
-            for (ParcelUuid parcelUuid : uuids) {
-                if (parcelUuid.equals(fromString)) {
-                    Log.d("BCProfile", "SD uuid present");
-                    z2 = true;
-                }
-            }
-            z = z2;
-        }
-        Log.d("BCProfile", "isBASeeker returns:" + z);
-        return z;
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v1, resolved type: boolean} */
+    /* JADX WARNING: type inference failed for: r3v0 */
+    /* JADX WARNING: type inference failed for: r3v2, types: [int] */
+    /* JADX WARNING: type inference failed for: r3v3 */
+    /* JADX WARNING: type inference failed for: r3v5 */
+    /* JADX WARNING: Multi-variable type inference failed */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public static boolean isBASeeker(android.bluetooth.BluetoothDevice r6) {
+        /*
+            if (r6 == 0) goto L_0x0007
+            android.os.ParcelUuid[] r6 = r6.getUuids()
+            goto L_0x0008
+        L_0x0007:
+            r6 = 0
+        L_0x0008:
+            java.lang.String r0 = "0000184F-0000-1000-8000-00805F9B34FB"
+            android.os.ParcelUuid r0 = android.os.ParcelUuid.fromString(r0)
+            boolean r1 = isBCSupported()
+            java.lang.String r2 = "BCProfile"
+            r3 = 0
+            if (r1 == 0) goto L_0x002f
+            if (r6 == 0) goto L_0x002f
+            int r1 = r6.length
+            r4 = r3
+        L_0x001b:
+            if (r3 >= r1) goto L_0x002e
+            r5 = r6[r3]
+            boolean r5 = r5.equals(r0)
+            if (r5 == 0) goto L_0x002b
+            java.lang.String r4 = "SD uuid present"
+            android.util.Log.d(r2, r4)
+            r4 = 1
+        L_0x002b:
+            int r3 = r3 + 1
+            goto L_0x001b
+        L_0x002e:
+            r3 = r4
+        L_0x002f:
+            java.lang.StringBuilder r6 = new java.lang.StringBuilder
+            r6.<init>()
+            java.lang.String r0 = "isBASeeker returns:"
+            r6.append(r0)
+            r6.append(r3)
+            java.lang.String r6 = r6.toString()
+            android.util.Log.d(r2, r6)
+            return r3
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settingslib.bluetooth.BCProfile.isBASeeker(android.bluetooth.BluetoothDevice):boolean");
     }
 }

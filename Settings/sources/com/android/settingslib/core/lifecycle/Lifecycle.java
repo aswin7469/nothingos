@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
 import androidx.lifecycle.OnLifecycleEvent;
@@ -26,20 +27,19 @@ import com.android.settingslib.core.lifecycle.events.SetPreferenceScreen;
 import com.android.settingslib.utils.ThreadUtils;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class Lifecycle extends LifecycleRegistry {
     private final List<LifecycleObserver> mObservers = new ArrayList();
     private final LifecycleProxy mProxy;
 
     public Lifecycle(LifecycleOwner lifecycleOwner) {
         super(lifecycleOwner);
-        LifecycleProxy lifecycleProxy = new LifecycleProxy(this, null);
+        LifecycleProxy lifecycleProxy = new LifecycleProxy();
         this.mProxy = lifecycleProxy;
         addObserver(lifecycleProxy);
     }
 
-    @Override // androidx.lifecycle.LifecycleRegistry, androidx.lifecycle.Lifecycle
-    public void addObserver(androidx.lifecycle.LifecycleObserver lifecycleObserver) {
+    public void addObserver(LifecycleObserver lifecycleObserver) {
         ThreadUtils.ensureMainThread();
         super.addObserver(lifecycleObserver);
         if (lifecycleObserver instanceof LifecycleObserver) {
@@ -47,8 +47,7 @@ public class Lifecycle extends LifecycleRegistry {
         }
     }
 
-    @Override // androidx.lifecycle.LifecycleRegistry, androidx.lifecycle.Lifecycle
-    public void removeObserver(androidx.lifecycle.LifecycleObserver lifecycleObserver) {
+    public void removeObserver(LifecycleObserver lifecycleObserver) {
         ThreadUtils.ensureMainThread();
         super.removeObserver(lifecycleObserver);
         if (lifecycleObserver instanceof LifecycleObserver) {
@@ -76,7 +75,7 @@ public class Lifecycle extends LifecycleRegistry {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void onStart() {
         int size = this.mObservers.size();
         for (int i = 0; i < size; i++) {
@@ -97,7 +96,7 @@ public class Lifecycle extends LifecycleRegistry {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void onResume() {
         int size = this.mObservers.size();
         for (int i = 0; i < size; i++) {
@@ -108,7 +107,7 @@ public class Lifecycle extends LifecycleRegistry {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void onPause() {
         int size = this.mObservers.size();
         for (int i = 0; i < size; i++) {
@@ -129,7 +128,7 @@ public class Lifecycle extends LifecycleRegistry {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void onStop() {
         int size = this.mObservers.size();
         for (int i = 0; i < size; i++) {
@@ -140,7 +139,7 @@ public class Lifecycle extends LifecycleRegistry {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void onDestroy() {
         int size = this.mObservers.size();
         for (int i = 0; i < size; i++) {
@@ -182,18 +181,13 @@ public class Lifecycle extends LifecycleRegistry {
         return false;
     }
 
-    /* loaded from: classes.dex */
-    private class LifecycleProxy implements androidx.lifecycle.LifecycleObserver {
+    private class LifecycleProxy implements LifecycleObserver {
         private LifecycleProxy() {
-        }
-
-        /* synthetic */ LifecycleProxy(Lifecycle lifecycle, AnonymousClass1 anonymousClass1) {
-            this();
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_ANY)
         public void onLifecycleEvent(LifecycleOwner lifecycleOwner, Lifecycle.Event event) {
-            switch (AnonymousClass1.$SwitchMap$androidx$lifecycle$Lifecycle$Event[event.ordinal()]) {
+            switch (C15601.$SwitchMap$androidx$lifecycle$Lifecycle$Event[event.ordinal()]) {
                 case 2:
                     Lifecycle.this.onStart();
                     return;
@@ -218,42 +212,69 @@ public class Lifecycle extends LifecycleRegistry {
         }
     }
 
-    /* renamed from: com.android.settingslib.core.lifecycle.Lifecycle$1  reason: invalid class name */
-    /* loaded from: classes.dex */
-    static /* synthetic */ class AnonymousClass1 {
+    /* renamed from: com.android.settingslib.core.lifecycle.Lifecycle$1 */
+    static /* synthetic */ class C15601 {
         static final /* synthetic */ int[] $SwitchMap$androidx$lifecycle$Lifecycle$Event;
 
+        /* JADX WARNING: Can't wrap try/catch for region: R(14:0|1|2|3|4|5|6|7|8|9|10|11|12|(3:13|14|16)) */
+        /* JADX WARNING: Can't wrap try/catch for region: R(16:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|16) */
+        /* JADX WARNING: Failed to process nested try/catch */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:11:0x003e */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:13:0x0049 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0012 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001d */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:7:0x0028 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:9:0x0033 */
         static {
-            int[] iArr = new int[Lifecycle.Event.values().length];
-            $SwitchMap$androidx$lifecycle$Lifecycle$Event = iArr;
-            try {
-                iArr[Lifecycle.Event.ON_CREATE.ordinal()] = 1;
-            } catch (NoSuchFieldError unused) {
-            }
-            try {
-                $SwitchMap$androidx$lifecycle$Lifecycle$Event[Lifecycle.Event.ON_START.ordinal()] = 2;
-            } catch (NoSuchFieldError unused2) {
-            }
-            try {
-                $SwitchMap$androidx$lifecycle$Lifecycle$Event[Lifecycle.Event.ON_RESUME.ordinal()] = 3;
-            } catch (NoSuchFieldError unused3) {
-            }
-            try {
-                $SwitchMap$androidx$lifecycle$Lifecycle$Event[Lifecycle.Event.ON_PAUSE.ordinal()] = 4;
-            } catch (NoSuchFieldError unused4) {
-            }
-            try {
-                $SwitchMap$androidx$lifecycle$Lifecycle$Event[Lifecycle.Event.ON_STOP.ordinal()] = 5;
-            } catch (NoSuchFieldError unused5) {
-            }
-            try {
-                $SwitchMap$androidx$lifecycle$Lifecycle$Event[Lifecycle.Event.ON_DESTROY.ordinal()] = 6;
-            } catch (NoSuchFieldError unused6) {
-            }
-            try {
-                $SwitchMap$androidx$lifecycle$Lifecycle$Event[Lifecycle.Event.ON_ANY.ordinal()] = 7;
-            } catch (NoSuchFieldError unused7) {
-            }
+            /*
+                androidx.lifecycle.Lifecycle$Event[] r0 = androidx.lifecycle.Lifecycle.Event.values()
+                int r0 = r0.length
+                int[] r0 = new int[r0]
+                $SwitchMap$androidx$lifecycle$Lifecycle$Event = r0
+                androidx.lifecycle.Lifecycle$Event r1 = androidx.lifecycle.Lifecycle.Event.ON_CREATE     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
+                r2 = 1
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                int[] r0 = $SwitchMap$androidx$lifecycle$Lifecycle$Event     // Catch:{ NoSuchFieldError -> 0x001d }
+                androidx.lifecycle.Lifecycle$Event r1 = androidx.lifecycle.Lifecycle.Event.ON_START     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
+                r2 = 2
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                int[] r0 = $SwitchMap$androidx$lifecycle$Lifecycle$Event     // Catch:{ NoSuchFieldError -> 0x0028 }
+                androidx.lifecycle.Lifecycle$Event r1 = androidx.lifecycle.Lifecycle.Event.ON_RESUME     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
+                r2 = 3
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
+            L_0x0028:
+                int[] r0 = $SwitchMap$androidx$lifecycle$Lifecycle$Event     // Catch:{ NoSuchFieldError -> 0x0033 }
+                androidx.lifecycle.Lifecycle$Event r1 = androidx.lifecycle.Lifecycle.Event.ON_PAUSE     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
+                r2 = 4
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0033 }
+            L_0x0033:
+                int[] r0 = $SwitchMap$androidx$lifecycle$Lifecycle$Event     // Catch:{ NoSuchFieldError -> 0x003e }
+                androidx.lifecycle.Lifecycle$Event r1 = androidx.lifecycle.Lifecycle.Event.ON_STOP     // Catch:{ NoSuchFieldError -> 0x003e }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x003e }
+                r2 = 5
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x003e }
+            L_0x003e:
+                int[] r0 = $SwitchMap$androidx$lifecycle$Lifecycle$Event     // Catch:{ NoSuchFieldError -> 0x0049 }
+                androidx.lifecycle.Lifecycle$Event r1 = androidx.lifecycle.Lifecycle.Event.ON_DESTROY     // Catch:{ NoSuchFieldError -> 0x0049 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0049 }
+                r2 = 6
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0049 }
+            L_0x0049:
+                int[] r0 = $SwitchMap$androidx$lifecycle$Lifecycle$Event     // Catch:{ NoSuchFieldError -> 0x0054 }
+                androidx.lifecycle.Lifecycle$Event r1 = androidx.lifecycle.Lifecycle.Event.ON_ANY     // Catch:{ NoSuchFieldError -> 0x0054 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0054 }
+                r2 = 7
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0054 }
+            L_0x0054:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.android.settingslib.core.lifecycle.Lifecycle.C15601.<clinit>():void");
         }
     }
 }

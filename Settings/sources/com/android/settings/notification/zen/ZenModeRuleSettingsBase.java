@@ -11,15 +11,14 @@ import android.view.View;
 import android.widget.Toast;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.Utils;
 import com.android.settings.core.SubSettingLauncher;
-/* loaded from: classes.dex */
+
 public abstract class ZenModeRuleSettingsBase extends ZenModeSettingsBase {
     protected static final boolean DEBUG = ZenModeSettingsBase.DEBUG;
     private final String CUSTOM_BEHAVIOR_KEY = "zen_custom_setting";
     protected ZenRuleButtonsPreferenceController mActionButtons;
-    protected Context mContext;
     protected Preference mCustomBehaviorPreference;
     protected boolean mDisableListeners;
     protected ZenAutomaticRuleHeaderPreferenceController mHeader;
@@ -27,15 +26,17 @@ public abstract class ZenModeRuleSettingsBase extends ZenModeSettingsBase {
     protected AutomaticZenRule mRule;
     protected ZenAutomaticRuleSwitchPreferenceController mSwitch;
 
-    protected abstract void onCreateInternal();
+    /* access modifiers changed from: protected */
+    public abstract void onCreateInternal();
 
-    protected abstract boolean setRule(AutomaticZenRule automaticZenRule);
+    /* access modifiers changed from: protected */
+    public abstract boolean setRule(AutomaticZenRule automaticZenRule);
 
-    protected abstract void updateControlsInternal();
+    /* access modifiers changed from: protected */
+    public abstract void updateControlsInternal();
 
-    @Override // com.android.settings.notification.zen.ZenModeSettingsBase, com.android.settings.dashboard.RestrictedDashboardFragment, com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
-    public void onCreate(Bundle bundle) {
-        this.mContext = getActivity();
+    public void onAttach(Context context) {
+        super.onAttach(context);
         Intent intent = getActivity().getIntent();
         boolean z = DEBUG;
         if (z) {
@@ -49,32 +50,37 @@ public abstract class ZenModeRuleSettingsBase extends ZenModeSettingsBase {
         String stringExtra = intent.getStringExtra("android.service.notification.extra.RULE_ID");
         this.mId = stringExtra;
         if (stringExtra == null) {
-            Log.w("ZenModeSettings", "rule id is null");
-            toastAndFinish();
-            return;
+            String stringExtra2 = intent.getStringExtra("android.app.extra.AUTOMATIC_RULE_ID");
+            this.mId = stringExtra2;
+            if (stringExtra2 == null) {
+                Log.w("ZenModeSettings", "rule id is null");
+                toastAndFinish();
+                return;
+            }
         }
         if (z) {
             Log.d("ZenModeSettings", "mId=" + this.mId);
         }
-        if (refreshRuleOrFinish()) {
-            return;
-        }
-        super.onCreate(bundle);
-        Preference findPreference = getPreferenceScreen().findPreference("zen_custom_setting");
-        this.mCustomBehaviorPreference = findPreference;
-        findPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() { // from class: com.android.settings.notification.zen.ZenModeRuleSettingsBase.1
-            @Override // androidx.preference.Preference.OnPreferenceClickListener
-            public boolean onPreferenceClick(Preference preference) {
-                Bundle bundle2 = new Bundle();
-                bundle2.putString("RULE_ID", ZenModeRuleSettingsBase.this.mId);
-                new SubSettingLauncher(ZenModeRuleSettingsBase.this.mContext).setDestination(ZenCustomRuleSettings.class.getName()).setArguments(bundle2).setSourceMetricsCategory(0).launch();
-                return true;
-            }
-        });
-        onCreateInternal();
+        refreshRuleOrFinish();
     }
 
-    @Override // com.android.settings.notification.zen.ZenModeSettingsBase, com.android.settings.dashboard.RestrictedDashboardFragment, com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        if (!isFinishingOrDestroyed()) {
+            Preference findPreference = getPreferenceScreen().findPreference("zen_custom_setting");
+            this.mCustomBehaviorPreference = findPreference;
+            findPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                public boolean onPreferenceClick(Preference preference) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("RULE_ID", ZenModeRuleSettingsBase.this.mId);
+                    new SubSettingLauncher(ZenModeRuleSettingsBase.this.mContext).setDestination(ZenCustomRuleSettings.class.getName()).setArguments(bundle).setSourceMetricsCategory(0).launch();
+                    return true;
+                }
+            });
+            onCreateInternal();
+        }
+    }
+
     public void onResume() {
         super.onResume();
         if (!isUiRestricted() && !refreshRuleOrFinish()) {
@@ -82,38 +88,33 @@ public abstract class ZenModeRuleSettingsBase extends ZenModeSettingsBase {
         }
     }
 
-    @Override // androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
         Utils.setActionBarShadowAnimation(getActivity(), getSettingsLifecycle(), getListView());
     }
 
-    @Override // com.android.settings.support.actionbar.HelpResourceProvider
     public int getHelpResource() {
-        return R.string.help_uri_interruptions;
+        return R$string.help_uri_interruptions;
     }
 
-    protected void updateHeader() {
+    /* access modifiers changed from: protected */
+    public void updateHeader() {
         PreferenceScreen preferenceScreen = getPreferenceScreen();
-        this.mSwitch.onResume(this.mRule, this.mId);
         this.mSwitch.displayPreference(preferenceScreen);
         updatePreference(this.mSwitch);
-        this.mHeader.onResume(this.mRule, this.mId);
         this.mHeader.displayPreference(preferenceScreen);
         updatePreference(this.mHeader);
-        this.mActionButtons.onResume(this.mRule, this.mId);
         this.mActionButtons.displayPreference(preferenceScreen);
         updatePreference(this.mActionButtons);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void updateRule(Uri uri) {
         this.mRule.setConditionId(uri);
         this.mBackend.updateZenRule(this.mId, this.mRule);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.notification.zen.ZenModeSettingsBase
+    /* access modifiers changed from: protected */
     public void onZenModeConfigChanged() {
         super.onZenModeConfigChanged();
         if (!refreshRuleOrFinish()) {
@@ -126,15 +127,18 @@ public abstract class ZenModeRuleSettingsBase extends ZenModeSettingsBase {
         if (DEBUG) {
             Log.d("ZenModeSettings", "mRule=" + this.mRule);
         }
-        if (!setRule(this.mRule)) {
-            toastAndFinish();
-            return true;
+        this.mHeader.setRule(this.mRule);
+        this.mSwitch.setIdAndRule(this.mId, this.mRule);
+        this.mActionButtons.setIdAndRule(this.mId, this.mRule);
+        if (setRule(this.mRule)) {
+            return false;
         }
-        return false;
+        toastAndFinish();
+        return true;
     }
 
     private void toastAndFinish() {
-        Toast.makeText(this.mContext, R.string.zen_mode_rule_not_found_text, 0).show();
+        Toast.makeText(this.mContext, R$string.zen_mode_rule_not_found_text, 0).show();
         getActivity().finish();
     }
 
@@ -147,9 +151,9 @@ public abstract class ZenModeRuleSettingsBase extends ZenModeSettingsBase {
         updateControlsInternal();
         updateHeader();
         if (this.mRule.getZenPolicy() == null) {
-            this.mCustomBehaviorPreference.setSummary(R.string.zen_mode_custom_behavior_summary_default);
+            this.mCustomBehaviorPreference.setSummary(R$string.zen_mode_custom_behavior_summary_default);
         } else {
-            this.mCustomBehaviorPreference.setSummary(R.string.zen_mode_custom_behavior_summary);
+            this.mCustomBehaviorPreference.setSummary(R$string.zen_mode_custom_behavior_summary);
         }
         this.mDisableListeners = false;
     }

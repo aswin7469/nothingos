@@ -10,25 +10,25 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import androidx.annotation.Keep;
 import java.util.ArrayList;
+
 @Keep
-/* loaded from: classes.dex */
 public class TestAccessPointBuilder {
     private static final int MAX_RSSI = -55;
     private static final int MIN_RSSI = -100;
+    private String mBssid = null;
     Context mContext;
+    private String mFqdn = null;
+    private int mNetworkId = -1;
+    private NetworkInfo mNetworkInfo = null;
+    private String mProviderFriendlyName = null;
+    private int mRssi = Integer.MIN_VALUE;
     private ArrayList<ScanResult> mScanResults;
     private ArrayList<TimestampedScoredNetwork> mScoredNetworkCache;
+    private int mSecurity = 0;
+    private int mSpeed = 0;
     private WifiConfiguration mWifiConfig;
     private WifiInfo mWifiInfo;
-    private String mBssid = null;
-    private int mSpeed = 0;
-    private int mRssi = Integer.MIN_VALUE;
-    private int mNetworkId = -1;
     private String ssid = "TestSsid";
-    private NetworkInfo mNetworkInfo = null;
-    private String mFqdn = null;
-    private String mProviderFriendlyName = null;
-    private int mSecurity = 0;
 
     @Keep
     public TestAccessPointBuilder(Context context) {
@@ -91,7 +91,7 @@ public class TestAccessPointBuilder {
         } else if (i > maxSignalLevel) {
             this.mRssi = MAX_RSSI;
         } else {
-            this.mRssi = (int) (((i * 45.0f) / maxSignalLevel) - 100.0f);
+            this.mRssi = (int) (((((float) i) * 45.0f) / ((float) maxSignalLevel)) - 0.044921875f);
         }
         return this;
     }
@@ -115,12 +115,10 @@ public class TestAccessPointBuilder {
 
     @Keep
     public TestAccessPointBuilder setReachable(boolean z) {
-        if (z) {
-            if (this.mRssi == Integer.MIN_VALUE) {
-                this.mRssi = MIN_RSSI;
-            }
-        } else {
+        if (!z) {
             this.mRssi = Integer.MIN_VALUE;
+        } else if (this.mRssi == Integer.MIN_VALUE) {
+            this.mRssi = MIN_RSSI;
         }
         return this;
     }

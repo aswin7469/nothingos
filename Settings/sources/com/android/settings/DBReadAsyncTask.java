@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-/* loaded from: classes.dex */
+
 public class DBReadAsyncTask extends AsyncTask<Void, Void, Boolean> {
     final Uri CONTENT_URI;
     final Uri SNAP_CONTENT_URI;
@@ -18,23 +18,22 @@ public class DBReadAsyncTask extends AsyncTask<Void, Void, Boolean> {
         this.mContext = context;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.os.AsyncTask
+    /* access modifiers changed from: protected */
     public Boolean doInBackground(Void... voidArr) {
-        Cursor query = this.mContext.getContentResolver().query(this.SNAP_CONTENT_URI, null, "key=?", new String[]{"app_status"}, null);
+        Cursor query = this.mContext.getContentResolver().query(this.SNAP_CONTENT_URI, (String[]) null, "key=?", new String[]{"app_status"}, (String) null);
         SharedPreferences sharedPreferences = this.mContext.getSharedPreferences("smqpreferences", 0);
-        if (query != null && query.getCount() > 0) {
+        if (query == null || query.getCount() <= 0) {
+            SharedPreferences.Editor edit = sharedPreferences.edit();
+            edit.putInt("app_status", 0);
+            edit.commit();
+        } else {
             query.moveToFirst();
             int i = query.getInt(1);
             if (sharedPreferences.getInt("app_status", 0) != i) {
-                SharedPreferences.Editor edit = sharedPreferences.edit();
-                edit.putInt("app_status", i);
-                edit.commit();
+                SharedPreferences.Editor edit2 = sharedPreferences.edit();
+                edit2.putInt("app_status", i);
+                edit2.commit();
             }
-        } else {
-            SharedPreferences.Editor edit2 = sharedPreferences.edit();
-            edit2.putInt("app_status", 0);
-            edit2.commit();
         }
         if (query != null) {
             query.close();

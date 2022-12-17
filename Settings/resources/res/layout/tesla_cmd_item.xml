@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:gravity="top|center_horizontal" android:orientation="vertical" android:layout_width="83.5dp" android:layout_height="76dp" android:layout_weight="1">
-    <ImageView android:id="@+id/cmd_icon" android:background="@drawable/tesla_cmd_item_background" android:layout_width="48dp" android:layout_height="48dp" android:scaleType="center"/>
-    <TextView android:textAppearance="@style/TextAppearance.TeslaCmdTitle" android:gravity="center" android:id="@+id/cmd_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp"/>
-</LinearLayout>

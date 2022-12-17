@@ -5,7 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import androidx.core.content.res.TypedArrayUtils;
-/* loaded from: classes.dex */
+
 public abstract class DialogPreference extends Preference {
     private Drawable mDialogIcon;
     private int mDialogLayoutResId;
@@ -14,7 +14,6 @@ public abstract class DialogPreference extends Preference {
     private CharSequence mNegativeButtonText;
     private CharSequence mPositiveButtonText;
 
-    /* loaded from: classes.dex */
     public interface TargetFragment {
         <T extends Preference> T findPreference(CharSequence charSequence);
     }
@@ -44,7 +43,7 @@ public abstract class DialogPreference extends Preference {
     }
 
     public DialogPreference(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public void setDialogTitle(CharSequence charSequence) {
@@ -76,7 +75,7 @@ public abstract class DialogPreference extends Preference {
     }
 
     public void setPositiveButtonText(int i) {
-        setPositiveButtonText(getContext().getString(i));
+        setPositiveButtonText((CharSequence) getContext().getString(i));
     }
 
     public CharSequence getPositiveButtonText() {
@@ -88,7 +87,7 @@ public abstract class DialogPreference extends Preference {
     }
 
     public void setNegativeButtonText(int i) {
-        setNegativeButtonText(getContext().getString(i));
+        setNegativeButtonText((CharSequence) getContext().getString(i));
     }
 
     public CharSequence getNegativeButtonText() {
@@ -103,8 +102,7 @@ public abstract class DialogPreference extends Preference {
         return this.mDialogLayoutResId;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public void onClick() {
         getPreferenceManager().showDialog(this);
     }

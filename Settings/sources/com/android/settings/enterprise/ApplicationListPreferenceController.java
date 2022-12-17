@@ -11,22 +11,19 @@ import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.core.AbstractPreferenceController;
 import com.android.settingslib.widget.AppPreference;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class ApplicationListPreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin, ApplicationFeatureProvider.ListOfAppsCallback {
     private SettingsPreferenceFragment mParent;
     private final PackageManager mPm;
 
-    /* loaded from: classes.dex */
     public interface ApplicationListBuilder {
         void buildApplicationList(Context context, ApplicationFeatureProvider.ListOfAppsCallback listOfAppsCallback);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return null;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return true;
     }
@@ -38,22 +35,20 @@ public class ApplicationListPreferenceController extends AbstractPreferenceContr
         applicationListBuilder.buildApplicationList(context, this);
     }
 
-    @Override // com.android.settings.applications.ApplicationFeatureProvider.ListOfAppsCallback
     public void onListOfAppsResult(List<UserAppInfo> list) {
         PreferenceScreen preferenceScreen = this.mParent.getPreferenceScreen();
-        if (preferenceScreen == null) {
-            return;
-        }
-        IconDrawableFactory newInstance = IconDrawableFactory.newInstance(this.mContext);
-        Context context = this.mParent.getPreferenceManager().getContext();
-        for (int i = 0; i < list.size(); i++) {
-            UserAppInfo userAppInfo = list.get(i);
-            AppPreference appPreference = new AppPreference(context);
-            appPreference.setTitle(userAppInfo.appInfo.loadLabel(this.mPm));
-            appPreference.setIcon(newInstance.getBadgedIcon(userAppInfo.appInfo));
-            appPreference.setOrder(i);
-            appPreference.setSelectable(false);
-            preferenceScreen.addPreference(appPreference);
+        if (preferenceScreen != null) {
+            IconDrawableFactory newInstance = IconDrawableFactory.newInstance(this.mContext);
+            Context context = this.mParent.getPreferenceManager().getContext();
+            for (int i = 0; i < list.size(); i++) {
+                UserAppInfo userAppInfo = list.get(i);
+                AppPreference appPreference = new AppPreference(context);
+                appPreference.setTitle(userAppInfo.appInfo.loadLabel(this.mPm));
+                appPreference.setIcon(newInstance.getBadgedIcon(userAppInfo.appInfo));
+                appPreference.setOrder(i);
+                appPreference.setSelectable(false);
+                preferenceScreen.addPreference(appPreference);
+            }
         }
     }
 }

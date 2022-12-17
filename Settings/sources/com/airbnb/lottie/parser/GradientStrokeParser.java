@@ -11,16 +11,16 @@ import com.airbnb.lottie.model.content.ShapeStroke;
 import com.airbnb.lottie.parser.moshi.JsonReader;
 import java.io.IOException;
 import java.util.ArrayList;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class GradientStrokeParser {
-    private static JsonReader.Options NAMES = JsonReader.Options.of("nm", "g", "o", "t", "s", "e", "w", "lc", "lj", "ml", "hd", "d");
-    private static final JsonReader.Options GRADIENT_NAMES = JsonReader.Options.of("p", "k");
-    private static final JsonReader.Options DASH_PATTERN_NAMES = JsonReader.Options.of("n", "v");
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static GradientStroke parse(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
+class GradientStrokeParser {
+    private static final JsonReader.Options DASH_PATTERN_NAMES = JsonReader.Options.m9of("n", "v");
+    private static final JsonReader.Options GRADIENT_NAMES = JsonReader.Options.m9of("p", "k");
+    private static JsonReader.Options NAMES = JsonReader.Options.m9of("nm", "g", "o", "t", "s", "e", "w", "lc", "lj", "ml", "hd", "d");
+
+    static GradientStroke parse(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
         AnimatableGradientColorValue animatableGradientColorValue;
+        JsonReader jsonReader2 = jsonReader;
+        LottieComposition lottieComposition2 = lottieComposition;
         ArrayList arrayList = new ArrayList();
         float f = 0.0f;
         String str = null;
@@ -35,7 +35,7 @@ public class GradientStrokeParser {
         AnimatableFloatValue animatableFloatValue2 = null;
         boolean z = false;
         while (jsonReader.hasNext()) {
-            switch (jsonReader.selectName(NAMES)) {
+            switch (jsonReader2.selectName(NAMES)) {
                 case 0:
                     str = jsonReader.nextString();
                     break;
@@ -43,14 +43,14 @@ public class GradientStrokeParser {
                     int i = -1;
                     jsonReader.beginObject();
                     while (jsonReader.hasNext()) {
-                        int selectName = jsonReader.selectName(GRADIENT_NAMES);
+                        int selectName = jsonReader2.selectName(GRADIENT_NAMES);
                         if (selectName != 0) {
                             animatableGradientColorValue = animatableGradientColorValue2;
-                            if (selectName == 1) {
-                                animatableGradientColorValue2 = AnimatableValueParser.parseGradientColor(jsonReader, lottieComposition, i);
-                            } else {
+                            if (selectName != 1) {
                                 jsonReader.skipName();
                                 jsonReader.skipValue();
+                            } else {
+                                animatableGradientColorValue2 = AnimatableValueParser.parseGradientColor(jsonReader2, lottieComposition2, i);
                             }
                         } else {
                             animatableGradientColorValue = animatableGradientColorValue2;
@@ -58,6 +58,7 @@ public class GradientStrokeParser {
                         }
                         animatableGradientColorValue2 = animatableGradientColorValue;
                     }
+                    AnimatableGradientColorValue animatableGradientColorValue3 = animatableGradientColorValue2;
                     jsonReader.endObject();
                     break;
                 case 2:
@@ -94,38 +95,39 @@ public class GradientStrokeParser {
                         String str2 = null;
                         AnimatableFloatValue animatableFloatValue3 = null;
                         while (jsonReader.hasNext()) {
-                            int selectName2 = jsonReader.selectName(DASH_PATTERN_NAMES);
+                            int selectName2 = jsonReader2.selectName(DASH_PATTERN_NAMES);
                             if (selectName2 != 0) {
                                 AnimatableFloatValue animatableFloatValue4 = animatableFloatValue2;
-                                if (selectName2 == 1) {
-                                    animatableFloatValue3 = AnimatableValueParser.parseFloat(jsonReader, lottieComposition);
-                                } else {
+                                if (selectName2 != 1) {
                                     jsonReader.skipName();
                                     jsonReader.skipValue();
+                                } else {
+                                    animatableFloatValue3 = AnimatableValueParser.parseFloat(jsonReader, lottieComposition);
                                 }
                                 animatableFloatValue2 = animatableFloatValue4;
                             } else {
+                                AnimatableFloatValue animatableFloatValue5 = animatableFloatValue2;
                                 str2 = jsonReader.nextString();
                             }
                         }
-                        AnimatableFloatValue animatableFloatValue5 = animatableFloatValue2;
+                        AnimatableFloatValue animatableFloatValue6 = animatableFloatValue2;
                         jsonReader.endObject();
                         if (str2.equals("o")) {
                             animatableFloatValue2 = animatableFloatValue3;
                         } else {
                             if (str2.equals("d") || str2.equals("g")) {
-                                lottieComposition.setHasDashPattern(true);
+                                lottieComposition2.setHasDashPattern(true);
                                 arrayList.add(animatableFloatValue3);
                             }
-                            animatableFloatValue2 = animatableFloatValue5;
+                            animatableFloatValue2 = animatableFloatValue6;
                         }
                     }
-                    AnimatableFloatValue animatableFloatValue6 = animatableFloatValue2;
+                    AnimatableFloatValue animatableFloatValue7 = animatableFloatValue2;
                     jsonReader.endArray();
                     if (arrayList.size() == 1) {
                         arrayList.add(arrayList.get(0));
                     }
-                    animatableFloatValue2 = animatableFloatValue6;
+                    animatableFloatValue2 = animatableFloatValue7;
                     break;
                 default:
                     jsonReader.skipName();

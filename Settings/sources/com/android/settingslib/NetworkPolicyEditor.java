@@ -11,7 +11,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
-/* loaded from: classes.dex */
+
 public class NetworkPolicyEditor {
     private ArrayList<NetworkPolicy> mPolicies = Lists.newArrayList();
     private NetworkPolicyManager mPolicyManager;
@@ -26,11 +26,11 @@ public class NetworkPolicyEditor {
         boolean z = false;
         for (NetworkPolicy networkPolicy : networkPolicies) {
             if (networkPolicy.limitBytes < -1) {
-                networkPolicy.limitBytes = -1L;
+                networkPolicy.limitBytes = -1;
                 z = true;
             }
             if (networkPolicy.warningBytes < -1) {
-                networkPolicy.warningBytes = -1L;
+                networkPolicy.warningBytes = -1;
                 z = true;
             }
             this.mPolicies.add(networkPolicy);
@@ -43,9 +43,8 @@ public class NetworkPolicyEditor {
     public void writeAsync() {
         ArrayList<NetworkPolicy> arrayList = this.mPolicies;
         final NetworkPolicy[] networkPolicyArr = (NetworkPolicy[]) arrayList.toArray(new NetworkPolicy[arrayList.size()]);
-        new AsyncTask<Void, Void, Void>() { // from class: com.android.settingslib.NetworkPolicyEditor.1
-            /* JADX INFO: Access modifiers changed from: protected */
-            @Override // android.os.AsyncTask
+        new AsyncTask<Void, Void, Void>() {
+            /* access modifiers changed from: protected */
             public Void doInBackground(Void... voidArr) {
                 NetworkPolicyEditor.this.write(networkPolicyArr);
                 return null;
@@ -59,12 +58,12 @@ public class NetworkPolicyEditor {
 
     public NetworkPolicy getOrCreatePolicy(NetworkTemplate networkTemplate) {
         NetworkPolicy policy = getPolicy(networkTemplate);
-        if (policy == null) {
-            NetworkPolicy buildDefaultPolicy = buildDefaultPolicy(networkTemplate);
-            this.mPolicies.add(buildDefaultPolicy);
-            return buildDefaultPolicy;
+        if (policy != null) {
+            return policy;
         }
-        return policy;
+        NetworkPolicy buildDefaultPolicy = buildDefaultPolicy(networkTemplate);
+        this.mPolicies.add(buildDefaultPolicy);
+        return buildDefaultPolicy;
     }
 
     public NetworkPolicy getPolicy(NetworkTemplate networkTemplate) {
@@ -80,16 +79,16 @@ public class NetworkPolicyEditor {
 
     @Deprecated
     private static NetworkPolicy buildDefaultPolicy(NetworkTemplate networkTemplate) {
-        RecurrenceRule buildRecurringMonthly;
         boolean z;
+        RecurrenceRule recurrenceRule;
         if (networkTemplate.getMatchRule() == 4) {
-            buildRecurringMonthly = RecurrenceRule.buildNever();
+            recurrenceRule = RecurrenceRule.buildNever();
             z = false;
         } else {
-            buildRecurringMonthly = RecurrenceRule.buildRecurringMonthly(ZonedDateTime.now().getDayOfMonth(), ZoneId.systemDefault());
+            recurrenceRule = RecurrenceRule.buildRecurringMonthly(ZonedDateTime.now().getDayOfMonth(), ZoneId.systemDefault());
             z = true;
         }
-        return new NetworkPolicy(networkTemplate, buildRecurringMonthly, -1L, -1L, -1L, -1L, z, true);
+        return new NetworkPolicy(networkTemplate, recurrenceRule, -1, -1, -1, -1, z, true);
     }
 
     @Deprecated
@@ -115,7 +114,7 @@ public class NetworkPolicyEditor {
         if (policy != null) {
             return policy.warningBytes;
         }
-        return -1L;
+        return -1;
     }
 
     private void setPolicyWarningBytesInner(NetworkTemplate networkTemplate, long j) {
@@ -139,7 +138,7 @@ public class NetworkPolicyEditor {
         if (policy != null) {
             return policy.limitBytes;
         }
-        return -1L;
+        return -1;
     }
 
     public void setPolicyLimitBytes(NetworkTemplate networkTemplate, long j) {

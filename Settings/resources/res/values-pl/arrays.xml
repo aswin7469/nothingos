@@ -196,6 +196,8 @@
         <item>Starsze niż 60 dni</item>
         <item>Starsze niż 90 dni</item>
     </array>
+    <array name="avatar_image_descriptions">
+    </array>
     <array name="battery_labels">
         <item>0%</item>
         <item>50%</item>
@@ -221,24 +223,24 @@
         <item>NR</item>
     </array>
     <array name="bluetooth_a2dp_codec_bits_per_sample_summaries">
-        <item>Użyj wyboru systemu (domyślnie)</item>
+        <item>Używaj wyboru systemu (domyślnie)</item>
         <item>16 bitów/próbkę</item>
         <item>24 bity/próbkę</item>
         <item>32 bity/próbkę</item>
     </array>
     <array name="bluetooth_a2dp_codec_bits_per_sample_titles">
-        <item>Użyj wyboru systemu (domyślnie)</item>
+        <item>Używaj wyboru systemu (domyślnie)</item>
         <item>16 bitów/próbkę</item>
         <item>24 bity/próbkę</item>
         <item>32 bity/próbkę</item>
     </array>
     <array name="bluetooth_a2dp_codec_channel_mode_summaries">
-        <item>Użyj wyboru systemu (domyślnie)</item>
+        <item>Używaj wyboru systemu (domyślnie)</item>
         <item>Mono</item>
         <item>Stereo</item>
     </array>
     <array name="bluetooth_a2dp_codec_channel_mode_titles">
-        <item>Użyj wyboru systemu (domyślnie)</item>
+        <item>Używaj wyboru systemu (domyślnie)</item>
         <item>Mono</item>
         <item>Stereo</item>
     </array>
@@ -255,21 +257,25 @@
         <item>Optymalna (adaptacyjna szybkość transmisji bitów)</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_summaries">
-        <item>Użyj wyboru systemu (domyślnie)</item>
+        <item>Używaj wyboru systemu (domyślnie)</item>
         <item>44,1 kHz</item>
         <item>48,0 kHz</item>
         <item>88,2 kHz</item>
         <item>96,0 kHz</item>
+        <item>176,4 kHz</item>
+        <item>192,0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
-        <item>Użyj wyboru systemu (domyślnie)</item>
+        <item>Używaj wyboru systemu (domyślnie)</item>
         <item>44,1 kHz</item>
         <item>48,0 kHz</item>
         <item>88,2 kHz</item>
         <item>96,0 kHz</item>
+        <item>176,4 kHz</item>
+        <item>192,0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
-        <item>Użyj wyboru systemu (domyślnie)</item>
+        <item>Używaj wyboru systemu (domyślnie)</item>
         <item>SBC</item>
         <item>AAC</item>
         <item>Audio Qualcomm® aptX™</item>
@@ -277,9 +283,13 @@
         <item>LDAC</item>
         <item>Audio Qualcomm® aptX™ Adaptive</item>
         <item>Audio Qualcomm® aptX™ TWS+</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
-        <item>Użyj wyboru systemu (domyślnie)</item>
+        <item>Używaj wyboru systemu (domyślnie)</item>
         <item>SBC</item>
         <item>AAC</item>
         <item>Audio Qualcomm® aptX™</item>
@@ -287,6 +297,10 @@
         <item>LDAC</item>
         <item>Audio Qualcomm® aptX™ Adaptive</item>
         <item>Audio Qualcomm® aptX™ TWS+</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -301,7 +315,7 @@
         <item>avrcp16</item>
     </array>
     <array name="bluetooth_avrcp_versions">
-        <item>AVRCP 1.5 (domyślna)</item>
+        <item>AVRCP 1.5 (domyślnie)</item>
         <item>AVRCP 1.3</item>
         <item>AVRCP 1.4</item>
         <item>AVRCP 1.6</item>
@@ -312,7 +326,7 @@
         <item>map14</item>
     </array>
     <array name="bluetooth_map_versions">
-        <item>MAP 1.2 (domyślny)</item>
+        <item>MAP 1.2 (domyślnie)</item>
         <item>MAP 1.3</item>
         <item>MAP 1.4</item>
     </array>
@@ -325,8 +339,8 @@
         <item>5</item>
     </array>
     <array name="bluetooth_visibility_timeout_entries">
-        <item>2 min</item>
-        <item>5 min</item>
+        <item>2 minuty</item>
+        <item>5 minut</item>
         <item>1 godz.</item>
         <item>Brak limitu czasu</item>
     </array>
@@ -343,17 +357,10 @@
         <item>Uniesione</item>
         <item>Obniżone</item>
     </array>
-    <array name="captioning_font_size_selector_summaries">
-        <item>Bardzo mały rozmiar tekstu</item>
-        <item>Mały rozmiar tekstu</item>
-        <item>Domyślny rozmiar tekstu</item>
-        <item>Duży rozmiar tekstu</item>
-        <item>Bardzo duży rozmiar tekstu</item>
-    </array>
     <array name="captioning_font_size_selector_titles">
         <item>Bardzo mały</item>
         <item>Mały</item>
-        <item>Domyślny</item>
+        <item>Średni</item>
         <item>Duży</item>
         <item>Bardzo duży</item>
     </array>
@@ -425,11 +432,11 @@
         <item>Nigdy</item>
         <item>15 s</item>
         <item>30 s</item>
-        <item>1 min</item>
-        <item>2 min</item>
-        <item>5 min</item>
-        <item>10 min</item>
-        <item>30 min</item>
+        <item>1 minuta</item>
+        <item>2 minuty</item>
+        <item>5 minut</item>
+        <item>10 minut</item>
+        <item>30 minut</item>
     </array>
     <array name="eap_ocsp_type">
         <item>Nie weryfikuj</item>
@@ -460,14 +467,14 @@
     </array>
     <array name="lock_after_timeout_entries">
         <item>Natychmiast</item>
-        <item>5 sek.</item>
-        <item>15 sek.</item>
-        <item>30 sek.</item>
-        <item>1 min</item>
-        <item>2 min</item>
-        <item>5 min</item>
-        <item>10 min</item>
-        <item>30 min</item>
+        <item>5 sekund</item>
+        <item>15 sekund</item>
+        <item>30 sekund</item>
+        <item>1 minuta</item>
+        <item>2 minut</item>
+        <item>5 minut</item>
+        <item>10 minut</item>
+        <item>30 minut</item>
     </array>
     <array name="long_press_timeout_selector_list_titles">
         <item>Krótko</item>
@@ -486,15 +493,13 @@
         <item>GID</item>
         <item>ICCID</item>
     </array>
-    <array name="res_0x7f0300b1_nt_preferred_network_mode_choices">
-        <item>3G</item>
-        <item>4G</item>
-        <item>5G</item>
+    <array name="nfc_payment_favor">
+        <item>Zawsze</item>
+        <item>Z wyjątkiem sytuacji, gdy otwarta jest inna aplikacja płatnicza</item>
     </array>
-    <array name="res_0x7f0300b2_nt_preferred_network_mode_values">
-        <item>21</item>
-        <item>22</item>
-        <item>33</item>
+    <array name="nfc_payment_favor_values">
+        <item>@null</item>
+        <item>1</item>
     </array>
     <array name="overlay_display_devices_entries">
         <item>Brak</item>
@@ -576,13 +581,13 @@
         <item>?</item>
     </array>
     <array name="screen_timeout_entries">
-        <item>15 sek.</item>
-        <item>30 sek.</item>
-        <item>1 min</item>
-        <item>2 min</item>
-        <item>5 min</item>
-        <item>10 min</item>
-        <item>30 min</item>
+        <item>15 sekund</item>
+        <item>30 sekund</item>
+        <item>1 minuta</item>
+        <item>2 minuty</item>
+        <item>5 minut</item>
+        <item>10 minut</item>
+        <item>30 minut</item>
     </array>
     <array name="security_settings_premium_sms_values">
         <item>Zapytaj</item>
@@ -628,17 +633,20 @@
         <item>Rysuj nieprostokątny region przycinania na niebiesko</item>
         <item>Wyróżnij testowane polecenia rysowania na zielono</item>
     </array>
-    <array name="sim_color_light">
-        <item>@color/SIM_color_cyan</item>
-        <item>@color/SIM_color_blue800</item>
-        <item>@color/SIM_color_green800</item>
-        <item>@color/SIM_color_purple800</item>
-        <item>@color/SIM_color_pink800</item>
-        <item>@color/SIM_color_orange</item>
-    </array>
     <array name="swipe_direction_values">
         <item>1</item>
         <item>@null</item>
+    </array>
+    <array name="switch_to_user_zero_when_docked_timeout_entries">
+        <item>Nigdy</item>
+        <item>Po minucie</item>
+        <item>Po 5 minutach</item>
+    </array>
+    <array name="tare_modifiers_subfactors">
+        <item>Ładowanie</item>
+        <item>Uśpienie</item>
+        <item>Tryb oszczędzania energii</item>
+        <item>Stan procesu</item>
     </array>
     <array name="timezone_filters">
         <item>Ameryka</item>
@@ -731,7 +739,7 @@
     </array>
     <array name="wifi_ip_settings">
         <item>DHCP</item>
-        <item>Statyczny</item>
+        <item>Statyczne</item>
     </array>
     <array name="wifi_metered_entries">
         <item>Wykrywaj automatycznie</item>

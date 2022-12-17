@@ -6,11 +6,10 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.EditText;
 import com.android.settingslib.CustomEditTextPreferenceCompat;
-/* loaded from: classes.dex */
+
 class EditPinPreference extends CustomEditTextPreferenceCompat {
     private OnPinEnteredListener mPinListener;
 
-    /* loaded from: classes.dex */
     interface OnPinEnteredListener {
         void onPinEntered(EditPinPreference editPinPreference, boolean z);
     }
@@ -27,8 +26,7 @@ class EditPinPreference extends CustomEditTextPreferenceCompat {
         this.mPinListener = onPinEnteredListener;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.CustomEditTextPreferenceCompat
+    /* access modifiers changed from: protected */
     public void onBindDialogView(View view) {
         super.onBindDialogView(view);
         EditText editText = (EditText) view.findViewById(16908291);
@@ -43,8 +41,7 @@ class EditPinPreference extends CustomEditTextPreferenceCompat {
         return dialog != null && dialog.isShowing();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.CustomEditTextPreferenceCompat
+    /* access modifiers changed from: protected */
     public void onDialogClosed(boolean z) {
         super.onDialogClosed(z);
         OnPinEnteredListener onPinEnteredListener = this.mPinListener;

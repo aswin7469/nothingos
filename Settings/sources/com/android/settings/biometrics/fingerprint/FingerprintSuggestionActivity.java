@@ -1,19 +1,19 @@
 package com.android.settings.biometrics.fingerprint;
 
 import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.hardware.fingerprint.FingerprintManager;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.Utils;
-/* loaded from: classes.dex */
+
 public class FingerprintSuggestionActivity extends SetupFingerprintEnrollIntroduction {
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction, com.android.settings.biometrics.BiometricEnrollBase
-    protected void initViews() {
+    /* access modifiers changed from: protected */
+    public void initViews() {
         super.initViews();
-        getCancelButton().setText(this, R.string.security_settings_fingerprint_enroll_introduction_cancel);
+        getCancelButton().setText(this, R$string.security_settings_fingerprint_enroll_introduction_cancel);
     }
 
-    @Override // android.app.Activity
     public void finish() {
         setResult(0);
         super.finish();
@@ -25,11 +25,13 @@ public class FingerprintSuggestionActivity extends SetupFingerprintEnrollIntrodu
 
     private static boolean isNotSingleFingerprintEnrolled(Context context) {
         FingerprintManager fingerprintManagerOrNull = Utils.getFingerprintManagerOrNull(context);
-        return fingerprintManagerOrNull == null || fingerprintManagerOrNull.getEnrolledFingerprints().size() != 1;
+        if (fingerprintManagerOrNull == null || fingerprintManagerOrNull.getEnrolledFingerprints().size() != 1) {
+            return true;
+        }
+        return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static boolean isFingerprintEnabled(Context context) {
-        return (((DevicePolicyManager) context.getSystemService("device_policy")).getKeyguardDisabledFeatures(null, context.getUserId()) & 32) == 0;
+    static boolean isFingerprintEnabled(Context context) {
+        return (((DevicePolicyManager) context.getSystemService("device_policy")).getKeyguardDisabledFeatures((ComponentName) null, context.getUserId()) & 32) == 0;
     }
 }

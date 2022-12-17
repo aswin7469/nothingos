@@ -23,18 +23,16 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.internal.PreferenceImageView;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
 import com.android.settings.core.InstrumentedFragment;
 import com.android.settings.overlay.FeatureFactory;
-import com.android.settings.wifi.addappnetworks.AddAppNetworksFragment;
-import com.android.settingslib.R$id;
-import com.android.settingslib.R$layout;
 import com.android.settingslib.Utils;
 import com.android.wifitrackerlib.WifiEntry;
 import com.android.wifitrackerlib.WifiPickerTracker;
@@ -43,8 +41,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
-/* loaded from: classes.dex */
+
 public class AddAppNetworksFragment extends InstrumentedFragment implements WifiPickerTracker.WifiPickerTrackerCallback {
     @VisibleForTesting
     static final int INITIAL_RSSI_SIGNAL_LEVEL = 0;
@@ -62,14 +59,14 @@ public class AddAppNetworksFragment extends InstrumentedFragment implements Wifi
     FragmentActivity mActivity;
     @VisibleForTesting
     List<WifiNetworkSuggestion> mAllSpecifiedNetworksList;
-    private boolean mAnyNetworkSavedSuccess;
+    /* access modifiers changed from: private */
+    public boolean mAnyNetworkSavedSuccess;
     @VisibleForTesting
     String mCallingPackageName;
     @VisibleForTesting
     Button mCancelButton;
     @VisibleForTesting
-    final Handler mHandler = new Handler() { // from class: com.android.settings.wifi.addappnetworks.AddAppNetworksFragment.1
-        @Override // android.os.Handler
+    final Handler mHandler = new Handler() {
         public void handleMessage(Message message) {
             AddAppNetworksFragment.this.showSaveStatusByState(message.what);
             int i = message.what;
@@ -82,17 +79,17 @@ public class AddAppNetworksFragment extends InstrumentedFragment implements Wifi
                 if (AddAppNetworksFragment.this.mIsSingleNetwork) {
                     AddAppNetworksFragment.this.connectNetwork(0);
                 }
-                sendEmptyMessageDelayed(4, 1000L);
+                sendEmptyMessageDelayed(4, 1000);
             } else if (i == 3) {
                 AddAppNetworksFragment.this.mSaveButton.setEnabled(true);
-            } else if (i != 4) {
-            } else {
+            } else if (i == 4) {
                 AddAppNetworksFragment addAppNetworksFragment2 = AddAppNetworksFragment.this;
                 addAppNetworksFragment2.finishWithResult(-1, addAppNetworksFragment2.mResultCodeArrayList);
             }
         }
     };
-    private boolean mIsSingleNetwork;
+    /* access modifiers changed from: private */
+    public boolean mIsSingleNetwork;
     @VisibleForTesting
     View mLayoutView;
     @VisibleForTesting
@@ -100,7 +97,8 @@ public class AddAppNetworksFragment extends InstrumentedFragment implements Wifi
     @VisibleForTesting
     Button mSaveButton;
     private WifiManager.ActionListener mSaveListener;
-    private int mSavingIndex;
+    /* access modifiers changed from: private */
+    public int mSavingIndex;
     private TextView mSingleNetworkProcessingStatusView;
     private TextView mSummaryView;
     private UiConfigurationItemAdapter mUiConfigurationItemAdapter;
@@ -112,20 +110,17 @@ public class AddAppNetworksFragment extends InstrumentedFragment implements Wifi
     @VisibleForTesting
     HandlerThread mWorkerThread;
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1809;
     }
 
-    @Override // com.android.wifitrackerlib.WifiPickerTracker.WifiPickerTrackerCallback
     public void onNumSavedNetworksChanged() {
     }
 
-    @Override // com.android.wifitrackerlib.WifiPickerTracker.WifiPickerTrackerCallback
     public void onNumSavedSubscriptionsChanged() {
     }
 
-    @Override // androidx.fragment.app.Fragment
+    /* JADX WARNING: type inference failed for: r5v0, types: [java.time.Clock, com.android.settings.wifi.addappnetworks.AddAppNetworksFragment$2] */
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
         FragmentActivity activity = getActivity();
         this.mActivity = activity;
@@ -133,78 +128,76 @@ public class AddAppNetworksFragment extends InstrumentedFragment implements Wifi
         HandlerThread handlerThread = new HandlerThread("AddAppNetworksFragment{" + Integer.toHexString(System.identityHashCode(this)) + "}", 10);
         this.mWorkerThread = handlerThread;
         handlerThread.start();
-        this.mWifiPickerTracker = FeatureFactory.getFactory(this.mActivity.getApplicationContext()).getWifiTrackerLibProvider().createWifiPickerTracker(getSettingsLifecycle(), this.mActivity, new Handler(Looper.getMainLooper()), this.mWorkerThread.getThreadHandler(), new SimpleClock(ZoneOffset.UTC) { // from class: com.android.settings.wifi.addappnetworks.AddAppNetworksFragment.2
+        this.mWifiPickerTracker = FeatureFactory.getFactory(this.mActivity.getApplicationContext()).getWifiTrackerLibProvider().createWifiPickerTracker(getSettingsLifecycle(), this.mActivity, new Handler(Looper.getMainLooper()), this.mWorkerThread.getThreadHandler(), new SimpleClock(ZoneOffset.UTC) {
             public long millis() {
                 return SystemClock.elapsedRealtime();
             }
-        }, 15000L, 10000L, this);
-        return layoutInflater.inflate(R.layout.wifi_add_app_networks, viewGroup, false);
+        }, 15000, 10000, this);
+        return layoutInflater.inflate(R$layout.wifi_add_app_networks, viewGroup, false);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onDestroy() {
         this.mWorkerThread.quit();
         super.onDestroy();
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
         this.mLayoutView = view;
-        this.mCancelButton = (Button) view.findViewById(R.id.cancel);
-        this.mSaveButton = (Button) view.findViewById(R.id.save);
-        this.mSummaryView = (TextView) view.findViewById(R.id.app_summary);
-        this.mSingleNetworkProcessingStatusView = (TextView) view.findViewById(R.id.single_status);
+        this.mCancelButton = (Button) view.findViewById(R$id.cancel);
+        this.mSaveButton = (Button) view.findViewById(R$id.save);
+        this.mSummaryView = (TextView) view.findViewById(R$id.app_summary);
+        this.mSingleNetworkProcessingStatusView = (TextView) view.findViewById(R$id.single_status);
         this.mCancelButton.setOnClickListener(getCancelClickListener());
         this.mSaveButton.setOnClickListener(getSaveClickListener());
         prepareSaveResultListener();
         createContent(getArguments());
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
     public void createContent(Bundle bundle) {
         Button button = this.mSaveButton;
-        if (button != null && !button.isEnabled()) {
-            Log.d("AddAppNetworksFragment", "Network saving, ignore new intent");
-            return;
-        }
-        ArrayList parcelableArrayList = bundle.getParcelableArrayList("android.provider.extra.WIFI_NETWORK_LIST");
-        this.mAllSpecifiedNetworksList = parcelableArrayList;
-        if (parcelableArrayList == null || parcelableArrayList.isEmpty() || this.mAllSpecifiedNetworksList.size() > 5) {
-            finishWithResult(0, null);
-            return;
-        }
-        initializeResultCodeArray();
-        filterSavedNetworks(this.mWifiManager.getPrivilegedConfiguredNetworks());
-        if (this.mUiToRequestedList.size() == 0) {
-            finishWithResult(-1, this.mResultCodeArrayList);
-            return;
-        }
-        if (this.mAllSpecifiedNetworksList.size() == 1) {
-            this.mIsSingleNetwork = true;
-            this.mLayoutView.findViewById(R.id.multiple_networks).setVisibility(8);
-            this.mLayoutView.findViewById(R.id.single_network).setVisibility(0);
-            updateSingleNetworkSignalIcon(0);
-            ((TextView) this.mLayoutView.findViewById(R.id.single_ssid)).setText(this.mUiToRequestedList.get(0).mDisplayedSsid);
-            this.mSingleNetworkProcessingStatusView.setVisibility(8);
-        } else {
-            this.mIsSingleNetwork = false;
-            this.mLayoutView.findViewById(R.id.single_network).setVisibility(8);
-            this.mLayoutView.findViewById(R.id.multiple_networks).setVisibility(0);
-            UiConfigurationItemAdapter uiConfigurationItemAdapter = this.mUiConfigurationItemAdapter;
-            if (uiConfigurationItemAdapter == null) {
-                UiConfigurationItemAdapter uiConfigurationItemAdapter2 = new UiConfigurationItemAdapter(this.mActivity, R$layout.preference_access_point, this.mUiToRequestedList);
-                this.mUiConfigurationItemAdapter = uiConfigurationItemAdapter2;
-                ((ListView) this.mLayoutView.findViewById(R.id.config_list)).setAdapter((ListAdapter) uiConfigurationItemAdapter2);
-            } else {
-                uiConfigurationItemAdapter.notifyDataSetChanged();
+        if (button == null || button.isEnabled()) {
+            ArrayList parcelableArrayList = bundle.getParcelableArrayList("android.provider.extra.WIFI_NETWORK_LIST");
+            this.mAllSpecifiedNetworksList = parcelableArrayList;
+            if (parcelableArrayList == null || parcelableArrayList.isEmpty() || this.mAllSpecifiedNetworksList.size() > 5) {
+                finishWithResult(0, (List<Integer>) null);
+                return;
             }
+            initializeResultCodeArray();
+            filterSavedNetworks(this.mWifiManager.getPrivilegedConfiguredNetworks());
+            if (this.mUiToRequestedList.size() == 0) {
+                finishWithResult(-1, this.mResultCodeArrayList);
+                return;
+            }
+            if (this.mAllSpecifiedNetworksList.size() == 1) {
+                this.mIsSingleNetwork = true;
+                this.mLayoutView.findViewById(R$id.multiple_networks).setVisibility(8);
+                this.mLayoutView.findViewById(R$id.single_network).setVisibility(0);
+                updateSingleNetworkSignalIcon(0);
+                ((TextView) this.mLayoutView.findViewById(R$id.single_ssid)).setText(this.mUiToRequestedList.get(0).mDisplayedSsid);
+                this.mSingleNetworkProcessingStatusView.setVisibility(8);
+            } else {
+                this.mIsSingleNetwork = false;
+                this.mLayoutView.findViewById(R$id.single_network).setVisibility(8);
+                this.mLayoutView.findViewById(R$id.multiple_networks).setVisibility(0);
+                UiConfigurationItemAdapter uiConfigurationItemAdapter = this.mUiConfigurationItemAdapter;
+                if (uiConfigurationItemAdapter == null) {
+                    UiConfigurationItemAdapter uiConfigurationItemAdapter2 = new UiConfigurationItemAdapter(this.mActivity, com.android.settingslib.R$layout.preference_access_point, this.mUiToRequestedList);
+                    this.mUiConfigurationItemAdapter = uiConfigurationItemAdapter2;
+                    ((ListView) this.mLayoutView.findViewById(R$id.config_list)).setAdapter(uiConfigurationItemAdapter2);
+                } else {
+                    uiConfigurationItemAdapter.notifyDataSetChanged();
+                }
+            }
+            String string = bundle.getString("panel_calling_package_name");
+            this.mCallingPackageName = string;
+            assignAppIcon(this.mActivity, string);
+            assignTitleAndSummary(this.mActivity, this.mCallingPackageName);
+            return;
         }
-        String string = bundle.getString("panel_calling_package_name");
-        this.mCallingPackageName = string;
-        assignAppIcon(this.mActivity, string);
-        assignTitleAndSummary(this.mActivity, this.mCallingPackageName);
+        Log.d("AddAppNetworksFragment", "Network saving, ignore new intent");
     }
 
     private void initializeResultCodeArray() {
@@ -226,27 +219,20 @@ public class AddAppNetworksFragment extends InstrumentedFragment implements Wifi
         return null;
     }
 
-    private boolean isSavedPasspointConfiguration(final PasspointConfiguration passpointConfiguration) {
-        return this.mWifiManager.getPasspointConfigurations().stream().filter(new Predicate() { // from class: com.android.settings.wifi.addappnetworks.AddAppNetworksFragment$$ExternalSyntheticLambda2
-            @Override // java.util.function.Predicate
-            public final boolean test(Object obj) {
-                boolean equals;
-                equals = ((PasspointConfiguration) obj).equals(passpointConfiguration);
-                return equals;
-            }
-        }).findFirst().isPresent();
+    private boolean isSavedPasspointConfiguration(PasspointConfiguration passpointConfiguration) {
+        return this.mWifiManager.getPasspointConfigurations().stream().filter(new AddAppNetworksFragment$$ExternalSyntheticLambda3(passpointConfiguration)).findFirst().isPresent();
     }
 
     private boolean isSavedWifiConfiguration(WifiConfiguration wifiConfiguration, List<WifiConfiguration> list) {
         String addQuotationIfNeeded = addQuotationIfNeeded(wifiConfiguration.SSID);
         int authType = wifiConfiguration.getAuthType();
-        for (WifiConfiguration wifiConfiguration2 : list) {
-            if (addQuotationIfNeeded.equals(wifiConfiguration2.SSID) && authType == wifiConfiguration2.getAuthType()) {
+        for (WifiConfiguration next : list) {
+            if (addQuotationIfNeeded.equals(next.SSID) && authType == next.getAuthType()) {
                 if (authType == 0) {
-                    return TextUtils.equals(getWepKey(wifiConfiguration), getWepKey(wifiConfiguration2));
+                    return TextUtils.equals(getWepKey(wifiConfiguration), getWepKey(next));
                 }
                 if (authType == 1 || authType == 4 || authType == 8) {
-                    if (wifiConfiguration.preSharedKey.equals(wifiConfiguration2.preSharedKey)) {
+                    if (wifiConfiguration.preSharedKey.equals(next.preSharedKey)) {
                         return true;
                     }
                 } else if (authType == 9) {
@@ -257,9 +243,10 @@ public class AddAppNetworksFragment extends InstrumentedFragment implements Wifi
         return false;
     }
 
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    void filterSavedNetworks(List<WifiConfiguration> list) {
-        boolean isSavedWifiConfiguration;
+    public void filterSavedNetworks(List<WifiConfiguration> list) {
+        boolean z;
         String str;
         List<UiConfigurationItem> list2 = this.mUiToRequestedList;
         if (list2 == null) {
@@ -268,30 +255,32 @@ public class AddAppNetworksFragment extends InstrumentedFragment implements Wifi
             list2.clear();
         }
         int i = 0;
-        for (WifiNetworkSuggestion wifiNetworkSuggestion : this.mAllSpecifiedNetworksList) {
-            PasspointConfiguration passpointConfig = wifiNetworkSuggestion.getPasspointConfig();
+        for (WifiNetworkSuggestion next : this.mAllSpecifiedNetworksList) {
+            PasspointConfiguration passpointConfig = next.getPasspointConfig();
             if (passpointConfig != null) {
-                isSavedWifiConfiguration = isSavedPasspointConfiguration(passpointConfig);
+                z = isSavedPasspointConfiguration(passpointConfig);
                 str = passpointConfig.getHomeSp().getFriendlyName();
             } else {
-                WifiConfiguration wifiConfiguration = wifiNetworkSuggestion.getWifiConfiguration();
+                WifiConfiguration wifiConfiguration = next.getWifiConfiguration();
                 String removeDoubleQuotes = removeDoubleQuotes(wifiConfiguration.SSID);
-                isSavedWifiConfiguration = isSavedWifiConfiguration(wifiConfiguration, list);
+                z = isSavedWifiConfiguration(wifiConfiguration, list);
                 str = removeDoubleQuotes;
             }
-            if (isSavedWifiConfiguration) {
+            if (z) {
                 this.mResultCodeArrayList.set(i, 2);
             } else {
-                this.mUiToRequestedList.add(new UiConfigurationItem(str, wifiNetworkSuggestion, i, 0));
+                this.mUiToRequestedList.add(new UiConfigurationItem(str, next, i, 0));
             }
             i++;
         }
     }
 
     private void updateSingleNetworkSignalIcon(int i) {
-        Drawable mutate = this.mActivity.getDrawable(Utils.getWifiIconResource(i)).mutate().getConstantState().newDrawable().mutate();
-        mutate.setTintList(Utils.getColorAttr(this.mActivity, 16843817));
-        ((ImageView) this.mLayoutView.findViewById(R.id.signal_strength)).setImageDrawable(mutate);
+        if (i != -1) {
+            Drawable mutate = this.mActivity.getDrawable(Utils.getWifiIconResource(i)).mutate().getConstantState().newDrawable().mutate();
+            mutate.setTintList(Utils.getColorAttr(this.mActivity, 16843817));
+            ((ImageView) this.mLayoutView.findViewById(R$id.signal_strength)).setImageDrawable(mutate);
+        }
     }
 
     private String addQuotationIfNeeded(String str) {
@@ -317,7 +306,7 @@ public class AddAppNetworksFragment extends InstrumentedFragment implements Wifi
     }
 
     private void assignAppIcon(Context context, String str) {
-        ((ImageView) this.mLayoutView.findViewById(R.id.app_icon)).setImageDrawable(loadPackageIconDrawable(context, str));
+        ((ImageView) this.mLayoutView.findViewById(R$id.app_icon)).setImageDrawable(loadPackageIconDrawable(context, str));
     }
 
     private Drawable loadPackageIconDrawable(Context context, String str) {
@@ -330,52 +319,54 @@ public class AddAppNetworksFragment extends InstrumentedFragment implements Wifi
     }
 
     private void assignTitleAndSummary(Context context, String str) {
-        ((TextView) this.mLayoutView.findViewById(R.id.app_title)).setText(getTitle());
+        ((TextView) this.mLayoutView.findViewById(R$id.app_title)).setText(getTitle());
         this.mSummaryView.setText(getAddNetworkRequesterSummary(com.android.settings.Utils.getApplicationLabel(context, str)));
     }
 
     private CharSequence getAddNetworkRequesterSummary(CharSequence charSequence) {
-        return getString(this.mIsSingleNetwork ? R.string.wifi_add_app_single_network_summary : R.string.wifi_add_app_networks_summary, charSequence);
+        int i;
+        if (this.mIsSingleNetwork) {
+            i = R$string.wifi_add_app_single_network_summary;
+        } else {
+            i = R$string.wifi_add_app_networks_summary;
+        }
+        return getString(i, charSequence);
     }
 
     private CharSequence getTitle() {
-        return getString(this.mIsSingleNetwork ? R.string.wifi_add_app_single_network_title : R.string.wifi_add_app_networks_title);
+        int i;
+        if (this.mIsSingleNetwork) {
+            i = R$string.wifi_add_app_single_network_title;
+        } else {
+            i = R$string.wifi_add_app_networks_title;
+        }
+        return getString(i);
     }
 
-    View.OnClickListener getCancelClickListener() {
-        return new View.OnClickListener() { // from class: com.android.settings.wifi.addappnetworks.AddAppNetworksFragment$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                AddAppNetworksFragment.this.lambda$getCancelClickListener$1(view);
-            }
-        };
+    /* access modifiers changed from: package-private */
+    public View.OnClickListener getCancelClickListener() {
+        return new AddAppNetworksFragment$$ExternalSyntheticLambda1(this);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$getCancelClickListener$1(View view) {
         Log.d("AddAppNetworksFragment", "User rejected to add network");
-        finishWithResult(0, null);
+        finishWithResult(0, (List<Integer>) null);
     }
 
-    View.OnClickListener getSaveClickListener() {
-        return new View.OnClickListener() { // from class: com.android.settings.wifi.addappnetworks.AddAppNetworksFragment$$ExternalSyntheticLambda1
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                AddAppNetworksFragment.this.lambda$getSaveClickListener$2(view);
-            }
-        };
+    /* access modifiers changed from: package-private */
+    public View.OnClickListener getSaveClickListener() {
+        return new AddAppNetworksFragment$$ExternalSyntheticLambda2(this);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$getSaveClickListener$2(View view) {
         Log.d("AddAppNetworksFragment", "User agree to add networks");
         this.mHandler.obtainMessage(1).sendToTarget();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
     @VisibleForTesting
-    /* loaded from: classes.dex */
-    public static class UiConfigurationItem {
+    static class UiConfigurationItem {
         public final String mDisplayedSsid;
         public final int mIndex;
         public int mLevel;
@@ -389,9 +380,7 @@ public class AddAppNetworksFragment extends InstrumentedFragment implements Wifi
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class UiConfigurationItemAdapter extends ArrayAdapter<UiConfigurationItem> {
+    private class UiConfigurationItemAdapter extends ArrayAdapter<UiConfigurationItem> {
         private final LayoutInflater mInflater;
         private final int mResourceId;
 
@@ -401,24 +390,23 @@ public class AddAppNetworksFragment extends InstrumentedFragment implements Wifi
             this.mInflater = LayoutInflater.from(context);
         }
 
-        @Override // android.widget.ArrayAdapter, android.widget.Adapter
         public View getView(int i, View view, ViewGroup viewGroup) {
             if (view == null) {
                 view = this.mInflater.inflate(this.mResourceId, viewGroup, false);
             }
-            View findViewById = view.findViewById(R$id.two_target_divider);
+            View findViewById = view.findViewById(com.android.settingslib.R$id.two_target_divider);
             if (findViewById != null) {
                 findViewById.setVisibility(8);
             }
-            UiConfigurationItem item = getItem(i);
+            UiConfigurationItem uiConfigurationItem = (UiConfigurationItem) getItem(i);
             TextView textView = (TextView) view.findViewById(16908310);
             if (textView != null) {
                 textView.setSingleLine(false);
-                textView.setText(item.mDisplayedSsid);
+                textView.setText(uiConfigurationItem.mDisplayedSsid);
             }
             PreferenceImageView preferenceImageView = (PreferenceImageView) view.findViewById(16908294);
             if (preferenceImageView != null) {
-                Drawable drawable = getContext().getDrawable(Utils.getWifiIconResource(item.mLevel));
+                Drawable drawable = getContext().getDrawable(Utils.getWifiIconResource(uiConfigurationItem.mLevel));
                 drawable.setTintList(Utils.getColorAttr(getContext(), 16843817));
                 preferenceImageView.setImageDrawable(drawable);
             }
@@ -431,27 +419,25 @@ public class AddAppNetworksFragment extends InstrumentedFragment implements Wifi
     }
 
     private void prepareSaveResultListener() {
-        this.mSaveListener = new WifiManager.ActionListener() { // from class: com.android.settings.wifi.addappnetworks.AddAppNetworksFragment.3
+        this.mSaveListener = new WifiManager.ActionListener() {
             public void onSuccess() {
                 AddAppNetworksFragment.this.mAnyNetworkSavedSuccess = true;
-                if (AddAppNetworksFragment.this.saveNextNetwork()) {
-                    return;
+                if (!AddAppNetworksFragment.this.saveNextNetwork()) {
+                    AddAppNetworksFragment.this.showSavedOrFail();
                 }
-                AddAppNetworksFragment.this.showSavedOrFail();
             }
 
             public void onFailure(int i) {
                 AddAppNetworksFragment addAppNetworksFragment = AddAppNetworksFragment.this;
                 addAppNetworksFragment.mResultCodeArrayList.set(addAppNetworksFragment.mUiToRequestedList.get(addAppNetworksFragment.mSavingIndex).mIndex, 1);
-                if (AddAppNetworksFragment.this.saveNextNetwork()) {
-                    return;
+                if (!AddAppNetworksFragment.this.saveNextNetwork()) {
+                    AddAppNetworksFragment.this.showSavedOrFail();
                 }
-                AddAppNetworksFragment.this.showSavedOrFail();
             }
         };
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public boolean saveNextNetwork() {
         if (this.mIsSingleNetwork || this.mSavingIndex >= this.mUiToRequestedList.size() - 1) {
             return false;
@@ -462,19 +448,20 @@ public class AddAppNetworksFragment extends InstrumentedFragment implements Wifi
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void showSavedOrFail() {
-        Message obtainMessage;
+        Message message;
         if (this.mAnyNetworkSavedSuccess) {
-            obtainMessage = this.mHandler.obtainMessage(2);
+            message = this.mHandler.obtainMessage(2);
         } else {
-            obtainMessage = this.mHandler.obtainMessage(3);
+            message = this.mHandler.obtainMessage(3);
         }
-        this.mHandler.sendMessageDelayed(obtainMessage, 500L);
+        this.mHandler.sendMessageDelayed(message, 500);
     }
 
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    void saveNetwork(int i) {
+    public void saveNetwork(int i) {
         PasspointConfiguration passpointConfig = this.mUiToRequestedList.get(i).mWifiNetworkSuggestion.getPasspointConfig();
         if (passpointConfig != null) {
             try {
@@ -483,10 +470,10 @@ public class AddAppNetworksFragment extends InstrumentedFragment implements Wifi
             } catch (IllegalArgumentException unused) {
                 this.mResultCodeArrayList.set(this.mUiToRequestedList.get(i).mIndex, 1);
             }
-            if (saveNextNetwork()) {
+            if (!saveNextNetwork()) {
+                showSavedOrFail();
                 return;
             }
-            showSavedOrFail();
             return;
         }
         WifiConfiguration wifiConfiguration = this.mUiToRequestedList.get(i).mWifiNetworkSuggestion.getWifiConfiguration();
@@ -494,117 +481,100 @@ public class AddAppNetworksFragment extends InstrumentedFragment implements Wifi
         this.mWifiManager.save(wifiConfiguration, this.mSaveListener);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void connectNetwork(int i) {
-        this.mWifiManager.connect(this.mUiToRequestedList.get(i).mWifiNetworkSuggestion.getWifiConfiguration(), null);
+        this.mWifiManager.connect(this.mUiToRequestedList.get(i).mWifiNetworkSuggestion.getWifiConfiguration(), (WifiManager.ActionListener) null);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void finishWithResult(int i, List<Integer> list) {
-        if (this.mActivity == null) {
-            return;
-        }
-        if (list != null) {
-            Intent intent = new Intent();
-            intent.putIntegerArrayListExtra("android.provider.extra.WIFI_NETWORK_RESULT_LIST", (ArrayList) list);
-            this.mActivity.setResult(i, intent);
-        }
-        this.mActivity.finish();
-    }
-
-    @VisibleForTesting
-    void showSaveStatusByState(int i) {
-        if (i == 1) {
-            if (this.mIsSingleNetwork) {
-                this.mSingleNetworkProcessingStatusView.setTextColor(Utils.getColorAttr(this.mActivity, 16842808));
-                this.mSingleNetworkProcessingStatusView.setText(getString(R.string.wifi_add_app_single_network_saving_summary));
-                this.mSingleNetworkProcessingStatusView.setVisibility(0);
-                return;
-            }
-            this.mSummaryView.setTextColor(Utils.getColorAttr(this.mActivity, 16842808));
-            this.mSummaryView.setText(getString(R.string.wifi_add_app_networks_saving_summary, Integer.valueOf(this.mUiToRequestedList.size())));
-        } else if (i == 2) {
-            if (this.mIsSingleNetwork) {
-                this.mSingleNetworkProcessingStatusView.setText(getString(R.string.wifi_add_app_single_network_saved_summary));
-            } else {
-                this.mSummaryView.setText(getString(R.string.wifi_add_app_networks_saved_summary));
-            }
-        } else if (i != 3) {
-        } else {
-            if (this.mIsSingleNetwork) {
-                this.mSingleNetworkProcessingStatusView.setTextColor(Utils.getColorAttr(this.mActivity, 16844099));
-                this.mSingleNetworkProcessingStatusView.setText(getString(R.string.wifi_add_app_network_save_failed_summary));
-                return;
-            }
-            this.mSummaryView.setTextColor(Utils.getColorAttr(this.mActivity, 16844099));
-            this.mSummaryView.setText(getString(R.string.wifi_add_app_network_save_failed_summary));
-        }
-    }
-
-    @VisibleForTesting
-    void updateScanResultsToUi() {
-        if (this.mUiToRequestedList == null) {
-            return;
-        }
-        List<WifiEntry> list = null;
-        if (this.mWifiPickerTracker.getWifiState() == 3) {
-            list = this.mWifiPickerTracker.getWifiEntries();
-            WifiEntry connectedWifiEntry = this.mWifiPickerTracker.getConnectedWifiEntry();
-            if (connectedWifiEntry != null) {
-                list.add(connectedWifiEntry);
-            }
-        }
-        Iterator<UiConfigurationItem> it = this.mUiToRequestedList.iterator();
-        while (true) {
-            int i = 0;
-            if (!it.hasNext()) {
-                break;
-            }
-            final UiConfigurationItem next = it.next();
-            next.mLevel = 0;
+        if (this.mActivity != null) {
             if (list != null) {
-                Optional<WifiEntry> findFirst = list.stream().filter(new Predicate() { // from class: com.android.settings.wifi.addappnetworks.AddAppNetworksFragment$$ExternalSyntheticLambda3
-                    @Override // java.util.function.Predicate
-                    public final boolean test(Object obj) {
-                        boolean lambda$updateScanResultsToUi$3;
-                        lambda$updateScanResultsToUi$3 = AddAppNetworksFragment.lambda$updateScanResultsToUi$3(AddAppNetworksFragment.UiConfigurationItem.this, (WifiEntry) obj);
-                        return lambda$updateScanResultsToUi$3;
+                Intent intent = new Intent();
+                intent.putIntegerArrayListExtra("android.provider.extra.WIFI_NETWORK_RESULT_LIST", (ArrayList) list);
+                this.mActivity.setResult(i, intent);
+            }
+            this.mActivity.finish();
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    @VisibleForTesting
+    public void showSaveStatusByState(int i) {
+        if (i != 1) {
+            if (i != 2) {
+                if (i == 3) {
+                    if (this.mIsSingleNetwork) {
+                        this.mSingleNetworkProcessingStatusView.setTextColor(Utils.getColorAttr(this.mActivity, 16844099));
+                        this.mSingleNetworkProcessingStatusView.setText(getString(R$string.wifi_add_app_network_save_failed_summary));
+                        return;
                     }
-                }).findFirst();
-                if (findFirst.isPresent()) {
-                    i = findFirst.get().getLevel();
+                    this.mSummaryView.setTextColor(Utils.getColorAttr(this.mActivity, 16844099));
+                    this.mSummaryView.setText(getString(R$string.wifi_add_app_network_save_failed_summary));
                 }
-                next.mLevel = i;
+            } else if (this.mIsSingleNetwork) {
+                this.mSingleNetworkProcessingStatusView.setText(getString(R$string.wifi_add_app_single_network_saved_summary));
+            } else {
+                this.mSummaryView.setText(getString(R$string.wifi_add_app_networks_saved_summary));
+            }
+        } else if (this.mIsSingleNetwork) {
+            this.mSingleNetworkProcessingStatusView.setTextColor(Utils.getColorAttr(this.mActivity, 16842808));
+            this.mSingleNetworkProcessingStatusView.setText(getString(R$string.wifi_add_app_single_network_saving_summary));
+            this.mSingleNetworkProcessingStatusView.setVisibility(0);
+        } else {
+            this.mSummaryView.setTextColor(Utils.getColorAttr(this.mActivity, 16842808));
+            this.mSummaryView.setText(getString(R$string.wifi_add_app_networks_saving_summary, Integer.valueOf(this.mUiToRequestedList.size())));
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    @VisibleForTesting
+    public void updateScanResultsToUi() {
+        if (this.mUiToRequestedList != null) {
+            List<WifiEntry> list = null;
+            if (this.mWifiPickerTracker.getWifiState() == 3) {
+                list = this.mWifiPickerTracker.getWifiEntries();
+                WifiEntry connectedWifiEntry = this.mWifiPickerTracker.getConnectedWifiEntry();
+                if (connectedWifiEntry != null) {
+                    list.add(connectedWifiEntry);
+                }
+            }
+            Iterator<UiConfigurationItem> it = this.mUiToRequestedList.iterator();
+            while (true) {
+                int i = 0;
+                if (!it.hasNext()) {
+                    break;
+                }
+                UiConfigurationItem next = it.next();
+                next.mLevel = 0;
+                if (list != null) {
+                    Optional findFirst = list.stream().filter(new AddAppNetworksFragment$$ExternalSyntheticLambda0(next)).findFirst();
+                    if (findFirst.isPresent()) {
+                        i = ((WifiEntry) findFirst.get()).getLevel();
+                    }
+                    next.mLevel = i;
+                }
+            }
+            if (this.mIsSingleNetwork) {
+                updateSingleNetworkSignalIcon(this.mUiToRequestedList.get(0).mLevel);
+                return;
+            }
+            UiConfigurationItemAdapter uiConfigurationItemAdapter = this.mUiConfigurationItemAdapter;
+            if (uiConfigurationItemAdapter != null) {
+                uiConfigurationItemAdapter.notifyDataSetChanged();
             }
         }
-        if (this.mIsSingleNetwork) {
-            updateSingleNetworkSignalIcon(this.mUiToRequestedList.get(0).mLevel);
-            return;
-        }
-        UiConfigurationItemAdapter uiConfigurationItemAdapter = this.mUiConfigurationItemAdapter;
-        if (uiConfigurationItemAdapter == null) {
-            return;
-        }
-        uiConfigurationItemAdapter.notifyDataSetChanged();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ boolean lambda$updateScanResultsToUi$3(UiConfigurationItem uiConfigurationItem, WifiEntry wifiEntry) {
-        return TextUtils.equals(uiConfigurationItem.mWifiNetworkSuggestion.getSsid(), wifiEntry.getSsid());
-    }
-
-    @Override // com.android.settings.core.InstrumentedFragment, com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
         onWifiEntriesChanged();
     }
 
-    @Override // com.android.wifitrackerlib.BaseWifiTracker.BaseWifiTrackerCallback
     public void onWifiStateChanged() {
         onWifiEntriesChanged();
     }
 
-    @Override // com.android.wifitrackerlib.WifiPickerTracker.WifiPickerTrackerCallback
     public void onWifiEntriesChanged() {
         updateScanResultsToUi();
     }

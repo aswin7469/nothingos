@@ -5,14 +5,12 @@ import android.util.Log;
 import androidx.preference.Preference;
 import androidx.preference.SwitchPreference;
 import com.android.settingslib.core.lifecycle.Lifecycle;
-/* loaded from: classes.dex */
+
 public class ZenModeEventsPreferenceController extends AbstractZenModePreferenceController implements Preference.OnPreferenceChangeListener {
-    @Override // com.android.settings.notification.zen.AbstractZenModePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "zen_mode_events";
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return true;
     }
@@ -21,7 +19,6 @@ public class ZenModeEventsPreferenceController extends AbstractZenModePreference
         super(context, "zen_mode_events", lifecycle);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         SwitchPreference switchPreference = (SwitchPreference) preference;
@@ -35,7 +32,6 @@ public class ZenModeEventsPreferenceController extends AbstractZenModePreference
         switchPreference.setEnabled(true);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         boolean booleanValue = ((Boolean) obj).booleanValue();
         if (ZenModeSettingsBase.DEBUG) {

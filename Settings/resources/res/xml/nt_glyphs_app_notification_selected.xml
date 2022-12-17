@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:settings="http://schemas.android.com/apk/res-auto" android:persistent="false" android:title="@string/nt_glyphs_apps_notification_selected_title">
-    <Preference android:title="When on you are notified only from these apps important to you." android:order="1" settings:searchable="false"/>
-    <Preference android:title="Selected apps" android:order="2" settings:searchable="false"/>
-    <Preference android:title="+  Add apps" android:key="glyphs_add_apps" android:order="3" android:fragment="com.nt.settings.glyphs.GlyphsAppNotificationSelectorPreferenceFragment" settings:searchable="false"/>
-    <com.nt.settings.glyphs.widget.GlyphsAppsListPreference android:key="glyphs_add_apps_list" android:order="4" settings:searchable="false"/>
-</PreferenceScreen>

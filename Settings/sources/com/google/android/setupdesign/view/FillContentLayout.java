@@ -8,13 +8,13 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import com.google.android.setupdesign.R$attr;
 import com.google.android.setupdesign.R$styleable;
-/* loaded from: classes2.dex */
+
 public class FillContentLayout extends FrameLayout {
     private int maxHeight;
     private int maxWidth;
 
     public FillContentLayout(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public FillContentLayout(Context context, AttributeSet attributeSet) {
@@ -27,17 +27,16 @@ public class FillContentLayout extends FrameLayout {
     }
 
     private void init(Context context, AttributeSet attributeSet, int i) {
-        if (isInEditMode()) {
-            return;
+        if (!isInEditMode()) {
+            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.SudFillContentLayout, i, 0);
+            this.maxHeight = obtainStyledAttributes.getDimensionPixelSize(R$styleable.SudFillContentLayout_android_maxHeight, -1);
+            this.maxWidth = obtainStyledAttributes.getDimensionPixelSize(R$styleable.SudFillContentLayout_android_maxWidth, -1);
+            obtainStyledAttributes.recycle();
         }
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.SudFillContentLayout, i, 0);
-        this.maxHeight = obtainStyledAttributes.getDimensionPixelSize(R$styleable.SudFillContentLayout_android_maxHeight, -1);
-        this.maxWidth = obtainStyledAttributes.getDimensionPixelSize(R$styleable.SudFillContentLayout_android_maxWidth, -1);
-        obtainStyledAttributes.recycle();
     }
 
-    @Override // android.widget.FrameLayout, android.view.View
-    protected void onMeasure(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         setMeasuredDimension(FrameLayout.getDefaultSize(getSuggestedMinimumWidth(), i), FrameLayout.getDefaultSize(getSuggestedMinimumHeight(), i2));
         int childCount = getChildCount();
         for (int i3 = 0; i3 < childCount; i3++) {
@@ -58,9 +57,9 @@ public class FillContentLayout extends FrameLayout {
         if (i3 == -1) {
             return View.MeasureSpec.makeMeasureSpec(max, 1073741824);
         }
-        if (i3 != -2) {
-            return 0;
+        if (i3 == -2) {
+            return View.MeasureSpec.makeMeasureSpec(max, Integer.MIN_VALUE);
         }
-        return View.MeasureSpec.makeMeasureSpec(max, Integer.MIN_VALUE);
+        return 0;
     }
 }

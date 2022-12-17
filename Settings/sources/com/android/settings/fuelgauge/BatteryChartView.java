@@ -16,87 +16,64 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityManager;
-import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.widget.AppCompatImageView;
-import com.android.settings.R;
+import com.android.settings.R$dimen;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settingslib.Utils;
 import java.time.Clock;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-/* loaded from: classes.dex */
+
 public class BatteryChartView extends AppCompatImageView implements View.OnClickListener, AccessibilityManager.AccessibilityStateChangeListener {
-    private static final List<String> ACCESSIBILITY_SERVICE_NAMES = Arrays.asList("SwitchAccessService", "TalkBackService", "JustSpeakService");
+    private static final List<String> ACCESSIBILITY_SERVICE_NAMES = Arrays.asList(new String[]{"SwitchAccessService", "TalkBackService", "JustSpeakService"});
     private static final int DIVIDER_COLOR = Color.parseColor("#CDCCC5");
     private int mDividerHeight;
     private Paint mDividerPaint;
     private int mDividerWidth;
-    Handler mHandler;
-    private final Rect mIndent;
+    Handler mHandler = new Handler();
+    int mHoveredIndex = -2;
+    private final Rect mIndent = new Rect();
     private boolean mIsSlotsClickabled;
     private int[] mLevels;
     private OnSelectListener mOnSelectListener;
-    private final Rect[] mPercentageBounds;
-    private String[] mPercentages;
-    int mSelectedIndex;
+    private final Rect[] mPercentageBounds = {new Rect(), new Rect(), new Rect()};
+    private String[] mPercentages = getPercentages();
+    int mSelectedIndex = -2;
     private int mTextPadding;
     private Paint mTextPaint;
     String[] mTimestamps;
-    private final Rect[] mTimestampsBounds;
-    private MotionEvent mTouchUpEvent;
+    private final Rect[] mTimestampsBounds = {new Rect(), new Rect(), new Rect(), new Rect()};
+    private float mTouchUpEventX = Float.MIN_VALUE;
     private int mTrapezoidColor;
     private int mTrapezoidCount;
-    Paint mTrapezoidCurvePaint;
+    Paint mTrapezoidCurvePaint = null;
     private float mTrapezoidHOffset;
+    private int mTrapezoidHoverColor;
     private Paint mTrapezoidPaint;
     private TrapezoidSlot[] mTrapezoidSlots;
     private int mTrapezoidSolidColor;
     private float mTrapezoidVOffset;
-    final Runnable mUpdateClickableStateRun;
+    final Runnable mUpdateClickableStateRun = new BatteryChartView$$ExternalSyntheticLambda0(this);
 
-    /* loaded from: classes.dex */
     public interface OnSelectListener {
         void onSelect(int i);
     }
 
     public BatteryChartView(Context context) {
-        super(context, null);
-        this.mPercentages = getPercentages();
-        this.mIndent = new Rect();
-        this.mPercentageBounds = new Rect[]{new Rect(), new Rect(), new Rect()};
-        this.mTimestampsBounds = new Rect[]{new Rect(), new Rect(), new Rect(), new Rect()};
-        this.mHandler = new Handler();
-        this.mUpdateClickableStateRun = new Runnable() { // from class: com.android.settings.fuelgauge.BatteryChartView$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                BatteryChartView.this.lambda$new$0();
-            }
-        };
-        this.mTrapezoidCurvePaint = null;
+        super(context, (AttributeSet) null);
     }
 
     public BatteryChartView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.mPercentages = getPercentages();
-        this.mIndent = new Rect();
-        this.mPercentageBounds = new Rect[]{new Rect(), new Rect(), new Rect()};
-        this.mTimestampsBounds = new Rect[]{new Rect(), new Rect(), new Rect(), new Rect()};
-        this.mHandler = new Handler();
-        this.mUpdateClickableStateRun = new Runnable() { // from class: com.android.settings.fuelgauge.BatteryChartView$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                BatteryChartView.this.lambda$new$0();
-            }
-        };
-        this.mTrapezoidCurvePaint = null;
         initializeColors(context);
         setOnClickListener(this);
         setSelectedIndex(-1);
         setTrapezoidCount(12);
         setClickable(false);
-        setLatestTimestamp(0L);
+        setLatestTimestamp(0);
     }
 
     public void setTrapezoidCount(int i) {
@@ -125,19 +102,19 @@ public class BatteryChartView extends AppCompatImageView implements View.OnClick
         int i = 0;
         setClickable(false);
         invalidate();
-        if (this.mLevels == null) {
-            return;
-        }
-        while (true) {
-            int[] iArr2 = this.mLevels;
-            if (i >= iArr2.length - 1) {
-                return;
+        if (this.mLevels != null) {
+            while (true) {
+                int[] iArr2 = this.mLevels;
+                if (i >= iArr2.length - 1) {
+                    return;
+                }
+                if (iArr2[i] == 0 || iArr2[i + 1] == 0) {
+                    i++;
+                } else {
+                    setClickable(true);
+                    return;
+                }
             }
-            if (iArr2[i] != 0 && iArr2[i + 1] != 0) {
-                setClickable(true);
-                return;
-            }
-            i++;
         }
     }
 
@@ -146,10 +123,9 @@ public class BatteryChartView extends AppCompatImageView implements View.OnClick
             this.mSelectedIndex = i;
             invalidate();
             OnSelectListener onSelectListener = this.mOnSelectListener;
-            if (onSelectListener == null) {
-                return;
+            if (onSelectListener != null) {
+                onSelectListener.onSelect(this.mSelectedIndex);
             }
-            onSelectListener.onSelect(this.mSelectedIndex);
         }
     }
 
@@ -177,12 +153,11 @@ public class BatteryChartView extends AppCompatImageView implements View.OnClick
         }
         boolean is24HourFormat = DateFormat.is24HourFormat(getContext());
         for (int i = 0; i < 4; i++) {
-            this.mTimestamps[i] = ConvertUtils.utcToLocalTimeHour(getContext(), j - ((3 - i) * 28800000), is24HourFormat);
+            this.mTimestamps[i] = ConvertUtils.utcToLocalTimeHour(getContext(), j - (((long) (3 - i)) * 28800000), is24HourFormat);
         }
         requestLayout();
     }
 
-    @Override // android.widget.ImageView, android.view.View
     public void onMeasure(int i, int i2) {
         super.onMeasure(i, i2);
         if (this.mTextPaint != null) {
@@ -192,7 +167,9 @@ public class BatteryChartView extends AppCompatImageView implements View.OnClick
                 if (i3 >= strArr.length) {
                     break;
                 }
-                this.mTextPaint.getTextBounds(strArr[i3], 0, strArr[i3].length(), this.mPercentageBounds[i3]);
+                Paint paint = this.mTextPaint;
+                String str = strArr[i3];
+                paint.getTextBounds(str, 0, str.length(), this.mPercentageBounds[i3]);
                 i3++;
             }
             this.mIndent.top = this.mPercentageBounds[0].height();
@@ -200,12 +177,12 @@ public class BatteryChartView extends AppCompatImageView implements View.OnClick
             if (this.mTimestamps != null) {
                 int i4 = 0;
                 for (int i5 = 0; i5 < 4; i5++) {
-                    Paint paint = this.mTextPaint;
-                    String[] strArr2 = this.mTimestamps;
-                    paint.getTextBounds(strArr2[i5], 0, strArr2[i5].length(), this.mTimestampsBounds[i5]);
+                    Paint paint2 = this.mTextPaint;
+                    String str2 = this.mTimestamps[i5];
+                    paint2.getTextBounds(str2, 0, str2.length(), this.mTimestampsBounds[i5]);
                     i4 = Math.max(i4, this.mTimestampsBounds[i5].height());
                 }
-                this.mIndent.bottom = i4 + Math.round(this.mTextPadding * 1.5f);
+                this.mIndent.bottom = i4 + Math.round(((float) this.mTextPadding) * 1.5f);
             }
             Log.d("BatteryChartView", "setIndent:" + this.mPercentageBounds[0]);
             return;
@@ -213,7 +190,6 @@ public class BatteryChartView extends AppCompatImageView implements View.OnClick
         this.mIndent.set(0, 0, 0, 0);
     }
 
-    @Override // android.view.View
     public void draw(Canvas canvas) {
         super.draw(canvas);
         drawHorizontalDividers(canvas);
@@ -221,61 +197,73 @@ public class BatteryChartView extends AppCompatImageView implements View.OnClick
         drawTrapezoids(canvas);
     }
 
-    @Override // android.view.View
     public boolean onTouchEvent(MotionEvent motionEvent) {
         int action = motionEvent.getAction();
         if (action == 1) {
-            this.mTouchUpEvent = MotionEvent.obtain(motionEvent);
+            this.mTouchUpEventX = motionEvent.getX();
         } else if (action == 3) {
-            this.mTouchUpEvent = null;
+            this.mTouchUpEventX = Float.MIN_VALUE;
         }
         return super.onTouchEvent(motionEvent);
     }
 
-    @Override // android.view.View.OnClickListener
+    public boolean onHoverEvent(MotionEvent motionEvent) {
+        int trapezoidIndex;
+        int action = motionEvent.getAction();
+        if ((action == 7 || action == 9) && this.mHoveredIndex != (trapezoidIndex = getTrapezoidIndex(motionEvent.getX()))) {
+            this.mHoveredIndex = trapezoidIndex;
+            invalidate();
+        }
+        return super.onHoverEvent(motionEvent);
+    }
+
+    public void onHoverChanged(boolean z) {
+        super.onHoverChanged(z);
+        if (!z) {
+            this.mHoveredIndex = -2;
+            invalidate();
+        }
+    }
+
     public void onClick(View view) {
-        MotionEvent motionEvent = this.mTouchUpEvent;
-        if (motionEvent == null) {
+        float f = this.mTouchUpEventX;
+        if (f == Float.MIN_VALUE) {
             Log.w("BatteryChartView", "invalid motion event for onClick() callback");
             return;
         }
-        int trapezoidIndex = getTrapezoidIndex(motionEvent.getX());
-        if (trapezoidIndex == -2 || !isValidToDraw(trapezoidIndex)) {
-            return;
+        int trapezoidIndex = getTrapezoidIndex(f);
+        if (trapezoidIndex != -2 && isValidToDraw(trapezoidIndex)) {
+            if (trapezoidIndex == this.mSelectedIndex) {
+                setSelectedIndex(-1);
+            } else {
+                setSelectedIndex(trapezoidIndex);
+            }
+            view.performHapticFeedback(6);
         }
-        if (trapezoidIndex == this.mSelectedIndex) {
-            setSelectedIndex(-1);
-        } else {
-            setSelectedIndex(trapezoidIndex);
-        }
-        view.performHapticFeedback(6);
     }
 
-    @Override // android.widget.ImageView, android.view.View
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         lambda$new$0();
-        ((AccessibilityManager) ((ImageView) this).mContext.getSystemService(AccessibilityManager.class)).addAccessibilityStateChangeListener(this);
+        ((AccessibilityManager) this.mContext.getSystemService(AccessibilityManager.class)).addAccessibilityStateChangeListener(this);
     }
 
-    @Override // android.widget.ImageView, android.view.View
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        ((AccessibilityManager) ((ImageView) this).mContext.getSystemService(AccessibilityManager.class)).removeAccessibilityStateChangeListener(this);
+        ((AccessibilityManager) this.mContext.getSystemService(AccessibilityManager.class)).removeAccessibilityStateChangeListener(this);
         this.mHandler.removeCallbacks(this.mUpdateClickableStateRun);
     }
 
-    @Override // android.view.accessibility.AccessibilityManager.AccessibilityStateChangeListener
     public void onAccessibilityStateChanged(boolean z) {
         Log.d("BatteryChartView", "onAccessibilityStateChanged:" + z);
         this.mHandler.removeCallbacks(this.mUpdateClickableStateRun);
-        this.mHandler.postDelayed(this.mUpdateClickableStateRun, 500L);
+        this.mHandler.postDelayed(this.mUpdateClickableStateRun, 500);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     /* renamed from: updateClickableState */
     public void lambda$new$0() {
-        Context context = ((ImageView) this).mContext;
+        Context context = this.mContext;
         this.mIsSlotsClickabled = FeatureFactory.getFactory(context).getPowerUsageFeatureProvider(context).isChartGraphSlotsEnabled(context) && !isAccessibilityEnabled(context);
         Log.d("BatteryChartView", "isChartGraphSlotsEnabled:" + this.mIsSlotsClickabled);
         setClickable(isClickable());
@@ -286,7 +274,7 @@ public class BatteryChartView extends AppCompatImageView implements View.OnClick
             paint.setAntiAlias(true);
             this.mTrapezoidCurvePaint.setColor(this.mTrapezoidSolidColor);
             this.mTrapezoidCurvePaint.setStyle(Paint.Style.STROKE);
-            this.mTrapezoidCurvePaint.setStrokeWidth(this.mDividerWidth * 2);
+            this.mTrapezoidCurvePaint.setStrokeWidth((float) (this.mDividerWidth * 2));
         } else if (z) {
             this.mTrapezoidCurvePaint = null;
             setLevels(this.mLevels);
@@ -294,12 +282,12 @@ public class BatteryChartView extends AppCompatImageView implements View.OnClick
         invalidate();
     }
 
-    @Override // android.view.View
     public void setClickable(boolean z) {
         super.setClickable(this.mIsSlotsClickabled && z);
     }
 
-    void setClickableForce(boolean z) {
+    /* access modifiers changed from: package-private */
+    public void setClickableForce(boolean z) {
         super.setClickable(z);
     }
 
@@ -308,26 +296,27 @@ public class BatteryChartView extends AppCompatImageView implements View.OnClick
         int colorAccentDefaultColor = Utils.getColorAccentDefaultColor(context);
         this.mTrapezoidSolidColor = colorAccentDefaultColor;
         this.mTrapezoidColor = Utils.getDisabled(context, colorAccentDefaultColor);
+        this.mTrapezoidHoverColor = Utils.getColorAttrDefaultColor(context, 17956903);
         Resources resources = getContext().getResources();
-        this.mDividerWidth = resources.getDimensionPixelSize(R.dimen.chartview_divider_width);
-        this.mDividerHeight = resources.getDimensionPixelSize(R.dimen.chartview_divider_height);
+        this.mDividerWidth = resources.getDimensionPixelSize(R$dimen.chartview_divider_width);
+        this.mDividerHeight = resources.getDimensionPixelSize(R$dimen.chartview_divider_height);
         Paint paint = new Paint();
         this.mDividerPaint = paint;
         paint.setAntiAlias(true);
         this.mDividerPaint.setColor(DIVIDER_COLOR);
         this.mDividerPaint.setStyle(Paint.Style.STROKE);
-        this.mDividerPaint.setStrokeWidth(this.mDividerWidth);
+        this.mDividerPaint.setStrokeWidth((float) this.mDividerWidth);
         Log.i("BatteryChartView", "mDividerWidth:" + this.mDividerWidth);
         Log.i("BatteryChartView", "mDividerHeight:" + this.mDividerHeight);
-        this.mTrapezoidHOffset = resources.getDimension(R.dimen.chartview_trapezoid_margin_start);
-        this.mTrapezoidVOffset = resources.getDimension(R.dimen.chartview_trapezoid_margin_bottom);
+        this.mTrapezoidHOffset = resources.getDimension(R$dimen.chartview_trapezoid_margin_start);
+        this.mTrapezoidVOffset = resources.getDimension(R$dimen.chartview_trapezoid_margin_bottom);
         Paint paint2 = new Paint();
         this.mTrapezoidPaint = paint2;
         paint2.setAntiAlias(true);
         this.mTrapezoidPaint.setColor(this.mTrapezoidSolidColor);
         this.mTrapezoidPaint.setStyle(Paint.Style.FILL);
-        this.mTrapezoidPaint.setPathEffect(new CornerPathEffect(resources.getDimensionPixelSize(R.dimen.chartview_trapezoid_radius)));
-        this.mTextPadding = resources.getDimensionPixelSize(R.dimen.chartview_text_padding);
+        this.mTrapezoidPaint.setPathEffect(new CornerPathEffect((float) resources.getDimensionPixelSize(R$dimen.chartview_trapezoid_radius)));
+        this.mTextPadding = resources.getDimensionPixelSize(R$dimen.chartview_text_padding);
     }
 
     private void drawHorizontalDividers(Canvas canvas) {
@@ -336,16 +325,17 @@ public class BatteryChartView extends AppCompatImageView implements View.OnClick
         Rect rect = this.mIndent;
         int i = rect.top;
         int i2 = (height - i) - rect.bottom;
-        float f = i + (this.mDividerWidth * 0.5f);
-        float f2 = width;
+        float f = ((float) i) + (((float) this.mDividerWidth) * 0.5f);
+        float f2 = (float) width;
         canvas.drawLine(0.0f, f, f2, f, this.mDividerPaint);
         drawPercentage(canvas, 0, f);
         int i3 = this.mDividerWidth;
-        float f3 = this.mIndent.top + i3 + ((((i2 - (i3 * 2)) - this.mTrapezoidVOffset) - this.mDividerHeight) * 0.5f);
-        canvas.drawLine(0.0f, f3, f2, f3, this.mDividerPaint);
+        float f3 = ((float) (this.mIndent.top + i3)) + (((((float) (i2 - (i3 * 2))) - this.mTrapezoidVOffset) - ((float) this.mDividerHeight)) * 0.5f);
+        Canvas canvas2 = canvas;
+        canvas2.drawLine(0.0f, f3, f2, f3, this.mDividerPaint);
         drawPercentage(canvas, 1, f3);
-        float f4 = this.mIndent.top + ((i2 - this.mDividerHeight) - (this.mDividerWidth * 0.5f));
-        canvas.drawLine(0.0f, f4, f2, f4, this.mDividerPaint);
+        float f4 = ((float) this.mIndent.top) + (((float) (i2 - this.mDividerHeight)) - (((float) this.mDividerWidth) * 0.5f));
+        canvas2.drawLine(0.0f, f4, f2, f4, this.mDividerPaint);
         drawPercentage(canvas, 2, f4);
     }
 
@@ -353,8 +343,8 @@ public class BatteryChartView extends AppCompatImageView implements View.OnClick
         if (this.mTextPaint != null) {
             String str = this.mPercentages[i];
             int width = getWidth() - this.mPercentageBounds[i].width();
-            Rect[] rectArr = this.mPercentageBounds;
-            canvas.drawText(str, width - rectArr[i].left, f + (rectArr[i].height() * 0.5f), this.mTextPaint);
+            Rect rect = this.mPercentageBounds[i];
+            canvas.drawText(str, (float) (width - rect.left), f + (((float) rect.height()) * 0.5f), this.mTextPaint);
         }
     }
 
@@ -362,21 +352,21 @@ public class BatteryChartView extends AppCompatImageView implements View.OnClick
         int width = getWidth() - this.mIndent.right;
         int i = this.mTrapezoidCount;
         int i2 = i + 1;
-        float f = (width - (this.mDividerWidth * i2)) / i;
-        float height = getHeight() - this.mIndent.bottom;
-        float f2 = height - this.mDividerHeight;
+        float f = (((float) width) - ((float) (this.mDividerWidth * i2))) / ((float) i);
+        float height = (float) (getHeight() - this.mIndent.bottom);
+        float f2 = height - ((float) this.mDividerHeight);
         float f3 = this.mTrapezoidHOffset;
         int i3 = this.mDividerWidth;
-        float f4 = f3 + (i3 * 0.5f);
-        float f5 = i3 * 0.5f;
+        float f4 = f3 + (((float) i3) * 0.5f);
+        float f5 = ((float) i3) * 0.5f;
         int i4 = 0;
         while (i4 < i2) {
             canvas.drawLine(f5, f2, f5, height, this.mDividerPaint);
-            float f6 = this.mDividerWidth + f5 + f;
+            float f6 = ((float) this.mDividerWidth) + f5 + f;
             TrapezoidSlot[] trapezoidSlotArr = this.mTrapezoidSlots;
             if (i4 < trapezoidSlotArr.length) {
-                trapezoidSlotArr[i4].mLeft = Math.round(f5 + f4);
-                this.mTrapezoidSlots[i4].mRight = Math.round(f6 - f4);
+                trapezoidSlotArr[i4].mLeft = (float) Math.round(f5 + f4);
+                this.mTrapezoidSlots[i4].mRight = (float) Math.round(f6 - f4);
             }
             i4++;
             f5 = f6;
@@ -384,99 +374,104 @@ public class BatteryChartView extends AppCompatImageView implements View.OnClick
         if (this.mTimestamps != null) {
             float[] fArr = new float[4];
             int i5 = this.mDividerWidth;
-            float f7 = i5 * 0.5f;
-            float f8 = i5 + f;
+            float f7 = ((float) i5) * 0.5f;
+            float f8 = ((float) i5) + f;
             for (int i6 = 0; i6 < 4; i6++) {
-                fArr[i6] = (i6 * f8 * 4.0f) + f7;
+                fArr[i6] = (((float) i6) * f8 * 4.0f) + f7;
             }
             drawTimestamp(canvas, fArr);
         }
     }
 
     private void drawTimestamp(Canvas canvas, float[] fArr) {
-        canvas.drawText(this.mTimestamps[0], fArr[0] - this.mTimestampsBounds[0].left, getTimestampY(0), this.mTextPaint);
-        canvas.drawText(this.mTimestamps[3], (fArr[3] - this.mTimestampsBounds[3].width()) - this.mTimestampsBounds[3].left, getTimestampY(3), this.mTextPaint);
+        canvas.drawText(this.mTimestamps[0], fArr[0] - ((float) this.mTimestampsBounds[0].left), (float) getTimestampY(0), this.mTextPaint);
+        canvas.drawText(this.mTimestamps[3], (fArr[3] - ((float) this.mTimestampsBounds[3].width())) - ((float) this.mTimestampsBounds[3].left), (float) getTimestampY(3), this.mTextPaint);
         for (int i = 1; i <= 2; i++) {
-            canvas.drawText(this.mTimestamps[i], fArr[i] - ((this.mTimestampsBounds[i].width() - this.mTimestampsBounds[i].left) * 0.5f), getTimestampY(i), this.mTextPaint);
+            canvas.drawText(this.mTimestamps[i], fArr[i] - (((float) (this.mTimestampsBounds[i].width() - this.mTimestampsBounds[i].left)) * 0.5f), (float) getTimestampY(i), this.mTextPaint);
         }
     }
 
     private int getTimestampY(int i) {
-        return (getHeight() - this.mTimestampsBounds[i].height()) + this.mTimestampsBounds[i].height() + this.mTimestampsBounds[i].top + Math.round(this.mTextPadding * 1.5f);
+        return (getHeight() - this.mTimestampsBounds[i].height()) + this.mTimestampsBounds[i].height() + this.mTimestampsBounds[i].top + Math.round(((float) this.mTextPadding) * 1.5f);
     }
 
     private void drawTrapezoids(Canvas canvas) {
-        Rect rect;
         int i;
-        if (this.mLevels == null) {
-            return;
-        }
-        int height = (getHeight() - this.mIndent.bottom) - this.mDividerHeight;
-        int i2 = this.mDividerWidth;
-        float f = (height - i2) - this.mTrapezoidVOffset;
-        float f2 = ((f - (i2 * 0.5f)) - rect.top) / 100.0f;
-        Path path = new Path();
-        int i3 = 0;
-        Path path2 = null;
-        while (i3 < this.mTrapezoidCount) {
-            if (!isValidToDraw(i3)) {
-                Paint paint = this.mTrapezoidCurvePaint;
-                if (paint != null && path2 != null) {
-                    canvas.drawPath(path2, paint);
-                    path2 = null;
-                }
-            } else {
-                if (!this.mIsSlotsClickabled) {
-                    i = this.mTrapezoidColor;
-                } else {
-                    int i4 = this.mSelectedIndex;
-                    i = (i4 == i3 || i4 == -1) ? this.mTrapezoidSolidColor : this.mTrapezoidColor;
-                }
-                this.mTrapezoidPaint.setColor(i);
-                float round = Math.round(f - (this.mLevels[i3] * f2));
-                float round2 = Math.round(f - (this.mLevels[i3 + 1] * f2));
-                path.reset();
-                path.moveTo(this.mTrapezoidSlots[i3].mLeft, f);
-                path.lineTo(this.mTrapezoidSlots[i3].mLeft, round);
-                path.lineTo(this.mTrapezoidSlots[i3].mRight, round2);
-                path.lineTo(this.mTrapezoidSlots[i3].mRight, f);
-                path.lineTo(this.mTrapezoidSlots[i3].mLeft, f);
-                path.lineTo(this.mTrapezoidSlots[i3].mLeft, round);
-                canvas.drawPath(path, this.mTrapezoidPaint);
-                if (this.mTrapezoidCurvePaint != null) {
-                    if (path2 == null) {
-                        path2 = new Path();
-                        path2.moveTo(this.mTrapezoidSlots[i3].mLeft, round);
-                    } else {
-                        path2.lineTo(this.mTrapezoidSlots[i3].mLeft, round);
+        int i2;
+        if (this.mLevels != null) {
+            int height = getHeight();
+            Rect rect = this.mIndent;
+            int i3 = (height - rect.bottom) - this.mDividerHeight;
+            int i4 = this.mDividerWidth;
+            float f = ((float) (i3 - i4)) - this.mTrapezoidVOffset;
+            float f2 = ((f - (((float) i4) * 0.5f)) - ((float) rect.top)) / 100.0f;
+            Path path = new Path();
+            int i5 = 0;
+            Path path2 = null;
+            while (i5 < this.mTrapezoidCount) {
+                if (!isValidToDraw(i5)) {
+                    Paint paint = this.mTrapezoidCurvePaint;
+                    if (!(paint == null || path2 == null)) {
+                        canvas.drawPath(path2, paint);
+                        path2 = null;
                     }
-                    path2.lineTo(this.mTrapezoidSlots[i3].mRight, round2);
+                } else {
+                    boolean z = this.mIsSlotsClickabled;
+                    if (!z) {
+                        i = this.mTrapezoidColor;
+                    } else {
+                        int i6 = this.mSelectedIndex;
+                        i = (i6 == i5 || i6 == -1) ? this.mTrapezoidSolidColor : this.mTrapezoidColor;
+                    }
+                    boolean z2 = z && (i2 = this.mHoveredIndex) == i5 && isValidToDraw(i2);
+                    Paint paint2 = this.mTrapezoidPaint;
+                    if (z2) {
+                        i = this.mTrapezoidHoverColor;
+                    }
+                    paint2.setColor(i);
+                    float round = (float) Math.round(f - (((float) this.mLevels[i5]) * f2));
+                    float round2 = (float) Math.round(f - (((float) this.mLevels[i5 + 1]) * f2));
+                    path.reset();
+                    path.moveTo(this.mTrapezoidSlots[i5].mLeft, f);
+                    path.lineTo(this.mTrapezoidSlots[i5].mLeft, round);
+                    path.lineTo(this.mTrapezoidSlots[i5].mRight, round2);
+                    path.lineTo(this.mTrapezoidSlots[i5].mRight, f);
+                    path.lineTo(this.mTrapezoidSlots[i5].mLeft, f);
+                    path.lineTo(this.mTrapezoidSlots[i5].mLeft, round);
+                    canvas.drawPath(path, this.mTrapezoidPaint);
+                    if (this.mTrapezoidCurvePaint != null) {
+                        if (path2 == null) {
+                            path2 = new Path();
+                            path2.moveTo(this.mTrapezoidSlots[i5].mLeft, round);
+                        } else {
+                            path2.lineTo(this.mTrapezoidSlots[i5].mLeft, round);
+                        }
+                        path2.lineTo(this.mTrapezoidSlots[i5].mRight, round2);
+                    }
                 }
+                i5++;
             }
-            i3++;
+            Paint paint3 = this.mTrapezoidCurvePaint;
+            if (paint3 != null && path2 != null) {
+                canvas.drawPath(path2, paint3);
+            }
         }
-        Paint paint2 = this.mTrapezoidCurvePaint;
-        if (paint2 == null || path2 == null) {
-            return;
-        }
-        canvas.drawPath(path2, paint2);
     }
 
     private int getTrapezoidIndex(float f) {
         int i = 0;
         while (true) {
             TrapezoidSlot[] trapezoidSlotArr = this.mTrapezoidSlots;
-            if (i < trapezoidSlotArr.length) {
-                TrapezoidSlot trapezoidSlot = trapezoidSlotArr[i];
-                float f2 = trapezoidSlot.mLeft;
-                float f3 = this.mTrapezoidHOffset;
-                if (f >= f2 - f3 && f <= trapezoidSlot.mRight + f3) {
-                    return i;
-                }
-                i++;
-            } else {
+            if (i >= trapezoidSlotArr.length) {
                 return -2;
             }
+            TrapezoidSlot trapezoidSlot = trapezoidSlotArr[i];
+            float f2 = trapezoidSlot.mLeft;
+            float f3 = this.mTrapezoidHOffset;
+            if (f >= f2 - f3 && f <= trapezoidSlot.mRight + f3) {
+                return i;
+            }
+            i++;
         }
     }
 
@@ -494,21 +489,23 @@ public class BatteryChartView extends AppCompatImageView implements View.OnClick
         if (!accessibilityManager.isEnabled()) {
             return false;
         }
-        for (AccessibilityServiceInfo accessibilityServiceInfo : accessibilityManager.getEnabledAccessibilityServiceList(17)) {
-            for (String str : ACCESSIBILITY_SERVICE_NAMES) {
-                String id = accessibilityServiceInfo.getId();
-                if (id != null && id.contains(str)) {
-                    Log.d("BatteryChartView", "acccessibilityEnabled:" + id);
-                    return true;
+        for (AccessibilityServiceInfo next : accessibilityManager.getEnabledAccessibilityServiceList(17)) {
+            Iterator<String> it = ACCESSIBILITY_SERVICE_NAMES.iterator();
+            while (true) {
+                if (it.hasNext()) {
+                    String next2 = it.next();
+                    String id = next.getId();
+                    if (id != null && id.contains(next2)) {
+                        Log.d("BatteryChartView", "acccessibilityEnabled:" + id);
+                        return true;
+                    }
                 }
             }
         }
         return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static final class TrapezoidSlot {
+    private static final class TrapezoidSlot {
         public float mLeft;
         public float mRight;
 
@@ -516,7 +513,7 @@ public class BatteryChartView extends AppCompatImageView implements View.OnClick
         }
 
         public String toString() {
-            return String.format(Locale.US, "TrapezoidSlot[%f,%f]", Float.valueOf(this.mLeft), Float.valueOf(this.mRight));
+            return String.format(Locale.US, "TrapezoidSlot[%f,%f]", new Object[]{Float.valueOf(this.mLeft), Float.valueOf(this.mRight)});
         }
     }
 }

@@ -10,7 +10,7 @@ import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.content.ContextCompat;
 import androidx.mediarouter.R$drawable;
 import androidx.mediarouter.R$string;
-/* loaded from: classes.dex */
+
 class MediaRouteExpandCollapseButton extends AppCompatImageButton {
     final AnimationDrawable mCollapseAnimationDrawable;
     final String mCollapseGroupDescription;
@@ -20,20 +20,20 @@ class MediaRouteExpandCollapseButton extends AppCompatImageButton {
     View.OnClickListener mListener;
 
     public MediaRouteExpandCollapseButton(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
-    public MediaRouteExpandCollapseButton(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+    public MediaRouteExpandCollapseButton(Context context, AttributeSet attributeSet) {
+        this(context, attributeSet, 0);
     }
 
-    public MediaRouteExpandCollapseButton(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+    public MediaRouteExpandCollapseButton(Context context, AttributeSet attributeSet, int i) {
+        super(context, attributeSet, i);
         AnimationDrawable animationDrawable = (AnimationDrawable) ContextCompat.getDrawable(context, R$drawable.mr_group_expand);
         this.mExpandAnimationDrawable = animationDrawable;
         AnimationDrawable animationDrawable2 = (AnimationDrawable) ContextCompat.getDrawable(context, R$drawable.mr_group_collapse);
         this.mCollapseAnimationDrawable = animationDrawable2;
-        PorterDuffColorFilter porterDuffColorFilter = new PorterDuffColorFilter(MediaRouterThemeHelper.getControllerColor(context, defStyleAttr), PorterDuff.Mode.SRC_IN);
+        PorterDuffColorFilter porterDuffColorFilter = new PorterDuffColorFilter(MediaRouterThemeHelper.getControllerColor(context, i), PorterDuff.Mode.SRC_IN);
         animationDrawable.setColorFilter(porterDuffColorFilter);
         animationDrawable2.setColorFilter(porterDuffColorFilter);
         String string = context.getString(R$string.mr_controller_expand_group);
@@ -41,8 +41,7 @@ class MediaRouteExpandCollapseButton extends AppCompatImageButton {
         this.mCollapseGroupDescription = context.getString(R$string.mr_controller_collapse_group);
         setImageDrawable(animationDrawable.getFrame(0));
         setContentDescription(string);
-        super.setOnClickListener(new View.OnClickListener() { // from class: androidx.mediarouter.app.MediaRouteExpandCollapseButton.1
-            @Override // android.view.View.OnClickListener
+        super.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 MediaRouteExpandCollapseButton mediaRouteExpandCollapseButton = MediaRouteExpandCollapseButton.this;
                 boolean z = !mediaRouteExpandCollapseButton.mIsGroupExpanded;
@@ -66,8 +65,7 @@ class MediaRouteExpandCollapseButton extends AppCompatImageButton {
         });
     }
 
-    @Override // android.view.View
-    public void setOnClickListener(View.OnClickListener listener) {
-        this.mListener = listener;
+    public void setOnClickListener(View.OnClickListener onClickListener) {
+        this.mListener = onClickListener;
     }
 }

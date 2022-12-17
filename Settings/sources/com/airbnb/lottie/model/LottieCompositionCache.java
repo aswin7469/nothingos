@@ -2,7 +2,7 @@ package com.airbnb.lottie.model;
 
 import androidx.collection.LruCache;
 import com.airbnb.lottie.LottieComposition;
-/* loaded from: classes.dex */
+
 public class LottieCompositionCache {
     private static final LottieCompositionCache INSTANCE = new LottieCompositionCache();
     private final LruCache<String, LottieComposition> cache = new LruCache<>(20);
@@ -22,9 +22,8 @@ public class LottieCompositionCache {
     }
 
     public void put(String str, LottieComposition lottieComposition) {
-        if (str == null) {
-            return;
+        if (str != null) {
+            this.cache.put(str, lottieComposition);
         }
-        this.cache.put(str, lottieComposition);
     }
 }

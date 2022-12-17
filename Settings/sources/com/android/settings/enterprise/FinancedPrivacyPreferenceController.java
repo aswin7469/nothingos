@@ -1,50 +1,66 @@
 package com.android.settings.enterprise;
 
 import android.content.Context;
+import android.content.IntentFilter;
 import androidx.preference.Preference;
 import com.android.internal.annotations.VisibleForTesting;
+import com.android.settings.core.BasePreferenceController;
 import com.android.settings.core.PreferenceControllerMixin;
-import com.android.settingslib.core.AbstractPreferenceController;
 import java.util.Objects;
-/* loaded from: classes.dex */
-public class FinancedPrivacyPreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin {
-    private final String mPreferenceKey;
+
+public class FinancedPrivacyPreferenceController extends BasePreferenceController implements PreferenceControllerMixin {
     private final PrivacyPreferenceControllerHelper mPrivacyPreferenceControllerHelper;
 
-    /* JADX WARN: 'this' call moved to the top of the method (can break code semantics) */
-    public FinancedPrivacyPreferenceController(Context context) {
-        this(context, "financed_privacy");
-        Objects.requireNonNull(context);
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
+        return super.getBackgroundWorkerClass();
     }
 
-    /* JADX WARN: 'this' call moved to the top of the method (can break code semantics) */
+    public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
+        return super.getIntentFilter();
+    }
+
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
+    public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
+        return super.hasAsyncUpdate();
+    }
+
+    public /* bridge */ /* synthetic */ boolean isPublicSlice() {
+        return super.isPublicSlice();
+    }
+
+    public /* bridge */ /* synthetic */ boolean isSliceable() {
+        return super.isSliceable();
+    }
+
+    public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
+        return super.useDynamicSliceSummary();
+    }
+
+    /* JADX INFO: this call moved to the top of the method (can break code semantics) */
     public FinancedPrivacyPreferenceController(Context context, String str) {
         this(context, new PrivacyPreferenceControllerHelper(context), str);
         Objects.requireNonNull(context);
+        Context context2 = context;
     }
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     @VisibleForTesting
     FinancedPrivacyPreferenceController(Context context, PrivacyPreferenceControllerHelper privacyPreferenceControllerHelper, String str) {
-        super(context);
+        super(context, str);
         Objects.requireNonNull(context);
+        Context context2 = context;
         Objects.requireNonNull(privacyPreferenceControllerHelper);
         this.mPrivacyPreferenceControllerHelper = privacyPreferenceControllerHelper;
-        this.mPreferenceKey = str;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         this.mPrivacyPreferenceControllerHelper.updateState(preference);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    public boolean isAvailable() {
-        return this.mPrivacyPreferenceControllerHelper.isFinancedDevice();
-    }
-
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    public String getPreferenceKey() {
-        return this.mPreferenceKey;
+    public int getAvailabilityStatus() {
+        return this.mPrivacyPreferenceControllerHelper.isFinancedDevice() ? 0 : 2;
     }
 }

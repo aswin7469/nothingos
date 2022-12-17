@@ -177,16 +177,16 @@
         <item quantity="other">%d 文字未満にしてください</item>
     </plurals>
     <plurals name="lockpassword_password_too_short">
-        <item quantity="one">%d 文字以上で作成してください</item>
-        <item quantity="other">%d 文字以上で作成してください</item>
+        <item quantity="one">%d 文字以上で設定してください</item>
+        <item quantity="other">%d 文字以上で設定してください</item>
     </plurals>
     <plurals name="lockpassword_pin_too_long">
         <item quantity="one">%d 桁未満にしてください</item>
         <item quantity="other">%d 桁未満にしてください</item>
     </plurals>
     <plurals name="lockpassword_pin_too_short">
-        <item quantity="one">PIN は %d 桁以上で作成してください</item>
-        <item quantity="other">PIN は %d 桁以上で作成してください</item>
+        <item quantity="one">PIN は %d 桁以上で設定してください</item>
+        <item quantity="other">PIN は %d 桁以上で設定してください</item>
     </plurals>
     <plurals name="manage_notification_access_summary_nonzero">
         <item quantity="one">%d個のアプリが通知を読み取れます</item>
@@ -234,15 +234,15 @@
     </plurals>
     <plurals name="notifications_sent_daily">
         <item quantity="one">約 %d 件の通知 / 日</item>
-        <item quantity="other">約 %d 件の通知 / 日</item>
+        <item quantity="other">約 %,d 件の通知 / 日</item>
     </plurals>
     <plurals name="notifications_sent_weekly">
         <item quantity="one">週に約 %d 件の通知</item>
-        <item quantity="other">週に約 %d 件の通知</item>
+        <item quantity="other">週に約 %,d 件の通知</item>
     </plurals>
     <plurals name="number_of_device_admins">
-        <item quantity="one">有効なアプリ: %d 個</item>
-        <item quantity="other">有効なアプリ: %d 個</item>
+        <item quantity="one">実行中のアプリ: %d 個</item>
+        <item quantity="other">実行中のアプリ: %d 個</item>
     </plurals>
     <plurals name="number_of_urls">
         <item quantity="one">URL: %d 件</item>
@@ -320,14 +320,6 @@
         <item quantity="one">証明書の信頼または削除</item>
         <item quantity="other">証明書の信頼または削除</item>
     </plurals>
-    <plurals name="ssl_ca_cert_info_message">
-        <item quantity="one">%s が、あなたの仕事用プロファイルに認証局をインストールしました。これにより、仕事のネットワーク アクティビティ（メール、アプリ、保護されたウェブサイトなど）が監視される場合があります。\n\nこの証明書について詳しくはドメインの管理者までお問い合わせください。</item>
-        <item quantity="other">%s が、あなたの仕事用プロファイルに認証局をインストールしました。これにより、仕事のネットワーク アクティビティ（メール、アプリ、保護されたウェブサイトなど）が監視される場合があります。\n\nこれらの証明書について詳しくはドメインの管理者までお問い合わせください。</item>
-    </plurals>
-    <plurals name="ssl_ca_cert_info_message_device_owner">
-        <item quantity="one">%s が、お使いのデバイスに認証局をインストールしました。これにより、お使いのデバイスのネットワーク アクティビティ（メール、アプリ、保護されたウェブサイトなど）が監視される場合があります。\n\nこの証明書について詳しくはドメインの管理者までお問い合わせください。</item>
-        <item quantity="other">%s が、お使いのデバイスに認証局をインストールしました。これにより、お使いのデバイスのネットワーク アクティビティ（メール、アプリ、保護されたウェブサイトなど）が監視される場合があります。\n\nこれらの証明書について詳しくはドメインの管理者までお問い合わせください。</item>
-    </plurals>
     <plurals name="ssl_ca_cert_settings_button">
         <item quantity="one">証明書を確認</item>
         <item quantity="other">証明書を確認</item>
@@ -359,10 +351,6 @@
     <plurals name="wifi_saved_passpoint_access_points_summary">
         <item quantity="one">1 件の登録</item>
         <item quantity="other">%d 件の登録</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d 台のデバイスが接続されています</item>
-        <item quantity="other">%1$d 台のデバイスが接続されています</item>
     </plurals>
     <plurals name="wrong_pin_code">
         <item quantity="one">SIM PINコードが無効です。入力できるのはあと%d回です。この回数を超えた場合は、携帯通信会社にお問い合わせください。</item>

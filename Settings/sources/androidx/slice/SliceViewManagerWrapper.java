@@ -1,6 +1,8 @@
 package androidx.slice;
 
 import android.annotation.SuppressLint;
+import android.app.slice.SliceManager;
+import android.app.slice.SliceSpec;
 import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.Intent;
@@ -11,27 +13,25 @@ import androidx.collection.ArrayMap;
 import androidx.slice.widget.SliceLiveData;
 import java.util.Collection;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 class SliceViewManagerWrapper extends SliceViewManagerBase {
     private final ArrayMap<String, String> mCachedAuthorities;
     private final ArrayMap<String, Boolean> mCachedSuspendFlags;
-    private final android.app.slice.SliceManager mManager;
-    private final Set<android.app.slice.SliceSpec> mSpecs;
+    private final SliceManager mManager;
+    private final Set<SliceSpec> mSpecs;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public SliceViewManagerWrapper(Context context) {
-        this(context, (android.app.slice.SliceManager) context.getSystemService(android.app.slice.SliceManager.class));
+    SliceViewManagerWrapper(Context context) {
+        this(context, (SliceManager) context.getSystemService(SliceManager.class));
     }
 
-    SliceViewManagerWrapper(Context context, android.app.slice.SliceManager manager) {
+    SliceViewManagerWrapper(Context context, SliceManager sliceManager) {
         super(context);
         this.mCachedSuspendFlags = new ArrayMap<>();
         this.mCachedAuthorities = new ArrayMap<>();
-        this.mManager = manager;
+        this.mManager = sliceManager;
         this.mSpecs = SliceConvert.unwrap(SliceLiveData.SUPPORTED_SPECS);
     }
 
-    @Override // androidx.slice.SliceViewManager
     public void pinSlice(Uri uri) {
         try {
             this.mManager.pinSlice(uri, this.mSpecs);
@@ -45,7 +45,6 @@ class SliceViewManagerWrapper extends SliceViewManagerBase {
         }
     }
 
-    @Override // androidx.slice.SliceViewManager
     public void unpinSlice(Uri uri) {
         try {
             this.mManager.unpinSlice(uri);
@@ -53,7 +52,6 @@ class SliceViewManagerWrapper extends SliceViewManagerBase {
         }
     }
 
-    @Override // androidx.slice.SliceViewManager
     public Slice bindSlice(Uri uri) {
         if (isAuthoritySuspended(uri.getAuthority())) {
             return null;
@@ -61,7 +59,6 @@ class SliceViewManagerWrapper extends SliceViewManagerBase {
         return SliceConvert.wrap(this.mManager.bindSlice(uri, this.mSpecs), this.mContext);
     }
 
-    @Override // androidx.slice.SliceViewManager
     public Slice bindSlice(Intent intent) {
         if (isPackageSuspended(intent)) {
             return null;
@@ -76,31 +73,31 @@ class SliceViewManagerWrapper extends SliceViewManagerBase {
         if (intent.getPackage() != null) {
             return isPackageSuspended(intent.getPackage());
         }
-        if (intent.getData() == null) {
-            return false;
+        if (intent.getData() != null) {
+            return isAuthoritySuspended(intent.getData().getAuthority());
         }
-        return isAuthoritySuspended(intent.getData().getAuthority());
+        return false;
     }
 
-    private boolean isAuthoritySuspended(String authority) {
-        String str = this.mCachedAuthorities.get(authority);
-        if (str == null) {
-            ProviderInfo resolveContentProvider = this.mContext.getPackageManager().resolveContentProvider(authority, 0);
+    private boolean isAuthoritySuspended(String str) {
+        String str2 = this.mCachedAuthorities.get(str);
+        if (str2 == null) {
+            ProviderInfo resolveContentProvider = this.mContext.getPackageManager().resolveContentProvider(str, 0);
             if (resolveContentProvider == null) {
                 return false;
             }
-            str = resolveContentProvider.packageName;
-            this.mCachedAuthorities.put(authority, str);
+            str2 = resolveContentProvider.packageName;
+            this.mCachedAuthorities.put(str, str2);
         }
-        return isPackageSuspended(str);
+        return isPackageSuspended(str2);
     }
 
-    private boolean isPackageSuspended(String pkg) {
-        Boolean bool = this.mCachedSuspendFlags.get(pkg);
+    private boolean isPackageSuspended(String str) {
+        Boolean bool = this.mCachedSuspendFlags.get(str);
         if (bool == null) {
             try {
-                Boolean valueOf = Boolean.valueOf((this.mContext.getPackageManager().getApplicationInfo(pkg, 0).flags & 1073741824) != 0);
-                this.mCachedSuspendFlags.put(pkg, valueOf);
+                Boolean valueOf = Boolean.valueOf((this.mContext.getPackageManager().getApplicationInfo(str, 0).flags & 1073741824) != 0);
+                this.mCachedSuspendFlags.put(str, valueOf);
                 bool = valueOf;
             } catch (PackageManager.NameNotFoundException unused) {
                 return false;
@@ -109,7 +106,6 @@ class SliceViewManagerWrapper extends SliceViewManagerBase {
         return bool.booleanValue();
     }
 
-    @Override // androidx.slice.SliceViewManager
     @SuppressLint({"WrongThread"})
     public Collection<Uri> getSliceDescendants(Uri uri) {
         try {

@@ -101,7 +101,7 @@
         <item>Tumia sip</item>
         <item>Chakata simu uliyopiga</item>
         <item>Alama ya kidole</item>
-        <item>Vitambua shughuli za mwili</item>
+        <item>Vitambuzi vya shughuli za mwili</item>
         <item>Soma matangazo ya simu</item>
         <item>Eneo la jaribio</item>
         <item>Soma hifadhi</item>
@@ -168,7 +168,7 @@
         <item>tumia sip</item>
         <item>chakata simu uliyopiga</item>
         <item>alama ya kidole</item>
-        <item>vitambua shughuli za mwili</item>
+        <item>vitambuzi vya shughuli za mwili</item>
         <item>soma matangazo ya simu</item>
         <item>eneo la jaribio</item>
         <item>soma hifadhi</item>
@@ -195,6 +195,8 @@
         <item>Zilizokaa zaidi ya siku 30</item>
         <item>Zilizokaa zaidi ya siku 60</item>
         <item>Zilizokaa zaidi ya siku 90</item>
+    </array>
+    <array name="avatar_image_descriptions">
     </array>
     <array name="battery_labels">
         <item>0%</item>
@@ -260,6 +262,8 @@
         <item>kHz 48.0</item>
         <item>kHz 88.2</item>
         <item>kHz 96.0</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
         <item>Tumia Uteuzi wa Mfumo (Chaguomsingi)</item>
@@ -267,6 +271,8 @@
         <item>kHz 48.0</item>
         <item>kHz 88.2</item>
         <item>kHz 96.0</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
         <item>Tumia Uteuzi wa Mfumo (Chaguomsingi)</item>
@@ -277,6 +283,10 @@
         <item>LDAC</item>
         <item>Sauti ya Qualcomm® aptX™ Adaptive</item>
         <item>Sauti ya Qualcomm® aptX™ TWS+</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
         <item>Tumia Uteuzi wa Mfumo (Chaguomsingi)</item>
@@ -287,6 +297,10 @@
         <item>LDAC</item>
         <item>Sauti ya Qualcomm® aptX™ Adaptive</item>
         <item>Sauti ya Qualcomm® aptX™ TWS+</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -343,17 +357,10 @@
         <item>Imeinuliwa</item>
         <item>Imepunguzwa</item>
     </array>
-    <array name="captioning_font_size_selector_summaries">
-        <item>Maandishi madogo zaidi</item>
-        <item>Maandishi madogo</item>
-        <item>Maandishi ya ukubwa chaguomsingi</item>
-        <item>Maandishi makubwa</item>
-        <item>Maandishi makubwa zaidi</item>
-    </array>
     <array name="captioning_font_size_selector_titles">
         <item>Madogo sana</item>
         <item>Madogo</item>
-        <item>Chaguomsingi</item>
+        <item>Wastani</item>
         <item>Makubwa</item>
         <item>Makubwa sana</item>
     </array>
@@ -485,6 +492,14 @@
         <item>IMSI</item>
         <item>GID</item>
         <item>ICCID</item>
+    </array>
+    <array name="nfc_payment_favor">
+        <item>Kila wakati</item>
+        <item>Isipokuwa wakati programu nyingine ya kulipa imefunguliwa</item>
+    </array>
+    <array name="nfc_payment_favor_values">
+        <item>@null</item>
+        <item>1</item>
     </array>
     <array name="overlay_display_devices_entries">
         <item>Hamna</item>
@@ -618,17 +633,20 @@
         <item>Chora eneo la klipu lisilo mstatili kwa rangi ya bluu</item>
         <item>Angazia amri za michoro iliyojaribiwa kwa rangi ya kijani</item>
     </array>
-    <array name="sim_color_light">
-        <item>@color/SIM_color_cyan</item>
-        <item>@color/SIM_color_blue800</item>
-        <item>@color/SIM_color_green800</item>
-        <item>@color/SIM_color_purple800</item>
-        <item>@color/SIM_color_pink800</item>
-        <item>@color/SIM_color_orange</item>
-    </array>
     <array name="swipe_direction_values">
         <item>1</item>
         <item>@null</item>
+    </array>
+    <array name="switch_to_user_zero_when_docked_timeout_entries">
+        <item>Kamwe</item>
+        <item>Baada ya dakika moja</item>
+        <item>Baada ya dakika tano</item>
+    </array>
+    <array name="tare_modifiers_subfactors">
+        <item>Inachaji</item>
+        <item>Sinzia</item>
+        <item>Hali ya Kiokoa Betri</item>
+        <item>Hali ya Kuchakata</item>
     </array>
     <array name="timezone_filters">
         <item>Marekani</item>

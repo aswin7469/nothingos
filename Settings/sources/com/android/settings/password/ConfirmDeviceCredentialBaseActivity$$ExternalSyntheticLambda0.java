@@ -1,12 +1,7 @@
 package com.android.settings.password;
-/* loaded from: classes.dex */
+
+/* compiled from: R8$$SyntheticClass */
 public final /* synthetic */ class ConfirmDeviceCredentialBaseActivity$$ExternalSyntheticLambda0 implements Runnable {
-    public static final /* synthetic */ ConfirmDeviceCredentialBaseActivity$$ExternalSyntheticLambda0 INSTANCE = new ConfirmDeviceCredentialBaseActivity$$ExternalSyntheticLambda0();
-
-    private /* synthetic */ ConfirmDeviceCredentialBaseActivity$$ExternalSyntheticLambda0() {
-    }
-
-    @Override // java.lang.Runnable
     public final void run() {
         ConfirmDeviceCredentialBaseActivity.lambda$onDestroy$0();
     }

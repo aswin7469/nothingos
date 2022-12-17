@@ -3,11 +3,10 @@ package androidx.appcompat.widget;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.Menu;
-import android.view.ViewGroup;
 import android.view.Window;
 import androidx.appcompat.view.menu.MenuPresenter;
 import androidx.core.view.ViewPropertyAnimatorCompat;
-/* loaded from: classes.dex */
+
 public interface DecorToolbar {
     boolean canShowOverflowMenu();
 
@@ -22,8 +21,6 @@ public interface DecorToolbar {
     int getNavigationMode();
 
     CharSequence getTitle();
-
-    ViewGroup getViewGroup();
 
     boolean hasExpandedActionView();
 

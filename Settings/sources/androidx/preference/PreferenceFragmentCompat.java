@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -20,43 +21,42 @@ import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-/* loaded from: classes.dex */
+
 public abstract class PreferenceFragmentCompat extends Fragment implements PreferenceManager.OnPreferenceTreeClickListener, PreferenceManager.OnDisplayPreferenceDialogListener, PreferenceManager.OnNavigateToScreenListener, DialogPreference.TargetFragment {
-    private boolean mHavePrefs;
-    private boolean mInitDone;
-    RecyclerView mList;
-    private PreferenceManager mPreferenceManager;
-    private Runnable mSelectPreferenceRunnable;
+    public static final String ARG_PREFERENCE_ROOT = "androidx.preference.PreferenceFragmentCompat.PREFERENCE_ROOT";
+    private static final String DIALOG_FRAGMENT_TAG = "androidx.preference.PreferenceFragment.DIALOG";
+    private static final int MSG_BIND_PREFERENCES = 1;
+    private static final String PREFERENCES_TAG = "android:preferences";
+    private static final String TAG = "PreferenceFragment";
     private final DividerDecoration mDividerDecoration = new DividerDecoration();
-    private int mLayoutResId = R$layout.preference_list_fragment;
-    private Handler mHandler = new Handler() { // from class: androidx.preference.PreferenceFragmentCompat.1
-        @Override // android.os.Handler
+    private Handler mHandler = new Handler() {
         public void handleMessage(Message message) {
-            if (message.what != 1) {
-                return;
+            if (message.what == 1) {
+                PreferenceFragmentCompat.this.bindPreferences();
             }
-            PreferenceFragmentCompat.this.bindPreferences();
         }
     };
-    private final Runnable mRequestFocus = new Runnable() { // from class: androidx.preference.PreferenceFragmentCompat.2
-        @Override // java.lang.Runnable
+    private boolean mHavePrefs;
+    private boolean mInitDone;
+    private int mLayoutResId = R$layout.preference_list_fragment;
+    RecyclerView mList;
+    private PreferenceManager mPreferenceManager;
+    private final Runnable mRequestFocus = new Runnable() {
         public void run() {
             RecyclerView recyclerView = PreferenceFragmentCompat.this.mList;
             recyclerView.focusableViewAvailable(recyclerView);
         }
     };
+    private Runnable mSelectPreferenceRunnable;
 
-    /* loaded from: classes.dex */
     public interface OnPreferenceDisplayDialogCallback {
         boolean onPreferenceDisplayDialog(PreferenceFragmentCompat preferenceFragmentCompat, Preference preference);
     }
 
-    /* loaded from: classes.dex */
     public interface OnPreferenceStartFragmentCallback {
         boolean onPreferenceStartFragment(PreferenceFragmentCompat preferenceFragmentCompat, Preference preference);
     }
 
-    /* loaded from: classes.dex */
     public interface OnPreferenceStartScreenCallback {
         boolean onPreferenceStartScreen(PreferenceFragmentCompat preferenceFragmentCompat, PreferenceScreen preferenceScreen);
     }
@@ -65,15 +65,16 @@ public abstract class PreferenceFragmentCompat extends Fragment implements Prefe
         return null;
     }
 
-    protected void onBindPreferences() {
+    /* access modifiers changed from: protected */
+    public void onBindPreferences() {
     }
 
     public abstract void onCreatePreferences(Bundle bundle, String str);
 
-    protected void onUnbindPreferences() {
+    /* access modifiers changed from: protected */
+    public void onUnbindPreferences() {
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         TypedValue typedValue = new TypedValue();
@@ -86,12 +87,11 @@ public abstract class PreferenceFragmentCompat extends Fragment implements Prefe
         PreferenceManager preferenceManager = new PreferenceManager(getContext());
         this.mPreferenceManager = preferenceManager;
         preferenceManager.setOnNavigateToScreenListener(this);
-        onCreatePreferences(bundle, getArguments() != null ? getArguments().getString("androidx.preference.PreferenceFragmentCompat.PREFERENCE_ROOT") : null);
+        onCreatePreferences(bundle, getArguments() != null ? getArguments().getString(ARG_PREFERENCE_ROOT) : null);
     }
 
-    @Override // androidx.fragment.app.Fragment
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
-        TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(null, R$styleable.PreferenceFragmentCompat, R$attr.preferenceFragmentCompatStyle, 0);
+        TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes((AttributeSet) null, R$styleable.PreferenceFragmentCompat, R$attr.preferenceFragmentCompatStyle, 0);
         this.mLayoutResId = obtainStyledAttributes.getResourceId(R$styleable.PreferenceFragmentCompat_android_layout, this.mLayoutResId);
         Drawable drawable = obtainStyledAttributes.getDrawable(R$styleable.PreferenceFragmentCompat_android_divider);
         int dimensionPixelSize = obtainStyledAttributes.getDimensionPixelSize(R$styleable.PreferenceFragmentCompat_android_dividerHeight, -1);
@@ -100,26 +100,26 @@ public abstract class PreferenceFragmentCompat extends Fragment implements Prefe
         LayoutInflater cloneInContext = layoutInflater.cloneInContext(getContext());
         View inflate = cloneInContext.inflate(this.mLayoutResId, viewGroup, false);
         View findViewById = inflate.findViewById(16908351);
-        if (!(findViewById instanceof ViewGroup)) {
-            throw new IllegalStateException("Content has view with id attribute 'android.R.id.list_container' that is not a ViewGroup class");
-        }
-        ViewGroup viewGroup2 = (ViewGroup) findViewById;
-        RecyclerView onCreateRecyclerView = onCreateRecyclerView(cloneInContext, viewGroup2, bundle);
-        if (onCreateRecyclerView == null) {
+        if (findViewById instanceof ViewGroup) {
+            ViewGroup viewGroup2 = (ViewGroup) findViewById;
+            RecyclerView onCreateRecyclerView = onCreateRecyclerView(cloneInContext, viewGroup2, bundle);
+            if (onCreateRecyclerView != null) {
+                this.mList = onCreateRecyclerView;
+                onCreateRecyclerView.addItemDecoration(this.mDividerDecoration);
+                setDivider(drawable);
+                if (dimensionPixelSize != -1) {
+                    setDividerHeight(dimensionPixelSize);
+                }
+                this.mDividerDecoration.setAllowDividerAfterLastItem(z);
+                if (this.mList.getParent() == null) {
+                    viewGroup2.addView(this.mList);
+                }
+                this.mHandler.post(this.mRequestFocus);
+                return inflate;
+            }
             throw new RuntimeException("Could not create RecyclerView");
         }
-        this.mList = onCreateRecyclerView;
-        onCreateRecyclerView.addItemDecoration(this.mDividerDecoration);
-        setDivider(drawable);
-        if (dimensionPixelSize != -1) {
-            setDividerHeight(dimensionPixelSize);
-        }
-        this.mDividerDecoration.setAllowDividerAfterLastItem(z);
-        if (this.mList.getParent() == null) {
-            viewGroup2.addView(this.mList);
-        }
-        this.mHandler.post(this.mRequestFocus);
-        return inflate;
+        throw new IllegalStateException("Content has view with id attribute 'android.R.id.list_container' that is not a ViewGroup class");
     }
 
     public void setDivider(Drawable drawable) {
@@ -130,12 +130,11 @@ public abstract class PreferenceFragmentCompat extends Fragment implements Prefe
         this.mDividerDecoration.setDividerHeight(i);
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onViewCreated(View view, Bundle bundle) {
         Bundle bundle2;
         PreferenceScreen preferenceScreen;
         super.onViewCreated(view, bundle);
-        if (bundle != null && (bundle2 = bundle.getBundle("android:preferences")) != null && (preferenceScreen = getPreferenceScreen()) != null) {
+        if (!(bundle == null || (bundle2 = bundle.getBundle(PREFERENCES_TAG)) == null || (preferenceScreen = getPreferenceScreen()) == null)) {
             preferenceScreen.restoreHierarchyState(bundle2);
         }
         if (this.mHavePrefs) {
@@ -149,21 +148,18 @@ public abstract class PreferenceFragmentCompat extends Fragment implements Prefe
         this.mInitDone = true;
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onStart() {
         super.onStart();
         this.mPreferenceManager.setOnPreferenceTreeClickListener(this);
         this.mPreferenceManager.setOnDisplayPreferenceDialogListener(this);
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onStop() {
         super.onStop();
-        this.mPreferenceManager.setOnPreferenceTreeClickListener(null);
-        this.mPreferenceManager.setOnDisplayPreferenceDialogListener(null);
+        this.mPreferenceManager.setOnPreferenceTreeClickListener((PreferenceManager.OnPreferenceTreeClickListener) null);
+        this.mPreferenceManager.setOnDisplayPreferenceDialogListener((PreferenceManager.OnDisplayPreferenceDialogListener) null);
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onDestroyView() {
         this.mHandler.removeCallbacks(this.mRequestFocus);
         this.mHandler.removeMessages(1);
@@ -174,14 +170,13 @@ public abstract class PreferenceFragmentCompat extends Fragment implements Prefe
         super.onDestroyView();
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         PreferenceScreen preferenceScreen = getPreferenceScreen();
         if (preferenceScreen != null) {
             Bundle bundle2 = new Bundle();
             preferenceScreen.saveHierarchyState(bundle2);
-            bundle.putBundle("android:preferences", bundle2);
+            bundle.putBundle(PREFERENCES_TAG, bundle2);
         }
     }
 
@@ -194,15 +189,13 @@ public abstract class PreferenceFragmentCompat extends Fragment implements Prefe
     }
 
     public void setPreferenceScreen(PreferenceScreen preferenceScreen) {
-        if (!this.mPreferenceManager.setPreferences(preferenceScreen) || preferenceScreen == null) {
-            return;
+        if (this.mPreferenceManager.setPreferences(preferenceScreen) && preferenceScreen != null) {
+            onUnbindPreferences();
+            this.mHavePrefs = true;
+            if (this.mInitDone) {
+                postBindPreferences();
+            }
         }
-        onUnbindPreferences();
-        this.mHavePrefs = true;
-        if (!this.mInitDone) {
-            return;
-        }
-        postBindPreferences();
     }
 
     public void addPreferencesFromResource(int i) {
@@ -212,7 +205,7 @@ public abstract class PreferenceFragmentCompat extends Fragment implements Prefe
 
     public void setPreferencesFromResource(int i, String str) {
         requirePreferenceManager();
-        PreferenceScreen inflateFromResource = this.mPreferenceManager.inflateFromResource(getContext(), i, null);
+        PreferenceScreen inflateFromResource = this.mPreferenceManager.inflateFromResource(getContext(), i, (PreferenceScreen) null);
         Object obj = inflateFromResource;
         if (str != null) {
             Object findPreference = inflateFromResource.findPreference(str);
@@ -225,67 +218,62 @@ public abstract class PreferenceFragmentCompat extends Fragment implements Prefe
         setPreferenceScreen((PreferenceScreen) obj);
     }
 
-    @Override // androidx.preference.PreferenceManager.OnPreferenceTreeClickListener
     public boolean onPreferenceTreeClick(Preference preference) {
-        if (preference.getFragment() != null) {
-            boolean onPreferenceStartFragment = getCallbackFragment() instanceof OnPreferenceStartFragmentCallback ? ((OnPreferenceStartFragmentCallback) getCallbackFragment()).onPreferenceStartFragment(this, preference) : false;
-            if (!onPreferenceStartFragment && (getContext() instanceof OnPreferenceStartFragmentCallback)) {
-                onPreferenceStartFragment = ((OnPreferenceStartFragmentCallback) getContext()).onPreferenceStartFragment(this, preference);
-            }
-            if (!onPreferenceStartFragment && (getActivity() instanceof OnPreferenceStartFragmentCallback)) {
-                onPreferenceStartFragment = ((OnPreferenceStartFragmentCallback) getActivity()).onPreferenceStartFragment(this, preference);
-            }
-            if (onPreferenceStartFragment) {
-                return true;
-            }
-            Log.w("PreferenceFragment", "onPreferenceStartFragment is not implemented in the parent activity - attempting to use a fallback implementation. You should implement this method so that you can configure the new fragment that will be displayed, and set a transition between the fragments.");
-            FragmentManager parentFragmentManager = getParentFragmentManager();
-            Bundle extras = preference.getExtras();
-            Fragment instantiate = parentFragmentManager.getFragmentFactory().instantiate(requireActivity().getClassLoader(), preference.getFragment());
-            instantiate.setArguments(extras);
-            instantiate.setTargetFragment(this, 0);
-            parentFragmentManager.beginTransaction().replace(((View) getView().getParent()).getId(), instantiate).addToBackStack(null).commit();
+        if (preference.getFragment() == null) {
+            return false;
+        }
+        boolean onPreferenceStartFragment = getCallbackFragment() instanceof OnPreferenceStartFragmentCallback ? ((OnPreferenceStartFragmentCallback) getCallbackFragment()).onPreferenceStartFragment(this, preference) : false;
+        if (!onPreferenceStartFragment && (getContext() instanceof OnPreferenceStartFragmentCallback)) {
+            onPreferenceStartFragment = ((OnPreferenceStartFragmentCallback) getContext()).onPreferenceStartFragment(this, preference);
+        }
+        if (!onPreferenceStartFragment && (getActivity() instanceof OnPreferenceStartFragmentCallback)) {
+            onPreferenceStartFragment = ((OnPreferenceStartFragmentCallback) getActivity()).onPreferenceStartFragment(this, preference);
+        }
+        if (onPreferenceStartFragment) {
             return true;
         }
-        return false;
+        Log.w(TAG, "onPreferenceStartFragment is not implemented in the parent activity - attempting to use a fallback implementation. You should implement this method so that you can configure the new fragment that will be displayed, and set a transition between the fragments.");
+        FragmentManager parentFragmentManager = getParentFragmentManager();
+        Bundle extras = preference.getExtras();
+        Fragment instantiate = parentFragmentManager.getFragmentFactory().instantiate(requireActivity().getClassLoader(), preference.getFragment());
+        instantiate.setArguments(extras);
+        instantiate.setTargetFragment(this, 0);
+        parentFragmentManager.beginTransaction().replace(((View) getView().getParent()).getId(), instantiate).addToBackStack((String) null).commit();
+        return true;
     }
 
-    @Override // androidx.preference.PreferenceManager.OnNavigateToScreenListener
     public void onNavigateToScreen(PreferenceScreen preferenceScreen) {
         boolean onPreferenceStartScreen = getCallbackFragment() instanceof OnPreferenceStartScreenCallback ? ((OnPreferenceStartScreenCallback) getCallbackFragment()).onPreferenceStartScreen(this, preferenceScreen) : false;
         if (!onPreferenceStartScreen && (getContext() instanceof OnPreferenceStartScreenCallback)) {
             onPreferenceStartScreen = ((OnPreferenceStartScreenCallback) getContext()).onPreferenceStartScreen(this, preferenceScreen);
         }
-        if (onPreferenceStartScreen || !(getActivity() instanceof OnPreferenceStartScreenCallback)) {
-            return;
+        if (!onPreferenceStartScreen && (getActivity() instanceof OnPreferenceStartScreenCallback)) {
+            ((OnPreferenceStartScreenCallback) getActivity()).onPreferenceStartScreen(this, preferenceScreen);
         }
-        ((OnPreferenceStartScreenCallback) getActivity()).onPreferenceStartScreen(this, preferenceScreen);
     }
 
-    @Override // androidx.preference.DialogPreference.TargetFragment
     public <T extends Preference> T findPreference(CharSequence charSequence) {
         PreferenceManager preferenceManager = this.mPreferenceManager;
         if (preferenceManager == null) {
             return null;
         }
-        return (T) preferenceManager.findPreference(charSequence);
+        return preferenceManager.findPreference(charSequence);
     }
 
     private void requirePreferenceManager() {
-        if (this.mPreferenceManager != null) {
-            return;
+        if (this.mPreferenceManager == null) {
+            throw new RuntimeException("This should be called after super.onCreate.");
         }
-        throw new RuntimeException("This should be called after super.onCreate.");
     }
 
     private void postBindPreferences() {
-        if (this.mHandler.hasMessages(1)) {
-            return;
+        if (!this.mHandler.hasMessages(1)) {
+            this.mHandler.obtainMessage(1).sendToTarget();
         }
-        this.mHandler.obtainMessage(1).sendToTarget();
     }
 
-    void bindPreferences() {
+    /* access modifiers changed from: package-private */
+    public void bindPreferences() {
         PreferenceScreen preferenceScreen = getPreferenceScreen();
         if (preferenceScreen != null) {
             getListView().setAdapter(onCreateAdapter(preferenceScreen));
@@ -295,7 +283,7 @@ public abstract class PreferenceFragmentCompat extends Fragment implements Prefe
     }
 
     private void unbindPreferences() {
-        getListView().setAdapter(null);
+        getListView().setAdapter((RecyclerView.Adapter) null);
         PreferenceScreen preferenceScreen = getPreferenceScreen();
         if (preferenceScreen != null) {
             preferenceScreen.onDetached();
@@ -309,26 +297,26 @@ public abstract class PreferenceFragmentCompat extends Fragment implements Prefe
 
     public RecyclerView onCreateRecyclerView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
         RecyclerView recyclerView;
-        if (!getContext().getPackageManager().hasSystemFeature("android.hardware.type.automotive") || (recyclerView = (RecyclerView) viewGroup.findViewById(R$id.recycler_view)) == null) {
-            RecyclerView recyclerView2 = (RecyclerView) layoutInflater.inflate(R$layout.preference_recyclerview, viewGroup, false);
-            recyclerView2.setLayoutManager(onCreateLayoutManager());
-            recyclerView2.setAccessibilityDelegateCompat(new PreferenceRecyclerViewAccessibilityDelegate(recyclerView2));
-            return recyclerView2;
+        if (getContext().getPackageManager().hasSystemFeature("android.hardware.type.automotive") && (recyclerView = (RecyclerView) viewGroup.findViewById(R$id.recycler_view)) != null) {
+            return recyclerView;
         }
-        return recyclerView;
+        RecyclerView recyclerView2 = (RecyclerView) layoutInflater.inflate(R$layout.preference_recyclerview, viewGroup, false);
+        recyclerView2.setLayoutManager(onCreateLayoutManager());
+        recyclerView2.setAccessibilityDelegateCompat(new PreferenceRecyclerViewAccessibilityDelegate(recyclerView2));
+        return recyclerView2;
     }
 
     public RecyclerView.LayoutManager onCreateLayoutManager() {
         return new LinearLayoutManager(getContext());
     }
 
-    protected RecyclerView.Adapter onCreateAdapter(PreferenceScreen preferenceScreen) {
+    /* access modifiers changed from: protected */
+    public RecyclerView.Adapter onCreateAdapter(PreferenceScreen preferenceScreen) {
         return new PreferenceGroupAdapter(preferenceScreen);
     }
 
-    @Override // androidx.preference.PreferenceManager.OnDisplayPreferenceDialogListener
     public void onDisplayPreferenceDialog(Preference preference) {
-        DialogFragment newInstance;
+        DialogFragment dialogFragment;
         boolean onPreferenceDisplayDialog = getCallbackFragment() instanceof OnPreferenceDisplayDialogCallback ? ((OnPreferenceDisplayDialogCallback) getCallbackFragment()).onPreferenceDisplayDialog(this, preference) : false;
         if (!onPreferenceDisplayDialog && (getContext() instanceof OnPreferenceDisplayDialogCallback)) {
             onPreferenceDisplayDialog = ((OnPreferenceDisplayDialogCallback) getContext()).onPreferenceDisplayDialog(this, preference);
@@ -336,62 +324,58 @@ public abstract class PreferenceFragmentCompat extends Fragment implements Prefe
         if (!onPreferenceDisplayDialog && (getActivity() instanceof OnPreferenceDisplayDialogCallback)) {
             onPreferenceDisplayDialog = ((OnPreferenceDisplayDialogCallback) getActivity()).onPreferenceDisplayDialog(this, preference);
         }
-        if (!onPreferenceDisplayDialog && getParentFragmentManager().findFragmentByTag("androidx.preference.PreferenceFragment.DIALOG") == null) {
+        if (!onPreferenceDisplayDialog && getParentFragmentManager().findFragmentByTag(DIALOG_FRAGMENT_TAG) == null) {
             if (preference instanceof EditTextPreference) {
-                newInstance = EditTextPreferenceDialogFragmentCompat.newInstance(preference.getKey());
+                dialogFragment = EditTextPreferenceDialogFragmentCompat.newInstance(preference.getKey());
             } else if (preference instanceof ListPreference) {
-                newInstance = ListPreferenceDialogFragmentCompat.newInstance(preference.getKey());
+                dialogFragment = ListPreferenceDialogFragmentCompat.newInstance(preference.getKey());
             } else if (preference instanceof MultiSelectListPreference) {
-                newInstance = MultiSelectListPreferenceDialogFragmentCompat.newInstance(preference.getKey());
+                dialogFragment = MultiSelectListPreferenceDialogFragmentCompat.newInstance(preference.getKey());
             } else {
                 throw new IllegalArgumentException("Cannot display dialog for an unknown Preference type: " + preference.getClass().getSimpleName() + ". Make sure to implement onPreferenceDisplayDialog() to handle displaying a custom dialog for this Preference.");
             }
-            newInstance.setTargetFragment(this, 0);
-            newInstance.show(getParentFragmentManager(), "androidx.preference.PreferenceFragment.DIALOG");
+            dialogFragment.setTargetFragment(this, 0);
+            dialogFragment.show(getParentFragmentManager(), DIALOG_FRAGMENT_TAG);
         }
     }
 
     public void scrollToPreference(String str) {
-        scrollToPreferenceInternal(null, str);
+        scrollToPreferenceInternal((Preference) null, str);
     }
 
     public void scrollToPreference(Preference preference) {
-        scrollToPreferenceInternal(preference, null);
+        scrollToPreferenceInternal(preference, (String) null);
     }
 
     private void scrollToPreferenceInternal(final Preference preference, final String str) {
-        Runnable runnable = new Runnable() { // from class: androidx.preference.PreferenceFragmentCompat.3
-            @Override // java.lang.Runnable
+        C02893 r0 = new Runnable() {
             public void run() {
-                int preferenceAdapterPosition;
+                int i;
                 RecyclerView.Adapter adapter = PreferenceFragmentCompat.this.mList.getAdapter();
-                if (!(adapter instanceof PreferenceGroup.PreferencePositionCallback)) {
-                    if (adapter != null) {
-                        throw new IllegalStateException("Adapter must implement PreferencePositionCallback");
+                if (adapter instanceof PreferenceGroup.PreferencePositionCallback) {
+                    Preference preference = preference;
+                    if (preference != null) {
+                        i = ((PreferenceGroup.PreferencePositionCallback) adapter).getPreferenceAdapterPosition(preference);
+                    } else {
+                        i = ((PreferenceGroup.PreferencePositionCallback) adapter).getPreferenceAdapterPosition(str);
                     }
-                    return;
-                }
-                Preference preference2 = preference;
-                if (preference2 != null) {
-                    preferenceAdapterPosition = ((PreferenceGroup.PreferencePositionCallback) adapter).getPreferenceAdapterPosition(preference2);
-                } else {
-                    preferenceAdapterPosition = ((PreferenceGroup.PreferencePositionCallback) adapter).getPreferenceAdapterPosition(str);
-                }
-                if (preferenceAdapterPosition != -1) {
-                    PreferenceFragmentCompat.this.mList.scrollToPosition(preferenceAdapterPosition);
-                } else {
-                    adapter.registerAdapterDataObserver(new ScrollToPreferenceObserver(adapter, PreferenceFragmentCompat.this.mList, preference, str));
+                    if (i != -1) {
+                        PreferenceFragmentCompat.this.mList.scrollToPosition(i);
+                    } else {
+                        adapter.registerAdapterDataObserver(new ScrollToPreferenceObserver(adapter, PreferenceFragmentCompat.this.mList, preference, str));
+                    }
+                } else if (adapter != null) {
+                    throw new IllegalStateException("Adapter must implement PreferencePositionCallback");
                 }
             }
         };
         if (this.mList == null) {
-            this.mSelectPreferenceRunnable = runnable;
+            this.mSelectPreferenceRunnable = r0;
         } else {
-            runnable.run();
+            r0.run();
         }
     }
 
-    /* loaded from: classes.dex */
     private static class ScrollToPreferenceObserver extends RecyclerView.AdapterDataObserver {
         private final RecyclerView.Adapter mAdapter;
         private final String mKey;
@@ -406,53 +390,45 @@ public abstract class PreferenceFragmentCompat extends Fragment implements Prefe
         }
 
         private void scrollToPreference() {
-            int preferenceAdapterPosition;
+            int i;
             this.mAdapter.unregisterAdapterDataObserver(this);
             Preference preference = this.mPreference;
             if (preference != null) {
-                preferenceAdapterPosition = ((PreferenceGroup.PreferencePositionCallback) this.mAdapter).getPreferenceAdapterPosition(preference);
+                i = ((PreferenceGroup.PreferencePositionCallback) this.mAdapter).getPreferenceAdapterPosition(preference);
             } else {
-                preferenceAdapterPosition = ((PreferenceGroup.PreferencePositionCallback) this.mAdapter).getPreferenceAdapterPosition(this.mKey);
+                i = ((PreferenceGroup.PreferencePositionCallback) this.mAdapter).getPreferenceAdapterPosition(this.mKey);
             }
-            if (preferenceAdapterPosition != -1) {
-                this.mList.scrollToPosition(preferenceAdapterPosition);
+            if (i != -1) {
+                this.mList.scrollToPosition(i);
             }
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
         public void onChanged() {
             scrollToPreference();
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
         public void onItemRangeChanged(int i, int i2) {
             scrollToPreference();
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
         public void onItemRangeChanged(int i, int i2, Object obj) {
             scrollToPreference();
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
         public void onItemRangeInserted(int i, int i2) {
             scrollToPreference();
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
         public void onItemRangeRemoved(int i, int i2) {
             scrollToPreference();
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
         public void onItemRangeMoved(int i, int i2, int i3) {
             scrollToPreference();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class DividerDecoration extends RecyclerView.ItemDecoration {
+    private class DividerDecoration extends RecyclerView.ItemDecoration {
         private boolean mAllowDividerAfterLastItem = true;
         private Drawable mDivider;
         private int mDividerHeight;
@@ -460,24 +436,21 @@ public abstract class PreferenceFragmentCompat extends Fragment implements Prefe
         DividerDecoration() {
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.ItemDecoration
         public void onDrawOver(Canvas canvas, RecyclerView recyclerView, RecyclerView.State state) {
-            if (this.mDivider == null) {
-                return;
-            }
-            int childCount = recyclerView.getChildCount();
-            int width = recyclerView.getWidth();
-            for (int i = 0; i < childCount; i++) {
-                View childAt = recyclerView.getChildAt(i);
-                if (shouldDrawDividerBelow(childAt, recyclerView)) {
-                    int y = ((int) childAt.getY()) + childAt.getHeight();
-                    this.mDivider.setBounds(0, y, width, this.mDividerHeight + y);
-                    this.mDivider.draw(canvas);
+            if (this.mDivider != null) {
+                int childCount = recyclerView.getChildCount();
+                int width = recyclerView.getWidth();
+                for (int i = 0; i < childCount; i++) {
+                    View childAt = recyclerView.getChildAt(i);
+                    if (shouldDrawDividerBelow(childAt, recyclerView)) {
+                        int y = ((int) childAt.getY()) + childAt.getHeight();
+                        this.mDivider.setBounds(0, y, width, this.mDividerHeight + y);
+                        this.mDivider.draw(canvas);
+                    }
                 }
             }
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.ItemDecoration
         public void getItemOffsets(Rect rect, View view, RecyclerView recyclerView, RecyclerView.State state) {
             if (shouldDrawDividerBelow(view, recyclerView)) {
                 rect.bottom = this.mDividerHeight;

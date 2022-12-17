@@ -5,40 +5,28 @@ import android.content.res.Resources;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.text.style.TtsSpan;
 import android.util.Log;
-import com.android.settings.R;
+import com.android.settings.R$bool;
+import com.android.settings.R$id;
+import com.android.settings.R$string;
 import com.android.settings.network.telephony.TelephonyUtils;
 import com.qti.extphone.QtiImeiInfo;
-/* loaded from: classes.dex */
+
 public class ImeiInfoDialogController {
+    static final int ID_CDMA_SETTINGS = R$id.cdma_settings;
+    static final int ID_GSM_SETTINGS = R$id.gsm_settings;
+    static final int ID_IMEI_SV_VALUE = R$id.imei_sv_value;
+    static final int ID_IMEI_VALUE = R$id.imei_value;
+    static final int ID_MEID_NUMBER_VALUE = R$id.meid_number_value;
+    private static final int ID_MIN_NUMBER_LABEL = R$id.min_number_label;
+    static final int ID_MIN_NUMBER_VALUE = R$id.min_number_value;
+    static final int ID_PRL_VERSION_VALUE = R$id.prl_version_value;
     private final ImeiInfoDialogFragment mDialog;
     private QtiImeiInfo[] mQtiImeiInfo;
     private final int mSlotId;
     private final SubscriptionInfo mSubscriptionInfo;
     private final TelephonyManager mTelephonyManager;
-    static final int ID_PRL_VERSION_VALUE = R.id.prl_version_value;
-    private static final int ID_MIN_NUMBER_LABEL = R.id.min_number_label;
-    static final int ID_MIN_NUMBER_VALUE = R.id.min_number_value;
-    static final int ID_MEID_NUMBER_VALUE = R.id.meid_number_value;
-    static final int ID_IMEI_VALUE = R.id.imei_value;
-    static final int ID_IMEI_SV_VALUE = R.id.imei_sv_value;
-    static final int ID_CDMA_SETTINGS = R.id.cdma_settings;
-    static final int ID_GSM_SETTINGS = R.id.gsm_settings;
-
-    private static CharSequence getTextAsDigits(CharSequence charSequence) {
-        if (TextUtils.isEmpty(charSequence)) {
-            return "";
-        }
-        if (!TextUtils.isDigitsOnly(charSequence)) {
-            return charSequence;
-        }
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(charSequence);
-        spannableStringBuilder.setSpan(new TtsSpan.DigitsBuilder(charSequence.toString()).build(), 0, spannableStringBuilder.length(), 33);
-        return spannableStringBuilder;
-    }
 
     public ImeiInfoDialogController(ImeiInfoDialogFragment imeiInfoDialogFragment, int i) {
         this.mDialog = imeiInfoDialogFragment;
@@ -65,12 +53,13 @@ public class ImeiInfoDialogController {
                 QtiImeiInfo[] qtiImeiInfoArr = this.mQtiImeiInfo;
                 if (i2 >= qtiImeiInfoArr.length) {
                     break;
-                } else if (qtiImeiInfoArr[i2].getSlotId() == i) {
+                }
+                QtiImeiInfo qtiImeiInfo = qtiImeiInfoArr[i2];
+                if (qtiImeiInfo != null && qtiImeiInfo.getSlotId() == i) {
                     str = this.mQtiImeiInfo[i2].getImei();
                     break;
-                } else {
-                    i2++;
                 }
+                i2++;
             }
         }
         str = null;
@@ -95,38 +84,42 @@ public class ImeiInfoDialogController {
         int i = ID_MIN_NUMBER_VALUE;
         SubscriptionInfo subscriptionInfo = this.mSubscriptionInfo;
         imeiInfoDialogFragment.setText(i, subscriptionInfo != null ? this.mTelephonyManager.getCdmaMin(subscriptionInfo.getSubscriptionId()) : "");
-        if (resources.getBoolean(R.bool.config_msid_enable)) {
-            this.mDialog.setText(ID_MIN_NUMBER_LABEL, resources.getString(R.string.status_msid_number));
+        if (resources.getBoolean(R$bool.config_msid_enable)) {
+            this.mDialog.setText(ID_MIN_NUMBER_LABEL, resources.getString(R$string.status_msid_number));
         }
         this.mDialog.setText(ID_PRL_VERSION_VALUE, getCdmaPrlVersion());
-        if ((this.mSubscriptionInfo != null && isCdmaLteEnabled()) || (this.mSubscriptionInfo == null && isSimPresent(this.mSlotId))) {
-            this.mDialog.setText(ID_IMEI_VALUE, getTextAsDigits(getImei(this.mSlotId)));
-            this.mDialog.setText(ID_IMEI_SV_VALUE, getTextAsDigits(this.mTelephonyManager.getDeviceSoftwareVersion(this.mSlotId)));
+        if ((this.mSubscriptionInfo == null || !isCdmaLteEnabled()) && (this.mSubscriptionInfo != null || !isSimPresent(this.mSlotId))) {
+            this.mDialog.removeViewFromScreen(ID_GSM_SETTINGS);
             return;
         }
-        this.mDialog.removeViewFromScreen(ID_GSM_SETTINGS);
+        this.mDialog.setText(ID_IMEI_VALUE, getImei(this.mSlotId));
+        this.mDialog.setText(ID_IMEI_SV_VALUE, this.mTelephonyManager.getDeviceSoftwareVersion(this.mSlotId));
     }
 
     private void updateDialogForGsmPhone() {
-        this.mDialog.setText(ID_IMEI_VALUE, getTextAsDigits(getImei(this.mSlotId)));
-        this.mDialog.setText(ID_IMEI_SV_VALUE, getTextAsDigits(this.mTelephonyManager.getDeviceSoftwareVersion(this.mSlotId)));
+        this.mDialog.setText(ID_IMEI_VALUE, getImei(this.mSlotId));
+        this.mDialog.setText(ID_IMEI_SV_VALUE, this.mTelephonyManager.getDeviceSoftwareVersion(this.mSlotId));
         this.mDialog.removeViewFromScreen(ID_CDMA_SETTINGS);
     }
 
-    String getCdmaPrlVersion() {
+    /* access modifiers changed from: package-private */
+    public String getCdmaPrlVersion() {
         return this.mSubscriptionInfo != null ? this.mTelephonyManager.getCdmaPrlVersion() : "";
     }
 
-    boolean isCdmaLteEnabled() {
+    /* access modifiers changed from: package-private */
+    public boolean isCdmaLteEnabled() {
         return this.mTelephonyManager.isLteCdmaEvdoGsmWcdmaEnabled();
     }
 
-    boolean isSimPresent(int i) {
+    /* access modifiers changed from: package-private */
+    public boolean isSimPresent(int i) {
         int simState = this.mTelephonyManager.getSimState(i);
         return (simState == 1 || simState == 0) ? false : true;
     }
 
-    String getMeid() {
+    /* access modifiers changed from: package-private */
+    public String getMeid() {
         return this.mTelephonyManager.getMeid(this.mSlotId);
     }
 

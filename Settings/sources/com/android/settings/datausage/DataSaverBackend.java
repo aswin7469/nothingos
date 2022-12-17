@@ -3,23 +3,39 @@ package com.android.settings.datausage;
 import android.content.Context;
 import android.net.NetworkPolicyManager;
 import android.util.SparseIntArray;
-import com.android.settings.datausage.DataSaverBackend;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
 import com.android.settingslib.utils.ThreadUtils;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
+
 public class DataSaverBackend {
     private boolean mAllowlistInitialized;
     private final Context mContext;
     private boolean mDenylistInitialized;
-    private final MetricsFeatureProvider mMetricsFeatureProvider;
-    private final NetworkPolicyManager mPolicyManager;
     private final ArrayList<Listener> mListeners = new ArrayList<>();
-    private SparseIntArray mUidPolicies = new SparseIntArray();
-    private final NetworkPolicyManager.Listener mPolicyListener = new AnonymousClass1();
+    private final MetricsFeatureProvider mMetricsFeatureProvider;
+    private final NetworkPolicyManager.Listener mPolicyListener = new NetworkPolicyManager.Listener() {
+        /* access modifiers changed from: private */
+        public /* synthetic */ void lambda$onUidPoliciesChanged$0(int i, int i2) {
+            DataSaverBackend.this.handleUidPoliciesChanged(i, i2);
+        }
 
-    /* loaded from: classes.dex */
+        public void onUidPoliciesChanged(int i, int i2) {
+            ThreadUtils.postOnMainThread(new DataSaverBackend$1$$ExternalSyntheticLambda0(this, i, i2));
+        }
+
+        /* access modifiers changed from: private */
+        public /* synthetic */ void lambda$onRestrictBackgroundChanged$1(boolean z) {
+            DataSaverBackend.this.handleRestrictBackgroundChanged(z);
+        }
+
+        public void onRestrictBackgroundChanged(boolean z) {
+            ThreadUtils.postOnMainThread(new DataSaverBackend$1$$ExternalSyntheticLambda1(this, z));
+        }
+    };
+    private final NetworkPolicyManager mPolicyManager;
+    private SparseIntArray mUidPolicies = new SparseIntArray();
+
     public interface Listener {
         void onAllowlistStatusChanged(int i, boolean z);
 
@@ -77,24 +93,22 @@ public class DataSaverBackend {
     }
 
     private void loadAllowlist() {
-        if (this.mAllowlistInitialized) {
-            return;
+        if (!this.mAllowlistInitialized) {
+            for (int put : this.mPolicyManager.getUidsWithPolicy(4)) {
+                this.mUidPolicies.put(put, 4);
+            }
+            this.mAllowlistInitialized = true;
         }
-        for (int i : this.mPolicyManager.getUidsWithPolicy(4)) {
-            this.mUidPolicies.put(i, 4);
-        }
-        this.mAllowlistInitialized = true;
     }
 
     public void refreshDenylist() {
         loadDenylist();
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
     public void setIsDenylisted(int i, String str, boolean z) {
         this.mPolicyManager.setUidPolicy(i, z ? 1 : 0);
         this.mUidPolicies.put(i, z);
-        if (z != 0) {
+        if (z) {
             this.mMetricsFeatureProvider.action(this.mContext, 396, str);
         }
     }
@@ -105,16 +119,15 @@ public class DataSaverBackend {
     }
 
     private void loadDenylist() {
-        if (this.mDenylistInitialized) {
-            return;
+        if (!this.mDenylistInitialized) {
+            for (int put : this.mPolicyManager.getUidsWithPolicy(1)) {
+                this.mUidPolicies.put(put, 1);
+            }
+            this.mDenylistInitialized = true;
         }
-        for (int i : this.mPolicyManager.getUidsWithPolicy(1)) {
-            this.mUidPolicies.put(i, 1);
-        }
-        this.mDenylistInitialized = true;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void handleRestrictBackgroundChanged(boolean z) {
         for (int i = 0; i < this.mListeners.size(); i++) {
             this.mListeners.get(i).onDataSaverChanged(z);
@@ -133,7 +146,7 @@ public class DataSaverBackend {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void handleUidPoliciesChanged(int i, int i2) {
         loadAllowlist();
         loadDenylist();
@@ -155,42 +168,6 @@ public class DataSaverBackend {
         }
         if (z3 != z) {
             handleDenylistChanged(i, z);
-        }
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.android.settings.datausage.DataSaverBackend$1  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public class AnonymousClass1 extends NetworkPolicyManager.Listener {
-        AnonymousClass1() {
-        }
-
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onUidPoliciesChanged$0(int i, int i2) {
-            DataSaverBackend.this.handleUidPoliciesChanged(i, i2);
-        }
-
-        public void onUidPoliciesChanged(final int i, final int i2) {
-            ThreadUtils.postOnMainThread(new Runnable() { // from class: com.android.settings.datausage.DataSaverBackend$1$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    DataSaverBackend.AnonymousClass1.this.lambda$onUidPoliciesChanged$0(i, i2);
-                }
-            });
-        }
-
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onRestrictBackgroundChanged$1(boolean z) {
-            DataSaverBackend.this.handleRestrictBackgroundChanged(z);
-        }
-
-        public void onRestrictBackgroundChanged(final boolean z) {
-            ThreadUtils.postOnMainThread(new Runnable() { // from class: com.android.settings.datausage.DataSaverBackend$1$$ExternalSyntheticLambda1
-                @Override // java.lang.Runnable
-                public final void run() {
-                    DataSaverBackend.AnonymousClass1.this.lambda$onRestrictBackgroundChanged$1(z);
-                }
-            });
         }
     }
 }

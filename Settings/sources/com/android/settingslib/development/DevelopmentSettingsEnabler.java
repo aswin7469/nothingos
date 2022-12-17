@@ -6,7 +6,7 @@ import android.os.Build;
 import android.os.UserManager;
 import android.provider.Settings;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-/* loaded from: classes.dex */
+
 public class DevelopmentSettingsEnabler {
     public static void setDevelopmentSettingsEnabled(Context context, boolean z) {
         Settings.Global.putInt(context.getContentResolver(), "development_settings_enabled", z ? 1 : 0);
@@ -15,6 +15,11 @@ public class DevelopmentSettingsEnabler {
 
     public static boolean isDevelopmentSettingsEnabled(Context context) {
         UserManager userManager = (UserManager) context.getSystemService("user");
-        return userManager.isAdminUser() && !userManager.hasUserRestriction("no_debugging_features") && (Settings.Global.getInt(context.getContentResolver(), "development_settings_enabled", Build.TYPE.equals("eng") ? 1 : 0) != 0 ? 1 : null) != null;
+        boolean z = Settings.Global.getInt(context.getContentResolver(), "development_settings_enabled", Build.TYPE.equals("eng") ? 1 : 0) != 0;
+        boolean hasUserRestriction = userManager.hasUserRestriction("no_debugging_features");
+        if (!userManager.isAdminUser() || hasUserRestriction || !z) {
+            return false;
+        }
+        return true;
     }
 }

@@ -3,37 +3,37 @@ package com.google.zxing.maxicode.decoder;
 import com.google.zxing.common.DecoderResult;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-/* loaded from: classes2.dex */
+import java.util.List;
+
 final class DecodedBitStreamParser {
     private static final NumberFormat NINE_DIGITS = new DecimalFormat("000000000");
+    private static final String[] SETS = {"\nABCDEFGHIJKLMNOPQRSTUVWXYZ￺\u001c\u001d\u001e￻ ￼\"#$%&'()*+,-./0123456789:￱￲￳￴￸", "`abcdefghijklmnopqrstuvwxyz￺\u001c\u001d\u001e￻{￼}~;<=>?[\\]^_ ,./:@!|￼￵￶￼￰￲￳￴￷", "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚ￺\u001c\u001d\u001eÛÜÝÞßª¬±²³µ¹º¼½¾￷ ￹￳￴￸", "àáâãäåæçèéêëìíîïðñòóôõö÷øùú￺\u001c\u001d\u001e￻ûüýþÿ¡¨«¯°´·¸»¿￷ ￲￹￴￸", "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\f\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a￺￼￼\u001b￻\u001c\u001d\u001e\u001f ¢£¤¥¦§©­®¶￷ ￲￳￹￸", "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\f\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f !\"#$%&'()*+,-./0123456789:;<=>?"};
     private static final NumberFormat THREE_DIGITS = new DecimalFormat("000");
-    private static final String[] SETS = {"\nABCDEFGHIJKLMNOPQRSTUVWXYZ\ufffa\u001c\u001d\u001e\ufffb ￼\"#$%&'()*+,-./0123456789:\ufff1\ufff2\ufff3\ufff4\ufff8", "`abcdefghijklmnopqrstuvwxyz\ufffa\u001c\u001d\u001e\ufffb{￼}~\u007f;<=>?[\\]^_ ,./:@!|￼\ufff5\ufff6￼\ufff0\ufff2\ufff3\ufff4\ufff7", "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚ\ufffa\u001c\u001d\u001eÛÜÝÞßª¬±²³µ¹º¼½¾\u0080\u0081\u0082\u0083\u0084\u0085\u0086\u0087\u0088\u0089\ufff7 \ufff9\ufff3\ufff4\ufff8", "àáâãäåæçèéêëìíîïðñòóôõö÷øùú\ufffa\u001c\u001d\u001e\ufffbûüýþÿ¡¨«¯°´·¸»¿\u008a\u008b\u008c\u008d\u008e\u008f\u0090\u0091\u0092\u0093\u0094\ufff7 \ufff2\ufff9\ufff4\ufff8", "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\f\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\ufffa￼￼\u001b\ufffb\u001c\u001d\u001e\u001f\u009f ¢£¤¥¦§©\u00ad®¶\u0095\u0096\u0097\u0098\u0099\u009a\u009b\u009c\u009d\u009e\ufff7 \ufff2\ufff3\ufff9\ufff8", "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\f\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f !\"#$%&'()*+,-./0123456789:;<=>?"};
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static DecoderResult decode(byte[] bArr, int i) {
-        String postCode3;
+    static DecoderResult decode(byte[] bArr, int i) {
+        String str;
         StringBuilder sb = new StringBuilder(144);
         if (i == 2 || i == 3) {
             if (i == 2) {
-                postCode3 = new DecimalFormat("0000000000".substring(0, getPostCode2Length(bArr))).format(getPostCode2(bArr));
+                str = new DecimalFormat("0000000000".substring(0, getPostCode2Length(bArr))).format((long) getPostCode2(bArr));
             } else {
-                postCode3 = getPostCode3(bArr);
+                str = getPostCode3(bArr);
             }
             NumberFormat numberFormat = THREE_DIGITS;
-            String format = numberFormat.format(getCountry(bArr));
-            String format2 = numberFormat.format(getServiceClass(bArr));
+            String format = numberFormat.format((long) getCountry(bArr));
+            String format2 = numberFormat.format((long) getServiceClass(bArr));
             sb.append(getMessage(bArr, 10, 84));
             if (sb.toString().startsWith("[)>\u001e01\u001d")) {
-                sb.insert(9, postCode3 + (char) 29 + format + (char) 29 + format2 + (char) 29);
+                sb.insert(9, str + 29 + format + 29 + format2 + 29);
             } else {
-                sb.insert(0, postCode3 + (char) 29 + format + (char) 29 + format2 + (char) 29);
+                sb.insert(0, str + 29 + format + 29 + format2 + 29);
             }
         } else if (i == 4) {
             sb.append(getMessage(bArr, 1, 93));
         } else if (i == 5) {
             sb.append(getMessage(bArr, 1, 77));
         }
-        return new DecoderResult(bArr, sb.toString(), null, String.valueOf(i));
+        return new DecoderResult(bArr, sb.toString(), (List<byte[]>) null, String.valueOf(i));
     }
 
     private static int getBit(int i, byte[] bArr) {
@@ -70,69 +70,135 @@ final class DecodedBitStreamParser {
         return String.valueOf(new char[]{strArr[0].charAt(getInt(bArr, new byte[]{39, 40, 41, 42, 31, 32})), strArr[0].charAt(getInt(bArr, new byte[]{33, 34, 35, 36, 25, 26})), strArr[0].charAt(getInt(bArr, new byte[]{27, 28, 29, 30, 19, 20})), strArr[0].charAt(getInt(bArr, new byte[]{21, 22, 23, 24, 13, 14})), strArr[0].charAt(getInt(bArr, new byte[]{15, 16, 17, 18, 7, 8})), strArr[0].charAt(getInt(bArr, new byte[]{9, 10, 11, 12, 1, 2}))});
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    private static String getMessage(byte[] bArr, int i, int i2) {
-        int i3;
-        int i4;
-        int i5;
-        int i6;
-        StringBuilder sb = new StringBuilder();
-        int i7 = i;
-        int i8 = 0;
-        int i9 = 0;
-        int i10 = -1;
-        while (i7 < i + i2) {
-            char charAt = SETS[i8].charAt(bArr[i7]);
-            switch (charAt) {
-                case 65520:
-                case 65521:
-                case 65522:
-                case 65523:
-                case 65524:
-                    i9 = i8;
-                    i8 = charAt - 65520;
-                    i10 = 1;
-                    break;
-                case 65525:
-                    i10 = 2;
-                    i9 = i8;
-                    i8 = 0;
-                    break;
-                case 65526:
-                    i10 = 3;
-                    i9 = i8;
-                    i8 = 0;
-                    break;
-                case 65527:
-                    i8 = 0;
-                    i10 = -1;
-                    break;
-                case 65528:
-                    i10 = -1;
-                    i8 = 1;
-                    break;
-                case 65529:
-                    i10 = -1;
-                    break;
-                case 65530:
-                default:
-                    sb.append(charAt);
-                    break;
-                case 65531:
-                    i7 = i7 + 1 + 1 + 1 + 1 + 1;
-                    sb.append(NINE_DIGITS.format((bArr[i3] << 24) + (bArr[i4] << 18) + (bArr[i5] << 12) + (bArr[i6] << 6) + bArr[i7]));
-                    break;
+    /* JADX WARNING: Code restructure failed: missing block: B:12:0x0051, code lost:
+        r6 = r4;
+        r4 = 0;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:14:0x005b, code lost:
+        r7 = r5 - 1;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:15:0x005d, code lost:
+        if (r5 != 0) goto L_0x0060;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:16:0x005f, code lost:
+        r4 = r6;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:17:0x0060, code lost:
+        r3 = r3 + 1;
+        r5 = r7;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:9:0x004c, code lost:
+        r5 = -1;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private static java.lang.String getMessage(byte[] r12, int r13, int r14) {
+        /*
+            java.lang.StringBuilder r0 = new java.lang.StringBuilder
+            r0.<init>()
+            r1 = 0
+            r2 = -1
+            r3 = r13
+            r4 = r1
+            r6 = r4
+            r5 = r2
+        L_0x000b:
+            int r7 = r13 + r14
+            r8 = 1
+            if (r3 >= r7) goto L_0x0063
+            java.lang.String[] r7 = SETS
+            r7 = r7[r4]
+            byte r9 = r12[r3]
+            char r7 = r7.charAt(r9)
+            switch(r7) {
+                case 65520: goto L_0x0054;
+                case 65521: goto L_0x0054;
+                case 65522: goto L_0x0054;
+                case 65523: goto L_0x0054;
+                case 65524: goto L_0x0054;
+                case 65525: goto L_0x0050;
+                case 65526: goto L_0x004e;
+                case 65527: goto L_0x004b;
+                case 65528: goto L_0x0048;
+                case 65529: goto L_0x004c;
+                case 65530: goto L_0x001d;
+                case 65531: goto L_0x0021;
+                default: goto L_0x001d;
             }
-            int i11 = i10 - 1;
-            if (i10 == 0) {
-                i8 = i9;
-            }
-            i7++;
-            i10 = i11;
-        }
-        while (sb.length() > 0 && sb.charAt(sb.length() - 1) == 65532) {
-            sb.setLength(sb.length() - 1);
-        }
-        return sb.toString();
+        L_0x001d:
+            r0.append(r7)
+            goto L_0x005b
+        L_0x0021:
+            int r3 = r3 + 1
+            byte r7 = r12[r3]
+            int r7 = r7 << 24
+            int r3 = r3 + r8
+            byte r9 = r12[r3]
+            int r9 = r9 << 18
+            int r7 = r7 + r9
+            int r3 = r3 + r8
+            byte r9 = r12[r3]
+            int r9 = r9 << 12
+            int r7 = r7 + r9
+            int r3 = r3 + r8
+            byte r9 = r12[r3]
+            int r9 = r9 << 6
+            int r7 = r7 + r9
+            int r3 = r3 + r8
+            byte r9 = r12[r3]
+            int r7 = r7 + r9
+            java.text.NumberFormat r9 = NINE_DIGITS
+            long r10 = (long) r7
+            java.lang.String r7 = r9.format(r10)
+            r0.append(r7)
+            goto L_0x005b
+        L_0x0048:
+            r5 = r2
+            r4 = r8
+            goto L_0x005b
+        L_0x004b:
+            r4 = r1
+        L_0x004c:
+            r5 = r2
+            goto L_0x005b
+        L_0x004e:
+            r5 = 3
+            goto L_0x0051
+        L_0x0050:
+            r5 = 2
+        L_0x0051:
+            r6 = r4
+            r4 = r1
+            goto L_0x005b
+        L_0x0054:
+            r5 = 65520(0xfff0, float:9.1813E-41)
+            int r7 = r7 - r5
+            r6 = r4
+            r4 = r7
+            r5 = r8
+        L_0x005b:
+            int r7 = r5 + -1
+            if (r5 != 0) goto L_0x0060
+            r4 = r6
+        L_0x0060:
+            int r3 = r3 + r8
+            r5 = r7
+            goto L_0x000b
+        L_0x0063:
+            int r12 = r0.length()
+            if (r12 <= 0) goto L_0x0080
+            int r12 = r0.length()
+            int r12 = r12 - r8
+            char r12 = r0.charAt(r12)
+            r13 = 65532(0xfffc, float:9.183E-41)
+            if (r12 != r13) goto L_0x0080
+            int r12 = r0.length()
+            int r12 = r12 - r8
+            r0.setLength(r12)
+            goto L_0x0063
+        L_0x0080:
+            java.lang.String r12 = r0.toString()
+            return r12
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.maxicode.decoder.DecodedBitStreamParser.getMessage(byte[], int, int):java.lang.String");
     }
 }

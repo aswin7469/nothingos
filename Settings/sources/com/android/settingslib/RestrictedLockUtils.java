@@ -8,10 +8,10 @@ import android.content.pm.PackageManager;
 import android.os.UserHandle;
 import android.os.UserManager;
 import java.util.Objects;
-/* loaded from: classes.dex */
+
 public class RestrictedLockUtils {
     public static EnforcedAdmin getProfileOrDeviceOwner(Context context, UserHandle userHandle) {
-        return getProfileOrDeviceOwner(context, null, userHandle);
+        return getProfileOrDeviceOwner(context, (String) null, userHandle);
     }
 
     public static EnforcedAdmin getProfileOrDeviceOwner(Context context, String str, UserHandle userHandle) {
@@ -25,10 +25,10 @@ public class RestrictedLockUtils {
             if (profileOwner != null) {
                 return new EnforcedAdmin(profileOwner, str, userHandle);
             }
-            if (Objects.equals(devicePolicyManager.getDeviceOwnerUser(), userHandle) && (deviceOwnerComponentOnAnyUser = devicePolicyManager.getDeviceOwnerComponentOnAnyUser()) != null) {
-                return new EnforcedAdmin(deviceOwnerComponentOnAnyUser, str, userHandle);
+            if (!Objects.equals(devicePolicyManager.getDeviceOwnerUser(), userHandle) || (deviceOwnerComponentOnAnyUser = devicePolicyManager.getDeviceOwnerComponentOnAnyUser()) == null) {
+                return null;
             }
-            return null;
+            return new EnforcedAdmin(deviceOwnerComponentOnAnyUser, str, userHandle);
         } catch (PackageManager.NameNotFoundException e) {
             throw new IllegalStateException(e);
         }
@@ -63,7 +63,6 @@ public class RestrictedLockUtils {
         return ((UserManager) context.getSystemService(UserManager.class)).getUserProfiles().contains(UserHandle.of(i));
     }
 
-    /* loaded from: classes.dex */
     public static class EnforcedAdmin {
         public static final EnforcedAdmin MULTIPLE_ENFORCED_ADMIN = new EnforcedAdmin();
         public ComponentName component;
@@ -77,17 +76,12 @@ public class RestrictedLockUtils {
         }
 
         public EnforcedAdmin(ComponentName componentName, UserHandle userHandle) {
-            this.component = null;
             this.enforcedRestriction = null;
-            this.user = null;
             this.component = componentName;
             this.user = userHandle;
         }
 
         public EnforcedAdmin(ComponentName componentName, String str, UserHandle userHandle) {
-            this.component = null;
-            this.enforcedRestriction = null;
-            this.user = null;
             this.component = componentName;
             this.enforcedRestriction = str;
             this.user = userHandle;
@@ -103,15 +97,18 @@ public class RestrictedLockUtils {
             if (this == obj) {
                 return true;
             }
-            if (obj == null || EnforcedAdmin.class != obj.getClass()) {
+            if (obj == null || getClass() != obj.getClass()) {
                 return false;
             }
             EnforcedAdmin enforcedAdmin = (EnforcedAdmin) obj;
-            return Objects.equals(this.user, enforcedAdmin.user) && Objects.equals(this.component, enforcedAdmin.component) && Objects.equals(this.enforcedRestriction, enforcedAdmin.enforcedRestriction);
+            if (!Objects.equals(this.user, enforcedAdmin.user) || !Objects.equals(this.component, enforcedAdmin.component) || !Objects.equals(this.enforcedRestriction, enforcedAdmin.enforcedRestriction)) {
+                return false;
+            }
+            return true;
         }
 
         public int hashCode() {
-            return Objects.hash(this.component, this.enforcedRestriction, this.user);
+            return Objects.hash(new Object[]{this.component, this.enforcedRestriction, this.user});
         }
 
         public String toString() {

@@ -18,20 +18,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityManager;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
+import com.android.settings.overlay.FeatureFactory;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class LaunchAccessibilityActivityPreferenceFragment extends ToggleFeaturePreferenceFragment {
-    @Override // com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
+    private ComponentName mTileComponentName;
+
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
     }
 
-    @Override // com.android.settings.accessibility.ToggleFeaturePreferenceFragment
-    protected void onPreferenceToggled(String str, boolean z) {
+    /* access modifiers changed from: protected */
+    public void onPreferenceToggled(String str, boolean z) {
     }
 
-    @Override // com.android.settings.accessibility.ToggleFeaturePreferenceFragment, com.android.settings.SettingsPreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
+    public int getMetricsCategory() {
+        return FeatureFactory.getFactory(getActivity().getApplicationContext()).getAccessibilityMetricsFeatureProvider().getDownloadedFeatureMetricsCategory((ComponentName) getArguments().getParcelable("component_name"));
+    }
+
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
         View onCreateView = super.onCreateView(layoutInflater, viewGroup, bundle);
         initLaunchPreference();
@@ -39,8 +45,7 @@ public class LaunchAccessibilityActivityPreferenceFragment extends ToggleFeature
         return onCreateView;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.accessibility.ToggleFeaturePreferenceFragment
+    /* access modifiers changed from: protected */
     public void onProcessArguments(Bundle bundle) {
         super.onProcessArguments(bundle);
         this.mComponentName = (ComponentName) bundle.getParcelable("component_name");
@@ -57,11 +62,35 @@ public class LaunchAccessibilityActivityPreferenceFragment extends ToggleFeature
             string = null;
         }
         this.mSettingsTitle = string;
+        if (bundle.containsKey("tile_service_component_name")) {
+            this.mTileComponentName = ComponentName.unflattenFromString(bundle.getString("tile_service_component_name"));
+        }
     }
 
-    @Override // com.android.settings.accessibility.ToggleFeaturePreferenceFragment
-    int getUserShortcutTypes() {
+    /* access modifiers changed from: package-private */
+    public int getUserShortcutTypes() {
         return AccessibilityUtil.getUserShortcutTypesFromSettings(getPrefContext(), this.mComponentName);
+    }
+
+    /* access modifiers changed from: package-private */
+    public ComponentName getTileComponentName() {
+        return this.mTileComponentName;
+    }
+
+    /* access modifiers changed from: package-private */
+    public CharSequence getTileTooltipContent(int i) {
+        CharSequence loadTileLabel;
+        int i2;
+        ComponentName tileComponentName = getTileComponentName();
+        if (tileComponentName == null || (loadTileLabel = loadTileLabel(getPrefContext(), tileComponentName)) == null) {
+            return null;
+        }
+        if (i == 0) {
+            i2 = R$string.accessibility_service_qs_tooltip_content;
+        } else {
+            i2 = R$string.accessibility_service_auto_added_qs_tooltip_content;
+        }
+        return getString(i2, loadTileLabel);
     }
 
     private AccessibilityShortcutInfo getAccessibilityShortcutInfo() {
@@ -77,8 +106,8 @@ public class LaunchAccessibilityActivityPreferenceFragment extends ToggleFeature
         return null;
     }
 
-    @Override // com.android.settings.accessibility.ToggleFeaturePreferenceFragment
-    protected List<String> getPreferenceOrderList() {
+    /* access modifiers changed from: protected */
+    public List<String> getPreferenceOrderList() {
         ArrayList arrayList = new ArrayList();
         arrayList.add("animated_image");
         arrayList.add("launch_preference");
@@ -88,22 +117,22 @@ public class LaunchAccessibilityActivityPreferenceFragment extends ToggleFeature
     }
 
     private void initLaunchPreference() {
+        String str;
         Preference preference = new Preference(getPrefContext());
+        preference.setLayoutResource(R$layout.accessibility_launch_activity_preference);
         preference.setKey("launch_preference");
         AccessibilityShortcutInfo accessibilityShortcutInfo = getAccessibilityShortcutInfo();
-        preference.setTitle(accessibilityShortcutInfo == null ? "" : getString(R.string.accessibility_service_primary_open_title, accessibilityShortcutInfo.getActivityInfo().loadLabel(getPackageManager())));
-        preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() { // from class: com.android.settings.accessibility.LaunchAccessibilityActivityPreferenceFragment$$ExternalSyntheticLambda0
-            @Override // androidx.preference.Preference.OnPreferenceClickListener
-            public final boolean onPreferenceClick(Preference preference2) {
-                boolean lambda$initLaunchPreference$0;
-                lambda$initLaunchPreference$0 = LaunchAccessibilityActivityPreferenceFragment.this.lambda$initLaunchPreference$0(preference2);
-                return lambda$initLaunchPreference$0;
-            }
-        });
+        if (accessibilityShortcutInfo == null) {
+            str = "";
+        } else {
+            str = getString(R$string.accessibility_service_primary_open_title, accessibilityShortcutInfo.getActivityInfo().loadLabel(getPackageManager()));
+        }
+        preference.setTitle((CharSequence) str);
+        preference.setOnPreferenceClickListener(new C0595xd3ae02e4(this));
         getPreferenceScreen().addPreference(preference);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ boolean lambda$initLaunchPreference$0(Preference preference) {
         AccessibilityStatsLogUtils.logAccessibilityServiceEnabled(this.mComponentName, true);
         launchShortcutTargetActivity(getPrefContext().getDisplayId(), this.mComponentName);
@@ -128,9 +157,9 @@ public class LaunchAccessibilityActivityPreferenceFragment extends ToggleFeature
             return null;
         }
         Intent component = new Intent("android.intent.action.MAIN").setComponent(ComponentName.unflattenFromString(string));
-        if (!getPackageManager().queryIntentActivities(component, 0).isEmpty()) {
-            return component;
+        if (getPackageManager().queryIntentActivities(component, 0).isEmpty()) {
+            return null;
         }
-        return null;
+        return component;
     }
 }

@@ -6,10 +6,10 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceScreen;
 import com.android.settings.core.BasePreferenceController;
 import com.android.settings.network.SubscriptionsPreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settings.wifi.WifiConnectionPreferenceController;
 import com.android.settingslib.core.lifecycle.Lifecycle;
-/* loaded from: classes.dex */
+
+@Deprecated
 public class MultiNetworkHeaderController extends BasePreferenceController implements WifiConnectionPreferenceController.UpdateListener, SubscriptionsPreferenceController.UpdateListener {
     public static final String TAG = "MultiNetworkHdrCtrl";
     private int mOriginalExpandedChildrenCount;
@@ -18,42 +18,30 @@ public class MultiNetworkHeaderController extends BasePreferenceController imple
     private SubscriptionsPreferenceController mSubscriptionsController;
     private WifiConnectionPreferenceController mWifiController;
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -67,15 +55,16 @@ public class MultiNetworkHeaderController extends BasePreferenceController imple
         this.mSubscriptionsController = createSubscriptionsController(lifecycle);
     }
 
-    WifiConnectionPreferenceController createWifiController(Lifecycle lifecycle) {
+    /* access modifiers changed from: package-private */
+    public WifiConnectionPreferenceController createWifiController(Lifecycle lifecycle) {
         return new WifiConnectionPreferenceController(this.mContext, lifecycle, this, this.mPreferenceKey, 0, 746);
     }
 
-    SubscriptionsPreferenceController createSubscriptionsController(Lifecycle lifecycle) {
+    /* access modifiers changed from: package-private */
+    public SubscriptionsPreferenceController createSubscriptionsController(Lifecycle lifecycle) {
         return new SubscriptionsPreferenceController(this.mContext, lifecycle, this, this.mPreferenceKey, 10);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreferenceScreen = preferenceScreen;
@@ -87,13 +76,11 @@ public class MultiNetworkHeaderController extends BasePreferenceController imple
         this.mSubscriptionsController.displayPreference(preferenceScreen);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         SubscriptionsPreferenceController subscriptionsPreferenceController = this.mSubscriptionsController;
         return (subscriptionsPreferenceController == null || !subscriptionsPreferenceController.isAvailable()) ? 2 : 0;
     }
 
-    @Override // com.android.settings.wifi.WifiConnectionPreferenceController.UpdateListener, com.android.settings.network.SubscriptionsPreferenceController.UpdateListener
     public void onChildrenUpdated() {
         boolean isAvailable = isAvailable();
         int i = this.mOriginalExpandedChildrenCount;

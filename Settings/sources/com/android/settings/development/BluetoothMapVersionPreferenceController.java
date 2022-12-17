@@ -5,34 +5,31 @@ import android.os.SystemProperties;
 import android.text.TextUtils;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$array;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.development.DeveloperOptionsPreferenceController;
-/* loaded from: classes.dex */
+
 public class BluetoothMapVersionPreferenceController extends DeveloperOptionsPreferenceController implements Preference.OnPreferenceChangeListener, PreferenceControllerMixin {
     static final String BLUETOOTH_MAP_VERSION_PROPERTY = "persist.bluetooth.mapversion";
     private final String[] mListSummaries;
     private final String[] mListValues;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "bluetooth_select_map_version";
     }
 
     public BluetoothMapVersionPreferenceController(Context context) {
         super(context);
-        this.mListValues = context.getResources().getStringArray(R.array.bluetooth_map_version_values);
-        this.mListSummaries = context.getResources().getStringArray(R.array.bluetooth_map_versions);
+        this.mListValues = context.getResources().getStringArray(R$array.bluetooth_map_version_values);
+        this.mListSummaries = context.getResources().getStringArray(R$array.bluetooth_map_versions);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         SystemProperties.set(BLUETOOTH_MAP_VERSION_PROPERTY, obj.toString());
         updateState(this.mPreference);
         return true;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         ListPreference listPreference = (ListPreference) preference;
         String str = SystemProperties.get(BLUETOOTH_MAP_VERSION_PROPERTY);

@@ -3,7 +3,7 @@ package com.airbnb.lottie.value;
 import android.graphics.PointF;
 import android.view.animation.Interpolator;
 import com.airbnb.lottie.LottieComposition;
-/* loaded from: classes.dex */
+
 public class Keyframe<T> {
     private final LottieComposition composition;
     public Float endFrame;
@@ -20,7 +20,7 @@ public class Keyframe<T> {
     private float startValueFloat;
     private int startValueInt;
 
-    public Keyframe(LottieComposition lottieComposition, T t, T t2, Interpolator interpolator, float f, Float f2) {
+    public Keyframe(LottieComposition lottieComposition, T t, T t2, Interpolator interpolator2, float f, Float f2) {
         this.startValueFloat = -3987645.8f;
         this.endValueFloat = -3987645.8f;
         this.startValueInt = 784923401;
@@ -32,7 +32,7 @@ public class Keyframe<T> {
         this.composition = lottieComposition;
         this.startValue = t;
         this.endValue = t2;
-        this.interpolator = interpolator;
+        this.interpolator = interpolator2;
         this.startFrame = f;
         this.endFrame = f2;
     }

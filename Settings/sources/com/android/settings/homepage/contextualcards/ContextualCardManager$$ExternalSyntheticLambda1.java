@@ -1,15 +1,16 @@
 package com.android.settings.homepage.contextualcards;
 
-import java.util.function.Function;
-/* loaded from: classes.dex */
-public final /* synthetic */ class ContextualCardManager$$ExternalSyntheticLambda1 implements Function {
-    public static final /* synthetic */ ContextualCardManager$$ExternalSyntheticLambda1 INSTANCE = new ContextualCardManager$$ExternalSyntheticLambda1();
+import java.util.function.Predicate;
 
-    private /* synthetic */ ContextualCardManager$$ExternalSyntheticLambda1() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class ContextualCardManager$$ExternalSyntheticLambda1 implements Predicate {
+    public final /* synthetic */ ContextualCardManager f$0;
+
+    public /* synthetic */ ContextualCardManager$$ExternalSyntheticLambda1(ContextualCardManager contextualCardManager) {
+        this.f$0 = contextualCardManager;
     }
 
-    @Override // java.util.function.Function
-    public final Object apply(Object obj) {
-        return Integer.valueOf(((ContextualCard) obj).getCardType());
+    public final boolean test(Object obj) {
+        return this.f$0.lambda$getCardsToKeep$5((ContextualCard) obj);
     }
 }

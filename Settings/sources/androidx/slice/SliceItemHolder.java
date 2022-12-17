@@ -8,32 +8,25 @@ import androidx.core.text.HtmlCompat;
 import androidx.core.util.Pair;
 import androidx.versionedparcelable.VersionedParcelable;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
+
 public class SliceItemHolder implements VersionedParcelable {
     public static HolderHandler sHandler;
     public static final Object sSerializeLock = new Object();
-    Bundle mBundle;
+    Bundle mBundle = null;
     Object mCallback;
-    int mInt;
-    long mLong;
-    Parcelable mParcelable;
+    int mInt = 0;
+    long mLong = 0;
+    Parcelable mParcelable = null;
     private SliceItemPool mPool;
-    String mStr;
-    public VersionedParcelable mVersionedParcelable;
+    String mStr = null;
+    public VersionedParcelable mVersionedParcelable = null;
 
-    /* loaded from: classes.dex */
     public interface HolderHandler {
-        void handle(SliceItemHolder holder, String format);
+        void handle(SliceItemHolder sliceItemHolder, String str);
     }
 
-    SliceItemHolder(SliceItemPool pool) {
-        this.mVersionedParcelable = null;
-        this.mParcelable = null;
-        this.mStr = null;
-        this.mInt = 0;
-        this.mLong = 0L;
-        this.mBundle = null;
-        this.mPool = pool;
+    SliceItemHolder(SliceItemPool sliceItemPool) {
+        this.mPool = sliceItemPool;
     }
 
     public void release() {
@@ -43,60 +36,55 @@ public class SliceItemHolder implements VersionedParcelable {
         }
     }
 
-    public SliceItemHolder(String format, Object mObj, boolean isStream) {
-        this.mVersionedParcelable = null;
-        this.mParcelable = null;
-        this.mStr = null;
-        this.mInt = 0;
-        this.mLong = 0L;
-        this.mBundle = null;
-        format.hashCode();
+    public SliceItemHolder(String str, Object obj, boolean z) {
+        String str2;
+        str.hashCode();
         char c = 65535;
-        switch (format.hashCode()) {
+        switch (str.hashCode()) {
             case -1422950858:
-                if (format.equals("action")) {
+                if (str.equals("action")) {
                     c = 0;
                     break;
                 }
                 break;
             case -1377881982:
-                if (format.equals("bundle")) {
+                if (str.equals("bundle")) {
                     c = 1;
                     break;
                 }
                 break;
             case 104431:
-                if (format.equals("int")) {
+                if (str.equals("int")) {
                     c = 2;
                     break;
                 }
                 break;
             case 3327612:
-                if (format.equals("long")) {
+                if (str.equals("long")) {
                     c = 3;
                     break;
                 }
                 break;
             case 3556653:
-                if (format.equals("text")) {
+                if (str.equals("text")) {
                     c = 4;
                     break;
                 }
                 break;
             case 100313435:
-                if (format.equals("image")) {
+                if (str.equals("image")) {
                     c = 5;
                     break;
                 }
                 break;
             case 100358090:
-                if (format.equals("input")) {
+                if (str.equals("input")) {
                     c = 6;
                     break;
                 }
                 break;
             case 109526418:
-                if (format.equals("slice")) {
+                if (str.equals("slice")) {
                     c = 7;
                     break;
                 }
@@ -104,93 +92,98 @@ public class SliceItemHolder implements VersionedParcelable {
         }
         switch (c) {
             case 0:
-                Pair pair = (Pair) mObj;
+                Pair pair = (Pair) obj;
                 F f = pair.first;
                 if (f instanceof PendingIntent) {
                     this.mParcelable = (Parcelable) f;
-                } else if (!isStream) {
+                } else if (!z) {
                     throw new IllegalArgumentException("Cannot write callback to parcel");
                 }
                 this.mVersionedParcelable = (VersionedParcelable) pair.second;
                 break;
             case 1:
-                this.mBundle = (Bundle) mObj;
+                this.mBundle = (Bundle) obj;
                 break;
             case 2:
-                this.mInt = ((Integer) mObj).intValue();
+                this.mInt = ((Integer) obj).intValue();
                 break;
             case 3:
-                this.mLong = ((Long) mObj).longValue();
+                this.mLong = ((Long) obj).longValue();
                 break;
             case 4:
-                this.mStr = mObj instanceof Spanned ? HtmlCompat.toHtml((Spanned) mObj, 0) : (String) mObj;
+                if (obj instanceof Spanned) {
+                    str2 = HtmlCompat.toHtml((Spanned) obj, 0);
+                } else {
+                    str2 = (String) obj;
+                }
+                this.mStr = str2;
                 break;
             case 5:
             case 7:
-                this.mVersionedParcelable = (VersionedParcelable) mObj;
+                this.mVersionedParcelable = (VersionedParcelable) obj;
                 break;
             case 6:
-                this.mParcelable = (Parcelable) mObj;
+                this.mParcelable = (Parcelable) obj;
                 break;
         }
         HolderHandler holderHandler = sHandler;
         if (holderHandler != null) {
-            holderHandler.handle(this, format);
+            holderHandler.handle(this, str);
         }
     }
 
-    public Object getObj(String format) {
+    public Object getObj(String str) {
         HolderHandler holderHandler = sHandler;
         if (holderHandler != null) {
-            holderHandler.handle(this, format);
+            holderHandler.handle(this, str);
         }
-        format.hashCode();
+        str.hashCode();
         char c = 65535;
-        switch (format.hashCode()) {
+        switch (str.hashCode()) {
             case -1422950858:
-                if (format.equals("action")) {
+                if (str.equals("action")) {
                     c = 0;
                     break;
                 }
                 break;
             case -1377881982:
-                if (format.equals("bundle")) {
+                if (str.equals("bundle")) {
                     c = 1;
                     break;
                 }
                 break;
             case 104431:
-                if (format.equals("int")) {
+                if (str.equals("int")) {
                     c = 2;
                     break;
                 }
                 break;
             case 3327612:
-                if (format.equals("long")) {
+                if (str.equals("long")) {
                     c = 3;
                     break;
                 }
                 break;
             case 3556653:
-                if (format.equals("text")) {
+                if (str.equals("text")) {
                     c = 4;
                     break;
                 }
                 break;
             case 100313435:
-                if (format.equals("image")) {
+                if (str.equals("image")) {
                     c = 5;
                     break;
                 }
                 break;
             case 100358090:
-                if (format.equals("input")) {
+                if (str.equals("input")) {
                     c = 6;
                     break;
                 }
                 break;
             case 109526418:
-                if (format.equals("slice")) {
+                if (str.equals("slice")) {
                     c = 7;
                     break;
                 }
@@ -213,28 +206,27 @@ public class SliceItemHolder implements VersionedParcelable {
             case 3:
                 return Long.valueOf(this.mLong);
             case 4:
-                String str = this.mStr;
-                return (str == null || str.length() == 0) ? "" : HtmlCompat.fromHtml(this.mStr, 0);
+                String str2 = this.mStr;
+                return (str2 == null || str2.length() == 0) ? "" : HtmlCompat.fromHtml(this.mStr, 0);
             case 5:
             case 7:
                 return this.mVersionedParcelable;
             case 6:
                 return this.mParcelable;
             default:
-                throw new IllegalArgumentException("Unrecognized format " + format);
+                throw new IllegalArgumentException("Unrecognized format " + str);
         }
     }
 
-    /* loaded from: classes.dex */
     public static class SliceItemPool {
         private final ArrayList<SliceItemHolder> mCached = new ArrayList<>();
 
         public SliceItemHolder get() {
-            if (this.mCached.size() > 0) {
-                ArrayList<SliceItemHolder> arrayList = this.mCached;
-                return arrayList.remove(arrayList.size() - 1);
+            if (this.mCached.size() <= 0) {
+                return new SliceItemHolder(this);
             }
-            return new SliceItemHolder(this);
+            ArrayList<SliceItemHolder> arrayList = this.mCached;
+            return arrayList.remove(arrayList.size() - 1);
         }
 
         public void release(SliceItemHolder sliceItemHolder) {
@@ -242,7 +234,7 @@ public class SliceItemHolder implements VersionedParcelable {
             sliceItemHolder.mCallback = null;
             sliceItemHolder.mVersionedParcelable = null;
             sliceItemHolder.mInt = 0;
-            sliceItemHolder.mLong = 0L;
+            sliceItemHolder.mLong = 0;
             sliceItemHolder.mStr = null;
             this.mCached.add(sliceItemHolder);
         }

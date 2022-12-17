@@ -6,14 +6,13 @@ import android.provider.Settings;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.TogglePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
-/* loaded from: classes.dex */
+
 public class LongPressPowerButtonPreferenceController extends TogglePreferenceController {
     private static final String ASSIST_SWITCH_KEY = "gesture_power_menu_long_press_for_assist";
     private static final String FOOTER_HINT_KEY = "power_menu_power_volume_up_hint";
-    private static final int KEY_CHORD_POWER_VOLUME_UP_DEFAULT_VALUE_RESOURCE = 17694833;
+    private static final int KEY_CHORD_POWER_VOLUME_UP_DEFAULT_VALUE_RESOURCE = 17694842;
     @VisibleForTesting
     static final int KEY_CHORD_POWER_VOLUME_UP_GLOBAL_ACTIONS = 2;
     @VisibleForTesting
@@ -26,32 +25,18 @@ public class LongPressPowerButtonPreferenceController extends TogglePreferenceCo
     @VisibleForTesting
     Preference mFooterHint;
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -60,7 +45,6 @@ public class LongPressPowerButtonPreferenceController extends TogglePreferenceCo
         super(context, str);
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mFooterHint = preferenceScreen.findPreference(FOOTER_HINT_KEY);
@@ -68,39 +52,47 @@ public class LongPressPowerButtonPreferenceController extends TogglePreferenceCo
         refreshStateDisplay();
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    /* renamed from: getSummary */
-    public CharSequence mo485getSummary() {
-        return this.mContext.getString(R.string.nt_power_hold_for_assistant_summary);
+    public CharSequence getSummary() {
+        int powerButtonSettingValue = PowerMenuSettingsUtils.getPowerButtonSettingValue(this.mContext);
+        if (powerButtonSettingValue == 5) {
+            return this.mContext.getString(R$string.power_menu_summary_long_press_for_assist_enabled);
+        }
+        if (powerButtonSettingValue == 1) {
+            return this.mContext.getString(R$string.f143x331c8baf);
+        }
+        return this.mContext.getString(R$string.power_menu_summary_long_press_for_assist_disabled_no_action);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
-        return this.mContext.getResources().getBoolean(17891587) ? 0 : 3;
+        return this.mContext.getResources().getBoolean(17891698) ? 0 : 3;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean isChecked() {
         return PowerMenuSettingsUtils.isLongPressPowerForAssistEnabled(this.mContext);
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean setChecked(boolean z) {
-        if (setPowerLongPressValue(z)) {
-            setPowerVolumeChordValue(z);
-            refreshStateDisplay();
-            return true;
+        if (!setPowerLongPressValue(z)) {
+            return false;
         }
-        return false;
+        setPowerVolumeChordValue(z);
+        refreshStateDisplay();
+        return true;
+    }
+
+    public int getSliceHighlightMenuRes() {
+        return R$string.menu_key_system;
     }
 
     private void refreshStateDisplay() {
         Preference preference = this.mAssistSwitch;
         if (preference != null) {
-            preference.setSummary(mo485getSummary());
+            preference.setSummary(getSummary());
         }
         if (this.mFooterHint != null) {
-            this.mFooterHint.setSummary(this.mContext.getString(R.string.power_menu_power_volume_up_hint));
+            String string = this.mContext.getString(R$string.power_menu_power_volume_up_hint);
+            this.mContext.getResources().getBoolean(17891830);
+            this.mFooterHint.setSummary((CharSequence) string);
             this.mFooterHint.setVisible(isPowerMenuKeyChordEnabled(this.mContext));
         }
     }
@@ -113,7 +105,7 @@ public class LongPressPowerButtonPreferenceController extends TogglePreferenceCo
         if (z) {
             return Settings.Global.putInt(this.mContext.getContentResolver(), "power_button_long_press", 5);
         }
-        int integer = this.mContext.getResources().getInteger(17694844);
+        int integer = this.mContext.getResources().getInteger(17694854);
         if (integer == 5) {
             return Settings.Global.putInt(this.mContext.getContentResolver(), "power_button_long_press", 1);
         }

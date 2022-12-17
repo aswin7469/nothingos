@@ -7,12 +7,12 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import com.google.android.material.circularreveal.CircularRevealWidget;
-/* loaded from: classes.dex */
+
 public class CircularRevealFrameLayout extends FrameLayout implements CircularRevealWidget {
     private final CircularRevealHelper helper;
 
     public CircularRevealFrameLayout(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public CircularRevealFrameLayout(Context context, AttributeSet attributeSet) {
@@ -20,32 +20,26 @@ public class CircularRevealFrameLayout extends FrameLayout implements CircularRe
         this.helper = new CircularRevealHelper(this);
     }
 
-    @Override // com.google.android.material.circularreveal.CircularRevealWidget
     public void buildCircularRevealCache() {
         this.helper.buildCircularRevealCache();
     }
 
-    @Override // com.google.android.material.circularreveal.CircularRevealWidget
     public void destroyCircularRevealCache() {
         this.helper.destroyCircularRevealCache();
     }
 
-    @Override // com.google.android.material.circularreveal.CircularRevealWidget
     public CircularRevealWidget.RevealInfo getRevealInfo() {
         return this.helper.getRevealInfo();
     }
 
-    @Override // com.google.android.material.circularreveal.CircularRevealWidget
     public void setRevealInfo(CircularRevealWidget.RevealInfo revealInfo) {
         this.helper.setRevealInfo(revealInfo);
     }
 
-    @Override // com.google.android.material.circularreveal.CircularRevealWidget
     public int getCircularRevealScrimColor() {
         return this.helper.getCircularRevealScrimColor();
     }
 
-    @Override // com.google.android.material.circularreveal.CircularRevealWidget
     public void setCircularRevealScrimColor(int i) {
         this.helper.setCircularRevealScrimColor(i);
     }
@@ -54,12 +48,10 @@ public class CircularRevealFrameLayout extends FrameLayout implements CircularRe
         return this.helper.getCircularRevealOverlayDrawable();
     }
 
-    @Override // com.google.android.material.circularreveal.CircularRevealWidget
     public void setCircularRevealOverlayDrawable(Drawable drawable) {
         this.helper.setCircularRevealOverlayDrawable(drawable);
     }
 
-    @Override // android.view.View
     @SuppressLint({"MissingSuperCall"})
     public void draw(Canvas canvas) {
         CircularRevealHelper circularRevealHelper = this.helper;
@@ -70,12 +62,10 @@ public class CircularRevealFrameLayout extends FrameLayout implements CircularRe
         }
     }
 
-    @Override // com.google.android.material.circularreveal.CircularRevealHelper.Delegate
     public void actualDraw(Canvas canvas) {
         super.draw(canvas);
     }
 
-    @Override // android.view.View
     public boolean isOpaque() {
         CircularRevealHelper circularRevealHelper = this.helper;
         if (circularRevealHelper != null) {
@@ -84,7 +74,6 @@ public class CircularRevealFrameLayout extends FrameLayout implements CircularRe
         return super.isOpaque();
     }
 
-    @Override // com.google.android.material.circularreveal.CircularRevealHelper.Delegate
     public boolean actualIsOpaque() {
         return super.isOpaque();
     }

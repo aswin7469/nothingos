@@ -8,47 +8,34 @@ import android.content.pm.ResolveInfo;
 import android.text.TextUtils;
 import androidx.preference.Preference;
 import com.android.settings.overlay.FeatureFactory;
-import com.android.settings.slices.SliceBackgroundWorker;
-/* loaded from: classes.dex */
+
 public class AppSettingPreferenceController extends AppInfoPreferenceControllerBase {
     private String mPackageName;
 
-    @Override // com.android.settings.applications.appinfo.AppInfoPreferenceControllerBase, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.applications.appinfo.AppInfoPreferenceControllerBase, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.applications.appinfo.AppInfoPreferenceControllerBase, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.applications.appinfo.AppInfoPreferenceControllerBase, com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.applications.appinfo.AppInfoPreferenceControllerBase, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.applications.appinfo.AppInfoPreferenceControllerBase, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.applications.appinfo.AppInfoPreferenceControllerBase, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.applications.appinfo.AppInfoPreferenceControllerBase, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -62,29 +49,30 @@ public class AppSettingPreferenceController extends AppInfoPreferenceControllerB
         return this;
     }
 
-    @Override // com.android.settings.applications.appinfo.AppInfoPreferenceControllerBase, com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
-        return (TextUtils.isEmpty(this.mPackageName) || this.mParent == null || resolveIntent(new Intent("android.intent.action.APPLICATION_PREFERENCES").setPackage(this.mPackageName)) == null) ? 2 : 0;
+        if (TextUtils.isEmpty(this.mPackageName) || this.mParent == null || resolveIntent(new Intent("android.intent.action.APPLICATION_PREFERENCES").setPackage(this.mPackageName)) == null) {
+            return 2;
+        }
+        return 0;
     }
 
-    @Override // com.android.settings.applications.appinfo.AppInfoPreferenceControllerBase, com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
         Intent resolveIntent;
-        if (TextUtils.equals(preference.getKey(), getPreferenceKey()) && (resolveIntent = resolveIntent(new Intent("android.intent.action.APPLICATION_PREFERENCES").setPackage(this.mPackageName))) != null) {
-            FeatureFactory.getFactory(this.mContext).getMetricsFeatureProvider().action(0, 1017, this.mParent.getMetricsCategory(), null, 0);
-            this.mContext.startActivity(resolveIntent);
-            return true;
+        if (!TextUtils.equals(preference.getKey(), getPreferenceKey()) || (resolveIntent = resolveIntent(new Intent("android.intent.action.APPLICATION_PREFERENCES").setPackage(this.mPackageName))) == null) {
+            return false;
         }
-        return false;
+        FeatureFactory.getFactory(this.mContext).getMetricsFeatureProvider().action(0, 1017, this.mParent.getMetricsCategory(), (String) null, 0);
+        this.mContext.startActivity(resolveIntent);
+        return true;
     }
 
     private Intent resolveIntent(Intent intent) {
         ResolveInfo resolveActivity = this.mContext.getPackageManager().resolveActivity(intent, 0);
-        if (resolveActivity != null) {
-            Intent intent2 = new Intent(intent.getAction());
-            ActivityInfo activityInfo = resolveActivity.activityInfo;
-            return intent2.setClassName(activityInfo.packageName, activityInfo.name);
+        if (resolveActivity == null) {
+            return null;
         }
-        return null;
+        Intent intent2 = new Intent(intent.getAction());
+        ActivityInfo activityInfo = resolveActivity.activityInfo;
+        return intent2.setClassName(activityInfo.packageName, activityInfo.name);
     }
 }

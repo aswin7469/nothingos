@@ -20,17 +20,22 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
-import com.android.settings.R;
+import com.android.settings.R$array;
+import com.android.settings.R$color;
+import com.android.settings.R$dimen;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
 import com.android.settings.core.instrumentation.InstrumentedDialogFragment;
 import com.android.settings.network.SubscriptionUtil;
 import com.android.settingslib.DeviceInfoUtils;
 import com.google.common.collect.ImmutableMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public class RenameMobileNetworkDialogFragment extends InstrumentedDialogFragment {
     private Spinner mColorSpinner;
     private Color[] mColors;
@@ -40,7 +45,6 @@ public class RenameMobileNetworkDialogFragment extends InstrumentedDialogFragmen
     private SubscriptionManager mSubscriptionManager;
     private TelephonyManager mTelephonyManager;
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1642;
     }
@@ -53,59 +57,70 @@ public class RenameMobileNetworkDialogFragment extends InstrumentedDialogFragmen
         return renameMobileNetworkDialogFragment;
     }
 
-    protected TelephonyManager getTelephonyManager(Context context) {
+    /* access modifiers changed from: protected */
+    public TelephonyManager getTelephonyManager(Context context) {
         return (TelephonyManager) context.getSystemService(TelephonyManager.class);
     }
 
-    protected SubscriptionManager getSubscriptionManager(Context context) {
+    /* access modifiers changed from: protected */
+    public SubscriptionManager getSubscriptionManager(Context context) {
         return (SubscriptionManager) context.getSystemService(SubscriptionManager.class);
     }
 
-    protected EditText getNameView() {
+    /* access modifiers changed from: protected */
+    public EditText getNameView() {
         return this.mNameView;
     }
 
-    protected Spinner getColorSpinnerView() {
+    /* access modifiers changed from: protected */
+    public Spinner getColorSpinnerView() {
         return this.mColorSpinner;
     }
 
-    @Override // com.android.settings.core.instrumentation.InstrumentedDialogFragment, com.android.settingslib.core.lifecycle.ObservableDialogFragment, androidx.fragment.app.DialogFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         this.mTelephonyManager = getTelephonyManager(context);
         this.mSubscriptionManager = getSubscriptionManager(context);
         this.mSubId = getArguments().getInt("subscription_id");
         Resources resources = context.getResources();
-        this.mLightDarkMap = ImmutableMap.builder().mo786put(Integer.valueOf(resources.getInteger(R.color.SIM_color_cyan)), Integer.valueOf(resources.getInteger(R.color.SIM_dark_mode_color_cyan))).mo786put(Integer.valueOf(resources.getInteger(R.color.SIM_color_blue800)), Integer.valueOf(resources.getInteger(R.color.SIM_dark_mode_color_blue))).mo786put(Integer.valueOf(resources.getInteger(R.color.SIM_color_green800)), Integer.valueOf(resources.getInteger(R.color.SIM_dark_mode_color_green))).mo786put(Integer.valueOf(resources.getInteger(R.color.SIM_color_purple800)), Integer.valueOf(resources.getInteger(R.color.SIM_dark_mode_color_purple))).mo786put(Integer.valueOf(resources.getInteger(R.color.SIM_color_pink800)), Integer.valueOf(resources.getInteger(R.color.SIM_dark_mode_color_pink))).mo786put(Integer.valueOf(resources.getInteger(R.color.SIM_color_orange)), Integer.valueOf(resources.getInteger(R.color.SIM_dark_mode_color_orange))).mo785build();
+        this.mLightDarkMap = ImmutableMap.builder().put(Integer.valueOf(resources.getInteger(R$color.SIM_color_cyan)), Integer.valueOf(resources.getInteger(R$color.SIM_dark_mode_color_cyan))).put(Integer.valueOf(resources.getInteger(R$color.SIM_color_blue800)), Integer.valueOf(resources.getInteger(R$color.SIM_dark_mode_color_blue))).put(Integer.valueOf(resources.getInteger(R$color.SIM_color_green800)), Integer.valueOf(resources.getInteger(R$color.SIM_dark_mode_color_green))).put(Integer.valueOf(resources.getInteger(R$color.SIM_color_purple800)), Integer.valueOf(resources.getInteger(R$color.SIM_dark_mode_color_purple))).put(Integer.valueOf(resources.getInteger(R$color.SIM_color_pink800)), Integer.valueOf(resources.getInteger(R$color.SIM_dark_mode_color_pink))).put(Integer.valueOf(resources.getInteger(R$color.SIM_color_orange)), Integer.valueOf(resources.getInteger(R$color.SIM_dark_mode_color_orange))).build();
     }
 
-    @Override // androidx.fragment.app.DialogFragment
     public Dialog onCreateDialog(Bundle bundle) {
         this.mColors = getColors();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        View inflate = ((LayoutInflater) builder.getContext().getSystemService(LayoutInflater.class)).inflate(R.layout.dialog_mobile_network_rename, (ViewGroup) null);
+        View inflate = ((LayoutInflater) builder.getContext().getSystemService(LayoutInflater.class)).inflate(R$layout.dialog_mobile_network_rename, (ViewGroup) null);
         populateView(inflate);
-        builder.setTitle(R.string.mobile_network_sim_name).setView(inflate).setPositiveButton(R.string.mobile_network_sim_name_rename, new DialogInterface.OnClickListener() { // from class: com.android.settings.network.telephony.RenameMobileNetworkDialogFragment$$ExternalSyntheticLambda0
-            @Override // android.content.DialogInterface.OnClickListener
-            public final void onClick(DialogInterface dialogInterface, int i) {
-                RenameMobileNetworkDialogFragment.this.lambda$onCreateDialog$0(dialogInterface, i);
-            }
-        }).setNegativeButton(17039360, (DialogInterface.OnClickListener) null);
+        builder.setTitle(R$string.mobile_network_sim_name).setView(inflate).setPositiveButton(R$string.mobile_network_sim_name_rename, (DialogInterface.OnClickListener) new RenameMobileNetworkDialogFragment$$ExternalSyntheticLambda0(this)).setNegativeButton(17039360, (DialogInterface.OnClickListener) null);
         return builder.create();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onCreateDialog$0(DialogInterface dialogInterface, int i) {
+        Color color;
         this.mSubscriptionManager.setDisplayName(this.mNameView.getText().toString(), this.mSubId, 2);
         Spinner spinner = this.mColorSpinner;
-        this.mSubscriptionManager.setIconTint((spinner == null ? this.mColors[0] : this.mColors[spinner.getSelectedItemPosition()]).getColor(), this.mSubId);
+        if (spinner == null) {
+            color = this.mColors[0];
+        } else {
+            color = this.mColors[spinner.getSelectedItemPosition()];
+        }
+        this.mSubscriptionManager.setIconTint(color.getColor(), this.mSubId);
     }
 
-    protected void populateView(View view) {
-        this.mNameView = (EditText) view.findViewById(R.id.name_edittext);
-        List<SubscriptionInfo> availableSubscriptionInfoList = this.mSubscriptionManager.getAvailableSubscriptionInfoList();
+    /* access modifiers changed from: protected */
+    public void populateView(View view) {
+        SubscriptionInfo subscriptionInfo;
+        String registeredOperatorName;
+        this.mNameView = (EditText) view.findViewById(R$id.name_edittext);
+        List availableSubscriptionInfoList = this.mSubscriptionManager.getAvailableSubscriptionInfoList();
         if (availableSubscriptionInfoList != null) {
-            for (SubscriptionInfo subscriptionInfo : availableSubscriptionInfoList) {
+            Iterator it = availableSubscriptionInfoList.iterator();
+            while (true) {
+                if (!it.hasNext()) {
+                    break;
+                }
+                subscriptionInfo = (SubscriptionInfo) it.next();
                 if (subscriptionInfo.getSubscriptionId() == this.mSubId) {
                     break;
                 }
@@ -121,18 +136,24 @@ public class RenameMobileNetworkDialogFragment extends InstrumentedDialogFragmen
         if (!TextUtils.isEmpty(uniqueSubscriptionDisplayName)) {
             this.mNameView.setSelection(uniqueSubscriptionDisplayName.length());
         }
-        this.mColorSpinner = (Spinner) view.findViewById(R.id.color_spinner);
-        this.mColorSpinner.setAdapter((SpinnerAdapter) new ColorAdapter(getContext(), R.layout.dialog_mobile_network_color_picker_item, this.mColors));
+        this.mColorSpinner = (Spinner) view.findViewById(R$id.color_spinner);
+        this.mColorSpinner.setAdapter(new ColorAdapter(getContext(), R$layout.dialog_mobile_network_color_picker_item, this.mColors));
         this.mColorSpinner.setSelection(getSimColorIndex(subscriptionInfo.getIconTint()));
+        TextView textView = (TextView) view.findViewById(R$id.operator_name_value);
         this.mTelephonyManager = this.mTelephonyManager.createForSubscriptionId(this.mSubId);
-        ((TextView) view.findViewById(R.id.operator_name_value)).setText(subscriptionInfo.getCarrierName());
-        ((TextView) view.findViewById(R.id.number_label)).setVisibility(subscriptionInfo.isOpportunistic() ? 8 : 0);
-        ((TextView) view.findViewById(R.id.number_value)).setText(DeviceInfoUtils.getBidiFormattedPhoneNumber(getContext(), subscriptionInfo));
+        textView.setText(subscriptionInfo.getCarrierName());
+        if (DomesticRoamUtils.isFeatureEnabled(getContext()) && "" != (registeredOperatorName = DomesticRoamUtils.getRegisteredOperatorName(getContext(), subscriptionInfo.getSubscriptionId()))) {
+            textView.setText(registeredOperatorName);
+        }
+        ((TextView) view.findViewById(R$id.number_label)).setVisibility(subscriptionInfo.isOpportunistic() ? 8 : 0);
+        TextView textView2 = (TextView) view.findViewById(R$id.number_value);
+        String bidiFormattedPhoneNumber = DeviceInfoUtils.getBidiFormattedPhoneNumber(getContext(), subscriptionInfo);
+        if (!TextUtils.isEmpty(bidiFormattedPhoneNumber)) {
+            textView2.setText(bidiFormattedPhoneNumber);
+        }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class ColorAdapter extends ArrayAdapter<Color> {
+    private class ColorAdapter extends ArrayAdapter<Color> {
         private Context mContext;
         private int mItemResId;
 
@@ -142,7 +163,6 @@ public class RenameMobileNetworkDialogFragment extends InstrumentedDialogFragmen
             this.mItemResId = i;
         }
 
-        @Override // android.widget.ArrayAdapter, android.widget.Adapter
         public View getView(int i, View view, ViewGroup viewGroup) {
             LayoutInflater layoutInflater = (LayoutInflater) this.mContext.getSystemService("layout_inflater");
             if (view == null) {
@@ -152,12 +172,11 @@ public class RenameMobileNetworkDialogFragment extends InstrumentedDialogFragmen
             if ((RenameMobileNetworkDialogFragment.this.getResources().getConfiguration().uiMode & 48) == 32) {
                 z = true;
             }
-            ((ImageView) view.findViewById(R.id.color_icon)).setImageDrawable(getItem(i).getDrawable(z));
-            ((TextView) view.findViewById(R.id.color_label)).setText(getItem(i).getLabel());
+            ((ImageView) view.findViewById(R$id.color_icon)).setImageDrawable(((Color) getItem(i)).getDrawable(z));
+            ((TextView) view.findViewById(R$id.color_label)).setText(((Color) getItem(i)).getLabel());
             return view;
         }
 
-        @Override // android.widget.ArrayAdapter, android.widget.BaseAdapter, android.widget.SpinnerAdapter
         public View getDropDownView(int i, View view, ViewGroup viewGroup) {
             return getView(i, view, viewGroup);
         }
@@ -165,22 +184,19 @@ public class RenameMobileNetworkDialogFragment extends InstrumentedDialogFragmen
 
     private Color[] getColors() {
         Resources resources = getContext().getResources();
-        int[] intArray = resources.getIntArray(R.array.nt_sim_color_light);
-        String[] stringArray = resources.getStringArray(R.array.color_picker);
-        int dimensionPixelSize = resources.getDimensionPixelSize(R.dimen.color_swatch_size);
-        int dimensionPixelSize2 = resources.getDimensionPixelSize(R.dimen.color_swatch_stroke_width);
+        int[] intArray = resources.getIntArray(R$array.sim_color_light);
+        String[] stringArray = resources.getStringArray(R$array.color_picker);
+        int dimensionPixelSize = resources.getDimensionPixelSize(R$dimen.color_swatch_size);
+        int dimensionPixelSize2 = resources.getDimensionPixelSize(R$dimen.color_swatch_stroke_width);
         int length = intArray.length;
         Color[] colorArr = new Color[length];
         for (int i = 0; i < length; i++) {
             colorArr[i] = new Color(stringArray[i], intArray[i], dimensionPixelSize, dimensionPixelSize2);
-            Log.d("RenameMobileNetwork", "getColor mColor: " + intArray[i]);
         }
         return colorArr;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class Color {
+    private class Color {
         private int mColor;
         private ShapeDrawable mDrawable;
         private String mLabel;
@@ -192,22 +208,22 @@ public class RenameMobileNetworkDialogFragment extends InstrumentedDialogFragmen
             this.mDrawable = shapeDrawable;
             shapeDrawable.setIntrinsicHeight(i2);
             this.mDrawable.setIntrinsicWidth(i2);
-            this.mDrawable.getPaint().setStrokeWidth(i3);
+            this.mDrawable.getPaint().setStrokeWidth((float) i3);
             this.mDrawable.getPaint().setStyle(Paint.Style.FILL_AND_STROKE);
             this.mDrawable.getPaint().setColor(i);
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public String getLabel() {
             return this.mLabel;
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public int getColor() {
             return this.mColor;
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public ShapeDrawable getDrawable(boolean z) {
             if (z) {
                 this.mDrawable.getPaint().setColor(RenameMobileNetworkDialogFragment.this.getDarkColor(this.mColor));
@@ -216,13 +232,13 @@ public class RenameMobileNetworkDialogFragment extends InstrumentedDialogFragmen
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public int getDarkColor(int i) {
         return this.mLightDarkMap.getOrDefault(Integer.valueOf(i), Integer.valueOf(i)).intValue();
     }
 
     private int getSimColorIndex(int i) {
-        int[] intArray = getContext().getResources().getIntArray(17236145);
+        int[] intArray = getContext().getResources().getIntArray(17236183);
         int i2 = -1;
         for (int i3 = 0; i3 < intArray.length; i3++) {
             if (intArray[i3] == i) {

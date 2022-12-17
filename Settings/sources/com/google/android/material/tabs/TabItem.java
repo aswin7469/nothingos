@@ -6,14 +6,14 @@ import android.util.AttributeSet;
 import android.view.View;
 import androidx.appcompat.widget.TintTypedArray;
 import com.google.android.material.R$styleable;
-/* loaded from: classes2.dex */
+
 public class TabItem extends View {
     public final int customLayout;
     public final Drawable icon;
     public final CharSequence text;
 
     public TabItem(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public TabItem(Context context, AttributeSet attributeSet) {

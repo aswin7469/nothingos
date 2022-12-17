@@ -5,10 +5,11 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.widget.Switch;
 import androidx.preference.PreferenceViewHolder;
+import androidx.preference.R$styleable;
 import androidx.preference.TwoStatePreference;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class MainSwitchPreference extends TwoStatePreference implements OnMainSwitchChangeListener {
     private MainSwitchBar mMainSwitchBar;
     private final List<OnMainSwitchChangeListener> mSwitchChangeListeners = new ArrayList();
@@ -16,7 +17,7 @@ public class MainSwitchPreference extends TwoStatePreference implements OnMainSw
 
     public MainSwitchPreference(Context context) {
         super(context);
-        init(context, null);
+        init(context, (AttributeSet) null);
     }
 
     public MainSwitchPreference(Context context, AttributeSet attributeSet) {
@@ -34,7 +35,6 @@ public class MainSwitchPreference extends TwoStatePreference implements OnMainSw
         init(context, attributeSet);
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         preferenceViewHolder.setDividerAllowedAbove(false);
@@ -48,23 +48,20 @@ public class MainSwitchPreference extends TwoStatePreference implements OnMainSw
         setLayoutResource(R$layout.settingslib_main_switch_layout);
         this.mSwitchChangeListeners.add(this);
         if (attributeSet != null) {
-            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, androidx.preference.R$styleable.Preference, 0, 0);
-            setTitle(obtainStyledAttributes.getText(androidx.preference.R$styleable.Preference_android_title));
+            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.Preference, 0, 0);
+            setTitle(obtainStyledAttributes.getText(R$styleable.Preference_android_title));
             obtainStyledAttributes.recycle();
         }
     }
 
-    @Override // androidx.preference.TwoStatePreference
     public void setChecked(boolean z) {
         super.setChecked(z);
         MainSwitchBar mainSwitchBar = this.mMainSwitchBar;
-        if (mainSwitchBar == null || mainSwitchBar.isChecked() == z) {
-            return;
+        if (mainSwitchBar != null && mainSwitchBar.isChecked() != z) {
+            this.mMainSwitchBar.setChecked(z);
         }
-        this.mMainSwitchBar.setChecked(z);
     }
 
-    @Override // androidx.preference.Preference
     public void setTitle(CharSequence charSequence) {
         this.mTitle = charSequence;
         MainSwitchBar mainSwitchBar = this.mMainSwitchBar;
@@ -73,8 +70,7 @@ public class MainSwitchPreference extends TwoStatePreference implements OnMainSw
         }
     }
 
-    @Override // com.android.settingslib.widget.OnMainSwitchChangeListener
-    public void onSwitchChanged(Switch r1, boolean z) {
+    public void onSwitchChanged(Switch switchR, boolean z) {
         super.setChecked(z);
     }
 
@@ -88,18 +84,18 @@ public class MainSwitchPreference extends TwoStatePreference implements OnMainSw
     }
 
     public void addOnSwitchChangeListener(OnMainSwitchChangeListener onMainSwitchChangeListener) {
-        MainSwitchBar mainSwitchBar = this.mMainSwitchBar;
-        if (mainSwitchBar == null) {
+        if (!this.mSwitchChangeListeners.contains(onMainSwitchChangeListener)) {
             this.mSwitchChangeListeners.add(onMainSwitchChangeListener);
-        } else {
+        }
+        MainSwitchBar mainSwitchBar = this.mMainSwitchBar;
+        if (mainSwitchBar != null) {
             mainSwitchBar.addOnSwitchChangeListener(onMainSwitchChangeListener);
         }
     }
 
     private void registerListenerToSwitchBar() {
-        for (OnMainSwitchChangeListener onMainSwitchChangeListener : this.mSwitchChangeListeners) {
-            this.mMainSwitchBar.addOnSwitchChangeListener(onMainSwitchChangeListener);
+        for (OnMainSwitchChangeListener addOnSwitchChangeListener : this.mSwitchChangeListeners) {
+            this.mMainSwitchBar.addOnSwitchChangeListener(addOnSwitchChangeListener);
         }
-        this.mSwitchChangeListeners.clear();
     }
 }

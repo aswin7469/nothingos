@@ -1,15 +1,20 @@
 package com.android.settings.widget;
 
-import android.media.MediaPlayer;
-/* loaded from: classes.dex */
-public final /* synthetic */ class MediaAnimationController$$ExternalSyntheticLambda0 implements MediaPlayer.OnPreparedListener {
-    public static final /* synthetic */ MediaAnimationController$$ExternalSyntheticLambda0 INSTANCE = new MediaAnimationController$$ExternalSyntheticLambda0();
+import android.view.View;
 
-    private /* synthetic */ MediaAnimationController$$ExternalSyntheticLambda0() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class MediaAnimationController$$ExternalSyntheticLambda0 implements View.OnClickListener {
+    public final /* synthetic */ MediaAnimationController f$0;
+    public final /* synthetic */ View f$1;
+    public final /* synthetic */ View f$2;
+
+    public /* synthetic */ MediaAnimationController$$ExternalSyntheticLambda0(MediaAnimationController mediaAnimationController, View view, View view2) {
+        this.f$0 = mediaAnimationController;
+        this.f$1 = view;
+        this.f$2 = view2;
     }
 
-    @Override // android.media.MediaPlayer.OnPreparedListener
-    public final void onPrepared(MediaPlayer mediaPlayer) {
-        mediaPlayer.setLooping(true);
+    public final void onClick(View view) {
+        this.f$0.lambda$attachView$2(this.f$1, this.f$2, view);
     }
 }

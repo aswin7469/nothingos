@@ -12,7 +12,7 @@ import android.util.Log;
 import com.android.settings.ActivityPicker;
 import com.android.settings.AppWidgetLoader;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class AppWidgetPickActivity extends ActivityPicker implements AppWidgetLoader.ItemConstructor<ActivityPicker.PickAdapter.Item> {
     private int mAppWidgetId;
     private AppWidgetLoader<ActivityPicker.PickAdapter.Item> mAppWidgetLoader;
@@ -20,15 +20,14 @@ public class AppWidgetPickActivity extends ActivityPicker implements AppWidgetLo
     List<ActivityPicker.PickAdapter.Item> mItems;
     private PackageManager mPackageManager;
 
-    /* JADX WARN: Multi-variable type inference failed */
-    @Override // com.android.settings.ActivityPicker
+    /* JADX WARNING: type inference failed for: r3v0, types: [android.content.Context, com.android.internal.app.AlertActivity, com.android.settings.AppWidgetLoader$ItemConstructor, com.android.settings.ActivityPicker, com.android.settings.AppWidgetPickActivity] */
     public void onCreate(Bundle bundle) {
         this.mPackageManager = getPackageManager();
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-        this.mAppWidgetManager = appWidgetManager;
-        this.mAppWidgetLoader = new AppWidgetLoader<>(this, appWidgetManager, this);
+        AppWidgetManager instance = AppWidgetManager.getInstance(this);
+        this.mAppWidgetManager = instance;
+        this.mAppWidgetLoader = new AppWidgetLoader<>(this, instance, this);
         super.onCreate(bundle);
-        setResultData(0, null);
+        setResultData(0, (Intent) null);
         Intent intent = getIntent();
         if (intent.hasExtra("appWidgetId")) {
             this.mAppWidgetId = intent.getIntExtra("appWidgetId", 0);
@@ -37,25 +36,22 @@ public class AppWidgetPickActivity extends ActivityPicker implements AppWidgetLo
         }
     }
 
-    @Override // com.android.settings.ActivityPicker
-    protected List<ActivityPicker.PickAdapter.Item> getItems() {
+    /* access modifiers changed from: protected */
+    public List<ActivityPicker.PickAdapter.Item> getItems() {
         List<ActivityPicker.PickAdapter.Item> items = this.mAppWidgetLoader.getItems(getIntent());
         this.mItems = items;
         return items;
     }
 
-    /* JADX WARN: Can't rename method to resolve collision */
-    @Override // com.android.settings.AppWidgetLoader.ItemConstructor
-    /* renamed from: createItem */
-    public ActivityPicker.PickAdapter.Item mo193createItem(Context context, AppWidgetProviderInfo appWidgetProviderInfo, Bundle bundle) {
+    public ActivityPicker.PickAdapter.Item createItem(Context context, AppWidgetProviderInfo appWidgetProviderInfo, Bundle bundle) {
         String str = appWidgetProviderInfo.label;
         Drawable drawable = null;
         if (appWidgetProviderInfo.icon != 0) {
             try {
                 int i = context.getResources().getDisplayMetrics().densityDpi;
-                if (i == 160 || i == 213 || i == 240 || i != 320) {
+                if (!(i == 160 || i == 213 || i == 240 || i == 320)) {
                 }
-                drawable = this.mPackageManager.getResourcesForApplication(appWidgetProviderInfo.provider.getPackageName()).getDrawableForDensity(appWidgetProviderInfo.icon, (int) ((i * 0.75f) + 0.5f));
+                drawable = this.mPackageManager.getResourcesForApplication(appWidgetProviderInfo.provider.getPackageName()).getDrawableForDensity(appWidgetProviderInfo.icon, (int) ((((float) i) * 0.75f) + 0.5f));
             } catch (PackageManager.NameNotFoundException unused) {
                 Log.w("AppWidgetPickActivity", "Can't load icon drawable 0x" + Integer.toHexString(appWidgetProviderInfo.icon) + " for provider: " + appWidgetProviderInfo.provider);
             }
@@ -63,14 +59,13 @@ public class AppWidgetPickActivity extends ActivityPicker implements AppWidgetLo
                 Log.w("AppWidgetPickActivity", "Can't load icon drawable 0x" + Integer.toHexString(appWidgetProviderInfo.icon) + " for provider: " + appWidgetProviderInfo.provider);
             }
         }
-        ActivityPicker.PickAdapter.Item item = new ActivityPicker.PickAdapter.Item(context, str, drawable);
+        ActivityPicker.PickAdapter.Item item = new ActivityPicker.PickAdapter.Item(context, (CharSequence) str, drawable);
         item.packageName = appWidgetProviderInfo.provider.getPackageName();
         item.className = appWidgetProviderInfo.provider.getClassName();
         item.extras = bundle;
         return item;
     }
 
-    @Override // com.android.settings.ActivityPicker, android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialogInterface, int i) {
         Intent intentForPosition = getIntentForPosition(i);
         int i2 = -1;
@@ -82,12 +77,13 @@ public class AppWidgetPickActivity extends ActivityPicker implements AppWidgetLo
             } catch (IllegalArgumentException unused) {
                 i2 = 0;
             }
-            setResultData(i2, null);
+            setResultData(i2, (Intent) null);
         }
         finish();
     }
 
-    void setResultData(int i, Intent intent) {
+    /* access modifiers changed from: package-private */
+    public void setResultData(int i, Intent intent) {
         if (intent == null) {
             intent = new Intent();
         }

@@ -6,12 +6,11 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
-/* loaded from: classes.dex */
+
 public class GlobalBubblePermissionObserverMixin extends ContentObserver {
     private final Context mContext;
     private final Listener mListener;
 
-    /* loaded from: classes.dex */
     public interface Listener {
         void onGlobalBubblePermissionChanged();
     }
@@ -22,7 +21,6 @@ public class GlobalBubblePermissionObserverMixin extends ContentObserver {
         this.mListener = listener;
     }
 
-    @Override // android.database.ContentObserver
     public void onChange(boolean z, Uri uri) {
         Listener listener = this.mListener;
         if (listener != null) {

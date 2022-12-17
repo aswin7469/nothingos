@@ -11,9 +11,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
 import com.android.internal.logging.MetricsLogger;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
 import com.android.settings.overlay.FeatureFactory;
-/* loaded from: classes.dex */
+
 public class ZenOnboardingActivity extends Activity {
     static final long ALWAYS_SHOW_THRESHOLD = 1209600000;
     static final String PREF_KEY_SUGGESTION_FIRST_DISPLAY_TIME = "pref_zen_suggestion_first_display_time_ms";
@@ -24,8 +25,8 @@ public class ZenOnboardingActivity extends Activity {
     RadioButton mNewSettingButton;
     private NotificationManager mNm;
 
-    @Override // android.app.Activity
-    protected void onCreate(Bundle bundle) {
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setNotificationManager((NotificationManager) getSystemService(NotificationManager.class));
         setMetricsLogger(new MetricsLogger());
@@ -33,39 +34,40 @@ public class ZenOnboardingActivity extends Activity {
         setupUI();
     }
 
-    protected void setupUI() {
-        setContentView(R.layout.zen_onboarding);
-        this.mNewSetting = findViewById(R.id.zen_onboarding_new_setting);
-        this.mKeepCurrentSetting = findViewById(R.id.zen_onboarding_current_setting);
-        this.mNewSettingButton = (RadioButton) findViewById(R.id.zen_onboarding_new_setting_button);
-        this.mKeepCurrentSettingButton = (RadioButton) findViewById(R.id.zen_onboarding_current_setting_button);
-        View.OnClickListener onClickListener = new View.OnClickListener() { // from class: com.android.settings.notification.zen.ZenOnboardingActivity.1
-            @Override // android.view.View.OnClickListener
+    /* access modifiers changed from: protected */
+    public void setupUI() {
+        setContentView(R$layout.zen_onboarding);
+        this.mNewSetting = findViewById(R$id.zen_onboarding_new_setting);
+        this.mKeepCurrentSetting = findViewById(R$id.zen_onboarding_current_setting);
+        this.mNewSettingButton = (RadioButton) findViewById(R$id.zen_onboarding_new_setting_button);
+        this.mKeepCurrentSettingButton = (RadioButton) findViewById(R$id.zen_onboarding_current_setting_button);
+        C12321 r0 = new View.OnClickListener() {
             public void onClick(View view) {
                 ZenOnboardingActivity.this.mKeepCurrentSettingButton.setChecked(false);
                 ZenOnboardingActivity.this.mNewSettingButton.setChecked(true);
             }
         };
-        View.OnClickListener onClickListener2 = new View.OnClickListener() { // from class: com.android.settings.notification.zen.ZenOnboardingActivity.2
-            @Override // android.view.View.OnClickListener
+        C12332 r1 = new View.OnClickListener() {
             public void onClick(View view) {
                 ZenOnboardingActivity.this.mKeepCurrentSettingButton.setChecked(true);
                 ZenOnboardingActivity.this.mNewSettingButton.setChecked(false);
             }
         };
-        this.mNewSetting.setOnClickListener(onClickListener);
-        this.mNewSettingButton.setOnClickListener(onClickListener);
-        this.mKeepCurrentSetting.setOnClickListener(onClickListener2);
-        this.mKeepCurrentSettingButton.setOnClickListener(onClickListener2);
+        this.mNewSetting.setOnClickListener(r0);
+        this.mNewSettingButton.setOnClickListener(r0);
+        this.mKeepCurrentSetting.setOnClickListener(r1);
+        this.mKeepCurrentSettingButton.setOnClickListener(r1);
         this.mKeepCurrentSettingButton.setChecked(true);
         this.mMetrics.visible(1380);
     }
 
-    protected void setNotificationManager(NotificationManager notificationManager) {
+    /* access modifiers changed from: protected */
+    public void setNotificationManager(NotificationManager notificationManager) {
         this.mNm = notificationManager;
     }
 
-    protected void setMetricsLogger(MetricsLogger metricsLogger) {
+    /* access modifiers changed from: protected */
+    public void setMetricsLogger(MetricsLogger metricsLogger) {
         this.mMetrics = metricsLogger;
     }
 
@@ -92,14 +94,20 @@ public class ZenOnboardingActivity extends Activity {
         if (wasZenUpdated(context)) {
             return true;
         }
-        return !showSuggestion(context) && !withinShowTimeThreshold(context);
+        if (showSuggestion(context) || withinShowTimeThreshold(context)) {
+            return false;
+        }
+        return true;
     }
 
     private static boolean wasZenUpdated(Context context) {
         if (NotificationManager.Policy.areAllVisualEffectsSuppressed(((NotificationManager) context.getSystemService(NotificationManager.class)).getNotificationPolicy().suppressedVisualEffects)) {
             Settings.Secure.putInt(context.getContentResolver(), "zen_settings_updated", 1);
         }
-        return Settings.Secure.getInt(context.getContentResolver(), "zen_settings_updated", 0) != 0;
+        if (Settings.Secure.getInt(context.getContentResolver(), "zen_settings_updated", 0) != 0) {
+            return true;
+        }
+        return false;
     }
 
     private static boolean showSuggestion(Context context) {
@@ -114,7 +122,7 @@ public class ZenOnboardingActivity extends Activity {
             sharedPrefs.edit().putLong(PREF_KEY_SUGGESTION_FIRST_DISPLAY_TIME, currentTimeMillis).commit();
             j = currentTimeMillis;
         } else {
-            j = sharedPrefs.getLong(PREF_KEY_SUGGESTION_FIRST_DISPLAY_TIME, -1L);
+            j = sharedPrefs.getLong(PREF_KEY_SUGGESTION_FIRST_DISPLAY_TIME, -1);
         }
         long j2 = j + ALWAYS_SHOW_THRESHOLD;
         boolean z = currentTimeMillis < j2;

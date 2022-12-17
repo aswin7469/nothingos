@@ -2,20 +2,17 @@ package androidx.slice;
 
 import android.app.PendingIntent;
 import android.app.RemoteInput;
+import android.app.slice.SliceManager;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Parcelable;
 import androidx.core.graphics.drawable.IconCompat;
 import androidx.core.util.Preconditions;
-import androidx.slice.compat.SliceProviderCompat;
 import androidx.versionedparcelable.CustomVersionedParcelable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public final class Slice extends CustomVersionedParcelable {
     static final String[] NO_HINTS = new String[0];
     static final SliceItem[] NO_ITEMS = new SliceItem[0];
@@ -24,18 +21,17 @@ public final class Slice extends CustomVersionedParcelable {
     SliceSpec mSpec;
     String mUri;
 
-    public void onPreParceling(boolean isStream) {
+    public void onPreParceling(boolean z) {
     }
 
-    Slice(ArrayList<SliceItem> items, String[] hints, Uri uri, SliceSpec spec) {
+    Slice(ArrayList<SliceItem> arrayList, String[] strArr, Uri uri, SliceSpec sliceSpec) {
         this.mSpec = null;
         this.mItems = NO_ITEMS;
-        this.mHints = NO_HINTS;
         this.mUri = null;
-        this.mHints = hints;
-        this.mItems = (SliceItem[]) items.toArray(new SliceItem[items.size()]);
+        this.mHints = strArr;
+        this.mItems = (SliceItem[]) arrayList.toArray(new SliceItem[arrayList.size()]);
         this.mUri = uri.toString();
-        this.mSpec = spec;
+        this.mSpec = sliceSpec;
     }
 
     public Slice() {
@@ -43,53 +39,6 @@ public final class Slice extends CustomVersionedParcelable {
         this.mItems = NO_ITEMS;
         this.mHints = NO_HINTS;
         this.mUri = null;
-    }
-
-    public Slice(Bundle in) {
-        SliceSpec sliceSpec = null;
-        this.mSpec = null;
-        this.mItems = NO_ITEMS;
-        this.mHints = NO_HINTS;
-        this.mUri = null;
-        this.mHints = in.getStringArray("hints");
-        Parcelable[] parcelableArray = in.getParcelableArray("items");
-        this.mItems = new SliceItem[parcelableArray.length];
-        int i = 0;
-        while (true) {
-            SliceItem[] sliceItemArr = this.mItems;
-            if (i >= sliceItemArr.length) {
-                break;
-            }
-            if (parcelableArray[i] instanceof Bundle) {
-                sliceItemArr[i] = new SliceItem((Bundle) parcelableArray[i]);
-            }
-            i++;
-        }
-        this.mUri = in.getParcelable("uri").toString();
-        this.mSpec = in.containsKey("type") ? new SliceSpec(in.getString("type"), in.getInt("revision")) : sliceSpec;
-    }
-
-    public Bundle toBundle() {
-        Bundle bundle = new Bundle();
-        bundle.putStringArray("hints", this.mHints);
-        Parcelable[] parcelableArr = new Parcelable[this.mItems.length];
-        int i = 0;
-        while (true) {
-            SliceItem[] sliceItemArr = this.mItems;
-            if (i >= sliceItemArr.length) {
-                break;
-            }
-            parcelableArr[i] = sliceItemArr[i].toBundle();
-            i++;
-        }
-        bundle.putParcelableArray("items", parcelableArr);
-        bundle.putParcelable("uri", Uri.parse(this.mUri));
-        SliceSpec sliceSpec = this.mSpec;
-        if (sliceSpec != null) {
-            bundle.putString("type", sliceSpec.getType());
-            bundle.putInt("revision", this.mSpec.getRevision());
-        }
-        return bundle;
     }
 
     public SliceSpec getSpec() {
@@ -116,15 +65,16 @@ public final class Slice extends CustomVersionedParcelable {
         return this.mHints;
     }
 
-    public boolean hasHint(String hint) {
-        return ArrayUtils.contains(this.mHints, hint);
+    public boolean hasHint(String str) {
+        return ArrayUtils.contains(this.mHints, str);
     }
 
     public void onPostParceling() {
         for (int length = this.mItems.length - 1; length >= 0; length--) {
             SliceItem[] sliceItemArr = this.mItems;
-            if (sliceItemArr[length].mObj == null) {
-                SliceItem[] sliceItemArr2 = (SliceItem[]) ArrayUtils.removeElement(SliceItem.class, sliceItemArr, sliceItemArr[length]);
+            SliceItem sliceItem = sliceItemArr[length];
+            if (sliceItem.mObj == null) {
+                SliceItem[] sliceItemArr2 = (SliceItem[]) ArrayUtils.removeElement(SliceItem.class, sliceItemArr, sliceItem);
                 this.mItems = sliceItemArr2;
                 if (sliceItemArr2 == null) {
                     this.mItems = new SliceItem[0];
@@ -133,20 +83,19 @@ public final class Slice extends CustomVersionedParcelable {
         }
     }
 
-    /* loaded from: classes.dex */
     public static class Builder {
         private int mChildId;
+        private ArrayList<String> mHints = new ArrayList<>();
+        private ArrayList<SliceItem> mItems = new ArrayList<>();
         private SliceSpec mSpec;
         private final Uri mUri;
-        private ArrayList<SliceItem> mItems = new ArrayList<>();
-        private ArrayList<String> mHints = new ArrayList<>();
 
         public Builder(Uri uri) {
             this.mUri = uri;
         }
 
-        public Builder(Builder parent) {
-            this.mUri = parent.getChildUri();
+        public Builder(Builder builder) {
+            this.mUri = builder.getChildUri();
         }
 
         private Uri getChildUri() {
@@ -156,97 +105,97 @@ public final class Slice extends CustomVersionedParcelable {
             return appendPath.appendPath(String.valueOf(i)).build();
         }
 
-        public Builder setSpec(SliceSpec spec) {
-            this.mSpec = spec;
+        public Builder setSpec(SliceSpec sliceSpec) {
+            this.mSpec = sliceSpec;
             return this;
         }
 
-        public Builder addHints(String... hints) {
-            this.mHints.addAll(Arrays.asList(hints));
+        public Builder addHints(String... strArr) {
+            this.mHints.addAll(Arrays.asList(strArr));
             return this;
         }
 
-        public Builder addHints(List<String> hints) {
-            return addHints((String[]) hints.toArray(new String[hints.size()]));
+        public Builder addHints(List<String> list) {
+            return addHints((String[]) list.toArray(new String[list.size()]));
         }
 
         public Builder addSubSlice(Slice slice) {
             Preconditions.checkNotNull(slice);
-            return addSubSlice(slice, null);
+            return addSubSlice(slice, (String) null);
         }
 
-        public Builder addSubSlice(Slice slice, String subType) {
+        public Builder addSubSlice(Slice slice, String str) {
             Preconditions.checkNotNull(slice);
-            this.mItems.add(new SliceItem(slice, "slice", subType, slice.getHintArray()));
+            this.mItems.add(new SliceItem((Object) slice, "slice", str, slice.getHintArray()));
             return this;
         }
 
-        public Builder addAction(PendingIntent action, Slice s, String subType) {
-            Preconditions.checkNotNull(action);
-            Preconditions.checkNotNull(s);
-            this.mItems.add(new SliceItem(action, s, "action", subType, s.getHintArray()));
+        public Builder addAction(PendingIntent pendingIntent, Slice slice, String str) {
+            Preconditions.checkNotNull(pendingIntent);
+            Preconditions.checkNotNull(slice);
+            this.mItems.add(new SliceItem(pendingIntent, slice, "action", str, slice.getHintArray()));
             return this;
         }
 
-        public Builder addText(CharSequence text, String subType, String... hints) {
-            this.mItems.add(new SliceItem(text, "text", subType, hints));
+        public Builder addText(CharSequence charSequence, String str, String... strArr) {
+            this.mItems.add(new SliceItem((Object) charSequence, "text", str, strArr));
             return this;
         }
 
-        public Builder addText(CharSequence text, String subType, List<String> hints) {
-            return addText(text, subType, (String[]) hints.toArray(new String[hints.size()]));
+        public Builder addText(CharSequence charSequence, String str, List<String> list) {
+            return addText(charSequence, str, (String[]) list.toArray(new String[list.size()]));
         }
 
-        public Builder addIcon(IconCompat icon, String subType, String... hints) {
-            Preconditions.checkNotNull(icon);
-            if (Slice.isValidIcon(icon)) {
-                this.mItems.add(new SliceItem(icon, "image", subType, hints));
+        public Builder addIcon(IconCompat iconCompat, String str, String... strArr) {
+            Preconditions.checkNotNull(iconCompat);
+            if (Slice.isValidIcon(iconCompat)) {
+                this.mItems.add(new SliceItem((Object) iconCompat, "image", str, strArr));
             }
             return this;
         }
 
-        public Builder addIcon(IconCompat icon, String subType, List<String> hints) {
-            Preconditions.checkNotNull(icon);
-            return Slice.isValidIcon(icon) ? addIcon(icon, subType, (String[]) hints.toArray(new String[hints.size()])) : this;
+        public Builder addIcon(IconCompat iconCompat, String str, List<String> list) {
+            Preconditions.checkNotNull(iconCompat);
+            return Slice.isValidIcon(iconCompat) ? addIcon(iconCompat, str, (String[]) list.toArray(new String[list.size()])) : this;
         }
 
-        public Builder addRemoteInput(RemoteInput remoteInput, String subType, List<String> hints) {
+        public Builder addRemoteInput(RemoteInput remoteInput, String str, List<String> list) {
             Preconditions.checkNotNull(remoteInput);
-            return addRemoteInput(remoteInput, subType, (String[]) hints.toArray(new String[hints.size()]));
+            return addRemoteInput(remoteInput, str, (String[]) list.toArray(new String[list.size()]));
         }
 
-        public Builder addRemoteInput(RemoteInput remoteInput, String subType, String... hints) {
+        public Builder addRemoteInput(RemoteInput remoteInput, String str, String... strArr) {
             Preconditions.checkNotNull(remoteInput);
-            this.mItems.add(new SliceItem(remoteInput, "input", subType, hints));
+            this.mItems.add(new SliceItem((Object) remoteInput, "input", str, strArr));
             return this;
         }
 
-        public Builder addInt(int value, String subType, String... hints) {
-            this.mItems.add(new SliceItem(Integer.valueOf(value), "int", subType, hints));
+        public Builder addInt(int i, String str, String... strArr) {
+            this.mItems.add(new SliceItem((Object) Integer.valueOf(i), "int", str, strArr));
             return this;
         }
 
-        public Builder addInt(int value, String subType, List<String> hints) {
-            return addInt(value, subType, (String[]) hints.toArray(new String[hints.size()]));
+        public Builder addInt(int i, String str, List<String> list) {
+            return addInt(i, str, (String[]) list.toArray(new String[list.size()]));
         }
 
-        public Builder addLong(long time, String subType, String... hints) {
-            this.mItems.add(new SliceItem(Long.valueOf(time), "long", subType, hints));
+        public Builder addLong(long j, String str, String... strArr) {
+            this.mItems.add(new SliceItem((Object) Long.valueOf(j), "long", str, strArr));
             return this;
         }
 
-        public Builder addLong(long time, String subType, List<String> hints) {
-            return addLong(time, subType, (String[]) hints.toArray(new String[hints.size()]));
+        public Builder addLong(long j, String str, List<String> list) {
+            return addLong(j, str, (String[]) list.toArray(new String[list.size()]));
         }
 
         @Deprecated
-        public Builder addTimestamp(long time, String subType, String... hints) {
-            this.mItems.add(new SliceItem(Long.valueOf(time), "long", subType, hints));
+        public Builder addTimestamp(long j, String str, String... strArr) {
+            this.mItems.add(new SliceItem((Object) Long.valueOf(j), "long", str, strArr));
             return this;
         }
 
-        public Builder addItem(SliceItem item) {
-            this.mItems.add(item);
+        public Builder addItem(SliceItem sliceItem) {
+            this.mItems.add(sliceItem);
             return this;
         }
 
@@ -261,9 +210,9 @@ public final class Slice extends CustomVersionedParcelable {
         return toString("");
     }
 
-    public String toString(String indent) {
+    public String toString(String str) {
         StringBuilder sb = new StringBuilder();
-        sb.append(indent);
+        sb.append(str);
         sb.append("Slice ");
         String[] strArr = this.mHints;
         if (strArr.length > 0) {
@@ -273,53 +222,49 @@ public final class Slice extends CustomVersionedParcelable {
         sb.append('[');
         sb.append(this.mUri);
         sb.append("] {\n");
-        String str = indent + "  ";
+        String str2 = str + "  ";
         int i = 0;
         while (true) {
             SliceItem[] sliceItemArr = this.mItems;
             if (i < sliceItemArr.length) {
-                sb.append(sliceItemArr[i].toString(str));
+                sb.append(sliceItemArr[i].toString(str2));
                 i++;
             } else {
-                sb.append(indent);
+                sb.append(str);
                 sb.append('}');
                 return sb.toString();
             }
         }
     }
 
-    public static void appendHints(StringBuilder sb, String[] hints) {
-        if (hints == null || hints.length == 0) {
-            return;
+    public static void appendHints(StringBuilder sb, String[] strArr) {
+        if (strArr != null && strArr.length != 0) {
+            sb.append('(');
+            int length = strArr.length - 1;
+            for (int i = 0; i < length; i++) {
+                sb.append(strArr[i]);
+                sb.append(", ");
+            }
+            sb.append(strArr[length]);
+            sb.append(")");
         }
-        sb.append('(');
-        int length = hints.length - 1;
-        for (int i = 0; i < length; i++) {
-            sb.append(hints[i]);
-            sb.append(", ");
-        }
-        sb.append(hints[length]);
-        sb.append(")");
     }
 
-    public static Slice bindSlice(Context context, Uri uri, Set<SliceSpec> supportedSpecs) {
-        if (Build.VERSION.SDK_INT >= 28) {
-            return callBindSlice(context, uri, supportedSpecs);
-        }
-        return SliceProviderCompat.bindSlice(context, uri, supportedSpecs);
+    public static Slice bindSlice(Context context, Uri uri, Set<SliceSpec> set) {
+        return callBindSlice(context, uri, set);
     }
 
-    private static Slice callBindSlice(Context context, Uri uri, Set<SliceSpec> supportedSpecs) {
-        return SliceConvert.wrap(((android.app.slice.SliceManager) context.getSystemService(android.app.slice.SliceManager.class)).bindSlice(uri, SliceConvert.unwrap(supportedSpecs)), context);
+    private static Slice callBindSlice(Context context, Uri uri, Set<SliceSpec> set) {
+        return SliceConvert.wrap(((SliceManager) context.getSystemService(SliceManager.class)).bindSlice(uri, SliceConvert.unwrap(set)), context);
     }
 
-    static boolean isValidIcon(IconCompat icon) {
-        if (icon == null) {
+    static boolean isValidIcon(IconCompat iconCompat) {
+        if (iconCompat == null) {
             return false;
         }
-        if (icon.mType != 2 || icon.getResId() != 0) {
+        if (iconCompat.mType != 2 || iconCompat.getResId() != 0) {
             return true;
         }
-        throw new IllegalArgumentException("Failed to add icon, invalid resource id: " + icon.getResId());
+        throw new IllegalArgumentException("Failed to add icon, invalid resource id: " + iconCompat.getResId());
     }
 }

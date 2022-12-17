@@ -6,13 +6,14 @@ import android.util.Log;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreference;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settingslib.core.instrumentation.Instrumentable;
-/* loaded from: classes.dex */
+
 public class SmartForwardingFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceChangeListener, Instrumentable {
     private boolean turnOffSwitch;
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1571;
     }
@@ -24,10 +25,9 @@ public class SmartForwardingFragment extends PreferenceFragmentCompat implements
         this.turnOffSwitch = z;
     }
 
-    @Override // androidx.preference.PreferenceFragmentCompat
     public void onCreatePreferences(Bundle bundle, String str) {
-        setPreferencesFromResource(R.xml.smart_forwarding_switch, str);
-        getActivity().getActionBar().setTitle(getResources().getString(R.string.smart_forwarding_title));
+        setPreferencesFromResource(R$xml.smart_forwarding_switch, str);
+        getActivity().getActionBar().setTitle(getResources().getString(R$string.smart_forwarding_title));
         SwitchPreference switchPreference = (SwitchPreference) findPreference("smart_forwarding_switch");
         if (this.turnOffSwitch) {
             switchPreference.setChecked(false);
@@ -35,7 +35,6 @@ public class SmartForwardingFragment extends PreferenceFragmentCompat implements
         switchPreference.setOnPreferenceChangeListener(this);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         boolean booleanValue = ((Boolean) obj).booleanValue();
         Log.d("SmartForwarding", "onPreferenceChange. Update value to " + booleanValue);
@@ -56,7 +55,7 @@ public class SmartForwardingFragment extends PreferenceFragmentCompat implements
     }
 
     private void switchToMDNFragment() {
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new MDNHandlerFragment()).commit();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R$id.content_frame, new MDNHandlerFragment()).commit();
     }
 
     public void turnOnSwitchPreference() {

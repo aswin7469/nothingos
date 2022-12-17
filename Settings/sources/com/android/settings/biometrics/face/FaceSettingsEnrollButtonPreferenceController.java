@@ -6,14 +6,13 @@ import android.content.IntentFilter;
 import android.view.View;
 import android.widget.Button;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$id;
 import com.android.settings.SettingsActivity;
 import com.android.settings.core.BasePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.widget.LayoutPreference;
 import com.google.android.setupdesign.util.ButtonStyler;
 import com.google.android.setupdesign.util.PartnerStyleHelper;
-/* loaded from: classes.dex */
+
 public class FaceSettingsEnrollButtonPreferenceController extends BasePreferenceController implements View.OnClickListener {
     static final String KEY = "security_settings_face_enroll_faces_container";
     private static final String TAG = "FaceSettings/Remove";
@@ -25,52 +24,38 @@ public class FaceSettingsEnrollButtonPreferenceController extends BasePreference
     private byte[] mToken;
     private int mUserId;
 
-    /* loaded from: classes.dex */
     public interface Listener {
         void onStartEnrolling(Intent intent);
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return 0;
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -84,18 +69,16 @@ public class FaceSettingsEnrollButtonPreferenceController extends BasePreference
         this.mContext = context;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
-        Button button = (Button) ((LayoutPreference) preference).findViewById(R.id.security_settings_face_settings_enroll_button);
+        Button button = (Button) ((LayoutPreference) preference).findViewById(R$id.security_settings_face_settings_enroll_button);
         this.mButton = button;
-        if (PartnerStyleHelper.shouldApplyPartnerResource(button)) {
+        if (PartnerStyleHelper.shouldApplyPartnerResource((View) button)) {
             ButtonStyler.applyPartnerCustomizationPrimaryButtonStyle(this.mContext, this.mButton);
         }
         this.mButton.setOnClickListener(this);
     }
 
-    @Override // android.view.View.OnClickListener
     public void onClick(View view) {
         this.mIsClicked = true;
         Intent intent = new Intent();

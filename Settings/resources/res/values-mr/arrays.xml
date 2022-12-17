@@ -89,7 +89,7 @@
         <item>स्थान</item>
         <item>स्थान</item>
         <item>वापरविषयक आकडेवारी मिळवा</item>
-        <item>मायक्रोफोन निःशब्द/सशब्द करा</item>
+        <item>मायक्रोफोन म्यूट/अनम्यूट करा</item>
         <item>टोस्ट दर्शवा</item>
         <item>प्रोजेक्‍ट मीडिया</item>
         <item>VPN सक्रिय करा</item>
@@ -156,7 +156,7 @@
         <item>स्थानाचे परीक्षण करा</item>
         <item>उच्च पॉवर स्थानाचे परीक्षण करा</item>
         <item>वापरविषयक आकडेवारी मिळवा</item>
-        <item>मायक्रोफोन निःशब्द/सशब्द करा</item>
+        <item>मायक्रोफोन म्यूट/अनम्यूट करा</item>
         <item>टोस्ट दर्शवा</item>
         <item>प्रोजेक्‍ट मीडिया</item>
         <item>VPN सक्रिय करा</item>
@@ -196,6 +196,8 @@
         <item>60 दिवसांपेक्षा अधिक जुने</item>
         <item>90 दिवसांपेक्षा अधिक जुने</item>
     </array>
+    <array name="avatar_image_descriptions">
+    </array>
     <array name="battery_labels">
         <item>०%</item>
         <item>५०%</item>
@@ -221,7 +223,7 @@
         <item>NR</item>
     </array>
     <array name="bluetooth_a2dp_codec_bits_per_sample_summaries">
-        <item>सिस्टम निवड वापरा (डीफॉल्ट)</item>
+        <item>सिस्टीम निवड वापरा (डीफॉल्ट)</item>
         <item>16 बिट/पॅटर्न</item>
         <item>24 बिट/पॅटर्न</item>
         <item>32 बिट/पॅटर्न</item>
@@ -233,7 +235,7 @@
         <item>32 बिट/पॅटर्न</item>
     </array>
     <array name="bluetooth_a2dp_codec_channel_mode_summaries">
-        <item>सिस्टम निवड वापरा (डीफॉल्ट)</item>
+        <item>सिस्टीम निवड वापरा (डीफॉल्ट)</item>
         <item>मोनो</item>
         <item>स्टिरिओ</item>
     </array>
@@ -260,6 +262,8 @@
         <item>48.0 kHz</item>
         <item>88.2 kHz</item>
         <item>96.0 kHz</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
         <item>सिस्टम निवड वापरा (डीफॉल्ट)</item>
@@ -267,6 +271,8 @@
         <item>48.0 kHz</item>
         <item>88.2 kHz</item>
         <item>96.0 kHz</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
         <item>सिस्टम निवड वापरा (डीफॉल्ट)</item>
@@ -277,9 +283,13 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive ऑडिओ</item>
         <item>Qualcomm® aptX™ TWS+ ऑडिओ</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
-        <item>सिस्टम निवड वापरा (डीफॉल्ट)</item>
+        <item>सिस्टीम निवड वापरा (डीफॉल्ट)</item>
         <item>SBC</item>
         <item>AAC</item>
         <item>Qualcomm® aptX™ ऑडिओ</item>
@@ -287,6 +297,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive ऑडिओ</item>
         <item>Qualcomm® aptX™ TWS+ ऑडिओ</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -343,17 +357,10 @@
         <item>उन्नत</item>
         <item>हताश</item>
     </array>
-    <array name="captioning_font_size_selector_summaries">
-        <item>खूप लहान आकाराचा मजकूर</item>
-        <item>लहान आकाराचा मजकूर</item>
-        <item>डीफॉल्ट मजकूर आकार</item>
-        <item>मोठ्या आकाराचा मजकूर</item>
-        <item>खूप मोठ्या आकाराचा मजकूर</item>
-    </array>
     <array name="captioning_font_size_selector_titles">
         <item>खूप लहान</item>
         <item>लहान</item>
-        <item>डीफॉल्ट</item>
+        <item>मध्‍यम</item>
         <item>मोठा</item>
         <item>खूप मोठा</item>
     </array>
@@ -485,6 +492,14 @@
         <item>IMSI</item>
         <item>GID</item>
         <item>ICCID</item>
+    </array>
+    <array name="nfc_payment_favor">
+        <item>नेहमी</item>
+        <item>दुसरे पेमेंट अ‍ॅप उघडे असल्यास, ते वगळता</item>
+    </array>
+    <array name="nfc_payment_favor_values">
+        <item>@null</item>
+        <item>1</item>
     </array>
     <array name="overlay_display_devices_entries">
         <item>काहीही नाही</item>
@@ -618,17 +633,20 @@
         <item>निळ्या रंगात आयताकार नसलेला क्लिप प्रांत रेखांकित करा</item>
         <item>चाचणी केलेल्या रेखांकित कमांड हिरव्या रंगामध्ये हायलाइट करा</item>
     </array>
-    <array name="sim_color_light">
-        <item>@color/SIM_color_cyan</item>
-        <item>@color/SIM_color_blue800</item>
-        <item>@color/SIM_color_green800</item>
-        <item>@color/SIM_color_purple800</item>
-        <item>@color/SIM_color_pink800</item>
-        <item>@color/SIM_color_orange</item>
-    </array>
     <array name="swipe_direction_values">
         <item>१</item>
         <item>०</item>
+    </array>
+    <array name="switch_to_user_zero_when_docked_timeout_entries">
+        <item>कधीही नाही</item>
+        <item>एका मिनिटानंतर</item>
+        <item>पाच मिनिटांनंतर</item>
+    </array>
+    <array name="tare_modifiers_subfactors">
+        <item>चार्ज होत आहे</item>
+        <item>डोझ</item>
+        <item>पॉवर सेव्ह मोड</item>
+        <item>प्रक्रियेची स्थिती</item>
     </array>
     <array name="timezone_filters">
         <item>अमेरिका</item>
@@ -778,7 +796,7 @@
         <item>डिस्कनेक्ट करत आहे...</item>
         <item>डिस्कनेक्ट केले</item>
         <item>अयशस्वी</item>
-        <item>अवरोधित</item>
+        <item>ब्लॉक केले</item>
         <item>तात्पुरते खराब कनेक्शन टाळत आहे</item>
     </array>
     <array name="wifi_status_with_ssid">
@@ -792,7 +810,7 @@
         <item>%1$s वरून डिस्कनेक्ट करत आहे…</item>
         <item>डिस्कनेक्ट केले</item>
         <item>अयशस्वी</item>
-        <item>अवरोधित</item>
+        <item>ब्लॉक केले</item>
         <item>तात्पुरते खराब कनेक्शन टाळत आहे</item>
     </array>
     <array name="wifi_ttls_phase2_entries">

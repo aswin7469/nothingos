@@ -3,9 +3,8 @@ package com.android.settings.notification;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.SeekBar;
-/* loaded from: classes.dex */
+
 public class RemoteVolumeSeekBarPreference extends VolumeSeekBarPreference {
-    @Override // com.android.settings.notification.VolumeSeekBarPreference
     public void setStream(int i) {
     }
 
@@ -25,18 +24,16 @@ public class RemoteVolumeSeekBarPreference extends VolumeSeekBarPreference {
         super(context);
     }
 
-    @Override // com.android.settings.notification.VolumeSeekBarPreference
-    protected void init() {
-        if (((VolumeSeekBarPreference) this).mSeekBar == null) {
-            return;
+    /* access modifiers changed from: protected */
+    public void init() {
+        if (this.mSeekBar != null) {
+            setContinuousUpdates(true);
+            updateIconView();
+            updateSuppressionText();
+            notifyHierarchyChanged();
         }
-        setContinuousUpdates(true);
-        updateIconView();
-        updateSuppressionText();
-        notifyHierarchyChanged();
     }
 
-    @Override // com.android.settings.widget.SeekBarPreference, android.widget.SeekBar.OnSeekBarChangeListener
     public void onProgressChanged(SeekBar seekBar, int i, boolean z) {
         super.onProgressChanged(seekBar, i, z);
         if (z) {

@@ -9,14 +9,11 @@ import java.util.Collection;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.function.Consumer;
-import java.util.function.Function;
-/* loaded from: classes.dex */
+
 public class TelephonyStatusControlSession implements AutoCloseable {
     private Collection<AbstractPreferenceController> mControllers;
     private Collection<Future<Boolean>> mResult;
 
-    /* loaded from: classes.dex */
     public static class Builder {
         private Collection<AbstractPreferenceController> mControllers;
 
@@ -32,29 +29,16 @@ public class TelephonyStatusControlSession implements AutoCloseable {
     private TelephonyStatusControlSession(Collection<AbstractPreferenceController> collection) {
         this.mResult = new ArrayList();
         this.mControllers = collection;
-        collection.forEach(new Consumer() { // from class: com.android.settings.network.telephony.TelephonyStatusControlSession$$ExternalSyntheticLambda1
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                TelephonyStatusControlSession.this.lambda$new$1((AbstractPreferenceController) obj);
-            }
-        });
+        collection.forEach(new TelephonyStatusControlSession$$ExternalSyntheticLambda0(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$1(final AbstractPreferenceController abstractPreferenceController) {
-        this.mResult.add(ThreadUtils.postOnBackgroundThread(new Callable() { // from class: com.android.settings.network.telephony.TelephonyStatusControlSession$$ExternalSyntheticLambda0
-            @Override // java.util.concurrent.Callable
-            public final Object call() {
-                Object lambda$new$0;
-                lambda$new$0 = TelephonyStatusControlSession.this.lambda$new$0(abstractPreferenceController);
-                return lambda$new$0;
-            }
-        }));
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$new$1(AbstractPreferenceController abstractPreferenceController) {
+        this.mResult.add(ThreadUtils.postOnBackgroundThread((Callable) new TelephonyStatusControlSession$$ExternalSyntheticLambda1(this, abstractPreferenceController)));
     }
 
-    @Override // java.lang.AutoCloseable
     public void close() {
-        for (Future<Boolean> future : this.mResult) {
+        for (Future future : this.mResult) {
             try {
                 future.get();
             } catch (InterruptedException | ExecutionException e) {
@@ -64,7 +48,7 @@ public class TelephonyStatusControlSession implements AutoCloseable {
         unsetAvailabilityStatus(this.mControllers);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     /* renamed from: setupAvailabilityStatus */
     public Boolean lambda$new$0(AbstractPreferenceController abstractPreferenceController) {
         try {
@@ -79,15 +63,10 @@ public class TelephonyStatusControlSession implements AutoCloseable {
     }
 
     private void unsetAvailabilityStatus(Collection<AbstractPreferenceController> collection) {
-        collection.stream().filter(TelephonyStatusControlSession$$ExternalSyntheticLambda4.INSTANCE).map(new Function() { // from class: com.android.settings.network.telephony.TelephonyStatusControlSession$$ExternalSyntheticLambda3
-            @Override // java.util.function.Function
-            public final Object apply(Object obj) {
-                return (TelephonyAvailabilityHandler) r1.cast((AbstractPreferenceController) obj);
-            }
-        }).forEach(TelephonyStatusControlSession$$ExternalSyntheticLambda2.INSTANCE);
+        collection.stream().filter(new TelephonyStatusControlSession$$ExternalSyntheticLambda2()).map(new TelephonyStatusControlSession$$ExternalSyntheticLambda3(TelephonyAvailabilityHandler.class)).forEach(new TelephonyStatusControlSession$$ExternalSyntheticLambda4());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ boolean lambda$unsetAvailabilityStatus$2(AbstractPreferenceController abstractPreferenceController) {
         return abstractPreferenceController instanceof TelephonyAvailabilityHandler;
     }

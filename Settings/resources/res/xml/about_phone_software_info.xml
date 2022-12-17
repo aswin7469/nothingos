@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:title="@string/nt_software_info" app:keywords="@string/keywords_android_version">
+    <com.nothing.settings.deviceinfo.aboutphone.SoftwareInfoPreference android:title="@string/nt_nothing_os_version" android:key="nt_nothing_os_version" android:summary="@string/summary_placeholder" app:controller="com.nothing.settings.deviceinfo.aboutphone.DeviceSoftwareinfoController" app:enableCopying="true">
+        <intent android:action="android.settings.SYSTEM_UPDATE_SETTINGS"/>
+    </com.nothing.settings.deviceinfo.aboutphone.SoftwareInfoPreference>
+    <Preference android:title="@string/build_number" android:key="build_number" android:summary="@string/summary_placeholder" app:controller="com.android.settings.deviceinfo.BuildNumberPreferenceController" app:enableCopying="true"/>
+</PreferenceScreen>

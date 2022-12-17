@@ -10,118 +10,115 @@ import android.os.UserHandle;
 import android.os.UserManager;
 import android.util.ArrayMap;
 import android.widget.CompoundButton;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$plurals;
+import com.android.settings.R$string;
 import com.android.settings.Utils;
 import com.android.settings.applications.AppStateBaseBridge;
 import com.android.settings.notification.NotificationBackend;
 import com.android.settingslib.applications.ApplicationsState;
 import com.android.settingslib.utils.StringUtil;
-import com.nt.settings.utils.NtSettingsVibrateUtils;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public class AppStateNotificationBridge extends AppStateBaseBridge {
-    private NotificationBackend mBackend;
-    private final Context mContext;
-    private IUsageStatsManager mUsageStatsManager;
-    protected List<Integer> mUserIds;
-    public static final ApplicationsState.AppFilter FILTER_APP_NOTIFICATION_RECENCY = new ApplicationsState.AppFilter() { // from class: com.android.settings.applications.AppStateNotificationBridge.1
-        @Override // com.android.settingslib.applications.ApplicationsState.AppFilter
+    public static final ApplicationsState.AppFilter FILTER_APP_NOTIFICATION_BLOCKED = new ApplicationsState.AppFilter() {
         public void init() {
         }
 
-        @Override // com.android.settingslib.applications.ApplicationsState.AppFilter
         public boolean filterApp(ApplicationsState.AppEntry appEntry) {
-            NotificationsSentState notificationsSentState = AppStateNotificationBridge.getNotificationsSentState(appEntry);
-            return (notificationsSentState == null || notificationsSentState.lastSent == 0) ? false : true;
-        }
-    };
-    public static final ApplicationsState.AppFilter FILTER_APP_NOTIFICATION_FREQUENCY = new ApplicationsState.AppFilter() { // from class: com.android.settings.applications.AppStateNotificationBridge.2
-        @Override // com.android.settingslib.applications.ApplicationsState.AppFilter
-        public void init() {
-        }
-
-        @Override // com.android.settingslib.applications.ApplicationsState.AppFilter
-        public boolean filterApp(ApplicationsState.AppEntry appEntry) {
-            NotificationsSentState notificationsSentState = AppStateNotificationBridge.getNotificationsSentState(appEntry);
-            return (notificationsSentState == null || notificationsSentState.sentCount == 0) ? false : true;
-        }
-    };
-    public static final ApplicationsState.AppFilter FILTER_APP_NOTIFICATION_BLOCKED = new ApplicationsState.AppFilter() { // from class: com.android.settings.applications.AppStateNotificationBridge.3
-        @Override // com.android.settingslib.applications.ApplicationsState.AppFilter
-        public void init() {
-        }
-
-        @Override // com.android.settingslib.applications.ApplicationsState.AppFilter
-        public boolean filterApp(ApplicationsState.AppEntry appEntry) {
-            NotificationsSentState notificationsSentState = AppStateNotificationBridge.getNotificationsSentState(appEntry);
-            if (notificationsSentState != null) {
-                return notificationsSentState.blocked;
+            NotificationsSentState r0 = AppStateNotificationBridge.getNotificationsSentState(appEntry);
+            if (r0 != null) {
+                return r0.blocked;
             }
             return false;
         }
     };
-    public static final Comparator<ApplicationsState.AppEntry> RECENT_NOTIFICATION_COMPARATOR = new Comparator<ApplicationsState.AppEntry>() { // from class: com.android.settings.applications.AppStateNotificationBridge.4
-        @Override // java.util.Comparator
-        public int compare(ApplicationsState.AppEntry appEntry, ApplicationsState.AppEntry appEntry2) {
-            NotificationsSentState notificationsSentState = AppStateNotificationBridge.getNotificationsSentState(appEntry);
-            NotificationsSentState notificationsSentState2 = AppStateNotificationBridge.getNotificationsSentState(appEntry2);
-            if (notificationsSentState != null || notificationsSentState2 == null) {
-                if (notificationsSentState != null && notificationsSentState2 == null) {
-                    return 1;
-                }
-                if (notificationsSentState != null && notificationsSentState2 != null) {
-                    long j = notificationsSentState.lastSent;
-                    long j2 = notificationsSentState2.lastSent;
-                    if (j < j2) {
-                        return 1;
-                    }
-                    if (j > j2) {
-                        return -1;
-                    }
-                }
-                return ApplicationsState.ALPHA_COMPARATOR.compare(appEntry, appEntry2);
-            }
-            return -1;
+    public static final ApplicationsState.AppFilter FILTER_APP_NOTIFICATION_FREQUENCY = new ApplicationsState.AppFilter() {
+        public void init() {
         }
-    };
-    public static final Comparator<ApplicationsState.AppEntry> FREQUENCY_NOTIFICATION_COMPARATOR = new Comparator<ApplicationsState.AppEntry>() { // from class: com.android.settings.applications.AppStateNotificationBridge.5
-        @Override // java.util.Comparator
-        public int compare(ApplicationsState.AppEntry appEntry, ApplicationsState.AppEntry appEntry2) {
-            NotificationsSentState notificationsSentState = AppStateNotificationBridge.getNotificationsSentState(appEntry);
-            NotificationsSentState notificationsSentState2 = AppStateNotificationBridge.getNotificationsSentState(appEntry2);
-            if (notificationsSentState != null || notificationsSentState2 == null) {
-                if (notificationsSentState != null && notificationsSentState2 == null) {
-                    return 1;
-                }
-                if (notificationsSentState != null && notificationsSentState2 != null) {
-                    int i = notificationsSentState.sentCount;
-                    int i2 = notificationsSentState2.sentCount;
-                    if (i < i2) {
-                        return 1;
-                    }
-                    if (i > i2) {
-                        return -1;
-                    }
-                }
-                return ApplicationsState.ALPHA_COMPARATOR.compare(appEntry, appEntry2);
-            }
-            return -1;
-        }
-    };
-    private final String TAG = "AppStateNotificationBridge";
-    private final boolean DEBUG = false;
 
-    /* loaded from: classes.dex */
+        public boolean filterApp(ApplicationsState.AppEntry appEntry) {
+            NotificationsSentState r0 = AppStateNotificationBridge.getNotificationsSentState(appEntry);
+            if (r0 == null || r0.sentCount == 0) {
+                return false;
+            }
+            return true;
+        }
+    };
+    public static final ApplicationsState.AppFilter FILTER_APP_NOTIFICATION_RECENCY = new ApplicationsState.AppFilter() {
+        public void init() {
+        }
+
+        public boolean filterApp(ApplicationsState.AppEntry appEntry) {
+            NotificationsSentState r4 = AppStateNotificationBridge.getNotificationsSentState(appEntry);
+            if (r4 == null || r4.lastSent == 0) {
+                return false;
+            }
+            return true;
+        }
+    };
+    public static final Comparator<ApplicationsState.AppEntry> FREQUENCY_NOTIFICATION_COMPARATOR = new Comparator<ApplicationsState.AppEntry>() {
+        public int compare(ApplicationsState.AppEntry appEntry, ApplicationsState.AppEntry appEntry2) {
+            NotificationsSentState r3 = AppStateNotificationBridge.getNotificationsSentState(appEntry);
+            NotificationsSentState r0 = AppStateNotificationBridge.getNotificationsSentState(appEntry2);
+            if (r3 == null && r0 != null) {
+                return -1;
+            }
+            if (r3 != null && r0 == null) {
+                return 1;
+            }
+            if (!(r3 == null || r0 == null)) {
+                int i = r3.sentCount;
+                int i2 = r0.sentCount;
+                if (i < i2) {
+                    return 1;
+                }
+                if (i > i2) {
+                    return -1;
+                }
+            }
+            return ApplicationsState.ALPHA_COMPARATOR.compare(appEntry, appEntry2);
+        }
+    };
+    public static final Comparator<ApplicationsState.AppEntry> RECENT_NOTIFICATION_COMPARATOR = new Comparator<ApplicationsState.AppEntry>() {
+        public int compare(ApplicationsState.AppEntry appEntry, ApplicationsState.AppEntry appEntry2) {
+            NotificationsSentState r7 = AppStateNotificationBridge.getNotificationsSentState(appEntry);
+            NotificationsSentState r0 = AppStateNotificationBridge.getNotificationsSentState(appEntry2);
+            if (r7 == null && r0 != null) {
+                return -1;
+            }
+            if (r7 != null && r0 == null) {
+                return 1;
+            }
+            if (!(r7 == null || r0 == null)) {
+                long j = r7.lastSent;
+                long j2 = r0.lastSent;
+                if (j < j2) {
+                    return 1;
+                }
+                if (j > j2) {
+                    return -1;
+                }
+            }
+            return ApplicationsState.ALPHA_COMPARATOR.compare(appEntry, appEntry2);
+        }
+    };
+    private final boolean DEBUG = false;
+    private final String TAG = "AppStateNotificationBridge";
+    private NotificationBackend mBackend;
+    private final Context mContext;
+    private IUsageStatsManager mUsageStatsManager;
+    protected List<Integer> mUserIds;
+
     public static class NotificationsSentState {
-        public boolean blockable;
-        public boolean blocked;
-        public boolean systemApp;
         public int avgSentDaily = 0;
         public int avgSentWeekly = 0;
+        public boolean blockable;
+        public boolean blocked;
         public long lastSent = 0;
         public int sentCount = 0;
     }
@@ -140,28 +137,27 @@ public class AppStateNotificationBridge extends AppStateBaseBridge {
         }
     }
 
-    @Override // com.android.settings.applications.AppStateBaseBridge
-    protected void loadAllExtraInfo() {
+    /* access modifiers changed from: protected */
+    public void loadAllExtraInfo() {
         ArrayList<ApplicationsState.AppEntry> allApps = this.mAppSession.getAllApps();
-        if (allApps == null) {
-            return;
-        }
-        Map<String, NotificationsSentState> aggregatedUsageEvents = getAggregatedUsageEvents();
-        Iterator<ApplicationsState.AppEntry> it = allApps.iterator();
-        while (it.hasNext()) {
-            ApplicationsState.AppEntry next = it.next();
-            NotificationsSentState notificationsSentState = aggregatedUsageEvents.get(getKey(UserHandle.getUserId(next.info.uid), next.info.packageName));
-            if (notificationsSentState == null) {
-                notificationsSentState = new NotificationsSentState();
+        if (allApps != null) {
+            Map<String, NotificationsSentState> aggregatedUsageEvents = getAggregatedUsageEvents();
+            Iterator<ApplicationsState.AppEntry> it = allApps.iterator();
+            while (it.hasNext()) {
+                ApplicationsState.AppEntry next = it.next();
+                NotificationsSentState notificationsSentState = aggregatedUsageEvents.get(getKey(UserHandle.getUserId(next.info.uid), next.info.packageName));
+                if (notificationsSentState == null) {
+                    notificationsSentState = new NotificationsSentState();
+                }
+                calculateAvgSentCounts(notificationsSentState);
+                addBlockStatus(next, notificationsSentState);
+                next.extraInfo = notificationsSentState;
             }
-            calculateAvgSentCounts(notificationsSentState);
-            addBlockStatus(next, notificationsSentState);
-            next.extraInfo = notificationsSentState;
         }
     }
 
-    @Override // com.android.settings.applications.AppStateBaseBridge
-    protected void updateExtraInfo(ApplicationsState.AppEntry appEntry, String str, int i) {
+    /* access modifiers changed from: protected */
+    public void updateExtraInfo(ApplicationsState.AppEntry appEntry, String str, int i) {
         NotificationsSentState aggregatedUsageEvents = getAggregatedUsageEvents(UserHandle.getUserId(appEntry.info.uid), appEntry.info.packageName);
         calculateAvgSentCounts(aggregatedUsageEvents);
         addBlockStatus(appEntry, aggregatedUsageEvents);
@@ -169,24 +165,24 @@ public class AppStateNotificationBridge extends AppStateBaseBridge {
     }
 
     public static CharSequence getSummary(Context context, NotificationsSentState notificationsSentState, int i) {
-        if (i == R.id.sort_order_recent_notification) {
+        if (i == R$id.sort_order_recent_notification) {
             if (notificationsSentState.lastSent == 0) {
-                return context.getString(R.string.notifications_sent_never);
+                return context.getString(R$string.notifications_sent_never);
             }
-            return StringUtil.formatRelativeTime(context, System.currentTimeMillis() - notificationsSentState.lastSent, true);
-        } else if (i != R.id.sort_order_frequent_notification) {
+            return StringUtil.formatRelativeTime(context, (double) (System.currentTimeMillis() - notificationsSentState.lastSent), true);
+        } else if (i != R$id.sort_order_frequent_notification) {
             return "";
         } else {
             if (notificationsSentState.avgSentDaily > 0) {
                 Resources resources = context.getResources();
-                int i2 = R.plurals.notifications_sent_daily;
+                int i2 = R$plurals.notifications_sent_daily;
                 int i3 = notificationsSentState.avgSentDaily;
-                return resources.getQuantityString(i2, i3, Integer.valueOf(i3));
+                return resources.getQuantityString(i2, i3, new Object[]{Integer.valueOf(i3)});
             }
             Resources resources2 = context.getResources();
-            int i4 = R.plurals.notifications_sent_weekly;
+            int i4 = R$plurals.notifications_sent_weekly;
             int i5 = notificationsSentState.avgSentWeekly;
-            return resources2.getQuantityString(i4, i5, Integer.valueOf(i5));
+            return resources2.getQuantityString(i4, i5, new Object[]{Integer.valueOf(i5)});
         }
     }
 
@@ -195,32 +191,30 @@ public class AppStateNotificationBridge extends AppStateBaseBridge {
             NotificationBackend notificationBackend = this.mBackend;
             ApplicationInfo applicationInfo = appEntry.info;
             notificationsSentState.blocked = notificationBackend.getNotificationsBanned(applicationInfo.packageName, applicationInfo.uid);
-            boolean isSystemApp = this.mBackend.isSystemApp(this.mContext, appEntry.info);
-            notificationsSentState.systemApp = isSystemApp;
-            notificationsSentState.blockable = !isSystemApp || (isSystemApp && notificationsSentState.blocked);
+            notificationsSentState.blockable = this.mBackend.enableSwitch(this.mContext, appEntry.info);
         }
     }
 
     private void calculateAvgSentCounts(NotificationsSentState notificationsSentState) {
         if (notificationsSentState != null) {
-            notificationsSentState.avgSentDaily = Math.round(notificationsSentState.sentCount / 7.0f);
+            notificationsSentState.avgSentDaily = Math.round(((float) notificationsSentState.sentCount) / 7.0f);
             int i = notificationsSentState.sentCount;
-            if (i >= 7) {
-                return;
+            if (i < 7) {
+                notificationsSentState.avgSentWeekly = i;
             }
-            notificationsSentState.avgSentWeekly = i;
         }
     }
 
-    protected Map<String, NotificationsSentState> getAggregatedUsageEvents() {
+    /* access modifiers changed from: protected */
+    public Map<String, NotificationsSentState> getAggregatedUsageEvents() {
         ArrayMap arrayMap = new ArrayMap();
         long currentTimeMillis = System.currentTimeMillis();
         long j = currentTimeMillis - 604800000;
-        for (Integer num : this.mUserIds) {
-            int intValue = num.intValue();
+        for (Integer intValue : this.mUserIds) {
+            int intValue2 = intValue.intValue();
             UsageEvents usageEvents = null;
             try {
-                usageEvents = this.mUsageStatsManager.queryEventsForUser(j, currentTimeMillis, intValue, this.mContext.getPackageName());
+                usageEvents = this.mUsageStatsManager.queryEventsForUser(j, currentTimeMillis, intValue2, this.mContext.getPackageName());
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -228,10 +222,10 @@ public class AppStateNotificationBridge extends AppStateBaseBridge {
                 UsageEvents.Event event = new UsageEvents.Event();
                 while (usageEvents.hasNextEvent()) {
                     usageEvents.getNextEvent(event);
-                    NotificationsSentState notificationsSentState = (NotificationsSentState) arrayMap.get(getKey(intValue, event.getPackageName()));
+                    NotificationsSentState notificationsSentState = (NotificationsSentState) arrayMap.get(getKey(intValue2, event.getPackageName()));
                     if (notificationsSentState == null) {
                         notificationsSentState = new NotificationsSentState();
-                        arrayMap.put(getKey(intValue, event.getPackageName()), notificationsSentState);
+                        arrayMap.put(getKey(intValue2, event.getPackageName()), notificationsSentState);
                     }
                     if (event.getEventType() == 12) {
                         if (event.getTimeStamp() > notificationsSentState.lastSent) {
@@ -245,7 +239,8 @@ public class AppStateNotificationBridge extends AppStateBaseBridge {
         return arrayMap;
     }
 
-    protected NotificationsSentState getAggregatedUsageEvents(int i, String str) {
+    /* access modifiers changed from: protected */
+    public NotificationsSentState getAggregatedUsageEvents(int i, String str) {
         UsageEvents usageEvents;
         long currentTimeMillis = System.currentTimeMillis();
         NotificationsSentState notificationsSentState = null;
@@ -273,7 +268,7 @@ public class AppStateNotificationBridge extends AppStateBaseBridge {
         return notificationsSentState;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static NotificationsSentState getNotificationsSentState(ApplicationsState.AppEntry appEntry) {
         Object obj;
         if (appEntry == null || (obj = appEntry.extraInfo) == null || !(obj instanceof NotificationsSentState)) {
@@ -286,28 +281,22 @@ public class AppStateNotificationBridge extends AppStateBaseBridge {
         return i + "|" + str;
     }
 
-    public CompoundButton.OnCheckedChangeListener getSwitchOnCheckedListener(final ApplicationsState.AppEntry appEntry) {
+    public CompoundButton.OnCheckedChangeListener getSwitchOnCheckedListener(ApplicationsState.AppEntry appEntry) {
         if (appEntry == null) {
             return null;
         }
-        return new CompoundButton.OnCheckedChangeListener() { // from class: com.android.settings.applications.AppStateNotificationBridge$$ExternalSyntheticLambda0
-            @Override // android.widget.CompoundButton.OnCheckedChangeListener
-            public final void onCheckedChanged(CompoundButton compoundButton, boolean z) {
-                AppStateNotificationBridge.this.lambda$getSwitchOnCheckedListener$0(appEntry, compoundButton, z);
-            }
-        };
+        return new AppStateNotificationBridge$$ExternalSyntheticLambda0(this, appEntry);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$getSwitchOnCheckedListener$0(ApplicationsState.AppEntry appEntry, CompoundButton compoundButton, boolean z) {
-        NotificationBackend notificationBackend = this.mBackend;
-        ApplicationInfo applicationInfo = appEntry.info;
-        notificationBackend.setNotificationsEnabledForPackage(applicationInfo.packageName, applicationInfo.uid, z);
         NotificationsSentState notificationsSentState = getNotificationsSentState(appEntry);
-        if (notificationsSentState != null) {
+        if (notificationsSentState != null && notificationsSentState.blocked == z) {
+            NotificationBackend notificationBackend = this.mBackend;
+            ApplicationInfo applicationInfo = appEntry.info;
+            notificationBackend.setNotificationsEnabledForPackage(applicationInfo.packageName, applicationInfo.uid, z);
             notificationsSentState.blocked = !z;
         }
-        NtSettingsVibrateUtils.getInstance(compoundButton.getContext()).playSwitchVibrate();
     }
 
     public static final boolean enableSwitch(ApplicationsState.AppEntry appEntry) {

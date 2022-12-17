@@ -9,19 +9,19 @@ import com.google.android.setupcompat.util.Logger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+
 @TargetApi(22)
-/* loaded from: classes2.dex */
 public final class PersistableBundles {
     private static final Logger LOG = new Logger("PersistableBundles");
 
     public static PersistableBundle mergeBundles(PersistableBundle persistableBundle, PersistableBundle persistableBundle2, PersistableBundle... persistableBundleArr) {
-        ArrayList<PersistableBundle> arrayList = new ArrayList();
-        arrayList.addAll(Arrays.asList(persistableBundle, persistableBundle2));
+        ArrayList<PersistableBundle> arrayList = new ArrayList<>();
+        arrayList.addAll(Arrays.asList(new PersistableBundle[]{persistableBundle, persistableBundle2}));
         Collections.addAll(arrayList, persistableBundleArr);
         PersistableBundle persistableBundle3 = new PersistableBundle();
         for (PersistableBundle persistableBundle4 : arrayList) {
             for (String str : persistableBundle4.keySet()) {
-                Preconditions.checkArgument(!persistableBundle3.containsKey(str), String.format("Found duplicate key [%s] while attempting to merge bundles.", str));
+                Preconditions.checkArgument(!persistableBundle3.containsKey(str), String.format("Found duplicate key [%s] while attempting to merge bundles.", new Object[]{str}));
             }
             persistableBundle3.putAll(persistableBundle4);
         }
@@ -42,7 +42,7 @@ public final class PersistableBundles {
         Preconditions.checkNotNull(persistableBundle, "PersistableBundle cannot be null!");
         for (String str : persistableBundle.keySet()) {
             Object obj = persistableBundle.get(str);
-            Preconditions.checkArgument(isSupportedDataType(obj), String.format("Unknown/unsupported data type [%s] for key %s", obj, str));
+            Preconditions.checkArgument(isSupportedDataType(obj), String.format("Unknown/unsupported data type [%s] for key %s", new Object[]{obj, str}));
         }
         return persistableBundle;
     }
@@ -52,12 +52,12 @@ public final class PersistableBundles {
             return new ArrayMap<>(0);
         }
         ArrayMap<String, Object> arrayMap = new ArrayMap<>(baseBundle.size());
-        for (String str : baseBundle.keySet()) {
-            Object obj = baseBundle.get(str);
+        for (String next : baseBundle.keySet()) {
+            Object obj = baseBundle.get(next);
             if (!isSupportedDataType(obj)) {
-                LOG.w(String.format("Unknown/unsupported data type [%s] for key %s", obj, str));
+                LOG.mo21687w(String.format("Unknown/unsupported data type [%s] for key %s", new Object[]{obj, next}));
             } else {
-                arrayMap.put(str, baseBundle.get(str));
+                arrayMap.put(next, baseBundle.get(next));
             }
         }
         return arrayMap;

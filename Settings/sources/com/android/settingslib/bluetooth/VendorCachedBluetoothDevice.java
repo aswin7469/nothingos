@@ -11,15 +11,12 @@ import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public class VendorCachedBluetoothDevice extends CachedBluetoothDevice {
-    private static final boolean V = Log.isLoggable("VendorCachedBluetoothDevice", 2);
-    private static Map<Integer, BleBroadcastSourceInfo> mBleBroadcastReceiverStates = new HashMap();
     private static Map<CachedBluetoothDevice, VendorCachedBluetoothDevice> mVcbdEntries = new IdentityHashMap();
-    private LocalBluetoothProfileManager mProfileManager;
-    private BleBroadcastAudioScanAssistManager mScanAssistManager;
-    private ScanResult mScanRes = null;
-    private BleBroadcastAudioScanAssistCallback mScanAssistCallback = new BleBroadcastAudioScanAssistCallback() { // from class: com.android.settingslib.bluetooth.VendorCachedBluetoothDevice.1
+    private Map<Integer, BleBroadcastSourceInfo> mBleBroadcastReceiverStates = new HashMap();
+    private LocalBluetoothProfileManager mProfileManager = null;
+    private BleBroadcastAudioScanAssistCallback mScanAssistCallback = new BleBroadcastAudioScanAssistCallback() {
         public void onBleBroadcastAudioSourceAdded(BluetoothDevice bluetoothDevice, byte b, int i) {
         }
 
@@ -33,12 +30,12 @@ public class VendorCachedBluetoothDevice extends CachedBluetoothDevice {
         }
 
         public void onBleBroadcastSourceFound(ScanResult scanResult) {
-            if (VendorCachedBluetoothDevice.V) {
-                Log.d("VendorCachedBluetoothDevice", "onBleBroadcastSourceFound" + scanResult.getDevice());
-            }
+            Log.d("VendorCachedBluetoothDevice", "onBleBroadcastSourceFound" + scanResult.getDevice());
             VendorCachedBluetoothDevice.this.setScanResult(scanResult);
         }
     };
+    private BleBroadcastAudioScanAssistManager mScanAssistManager;
+    private ScanResult mScanRes = null;
 
     public static VendorCachedBluetoothDevice getVendorCachedBluetoothDevice(CachedBluetoothDevice cachedBluetoothDevice, LocalBluetoothProfileManager localBluetoothProfileManager) {
         Map<CachedBluetoothDevice, VendorCachedBluetoothDevice> map = mVcbdEntries;
@@ -54,23 +51,18 @@ public class VendorCachedBluetoothDevice extends CachedBluetoothDevice {
 
     VendorCachedBluetoothDevice(CachedBluetoothDevice cachedBluetoothDevice, LocalBluetoothProfileManager localBluetoothProfileManager) {
         super(cachedBluetoothDevice);
-        this.mProfileManager = null;
         this.mProfileManager = localBluetoothProfileManager;
-        mBleBroadcastReceiverStates = new HashMap();
+        this.mBleBroadcastReceiverStates = new HashMap();
         InitializeSAManager();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // com.android.settingslib.bluetooth.CachedBluetoothDevice
+    /* access modifiers changed from: package-private */
     public void onProfileStateChanged(LocalBluetoothProfile localBluetoothProfile, int i) {
-        if (V) {
-            Log.d("VendorCachedBluetoothDevice", "onProfileStateChanged: profile " + localBluetoothProfile + ", device=" + this.mDevice + ", newProfileState " + i);
+        Log.d("VendorCachedBluetoothDevice", "onProfileStateChanged: profile " + localBluetoothProfile + ", device=" + this.mDevice + ", newProfileState " + i);
+        if ((localBluetoothProfile instanceof BCProfile) && i == 0) {
+            cleanUpSAMananger();
+            super.lambda$refresh$0();
         }
-        if (!(localBluetoothProfile instanceof BCProfile) || i != 0) {
-            return;
-        }
-        cleanUpSAMananger();
-        super.lambda$refresh$0();
     }
 
     public BleBroadcastAudioScanAssistManager getScanAssistManager() {
@@ -78,24 +70,29 @@ public class VendorCachedBluetoothDevice extends CachedBluetoothDevice {
         return this.mScanAssistManager;
     }
 
-    void InitializeSAManager() {
+    /* access modifiers changed from: package-private */
+    public void InitializeSAManager() {
         this.mScanAssistManager = ((BCProfile) this.mProfileManager.getBCProfile()).getBSAManager(this.mDevice, this.mScanAssistCallback);
     }
 
-    void cleanUpSAMananger() {
+    /* access modifiers changed from: package-private */
+    public void cleanUpSAMananger() {
         this.mScanAssistManager = null;
-        Map<Integer, BleBroadcastSourceInfo> map = mBleBroadcastReceiverStates;
+        Map<Integer, BleBroadcastSourceInfo> map = this.mBleBroadcastReceiverStates;
         if (map != null) {
             map.clear();
         }
     }
 
-    void updateBroadcastreceiverStates(BleBroadcastSourceInfo bleBroadcastSourceInfo, int i, int i2) {
-        if (mBleBroadcastReceiverStates.get(Integer.valueOf(i)) != null) {
+    /* access modifiers changed from: package-private */
+    public void updateBroadcastreceiverStates(BleBroadcastSourceInfo bleBroadcastSourceInfo, int i, int i2) {
+        Log.d("VendorCachedBluetoothDevice", "updateBroadcastreceiverStates index: " + i);
+        if (this.mBleBroadcastReceiverStates.get(Integer.valueOf(i)) != null) {
             Log.d("VendorCachedBluetoothDevice", "updateBroadcastreceiverStates: Replacing receiver State Information");
-            mBleBroadcastReceiverStates.replace(Integer.valueOf(i), bleBroadcastSourceInfo);
+            this.mBleBroadcastReceiverStates.replace(Integer.valueOf(i), bleBroadcastSourceInfo);
         } else {
-            mBleBroadcastReceiverStates.put(Integer.valueOf(i), bleBroadcastSourceInfo);
+            Log.d("VendorCachedBluetoothDevice", "updateBroadcastreceiverStates: New entry for index: " + i);
+            this.mBleBroadcastReceiverStates.put(Integer.valueOf(i), bleBroadcastSourceInfo);
         }
         super.lambda$refresh$0();
     }
@@ -112,9 +109,7 @@ public class VendorCachedBluetoothDevice extends CachedBluetoothDevice {
         if (allBroadcastSourceInformation != null) {
             i = allBroadcastSourceInformation.size();
         }
-        if (V) {
-            Log.d("VendorCachedBluetoothDevice", "getNumberOfBleBroadcastReceiverStates:" + i);
-        }
+        Log.d("VendorCachedBluetoothDevice", "getNumberOfBleBroadcastReceiverStates:" + i);
         return i;
     }
 
@@ -131,14 +126,14 @@ public class VendorCachedBluetoothDevice extends CachedBluetoothDevice {
             Log.e("VendorCachedBluetoothDevice", "getAllBleBroadcastreceiverStates: no src Info");
             return null;
         }
+        HashMap hashMap = new HashMap();
         for (int i = 0; i < allBroadcastSourceInformation.size(); i++) {
-            BleBroadcastSourceInfo bleBroadcastSourceInfo = (BleBroadcastSourceInfo) allBroadcastSourceInformation.get(i);
-            mBleBroadcastReceiverStates.put(Integer.valueOf(bleBroadcastSourceInfo.getSourceId()), bleBroadcastSourceInfo);
+            hashMap.put(Integer.valueOf(i), (BleBroadcastSourceInfo) allBroadcastSourceInformation.get(i));
         }
-        return mBleBroadcastReceiverStates;
+        return hashMap;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void onBroadcastReceiverStateChanged(BleBroadcastSourceInfo bleBroadcastSourceInfo, int i, int i2) {
         updateBroadcastreceiverStates(bleBroadcastSourceInfo, i, i2);
     }

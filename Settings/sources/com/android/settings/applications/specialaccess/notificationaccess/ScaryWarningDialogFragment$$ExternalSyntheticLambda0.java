@@ -1,15 +1,21 @@
 package com.android.settings.applications.specialaccess.notificationaccess;
 
-import android.content.DialogInterface;
-/* loaded from: classes.dex */
-public final /* synthetic */ class ScaryWarningDialogFragment$$ExternalSyntheticLambda0 implements DialogInterface.OnClickListener {
-    public static final /* synthetic */ ScaryWarningDialogFragment$$ExternalSyntheticLambda0 INSTANCE = new ScaryWarningDialogFragment$$ExternalSyntheticLambda0();
+import android.content.ComponentName;
+import android.view.View;
 
-    private /* synthetic */ ScaryWarningDialogFragment$$ExternalSyntheticLambda0() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class ScaryWarningDialogFragment$$ExternalSyntheticLambda0 implements View.OnClickListener {
+    public final /* synthetic */ ScaryWarningDialogFragment f$0;
+    public final /* synthetic */ NotificationAccessDetails f$1;
+    public final /* synthetic */ ComponentName f$2;
+
+    public /* synthetic */ ScaryWarningDialogFragment$$ExternalSyntheticLambda0(ScaryWarningDialogFragment scaryWarningDialogFragment, NotificationAccessDetails notificationAccessDetails, ComponentName componentName) {
+        this.f$0 = scaryWarningDialogFragment;
+        this.f$1 = notificationAccessDetails;
+        this.f$2 = componentName;
     }
 
-    @Override // android.content.DialogInterface.OnClickListener
-    public final void onClick(DialogInterface dialogInterface, int i) {
-        ScaryWarningDialogFragment.lambda$onCreateDialog$0(dialogInterface, i);
+    public final void onClick(View view) {
+        this.f$0.lambda$getDialogView$0(this.f$1, this.f$2, view);
     }
 }

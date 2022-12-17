@@ -7,50 +7,37 @@ import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 import androidx.preference.PreferenceScreen;
 import com.android.settings.network.AllowedNetworkTypesListener;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settings.widget.PreferenceCategoryController;
-/* loaded from: classes.dex */
+
 public class NetworkPreferenceCategoryController extends PreferenceCategoryController implements LifecycleObserver {
     private AllowedNetworkTypesListener mAllowedNetworkTypesListener;
     private PreferenceScreen mPreferenceScreen;
     protected int mSubId = -1;
 
-    @Override // com.android.settings.widget.PreferenceCategoryController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.widget.PreferenceCategoryController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.widget.PreferenceCategoryController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.widget.PreferenceCategoryController, com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.widget.PreferenceCategoryController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.widget.PreferenceCategoryController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.widget.PreferenceCategoryController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.widget.PreferenceCategoryController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -59,15 +46,10 @@ public class NetworkPreferenceCategoryController extends PreferenceCategoryContr
         super(context, str);
         AllowedNetworkTypesListener allowedNetworkTypesListener = new AllowedNetworkTypesListener(context.getMainExecutor());
         this.mAllowedNetworkTypesListener = allowedNetworkTypesListener;
-        allowedNetworkTypesListener.setAllowedNetworkTypesListener(new AllowedNetworkTypesListener.OnAllowedNetworkTypesListener() { // from class: com.android.settings.network.telephony.NetworkPreferenceCategoryController$$ExternalSyntheticLambda0
-            @Override // com.android.settings.network.AllowedNetworkTypesListener.OnAllowedNetworkTypesListener
-            public final void onAllowedNetworkTypesChanged() {
-                NetworkPreferenceCategoryController.this.lambda$new$0();
-            }
-        });
+        allowedNetworkTypesListener.setAllowedNetworkTypesListener(new NetworkPreferenceCategoryController$$ExternalSyntheticLambda0(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     /* renamed from: updatePreference */
     public void lambda$new$0() {
         displayPreference(this.mPreferenceScreen);
@@ -83,15 +65,14 @@ public class NetworkPreferenceCategoryController extends PreferenceCategoryContr
         this.mAllowedNetworkTypesListener.unregister(this.mContext, this.mSubId);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreferenceScreen = preferenceScreen;
     }
 
-    public NetworkPreferenceCategoryController init(Lifecycle lifecycle, int i) {
+    /* access modifiers changed from: package-private */
+    public NetworkPreferenceCategoryController init(int i) {
         this.mSubId = i;
-        lifecycle.addObserver(this);
         return this;
     }
 }

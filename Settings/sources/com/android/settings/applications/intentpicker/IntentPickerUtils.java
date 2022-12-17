@@ -10,9 +10,8 @@ import android.text.style.AlignmentSpan;
 import android.util.Log;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-/* loaded from: classes.dex */
+
 public class IntentPickerUtils {
     private static final boolean DEBUG = Build.IS_DEBUGGABLE;
 
@@ -31,27 +30,20 @@ public class IntentPickerUtils {
         }
     }
 
-    public static List<String> getLinksList(DomainVerificationManager domainVerificationManager, String str, final int i) {
+    public static List<String> getLinksList(DomainVerificationManager domainVerificationManager, String str, int i) {
         DomainVerificationUserState domainVerificationUserState = getDomainVerificationUserState(domainVerificationManager, str);
         if (domainVerificationUserState == null) {
             return null;
         }
-        return (List) domainVerificationUserState.getHostToStateMap().entrySet().stream().filter(new Predicate() { // from class: com.android.settings.applications.intentpicker.IntentPickerUtils$$ExternalSyntheticLambda1
-            @Override // java.util.function.Predicate
-            public final boolean test(Object obj) {
-                boolean lambda$getLinksList$0;
-                lambda$getLinksList$0 = IntentPickerUtils.lambda$getLinksList$0(i, (Map.Entry) obj);
-                return lambda$getLinksList$0;
-            }
-        }).map(IntentPickerUtils$$ExternalSyntheticLambda0.INSTANCE).collect(Collectors.toList());
+        return (List) domainVerificationUserState.getHostToStateMap().entrySet().stream().filter(new IntentPickerUtils$$ExternalSyntheticLambda0(i)).map(new IntentPickerUtils$$ExternalSyntheticLambda1()).collect(Collectors.toList());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ boolean lambda$getLinksList$0(int i, Map.Entry entry) {
         return ((Integer) entry.getValue()).intValue() == i;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ String lambda$getLinksList$1(Map.Entry entry) {
         return (String) entry.getKey();
     }

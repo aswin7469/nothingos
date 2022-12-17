@@ -11,7 +11,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
 import com.android.settings.SidecarFragment;
 import com.android.settings.network.SubscriptionUtil;
 import com.android.settings.network.SwitchToEuiccSubscriptionSidecar;
@@ -28,26 +30,26 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-/* loaded from: classes.dex */
+
 public class ChooseSimActivity extends Activity implements RecyclerItemAdapter.OnItemSelectedListener, SidecarFragment.Listener {
+    private ArrayList<SubscriptionInfo> mEmbeddedSubscriptions = new ArrayList<>();
     private boolean mHasPsim;
     private boolean mIsSwitching;
     private ItemGroup mItemGroup;
     private boolean mNoPsimContinueToSettings;
+    private SubscriptionInfo mRemovableSubscription = null;
     private int mSelectedItemIndex;
     private SwitchToEuiccSubscriptionSidecar mSwitchToEuiccSubscriptionSidecar;
     private SwitchToRemovableSlotSidecar mSwitchToRemovableSlotSidecar;
-    private ArrayList<SubscriptionInfo> mEmbeddedSubscriptions = new ArrayList<>();
-    private SubscriptionInfo mRemovableSubscription = null;
 
     public static Intent getIntent(Context context) {
         return new Intent(context, ChooseSimActivity.class);
     }
 
-    @Override // android.app.Activity
-    protected void onCreate(Bundle bundle) {
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setContentView(R.layout.choose_sim_activity);
+        setContentView(R$layout.choose_sim_activity);
         Intent intent = getIntent();
         this.mHasPsim = intent.getBooleanExtra("has_psim", false);
         this.mNoPsimContinueToSettings = intent.getBooleanExtra("no_psim_continue_to_settings", false);
@@ -61,132 +63,122 @@ public class ChooseSimActivity extends Activity implements RecyclerItemAdapter.O
             this.mSelectedItemIndex = bundle.getInt("selected_index");
             this.mIsSwitching = bundle.getBoolean("is_switching");
         }
-        GlifLayout glifLayout = (GlifLayout) findViewById(R.id.glif_layout);
+        GlifLayout glifLayout = (GlifLayout) findViewById(R$id.glif_layout);
         int size = this.mEmbeddedSubscriptions.size();
         if (this.mHasPsim) {
             size++;
         }
-        glifLayout.setHeaderText(getString(R.string.choose_sim_title));
-        MessageFormat messageFormat = new MessageFormat(getString(R.string.choose_sim_text), Locale.getDefault());
+        glifLayout.setHeaderText((CharSequence) getString(R$string.choose_sim_title));
+        MessageFormat messageFormat = new MessageFormat(getString(R$string.choose_sim_text), Locale.getDefault());
         HashMap hashMap = new HashMap();
         hashMap.put("count", Integer.valueOf(size));
-        glifLayout.setDescriptionText(messageFormat.format(hashMap));
+        glifLayout.setDescriptionText((CharSequence) messageFormat.format(hashMap));
         displaySubscriptions();
         this.mSwitchToRemovableSlotSidecar = SwitchToRemovableSlotSidecar.get(getFragmentManager());
         this.mSwitchToEuiccSubscriptionSidecar = SwitchToEuiccSubscriptionSidecar.get(getFragmentManager());
     }
 
-    @Override // android.app.Activity
     public void onResume() {
         super.onResume();
         this.mSwitchToRemovableSlotSidecar.addListener(this);
         this.mSwitchToEuiccSubscriptionSidecar.addListener(this);
     }
 
-    @Override // android.app.Activity
     public void onPause() {
         this.mSwitchToEuiccSubscriptionSidecar.removeListener(this);
         this.mSwitchToRemovableSlotSidecar.removeListener(this);
         super.onPause();
     }
 
-    @Override // android.app.Activity
-    protected void onSaveInstanceState(Bundle bundle) {
+    /* access modifiers changed from: protected */
+    public void onSaveInstanceState(Bundle bundle) {
         bundle.putInt("selected_index", this.mSelectedItemIndex);
         bundle.putBoolean("is_switching", this.mIsSwitching);
         super.onSaveInstanceState(bundle);
     }
 
-    @Override // com.google.android.setupdesign.items.RecyclerItemAdapter.OnItemSelectedListener
     public void onItemSelected(IItem iItem) {
-        if (this.mIsSwitching) {
-            return;
+        if (!this.mIsSwitching) {
+            this.mIsSwitching = true;
+            Item item = (Item) iItem;
+            item.setSummary(getString(R$string.choose_sim_activating));
+            int id = item.getId();
+            this.mSelectedItemIndex = id;
+            if (id == -1) {
+                Log.i("ChooseSimActivity", "Ready to switch to pSIM slot.");
+                this.mSwitchToRemovableSlotSidecar.run(-1, (SubscriptionInfo) null);
+                return;
+            }
+            Log.i("ChooseSimActivity", "Ready to switch to eSIM subscription with index: " + this.mSelectedItemIndex);
+            this.mSwitchToEuiccSubscriptionSidecar.run(this.mEmbeddedSubscriptions.get(this.mSelectedItemIndex).getSubscriptionId(), -1, (SubscriptionInfo) null);
         }
-        this.mIsSwitching = true;
-        Item item = (Item) iItem;
-        item.setSummary(getString(R.string.choose_sim_activating));
-        int id = item.getId();
-        this.mSelectedItemIndex = id;
-        if (id == -1) {
-            Log.i("ChooseSimActivity", "Ready to switch to pSIM slot.");
-            this.mSwitchToRemovableSlotSidecar.run(-1);
-            return;
-        }
-        Log.i("ChooseSimActivity", "Ready to switch to eSIM subscription with index: " + this.mSelectedItemIndex);
-        this.mSwitchToEuiccSubscriptionSidecar.run(this.mEmbeddedSubscriptions.get(this.mSelectedItemIndex).getSubscriptionId());
     }
 
-    @Override // com.android.settings.SidecarFragment.Listener
     public void onStateChange(SidecarFragment sidecarFragment) {
         SubscriptionInfo firstRemovableSubscription;
         SwitchToRemovableSlotSidecar switchToRemovableSlotSidecar = this.mSwitchToRemovableSlotSidecar;
         if (sidecarFragment == switchToRemovableSlotSidecar) {
             int state = switchToRemovableSlotSidecar.getState();
-            if (state != 2) {
-                if (state != 3) {
-                    return;
+            if (state == 2) {
+                this.mSwitchToRemovableSlotSidecar.reset();
+                Log.i("ChooseSimActivity", "Switch slot successfully.");
+                SubscriptionManager subscriptionManager = (SubscriptionManager) getSystemService(SubscriptionManager.class);
+                if (subscriptionManager.canDisablePhysicalSubscription() && (firstRemovableSubscription = SubscriptionUtil.getFirstRemovableSubscription(this)) != null) {
+                    subscriptionManager.setUiccApplicationsEnabled(firstRemovableSubscription.getSubscriptionId(), true);
                 }
+                finish();
+            } else if (state == 3) {
                 this.mSwitchToRemovableSlotSidecar.reset();
                 Log.e("ChooseSimActivity", "Failed to switch slot in ChooseSubscriptionsActivity.");
                 handleEnableRemovableSimError();
-                return;
             }
-            this.mSwitchToRemovableSlotSidecar.reset();
-            Log.i("ChooseSimActivity", "Switch slot successfully.");
-            SubscriptionManager subscriptionManager = (SubscriptionManager) getSystemService(SubscriptionManager.class);
-            if (subscriptionManager.canDisablePhysicalSubscription() && (firstRemovableSubscription = SubscriptionUtil.getFirstRemovableSubscription(this)) != null) {
-                subscriptionManager.setUiccApplicationsEnabled(firstRemovableSubscription.getSubscriptionId(), true);
-            }
-            finish();
-            return;
-        }
-        SwitchToEuiccSubscriptionSidecar switchToEuiccSubscriptionSidecar = this.mSwitchToEuiccSubscriptionSidecar;
-        if (sidecarFragment != switchToEuiccSubscriptionSidecar) {
-            return;
-        }
-        int state2 = switchToEuiccSubscriptionSidecar.getState();
-        if (state2 == 2) {
-            this.mSwitchToEuiccSubscriptionSidecar.reset();
-            if (this.mNoPsimContinueToSettings) {
-                Log.e("ChooseSimActivity", "mNoPsimContinueToSettings is true which is not supported for now.");
-                return;
-            }
-            Log.i("ChooseSimActivity", "User finished selecting eSIM profile.");
-            finish();
-        } else if (state2 != 3) {
         } else {
-            this.mSwitchToEuiccSubscriptionSidecar.reset();
-            Log.e("ChooseSimActivity", "Failed to switch subscription in ChooseSubscriptionsActivity.");
-            Item item = (Item) this.mItemGroup.getItemAt(this.mSelectedItemIndex);
-            item.setEnabled(false);
-            item.setSummary(getString(R.string.choose_sim_could_not_activate));
-            this.mIsSwitching = false;
+            SwitchToEuiccSubscriptionSidecar switchToEuiccSubscriptionSidecar = this.mSwitchToEuiccSubscriptionSidecar;
+            if (sidecarFragment == switchToEuiccSubscriptionSidecar) {
+                int state2 = switchToEuiccSubscriptionSidecar.getState();
+                if (state2 == 2) {
+                    this.mSwitchToEuiccSubscriptionSidecar.reset();
+                    if (this.mNoPsimContinueToSettings) {
+                        Log.e("ChooseSimActivity", "mNoPsimContinueToSettings is true which is not supported for now.");
+                        return;
+                    }
+                    Log.i("ChooseSimActivity", "User finished selecting eSIM profile.");
+                    finish();
+                } else if (state2 == 3) {
+                    this.mSwitchToEuiccSubscriptionSidecar.reset();
+                    Log.e("ChooseSimActivity", "Failed to switch subscription in ChooseSubscriptionsActivity.");
+                    Item item = (Item) this.mItemGroup.getItemAt(this.mSelectedItemIndex);
+                    item.setEnabled(false);
+                    item.setSummary(getString(R$string.choose_sim_could_not_activate));
+                    this.mIsSwitching = false;
+                }
+            }
         }
     }
 
     private void displaySubscriptions() {
-        RecyclerItemAdapter recyclerItemAdapter = (RecyclerItemAdapter) ((GlifRecyclerLayout) findViewById(16908290).findViewById(R.id.glif_layout)).getAdapter();
+        RecyclerItemAdapter recyclerItemAdapter = (RecyclerItemAdapter) ((GlifRecyclerLayout) findViewById(16908290).findViewById(R$id.glif_layout)).getAdapter();
         recyclerItemAdapter.setOnItemSelectedListener(this);
         this.mItemGroup = (ItemGroup) recyclerItemAdapter.getRootItemHierarchy();
         if (this.mHasPsim) {
-            Item disableableItem = new DisableableItem();
+            DisableableItem disableableItem = new DisableableItem();
             CharSequence charSequence = null;
             SubscriptionInfo subscriptionInfo = this.mRemovableSubscription;
             if (subscriptionInfo != null) {
-                charSequence = SubscriptionUtil.getUniqueSubscriptionDisplayName(Integer.valueOf(subscriptionInfo.getSubscriptionId()), this);
+                charSequence = SubscriptionUtil.getUniqueSubscriptionDisplayName(Integer.valueOf(subscriptionInfo.getSubscriptionId()), (Context) this);
             }
             if (TextUtils.isEmpty(charSequence)) {
-                charSequence = getString(R.string.sim_card_label);
+                charSequence = getString(R$string.sim_card_label);
             }
             disableableItem.setTitle(charSequence);
-            if (this.mIsSwitching && this.mSelectedItemIndex == -1) {
-                disableableItem.setSummary(getString(R.string.choose_sim_activating));
-            } else {
-                CharSequence formattedPhoneNumber = SubscriptionUtil.getFormattedPhoneNumber(this, this.mRemovableSubscription);
+            if (!this.mIsSwitching || this.mSelectedItemIndex != -1) {
+                String formattedPhoneNumber = SubscriptionUtil.getFormattedPhoneNumber(this, this.mRemovableSubscription);
                 if (TextUtils.isEmpty(formattedPhoneNumber)) {
                     formattedPhoneNumber = "";
                 }
                 disableableItem.setSummary(formattedPhoneNumber);
+            } else {
+                disableableItem.setSummary(getString(R$string.choose_sim_activating));
             }
             disableableItem.setId(-1);
             this.mItemGroup.addChild(disableableItem);
@@ -196,19 +188,19 @@ public class ChooseSimActivity extends Activity implements RecyclerItemAdapter.O
         while (it.hasNext()) {
             SubscriptionInfo next = it.next();
             DisableableItem disableableItem2 = new DisableableItem();
-            CharSequence uniqueSubscriptionDisplayName = SubscriptionUtil.getUniqueSubscriptionDisplayName(Integer.valueOf(next.getSubscriptionId()), this);
+            CharSequence uniqueSubscriptionDisplayName = SubscriptionUtil.getUniqueSubscriptionDisplayName(Integer.valueOf(next.getSubscriptionId()), (Context) this);
             if (TextUtils.isEmpty(uniqueSubscriptionDisplayName)) {
                 uniqueSubscriptionDisplayName = next.getDisplayName();
             }
             disableableItem2.setTitle(uniqueSubscriptionDisplayName);
-            if (this.mIsSwitching && this.mSelectedItemIndex == i) {
-                disableableItem2.setSummary(getString(R.string.choose_sim_activating));
-            } else {
+            if (!this.mIsSwitching || this.mSelectedItemIndex != i) {
                 String formattedPhoneNumber2 = SubscriptionUtil.getFormattedPhoneNumber(this, next);
                 if (TextUtils.isEmpty(formattedPhoneNumber2)) {
                     formattedPhoneNumber2 = "";
                 }
                 disableableItem2.setSummary(formattedPhoneNumber2);
+            } else {
+                disableableItem2.setSummary(getString(R$string.choose_sim_activating));
             }
             disableableItem2.setId(i);
             this.mItemGroup.addChild(disableableItem2);
@@ -219,12 +211,12 @@ public class ChooseSimActivity extends Activity implements RecyclerItemAdapter.O
     private void updateSubscriptions() {
         List<SubscriptionInfo> selectableSubscriptionInfoList = SubscriptionUtil.getSelectableSubscriptionInfoList(this);
         if (selectableSubscriptionInfoList != null) {
-            for (SubscriptionInfo subscriptionInfo : selectableSubscriptionInfoList) {
-                if (subscriptionInfo != null) {
-                    if (subscriptionInfo.isEmbedded()) {
-                        this.mEmbeddedSubscriptions.add(subscriptionInfo);
+            for (SubscriptionInfo next : selectableSubscriptionInfoList) {
+                if (next != null) {
+                    if (next.isEmbedded()) {
+                        this.mEmbeddedSubscriptions.add(next);
                     } else {
-                        this.mRemovableSubscription = subscriptionInfo;
+                        this.mRemovableSubscription = next;
                     }
                 }
             }
@@ -238,19 +230,15 @@ public class ChooseSimActivity extends Activity implements RecyclerItemAdapter.O
         }
         Item item = (Item) this.mItemGroup.getItemAt(i);
         item.setEnabled(false);
-        item.setSummary(getString(R.string.choose_sim_could_not_activate));
+        item.setSummary(getString(R$string.choose_sim_could_not_activate));
         this.mIsSwitching = false;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public class DisableableItem extends Item implements Dividable {
-        @Override // com.google.android.setupdesign.items.Dividable
+    class DisableableItem extends Item implements Dividable {
         public boolean isDividerAllowedAbove() {
             return true;
         }
 
-        @Override // com.google.android.setupdesign.items.Dividable
         public boolean isDividerAllowedBelow() {
             return true;
         }
@@ -258,11 +246,10 @@ public class ChooseSimActivity extends Activity implements RecyclerItemAdapter.O
         DisableableItem() {
         }
 
-        @Override // com.google.android.setupdesign.items.Item, com.google.android.setupdesign.items.IItem
         public void onBindView(View view) {
             super.onBindView(view);
-            ((TextView) view.findViewById(R.id.sud_items_title)).setEnabled(isEnabled());
-            ((TextView) view.findViewById(R.id.sud_items_summary)).setEnabled(isEnabled());
+            ((TextView) view.findViewById(R$id.sud_items_title)).setEnabled(isEnabled());
+            ((TextView) view.findViewById(R$id.sud_items_summary)).setEnabled(isEnabled());
         }
     }
 }

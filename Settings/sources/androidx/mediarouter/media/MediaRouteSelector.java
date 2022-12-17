@@ -7,45 +7,45 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public final class MediaRouteSelector {
-    public static final MediaRouteSelector EMPTY = new MediaRouteSelector(new Bundle(), null);
+    public static final MediaRouteSelector EMPTY = new MediaRouteSelector(new Bundle(), (List<String>) null);
     private final Bundle mBundle;
     List<String> mControlCategories;
 
-    MediaRouteSelector(Bundle bundle, List<String> controlCategories) {
+    MediaRouteSelector(Bundle bundle, List<String> list) {
         this.mBundle = bundle;
-        this.mControlCategories = controlCategories;
+        this.mControlCategories = list;
     }
 
     public List<String> getControlCategories() {
         ensureControlCategories();
-        return this.mControlCategories;
+        return new ArrayList(this.mControlCategories);
     }
 
-    void ensureControlCategories() {
+    /* access modifiers changed from: package-private */
+    public void ensureControlCategories() {
         if (this.mControlCategories == null) {
             ArrayList<String> stringArrayList = this.mBundle.getStringArrayList("controlCategories");
             this.mControlCategories = stringArrayList;
-            if (stringArrayList != null && !stringArrayList.isEmpty()) {
-                return;
+            if (stringArrayList == null || stringArrayList.isEmpty()) {
+                this.mControlCategories = Collections.emptyList();
             }
-            this.mControlCategories = Collections.emptyList();
         }
     }
 
-    public boolean matchesControlFilters(List<IntentFilter> filters) {
-        if (filters == null) {
+    public boolean matchesControlFilters(List<IntentFilter> list) {
+        if (list == null) {
             return false;
         }
         ensureControlCategories();
         if (this.mControlCategories.isEmpty()) {
             return false;
         }
-        for (IntentFilter intentFilter : filters) {
-            if (intentFilter != null) {
-                for (String str : this.mControlCategories) {
-                    if (intentFilter.hasCategory(str)) {
+        for (IntentFilter next : list) {
+            if (next != null) {
+                for (String hasCategory : this.mControlCategories) {
+                    if (next.hasCategory(hasCategory)) {
                         return true;
                     }
                 }
@@ -55,13 +55,13 @@ public final class MediaRouteSelector {
         return false;
     }
 
-    public boolean contains(MediaRouteSelector selector) {
-        if (selector == null) {
+    public boolean contains(MediaRouteSelector mediaRouteSelector) {
+        if (mediaRouteSelector == null) {
             return false;
         }
         ensureControlCategories();
-        selector.ensureControlCategories();
-        return this.mControlCategories.containsAll(selector.mControlCategories);
+        mediaRouteSelector.ensureControlCategories();
+        return this.mControlCategories.containsAll(mediaRouteSelector.mControlCategories);
     }
 
     public boolean isEmpty() {
@@ -71,17 +71,17 @@ public final class MediaRouteSelector {
 
     public boolean isValid() {
         ensureControlCategories();
-        return !this.mControlCategories.contains(null);
+        return !this.mControlCategories.contains((Object) null);
     }
 
-    public boolean equals(Object o) {
-        if (o instanceof MediaRouteSelector) {
-            MediaRouteSelector mediaRouteSelector = (MediaRouteSelector) o;
-            ensureControlCategories();
-            mediaRouteSelector.ensureControlCategories();
-            return this.mControlCategories.equals(mediaRouteSelector.mControlCategories);
+    public boolean equals(Object obj) {
+        if (!(obj instanceof MediaRouteSelector)) {
+            return false;
         }
-        return false;
+        MediaRouteSelector mediaRouteSelector = (MediaRouteSelector) obj;
+        ensureControlCategories();
+        mediaRouteSelector.ensureControlCategories();
+        return this.mControlCategories.equals(mediaRouteSelector.mControlCategories);
     }
 
     public int hashCode() {
@@ -90,7 +90,7 @@ public final class MediaRouteSelector {
     }
 
     public String toString() {
-        return "MediaRouteSelector{ controlCategories=" + Arrays.toString(getControlCategories().toArray()) + " }";
+        return "MediaRouteSelector{ " + "controlCategories=" + Arrays.toString(getControlCategories().toArray()) + " }";
     }
 
     public Bundle asBundle() {
@@ -99,60 +99,60 @@ public final class MediaRouteSelector {
 
     public static MediaRouteSelector fromBundle(Bundle bundle) {
         if (bundle != null) {
-            return new MediaRouteSelector(bundle, null);
+            return new MediaRouteSelector(bundle, (List<String>) null);
         }
         return null;
     }
 
-    /* loaded from: classes.dex */
     public static final class Builder {
         private ArrayList<String> mControlCategories;
 
         public Builder() {
         }
 
-        public Builder(MediaRouteSelector selector) {
-            if (selector == null) {
-                throw new IllegalArgumentException("selector must not be null");
-            }
-            selector.ensureControlCategories();
-            if (selector.mControlCategories.isEmpty()) {
+        public Builder(MediaRouteSelector mediaRouteSelector) {
+            if (mediaRouteSelector != null) {
+                mediaRouteSelector.ensureControlCategories();
+                if (!mediaRouteSelector.mControlCategories.isEmpty()) {
+                    this.mControlCategories = new ArrayList<>(mediaRouteSelector.mControlCategories);
+                    return;
+                }
                 return;
             }
-            this.mControlCategories = new ArrayList<>(selector.mControlCategories);
+            throw new IllegalArgumentException("selector must not be null");
         }
 
-        public Builder addControlCategory(String category) {
-            if (category == null) {
-                throw new IllegalArgumentException("category must not be null");
-            }
-            if (this.mControlCategories == null) {
-                this.mControlCategories = new ArrayList<>();
-            }
-            if (!this.mControlCategories.contains(category)) {
-                this.mControlCategories.add(category);
-            }
-            return this;
-        }
-
-        public Builder addControlCategories(Collection<String> categories) {
-            if (categories == null) {
-                throw new IllegalArgumentException("categories must not be null");
-            }
-            if (!categories.isEmpty()) {
-                for (String str : categories) {
-                    addControlCategory(str);
+        public Builder addControlCategory(String str) {
+            if (str != null) {
+                if (this.mControlCategories == null) {
+                    this.mControlCategories = new ArrayList<>();
                 }
+                if (!this.mControlCategories.contains(str)) {
+                    this.mControlCategories.add(str);
+                }
+                return this;
             }
-            return this;
+            throw new IllegalArgumentException("category must not be null");
         }
 
-        public Builder addSelector(MediaRouteSelector selector) {
-            if (selector == null) {
-                throw new IllegalArgumentException("selector must not be null");
+        public Builder addControlCategories(Collection<String> collection) {
+            if (collection != null) {
+                if (!collection.isEmpty()) {
+                    for (String addControlCategory : collection) {
+                        addControlCategory(addControlCategory);
+                    }
+                }
+                return this;
             }
-            addControlCategories(selector.getControlCategories());
-            return this;
+            throw new IllegalArgumentException("categories must not be null");
+        }
+
+        public Builder addSelector(MediaRouteSelector mediaRouteSelector) {
+            if (mediaRouteSelector != null) {
+                addControlCategories(mediaRouteSelector.getControlCategories());
+                return this;
+            }
+            throw new IllegalArgumentException("selector must not be null");
         }
 
         public MediaRouteSelector build() {

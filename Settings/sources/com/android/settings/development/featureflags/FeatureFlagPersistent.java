@@ -5,7 +5,7 @@ import android.os.SystemProperties;
 import android.text.TextUtils;
 import android.util.FeatureFlagUtils;
 import java.util.HashSet;
-/* loaded from: classes.dex */
+
 public class FeatureFlagPersistent {
     private static final HashSet<String> PERSISTENT_FLAGS;
 

@@ -10,7 +10,7 @@ import androidx.preference.DropDownPreference;
 import androidx.preference.Preference;
 import androidx.preference.TwoStatePreference;
 import com.android.settings.SettingsPreferenceFragment;
-/* loaded from: classes.dex */
+
 public class SettingPref {
     protected final int mDefault;
     protected DropDownPreference mDropDown;
@@ -34,7 +34,8 @@ public class SettingPref {
         this.mUri = getUriFor(i, str2);
     }
 
-    protected String getCaption(Resources resources, int i) {
+    /* access modifiers changed from: protected */
+    public String getCaption(Resources resources, int i) {
         throw new UnsupportedOperationException();
     }
 
@@ -61,8 +62,7 @@ public class SettingPref {
         }
         update(activity);
         if (this.mTwoState != null) {
-            findPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() { // from class: com.android.settings.notification.SettingPref.1
-                @Override // androidx.preference.Preference.OnPreferenceChangeListener
+            findPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 public boolean onPreferenceChange(Preference preference, Object obj) {
                     SettingPref.this.setSetting(activity, ((Boolean) obj).booleanValue() ? 1 : 0);
                     return true;
@@ -72,8 +72,7 @@ public class SettingPref {
         } else if (this.mDropDown == null) {
             return null;
         } else {
-            findPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() { // from class: com.android.settings.notification.SettingPref.2
-                @Override // androidx.preference.Preference.OnPreferenceChangeListener
+            findPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 public boolean onPreferenceChange(Preference preference, Object obj) {
                     return SettingPref.this.setSetting(activity, Integer.parseInt((String) obj));
                 }
@@ -82,7 +81,7 @@ public class SettingPref {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean setSetting(Context context, int i) {
         return putInt(this.mType, context.getContentResolver(), this.mSetting, i);
     }
@@ -103,48 +102,47 @@ public class SettingPref {
             return;
         }
         DropDownPreference dropDownPreference = this.mDropDown;
-        if (dropDownPreference == null) {
-            return;
+        if (dropDownPreference != null) {
+            dropDownPreference.setValue(Integer.toString(i));
         }
-        dropDownPreference.setValue(Integer.toString(i));
     }
 
     private static Uri getUriFor(int i, String str) {
-        if (i != 1) {
-            if (i == 2) {
-                return Settings.System.getUriFor(str);
-            }
-            if (i == 3) {
-                return Settings.Secure.getUriFor(str);
-            }
-            throw new IllegalArgumentException();
+        if (i == 1) {
+            return Settings.Global.getUriFor(str);
         }
-        return Settings.Global.getUriFor(str);
+        if (i == 2) {
+            return Settings.System.getUriFor(str);
+        }
+        if (i == 3) {
+            return Settings.Secure.getUriFor(str);
+        }
+        throw new IllegalArgumentException();
     }
 
     protected static boolean putInt(int i, ContentResolver contentResolver, String str, int i2) {
-        if (i != 1) {
-            if (i == 2) {
-                return Settings.System.putInt(contentResolver, str, i2);
-            }
-            if (i == 3) {
-                return Settings.Secure.putInt(contentResolver, str, i2);
-            }
-            throw new IllegalArgumentException();
+        if (i == 1) {
+            return Settings.Global.putInt(contentResolver, str, i2);
         }
-        return Settings.Global.putInt(contentResolver, str, i2);
+        if (i == 2) {
+            return Settings.System.putInt(contentResolver, str, i2);
+        }
+        if (i == 3) {
+            return Settings.Secure.putInt(contentResolver, str, i2);
+        }
+        throw new IllegalArgumentException();
     }
 
     protected static int getInt(int i, ContentResolver contentResolver, String str, int i2) {
-        if (i != 1) {
-            if (i == 2) {
-                return Settings.System.getInt(contentResolver, str, i2);
-            }
-            if (i == 3) {
-                return Settings.Secure.getInt(contentResolver, str, i2);
-            }
-            throw new IllegalArgumentException();
+        if (i == 1) {
+            return Settings.Global.getInt(contentResolver, str, i2);
         }
-        return Settings.Global.getInt(contentResolver, str, i2);
+        if (i == 2) {
+            return Settings.System.getInt(contentResolver, str, i2);
+        }
+        if (i == 3) {
+            return Settings.Secure.getInt(contentResolver, str, i2);
+        }
+        throw new IllegalArgumentException();
     }
 }

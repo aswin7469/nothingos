@@ -7,9 +7,8 @@ import androidx.preference.SwitchPreference;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.development.DeveloperOptionsPreferenceController;
 import com.android.settingslib.development.SystemPropPoker;
-/* loaded from: classes.dex */
+
 public class ForceMSAAPreferenceController extends DeveloperOptionsPreferenceController implements Preference.OnPreferenceChangeListener, PreferenceControllerMixin {
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "force_msaa";
     }
@@ -18,20 +17,17 @@ public class ForceMSAAPreferenceController extends DeveloperOptionsPreferenceCon
         super(context);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         DisplayProperties.debug_force_msaa(Boolean.valueOf(((Boolean) obj).booleanValue()));
         SystemPropPoker.getInstance().poke();
         return true;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         ((SwitchPreference) this.mPreference).setChecked(((Boolean) DisplayProperties.debug_force_msaa().orElse(Boolean.FALSE)).booleanValue());
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController
+    /* access modifiers changed from: protected */
     public void onDeveloperOptionsSwitchDisabled() {
         super.onDeveloperOptionsSwitchDisabled();
         DisplayProperties.debug_force_msaa(Boolean.FALSE);

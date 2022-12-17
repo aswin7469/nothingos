@@ -6,7 +6,7 @@ import android.util.Log;
 import com.android.ims.FeatureConnector;
 import com.android.ims.ImsException;
 import com.android.ims.ImsManager;
-/* loaded from: classes.dex */
+
 public class ImsConnector implements FeatureConnector.Listener<ImsManager> {
     private static final String TAG = ImsConnector.class.getSimpleName();
     private FeatureConnector<ImsManager> mConnector;
@@ -37,7 +37,7 @@ public class ImsConnector implements FeatureConnector.Listener<ImsManager> {
         }
     }
 
-    public void connectionReady(ImsManager imsManager) throws ImsException {
+    public void connectionReady(ImsManager imsManager, int i) throws ImsException {
         this.mImsManager = imsManager;
         registerListener();
     }

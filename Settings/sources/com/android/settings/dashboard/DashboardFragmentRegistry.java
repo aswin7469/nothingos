@@ -26,10 +26,11 @@ import com.android.settings.notification.SoundSettings;
 import com.android.settings.notification.zen.ZenModeSettings;
 import com.android.settings.privacy.PrivacyDashboardFragment;
 import com.android.settings.security.LockscreenDashboardFragment;
+import com.android.settings.security.SecurityAdvancedSettings;
 import com.android.settings.security.SecuritySettings;
 import com.android.settings.system.SystemDashboardFragment;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public class DashboardFragmentRegistry {
     public static final Map<String, String> CATEGORY_KEY_TO_PARENT_MAP;
     public static final Map<String, String> PARENT_TO_CATEGORY_KEY_MAP;
@@ -48,6 +49,7 @@ public class DashboardFragmentRegistry {
         arrayMap.put(SoundSettings.class.getName(), "com.android.settings.category.ia.sound");
         arrayMap.put(StorageDashboardFragment.class.getName(), "com.android.settings.category.ia.storage");
         arrayMap.put(SecuritySettings.class.getName(), "com.android.settings.category.ia.security");
+        arrayMap.put(SecurityAdvancedSettings.class.getName(), "com.android.settings.category.ia.advanced_security");
         arrayMap.put(AccountDetailDashboardFragment.class.getName(), "com.android.settings.category.ia.account_detail");
         arrayMap.put(AccountDashboardFragment.class.getName(), "com.android.settings.category.ia.accounts");
         arrayMap.put(SystemDashboardFragment.class.getName(), "com.android.settings.category.ia.system");

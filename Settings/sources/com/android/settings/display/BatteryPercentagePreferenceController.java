@@ -5,52 +5,39 @@ import android.content.IntentFilter;
 import android.provider.Settings;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import androidx.preference.SwitchPreference;
 import com.android.settings.Utils;
 import com.android.settings.core.BasePreferenceController;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settings.overlay.FeatureFactory;
-import com.android.settings.slices.SliceBackgroundWorker;
-/* loaded from: classes.dex */
+import com.nothing.p006ui.support.NtCustSwitchPreference;
+
 public class BatteryPercentagePreferenceController extends BasePreferenceController implements PreferenceControllerMixin, Preference.OnPreferenceChangeListener {
     private Preference mPreference;
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -59,7 +46,6 @@ public class BatteryPercentagePreferenceController extends BasePreferenceControl
         super(context, str);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = preferenceScreen.findPreference(getPreferenceKey());
@@ -68,25 +54,22 @@ public class BatteryPercentagePreferenceController extends BasePreferenceControl
         }
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         if (!Utils.isBatteryPresent(this.mContext)) {
             return 2;
         }
-        return this.mContext.getResources().getBoolean(17891381) ? 0 : 3;
+        return this.mContext.getResources().getBoolean(17891384) ? 0 : 3;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         boolean z = false;
-        SwitchPreference switchPreference = (SwitchPreference) preference;
+        NtCustSwitchPreference ntCustSwitchPreference = (NtCustSwitchPreference) preference;
         if (Settings.System.getInt(this.mContext.getContentResolver(), "status_bar_show_battery_percent", 0) == 1) {
             z = true;
         }
-        switchPreference.setChecked(z);
+        ntCustSwitchPreference.setChecked(z);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         boolean booleanValue = ((Boolean) obj).booleanValue();
         Settings.System.putInt(this.mContext.getContentResolver(), "status_bar_show_battery_percent", booleanValue ? 1 : 0);

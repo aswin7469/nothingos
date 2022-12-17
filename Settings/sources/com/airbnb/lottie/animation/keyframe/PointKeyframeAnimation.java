@@ -4,39 +4,33 @@ import android.graphics.PointF;
 import com.airbnb.lottie.value.Keyframe;
 import com.airbnb.lottie.value.LottieValueCallback;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class PointKeyframeAnimation extends KeyframeAnimation<PointF> {
     private final PointF point = new PointF();
-
-    @Override // com.airbnb.lottie.animation.keyframe.BaseKeyframeAnimation
-    /* renamed from: getValue  reason: collision with other method in class */
-    public /* bridge */ /* synthetic */ Object mo179getValue(Keyframe keyframe, float f) {
-        return mo179getValue((Keyframe<PointF>) keyframe, f);
-    }
 
     public PointKeyframeAnimation(List<Keyframe<PointF>> list) {
         super(list);
     }
 
-    @Override // com.airbnb.lottie.animation.keyframe.BaseKeyframeAnimation
-    /* renamed from: getValue */
-    public PointF mo179getValue(Keyframe<PointF> keyframe, float f) {
-        PointF pointF;
-        PointF pointF2;
-        PointF pointF3 = keyframe.startValue;
-        if (pointF3 == null || (pointF = keyframe.endValue) == null) {
+    public PointF getValue(Keyframe<PointF> keyframe, float f) {
+        T t;
+        T t2 = keyframe.startValue;
+        if (t2 == null || (t = keyframe.endValue) == null) {
             throw new IllegalStateException("Missing values for keyframe.");
         }
-        PointF pointF4 = pointF3;
-        PointF pointF5 = pointF;
+        PointF pointF = (PointF) t2;
+        PointF pointF2 = (PointF) t;
         LottieValueCallback<A> lottieValueCallback = this.valueCallback;
-        if (lottieValueCallback != 0 && (pointF2 = (PointF) lottieValueCallback.getValueInternal(keyframe.startFrame, keyframe.endFrame.floatValue(), pointF4, pointF5, f, getLinearCurrentKeyframeProgress(), getProgress())) != null) {
-            return pointF2;
+        if (lottieValueCallback != null) {
+            PointF pointF3 = (PointF) lottieValueCallback.getValueInternal(keyframe.startFrame, keyframe.endFrame.floatValue(), pointF, pointF2, f, getLinearCurrentKeyframeProgress(), getProgress());
+            if (pointF3 != null) {
+                return pointF3;
+            }
         }
-        PointF pointF6 = this.point;
-        float f2 = pointF4.x;
-        float f3 = pointF4.y;
-        pointF6.set(f2 + ((pointF5.x - f2) * f), f3 + (f * (pointF5.y - f3)));
+        PointF pointF4 = this.point;
+        float f2 = pointF.x;
+        float f3 = pointF.y;
+        pointF4.set(f2 + ((pointF2.x - f2) * f), f3 + (f * (pointF2.y - f3)));
         return this.point;
     }
 }

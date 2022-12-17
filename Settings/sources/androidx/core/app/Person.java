@@ -2,7 +2,7 @@ package androidx.core.app;
 
 import android.app.Person;
 import androidx.core.graphics.drawable.IconCompat;
-/* loaded from: classes.dex */
+
 public class Person {
     IconCompat mIcon;
     boolean mIsBot;
@@ -12,7 +12,7 @@ public class Person {
     String mUri;
 
     public android.app.Person toAndroidPerson() {
-        return new Person.Builder().setName(getName()).setIcon(getIcon() != null ? getIcon().toIcon() : null).setUri(getUri()).setKey(getKey()).setBot(isBot()).setImportant(isImportant()).build();
+        return Api28Impl.toAndroidPerson(this);
     }
 
     public CharSequence getName() {
@@ -39,14 +39,9 @@ public class Person {
         return this.mIsImportant;
     }
 
-    public String resolveToLegacyUri() {
-        String str = this.mUri;
-        if (str != null) {
-            return str;
+    static class Api28Impl {
+        static android.app.Person toAndroidPerson(Person person) {
+            return new Person.Builder().setName(person.getName()).setIcon(person.getIcon() != null ? person.getIcon().toIcon() : null).setUri(person.getUri()).setKey(person.getKey()).setBot(person.isBot()).setImportant(person.isImportant()).build();
         }
-        if (this.mName == null) {
-            return "";
-        }
-        return "name:" + ((Object) this.mName);
     }
 }

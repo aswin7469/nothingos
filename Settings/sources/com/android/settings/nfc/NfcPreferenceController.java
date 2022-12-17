@@ -10,6 +10,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.Switch;
 import androidx.preference.PreferenceScreen;
+import com.android.settings.R$string;
 import com.android.settings.core.TogglePreferenceController;
 import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
@@ -17,41 +18,26 @@ import com.android.settingslib.core.lifecycle.events.OnPause;
 import com.android.settingslib.core.lifecycle.events.OnResume;
 import com.android.settingslib.widget.MainSwitchPreference;
 import com.android.settingslib.widget.OnMainSwitchChangeListener;
-import com.nt.settings.utils.NtSettingsVibrateUtils;
 import java.io.IOException;
-/* loaded from: classes.dex */
+
 public class NfcPreferenceController extends TogglePreferenceController implements LifecycleObserver, OnResume, OnPause, OnMainSwitchChangeListener {
     public static final String KEY_TOGGLE_NFC = "toggle_nfc";
     private final NfcAdapter mNfcAdapter;
     private NfcEnabler mNfcEnabler;
     private MainSwitchPreference mPreference;
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public boolean hasAsyncUpdate() {
         return true;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public boolean isPublicSlice() {
         return true;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -61,7 +47,6 @@ public class NfcPreferenceController extends TogglePreferenceController implemen
         this.mNfcAdapter = NfcAdapter.getDefaultAdapter(context);
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         if (!isAvailable()) {
@@ -74,20 +59,16 @@ public class NfcPreferenceController extends TogglePreferenceController implemen
         this.mNfcEnabler = new NfcEnabler(this.mContext, this.mPreference);
     }
 
-    @Override // com.android.settingslib.widget.OnMainSwitchChangeListener
-    public void onSwitchChanged(Switch r2, boolean z) {
+    public void onSwitchChanged(Switch switchR, boolean z) {
         if (z != this.mNfcAdapter.isEnabled()) {
             setChecked(z);
         }
-        NtSettingsVibrateUtils.getInstance(r2.getContext()).playSwitchVibrate();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean isChecked() {
         return this.mNfcAdapter.isEnabled();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean setChecked(boolean z) {
         if (z) {
             this.mNfcAdapter.enable();
@@ -97,17 +78,18 @@ public class NfcPreferenceController extends TogglePreferenceController implemen
         return true;
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return this.mNfcAdapter != null ? 0 : 3;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
+    public int getSliceHighlightMenuRes() {
+        return R$string.menu_key_connected_devices;
+    }
+
     public Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
         return NfcSliceWorker.class;
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnResume
     public void onResume() {
         NfcEnabler nfcEnabler = this.mNfcEnabler;
         if (nfcEnabler != null) {
@@ -115,7 +97,6 @@ public class NfcPreferenceController extends TogglePreferenceController implemen
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnPause
     public void onPause() {
         NfcEnabler nfcEnabler = this.mNfcEnabler;
         if (nfcEnabler != null) {
@@ -133,7 +114,6 @@ public class NfcPreferenceController extends TogglePreferenceController implemen
         return string != null && string.contains("nfc");
     }
 
-    /* loaded from: classes.dex */
     public static class NfcSliceWorker extends SliceBackgroundWorker<Void> {
         private static final IntentFilter NFC_FILTER = new IntentFilter("android.nfc.action.ADAPTER_STATE_CHANGED");
         private NfcUpdateReceiver mUpdateObserver = new NfcUpdateReceiver(this);
@@ -142,17 +122,16 @@ public class NfcPreferenceController extends TogglePreferenceController implemen
             super(context, uri);
         }
 
-        @Override // com.android.settings.slices.SliceBackgroundWorker
-        protected void onSlicePinned() {
+        /* access modifiers changed from: protected */
+        public void onSlicePinned() {
             getContext().registerReceiver(this.mUpdateObserver, NFC_FILTER);
         }
 
-        @Override // com.android.settings.slices.SliceBackgroundWorker
-        protected void onSliceUnpinned() {
+        /* access modifiers changed from: protected */
+        public void onSliceUnpinned() {
             getContext().unregisterReceiver(this.mUpdateObserver);
         }
 
-        @Override // java.io.Closeable, java.lang.AutoCloseable
         public void close() throws IOException {
             this.mUpdateObserver = null;
         }
@@ -161,7 +140,6 @@ public class NfcPreferenceController extends TogglePreferenceController implemen
             notifySliceChange();
         }
 
-        /* loaded from: classes.dex */
         public class NfcUpdateReceiver extends BroadcastReceiver {
             private final int NO_EXTRA = -1;
             private final NfcSliceWorker mSliceBackgroundWorker;
@@ -170,7 +148,6 @@ public class NfcPreferenceController extends TogglePreferenceController implemen
                 this.mSliceBackgroundWorker = nfcSliceWorker;
             }
 
-            @Override // android.content.BroadcastReceiver
             public void onReceive(Context context, Intent intent) {
                 int intExtra = intent.getIntExtra("android.nfc.extra.ADAPTER_STATE", -1);
                 if (intExtra == -1 || intExtra == 2 || intExtra == 4) {

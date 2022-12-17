@@ -8,12 +8,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 import java.io.File;
-/* loaded from: classes.dex */
+
 public class ManualDisplayActivity extends Activity {
-    @Override // android.app.Activity
-    protected void onCreate(Bundle bundle) {
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        if (!getResources().getBoolean(R.bool.config_show_manual)) {
+        if (!getResources().getBoolean(R$bool.config_show_manual)) {
             finish();
         }
         File file = new File("/system/etc/MANUAL.html.gz");
@@ -24,7 +24,7 @@ public class ManualDisplayActivity extends Activity {
         }
         Intent intent = new Intent("android.intent.action.VIEW");
         intent.setDataAndType(Uri.fromFile(file), "text/html");
-        intent.putExtra("android.intent.extra.TITLE", getString(R.string.settings_manual_activity_title));
+        intent.putExtra("android.intent.extra.TITLE", getString(R$string.settings_manual_activity_title));
         intent.addCategory("android.intent.category.DEFAULT");
         intent.setPackage("com.android.htmlviewer");
         try {
@@ -37,7 +37,7 @@ public class ManualDisplayActivity extends Activity {
     }
 
     private void showErrorAndFinish() {
-        Toast.makeText(this, R.string.settings_manual_activity_unavailable, 1).show();
+        Toast.makeText(this, R$string.settings_manual_activity_unavailable, 1).show();
         finish();
     }
 }

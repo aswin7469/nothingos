@@ -1,16 +1,17 @@
 package com.android.settings.network;
 
-import com.android.settings.network.ProxySubscriptionManager;
-import java.util.function.Consumer;
-/* loaded from: classes.dex */
-public final /* synthetic */ class ProxySubscriptionManager$$ExternalSyntheticLambda2 implements Consumer {
-    public static final /* synthetic */ ProxySubscriptionManager$$ExternalSyntheticLambda2 INSTANCE = new ProxySubscriptionManager$$ExternalSyntheticLambda2();
+import java.util.List;
+import java.util.function.BiFunction;
 
-    private /* synthetic */ ProxySubscriptionManager$$ExternalSyntheticLambda2() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class ProxySubscriptionManager$$ExternalSyntheticLambda2 implements BiFunction {
+    public final /* synthetic */ ProxySubscriptionManager f$0;
+
+    public /* synthetic */ ProxySubscriptionManager$$ExternalSyntheticLambda2(ProxySubscriptionManager proxySubscriptionManager) {
+        this.f$0 = proxySubscriptionManager;
     }
 
-    @Override // java.util.function.Consumer
-    public final void accept(Object obj) {
-        ((ProxySubscriptionManager.OnActiveSubscriptionChangedListener) obj).onChanged();
+    public final Object apply(Object obj, Object obj2) {
+        return this.f$0.lambda$processStatusChangeOnListeners$4((Integer) obj, (List) obj2);
     }
 }

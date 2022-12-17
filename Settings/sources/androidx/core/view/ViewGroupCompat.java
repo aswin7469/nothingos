@@ -1,15 +1,15 @@
 package androidx.core.view;
 
-import android.os.Build;
 import android.view.ViewGroup;
-import androidx.core.R$id;
-/* loaded from: classes.dex */
+
 public final class ViewGroupCompat {
-    public static boolean isTransitionGroup(ViewGroup group) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            return group.isTransitionGroup();
+    public static boolean isTransitionGroup(ViewGroup viewGroup) {
+        return Api21Impl.isTransitionGroup(viewGroup);
+    }
+
+    static class Api21Impl {
+        static boolean isTransitionGroup(ViewGroup viewGroup) {
+            return viewGroup.isTransitionGroup();
         }
-        Boolean bool = (Boolean) group.getTag(R$id.tag_transition_group);
-        return ((bool == null || !bool.booleanValue()) && group.getBackground() == null && ViewCompat.getTransitionName(group) == null) ? false : true;
     }
 }

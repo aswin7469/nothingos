@@ -3,7 +3,6 @@ package androidx.constraintlayout.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.content.res.XmlResourceParser;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseArray;
@@ -23,16 +22,16 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
-/* loaded from: classes.dex */
+
 public class ConstraintSet {
-    private static final int[] VISIBILITY_FLAGS = {0, 4, 8};
+    /* access modifiers changed from: private */
+    public static final int[] VISIBILITY_FLAGS = {0, 4, 8};
     private static SparseIntArray mapToConstant;
-    private boolean mValidate;
-    private HashMap<String, ConstraintAttribute> mSavedAttributes = new HashMap<>();
-    private boolean mForceId = true;
     private HashMap<Integer, Constraint> mConstraints = new HashMap<>();
+    private boolean mForceId = true;
+    private HashMap<String, ConstraintAttribute> mSavedAttributes = new HashMap<>();
+    private boolean mValidate;
 
     static {
         SparseIntArray sparseIntArray = new SparseIntArray();
@@ -130,9 +129,9 @@ public class ConstraintSet {
     }
 
     public void readFallback(ConstraintSet constraintSet) {
-        for (Integer num : constraintSet.mConstraints.keySet()) {
-            int intValue = num.intValue();
-            Constraint constraint = constraintSet.mConstraints.get(num);
+        for (Integer next : constraintSet.mConstraints.keySet()) {
+            int intValue = next.intValue();
+            Constraint constraint = constraintSet.mConstraints.get(next);
             if (!this.mConstraints.containsKey(Integer.valueOf(intValue))) {
                 this.mConstraints.put(Integer.valueOf(intValue), new Constraint());
             }
@@ -153,9 +152,9 @@ public class ConstraintSet {
             if (!motion.mApply) {
                 motion.copyFrom(constraint.motion);
             }
-            for (String str : constraint.mCustomConstraints.keySet()) {
-                if (!constraint2.mCustomConstraints.containsKey(str)) {
-                    constraint2.mCustomConstraints.put(str, constraint.mCustomConstraints.get(str));
+            for (String next2 : constraint.mCustomConstraints.keySet()) {
+                if (!constraint2.mCustomConstraints.containsKey(next2)) {
+                    constraint2.mCustomConstraints.put(next2, constraint.mCustomConstraints.get(next2));
                 }
             }
         }
@@ -163,38 +162,35 @@ public class ConstraintSet {
 
     public void readFallback(ConstraintLayout constraintLayout) {
         int childCount = constraintLayout.getChildCount();
-        for (int i = 0; i < childCount; i++) {
+        int i = 0;
+        while (i < childCount) {
             View childAt = constraintLayout.getChildAt(i);
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) childAt.getLayoutParams();
             int id = childAt.getId();
-            if (this.mForceId && id == -1) {
-                throw new RuntimeException("All children of ConstraintLayout must have ids to use ConstraintSet");
-            }
-            if (!this.mConstraints.containsKey(Integer.valueOf(id))) {
-                this.mConstraints.put(Integer.valueOf(id), new Constraint());
-            }
-            Constraint constraint = this.mConstraints.get(Integer.valueOf(id));
-            if (!constraint.layout.mApply) {
-                constraint.fillFrom(id, layoutParams);
-                if (childAt instanceof ConstraintHelper) {
-                    constraint.layout.mReferenceIds = ((ConstraintHelper) childAt).getReferencedIds();
-                    if (childAt instanceof Barrier) {
-                        Barrier barrier = (Barrier) childAt;
-                        constraint.layout.mBarrierAllowsGoneWidgets = barrier.allowsGoneWidget();
-                        constraint.layout.mBarrierDirection = barrier.getType();
-                        constraint.layout.mBarrierMargin = barrier.getMargin();
-                    }
+            if (!this.mForceId || id != -1) {
+                if (!this.mConstraints.containsKey(Integer.valueOf(id))) {
+                    this.mConstraints.put(Integer.valueOf(id), new Constraint());
                 }
-                constraint.layout.mApply = true;
-            }
-            PropertySet propertySet = constraint.propertySet;
-            if (!propertySet.mApply) {
-                propertySet.visibility = childAt.getVisibility();
-                constraint.propertySet.alpha = childAt.getAlpha();
-                constraint.propertySet.mApply = true;
-            }
-            int i2 = Build.VERSION.SDK_INT;
-            if (i2 >= 17) {
+                Constraint constraint = this.mConstraints.get(Integer.valueOf(id));
+                if (!constraint.layout.mApply) {
+                    constraint.fillFrom(id, layoutParams);
+                    if (childAt instanceof ConstraintHelper) {
+                        constraint.layout.mReferenceIds = ((ConstraintHelper) childAt).getReferencedIds();
+                        if (childAt instanceof Barrier) {
+                            Barrier barrier = (Barrier) childAt;
+                            constraint.layout.mBarrierAllowsGoneWidgets = barrier.allowsGoneWidget();
+                            constraint.layout.mBarrierDirection = barrier.getType();
+                            constraint.layout.mBarrierMargin = barrier.getMargin();
+                        }
+                    }
+                    constraint.layout.mApply = true;
+                }
+                PropertySet propertySet = constraint.propertySet;
+                if (!propertySet.mApply) {
+                    propertySet.visibility = childAt.getVisibility();
+                    constraint.propertySet.alpha = childAt.getAlpha();
+                    constraint.propertySet.mApply = true;
+                }
                 Transform transform = constraint.transform;
                 if (!transform.mApply) {
                     transform.mApply = true;
@@ -205,90 +201,90 @@ public class ConstraintSet {
                     constraint.transform.scaleY = childAt.getScaleY();
                     float pivotX = childAt.getPivotX();
                     float pivotY = childAt.getPivotY();
-                    if (pivotX != 0.0d || pivotY != 0.0d) {
+                    if (!(((double) pivotX) == 0.0d && ((double) pivotY) == 0.0d)) {
                         Transform transform2 = constraint.transform;
                         transform2.transformPivotX = pivotX;
                         transform2.transformPivotY = pivotY;
                     }
                     constraint.transform.translationX = childAt.getTranslationX();
                     constraint.transform.translationY = childAt.getTranslationY();
-                    if (i2 >= 21) {
-                        constraint.transform.translationZ = childAt.getTranslationZ();
-                        Transform transform3 = constraint.transform;
-                        if (transform3.applyElevation) {
-                            transform3.elevation = childAt.getElevation();
-                        }
+                    constraint.transform.translationZ = childAt.getTranslationZ();
+                    Transform transform3 = constraint.transform;
+                    if (transform3.applyElevation) {
+                        transform3.elevation = childAt.getElevation();
                     }
                 }
+                i++;
+            } else {
+                throw new RuntimeException("All children of ConstraintLayout must have ids to use ConstraintSet");
             }
         }
     }
 
-    /* loaded from: classes.dex */
     public static class Layout {
         private static SparseIntArray mapToConstant;
-        public String mConstraintTag;
-        public int mHeight;
-        public String mReferenceIdString;
-        public int[] mReferenceIds;
-        public int mWidth;
-        public boolean mIsGuideline = false;
-        public boolean mApply = false;
+        public int baselineToBaseline = -1;
+        public int bottomMargin = -1;
+        public int bottomToBottom = -1;
+        public int bottomToTop = -1;
+        public float circleAngle = 0.0f;
+        public int circleConstraint = -1;
+        public int circleRadius = 0;
+        public boolean constrainedHeight = false;
+        public boolean constrainedWidth = false;
+        public String dimensionRatio = null;
+        public int editorAbsoluteX = -1;
+        public int editorAbsoluteY = -1;
+        public int endMargin = -1;
+        public int endToEnd = -1;
+        public int endToStart = -1;
+        public int goneBottomMargin = -1;
+        public int goneEndMargin = -1;
+        public int goneLeftMargin = -1;
+        public int goneRightMargin = -1;
+        public int goneStartMargin = -1;
+        public int goneTopMargin = -1;
         public int guideBegin = -1;
         public int guideEnd = -1;
         public float guidePercent = -1.0f;
+        public int heightDefault = 0;
+        public int heightMax = -1;
+        public int heightMin = -1;
+        public float heightPercent = 1.0f;
+        public float horizontalBias = 0.5f;
+        public int horizontalChainStyle = 0;
+        public float horizontalWeight = -1.0f;
+        public int leftMargin = -1;
         public int leftToLeft = -1;
         public int leftToRight = -1;
-        public int rightToLeft = -1;
-        public int rightToRight = -1;
-        public int topToTop = -1;
-        public int topToBottom = -1;
-        public int bottomToTop = -1;
-        public int bottomToBottom = -1;
-        public int baselineToBaseline = -1;
-        public int startToEnd = -1;
-        public int startToStart = -1;
-        public int endToStart = -1;
-        public int endToEnd = -1;
-        public float horizontalBias = 0.5f;
-        public float verticalBias = 0.5f;
-        public String dimensionRatio = null;
-        public int circleConstraint = -1;
-        public int circleRadius = 0;
-        public float circleAngle = 0.0f;
-        public int editorAbsoluteX = -1;
-        public int editorAbsoluteY = -1;
-        public int orientation = -1;
-        public int leftMargin = -1;
-        public int rightMargin = -1;
-        public int topMargin = -1;
-        public int bottomMargin = -1;
-        public int endMargin = -1;
-        public int startMargin = -1;
-        public int goneLeftMargin = -1;
-        public int goneTopMargin = -1;
-        public int goneRightMargin = -1;
-        public int goneBottomMargin = -1;
-        public int goneEndMargin = -1;
-        public int goneStartMargin = -1;
-        public float verticalWeight = -1.0f;
-        public float horizontalWeight = -1.0f;
-        public int horizontalChainStyle = 0;
-        public int verticalChainStyle = 0;
-        public int widthDefault = 0;
-        public int heightDefault = 0;
-        public int widthMax = -1;
-        public int heightMax = -1;
-        public int widthMin = -1;
-        public int heightMin = -1;
-        public float widthPercent = 1.0f;
-        public float heightPercent = 1.0f;
+        public boolean mApply = false;
+        public boolean mBarrierAllowsGoneWidgets = true;
         public int mBarrierDirection = -1;
         public int mBarrierMargin = 0;
+        public String mConstraintTag;
+        public int mHeight;
         public int mHelperType = -1;
-        public boolean constrainedWidth = false;
-        public boolean constrainedHeight = false;
-        public boolean mBarrierAllowsGoneWidgets = true;
+        public boolean mIsGuideline = false;
+        public String mReferenceIdString;
+        public int[] mReferenceIds;
+        public int mWidth;
+        public int orientation = -1;
+        public int rightMargin = -1;
+        public int rightToLeft = -1;
+        public int rightToRight = -1;
+        public int startMargin = -1;
+        public int startToEnd = -1;
+        public int startToStart = -1;
+        public int topMargin = -1;
+        public int topToBottom = -1;
+        public int topToTop = -1;
+        public float verticalBias = 0.5f;
+        public int verticalChainStyle = 0;
+        public float verticalWeight = -1.0f;
+        public int widthDefault = 0;
+        public int widthMax = -1;
+        public int widthMin = -1;
+        public float widthPercent = 1.0f;
 
         public void copyFrom(Layout layout) {
             this.mIsGuideline = layout.mIsGuideline;
@@ -420,7 +416,8 @@ public class ConstraintSet {
             mapToConstant.append(R$styleable.Layout_barrierAllowsGoneWidgets, 75);
         }
 
-        void fillFromAttributeList(Context context, AttributeSet attributeSet) {
+        /* access modifiers changed from: package-private */
+        public void fillFromAttributeList(Context context, AttributeSet attributeSet) {
             TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.Layout);
             this.mApply = true;
             int indexCount = obtainStyledAttributes.getIndexCount();
@@ -433,190 +430,187 @@ public class ConstraintSet {
                     switch (i2) {
                         case 1:
                             this.baselineToBaseline = ConstraintSet.lookupID(obtainStyledAttributes, index, this.baselineToBaseline);
-                            continue;
+                            break;
                         case 2:
                             this.bottomMargin = obtainStyledAttributes.getDimensionPixelSize(index, this.bottomMargin);
-                            continue;
+                            break;
                         case 3:
                             this.bottomToBottom = ConstraintSet.lookupID(obtainStyledAttributes, index, this.bottomToBottom);
-                            continue;
+                            break;
                         case 4:
                             this.bottomToTop = ConstraintSet.lookupID(obtainStyledAttributes, index, this.bottomToTop);
-                            continue;
+                            break;
                         case 5:
                             this.dimensionRatio = obtainStyledAttributes.getString(index);
-                            continue;
+                            break;
                         case 6:
                             this.editorAbsoluteX = obtainStyledAttributes.getDimensionPixelOffset(index, this.editorAbsoluteX);
-                            continue;
+                            break;
                         case 7:
                             this.editorAbsoluteY = obtainStyledAttributes.getDimensionPixelOffset(index, this.editorAbsoluteY);
-                            continue;
+                            break;
                         case 8:
                             this.endMargin = obtainStyledAttributes.getDimensionPixelSize(index, this.endMargin);
-                            continue;
+                            break;
                         case 9:
                             this.endToEnd = ConstraintSet.lookupID(obtainStyledAttributes, index, this.endToEnd);
-                            continue;
+                            break;
                         case 10:
                             this.endToStart = ConstraintSet.lookupID(obtainStyledAttributes, index, this.endToStart);
-                            continue;
+                            break;
                         case 11:
                             this.goneBottomMargin = obtainStyledAttributes.getDimensionPixelSize(index, this.goneBottomMargin);
-                            continue;
+                            break;
                         case 12:
                             this.goneEndMargin = obtainStyledAttributes.getDimensionPixelSize(index, this.goneEndMargin);
-                            continue;
+                            break;
                         case 13:
                             this.goneLeftMargin = obtainStyledAttributes.getDimensionPixelSize(index, this.goneLeftMargin);
-                            continue;
+                            break;
                         case 14:
                             this.goneRightMargin = obtainStyledAttributes.getDimensionPixelSize(index, this.goneRightMargin);
-                            continue;
+                            break;
                         case 15:
                             this.goneStartMargin = obtainStyledAttributes.getDimensionPixelSize(index, this.goneStartMargin);
-                            continue;
+                            break;
                         case 16:
                             this.goneTopMargin = obtainStyledAttributes.getDimensionPixelSize(index, this.goneTopMargin);
-                            continue;
+                            break;
                         case 17:
                             this.guideBegin = obtainStyledAttributes.getDimensionPixelOffset(index, this.guideBegin);
-                            continue;
+                            break;
                         case 18:
                             this.guideEnd = obtainStyledAttributes.getDimensionPixelOffset(index, this.guideEnd);
-                            continue;
+                            break;
                         case 19:
                             this.guidePercent = obtainStyledAttributes.getFloat(index, this.guidePercent);
-                            continue;
+                            break;
                         case 20:
                             this.horizontalBias = obtainStyledAttributes.getFloat(index, this.horizontalBias);
-                            continue;
+                            break;
                         case 21:
                             this.mHeight = obtainStyledAttributes.getLayoutDimension(index, this.mHeight);
-                            continue;
+                            break;
                         case 22:
                             this.mWidth = obtainStyledAttributes.getLayoutDimension(index, this.mWidth);
-                            continue;
+                            break;
                         case 23:
                             this.leftMargin = obtainStyledAttributes.getDimensionPixelSize(index, this.leftMargin);
-                            continue;
+                            break;
                         case 24:
                             this.leftToLeft = ConstraintSet.lookupID(obtainStyledAttributes, index, this.leftToLeft);
-                            continue;
+                            break;
                         case 25:
                             this.leftToRight = ConstraintSet.lookupID(obtainStyledAttributes, index, this.leftToRight);
-                            continue;
+                            break;
                         case 26:
                             this.orientation = obtainStyledAttributes.getInt(index, this.orientation);
-                            continue;
+                            break;
                         case 27:
                             this.rightMargin = obtainStyledAttributes.getDimensionPixelSize(index, this.rightMargin);
-                            continue;
+                            break;
                         case 28:
                             this.rightToLeft = ConstraintSet.lookupID(obtainStyledAttributes, index, this.rightToLeft);
-                            continue;
+                            break;
                         case 29:
                             this.rightToRight = ConstraintSet.lookupID(obtainStyledAttributes, index, this.rightToRight);
-                            continue;
+                            break;
                         case 30:
                             this.startMargin = obtainStyledAttributes.getDimensionPixelSize(index, this.startMargin);
-                            continue;
+                            break;
                         case 31:
                             this.startToEnd = ConstraintSet.lookupID(obtainStyledAttributes, index, this.startToEnd);
-                            continue;
+                            break;
                         case 32:
                             this.startToStart = ConstraintSet.lookupID(obtainStyledAttributes, index, this.startToStart);
-                            continue;
+                            break;
                         case 33:
                             this.topMargin = obtainStyledAttributes.getDimensionPixelSize(index, this.topMargin);
-                            continue;
+                            break;
                         case 34:
                             this.topToBottom = ConstraintSet.lookupID(obtainStyledAttributes, index, this.topToBottom);
-                            continue;
+                            break;
                         case 35:
                             this.topToTop = ConstraintSet.lookupID(obtainStyledAttributes, index, this.topToTop);
-                            continue;
+                            break;
                         case 36:
                             this.verticalBias = obtainStyledAttributes.getFloat(index, this.verticalBias);
-                            continue;
+                            break;
                         case 37:
                             this.horizontalWeight = obtainStyledAttributes.getFloat(index, this.horizontalWeight);
-                            continue;
+                            break;
                         case 38:
                             this.verticalWeight = obtainStyledAttributes.getFloat(index, this.verticalWeight);
-                            continue;
+                            break;
                         case 39:
                             this.horizontalChainStyle = obtainStyledAttributes.getInt(index, this.horizontalChainStyle);
-                            continue;
+                            break;
                         case 40:
                             this.verticalChainStyle = obtainStyledAttributes.getInt(index, this.verticalChainStyle);
-                            continue;
+                            break;
                         default:
                             switch (i2) {
                                 case 54:
                                     this.widthDefault = obtainStyledAttributes.getInt(index, this.widthDefault);
-                                    continue;
+                                    break;
                                 case 55:
                                     this.heightDefault = obtainStyledAttributes.getInt(index, this.heightDefault);
-                                    continue;
+                                    break;
                                 case 56:
                                     this.widthMax = obtainStyledAttributes.getDimensionPixelSize(index, this.widthMax);
-                                    continue;
+                                    break;
                                 case 57:
                                     this.heightMax = obtainStyledAttributes.getDimensionPixelSize(index, this.heightMax);
-                                    continue;
+                                    break;
                                 case 58:
                                     this.widthMin = obtainStyledAttributes.getDimensionPixelSize(index, this.widthMin);
-                                    continue;
+                                    break;
                                 case 59:
                                     this.heightMin = obtainStyledAttributes.getDimensionPixelSize(index, this.heightMin);
-                                    continue;
+                                    break;
                                 default:
                                     switch (i2) {
                                         case 61:
                                             this.circleConstraint = ConstraintSet.lookupID(obtainStyledAttributes, index, this.circleConstraint);
-                                            continue;
+                                            break;
                                         case 62:
                                             this.circleRadius = obtainStyledAttributes.getDimensionPixelSize(index, this.circleRadius);
-                                            continue;
+                                            break;
                                         case 63:
                                             this.circleAngle = obtainStyledAttributes.getFloat(index, this.circleAngle);
-                                            continue;
+                                            break;
                                         default:
                                             switch (i2) {
                                                 case 69:
                                                     this.widthPercent = obtainStyledAttributes.getFloat(index, 1.0f);
-                                                    continue;
+                                                    break;
                                                 case 70:
                                                     this.heightPercent = obtainStyledAttributes.getFloat(index, 1.0f);
-                                                    continue;
+                                                    break;
                                                 case 71:
                                                     Log.e("ConstraintSet", "CURRENTLY UNSUPPORTED");
-                                                    continue;
+                                                    break;
                                                 case 72:
                                                     this.mBarrierDirection = obtainStyledAttributes.getInt(index, this.mBarrierDirection);
-                                                    continue;
+                                                    break;
                                                 case 73:
                                                     this.mBarrierMargin = obtainStyledAttributes.getDimensionPixelSize(index, this.mBarrierMargin);
-                                                    continue;
+                                                    break;
                                                 case 74:
                                                     this.mReferenceIdString = obtainStyledAttributes.getString(index);
-                                                    continue;
+                                                    break;
                                                 case 75:
                                                     this.mBarrierAllowsGoneWidgets = obtainStyledAttributes.getBoolean(index, this.mBarrierAllowsGoneWidgets);
-                                                    continue;
+                                                    break;
                                                 case 76:
                                                     Log.w("ConstraintSet", "unused attribute 0x" + Integer.toHexString(index) + "   " + mapToConstant.get(index));
-                                                    continue;
+                                                    break;
                                                 case 77:
                                                     this.mConstraintTag = obtainStyledAttributes.getString(index);
-                                                    continue;
+                                                    break;
                                                 default:
                                                     Log.w("ConstraintSet", "Unknown attribute 0x" + Integer.toHexString(index) + "   " + mapToConstant.get(index));
-                                                    continue;
-                                                    continue;
-                                                    continue;
-                                                    continue;
+                                                    break;
                                             }
                                     }
                             }
@@ -629,9 +623,10 @@ public class ConstraintSet {
         }
     }
 
-    /* loaded from: classes.dex */
     public static class Transform {
         private static SparseIntArray mapToConstant;
+        public boolean applyElevation = false;
+        public float elevation = 0.0f;
         public boolean mApply = false;
         public float rotation = 0.0f;
         public float rotationX = 0.0f;
@@ -643,8 +638,6 @@ public class ConstraintSet {
         public float translationX = 0.0f;
         public float translationY = 0.0f;
         public float translationZ = 0.0f;
-        public boolean applyElevation = false;
-        public float elevation = 0.0f;
 
         public void copyFrom(Transform transform) {
             this.mApply = transform.mApply;
@@ -678,7 +671,8 @@ public class ConstraintSet {
             mapToConstant.append(R$styleable.Transform_android_elevation, 11);
         }
 
-        void fillFromAttributeList(Context context, AttributeSet attributeSet) {
+        /* access modifiers changed from: package-private */
+        public void fillFromAttributeList(Context context, AttributeSet attributeSet) {
             TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.Transform);
             this.mApply = true;
             int indexCount = obtainStyledAttributes.getIndexCount();
@@ -713,33 +707,24 @@ public class ConstraintSet {
                         this.translationY = obtainStyledAttributes.getDimension(index, this.translationY);
                         break;
                     case 10:
-                        if (Build.VERSION.SDK_INT >= 21) {
-                            this.translationZ = obtainStyledAttributes.getDimension(index, this.translationZ);
-                            break;
-                        } else {
-                            break;
-                        }
+                        this.translationZ = obtainStyledAttributes.getDimension(index, this.translationZ);
+                        break;
                     case 11:
-                        if (Build.VERSION.SDK_INT >= 21) {
-                            this.applyElevation = true;
-                            this.elevation = obtainStyledAttributes.getDimension(index, this.elevation);
-                            break;
-                        } else {
-                            break;
-                        }
+                        this.applyElevation = true;
+                        this.elevation = obtainStyledAttributes.getDimension(index, this.elevation);
+                        break;
                 }
             }
             obtainStyledAttributes.recycle();
         }
     }
 
-    /* loaded from: classes.dex */
     public static class PropertySet {
-        public boolean mApply = false;
-        public int visibility = 0;
-        public int mVisibilityMode = 0;
         public float alpha = 1.0f;
+        public boolean mApply = false;
         public float mProgress = Float.NaN;
+        public int mVisibilityMode = 0;
+        public int visibility = 0;
 
         public void copyFrom(PropertySet propertySet) {
             this.mApply = propertySet.mApply;
@@ -749,7 +734,8 @@ public class ConstraintSet {
             this.mVisibilityMode = propertySet.mVisibilityMode;
         }
 
-        void fillFromAttributeList(Context context, AttributeSet attributeSet) {
+        /* access modifiers changed from: package-private */
+        public void fillFromAttributeList(Context context, AttributeSet attributeSet) {
             TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.PropertySet);
             this.mApply = true;
             int indexCount = obtainStyledAttributes.getIndexCount();
@@ -770,16 +756,15 @@ public class ConstraintSet {
         }
     }
 
-    /* loaded from: classes.dex */
     public static class Motion {
         private static SparseIntArray mapToConstant;
-        public boolean mApply = false;
         public int mAnimateRelativeTo = -1;
-        public String mTransitionEasing = null;
-        public int mPathMotionArc = -1;
+        public boolean mApply = false;
         public int mDrawPath = 0;
         public float mMotionStagger = Float.NaN;
+        public int mPathMotionArc = -1;
         public float mPathRotate = Float.NaN;
+        public String mTransitionEasing = null;
 
         public void copyFrom(Motion motion) {
             this.mApply = motion.mApply;
@@ -802,7 +787,8 @@ public class ConstraintSet {
             mapToConstant.append(R$styleable.Motion_motionStagger, 6);
         }
 
-        void fillFromAttributeList(Context context, AttributeSet attributeSet) {
+        /* access modifiers changed from: package-private */
+        public void fillFromAttributeList(Context context, AttributeSet attributeSet) {
             TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.Motion);
             this.mApply = true;
             int indexCount = obtainStyledAttributes.getIndexCount();
@@ -816,11 +802,11 @@ public class ConstraintSet {
                         this.mPathMotionArc = obtainStyledAttributes.getInt(index, this.mPathMotionArc);
                         break;
                     case 3:
-                        if (obtainStyledAttributes.peekValue(index).type == 3) {
-                            this.mTransitionEasing = obtainStyledAttributes.getString(index);
+                        if (obtainStyledAttributes.peekValue(index).type != 3) {
+                            this.mTransitionEasing = Easing.NAMED_EASING[obtainStyledAttributes.getInteger(index, 0)];
                             break;
                         } else {
-                            this.mTransitionEasing = Easing.NAMED_EASING[obtainStyledAttributes.getInteger(index, 0)];
+                            this.mTransitionEasing = obtainStyledAttributes.getString(index);
                             break;
                         }
                     case 4:
@@ -838,17 +824,15 @@ public class ConstraintSet {
         }
     }
 
-    /* loaded from: classes.dex */
     public static class Constraint {
-        int mViewId;
-        public final PropertySet propertySet = new PropertySet();
-        public final Motion motion = new Motion();
         public final Layout layout = new Layout();
-        public final Transform transform = new Transform();
         public HashMap<String, ConstraintAttribute> mCustomConstraints = new HashMap<>();
+        int mViewId;
+        public final Motion motion = new Motion();
+        public final PropertySet propertySet = new PropertySet();
+        public final Transform transform = new Transform();
 
-        /* renamed from: clone */
-        public Constraint m70clone() {
+        public Constraint clone() {
             Constraint constraint = new Constraint();
             constraint.layout.copyFrom(this.layout);
             constraint.motion.copyFrom(this.motion);
@@ -858,159 +842,155 @@ public class ConstraintSet {
             return constraint;
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public void fillFromConstraints(ConstraintHelper constraintHelper, int i, Constraints.LayoutParams layoutParams) {
             fillFromConstraints(i, layoutParams);
             if (constraintHelper instanceof Barrier) {
-                Layout layout = this.layout;
-                layout.mHelperType = 1;
+                Layout layout2 = this.layout;
+                layout2.mHelperType = 1;
                 Barrier barrier = (Barrier) constraintHelper;
-                layout.mBarrierDirection = barrier.getType();
+                layout2.mBarrierDirection = barrier.getType();
                 this.layout.mReferenceIds = barrier.getReferencedIds();
                 this.layout.mBarrierMargin = barrier.getMargin();
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public void fillFromConstraints(int i, Constraints.LayoutParams layoutParams) {
             fillFrom(i, layoutParams);
             this.propertySet.alpha = layoutParams.alpha;
-            Transform transform = this.transform;
-            transform.rotation = layoutParams.rotation;
-            transform.rotationX = layoutParams.rotationX;
-            transform.rotationY = layoutParams.rotationY;
-            transform.scaleX = layoutParams.scaleX;
-            transform.scaleY = layoutParams.scaleY;
-            transform.transformPivotX = layoutParams.transformPivotX;
-            transform.transformPivotY = layoutParams.transformPivotY;
-            transform.translationX = layoutParams.translationX;
-            transform.translationY = layoutParams.translationY;
-            transform.translationZ = layoutParams.translationZ;
-            transform.elevation = layoutParams.elevation;
-            transform.applyElevation = layoutParams.applyElevation;
+            Transform transform2 = this.transform;
+            transform2.rotation = layoutParams.rotation;
+            transform2.rotationX = layoutParams.rotationX;
+            transform2.rotationY = layoutParams.rotationY;
+            transform2.scaleX = layoutParams.scaleX;
+            transform2.scaleY = layoutParams.scaleY;
+            transform2.transformPivotX = layoutParams.transformPivotX;
+            transform2.transformPivotY = layoutParams.transformPivotY;
+            transform2.translationX = layoutParams.translationX;
+            transform2.translationY = layoutParams.translationY;
+            transform2.translationZ = layoutParams.translationZ;
+            transform2.elevation = layoutParams.elevation;
+            transform2.applyElevation = layoutParams.applyElevation;
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public void fillFrom(int i, ConstraintLayout.LayoutParams layoutParams) {
             this.mViewId = i;
-            Layout layout = this.layout;
-            layout.leftToLeft = layoutParams.leftToLeft;
-            layout.leftToRight = layoutParams.leftToRight;
-            layout.rightToLeft = layoutParams.rightToLeft;
-            layout.rightToRight = layoutParams.rightToRight;
-            layout.topToTop = layoutParams.topToTop;
-            layout.topToBottom = layoutParams.topToBottom;
-            layout.bottomToTop = layoutParams.bottomToTop;
-            layout.bottomToBottom = layoutParams.bottomToBottom;
-            layout.baselineToBaseline = layoutParams.baselineToBaseline;
-            layout.startToEnd = layoutParams.startToEnd;
-            layout.startToStart = layoutParams.startToStart;
-            layout.endToStart = layoutParams.endToStart;
-            layout.endToEnd = layoutParams.endToEnd;
-            layout.horizontalBias = layoutParams.horizontalBias;
-            layout.verticalBias = layoutParams.verticalBias;
-            layout.dimensionRatio = layoutParams.dimensionRatio;
-            layout.circleConstraint = layoutParams.circleConstraint;
-            layout.circleRadius = layoutParams.circleRadius;
-            layout.circleAngle = layoutParams.circleAngle;
-            layout.editorAbsoluteX = layoutParams.editorAbsoluteX;
-            layout.editorAbsoluteY = layoutParams.editorAbsoluteY;
-            layout.orientation = layoutParams.orientation;
-            layout.guidePercent = layoutParams.guidePercent;
-            layout.guideBegin = layoutParams.guideBegin;
-            layout.guideEnd = layoutParams.guideEnd;
-            layout.mWidth = ((ViewGroup.MarginLayoutParams) layoutParams).width;
-            layout.mHeight = ((ViewGroup.MarginLayoutParams) layoutParams).height;
-            layout.leftMargin = ((ViewGroup.MarginLayoutParams) layoutParams).leftMargin;
-            layout.rightMargin = ((ViewGroup.MarginLayoutParams) layoutParams).rightMargin;
-            layout.topMargin = ((ViewGroup.MarginLayoutParams) layoutParams).topMargin;
-            layout.bottomMargin = ((ViewGroup.MarginLayoutParams) layoutParams).bottomMargin;
-            layout.verticalWeight = layoutParams.verticalWeight;
-            layout.horizontalWeight = layoutParams.horizontalWeight;
-            layout.verticalChainStyle = layoutParams.verticalChainStyle;
-            layout.horizontalChainStyle = layoutParams.horizontalChainStyle;
-            layout.constrainedWidth = layoutParams.constrainedWidth;
-            layout.constrainedHeight = layoutParams.constrainedHeight;
-            layout.widthDefault = layoutParams.matchConstraintDefaultWidth;
-            layout.heightDefault = layoutParams.matchConstraintDefaultHeight;
-            layout.widthMax = layoutParams.matchConstraintMaxWidth;
-            layout.heightMax = layoutParams.matchConstraintMaxHeight;
-            layout.widthMin = layoutParams.matchConstraintMinWidth;
-            layout.heightMin = layoutParams.matchConstraintMinHeight;
-            layout.widthPercent = layoutParams.matchConstraintPercentWidth;
-            layout.heightPercent = layoutParams.matchConstraintPercentHeight;
-            layout.mConstraintTag = layoutParams.constraintTag;
-            layout.goneTopMargin = layoutParams.goneTopMargin;
-            layout.goneBottomMargin = layoutParams.goneBottomMargin;
-            layout.goneLeftMargin = layoutParams.goneLeftMargin;
-            layout.goneRightMargin = layoutParams.goneRightMargin;
-            layout.goneStartMargin = layoutParams.goneStartMargin;
-            layout.goneEndMargin = layoutParams.goneEndMargin;
-            if (Build.VERSION.SDK_INT >= 17) {
-                layout.endMargin = layoutParams.getMarginEnd();
-                this.layout.startMargin = layoutParams.getMarginStart();
-            }
+            Layout layout2 = this.layout;
+            layout2.leftToLeft = layoutParams.leftToLeft;
+            layout2.leftToRight = layoutParams.leftToRight;
+            layout2.rightToLeft = layoutParams.rightToLeft;
+            layout2.rightToRight = layoutParams.rightToRight;
+            layout2.topToTop = layoutParams.topToTop;
+            layout2.topToBottom = layoutParams.topToBottom;
+            layout2.bottomToTop = layoutParams.bottomToTop;
+            layout2.bottomToBottom = layoutParams.bottomToBottom;
+            layout2.baselineToBaseline = layoutParams.baselineToBaseline;
+            layout2.startToEnd = layoutParams.startToEnd;
+            layout2.startToStart = layoutParams.startToStart;
+            layout2.endToStart = layoutParams.endToStart;
+            layout2.endToEnd = layoutParams.endToEnd;
+            layout2.horizontalBias = layoutParams.horizontalBias;
+            layout2.verticalBias = layoutParams.verticalBias;
+            layout2.dimensionRatio = layoutParams.dimensionRatio;
+            layout2.circleConstraint = layoutParams.circleConstraint;
+            layout2.circleRadius = layoutParams.circleRadius;
+            layout2.circleAngle = layoutParams.circleAngle;
+            layout2.editorAbsoluteX = layoutParams.editorAbsoluteX;
+            layout2.editorAbsoluteY = layoutParams.editorAbsoluteY;
+            layout2.orientation = layoutParams.orientation;
+            layout2.guidePercent = layoutParams.guidePercent;
+            layout2.guideBegin = layoutParams.guideBegin;
+            layout2.guideEnd = layoutParams.guideEnd;
+            layout2.mWidth = layoutParams.width;
+            layout2.mHeight = layoutParams.height;
+            layout2.leftMargin = layoutParams.leftMargin;
+            layout2.rightMargin = layoutParams.rightMargin;
+            layout2.topMargin = layoutParams.topMargin;
+            layout2.bottomMargin = layoutParams.bottomMargin;
+            layout2.verticalWeight = layoutParams.verticalWeight;
+            layout2.horizontalWeight = layoutParams.horizontalWeight;
+            layout2.verticalChainStyle = layoutParams.verticalChainStyle;
+            layout2.horizontalChainStyle = layoutParams.horizontalChainStyle;
+            layout2.constrainedWidth = layoutParams.constrainedWidth;
+            layout2.constrainedHeight = layoutParams.constrainedHeight;
+            layout2.widthDefault = layoutParams.matchConstraintDefaultWidth;
+            layout2.heightDefault = layoutParams.matchConstraintDefaultHeight;
+            layout2.widthMax = layoutParams.matchConstraintMaxWidth;
+            layout2.heightMax = layoutParams.matchConstraintMaxHeight;
+            layout2.widthMin = layoutParams.matchConstraintMinWidth;
+            layout2.heightMin = layoutParams.matchConstraintMinHeight;
+            layout2.widthPercent = layoutParams.matchConstraintPercentWidth;
+            layout2.heightPercent = layoutParams.matchConstraintPercentHeight;
+            layout2.mConstraintTag = layoutParams.constraintTag;
+            layout2.goneTopMargin = layoutParams.goneTopMargin;
+            layout2.goneBottomMargin = layoutParams.goneBottomMargin;
+            layout2.goneLeftMargin = layoutParams.goneLeftMargin;
+            layout2.goneRightMargin = layoutParams.goneRightMargin;
+            layout2.goneStartMargin = layoutParams.goneStartMargin;
+            layout2.goneEndMargin = layoutParams.goneEndMargin;
+            layout2.endMargin = layoutParams.getMarginEnd();
+            this.layout.startMargin = layoutParams.getMarginStart();
         }
 
         public void applyTo(ConstraintLayout.LayoutParams layoutParams) {
-            Layout layout = this.layout;
-            layoutParams.leftToLeft = layout.leftToLeft;
-            layoutParams.leftToRight = layout.leftToRight;
-            layoutParams.rightToLeft = layout.rightToLeft;
-            layoutParams.rightToRight = layout.rightToRight;
-            layoutParams.topToTop = layout.topToTop;
-            layoutParams.topToBottom = layout.topToBottom;
-            layoutParams.bottomToTop = layout.bottomToTop;
-            layoutParams.bottomToBottom = layout.bottomToBottom;
-            layoutParams.baselineToBaseline = layout.baselineToBaseline;
-            layoutParams.startToEnd = layout.startToEnd;
-            layoutParams.startToStart = layout.startToStart;
-            layoutParams.endToStart = layout.endToStart;
-            layoutParams.endToEnd = layout.endToEnd;
-            ((ViewGroup.MarginLayoutParams) layoutParams).leftMargin = layout.leftMargin;
-            ((ViewGroup.MarginLayoutParams) layoutParams).rightMargin = layout.rightMargin;
-            ((ViewGroup.MarginLayoutParams) layoutParams).topMargin = layout.topMargin;
-            ((ViewGroup.MarginLayoutParams) layoutParams).bottomMargin = layout.bottomMargin;
-            layoutParams.goneStartMargin = layout.goneStartMargin;
-            layoutParams.goneEndMargin = layout.goneEndMargin;
-            layoutParams.goneTopMargin = layout.goneTopMargin;
-            layoutParams.goneBottomMargin = layout.goneBottomMargin;
-            layoutParams.horizontalBias = layout.horizontalBias;
-            layoutParams.verticalBias = layout.verticalBias;
-            layoutParams.circleConstraint = layout.circleConstraint;
-            layoutParams.circleRadius = layout.circleRadius;
-            layoutParams.circleAngle = layout.circleAngle;
-            layoutParams.dimensionRatio = layout.dimensionRatio;
-            layoutParams.editorAbsoluteX = layout.editorAbsoluteX;
-            layoutParams.editorAbsoluteY = layout.editorAbsoluteY;
-            layoutParams.verticalWeight = layout.verticalWeight;
-            layoutParams.horizontalWeight = layout.horizontalWeight;
-            layoutParams.verticalChainStyle = layout.verticalChainStyle;
-            layoutParams.horizontalChainStyle = layout.horizontalChainStyle;
-            layoutParams.constrainedWidth = layout.constrainedWidth;
-            layoutParams.constrainedHeight = layout.constrainedHeight;
-            layoutParams.matchConstraintDefaultWidth = layout.widthDefault;
-            layoutParams.matchConstraintDefaultHeight = layout.heightDefault;
-            layoutParams.matchConstraintMaxWidth = layout.widthMax;
-            layoutParams.matchConstraintMaxHeight = layout.heightMax;
-            layoutParams.matchConstraintMinWidth = layout.widthMin;
-            layoutParams.matchConstraintMinHeight = layout.heightMin;
-            layoutParams.matchConstraintPercentWidth = layout.widthPercent;
-            layoutParams.matchConstraintPercentHeight = layout.heightPercent;
-            layoutParams.orientation = layout.orientation;
-            layoutParams.guidePercent = layout.guidePercent;
-            layoutParams.guideBegin = layout.guideBegin;
-            layoutParams.guideEnd = layout.guideEnd;
-            ((ViewGroup.MarginLayoutParams) layoutParams).width = layout.mWidth;
-            ((ViewGroup.MarginLayoutParams) layoutParams).height = layout.mHeight;
-            String str = layout.mConstraintTag;
+            Layout layout2 = this.layout;
+            layoutParams.leftToLeft = layout2.leftToLeft;
+            layoutParams.leftToRight = layout2.leftToRight;
+            layoutParams.rightToLeft = layout2.rightToLeft;
+            layoutParams.rightToRight = layout2.rightToRight;
+            layoutParams.topToTop = layout2.topToTop;
+            layoutParams.topToBottom = layout2.topToBottom;
+            layoutParams.bottomToTop = layout2.bottomToTop;
+            layoutParams.bottomToBottom = layout2.bottomToBottom;
+            layoutParams.baselineToBaseline = layout2.baselineToBaseline;
+            layoutParams.startToEnd = layout2.startToEnd;
+            layoutParams.startToStart = layout2.startToStart;
+            layoutParams.endToStart = layout2.endToStart;
+            layoutParams.endToEnd = layout2.endToEnd;
+            layoutParams.leftMargin = layout2.leftMargin;
+            layoutParams.rightMargin = layout2.rightMargin;
+            layoutParams.topMargin = layout2.topMargin;
+            layoutParams.bottomMargin = layout2.bottomMargin;
+            layoutParams.goneStartMargin = layout2.goneStartMargin;
+            layoutParams.goneEndMargin = layout2.goneEndMargin;
+            layoutParams.goneTopMargin = layout2.goneTopMargin;
+            layoutParams.goneBottomMargin = layout2.goneBottomMargin;
+            layoutParams.horizontalBias = layout2.horizontalBias;
+            layoutParams.verticalBias = layout2.verticalBias;
+            layoutParams.circleConstraint = layout2.circleConstraint;
+            layoutParams.circleRadius = layout2.circleRadius;
+            layoutParams.circleAngle = layout2.circleAngle;
+            layoutParams.dimensionRatio = layout2.dimensionRatio;
+            layoutParams.editorAbsoluteX = layout2.editorAbsoluteX;
+            layoutParams.editorAbsoluteY = layout2.editorAbsoluteY;
+            layoutParams.verticalWeight = layout2.verticalWeight;
+            layoutParams.horizontalWeight = layout2.horizontalWeight;
+            layoutParams.verticalChainStyle = layout2.verticalChainStyle;
+            layoutParams.horizontalChainStyle = layout2.horizontalChainStyle;
+            layoutParams.constrainedWidth = layout2.constrainedWidth;
+            layoutParams.constrainedHeight = layout2.constrainedHeight;
+            layoutParams.matchConstraintDefaultWidth = layout2.widthDefault;
+            layoutParams.matchConstraintDefaultHeight = layout2.heightDefault;
+            layoutParams.matchConstraintMaxWidth = layout2.widthMax;
+            layoutParams.matchConstraintMaxHeight = layout2.heightMax;
+            layoutParams.matchConstraintMinWidth = layout2.widthMin;
+            layoutParams.matchConstraintMinHeight = layout2.heightMin;
+            layoutParams.matchConstraintPercentWidth = layout2.widthPercent;
+            layoutParams.matchConstraintPercentHeight = layout2.heightPercent;
+            layoutParams.orientation = layout2.orientation;
+            layoutParams.guidePercent = layout2.guidePercent;
+            layoutParams.guideBegin = layout2.guideBegin;
+            layoutParams.guideEnd = layout2.guideEnd;
+            layoutParams.width = layout2.mWidth;
+            layoutParams.height = layout2.mHeight;
+            String str = layout2.mConstraintTag;
             if (str != null) {
                 layoutParams.constraintTag = str;
             }
-            if (Build.VERSION.SDK_INT >= 17) {
-                layoutParams.setMarginStart(layout.startMargin);
-                layoutParams.setMarginEnd(this.layout.endMargin);
-            }
+            layoutParams.setMarginStart(layout2.startMargin);
+            layoutParams.setMarginEnd(this.layout.endMargin);
             layoutParams.validate();
         }
     }
@@ -1022,22 +1002,19 @@ public class ConstraintSet {
     public void clone(ConstraintLayout constraintLayout) {
         int childCount = constraintLayout.getChildCount();
         this.mConstraints.clear();
-        for (int i = 0; i < childCount; i++) {
+        int i = 0;
+        while (i < childCount) {
             View childAt = constraintLayout.getChildAt(i);
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) childAt.getLayoutParams();
             int id = childAt.getId();
-            if (this.mForceId && id == -1) {
-                throw new RuntimeException("All children of ConstraintLayout must have ids to use ConstraintSet");
-            }
-            if (!this.mConstraints.containsKey(Integer.valueOf(id))) {
-                this.mConstraints.put(Integer.valueOf(id), new Constraint());
-            }
-            Constraint constraint = this.mConstraints.get(Integer.valueOf(id));
-            constraint.mCustomConstraints = ConstraintAttribute.extractAttributes(this.mSavedAttributes, childAt);
-            constraint.fillFrom(id, layoutParams);
-            constraint.propertySet.visibility = childAt.getVisibility();
-            int i2 = Build.VERSION.SDK_INT;
-            if (i2 >= 17) {
+            if (!this.mForceId || id != -1) {
+                if (!this.mConstraints.containsKey(Integer.valueOf(id))) {
+                    this.mConstraints.put(Integer.valueOf(id), new Constraint());
+                }
+                Constraint constraint = this.mConstraints.get(Integer.valueOf(id));
+                constraint.mCustomConstraints = ConstraintAttribute.extractAttributes(this.mSavedAttributes, childAt);
+                constraint.fillFrom(id, layoutParams);
+                constraint.propertySet.visibility = childAt.getVisibility();
                 constraint.propertySet.alpha = childAt.getAlpha();
                 constraint.transform.rotation = childAt.getRotation();
                 constraint.transform.rotationX = childAt.getRotationX();
@@ -1046,27 +1023,28 @@ public class ConstraintSet {
                 constraint.transform.scaleY = childAt.getScaleY();
                 float pivotX = childAt.getPivotX();
                 float pivotY = childAt.getPivotY();
-                if (pivotX != 0.0d || pivotY != 0.0d) {
+                if (!(((double) pivotX) == 0.0d && ((double) pivotY) == 0.0d)) {
                     Transform transform = constraint.transform;
                     transform.transformPivotX = pivotX;
                     transform.transformPivotY = pivotY;
                 }
                 constraint.transform.translationX = childAt.getTranslationX();
                 constraint.transform.translationY = childAt.getTranslationY();
-                if (i2 >= 21) {
-                    constraint.transform.translationZ = childAt.getTranslationZ();
-                    Transform transform2 = constraint.transform;
-                    if (transform2.applyElevation) {
-                        transform2.elevation = childAt.getElevation();
-                    }
+                constraint.transform.translationZ = childAt.getTranslationZ();
+                Transform transform2 = constraint.transform;
+                if (transform2.applyElevation) {
+                    transform2.elevation = childAt.getElevation();
                 }
-            }
-            if (childAt instanceof Barrier) {
-                Barrier barrier = (Barrier) childAt;
-                constraint.layout.mBarrierAllowsGoneWidgets = barrier.allowsGoneWidget();
-                constraint.layout.mReferenceIds = barrier.getReferencedIds();
-                constraint.layout.mBarrierDirection = barrier.getType();
-                constraint.layout.mBarrierMargin = barrier.getMargin();
+                if (childAt instanceof Barrier) {
+                    Barrier barrier = (Barrier) childAt;
+                    constraint.layout.mBarrierAllowsGoneWidgets = barrier.allowsGoneWidget();
+                    constraint.layout.mReferenceIds = barrier.getReferencedIds();
+                    constraint.layout.mBarrierDirection = barrier.getType();
+                    constraint.layout.mBarrierMargin = barrier.getMargin();
+                }
+                i++;
+            } else {
+                throw new RuntimeException("All children of ConstraintLayout must have ids to use ConstraintSet");
             }
         }
     }
@@ -1074,27 +1052,30 @@ public class ConstraintSet {
     public void clone(Constraints constraints) {
         int childCount = constraints.getChildCount();
         this.mConstraints.clear();
-        for (int i = 0; i < childCount; i++) {
+        int i = 0;
+        while (i < childCount) {
             View childAt = constraints.getChildAt(i);
             Constraints.LayoutParams layoutParams = (Constraints.LayoutParams) childAt.getLayoutParams();
             int id = childAt.getId();
-            if (this.mForceId && id == -1) {
+            if (!this.mForceId || id != -1) {
+                if (!this.mConstraints.containsKey(Integer.valueOf(id))) {
+                    this.mConstraints.put(Integer.valueOf(id), new Constraint());
+                }
+                Constraint constraint = this.mConstraints.get(Integer.valueOf(id));
+                if (childAt instanceof ConstraintHelper) {
+                    constraint.fillFromConstraints((ConstraintHelper) childAt, id, layoutParams);
+                }
+                constraint.fillFromConstraints(id, layoutParams);
+                i++;
+            } else {
                 throw new RuntimeException("All children of ConstraintLayout must have ids to use ConstraintSet");
             }
-            if (!this.mConstraints.containsKey(Integer.valueOf(id))) {
-                this.mConstraints.put(Integer.valueOf(id), new Constraint());
-            }
-            Constraint constraint = this.mConstraints.get(Integer.valueOf(id));
-            if (childAt instanceof ConstraintHelper) {
-                constraint.fillFromConstraints((ConstraintHelper) childAt, id, layoutParams);
-            }
-            constraint.fillFromConstraints(id, layoutParams);
         }
     }
 
     public void applyTo(ConstraintLayout constraintLayout) {
         applyToInternal(constraintLayout, true);
-        constraintLayout.setConstraintSet(null);
+        constraintLayout.setConstraintSet((ConstraintSet) null);
         constraintLayout.requestLayout();
     }
 
@@ -1107,10 +1088,8 @@ public class ConstraintSet {
                 Log.v("ConstraintSet", "id unknown " + Debug.getName(childAt));
             } else if (this.mForceId && id == -1) {
                 throw new RuntimeException("All children of ConstraintLayout must have ids to use ConstraintSet");
-            } else {
-                if (this.mConstraints.containsKey(Integer.valueOf(id))) {
-                    ConstraintAttribute.setAttributes(childAt, this.mConstraints.get(Integer.valueOf(id)).mCustomConstraints);
-                }
+            } else if (this.mConstraints.containsKey(Integer.valueOf(id))) {
+                ConstraintAttribute.setAttributes(childAt, this.mConstraints.get(Integer.valueOf(id)).mCustomConstraints);
             }
         }
     }
@@ -1119,10 +1098,9 @@ public class ConstraintSet {
         int id = constraintHelper.getId();
         if (this.mConstraints.containsKey(Integer.valueOf(id))) {
             Constraint constraint = this.mConstraints.get(Integer.valueOf(id));
-            if (!(constraintWidget instanceof HelperWidget)) {
-                return;
+            if (constraintWidget instanceof HelperWidget) {
+                constraintHelper.loadParameters(constraint, (HelperWidget) constraintWidget, layoutParams, sparseArray);
             }
-            constraintHelper.loadParameters(constraint, (HelperWidget) constraintWidget, layoutParams, sparseArray);
         }
     }
 
@@ -1132,7 +1110,7 @@ public class ConstraintSet {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void applyToInternal(ConstraintLayout constraintLayout, boolean z) {
         int childCount = constraintLayout.getChildCount();
         HashSet hashSet = new HashSet(this.mConstraints.keySet());
@@ -1143,71 +1121,64 @@ public class ConstraintSet {
                 Log.w("ConstraintSet", "id unknown " + Debug.getName(childAt));
             } else if (this.mForceId && id == -1) {
                 throw new RuntimeException("All children of ConstraintLayout must have ids to use ConstraintSet");
-            } else {
-                if (id != -1) {
-                    if (this.mConstraints.containsKey(Integer.valueOf(id))) {
-                        hashSet.remove(Integer.valueOf(id));
-                        Constraint constraint = this.mConstraints.get(Integer.valueOf(id));
-                        if (childAt instanceof Barrier) {
-                            constraint.layout.mHelperType = 1;
-                        }
-                        int i2 = constraint.layout.mHelperType;
-                        if (i2 != -1 && i2 == 1) {
-                            Barrier barrier = (Barrier) childAt;
-                            barrier.setId(id);
-                            barrier.setType(constraint.layout.mBarrierDirection);
-                            barrier.setMargin(constraint.layout.mBarrierMargin);
-                            barrier.setAllowsGoneWidget(constraint.layout.mBarrierAllowsGoneWidgets);
-                            Layout layout = constraint.layout;
-                            int[] iArr = layout.mReferenceIds;
-                            if (iArr != null) {
-                                barrier.setReferencedIds(iArr);
-                            } else {
-                                String str = layout.mReferenceIdString;
-                                if (str != null) {
-                                    layout.mReferenceIds = convertReferenceString(barrier, str);
-                                    barrier.setReferencedIds(constraint.layout.mReferenceIds);
-                                }
-                            }
-                        }
-                        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) childAt.getLayoutParams();
-                        layoutParams.validate();
-                        constraint.applyTo(layoutParams);
-                        if (z) {
-                            ConstraintAttribute.setAttributes(childAt, constraint.mCustomConstraints);
-                        }
-                        childAt.setLayoutParams(layoutParams);
-                        PropertySet propertySet = constraint.propertySet;
-                        if (propertySet.mVisibilityMode == 0) {
-                            childAt.setVisibility(propertySet.visibility);
-                        }
-                        int i3 = Build.VERSION.SDK_INT;
-                        if (i3 >= 17) {
-                            childAt.setAlpha(constraint.propertySet.alpha);
-                            childAt.setRotation(constraint.transform.rotation);
-                            childAt.setRotationX(constraint.transform.rotationX);
-                            childAt.setRotationY(constraint.transform.rotationY);
-                            childAt.setScaleX(constraint.transform.scaleX);
-                            childAt.setScaleY(constraint.transform.scaleY);
-                            if (!Float.isNaN(constraint.transform.transformPivotX)) {
-                                childAt.setPivotX(constraint.transform.transformPivotX);
-                            }
-                            if (!Float.isNaN(constraint.transform.transformPivotY)) {
-                                childAt.setPivotY(constraint.transform.transformPivotY);
-                            }
-                            childAt.setTranslationX(constraint.transform.translationX);
-                            childAt.setTranslationY(constraint.transform.translationY);
-                            if (i3 >= 21) {
-                                childAt.setTranslationZ(constraint.transform.translationZ);
-                                Transform transform = constraint.transform;
-                                if (transform.applyElevation) {
-                                    childAt.setElevation(transform.elevation);
-                                }
-                            }
-                        }
-                    } else {
-                        Log.v("ConstraintSet", "WARNING NO CONSTRAINTS for view " + id);
+            } else if (id != -1) {
+                if (this.mConstraints.containsKey(Integer.valueOf(id))) {
+                    hashSet.remove(Integer.valueOf(id));
+                    Constraint constraint = this.mConstraints.get(Integer.valueOf(id));
+                    if (childAt instanceof Barrier) {
+                        constraint.layout.mHelperType = 1;
                     }
+                    int i2 = constraint.layout.mHelperType;
+                    if (i2 != -1 && i2 == 1) {
+                        Barrier barrier = (Barrier) childAt;
+                        barrier.setId(id);
+                        barrier.setType(constraint.layout.mBarrierDirection);
+                        barrier.setMargin(constraint.layout.mBarrierMargin);
+                        barrier.setAllowsGoneWidget(constraint.layout.mBarrierAllowsGoneWidgets);
+                        Layout layout = constraint.layout;
+                        int[] iArr = layout.mReferenceIds;
+                        if (iArr != null) {
+                            barrier.setReferencedIds(iArr);
+                        } else {
+                            String str = layout.mReferenceIdString;
+                            if (str != null) {
+                                layout.mReferenceIds = convertReferenceString(barrier, str);
+                                barrier.setReferencedIds(constraint.layout.mReferenceIds);
+                            }
+                        }
+                    }
+                    ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) childAt.getLayoutParams();
+                    layoutParams.validate();
+                    constraint.applyTo(layoutParams);
+                    if (z) {
+                        ConstraintAttribute.setAttributes(childAt, constraint.mCustomConstraints);
+                    }
+                    childAt.setLayoutParams(layoutParams);
+                    PropertySet propertySet = constraint.propertySet;
+                    if (propertySet.mVisibilityMode == 0) {
+                        childAt.setVisibility(propertySet.visibility);
+                    }
+                    childAt.setAlpha(constraint.propertySet.alpha);
+                    childAt.setRotation(constraint.transform.rotation);
+                    childAt.setRotationX(constraint.transform.rotationX);
+                    childAt.setRotationY(constraint.transform.rotationY);
+                    childAt.setScaleX(constraint.transform.scaleX);
+                    childAt.setScaleY(constraint.transform.scaleY);
+                    if (!Float.isNaN(constraint.transform.transformPivotX)) {
+                        childAt.setPivotX(constraint.transform.transformPivotX);
+                    }
+                    if (!Float.isNaN(constraint.transform.transformPivotY)) {
+                        childAt.setPivotY(constraint.transform.transformPivotY);
+                    }
+                    childAt.setTranslationX(constraint.transform.translationX);
+                    childAt.setTranslationY(constraint.transform.translationY);
+                    childAt.setTranslationZ(constraint.transform.translationZ);
+                    Transform transform = constraint.transform;
+                    if (transform.applyElevation) {
+                        childAt.setElevation(transform.elevation);
+                    }
+                } else {
+                    Log.v("ConstraintSet", "WARNING NO CONSTRAINTS for view " + id);
                 }
             }
         }
@@ -1215,8 +1186,8 @@ public class ConstraintSet {
         while (it.hasNext()) {
             Integer num = (Integer) it.next();
             Constraint constraint2 = this.mConstraints.get(num);
-            int i4 = constraint2.layout.mHelperType;
-            if (i4 != -1 && i4 == 1) {
+            int i3 = constraint2.layout.mHelperType;
+            if (i3 != -1 && i3 == 1) {
                 Barrier barrier2 = new Barrier(constraintLayout.getContext());
                 barrier2.setId(num.intValue());
                 Layout layout2 = constraint2.layout;
@@ -1238,7 +1209,7 @@ public class ConstraintSet {
                 constraintLayout.addView(barrier2, generateDefaultLayoutParams);
             }
             if (constraint2.layout.mIsGuideline) {
-                View guideline = new Guideline(constraintLayout.getContext());
+                Guideline guideline = new Guideline(constraintLayout.getContext());
                 guideline.setId(num.intValue());
                 ConstraintLayout.LayoutParams generateDefaultLayoutParams2 = constraintLayout.generateDefaultLayoutParams();
                 constraint2.applyTo(generateDefaultLayoutParams2);
@@ -1338,175 +1309,255 @@ public class ConstraintSet {
             for (int eventType = xml.getEventType(); eventType != 1; eventType = xml.next()) {
                 if (eventType == 0) {
                     xml.getName();
-                    continue;
-                } else if (eventType != 2) {
-                    continue;
-                } else {
+                } else if (eventType == 2) {
                     String name = xml.getName();
                     Constraint fillFromAttributeList = fillFromAttributeList(context, Xml.asAttributeSet(xml));
                     if (name.equalsIgnoreCase("Guideline")) {
                         fillFromAttributeList.layout.mIsGuideline = true;
                     }
                     this.mConstraints.put(Integer.valueOf(fillFromAttributeList.mViewId), fillFromAttributeList);
-                    continue;
                 }
             }
-        } catch (IOException e) {
+        } catch (XmlPullParserException e) {
             e.printStackTrace();
-        } catch (XmlPullParserException e2) {
+        } catch (IOException e2) {
             e2.printStackTrace();
         }
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:63:0x0179, code lost:
+    /* JADX WARNING: Can't fix incorrect switch cases order */
+    /* JADX WARNING: Code restructure failed: missing block: B:94:0x0179, code lost:
         continue;
      */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public void load(Context context, XmlPullParser xmlPullParser) {
-        Constraint fillFromAttributeList;
-        try {
-            int eventType = xmlPullParser.getEventType();
-            Constraint constraint = null;
-            while (eventType != 1) {
-                if (eventType != 0) {
-                    char c = 3;
-                    if (eventType == 2) {
-                        String name = xmlPullParser.getName();
-                        switch (name.hashCode()) {
-                            case -2025855158:
-                                if (name.equals("Layout")) {
-                                    c = 5;
-                                    break;
-                                }
-                                c = 65535;
-                                break;
-                            case -1984451626:
-                                if (name.equals("Motion")) {
-                                    c = 6;
-                                    break;
-                                }
-                                c = 65535;
-                                break;
-                            case -1269513683:
-                                if (name.equals("PropertySet")) {
-                                    break;
-                                }
-                                c = 65535;
-                                break;
-                            case -1238332596:
-                                if (name.equals("Transform")) {
-                                    c = 4;
-                                    break;
-                                }
-                                c = 65535;
-                                break;
-                            case -71750448:
-                                if (name.equals("Guideline")) {
-                                    c = 1;
-                                    break;
-                                }
-                                c = 65535;
-                                break;
-                            case 1331510167:
-                                if (name.equals("Barrier")) {
-                                    c = 2;
-                                    break;
-                                }
-                                c = 65535;
-                                break;
-                            case 1791837707:
-                                if (name.equals("CustomAttribute")) {
-                                    c = 7;
-                                    break;
-                                }
-                                c = 65535;
-                                break;
-                            case 1803088381:
-                                if (name.equals("Constraint")) {
-                                    c = 0;
-                                    break;
-                                }
-                                c = 65535;
-                                break;
-                            default:
-                                c = 65535;
-                                break;
-                        }
-                        switch (c) {
-                            case 0:
-                                fillFromAttributeList = fillFromAttributeList(context, Xml.asAttributeSet(xmlPullParser));
-                                constraint = fillFromAttributeList;
-                                break;
-                            case 1:
-                                fillFromAttributeList = fillFromAttributeList(context, Xml.asAttributeSet(xmlPullParser));
-                                Layout layout = fillFromAttributeList.layout;
-                                layout.mIsGuideline = true;
-                                layout.mApply = true;
-                                constraint = fillFromAttributeList;
-                                break;
-                            case 2:
-                                fillFromAttributeList = fillFromAttributeList(context, Xml.asAttributeSet(xmlPullParser));
-                                fillFromAttributeList.layout.mHelperType = 1;
-                                constraint = fillFromAttributeList;
-                                break;
-                            case 3:
-                                if (constraint == null) {
-                                    throw new RuntimeException("XML parser error must be within a Constraint " + xmlPullParser.getLineNumber());
-                                }
-                                constraint.propertySet.fillFromAttributeList(context, Xml.asAttributeSet(xmlPullParser));
-                                break;
-                            case 4:
-                                if (constraint == null) {
-                                    throw new RuntimeException("XML parser error must be within a Constraint " + xmlPullParser.getLineNumber());
-                                }
-                                constraint.transform.fillFromAttributeList(context, Xml.asAttributeSet(xmlPullParser));
-                                break;
-                            case 5:
-                                if (constraint == null) {
-                                    throw new RuntimeException("XML parser error must be within a Constraint " + xmlPullParser.getLineNumber());
-                                }
-                                constraint.layout.fillFromAttributeList(context, Xml.asAttributeSet(xmlPullParser));
-                                break;
-                            case 6:
-                                if (constraint == null) {
-                                    throw new RuntimeException("XML parser error must be within a Constraint " + xmlPullParser.getLineNumber());
-                                }
-                                constraint.motion.fillFromAttributeList(context, Xml.asAttributeSet(xmlPullParser));
-                                break;
-                            case 7:
-                                if (constraint == null) {
-                                    throw new RuntimeException("XML parser error must be within a Constraint " + xmlPullParser.getLineNumber());
-                                }
-                                ConstraintAttribute.parse(context, xmlPullParser, constraint.mCustomConstraints);
-                                break;
-                        }
-                    } else if (eventType != 3) {
-                        continue;
-                    } else {
-                        String name2 = xmlPullParser.getName();
-                        if ("ConstraintSet".equals(name2)) {
-                            return;
-                        }
-                        if (name2.equalsIgnoreCase("Constraint")) {
-                            this.mConstraints.put(Integer.valueOf(constraint.mViewId), constraint);
-                            constraint = null;
-                        }
-                    }
-                } else {
-                    xmlPullParser.getName();
-                }
-                eventType = xmlPullParser.next();
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void load(android.content.Context r10, org.xmlpull.v1.XmlPullParser r11) {
+        /*
+            r9 = this;
+            int r0 = r11.getEventType()     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r1 = 0
+            r2 = r1
+        L_0x0006:
+            r3 = 1
+            if (r0 == r3) goto L_0x0188
+            if (r0 == 0) goto L_0x0176
+            java.lang.String r4 = "Constraint"
+            r5 = 3
+            r6 = 2
+            if (r0 == r6) goto L_0x0036
+            if (r0 == r5) goto L_0x0015
+            goto L_0x0179
+        L_0x0015:
+            java.lang.String r0 = r11.getName()     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            java.lang.String r3 = "ConstraintSet"
+            boolean r3 = r3.equals(r0)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            if (r3 == 0) goto L_0x0022
+            return
+        L_0x0022:
+            boolean r0 = r0.equalsIgnoreCase(r4)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            if (r0 == 0) goto L_0x0179
+            java.util.HashMap<java.lang.Integer, androidx.constraintlayout.widget.ConstraintSet$Constraint> r0 = r9.mConstraints     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            int r3 = r2.mViewId     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            java.lang.Integer r3 = java.lang.Integer.valueOf(r3)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r0.put(r3, r2)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r2 = r1
+            goto L_0x0179
+        L_0x0036:
+            java.lang.String r0 = r11.getName()     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r7 = -1
+            int r8 = r0.hashCode()     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            switch(r8) {
+                case -2025855158: goto L_0x0086;
+                case -1984451626: goto L_0x007c;
+                case -1269513683: goto L_0x0073;
+                case -1238332596: goto L_0x0069;
+                case -71750448: goto L_0x005f;
+                case 1331510167: goto L_0x0055;
+                case 1791837707: goto L_0x004b;
+                case 1803088381: goto L_0x0043;
+                default: goto L_0x0042;
+            }     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+        L_0x0042:
+            goto L_0x0090
+        L_0x0043:
+            boolean r0 = r0.equals(r4)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            if (r0 == 0) goto L_0x0090
+            r5 = 0
+            goto L_0x0091
+        L_0x004b:
+            java.lang.String r4 = "CustomAttribute"
+            boolean r0 = r0.equals(r4)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            if (r0 == 0) goto L_0x0090
+            r5 = 7
+            goto L_0x0091
+        L_0x0055:
+            java.lang.String r4 = "Barrier"
+            boolean r0 = r0.equals(r4)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            if (r0 == 0) goto L_0x0090
+            r5 = r6
+            goto L_0x0091
+        L_0x005f:
+            java.lang.String r4 = "Guideline"
+            boolean r0 = r0.equals(r4)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            if (r0 == 0) goto L_0x0090
+            r5 = r3
+            goto L_0x0091
+        L_0x0069:
+            java.lang.String r4 = "Transform"
+            boolean r0 = r0.equals(r4)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            if (r0 == 0) goto L_0x0090
+            r5 = 4
+            goto L_0x0091
+        L_0x0073:
+            java.lang.String r4 = "PropertySet"
+            boolean r0 = r0.equals(r4)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            if (r0 == 0) goto L_0x0090
+            goto L_0x0091
+        L_0x007c:
+            java.lang.String r4 = "Motion"
+            boolean r0 = r0.equals(r4)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            if (r0 == 0) goto L_0x0090
+            r5 = 6
+            goto L_0x0091
+        L_0x0086:
+            java.lang.String r4 = "Layout"
+            boolean r0 = r0.equals(r4)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            if (r0 == 0) goto L_0x0090
+            r5 = 5
+            goto L_0x0091
+        L_0x0090:
+            r5 = r7
+        L_0x0091:
+            java.lang.String r0 = "XML parser error must be within a Constraint "
+            switch(r5) {
+                case 0: goto L_0x016c;
+                case 1: goto L_0x015d;
+                case 2: goto L_0x0150;
+                case 3: goto L_0x012b;
+                case 4: goto L_0x0106;
+                case 5: goto L_0x00e0;
+                case 6: goto L_0x00ba;
+                case 7: goto L_0x0098;
+                default: goto L_0x0096;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (XmlPullParserException e2) {
-            e2.printStackTrace();
-        }
+        L_0x0096:
+            goto L_0x0179
+        L_0x0098:
+            if (r2 == 0) goto L_0x00a1
+            java.util.HashMap<java.lang.String, androidx.constraintlayout.widget.ConstraintAttribute> r0 = r2.mCustomConstraints     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            androidx.constraintlayout.widget.ConstraintAttribute.parse(r10, r11, r0)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            goto L_0x0179
+        L_0x00a1:
+            java.lang.RuntimeException r9 = new java.lang.RuntimeException     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            java.lang.StringBuilder r10 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r10.<init>()     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r10.append(r0)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            int r11 = r11.getLineNumber()     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r10.append(r11)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            java.lang.String r10 = r10.toString()     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r9.<init>(r10)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            throw r9     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+        L_0x00ba:
+            if (r2 == 0) goto L_0x00c7
+            androidx.constraintlayout.widget.ConstraintSet$Motion r0 = r2.motion     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            android.util.AttributeSet r3 = android.util.Xml.asAttributeSet(r11)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r0.fillFromAttributeList(r10, r3)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            goto L_0x0179
+        L_0x00c7:
+            java.lang.RuntimeException r9 = new java.lang.RuntimeException     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            java.lang.StringBuilder r10 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r10.<init>()     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r10.append(r0)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            int r11 = r11.getLineNumber()     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r10.append(r11)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            java.lang.String r10 = r10.toString()     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r9.<init>(r10)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            throw r9     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+        L_0x00e0:
+            if (r2 == 0) goto L_0x00ed
+            androidx.constraintlayout.widget.ConstraintSet$Layout r0 = r2.layout     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            android.util.AttributeSet r3 = android.util.Xml.asAttributeSet(r11)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r0.fillFromAttributeList(r10, r3)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            goto L_0x0179
+        L_0x00ed:
+            java.lang.RuntimeException r9 = new java.lang.RuntimeException     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            java.lang.StringBuilder r10 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r10.<init>()     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r10.append(r0)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            int r11 = r11.getLineNumber()     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r10.append(r11)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            java.lang.String r10 = r10.toString()     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r9.<init>(r10)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            throw r9     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+        L_0x0106:
+            if (r2 == 0) goto L_0x0112
+            androidx.constraintlayout.widget.ConstraintSet$Transform r0 = r2.transform     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            android.util.AttributeSet r3 = android.util.Xml.asAttributeSet(r11)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r0.fillFromAttributeList(r10, r3)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            goto L_0x0179
+        L_0x0112:
+            java.lang.RuntimeException r9 = new java.lang.RuntimeException     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            java.lang.StringBuilder r10 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r10.<init>()     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r10.append(r0)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            int r11 = r11.getLineNumber()     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r10.append(r11)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            java.lang.String r10 = r10.toString()     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r9.<init>(r10)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            throw r9     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+        L_0x012b:
+            if (r2 == 0) goto L_0x0137
+            androidx.constraintlayout.widget.ConstraintSet$PropertySet r0 = r2.propertySet     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            android.util.AttributeSet r3 = android.util.Xml.asAttributeSet(r11)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r0.fillFromAttributeList(r10, r3)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            goto L_0x0179
+        L_0x0137:
+            java.lang.RuntimeException r9 = new java.lang.RuntimeException     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            java.lang.StringBuilder r10 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r10.<init>()     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r10.append(r0)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            int r11 = r11.getLineNumber()     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r10.append(r11)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            java.lang.String r10 = r10.toString()     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r9.<init>(r10)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            throw r9     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+        L_0x0150:
+            android.util.AttributeSet r0 = android.util.Xml.asAttributeSet(r11)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            androidx.constraintlayout.widget.ConstraintSet$Constraint r0 = r9.fillFromAttributeList(r10, r0)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            androidx.constraintlayout.widget.ConstraintSet$Layout r2 = r0.layout     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r2.mHelperType = r3     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            goto L_0x0174
+        L_0x015d:
+            android.util.AttributeSet r0 = android.util.Xml.asAttributeSet(r11)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            androidx.constraintlayout.widget.ConstraintSet$Constraint r0 = r9.fillFromAttributeList(r10, r0)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            androidx.constraintlayout.widget.ConstraintSet$Layout r2 = r0.layout     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r2.mIsGuideline = r3     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            r2.mApply = r3     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            goto L_0x0174
+        L_0x016c:
+            android.util.AttributeSet r0 = android.util.Xml.asAttributeSet(r11)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            androidx.constraintlayout.widget.ConstraintSet$Constraint r0 = r9.fillFromAttributeList(r10, r0)     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+        L_0x0174:
+            r2 = r0
+            goto L_0x0179
+        L_0x0176:
+            r11.getName()     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+        L_0x0179:
+            int r0 = r11.next()     // Catch:{ XmlPullParserException -> 0x0184, IOException -> 0x017f }
+            goto L_0x0006
+        L_0x017f:
+            r9 = move-exception
+            r9.printStackTrace()
+            goto L_0x0188
+        L_0x0184:
+            r9 = move-exception
+            r9.printStackTrace()
+        L_0x0188:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.constraintlayout.widget.ConstraintSet.load(android.content.Context, org.xmlpull.v1.XmlPullParser):void");
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static int lookupID(TypedArray typedArray, int i, int i2) {
         int resourceId = typedArray.getResourceId(i, i2);
         return resourceId == -1 ? typedArray.getInt(i, -1) : resourceId;
@@ -1704,14 +1755,10 @@ public class ConstraintSet {
                     propertySet3.alpha = typedArray.getFloat(index, propertySet3.alpha);
                     break;
                 case 44:
-                    if (Build.VERSION.SDK_INT >= 21) {
-                        Transform transform = constraint.transform;
-                        transform.applyElevation = true;
-                        transform.elevation = typedArray.getDimension(index, transform.elevation);
-                        break;
-                    } else {
-                        break;
-                    }
+                    Transform transform = constraint.transform;
+                    transform.applyElevation = true;
+                    transform.elevation = typedArray.getDimension(index, transform.elevation);
+                    break;
                 case 45:
                     Transform transform2 = constraint.transform;
                     transform2.rotationX = typedArray.getFloat(index, transform2.rotationX);
@@ -1745,13 +1792,9 @@ public class ConstraintSet {
                     transform9.translationY = typedArray.getDimension(index, transform9.translationY);
                     break;
                 case 53:
-                    if (Build.VERSION.SDK_INT >= 21) {
-                        Transform transform10 = constraint.transform;
-                        transform10.translationZ = typedArray.getDimension(index, transform10.translationZ);
-                        break;
-                    } else {
-                        break;
-                    }
+                    Transform transform10 = constraint.transform;
+                    transform10.translationZ = typedArray.getDimension(index, transform10.translationZ);
+                    break;
                 case 54:
                     Layout layout40 = constraint.layout;
                     layout40.widthDefault = typedArray.getInt(index, layout40.widthDefault);
@@ -1797,11 +1840,11 @@ public class ConstraintSet {
                     motion.mAnimateRelativeTo = lookupID(typedArray, index, motion.mAnimateRelativeTo);
                     break;
                 case 65:
-                    if (typedArray.peekValue(index).type == 3) {
-                        constraint.motion.mTransitionEasing = typedArray.getString(index);
+                    if (typedArray.peekValue(index).type != 3) {
+                        constraint.motion.mTransitionEasing = Easing.NAMED_EASING[typedArray.getInteger(index, 0)];
                         break;
                     } else {
-                        constraint.motion.mTransitionEasing = Easing.NAMED_EASING[typedArray.getInteger(index, 0)];
+                        constraint.motion.mTransitionEasing = typedArray.getString(index);
                         break;
                     }
                 case 66:
@@ -1883,7 +1926,7 @@ public class ConstraintSet {
         while (i2 < split.length) {
             String trim = split[i2].trim();
             try {
-                i = R$id.class.getField(trim).getInt(null);
+                i = R$id.class.getField(trim).getInt((Object) null);
             } catch (Exception unused) {
                 i = 0;
             }

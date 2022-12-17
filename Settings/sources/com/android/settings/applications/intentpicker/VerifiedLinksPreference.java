@@ -5,9 +5,10 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.CheckBox;
 import androidx.preference.PreferenceViewHolder;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
 import com.android.settingslib.widget.TwoTargetPreference;
-/* loaded from: classes.dex */
+
 public class VerifiedLinksPreference extends TwoTargetPreference {
     private Context mContext;
     private View.OnClickListener mOnWidgetClickListener;
@@ -27,15 +28,15 @@ public class VerifiedLinksPreference extends TwoTargetPreference {
     }
 
     public VerifiedLinksPreference(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     private void init(Context context) {
         this.mContext = context;
         this.mOnWidgetClickListener = null;
         this.mShowCheckBox = true;
-        setLayoutResource(R.layout.preference_checkable_two_target);
-        setWidgetLayoutResource(R.layout.verified_links_widget);
+        setLayoutResource(R$layout.preference_checkable_two_target);
+        setWidgetLayoutResource(R$layout.verified_links_widget);
     }
 
     public void setWidgetFrameClickListener(View.OnClickListener onClickListener) {
@@ -46,18 +47,17 @@ public class VerifiedLinksPreference extends TwoTargetPreference {
         this.mShowCheckBox = z;
     }
 
-    @Override // com.android.settingslib.widget.TwoTargetPreference, androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         View findViewById = preferenceViewHolder.findViewById(16908312);
         int i = 0;
-        preferenceViewHolder.findViewById(R.id.two_target_divider).setVisibility(0);
+        preferenceViewHolder.findViewById(R$id.two_target_divider).setVisibility(0);
         findViewById.setVisibility(0);
         View.OnClickListener onClickListener = this.mOnWidgetClickListener;
         if (onClickListener != null) {
             findViewById.setOnClickListener(onClickListener);
         }
-        View findViewById2 = preferenceViewHolder.findViewById(R.id.checkbox_container);
+        View findViewById2 = preferenceViewHolder.findViewById(R$id.checkbox_container);
         View view = (View) findViewById2.getParent();
         view.setEnabled(false);
         view.setClickable(false);

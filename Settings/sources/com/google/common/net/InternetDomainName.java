@@ -7,53 +7,51 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
-import com.google.errorprone.annotations.Immutable;
 import com.google.thirdparty.publicsuffix.PublicSuffixPatterns;
 import com.google.thirdparty.publicsuffix.PublicSuffixType;
 import java.util.List;
-@Immutable
-/* loaded from: classes2.dex */
+
 public final class InternetDomainName {
     private static final CharMatcher DASH_MATCHER;
     private static final CharMatcher DIGIT_MATCHER;
+    private static final CharMatcher DOTS_MATCHER = CharMatcher.anyOf(".。．｡");
+    private static final Joiner DOT_JOINER = Joiner.m20on('.');
+    private static final Splitter DOT_SPLITTER = Splitter.m23on('.');
     private static final CharMatcher LETTER_MATCHER;
     private static final CharMatcher PART_CHAR_MATCHER;
     private final String name;
     private final ImmutableList<String> parts;
     private final int publicSuffixIndex;
     private final int registrySuffixIndex;
-    private static final CharMatcher DOTS_MATCHER = CharMatcher.anyOf(".。．｡");
-    private static final Splitter DOT_SPLITTER = Splitter.on('.');
-    private static final Joiner DOT_JOINER = Joiner.on('.');
 
     static {
         CharMatcher anyOf = CharMatcher.anyOf("-_");
         DASH_MATCHER = anyOf;
         CharMatcher inRange = CharMatcher.inRange('0', '9');
         DIGIT_MATCHER = inRange;
-        CharMatcher or = CharMatcher.inRange('a', 'z').or(CharMatcher.inRange('A', 'Z'));
+        CharMatcher or = CharMatcher.inRange('a', 'z').mo22046or(CharMatcher.inRange('A', 'Z'));
         LETTER_MATCHER = or;
-        PART_CHAR_MATCHER = inRange.or(or).or(anyOf);
+        PART_CHAR_MATCHER = inRange.mo22046or(or).mo22046or(anyOf);
     }
 
     InternetDomainName(String str) {
         String lowerCase = Ascii.toLowerCase(DOTS_MATCHER.replaceFrom(str, '.'));
         boolean z = true;
         lowerCase = lowerCase.endsWith(".") ? lowerCase.substring(0, lowerCase.length() - 1) : lowerCase;
-        Preconditions.checkArgument(lowerCase.length() <= 253, "Domain name too long: '%s':", lowerCase);
+        Preconditions.checkArgument(lowerCase.length() <= 253, "Domain name too long: '%s':", (Object) lowerCase);
         this.name = lowerCase;
         ImmutableList<String> copyOf = ImmutableList.copyOf(DOT_SPLITTER.split(lowerCase));
         this.parts = copyOf;
-        Preconditions.checkArgument(copyOf.size() > 127 ? false : z, "Domain has too many parts: '%s'", lowerCase);
-        Preconditions.checkArgument(validateSyntax(copyOf), "Not a valid domain name: '%s'", lowerCase);
+        Preconditions.checkArgument(copyOf.size() > 127 ? false : z, "Domain has too many parts: '%s'", (Object) lowerCase);
+        Preconditions.checkArgument(validateSyntax(copyOf), "Not a valid domain name: '%s'", (Object) lowerCase);
         this.publicSuffixIndex = findSuffixOfType(Optional.absent());
-        this.registrySuffixIndex = findSuffixOfType(Optional.of(PublicSuffixType.REGISTRY));
+        this.registrySuffixIndex = findSuffixOfType(Optional.m22of(PublicSuffixType.REGISTRY));
     }
 
     private int findSuffixOfType(Optional<PublicSuffixType> optional) {
         int size = this.parts.size();
         for (int i = 0; i < size; i++) {
-            String join = DOT_JOINER.join(this.parts.mo763subList(i, size));
+            String join = DOT_JOINER.join((Iterable<? extends Object>) this.parts.subList(i, size));
             if (matchesType(optional, Optional.fromNullable(PublicSuffixPatterns.EXACT.get(join)))) {
                 return i;
             }
@@ -108,7 +106,10 @@ public final class InternetDomainName {
 
     private static boolean matchesWildcardSuffixType(Optional<PublicSuffixType> optional, String str) {
         List<String> splitToList = DOT_SPLITTER.limit(2).splitToList(str);
-        return splitToList.size() == 2 && matchesType(optional, Optional.fromNullable(PublicSuffixPatterns.UNDER.get(splitToList.get(1))));
+        if (splitToList.size() != 2 || !matchesType(optional, Optional.fromNullable(PublicSuffixPatterns.UNDER.get(splitToList.get(1))))) {
+            return false;
+        }
+        return true;
     }
 
     private static boolean matchesType(Optional<PublicSuffixType> optional, Optional<PublicSuffixType> optional2) {
@@ -123,10 +124,10 @@ public final class InternetDomainName {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof InternetDomainName)) {
-            return false;
+        if (obj instanceof InternetDomainName) {
+            return this.name.equals(((InternetDomainName) obj).name);
         }
-        return this.name.equals(((InternetDomainName) obj).name);
+        return false;
     }
 
     public int hashCode() {

@@ -1,7 +1,9 @@
 package com.android.settings;
 
 import android.app.Dialog;
+import android.app.admin.DevicePolicyManager;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -32,55 +34,54 @@ import com.android.settingslib.CustomDialogPreferenceCompat;
 import com.android.settingslib.CustomEditTextPreferenceCompat;
 import com.android.settingslib.widget.LayoutPreference;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.setupcompat.util.WizardManagerHelper;
 import java.util.UUID;
-/* loaded from: classes.dex */
+
 public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceFragment implements DialogCreatable, HelpResourceProvider {
+    private static final int ORDER_FIRST = -1;
+    private static final String SAVE_HIGHLIGHTED_KEY = "android:preference_highlighted";
+    private static final String TAG = "SettingsPreferenceFragment";
     public HighlightablePreferenceGroupAdapter mAdapter;
     private boolean mAnimationAllowed;
     private AppBarLayout mAppBarLayout;
     private ContentResolver mContentResolver;
     private RecyclerView.Adapter mCurrentRootAdapter;
-    private SettingsDialogFragment mDialogFragment;
-    private View mEmptyView;
-    private LayoutPreference mHeader;
-    private LinearLayoutManager mLayoutManager;
-    ViewGroup mPinnedHeaderFrameLayout;
-    private ArrayMap<String, Preference> mPreferenceCache;
-    private boolean mIsDataSetObserverRegistered = false;
-    private RecyclerView.AdapterDataObserver mDataSetObserver = new RecyclerView.AdapterDataObserver() { // from class: com.android.settings.SettingsPreferenceFragment.1
-        @Override // androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
+    private RecyclerView.AdapterDataObserver mDataSetObserver = new RecyclerView.AdapterDataObserver() {
         public void onChanged() {
             SettingsPreferenceFragment.this.onDataSetChanged();
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
         public void onItemRangeChanged(int i, int i2) {
             SettingsPreferenceFragment.this.onDataSetChanged();
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
         public void onItemRangeChanged(int i, int i2, Object obj) {
             SettingsPreferenceFragment.this.onDataSetChanged();
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
         public void onItemRangeInserted(int i, int i2) {
             SettingsPreferenceFragment.this.onDataSetChanged();
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
         public void onItemRangeRemoved(int i, int i2) {
             SettingsPreferenceFragment.this.onDataSetChanged();
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
         public void onItemRangeMoved(int i, int i2, int i3) {
             SettingsPreferenceFragment.this.onDataSetChanged();
         }
     };
-    public boolean mPreferenceHighlighted = false;
+    protected DevicePolicyManager mDevicePolicyManager;
+    /* access modifiers changed from: private */
+    public SettingsDialogFragment mDialogFragment;
+    private View mEmptyView;
+    private LayoutPreference mHeader;
+    private boolean mIsDataSetObserverRegistered = false;
+    private LinearLayoutManager mLayoutManager;
+    ViewGroup mPinnedHeaderFrameLayout;
+    private ArrayMap<String, Preference> mPreferenceCache;
+    private boolean mPreferenceHighlighted = false;
 
-    @Override // com.android.settings.DialogCreatable
     public int getDialogMetricsCategory(int i) {
         return 0;
     }
@@ -89,7 +90,6 @@ public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceF
         return 0;
     }
 
-    @Override // com.android.settings.DialogCreatable
     public Dialog onCreateDialog(int i) {
         return null;
     }
@@ -97,39 +97,50 @@ public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceF
     public void onDialogShowing() {
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
+    /* access modifiers changed from: protected */
+    public boolean shouldSkipForInitialSUW() {
+        return false;
+    }
+
+    public void onAttach(Context context) {
+        if (shouldSkipForInitialSUW() && !WizardManagerHelper.isDeviceProvisioned(getContext())) {
+            Log.w(TAG, "Skip " + getClass().getSimpleName() + " before SUW completed.");
+            finish();
+        }
+        super.onAttach(context);
+    }
+
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        this.mDevicePolicyManager = (DevicePolicyManager) getContext().getSystemService(DevicePolicyManager.class);
         if (bundle != null) {
-            this.mPreferenceHighlighted = bundle.getBoolean("android:preference_highlighted");
+            this.mPreferenceHighlighted = bundle.getBoolean(SAVE_HIGHLIGHTED_KEY);
         }
         HighlightablePreferenceGroupAdapter.adjustInitialExpandedChildCount(this);
     }
 
-    @Override // androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
         View onCreateView = super.onCreateView(layoutInflater, viewGroup, bundle);
-        this.mPinnedHeaderFrameLayout = (ViewGroup) onCreateView.findViewById(R.id.pinned_header);
-        this.mAppBarLayout = (AppBarLayout) getActivity().findViewById(R.id.app_bar);
+        this.mPinnedHeaderFrameLayout = (ViewGroup) onCreateView.findViewById(R$id.pinned_header);
+        this.mAppBarLayout = (AppBarLayout) getActivity().findViewById(R$id.app_bar);
         return onCreateView;
     }
 
-    @Override // com.android.settings.core.InstrumentedPreferenceFragment, androidx.preference.PreferenceFragmentCompat
     public void addPreferencesFromResource(int i) {
         super.addPreferencesFromResource(i);
         checkAvailablePrefs(getPreferenceScreen());
     }
 
-    void checkAvailablePrefs(PreferenceGroup preferenceGroup) {
-        if (preferenceGroup == null) {
-            return;
-        }
-        for (int i = 0; i < preferenceGroup.getPreferenceCount(); i++) {
-            Preference preference = preferenceGroup.getPreference(i);
-            if ((preference instanceof SelfAvailablePreference) && !((SelfAvailablePreference) preference).isAvailable(getContext())) {
-                preference.setVisible(false);
-            } else if (preference instanceof PreferenceGroup) {
-                checkAvailablePrefs((PreferenceGroup) preference);
+    /* access modifiers changed from: package-private */
+    public void checkAvailablePrefs(PreferenceGroup preferenceGroup) {
+        if (preferenceGroup != null) {
+            for (int i = 0; i < preferenceGroup.getPreferenceCount(); i++) {
+                Preference preference = preferenceGroup.getPreference(i);
+                if ((preference instanceof SelfAvailablePreference) && !((SelfAvailablePreference) preference).isAvailable(getContext())) {
+                    preference.setVisible(false);
+                } else if (preference instanceof PreferenceGroup) {
+                    checkAvailablePrefs((PreferenceGroup) preference);
+                }
             }
         }
     }
@@ -149,39 +160,36 @@ public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceF
         this.mPinnedHeaderFrameLayout.setVisibility(z ? 0 : 4);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         HighlightablePreferenceGroupAdapter highlightablePreferenceGroupAdapter = this.mAdapter;
         if (highlightablePreferenceGroupAdapter != null) {
-            bundle.putBoolean("android:preference_highlighted", highlightablePreferenceGroupAdapter.isHighlightRequested());
+            bundle.putBoolean(SAVE_HIGHLIGHTED_KEY, highlightablePreferenceGroupAdapter.isHighlightRequested());
         }
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
         setHasOptionsMenu(true);
     }
 
-    @Override // com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
         highlightPreferenceIfNeeded();
     }
 
-    @Override // androidx.preference.PreferenceFragmentCompat
-    protected void onBindPreferences() {
+    /* access modifiers changed from: protected */
+    public void onBindPreferences() {
         registerObserverIfNeeded();
     }
 
-    @Override // androidx.preference.PreferenceFragmentCompat
-    protected void onUnbindPreferences() {
+    /* access modifiers changed from: protected */
+    public void onUnbindPreferences() {
         unregisterObserverIfNeeded();
     }
 
     public void setLoading(boolean z, boolean z2) {
-        LoadingViewController.handleLoadingContainer(getView().findViewById(R.id.loading_container), getListView(), !z, z2);
+        LoadingViewController.handleLoadingContainer(getView().findViewById(R$id.loading_container), getListView(), !z, z2);
     }
 
     public void registerObserverIfNeeded() {
@@ -216,13 +224,13 @@ public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceF
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean isPreferenceExpanded(Preference preference) {
         HighlightablePreferenceGroupAdapter highlightablePreferenceGroupAdapter = this.mAdapter;
-        return highlightablePreferenceGroupAdapter == null || highlightablePreferenceGroupAdapter.getPreferenceAdapterPosition(preference) != -1;
+        return highlightablePreferenceGroupAdapter == null || highlightablePreferenceGroupAdapter.getPreferenceAdapterPosition(preference) != ORDER_FIRST;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onDataSetChanged() {
         highlightPreferenceIfNeeded();
         updateEmptyView();
@@ -232,7 +240,7 @@ public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceF
         return this.mHeader;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void setHeaderView(int i) {
         LayoutPreference layoutPreference = new LayoutPreference(getPrefContext(), i);
         this.mHeader = layoutPreference;
@@ -240,45 +248,51 @@ public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceF
         addPreferenceToTop(this.mHeader);
     }
 
+    /* access modifiers changed from: protected */
+    public void setHeaderView(View view) {
+        LayoutPreference layoutPreference = new LayoutPreference(getPrefContext(), view);
+        this.mHeader = layoutPreference;
+        layoutPreference.setSelectable(false);
+        addPreferenceToTop(this.mHeader);
+    }
+
     private void addPreferenceToTop(LayoutPreference layoutPreference) {
-        layoutPreference.setOrder(-1);
+        layoutPreference.setOrder(ORDER_FIRST);
         if (getPreferenceScreen() != null) {
             getPreferenceScreen().addPreference(layoutPreference);
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat
     public void setPreferenceScreen(PreferenceScreen preferenceScreen) {
         LayoutPreference layoutPreference;
         if (preferenceScreen != null && !preferenceScreen.isAttached()) {
             preferenceScreen.setShouldUseGeneratedIds(this.mAnimationAllowed);
         }
         super.setPreferenceScreen(preferenceScreen);
-        if (preferenceScreen == null || (layoutPreference = this.mHeader) == null) {
-            return;
+        if (preferenceScreen != null && (layoutPreference = this.mHeader) != null) {
+            preferenceScreen.addPreference(layoutPreference);
         }
-        preferenceScreen.addPreference(layoutPreference);
     }
 
-    void updateEmptyView() {
-        if (this.mEmptyView == null) {
-            return;
-        }
-        int i = 0;
-        if (getPreferenceScreen() != null) {
-            View findViewById = getActivity().findViewById(16908351);
-            boolean z = true;
-            if (getPreferenceScreen().getPreferenceCount() - (this.mHeader != null ? 1 : 0) > 0 && (findViewById == null || findViewById.getVisibility() == 0)) {
-                z = false;
+    /* access modifiers changed from: package-private */
+    public void updateEmptyView() {
+        if (this.mEmptyView != null) {
+            int i = 0;
+            if (getPreferenceScreen() != null) {
+                View findViewById = getActivity().findViewById(16908351);
+                boolean z = true;
+                if (getPreferenceScreen().getPreferenceCount() - (this.mHeader != null ? 1 : 0) > 0 && (findViewById == null || findViewById.getVisibility() == 0)) {
+                    z = false;
+                }
+                View view = this.mEmptyView;
+                if (!z) {
+                    i = 8;
+                }
+                view.setVisibility(i);
+                return;
             }
-            View view = this.mEmptyView;
-            if (!z) {
-                i = 8;
-            }
-            view.setVisibility(i);
-            return;
+            this.mEmptyView.setVisibility(0);
         }
-        this.mEmptyView.setVisibility(0);
     }
 
     public void setEmptyView(View view) {
@@ -294,28 +308,32 @@ public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceF
         return this.mEmptyView;
     }
 
-    @Override // androidx.preference.PreferenceFragmentCompat
     public RecyclerView.LayoutManager onCreateLayoutManager() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         this.mLayoutManager = linearLayoutManager;
         return linearLayoutManager;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.PreferenceFragmentCompat
+    /* access modifiers changed from: protected */
     public RecyclerView.Adapter onCreateAdapter(PreferenceScreen preferenceScreen) {
+        String str;
         Bundle arguments = getArguments();
-        HighlightablePreferenceGroupAdapter highlightablePreferenceGroupAdapter = new HighlightablePreferenceGroupAdapter(preferenceScreen, arguments == null ? null : arguments.getString(":settings:fragment_args_key"), this.mPreferenceHighlighted);
+        if (arguments == null) {
+            str = null;
+        } else {
+            str = arguments.getString(":settings:fragment_args_key");
+        }
+        HighlightablePreferenceGroupAdapter highlightablePreferenceGroupAdapter = new HighlightablePreferenceGroupAdapter(preferenceScreen, str, this.mPreferenceHighlighted);
         this.mAdapter = highlightablePreferenceGroupAdapter;
         return highlightablePreferenceGroupAdapter;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void setAnimationAllowed(boolean z) {
         this.mAnimationAllowed = z;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void cacheRemoveAllPrefs(PreferenceGroup preferenceGroup) {
         this.mPreferenceCache = new ArrayMap<>();
         int preferenceCount = preferenceGroup.getPreferenceCount();
@@ -327,7 +345,7 @@ public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceF
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public Preference getCachedPreference(String str) {
         ArrayMap<String, Preference> arrayMap = this.mPreferenceCache;
         if (arrayMap != null) {
@@ -336,19 +354,29 @@ public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceF
         return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void removeCachedPrefs(PreferenceGroup preferenceGroup) {
-        for (Preference preference : this.mPreferenceCache.values()) {
-            preferenceGroup.removePreference(preference);
+        for (Preference removePreference : this.mPreferenceCache.values()) {
+            preferenceGroup.removePreference(removePreference);
         }
         this.mPreferenceCache = null;
+    }
+
+    /* access modifiers changed from: protected */
+    public int getCachedCount() {
+        ArrayMap<String, Preference> arrayMap = this.mPreferenceCache;
+        if (arrayMap != null) {
+            return arrayMap.size();
+        }
+        return 0;
     }
 
     public boolean removePreference(String str) {
         return removePreference(getPreferenceScreen(), str);
     }
 
-    boolean removePreference(PreferenceGroup preferenceGroup, String str) {
+    /* access modifiers changed from: package-private */
+    public boolean removePreference(PreferenceGroup preferenceGroup, String str) {
         int preferenceCount = preferenceGroup.getPreferenceCount();
         for (int i = 0; i < preferenceCount; i++) {
             Preference preference = preferenceGroup.getPreference(i);
@@ -366,7 +394,7 @@ public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceF
         getActivity().onBackPressed();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public ContentResolver getContentResolver() {
         FragmentActivity activity = getActivity();
         if (activity != null) {
@@ -375,22 +403,21 @@ public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceF
         return this.mContentResolver;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public Object getSystemService(String str) {
         return getActivity().getSystemService(str);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public <T> T getSystemService(Class<T> cls) {
-        return (T) getActivity().getSystemService(cls);
+        return getActivity().getSystemService(cls);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public PackageManager getPackageManager() {
         return getActivity().getPackageManager();
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onDetach() {
         SettingsDialogFragment settingsDialogFragment;
         if (isRemoving() && (settingsDialogFragment = this.mDialogFragment) != null) {
@@ -400,17 +427,17 @@ public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceF
         super.onDetach();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void showDialog(int i) {
         if (this.mDialogFragment != null) {
-            Log.e("SettingsPreference", "Old dialog fragment not null!");
+            Log.e(TAG, "Old dialog fragment not null!");
         }
         SettingsDialogFragment newInstance = SettingsDialogFragment.newInstance(this, i);
         this.mDialogFragment = newInstance;
         newInstance.show(getChildFragmentManager(), Integer.toString(i));
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void removeDialog(int i) {
         SettingsDialogFragment settingsDialogFragment = this.mDialogFragment;
         if (settingsDialogFragment != null && settingsDialogFragment.getDialogId() == i) {
@@ -419,7 +446,15 @@ public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceF
         this.mDialogFragment = null;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
+    public void setOnCancelListener(DialogInterface.OnCancelListener onCancelListener) {
+        SettingsDialogFragment settingsDialogFragment = this.mDialogFragment;
+        if (settingsDialogFragment != null) {
+            settingsDialogFragment.mOnCancelListener = onCancelListener;
+        }
+    }
+
+    /* access modifiers changed from: protected */
     public void setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
         SettingsDialogFragment settingsDialogFragment = this.mDialogFragment;
         if (settingsDialogFragment != null) {
@@ -427,59 +462,57 @@ public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceF
         }
     }
 
-    @Override // androidx.preference.PreferenceFragmentCompat, androidx.preference.PreferenceManager.OnDisplayPreferenceDialogListener
     public void onDisplayPreferenceDialog(Preference preference) {
-        DialogFragment newInstance;
+        DialogFragment dialogFragment;
         if (preference.getKey() == null) {
             preference.setKey(UUID.randomUUID().toString());
         }
         if (preference instanceof RestrictedListPreference) {
-            newInstance = RestrictedListPreference.RestrictedListPreferenceDialogFragment.newInstance(preference.getKey());
+            dialogFragment = RestrictedListPreference.RestrictedListPreferenceDialogFragment.newInstance(preference.getKey());
         } else if (preference instanceof CustomListPreference) {
-            newInstance = CustomListPreference.CustomListPreferenceDialogFragment.newInstance(preference.getKey());
+            dialogFragment = CustomListPreference.CustomListPreferenceDialogFragment.newInstance(preference.getKey());
         } else if (preference instanceof CustomDialogPreferenceCompat) {
-            newInstance = CustomDialogPreferenceCompat.CustomPreferenceDialogFragment.newInstance(preference.getKey());
+            dialogFragment = CustomDialogPreferenceCompat.CustomPreferenceDialogFragment.newInstance(preference.getKey());
         } else if (preference instanceof CustomEditTextPreferenceCompat) {
-            newInstance = CustomEditTextPreferenceCompat.CustomPreferenceDialogFragment.newInstance(preference.getKey());
+            dialogFragment = CustomEditTextPreferenceCompat.CustomPreferenceDialogFragment.newInstance(preference.getKey());
         } else {
             super.onDisplayPreferenceDialog(preference);
             return;
         }
-        newInstance.setTargetFragment(this, 0);
-        newInstance.show(getFragmentManager(), "dialog_preference");
+        dialogFragment.setTargetFragment(this, 0);
+        dialogFragment.show(getFragmentManager(), "dialog_preference");
         onDialogShowing();
     }
 
-    /* loaded from: classes.dex */
     public static class SettingsDialogFragment extends InstrumentedDialogFragment {
-        private DialogInterface.OnCancelListener mOnCancelListener;
-        private DialogInterface.OnDismissListener mOnDismissListener;
+        /* access modifiers changed from: private */
+        public DialogInterface.OnCancelListener mOnCancelListener;
+        /* access modifiers changed from: private */
+        public DialogInterface.OnDismissListener mOnDismissListener;
         private Fragment mParentFragment;
 
         public static SettingsDialogFragment newInstance(DialogCreatable dialogCreatable, int i) {
-            if (!(dialogCreatable instanceof Fragment)) {
-                throw new IllegalArgumentException("fragment argument must be an instance of " + Fragment.class.getName());
+            if (dialogCreatable instanceof Fragment) {
+                SettingsDialogFragment settingsDialogFragment = new SettingsDialogFragment();
+                settingsDialogFragment.setParentFragment(dialogCreatable);
+                settingsDialogFragment.setDialogId(i);
+                return settingsDialogFragment;
             }
-            SettingsDialogFragment settingsDialogFragment = new SettingsDialogFragment();
-            settingsDialogFragment.setParentFragment(dialogCreatable);
-            settingsDialogFragment.setDialogId(i);
-            return settingsDialogFragment;
+            throw new IllegalArgumentException("fragment argument must be an instance of " + Fragment.class.getName());
         }
 
-        @Override // com.android.settingslib.core.instrumentation.Instrumentable
         public int getMetricsCategory() {
             Fragment fragment = this.mParentFragment;
             if (fragment == null) {
                 return 0;
             }
             int dialogMetricsCategory = ((DialogCreatable) fragment).getDialogMetricsCategory(this.mDialogId);
-            if (dialogMetricsCategory <= 0) {
-                throw new IllegalStateException("Dialog must provide a metrics category");
+            if (dialogMetricsCategory > 0) {
+                return dialogMetricsCategory;
             }
-            return dialogMetricsCategory;
+            throw new IllegalStateException("Dialog must provide a metrics category");
         }
 
-        @Override // androidx.fragment.app.DialogFragment, androidx.fragment.app.Fragment
         public void onSaveInstanceState(Bundle bundle) {
             super.onSaveInstanceState(bundle);
             if (this.mParentFragment != null) {
@@ -488,23 +521,20 @@ public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceF
             }
         }
 
-        @Override // com.android.settingslib.core.lifecycle.ObservableDialogFragment, androidx.fragment.app.DialogFragment, androidx.fragment.app.Fragment
         public void onStart() {
             super.onStart();
             Fragment fragment = this.mParentFragment;
-            if (fragment == null || !(fragment instanceof SettingsPreferenceFragment)) {
-                return;
+            if (fragment != null && (fragment instanceof SettingsPreferenceFragment)) {
+                ((SettingsPreferenceFragment) fragment).onDialogShowing();
             }
-            ((SettingsPreferenceFragment) fragment).onDialogShowing();
         }
 
-        @Override // androidx.fragment.app.DialogFragment
         public Dialog onCreateDialog(Bundle bundle) {
-            Object valueOf;
+            Object obj;
             if (bundle != null) {
                 this.mDialogId = bundle.getInt("key_dialog_id", 0);
                 this.mParentFragment = getParentFragment();
-                int i = bundle.getInt("key_parent_fragment_id", -1);
+                int i = bundle.getInt("key_parent_fragment_id", SettingsPreferenceFragment.ORDER_FIRST);
                 if (this.mParentFragment == null) {
                     this.mParentFragment = getFragmentManager().findFragmentById(i);
                 }
@@ -513,11 +543,11 @@ public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceF
                     StringBuilder sb = new StringBuilder();
                     Fragment fragment2 = this.mParentFragment;
                     if (fragment2 != null) {
-                        valueOf = fragment2.getClass().getName();
+                        obj = fragment2.getClass().getName();
                     } else {
-                        valueOf = Integer.valueOf(i);
+                        obj = Integer.valueOf(i);
                     }
-                    sb.append(valueOf);
+                    sb.append(obj);
                     sb.append(" must implement ");
                     sb.append(DialogCreatable.class.getName());
                     throw new IllegalArgumentException(sb.toString());
@@ -528,7 +558,6 @@ public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceF
             return ((DialogCreatable) this.mParentFragment).onCreateDialog(this.mDialogId);
         }
 
-        @Override // androidx.fragment.app.DialogFragment, android.content.DialogInterface.OnCancelListener
         public void onCancel(DialogInterface dialogInterface) {
             super.onCancel(dialogInterface);
             DialogInterface.OnCancelListener onCancelListener = this.mOnCancelListener;
@@ -537,7 +566,6 @@ public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceF
             }
         }
 
-        @Override // androidx.fragment.app.DialogFragment, android.content.DialogInterface.OnDismissListener
         public void onDismiss(DialogInterface dialogInterface) {
             super.onDismiss(dialogInterface);
             DialogInterface.OnDismissListener onDismissListener = this.mOnDismissListener;
@@ -550,14 +578,12 @@ public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceF
             return this.mDialogId;
         }
 
-        @Override // androidx.fragment.app.DialogFragment, androidx.fragment.app.Fragment
         public void onDetach() {
             super.onDetach();
             Fragment fragment = this.mParentFragment;
-            if (!(fragment instanceof SettingsPreferenceFragment) || ((SettingsPreferenceFragment) fragment).mDialogFragment != this) {
-                return;
+            if ((fragment instanceof SettingsPreferenceFragment) && ((SettingsPreferenceFragment) fragment).mDialogFragment == this) {
+                ((SettingsPreferenceFragment) this.mParentFragment).mDialogFragment = null;
             }
-            ((SettingsPreferenceFragment) this.mParentFragment).mDialogFragment = null;
         }
 
         private void setParentFragment(DialogCreatable dialogCreatable) {
@@ -569,29 +595,28 @@ public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceF
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean hasNextButton() {
         return ((ButtonBarHandler) getActivity()).hasNextButton();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public Button getNextButton() {
         return ((ButtonBarHandler) getActivity()).getNextButton();
     }
 
     public void finish() {
         FragmentActivity activity = getActivity();
-        if (activity == null) {
-            return;
-        }
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
-        } else {
-            activity.finish();
+        if (activity != null) {
+            if (getFragmentManager().getBackStackEntryCount() > 0) {
+                getFragmentManager().popBackStack();
+            } else {
+                activity.finish();
+            }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public Intent getIntent() {
         if (getActivity() == null) {
             return null;
@@ -599,25 +624,63 @@ public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceF
         return getActivity().getIntent();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void setResult(int i, Intent intent) {
-        if (getActivity() == null) {
-            return;
+        if (getActivity() != null) {
+            getActivity().setResult(i, intent);
         }
-        getActivity().setResult(i, intent);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void setResult(int i) {
-        if (getActivity() == null) {
-            return;
+        if (getActivity() != null) {
+            getActivity().setResult(i);
         }
-        getActivity().setResult(i);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean isFinishingOrDestroyed() {
         FragmentActivity activity = getActivity();
         return activity == null || activity.isFinishing() || activity.isDestroyed();
+    }
+
+    /* access modifiers changed from: protected */
+    public void replaceEnterprisePreferenceScreenTitle(String str, int i) {
+        getActivity().setTitle(this.mDevicePolicyManager.getResources().getString(str, new SettingsPreferenceFragment$$ExternalSyntheticLambda2(this, i)));
+    }
+
+    /* access modifiers changed from: private */
+    public /* synthetic */ String lambda$replaceEnterprisePreferenceScreenTitle$0(int i) {
+        return getString(i);
+    }
+
+    /* access modifiers changed from: protected */
+    public void replaceEnterpriseStringSummary(String str, String str2, int i) {
+        Preference findPreference = findPreference(str);
+        if (findPreference == null) {
+            Log.d(TAG, "Could not find enterprise preference " + str);
+            return;
+        }
+        findPreference.setSummary((CharSequence) this.mDevicePolicyManager.getResources().getString(str2, new SettingsPreferenceFragment$$ExternalSyntheticLambda0(this, i)));
+    }
+
+    /* access modifiers changed from: private */
+    public /* synthetic */ String lambda$replaceEnterpriseStringSummary$1(int i) {
+        return getString(i);
+    }
+
+    /* access modifiers changed from: protected */
+    public void replaceEnterpriseStringTitle(String str, String str2, int i) {
+        Preference findPreference = findPreference(str);
+        if (findPreference == null) {
+            Log.d(TAG, "Could not find enterprise preference " + str);
+            return;
+        }
+        findPreference.setTitle((CharSequence) this.mDevicePolicyManager.getResources().getString(str2, new SettingsPreferenceFragment$$ExternalSyntheticLambda1(this, i)));
+    }
+
+    /* access modifiers changed from: private */
+    public /* synthetic */ String lambda$replaceEnterpriseStringTitle$2(int i) {
+        return getString(i);
     }
 }

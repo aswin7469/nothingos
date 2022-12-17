@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.setupdesign.template.RecyclerMixin;
 import com.google.android.setupdesign.template.RecyclerViewScrollHandlingDelegate;
 import com.google.android.setupdesign.template.RequireScrollMixin;
-/* loaded from: classes2.dex */
+
 public class SetupWizardRecyclerLayout extends SetupWizardLayout {
     protected RecyclerMixin recyclerMixin;
 
@@ -20,7 +20,7 @@ public class SetupWizardRecyclerLayout extends SetupWizardLayout {
 
     public SetupWizardRecyclerLayout(Context context, int i, int i2) {
         super(context, i, i2);
-        init(null, 0);
+        init((AttributeSet) null, 0);
     }
 
     public SetupWizardRecyclerLayout(Context context, AttributeSet attributeSet) {
@@ -34,17 +34,16 @@ public class SetupWizardRecyclerLayout extends SetupWizardLayout {
     }
 
     private void init(AttributeSet attributeSet, int i) {
-        if (isInEditMode()) {
-            return;
+        if (!isInEditMode()) {
+            this.recyclerMixin.parseAttributes(attributeSet, i);
+            registerMixin(RecyclerMixin.class, this.recyclerMixin);
+            RequireScrollMixin requireScrollMixin = (RequireScrollMixin) getMixin(RequireScrollMixin.class);
+            requireScrollMixin.setScrollHandlingDelegate(new RecyclerViewScrollHandlingDelegate(requireScrollMixin, getRecyclerView()));
         }
-        this.recyclerMixin.parseAttributes(attributeSet, i);
-        registerMixin(RecyclerMixin.class, this.recyclerMixin);
-        RequireScrollMixin requireScrollMixin = (RequireScrollMixin) getMixin(RequireScrollMixin.class);
-        requireScrollMixin.setScrollHandlingDelegate(new RecyclerViewScrollHandlingDelegate(requireScrollMixin, getRecyclerView()));
     }
 
-    @Override // android.widget.FrameLayout, android.view.ViewGroup, android.view.View
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
         this.recyclerMixin.onLayout();
     }
@@ -61,8 +60,7 @@ public class SetupWizardRecyclerLayout extends SetupWizardLayout {
         return this.recyclerMixin.getRecyclerView();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.google.android.setupdesign.SetupWizardLayout, com.google.android.setupcompat.internal.TemplateLayout
+    /* access modifiers changed from: protected */
     public ViewGroup findContainer(int i) {
         if (i == 0) {
             i = R$id.sud_recycler_view;
@@ -70,8 +68,7 @@ public class SetupWizardRecyclerLayout extends SetupWizardLayout {
         return super.findContainer(i);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.google.android.setupdesign.SetupWizardLayout, com.google.android.setupcompat.internal.TemplateLayout
+    /* access modifiers changed from: protected */
     public View onInflateTemplate(LayoutInflater layoutInflater, int i) {
         if (i == 0) {
             i = R$layout.sud_recycler_template;
@@ -79,8 +76,8 @@ public class SetupWizardRecyclerLayout extends SetupWizardLayout {
         return super.onInflateTemplate(layoutInflater, i);
     }
 
-    @Override // com.google.android.setupcompat.internal.TemplateLayout
-    protected void onTemplateInflated() {
+    /* access modifiers changed from: protected */
+    public void onTemplateInflated() {
         View findViewById = findViewById(R$id.sud_recycler_view);
         if (findViewById instanceof RecyclerView) {
             this.recyclerMixin = new RecyclerMixin(this, (RecyclerView) findViewById);
@@ -89,11 +86,13 @@ public class SetupWizardRecyclerLayout extends SetupWizardLayout {
         throw new IllegalStateException("SetupWizardRecyclerLayout should use a template with recycler view");
     }
 
-    @Override // com.google.android.setupcompat.internal.TemplateLayout
     public <T extends View> T findManagedViewById(int i) {
-        T t;
+        T findViewById;
         View header = this.recyclerMixin.getHeader();
-        return (header == null || (t = (T) header.findViewById(i)) == null) ? (T) super.findViewById(i) : t;
+        if (header == null || (findViewById = header.findViewById(i)) == null) {
+            return super.findViewById(i);
+        }
+        return findViewById;
     }
 
     @Deprecated

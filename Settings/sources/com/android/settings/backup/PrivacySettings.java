@@ -1,50 +1,44 @@
 package com.android.settings.backup;
 
 import android.content.Context;
-import com.android.settings.R;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.dashboard.DashboardFragment;
 import com.android.settings.search.BaseSearchIndexProvider;
-/* loaded from: classes.dex */
+
 public class PrivacySettings extends DashboardFragment {
-    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R.xml.privacy_settings) { // from class: com.android.settings.backup.PrivacySettings.1
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // com.android.settings.search.BaseSearchIndexProvider
+    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R$xml.privacy_settings) {
+        /* access modifiers changed from: protected */
         public boolean isPageSearchEnabled(Context context) {
             BackupSettingsHelper backupSettingsHelper = new BackupSettingsHelper(context);
             return !backupSettingsHelper.isBackupProvidedByManufacturer() && !backupSettingsHelper.isIntentProvidedByTransport();
         }
     };
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "PrivacySettings";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 81;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.privacy_settings;
+        return R$xml.privacy_settings;
     }
 
-    @Override // com.android.settings.support.actionbar.HelpResourceProvider
     public int getHelpResource() {
-        return R.string.help_url_backup_reset;
+        return R$string.help_url_backup_reset;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         updatePrivacySettingsConfigData(context);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public void updatePreferenceStates() {
         updatePrivacySettingsConfigData(getContext());
         super.updatePreferenceStates();

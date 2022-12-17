@@ -6,11 +6,10 @@ import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.instrumentation.InstrumentedDialogFragment;
-/* loaded from: classes.dex */
+
 public class EnableOemUnlockSettingWarningDialog extends InstrumentedDialogFragment implements DialogInterface.OnClickListener {
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1220;
     }
@@ -24,31 +23,26 @@ public class EnableOemUnlockSettingWarningDialog extends InstrumentedDialogFragm
         }
     }
 
-    @Override // androidx.fragment.app.DialogFragment
     public Dialog onCreateDialog(Bundle bundle) {
-        return new AlertDialog.Builder(getActivity()).setTitle(R.string.confirm_enable_oem_unlock_title).setMessage(R.string.confirm_enable_oem_unlock_text).setPositiveButton(R.string.enable_text, this).setNegativeButton(17039360, this).create();
+        return new AlertDialog.Builder(getActivity()).setTitle(R$string.confirm_enable_oem_unlock_title).setMessage(R$string.confirm_enable_oem_unlock_text).setPositiveButton(R$string.enable_text, (DialogInterface.OnClickListener) this).setNegativeButton(17039360, (DialogInterface.OnClickListener) this).create();
     }
 
-    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialogInterface, int i) {
         OemUnlockDialogHost oemUnlockDialogHost = (OemUnlockDialogHost) getTargetFragment();
-        if (oemUnlockDialogHost == null) {
-            return;
-        }
-        if (i == -1) {
-            oemUnlockDialogHost.onOemUnlockDialogConfirmed();
-        } else {
-            oemUnlockDialogHost.onOemUnlockDialogDismissed();
+        if (oemUnlockDialogHost != null) {
+            if (i == -1) {
+                oemUnlockDialogHost.onOemUnlockDialogConfirmed();
+            } else {
+                oemUnlockDialogHost.onOemUnlockDialogDismissed();
+            }
         }
     }
 
-    @Override // androidx.fragment.app.DialogFragment, android.content.DialogInterface.OnDismissListener
     public void onDismiss(DialogInterface dialogInterface) {
         super.onDismiss(dialogInterface);
         OemUnlockDialogHost oemUnlockDialogHost = (OemUnlockDialogHost) getTargetFragment();
-        if (oemUnlockDialogHost == null) {
-            return;
+        if (oemUnlockDialogHost != null) {
+            oemUnlockDialogHost.onOemUnlockDialogDismissed();
         }
-        oemUnlockDialogHost.onOemUnlockDialogDismissed();
     }
 }

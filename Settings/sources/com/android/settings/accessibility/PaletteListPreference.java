@@ -8,7 +8,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
-import com.android.settings.R;
+import com.android.settings.R$array;
+import com.android.settings.R$color;
+import com.android.settings.R$dimen;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
 import com.google.common.primitives.Floats;
 import com.google.common.primitives.Ints;
 import java.util.ArrayList;
@@ -17,7 +21,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-/* loaded from: classes.dex */
+
 public final class PaletteListPreference extends Preference {
     private final List<Integer> mGradientColors;
     private final List<Float> mGradientOffsets;
@@ -30,18 +34,17 @@ public final class PaletteListPreference extends Preference {
         super(context, attributeSet, i);
         this.mGradientColors = new ArrayList();
         this.mGradientOffsets = new ArrayList();
-        setLayoutResource(R.layout.daltonizer_preview);
+        setLayoutResource(R$layout.daltonizer_preview);
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         initPaletteAttributes(getContext());
-        initPaletteView(getContext(), (ViewGroup) preferenceViewHolder.itemView.findViewById(R.id.palette_view));
+        initPaletteView(getContext(), (ViewGroup) preferenceViewHolder.itemView.findViewById(R$id.palette_view));
     }
 
     private void initPaletteAttributes(Context context) {
-        int color = context.getColor(R.color.palette_list_gradient_background);
+        int color = context.getColor(R$color.palette_list_gradient_background);
         this.mGradientColors.add(0, Integer.valueOf(color));
         this.mGradientColors.add(1, Integer.valueOf(color));
         this.mGradientColors.add(2, Integer.valueOf(color));
@@ -56,8 +59,8 @@ public final class PaletteListPreference extends Preference {
         }
         List<Integer> paletteColors = getPaletteColors(context);
         List<String> paletteData = getPaletteData(context);
-        float dimension = context.getResources().getDimension(R.dimen.accessibility_layout_margin_start_end);
-        this.mGradientOffsets.set(1, Float.valueOf((getTextWidth(context, (String) Collections.max(paletteData, Comparator.comparing(PaletteListPreference$$ExternalSyntheticLambda0.INSTANCE))) + dimension) / AccessibilityUtil.getScreenWidthPixels(context)));
+        float dimension = context.getResources().getDimension(R$dimen.accessibility_layout_margin_start_end);
+        this.mGradientOffsets.set(1, Float.valueOf((((float) getTextWidth(context, (String) Collections.max(paletteData, Comparator.comparing(new PaletteListPreference$$ExternalSyntheticLambda0())))) + dimension) / ((float) AccessibilityUtil.getScreenWidthPixels(context))));
         int max = Ints.max((AccessibilityUtil.getScreenHeightPixels(context) / 2) / paletteData.size(), getTextLineHeight(context));
         for (int i = 0; i < paletteData.size(); i++) {
             TextView textView = new TextView(context);
@@ -68,6 +71,7 @@ public final class PaletteListPreference extends Preference {
             textView.setBackground(createGradientDrawable(viewGroup, paletteColors.get(i).intValue()));
             viewGroup.addView(textView);
         }
+        updateFirstAndLastItemsBackground(context, viewGroup, paletteData.size());
     }
 
     private GradientDrawable createGradientDrawable(ViewGroup viewGroup, int i) {
@@ -84,12 +88,18 @@ public final class PaletteListPreference extends Preference {
         return gradientDrawable;
     }
 
+    private void updateFirstAndLastItemsBackground(Context context, ViewGroup viewGroup, int i) {
+        float dimensionPixelSize = (float) context.getResources().getDimensionPixelSize(R$dimen.accessibility_illustration_view_radius);
+        ((GradientDrawable) viewGroup.getChildAt(0).getBackground()).setCornerRadii(new float[]{dimensionPixelSize, dimensionPixelSize, dimensionPixelSize, dimensionPixelSize, 0.0f, 0.0f, 0.0f, 0.0f});
+        ((GradientDrawable) viewGroup.getChildAt(i - 1).getBackground()).setCornerRadii(new float[]{0.0f, 0.0f, 0.0f, 0.0f, dimensionPixelSize, dimensionPixelSize, dimensionPixelSize, dimensionPixelSize});
+    }
+
     private List<Integer> getPaletteColors(Context context) {
-        return (List) Arrays.stream(context.getResources().getIntArray(R.array.setting_palette_colors)).boxed().collect(Collectors.toList());
+        return (List) Arrays.stream(context.getResources().getIntArray(R$array.setting_palette_colors)).boxed().collect(Collectors.toList());
     }
 
     private List<String> getPaletteData(Context context) {
-        return Arrays.asList(context.getResources().getStringArray(R.array.setting_palette_data));
+        return Arrays.asList(context.getResources().getStringArray(R$array.setting_palette_data));
     }
 
     private int getTextWidth(Context context, String str) {

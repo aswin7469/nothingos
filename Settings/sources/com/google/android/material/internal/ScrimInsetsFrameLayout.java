@@ -13,7 +13,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.R$style;
 import com.google.android.material.R$styleable;
-/* loaded from: classes2.dex */
+
 public class ScrimInsetsFrameLayout extends FrameLayout {
     private boolean drawBottomInsetForeground;
     private boolean drawTopInsetForeground;
@@ -21,11 +21,12 @@ public class ScrimInsetsFrameLayout extends FrameLayout {
     Rect insets;
     private Rect tempRect;
 
-    protected void onInsetsChanged(WindowInsetsCompat windowInsetsCompat) {
+    /* access modifiers changed from: protected */
+    public void onInsetsChanged(WindowInsetsCompat windowInsetsCompat) {
     }
 
     public ScrimInsetsFrameLayout(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public ScrimInsetsFrameLayout(Context context, AttributeSet attributeSet) {
@@ -41,8 +42,7 @@ public class ScrimInsetsFrameLayout extends FrameLayout {
         this.insetForeground = obtainStyledAttributes.getDrawable(R$styleable.ScrimInsetsFrameLayout_insetForeground);
         obtainStyledAttributes.recycle();
         setWillNotDraw(true);
-        ViewCompat.setOnApplyWindowInsetsListener(this, new OnApplyWindowInsetsListener() { // from class: com.google.android.material.internal.ScrimInsetsFrameLayout.1
-            @Override // androidx.core.view.OnApplyWindowInsetsListener
+        ViewCompat.setOnApplyWindowInsetsListener(this, new OnApplyWindowInsetsListener() {
             public WindowInsetsCompat onApplyWindowInsets(View view, WindowInsetsCompat windowInsetsCompat) {
                 ScrimInsetsFrameLayout scrimInsetsFrameLayout = ScrimInsetsFrameLayout.this;
                 if (scrimInsetsFrameLayout.insets == null) {
@@ -69,41 +69,38 @@ public class ScrimInsetsFrameLayout extends FrameLayout {
         this.drawBottomInsetForeground = z;
     }
 
-    @Override // android.view.View
     public void draw(Canvas canvas) {
         super.draw(canvas);
         int width = getWidth();
         int height = getHeight();
-        if (this.insets == null || this.insetForeground == null) {
-            return;
-        }
-        int save = canvas.save();
-        canvas.translate(getScrollX(), getScrollY());
-        if (this.drawTopInsetForeground) {
-            this.tempRect.set(0, 0, width, this.insets.top);
+        if (this.insets != null && this.insetForeground != null) {
+            int save = canvas.save();
+            canvas.translate((float) getScrollX(), (float) getScrollY());
+            if (this.drawTopInsetForeground) {
+                this.tempRect.set(0, 0, width, this.insets.top);
+                this.insetForeground.setBounds(this.tempRect);
+                this.insetForeground.draw(canvas);
+            }
+            if (this.drawBottomInsetForeground) {
+                this.tempRect.set(0, height - this.insets.bottom, width, height);
+                this.insetForeground.setBounds(this.tempRect);
+                this.insetForeground.draw(canvas);
+            }
+            Rect rect = this.tempRect;
+            Rect rect2 = this.insets;
+            rect.set(0, rect2.top, rect2.left, height - rect2.bottom);
             this.insetForeground.setBounds(this.tempRect);
             this.insetForeground.draw(canvas);
-        }
-        if (this.drawBottomInsetForeground) {
-            this.tempRect.set(0, height - this.insets.bottom, width, height);
+            Rect rect3 = this.tempRect;
+            Rect rect4 = this.insets;
+            rect3.set(width - rect4.right, rect4.top, width, height - rect4.bottom);
             this.insetForeground.setBounds(this.tempRect);
             this.insetForeground.draw(canvas);
+            canvas.restoreToCount(save);
         }
-        Rect rect = this.tempRect;
-        Rect rect2 = this.insets;
-        rect.set(0, rect2.top, rect2.left, height - rect2.bottom);
-        this.insetForeground.setBounds(this.tempRect);
-        this.insetForeground.draw(canvas);
-        Rect rect3 = this.tempRect;
-        Rect rect4 = this.insets;
-        rect3.set(width - rect4.right, rect4.top, width, height - rect4.bottom);
-        this.insetForeground.setBounds(this.tempRect);
-        this.insetForeground.draw(canvas);
-        canvas.restoreToCount(save);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.view.ViewGroup, android.view.View
+    /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         Drawable drawable = this.insetForeground;
@@ -112,13 +109,12 @@ public class ScrimInsetsFrameLayout extends FrameLayout {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.view.ViewGroup, android.view.View
+    /* access modifiers changed from: protected */
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         Drawable drawable = this.insetForeground;
         if (drawable != null) {
-            drawable.setCallback(null);
+            drawable.setCallback((Drawable.Callback) null);
         }
     }
 }

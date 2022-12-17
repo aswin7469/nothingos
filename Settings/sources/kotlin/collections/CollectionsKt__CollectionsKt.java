@@ -3,24 +3,33 @@ package kotlin.collections;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import kotlin.comparisons.ComparisonsKt;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-/* JADX INFO: Access modifiers changed from: package-private */
+
 /* compiled from: Collections.kt */
-/* loaded from: classes2.dex */
-public class CollectionsKt__CollectionsKt extends CollectionsKt__CollectionsJVMKt {
+class CollectionsKt__CollectionsKt extends CollectionsKt__CollectionsJVMKt {
     @NotNull
-    public static final <T> Collection<T> asCollection(@NotNull T[] asCollection) {
-        Intrinsics.checkNotNullParameter(asCollection, "$this$asCollection");
-        return new ArrayAsCollection(asCollection, false);
+    public static final <T> Collection<T> asCollection(@NotNull T[] tArr) {
+        Intrinsics.checkNotNullParameter(tArr, "<this>");
+        return new ArrayAsCollection(tArr, false);
     }
 
     @NotNull
-    public static <T> List<T> mutableListOf(@NotNull T... elements) {
-        Intrinsics.checkNotNullParameter(elements, "elements");
-        return elements.length == 0 ? new ArrayList() : new ArrayList(new ArrayAsCollection(elements, true));
+    public static <T> List<T> emptyList() {
+        return EmptyList.INSTANCE;
+    }
+
+    @NotNull
+    public static <T> List<T> listOf(@NotNull T... tArr) {
+        Intrinsics.checkNotNullParameter(tArr, "elements");
+        return tArr.length > 0 ? ArraysKt___ArraysJvmKt.asList(tArr) : emptyList();
+    }
+
+    @NotNull
+    public static <T> List<T> mutableListOf(@NotNull T... tArr) {
+        Intrinsics.checkNotNullParameter(tArr, "elements");
+        return tArr.length == 0 ? new ArrayList() : new ArrayList(new ArrayAsCollection(tArr, true));
     }
 
     public static /* synthetic */ int binarySearch$default(List list, Comparable comparable, int i, int i2, int i3, Object obj) {
@@ -33,13 +42,13 @@ public class CollectionsKt__CollectionsKt extends CollectionsKt__CollectionsJVMK
         return binarySearch(list, comparable, i, i2);
     }
 
-    public static final <T extends Comparable<? super T>> int binarySearch(@NotNull List<? extends T> binarySearch, @Nullable T t, int i, int i2) {
-        Intrinsics.checkNotNullParameter(binarySearch, "$this$binarySearch");
-        rangeCheck$CollectionsKt__CollectionsKt(binarySearch.size(), i, i2);
+    public static final <T extends Comparable<? super T>> int binarySearch(@NotNull List<? extends T> list, @Nullable T t, int i, int i2) {
+        Intrinsics.checkNotNullParameter(list, "<this>");
+        rangeCheck$CollectionsKt__CollectionsKt(list.size(), i, i2);
         int i3 = i2 - 1;
         while (i <= i3) {
             int i4 = (i + i3) >>> 1;
-            int compareValues = ComparisonsKt.compareValues(binarySearch.get(i4), t);
+            int compareValues = ComparisonsKt__ComparisonsKt.compareValues((Comparable) list.get(i4), t);
             if (compareValues < 0) {
                 i = i4 + 1;
             } else if (compareValues <= 0) {
@@ -56,9 +65,12 @@ public class CollectionsKt__CollectionsKt extends CollectionsKt__CollectionsJVMK
             throw new IllegalArgumentException("fromIndex (" + i2 + ") is greater than toIndex (" + i3 + ").");
         } else if (i2 < 0) {
             throw new IndexOutOfBoundsException("fromIndex (" + i2 + ") is less than zero.");
-        } else if (i3 <= i) {
-        } else {
+        } else if (i3 > i) {
             throw new IndexOutOfBoundsException("toIndex (" + i3 + ") is greater than size (" + i + ").");
         }
+    }
+
+    public static void throwIndexOverflow() {
+        throw new ArithmeticException("Index overflow has happened.");
     }
 }

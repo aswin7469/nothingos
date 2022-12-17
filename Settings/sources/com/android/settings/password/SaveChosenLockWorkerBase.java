@@ -10,10 +10,10 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.internal.widget.LockscreenCredential;
-import com.android.settings.R;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public abstract class SaveChosenLockWorkerBase extends Fragment {
+import com.android.settings.R$string;
+import com.android.settings.safetycenter.LockScreenSafetySource;
+
+abstract class SaveChosenLockWorkerBase extends Fragment {
     private boolean mBlocking;
     private boolean mFinished;
     private Listener mListener;
@@ -25,32 +25,31 @@ public abstract class SaveChosenLockWorkerBase extends Fragment {
     protected LockPatternUtils mUtils;
     protected boolean mWasSecureBefore;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public interface Listener {
+    interface Listener {
         void onChosenLockSaveFinished(boolean z, Intent intent);
     }
 
-    protected abstract Pair<Boolean, Intent> saveAndVerifyInBackground();
+    /* access modifiers changed from: protected */
+    public abstract Pair<Boolean, Intent> saveAndVerifyInBackground();
 
-    @Override // androidx.fragment.app.Fragment
+    SaveChosenLockWorkerBase() {
+    }
+
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setRetainInstance(true);
     }
 
     public void setListener(Listener listener) {
-        if (this.mListener == listener) {
-            return;
+        if (this.mListener != listener) {
+            this.mListener = listener;
+            if (this.mFinished && listener != null) {
+                listener.onChosenLockSaveFinished(this.mWasSecureBefore, this.mResultData);
+            }
         }
-        this.mListener = listener;
-        if (!this.mFinished || listener == null) {
-            return;
-        }
-        listener.onChosenLockSaveFinished(this.mWasSecureBefore, this.mResultData);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void prepare(LockPatternUtils lockPatternUtils, boolean z, boolean z2, int i) {
         this.mUtils = lockPatternUtils;
         this.mUserId = i;
@@ -64,7 +63,7 @@ public abstract class SaveChosenLockWorkerBase extends Fragment {
         this.mResultData = null;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void start() {
         if (this.mBlocking) {
             finish((Intent) saveAndVerifyInBackground().second);
@@ -73,7 +72,7 @@ public abstract class SaveChosenLockWorkerBase extends Fragment {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void finish(Intent intent) {
         this.mFinished = true;
         this.mResultData = intent;
@@ -85,6 +84,7 @@ public abstract class SaveChosenLockWorkerBase extends Fragment {
         if (lockscreenCredential != null) {
             lockscreenCredential.zeroize();
         }
+        LockScreenSafetySource.onLockScreenChange(getContext());
     }
 
     public void setBlocking(boolean z) {
@@ -96,7 +96,7 @@ public abstract class SaveChosenLockWorkerBase extends Fragment {
         this.mUnificationProfileCredential = lockscreenCredential.duplicate();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void unifyProfileCredentialIfRequested() {
         int i = this.mUnificationProfileId;
         if (i != -10000) {
@@ -104,22 +104,19 @@ public abstract class SaveChosenLockWorkerBase extends Fragment {
         }
     }
 
-    /* loaded from: classes.dex */
     private class Task extends AsyncTask<Void, Void, Pair<Boolean, Intent>> {
         private Task() {
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // android.os.AsyncTask
+        /* access modifiers changed from: protected */
         public Pair<Boolean, Intent> doInBackground(Void... voidArr) {
             return SaveChosenLockWorkerBase.this.saveAndVerifyInBackground();
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // android.os.AsyncTask
+        /* access modifiers changed from: protected */
         public void onPostExecute(Pair<Boolean, Intent> pair) {
             if (!((Boolean) pair.first).booleanValue()) {
-                Toast.makeText(SaveChosenLockWorkerBase.this.getContext(), R.string.lockpassword_credential_changed, 1).show();
+                Toast.makeText(SaveChosenLockWorkerBase.this.getContext(), R$string.lockpassword_credential_changed, 1).show();
             }
             SaveChosenLockWorkerBase.this.finish((Intent) pair.second);
         }

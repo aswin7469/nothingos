@@ -7,7 +7,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
-/* loaded from: classes.dex */
+
 final class AutofillDeveloperSettingsObserver extends ContentObserver {
     private final Runnable mChangeCallback;
     private final ContentResolver mResolver;
@@ -28,7 +28,6 @@ final class AutofillDeveloperSettingsObserver extends ContentObserver {
         this.mResolver.unregisterContentObserver(this);
     }
 
-    @Override // android.database.ContentObserver
     public void onChange(boolean z, Uri uri, int i) {
         this.mChangeCallback.run();
     }

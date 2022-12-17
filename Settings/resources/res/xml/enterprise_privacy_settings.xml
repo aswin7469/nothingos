@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:settings="http://schemas.android.com/apk/res-auto" android:title="@string/enterprise_privacy_settings">
+<PreferenceScreen xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:title="@string/enterprise_privacy_settings">
     <PreferenceCategory android:title="@string/enterprise_privacy_exposure_category" android:key="exposure_category" android:order="200" android:contentDescription="@string/enterprise_privacy_exposure_category">
         <Preference android:layout_height="wrap_content" android:title="@string/enterprise_privacy_enterprise_data" android:selectable="false" android:key="enterprise_privacy_enterprise_data" android:order="210"/>
         <Preference android:title="@string/enterprise_privacy_installed_packages" android:selectable="false" android:key="enterprise_privacy_installed_packages" android:order="220"/>
@@ -27,5 +27,5 @@
         <Preference android:title="@string/enterprise_privacy_failed_password_wipe_device" android:selectable="false" android:key="failed_password_wipe_current_user" android:order="530"/>
         <Preference android:title="@string/enterprise_privacy_failed_password_wipe_work" android:selectable="false" android:key="failed_password_wipe_managed_profile" android:order="540"/>
     </PreferenceCategory>
-    <com.android.settingslib.widget.FooterPreference android:title="@string/enterprise_privacy_header" android:selectable="false" android:key="enterprise_privacy_footer" settings:searchable="false"/>
+    <com.android.settingslib.widget.FooterPreference android:title="@string/enterprise_privacy_header" android:selectable="false" android:key="enterprise_privacy_footer" app:searchable="false"/>
 </PreferenceScreen>

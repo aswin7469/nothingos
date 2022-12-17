@@ -1,28 +1,31 @@
 package com.android.settings.biometrics;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
-import com.android.settings.R;
+import androidx.fragment.app.Fragment;
+import com.android.settings.R$anim;
 import com.android.settings.biometrics.BiometricEnrollSidecar;
 import com.google.android.setupcompat.util.WizardManagerHelper;
-/* loaded from: classes.dex */
+
 public abstract class BiometricsEnrollEnrolling extends BiometricEnrollBase implements BiometricEnrollSidecar.Listener {
     protected BiometricEnrollSidecar mSidecar;
 
-    protected abstract Intent getFinishIntent();
+    /* access modifiers changed from: protected */
+    public abstract Intent getFinishIntent();
 
-    protected abstract BiometricEnrollSidecar getSidecar();
+    /* access modifiers changed from: protected */
+    public abstract BiometricEnrollSidecar getSidecar();
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.biometrics.BiometricEnrollBase
+    /* access modifiers changed from: protected */
     public boolean shouldFinishWhenBackgrounded() {
         return false;
     }
 
-    protected abstract boolean shouldStartAutomatically();
+    /* access modifiers changed from: protected */
+    public abstract boolean shouldStartAutomatically();
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.core.lifecycle.ObservableActivity, androidx.fragment.app.FragmentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onStart() {
         super.onStart();
         if (shouldStartAutomatically()) {
@@ -30,13 +33,12 @@ public abstract class BiometricsEnrollEnrolling extends BiometricEnrollBase impl
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.biometrics.BiometricEnrollBase, com.android.settingslib.core.lifecycle.ObservableActivity, androidx.fragment.app.FragmentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onStop() {
         super.onStop();
         BiometricEnrollSidecar biometricEnrollSidecar = this.mSidecar;
         if (biometricEnrollSidecar != null) {
-            biometricEnrollSidecar.setListener(null);
+            biometricEnrollSidecar.setListener((BiometricEnrollSidecar.Listener) null);
         }
         if (!isChangingConfigurations()) {
             BiometricEnrollSidecar biometricEnrollSidecar2 = this.mSidecar;
@@ -56,13 +58,13 @@ public abstract class BiometricsEnrollEnrolling extends BiometricEnrollBase impl
         }
     }
 
-    @Override // androidx.activity.ComponentActivity, android.app.Activity
     public void onBackPressed() {
+        Log.d("Security", "BiometricsEnrollEnrolling::onBackPressed");
         cancelEnrollment();
         super.onBackPressed();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onSkipButtonClick(View view) {
         cancelEnrollment();
         setResult(2);
@@ -72,7 +74,7 @@ public abstract class BiometricsEnrollEnrolling extends BiometricEnrollBase impl
     public void cancelEnrollment() {
         BiometricEnrollSidecar biometricEnrollSidecar = this.mSidecar;
         if (biometricEnrollSidecar != null) {
-            biometricEnrollSidecar.setListener(null);
+            biometricEnrollSidecar.setListener((BiometricEnrollSidecar.Listener) null);
             this.mSidecar.cancelEnrollment();
             getSupportFragmentManager().beginTransaction().remove(this.mSidecar).commitAllowingStateLoss();
             this.mSidecar = null;
@@ -80,17 +82,19 @@ public abstract class BiometricsEnrollEnrolling extends BiometricEnrollBase impl
     }
 
     public void startEnrollment() {
+        Log.d("Security", "startEnrollment");
         BiometricEnrollSidecar biometricEnrollSidecar = (BiometricEnrollSidecar) getSupportFragmentManager().findFragmentByTag("sidecar");
         this.mSidecar = biometricEnrollSidecar;
         if (biometricEnrollSidecar == null) {
             this.mSidecar = getSidecar();
-            getSupportFragmentManager().beginTransaction().add(this.mSidecar, "sidecar").commitAllowingStateLoss();
+            getSupportFragmentManager().beginTransaction().add((Fragment) this.mSidecar, "sidecar").commitAllowingStateLoss();
         }
         this.mSidecar.setListener(this);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void launchFinish(byte[] bArr) {
+        Log.d("Security", "BiometricsEnrollEnrolling::launchFinish");
         Intent finishIntent = getFinishIntent();
         finishIntent.addFlags(637534208);
         finishIntent.putExtra("hw_auth_token", bArr);
@@ -102,7 +106,7 @@ public abstract class BiometricsEnrollEnrolling extends BiometricEnrollBase impl
             finishIntent.putExtra("android.intent.extra.USER_ID", i);
         }
         startActivity(finishIntent);
-        overridePendingTransition(R.anim.sud_slide_next_in, R.anim.sud_slide_next_out);
+        overridePendingTransition(R$anim.sud_slide_next_in, R$anim.sud_slide_next_out);
         finish();
     }
 }

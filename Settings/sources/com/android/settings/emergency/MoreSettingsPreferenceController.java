@@ -1,6 +1,5 @@
 package com.android.settings.emergency;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -19,81 +18,67 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$string;
 import com.android.settings.core.BasePreferenceController;
 import com.android.settings.overlay.FeatureFactory;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.Utils;
 import com.android.settingslib.widget.LayoutPreference;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class MoreSettingsPreferenceController extends BasePreferenceController implements View.OnClickListener {
     private static final String EXTRA_KEY_ATTRIBUTION = "attribution";
     private static final String TAG = "MoreSettingsPrefCtrl";
     Intent mIntent;
     private LayoutPreference mPreference;
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
 
     public MoreSettingsPreferenceController(Context context, String str) {
         super(context, str);
-        String string = this.mContext.getResources().getString(R.string.config_emergency_package_name);
-        if (TextUtils.isEmpty(string)) {
-            return;
-        }
-        this.mIntent = new Intent("android.intent.action.MAIN").setPackage(string);
-        List<ResolveInfo> queryIntentActivities = this.mContext.getPackageManager().queryIntentActivities(this.mIntent, 1048576);
-        if (queryIntentActivities != null && !queryIntentActivities.isEmpty()) {
-            this.mIntent.setClassName(string, queryIntentActivities.get(0).activityInfo.name);
-        } else {
-            this.mIntent = null;
+        String string = this.mContext.getResources().getString(R$string.config_emergency_package_name);
+        if (!TextUtils.isEmpty(string)) {
+            this.mIntent = new Intent("android.intent.action.MAIN").setPackage(string);
+            List<ResolveInfo> queryIntentActivities = this.mContext.getPackageManager().queryIntentActivities(this.mIntent, 1048576);
+            if (queryIntentActivities == null || queryIntentActivities.isEmpty()) {
+                this.mIntent = null;
+            } else {
+                this.mIntent.setClassName(string, queryIntentActivities.get(0).activityInfo.name);
+            }
         }
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         LayoutPreference layoutPreference = (LayoutPreference) preferenceScreen.findPreference(getPreferenceKey());
         this.mPreference = layoutPreference;
-        Button button = (Button) layoutPreference.findViewById(R.id.button);
+        Button button = (Button) layoutPreference.findViewById(R$id.button);
         Drawable icon = getIcon();
         button.setText(getButtonText());
         if (icon != null) {
@@ -103,27 +88,21 @@ public class MoreSettingsPreferenceController extends BasePreferenceController i
         button.setOnClickListener(this);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return this.mIntent == null ? 3 : 0;
     }
 
-    @Override // android.view.View.OnClickListener
     public void onClick(View view) {
         FeatureFactory.getFactory(this.mContext).getMetricsFeatureProvider().logClickedPreference(this.mPreference, getMetricsCategory());
-        Intent flags = new Intent(this.mIntent).addCategory("android.intent.category.LAUNCHER").setFlags(67108864);
+        Intent flags = new Intent(this.mIntent).addCategory("android.intent.category.LAUNCHER").setFlags(335544320);
         Bundle bundle = new Bundle();
         bundle.putString(EXTRA_KEY_ATTRIBUTION, this.mContext.getPackageName());
-        try {
-            this.mContext.startActivity(flags, bundle);
-        } catch (ActivityNotFoundException e) {
-            e.printStackTrace();
-        }
+        this.mContext.startActivity(flags, bundle);
     }
 
     private Drawable getIcon() {
         try {
-            ApplicationInfo applicationInfo = this.mContext.getPackageManager().getApplicationInfo(this.mContext.getResources().getString(R.string.config_emergency_package_name), 33280);
+            ApplicationInfo applicationInfo = this.mContext.getPackageManager().getApplicationInfo(this.mContext.getResources().getString(R$string.config_emergency_package_name), 33280);
             Context context = this.mContext;
             return getScaledDrawable(context, Utils.getBadgedIcon(context, applicationInfo), 24, 24);
         } catch (Exception e) {
@@ -133,10 +112,11 @@ public class MoreSettingsPreferenceController extends BasePreferenceController i
     }
 
     private CharSequence getButtonText() {
-        String string = this.mContext.getResources().getString(R.string.config_emergency_package_name);
+        String string = this.mContext.getResources().getString(R$string.config_emergency_package_name);
         try {
             PackageManager packageManager = this.mContext.getPackageManager();
-            return this.mContext.getString(R.string.open_app_button, packageManager.getApplicationInfo(string, 33280).loadLabel(packageManager));
+            ApplicationInfo applicationInfo = packageManager.getApplicationInfo(string, 33280);
+            return this.mContext.getString(R$string.open_app_button, new Object[]{applicationInfo.loadLabel(packageManager)});
         } catch (Exception unused) {
             Log.d(TAG, "Failed to get open app button text, falling back.");
             return "";
@@ -145,7 +125,7 @@ public class MoreSettingsPreferenceController extends BasePreferenceController i
 
     private static Drawable getScaledDrawable(Context context, Drawable drawable, int i, int i2) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        return new BitmapDrawable(context.getResources(), convertToBitmap(drawable, (int) TypedValue.applyDimension(1, i, displayMetrics), (int) TypedValue.applyDimension(1, i2, displayMetrics)));
+        return new BitmapDrawable(context.getResources(), convertToBitmap(drawable, (int) TypedValue.applyDimension(1, (float) i, displayMetrics), (int) TypedValue.applyDimension(1, (float) i2, displayMetrics)));
     }
 
     private static Bitmap convertToBitmap(Drawable drawable, int i, int i2) {

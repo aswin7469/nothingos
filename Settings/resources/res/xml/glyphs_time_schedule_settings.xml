@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:persistent="false" android:title="@string/nt_glyphs_bed_time_schedule_title" android:key="key_main_screen">
+    <com.nothing.settings.glyphs.preference.GlyphsPreference android:title="@string/nt_glyphs_time_schedule_features" android:selectable="false" android:order="-30" app:title_font_size="@dimen/glyphs_bedtime_title_size"/>
+    <com.android.settings.widget.SettingsMainSwitchPreference android:title="@string/nt_glyphs_bed_time_schedule_title" android:key="key_glyphs_time_schedule_switch" android:order="-20" app:controller="com.nothing.settings.glyphs.bedtime.ScheduleTimeSwitchPreferenceController"/>
+    <PreferenceCategory android:title="@string/nt_glyphs_category_time_title" android:key="key_time_category">
+        <com.android.settingslib.RestrictedPreference android:title="@string/nt_glyphs_schedule_start_time" android:key="key_time_start" android:summary="@string/summary_placeholder" app:controller="com.nothing.settings.glyphs.bedtime.CustomStartTimePreferenceController" app:userRestriction="no_config_date_time"/>
+        <com.android.settingslib.RestrictedPreference android:title="@string/nt_glyphs_schedule_start_end" android:key="key_time_end" android:summary="@string/summary_placeholder" app:controller="com.nothing.settings.glyphs.bedtime.CustomEndTimePreferenceController" app:userRestriction="no_config_date_time"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/nt_glyphs_category_repeat_title" android:key="key_repeat_category">
+        <com.nothing.settings.glyphs.preference.WeekCheckBoxPreference android:key="key_repeat_weeks" app:controller="com.nothing.settings.glyphs.bedtime.WeekPreferenceController"/>
+        <com.nothing.settings.glyphs.preference.GlyphsPreference android:title="" android:selectable="false" android:key="key_repeat_select_dec" app:title_font_size="@dimen/glyphs_bedtime_repeat_selected_title_size"/>
+    </PreferenceCategory>
+</PreferenceScreen>

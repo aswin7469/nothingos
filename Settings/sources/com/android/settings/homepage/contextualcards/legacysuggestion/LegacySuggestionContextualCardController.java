@@ -5,7 +5,7 @@ import android.content.Context;
 import android.service.settings.suggestions.Suggestion;
 import android.util.ArrayMap;
 import android.util.Log;
-import com.android.settings.R;
+import com.android.settings.R$bool;
 import com.android.settings.homepage.contextualcards.ContextualCard;
 import com.android.settings.homepage.contextualcards.ContextualCardController;
 import com.android.settings.homepage.contextualcards.ContextualCardUpdateListener;
@@ -19,31 +19,28 @@ import com.android.settingslib.utils.ThreadUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public class LegacySuggestionContextualCardController implements ContextualCardController, LifecycleObserver, OnStart, OnStop, SuggestionController.ServiceConnectionListener {
     private ContextualCardUpdateListener mCardUpdateListener;
     private final Context mContext;
     SuggestionController mSuggestionController;
     final List<ContextualCard> mSuggestions = new ArrayList();
 
-    @Override // com.android.settings.homepage.contextualcards.ContextualCardController
     public void onActionClick(ContextualCard contextualCard) {
     }
 
-    @Override // com.android.settingslib.suggestions.SuggestionController.ServiceConnectionListener
     public void onServiceDisconnected() {
     }
 
     public LegacySuggestionContextualCardController(Context context) {
         this.mContext = context;
-        if (!context.getResources().getBoolean(R.bool.config_use_legacy_suggestion)) {
+        if (!context.getResources().getBoolean(R$bool.config_use_legacy_suggestion)) {
             Log.w("LegacySuggestCardCtrl", "Legacy suggestion contextual card disabled, skipping.");
         } else {
             this.mSuggestionController = new SuggestionController(context, FeatureFactory.getFactory(context).getSuggestionFeatureProvider(context).getSuggestionServiceComponent(), this);
         }
     }
 
-    @Override // com.android.settings.homepage.contextualcards.ContextualCardController
     public void onPrimaryClick(ContextualCard contextualCard) {
         try {
             ((LegacySuggestionContextualCard) contextualCard).getPendingIntent().send();
@@ -52,87 +49,74 @@ public class LegacySuggestionContextualCardController implements ContextualCardC
         }
     }
 
-    @Override // com.android.settings.homepage.contextualcards.ContextualCardController
     public void onDismissed(ContextualCard contextualCard) {
         this.mSuggestionController.dismissSuggestions(((LegacySuggestionContextualCard) contextualCard).getSuggestion());
         this.mSuggestions.remove(contextualCard);
         updateAdapter();
     }
 
-    @Override // com.android.settings.homepage.contextualcards.ContextualCardController
     public void setCardUpdateListener(ContextualCardUpdateListener contextualCardUpdateListener) {
         this.mCardUpdateListener = contextualCardUpdateListener;
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStart
     public void onStart() {
         SuggestionController suggestionController = this.mSuggestionController;
-        if (suggestionController == null) {
-            return;
+        if (suggestionController != null) {
+            suggestionController.start();
         }
-        suggestionController.start();
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStop
     public void onStop() {
         SuggestionController suggestionController = this.mSuggestionController;
-        if (suggestionController == null) {
-            return;
+        if (suggestionController != null) {
+            suggestionController.stop();
         }
-        suggestionController.stop();
     }
 
-    @Override // com.android.settingslib.suggestions.SuggestionController.ServiceConnectionListener
     public void onServiceConnected() {
         loadSuggestions();
     }
 
     private void loadSuggestions() {
-        ThreadUtils.postOnBackgroundThread(new Runnable() { // from class: com.android.settings.homepage.contextualcards.legacysuggestion.LegacySuggestionContextualCardController$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                LegacySuggestionContextualCardController.this.lambda$loadSuggestions$0();
-            }
-        });
+        ThreadUtils.postOnBackgroundThread((Runnable) new C1010x4d51e8ba(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$loadSuggestions$0() {
+        String str;
         SuggestionController suggestionController = this.mSuggestionController;
-        if (suggestionController == null || this.mCardUpdateListener == null) {
-            return;
-        }
-        List<Suggestion> suggestions = suggestionController.getSuggestions();
-        String valueOf = suggestions == null ? "null" : String.valueOf(suggestions.size());
-        Log.d("LegacySuggestCardCtrl", "Loaded suggests: " + valueOf);
-        ArrayList arrayList = new ArrayList();
-        if (suggestions != null) {
-            for (Suggestion suggestion : suggestions) {
-                LegacySuggestionContextualCard.Builder builder = new LegacySuggestionContextualCard.Builder();
-                if (suggestion.getIcon() != null) {
-                    builder.setIconDrawable(suggestion.getIcon().loadDrawable(this.mContext));
-                }
-                builder.setPendingIntent(suggestion.getPendingIntent()).setSuggestion(suggestion).setName(suggestion.getId()).setTitleText(suggestion.getTitle().toString()).setSummaryText(suggestion.getSummary().toString()).setViewType(LegacySuggestionContextualCardRenderer.VIEW_TYPE);
-                arrayList.add(builder.mo389build());
+        if (suggestionController != null && this.mCardUpdateListener != null) {
+            List<Suggestion> suggestions = suggestionController.getSuggestions();
+            if (suggestions == null) {
+                str = "null";
+            } else {
+                str = String.valueOf(suggestions.size());
             }
+            Log.d("LegacySuggestCardCtrl", "Loaded suggests: " + str);
+            ArrayList arrayList = new ArrayList();
+            if (suggestions != null) {
+                for (Suggestion next : suggestions) {
+                    LegacySuggestionContextualCard.Builder builder = new LegacySuggestionContextualCard.Builder();
+                    if (next.getIcon() != null) {
+                        builder.setIconDrawable(next.getIcon().loadDrawable(this.mContext));
+                    }
+                    builder.setPendingIntent(next.getPendingIntent()).setSuggestion(next).setName(next.getId()).setTitleText(next.getTitle().toString()).setSummaryText(next.getSummary().toString()).setViewType(LegacySuggestionContextualCardRenderer.VIEW_TYPE);
+                    arrayList.add(builder.build());
+                }
+            }
+            this.mSuggestions.clear();
+            this.mSuggestions.addAll(arrayList);
+            updateAdapter();
         }
-        this.mSuggestions.clear();
-        this.mSuggestions.addAll(arrayList);
-        updateAdapter();
     }
 
     private void updateAdapter() {
-        final ArrayMap arrayMap = new ArrayMap();
+        ArrayMap arrayMap = new ArrayMap();
         arrayMap.put(2, this.mSuggestions);
-        ThreadUtils.postOnMainThread(new Runnable() { // from class: com.android.settings.homepage.contextualcards.legacysuggestion.LegacySuggestionContextualCardController$$ExternalSyntheticLambda1
-            @Override // java.lang.Runnable
-            public final void run() {
-                LegacySuggestionContextualCardController.this.lambda$updateAdapter$1(arrayMap);
-            }
-        });
+        ThreadUtils.postOnMainThread(new C1009x4d51e8b9(this, arrayMap));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$updateAdapter$1(Map map) {
         this.mCardUpdateListener.onContextualCardUpdated(map);
     }

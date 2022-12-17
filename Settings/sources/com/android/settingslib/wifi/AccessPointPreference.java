@@ -15,8 +15,12 @@ import com.android.settingslib.R$dimen;
 import com.android.settingslib.R$id;
 import com.android.settingslib.R$layout;
 import com.android.settingslib.R$string;
-/* loaded from: classes.dex */
+
 public class AccessPointPreference extends Preference {
+    private static final int[] FRICTION_ATTRS = {R$attr.wifi_friction};
+    private static final int[] STATE_METERED = {R$attr.state_metered};
+    private static final int[] STATE_SECURED = {R$attr.state_encrypted};
+    private static final int[] WIFI_CONNECTION_STRENGTH = {R$string.accessibility_no_wifi, R$string.accessibility_wifi_one_bar, R$string.accessibility_wifi_two_bars, R$string.accessibility_wifi_three_bars, R$string.accessibility_wifi_signal_full};
     private AccessPoint mAccessPoint;
     private Drawable mBadge;
     private final int mBadgePadding;
@@ -30,12 +34,7 @@ public class AccessPointPreference extends Preference {
     private boolean mShowDivider;
     private TextView mTitleView;
     private int mWifiSpeed;
-    private static final int[] STATE_SECURED = {R$attr.state_encrypted};
-    private static final int[] STATE_METERED = {R$attr.state_metered};
-    private static final int[] FRICTION_ATTRS = {R$attr.wifi_friction};
-    private static final int[] WIFI_CONNECTION_STRENGTH = {R$string.accessibility_no_wifi, R$string.accessibility_wifi_one_bar, R$string.accessibility_wifi_two_bars, R$string.accessibility_wifi_three_bars, R$string.accessibility_wifi_signal_full};
 
-    /* loaded from: classes.dex */
     public static class UserBadgeCache {
     }
 
@@ -43,8 +42,7 @@ public class AccessPointPreference extends Preference {
         super(context, attributeSet);
         this.mForSavedNetworks = false;
         this.mWifiSpeed = 0;
-        this.mNotifyChanged = new Runnable() { // from class: com.android.settingslib.wifi.AccessPointPreference.1
-            @Override // java.lang.Runnable
+        this.mNotifyChanged = new Runnable() {
             public void run() {
                 AccessPointPreference.this.notifyChanged();
             }
@@ -58,8 +56,7 @@ public class AccessPointPreference extends Preference {
         super(context);
         this.mForSavedNetworks = false;
         this.mWifiSpeed = 0;
-        this.mNotifyChanged = new Runnable() { // from class: com.android.settingslib.wifi.AccessPointPreference.1
-            @Override // java.lang.Runnable
+        this.mNotifyChanged = new Runnable() {
             public void run() {
                 AccessPointPreference.this.notifyChanged();
             }
@@ -76,29 +73,28 @@ public class AccessPointPreference extends Preference {
         this.mBadgePadding = context.getResources().getDimensionPixelSize(R$dimen.wifi_preference_badge_padding);
     }
 
-    protected int getWidgetLayoutResourceId() {
+    /* access modifiers changed from: protected */
+    public int getWidgetLayoutResourceId() {
         return R$layout.access_point_friction_widget;
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
-        if (this.mAccessPoint == null) {
-            return;
+        if (this.mAccessPoint != null) {
+            Drawable icon = getIcon();
+            if (icon != null) {
+                icon.setLevel(this.mLevel);
+            }
+            TextView textView = (TextView) preferenceViewHolder.findViewById(16908310);
+            this.mTitleView = textView;
+            if (textView != null) {
+                textView.setCompoundDrawablesRelativeWithIntrinsicBounds((Drawable) null, (Drawable) null, this.mBadge, (Drawable) null);
+                this.mTitleView.setCompoundDrawablePadding(this.mBadgePadding);
+            }
+            preferenceViewHolder.itemView.setContentDescription(this.mContentDescription);
+            bindFrictionImage((ImageView) preferenceViewHolder.findViewById(R$id.friction_icon));
+            preferenceViewHolder.findViewById(R$id.two_target_divider).setVisibility(shouldShowDivider() ? 0 : 4);
         }
-        Drawable icon = getIcon();
-        if (icon != null) {
-            icon.setLevel(this.mLevel);
-        }
-        TextView textView = (TextView) preferenceViewHolder.findViewById(16908310);
-        this.mTitleView = textView;
-        if (textView != null) {
-            textView.setCompoundDrawablesRelativeWithIntrinsicBounds((Drawable) null, (Drawable) null, this.mBadge, (Drawable) null);
-            this.mTitleView.setCompoundDrawablePadding(this.mBadgePadding);
-        }
-        preferenceViewHolder.itemView.setContentDescription(this.mContentDescription);
-        bindFrictionImage((ImageView) preferenceViewHolder.findViewById(R$id.friction_icon));
-        preferenceViewHolder.findViewById(R$id.two_target_divider).setVisibility(shouldShowDivider() ? 0 : 4);
     }
 
     public boolean shouldShowDivider() {
@@ -106,19 +102,17 @@ public class AccessPointPreference extends Preference {
     }
 
     private void bindFrictionImage(ImageView imageView) {
-        if (imageView == null || this.mFrictionSld == null) {
-            return;
+        if (imageView != null && this.mFrictionSld != null) {
+            if (this.mAccessPoint.getSecurity() != 0 && this.mAccessPoint.getSecurity() != 4) {
+                this.mFrictionSld.setState(STATE_SECURED);
+            } else if (this.mAccessPoint.isMetered()) {
+                this.mFrictionSld.setState(STATE_METERED);
+            }
+            imageView.setImageDrawable(this.mFrictionSld.getCurrent());
         }
-        if (this.mAccessPoint.getSecurity() != 0 && this.mAccessPoint.getSecurity() != 4) {
-            this.mFrictionSld.setState(STATE_SECURED);
-        } else if (this.mAccessPoint.isMetered()) {
-            this.mFrictionSld.setState(STATE_METERED);
-        }
-        imageView.setImageDrawable(this.mFrictionSld.getCurrent());
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public void notifyChanged() {
         if (Looper.getMainLooper() != Looper.myLooper()) {
             postNotifyChanged();
@@ -128,32 +122,32 @@ public class AccessPointPreference extends Preference {
     }
 
     static void setTitle(AccessPointPreference accessPointPreference, AccessPoint accessPoint) {
-        accessPointPreference.setTitle(accessPoint.getTitle());
+        accessPointPreference.setTitle((CharSequence) accessPoint.getTitle());
     }
 
     static CharSequence buildContentDescription(Context context, Preference preference, AccessPoint accessPoint) {
-        String string;
+        String str;
         CharSequence title = preference.getTitle();
         CharSequence summary = preference.getSummary();
         if (!TextUtils.isEmpty(summary)) {
-            title = TextUtils.concat(title, ",", summary);
+            title = TextUtils.concat(new CharSequence[]{title, ",", summary});
         }
         int level = accessPoint.getLevel();
         if (level >= 0) {
             int[] iArr = WIFI_CONNECTION_STRENGTH;
             if (level < iArr.length) {
-                title = TextUtils.concat(title, ",", context.getString(iArr[level]));
+                title = TextUtils.concat(new CharSequence[]{title, ",", context.getString(iArr[level])});
             }
         }
         CharSequence[] charSequenceArr = new CharSequence[3];
         charSequenceArr[0] = title;
         charSequenceArr[1] = ",";
         if (accessPoint.getSecurity() == 0) {
-            string = context.getString(R$string.accessibility_wifi_security_type_none);
+            str = context.getString(R$string.accessibility_wifi_security_type_none);
         } else {
-            string = context.getString(R$string.accessibility_wifi_security_type_secured);
+            str = context.getString(R$string.accessibility_wifi_security_type_secured);
         }
-        charSequenceArr[2] = string;
+        charSequenceArr[2] = str;
         return TextUtils.concat(charSequenceArr);
     }
 
@@ -164,7 +158,6 @@ public class AccessPointPreference extends Preference {
         }
     }
 
-    /* loaded from: classes.dex */
     static class IconInjector {
         private final Context mContext;
 

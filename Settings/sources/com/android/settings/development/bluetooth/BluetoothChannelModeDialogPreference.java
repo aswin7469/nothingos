@@ -2,8 +2,9 @@ package com.android.settings.development.bluetooth;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$array;
+import com.android.settings.R$id;
+
 public class BluetoothChannelModeDialogPreference extends BaseBluetoothDialogPreference {
     public BluetoothChannelModeDialogPreference(Context context) {
         super(context);
@@ -25,20 +26,22 @@ public class BluetoothChannelModeDialogPreference extends BaseBluetoothDialogPre
         initialize(context);
     }
 
-    @Override // com.android.settings.development.bluetooth.BaseBluetoothDialogPreference
-    protected int getRadioButtonGroupId() {
-        return R.id.bluetooth_audio_channel_mode_radio_group;
+    /* access modifiers changed from: protected */
+    public int getRadioButtonGroupId() {
+        return R$id.bluetooth_audio_channel_mode_radio_group;
     }
 
     private void initialize(Context context) {
-        this.mRadioButtonIds.add(Integer.valueOf(R.id.bluetooth_audio_channel_mode_default));
-        this.mRadioButtonIds.add(Integer.valueOf(R.id.bluetooth_audio_channel_mode_mono));
-        this.mRadioButtonIds.add(Integer.valueOf(R.id.bluetooth_audio_channel_mode_stereo));
-        for (String str : context.getResources().getStringArray(R.array.bluetooth_a2dp_codec_channel_mode_titles)) {
-            this.mRadioButtonStrings.add(str);
+        this.mRadioButtonIds.add(Integer.valueOf(R$id.bluetooth_audio_channel_mode_default));
+        this.mRadioButtonIds.add(Integer.valueOf(R$id.bluetooth_audio_channel_mode_mono));
+        this.mRadioButtonIds.add(Integer.valueOf(R$id.bluetooth_audio_channel_mode_stereo));
+        String[] stringArray = context.getResources().getStringArray(R$array.bluetooth_a2dp_codec_channel_mode_titles);
+        for (String add : stringArray) {
+            this.mRadioButtonStrings.add(add);
         }
-        for (String str2 : context.getResources().getStringArray(R.array.bluetooth_a2dp_codec_channel_mode_summaries)) {
-            this.mSummaryStrings.add(str2);
+        String[] stringArray2 = context.getResources().getStringArray(R$array.bluetooth_a2dp_codec_channel_mode_summaries);
+        for (String add2 : stringArray2) {
+            this.mSummaryStrings.add(add2);
         }
     }
 }

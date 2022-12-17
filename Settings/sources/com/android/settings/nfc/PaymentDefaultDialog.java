@@ -4,19 +4,23 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.UserHandle;
 import android.util.Log;
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
-import com.android.settings.R;
+import com.android.settings.R$string;
+import com.android.settings.dashboard.DashboardFragment;
 import com.android.settings.nfc.PaymentBackend;
-/* loaded from: classes.dex */
+
 public final class PaymentDefaultDialog extends AlertActivity implements DialogInterface.OnClickListener {
     private PaymentBackend mBackend;
-    private ComponentName mNewDefault;
+    private PaymentBackend.PaymentInfo mNewDefault;
 
-    /* JADX WARN: Multi-variable type inference failed */
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    /* JADX WARNING: type inference failed for: r3v0, types: [android.content.Context, com.android.internal.app.AlertActivity, com.android.settings.nfc.PaymentDefaultDialog] */
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
+        int i;
+        PaymentDefaultDialog.super.onCreate(bundle);
         getWindow().addPrivateFlags(524288);
         try {
             this.mBackend = new PaymentBackend(this);
@@ -24,23 +28,30 @@ public final class PaymentDefaultDialog extends AlertActivity implements DialogI
             finish();
         }
         Intent intent = getIntent();
-        String stringExtra = intent.getStringExtra("category");
+        ComponentName componentName = (ComponentName) intent.getParcelableExtra("component");
+        String stringExtra = intent.getStringExtra(DashboardFragment.CATEGORY);
+        UserHandle userHandle = (UserHandle) intent.getParcelableExtra("android.intent.extra.USER");
+        if (userHandle == null) {
+            i = UserHandle.myUserId();
+        } else {
+            i = userHandle.getIdentifier();
+        }
         setResult(0);
-        if (!buildDialog((ComponentName) intent.getParcelableExtra("component"), stringExtra)) {
+        if (!buildDialog(componentName, stringExtra, i)) {
             finish();
         }
     }
 
-    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialogInterface, int i) {
-        if (i != -1) {
-            return;
+        if (i == -1) {
+            PaymentBackend paymentBackend = this.mBackend;
+            PaymentBackend.PaymentInfo paymentInfo = this.mNewDefault;
+            paymentBackend.setDefaultPaymentApp(paymentInfo.componentName, paymentInfo.userId);
+            setResult(-1);
         }
-        this.mBackend.setDefaultPaymentApp(this.mNewDefault);
-        setResult(-1);
     }
 
-    private boolean buildDialog(ComponentName componentName, String str) {
+    private boolean buildDialog(ComponentName componentName, String str, int i) {
         if (componentName == null || str == null) {
             Log.e("PaymentDefaultDialog", "Component or category are null");
             return false;
@@ -50,44 +61,47 @@ public final class PaymentDefaultDialog extends AlertActivity implements DialogI
         } else {
             PaymentBackend.PaymentAppInfo paymentAppInfo = null;
             PaymentBackend.PaymentAppInfo paymentAppInfo2 = null;
-            for (PaymentBackend.PaymentAppInfo paymentAppInfo3 : this.mBackend.getPaymentAppInfos()) {
-                if (componentName.equals(paymentAppInfo3.componentName)) {
-                    paymentAppInfo = paymentAppInfo3;
+            for (PaymentBackend.PaymentAppInfo next : this.mBackend.getPaymentAppInfos()) {
+                if (componentName.equals(next.componentName) && next.userHandle.getIdentifier() == i) {
+                    paymentAppInfo = next;
                 }
-                if (paymentAppInfo3.isDefault) {
-                    paymentAppInfo2 = paymentAppInfo3;
+                if (next.isDefault && next.userHandle.getIdentifier() == i) {
+                    paymentAppInfo2 = next;
                 }
             }
             if (paymentAppInfo == null) {
                 Log.e("PaymentDefaultDialog", "Component " + componentName + " is not a registered payment service.");
                 return false;
             }
-            ComponentName defaultPaymentApp = this.mBackend.getDefaultPaymentApp();
-            if (defaultPaymentApp != null && defaultPaymentApp.equals(componentName)) {
-                Log.e("PaymentDefaultDialog", "Component " + componentName + " is already default.");
-                return false;
+            PaymentBackend.PaymentInfo defaultPaymentApp = this.mBackend.getDefaultPaymentApp();
+            if (defaultPaymentApp == null || !defaultPaymentApp.componentName.equals(componentName) || defaultPaymentApp.userId != i) {
+                PaymentBackend.PaymentInfo paymentInfo = new PaymentBackend.PaymentInfo();
+                this.mNewDefault = paymentInfo;
+                paymentInfo.componentName = componentName;
+                paymentInfo.userId = i;
+                AlertController.AlertParams alertParams = this.mAlertParams;
+                if (paymentAppInfo2 == null) {
+                    alertParams.mTitle = getString(R$string.nfc_payment_set_default_label);
+                    alertParams.mMessage = String.format(getString(R$string.nfc_payment_set_default), new Object[]{sanitizePaymentAppCaption(paymentAppInfo.label.toString())});
+                    alertParams.mPositiveButtonText = getString(R$string.nfc_payment_btn_text_set_deault);
+                } else {
+                    alertParams.mTitle = getString(R$string.nfc_payment_update_default_label);
+                    alertParams.mMessage = String.format(getString(R$string.nfc_payment_set_default_instead_of), new Object[]{sanitizePaymentAppCaption(paymentAppInfo.label.toString()), sanitizePaymentAppCaption(paymentAppInfo2.label.toString())});
+                    alertParams.mPositiveButtonText = getString(R$string.nfc_payment_btn_text_update);
+                }
+                alertParams.mNegativeButtonText = getString(R$string.cancel);
+                alertParams.mPositiveButtonListener = this;
+                alertParams.mNegativeButtonListener = this;
+                setupAlert();
+                return true;
             }
-            this.mNewDefault = componentName;
-            AlertController.AlertParams alertParams = ((AlertActivity) this).mAlertParams;
-            if (paymentAppInfo2 == null) {
-                alertParams.mTitle = getString(R.string.nfc_payment_set_default_label);
-                alertParams.mMessage = String.format(getString(R.string.nfc_payment_set_default), sanitizePaymentAppCaption(paymentAppInfo.label.toString()));
-                alertParams.mPositiveButtonText = getString(R.string.nfc_payment_btn_text_set_deault);
-            } else {
-                alertParams.mTitle = getString(R.string.nfc_payment_update_default_label);
-                alertParams.mMessage = String.format(getString(R.string.nfc_payment_set_default_instead_of), sanitizePaymentAppCaption(paymentAppInfo.label.toString()), sanitizePaymentAppCaption(paymentAppInfo2.label.toString()));
-                alertParams.mPositiveButtonText = getString(R.string.nfc_payment_btn_text_update);
-            }
-            alertParams.mNegativeButtonText = getString(R.string.cancel);
-            alertParams.mPositiveButtonListener = this;
-            alertParams.mNegativeButtonListener = this;
-            setupAlert();
-            return true;
+            Log.e("PaymentDefaultDialog", "Component " + componentName + " is already default.");
+            return false;
         }
     }
 
     private String sanitizePaymentAppCaption(String str) {
-        String trim = str.replace('\n', ' ').replace('\r', ' ').trim();
+        String trim = str.replace(10, ' ').replace(13, ' ').trim();
         return trim.length() > 40 ? trim.substring(0, 40) : trim;
     }
 }

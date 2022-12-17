@@ -3,26 +3,28 @@ package com.android.settings.bluetooth;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.UserManager;
+import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.ImageView;
 import androidx.preference.PreferenceViewHolder;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
 import com.android.settings.widget.GearPreference;
-/* loaded from: classes.dex */
+
 public class GroupBluetoothSettingsPreference extends GearPreference {
     private static int sDimAlpha = Integer.MIN_VALUE;
-    private int mGroupId;
-    private final UserManager mUserManager;
-    private int mVisibleCount;
     private String contentDescription = null;
+    private int mGroupId;
     private boolean mHideSecondTarget = false;
-    private Resources mResources = getContext().getResources();
+    private Resources mResources;
+    private final UserManager mUserManager;
+    private int mVisibleCount = 0;
 
     public GroupBluetoothSettingsPreference(Context context, int i) {
-        super(context, null);
-        this.mGroupId = -1;
-        this.mVisibleCount = 0;
+        super(context, (AttributeSet) null);
         this.mGroupId = i;
+        this.mResources = getContext().getResources();
         this.mUserManager = (UserManager) context.getSystemService(UserManager.class);
         if (sDimAlpha == Integer.MIN_VALUE) {
             TypedValue typedValue = new TypedValue();
@@ -33,24 +35,23 @@ public class GroupBluetoothSettingsPreference extends GearPreference {
         onDeviceAttributesChanged();
     }
 
-    @Override // com.android.settings.widget.GearPreference, com.android.settingslib.RestrictedPreference, com.android.settingslib.widget.TwoTargetPreference
-    protected boolean shouldHideSecondTarget() {
+    /* access modifiers changed from: protected */
+    public boolean shouldHideSecondTarget() {
         return this.mUserManager.hasUserRestriction("no_config_bluetooth") || this.mHideSecondTarget;
     }
 
     public void onDeviceAttributesChanged() {
-        String string = getContext().getString(R.string.group_settings);
-        setTitle(string + " " + (this.mGroupId + 1));
+        String string = getContext().getString(R$string.group_settings);
+        setTitle((CharSequence) string + " " + (this.mGroupId + 1));
         setEnabled(true);
         setVisible(true);
     }
 
-    @Override // com.android.settings.widget.GearPreference, com.android.settingslib.RestrictedPreference, com.android.settingslib.widget.TwoTargetPreference, androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         if (findPreferenceInHierarchy("bt_checkbox") != null) {
             setDependency("bt_checkbox");
         }
-        ImageView imageView = (ImageView) preferenceViewHolder.findViewById(R.id.settings_button);
+        ImageView imageView = (ImageView) preferenceViewHolder.findViewById(R$id.settings_button);
         if (imageView != null) {
             imageView.setOnClickListener(this);
         }
@@ -63,9 +64,9 @@ public class GroupBluetoothSettingsPreference extends GearPreference {
         super.onBindViewHolder(preferenceViewHolder);
     }
 
-    @Override // com.android.settings.widget.GearPreference, com.android.settingslib.RestrictedPreference, com.android.settingslib.widget.TwoTargetPreference
-    protected int getSecondTargetResId() {
-        return R.layout.preference_widget_gear;
+    /* access modifiers changed from: protected */
+    public int getSecondTargetResId() {
+        return R$layout.preference_widget_gear;
     }
 
     public int getGroupId() {

@@ -10,9 +10,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.core.content.res.TypedArrayUtils;
-import androidx.transition.AnimatorUtils;
 import androidx.transition.Transition;
-/* loaded from: classes.dex */
+
 public abstract class Visibility extends Transition {
     private static final String[] sTransitionProperties = {"android:visibility:visibility", "android:visibility:parent"};
     private int mMode = 3;
@@ -25,9 +24,7 @@ public abstract class Visibility extends Transition {
         return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class VisibilityInfo {
+    private static class VisibilityInfo {
         ViewGroup mEndParent;
         int mEndVisibility;
         boolean mFadeIn;
@@ -54,17 +51,17 @@ public abstract class Visibility extends Transition {
     }
 
     public void setMode(int i) {
-        if ((i & (-4)) != 0) {
-            throw new IllegalArgumentException("Only MODE_IN and MODE_OUT flags are allowed");
+        if ((i & -4) == 0) {
+            this.mMode = i;
+            return;
         }
-        this.mMode = i;
+        throw new IllegalArgumentException("Only MODE_IN and MODE_OUT flags are allowed");
     }
 
     public int getMode() {
         return this.mMode;
     }
 
-    @Override // androidx.transition.Transition
     public String[] getTransitionProperties() {
         return sTransitionProperties;
     }
@@ -77,12 +74,10 @@ public abstract class Visibility extends Transition {
         transitionValues.values.put("android:visibility:screenLocation", iArr);
     }
 
-    @Override // androidx.transition.Transition
     public void captureStartValues(TransitionValues transitionValues) {
         captureValues(transitionValues);
     }
 
-    @Override // androidx.transition.Transition
     public void captureEndValues(TransitionValues transitionValues) {
         captureValues(transitionValues);
     }
@@ -91,19 +86,19 @@ public abstract class Visibility extends Transition {
         VisibilityInfo visibilityInfo = new VisibilityInfo();
         visibilityInfo.mVisibilityChange = false;
         visibilityInfo.mFadeIn = false;
-        if (transitionValues != null && transitionValues.values.containsKey("android:visibility:visibility")) {
-            visibilityInfo.mStartVisibility = ((Integer) transitionValues.values.get("android:visibility:visibility")).intValue();
-            visibilityInfo.mStartParent = (ViewGroup) transitionValues.values.get("android:visibility:parent");
-        } else {
+        if (transitionValues == null || !transitionValues.values.containsKey("android:visibility:visibility")) {
             visibilityInfo.mStartVisibility = -1;
             visibilityInfo.mStartParent = null;
-        }
-        if (transitionValues2 != null && transitionValues2.values.containsKey("android:visibility:visibility")) {
-            visibilityInfo.mEndVisibility = ((Integer) transitionValues2.values.get("android:visibility:visibility")).intValue();
-            visibilityInfo.mEndParent = (ViewGroup) transitionValues2.values.get("android:visibility:parent");
         } else {
+            visibilityInfo.mStartVisibility = ((Integer) transitionValues.values.get("android:visibility:visibility")).intValue();
+            visibilityInfo.mStartParent = (ViewGroup) transitionValues.values.get("android:visibility:parent");
+        }
+        if (transitionValues2 == null || !transitionValues2.values.containsKey("android:visibility:visibility")) {
             visibilityInfo.mEndVisibility = -1;
             visibilityInfo.mEndParent = null;
+        } else {
+            visibilityInfo.mEndVisibility = ((Integer) transitionValues2.values.get("android:visibility:visibility")).intValue();
+            visibilityInfo.mEndParent = (ViewGroup) transitionValues2.values.get("android:visibility:parent");
         }
         if (transitionValues != null && transitionValues2 != null) {
             int i = visibilityInfo.mStartVisibility;
@@ -136,19 +131,18 @@ public abstract class Visibility extends Transition {
         return visibilityInfo;
     }
 
-    @Override // androidx.transition.Transition
     public Animator createAnimator(ViewGroup viewGroup, TransitionValues transitionValues, TransitionValues transitionValues2) {
         VisibilityInfo visibilityChangeInfo = getVisibilityChangeInfo(transitionValues, transitionValues2);
-        if (visibilityChangeInfo.mVisibilityChange) {
-            if (visibilityChangeInfo.mStartParent == null && visibilityChangeInfo.mEndParent == null) {
-                return null;
-            }
-            if (visibilityChangeInfo.mFadeIn) {
-                return onAppear(viewGroup, transitionValues, visibilityChangeInfo.mStartVisibility, transitionValues2, visibilityChangeInfo.mEndVisibility);
-            }
-            return onDisappear(viewGroup, transitionValues, visibilityChangeInfo.mStartVisibility, transitionValues2, visibilityChangeInfo.mEndVisibility);
+        if (!visibilityChangeInfo.mVisibilityChange) {
+            return null;
         }
-        return null;
+        if (visibilityChangeInfo.mStartParent == null && visibilityChangeInfo.mEndParent == null) {
+            return null;
+        }
+        if (visibilityChangeInfo.mFadeIn) {
+            return onAppear(viewGroup, transitionValues, visibilityChangeInfo.mStartVisibility, transitionValues2, visibilityChangeInfo.mEndVisibility);
+        }
+        return onDisappear(viewGroup, transitionValues, visibilityChangeInfo.mStartVisibility, transitionValues2, visibilityChangeInfo.mEndVisibility);
     }
 
     public Animator onAppear(ViewGroup viewGroup, TransitionValues transitionValues, int i, TransitionValues transitionValues2, int i2) {
@@ -164,150 +158,167 @@ public abstract class Visibility extends Transition {
         return onAppear(viewGroup, transitionValues2.view, transitionValues, transitionValues2);
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:51:0x0089, code lost:
-        if (r17.mCanRemoveViews != false) goto L52;
+    /* JADX WARNING: Code restructure failed: missing block: B:37:0x0089, code lost:
+        if (r0.mCanRemoveViews != false) goto L_0x008b;
      */
-    /* JADX WARN: Removed duplicated region for block: B:37:0x004a  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public Animator onDisappear(final ViewGroup viewGroup, TransitionValues transitionValues, int i, TransitionValues transitionValues2, int i2) {
-        View view;
-        boolean z;
-        boolean z2;
-        View view2;
-        if ((this.mMode & 2) == 2 && transitionValues != null) {
-            final View view3 = transitionValues.view;
-            View view4 = transitionValues2 != null ? transitionValues2.view : null;
-            int i3 = R$id.save_overlay_view;
-            final View view5 = (View) view3.getTag(i3);
-            if (view5 != null) {
-                view2 = null;
-                z2 = true;
-            } else if (view4 == null || view4.getParent() == null) {
-                if (view4 != null) {
-                    view = null;
-                    z = false;
-                    if (z) {
-                        if (view3.getParent() != null) {
-                            if (view3.getParent() instanceof View) {
-                                View view6 = (View) view3.getParent();
-                                if (!getVisibilityChangeInfo(getTransitionValues(view6, true), getMatchedTransitionValues(view6, true)).mVisibilityChange) {
-                                    view4 = TransitionUtils.copyViewImage(viewGroup, view3, view6);
-                                } else {
-                                    int id = view6.getId();
-                                    if (view6.getParent() == null) {
-                                        if (id != -1) {
-                                            if (viewGroup.findViewById(id) != null) {
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        view2 = view;
-                        z2 = false;
-                        view5 = view3;
-                    }
-                    z2 = false;
-                    View view7 = view;
-                    view5 = view4;
-                    view2 = view7;
-                }
-                view4 = null;
-                view = null;
-                z = true;
-                if (z) {
-                }
-                z2 = false;
-                View view72 = view;
-                view5 = view4;
-                view2 = view72;
-            } else {
-                if (i2 == 4 || view3 == view4) {
-                    view = view4;
-                    z = false;
-                    view4 = null;
-                    if (z) {
-                    }
-                    z2 = false;
-                    View view722 = view;
-                    view5 = view4;
-                    view2 = view722;
-                }
-                view4 = null;
-                view = null;
-                z = true;
-                if (z) {
-                }
-                z2 = false;
-                View view7222 = view;
-                view5 = view4;
-                view2 = view7222;
-            }
-            if (view5 == null) {
-                if (view2 == null) {
-                    return null;
-                }
-                int visibility = view2.getVisibility();
-                ViewUtils.setTransitionVisibility(view2, 0);
-                Animator onDisappear = onDisappear(viewGroup, view2, transitionValues, transitionValues2);
-                if (onDisappear != null) {
-                    DisappearListener disappearListener = new DisappearListener(view2, i2, true);
-                    onDisappear.addListener(disappearListener);
-                    AnimatorUtils.addPauseListener(onDisappear, disappearListener);
-                    mo146addListener(disappearListener);
-                } else {
-                    ViewUtils.setTransitionVisibility(view2, visibility);
-                }
-                return onDisappear;
-            }
-            if (!z2) {
-                int[] iArr = (int[]) transitionValues.values.get("android:visibility:screenLocation");
-                int i4 = iArr[0];
-                int i5 = iArr[1];
-                int[] iArr2 = new int[2];
-                viewGroup.getLocationOnScreen(iArr2);
-                view5.offsetLeftAndRight((i4 - iArr2[0]) - view5.getLeft());
-                view5.offsetTopAndBottom((i5 - iArr2[1]) - view5.getTop());
-                ViewGroupUtils.getOverlay(viewGroup).add(view5);
-            }
-            Animator onDisappear2 = onDisappear(viewGroup, view5, transitionValues, transitionValues2);
-            if (!z2) {
-                if (onDisappear2 == null) {
-                    ViewGroupUtils.getOverlay(viewGroup).remove(view5);
-                } else {
-                    view3.setTag(i3, view5);
-                    mo146addListener(new TransitionListenerAdapter() { // from class: androidx.transition.Visibility.1
-                        @Override // androidx.transition.TransitionListenerAdapter, androidx.transition.Transition.TransitionListener
-                        public void onTransitionPause(Transition transition) {
-                            ViewGroupUtils.getOverlay(viewGroup).remove(view5);
-                        }
-
-                        @Override // androidx.transition.TransitionListenerAdapter, androidx.transition.Transition.TransitionListener
-                        public void onTransitionResume(Transition transition) {
-                            if (view5.getParent() == null) {
-                                ViewGroupUtils.getOverlay(viewGroup).add(view5);
-                            } else {
-                                Visibility.this.cancel();
-                            }
-                        }
-
-                        @Override // androidx.transition.Transition.TransitionListener
-                        public void onTransitionEnd(Transition transition) {
-                            view3.setTag(R$id.save_overlay_view, null);
-                            ViewGroupUtils.getOverlay(viewGroup).remove(view5);
-                            transition.mo149removeListener(this);
-                        }
-                    });
-                }
-            }
-            return onDisappear2;
-        }
-        return null;
+    /* JADX WARNING: Removed duplicated region for block: B:23:0x004a  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public android.animation.Animator onDisappear(android.view.ViewGroup r18, androidx.transition.TransitionValues r19, int r20, androidx.transition.TransitionValues r21, int r22) {
+        /*
+            r17 = this;
+            r0 = r17
+            r1 = r18
+            r2 = r19
+            r3 = r21
+            r4 = r22
+            int r5 = r0.mMode
+            r6 = 2
+            r5 = r5 & r6
+            r7 = 0
+            if (r5 == r6) goto L_0x0012
+            return r7
+        L_0x0012:
+            if (r2 != 0) goto L_0x0015
+            return r7
+        L_0x0015:
+            android.view.View r5 = r2.view
+            if (r3 == 0) goto L_0x001c
+            android.view.View r8 = r3.view
+            goto L_0x001d
+        L_0x001c:
+            r8 = r7
+        L_0x001d:
+            int r9 = androidx.transition.R$id.save_overlay_view
+            java.lang.Object r10 = r5.getTag(r9)
+            android.view.View r10 = (android.view.View) r10
+            r11 = 0
+            r12 = 1
+            if (r10 == 0) goto L_0x002d
+            r8 = r7
+            r13 = r12
+            goto L_0x0095
+        L_0x002d:
+            if (r8 == 0) goto L_0x0040
+            android.view.ViewParent r10 = r8.getParent()
+            if (r10 != 0) goto L_0x0036
+            goto L_0x0040
+        L_0x0036:
+            r10 = 4
+            if (r4 != r10) goto L_0x003a
+            goto L_0x003c
+        L_0x003a:
+            if (r5 != r8) goto L_0x0045
+        L_0x003c:
+            r10 = r8
+            r13 = r11
+            r8 = r7
+            goto L_0x0048
+        L_0x0040:
+            if (r8 == 0) goto L_0x0045
+            r10 = r7
+            r13 = r11
+            goto L_0x0048
+        L_0x0045:
+            r8 = r7
+            r10 = r8
+            r13 = r12
+        L_0x0048:
+            if (r13 == 0) goto L_0x008f
+            android.view.ViewParent r13 = r5.getParent()
+            if (r13 != 0) goto L_0x0051
+            goto L_0x008b
+        L_0x0051:
+            android.view.ViewParent r13 = r5.getParent()
+            boolean r13 = r13 instanceof android.view.View
+            if (r13 == 0) goto L_0x008f
+            android.view.ViewParent r13 = r5.getParent()
+            android.view.View r13 = (android.view.View) r13
+            androidx.transition.TransitionValues r14 = r0.getTransitionValues(r13, r12)
+            androidx.transition.TransitionValues r15 = r0.getMatchedTransitionValues(r13, r12)
+            androidx.transition.Visibility$VisibilityInfo r14 = r0.getVisibilityChangeInfo(r14, r15)
+            boolean r14 = r14.mVisibilityChange
+            if (r14 != 0) goto L_0x0074
+            android.view.View r8 = androidx.transition.TransitionUtils.copyViewImage(r1, r5, r13)
+            goto L_0x008f
+        L_0x0074:
+            int r14 = r13.getId()
+            android.view.ViewParent r13 = r13.getParent()
+            if (r13 != 0) goto L_0x008f
+            r13 = -1
+            if (r14 == r13) goto L_0x008f
+            android.view.View r13 = r1.findViewById(r14)
+            if (r13 == 0) goto L_0x008f
+            boolean r13 = r0.mCanRemoveViews
+            if (r13 == 0) goto L_0x008f
+        L_0x008b:
+            r8 = r10
+            r13 = r11
+            r10 = r5
+            goto L_0x0095
+        L_0x008f:
+            r13 = r11
+            r16 = r10
+            r10 = r8
+            r8 = r16
+        L_0x0095:
+            if (r10 == 0) goto L_0x00e5
+            if (r13 != 0) goto L_0x00c9
+            java.util.Map<java.lang.String, java.lang.Object> r4 = r2.values
+            java.lang.String r7 = "android:visibility:screenLocation"
+            java.lang.Object r4 = r4.get(r7)
+            int[] r4 = (int[]) r4
+            r7 = r4[r11]
+            r4 = r4[r12]
+            int[] r6 = new int[r6]
+            r1.getLocationOnScreen(r6)
+            r8 = r6[r11]
+            int r7 = r7 - r8
+            int r8 = r10.getLeft()
+            int r7 = r7 - r8
+            r10.offsetLeftAndRight(r7)
+            r6 = r6[r12]
+            int r4 = r4 - r6
+            int r6 = r10.getTop()
+            int r4 = r4 - r6
+            r10.offsetTopAndBottom(r4)
+            androidx.transition.ViewGroupOverlayImpl r4 = androidx.transition.ViewGroupUtils.getOverlay(r18)
+            r4.add(r10)
+        L_0x00c9:
+            android.animation.Animator r2 = r0.onDisappear(r1, r10, r2, r3)
+            if (r13 != 0) goto L_0x00e4
+            if (r2 != 0) goto L_0x00d9
+            androidx.transition.ViewGroupOverlayImpl r0 = androidx.transition.ViewGroupUtils.getOverlay(r18)
+            r0.remove(r10)
+            goto L_0x00e4
+        L_0x00d9:
+            r5.setTag(r9, r10)
+            androidx.transition.Visibility$1 r3 = new androidx.transition.Visibility$1
+            r3.<init>(r1, r10, r5)
+            r0.addListener(r3)
+        L_0x00e4:
+            return r2
+        L_0x00e5:
+            if (r8 == 0) goto L_0x0107
+            int r5 = r8.getVisibility()
+            androidx.transition.ViewUtils.setTransitionVisibility(r8, r11)
+            android.animation.Animator r1 = r0.onDisappear(r1, r8, r2, r3)
+            if (r1 == 0) goto L_0x0103
+            androidx.transition.Visibility$DisappearListener r2 = new androidx.transition.Visibility$DisappearListener
+            r2.<init>(r8, r4, r12)
+            r1.addListener(r2)
+            androidx.transition.AnimatorUtils.addPauseListener(r1, r2)
+            r0.addListener(r2)
+            goto L_0x0106
+        L_0x0103:
+            androidx.transition.ViewUtils.setTransitionVisibility(r8, r5)
+        L_0x0106:
+            return r1
+        L_0x0107:
+            return r7
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.transition.Visibility.onDisappear(android.view.ViewGroup, androidx.transition.TransitionValues, int, androidx.transition.TransitionValues, int):android.animation.Animator");
     }
 
-    @Override // androidx.transition.Transition
     public boolean isTransitionRequired(TransitionValues transitionValues, TransitionValues transitionValues2) {
         if (transitionValues == null && transitionValues2 == null) {
             return false;
@@ -319,12 +330,13 @@ public abstract class Visibility extends Transition {
         if (!visibilityChangeInfo.mVisibilityChange) {
             return false;
         }
-        return visibilityChangeInfo.mStartVisibility == 0 || visibilityChangeInfo.mEndVisibility == 0;
+        if (visibilityChangeInfo.mStartVisibility == 0 || visibilityChangeInfo.mEndVisibility == 0) {
+            return true;
+        }
+        return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class DisappearListener extends AnimatorListenerAdapter implements Transition.TransitionListener, AnimatorUtils.AnimatorPauseListenerCompat {
+    private static class DisappearListener extends AnimatorListenerAdapter implements Transition.TransitionListener {
         boolean mCanceled = false;
         private final int mFinalVisibility;
         private boolean mLayoutSuppressed;
@@ -332,19 +344,15 @@ public abstract class Visibility extends Transition {
         private final boolean mSuppressLayout;
         private final View mView;
 
-        @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
         public void onAnimationRepeat(Animator animator) {
         }
 
-        @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
         public void onAnimationStart(Animator animator) {
         }
 
-        @Override // androidx.transition.Transition.TransitionListener
         public void onTransitionCancel(Transition transition) {
         }
 
-        @Override // androidx.transition.Transition.TransitionListener
         public void onTransitionStart(Transition transition) {
         }
 
@@ -356,42 +364,35 @@ public abstract class Visibility extends Transition {
             suppressLayout(true);
         }
 
-        @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorPauseListener, androidx.transition.AnimatorUtils.AnimatorPauseListenerCompat
         public void onAnimationPause(Animator animator) {
             if (!this.mCanceled) {
                 ViewUtils.setTransitionVisibility(this.mView, this.mFinalVisibility);
             }
         }
 
-        @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorPauseListener, androidx.transition.AnimatorUtils.AnimatorPauseListenerCompat
         public void onAnimationResume(Animator animator) {
             if (!this.mCanceled) {
                 ViewUtils.setTransitionVisibility(this.mView, 0);
             }
         }
 
-        @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
         public void onAnimationCancel(Animator animator) {
             this.mCanceled = true;
         }
 
-        @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
         public void onAnimationEnd(Animator animator) {
             hideViewWhenNotCanceled();
         }
 
-        @Override // androidx.transition.Transition.TransitionListener
         public void onTransitionEnd(Transition transition) {
             hideViewWhenNotCanceled();
-            transition.mo149removeListener(this);
+            transition.removeListener(this);
         }
 
-        @Override // androidx.transition.Transition.TransitionListener
         public void onTransitionPause(Transition transition) {
             suppressLayout(false);
         }
 
-        @Override // androidx.transition.Transition.TransitionListener
         public void onTransitionResume(Transition transition) {
             suppressLayout(true);
         }
@@ -409,11 +410,10 @@ public abstract class Visibility extends Transition {
 
         private void suppressLayout(boolean z) {
             ViewGroup viewGroup;
-            if (!this.mSuppressLayout || this.mLayoutSuppressed == z || (viewGroup = this.mParent) == null) {
-                return;
+            if (this.mSuppressLayout && this.mLayoutSuppressed != z && (viewGroup = this.mParent) != null) {
+                this.mLayoutSuppressed = z;
+                ViewGroupUtils.suppressLayout(viewGroup, z);
             }
-            this.mLayoutSuppressed = z;
-            ViewGroupUtils.suppressLayout(viewGroup, z);
         }
     }
 }

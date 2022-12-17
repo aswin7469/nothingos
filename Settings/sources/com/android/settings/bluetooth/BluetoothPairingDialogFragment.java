@@ -17,45 +17,50 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
 import com.android.settings.core.instrumentation.InstrumentedDialogFragment;
-/* loaded from: classes.dex */
+
 public class BluetoothPairingDialogFragment extends InstrumentedDialogFragment implements TextWatcher, DialogInterface.OnClickListener {
     private AlertDialog.Builder mBuilder;
     private AlertDialog mDialog;
     private BluetoothPairingController mPairingController;
     private BluetoothPairingDialog mPairingDialogActivity;
     private EditText mPairingView;
+    private boolean mPositiveClicked = false;
 
-    @Override // android.text.TextWatcher
     public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 613;
     }
 
-    @Override // android.text.TextWatcher
     public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
     }
 
-    @Override // androidx.fragment.app.DialogFragment
     public Dialog onCreateDialog(Bundle bundle) {
         if (!isPairingControllerSet()) {
             throw new IllegalStateException("Must call setPairingController() before showing dialog");
-        }
-        if (!isPairingDialogActivitySet()) {
+        } else if (isPairingDialogActivitySet()) {
+            this.mBuilder = new AlertDialog.Builder(getActivity());
+            AlertDialog alertDialog = setupDialog();
+            this.mDialog = alertDialog;
+            alertDialog.setCanceledOnTouchOutside(false);
+            return this.mDialog;
+        } else {
             throw new IllegalStateException("Must call setPairingDialogActivity() before showing dialog");
         }
-        this.mBuilder = new AlertDialog.Builder(getActivity());
-        AlertDialog alertDialog = setupDialog();
-        this.mDialog = alertDialog;
-        alertDialog.setCanceledOnTouchOutside(false);
-        return this.mDialog;
     }
 
-    @Override // android.text.TextWatcher
+    public void onDestroy() {
+        super.onDestroy();
+        if (!this.mPositiveClicked) {
+            this.mPairingController.onCancel();
+        }
+    }
+
     public void afterTextChanged(Editable editable) {
         Button button = this.mDialog.getButton(-1);
         if (button != null) {
@@ -64,9 +69,9 @@ public class BluetoothPairingDialogFragment extends InstrumentedDialogFragment i
         this.mPairingController.updateUserInput(editable.toString());
     }
 
-    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialogInterface, int i) {
         if (i == -1) {
+            this.mPositiveClicked = true;
             this.mPairingController.onDialogPositiveClick(this);
         } else if (i == -2) {
             this.mPairingController.onDialogNegativeClick(this);
@@ -74,48 +79,51 @@ public class BluetoothPairingDialogFragment extends InstrumentedDialogFragment i
         this.mPairingDialogActivity.dismiss();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setPairingController(BluetoothPairingController bluetoothPairingController) {
-        if (isPairingControllerSet()) {
-            throw new IllegalStateException("The controller can only be set once. Forcibly replacing it will lead to undefined behavior");
+        if (!isPairingControllerSet()) {
+            this.mPairingController = bluetoothPairingController;
+            return;
         }
-        this.mPairingController = bluetoothPairingController;
+        throw new IllegalStateException("The controller can only be set once. Forcibly replacing it will lead to undefined behavior");
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isPairingControllerSet() {
         return this.mPairingController != null;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setPairingDialogActivity(BluetoothPairingDialog bluetoothPairingDialog) {
-        if (isPairingDialogActivitySet()) {
-            throw new IllegalStateException("The pairing dialog activity can only be set once");
+        if (!isPairingDialogActivitySet()) {
+            this.mPairingDialogActivity = bluetoothPairingDialog;
+            return;
         }
-        this.mPairingDialogActivity = bluetoothPairingDialog;
+        throw new IllegalStateException("The pairing dialog activity can only be set once");
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isPairingDialogActivitySet() {
         return this.mPairingDialogActivity != null;
     }
 
     private AlertDialog setupDialog() {
         int dialogType = this.mPairingController.getDialogType();
-        if (dialogType != 0) {
-            if (dialogType == 1) {
-                return createConsentDialog();
-            }
-            if (dialogType == 2) {
-                return createDisplayPasskeyOrPinDialog();
-            }
-            Log.e("BTPairingDialogFragment", "Incorrect pairing type received, not showing any dialog");
-            return null;
+        if (dialogType == 0) {
+            return createUserEntryDialog();
         }
-        return createUserEntryDialog();
+        if (dialogType == 1) {
+            return createConsentDialog();
+        }
+        if (dialogType == 2) {
+            return createDisplayPasskeyOrPinDialog();
+        }
+        Log.e("BTPairingDialogFragment", "Incorrect pairing type received, not showing any dialog");
+        return null;
     }
 
-    CharSequence getPairingViewText() {
+    /* access modifiers changed from: package-private */
+    public CharSequence getPairingViewText() {
         EditText editText = this.mPairingView;
         if (editText != null) {
             return editText.getText();
@@ -124,41 +132,35 @@ public class BluetoothPairingDialogFragment extends InstrumentedDialogFragment i
     }
 
     private AlertDialog createUserEntryDialog() {
-        this.mBuilder.setTitle(getString(R.string.bluetooth_pairing_request, this.mPairingController.getDeviceName()));
+        this.mBuilder.setTitle((CharSequence) getString(R$string.bluetooth_pairing_request, this.mPairingController.getDeviceName()));
         this.mBuilder.setView(createPinEntryView());
-        this.mBuilder.setPositiveButton(getString(17039370), this);
-        this.mBuilder.setNegativeButton(getString(17039360), this);
+        this.mBuilder.setPositiveButton((CharSequence) getString(17039370), (DialogInterface.OnClickListener) this);
+        this.mBuilder.setNegativeButton((CharSequence) getString(17039360), (DialogInterface.OnClickListener) this);
         AlertDialog create = this.mBuilder.create();
-        create.setOnShowListener(new DialogInterface.OnShowListener() { // from class: com.android.settings.bluetooth.BluetoothPairingDialogFragment$$ExternalSyntheticLambda0
-            @Override // android.content.DialogInterface.OnShowListener
-            public final void onShow(DialogInterface dialogInterface) {
-                BluetoothPairingDialogFragment.this.lambda$createUserEntryDialog$0(dialogInterface);
-            }
-        });
+        create.setOnShowListener(new BluetoothPairingDialogFragment$$ExternalSyntheticLambda0(this));
         return create;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$createUserEntryDialog$0(DialogInterface dialogInterface) {
         InputMethodManager inputMethodManager;
         if (TextUtils.isEmpty(getPairingViewText())) {
             this.mDialog.getButton(-1).setEnabled(false);
         }
         EditText editText = this.mPairingView;
-        if (editText == null || !editText.requestFocus() || (inputMethodManager = (InputMethodManager) getContext().getSystemService("input_method")) == null) {
-            return;
+        if (editText != null && editText.requestFocus() && (inputMethodManager = (InputMethodManager) getContext().getSystemService("input_method")) != null) {
+            inputMethodManager.showSoftInput(this.mPairingView, 1);
         }
-        inputMethodManager.showSoftInput(this.mPairingView, 1);
     }
 
     private View createPinEntryView() {
-        View inflate = getActivity().getLayoutInflater().inflate(R.layout.bluetooth_pin_entry, (ViewGroup) null);
-        TextView textView = (TextView) inflate.findViewById(R.id.pin_values_hint);
-        TextView textView2 = (TextView) inflate.findViewById(R.id.message_below_pin);
-        CheckBox checkBox = (CheckBox) inflate.findViewById(R.id.alphanumeric_pin);
-        CheckBox checkBox2 = (CheckBox) inflate.findViewById(R.id.phonebook_sharing_message_entry_pin);
-        checkBox2.setText(getString(R.string.bluetooth_pairing_shares_phonebook, this.mPairingController.getDeviceName()));
-        EditText editText = (EditText) inflate.findViewById(R.id.text);
+        View inflate = getActivity().getLayoutInflater().inflate(R$layout.bluetooth_pin_entry, (ViewGroup) null);
+        TextView textView = (TextView) inflate.findViewById(R$id.pin_values_hint);
+        TextView textView2 = (TextView) inflate.findViewById(R$id.message_below_pin);
+        CheckBox checkBox = (CheckBox) inflate.findViewById(R$id.alphanumeric_pin);
+        CheckBox checkBox2 = (CheckBox) inflate.findViewById(R$id.phonebook_sharing_message_entry_pin);
+        checkBox2.setText(getString(R$string.bluetooth_pairing_shares_phonebook, this.mPairingController.getDeviceName()));
+        EditText editText = (EditText) inflate.findViewById(R$id.text);
         checkBox2.setVisibility(this.mPairingController.isProfileReady() ? 8 : 0);
         this.mPairingController.setContactSharingState();
         checkBox2.setOnCheckedChangeListener(this.mPairingController);
@@ -166,12 +168,7 @@ public class BluetoothPairingDialogFragment extends InstrumentedDialogFragment i
         this.mPairingView = editText;
         editText.setInputType(2);
         editText.addTextChangedListener(this);
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { // from class: com.android.settings.bluetooth.BluetoothPairingDialogFragment$$ExternalSyntheticLambda1
-            @Override // android.widget.CompoundButton.OnCheckedChangeListener
-            public final void onCheckedChanged(CompoundButton compoundButton, boolean z) {
-                BluetoothPairingDialogFragment.this.lambda$createPinEntryView$1(compoundButton, z);
-            }
-        });
+        checkBox.setOnCheckedChangeListener(new BluetoothPairingDialogFragment$$ExternalSyntheticLambda1(this));
         int deviceVariantMessageId = this.mPairingController.getDeviceVariantMessageId();
         int deviceVariantMessageHintId = this.mPairingController.getDeviceVariantMessageHintId();
         int deviceMaxPasskeyLength = this.mPairingController.getDeviceMaxPasskeyLength();
@@ -190,7 +187,7 @@ public class BluetoothPairingDialogFragment extends InstrumentedDialogFragment i
         return inflate;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$createPinEntryView$1(CompoundButton compoundButton, boolean z) {
         if (z) {
             this.mPairingView.setInputType(1);
@@ -200,10 +197,10 @@ public class BluetoothPairingDialogFragment extends InstrumentedDialogFragment i
     }
 
     private AlertDialog createConfirmationDialog() {
-        this.mBuilder.setTitle(getString(R.string.bluetooth_pairing_request, this.mPairingController.getDeviceName()));
+        this.mBuilder.setTitle((CharSequence) getString(R$string.bluetooth_pairing_request, this.mPairingController.getDeviceName()));
         this.mBuilder.setView(createView());
-        this.mBuilder.setPositiveButton(getString(R.string.bluetooth_pairing_accept), this);
-        this.mBuilder.setNegativeButton(getString(R.string.bluetooth_pairing_decline), this);
+        this.mBuilder.setPositiveButton((CharSequence) getString(R$string.bluetooth_pairing_accept), (DialogInterface.OnClickListener) this);
+        this.mBuilder.setNegativeButton((CharSequence) getString(R$string.bluetooth_pairing_decline), (DialogInterface.OnClickListener) this);
         return this.mBuilder.create();
     }
 
@@ -212,35 +209,37 @@ public class BluetoothPairingDialogFragment extends InstrumentedDialogFragment i
     }
 
     private AlertDialog createDisplayPasskeyOrPinDialog() {
-        this.mBuilder.setTitle(getString(R.string.bluetooth_pairing_request, this.mPairingController.getDeviceName()));
+        this.mBuilder.setTitle((CharSequence) getString(R$string.bluetooth_pairing_request, this.mPairingController.getDeviceName()));
         this.mBuilder.setView(createView());
-        this.mBuilder.setNegativeButton(getString(17039360), this);
+        this.mBuilder.setNegativeButton((CharSequence) getString(17039360), (DialogInterface.OnClickListener) this);
         AlertDialog create = this.mBuilder.create();
         this.mPairingController.notifyDialogDisplayed();
         return create;
     }
 
     private View createView() {
-        View inflate = getActivity().getLayoutInflater().inflate(R.layout.bluetooth_pin_confirm, (ViewGroup) null);
-        TextView textView = (TextView) inflate.findViewById(R.id.pairing_caption);
-        TextView textView2 = (TextView) inflate.findViewById(R.id.pairing_subhead);
-        TextView textView3 = (TextView) inflate.findViewById(R.id.pairing_code_message);
-        CheckBox checkBox = (CheckBox) inflate.findViewById(R.id.phonebook_sharing_message_confirm_pin);
-        checkBox.setText(getString(R.string.bluetooth_pairing_shares_phonebook, this.mPairingController.getDeviceName()));
-        int i = 8;
+        View inflate = getActivity().getLayoutInflater().inflate(R$layout.bluetooth_pin_confirm, (ViewGroup) null);
+        TextView textView = (TextView) inflate.findViewById(R$id.pairing_caption);
+        TextView textView2 = (TextView) inflate.findViewById(R$id.pairing_subhead);
+        TextView textView3 = (TextView) inflate.findViewById(R$id.pairing_code_message);
+        CheckBox checkBox = (CheckBox) inflate.findViewById(R$id.phonebook_sharing_message_confirm_pin);
+        int i = 0;
+        checkBox.setText(getString(R$string.bluetooth_pairing_shares_phonebook, this.mPairingController.getDeviceName()));
         checkBox.setVisibility(this.mPairingController.isProfileReady() ? 8 : 0);
         this.mPairingController.setContactSharingState();
         checkBox.setChecked(this.mPairingController.getContactSharingState());
         checkBox.setOnCheckedChangeListener(this.mPairingController);
-        if (this.mPairingController.isDisplayPairingKeyVariant()) {
-            i = 0;
-        }
-        textView3.setVisibility(i);
+        textView3.setVisibility(this.mPairingController.isDisplayPairingKeyVariant() ? 0 : 8);
         if (this.mPairingController.hasPairingContent()) {
             textView.setVisibility(0);
             textView2.setVisibility(0);
             textView2.setText(this.mPairingController.getPairingContent());
         }
+        TextView textView4 = (TextView) inflate.findViewById(R$id.pairing_group_message);
+        if (!this.mPairingController.isCoordinatedSetMemberDevice()) {
+            i = 8;
+        }
+        textView4.setVisibility(i);
         return inflate;
     }
 }

@@ -1,5 +1,5 @@
 package com.google.zxing.oned.rss;
-/* loaded from: classes2.dex */
+
 public class DataCharacter {
     private final int checksumPortion;
     private final int value;
@@ -26,7 +26,10 @@ public class DataCharacter {
             return false;
         }
         DataCharacter dataCharacter = (DataCharacter) obj;
-        return this.value == dataCharacter.value && this.checksumPortion == dataCharacter.checksumPortion;
+        if (this.value == dataCharacter.value && this.checksumPortion == dataCharacter.checksumPortion) {
+            return true;
+        }
+        return false;
     }
 
     public final int hashCode() {

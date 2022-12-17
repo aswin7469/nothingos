@@ -2,8 +2,6 @@ package androidx.constraintlayout.solver.widgets;
 
 import androidx.constraintlayout.solver.Cache;
 import androidx.constraintlayout.solver.LinearSystem;
-import androidx.constraintlayout.solver.Metrics;
-import androidx.constraintlayout.solver.SolverVariable;
 import androidx.constraintlayout.solver.widgets.ConstraintAnchor;
 import androidx.constraintlayout.solver.widgets.analyzer.ChainRun;
 import androidx.constraintlayout.solver.widgets.analyzer.DependencyNode;
@@ -13,93 +11,96 @@ import androidx.constraintlayout.solver.widgets.analyzer.WidgetRun;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-/* loaded from: classes.dex */
+
 public class ConstraintWidget {
     public static float DEFAULT_BIAS = 0.5f;
+    private boolean hasBaseline = false;
     public ChainRun horizontalChainRun;
+    public HorizontalWidgetRun horizontalRun = new HorizontalWidgetRun(this);
     private boolean inPlaceholder;
+    public boolean[] isTerminalWidget = {true, true};
+    protected ArrayList<ConstraintAnchor> mAnchors;
+    ConstraintAnchor mBaseline = new ConstraintAnchor(this, ConstraintAnchor.Type.BASELINE);
+    int mBaselineDistance;
+    public ConstraintAnchor mBottom = new ConstraintAnchor(this, ConstraintAnchor.Type.BOTTOM);
     boolean mBottomHasCentered;
     ConstraintAnchor mCenter;
+    ConstraintAnchor mCenterX = new ConstraintAnchor(this, ConstraintAnchor.Type.CENTER_X);
+    ConstraintAnchor mCenterY = new ConstraintAnchor(this, ConstraintAnchor.Type.CENTER_Y);
+    private float mCircleConstraintAngle = 0.0f;
     private Object mCompanionWidget;
+    private int mContainerItemSkip;
+    private String mDebugName;
+    public float mDimensionRatio;
+    protected int mDimensionRatioSide;
     int mDistToBottom;
     int mDistToLeft;
     int mDistToRight;
     int mDistToTop;
+    boolean mGroupsToSolver;
+    int mHeight;
     float mHorizontalBiasPercent;
     boolean mHorizontalChainFixedPosition;
+    int mHorizontalChainStyle;
+    ConstraintWidget mHorizontalNextWidget;
+    public int mHorizontalResolution = -1;
     boolean mHorizontalWrapVisited;
+    private boolean mInVirtuaLayout = false;
     public boolean mIsHeightWrapContent;
     public boolean mIsWidthWrapContent;
+    public ConstraintAnchor mLeft = new ConstraintAnchor(this, ConstraintAnchor.Type.LEFT);
     boolean mLeftHasCentered;
     public ConstraintAnchor[] mListAnchors;
     public DimensionBehaviour[] mListDimensionBehaviors;
+    protected ConstraintWidget[] mListNextMatchConstraintsWidget;
+    public int mMatchConstraintDefaultHeight = 0;
+    public int mMatchConstraintDefaultWidth = 0;
+    public int mMatchConstraintMaxHeight = 0;
+    public int mMatchConstraintMaxWidth = 0;
+    public int mMatchConstraintMinHeight = 0;
+    public int mMatchConstraintMinWidth = 0;
+    public float mMatchConstraintPercentHeight = 1.0f;
+    public float mMatchConstraintPercentWidth = 1.0f;
+    private int[] mMaxDimension = {Integer.MAX_VALUE, Integer.MAX_VALUE};
     protected int mMinHeight;
     protected int mMinWidth;
+    protected ConstraintWidget[] mNextChainWidget;
+    protected int mOffsetX;
+    protected int mOffsetY;
+    boolean mOptimizerMeasurable;
+    public ConstraintWidget mParent;
+    int mRelX;
+    int mRelY;
+    float mResolvedDimensionRatio = 1.0f;
+    int mResolvedDimensionRatioSide = -1;
+    boolean mResolvedHasRatio = false;
+    public int[] mResolvedMatchConstraintDefault = new int[2];
+    public ConstraintAnchor mRight = new ConstraintAnchor(this, ConstraintAnchor.Type.RIGHT);
     boolean mRightHasCentered;
+    public ConstraintAnchor mTop = new ConstraintAnchor(this, ConstraintAnchor.Type.TOP);
     boolean mTopHasCentered;
+    private String mType;
     float mVerticalBiasPercent;
     boolean mVerticalChainFixedPosition;
+    int mVerticalChainStyle;
+    ConstraintWidget mVerticalNextWidget;
+    public int mVerticalResolution = -1;
     boolean mVerticalWrapVisited;
-    public ChainRun verticalChainRun;
+    private int mVisibility;
+    public float[] mWeight;
+    int mWidth;
+
+    /* renamed from: mX */
+    protected int f18mX;
+
+    /* renamed from: mY */
+    protected int f19mY;
     public boolean measured = false;
     public WidgetRun[] run = new WidgetRun[2];
-    public HorizontalWidgetRun horizontalRun = new HorizontalWidgetRun(this);
+    public ChainRun verticalChainRun;
     public VerticalWidgetRun verticalRun = new VerticalWidgetRun(this);
-    public boolean[] isTerminalWidget = {true, true};
     public int[] wrapMeasure = {0, 0};
-    boolean mResolvedHasRatio = false;
-    public int mHorizontalResolution = -1;
-    public int mVerticalResolution = -1;
-    public int mMatchConstraintDefaultWidth = 0;
-    public int mMatchConstraintDefaultHeight = 0;
-    public int[] mResolvedMatchConstraintDefault = new int[2];
-    public int mMatchConstraintMinWidth = 0;
-    public int mMatchConstraintMaxWidth = 0;
-    public float mMatchConstraintPercentWidth = 1.0f;
-    public int mMatchConstraintMinHeight = 0;
-    public int mMatchConstraintMaxHeight = 0;
-    public float mMatchConstraintPercentHeight = 1.0f;
-    int mResolvedDimensionRatioSide = -1;
-    float mResolvedDimensionRatio = 1.0f;
-    private int[] mMaxDimension = {Integer.MAX_VALUE, Integer.MAX_VALUE};
-    private float mCircleConstraintAngle = 0.0f;
-    private boolean hasBaseline = false;
-    private boolean mInVirtuaLayout = false;
-    public ConstraintAnchor mLeft = new ConstraintAnchor(this, ConstraintAnchor.Type.LEFT);
-    public ConstraintAnchor mTop = new ConstraintAnchor(this, ConstraintAnchor.Type.TOP);
-    public ConstraintAnchor mRight = new ConstraintAnchor(this, ConstraintAnchor.Type.RIGHT);
-    public ConstraintAnchor mBottom = new ConstraintAnchor(this, ConstraintAnchor.Type.BOTTOM);
-    ConstraintAnchor mBaseline = new ConstraintAnchor(this, ConstraintAnchor.Type.BASELINE);
-    ConstraintAnchor mCenterX = new ConstraintAnchor(this, ConstraintAnchor.Type.CENTER_X);
-    ConstraintAnchor mCenterY = new ConstraintAnchor(this, ConstraintAnchor.Type.CENTER_Y);
-    protected ArrayList<ConstraintAnchor> mAnchors = new ArrayList<>();
-    public ConstraintWidget mParent = null;
-    int mWidth = 0;
-    int mHeight = 0;
-    public float mDimensionRatio = 0.0f;
-    protected int mDimensionRatioSide = -1;
-    protected int mX = 0;
-    protected int mY = 0;
-    int mRelX = 0;
-    int mRelY = 0;
-    protected int mOffsetX = 0;
-    protected int mOffsetY = 0;
-    int mBaselineDistance = 0;
-    private int mContainerItemSkip = 0;
-    private int mVisibility = 0;
-    private String mDebugName = null;
-    private String mType = null;
-    boolean mOptimizerMeasurable = false;
-    boolean mGroupsToSolver = false;
-    int mHorizontalChainStyle = 0;
-    int mVerticalChainStyle = 0;
-    public float[] mWeight = {-1.0f, -1.0f};
-    protected ConstraintWidget[] mListNextMatchConstraintsWidget = {null, null};
-    protected ConstraintWidget[] mNextChainWidget = {null, null};
-    ConstraintWidget mHorizontalNextWidget = null;
-    ConstraintWidget mVerticalNextWidget = null;
 
-    /* loaded from: classes.dex */
     public enum DimensionBehaviour {
         FIXED,
         WRAP_CONTENT,
@@ -111,10 +112,10 @@ public class ConstraintWidget {
         if (i == 0) {
             return this.horizontalRun;
         }
-        if (i != 1) {
-            return null;
+        if (i == 1) {
+            return this.verticalRun;
         }
-        return this.verticalRun;
+        return null;
     }
 
     public void setInVirtualLayout(boolean z) {
@@ -160,8 +161,8 @@ public class ConstraintWidget {
         this.mHeight = 0;
         this.mDimensionRatio = 0.0f;
         this.mDimensionRatioSide = -1;
-        this.mX = 0;
-        this.mY = 0;
+        this.f18mX = 0;
+        this.f19mY = 0;
         this.mOffsetX = 0;
         this.mOffsetY = 0;
         this.mBaselineDistance = 0;
@@ -215,11 +216,37 @@ public class ConstraintWidget {
         ConstraintAnchor constraintAnchor = new ConstraintAnchor(this, ConstraintAnchor.Type.CENTER);
         this.mCenter = constraintAnchor;
         this.mListAnchors = new ConstraintAnchor[]{this.mLeft, this.mRight, this.mTop, this.mBottom, this.mBaseline, constraintAnchor};
+        this.mAnchors = new ArrayList<>();
         DimensionBehaviour dimensionBehaviour = DimensionBehaviour.FIXED;
         this.mListDimensionBehaviors = new DimensionBehaviour[]{dimensionBehaviour, dimensionBehaviour};
+        this.mParent = null;
+        this.mWidth = 0;
+        this.mHeight = 0;
+        this.mDimensionRatio = 0.0f;
+        this.mDimensionRatioSide = -1;
+        this.f18mX = 0;
+        this.f19mY = 0;
+        this.mRelX = 0;
+        this.mRelY = 0;
+        this.mOffsetX = 0;
+        this.mOffsetY = 0;
+        this.mBaselineDistance = 0;
         float f = DEFAULT_BIAS;
         this.mHorizontalBiasPercent = f;
         this.mVerticalBiasPercent = f;
+        this.mContainerItemSkip = 0;
+        this.mVisibility = 0;
+        this.mDebugName = null;
+        this.mType = null;
+        this.mOptimizerMeasurable = false;
+        this.mGroupsToSolver = false;
+        this.mHorizontalChainStyle = 0;
+        this.mVerticalChainStyle = 0;
+        this.mWeight = new float[]{-1.0f, -1.0f};
+        this.mListNextMatchConstraintsWidget = new ConstraintWidget[]{null, null};
+        this.mNextChainWidget = new ConstraintWidget[]{null, null};
+        this.mHorizontalNextWidget = null;
+        this.mVerticalNextWidget = null;
         addAnchors();
     }
 
@@ -300,9 +327,9 @@ public class ConstraintWidget {
         }
         sb.append(str2);
         sb.append("(");
-        sb.append(this.mX);
+        sb.append(this.f18mX);
         sb.append(", ");
-        sb.append(this.mY);
+        sb.append(this.f19mY);
         sb.append(") - (");
         sb.append(this.mWidth);
         sb.append(" x ");
@@ -313,18 +340,18 @@ public class ConstraintWidget {
 
     public int getX() {
         ConstraintWidget constraintWidget = this.mParent;
-        if (constraintWidget != null && (constraintWidget instanceof ConstraintWidgetContainer)) {
-            return ((ConstraintWidgetContainer) constraintWidget).mPaddingLeft + this.mX;
+        if (constraintWidget == null || !(constraintWidget instanceof ConstraintWidgetContainer)) {
+            return this.f18mX;
         }
-        return this.mX;
+        return ((ConstraintWidgetContainer) constraintWidget).mPaddingLeft + this.f18mX;
     }
 
     public int getY() {
         ConstraintWidget constraintWidget = this.mParent;
-        if (constraintWidget != null && (constraintWidget instanceof ConstraintWidgetContainer)) {
-            return ((ConstraintWidgetContainer) constraintWidget).mPaddingTop + this.mY;
+        if (constraintWidget == null || !(constraintWidget instanceof ConstraintWidgetContainer)) {
+            return this.f19mY;
         }
-        return this.mY;
+        return ((ConstraintWidgetContainer) constraintWidget).mPaddingTop + this.f19mY;
     }
 
     public int getWidth() {
@@ -345,10 +372,10 @@ public class ConstraintWidget {
         if (i == 0) {
             return getWidth();
         }
-        if (i != 1) {
-            return 0;
+        if (i == 1) {
+            return getHeight();
         }
-        return getHeight();
+        return 0;
     }
 
     public int getMinWidth() {
@@ -397,10 +424,10 @@ public class ConstraintWidget {
         if (i == 0) {
             return this.mHorizontalBiasPercent;
         }
-        if (i != 1) {
-            return -1.0f;
+        if (i == 1) {
+            return this.mVerticalBiasPercent;
         }
-        return this.mVerticalBiasPercent;
+        return -1.0f;
     }
 
     public boolean hasBaseline() {
@@ -416,16 +443,16 @@ public class ConstraintWidget {
     }
 
     public void setX(int i) {
-        this.mX = i;
+        this.f18mX = i;
     }
 
     public void setY(int i) {
-        this.mY = i;
+        this.f19mY = i;
     }
 
     public void setOrigin(int i, int i2) {
-        this.mX = i;
-        this.mY = i2;
+        this.f18mX = i;
+        this.f19mY = i2;
     }
 
     public void setWidth(int i) {
@@ -452,10 +479,9 @@ public class ConstraintWidget {
         }
         this.mMatchConstraintMaxWidth = i3;
         this.mMatchConstraintPercentWidth = f;
-        if (f <= 0.0f || f >= 1.0f || i != 0) {
-            return;
+        if (f > 0.0f && f < 1.0f && i == 0) {
+            this.mMatchConstraintDefaultWidth = 2;
         }
-        this.mMatchConstraintDefaultWidth = 2;
     }
 
     public void setVerticalMatchStyle(int i, int i2, int i3, float f) {
@@ -466,62 +492,92 @@ public class ConstraintWidget {
         }
         this.mMatchConstraintMaxHeight = i3;
         this.mMatchConstraintPercentHeight = f;
-        if (f <= 0.0f || f >= 1.0f || i != 0) {
-            return;
+        if (f > 0.0f && f < 1.0f && i == 0) {
+            this.mMatchConstraintDefaultHeight = 2;
         }
-        this.mMatchConstraintDefaultHeight = 2;
     }
 
-    /* JADX WARN: Unsupported multi-entry loop pattern (BACK_EDGE: B:38:0x0084 -> B:31:0x0085). Please submit an issue!!! */
-    public void setDimensionRatio(String str) {
-        float f;
-        int i = 0;
-        if (str == null || str.length() == 0) {
-            this.mDimensionRatio = 0.0f;
-            return;
-        }
-        int i2 = -1;
-        int length = str.length();
-        int indexOf = str.indexOf(44);
-        int i3 = 0;
-        if (indexOf > 0 && indexOf < length - 1) {
-            String substring = str.substring(0, indexOf);
-            if (substring.equalsIgnoreCase("W")) {
-                i2 = 0;
-            } else if (substring.equalsIgnoreCase("H")) {
-                i2 = 1;
-            }
-            i3 = indexOf + 1;
-        }
-        int indexOf2 = str.indexOf(58);
-        if (indexOf2 >= 0 && indexOf2 < length - 1) {
-            String substring2 = str.substring(i3, indexOf2);
-            String substring3 = str.substring(indexOf2 + 1);
-            if (substring2.length() > 0 && substring3.length() > 0) {
-                float parseFloat = Float.parseFloat(substring2);
-                float parseFloat2 = Float.parseFloat(substring3);
-                if (parseFloat > 0.0f && parseFloat2 > 0.0f) {
-                    if (i2 == 1) {
-                        f = Math.abs(parseFloat2 / parseFloat);
-                    } else {
-                        f = Math.abs(parseFloat / parseFloat2);
-                    }
-                }
-            }
-            f = i;
-        } else {
-            String substring4 = str.substring(i3);
-            if (substring4.length() > 0) {
-                f = Float.parseFloat(substring4);
-            }
-            f = i;
-        }
-        i = (f > i ? 1 : (f == i ? 0 : -1));
-        if (i <= 0) {
-            return;
-        }
-        this.mDimensionRatio = f;
-        this.mDimensionRatioSide = i2;
+    /* JADX WARNING: Removed duplicated region for block: B:39:0x0089  */
+    /* JADX WARNING: Removed duplicated region for block: B:43:? A[RETURN, SYNTHETIC] */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void setDimensionRatio(java.lang.String r9) {
+        /*
+            r8 = this;
+            r0 = 0
+            if (r9 == 0) goto L_0x008e
+            int r1 = r9.length()
+            if (r1 != 0) goto L_0x000b
+            goto L_0x008e
+        L_0x000b:
+            r1 = -1
+            int r2 = r9.length()
+            r3 = 44
+            int r3 = r9.indexOf(r3)
+            r4 = 0
+            r5 = 1
+            if (r3 <= 0) goto L_0x0037
+            int r6 = r2 + -1
+            if (r3 >= r6) goto L_0x0037
+            java.lang.String r6 = r9.substring(r4, r3)
+            java.lang.String r7 = "W"
+            boolean r7 = r6.equalsIgnoreCase(r7)
+            if (r7 == 0) goto L_0x002c
+            r1 = r4
+            goto L_0x0035
+        L_0x002c:
+            java.lang.String r4 = "H"
+            boolean r4 = r6.equalsIgnoreCase(r4)
+            if (r4 == 0) goto L_0x0035
+            r1 = r5
+        L_0x0035:
+            int r4 = r3 + 1
+        L_0x0037:
+            r3 = 58
+            int r3 = r9.indexOf(r3)
+            if (r3 < 0) goto L_0x0075
+            int r2 = r2 - r5
+            if (r3 >= r2) goto L_0x0075
+            java.lang.String r2 = r9.substring(r4, r3)
+            int r3 = r3 + r5
+            java.lang.String r9 = r9.substring(r3)
+            int r3 = r2.length()
+            if (r3 <= 0) goto L_0x0084
+            int r3 = r9.length()
+            if (r3 <= 0) goto L_0x0084
+            float r2 = java.lang.Float.parseFloat(r2)     // Catch:{ NumberFormatException -> 0x0084 }
+            float r9 = java.lang.Float.parseFloat(r9)     // Catch:{ NumberFormatException -> 0x0084 }
+            int r3 = (r2 > r0 ? 1 : (r2 == r0 ? 0 : -1))
+            if (r3 <= 0) goto L_0x0084
+            int r3 = (r9 > r0 ? 1 : (r9 == r0 ? 0 : -1))
+            if (r3 <= 0) goto L_0x0084
+            if (r1 != r5) goto L_0x006f
+            float r9 = r9 / r2
+            float r9 = java.lang.Math.abs(r9)     // Catch:{ NumberFormatException -> 0x0084 }
+            goto L_0x0085
+        L_0x006f:
+            float r2 = r2 / r9
+            float r9 = java.lang.Math.abs(r2)     // Catch:{ NumberFormatException -> 0x0084 }
+            goto L_0x0085
+        L_0x0075:
+            java.lang.String r9 = r9.substring(r4)
+            int r2 = r9.length()
+            if (r2 <= 0) goto L_0x0084
+            float r9 = java.lang.Float.parseFloat(r9)     // Catch:{ NumberFormatException -> 0x0084 }
+            goto L_0x0085
+        L_0x0084:
+            r9 = r0
+        L_0x0085:
+            int r0 = (r9 > r0 ? 1 : (r9 == r0 ? 0 : -1))
+            if (r0 <= 0) goto L_0x008d
+            r8.mDimensionRatio = r9
+            r8.mDimensionRatioSide = r1
+        L_0x008d:
+            return
+        L_0x008e:
+            r8.mDimensionRatio = r0
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.constraintlayout.solver.widgets.ConstraintWidget.setDimensionRatio(java.lang.String):void");
     }
 
     public float getDimensionRatio() {
@@ -561,8 +617,8 @@ public class ConstraintWidget {
         int i6;
         int i7 = i3 - i;
         int i8 = i4 - i2;
-        this.mX = i;
-        this.mY = i2;
+        this.f18mX = i;
+        this.f19mY = i2;
         if (this.mVisibility == 8) {
             this.mWidth = 0;
             this.mHeight = 0;
@@ -584,14 +640,13 @@ public class ConstraintWidget {
             this.mHeight = i9;
         }
         int i10 = this.mMinWidth;
-        if (i7 >= i10) {
-            return;
+        if (i7 < i10) {
+            this.mWidth = i10;
         }
-        this.mWidth = i10;
     }
 
     public void setHorizontalDimension(int i, int i2) {
-        this.mX = i;
+        this.f18mX = i;
         int i3 = i2 - i;
         this.mWidth = i3;
         int i4 = this.mMinWidth;
@@ -601,7 +656,7 @@ public class ConstraintWidget {
     }
 
     public void setVerticalDimension(int i, int i2) {
-        this.mY = i;
+        this.f19mY = i;
         int i3 = i2 - i;
         this.mHeight = i3;
         int i4 = this.mMinHeight;
@@ -662,134 +717,126 @@ public class ConstraintWidget {
         ConstraintAnchor.Type type4;
         boolean z;
         ConstraintAnchor.Type type5 = ConstraintAnchor.Type.CENTER;
-        if (type == type5) {
-            if (type2 == type5) {
-                ConstraintAnchor.Type type6 = ConstraintAnchor.Type.LEFT;
-                ConstraintAnchor anchor = getAnchor(type6);
-                ConstraintAnchor.Type type7 = ConstraintAnchor.Type.RIGHT;
-                ConstraintAnchor anchor2 = getAnchor(type7);
-                ConstraintAnchor.Type type8 = ConstraintAnchor.Type.TOP;
-                ConstraintAnchor anchor3 = getAnchor(type8);
-                ConstraintAnchor.Type type9 = ConstraintAnchor.Type.BOTTOM;
-                ConstraintAnchor anchor4 = getAnchor(type9);
-                boolean z2 = true;
-                if ((anchor == null || !anchor.isConnected()) && (anchor2 == null || !anchor2.isConnected())) {
-                    connect(type6, constraintWidget, type6, 0);
-                    connect(type7, constraintWidget, type7, 0);
-                    z = true;
-                } else {
-                    z = false;
-                }
-                if ((anchor3 == null || !anchor3.isConnected()) && (anchor4 == null || !anchor4.isConnected())) {
-                    connect(type8, constraintWidget, type8, 0);
-                    connect(type9, constraintWidget, type9, 0);
-                } else {
-                    z2 = false;
-                }
-                if (z && z2) {
-                    getAnchor(type5).connect(constraintWidget.getAnchor(type5), 0);
-                    return;
-                } else if (z) {
-                    ConstraintAnchor.Type type10 = ConstraintAnchor.Type.CENTER_X;
-                    getAnchor(type10).connect(constraintWidget.getAnchor(type10), 0);
-                    return;
-                } else if (!z2) {
-                    return;
-                } else {
-                    ConstraintAnchor.Type type11 = ConstraintAnchor.Type.CENTER_Y;
-                    getAnchor(type11).connect(constraintWidget.getAnchor(type11), 0);
-                    return;
+        if (type != type5) {
+            ConstraintAnchor.Type type6 = ConstraintAnchor.Type.CENTER_X;
+            if (type == type6 && (type2 == (type4 = ConstraintAnchor.Type.LEFT) || type2 == ConstraintAnchor.Type.RIGHT)) {
+                ConstraintAnchor anchor = getAnchor(type4);
+                ConstraintAnchor anchor2 = constraintWidget.getAnchor(type2);
+                ConstraintAnchor anchor3 = getAnchor(ConstraintAnchor.Type.RIGHT);
+                anchor.connect(anchor2, 0);
+                anchor3.connect(anchor2, 0);
+                getAnchor(type6).connect(anchor2, 0);
+                return;
+            }
+            ConstraintAnchor.Type type7 = ConstraintAnchor.Type.CENTER_Y;
+            if (type == type7 && (type2 == (type3 = ConstraintAnchor.Type.TOP) || type2 == ConstraintAnchor.Type.BOTTOM)) {
+                ConstraintAnchor anchor4 = constraintWidget.getAnchor(type2);
+                getAnchor(type3).connect(anchor4, 0);
+                getAnchor(ConstraintAnchor.Type.BOTTOM).connect(anchor4, 0);
+                getAnchor(type7).connect(anchor4, 0);
+            } else if (type == type6 && type2 == type6) {
+                ConstraintAnchor.Type type8 = ConstraintAnchor.Type.LEFT;
+                getAnchor(type8).connect(constraintWidget.getAnchor(type8), 0);
+                ConstraintAnchor.Type type9 = ConstraintAnchor.Type.RIGHT;
+                getAnchor(type9).connect(constraintWidget.getAnchor(type9), 0);
+                getAnchor(type6).connect(constraintWidget.getAnchor(type2), 0);
+            } else if (type == type7 && type2 == type7) {
+                ConstraintAnchor.Type type10 = ConstraintAnchor.Type.TOP;
+                getAnchor(type10).connect(constraintWidget.getAnchor(type10), 0);
+                ConstraintAnchor.Type type11 = ConstraintAnchor.Type.BOTTOM;
+                getAnchor(type11).connect(constraintWidget.getAnchor(type11), 0);
+                getAnchor(type7).connect(constraintWidget.getAnchor(type2), 0);
+            } else {
+                ConstraintAnchor anchor5 = getAnchor(type);
+                ConstraintAnchor anchor6 = constraintWidget.getAnchor(type2);
+                if (anchor5.isValidConnection(anchor6)) {
+                    ConstraintAnchor.Type type12 = ConstraintAnchor.Type.BASELINE;
+                    if (type == type12) {
+                        ConstraintAnchor anchor7 = getAnchor(ConstraintAnchor.Type.TOP);
+                        ConstraintAnchor anchor8 = getAnchor(ConstraintAnchor.Type.BOTTOM);
+                        if (anchor7 != null) {
+                            anchor7.reset();
+                        }
+                        if (anchor8 != null) {
+                            anchor8.reset();
+                        }
+                        i = 0;
+                    } else if (type == ConstraintAnchor.Type.TOP || type == ConstraintAnchor.Type.BOTTOM) {
+                        ConstraintAnchor anchor9 = getAnchor(type12);
+                        if (anchor9 != null) {
+                            anchor9.reset();
+                        }
+                        ConstraintAnchor anchor10 = getAnchor(type5);
+                        if (anchor10.getTarget() != anchor6) {
+                            anchor10.reset();
+                        }
+                        ConstraintAnchor opposite = getAnchor(type).getOpposite();
+                        ConstraintAnchor anchor11 = getAnchor(type7);
+                        if (anchor11.isConnected()) {
+                            opposite.reset();
+                            anchor11.reset();
+                        }
+                    } else if (type == ConstraintAnchor.Type.LEFT || type == ConstraintAnchor.Type.RIGHT) {
+                        ConstraintAnchor anchor12 = getAnchor(type5);
+                        if (anchor12.getTarget() != anchor6) {
+                            anchor12.reset();
+                        }
+                        ConstraintAnchor opposite2 = getAnchor(type).getOpposite();
+                        ConstraintAnchor anchor13 = getAnchor(type6);
+                        if (anchor13.isConnected()) {
+                            opposite2.reset();
+                            anchor13.reset();
+                        }
+                    }
+                    anchor5.connect(anchor6, i);
                 }
             }
-            ConstraintAnchor.Type type12 = ConstraintAnchor.Type.LEFT;
-            if (type2 == type12 || type2 == ConstraintAnchor.Type.RIGHT) {
-                connect(type12, constraintWidget, type2, 0);
+        } else if (type2 == type5) {
+            ConstraintAnchor.Type type13 = ConstraintAnchor.Type.LEFT;
+            ConstraintAnchor anchor14 = getAnchor(type13);
+            ConstraintAnchor.Type type14 = ConstraintAnchor.Type.RIGHT;
+            ConstraintAnchor anchor15 = getAnchor(type14);
+            ConstraintAnchor.Type type15 = ConstraintAnchor.Type.TOP;
+            ConstraintAnchor anchor16 = getAnchor(type15);
+            ConstraintAnchor.Type type16 = ConstraintAnchor.Type.BOTTOM;
+            ConstraintAnchor anchor17 = getAnchor(type16);
+            boolean z2 = true;
+            if ((anchor14 == null || !anchor14.isConnected()) && (anchor15 == null || !anchor15.isConnected())) {
+                connect(type13, constraintWidget, type13, 0);
+                connect(type14, constraintWidget, type14, 0);
+                z = true;
+            } else {
+                z = false;
+            }
+            if ((anchor16 == null || !anchor16.isConnected()) && (anchor17 == null || !anchor17.isConnected())) {
+                connect(type15, constraintWidget, type15, 0);
+                connect(type16, constraintWidget, type16, 0);
+            } else {
+                z2 = false;
+            }
+            if (z && z2) {
+                getAnchor(type5).connect(constraintWidget.getAnchor(type5), 0);
+            } else if (z) {
+                ConstraintAnchor.Type type17 = ConstraintAnchor.Type.CENTER_X;
+                getAnchor(type17).connect(constraintWidget.getAnchor(type17), 0);
+            } else if (z2) {
+                ConstraintAnchor.Type type18 = ConstraintAnchor.Type.CENTER_Y;
+                getAnchor(type18).connect(constraintWidget.getAnchor(type18), 0);
+            }
+        } else {
+            ConstraintAnchor.Type type19 = ConstraintAnchor.Type.LEFT;
+            if (type2 == type19 || type2 == ConstraintAnchor.Type.RIGHT) {
+                connect(type19, constraintWidget, type2, 0);
                 connect(ConstraintAnchor.Type.RIGHT, constraintWidget, type2, 0);
                 getAnchor(type5).connect(constraintWidget.getAnchor(type2), 0);
                 return;
             }
-            ConstraintAnchor.Type type13 = ConstraintAnchor.Type.TOP;
-            if (type2 != type13 && type2 != ConstraintAnchor.Type.BOTTOM) {
-                return;
+            ConstraintAnchor.Type type20 = ConstraintAnchor.Type.TOP;
+            if (type2 == type20 || type2 == ConstraintAnchor.Type.BOTTOM) {
+                connect(type20, constraintWidget, type2, 0);
+                connect(ConstraintAnchor.Type.BOTTOM, constraintWidget, type2, 0);
+                getAnchor(type5).connect(constraintWidget.getAnchor(type2), 0);
             }
-            connect(type13, constraintWidget, type2, 0);
-            connect(ConstraintAnchor.Type.BOTTOM, constraintWidget, type2, 0);
-            getAnchor(type5).connect(constraintWidget.getAnchor(type2), 0);
-            return;
-        }
-        ConstraintAnchor.Type type14 = ConstraintAnchor.Type.CENTER_X;
-        if (type == type14 && (type2 == (type4 = ConstraintAnchor.Type.LEFT) || type2 == ConstraintAnchor.Type.RIGHT)) {
-            ConstraintAnchor anchor5 = getAnchor(type4);
-            ConstraintAnchor anchor6 = constraintWidget.getAnchor(type2);
-            ConstraintAnchor anchor7 = getAnchor(ConstraintAnchor.Type.RIGHT);
-            anchor5.connect(anchor6, 0);
-            anchor7.connect(anchor6, 0);
-            getAnchor(type14).connect(anchor6, 0);
-            return;
-        }
-        ConstraintAnchor.Type type15 = ConstraintAnchor.Type.CENTER_Y;
-        if (type == type15 && (type2 == (type3 = ConstraintAnchor.Type.TOP) || type2 == ConstraintAnchor.Type.BOTTOM)) {
-            ConstraintAnchor anchor8 = constraintWidget.getAnchor(type2);
-            getAnchor(type3).connect(anchor8, 0);
-            getAnchor(ConstraintAnchor.Type.BOTTOM).connect(anchor8, 0);
-            getAnchor(type15).connect(anchor8, 0);
-        } else if (type == type14 && type2 == type14) {
-            ConstraintAnchor.Type type16 = ConstraintAnchor.Type.LEFT;
-            getAnchor(type16).connect(constraintWidget.getAnchor(type16), 0);
-            ConstraintAnchor.Type type17 = ConstraintAnchor.Type.RIGHT;
-            getAnchor(type17).connect(constraintWidget.getAnchor(type17), 0);
-            getAnchor(type14).connect(constraintWidget.getAnchor(type2), 0);
-        } else if (type == type15 && type2 == type15) {
-            ConstraintAnchor.Type type18 = ConstraintAnchor.Type.TOP;
-            getAnchor(type18).connect(constraintWidget.getAnchor(type18), 0);
-            ConstraintAnchor.Type type19 = ConstraintAnchor.Type.BOTTOM;
-            getAnchor(type19).connect(constraintWidget.getAnchor(type19), 0);
-            getAnchor(type15).connect(constraintWidget.getAnchor(type2), 0);
-        } else {
-            ConstraintAnchor anchor9 = getAnchor(type);
-            ConstraintAnchor anchor10 = constraintWidget.getAnchor(type2);
-            if (!anchor9.isValidConnection(anchor10)) {
-                return;
-            }
-            ConstraintAnchor.Type type20 = ConstraintAnchor.Type.BASELINE;
-            if (type == type20) {
-                ConstraintAnchor anchor11 = getAnchor(ConstraintAnchor.Type.TOP);
-                ConstraintAnchor anchor12 = getAnchor(ConstraintAnchor.Type.BOTTOM);
-                if (anchor11 != null) {
-                    anchor11.reset();
-                }
-                if (anchor12 != null) {
-                    anchor12.reset();
-                }
-                i = 0;
-            } else if (type == ConstraintAnchor.Type.TOP || type == ConstraintAnchor.Type.BOTTOM) {
-                ConstraintAnchor anchor13 = getAnchor(type20);
-                if (anchor13 != null) {
-                    anchor13.reset();
-                }
-                ConstraintAnchor anchor14 = getAnchor(type5);
-                if (anchor14.getTarget() != anchor10) {
-                    anchor14.reset();
-                }
-                ConstraintAnchor opposite = getAnchor(type).getOpposite();
-                ConstraintAnchor anchor15 = getAnchor(type15);
-                if (anchor15.isConnected()) {
-                    opposite.reset();
-                    anchor15.reset();
-                }
-            } else if (type == ConstraintAnchor.Type.LEFT || type == ConstraintAnchor.Type.RIGHT) {
-                ConstraintAnchor anchor16 = getAnchor(type5);
-                if (anchor16.getTarget() != anchor10) {
-                    anchor16.reset();
-                }
-                ConstraintAnchor opposite2 = getAnchor(type).getOpposite();
-                ConstraintAnchor anchor17 = getAnchor(type14);
-                if (anchor17.isConnected()) {
-                    opposite2.reset();
-                    anchor17.reset();
-                }
-            }
-            anchor9.connect(anchor10, i);
         }
     }
 
@@ -804,7 +851,7 @@ public class ConstraintWidget {
     }
 
     public ConstraintAnchor getAnchor(ConstraintAnchor.Type type) {
-        switch (AnonymousClass1.$SwitchMap$androidx$constraintlayout$solver$widgets$ConstraintAnchor$Type[type.ordinal()]) {
+        switch (C01051.f20x4c44d048[type.ordinal()]) {
             case 1:
                 return this.mLeft;
             case 2:
@@ -840,10 +887,10 @@ public class ConstraintWidget {
         if (i == 0) {
             return getHorizontalDimensionBehaviour();
         }
-        if (i != 1) {
-            return null;
+        if (i == 1) {
+            return getVerticalDimensionBehaviour();
         }
-        return getVerticalDimensionBehaviour();
+        return null;
     }
 
     public void setHorizontalDimensionBehaviour(DimensionBehaviour dimensionBehaviour) {
@@ -857,603 +904,867 @@ public class ConstraintWidget {
     public boolean isInHorizontalChain() {
         ConstraintAnchor constraintAnchor = this.mLeft;
         ConstraintAnchor constraintAnchor2 = constraintAnchor.mTarget;
-        if (constraintAnchor2 == null || constraintAnchor2.mTarget != constraintAnchor) {
-            ConstraintAnchor constraintAnchor3 = this.mRight;
-            ConstraintAnchor constraintAnchor4 = constraintAnchor3.mTarget;
-            return constraintAnchor4 != null && constraintAnchor4.mTarget == constraintAnchor3;
-        }
-        return true;
-    }
-
-    public ConstraintWidget getPreviousChainMember(int i) {
-        ConstraintAnchor constraintAnchor;
-        ConstraintAnchor constraintAnchor2;
-        if (i != 0) {
-            if (i != 1 || (constraintAnchor2 = (constraintAnchor = this.mTop).mTarget) == null || constraintAnchor2.mTarget != constraintAnchor) {
-                return null;
-            }
-            return constraintAnchor2.mOwner;
-        }
-        ConstraintAnchor constraintAnchor3 = this.mLeft;
-        ConstraintAnchor constraintAnchor4 = constraintAnchor3.mTarget;
-        if (constraintAnchor4 != null && constraintAnchor4.mTarget == constraintAnchor3) {
-            return constraintAnchor4.mOwner;
-        }
-        return null;
-    }
-
-    public ConstraintWidget getNextChainMember(int i) {
-        ConstraintAnchor constraintAnchor;
-        ConstraintAnchor constraintAnchor2;
-        if (i != 0) {
-            if (i != 1 || (constraintAnchor2 = (constraintAnchor = this.mBottom).mTarget) == null || constraintAnchor2.mTarget != constraintAnchor) {
-                return null;
-            }
-            return constraintAnchor2.mOwner;
+        if (constraintAnchor2 != null && constraintAnchor2.mTarget == constraintAnchor) {
+            return true;
         }
         ConstraintAnchor constraintAnchor3 = this.mRight;
         ConstraintAnchor constraintAnchor4 = constraintAnchor3.mTarget;
-        if (constraintAnchor4 != null && constraintAnchor4.mTarget == constraintAnchor3) {
-            return constraintAnchor4.mOwner;
-        }
-        return null;
+        return constraintAnchor4 != null && constraintAnchor4.mTarget == constraintAnchor3;
+    }
+
+    /* JADX WARNING: Code restructure failed: missing block: B:9:0x0012, code lost:
+        r1 = r1.mTop;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public androidx.constraintlayout.solver.widgets.ConstraintWidget getPreviousChainMember(int r2) {
+        /*
+            r1 = this;
+            if (r2 != 0) goto L_0x000f
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r1 = r1.mLeft
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r2 = r1.mTarget
+            if (r2 == 0) goto L_0x001f
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r0 = r2.mTarget
+            if (r0 != r1) goto L_0x001f
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r1 = r2.mOwner
+            return r1
+        L_0x000f:
+            r0 = 1
+            if (r2 != r0) goto L_0x001f
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r1 = r1.mTop
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r2 = r1.mTarget
+            if (r2 == 0) goto L_0x001f
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r0 = r2.mTarget
+            if (r0 != r1) goto L_0x001f
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r1 = r2.mOwner
+            return r1
+        L_0x001f:
+            r1 = 0
+            return r1
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.constraintlayout.solver.widgets.ConstraintWidget.getPreviousChainMember(int):androidx.constraintlayout.solver.widgets.ConstraintWidget");
+    }
+
+    /* JADX WARNING: Code restructure failed: missing block: B:9:0x0012, code lost:
+        r1 = r1.mBottom;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public androidx.constraintlayout.solver.widgets.ConstraintWidget getNextChainMember(int r2) {
+        /*
+            r1 = this;
+            if (r2 != 0) goto L_0x000f
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r1 = r1.mRight
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r2 = r1.mTarget
+            if (r2 == 0) goto L_0x001f
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r0 = r2.mTarget
+            if (r0 != r1) goto L_0x001f
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r1 = r2.mOwner
+            return r1
+        L_0x000f:
+            r0 = 1
+            if (r2 != r0) goto L_0x001f
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r1 = r1.mBottom
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r2 = r1.mTarget
+            if (r2 == 0) goto L_0x001f
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r0 = r2.mTarget
+            if (r0 != r1) goto L_0x001f
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r1 = r2.mOwner
+            return r1
+        L_0x001f:
+            r1 = 0
+            return r1
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.constraintlayout.solver.widgets.ConstraintWidget.getNextChainMember(int):androidx.constraintlayout.solver.widgets.ConstraintWidget");
     }
 
     public boolean isInVerticalChain() {
         ConstraintAnchor constraintAnchor = this.mTop;
         ConstraintAnchor constraintAnchor2 = constraintAnchor.mTarget;
-        if (constraintAnchor2 == null || constraintAnchor2.mTarget != constraintAnchor) {
-            ConstraintAnchor constraintAnchor3 = this.mBottom;
-            ConstraintAnchor constraintAnchor4 = constraintAnchor3.mTarget;
-            return constraintAnchor4 != null && constraintAnchor4.mTarget == constraintAnchor3;
+        if (constraintAnchor2 != null && constraintAnchor2.mTarget == constraintAnchor) {
+            return true;
         }
-        return true;
+        ConstraintAnchor constraintAnchor3 = this.mBottom;
+        ConstraintAnchor constraintAnchor4 = constraintAnchor3.mTarget;
+        return constraintAnchor4 != null && constraintAnchor4.mTarget == constraintAnchor3;
     }
 
-    private boolean isChainHead(int i) {
-        int i2 = i * 2;
-        ConstraintAnchor[] constraintAnchorArr = this.mListAnchors;
-        if (constraintAnchorArr[i2].mTarget != null && constraintAnchorArr[i2].mTarget.mTarget != constraintAnchorArr[i2]) {
-            int i3 = i2 + 1;
-            if (constraintAnchorArr[i3].mTarget != null && constraintAnchorArr[i3].mTarget.mTarget == constraintAnchorArr[i3]) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /* JADX WARN: Code restructure failed: missing block: B:176:0x0413, code lost:
-        if (r13.mVisibility == 8) goto L190;
+    /* JADX WARNING: Code restructure failed: missing block: B:4:0x000f, code lost:
+        r3 = r3[r4 + 1];
+        r4 = r3.mTarget;
      */
-    /* JADX WARN: Removed duplicated region for block: B:112:0x023d  */
-    /* JADX WARN: Removed duplicated region for block: B:118:0x0253  */
-    /* JADX WARN: Removed duplicated region for block: B:122:0x025e  */
-    /* JADX WARN: Removed duplicated region for block: B:125:0x0273  */
-    /* JADX WARN: Removed duplicated region for block: B:140:0x0371  */
-    /* JADX WARN: Removed duplicated region for block: B:152:0x03ca  */
-    /* JADX WARN: Removed duplicated region for block: B:154:0x03cf  */
-    /* JADX WARN: Removed duplicated region for block: B:180:0x0493  */
-    /* JADX WARN: Removed duplicated region for block: B:185:0x04c6  */
-    /* JADX WARN: Removed duplicated region for block: B:187:? A[RETURN, SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:189:0x04bc  */
-    /* JADX WARN: Removed duplicated region for block: B:203:0x048d  */
-    /* JADX WARN: Removed duplicated region for block: B:204:0x03cc  */
-    /* JADX WARN: Removed duplicated region for block: B:218:0x0355  */
-    /* JADX WARN: Removed duplicated region for block: B:219:0x0261  */
-    /* JADX WARN: Removed duplicated region for block: B:222:0x0247 A[ADDED_TO_REGION] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public void addToSolver(LinearSystem linearSystem) {
-        boolean z;
-        boolean z2;
-        boolean z3;
-        boolean z4;
-        SolverVariable solverVariable;
-        char c;
-        int i;
-        int i2;
-        boolean z5;
-        int i3;
-        int i4;
-        boolean z6;
-        boolean z7;
-        DimensionBehaviour dimensionBehaviour;
-        boolean z8;
-        SolverVariable solverVariable2;
-        SolverVariable solverVariable3;
-        SolverVariable solverVariable4;
-        SolverVariable solverVariable5;
-        SolverVariable solverVariable6;
-        boolean z9;
-        DependencyNode dependencyNode;
-        LinearSystem linearSystem2;
-        SolverVariable solverVariable7;
-        SolverVariable solverVariable8;
-        SolverVariable solverVariable9;
-        int i5;
-        int i6;
-        int i7;
-        int i8;
-        SolverVariable solverVariable10;
-        SolverVariable solverVariable11;
-        ConstraintWidget constraintWidget;
-        boolean z10;
-        int i9;
-        int i10;
-        char c2;
-        int i11;
-        boolean isInHorizontalChain;
-        boolean isInVerticalChain;
-        ConstraintWidget constraintWidget2 = this;
-        SolverVariable createObjectVariable = linearSystem.createObjectVariable(constraintWidget2.mLeft);
-        SolverVariable createObjectVariable2 = linearSystem.createObjectVariable(constraintWidget2.mRight);
-        SolverVariable createObjectVariable3 = linearSystem.createObjectVariable(constraintWidget2.mTop);
-        SolverVariable createObjectVariable4 = linearSystem.createObjectVariable(constraintWidget2.mBottom);
-        SolverVariable createObjectVariable5 = linearSystem.createObjectVariable(constraintWidget2.mBaseline);
-        Metrics metrics = LinearSystem.sMetrics;
-        HorizontalWidgetRun horizontalWidgetRun = constraintWidget2.horizontalRun;
-        DependencyNode dependencyNode2 = horizontalWidgetRun.start;
-        if (dependencyNode2.resolved && horizontalWidgetRun.end.resolved) {
-            VerticalWidgetRun verticalWidgetRun = constraintWidget2.verticalRun;
-            if (verticalWidgetRun.start.resolved && verticalWidgetRun.end.resolved) {
-                linearSystem.addEquality(createObjectVariable, dependencyNode2.value);
-                linearSystem.addEquality(createObjectVariable2, constraintWidget2.horizontalRun.end.value);
-                linearSystem.addEquality(createObjectVariable3, constraintWidget2.verticalRun.start.value);
-                linearSystem.addEquality(createObjectVariable4, constraintWidget2.verticalRun.end.value);
-                linearSystem.addEquality(createObjectVariable5, constraintWidget2.verticalRun.baseline.value);
-                ConstraintWidget constraintWidget3 = constraintWidget2.mParent;
-                if (constraintWidget3 == null) {
-                    return;
-                }
-                boolean z11 = constraintWidget3 != null && constraintWidget3.mListDimensionBehaviors[0] == DimensionBehaviour.WRAP_CONTENT;
-                boolean z12 = constraintWidget3 != null && constraintWidget3.mListDimensionBehaviors[1] == DimensionBehaviour.WRAP_CONTENT;
-                if (z11 && constraintWidget2.isTerminalWidget[0] && !isInHorizontalChain()) {
-                    linearSystem.addGreaterThan(linearSystem.createObjectVariable(constraintWidget2.mParent.mRight), createObjectVariable2, 0, 7);
-                }
-                if (!z12 || !constraintWidget2.isTerminalWidget[1] || isInVerticalChain()) {
-                    return;
-                }
-                linearSystem.addGreaterThan(linearSystem.createObjectVariable(constraintWidget2.mParent.mBottom), createObjectVariable4, 0, 7);
-                return;
-            }
-        }
-        ConstraintWidget constraintWidget4 = constraintWidget2.mParent;
-        if (constraintWidget4 != null) {
-            boolean z13 = constraintWidget4 != null && constraintWidget4.mListDimensionBehaviors[0] == DimensionBehaviour.WRAP_CONTENT;
-            z = constraintWidget4 != null && constraintWidget4.mListDimensionBehaviors[1] == DimensionBehaviour.WRAP_CONTENT;
-            if (constraintWidget2.isChainHead(0)) {
-                ((ConstraintWidgetContainer) constraintWidget2.mParent).addChain(constraintWidget2, 0);
-                isInHorizontalChain = true;
-            } else {
-                isInHorizontalChain = isInHorizontalChain();
-            }
-            if (constraintWidget2.isChainHead(1)) {
-                ((ConstraintWidgetContainer) constraintWidget2.mParent).addChain(constraintWidget2, 1);
-                isInVerticalChain = true;
-            } else {
-                isInVerticalChain = isInVerticalChain();
-            }
-            if (!isInHorizontalChain && z13 && constraintWidget2.mVisibility != 8 && constraintWidget2.mLeft.mTarget == null && constraintWidget2.mRight.mTarget == null) {
-                linearSystem.addGreaterThan(linearSystem.createObjectVariable(constraintWidget2.mParent.mRight), createObjectVariable2, 0, 1);
-            }
-            if (!isInVerticalChain && z && constraintWidget2.mVisibility != 8 && constraintWidget2.mTop.mTarget == null && constraintWidget2.mBottom.mTarget == null && constraintWidget2.mBaseline == null) {
-                linearSystem.addGreaterThan(linearSystem.createObjectVariable(constraintWidget2.mParent.mBottom), createObjectVariable4, 0, 1);
-            }
-            z2 = z13;
-            z4 = isInHorizontalChain;
-            z3 = isInVerticalChain;
-        } else {
-            z = false;
-            z2 = false;
-            z3 = false;
-            z4 = false;
-        }
-        int i12 = constraintWidget2.mWidth;
-        int i13 = constraintWidget2.mMinWidth;
-        if (i12 >= i13) {
-            i13 = i12;
-        }
-        int i14 = constraintWidget2.mHeight;
-        int i15 = constraintWidget2.mMinHeight;
-        if (i14 >= i15) {
-            i15 = i14;
-        }
-        DimensionBehaviour[] dimensionBehaviourArr = constraintWidget2.mListDimensionBehaviors;
-        DimensionBehaviour dimensionBehaviour2 = dimensionBehaviourArr[0];
-        DimensionBehaviour dimensionBehaviour3 = DimensionBehaviour.MATCH_CONSTRAINT;
-        boolean z14 = dimensionBehaviour2 != dimensionBehaviour3;
-        boolean z15 = dimensionBehaviourArr[1] != dimensionBehaviour3;
-        int i16 = constraintWidget2.mDimensionRatioSide;
-        constraintWidget2.mResolvedDimensionRatioSide = i16;
-        float f = constraintWidget2.mDimensionRatio;
-        constraintWidget2.mResolvedDimensionRatio = f;
-        int i17 = i13;
-        int i18 = constraintWidget2.mMatchConstraintDefaultWidth;
-        int i19 = i15;
-        int i20 = constraintWidget2.mMatchConstraintDefaultHeight;
-        if (f > 0.0f) {
-            solverVariable = createObjectVariable;
-            if (constraintWidget2.mVisibility != 8) {
-                if (dimensionBehaviourArr[0] == dimensionBehaviour3 && i18 == 0) {
-                    i18 = 3;
-                }
-                if (dimensionBehaviourArr[1] == dimensionBehaviour3 && i20 == 0) {
-                    c2 = 0;
-                    i20 = 3;
-                } else {
-                    c2 = 0;
-                }
-                if (dimensionBehaviourArr[c2] == dimensionBehaviour3 && dimensionBehaviourArr[1] == dimensionBehaviour3) {
-                    i11 = 3;
-                    if (i18 == 3 && i20 == 3) {
-                        constraintWidget2.setupDimensionRatio(z2, z, z14, z15);
-                        c = 0;
-                        i = i18;
-                        i2 = i20;
-                        i3 = i17;
-                        i4 = i19;
-                        z5 = true;
-                        int[] iArr = constraintWidget2.mResolvedMatchConstraintDefault;
-                        iArr[c] = i;
-                        iArr[1] = i2;
-                        constraintWidget2.mResolvedHasRatio = z5;
-                        if (!z5 && ((i10 = constraintWidget2.mResolvedDimensionRatioSide) == 0 || i10 == -1)) {
-                            z6 = true;
-                            DimensionBehaviour dimensionBehaviour4 = constraintWidget2.mListDimensionBehaviors[0];
-                            DimensionBehaviour dimensionBehaviour5 = DimensionBehaviour.WRAP_CONTENT;
-                            boolean z16 = dimensionBehaviour4 != dimensionBehaviour5 && (constraintWidget2 instanceof ConstraintWidgetContainer);
-                            int i21 = z16 ? 0 : i3;
-                            boolean z17 = !constraintWidget2.mCenter.isConnected();
-                            SolverVariable solverVariable12 = null;
-                            if (constraintWidget2.mHorizontalResolution != 2) {
-                                HorizontalWidgetRun horizontalWidgetRun2 = constraintWidget2.horizontalRun;
-                                DependencyNode dependencyNode3 = horizontalWidgetRun2.start;
-                                if (!dependencyNode3.resolved || !horizontalWidgetRun2.end.resolved) {
-                                    SolverVariable solverVariable13 = solverVariable;
-                                    ConstraintWidget constraintWidget5 = constraintWidget2.mParent;
-                                    SolverVariable createObjectVariable6 = constraintWidget5 != null ? linearSystem.createObjectVariable(constraintWidget5.mRight) : null;
-                                    ConstraintWidget constraintWidget6 = constraintWidget2.mParent;
-                                    z9 = z2;
-                                    z7 = z;
-                                    solverVariable2 = createObjectVariable5;
-                                    solverVariable3 = createObjectVariable4;
-                                    solverVariable4 = createObjectVariable3;
-                                    solverVariable5 = createObjectVariable2;
-                                    dimensionBehaviour = dimensionBehaviour5;
-                                    solverVariable6 = solverVariable13;
-                                    z8 = z5;
-                                    applyConstraints(linearSystem, true, z9, z7, constraintWidget2.isTerminalWidget[0], constraintWidget6 != null ? linearSystem.createObjectVariable(constraintWidget6.mLeft) : null, createObjectVariable6, constraintWidget2.mListDimensionBehaviors[0], z16, constraintWidget2.mLeft, constraintWidget2.mRight, constraintWidget2.mX, i21, constraintWidget2.mMinWidth, constraintWidget2.mMaxDimension[0], constraintWidget2.mHorizontalBiasPercent, z6, z4, z3, i, i2, constraintWidget2.mMatchConstraintMinWidth, constraintWidget2.mMatchConstraintMaxWidth, constraintWidget2.mMatchConstraintPercentWidth, z17);
-                                } else {
-                                    SolverVariable solverVariable14 = solverVariable;
-                                    linearSystem.addEquality(solverVariable14, dependencyNode3.value);
-                                    linearSystem.addEquality(createObjectVariable2, constraintWidget2.horizontalRun.end.value);
-                                    if (constraintWidget2.mParent != null && z2 && constraintWidget2.isTerminalWidget[0] && !isInHorizontalChain()) {
-                                        linearSystem.addGreaterThan(linearSystem.createObjectVariable(constraintWidget2.mParent.mRight), createObjectVariable2, 0, 7);
-                                    }
-                                    z7 = z;
-                                    dimensionBehaviour = dimensionBehaviour5;
-                                    z8 = z5;
-                                    z9 = z2;
-                                    solverVariable5 = createObjectVariable2;
-                                    solverVariable6 = solverVariable14;
-                                    solverVariable2 = createObjectVariable5;
-                                    solverVariable3 = createObjectVariable4;
-                                    solverVariable4 = createObjectVariable3;
-                                    VerticalWidgetRun verticalWidgetRun2 = constraintWidget2.verticalRun;
-                                    dependencyNode = verticalWidgetRun2.start;
-                                    if (dependencyNode.resolved || !verticalWidgetRun2.end.resolved) {
-                                        linearSystem2 = linearSystem;
-                                        solverVariable7 = solverVariable2;
-                                        solverVariable8 = solverVariable3;
-                                        solverVariable9 = solverVariable4;
-                                        i5 = 7;
-                                        i6 = 0;
-                                        i7 = 1;
-                                        i8 = 1;
-                                    } else {
-                                        linearSystem2 = linearSystem;
-                                        solverVariable9 = solverVariable4;
-                                        linearSystem2.addEquality(solverVariable9, dependencyNode.value);
-                                        solverVariable8 = solverVariable3;
-                                        linearSystem2.addEquality(solverVariable8, constraintWidget2.verticalRun.end.value);
-                                        solverVariable7 = solverVariable2;
-                                        linearSystem2.addEquality(solverVariable7, constraintWidget2.verticalRun.baseline.value);
-                                        ConstraintWidget constraintWidget7 = constraintWidget2.mParent;
-                                        if (constraintWidget7 == null || z3 || !z7) {
-                                            i5 = 7;
-                                            i6 = 0;
-                                            i7 = 1;
-                                        } else {
-                                            i7 = 1;
-                                            if (constraintWidget2.isTerminalWidget[1]) {
-                                                i5 = 7;
-                                                i6 = 0;
-                                                linearSystem2.addGreaterThan(linearSystem2.createObjectVariable(constraintWidget7.mBottom), solverVariable8, 0, 7);
-                                            } else {
-                                                i5 = 7;
-                                                i6 = 0;
-                                            }
-                                        }
-                                        i8 = i6;
-                                    }
-                                    if ((constraintWidget2.mVerticalResolution != 2 ? i6 : i8) == 0) {
-                                        int i22 = (constraintWidget2.mListDimensionBehaviors[i7] != dimensionBehaviour || !(constraintWidget2 instanceof ConstraintWidgetContainer)) ? i6 : i7;
-                                        if (i22 != 0) {
-                                            i4 = i6;
-                                        }
-                                        boolean z18 = (!z8 || !((i9 = constraintWidget2.mResolvedDimensionRatioSide) == i7 || i9 == -1)) ? i6 : i7;
-                                        ConstraintWidget constraintWidget8 = constraintWidget2.mParent;
-                                        SolverVariable createObjectVariable7 = constraintWidget8 != null ? linearSystem2.createObjectVariable(constraintWidget8.mBottom) : null;
-                                        ConstraintWidget constraintWidget9 = constraintWidget2.mParent;
-                                        if (constraintWidget9 != null) {
-                                            solverVariable12 = linearSystem2.createObjectVariable(constraintWidget9.mTop);
-                                        }
-                                        int i23 = constraintWidget2.mBaselineDistance <= 0 ? 8 : 8;
-                                        linearSystem2.addEquality(solverVariable7, solverVariable9, getBaselineDistance(), i5);
-                                        ConstraintAnchor constraintAnchor = constraintWidget2.mBaseline.mTarget;
-                                        if (constraintAnchor != null) {
-                                            linearSystem2.addEquality(solverVariable7, linearSystem2.createObjectVariable(constraintAnchor), i6, i5);
-                                            if (z7) {
-                                                linearSystem2.addGreaterThan(createObjectVariable7, linearSystem2.createObjectVariable(constraintWidget2.mBottom), i6, 5);
-                                            }
-                                            z10 = i6;
-                                            solverVariable10 = solverVariable8;
-                                            solverVariable11 = solverVariable9;
-                                            applyConstraints(linearSystem, false, z7, z9, constraintWidget2.isTerminalWidget[i7], solverVariable12, createObjectVariable7, constraintWidget2.mListDimensionBehaviors[i7], i22, constraintWidget2.mTop, constraintWidget2.mBottom, constraintWidget2.mY, i4, constraintWidget2.mMinHeight, constraintWidget2.mMaxDimension[i7], constraintWidget2.mVerticalBiasPercent, z18, z3, z4, i2, i, constraintWidget2.mMatchConstraintMinHeight, constraintWidget2.mMatchConstraintMaxHeight, constraintWidget2.mMatchConstraintPercentHeight, z10);
-                                        } else {
-                                            if (constraintWidget2.mVisibility == i23) {
-                                                linearSystem2.addEquality(solverVariable7, solverVariable9, i6, i5);
-                                            }
-                                            z10 = z17;
-                                            solverVariable10 = solverVariable8;
-                                            solverVariable11 = solverVariable9;
-                                            applyConstraints(linearSystem, false, z7, z9, constraintWidget2.isTerminalWidget[i7], solverVariable12, createObjectVariable7, constraintWidget2.mListDimensionBehaviors[i7], i22, constraintWidget2.mTop, constraintWidget2.mBottom, constraintWidget2.mY, i4, constraintWidget2.mMinHeight, constraintWidget2.mMaxDimension[i7], constraintWidget2.mVerticalBiasPercent, z18, z3, z4, i2, i, constraintWidget2.mMatchConstraintMinHeight, constraintWidget2.mMatchConstraintMaxHeight, constraintWidget2.mMatchConstraintPercentHeight, z10);
-                                        }
-                                    } else {
-                                        solverVariable10 = solverVariable8;
-                                        solverVariable11 = solverVariable9;
-                                    }
-                                    if (!z8) {
-                                        constraintWidget = this;
-                                        if (constraintWidget.mResolvedDimensionRatioSide == 1) {
-                                            linearSystem.addRatio(solverVariable10, solverVariable11, solverVariable5, solverVariable6, constraintWidget.mResolvedDimensionRatio, 7);
-                                        } else {
-                                            linearSystem.addRatio(solverVariable5, solverVariable6, solverVariable10, solverVariable11, constraintWidget.mResolvedDimensionRatio, 7);
-                                        }
-                                    } else {
-                                        constraintWidget = this;
-                                    }
-                                    if (constraintWidget.mCenter.isConnected()) {
-                                        return;
-                                    }
-                                    linearSystem.addCenterPoint(constraintWidget, constraintWidget.mCenter.getTarget().getOwner(), (float) Math.toRadians(constraintWidget.mCircleConstraintAngle + 90.0f), constraintWidget.mCenter.getMargin());
-                                    return;
-                                }
-                            } else {
-                                z7 = z;
-                                dimensionBehaviour = dimensionBehaviour5;
-                                z8 = z5;
-                                solverVariable2 = createObjectVariable5;
-                                solverVariable3 = createObjectVariable4;
-                                solverVariable4 = createObjectVariable3;
-                                solverVariable5 = createObjectVariable2;
-                                solverVariable6 = solverVariable;
-                                z9 = z2;
-                            }
-                            constraintWidget2 = this;
-                            VerticalWidgetRun verticalWidgetRun22 = constraintWidget2.verticalRun;
-                            dependencyNode = verticalWidgetRun22.start;
-                            if (dependencyNode.resolved) {
-                            }
-                            linearSystem2 = linearSystem;
-                            solverVariable7 = solverVariable2;
-                            solverVariable8 = solverVariable3;
-                            solverVariable9 = solverVariable4;
-                            i5 = 7;
-                            i6 = 0;
-                            i7 = 1;
-                            i8 = 1;
-                            if ((constraintWidget2.mVerticalResolution != 2 ? i6 : i8) == 0) {
-                            }
-                            if (!z8) {
-                            }
-                            if (constraintWidget.mCenter.isConnected()) {
-                            }
-                        }
-                        z6 = false;
-                        DimensionBehaviour dimensionBehaviour42 = constraintWidget2.mListDimensionBehaviors[0];
-                        DimensionBehaviour dimensionBehaviour52 = DimensionBehaviour.WRAP_CONTENT;
-                        if (dimensionBehaviour42 != dimensionBehaviour52) {
-                        }
-                        if (z16) {
-                        }
-                        boolean z172 = !constraintWidget2.mCenter.isConnected();
-                        SolverVariable solverVariable122 = null;
-                        if (constraintWidget2.mHorizontalResolution != 2) {
-                        }
-                        constraintWidget2 = this;
-                        VerticalWidgetRun verticalWidgetRun222 = constraintWidget2.verticalRun;
-                        dependencyNode = verticalWidgetRun222.start;
-                        if (dependencyNode.resolved) {
-                        }
-                        linearSystem2 = linearSystem;
-                        solverVariable7 = solverVariable2;
-                        solverVariable8 = solverVariable3;
-                        solverVariable9 = solverVariable4;
-                        i5 = 7;
-                        i6 = 0;
-                        i7 = 1;
-                        i8 = 1;
-                        if ((constraintWidget2.mVerticalResolution != 2 ? i6 : i8) == 0) {
-                        }
-                        if (!z8) {
-                        }
-                        if (constraintWidget.mCenter.isConnected()) {
-                        }
-                    }
-                } else {
-                    i11 = 3;
-                }
-                if (dimensionBehaviourArr[0] == dimensionBehaviour3 && i18 == i11) {
-                    constraintWidget2.mResolvedDimensionRatioSide = 0;
-                    int i24 = (int) (f * i14);
-                    if (dimensionBehaviourArr[1] != dimensionBehaviour3) {
-                        i3 = i24;
-                        i2 = i20;
-                        i = 4;
-                        z5 = false;
-                        c = 0;
-                        i4 = i19;
-                    } else {
-                        i = i18;
-                        z5 = true;
-                        i2 = i20;
-                        i4 = i19;
-                        c = 0;
-                        i3 = i24;
-                    }
-                } else {
-                    if (dimensionBehaviourArr[1] == dimensionBehaviour3 && i20 == 3) {
-                        constraintWidget2.mResolvedDimensionRatioSide = 1;
-                        if (i16 == -1) {
-                            constraintWidget2.mResolvedDimensionRatio = 1.0f / f;
-                        }
-                        int i25 = (int) (constraintWidget2.mResolvedDimensionRatio * i12);
-                        c = 0;
-                        if (dimensionBehaviourArr[0] != dimensionBehaviour3) {
-                            i = i18;
-                            z5 = false;
-                            i3 = i17;
-                            i2 = 4;
-                            i4 = i25;
-                        } else {
-                            i4 = i25;
-                            i = i18;
-                            i2 = i20;
-                            i3 = i17;
-                            z5 = true;
-                        }
-                    }
-                    c = 0;
-                    i = i18;
-                    i2 = i20;
-                    i3 = i17;
-                    i4 = i19;
-                    z5 = true;
-                }
-                int[] iArr2 = constraintWidget2.mResolvedMatchConstraintDefault;
-                iArr2[c] = i;
-                iArr2[1] = i2;
-                constraintWidget2.mResolvedHasRatio = z5;
-                if (!z5) {
-                    z6 = true;
-                    DimensionBehaviour dimensionBehaviour422 = constraintWidget2.mListDimensionBehaviors[0];
-                    DimensionBehaviour dimensionBehaviour522 = DimensionBehaviour.WRAP_CONTENT;
-                    if (dimensionBehaviour422 != dimensionBehaviour522) {
-                    }
-                    if (z16) {
-                    }
-                    boolean z1722 = !constraintWidget2.mCenter.isConnected();
-                    SolverVariable solverVariable1222 = null;
-                    if (constraintWidget2.mHorizontalResolution != 2) {
-                    }
-                    constraintWidget2 = this;
-                    VerticalWidgetRun verticalWidgetRun2222 = constraintWidget2.verticalRun;
-                    dependencyNode = verticalWidgetRun2222.start;
-                    if (dependencyNode.resolved) {
-                    }
-                    linearSystem2 = linearSystem;
-                    solverVariable7 = solverVariable2;
-                    solverVariable8 = solverVariable3;
-                    solverVariable9 = solverVariable4;
-                    i5 = 7;
-                    i6 = 0;
-                    i7 = 1;
-                    i8 = 1;
-                    if ((constraintWidget2.mVerticalResolution != 2 ? i6 : i8) == 0) {
-                    }
-                    if (!z8) {
-                    }
-                    if (constraintWidget.mCenter.isConnected()) {
-                    }
-                }
-                z6 = false;
-                DimensionBehaviour dimensionBehaviour4222 = constraintWidget2.mListDimensionBehaviors[0];
-                DimensionBehaviour dimensionBehaviour5222 = DimensionBehaviour.WRAP_CONTENT;
-                if (dimensionBehaviour4222 != dimensionBehaviour5222) {
-                }
-                if (z16) {
-                }
-                boolean z17222 = !constraintWidget2.mCenter.isConnected();
-                SolverVariable solverVariable12222 = null;
-                if (constraintWidget2.mHorizontalResolution != 2) {
-                }
-                constraintWidget2 = this;
-                VerticalWidgetRun verticalWidgetRun22222 = constraintWidget2.verticalRun;
-                dependencyNode = verticalWidgetRun22222.start;
-                if (dependencyNode.resolved) {
-                }
-                linearSystem2 = linearSystem;
-                solverVariable7 = solverVariable2;
-                solverVariable8 = solverVariable3;
-                solverVariable9 = solverVariable4;
-                i5 = 7;
-                i6 = 0;
-                i7 = 1;
-                i8 = 1;
-                if ((constraintWidget2.mVerticalResolution != 2 ? i6 : i8) == 0) {
-                }
-                if (!z8) {
-                }
-                if (constraintWidget.mCenter.isConnected()) {
-                }
-            }
-        } else {
-            solverVariable = createObjectVariable;
-        }
-        c = 0;
-        i = i18;
-        i2 = i20;
-        z5 = false;
-        i3 = i17;
-        i4 = i19;
-        int[] iArr22 = constraintWidget2.mResolvedMatchConstraintDefault;
-        iArr22[c] = i;
-        iArr22[1] = i2;
-        constraintWidget2.mResolvedHasRatio = z5;
-        if (!z5) {
-        }
-        z6 = false;
-        DimensionBehaviour dimensionBehaviour42222 = constraintWidget2.mListDimensionBehaviors[0];
-        DimensionBehaviour dimensionBehaviour52222 = DimensionBehaviour.WRAP_CONTENT;
-        if (dimensionBehaviour42222 != dimensionBehaviour52222) {
-        }
-        if (z16) {
-        }
-        boolean z172222 = !constraintWidget2.mCenter.isConnected();
-        SolverVariable solverVariable122222 = null;
-        if (constraintWidget2.mHorizontalResolution != 2) {
-        }
-        constraintWidget2 = this;
-        VerticalWidgetRun verticalWidgetRun222222 = constraintWidget2.verticalRun;
-        dependencyNode = verticalWidgetRun222222.start;
-        if (dependencyNode.resolved) {
-        }
-        linearSystem2 = linearSystem;
-        solverVariable7 = solverVariable2;
-        solverVariable8 = solverVariable3;
-        solverVariable9 = solverVariable4;
-        i5 = 7;
-        i6 = 0;
-        i7 = 1;
-        i8 = 1;
-        if ((constraintWidget2.mVerticalResolution != 2 ? i6 : i8) == 0) {
-        }
-        if (!z8) {
-        }
-        if (constraintWidget.mCenter.isConnected()) {
-        }
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private boolean isChainHead(int r4) {
+        /*
+            r3 = this;
+            int r4 = r4 * 2
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor[] r3 = r3.mListAnchors
+            r0 = r3[r4]
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r1 = r0.mTarget
+            r2 = 1
+            if (r1 == 0) goto L_0x001b
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r1 = r1.mTarget
+            if (r1 == r0) goto L_0x001b
+            int r4 = r4 + r2
+            r3 = r3[r4]
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r4 = r3.mTarget
+            if (r4 == 0) goto L_0x001b
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r4 = r4.mTarget
+            if (r4 != r3) goto L_0x001b
+            goto L_0x001c
+        L_0x001b:
+            r2 = 0
+        L_0x001c:
+            return r2
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.constraintlayout.solver.widgets.ConstraintWidget.isChainHead(int):boolean");
+    }
+
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r17v1, resolved type: int} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r18v1, resolved type: int} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r9v3, resolved type: boolean} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r17v2, resolved type: boolean} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r18v3, resolved type: boolean} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r18v4, resolved type: int} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r29v3, resolved type: boolean} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r17v3, resolved type: boolean} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r17v4, resolved type: int} */
+    /* JADX WARNING: Code restructure failed: missing block: B:212:0x03ec, code lost:
+        if (r13.mVisibility == 8) goto L_0x03f1;
+     */
+    /* JADX WARNING: Multi-variable type inference failed */
+    /* JADX WARNING: Removed duplicated region for block: B:126:0x0215  */
+    /* JADX WARNING: Removed duplicated region for block: B:130:0x021f  */
+    /* JADX WARNING: Removed duplicated region for block: B:136:0x022f  */
+    /* JADX WARNING: Removed duplicated region for block: B:137:0x0232  */
+    /* JADX WARNING: Removed duplicated region for block: B:139:0x0236  */
+    /* JADX WARNING: Removed duplicated region for block: B:140:0x0239  */
+    /* JADX WARNING: Removed duplicated region for block: B:143:0x024b  */
+    /* JADX WARNING: Removed duplicated region for block: B:165:0x032e  */
+    /* JADX WARNING: Removed duplicated region for block: B:171:0x0350  */
+    /* JADX WARNING: Removed duplicated region for block: B:181:0x0392  */
+    /* JADX WARNING: Removed duplicated region for block: B:184:0x03a3  */
+    /* JADX WARNING: Removed duplicated region for block: B:185:0x03a5  */
+    /* JADX WARNING: Removed duplicated region for block: B:187:0x03a8  */
+    /* JADX WARNING: Removed duplicated region for block: B:225:0x0466  */
+    /* JADX WARNING: Removed duplicated region for block: B:227:0x046c  */
+    /* JADX WARNING: Removed duplicated region for block: B:231:0x0495  */
+    /* JADX WARNING: Removed duplicated region for block: B:234:0x049f  */
+    /* JADX WARNING: Removed duplicated region for block: B:241:? A[RETURN, SYNTHETIC] */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void addToSolver(androidx.constraintlayout.solver.LinearSystem r45) {
+        /*
+            r44 = this;
+            r13 = r44
+            r9 = r45
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r0 = r13.mLeft
+            androidx.constraintlayout.solver.SolverVariable r7 = r9.createObjectVariable(r0)
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r0 = r13.mRight
+            androidx.constraintlayout.solver.SolverVariable r6 = r9.createObjectVariable(r0)
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r0 = r13.mTop
+            androidx.constraintlayout.solver.SolverVariable r4 = r9.createObjectVariable(r0)
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r0 = r13.mBottom
+            androidx.constraintlayout.solver.SolverVariable r3 = r9.createObjectVariable(r0)
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r0 = r13.mBaseline
+            androidx.constraintlayout.solver.SolverVariable r1 = r9.createObjectVariable(r0)
+            int r0 = androidx.constraintlayout.solver.LinearSystem.$r8$clinit
+            androidx.constraintlayout.solver.widgets.analyzer.HorizontalWidgetRun r0 = r13.horizontalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r2 = r0.start
+            boolean r5 = r2.resolved
+            r15 = 7
+            r14 = 1
+            r12 = 0
+            if (r5 == 0) goto L_0x00bd
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = r0.end
+            boolean r0 = r0.resolved
+            if (r0 == 0) goto L_0x00bd
+            androidx.constraintlayout.solver.widgets.analyzer.VerticalWidgetRun r0 = r13.verticalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r5 = r0.start
+            boolean r5 = r5.resolved
+            if (r5 == 0) goto L_0x00bd
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = r0.end
+            boolean r0 = r0.resolved
+            if (r0 == 0) goto L_0x00bd
+            int r0 = r2.value
+            r9.addEquality(r7, r0)
+            androidx.constraintlayout.solver.widgets.analyzer.HorizontalWidgetRun r0 = r13.horizontalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = r0.end
+            int r0 = r0.value
+            r9.addEquality(r6, r0)
+            androidx.constraintlayout.solver.widgets.analyzer.VerticalWidgetRun r0 = r13.verticalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = r0.start
+            int r0 = r0.value
+            r9.addEquality(r4, r0)
+            androidx.constraintlayout.solver.widgets.analyzer.VerticalWidgetRun r0 = r13.verticalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = r0.end
+            int r0 = r0.value
+            r9.addEquality(r3, r0)
+            androidx.constraintlayout.solver.widgets.analyzer.VerticalWidgetRun r0 = r13.verticalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = r0.baseline
+            int r0 = r0.value
+            r9.addEquality(r1, r0)
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r0 = r13.mParent
+            if (r0 == 0) goto L_0x00bc
+            if (r0 == 0) goto L_0x007c
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour[] r1 = r0.mListDimensionBehaviors
+            r1 = r1[r12]
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r2 = androidx.constraintlayout.solver.widgets.ConstraintWidget.DimensionBehaviour.WRAP_CONTENT
+            if (r1 != r2) goto L_0x007c
+            r1 = r14
+            goto L_0x007d
+        L_0x007c:
+            r1 = r12
+        L_0x007d:
+            if (r0 == 0) goto L_0x0089
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour[] r0 = r0.mListDimensionBehaviors
+            r0 = r0[r14]
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r2 = androidx.constraintlayout.solver.widgets.ConstraintWidget.DimensionBehaviour.WRAP_CONTENT
+            if (r0 != r2) goto L_0x0089
+            r0 = r14
+            goto L_0x008a
+        L_0x0089:
+            r0 = r12
+        L_0x008a:
+            if (r1 == 0) goto L_0x00a3
+            boolean[] r1 = r13.isTerminalWidget
+            boolean r1 = r1[r12]
+            if (r1 == 0) goto L_0x00a3
+            boolean r1 = r44.isInHorizontalChain()
+            if (r1 != 0) goto L_0x00a3
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r1 = r13.mParent
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r1 = r1.mRight
+            androidx.constraintlayout.solver.SolverVariable r1 = r9.createObjectVariable(r1)
+            r9.addGreaterThan(r1, r6, r12, r15)
+        L_0x00a3:
+            if (r0 == 0) goto L_0x00bc
+            boolean[] r0 = r13.isTerminalWidget
+            boolean r0 = r0[r14]
+            if (r0 == 0) goto L_0x00bc
+            boolean r0 = r44.isInVerticalChain()
+            if (r0 != 0) goto L_0x00bc
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r0 = r13.mParent
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r0 = r0.mBottom
+            androidx.constraintlayout.solver.SolverVariable r0 = r9.createObjectVariable(r0)
+            r9.addGreaterThan(r0, r3, r12, r15)
+        L_0x00bc:
+            return
+        L_0x00bd:
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r0 = r13.mParent
+            r11 = 8
+            if (r0 == 0) goto L_0x014b
+            if (r0 == 0) goto L_0x00cf
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour[] r2 = r0.mListDimensionBehaviors
+            r2 = r2[r12]
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r5 = androidx.constraintlayout.solver.widgets.ConstraintWidget.DimensionBehaviour.WRAP_CONTENT
+            if (r2 != r5) goto L_0x00cf
+            r2 = r14
+            goto L_0x00d0
+        L_0x00cf:
+            r2 = r12
+        L_0x00d0:
+            if (r0 == 0) goto L_0x00dc
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour[] r0 = r0.mListDimensionBehaviors
+            r0 = r0[r14]
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r5 = androidx.constraintlayout.solver.widgets.ConstraintWidget.DimensionBehaviour.WRAP_CONTENT
+            if (r0 != r5) goto L_0x00dc
+            r0 = r14
+            goto L_0x00dd
+        L_0x00dc:
+            r0 = r12
+        L_0x00dd:
+            boolean r5 = r13.isChainHead(r12)
+            if (r5 == 0) goto L_0x00ec
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r5 = r13.mParent
+            androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer r5 = (androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer) r5
+            r5.addChain(r13, r12)
+            r5 = r14
+            goto L_0x00f0
+        L_0x00ec:
+            boolean r5 = r44.isInHorizontalChain()
+        L_0x00f0:
+            boolean r8 = r13.isChainHead(r14)
+            if (r8 == 0) goto L_0x00ff
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r8 = r13.mParent
+            androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer r8 = (androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer) r8
+            r8.addChain(r13, r14)
+            r8 = r14
+            goto L_0x0103
+        L_0x00ff:
+            boolean r8 = r44.isInVerticalChain()
+        L_0x0103:
+            if (r5 != 0) goto L_0x0122
+            if (r2 == 0) goto L_0x0122
+            int r10 = r13.mVisibility
+            if (r10 == r11) goto L_0x0122
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r10 = r13.mLeft
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r10 = r10.mTarget
+            if (r10 != 0) goto L_0x0122
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r10 = r13.mRight
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r10 = r10.mTarget
+            if (r10 != 0) goto L_0x0122
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r10 = r13.mParent
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r10 = r10.mRight
+            androidx.constraintlayout.solver.SolverVariable r10 = r9.createObjectVariable(r10)
+            r9.addGreaterThan(r10, r6, r12, r14)
+        L_0x0122:
+            if (r8 != 0) goto L_0x0145
+            if (r0 == 0) goto L_0x0145
+            int r10 = r13.mVisibility
+            if (r10 == r11) goto L_0x0145
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r10 = r13.mTop
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r10 = r10.mTarget
+            if (r10 != 0) goto L_0x0145
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r10 = r13.mBottom
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r10 = r10.mTarget
+            if (r10 != 0) goto L_0x0145
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r10 = r13.mBaseline
+            if (r10 != 0) goto L_0x0145
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r10 = r13.mParent
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r10 = r10.mBottom
+            androidx.constraintlayout.solver.SolverVariable r10 = r9.createObjectVariable(r10)
+            r9.addGreaterThan(r10, r3, r12, r14)
+        L_0x0145:
+            r10 = r2
+            r27 = r5
+            r26 = r8
+            goto L_0x0151
+        L_0x014b:
+            r0 = r12
+            r10 = r0
+            r26 = r10
+            r27 = r26
+        L_0x0151:
+            int r2 = r13.mWidth
+            int r5 = r13.mMinWidth
+            if (r2 >= r5) goto L_0x0158
+            goto L_0x0159
+        L_0x0158:
+            r5 = r2
+        L_0x0159:
+            int r8 = r13.mHeight
+            int r15 = r13.mMinHeight
+            if (r8 >= r15) goto L_0x0160
+            goto L_0x0161
+        L_0x0160:
+            r15 = r8
+        L_0x0161:
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour[] r11 = r13.mListDimensionBehaviors
+            r14 = r11[r12]
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r12 = androidx.constraintlayout.solver.widgets.ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT
+            r20 = r1
+            if (r14 == r12) goto L_0x016d
+            r1 = 1
+            goto L_0x016e
+        L_0x016d:
+            r1 = 0
+        L_0x016e:
+            r18 = 1
+            r11 = r11[r18]
+            r21 = r3
+            r25 = r4
+            if (r11 == r12) goto L_0x017a
+            r3 = 1
+            goto L_0x017b
+        L_0x017a:
+            r3 = 0
+        L_0x017b:
+            int r4 = r13.mDimensionRatioSide
+            r13.mResolvedDimensionRatioSide = r4
+            r22 = r5
+            float r5 = r13.mDimensionRatio
+            r13.mResolvedDimensionRatio = r5
+            r23 = r15
+            int r15 = r13.mMatchConstraintDefaultWidth
+            r28 = r6
+            int r6 = r13.mMatchConstraintDefaultHeight
+            r24 = 0
+            int r24 = (r5 > r24 ? 1 : (r5 == r24 ? 0 : -1))
+            r29 = 4
+            r30 = r7
+            if (r24 <= 0) goto L_0x01fe
+            int r7 = r13.mVisibility
+            r9 = 8
+            if (r7 == r9) goto L_0x0200
+            r7 = 3
+            if (r14 != r12) goto L_0x01a3
+            if (r15 != 0) goto L_0x01a3
+            r15 = r7
+        L_0x01a3:
+            if (r11 != r12) goto L_0x01a8
+            if (r6 != 0) goto L_0x01a8
+            r6 = r7
+        L_0x01a8:
+            if (r14 != r12) goto L_0x01b4
+            if (r11 != r12) goto L_0x01b4
+            if (r15 != r7) goto L_0x01b4
+            if (r6 != r7) goto L_0x01b4
+            r13.setupDimensionRatio(r10, r0, r1, r3)
+            goto L_0x01f4
+        L_0x01b4:
+            if (r14 != r12) goto L_0x01cb
+            if (r15 != r7) goto L_0x01cb
+            r1 = 0
+            r13.mResolvedDimensionRatioSide = r1
+            float r1 = (float) r8
+            float r5 = r5 * r1
+            int r5 = (int) r5
+            r32 = r6
+            if (r11 == r12) goto L_0x01c8
+            r33 = r29
+            r7 = 0
+            r29 = r23
+            goto L_0x0209
+        L_0x01c8:
+            r33 = r15
+            goto L_0x01fa
+        L_0x01cb:
+            if (r11 != r12) goto L_0x01f4
+            if (r6 != r7) goto L_0x01f4
+            r1 = 1
+            r13.mResolvedDimensionRatioSide = r1
+            r1 = -1
+            if (r4 != r1) goto L_0x01da
+            r1 = 1065353216(0x3f800000, float:1.0)
+            float r1 = r1 / r5
+            r13.mResolvedDimensionRatio = r1
+        L_0x01da:
+            float r1 = r13.mResolvedDimensionRatio
+            float r2 = (float) r2
+            float r1 = r1 * r2
+            int r1 = (int) r1
+            if (r14 == r12) goto L_0x01eb
+            r33 = r15
+            r5 = r22
+            r32 = r29
+            r7 = 0
+            r29 = r1
+            goto L_0x0209
+        L_0x01eb:
+            r29 = r1
+            r32 = r6
+            r33 = r15
+            r5 = r22
+            goto L_0x01fc
+        L_0x01f4:
+            r32 = r6
+            r33 = r15
+            r5 = r22
+        L_0x01fa:
+            r29 = r23
+        L_0x01fc:
+            r7 = 1
+            goto L_0x0209
+        L_0x01fe:
+            r9 = 8
+        L_0x0200:
+            r32 = r6
+            r33 = r15
+            r5 = r22
+            r29 = r23
+            r7 = 0
+        L_0x0209:
+            int[] r1 = r13.mResolvedMatchConstraintDefault
+            r2 = 0
+            r1[r2] = r33
+            r2 = 1
+            r1[r2] = r32
+            r13.mResolvedHasRatio = r7
+            if (r7 == 0) goto L_0x021f
+            int r1 = r13.mResolvedDimensionRatioSide
+            r6 = -1
+            if (r1 == 0) goto L_0x021c
+            if (r1 != r6) goto L_0x0220
+        L_0x021c:
+            r17 = 1
+            goto L_0x0222
+        L_0x021f:
+            r6 = -1
+        L_0x0220:
+            r17 = 0
+        L_0x0222:
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour[] r1 = r13.mListDimensionBehaviors
+            r2 = 0
+            r1 = r1[r2]
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r4 = androidx.constraintlayout.solver.widgets.ConstraintWidget.DimensionBehaviour.WRAP_CONTENT
+            if (r1 != r4) goto L_0x0232
+            boolean r1 = r13 instanceof androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer
+            if (r1 == 0) goto L_0x0232
+            r31 = 1
+            goto L_0x0234
+        L_0x0232:
+            r31 = 0
+        L_0x0234:
+            if (r31 == 0) goto L_0x0239
+            r34 = 0
+            goto L_0x023b
+        L_0x0239:
+            r34 = r5
+        L_0x023b:
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r1 = r13.mCenter
+            boolean r1 = r1.isConnected()
+            r3 = 1
+            r35 = r1 ^ 1
+            int r1 = r13.mHorizontalResolution
+            r15 = 2
+            r36 = 0
+            if (r1 == r15) goto L_0x032e
+            androidx.constraintlayout.solver.widgets.analyzer.HorizontalWidgetRun r1 = r13.horizontalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r2 = r1.start
+            boolean r5 = r2.resolved
+            if (r5 == 0) goto L_0x02a2
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r1 = r1.end
+            boolean r1 = r1.resolved
+            if (r1 != 0) goto L_0x025a
+            goto L_0x02a2
+        L_0x025a:
+            int r1 = r2.value
+            r11 = r9
+            r14 = r30
+            r9 = r45
+            r9.addEquality(r14, r1)
+            androidx.constraintlayout.solver.widgets.analyzer.HorizontalWidgetRun r1 = r13.horizontalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r1 = r1.end
+            int r1 = r1.value
+            r12 = r28
+            r9.addEquality(r12, r1)
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r1 = r13.mParent
+            if (r1 == 0) goto L_0x028e
+            if (r10 == 0) goto L_0x028e
+            boolean[] r1 = r13.isTerminalWidget
+            r2 = 0
+            boolean r1 = r1[r2]
+            if (r1 == 0) goto L_0x028e
+            boolean r1 = r44.isInHorizontalChain()
+            if (r1 != 0) goto L_0x028e
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r1 = r13.mParent
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r1 = r1.mRight
+            androidx.constraintlayout.solver.SolverVariable r1 = r9.createObjectVariable(r1)
+            r8 = 7
+            r9.addGreaterThan(r1, r12, r2, r8)
+        L_0x028e:
+            r39 = r0
+            r43 = r4
+            r38 = r7
+            r30 = r10
+            r37 = r12
+            r28 = r14
+            r40 = r20
+            r41 = r21
+            r42 = r25
+            goto L_0x0342
+        L_0x02a2:
+            r11 = r9
+            r12 = r28
+            r14 = r30
+            r8 = 7
+            r9 = r45
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r1 = r13.mParent
+            if (r1 == 0) goto L_0x02b7
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r1 = r1.mRight
+            androidx.constraintlayout.solver.SolverVariable r1 = r9.createObjectVariable(r1)
+            r18 = r1
+            goto L_0x02b9
+        L_0x02b7:
+            r18 = r36
+        L_0x02b9:
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r1 = r13.mParent
+            if (r1 == 0) goto L_0x02c6
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r1 = r1.mLeft
+            androidx.constraintlayout.solver.SolverVariable r1 = r9.createObjectVariable(r1)
+            r28 = r1
+            goto L_0x02c8
+        L_0x02c6:
+            r28 = r36
+        L_0x02c8:
+            r2 = 1
+            boolean[] r1 = r13.isTerminalWidget
+            r16 = 0
+            boolean r5 = r1[r16]
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour[] r1 = r13.mListDimensionBehaviors
+            r1 = r1[r16]
+            r19 = r8
+            r8 = r1
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r1 = r13.mLeft
+            r30 = r10
+            r10 = r1
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r1 = r13.mRight
+            r11 = r1
+            int r1 = r13.f18mX
+            r37 = r12
+            r2 = r16
+            r12 = r1
+            int r1 = r13.mMinWidth
+            r38 = r14
+            r14 = r1
+            int[] r1 = r13.mMaxDimension
+            r1 = r1[r2]
+            r15 = r1
+            float r1 = r13.mHorizontalBiasPercent
+            r16 = r1
+            int r1 = r13.mMatchConstraintMinWidth
+            r22 = r1
+            int r1 = r13.mMatchConstraintMaxWidth
+            r23 = r1
+            float r1 = r13.mMatchConstraintPercentWidth
+            r24 = r1
+            r39 = r0
+            r0 = r44
+            r40 = r20
+            r1 = r45
+            r41 = r21
+            r3 = r30
+            r43 = r4
+            r42 = r25
+            r4 = r39
+            r19 = r6
+            r6 = r28
+            r28 = r38
+            r38 = r7
+            r7 = r18
+            r9 = r31
+            r13 = r34
+            r18 = r27
+            r19 = r26
+            r20 = r33
+            r21 = r32
+            r25 = r35
+            r2 = 1
+            r0.applyConstraints(r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, r17, r18, r19, r20, r21, r22, r23, r24, r25)
+            goto L_0x0340
+        L_0x032e:
+            r39 = r0
+            r43 = r4
+            r38 = r7
+            r40 = r20
+            r41 = r21
+            r42 = r25
+            r37 = r28
+            r28 = r30
+            r30 = r10
+        L_0x0340:
+            r13 = r44
+        L_0x0342:
+            androidx.constraintlayout.solver.widgets.analyzer.VerticalWidgetRun r0 = r13.verticalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r1 = r0.start
+            boolean r2 = r1.resolved
+            if (r2 == 0) goto L_0x0392
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = r0.end
+            boolean r0 = r0.resolved
+            if (r0 == 0) goto L_0x0392
+            int r0 = r1.value
+            r9 = r45
+            r7 = r42
+            r9.addEquality(r7, r0)
+            androidx.constraintlayout.solver.widgets.analyzer.VerticalWidgetRun r0 = r13.verticalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = r0.end
+            int r0 = r0.value
+            r6 = r41
+            r9.addEquality(r6, r0)
+            androidx.constraintlayout.solver.widgets.analyzer.VerticalWidgetRun r0 = r13.verticalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = r0.baseline
+            int r0 = r0.value
+            r1 = r40
+            r9.addEquality(r1, r0)
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r0 = r13.mParent
+            if (r0 == 0) goto L_0x038d
+            if (r26 != 0) goto L_0x038d
+            if (r39 == 0) goto L_0x038d
+            boolean[] r2 = r13.isTerminalWidget
+            r4 = 1
+            boolean r2 = r2[r4]
+            if (r2 == 0) goto L_0x038a
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r0 = r0.mBottom
+            androidx.constraintlayout.solver.SolverVariable r0 = r9.createObjectVariable(r0)
+            r2 = 7
+            r3 = 0
+            r9.addGreaterThan(r0, r6, r3, r2)
+            goto L_0x0390
+        L_0x038a:
+            r2 = 7
+            r3 = 0
+            goto L_0x0390
+        L_0x038d:
+            r2 = 7
+            r3 = 0
+            r4 = 1
+        L_0x0390:
+            r14 = r3
+            goto L_0x039e
+        L_0x0392:
+            r9 = r45
+            r1 = r40
+            r6 = r41
+            r7 = r42
+            r2 = 7
+            r3 = 0
+            r4 = 1
+            r14 = r4
+        L_0x039e:
+            int r0 = r13.mVerticalResolution
+            r5 = 2
+            if (r0 != r5) goto L_0x03a5
+            r12 = r3
+            goto L_0x03a6
+        L_0x03a5:
+            r12 = r14
+        L_0x03a6:
+            if (r12 == 0) goto L_0x0466
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour[] r0 = r13.mListDimensionBehaviors
+            r0 = r0[r4]
+            r5 = r43
+            if (r0 != r5) goto L_0x03b7
+            boolean r0 = r13 instanceof androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer
+            if (r0 == 0) goto L_0x03b7
+            r17 = r4
+            goto L_0x03b9
+        L_0x03b7:
+            r17 = r3
+        L_0x03b9:
+            if (r17 == 0) goto L_0x03bd
+            r29 = r3
+        L_0x03bd:
+            if (r38 == 0) goto L_0x03c9
+            int r0 = r13.mResolvedDimensionRatioSide
+            if (r0 == r4) goto L_0x03c6
+            r5 = -1
+            if (r0 != r5) goto L_0x03c9
+        L_0x03c6:
+            r18 = r4
+            goto L_0x03cb
+        L_0x03c9:
+            r18 = r3
+        L_0x03cb:
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r0 = r13.mParent
+            if (r0 == 0) goto L_0x03d6
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r0 = r0.mBottom
+            androidx.constraintlayout.solver.SolverVariable r0 = r9.createObjectVariable(r0)
+            goto L_0x03d8
+        L_0x03d6:
+            r0 = r36
+        L_0x03d8:
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r5 = r13.mParent
+            if (r5 == 0) goto L_0x03e4
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r5 = r5.mTop
+            androidx.constraintlayout.solver.SolverVariable r5 = r9.createObjectVariable(r5)
+            r36 = r5
+        L_0x03e4:
+            int r5 = r13.mBaselineDistance
+            if (r5 > 0) goto L_0x03ef
+            int r5 = r13.mVisibility
+            r8 = 8
+            if (r5 != r8) goto L_0x041b
+            goto L_0x03f1
+        L_0x03ef:
+            r8 = 8
+        L_0x03f1:
+            int r5 = r44.getBaselineDistance()
+            r9.addEquality(r1, r7, r5, r2)
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r5 = r13.mBaseline
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r5 = r5.mTarget
+            if (r5 == 0) goto L_0x0414
+            androidx.constraintlayout.solver.SolverVariable r5 = r9.createObjectVariable(r5)
+            r9.addEquality(r1, r5, r3, r2)
+            if (r39 == 0) goto L_0x0411
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r1 = r13.mBottom
+            androidx.constraintlayout.solver.SolverVariable r1 = r9.createObjectVariable(r1)
+            r2 = 5
+            r9.addGreaterThan(r0, r1, r3, r2)
+        L_0x0411:
+            r25 = r3
+            goto L_0x041d
+        L_0x0414:
+            int r5 = r13.mVisibility
+            if (r5 != r8) goto L_0x041b
+            r9.addEquality(r1, r7, r3, r2)
+        L_0x041b:
+            r25 = r35
+        L_0x041d:
+            r2 = 0
+            boolean[] r1 = r13.isTerminalWidget
+            boolean r5 = r1[r4]
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour[] r1 = r13.mListDimensionBehaviors
+            r8 = r1[r4]
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r10 = r13.mTop
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r11 = r13.mBottom
+            int r12 = r13.f19mY
+            int r14 = r13.mMinHeight
+            int[] r1 = r13.mMaxDimension
+            r15 = r1[r4]
+            float r1 = r13.mVerticalBiasPercent
+            r16 = r1
+            int r1 = r13.mMatchConstraintMinHeight
+            r22 = r1
+            int r1 = r13.mMatchConstraintMaxHeight
+            r23 = r1
+            float r1 = r13.mMatchConstraintPercentHeight
+            r24 = r1
+            r19 = r0
+            r0 = r44
+            r1 = r45
+            r3 = r39
+            r4 = r30
+            r30 = r6
+            r6 = r36
+            r31 = r7
+            r7 = r19
+            r9 = r17
+            r13 = r29
+            r17 = r18
+            r18 = r26
+            r19 = r27
+            r20 = r32
+            r21 = r33
+            r0.applyConstraints(r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, r17, r18, r19, r20, r21, r22, r23, r24, r25)
+            goto L_0x046a
+        L_0x0466:
+            r30 = r6
+            r31 = r7
+        L_0x046a:
+            if (r38 == 0) goto L_0x0495
+            r6 = 7
+            r7 = r44
+            int r0 = r7.mResolvedDimensionRatioSide
+            r1 = 1
+            if (r0 != r1) goto L_0x0484
+            float r5 = r7.mResolvedDimensionRatio
+            r0 = r45
+            r1 = r30
+            r2 = r31
+            r3 = r37
+            r4 = r28
+            r0.addRatio(r1, r2, r3, r4, r5, r6)
+            goto L_0x0497
+        L_0x0484:
+            float r5 = r7.mResolvedDimensionRatio
+            r6 = 7
+            r0 = r45
+            r1 = r37
+            r2 = r28
+            r3 = r30
+            r4 = r31
+            r0.addRatio(r1, r2, r3, r4, r5, r6)
+            goto L_0x0497
+        L_0x0495:
+            r7 = r44
+        L_0x0497:
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r0 = r7.mCenter
+            boolean r0 = r0.isConnected()
+            if (r0 == 0) goto L_0x04bf
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r0 = r7.mCenter
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r0 = r0.getTarget()
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r0 = r0.getOwner()
+            float r1 = r7.mCircleConstraintAngle
+            r2 = 1119092736(0x42b40000, float:90.0)
+            float r1 = r1 + r2
+            double r1 = (double) r1
+            double r1 = java.lang.Math.toRadians(r1)
+            float r1 = (float) r1
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r2 = r7.mCenter
+            int r2 = r2.getMargin()
+            r3 = r45
+            r3.addCenterPoint(r7, r0, r1, r2)
+        L_0x04bf:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.constraintlayout.solver.widgets.ConstraintWidget.addToSolver(androidx.constraintlayout.solver.LinearSystem):void");
     }
 
     public void setupDimensionRatio(boolean z, boolean z2, boolean z3, boolean z4) {
@@ -1484,564 +1795,812 @@ public class ConstraintWidget {
             int i = this.mMatchConstraintMinWidth;
             if (i > 0 && this.mMatchConstraintMinHeight == 0) {
                 this.mResolvedDimensionRatioSide = 0;
-            } else if (i != 0 || this.mMatchConstraintMinHeight <= 0) {
-            } else {
+            } else if (i == 0 && this.mMatchConstraintMinHeight > 0) {
                 this.mResolvedDimensionRatio = 1.0f / this.mResolvedDimensionRatio;
                 this.mResolvedDimensionRatioSide = 1;
             }
         }
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:205:0x03d4, code lost:
-        if (r0[1] == r1) goto L207;
-     */
-    /* JADX WARN: Removed duplicated region for block: B:124:0x0353  */
-    /* JADX WARN: Removed duplicated region for block: B:141:0x030a  */
-    /* JADX WARN: Removed duplicated region for block: B:142:0x02da  */
-    /* JADX WARN: Removed duplicated region for block: B:190:0x03a2 A[ADDED_TO_REGION] */
-    /* JADX WARN: Removed duplicated region for block: B:214:? A[ADDED_TO_REGION, RETURN, SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:216:0x00c4  */
-    /* JADX WARN: Removed duplicated region for block: B:21:0x0079  */
-    /* JADX WARN: Removed duplicated region for block: B:23:0x0081  */
-    /* JADX WARN: Removed duplicated region for block: B:269:0x007d  */
-    /* JADX WARN: Removed duplicated region for block: B:31:0x009d  */
-    /* JADX WARN: Removed duplicated region for block: B:41:0x01c2 A[ADDED_TO_REGION] */
-    /* JADX WARN: Removed duplicated region for block: B:47:0x0382 A[ADDED_TO_REGION] */
-    /* JADX WARN: Removed duplicated region for block: B:58:? A[ADDED_TO_REGION, RETURN, SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:85:0x02b8  */
-    /* JADX WARN: Removed duplicated region for block: B:88:0x02e8  */
-    /* JADX WARN: Removed duplicated region for block: B:98:0x030e  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private void applyConstraints(LinearSystem linearSystem, boolean z, boolean z2, boolean z3, boolean z4, SolverVariable solverVariable, SolverVariable solverVariable2, DimensionBehaviour dimensionBehaviour, boolean z5, ConstraintAnchor constraintAnchor, ConstraintAnchor constraintAnchor2, int i, int i2, int i3, int i4, float f, boolean z6, boolean z7, boolean z8, int i5, int i6, int i7, int i8, float f2, boolean z9) {
-        int i9;
-        boolean z10;
-        int i10;
-        int i11;
-        int i12;
-        int i13;
-        SolverVariable solverVariable3;
-        SolverVariable solverVariable4;
-        SolverVariable solverVariable5;
-        int i14;
-        boolean z11;
-        boolean z12;
-        SolverVariable createObjectVariable;
-        SolverVariable createObjectVariable2;
-        ConstraintAnchor constraintAnchor3;
-        boolean z13;
-        boolean z14;
-        int i15;
-        int i16;
-        int i17;
-        boolean z15;
-        boolean z16;
-        boolean z17;
-        SolverVariable solverVariable6;
-        int i18;
-        ConstraintWidget constraintWidget;
-        ConstraintWidget constraintWidget2;
-        int i19;
-        ConstraintWidget constraintWidget3;
-        int i20;
-        SolverVariable solverVariable7;
-        int i21;
-        int i22;
-        int i23;
-        boolean z18;
-        int i24;
-        int i25;
-        boolean z19;
-        SolverVariable solverVariable8;
-        int i26;
-        int i27 = i8;
-        SolverVariable createObjectVariable3 = linearSystem.createObjectVariable(constraintAnchor);
-        SolverVariable createObjectVariable4 = linearSystem.createObjectVariable(constraintAnchor2);
-        SolverVariable createObjectVariable5 = linearSystem.createObjectVariable(constraintAnchor.getTarget());
-        SolverVariable createObjectVariable6 = linearSystem.createObjectVariable(constraintAnchor2.getTarget());
-        LinearSystem.getMetrics();
-        boolean isConnected = constraintAnchor.isConnected();
-        boolean isConnected2 = constraintAnchor2.isConnected();
-        boolean isConnected3 = this.mCenter.isConnected();
-        int i28 = isConnected2 ? (isConnected ? 1 : 0) + 1 : isConnected ? 1 : 0;
-        if (isConnected3) {
-            i28++;
-        }
-        int i29 = z6 ? 3 : i5;
-        int i30 = AnonymousClass1.$SwitchMap$androidx$constraintlayout$solver$widgets$ConstraintWidget$DimensionBehaviour[dimensionBehaviour.ordinal()];
-        if (i30 == 1 || i30 == 2 || i30 == 3 || i30 != 4) {
-            i9 = i29;
-        } else {
-            i9 = i29;
-            if (i9 != 4) {
-                z10 = true;
-                if (this.mVisibility != 8) {
-                    i10 = 0;
-                    z10 = false;
-                } else {
-                    i10 = i2;
-                }
-                if (z9) {
-                    if (!isConnected && !isConnected2 && !isConnected3) {
-                        linearSystem.addEquality(createObjectVariable3, i);
-                    } else if (isConnected && !isConnected2) {
-                        i11 = 7;
-                        linearSystem.addEquality(createObjectVariable3, createObjectVariable5, constraintAnchor.getMargin(), 7);
-                        if (!z10) {
-                            if (z5) {
-                                linearSystem.addEquality(createObjectVariable4, createObjectVariable3, 0, 3);
-                                if (i3 > 0) {
-                                    linearSystem.addGreaterThan(createObjectVariable4, createObjectVariable3, i3, 7);
-                                }
-                                if (i4 < Integer.MAX_VALUE) {
-                                    linearSystem.addLowerThan(createObjectVariable4, createObjectVariable3, i4, 7);
-                                }
-                            } else {
-                                linearSystem.addEquality(createObjectVariable4, createObjectVariable3, i10, i11);
-                            }
-                            i13 = i28;
-                            solverVariable3 = createObjectVariable5;
-                            solverVariable4 = createObjectVariable4;
-                            z11 = z10;
-                            solverVariable5 = createObjectVariable6;
-                            z12 = z4;
-                        } else if (i28 == 2 || z6 || !(i9 == 1 || i9 == 0)) {
-                            int i31 = i7 == -2 ? i10 : i7;
-                            int i32 = i27 == -2 ? i10 : i27;
-                            if (i10 > 0 && i9 != 1) {
-                                i10 = 0;
-                            }
-                            if (i31 > 0) {
-                                linearSystem.addGreaterThan(createObjectVariable4, createObjectVariable3, i31, 7);
-                                i10 = Math.max(i10, i31);
-                            }
-                            if (i32 > 0) {
-                                i12 = 7;
-                                if (!z2 || i9 != 1) {
-                                    linearSystem.addLowerThan(createObjectVariable4, createObjectVariable3, i32, 7);
-                                }
-                                i10 = Math.min(i10, i32);
-                            } else {
-                                i12 = 7;
-                            }
-                            if (i9 == 1) {
-                                if (z2) {
-                                    linearSystem.addEquality(createObjectVariable4, createObjectVariable3, i10, i12);
-                                } else if (z7) {
-                                    linearSystem.addEquality(createObjectVariable4, createObjectVariable3, i10, 5);
-                                    linearSystem.addLowerThan(createObjectVariable4, createObjectVariable3, i10, i12);
-                                } else {
-                                    linearSystem.addEquality(createObjectVariable4, createObjectVariable3, i10, 5);
-                                    linearSystem.addLowerThan(createObjectVariable4, createObjectVariable3, i10, i12);
-                                }
-                                i27 = i32;
-                                i13 = i28;
-                                solverVariable3 = createObjectVariable5;
-                                solverVariable4 = createObjectVariable4;
-                                z11 = z10;
-                                z12 = z4;
-                                i14 = i31;
-                                solverVariable5 = createObjectVariable6;
-                            } else if (i9 == 2) {
-                                ConstraintAnchor.Type type = constraintAnchor.getType();
-                                ConstraintAnchor.Type type2 = ConstraintAnchor.Type.TOP;
-                                if (type == type2 || constraintAnchor.getType() == ConstraintAnchor.Type.BOTTOM) {
-                                    createObjectVariable = linearSystem.createObjectVariable(this.mParent.getAnchor(type2));
-                                    createObjectVariable2 = linearSystem.createObjectVariable(this.mParent.getAnchor(ConstraintAnchor.Type.BOTTOM));
-                                } else {
-                                    createObjectVariable = linearSystem.createObjectVariable(this.mParent.getAnchor(ConstraintAnchor.Type.LEFT));
-                                    createObjectVariable2 = linearSystem.createObjectVariable(this.mParent.getAnchor(ConstraintAnchor.Type.RIGHT));
-                                }
-                                SolverVariable solverVariable9 = createObjectVariable;
-                                int i33 = i32;
-                                i13 = i28;
-                                int i34 = i31;
-                                solverVariable5 = createObjectVariable6;
-                                solverVariable3 = createObjectVariable5;
-                                solverVariable4 = createObjectVariable4;
-                                linearSystem.addConstraint(linearSystem.createRow().createRowDimensionRatio(createObjectVariable4, createObjectVariable3, createObjectVariable2, solverVariable9, f2));
-                                z12 = z4;
-                                i27 = i33;
-                                i14 = i34;
-                                z11 = false;
-                            } else {
-                                int i35 = i32;
-                                i13 = i28;
-                                solverVariable3 = createObjectVariable5;
-                                solverVariable4 = createObjectVariable4;
-                                int i36 = i31;
-                                solverVariable5 = createObjectVariable6;
-                                i27 = i35;
-                                i14 = i36;
-                                z11 = z10;
-                                z12 = true;
-                            }
-                            if (z9 || z7) {
-                                SolverVariable solverVariable10 = solverVariable4;
-                                if (i13 >= 2 || !z2 || !z12) {
-                                    return;
-                                }
-                                linearSystem.addGreaterThan(createObjectVariable3, solverVariable, 0, 7);
-                                boolean z20 = z || this.mBaseline.mTarget == null;
-                                if (!z && (constraintAnchor3 = this.mBaseline.mTarget) != null) {
-                                    ConstraintWidget constraintWidget4 = constraintAnchor3.mOwner;
-                                    if (constraintWidget4.mDimensionRatio != 0.0f) {
-                                        DimensionBehaviour[] dimensionBehaviourArr = constraintWidget4.mListDimensionBehaviors;
-                                        DimensionBehaviour dimensionBehaviour2 = dimensionBehaviourArr[0];
-                                        DimensionBehaviour dimensionBehaviour3 = DimensionBehaviour.MATCH_CONSTRAINT;
-                                        if (dimensionBehaviour2 == dimensionBehaviour3) {
-                                            z20 = true;
-                                        }
-                                    }
-                                    z20 = false;
-                                }
-                                if (!z20) {
-                                    return;
-                                }
-                                linearSystem.addGreaterThan(solverVariable2, solverVariable10, 0, 7);
-                                return;
-                            }
-                            if ((isConnected || isConnected2 || isConnected3) && (!isConnected || isConnected2)) {
-                                if (!isConnected && isConnected2) {
-                                    linearSystem.addEquality(solverVariable4, solverVariable5, -constraintAnchor2.getMargin(), 7);
-                                    if (z2) {
-                                        linearSystem.addGreaterThan(createObjectVariable3, solverVariable, 0, 5);
-                                    }
-                                } else if (isConnected && isConnected2) {
-                                    ConstraintWidget constraintWidget5 = constraintAnchor.mTarget.mOwner;
-                                    ConstraintWidget constraintWidget6 = constraintAnchor2.mTarget.mOwner;
-                                    ConstraintWidget parent = getParent();
-                                    if (z11) {
-                                        if (i9 == 0) {
-                                            if (i27 == 0 && i14 == 0) {
-                                                z19 = false;
-                                                i24 = 7;
-                                                i25 = 7;
-                                                z18 = true;
-                                            } else {
-                                                z18 = false;
-                                                i24 = 5;
-                                                i25 = 5;
-                                                z19 = true;
-                                            }
-                                            if ((constraintWidget5 instanceof Barrier) || (constraintWidget6 instanceof Barrier)) {
-                                                z14 = z19;
-                                                z15 = z18;
-                                                i15 = 4;
-                                                i17 = 5;
-                                                i16 = i24;
-                                                z13 = false;
-                                            } else {
-                                                z15 = z18;
-                                                i17 = 5;
-                                                i16 = i24;
-                                                z13 = false;
-                                                boolean z21 = z19;
-                                                i15 = i25;
-                                                z14 = z21;
-                                            }
-                                        } else if (i9 == 1) {
-                                            z13 = true;
-                                            z14 = true;
-                                            i15 = 4;
-                                            i16 = 7;
-                                            i17 = 5;
-                                            z15 = false;
-                                        } else if (i9 == 3) {
-                                            if (this.mResolvedDimensionRatioSide == -1) {
-                                                if (z8) {
-                                                    z13 = true;
-                                                    z14 = true;
-                                                    i15 = 5;
-                                                    i16 = 7;
-                                                    if (!z2) {
-                                                        i17 = 4;
-                                                    }
-                                                } else {
-                                                    z13 = true;
-                                                    z14 = true;
-                                                    i15 = 5;
-                                                    i16 = 7;
-                                                    i17 = 7;
-                                                }
-                                                z15 = true;
-                                            } else if (z6) {
-                                                if (!(i6 == 2 || i6 == 1)) {
-                                                    i22 = 5;
-                                                    i23 = 7;
-                                                } else {
-                                                    i22 = 4;
-                                                    i23 = 5;
-                                                }
-                                                i15 = i22;
-                                                i16 = i23;
-                                                z13 = true;
-                                                z14 = true;
-                                            } else {
-                                                if (i27 > 0) {
-                                                    z13 = true;
-                                                    z14 = true;
-                                                    i15 = 5;
-                                                } else if (i27 != 0 || i14 != 0) {
-                                                    z13 = true;
-                                                    z14 = true;
-                                                    i15 = 4;
-                                                } else if (!z8) {
-                                                    z13 = true;
-                                                    z14 = true;
-                                                    i15 = 7;
-                                                } else {
-                                                    i16 = (constraintWidget5 == parent || constraintWidget6 == parent) ? 5 : 4;
-                                                    z13 = true;
-                                                    z14 = true;
-                                                    i15 = 4;
-                                                }
-                                                i16 = 5;
-                                            }
-                                            i17 = 5;
-                                            z15 = true;
-                                        } else {
-                                            z13 = false;
-                                            z14 = false;
-                                        }
-                                        if (z13 || solverVariable3 != solverVariable5 || constraintWidget5 == parent) {
-                                            z16 = z13;
-                                            z17 = true;
-                                        } else {
-                                            z17 = false;
-                                            z16 = false;
-                                        }
-                                        if (!z14) {
-                                            solverVariable6 = solverVariable3;
-                                            i19 = i9;
-                                            constraintWidget3 = parent;
-                                            constraintWidget = constraintWidget6;
-                                            i18 = i15;
-                                            constraintWidget2 = constraintWidget5;
-                                            linearSystem.addCentering(createObjectVariable3, solverVariable3, constraintAnchor.getMargin(), f, solverVariable5, solverVariable4, constraintAnchor2.getMargin(), i17);
-                                        } else {
-                                            solverVariable6 = solverVariable3;
-                                            i18 = i15;
-                                            constraintWidget = constraintWidget6;
-                                            constraintWidget2 = constraintWidget5;
-                                            i19 = i9;
-                                            constraintWidget3 = parent;
-                                        }
-                                        SolverVariable solverVariable11 = solverVariable6;
-                                        if (!z16) {
-                                            i20 = (!z2 || solverVariable11 == solverVariable5 || z11 || (!(constraintWidget2 instanceof Barrier) && !(constraintWidget instanceof Barrier))) ? i16 : 6;
-                                            linearSystem.addGreaterThan(createObjectVariable3, solverVariable11, constraintAnchor.getMargin(), i20);
-                                            linearSystem.addLowerThan(solverVariable4, solverVariable5, -constraintAnchor2.getMargin(), i20);
-                                        } else {
-                                            i20 = i16;
-                                        }
-                                        if (z17) {
-                                            if (!z15 || (z8 && !z3)) {
-                                                i21 = i18;
-                                            } else {
-                                                int i37 = (constraintWidget2 == constraintWidget3 || constraintWidget == constraintWidget3) ? 6 : i18;
-                                                if ((constraintWidget2 instanceof Guideline) || (constraintWidget instanceof Guideline)) {
-                                                    i37 = 5;
-                                                }
-                                                if ((constraintWidget2 instanceof Barrier) || (constraintWidget instanceof Barrier)) {
-                                                    i37 = 5;
-                                                }
-                                                int i38 = i18;
-                                                if (z8) {
-                                                    i37 = 5;
-                                                }
-                                                i21 = Math.max(i37, i38);
-                                            }
-                                            if (z2) {
-                                                i21 = Math.min(i20, i21);
-                                            }
-                                            linearSystem.addEquality(createObjectVariable3, solverVariable11, constraintAnchor.getMargin(), i21);
-                                            linearSystem.addEquality(solverVariable4, solverVariable5, -constraintAnchor2.getMargin(), i21);
-                                        }
-                                        if (z2) {
-                                            int margin = solverVariable == solverVariable11 ? constraintAnchor.getMargin() : 0;
-                                            if (solverVariable11 != solverVariable) {
-                                                linearSystem.addGreaterThan(createObjectVariable3, solverVariable, margin, 5);
-                                            }
-                                        }
-                                        if (z2 && z11) {
-                                            solverVariable7 = solverVariable4;
-                                            if (i3 == 0 && i14 == 0) {
-                                                if (!z11 && i19 == 3) {
-                                                    linearSystem.addGreaterThan(solverVariable7, createObjectVariable3, 0, 7);
-                                                } else {
-                                                    linearSystem.addGreaterThan(solverVariable7, createObjectVariable3, 0, 5);
-                                                }
-                                            }
-                                            if (z2 || !z12) {
-                                                return;
-                                            }
-                                            if (constraintAnchor2.mTarget != null) {
-                                                i26 = constraintAnchor2.getMargin();
-                                                solverVariable8 = solverVariable2;
-                                            } else {
-                                                solverVariable8 = solverVariable2;
-                                                i26 = 0;
-                                            }
-                                            if (solverVariable5 == solverVariable8) {
-                                                return;
-                                            }
-                                            linearSystem.addGreaterThan(solverVariable8, solverVariable7, i26, 5);
-                                            return;
-                                        }
-                                    } else {
-                                        z13 = true;
-                                        z14 = true;
-                                    }
-                                    i15 = 4;
-                                    i16 = 5;
-                                    i17 = 5;
-                                    z15 = false;
-                                    if (z13) {
-                                    }
-                                    z16 = z13;
-                                    z17 = true;
-                                    if (!z14) {
-                                    }
-                                    SolverVariable solverVariable112 = solverVariable6;
-                                    if (!z16) {
-                                    }
-                                    if (z17) {
-                                    }
-                                    if (z2) {
-                                    }
-                                    if (z2) {
-                                        solverVariable7 = solverVariable4;
-                                        if (i3 == 0) {
-                                            if (!z11) {
-                                            }
-                                            linearSystem.addGreaterThan(solverVariable7, createObjectVariable3, 0, 5);
-                                        }
-                                        if (z2) {
-                                            return;
-                                        }
-                                        return;
-                                    }
-                                }
-                            }
-                            solverVariable7 = solverVariable4;
-                            if (z2) {
-                            }
-                        } else {
-                            int max = Math.max(i7, i10);
-                            if (i27 > 0) {
-                                max = Math.min(i27, max);
-                            }
-                            linearSystem.addEquality(createObjectVariable4, createObjectVariable3, max, 7);
-                            z12 = z4;
-                            i13 = i28;
-                            solverVariable3 = createObjectVariable5;
-                            solverVariable4 = createObjectVariable4;
-                            solverVariable5 = createObjectVariable6;
-                            z11 = false;
-                        }
-                        i14 = i7;
-                        if (z9) {
-                        }
-                        SolverVariable solverVariable102 = solverVariable4;
-                        if (i13 >= 2) {
-                            return;
-                        }
-                        return;
-                    }
-                }
-                i11 = 7;
-                if (!z10) {
-                }
-                i14 = i7;
-                if (z9) {
-                }
-                SolverVariable solverVariable1022 = solverVariable4;
-                if (i13 >= 2) {
-                }
-            }
-        }
-        z10 = false;
-        if (this.mVisibility != 8) {
-        }
-        if (z9) {
-        }
-        i11 = 7;
-        if (!z10) {
-        }
-        i14 = i7;
-        if (z9) {
-        }
-        SolverVariable solverVariable10222 = solverVariable4;
-        if (i13 >= 2) {
-        }
+    /* JADX WARNING: Removed duplicated region for block: B:176:0x02c1  */
+    /* JADX WARNING: Removed duplicated region for block: B:177:0x02e4  */
+    /* JADX WARNING: Removed duplicated region for block: B:180:0x02f3  */
+    /* JADX WARNING: Removed duplicated region for block: B:190:0x0317  */
+    /* JADX WARNING: Removed duplicated region for block: B:192:0x031d A[ADDED_TO_REGION] */
+    /* JADX WARNING: Removed duplicated region for block: B:216:0x035c  */
+    /* JADX WARNING: Removed duplicated region for block: B:230:0x037c  */
+    /* JADX WARNING: Removed duplicated region for block: B:231:0x0382  */
+    /* JADX WARNING: Removed duplicated region for block: B:235:0x038c A[ADDED_TO_REGION] */
+    /* JADX WARNING: Removed duplicated region for block: B:242:0x03a5  */
+    /* JADX WARNING: Removed duplicated region for block: B:244:0x03ae A[ADDED_TO_REGION] */
+    /* JADX WARNING: Removed duplicated region for block: B:24:0x0079  */
+    /* JADX WARNING: Removed duplicated region for block: B:25:0x007d  */
+    /* JADX WARNING: Removed duplicated region for block: B:266:? A[ADDED_TO_REGION, RETURN, SYNTHETIC] */
+    /* JADX WARNING: Removed duplicated region for block: B:270:? A[ADDED_TO_REGION, RETURN, SYNTHETIC] */
+    /* JADX WARNING: Removed duplicated region for block: B:27:0x0081  */
+    /* JADX WARNING: Removed duplicated region for block: B:36:0x009d  */
+    /* JADX WARNING: Removed duplicated region for block: B:46:0x00c6  */
+    /* JADX WARNING: Removed duplicated region for block: B:99:0x01cb  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private void applyConstraints(androidx.constraintlayout.solver.LinearSystem r28, boolean r29, boolean r30, boolean r31, boolean r32, androidx.constraintlayout.solver.SolverVariable r33, androidx.constraintlayout.solver.SolverVariable r34, androidx.constraintlayout.solver.widgets.ConstraintWidget.DimensionBehaviour r35, boolean r36, androidx.constraintlayout.solver.widgets.ConstraintAnchor r37, androidx.constraintlayout.solver.widgets.ConstraintAnchor r38, int r39, int r40, int r41, int r42, float r43, boolean r44, boolean r45, boolean r46, int r47, int r48, int r49, int r50, float r51, boolean r52) {
+        /*
+            r27 = this;
+            r0 = r27
+            r9 = r28
+            r10 = r33
+            r11 = r34
+            r12 = r37
+            r13 = r38
+            r14 = r41
+            r1 = r42
+            r2 = r48
+            r3 = r49
+            r4 = r50
+            androidx.constraintlayout.solver.SolverVariable r15 = r9.createObjectVariable(r12)
+            androidx.constraintlayout.solver.SolverVariable r8 = r9.createObjectVariable(r13)
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r5 = r37.getTarget()
+            androidx.constraintlayout.solver.SolverVariable r7 = r9.createObjectVariable(r5)
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r5 = r38.getTarget()
+            androidx.constraintlayout.solver.SolverVariable r6 = r9.createObjectVariable(r5)
+            androidx.constraintlayout.solver.LinearSystem.getMetrics()
+            boolean r16 = r37.isConnected()
+            boolean r17 = r38.isConnected()
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r5 = r0.mCenter
+            boolean r18 = r5.isConnected()
+            if (r17 == 0) goto L_0x0044
+            int r5 = r16 + 1
+            goto L_0x0046
+        L_0x0044:
+            r5 = r16
+        L_0x0046:
+            if (r18 == 0) goto L_0x004a
+            int r5 = r5 + 1
+        L_0x004a:
+            if (r44 == 0) goto L_0x004f
+            r19 = 3
+            goto L_0x0051
+        L_0x004f:
+            r19 = r47
+        L_0x0051:
+            int[] r20 = androidx.constraintlayout.solver.widgets.ConstraintWidget.C01051.f21xdde91696
+            int r21 = r35.ordinal()
+            r11 = r20[r21]
+            r2 = 1
+            if (r11 == r2) goto L_0x0065
+            r2 = 2
+            if (r11 == r2) goto L_0x0065
+            r2 = 3
+            if (r11 == r2) goto L_0x0065
+            r2 = 4
+            if (r11 == r2) goto L_0x006a
+        L_0x0065:
+            r11 = r19
+        L_0x0067:
+            r19 = 0
+            goto L_0x0071
+        L_0x006a:
+            r11 = r19
+            if (r11 != r2) goto L_0x006f
+            goto L_0x0067
+        L_0x006f:
+            r19 = 1
+        L_0x0071:
+            int r2 = r0.mVisibility
+            r22 = r6
+            r6 = 8
+            if (r2 != r6) goto L_0x007d
+            r2 = 0
+            r19 = 0
+            goto L_0x007f
+        L_0x007d:
+            r2 = r40
+        L_0x007f:
+            if (r52 == 0) goto L_0x009a
+            if (r16 != 0) goto L_0x008d
+            if (r17 != 0) goto L_0x008d
+            if (r18 != 0) goto L_0x008d
+            r6 = r39
+            r9.addEquality(r15, r6)
+            goto L_0x009a
+        L_0x008d:
+            if (r16 == 0) goto L_0x009a
+            if (r17 != 0) goto L_0x009a
+            int r6 = r37.getMargin()
+            r13 = 7
+            r9.addEquality(r15, r7, r6, r13)
+            goto L_0x009b
+        L_0x009a:
+            r13 = 7
+        L_0x009b:
+            if (r19 != 0) goto L_0x00c6
+            if (r36 == 0) goto L_0x00b3
+            r6 = 3
+            r13 = 0
+            r9.addEquality(r8, r15, r13, r6)
+            r6 = 7
+            if (r14 <= 0) goto L_0x00aa
+            r9.addGreaterThan(r8, r15, r14, r6)
+        L_0x00aa:
+            r2 = 2147483647(0x7fffffff, float:NaN)
+            if (r1 >= r2) goto L_0x00b7
+            r9.addLowerThan(r8, r15, r1, r6)
+            goto L_0x00b7
+        L_0x00b3:
+            r6 = r13
+            r9.addEquality(r8, r15, r2, r6)
+        L_0x00b7:
+            r24 = r3
+            r2 = r7
+            r1 = r8
+            r25 = r19
+            r14 = r22
+            r13 = 7
+            r19 = r32
+        L_0x00c2:
+            r22 = r5
+            goto L_0x01c9
+        L_0x00c6:
+            r1 = 2
+            if (r5 == r1) goto L_0x00ea
+            if (r44 != 0) goto L_0x00ea
+            r1 = 1
+            if (r11 == r1) goto L_0x00d0
+            if (r11 != 0) goto L_0x00ea
+        L_0x00d0:
+            int r1 = java.lang.Math.max(r3, r2)
+            if (r4 <= 0) goto L_0x00da
+            int r1 = java.lang.Math.min(r4, r1)
+        L_0x00da:
+            r2 = 7
+            r9.addEquality(r8, r15, r1, r2)
+            r19 = r32
+            r13 = r2
+            r24 = r3
+            r2 = r7
+            r1 = r8
+            r14 = r22
+            r25 = 0
+            goto L_0x00c2
+        L_0x00ea:
+            r1 = -2
+            if (r3 != r1) goto L_0x00ef
+            r13 = r2
+            goto L_0x00f0
+        L_0x00ef:
+            r13 = r3
+        L_0x00f0:
+            if (r4 != r1) goto L_0x00f4
+            r1 = r2
+            goto L_0x00f5
+        L_0x00f4:
+            r1 = r4
+        L_0x00f5:
+            if (r2 <= 0) goto L_0x00fb
+            r3 = 1
+            if (r11 == r3) goto L_0x00fb
+            r2 = 0
+        L_0x00fb:
+            if (r13 <= 0) goto L_0x0105
+            r3 = 7
+            r9.addGreaterThan(r8, r15, r13, r3)
+            int r2 = java.lang.Math.max(r2, r13)
+        L_0x0105:
+            if (r1 <= 0) goto L_0x011a
+            if (r30 == 0) goto L_0x010e
+            r3 = 1
+            if (r11 != r3) goto L_0x010e
+            r3 = 0
+            goto L_0x010f
+        L_0x010e:
+            r3 = 1
+        L_0x010f:
+            r6 = 7
+            if (r3 == 0) goto L_0x0115
+            r9.addLowerThan(r8, r15, r1, r6)
+        L_0x0115:
+            int r2 = java.lang.Math.min(r2, r1)
+            goto L_0x011b
+        L_0x011a:
+            r6 = 7
+        L_0x011b:
+            r3 = 1
+            if (r11 != r3) goto L_0x0146
+            if (r30 == 0) goto L_0x0125
+            r9.addEquality(r8, r15, r2, r6)
+            r4 = 5
+            goto L_0x0136
+        L_0x0125:
+            if (r45 == 0) goto L_0x012f
+            r4 = 5
+            r9.addEquality(r8, r15, r2, r4)
+            r9.addLowerThan(r8, r15, r2, r6)
+            goto L_0x0136
+        L_0x012f:
+            r4 = 5
+            r9.addEquality(r8, r15, r2, r4)
+            r9.addLowerThan(r8, r15, r2, r6)
+        L_0x0136:
+            r4 = r1
+            r2 = r7
+            r1 = r8
+            r24 = r13
+            r25 = r19
+            r14 = r22
+            r19 = r32
+            r22 = r5
+            r13 = r6
+            goto L_0x01c9
+        L_0x0146:
+            r2 = 2
+            r4 = 5
+            if (r11 != r2) goto L_0x01b6
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor$Type r3 = r37.getType()
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor$Type r2 = androidx.constraintlayout.solver.widgets.ConstraintAnchor.Type.TOP
+            if (r3 == r2) goto L_0x0174
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor$Type r3 = r37.getType()
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor$Type r4 = androidx.constraintlayout.solver.widgets.ConstraintAnchor.Type.BOTTOM
+            if (r3 != r4) goto L_0x015b
+            goto L_0x0174
+        L_0x015b:
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r2 = r0.mParent
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor$Type r3 = androidx.constraintlayout.solver.widgets.ConstraintAnchor.Type.LEFT
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r2 = r2.getAnchor(r3)
+            androidx.constraintlayout.solver.SolverVariable r2 = r9.createObjectVariable(r2)
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r3 = r0.mParent
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor$Type r4 = androidx.constraintlayout.solver.widgets.ConstraintAnchor.Type.RIGHT
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r3 = r3.getAnchor(r4)
+            androidx.constraintlayout.solver.SolverVariable r3 = r9.createObjectVariable(r3)
+            goto L_0x018a
+        L_0x0174:
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r3 = r0.mParent
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r2 = r3.getAnchor(r2)
+            androidx.constraintlayout.solver.SolverVariable r2 = r9.createObjectVariable(r2)
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r3 = r0.mParent
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor$Type r4 = androidx.constraintlayout.solver.widgets.ConstraintAnchor.Type.BOTTOM
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r3 = r3.getAnchor(r4)
+            androidx.constraintlayout.solver.SolverVariable r3 = r9.createObjectVariable(r3)
+        L_0x018a:
+            r19 = r2
+            r2 = r3
+            androidx.constraintlayout.solver.ArrayRow r3 = r28.createRow()
+            r23 = 5
+            r4 = r8
+            r36 = r1
+            r1 = r5
+            r5 = r15
+            r39 = r13
+            r14 = r22
+            r13 = r6
+            r6 = r2
+            r2 = r7
+            r7 = r19
+            r22 = r1
+            r1 = r8
+            r8 = r51
+            androidx.constraintlayout.solver.ArrayRow r3 = r3.createRowDimensionRatio(r4, r5, r6, r7, r8)
+            r9.addConstraint(r3)
+            r19 = r32
+            r4 = r36
+            r24 = r39
+            r25 = 0
+            goto L_0x01c9
+        L_0x01b6:
+            r36 = r1
+            r2 = r7
+            r1 = r8
+            r39 = r13
+            r14 = r22
+            r22 = r5
+            r13 = r6
+            r4 = r36
+            r24 = r39
+            r25 = r19
+            r19 = 1
+        L_0x01c9:
+            if (r52 == 0) goto L_0x03a5
+            if (r45 == 0) goto L_0x01d6
+            r4 = r1
+            r2 = r10
+            r5 = r22
+            r3 = 2
+            r1 = r34
+            goto L_0x03ac
+        L_0x01d6:
+            if (r16 != 0) goto L_0x01de
+            if (r17 != 0) goto L_0x01de
+            if (r18 != 0) goto L_0x01de
+            goto L_0x0388
+        L_0x01de:
+            if (r16 == 0) goto L_0x01e4
+            if (r17 != 0) goto L_0x01e4
+            goto L_0x0388
+        L_0x01e4:
+            if (r16 != 0) goto L_0x01f9
+            if (r17 == 0) goto L_0x01f9
+            int r0 = r38.getMargin()
+            int r0 = -r0
+            r9.addEquality(r1, r14, r0, r13)
+            if (r30 == 0) goto L_0x0388
+            r0 = 5
+            r3 = 0
+            r9.addGreaterThan(r15, r10, r3, r0)
+            goto L_0x0388
+        L_0x01f9:
+            r3 = 0
+            if (r16 == 0) goto L_0x0388
+            if (r17 == 0) goto L_0x0388
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r5 = r12.mTarget
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r8 = r5.mOwner
+            r7 = r38
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r5 = r7.mTarget
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r6 = r5.mOwner
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r5 = r27.getParent()
+            if (r25 == 0) goto L_0x02a7
+            if (r11 != 0) goto L_0x023b
+            if (r4 != 0) goto L_0x021b
+            if (r24 != 0) goto L_0x021b
+            r16 = r3
+            r0 = r13
+            r4 = r0
+            r17 = 1
+            goto L_0x0221
+        L_0x021b:
+            r17 = r3
+            r0 = 5
+            r4 = 5
+            r16 = 1
+        L_0x0221:
+            boolean r3 = r8 instanceof androidx.constraintlayout.solver.widgets.Barrier
+            if (r3 != 0) goto L_0x022f
+            boolean r3 = r6 instanceof androidx.constraintlayout.solver.widgets.Barrier
+            if (r3 == 0) goto L_0x022a
+            goto L_0x022f
+        L_0x022a:
+            r3 = r16
+            r18 = r17
+            goto L_0x0234
+        L_0x022f:
+            r3 = r16
+            r18 = r17
+            r4 = 4
+        L_0x0234:
+            r17 = 5
+            r16 = r0
+            r0 = 0
+            goto L_0x02b0
+        L_0x023b:
+            r3 = 1
+            if (r11 != r3) goto L_0x0245
+            r16 = r13
+            r0 = 1
+            r3 = 1
+            r4 = 4
+            goto L_0x02ac
+        L_0x0245:
+            r3 = 3
+            if (r11 != r3) goto L_0x02a4
+            int r0 = r0.mResolvedDimensionRatioSide
+            r3 = -1
+            if (r0 != r3) goto L_0x0264
+            if (r46 == 0) goto L_0x025a
+            r16 = r13
+            r0 = 1
+            r3 = 1
+            r4 = 5
+            if (r30 == 0) goto L_0x0257
+            goto L_0x02a1
+        L_0x0257:
+            r17 = 4
+            goto L_0x0261
+        L_0x025a:
+            r16 = r13
+            r17 = r16
+            r0 = 1
+            r3 = 1
+            r4 = 5
+        L_0x0261:
+            r18 = 1
+            goto L_0x02b0
+        L_0x0264:
+            if (r44 == 0) goto L_0x027f
+            r0 = r48
+            r3 = 2
+            if (r0 == r3) goto L_0x0271
+            r3 = 1
+            if (r0 != r3) goto L_0x026f
+            goto L_0x0271
+        L_0x026f:
+            r0 = 0
+            goto L_0x0272
+        L_0x0271:
+            r0 = 1
+        L_0x0272:
+            if (r0 != 0) goto L_0x0277
+            r3 = r13
+            r0 = 5
+            goto L_0x0279
+        L_0x0277:
+            r0 = 4
+            r3 = 5
+        L_0x0279:
+            r4 = r0
+            r16 = r3
+            r0 = 1
+            r3 = 1
+            goto L_0x02a1
+        L_0x027f:
+            if (r4 <= 0) goto L_0x0285
+            r0 = 1
+            r3 = 1
+            r4 = 5
+            goto L_0x029f
+        L_0x0285:
+            if (r4 != 0) goto L_0x029c
+            if (r24 != 0) goto L_0x029c
+            if (r46 != 0) goto L_0x028f
+            r4 = r13
+            r0 = 1
+            r3 = 1
+            goto L_0x029f
+        L_0x028f:
+            if (r8 == r5) goto L_0x0295
+            if (r6 == r5) goto L_0x0295
+            r0 = 4
+            goto L_0x0296
+        L_0x0295:
+            r0 = 5
+        L_0x0296:
+            r16 = r0
+            r0 = 1
+            r3 = 1
+            r4 = 4
+            goto L_0x02a1
+        L_0x029c:
+            r0 = 1
+            r3 = 1
+            r4 = 4
+        L_0x029f:
+            r16 = 5
+        L_0x02a1:
+            r17 = 5
+            goto L_0x0261
+        L_0x02a4:
+            r0 = 0
+            r3 = 0
+            goto L_0x02a9
+        L_0x02a7:
+            r0 = 1
+            r3 = 1
+        L_0x02a9:
+            r4 = 4
+            r16 = 5
+        L_0x02ac:
+            r17 = 5
+            r18 = 0
+        L_0x02b0:
+            if (r0 == 0) goto L_0x02bb
+            if (r2 != r14) goto L_0x02bb
+            if (r8 == r5) goto L_0x02bb
+            r21 = 0
+            r22 = 0
+            goto L_0x02bf
+        L_0x02bb:
+            r22 = r0
+            r21 = 1
+        L_0x02bf:
+            if (r3 == 0) goto L_0x02e4
+            int r3 = r37.getMargin()
+            int r26 = r38.getMargin()
+            r0 = r28
+            r32 = r1
+            r1 = r15
+            r27 = r2
+            r12 = 0
+            r12 = r4
+            r4 = r43
+            r13 = r5
+            r5 = r14
+            r35 = r11
+            r11 = r6
+            r6 = r32
+            r7 = r26
+            r10 = r8
+            r8 = r17
+            r0.addCentering(r1, r2, r3, r4, r5, r6, r7, r8)
+            goto L_0x02ee
+        L_0x02e4:
+            r32 = r1
+            r27 = r2
+            r12 = r4
+            r13 = r5
+            r10 = r8
+            r35 = r11
+            r11 = r6
+        L_0x02ee:
+            r0 = 6
+            r1 = r27
+            if (r22 == 0) goto L_0x0317
+            if (r30 == 0) goto L_0x0303
+            if (r1 == r14) goto L_0x0303
+            if (r25 != 0) goto L_0x0303
+            boolean r2 = r10 instanceof androidx.constraintlayout.solver.widgets.Barrier
+            if (r2 != 0) goto L_0x0301
+            boolean r2 = r11 instanceof androidx.constraintlayout.solver.widgets.Barrier
+            if (r2 == 0) goto L_0x0303
+        L_0x0301:
+            r2 = r0
+            goto L_0x0305
+        L_0x0303:
+            r2 = r16
+        L_0x0305:
+            int r3 = r37.getMargin()
+            r9.addGreaterThan(r15, r1, r3, r2)
+            int r3 = r38.getMargin()
+            int r3 = -r3
+            r4 = r32
+            r9.addLowerThan(r4, r14, r3, r2)
+            goto L_0x031b
+        L_0x0317:
+            r4 = r32
+            r2 = r16
+        L_0x031b:
+            if (r21 == 0) goto L_0x035a
+            if (r18 == 0) goto L_0x0345
+            if (r46 == 0) goto L_0x0323
+            if (r31 == 0) goto L_0x0345
+        L_0x0323:
+            if (r10 == r13) goto L_0x032a
+            if (r11 != r13) goto L_0x0328
+            goto L_0x032a
+        L_0x0328:
+            r6 = r12
+            goto L_0x032b
+        L_0x032a:
+            r6 = r0
+        L_0x032b:
+            boolean r0 = r10 instanceof androidx.constraintlayout.solver.widgets.Guideline
+            if (r0 != 0) goto L_0x0333
+            boolean r0 = r11 instanceof androidx.constraintlayout.solver.widgets.Guideline
+            if (r0 == 0) goto L_0x0334
+        L_0x0333:
+            r6 = 5
+        L_0x0334:
+            boolean r0 = r10 instanceof androidx.constraintlayout.solver.widgets.Barrier
+            if (r0 != 0) goto L_0x033c
+            boolean r0 = r11 instanceof androidx.constraintlayout.solver.widgets.Barrier
+            if (r0 == 0) goto L_0x033d
+        L_0x033c:
+            r6 = 5
+        L_0x033d:
+            if (r46 == 0) goto L_0x0340
+            r6 = 5
+        L_0x0340:
+            int r0 = java.lang.Math.max(r6, r12)
+            r12 = r0
+        L_0x0345:
+            if (r30 == 0) goto L_0x034b
+            int r12 = java.lang.Math.min(r2, r12)
+        L_0x034b:
+            int r0 = r37.getMargin()
+            r9.addEquality(r15, r1, r0, r12)
+            int r0 = r38.getMargin()
+            int r0 = -r0
+            r9.addEquality(r4, r14, r0, r12)
+        L_0x035a:
+            if (r30 == 0) goto L_0x036c
+            r2 = r33
+            if (r2 != r1) goto L_0x0365
+            int r0 = r37.getMargin()
+            goto L_0x0366
+        L_0x0365:
+            r0 = 0
+        L_0x0366:
+            if (r1 == r2) goto L_0x036c
+            r1 = 5
+            r9.addGreaterThan(r15, r2, r0, r1)
+        L_0x036c:
+            if (r30 == 0) goto L_0x0389
+            if (r25 == 0) goto L_0x0389
+            r0 = r14
+            if (r41 != 0) goto L_0x038a
+            if (r24 != 0) goto L_0x038a
+            if (r25 == 0) goto L_0x0382
+            r11 = r35
+            r1 = 3
+            if (r11 != r1) goto L_0x0382
+            r1 = 7
+            r2 = 0
+            r9.addGreaterThan(r4, r15, r2, r1)
+            goto L_0x038a
+        L_0x0382:
+            r2 = 0
+            r1 = 5
+            r9.addGreaterThan(r4, r15, r2, r1)
+            goto L_0x038a
+        L_0x0388:
+            r4 = r1
+        L_0x0389:
+            r0 = r14
+        L_0x038a:
+            if (r30 == 0) goto L_0x03a4
+            if (r19 == 0) goto L_0x03a4
+            r1 = r38
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r2 = r1.mTarget
+            if (r2 == 0) goto L_0x039b
+            int r2 = r38.getMargin()
+            r1 = r34
+            goto L_0x039e
+        L_0x039b:
+            r1 = r34
+            r2 = 0
+        L_0x039e:
+            if (r0 == r1) goto L_0x03a4
+            r0 = 5
+            r9.addGreaterThan(r1, r4, r2, r0)
+        L_0x03a4:
+            return
+        L_0x03a5:
+            r4 = r1
+            r2 = r10
+            r3 = 2
+            r1 = r34
+            r5 = r22
+        L_0x03ac:
+            if (r5 >= r3) goto L_0x03ec
+            if (r30 == 0) goto L_0x03ec
+            if (r19 == 0) goto L_0x03ec
+            r3 = 7
+            r5 = 0
+            r9.addGreaterThan(r15, r2, r5, r3)
+            if (r29 != 0) goto L_0x03c2
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r2 = r0.mBaseline
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r2 = r2.mTarget
+            if (r2 != 0) goto L_0x03c0
+            goto L_0x03c2
+        L_0x03c0:
+            r2 = 0
+            goto L_0x03c3
+        L_0x03c2:
+            r2 = 1
+        L_0x03c3:
+            if (r29 != 0) goto L_0x03e5
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r0 = r0.mBaseline
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r0 = r0.mTarget
+            if (r0 == 0) goto L_0x03e5
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r0 = r0.mOwner
+            float r2 = r0.mDimensionRatio
+            r3 = 0
+            int r2 = (r2 > r3 ? 1 : (r2 == r3 ? 0 : -1))
+            if (r2 == 0) goto L_0x03e4
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour[] r0 = r0.mListDimensionBehaviors
+            r2 = 0
+            r3 = r0[r2]
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r2 = androidx.constraintlayout.solver.widgets.ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT
+            if (r3 != r2) goto L_0x03e4
+            r3 = 1
+            r0 = r0[r3]
+            if (r0 != r2) goto L_0x03e4
+            r2 = r3
+            goto L_0x03e5
+        L_0x03e4:
+            r2 = 0
+        L_0x03e5:
+            if (r2 == 0) goto L_0x03ec
+            r0 = 7
+            r2 = 0
+            r9.addGreaterThan(r1, r4, r2, r0)
+        L_0x03ec:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.constraintlayout.solver.widgets.ConstraintWidget.applyConstraints(androidx.constraintlayout.solver.LinearSystem, boolean, boolean, boolean, boolean, androidx.constraintlayout.solver.SolverVariable, androidx.constraintlayout.solver.SolverVariable, androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour, boolean, androidx.constraintlayout.solver.widgets.ConstraintAnchor, androidx.constraintlayout.solver.widgets.ConstraintAnchor, int, int, int, int, float, boolean, boolean, boolean, int, int, int, int, float, boolean):void");
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: androidx.constraintlayout.solver.widgets.ConstraintWidget$1  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public static /* synthetic */ class AnonymousClass1 {
-        static final /* synthetic */ int[] $SwitchMap$androidx$constraintlayout$solver$widgets$ConstraintAnchor$Type;
-        static final /* synthetic */ int[] $SwitchMap$androidx$constraintlayout$solver$widgets$ConstraintWidget$DimensionBehaviour;
+    /* renamed from: androidx.constraintlayout.solver.widgets.ConstraintWidget$1 */
+    static /* synthetic */ class C01051 {
 
+        /* renamed from: $SwitchMap$androidx$constraintlayout$solver$widgets$ConstraintAnchor$Type */
+        static final /* synthetic */ int[] f20x4c44d048;
+
+        /* renamed from: $SwitchMap$androidx$constraintlayout$solver$widgets$ConstraintWidget$DimensionBehaviour */
+        static final /* synthetic */ int[] f21xdde91696;
+
+        /* JADX WARNING: Can't wrap try/catch for region: R(29:0|(2:1|2)|3|(2:5|6)|7|9|10|11|(2:13|14)|15|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31|32|33|34|36) */
+        /* JADX WARNING: Can't wrap try/catch for region: R(31:0|1|2|3|(2:5|6)|7|9|10|11|13|14|15|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31|32|33|34|36) */
+        /* JADX WARNING: Can't wrap try/catch for region: R(32:0|1|2|3|5|6|7|9|10|11|13|14|15|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31|32|33|34|36) */
+        /* JADX WARNING: Failed to process nested try/catch */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:19:0x0044 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:21:0x004e */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:23:0x0058 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:25:0x0062 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:27:0x006d */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:29:0x0078 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:31:0x0083 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:33:0x008f */
         static {
-            int[] iArr = new int[DimensionBehaviour.values().length];
-            $SwitchMap$androidx$constraintlayout$solver$widgets$ConstraintWidget$DimensionBehaviour = iArr;
-            try {
-                iArr[DimensionBehaviour.FIXED.ordinal()] = 1;
-            } catch (NoSuchFieldError unused) {
-            }
-            try {
-                $SwitchMap$androidx$constraintlayout$solver$widgets$ConstraintWidget$DimensionBehaviour[DimensionBehaviour.WRAP_CONTENT.ordinal()] = 2;
-            } catch (NoSuchFieldError unused2) {
-            }
-            try {
-                $SwitchMap$androidx$constraintlayout$solver$widgets$ConstraintWidget$DimensionBehaviour[DimensionBehaviour.MATCH_PARENT.ordinal()] = 3;
-            } catch (NoSuchFieldError unused3) {
-            }
-            try {
-                $SwitchMap$androidx$constraintlayout$solver$widgets$ConstraintWidget$DimensionBehaviour[DimensionBehaviour.MATCH_CONSTRAINT.ordinal()] = 4;
-            } catch (NoSuchFieldError unused4) {
-            }
-            int[] iArr2 = new int[ConstraintAnchor.Type.values().length];
-            $SwitchMap$androidx$constraintlayout$solver$widgets$ConstraintAnchor$Type = iArr2;
-            try {
-                iArr2[ConstraintAnchor.Type.LEFT.ordinal()] = 1;
-            } catch (NoSuchFieldError unused5) {
-            }
-            try {
-                $SwitchMap$androidx$constraintlayout$solver$widgets$ConstraintAnchor$Type[ConstraintAnchor.Type.TOP.ordinal()] = 2;
-            } catch (NoSuchFieldError unused6) {
-            }
-            try {
-                $SwitchMap$androidx$constraintlayout$solver$widgets$ConstraintAnchor$Type[ConstraintAnchor.Type.RIGHT.ordinal()] = 3;
-            } catch (NoSuchFieldError unused7) {
-            }
-            try {
-                $SwitchMap$androidx$constraintlayout$solver$widgets$ConstraintAnchor$Type[ConstraintAnchor.Type.BOTTOM.ordinal()] = 4;
-            } catch (NoSuchFieldError unused8) {
-            }
-            try {
-                $SwitchMap$androidx$constraintlayout$solver$widgets$ConstraintAnchor$Type[ConstraintAnchor.Type.BASELINE.ordinal()] = 5;
-            } catch (NoSuchFieldError unused9) {
-            }
-            try {
-                $SwitchMap$androidx$constraintlayout$solver$widgets$ConstraintAnchor$Type[ConstraintAnchor.Type.CENTER.ordinal()] = 6;
-            } catch (NoSuchFieldError unused10) {
-            }
-            try {
-                $SwitchMap$androidx$constraintlayout$solver$widgets$ConstraintAnchor$Type[ConstraintAnchor.Type.CENTER_X.ordinal()] = 7;
-            } catch (NoSuchFieldError unused11) {
-            }
-            try {
-                $SwitchMap$androidx$constraintlayout$solver$widgets$ConstraintAnchor$Type[ConstraintAnchor.Type.CENTER_Y.ordinal()] = 8;
-            } catch (NoSuchFieldError unused12) {
-            }
-            try {
-                $SwitchMap$androidx$constraintlayout$solver$widgets$ConstraintAnchor$Type[ConstraintAnchor.Type.NONE.ordinal()] = 9;
-            } catch (NoSuchFieldError unused13) {
-            }
+            /*
+                androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour[] r0 = androidx.constraintlayout.solver.widgets.ConstraintWidget.DimensionBehaviour.values()
+                int r0 = r0.length
+                int[] r0 = new int[r0]
+                f21xdde91696 = r0
+                r1 = 1
+                androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r2 = androidx.constraintlayout.solver.widgets.ConstraintWidget.DimensionBehaviour.FIXED     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r2 = r2.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
+                r0[r2] = r1     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                r0 = 2
+                int[] r2 = f21xdde91696     // Catch:{ NoSuchFieldError -> 0x001d }
+                androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r3 = androidx.constraintlayout.solver.widgets.ConstraintWidget.DimensionBehaviour.WRAP_CONTENT     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r3 = r3.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
+                r2[r3] = r0     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                r2 = 3
+                int[] r3 = f21xdde91696     // Catch:{ NoSuchFieldError -> 0x0028 }
+                androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r4 = androidx.constraintlayout.solver.widgets.ConstraintWidget.DimensionBehaviour.MATCH_PARENT     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int r4 = r4.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
+                r3[r4] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
+            L_0x0028:
+                r3 = 4
+                int[] r4 = f21xdde91696     // Catch:{ NoSuchFieldError -> 0x0033 }
+                androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r5 = androidx.constraintlayout.solver.widgets.ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int r5 = r5.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
+                r4[r5] = r3     // Catch:{ NoSuchFieldError -> 0x0033 }
+            L_0x0033:
+                androidx.constraintlayout.solver.widgets.ConstraintAnchor$Type[] r4 = androidx.constraintlayout.solver.widgets.ConstraintAnchor.Type.values()
+                int r4 = r4.length
+                int[] r4 = new int[r4]
+                f20x4c44d048 = r4
+                androidx.constraintlayout.solver.widgets.ConstraintAnchor$Type r5 = androidx.constraintlayout.solver.widgets.ConstraintAnchor.Type.LEFT     // Catch:{ NoSuchFieldError -> 0x0044 }
+                int r5 = r5.ordinal()     // Catch:{ NoSuchFieldError -> 0x0044 }
+                r4[r5] = r1     // Catch:{ NoSuchFieldError -> 0x0044 }
+            L_0x0044:
+                int[] r1 = f20x4c44d048     // Catch:{ NoSuchFieldError -> 0x004e }
+                androidx.constraintlayout.solver.widgets.ConstraintAnchor$Type r4 = androidx.constraintlayout.solver.widgets.ConstraintAnchor.Type.TOP     // Catch:{ NoSuchFieldError -> 0x004e }
+                int r4 = r4.ordinal()     // Catch:{ NoSuchFieldError -> 0x004e }
+                r1[r4] = r0     // Catch:{ NoSuchFieldError -> 0x004e }
+            L_0x004e:
+                int[] r0 = f20x4c44d048     // Catch:{ NoSuchFieldError -> 0x0058 }
+                androidx.constraintlayout.solver.widgets.ConstraintAnchor$Type r1 = androidx.constraintlayout.solver.widgets.ConstraintAnchor.Type.RIGHT     // Catch:{ NoSuchFieldError -> 0x0058 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0058 }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0058 }
+            L_0x0058:
+                int[] r0 = f20x4c44d048     // Catch:{ NoSuchFieldError -> 0x0062 }
+                androidx.constraintlayout.solver.widgets.ConstraintAnchor$Type r1 = androidx.constraintlayout.solver.widgets.ConstraintAnchor.Type.BOTTOM     // Catch:{ NoSuchFieldError -> 0x0062 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0062 }
+                r0[r1] = r3     // Catch:{ NoSuchFieldError -> 0x0062 }
+            L_0x0062:
+                int[] r0 = f20x4c44d048     // Catch:{ NoSuchFieldError -> 0x006d }
+                androidx.constraintlayout.solver.widgets.ConstraintAnchor$Type r1 = androidx.constraintlayout.solver.widgets.ConstraintAnchor.Type.BASELINE     // Catch:{ NoSuchFieldError -> 0x006d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x006d }
+                r2 = 5
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x006d }
+            L_0x006d:
+                int[] r0 = f20x4c44d048     // Catch:{ NoSuchFieldError -> 0x0078 }
+                androidx.constraintlayout.solver.widgets.ConstraintAnchor$Type r1 = androidx.constraintlayout.solver.widgets.ConstraintAnchor.Type.CENTER     // Catch:{ NoSuchFieldError -> 0x0078 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0078 }
+                r2 = 6
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0078 }
+            L_0x0078:
+                int[] r0 = f20x4c44d048     // Catch:{ NoSuchFieldError -> 0x0083 }
+                androidx.constraintlayout.solver.widgets.ConstraintAnchor$Type r1 = androidx.constraintlayout.solver.widgets.ConstraintAnchor.Type.CENTER_X     // Catch:{ NoSuchFieldError -> 0x0083 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0083 }
+                r2 = 7
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0083 }
+            L_0x0083:
+                int[] r0 = f20x4c44d048     // Catch:{ NoSuchFieldError -> 0x008f }
+                androidx.constraintlayout.solver.widgets.ConstraintAnchor$Type r1 = androidx.constraintlayout.solver.widgets.ConstraintAnchor.Type.CENTER_Y     // Catch:{ NoSuchFieldError -> 0x008f }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x008f }
+                r2 = 8
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x008f }
+            L_0x008f:
+                int[] r0 = f20x4c44d048     // Catch:{ NoSuchFieldError -> 0x009b }
+                androidx.constraintlayout.solver.widgets.ConstraintAnchor$Type r1 = androidx.constraintlayout.solver.widgets.ConstraintAnchor.Type.NONE     // Catch:{ NoSuchFieldError -> 0x009b }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x009b }
+                r2 = 9
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x009b }
+            L_0x009b:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: androidx.constraintlayout.solver.widgets.ConstraintWidget.C01051.<clinit>():void");
         }
     }
 
@@ -2116,8 +2675,8 @@ public class ConstraintWidget {
         this.mHeight = constraintWidget.mHeight;
         this.mDimensionRatio = constraintWidget.mDimensionRatio;
         this.mDimensionRatioSide = constraintWidget.mDimensionRatioSide;
-        this.mX = constraintWidget.mX;
-        this.mY = constraintWidget.mY;
+        this.f18mX = constraintWidget.f18mX;
+        this.f19mY = constraintWidget.f19mY;
         this.mRelX = constraintWidget.mRelX;
         this.mRelY = constraintWidget.mRelY;
         this.mOffsetX = constraintWidget.mOffsetX;
@@ -2190,10 +2749,10 @@ public class ConstraintWidget {
         int i8 = i5 - i3;
         int i9 = i6 - i4;
         if (isResolved) {
-            this.mX = i3;
+            this.f18mX = i3;
         }
         if (isResolved2) {
-            this.mY = i4;
+            this.f19mY = i4;
         }
         if (this.mVisibility == 8) {
             this.mWidth = 0;
@@ -2210,17 +2769,15 @@ public class ConstraintWidget {
                 this.mWidth = i10;
             }
         }
-        if (!isResolved2) {
-            return;
+        if (isResolved2) {
+            if (this.mListDimensionBehaviors[1] == DimensionBehaviour.FIXED && i9 < (i = this.mHeight)) {
+                i9 = i;
+            }
+            this.mHeight = i9;
+            int i11 = this.mMinHeight;
+            if (i9 < i11) {
+                this.mHeight = i11;
+            }
         }
-        if (this.mListDimensionBehaviors[1] == DimensionBehaviour.FIXED && i9 < (i = this.mHeight)) {
-            i9 = i;
-        }
-        this.mHeight = i9;
-        int i11 = this.mMinHeight;
-        if (i9 >= i11) {
-            return;
-        }
-        this.mHeight = i11;
     }
 }

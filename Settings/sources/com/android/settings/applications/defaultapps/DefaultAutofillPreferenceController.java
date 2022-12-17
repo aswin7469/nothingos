@@ -8,17 +8,16 @@ import android.text.TextUtils;
 import android.view.autofill.AutofillManager;
 import com.android.settings.applications.defaultapps.DefaultAutofillPicker;
 import com.android.settingslib.applications.DefaultAppInfo;
-/* loaded from: classes.dex */
-public class DefaultAutofillPreferenceController extends DefaultAppPreferenceController {
-    private final AutofillManager mAutofillManager = (AutofillManager) this.mContext.getSystemService(AutofillManager.class);
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
+public class DefaultAutofillPreferenceController extends DefaultAppPreferenceController {
+    private final AutofillManager mAutofillManager = ((AutofillManager) this.mContext.getSystemService(AutofillManager.class));
+
     public String getPreferenceKey() {
         return "default_autofill_main";
     }
 
-    @Override // com.android.settings.applications.defaultapps.DefaultAppPreferenceController
-    protected boolean showLabelAsTitle() {
+    /* access modifiers changed from: protected */
+    public boolean showLabelAsTitle() {
         return true;
     }
 
@@ -26,22 +25,21 @@ public class DefaultAutofillPreferenceController extends DefaultAppPreferenceCon
         super(context);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         AutofillManager autofillManager = this.mAutofillManager;
         return autofillManager != null && autofillManager.hasAutofillFeature() && this.mAutofillManager.isAutofillSupported();
     }
 
-    @Override // com.android.settings.applications.defaultapps.DefaultAppPreferenceController
-    protected Intent getSettingIntent(DefaultAppInfo defaultAppInfo) {
+    /* access modifiers changed from: protected */
+    public Intent getSettingIntent(DefaultAppInfo defaultAppInfo) {
         if (defaultAppInfo == null) {
             return null;
         }
         return new DefaultAutofillPicker.AutofillSettingIntentProvider(this.mContext, this.mUserId, defaultAppInfo.getKey()).getIntent();
     }
 
-    @Override // com.android.settings.applications.defaultapps.DefaultAppPreferenceController
-    protected DefaultAppInfo getDefaultAppInfo() {
+    /* access modifiers changed from: protected */
+    public DefaultAppInfo getDefaultAppInfo() {
         String string = Settings.Secure.getString(this.mContext.getContentResolver(), "autofill_service");
         if (!TextUtils.isEmpty(string)) {
             return new DefaultAppInfo(this.mContext, this.mPackageManager, this.mUserId, ComponentName.unflattenFromString(string));

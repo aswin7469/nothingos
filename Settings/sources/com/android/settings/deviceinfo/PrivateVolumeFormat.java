@@ -11,12 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
 import com.android.settings.core.InstrumentedFragment;
-/* loaded from: classes.dex */
+
 public class PrivateVolumeFormat extends InstrumentedFragment {
-    private final View.OnClickListener mConfirmListener = new View.OnClickListener() { // from class: com.android.settings.deviceinfo.PrivateVolumeFormat.1
-        @Override // android.view.View.OnClickListener
+    private final View.OnClickListener mConfirmListener = new View.OnClickListener() {
         public void onClick(View view) {
             Intent intent = new Intent(PrivateVolumeFormat.this.getActivity(), StorageWizardFormatProgress.class);
             intent.putExtra("android.os.storage.extra.DISK_ID", PrivateVolumeFormat.this.mDisk.getId());
@@ -26,23 +27,23 @@ public class PrivateVolumeFormat extends InstrumentedFragment {
             PrivateVolumeFormat.this.getActivity().finish();
         }
     };
-    private DiskInfo mDisk;
-    private VolumeInfo mVolume;
+    /* access modifiers changed from: private */
+    public DiskInfo mDisk;
+    /* access modifiers changed from: private */
+    public VolumeInfo mVolume;
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 42;
     }
 
-    @Override // androidx.fragment.app.Fragment
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
         StorageManager storageManager = (StorageManager) getActivity().getSystemService(StorageManager.class);
         VolumeInfo findVolumeById = storageManager.findVolumeById(getArguments().getString("android.os.storage.extra.VOLUME_ID"));
         this.mVolume = findVolumeById;
         this.mDisk = storageManager.findDiskById(findVolumeById.getDiskId());
-        View inflate = layoutInflater.inflate(R.layout.storage_internal_format, viewGroup, false);
-        ((TextView) inflate.findViewById(R.id.body)).setText(TextUtils.expandTemplate(getText(R.string.storage_internal_format_details), this.mDisk.getDescription()));
-        ((Button) inflate.findViewById(R.id.confirm)).setOnClickListener(this.mConfirmListener);
+        View inflate = layoutInflater.inflate(R$layout.storage_internal_format, viewGroup, false);
+        ((TextView) inflate.findViewById(R$id.body)).setText(TextUtils.expandTemplate(getText(R$string.storage_internal_format_details), new CharSequence[]{this.mDisk.getDescription()}));
+        ((Button) inflate.findViewById(R$id.confirm)).setOnClickListener(this.mConfirmListener);
         return inflate;
     }
 }

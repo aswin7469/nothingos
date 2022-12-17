@@ -1,9 +1,7 @@
 package com.google.protobuf;
-/* JADX WARN: Init of enum ENUM can be incorrect */
-/* JADX WARN: Init of enum INT can be incorrect */
-/* loaded from: classes2.dex */
+
 public enum JavaType {
-    VOID(Void.class, Void.class, null),
+    VOID(Void.class, Void.class, (Class<?>) null),
     INT(r1, Integer.class, 0),
     LONG(Long.TYPE, Long.class, 0L),
     FLOAT(Float.TYPE, Float.class, Float.valueOf(0.0f)),
@@ -11,18 +9,14 @@ public enum JavaType {
     BOOLEAN(Boolean.TYPE, Boolean.class, Boolean.FALSE),
     STRING(String.class, String.class, ""),
     BYTE_STRING(ByteString.class, ByteString.class, ByteString.EMPTY),
-    ENUM(r1, Integer.class, null),
-    MESSAGE(Object.class, Object.class, null);
+    ENUM(r1, Integer.class, (Class<?>) null),
+    MESSAGE(Object.class, Object.class, (Class<?>) null);
     
     private final Class<?> boxedType;
     private final Object defaultDefault;
     private final Class<?> type;
 
-    static {
-        Class cls = Integer.TYPE;
-    }
-
-    JavaType(Class cls, Class cls2, Object obj) {
+    private JavaType(Class<?> cls, Class<?> cls2, Object obj) {
         this.type = cls;
         this.boxedType = cls2;
         this.defaultDefault = obj;

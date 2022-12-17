@@ -6,14 +6,12 @@ import android.telephony.SmsManager;
 import com.android.settings.applications.AppStateBaseBridge;
 import com.android.settingslib.applications.ApplicationsState;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
+
 public class AppStateSmsPremBridge extends AppStateBaseBridge {
-    public static final ApplicationsState.AppFilter FILTER_APP_PREMIUM_SMS = new ApplicationsState.AppFilter() { // from class: com.android.settings.applications.AppStateSmsPremBridge.1
-        @Override // com.android.settingslib.applications.ApplicationsState.AppFilter
+    public static final ApplicationsState.AppFilter FILTER_APP_PREMIUM_SMS = new ApplicationsState.AppFilter() {
         public void init() {
         }
 
-        @Override // com.android.settingslib.applications.ApplicationsState.AppFilter
         public boolean filterApp(ApplicationsState.AppEntry appEntry) {
             Object obj = appEntry.extraInfo;
             return (obj instanceof SmsState) && ((SmsState) obj).smsState != 0;
@@ -22,7 +20,6 @@ public class AppStateSmsPremBridge extends AppStateBaseBridge {
     private final Context mContext;
     private final SmsManager mSmsManager = SmsManager.getDefault();
 
-    /* loaded from: classes.dex */
     public static class SmsState {
         public int smsState;
     }
@@ -32,8 +29,8 @@ public class AppStateSmsPremBridge extends AppStateBaseBridge {
         this.mContext = context;
     }
 
-    @Override // com.android.settings.applications.AppStateBaseBridge
-    protected void loadAllExtraInfo() {
+    /* access modifiers changed from: protected */
+    public void loadAllExtraInfo() {
         ArrayList<ApplicationsState.AppEntry> allApps = this.mAppSession.getAllApps();
         int size = allApps.size();
         for (int i = 0; i < size; i++) {
@@ -43,8 +40,8 @@ public class AppStateSmsPremBridge extends AppStateBaseBridge {
         }
     }
 
-    @Override // com.android.settings.applications.AppStateBaseBridge
-    protected void updateExtraInfo(ApplicationsState.AppEntry appEntry, String str, int i) {
+    /* access modifiers changed from: protected */
+    public void updateExtraInfo(ApplicationsState.AppEntry appEntry, String str, int i) {
         appEntry.extraInfo = getState(str);
     }
 

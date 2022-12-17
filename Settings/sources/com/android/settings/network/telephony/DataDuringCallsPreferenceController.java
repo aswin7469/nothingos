@@ -1,11 +1,14 @@
 package com.android.settings.network.telephony;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Looper;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
@@ -13,47 +16,42 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.SwitchPreference;
 import com.android.internal.annotations.VisibleForTesting;
+import com.android.settings.datausage.DataUsageUtils;
 import com.android.settings.network.MobileDataContentObserver;
 import com.android.settings.network.SubscriptionsChangeListener;
-import com.android.settings.slices.SliceBackgroundWorker;
-/* loaded from: classes.dex */
+
 public class DataDuringCallsPreferenceController extends TelephonyTogglePreferenceController implements LifecycleObserver, SubscriptionsChangeListener.SubscriptionsChangeListenerClient {
+    private static final String TAG = "DataDuringCalls";
     private SubscriptionsChangeListener mChangeListener;
+    private final BroadcastReceiver mDefaultDataChangedReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            if (DataDuringCallsPreferenceController.this.mPreference != null) {
+                Log.d(DataDuringCallsPreferenceController.TAG, "DDS is changed");
+                DataDuringCallsPreferenceController.this.lambda$onResume$0();
+            }
+        }
+    };
     private TelephonyManager mManager;
     private MobileDataContentObserver mMobileDataContentObserver;
-    private SwitchPreference mPreference;
+    /* access modifiers changed from: private */
+    public SwitchPreference mPreference;
     private PreferenceScreen mScreen;
 
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.network.SubscriptionsChangeListener.SubscriptionsChangeListenerClient
     public void onAirplaneModeChanged(boolean z) {
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -62,10 +60,10 @@ public class DataDuringCallsPreferenceController extends TelephonyTogglePreferen
         super(context, str);
     }
 
-    public void init(Lifecycle lifecycle, int i) {
+    /* access modifiers changed from: package-private */
+    public void init(int i) {
         this.mSubId = i;
         this.mManager = ((TelephonyManager) this.mContext.getSystemService(TelephonyManager.class)).createForSubscriptionId(i);
-        lifecycle.addObserver(this);
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
@@ -77,18 +75,14 @@ public class DataDuringCallsPreferenceController extends TelephonyTogglePreferen
         if (this.mMobileDataContentObserver == null) {
             MobileDataContentObserver mobileDataContentObserver = new MobileDataContentObserver(new Handler(Looper.getMainLooper()));
             this.mMobileDataContentObserver = mobileDataContentObserver;
-            mobileDataContentObserver.setOnMobileDataChangedListener(new MobileDataContentObserver.OnMobileDataChangedListener() { // from class: com.android.settings.network.telephony.DataDuringCallsPreferenceController$$ExternalSyntheticLambda0
-                @Override // com.android.settings.network.MobileDataContentObserver.OnMobileDataChangedListener
-                public final void onMobileDataChanged() {
-                    DataDuringCallsPreferenceController.this.lambda$onResume$0();
-                }
-            });
+            mobileDataContentObserver.setOnMobileDataChangedListener(new DataDuringCallsPreferenceController$$ExternalSyntheticLambda0(this));
         }
         this.mMobileDataContentObserver.register(this.mContext, this.mSubId);
         int defaultDataSubscriptionId = SubscriptionManager.getDefaultDataSubscriptionId();
         if (defaultDataSubscriptionId != this.mSubId) {
             this.mMobileDataContentObserver.register(this.mContext, defaultDataSubscriptionId);
         }
+        this.mContext.registerReceiver(this.mDefaultDataChangedReceiver, new IntentFilter("android.intent.action.ACTION_DEFAULT_DATA_SUBSCRIPTION_CHANGED"));
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
@@ -101,44 +95,55 @@ public class DataDuringCallsPreferenceController extends TelephonyTogglePreferen
         if (mobileDataContentObserver != null) {
             mobileDataContentObserver.unRegister(this.mContext);
         }
+        BroadcastReceiver broadcastReceiver = this.mDefaultDataChangedReceiver;
+        if (broadcastReceiver != null) {
+            this.mContext.unregisterReceiver(broadcastReceiver);
+        }
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = (SwitchPreference) preferenceScreen.findPreference(getPreferenceKey());
         this.mScreen = preferenceScreen;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean isChecked() {
-        return this.mManager.isMobileDataPolicyEnabled(1);
+        TelephonyManager telephonyManager = this.mManager;
+        if (telephonyManager == null) {
+            return false;
+        }
+        return telephonyManager.isMobileDataPolicyEnabled(1);
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean setChecked(boolean z) {
         this.mManager.setMobileDataPolicyEnabled(1, z);
         return true;
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.network.telephony.TelephonyAvailabilityCallback
+    /* access modifiers changed from: protected */
+    @VisibleForTesting
+    public boolean hasMobileData() {
+        return DataUsageUtils.hasMobileData(this.mContext);
+    }
+
     public int getAvailabilityStatus(int i) {
-        if (!SubscriptionManager.isValidSubscriptionId(i) || SubscriptionManager.getDefaultDataSubscriptionId() == i || !this.mManager.createForSubscriptionId(SubscriptionManager.getDefaultDataSubscriptionId()).isDataEnabled()) {
+        TelephonyManager telephonyManager;
+        if (!SubscriptionManager.isValidSubscriptionId(i) || SubscriptionManager.getDefaultDataSubscriptionId() == i || !hasMobileData() || (telephonyManager = this.mManager) == null || !telephonyManager.createForSubscriptionId(SubscriptionManager.getDefaultDataSubscriptionId()).isDataEnabled()) {
             return 2;
         }
-        return (!TelephonyUtils.isSubsidyFeatureEnabled(this.mContext) || TelephonyUtils.isSubsidySimCard(this.mContext, SubscriptionManager.getSlotIndex(this.mSubId))) ? 0 : 2;
+        if (!TelephonyUtils.isSubsidyFeatureEnabled(this.mContext) || TelephonyUtils.isSubsidySimCard(this.mContext, SubscriptionManager.getSlotIndex(this.mSubId))) {
+            return 0;
+        }
+        return 2;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
-        if (preference == null) {
-            return;
+        if (preference != null) {
+            preference.setVisible(isAvailable());
         }
-        preference.setVisible(isAvailable());
     }
 
-    @Override // com.android.settings.network.SubscriptionsChangeListener.SubscriptionsChangeListenerClient
     public void onSubscriptionsChanged() {
         updateState(this.mPreference);
     }

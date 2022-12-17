@@ -1,71 +1,70 @@
 package androidx.dynamicanimation.animation;
 
+import android.util.AndroidRuntimeException;
 import androidx.dynamicanimation.animation.DynamicAnimation;
-/* loaded from: classes.dex */
-public final class SpringAnimation extends DynamicAnimation<SpringAnimation> {
-    private SpringForce mSpring = null;
-    private float mPendingPosition = Float.MAX_VALUE;
-    private boolean mEndRequested = false;
 
-    public <K> SpringAnimation(K object, FloatPropertyCompat<K> property) {
-        super(object, property);
+public final class SpringAnimation extends DynamicAnimation<SpringAnimation> {
+    private boolean mEndRequested = false;
+    private float mPendingPosition = Float.MAX_VALUE;
+    private SpringForce mSpring = null;
+
+    public <K> SpringAnimation(K k, FloatPropertyCompat<K> floatPropertyCompat) {
+        super(k, floatPropertyCompat);
     }
 
-    public SpringAnimation setSpring(SpringForce force) {
-        this.mSpring = force;
+    public SpringAnimation setSpring(SpringForce springForce) {
+        this.mSpring = springForce;
         return this;
     }
 
-    @Override // androidx.dynamicanimation.animation.DynamicAnimation
     public void start() {
         sanityCheck();
-        this.mSpring.setValueThreshold(getValueThreshold());
+        this.mSpring.setValueThreshold((double) getValueThreshold());
         super.start();
     }
 
-    public void animateToFinalPosition(float finalPosition) {
+    public void animateToFinalPosition(float f) {
         if (isRunning()) {
-            this.mPendingPosition = finalPosition;
+            this.mPendingPosition = f;
             return;
         }
         if (this.mSpring == null) {
-            this.mSpring = new SpringForce(finalPosition);
+            this.mSpring = new SpringForce(f);
         }
-        this.mSpring.setFinalPosition(finalPosition);
+        this.mSpring.setFinalPosition(f);
         start();
     }
 
-    @Override // androidx.dynamicanimation.animation.DynamicAnimation
-    public void cancel() {
-        super.cancel();
-        float f = this.mPendingPosition;
-        if (f != Float.MAX_VALUE) {
-            SpringForce springForce = this.mSpring;
-            if (springForce == null) {
-                this.mSpring = new SpringForce(f);
-            } else {
-                springForce.setFinalPosition(f);
-            }
-            this.mPendingPosition = Float.MAX_VALUE;
+    public void skipToEnd() {
+        if (!canSkipToEnd()) {
+            throw new UnsupportedOperationException("Spring animations can only come to an end when there is damping");
+        } else if (!getAnimationHandler().isCurrentThread()) {
+            throw new AndroidRuntimeException("Animations may only be started on the same thread as the animation handler");
+        } else if (this.mRunning) {
+            this.mEndRequested = true;
         }
+    }
+
+    public boolean canSkipToEnd() {
+        return this.mSpring.mDampingRatio > 0.0d;
     }
 
     private void sanityCheck() {
         SpringForce springForce = this.mSpring;
-        if (springForce == null) {
+        if (springForce != null) {
+            double finalPosition = (double) springForce.getFinalPosition();
+            if (finalPosition > ((double) this.mMaxValue)) {
+                throw new UnsupportedOperationException("Final position of the spring cannot be greater than the max value.");
+            } else if (finalPosition < ((double) this.mMinValue)) {
+                throw new UnsupportedOperationException("Final position of the spring cannot be less than the min value.");
+            }
+        } else {
             throw new UnsupportedOperationException("Incomplete SpringAnimation: Either final position or a spring force needs to be set.");
-        }
-        double finalPosition = springForce.getFinalPosition();
-        if (finalPosition > this.mMaxValue) {
-            throw new UnsupportedOperationException("Final position of the spring cannot be greater than the max value.");
-        }
-        if (finalPosition < this.mMinValue) {
-            throw new UnsupportedOperationException("Final position of the spring cannot be less than the min value.");
         }
     }
 
-    @Override // androidx.dynamicanimation.animation.DynamicAnimation
-    boolean updateValueAndVelocity(long deltaT) {
+    /* access modifiers changed from: package-private */
+    public boolean updateValueAndVelocity(long j) {
         if (this.mEndRequested) {
             float f = this.mPendingPosition;
             if (f != Float.MAX_VALUE) {
@@ -78,15 +77,15 @@ public final class SpringAnimation extends DynamicAnimation<SpringAnimation> {
             return true;
         }
         if (this.mPendingPosition != Float.MAX_VALUE) {
-            long j = deltaT / 2;
-            DynamicAnimation.MassState updateValues = this.mSpring.updateValues(this.mValue, this.mVelocity, j);
+            long j2 = j / 2;
+            DynamicAnimation.MassState updateValues = this.mSpring.updateValues((double) this.mValue, (double) this.mVelocity, j2);
             this.mSpring.setFinalPosition(this.mPendingPosition);
             this.mPendingPosition = Float.MAX_VALUE;
-            DynamicAnimation.MassState updateValues2 = this.mSpring.updateValues(updateValues.mValue, updateValues.mVelocity, j);
+            DynamicAnimation.MassState updateValues2 = this.mSpring.updateValues((double) updateValues.mValue, (double) updateValues.mVelocity, j2);
             this.mValue = updateValues2.mValue;
             this.mVelocity = updateValues2.mVelocity;
         } else {
-            DynamicAnimation.MassState updateValues3 = this.mSpring.updateValues(this.mValue, this.mVelocity, deltaT);
+            DynamicAnimation.MassState updateValues3 = this.mSpring.updateValues((double) this.mValue, (double) this.mVelocity, j);
             this.mValue = updateValues3.mValue;
             this.mVelocity = updateValues3.mVelocity;
         }
@@ -102,7 +101,8 @@ public final class SpringAnimation extends DynamicAnimation<SpringAnimation> {
         return true;
     }
 
-    boolean isAtEquilibrium(float value, float velocity) {
-        return this.mSpring.isAtEquilibrium(value, velocity);
+    /* access modifiers changed from: package-private */
+    public boolean isAtEquilibrium(float f, float f2) {
+        return this.mSpring.isAtEquilibrium(f, f2);
     }
 }

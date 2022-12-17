@@ -1,11 +1,9 @@
 package androidx.core.view;
 
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
-import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -14,99 +12,69 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.PointerIcon;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.ViewTreeObserver;
 import android.view.WindowInsets;
-import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 import androidx.core.R$id;
 import androidx.core.view.AccessibilityDelegateCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.core.view.accessibility.AccessibilityViewCommand;
-import java.lang.ref.WeakReference;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+
 @SuppressLint({"PrivateConstructorForUtilityClass"})
-/* loaded from: classes.dex */
 public class ViewCompat {
-    private static Field sAccessibilityDelegateField;
-    private static Field sMinHeightField;
-    private static boolean sMinHeightFieldFetched;
-    private static Field sMinWidthField;
-    private static boolean sMinWidthFieldFetched;
-    private static ThreadLocal<Rect> sThreadLocalRect;
-    private static WeakHashMap<View, String> sTransitionNameMap;
+    private static final int[] ACCESSIBILITY_ACTIONS_RESOURCE_IDS = {R$id.accessibility_custom_action_0, R$id.accessibility_custom_action_1, R$id.accessibility_custom_action_2, R$id.accessibility_custom_action_3, R$id.accessibility_custom_action_4, R$id.accessibility_custom_action_5, R$id.accessibility_custom_action_6, R$id.accessibility_custom_action_7, R$id.accessibility_custom_action_8, R$id.accessibility_custom_action_9, R$id.accessibility_custom_action_10, R$id.accessibility_custom_action_11, R$id.accessibility_custom_action_12, R$id.accessibility_custom_action_13, R$id.accessibility_custom_action_14, R$id.accessibility_custom_action_15, R$id.accessibility_custom_action_16, R$id.accessibility_custom_action_17, R$id.accessibility_custom_action_18, R$id.accessibility_custom_action_19, R$id.accessibility_custom_action_20, R$id.accessibility_custom_action_21, R$id.accessibility_custom_action_22, R$id.accessibility_custom_action_23, R$id.accessibility_custom_action_24, R$id.accessibility_custom_action_25, R$id.accessibility_custom_action_26, R$id.accessibility_custom_action_27, R$id.accessibility_custom_action_28, R$id.accessibility_custom_action_29, R$id.accessibility_custom_action_30, R$id.accessibility_custom_action_31};
+    private static final OnReceiveContentViewBehavior NO_OP_ON_RECEIVE_CONTENT_VIEW_BEHAVIOR = new ViewCompat$$ExternalSyntheticLambda0();
+    private static boolean sAccessibilityDelegateCheckFailed = false;
+    private static final AccessibilityPaneVisibilityManager sAccessibilityPaneVisibilityManager = new AccessibilityPaneVisibilityManager();
     private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
     private static WeakHashMap<View, ViewPropertyAnimatorCompat> sViewPropertyAnimatorMap = null;
-    private static boolean sAccessibilityDelegateCheckFailed = false;
-    private static final int[] ACCESSIBILITY_ACTIONS_RESOURCE_IDS = {R$id.accessibility_custom_action_0, R$id.accessibility_custom_action_1, R$id.accessibility_custom_action_2, R$id.accessibility_custom_action_3, R$id.accessibility_custom_action_4, R$id.accessibility_custom_action_5, R$id.accessibility_custom_action_6, R$id.accessibility_custom_action_7, R$id.accessibility_custom_action_8, R$id.accessibility_custom_action_9, R$id.accessibility_custom_action_10, R$id.accessibility_custom_action_11, R$id.accessibility_custom_action_12, R$id.accessibility_custom_action_13, R$id.accessibility_custom_action_14, R$id.accessibility_custom_action_15, R$id.accessibility_custom_action_16, R$id.accessibility_custom_action_17, R$id.accessibility_custom_action_18, R$id.accessibility_custom_action_19, R$id.accessibility_custom_action_20, R$id.accessibility_custom_action_21, R$id.accessibility_custom_action_22, R$id.accessibility_custom_action_23, R$id.accessibility_custom_action_24, R$id.accessibility_custom_action_25, R$id.accessibility_custom_action_26, R$id.accessibility_custom_action_27, R$id.accessibility_custom_action_28, R$id.accessibility_custom_action_29, R$id.accessibility_custom_action_30, R$id.accessibility_custom_action_31};
-    private static final OnReceiveContentViewBehavior NO_OP_ON_RECEIVE_CONTENT_VIEW_BEHAVIOR = new OnReceiveContentViewBehavior() { // from class: androidx.core.view.ViewCompat.1
-        @Override // androidx.core.view.OnReceiveContentViewBehavior
-        public ContentInfoCompat onReceiveContent(ContentInfoCompat payload) {
-            return payload;
-        }
-    };
-    private static AccessibilityPaneVisibilityManager sAccessibilityPaneVisibilityManager = new AccessibilityPaneVisibilityManager();
 
-    /* loaded from: classes.dex */
-    public interface OnUnhandledKeyEventListenerCompat {
-        boolean onUnhandledKeyEvent(View v, KeyEvent event);
+    static boolean dispatchUnhandledKeyEventBeforeHierarchy(View view, KeyEvent keyEvent) {
+        return false;
     }
 
-    private static Rect getEmptyTempRect() {
-        if (sThreadLocalRect == null) {
-            sThreadLocalRect = new ThreadLocal<>();
-        }
-        Rect rect = sThreadLocalRect.get();
-        if (rect == null) {
-            rect = new Rect();
-            sThreadLocalRect.set(rect);
-        }
-        rect.setEmpty();
-        return rect;
+    public static void saveAttributeDataForStyleable(View view, @SuppressLint({"ContextFirst"}) Context context, int[] iArr, AttributeSet attributeSet, TypedArray typedArray, int i, int i2) {
+        Api29Impl.saveAttributeDataForStyleable(view, context, iArr, attributeSet, typedArray, i, i2);
     }
 
-    public static void saveAttributeDataForStyleable(View view, @SuppressLint({"ContextFirst"}) Context context, int[] styleable, AttributeSet attrs, TypedArray t, int defStyleAttr, int defStyleRes) {
-        if (Build.VERSION.SDK_INT >= 29) {
-            Api29Impl.saveAttributeDataForStyleable(view, context, styleable, attrs, t, defStyleAttr, defStyleRes);
-        }
+    public static void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
+        view.onInitializeAccessibilityNodeInfo(accessibilityNodeInfoCompat.unwrap());
     }
 
-    public static void onInitializeAccessibilityNodeInfo(View v, AccessibilityNodeInfoCompat info) {
-        v.onInitializeAccessibilityNodeInfo(info.unwrap());
-    }
-
-    public static void setAccessibilityDelegate(View v, AccessibilityDelegateCompat delegate) {
-        if (delegate == null && (getAccessibilityDelegateInternal(v) instanceof AccessibilityDelegateCompat.AccessibilityDelegateAdapter)) {
-            delegate = new AccessibilityDelegateCompat();
+    public static void setAccessibilityDelegate(View view, AccessibilityDelegateCompat accessibilityDelegateCompat) {
+        View.AccessibilityDelegate accessibilityDelegate;
+        if (accessibilityDelegateCompat == null && (getAccessibilityDelegateInternal(view) instanceof AccessibilityDelegateCompat.AccessibilityDelegateAdapter)) {
+            accessibilityDelegateCompat = new AccessibilityDelegateCompat();
         }
-        v.setAccessibilityDelegate(delegate == null ? null : delegate.getBridge());
+        if (accessibilityDelegateCompat == null) {
+            accessibilityDelegate = null;
+        } else {
+            accessibilityDelegate = accessibilityDelegateCompat.getBridge();
+        }
+        view.setAccessibilityDelegate(accessibilityDelegate);
     }
 
     @SuppressLint({"InlinedApi"})
-    public static int getImportantForAutofill(View v) {
-        if (Build.VERSION.SDK_INT >= 26) {
-            return v.getImportantForAutofill();
-        }
-        return 0;
+    public static int getImportantForAutofill(View view) {
+        return Api26Impl.getImportantForAutofill(view);
     }
 
-    public static void setImportantForAutofill(View v, int mode) {
-        if (Build.VERSION.SDK_INT >= 26) {
-            v.setImportantForAutofill(mode);
-        }
+    public static void setImportantForAutofill(View view, int i) {
+        Api26Impl.setImportantForAutofill(view, i);
+    }
+
+    public static boolean hasAccessibilityDelegate(View view) {
+        return getAccessibilityDelegateInternal(view) != null;
     }
 
     public static AccessibilityDelegateCompat getAccessibilityDelegate(View view) {
@@ -120,132 +88,63 @@ public class ViewCompat {
         return new AccessibilityDelegateCompat(accessibilityDelegateInternal);
     }
 
-    static AccessibilityDelegateCompat getOrCreateAccessibilityDelegateCompat(View v) {
-        AccessibilityDelegateCompat accessibilityDelegate = getAccessibilityDelegate(v);
+    static void ensureAccessibilityDelegateCompat(View view) {
+        AccessibilityDelegateCompat accessibilityDelegate = getAccessibilityDelegate(view);
         if (accessibilityDelegate == null) {
             accessibilityDelegate = new AccessibilityDelegateCompat();
         }
-        setAccessibilityDelegate(v, accessibilityDelegate);
-        return accessibilityDelegate;
+        setAccessibilityDelegate(view, accessibilityDelegate);
     }
 
-    private static View.AccessibilityDelegate getAccessibilityDelegateInternal(View v) {
-        if (Build.VERSION.SDK_INT >= 29) {
-            return v.getAccessibilityDelegate();
-        }
-        return getAccessibilityDelegateThroughReflection(v);
-    }
-
-    private static View.AccessibilityDelegate getAccessibilityDelegateThroughReflection(View v) {
-        if (sAccessibilityDelegateCheckFailed) {
-            return null;
-        }
-        if (sAccessibilityDelegateField == null) {
-            try {
-                Field declaredField = View.class.getDeclaredField("mAccessibilityDelegate");
-                sAccessibilityDelegateField = declaredField;
-                declaredField.setAccessible(true);
-            } catch (Throwable unused) {
-                sAccessibilityDelegateCheckFailed = true;
-                return null;
-            }
-        }
-        try {
-            Object obj = sAccessibilityDelegateField.get(v);
-            if (!(obj instanceof View.AccessibilityDelegate)) {
-                return null;
-            }
-            return (View.AccessibilityDelegate) obj;
-        } catch (Throwable unused2) {
-            sAccessibilityDelegateCheckFailed = true;
-            return null;
-        }
+    private static View.AccessibilityDelegate getAccessibilityDelegateInternal(View view) {
+        return Api29Impl.getAccessibilityDelegate(view);
     }
 
     public static boolean hasTransientState(View view) {
-        if (Build.VERSION.SDK_INT >= 16) {
-            return view.hasTransientState();
-        }
-        return false;
+        return Api16Impl.hasTransientState(view);
     }
 
-    public static void setHasTransientState(View view, boolean hasTransientState) {
-        if (Build.VERSION.SDK_INT >= 16) {
-            view.setHasTransientState(hasTransientState);
-        }
+    public static void setHasTransientState(View view, boolean z) {
+        Api16Impl.setHasTransientState(view, z);
     }
 
     public static void postInvalidateOnAnimation(View view) {
-        if (Build.VERSION.SDK_INT >= 16) {
-            view.postInvalidateOnAnimation();
-        } else {
-            view.postInvalidate();
-        }
+        Api16Impl.postInvalidateOnAnimation(view);
     }
 
-    public static void postInvalidateOnAnimation(View view, int left, int top, int right, int bottom) {
-        if (Build.VERSION.SDK_INT >= 16) {
-            view.postInvalidateOnAnimation(left, top, right, bottom);
-        } else {
-            view.postInvalidate(left, top, right, bottom);
-        }
+    public static void postOnAnimation(View view, Runnable runnable) {
+        Api16Impl.postOnAnimation(view, runnable);
     }
 
-    public static void postOnAnimation(View view, Runnable action) {
-        if (Build.VERSION.SDK_INT >= 16) {
-            view.postOnAnimation(action);
-        } else {
-            view.postDelayed(action, ValueAnimator.getFrameDelay());
-        }
-    }
-
-    public static void postOnAnimationDelayed(View view, Runnable action, long delayMillis) {
-        if (Build.VERSION.SDK_INT >= 16) {
-            view.postOnAnimationDelayed(action, delayMillis);
-        } else {
-            view.postDelayed(action, ValueAnimator.getFrameDelay() + delayMillis);
-        }
+    @SuppressLint({"LambdaLast"})
+    public static void postOnAnimationDelayed(View view, Runnable runnable, long j) {
+        Api16Impl.postOnAnimationDelayed(view, runnable, j);
     }
 
     public static int getImportantForAccessibility(View view) {
-        if (Build.VERSION.SDK_INT >= 16) {
-            return view.getImportantForAccessibility();
-        }
-        return 0;
+        return Api16Impl.getImportantForAccessibility(view);
     }
 
-    public static void setImportantForAccessibility(View view, int mode) {
-        int i = Build.VERSION.SDK_INT;
-        if (i >= 19) {
-            view.setImportantForAccessibility(mode);
-        } else if (i < 16) {
-        } else {
-            if (mode == 4) {
-                mode = 2;
-            }
-            view.setImportantForAccessibility(mode);
-        }
+    public static void setImportantForAccessibility(View view, int i) {
+        Api16Impl.setImportantForAccessibility(view, i);
     }
 
-    public static boolean performAccessibilityAction(View view, int action, Bundle arguments) {
-        if (Build.VERSION.SDK_INT >= 16) {
-            return view.performAccessibilityAction(action, arguments);
-        }
-        return false;
+    public static boolean performAccessibilityAction(View view, int i, Bundle bundle) {
+        return Api16Impl.performAccessibilityAction(view, i, bundle);
     }
 
-    public static int addAccessibilityAction(View view, CharSequence label, AccessibilityViewCommand command) {
-        int availableActionIdFromResources = getAvailableActionIdFromResources(view, label);
+    public static int addAccessibilityAction(View view, CharSequence charSequence, AccessibilityViewCommand accessibilityViewCommand) {
+        int availableActionIdFromResources = getAvailableActionIdFromResources(view, charSequence);
         if (availableActionIdFromResources != -1) {
-            addAccessibilityAction(view, new AccessibilityNodeInfoCompat.AccessibilityActionCompat(availableActionIdFromResources, label, command));
+            addAccessibilityAction(view, new AccessibilityNodeInfoCompat.AccessibilityActionCompat(availableActionIdFromResources, charSequence, accessibilityViewCommand));
         }
         return availableActionIdFromResources;
     }
 
-    private static int getAvailableActionIdFromResources(View view, CharSequence label) {
+    private static int getAvailableActionIdFromResources(View view, CharSequence charSequence) {
         List<AccessibilityNodeInfoCompat.AccessibilityActionCompat> actionList = getActionList(view);
         for (int i = 0; i < actionList.size(); i++) {
-            if (TextUtils.equals(label, actionList.get(i).getLabel())) {
+            if (TextUtils.equals(charSequence, actionList.get(i).getLabel())) {
                 return actionList.get(i).getId();
             }
         }
@@ -254,7 +153,7 @@ public class ViewCompat {
         while (true) {
             int[] iArr = ACCESSIBILITY_ACTIONS_RESOURCE_IDS;
             if (i3 >= iArr.length || i2 != -1) {
-                break;
+                return i2;
             }
             int i4 = iArr[i3];
             boolean z = true;
@@ -269,35 +168,31 @@ public class ViewCompat {
         return i2;
     }
 
-    public static void replaceAccessibilityAction(View view, AccessibilityNodeInfoCompat.AccessibilityActionCompat replacedAction, CharSequence label, AccessibilityViewCommand command) {
-        if (command == null && label == null) {
-            removeAccessibilityAction(view, replacedAction.getId());
+    public static void replaceAccessibilityAction(View view, AccessibilityNodeInfoCompat.AccessibilityActionCompat accessibilityActionCompat, CharSequence charSequence, AccessibilityViewCommand accessibilityViewCommand) {
+        if (accessibilityViewCommand == null && charSequence == null) {
+            removeAccessibilityAction(view, accessibilityActionCompat.getId());
         } else {
-            addAccessibilityAction(view, replacedAction.createReplacementAction(label, command));
+            addAccessibilityAction(view, accessibilityActionCompat.createReplacementAction(charSequence, accessibilityViewCommand));
         }
     }
 
-    private static void addAccessibilityAction(View view, AccessibilityNodeInfoCompat.AccessibilityActionCompat action) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            getOrCreateAccessibilityDelegateCompat(view);
-            removeActionWithId(action.getId(), view);
-            getActionList(view).add(action);
-            notifyViewAccessibilityStateChangedIfNeeded(view, 0);
-        }
+    private static void addAccessibilityAction(View view, AccessibilityNodeInfoCompat.AccessibilityActionCompat accessibilityActionCompat) {
+        ensureAccessibilityDelegateCompat(view);
+        removeActionWithId(accessibilityActionCompat.getId(), view);
+        getActionList(view).add(accessibilityActionCompat);
+        notifyViewAccessibilityStateChangedIfNeeded(view, 0);
     }
 
-    public static void removeAccessibilityAction(View view, int actionId) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            removeActionWithId(actionId, view);
-            notifyViewAccessibilityStateChangedIfNeeded(view, 0);
-        }
+    public static void removeAccessibilityAction(View view, int i) {
+        removeActionWithId(i, view);
+        notifyViewAccessibilityStateChangedIfNeeded(view, 0);
     }
 
-    private static void removeActionWithId(int actionId, View view) {
+    private static void removeActionWithId(int i, View view) {
         List<AccessibilityNodeInfoCompat.AccessibilityActionCompat> actionList = getActionList(view);
-        for (int i = 0; i < actionList.size(); i++) {
-            if (actionList.get(i).getId() == actionId) {
-                actionList.remove(i);
+        for (int i2 = 0; i2 < actionList.size(); i2++) {
+            if (actionList.get(i2).getId() == i) {
+                actionList.remove(i2);
                 return;
             }
         }
@@ -306,128 +201,56 @@ public class ViewCompat {
     private static List<AccessibilityNodeInfoCompat.AccessibilityActionCompat> getActionList(View view) {
         int i = R$id.tag_accessibility_actions;
         ArrayList arrayList = (ArrayList) view.getTag(i);
-        if (arrayList == null) {
-            ArrayList arrayList2 = new ArrayList();
-            view.setTag(i, arrayList2);
-            return arrayList2;
+        if (arrayList != null) {
+            return arrayList;
         }
-        return arrayList;
+        ArrayList arrayList2 = new ArrayList();
+        view.setTag(i, arrayList2);
+        return arrayList2;
     }
 
-    public static void setStateDescription(View view, CharSequence stateDescription) {
-        if (Build.VERSION.SDK_INT >= 19) {
-            stateDescriptionProperty().set(view, stateDescription);
-        }
+    public static void setStateDescription(View view, CharSequence charSequence) {
+        stateDescriptionProperty().set(view, charSequence);
     }
 
-    public static final CharSequence getStateDescription(View view) {
+    public static CharSequence getStateDescription(View view) {
         return stateDescriptionProperty().get(view);
     }
 
-    public static void setLayerPaint(View view, Paint paint) {
-        if (Build.VERSION.SDK_INT >= 17) {
-            view.setLayerPaint(paint);
-            return;
-        }
-        view.setLayerType(view.getLayerType(), paint);
-        view.invalidate();
-    }
-
     public static int getLayoutDirection(View view) {
-        if (Build.VERSION.SDK_INT >= 17) {
-            return view.getLayoutDirection();
-        }
-        return 0;
+        return Api17Impl.getLayoutDirection(view);
     }
 
     public static ViewParent getParentForAccessibility(View view) {
-        if (Build.VERSION.SDK_INT >= 16) {
-            return view.getParentForAccessibility();
-        }
-        return view.getParent();
+        return Api16Impl.getParentForAccessibility(view);
     }
 
     public static int getAccessibilityLiveRegion(View view) {
-        if (Build.VERSION.SDK_INT >= 19) {
-            return view.getAccessibilityLiveRegion();
-        }
-        return 0;
+        return Api19Impl.getAccessibilityLiveRegion(view);
     }
 
-    public static void setAccessibilityLiveRegion(View view, int mode) {
-        if (Build.VERSION.SDK_INT >= 19) {
-            view.setAccessibilityLiveRegion(mode);
-        }
+    public static void setAccessibilityLiveRegion(View view, int i) {
+        Api19Impl.setAccessibilityLiveRegion(view, i);
     }
 
     public static int getPaddingStart(View view) {
-        if (Build.VERSION.SDK_INT >= 17) {
-            return view.getPaddingStart();
-        }
-        return view.getPaddingLeft();
+        return Api17Impl.getPaddingStart(view);
     }
 
     public static int getPaddingEnd(View view) {
-        if (Build.VERSION.SDK_INT >= 17) {
-            return view.getPaddingEnd();
-        }
-        return view.getPaddingRight();
+        return Api17Impl.getPaddingEnd(view);
     }
 
-    public static void setPaddingRelative(View view, int start, int top, int end, int bottom) {
-        if (Build.VERSION.SDK_INT >= 17) {
-            view.setPaddingRelative(start, top, end, bottom);
-        } else {
-            view.setPadding(start, top, end, bottom);
-        }
+    public static void setPaddingRelative(View view, int i, int i2, int i3, int i4) {
+        Api17Impl.setPaddingRelative(view, i, i2, i3, i4);
     }
 
     public static int getMinimumWidth(View view) {
-        if (Build.VERSION.SDK_INT >= 16) {
-            return view.getMinimumWidth();
-        }
-        if (!sMinWidthFieldFetched) {
-            try {
-                Field declaredField = View.class.getDeclaredField("mMinWidth");
-                sMinWidthField = declaredField;
-                declaredField.setAccessible(true);
-            } catch (NoSuchFieldException unused) {
-            }
-            sMinWidthFieldFetched = true;
-        }
-        Field field = sMinWidthField;
-        if (field == null) {
-            return 0;
-        }
-        try {
-            return ((Integer) field.get(view)).intValue();
-        } catch (Exception unused2) {
-            return 0;
-        }
+        return Api16Impl.getMinimumWidth(view);
     }
 
     public static int getMinimumHeight(View view) {
-        if (Build.VERSION.SDK_INT >= 16) {
-            return view.getMinimumHeight();
-        }
-        if (!sMinHeightFieldFetched) {
-            try {
-                Field declaredField = View.class.getDeclaredField("mMinHeight");
-                sMinHeightField = declaredField;
-                declaredField.setAccessible(true);
-            } catch (NoSuchFieldException unused) {
-            }
-            sMinHeightFieldFetched = true;
-        }
-        Field field = sMinHeightField;
-        if (field == null) {
-            return 0;
-        }
-        try {
-            return ((Integer) field.get(view)).intValue();
-        } catch (Exception unused2) {
-            return 0;
-        }
+        return Api16Impl.getMinimumHeight(view);
     }
 
     public static ViewPropertyAnimatorCompat animate(View view) {
@@ -435,12 +258,12 @@ public class ViewCompat {
             sViewPropertyAnimatorMap = new WeakHashMap<>();
         }
         ViewPropertyAnimatorCompat viewPropertyAnimatorCompat = sViewPropertyAnimatorMap.get(view);
-        if (viewPropertyAnimatorCompat == null) {
-            ViewPropertyAnimatorCompat viewPropertyAnimatorCompat2 = new ViewPropertyAnimatorCompat(view);
-            sViewPropertyAnimatorMap.put(view, viewPropertyAnimatorCompat2);
-            return viewPropertyAnimatorCompat2;
+        if (viewPropertyAnimatorCompat != null) {
+            return viewPropertyAnimatorCompat;
         }
-        return viewPropertyAnimatorCompat;
+        ViewPropertyAnimatorCompat viewPropertyAnimatorCompat2 = new ViewPropertyAnimatorCompat(view);
+        sViewPropertyAnimatorMap.put(view, viewPropertyAnimatorCompat2);
+        return viewPropertyAnimatorCompat2;
     }
 
     @Deprecated
@@ -448,475 +271,205 @@ public class ViewCompat {
         return view.getY();
     }
 
-    public static void setElevation(View view, float elevation) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            view.setElevation(elevation);
-        }
+    public static void setElevation(View view, float f) {
+        Api21Impl.setElevation(view, f);
     }
 
     public static float getElevation(View view) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            return view.getElevation();
-        }
-        return 0.0f;
+        return Api21Impl.getElevation(view);
     }
 
-    public static void setTranslationZ(View view, float translationZ) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            view.setTranslationZ(translationZ);
-        }
+    public static void setTranslationZ(View view, float f) {
+        Api21Impl.setTranslationZ(view, f);
     }
 
     public static float getTranslationZ(View view) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            return view.getTranslationZ();
-        }
-        return 0.0f;
+        return Api21Impl.getTranslationZ(view);
     }
 
-    public static void setTransitionName(View view, String transitionName) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            view.setTransitionName(transitionName);
-            return;
-        }
-        if (sTransitionNameMap == null) {
-            sTransitionNameMap = new WeakHashMap<>();
-        }
-        sTransitionNameMap.put(view, transitionName);
+    public static void setTransitionName(View view, String str) {
+        Api21Impl.setTransitionName(view, str);
     }
 
     public static String getTransitionName(View view) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            return view.getTransitionName();
-        }
-        WeakHashMap<View, String> weakHashMap = sTransitionNameMap;
-        if (weakHashMap != null) {
-            return weakHashMap.get(view);
-        }
-        return null;
-    }
-
-    public static int getWindowSystemUiVisibility(View view) {
-        if (Build.VERSION.SDK_INT >= 16) {
-            return view.getWindowSystemUiVisibility();
-        }
-        return 0;
-    }
-
-    public static void requestApplyInsets(View view) {
-        int i = Build.VERSION.SDK_INT;
-        if (i >= 20) {
-            view.requestApplyInsets();
-        } else if (i < 16) {
-        } else {
-            view.requestFitSystemWindows();
-        }
-    }
-
-    public static boolean getFitsSystemWindows(View v) {
-        if (Build.VERSION.SDK_INT >= 16) {
-            return v.getFitsSystemWindows();
-        }
-        return false;
+        return Api21Impl.getTransitionName(view);
     }
 
     @Deprecated
-    public static void setFitsSystemWindows(View view, boolean fitSystemWindows) {
-        view.setFitsSystemWindows(fitSystemWindows);
+    public static int getWindowSystemUiVisibility(View view) {
+        return Api16Impl.getWindowSystemUiVisibility(view);
     }
 
-    public static void setOnApplyWindowInsetsListener(final View v, final OnApplyWindowInsetsListener listener) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            Api21Impl.setOnApplyWindowInsetsListener(v, listener);
-        }
+    public static void requestApplyInsets(View view) {
+        Api20Impl.requestApplyInsets(view);
     }
 
-    public static WindowInsetsCompat onApplyWindowInsets(View view, WindowInsetsCompat insets) {
-        WindowInsets windowInsets;
-        if (Build.VERSION.SDK_INT >= 21 && (windowInsets = insets.toWindowInsets()) != null) {
-            WindowInsets onApplyWindowInsets = view.onApplyWindowInsets(windowInsets);
+    public static boolean getFitsSystemWindows(View view) {
+        return Api16Impl.getFitsSystemWindows(view);
+    }
+
+    @Deprecated
+    public static void setFitsSystemWindows(View view, boolean z) {
+        view.setFitsSystemWindows(z);
+    }
+
+    public static void setOnApplyWindowInsetsListener(View view, OnApplyWindowInsetsListener onApplyWindowInsetsListener) {
+        Api21Impl.setOnApplyWindowInsetsListener(view, onApplyWindowInsetsListener);
+    }
+
+    public static WindowInsetsCompat onApplyWindowInsets(View view, WindowInsetsCompat windowInsetsCompat) {
+        WindowInsets windowInsets = windowInsetsCompat.toWindowInsets();
+        if (windowInsets != null) {
+            WindowInsets onApplyWindowInsets = Api20Impl.onApplyWindowInsets(view, windowInsets);
             if (!onApplyWindowInsets.equals(windowInsets)) {
                 return WindowInsetsCompat.toWindowInsetsCompat(onApplyWindowInsets, view);
             }
         }
-        return insets;
+        return windowInsetsCompat;
     }
 
-    public static WindowInsetsCompat dispatchApplyWindowInsets(View view, WindowInsetsCompat insets) {
-        WindowInsets windowInsets;
-        if (Build.VERSION.SDK_INT >= 21 && (windowInsets = insets.toWindowInsets()) != null) {
-            WindowInsets dispatchApplyWindowInsets = view.dispatchApplyWindowInsets(windowInsets);
+    public static WindowInsetsCompat dispatchApplyWindowInsets(View view, WindowInsetsCompat windowInsetsCompat) {
+        WindowInsets windowInsets = windowInsetsCompat.toWindowInsets();
+        if (windowInsets != null) {
+            WindowInsets dispatchApplyWindowInsets = Api20Impl.dispatchApplyWindowInsets(view, windowInsets);
             if (!dispatchApplyWindowInsets.equals(windowInsets)) {
                 return WindowInsetsCompat.toWindowInsetsCompat(dispatchApplyWindowInsets, view);
             }
         }
-        return insets;
+        return windowInsetsCompat;
     }
 
     public static WindowInsetsCompat getRootWindowInsets(View view) {
-        int i = Build.VERSION.SDK_INT;
-        if (i >= 23) {
-            return Api23Impl.getRootWindowInsets(view);
-        }
-        if (i < 21) {
-            return null;
-        }
-        return Api21Impl.getRootWindowInsets(view);
+        return Api23Impl.getRootWindowInsets(view);
     }
 
-    public static WindowInsetsCompat computeSystemWindowInsets(View view, WindowInsetsCompat insets, Rect outLocalInsets) {
-        return Build.VERSION.SDK_INT >= 21 ? Api21Impl.computeSystemWindowInsets(view, insets, outLocalInsets) : insets;
-    }
-
-    public static String[] getOnReceiveContentMimeTypes(View view) {
-        return (String[]) view.getTag(R$id.tag_on_receive_content_mime_types);
-    }
-
-    public static ContentInfoCompat performReceiveContent(View view, ContentInfoCompat payload) {
-        if (Log.isLoggable("ViewCompat", 3)) {
-            Log.d("ViewCompat", "performReceiveContent: " + payload + ", view=" + view.getClass().getSimpleName() + "[" + view.getId() + "]");
-        }
-        OnReceiveContentListener onReceiveContentListener = (OnReceiveContentListener) view.getTag(R$id.tag_on_receive_content_listener);
-        if (onReceiveContentListener != null) {
-            ContentInfoCompat onReceiveContent = onReceiveContentListener.onReceiveContent(view, payload);
-            if (onReceiveContent != null) {
-                return getFallback(view).onReceiveContent(onReceiveContent);
-            }
-            return null;
-        }
-        return getFallback(view).onReceiveContent(payload);
-    }
-
-    private static OnReceiveContentViewBehavior getFallback(View view) {
-        if (view instanceof OnReceiveContentViewBehavior) {
-            return (OnReceiveContentViewBehavior) view;
-        }
-        return NO_OP_ON_RECEIVE_CONTENT_VIEW_BEHAVIOR;
+    public static WindowInsetsCompat computeSystemWindowInsets(View view, WindowInsetsCompat windowInsetsCompat, Rect rect) {
+        return Api21Impl.computeSystemWindowInsets(view, windowInsetsCompat, rect);
     }
 
     public static boolean hasOverlappingRendering(View view) {
-        if (Build.VERSION.SDK_INT >= 16) {
-            return view.hasOverlappingRendering();
-        }
-        return true;
+        return Api16Impl.hasOverlappingRendering(view);
     }
 
     public static boolean isPaddingRelative(View view) {
-        if (Build.VERSION.SDK_INT >= 17) {
-            return view.isPaddingRelative();
-        }
-        return false;
+        return Api17Impl.isPaddingRelative(view);
     }
 
-    public static void setBackground(View view, Drawable background) {
-        if (Build.VERSION.SDK_INT >= 16) {
-            view.setBackground(background);
-        } else {
-            view.setBackgroundDrawable(background);
-        }
+    public static void setBackground(View view, Drawable drawable) {
+        Api16Impl.setBackground(view, drawable);
     }
 
     public static ColorStateList getBackgroundTintList(View view) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            return view.getBackgroundTintList();
-        }
-        if (!(view instanceof TintableBackgroundView)) {
-            return null;
-        }
-        return ((TintableBackgroundView) view).getSupportBackgroundTintList();
+        return Api21Impl.getBackgroundTintList(view);
     }
 
-    public static void setBackgroundTintList(View view, ColorStateList tintList) {
-        int i = Build.VERSION.SDK_INT;
-        if (i >= 21) {
-            view.setBackgroundTintList(tintList);
-            if (i != 21) {
-                return;
-            }
-            Drawable background = view.getBackground();
-            boolean z = (view.getBackgroundTintList() == null && view.getBackgroundTintMode() == null) ? false : true;
-            if (background == null || !z) {
-                return;
-            }
-            if (background.isStateful()) {
-                background.setState(view.getDrawableState());
-            }
-            view.setBackground(background);
-        } else if (!(view instanceof TintableBackgroundView)) {
-        } else {
-            ((TintableBackgroundView) view).setSupportBackgroundTintList(tintList);
-        }
+    public static void setBackgroundTintList(View view, ColorStateList colorStateList) {
+        Api21Impl.setBackgroundTintList(view, colorStateList);
     }
 
     public static PorterDuff.Mode getBackgroundTintMode(View view) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            return view.getBackgroundTintMode();
-        }
-        if (!(view instanceof TintableBackgroundView)) {
-            return null;
-        }
-        return ((TintableBackgroundView) view).getSupportBackgroundTintMode();
+        return Api21Impl.getBackgroundTintMode(view);
     }
 
     public static void setBackgroundTintMode(View view, PorterDuff.Mode mode) {
-        int i = Build.VERSION.SDK_INT;
-        if (i >= 21) {
-            view.setBackgroundTintMode(mode);
-            if (i != 21) {
-                return;
-            }
-            Drawable background = view.getBackground();
-            boolean z = (view.getBackgroundTintList() == null && view.getBackgroundTintMode() == null) ? false : true;
-            if (background == null || !z) {
-                return;
-            }
-            if (background.isStateful()) {
-                background.setState(view.getDrawableState());
-            }
-            view.setBackground(background);
-        } else if (!(view instanceof TintableBackgroundView)) {
-        } else {
-            ((TintableBackgroundView) view).setSupportBackgroundTintMode(mode);
-        }
+        Api21Impl.setBackgroundTintMode(view, mode);
     }
 
-    public static void setNestedScrollingEnabled(View view, boolean enabled) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            view.setNestedScrollingEnabled(enabled);
-        } else if (!(view instanceof NestedScrollingChild)) {
-        } else {
-            ((NestedScrollingChild) view).setNestedScrollingEnabled(enabled);
-        }
+    public static void setNestedScrollingEnabled(View view, boolean z) {
+        Api21Impl.setNestedScrollingEnabled(view, z);
     }
 
     public static boolean isNestedScrollingEnabled(View view) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            return view.isNestedScrollingEnabled();
-        }
-        if (!(view instanceof NestedScrollingChild)) {
-            return false;
-        }
-        return ((NestedScrollingChild) view).isNestedScrollingEnabled();
+        return Api21Impl.isNestedScrollingEnabled(view);
     }
 
     public static void stopNestedScroll(View view) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            view.stopNestedScroll();
-        } else if (!(view instanceof NestedScrollingChild)) {
-        } else {
-            ((NestedScrollingChild) view).stopNestedScroll();
-        }
+        Api21Impl.stopNestedScroll(view);
     }
 
     public static boolean isLaidOut(View view) {
-        if (Build.VERSION.SDK_INT >= 19) {
-            return view.isLaidOut();
-        }
-        return view.getWidth() > 0 && view.getHeight() > 0;
+        return Api19Impl.isLaidOut(view);
     }
 
     public static float getZ(View view) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            return view.getZ();
-        }
-        return 0.0f;
+        return Api21Impl.getZ(view);
     }
 
-    public static void setZ(View view, float z) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            view.setZ(z);
-        }
+    public static void setZ(View view, float f) {
+        Api21Impl.setZ(view, f);
     }
 
-    public static void offsetTopAndBottom(View view, int offset) {
-        int i = Build.VERSION.SDK_INT;
-        if (i >= 23) {
-            view.offsetTopAndBottom(offset);
-        } else if (i >= 21) {
-            Rect emptyTempRect = getEmptyTempRect();
-            boolean z = false;
-            ViewParent parent = view.getParent();
-            if (parent instanceof View) {
-                View view2 = (View) parent;
-                emptyTempRect.set(view2.getLeft(), view2.getTop(), view2.getRight(), view2.getBottom());
-                z = !emptyTempRect.intersects(view.getLeft(), view.getTop(), view.getRight(), view.getBottom());
-            }
-            compatOffsetTopAndBottom(view, offset);
-            if (!z || !emptyTempRect.intersect(view.getLeft(), view.getTop(), view.getRight(), view.getBottom())) {
-                return;
-            }
-            ((View) parent).invalidate(emptyTempRect);
-        } else {
-            compatOffsetTopAndBottom(view, offset);
-        }
+    public static void offsetTopAndBottom(View view, int i) {
+        view.offsetTopAndBottom(i);
     }
 
-    private static void compatOffsetTopAndBottom(View view, int offset) {
-        view.offsetTopAndBottom(offset);
-        if (view.getVisibility() == 0) {
-            tickleInvalidationFlag(view);
-            ViewParent parent = view.getParent();
-            if (!(parent instanceof View)) {
-                return;
-            }
-            tickleInvalidationFlag((View) parent);
-        }
+    public static void offsetLeftAndRight(View view, int i) {
+        view.offsetLeftAndRight(i);
     }
 
-    public static void offsetLeftAndRight(View view, int offset) {
-        int i = Build.VERSION.SDK_INT;
-        if (i >= 23) {
-            view.offsetLeftAndRight(offset);
-        } else if (i >= 21) {
-            Rect emptyTempRect = getEmptyTempRect();
-            boolean z = false;
-            ViewParent parent = view.getParent();
-            if (parent instanceof View) {
-                View view2 = (View) parent;
-                emptyTempRect.set(view2.getLeft(), view2.getTop(), view2.getRight(), view2.getBottom());
-                z = !emptyTempRect.intersects(view.getLeft(), view.getTop(), view.getRight(), view.getBottom());
-            }
-            compatOffsetLeftAndRight(view, offset);
-            if (!z || !emptyTempRect.intersect(view.getLeft(), view.getTop(), view.getRight(), view.getBottom())) {
-                return;
-            }
-            ((View) parent).invalidate(emptyTempRect);
-        } else {
-            compatOffsetLeftAndRight(view, offset);
-        }
-    }
-
-    private static void compatOffsetLeftAndRight(View view, int offset) {
-        view.offsetLeftAndRight(offset);
-        if (view.getVisibility() == 0) {
-            tickleInvalidationFlag(view);
-            ViewParent parent = view.getParent();
-            if (!(parent instanceof View)) {
-                return;
-            }
-            tickleInvalidationFlag((View) parent);
-        }
-    }
-
-    private static void tickleInvalidationFlag(View view) {
-        float translationY = view.getTranslationY();
-        view.setTranslationY(1.0f + translationY);
-        view.setTranslationY(translationY);
-    }
-
-    public static void setClipBounds(View view, Rect clipBounds) {
-        if (Build.VERSION.SDK_INT >= 18) {
-            view.setClipBounds(clipBounds);
-        }
+    public static void setClipBounds(View view, Rect rect) {
+        Api18Impl.setClipBounds(view, rect);
     }
 
     public static Rect getClipBounds(View view) {
-        if (Build.VERSION.SDK_INT >= 18) {
-            return view.getClipBounds();
-        }
-        return null;
+        return Api18Impl.getClipBounds(view);
     }
 
     public static boolean isAttachedToWindow(View view) {
-        if (Build.VERSION.SDK_INT >= 19) {
-            return view.isAttachedToWindow();
-        }
-        return view.getWindowToken() != null;
+        return Api19Impl.isAttachedToWindow(view);
     }
 
     public static boolean hasOnClickListeners(View view) {
-        if (Build.VERSION.SDK_INT >= 15) {
-            return view.hasOnClickListeners();
-        }
-        return false;
+        return Api15Impl.hasOnClickListeners(view);
     }
 
-    public static void setScrollIndicators(View view, int indicators, int mask) {
-        if (Build.VERSION.SDK_INT >= 23) {
-            view.setScrollIndicators(indicators, mask);
-        }
+    public static void setScrollIndicators(View view, int i, int i2) {
+        Api23Impl.setScrollIndicators(view, i, i2);
     }
 
-    public static void setPointerIcon(View view, PointerIconCompat pointerIcon) {
-        if (Build.VERSION.SDK_INT >= 24) {
-            view.setPointerIcon((PointerIcon) (pointerIcon != null ? pointerIcon.getPointerIcon() : null));
-        }
+    public static void setPointerIcon(View view, PointerIconCompat pointerIconCompat) {
+        Api24Impl.setPointerIcon(view, (PointerIcon) (pointerIconCompat != null ? pointerIconCompat.getPointerIcon() : null));
     }
 
     public static Display getDisplay(View view) {
-        if (Build.VERSION.SDK_INT >= 17) {
-            return view.getDisplay();
-        }
-        if (!isAttachedToWindow(view)) {
-            return null;
-        }
-        return ((WindowManager) view.getContext().getSystemService("window")).getDefaultDisplay();
+        return Api17Impl.getDisplay(view);
     }
 
     public static int generateViewId() {
-        AtomicInteger atomicInteger;
-        int i;
-        int i2;
-        if (Build.VERSION.SDK_INT >= 17) {
-            return View.generateViewId();
-        }
-        do {
-            atomicInteger = sNextGeneratedId;
-            i = atomicInteger.get();
-            i2 = i + 1;
-            if (i2 > 16777215) {
-                i2 = 1;
-            }
-        } while (!atomicInteger.compareAndSet(i, i2));
-        return i;
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static boolean dispatchUnhandledKeyEventBeforeHierarchy(View root, KeyEvent evt) {
-        if (Build.VERSION.SDK_INT >= 28) {
-            return false;
-        }
-        return UnhandledKeyEventManager.at(root).preDispatch(evt);
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static boolean dispatchUnhandledKeyEventBeforeCallback(View root, KeyEvent evt) {
-        if (Build.VERSION.SDK_INT >= 28) {
-            return false;
-        }
-        return UnhandledKeyEventManager.at(root).dispatch(root, evt);
+        return Api17Impl.generateViewId();
     }
 
     public static boolean isScreenReaderFocusable(View view) {
         Boolean bool = screenReaderFocusableProperty().get(view);
-        if (bool == null) {
-            return false;
-        }
-        return bool.booleanValue();
+        return bool != null && bool.booleanValue();
     }
 
     private static AccessibilityViewProperty<Boolean> screenReaderFocusableProperty() {
-        return new AccessibilityViewProperty<Boolean>(R$id.tag_screen_reader_focusable, Boolean.class, 28) { // from class: androidx.core.view.ViewCompat.2
-            /* JADX INFO: Access modifiers changed from: package-private */
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // androidx.core.view.ViewCompat.AccessibilityViewProperty
-            /* renamed from: frameworkGet */
-            public Boolean mo84frameworkGet(View view) {
-                return Boolean.valueOf(view.isScreenReaderFocusable());
+        return new AccessibilityViewProperty<Boolean>(R$id.tag_screen_reader_focusable, Boolean.class, 28) {
+            /* access modifiers changed from: package-private */
+            public Boolean frameworkGet(View view) {
+                return Boolean.valueOf(Api28Impl.isScreenReaderFocusable(view));
             }
 
-            /* JADX INFO: Access modifiers changed from: package-private */
-            @Override // androidx.core.view.ViewCompat.AccessibilityViewProperty
-            public void frameworkSet(View view, Boolean value) {
-                view.setScreenReaderFocusable(value.booleanValue());
+            /* access modifiers changed from: package-private */
+            public void frameworkSet(View view, Boolean bool) {
+                Api28Impl.setScreenReaderFocusable(view, bool.booleanValue());
             }
 
-            /* JADX INFO: Access modifiers changed from: package-private */
-            @Override // androidx.core.view.ViewCompat.AccessibilityViewProperty
-            public boolean shouldUpdate(Boolean oldValue, Boolean newValue) {
-                return !booleanNullToFalseEquals(oldValue, newValue);
+            /* access modifiers changed from: package-private */
+            public boolean shouldUpdate(Boolean bool, Boolean bool2) {
+                return !booleanNullToFalseEquals(bool, bool2);
             }
         };
+    }
+
+    public static void setAccessibilityPaneTitle(View view, CharSequence charSequence) {
+        paneTitleProperty().set(view, charSequence);
+        if (charSequence != null) {
+            sAccessibilityPaneVisibilityManager.addAccessibilityPane(view);
+        } else {
+            sAccessibilityPaneVisibilityManager.removeAccessibilityPane(view);
+        }
     }
 
     public static CharSequence getAccessibilityPaneTitle(View view) {
@@ -924,187 +477,172 @@ public class ViewCompat {
     }
 
     private static AccessibilityViewProperty<CharSequence> paneTitleProperty() {
-        return new AccessibilityViewProperty<CharSequence>(R$id.tag_accessibility_pane_title, CharSequence.class, 8, 28) { // from class: androidx.core.view.ViewCompat.3
-            /* JADX INFO: Access modifiers changed from: package-private */
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // androidx.core.view.ViewCompat.AccessibilityViewProperty
-            /* renamed from: frameworkGet */
-            public CharSequence mo84frameworkGet(View view) {
-                return view.getAccessibilityPaneTitle();
+        return new AccessibilityViewProperty<CharSequence>(R$id.tag_accessibility_pane_title, CharSequence.class, 8, 28) {
+            /* access modifiers changed from: package-private */
+            public CharSequence frameworkGet(View view) {
+                return Api28Impl.getAccessibilityPaneTitle(view);
             }
 
-            /* JADX INFO: Access modifiers changed from: package-private */
-            @Override // androidx.core.view.ViewCompat.AccessibilityViewProperty
-            public void frameworkSet(View view, CharSequence value) {
-                view.setAccessibilityPaneTitle(value);
+            /* access modifiers changed from: package-private */
+            public void frameworkSet(View view, CharSequence charSequence) {
+                Api28Impl.setAccessibilityPaneTitle(view, charSequence);
             }
 
-            /* JADX INFO: Access modifiers changed from: package-private */
-            @Override // androidx.core.view.ViewCompat.AccessibilityViewProperty
-            public boolean shouldUpdate(CharSequence oldValue, CharSequence newValue) {
-                return !TextUtils.equals(oldValue, newValue);
+            /* access modifiers changed from: package-private */
+            public boolean shouldUpdate(CharSequence charSequence, CharSequence charSequence2) {
+                return !TextUtils.equals(charSequence, charSequence2);
             }
         };
     }
 
     private static AccessibilityViewProperty<CharSequence> stateDescriptionProperty() {
-        return new AccessibilityViewProperty<CharSequence>(R$id.tag_state_description, CharSequence.class, 64, 30) { // from class: androidx.core.view.ViewCompat.4
-            /* JADX INFO: Access modifiers changed from: package-private */
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // androidx.core.view.ViewCompat.AccessibilityViewProperty
-            /* renamed from: frameworkGet */
-            public CharSequence mo84frameworkGet(View view) {
-                return view.getStateDescription();
+        return new AccessibilityViewProperty<CharSequence>(R$id.tag_state_description, CharSequence.class, 64, 30) {
+            /* access modifiers changed from: package-private */
+            public CharSequence frameworkGet(View view) {
+                return Api30Impl.getStateDescription(view);
             }
 
-            /* JADX INFO: Access modifiers changed from: package-private */
-            @Override // androidx.core.view.ViewCompat.AccessibilityViewProperty
-            public void frameworkSet(View view, CharSequence value) {
-                view.setStateDescription(value);
+            /* access modifiers changed from: package-private */
+            public void frameworkSet(View view, CharSequence charSequence) {
+                Api30Impl.setStateDescription(view, charSequence);
             }
 
-            /* JADX INFO: Access modifiers changed from: package-private */
-            @Override // androidx.core.view.ViewCompat.AccessibilityViewProperty
-            public boolean shouldUpdate(CharSequence oldValue, CharSequence newValue) {
-                return !TextUtils.equals(oldValue, newValue);
+            /* access modifiers changed from: package-private */
+            public boolean shouldUpdate(CharSequence charSequence, CharSequence charSequence2) {
+                return !TextUtils.equals(charSequence, charSequence2);
             }
         };
     }
 
     public static boolean isAccessibilityHeading(View view) {
         Boolean bool = accessibilityHeadingProperty().get(view);
-        if (bool == null) {
-            return false;
-        }
-        return bool.booleanValue();
+        return bool != null && bool.booleanValue();
     }
 
-    public static void setAccessibilityHeading(View view, boolean isHeading) {
-        accessibilityHeadingProperty().set(view, Boolean.valueOf(isHeading));
+    public static void setAccessibilityHeading(View view, boolean z) {
+        accessibilityHeadingProperty().set(view, Boolean.valueOf(z));
     }
 
     private static AccessibilityViewProperty<Boolean> accessibilityHeadingProperty() {
-        return new AccessibilityViewProperty<Boolean>(R$id.tag_accessibility_heading, Boolean.class, 28) { // from class: androidx.core.view.ViewCompat.5
-            /* JADX INFO: Access modifiers changed from: package-private */
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // androidx.core.view.ViewCompat.AccessibilityViewProperty
-            /* renamed from: frameworkGet */
-            public Boolean mo84frameworkGet(View view) {
-                return Boolean.valueOf(view.isAccessibilityHeading());
+        return new AccessibilityViewProperty<Boolean>(R$id.tag_accessibility_heading, Boolean.class, 28) {
+            /* access modifiers changed from: package-private */
+            public Boolean frameworkGet(View view) {
+                return Boolean.valueOf(Api28Impl.isAccessibilityHeading(view));
             }
 
-            /* JADX INFO: Access modifiers changed from: package-private */
-            @Override // androidx.core.view.ViewCompat.AccessibilityViewProperty
-            public void frameworkSet(View view, Boolean value) {
-                view.setAccessibilityHeading(value.booleanValue());
+            /* access modifiers changed from: package-private */
+            public void frameworkSet(View view, Boolean bool) {
+                Api28Impl.setAccessibilityHeading(view, bool.booleanValue());
             }
 
-            /* JADX INFO: Access modifiers changed from: package-private */
-            @Override // androidx.core.view.ViewCompat.AccessibilityViewProperty
-            public boolean shouldUpdate(Boolean oldValue, Boolean newValue) {
-                return !booleanNullToFalseEquals(oldValue, newValue);
+            /* access modifiers changed from: package-private */
+            public boolean shouldUpdate(Boolean bool, Boolean bool2) {
+                return !booleanNullToFalseEquals(bool, bool2);
             }
         };
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static abstract class AccessibilityViewProperty<T> {
+    static abstract class AccessibilityViewProperty<T> {
         private final int mContentChangeType;
         private final int mFrameworkMinimumSdk;
         private final int mTagKey;
         private final Class<T> mType;
 
-        /* renamed from: frameworkGet */
-        abstract T mo84frameworkGet(View view);
-
-        abstract void frameworkSet(View view, T value);
-
-        abstract boolean shouldUpdate(T oldValue, T newValue);
-
-        AccessibilityViewProperty(int tagKey, Class<T> type, int frameworkMinimumSdk) {
-            this(tagKey, type, 0, frameworkMinimumSdk);
+        private boolean extrasAvailable() {
+            return true;
         }
 
-        AccessibilityViewProperty(int tagKey, Class<T> type, int contentChangeType, int frameworkMinimumSdk) {
-            this.mTagKey = tagKey;
-            this.mType = type;
-            this.mContentChangeType = contentChangeType;
-            this.mFrameworkMinimumSdk = frameworkMinimumSdk;
+        /* access modifiers changed from: package-private */
+        public abstract T frameworkGet(View view);
+
+        /* access modifiers changed from: package-private */
+        public abstract void frameworkSet(View view, T t);
+
+        /* access modifiers changed from: package-private */
+        public abstract boolean shouldUpdate(T t, T t2);
+
+        AccessibilityViewProperty(int i, Class<T> cls, int i2) {
+            this(i, cls, 0, i2);
         }
 
-        void set(View view, T value) {
+        AccessibilityViewProperty(int i, Class<T> cls, int i2, int i3) {
+            this.mTagKey = i;
+            this.mType = cls;
+            this.mContentChangeType = i2;
+            this.mFrameworkMinimumSdk = i3;
+        }
+
+        /* access modifiers changed from: package-private */
+        public void set(View view, T t) {
             if (frameworkAvailable()) {
-                frameworkSet(view, value);
-            } else if (!extrasAvailable() || !shouldUpdate(get(view), value)) {
-            } else {
-                ViewCompat.getOrCreateAccessibilityDelegateCompat(view);
-                view.setTag(this.mTagKey, value);
+                frameworkSet(view, t);
+            } else if (extrasAvailable() && shouldUpdate(get(view), t)) {
+                ViewCompat.ensureAccessibilityDelegateCompat(view);
+                view.setTag(this.mTagKey, t);
                 ViewCompat.notifyViewAccessibilityStateChangedIfNeeded(view, this.mContentChangeType);
             }
         }
 
-        T get(View view) {
+        /* access modifiers changed from: package-private */
+        public T get(View view) {
             if (frameworkAvailable()) {
-                return mo84frameworkGet(view);
+                return frameworkGet(view);
             }
             if (!extrasAvailable()) {
                 return null;
             }
-            T t = (T) view.getTag(this.mTagKey);
-            if (!this.mType.isInstance(t)) {
-                return null;
+            T tag = view.getTag(this.mTagKey);
+            if (this.mType.isInstance(tag)) {
+                return tag;
             }
-            return t;
+            return null;
         }
 
         private boolean frameworkAvailable() {
             return Build.VERSION.SDK_INT >= this.mFrameworkMinimumSdk;
         }
 
-        private boolean extrasAvailable() {
-            return Build.VERSION.SDK_INT >= 19;
-        }
-
-        boolean booleanNullToFalseEquals(Boolean a, Boolean b) {
-            return (a == null ? false : a.booleanValue()) == (b == null ? false : b.booleanValue());
+        /* access modifiers changed from: package-private */
+        public boolean booleanNullToFalseEquals(Boolean bool, Boolean bool2) {
+            if ((bool != null && bool.booleanValue()) == (bool2 != null && bool2.booleanValue())) {
+                return true;
+            }
+            return false;
         }
     }
 
-    static void notifyViewAccessibilityStateChangedIfNeeded(View view, int changeType) {
+    static void notifyViewAccessibilityStateChangedIfNeeded(View view, int i) {
         AccessibilityManager accessibilityManager = (AccessibilityManager) view.getContext().getSystemService("accessibility");
-        if (!accessibilityManager.isEnabled()) {
-            return;
-        }
-        boolean z = getAccessibilityPaneTitle(view) != null && view.getVisibility() == 0;
-        int i = 32;
-        if (getAccessibilityLiveRegion(view) != 0 || z) {
-            AccessibilityEvent obtain = AccessibilityEvent.obtain();
-            if (!z) {
-                i = 2048;
-            }
-            obtain.setEventType(i);
-            obtain.setContentChangeTypes(changeType);
-            if (z) {
-                obtain.getText().add(getAccessibilityPaneTitle(view));
-                setViewImportanceForAccessibilityIfNeeded(view);
-            }
-            view.sendAccessibilityEventUnchecked(obtain);
-        } else if (changeType == 32) {
-            AccessibilityEvent obtain2 = AccessibilityEvent.obtain();
-            view.onInitializeAccessibilityEvent(obtain2);
-            obtain2.setEventType(32);
-            obtain2.setContentChangeTypes(changeType);
-            obtain2.setSource(view);
-            view.onPopulateAccessibilityEvent(obtain2);
-            obtain2.getText().add(getAccessibilityPaneTitle(view));
-            accessibilityManager.sendAccessibilityEvent(obtain2);
-        } else if (view.getParent() == null) {
-        } else {
-            try {
-                view.getParent().notifySubtreeAccessibilityStateChanged(view, view, changeType);
-            } catch (AbstractMethodError e) {
-                Log.e("ViewCompat", view.getParent().getClass().getSimpleName() + " does not fully implement ViewParent", e);
+        if (accessibilityManager.isEnabled()) {
+            boolean z = getAccessibilityPaneTitle(view) != null && view.isShown() && view.getWindowVisibility() == 0;
+            int i2 = 32;
+            if (getAccessibilityLiveRegion(view) != 0 || z) {
+                AccessibilityEvent obtain = AccessibilityEvent.obtain();
+                if (!z) {
+                    i2 = 2048;
+                }
+                obtain.setEventType(i2);
+                Api19Impl.setContentChangeTypes(obtain, i);
+                if (z) {
+                    obtain.getText().add(getAccessibilityPaneTitle(view));
+                    setViewImportanceForAccessibilityIfNeeded(view);
+                }
+                view.sendAccessibilityEventUnchecked(obtain);
+            } else if (i == 32) {
+                AccessibilityEvent obtain2 = AccessibilityEvent.obtain();
+                view.onInitializeAccessibilityEvent(obtain2);
+                obtain2.setEventType(32);
+                Api19Impl.setContentChangeTypes(obtain2, i);
+                obtain2.setSource(view);
+                view.onPopulateAccessibilityEvent(obtain2);
+                obtain2.getText().add(getAccessibilityPaneTitle(view));
+                accessibilityManager.sendAccessibilityEvent(obtain2);
+            } else if (view.getParent() != null) {
+                try {
+                    Api19Impl.notifySubtreeAccessibilityStateChanged(view.getParent(), view, view, i);
+                } catch (AbstractMethodError e) {
+                    Log.e("ViewCompat", view.getParent().getClass().getSimpleName() + " does not fully implement ViewParent", e);
+                }
             }
         }
     }
@@ -1121,246 +659,362 @@ public class ViewCompat {
         }
     }
 
-    /* loaded from: classes.dex */
     static class AccessibilityPaneVisibilityManager implements ViewTreeObserver.OnGlobalLayoutListener, View.OnAttachStateChangeListener {
-        private WeakHashMap<View, Boolean> mPanesToVisible = new WeakHashMap<>();
+        private final WeakHashMap<View, Boolean> mPanesToVisible = new WeakHashMap<>();
 
-        @Override // android.view.View.OnAttachStateChangeListener
+        public void onGlobalLayout() {
+        }
+
         public void onViewDetachedFromWindow(View view) {
         }
 
         AccessibilityPaneVisibilityManager() {
         }
 
-        @Override // android.view.ViewTreeObserver.OnGlobalLayoutListener
-        public void onGlobalLayout() {
-            if (Build.VERSION.SDK_INT < 28) {
-                for (Map.Entry<View, Boolean> entry : this.mPanesToVisible.entrySet()) {
-                    checkPaneVisibility(entry.getKey(), entry.getValue().booleanValue());
-                }
-            }
-        }
-
-        @Override // android.view.View.OnAttachStateChangeListener
         public void onViewAttachedToWindow(View view) {
             registerForLayoutCallback(view);
         }
 
-        private void checkPaneVisibility(View pane, boolean oldVisibility) {
-            boolean z = pane.getVisibility() == 0;
-            if (oldVisibility != z) {
-                ViewCompat.notifyViewAccessibilityStateChangedIfNeeded(pane, z ? 16 : 32);
-                this.mPanesToVisible.put(pane, Boolean.valueOf(z));
+        /* access modifiers changed from: package-private */
+        public void addAccessibilityPane(View view) {
+            this.mPanesToVisible.put(view, Boolean.valueOf(view.isShown() && view.getWindowVisibility() == 0));
+            view.addOnAttachStateChangeListener(this);
+            if (Api19Impl.isAttachedToWindow(view)) {
+                registerForLayoutCallback(view);
             }
+        }
+
+        /* access modifiers changed from: package-private */
+        public void removeAccessibilityPane(View view) {
+            this.mPanesToVisible.remove(view);
+            view.removeOnAttachStateChangeListener(this);
+            unregisterForLayoutCallback(view);
         }
 
         private void registerForLayoutCallback(View view) {
             view.getViewTreeObserver().addOnGlobalLayoutListener(this);
         }
-    }
 
-    /* loaded from: classes.dex */
-    static class UnhandledKeyEventManager {
-        private static final ArrayList<WeakReference<View>> sViewsWithListeners = new ArrayList<>();
-        private WeakHashMap<View, Boolean> mViewsContainingListeners = null;
-        private SparseArray<WeakReference<View>> mCapturedKeys = null;
-        private WeakReference<KeyEvent> mLastDispatchedPreViewKeyEvent = null;
-
-        UnhandledKeyEventManager() {
-        }
-
-        private SparseArray<WeakReference<View>> getCapturedKeys() {
-            if (this.mCapturedKeys == null) {
-                this.mCapturedKeys = new SparseArray<>();
-            }
-            return this.mCapturedKeys;
-        }
-
-        static UnhandledKeyEventManager at(View root) {
-            int i = R$id.tag_unhandled_key_event_manager;
-            UnhandledKeyEventManager unhandledKeyEventManager = (UnhandledKeyEventManager) root.getTag(i);
-            if (unhandledKeyEventManager == null) {
-                UnhandledKeyEventManager unhandledKeyEventManager2 = new UnhandledKeyEventManager();
-                root.setTag(i, unhandledKeyEventManager2);
-                return unhandledKeyEventManager2;
-            }
-            return unhandledKeyEventManager;
-        }
-
-        boolean dispatch(View root, KeyEvent event) {
-            if (event.getAction() == 0) {
-                recalcViewsWithUnhandled();
-            }
-            View dispatchInOrder = dispatchInOrder(root, event);
-            if (event.getAction() == 0) {
-                int keyCode = event.getKeyCode();
-                if (dispatchInOrder != null && !KeyEvent.isModifierKey(keyCode)) {
-                    getCapturedKeys().put(keyCode, new WeakReference<>(dispatchInOrder));
-                }
-            }
-            return dispatchInOrder != null;
-        }
-
-        private View dispatchInOrder(View view, KeyEvent event) {
-            WeakHashMap<View, Boolean> weakHashMap = this.mViewsContainingListeners;
-            if (weakHashMap != null && weakHashMap.containsKey(view)) {
-                if (view instanceof ViewGroup) {
-                    ViewGroup viewGroup = (ViewGroup) view;
-                    for (int childCount = viewGroup.getChildCount() - 1; childCount >= 0; childCount--) {
-                        View dispatchInOrder = dispatchInOrder(viewGroup.getChildAt(childCount), event);
-                        if (dispatchInOrder != null) {
-                            return dispatchInOrder;
-                        }
-                    }
-                }
-                if (onUnhandledKeyEvent(view, event)) {
-                    return view;
-                }
-            }
-            return null;
-        }
-
-        boolean preDispatch(KeyEvent event) {
-            int indexOfKey;
-            WeakReference<KeyEvent> weakReference = this.mLastDispatchedPreViewKeyEvent;
-            if (weakReference == null || weakReference.get() != event) {
-                this.mLastDispatchedPreViewKeyEvent = new WeakReference<>(event);
-                WeakReference<View> weakReference2 = null;
-                SparseArray<WeakReference<View>> capturedKeys = getCapturedKeys();
-                if (event.getAction() == 1 && (indexOfKey = capturedKeys.indexOfKey(event.getKeyCode())) >= 0) {
-                    weakReference2 = capturedKeys.valueAt(indexOfKey);
-                    capturedKeys.removeAt(indexOfKey);
-                }
-                if (weakReference2 == null) {
-                    weakReference2 = capturedKeys.get(event.getKeyCode());
-                }
-                if (weakReference2 == null) {
-                    return false;
-                }
-                View view = weakReference2.get();
-                if (view != null && ViewCompat.isAttachedToWindow(view)) {
-                    onUnhandledKeyEvent(view, event);
-                }
-                return true;
-            }
-            return false;
-        }
-
-        private boolean onUnhandledKeyEvent(View v, KeyEvent event) {
-            ArrayList arrayList = (ArrayList) v.getTag(R$id.tag_unhandled_key_listeners);
-            if (arrayList != null) {
-                for (int size = arrayList.size() - 1; size >= 0; size--) {
-                    if (((OnUnhandledKeyEventListenerCompat) arrayList.get(size)).onUnhandledKeyEvent(v, event)) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-            return false;
-        }
-
-        private void recalcViewsWithUnhandled() {
-            WeakHashMap<View, Boolean> weakHashMap = this.mViewsContainingListeners;
-            if (weakHashMap != null) {
-                weakHashMap.clear();
-            }
-            ArrayList<WeakReference<View>> arrayList = sViewsWithListeners;
-            if (arrayList.isEmpty()) {
-                return;
-            }
-            synchronized (arrayList) {
-                if (this.mViewsContainingListeners == null) {
-                    this.mViewsContainingListeners = new WeakHashMap<>();
-                }
-                for (int size = arrayList.size() - 1; size >= 0; size--) {
-                    ArrayList<WeakReference<View>> arrayList2 = sViewsWithListeners;
-                    View view = arrayList2.get(size).get();
-                    if (view == null) {
-                        arrayList2.remove(size);
-                    } else {
-                        this.mViewsContainingListeners.put(view, Boolean.TRUE);
-                        for (ViewParent parent = view.getParent(); parent instanceof View; parent = parent.getParent()) {
-                            this.mViewsContainingListeners.put((View) parent, Boolean.TRUE);
-                        }
-                    }
-                }
-            }
+        private void unregisterForLayoutCallback(View view) {
+            Api16Impl.removeOnGlobalLayoutListener(view.getViewTreeObserver(), this);
         }
     }
 
-    /* loaded from: classes.dex */
     private static class Api21Impl {
-        public static WindowInsetsCompat getRootWindowInsets(View v) {
-            return WindowInsetsCompat.Api21ReflectionHolder.getRootWindowInsets(v);
-        }
-
-        static WindowInsetsCompat computeSystemWindowInsets(View v, WindowInsetsCompat insets, Rect outLocalInsets) {
-            WindowInsets windowInsets = insets.toWindowInsets();
+        static WindowInsetsCompat computeSystemWindowInsets(View view, WindowInsetsCompat windowInsetsCompat, Rect rect) {
+            WindowInsets windowInsets = windowInsetsCompat.toWindowInsets();
             if (windowInsets != null) {
-                return WindowInsetsCompat.toWindowInsetsCompat(v.computeSystemWindowInsets(windowInsets, outLocalInsets), v);
+                return WindowInsetsCompat.toWindowInsetsCompat(view.computeSystemWindowInsets(windowInsets, rect), view);
             }
-            outLocalInsets.setEmpty();
-            return insets;
+            rect.setEmpty();
+            return windowInsetsCompat;
         }
 
-        static void setOnApplyWindowInsetsListener(final View v, final OnApplyWindowInsetsListener listener) {
-            if (Build.VERSION.SDK_INT < 30) {
-                v.setTag(R$id.tag_on_apply_window_listener, listener);
-            }
-            if (listener == null) {
-                v.setOnApplyWindowInsetsListener((View.OnApplyWindowInsetsListener) v.getTag(R$id.tag_window_insets_animation_callback));
+        static void setOnApplyWindowInsetsListener(final View view, final OnApplyWindowInsetsListener onApplyWindowInsetsListener) {
+            if (onApplyWindowInsetsListener == null) {
+                view.setOnApplyWindowInsetsListener((View.OnApplyWindowInsetsListener) view.getTag(R$id.tag_window_insets_animation_callback));
             } else {
-                v.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() { // from class: androidx.core.view.ViewCompat.Api21Impl.1
+                view.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
                     WindowInsetsCompat mLastInsets = null;
 
-                    @Override // android.view.View.OnApplyWindowInsetsListener
-                    public WindowInsets onApplyWindowInsets(final View view, final WindowInsets insets) {
-                        WindowInsetsCompat windowInsetsCompat = WindowInsetsCompat.toWindowInsetsCompat(insets, view);
-                        int i = Build.VERSION.SDK_INT;
-                        if (i < 30) {
-                            Api21Impl.callCompatInsetAnimationCallback(insets, v);
-                            if (windowInsetsCompat.equals(this.mLastInsets)) {
-                                return listener.onApplyWindowInsets(view, windowInsetsCompat).toWindowInsets();
-                            }
-                        }
+                    public WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
+                        WindowInsetsCompat windowInsetsCompat = WindowInsetsCompat.toWindowInsetsCompat(windowInsets, view);
                         this.mLastInsets = windowInsetsCompat;
-                        WindowInsetsCompat onApplyWindowInsets = listener.onApplyWindowInsets(view, windowInsetsCompat);
-                        if (i >= 30) {
-                            return onApplyWindowInsets.toWindowInsets();
-                        }
-                        ViewCompat.requestApplyInsets(view);
-                        return onApplyWindowInsets.toWindowInsets();
+                        return onApplyWindowInsetsListener.onApplyWindowInsets(view, windowInsetsCompat).toWindowInsets();
                     }
                 });
             }
         }
 
-        static void callCompatInsetAnimationCallback(final WindowInsets insets, final View v) {
-            View.OnApplyWindowInsetsListener onApplyWindowInsetsListener = (View.OnApplyWindowInsetsListener) v.getTag(R$id.tag_window_insets_animation_callback);
-            if (onApplyWindowInsetsListener != null) {
-                onApplyWindowInsetsListener.onApplyWindowInsets(v, insets);
-            }
+        static float getZ(View view) {
+            return view.getZ();
+        }
+
+        static void setZ(View view, float f) {
+            view.setZ(f);
+        }
+
+        static void setElevation(View view, float f) {
+            view.setElevation(f);
+        }
+
+        static void setTranslationZ(View view, float f) {
+            view.setTranslationZ(f);
+        }
+
+        static float getTranslationZ(View view) {
+            return view.getTranslationZ();
+        }
+
+        static void setTransitionName(View view, String str) {
+            view.setTransitionName(str);
+        }
+
+        static float getElevation(View view) {
+            return view.getElevation();
+        }
+
+        static String getTransitionName(View view) {
+            return view.getTransitionName();
+        }
+
+        static void setBackgroundTintList(View view, ColorStateList colorStateList) {
+            view.setBackgroundTintList(colorStateList);
+        }
+
+        static ColorStateList getBackgroundTintList(View view) {
+            return view.getBackgroundTintList();
+        }
+
+        static PorterDuff.Mode getBackgroundTintMode(View view) {
+            return view.getBackgroundTintMode();
+        }
+
+        static void setBackgroundTintMode(View view, PorterDuff.Mode mode) {
+            view.setBackgroundTintMode(mode);
+        }
+
+        static void setNestedScrollingEnabled(View view, boolean z) {
+            view.setNestedScrollingEnabled(z);
+        }
+
+        static boolean isNestedScrollingEnabled(View view) {
+            return view.isNestedScrollingEnabled();
+        }
+
+        static void stopNestedScroll(View view) {
+            view.stopNestedScroll();
         }
     }
 
-    /* loaded from: classes.dex */
     private static class Api23Impl {
-        public static WindowInsetsCompat getRootWindowInsets(View v) {
-            WindowInsets rootWindowInsets = v.getRootWindowInsets();
+        public static WindowInsetsCompat getRootWindowInsets(View view) {
+            WindowInsets rootWindowInsets = view.getRootWindowInsets();
             if (rootWindowInsets == null) {
                 return null;
             }
             WindowInsetsCompat windowInsetsCompat = WindowInsetsCompat.toWindowInsetsCompat(rootWindowInsets);
             windowInsetsCompat.setRootWindowInsets(windowInsetsCompat);
-            windowInsetsCompat.copyRootViewBounds(v.getRootView());
+            windowInsetsCompat.copyRootViewBounds(view.getRootView());
             return windowInsetsCompat;
+        }
+
+        static void setScrollIndicators(View view, int i, int i2) {
+            view.setScrollIndicators(i, i2);
         }
     }
 
-    /* loaded from: classes.dex */
     private static class Api29Impl {
-        static void saveAttributeDataForStyleable(View view, Context context, int[] styleable, AttributeSet attrs, TypedArray t, int defStyleAttr, int defStyleRes) {
-            view.saveAttributeDataForStyleable(context, styleable, attrs, t, defStyleAttr, defStyleRes);
+        static void saveAttributeDataForStyleable(View view, Context context, int[] iArr, AttributeSet attributeSet, TypedArray typedArray, int i, int i2) {
+            view.saveAttributeDataForStyleable(context, iArr, attributeSet, typedArray, i, i2);
+        }
+
+        static View.AccessibilityDelegate getAccessibilityDelegate(View view) {
+            return view.getAccessibilityDelegate();
+        }
+    }
+
+    private static class Api30Impl {
+        static void setStateDescription(View view, CharSequence charSequence) {
+            view.setStateDescription(charSequence);
+        }
+
+        static CharSequence getStateDescription(View view) {
+            return view.getStateDescription();
+        }
+    }
+
+    static class Api26Impl {
+        static int getImportantForAutofill(View view) {
+            return view.getImportantForAutofill();
+        }
+
+        static void setImportantForAutofill(View view, int i) {
+            view.setImportantForAutofill(i);
+        }
+    }
+
+    static class Api18Impl {
+        static void setClipBounds(View view, Rect rect) {
+            view.setClipBounds(rect);
+        }
+
+        static Rect getClipBounds(View view) {
+            return view.getClipBounds();
+        }
+    }
+
+    static class Api19Impl {
+        static boolean isLaidOut(View view) {
+            return view.isLaidOut();
+        }
+
+        static boolean isAttachedToWindow(View view) {
+            return view.isAttachedToWindow();
+        }
+
+        static int getAccessibilityLiveRegion(View view) {
+            return view.getAccessibilityLiveRegion();
+        }
+
+        static void setAccessibilityLiveRegion(View view, int i) {
+            view.setAccessibilityLiveRegion(i);
+        }
+
+        static void setContentChangeTypes(AccessibilityEvent accessibilityEvent, int i) {
+            accessibilityEvent.setContentChangeTypes(i);
+        }
+
+        static void notifySubtreeAccessibilityStateChanged(ViewParent viewParent, View view, View view2, int i) {
+            viewParent.notifySubtreeAccessibilityStateChanged(view, view2, i);
+        }
+    }
+
+    static class Api15Impl {
+        static boolean hasOnClickListeners(View view) {
+            return view.hasOnClickListeners();
+        }
+    }
+
+    static class Api24Impl {
+        static void setPointerIcon(View view, PointerIcon pointerIcon) {
+            view.setPointerIcon(pointerIcon);
+        }
+    }
+
+    static class Api17Impl {
+        static Display getDisplay(View view) {
+            return view.getDisplay();
+        }
+
+        static int generateViewId() {
+            return View.generateViewId();
+        }
+
+        static int getLayoutDirection(View view) {
+            return view.getLayoutDirection();
+        }
+
+        static int getPaddingStart(View view) {
+            return view.getPaddingStart();
+        }
+
+        static int getPaddingEnd(View view) {
+            return view.getPaddingEnd();
+        }
+
+        static void setPaddingRelative(View view, int i, int i2, int i3, int i4) {
+            view.setPaddingRelative(i, i2, i3, i4);
+        }
+
+        static boolean isPaddingRelative(View view) {
+            return view.isPaddingRelative();
+        }
+    }
+
+    static class Api16Impl {
+        static boolean hasTransientState(View view) {
+            return view.hasTransientState();
+        }
+
+        static void setHasTransientState(View view, boolean z) {
+            view.setHasTransientState(z);
+        }
+
+        static void postInvalidateOnAnimation(View view) {
+            view.postInvalidateOnAnimation();
+        }
+
+        static void postOnAnimation(View view, Runnable runnable) {
+            view.postOnAnimation(runnable);
+        }
+
+        static void postOnAnimationDelayed(View view, Runnable runnable, long j) {
+            view.postOnAnimationDelayed(runnable, j);
+        }
+
+        static int getImportantForAccessibility(View view) {
+            return view.getImportantForAccessibility();
+        }
+
+        static void setImportantForAccessibility(View view, int i) {
+            view.setImportantForAccessibility(i);
+        }
+
+        static ViewParent getParentForAccessibility(View view) {
+            return view.getParentForAccessibility();
+        }
+
+        static int getMinimumWidth(View view) {
+            return view.getMinimumWidth();
+        }
+
+        static int getMinimumHeight(View view) {
+            return view.getMinimumHeight();
+        }
+
+        static int getWindowSystemUiVisibility(View view) {
+            return view.getWindowSystemUiVisibility();
+        }
+
+        static boolean getFitsSystemWindows(View view) {
+            return view.getFitsSystemWindows();
+        }
+
+        static boolean performAccessibilityAction(View view, int i, Bundle bundle) {
+            return view.performAccessibilityAction(i, bundle);
+        }
+
+        static boolean hasOverlappingRendering(View view) {
+            return view.hasOverlappingRendering();
+        }
+
+        static void setBackground(View view, Drawable drawable) {
+            view.setBackground(drawable);
+        }
+
+        static void removeOnGlobalLayoutListener(ViewTreeObserver viewTreeObserver, ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener) {
+            viewTreeObserver.removeOnGlobalLayoutListener(onGlobalLayoutListener);
+        }
+    }
+
+    static class Api28Impl {
+        static CharSequence getAccessibilityPaneTitle(View view) {
+            return view.getAccessibilityPaneTitle();
+        }
+
+        static void setAccessibilityPaneTitle(View view, CharSequence charSequence) {
+            view.setAccessibilityPaneTitle(charSequence);
+        }
+
+        static void setAccessibilityHeading(View view, boolean z) {
+            view.setAccessibilityHeading(z);
+        }
+
+        static boolean isAccessibilityHeading(View view) {
+            return view.isAccessibilityHeading();
+        }
+
+        static boolean isScreenReaderFocusable(View view) {
+            return view.isScreenReaderFocusable();
+        }
+
+        static void setScreenReaderFocusable(View view, boolean z) {
+            view.setScreenReaderFocusable(z);
+        }
+    }
+
+    static class Api20Impl {
+        static void requestApplyInsets(View view) {
+            view.requestApplyInsets();
+        }
+
+        static WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
+            return view.onApplyWindowInsets(windowInsets);
+        }
+
+        static WindowInsets dispatchApplyWindowInsets(View view, WindowInsets windowInsets) {
+            return view.dispatchApplyWindowInsets(windowInsets);
         }
     }
 }

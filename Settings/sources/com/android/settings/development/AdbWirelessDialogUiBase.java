@@ -1,7 +1,7 @@
 package com.android.settings.development;
 
 import android.content.Context;
-/* loaded from: classes.dex */
+
 public interface AdbWirelessDialogUiBase {
     Context getContext();
 

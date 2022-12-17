@@ -5,49 +5,35 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 import androidx.preference.PreferenceScreen;
+import com.android.settings.R$string;
 import com.android.settings.notification.VolumeSeekBarPreference;
-import com.android.settings.slices.SliceBackgroundWorker;
-/* loaded from: classes.dex */
+
 public abstract class VolumeSeekBarPreferenceController extends AdjustVolumeRestrictedPreferenceController implements LifecycleObserver {
     protected AudioHelper mHelper;
     protected VolumeSeekBarPreference mPreference;
     protected VolumeSeekBarPreference.Callback mVolumePreferenceCallback;
 
-    @Override // com.android.settings.notification.AdjustVolumeRestrictedPreferenceController, com.android.settings.core.SliderPreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
     public abstract int getAudioStream();
 
-    @Override // com.android.settings.notification.AdjustVolumeRestrictedPreferenceController, com.android.settings.core.SliderPreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    protected abstract int getMuteIcon();
+    /* access modifiers changed from: protected */
+    public abstract int getMuteIcon();
 
-    @Override // com.android.settings.notification.AdjustVolumeRestrictedPreferenceController, com.android.settings.core.SliderPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.notification.AdjustVolumeRestrictedPreferenceController, com.android.settings.core.SliderPreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.notification.AdjustVolumeRestrictedPreferenceController, com.android.settings.core.SliderPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.notification.AdjustVolumeRestrictedPreferenceController, com.android.settings.core.SliderPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.notification.AdjustVolumeRestrictedPreferenceController, com.android.settings.core.SliderPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -57,7 +43,8 @@ public abstract class VolumeSeekBarPreferenceController extends AdjustVolumeRest
         setAudioHelper(new AudioHelper(context));
     }
 
-    void setAudioHelper(AudioHelper audioHelper) {
+    /* access modifiers changed from: package-private */
+    public void setAudioHelper(AudioHelper audioHelper) {
         this.mHelper = audioHelper;
     }
 
@@ -65,7 +52,6 @@ public abstract class VolumeSeekBarPreferenceController extends AdjustVolumeRest
         this.mVolumePreferenceCallback = callback;
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         if (isAvailable()) {
@@ -93,7 +79,10 @@ public abstract class VolumeSeekBarPreferenceController extends AdjustVolumeRest
         }
     }
 
-    @Override // com.android.settings.core.SliderPreferenceController
+    public int getSliceHighlightMenuRes() {
+        return R$string.menu_key_sound;
+    }
+
     public int getSliderPosition() {
         VolumeSeekBarPreference volumeSeekBarPreference = this.mPreference;
         if (volumeSeekBarPreference != null) {
@@ -102,7 +91,6 @@ public abstract class VolumeSeekBarPreferenceController extends AdjustVolumeRest
         return this.mHelper.getStreamVolume(getAudioStream());
     }
 
-    @Override // com.android.settings.core.SliderPreferenceController
     public boolean setSliderPosition(int i) {
         VolumeSeekBarPreference volumeSeekBarPreference = this.mPreference;
         if (volumeSeekBarPreference != null) {
@@ -111,7 +99,6 @@ public abstract class VolumeSeekBarPreferenceController extends AdjustVolumeRest
         return this.mHelper.setStreamVolume(getAudioStream(), i);
     }
 
-    @Override // com.android.settings.core.SliderPreferenceController
     public int getMax() {
         VolumeSeekBarPreference volumeSeekBarPreference = this.mPreference;
         if (volumeSeekBarPreference != null) {
@@ -120,7 +107,6 @@ public abstract class VolumeSeekBarPreferenceController extends AdjustVolumeRest
         return this.mHelper.getMaxVolume(getAudioStream());
     }
 
-    @Override // com.android.settings.core.SliderPreferenceController
     public int getMin() {
         VolumeSeekBarPreference volumeSeekBarPreference = this.mPreference;
         if (volumeSeekBarPreference != null) {

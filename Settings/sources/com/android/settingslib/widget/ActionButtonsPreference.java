@@ -14,21 +14,21 @@ import androidx.preference.PreferenceViewHolder;
 import com.android.settingslib.utils.BuildCompatUtils;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class ActionButtonsPreference extends Preference {
     private static final boolean mIsAtLeastS = BuildCompatUtils.isAtLeastS();
-    private View mDivider1;
-    private View mDivider2;
-    private View mDivider3;
-    private final ButtonInfo mButton1Info = new ButtonInfo();
-    private final ButtonInfo mButton2Info = new ButtonInfo();
-    private final ButtonInfo mButton3Info = new ButtonInfo();
-    private final ButtonInfo mButton4Info = new ButtonInfo();
-    private final List<ButtonInfo> mVisibleButtonInfos = new ArrayList(4);
     private final List<Drawable> mBtnBackgroundStyle1 = new ArrayList(1);
     private final List<Drawable> mBtnBackgroundStyle2 = new ArrayList(2);
     private final List<Drawable> mBtnBackgroundStyle3 = new ArrayList(3);
     private final List<Drawable> mBtnBackgroundStyle4 = new ArrayList(4);
+    private final ButtonInfo mButton1Info = new ButtonInfo();
+    private final ButtonInfo mButton2Info = new ButtonInfo();
+    private final ButtonInfo mButton3Info = new ButtonInfo();
+    private final ButtonInfo mButton4Info = new ButtonInfo();
+    private View mDivider1;
+    private View mDivider2;
+    private View mDivider3;
+    private final List<ButtonInfo> mVisibleButtonInfos = new ArrayList(4);
 
     public ActionButtonsPreference(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
@@ -66,7 +66,6 @@ public class ActionButtonsPreference extends Preference {
         }
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         boolean z = mIsAtLeastS;
@@ -89,8 +88,7 @@ public class ActionButtonsPreference extends Preference {
         updateLayout();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public void notifyChanged() {
         super.notifyChanged();
         if (!this.mVisibleButtonInfos.isEmpty()) {
@@ -333,43 +331,44 @@ public class ActionButtonsPreference extends Preference {
     }
 
     private void setupDivider1() {
-        if (this.mDivider1 == null || !this.mButton1Info.isVisible() || !this.mButton2Info.isVisible()) {
-            return;
+        if (this.mDivider1 != null && this.mButton1Info.isVisible() && this.mButton2Info.isVisible()) {
+            this.mDivider1.setVisibility(0);
         }
-        this.mDivider1.setVisibility(0);
     }
 
     private void setupDivider2() {
-        if (this.mDivider2 == null || !this.mButton3Info.isVisible()) {
-            return;
+        if (this.mDivider2 != null && this.mButton3Info.isVisible()) {
+            if (this.mButton1Info.isVisible() || this.mButton2Info.isVisible()) {
+                this.mDivider2.setVisibility(0);
+            }
         }
-        if (!this.mButton1Info.isVisible() && !this.mButton2Info.isVisible()) {
-            return;
-        }
-        this.mDivider2.setVisibility(0);
     }
 
     private void setupDivider3() {
-        if (this.mDivider3 == null || this.mVisibleButtonInfos.size() <= 1 || !this.mButton4Info.isVisible()) {
-            return;
+        if (this.mDivider3 != null && this.mVisibleButtonInfos.size() > 1 && this.mButton4Info.isVisible()) {
+            this.mDivider3.setVisibility(0);
         }
-        this.mDivider3.setVisibility(0);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class ButtonInfo {
-        private Button mButton;
-        private Drawable mIcon;
-        private boolean mIsEnabled = true;
-        private boolean mIsVisible = true;
-        private View.OnClickListener mListener;
-        private CharSequence mText;
+    static class ButtonInfo {
+        /* access modifiers changed from: private */
+        public Button mButton;
+        /* access modifiers changed from: private */
+        public Drawable mIcon;
+        /* access modifiers changed from: private */
+        public boolean mIsEnabled = true;
+        /* access modifiers changed from: private */
+        public boolean mIsVisible = true;
+        /* access modifiers changed from: private */
+        public View.OnClickListener mListener;
+        /* access modifiers changed from: private */
+        public CharSequence mText;
 
         ButtonInfo() {
         }
 
-        void setUpButton() {
+        /* access modifiers changed from: package-private */
+        public void setUpButton() {
             this.mButton.setText(this.mText);
             this.mButton.setOnClickListener(this.mListener);
             this.mButton.setEnabled(this.mIsEnabled);
@@ -381,7 +380,8 @@ public class ActionButtonsPreference extends Preference {
             }
         }
 
-        boolean isVisible() {
+        /* access modifiers changed from: package-private */
+        public boolean isVisible() {
             return this.mButton.getVisibility() == 0;
         }
 

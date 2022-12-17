@@ -6,12 +6,12 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 import com.android.settings.R$styleable;
-/* loaded from: classes.dex */
+
 public final class AspectRatioFrameLayout extends FrameLayout {
     float mAspectRatio;
 
     public AspectRatioFrameLayout(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public AspectRatioFrameLayout(Context context, AttributeSet attributeSet) {
@@ -32,18 +32,16 @@ public final class AspectRatioFrameLayout extends FrameLayout {
         this.mAspectRatio = f;
     }
 
-    @Override // android.widget.FrameLayout, android.view.View
-    protected void onMeasure(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         super.onMeasure(i, i2);
         int measuredWidth = getMeasuredWidth();
         int measuredHeight = getMeasuredHeight();
-        if (measuredWidth == 0 || measuredHeight == 0) {
-            return;
+        if (measuredWidth != 0 && measuredHeight != 0) {
+            float f = (float) measuredHeight;
+            if (Math.abs(this.mAspectRatio - (((float) measuredWidth) / f)) > 0.01f) {
+                super.onMeasure(View.MeasureSpec.makeMeasureSpec((int) (f * this.mAspectRatio), 1073741824), View.MeasureSpec.makeMeasureSpec(measuredHeight, 1073741824));
+            }
         }
-        float f = measuredHeight;
-        if (Math.abs(this.mAspectRatio - (measuredWidth / f)) <= 0.01f) {
-            return;
-        }
-        super.onMeasure(View.MeasureSpec.makeMeasureSpec((int) (f * this.mAspectRatio), 1073741824), View.MeasureSpec.makeMeasureSpec(measuredHeight, 1073741824));
     }
 }

@@ -7,46 +7,33 @@ import android.graphics.drawable.Drawable;
 import android.print.PrintJob;
 import android.print.PrintJobInfo;
 import android.text.format.DateUtils;
-import com.android.settings.R;
-import com.android.settings.slices.SliceBackgroundWorker;
-/* loaded from: classes.dex */
-public class PrintJobPreferenceController extends PrintJobPreferenceControllerBase {
-    @Override // com.android.settings.print.PrintJobPreferenceControllerBase, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
+import com.android.settings.R$string;
 
-    @Override // com.android.settings.print.PrintJobPreferenceControllerBase, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+public class PrintJobPreferenceController extends PrintJobPreferenceControllerBase {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.print.PrintJobPreferenceControllerBase, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.print.PrintJobPreferenceControllerBase, com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.print.PrintJobPreferenceControllerBase, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.print.PrintJobPreferenceControllerBase, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.print.PrintJobPreferenceControllerBase, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.print.PrintJobPreferenceControllerBase, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -55,8 +42,8 @@ public class PrintJobPreferenceController extends PrintJobPreferenceControllerBa
         super(context, str);
     }
 
-    @Override // com.android.settings.print.PrintJobPreferenceControllerBase
-    protected void updateUi() {
+    /* access modifiers changed from: protected */
+    public void updateUi() {
         PrintJob printJob = getPrintJob();
         if (printJob == null) {
             this.mFragment.finish();
@@ -66,34 +53,33 @@ public class PrintJobPreferenceController extends PrintJobPreferenceControllerBa
             PrintJobInfo info = printJob.getInfo();
             int state = info.getState();
             if (state == 1) {
-                this.mPreference.setTitle(this.mContext.getString(R.string.print_configuring_state_title_template, info.getLabel()));
+                this.mPreference.setTitle((CharSequence) this.mContext.getString(R$string.print_configuring_state_title_template, new Object[]{info.getLabel()}));
             } else if (state == 2 || state == 3) {
                 if (!printJob.getInfo().isCancelling()) {
-                    this.mPreference.setTitle(this.mContext.getString(R.string.print_printing_state_title_template, info.getLabel()));
+                    this.mPreference.setTitle((CharSequence) this.mContext.getString(R$string.print_printing_state_title_template, new Object[]{info.getLabel()}));
                 } else {
-                    this.mPreference.setTitle(this.mContext.getString(R.string.print_cancelling_state_title_template, info.getLabel()));
+                    this.mPreference.setTitle((CharSequence) this.mContext.getString(R$string.print_cancelling_state_title_template, new Object[]{info.getLabel()}));
                 }
             } else if (state != 4) {
                 if (state == 6) {
-                    this.mPreference.setTitle(this.mContext.getString(R.string.print_failed_state_title_template, info.getLabel()));
+                    this.mPreference.setTitle((CharSequence) this.mContext.getString(R$string.print_failed_state_title_template, new Object[]{info.getLabel()}));
                 }
             } else if (!printJob.getInfo().isCancelling()) {
-                this.mPreference.setTitle(this.mContext.getString(R.string.print_blocked_state_title_template, info.getLabel()));
+                this.mPreference.setTitle((CharSequence) this.mContext.getString(R$string.print_blocked_state_title_template, new Object[]{info.getLabel()}));
             } else {
-                this.mPreference.setTitle(this.mContext.getString(R.string.print_cancelling_state_title_template, info.getLabel()));
+                this.mPreference.setTitle((CharSequence) this.mContext.getString(R$string.print_cancelling_state_title_template, new Object[]{info.getLabel()}));
             }
-            this.mPreference.setSummary(this.mContext.getString(R.string.print_job_summary, info.getPrinterName(), DateUtils.formatSameDayTime(info.getCreationTime(), info.getCreationTime(), 3, 3)));
+            this.mPreference.setSummary((CharSequence) this.mContext.getString(R$string.print_job_summary, new Object[]{info.getPrinterName(), DateUtils.formatSameDayTime(info.getCreationTime(), info.getCreationTime(), 3, 3)}));
             TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(new int[]{16843817});
             int color = obtainStyledAttributes.getColor(0, 0);
             obtainStyledAttributes.recycle();
             int state2 = info.getState();
             if (state2 == 2 || state2 == 3) {
-                Drawable drawable = this.mContext.getDrawable(17302815);
+                Drawable drawable = this.mContext.getDrawable(17302825);
                 drawable.setTint(color);
                 this.mPreference.setIcon(drawable);
-            } else if (state2 != 4 && state2 != 6) {
-            } else {
-                Drawable drawable2 = this.mContext.getDrawable(17302816);
+            } else if (state2 == 4 || state2 == 6) {
+                Drawable drawable2 = this.mContext.getDrawable(17302826);
                 drawable2.setTint(color);
                 this.mPreference.setIcon(drawable2);
             }

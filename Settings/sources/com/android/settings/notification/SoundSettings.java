@@ -11,94 +11,86 @@ import android.preference.SeekBarVolumizer;
 import android.text.TextUtils;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.RingtonePreference;
 import com.android.settings.core.OnActivityResultListener;
 import com.android.settings.dashboard.DashboardFragment;
 import com.android.settings.notification.VolumeSeekBarPreference;
 import com.android.settings.search.BaseSearchIndexProvider;
-import com.android.settings.sound.AudioSwitchPreferenceController;
 import com.android.settings.sound.HandsFreeProfileOutputPreferenceController;
 import com.android.settings.widget.PreferenceCategoryController;
 import com.android.settingslib.core.AbstractPreferenceController;
 import com.android.settingslib.core.lifecycle.Lifecycle;
 import com.android.settingslib.widget.UpdatableListPreferenceDialogFragment;
+import com.nothing.settings.sound.ScreenshotShutterPreferenceController;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class SoundSettings extends DashboardFragment implements OnActivityResultListener {
-    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R.xml.sound_settings) { // from class: com.android.settings.notification.SoundSettings.2
-        @Override // com.android.settings.search.BaseSearchIndexProvider
+    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R$xml.sound_settings) {
         public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
-            return SoundSettings.buildPreferenceControllers(context, null, null);
+            return SoundSettings.buildPreferenceControllers(context, (SoundSettings) null, (Lifecycle) null);
         }
     };
     static final int STOP_SAMPLE = 1;
     private UpdatableListPreferenceDialogFragment mDialogFragment;
-    private String mHfpOutputControllerKey;
-    private RingtonePreference mRequestPreference;
-    final VolumePreferenceCallback mVolumeCallback = new VolumePreferenceCallback();
-    final Handler mHandler = new Handler(Looper.getMainLooper()) { // from class: com.android.settings.notification.SoundSettings.1
-        @Override // android.os.Handler
+    final Handler mHandler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message message) {
-            if (message.what != 1) {
-                return;
+            if (message.what == 1) {
+                SoundSettings.this.mVolumeCallback.stopSample();
             }
-            SoundSettings.this.mVolumeCallback.stopSample();
         }
     };
+    private String mHfpOutputControllerKey;
+    private RingtonePreference mRequestPreference;
     private String mVibrationPreferencesKey = "vibration_preference_screen";
+    final VolumePreferenceCallback mVolumeCallback = new VolumePreferenceCallback();
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "SoundSettings";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 336;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         if (bundle != null) {
-            String string = bundle.getString("selected_preference", null);
+            String string = bundle.getString("selected_preference", (String) null);
             if (!TextUtils.isEmpty(string)) {
                 this.mRequestPreference = (RingtonePreference) findPreference(string);
             }
             this.mDialogFragment = (UpdatableListPreferenceDialogFragment) getFragmentManager().findFragmentByTag("SoundSettings");
         }
+        replaceEnterpriseStringTitle("sound_work_settings", "Settings.WORK_PROFILE_SOUND_SETTINGS_SECTION_HEADER", R$string.sound_work_settings);
     }
 
-    @Override // com.android.settings.support.actionbar.HelpResourceProvider
     public int getHelpResource() {
-        return R.string.help_url_sound;
+        return R$string.help_url_sound;
     }
 
-    @Override // com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onPause() {
         super.onPause();
         this.mVolumeCallback.stopSample();
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.preference.PreferenceManager.OnPreferenceTreeClickListener
     public boolean onPreferenceTreeClick(Preference preference) {
-        if (preference instanceof RingtonePreference) {
-            writePreferenceClickMetric(preference);
-            RingtonePreference ringtonePreference = (RingtonePreference) preference;
-            this.mRequestPreference = ringtonePreference;
-            ringtonePreference.onPrepareRingtonePickerIntent(ringtonePreference.getIntent());
-            getActivity().startActivityForResultAsUser(this.mRequestPreference.getIntent(), 200, null, UserHandle.of(this.mRequestPreference.getUserId()));
-            return true;
+        if (!(preference instanceof RingtonePreference)) {
+            return super.onPreferenceTreeClick(preference);
         }
-        return super.onPreferenceTreeClick(preference);
+        writePreferenceClickMetric(preference);
+        RingtonePreference ringtonePreference = (RingtonePreference) preference;
+        this.mRequestPreference = ringtonePreference;
+        ringtonePreference.onPrepareRingtonePickerIntent(ringtonePreference.getIntent());
+        getActivity().startActivityForResultAsUser(this.mRequestPreference.getIntent(), 200, (Bundle) null, UserHandle.of(this.mRequestPreference.getUserId()));
+        return true;
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.preference.PreferenceManager.OnDisplayPreferenceDialogListener
     public void onDisplayPreferenceDialog(Preference preference) {
         if (TextUtils.equals(this.mVibrationPreferencesKey, preference.getKey())) {
             super.onDisplayPreferenceDialog(preference);
@@ -110,18 +102,16 @@ public class SoundSettings extends DashboardFragment implements OnActivityResult
         this.mDialogFragment.show(getFragmentManager(), "SoundSettings");
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.sound_settings;
+        return R$xml.sound_settings;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment
-    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+    /* access modifiers changed from: protected */
+    public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
         return buildPreferenceControllers(context, this, getSettingsLifecycle());
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onActivityResult(int i, int i2, Intent intent) {
         RingtonePreference ringtonePreference = this.mRequestPreference;
         if (ringtonePreference != null) {
@@ -130,7 +120,6 @@ public class SoundSettings extends DashboardFragment implements OnActivityResult
         }
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         RingtonePreference ringtonePreference = this.mRequestPreference;
@@ -139,21 +128,17 @@ public class SoundSettings extends DashboardFragment implements OnActivityResult
         }
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
+        Class cls = HandsFreeProfileOutputPreferenceController.class;
         super.onAttach(context);
         ArrayList arrayList = new ArrayList();
         arrayList.add((VolumeSeekBarPreferenceController) use(AlarmVolumePreferenceController.class));
         arrayList.add((VolumeSeekBarPreferenceController) use(MediaVolumePreferenceController.class));
         arrayList.add((VolumeSeekBarPreferenceController) use(RingVolumePreferenceController.class));
         arrayList.add((VolumeSeekBarPreferenceController) use(NotificationVolumePreferenceController.class));
-        ((HandsFreeProfileOutputPreferenceController) use(HandsFreeProfileOutputPreferenceController.class)).setCallback(new AudioSwitchPreferenceController.AudioSwitchCallback() { // from class: com.android.settings.notification.SoundSettings$$ExternalSyntheticLambda0
-            @Override // com.android.settings.sound.AudioSwitchPreferenceController.AudioSwitchCallback
-            public final void onPreferenceDataChanged(ListPreference listPreference) {
-                SoundSettings.this.lambda$onAttach$0(listPreference);
-            }
-        });
-        this.mHfpOutputControllerKey = ((HandsFreeProfileOutputPreferenceController) use(HandsFreeProfileOutputPreferenceController.class)).getPreferenceKey();
+        arrayList.add((VolumeSeekBarPreferenceController) use(CallVolumePreferenceController.class));
+        ((HandsFreeProfileOutputPreferenceController) use(cls)).setCallback(new SoundSettings$$ExternalSyntheticLambda0(this));
+        this.mHfpOutputControllerKey = ((HandsFreeProfileOutputPreferenceController) use(cls)).getPreferenceKey();
         Iterator it = arrayList.iterator();
         while (it.hasNext()) {
             VolumeSeekBarPreferenceController volumeSeekBarPreferenceController = (VolumeSeekBarPreferenceController) it.next();
@@ -162,33 +147,29 @@ public class SoundSettings extends DashboardFragment implements OnActivityResult
         }
     }
 
-    /* loaded from: classes.dex */
     final class VolumePreferenceCallback implements VolumeSeekBarPreference.Callback {
         private SeekBarVolumizer mCurrent;
 
         VolumePreferenceCallback() {
         }
 
-        @Override // com.android.settings.notification.VolumeSeekBarPreference.Callback
         public void onSampleStarting(SeekBarVolumizer seekBarVolumizer) {
             if (this.mCurrent != null) {
                 SoundSettings.this.mHandler.removeMessages(1);
-                SoundSettings.this.mHandler.sendEmptyMessageDelayed(1, 2000L);
+                SoundSettings.this.mHandler.sendEmptyMessageDelayed(1, 2000);
             }
         }
 
-        @Override // com.android.settings.notification.VolumeSeekBarPreference.Callback
         public void onStreamValueChanged(int i, int i2) {
             if (this.mCurrent != null) {
                 SoundSettings.this.mHandler.removeMessages(1);
-                SoundSettings.this.mHandler.sendEmptyMessageDelayed(1, 2000L);
+                SoundSettings.this.mHandler.sendEmptyMessageDelayed(1, 2000);
             }
         }
 
-        @Override // com.android.settings.notification.VolumeSeekBarPreference.Callback
         public void onStartTrackingTouch(SeekBarVolumizer seekBarVolumizer) {
             SeekBarVolumizer seekBarVolumizer2 = this.mCurrent;
-            if (seekBarVolumizer2 != null && seekBarVolumizer2 != seekBarVolumizer) {
+            if (!(seekBarVolumizer2 == null || seekBarVolumizer2 == seekBarVolumizer)) {
                 seekBarVolumizer2.stopSample();
             }
             this.mCurrent = seekBarVolumizer;
@@ -202,7 +183,7 @@ public class SoundSettings extends DashboardFragment implements OnActivityResult
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static List<AbstractPreferenceController> buildPreferenceControllers(Context context, SoundSettings soundSettings, Lifecycle lifecycle) {
         ArrayList arrayList = new ArrayList();
         arrayList.add(new PhoneRingtonePreferenceController(context));
@@ -217,20 +198,24 @@ public class SoundSettings extends DashboardFragment implements OnActivityResult
         DockAudioMediaPreferenceController dockAudioMediaPreferenceController = new DockAudioMediaPreferenceController(context, soundSettings, lifecycle);
         BootSoundPreferenceController bootSoundPreferenceController = new BootSoundPreferenceController(context);
         EmergencyTonePreferenceController emergencyTonePreferenceController = new EmergencyTonePreferenceController(context, soundSettings, lifecycle);
+        VibrateIconPreferenceController vibrateIconPreferenceController = new VibrateIconPreferenceController(context, soundSettings, lifecycle);
+        ScreenshotShutterPreferenceController screenshotShutterPreferenceController = new ScreenshotShutterPreferenceController(context, soundSettings, lifecycle);
         arrayList.add(dialPadTonePreferenceController);
         arrayList.add(callConnectedTonePreferenceController);
         arrayList.add(screenLockSoundPreferenceController);
         arrayList.add(chargingSoundPreferenceController);
         arrayList.add(dockingSoundPreferenceController);
         arrayList.add(touchSoundPreferenceController);
+        arrayList.add(screenshotShutterPreferenceController);
+        arrayList.add(vibrateIconPreferenceController);
         arrayList.add(dockAudioMediaPreferenceController);
         arrayList.add(bootSoundPreferenceController);
         arrayList.add(emergencyTonePreferenceController);
-        arrayList.add(new PreferenceCategoryController(context, "other_sounds_and_vibrations_category").setChildren(Arrays.asList(dialPadTonePreferenceController, callConnectedTonePreferenceController, screenLockSoundPreferenceController, chargingSoundPreferenceController, dockingSoundPreferenceController, touchSoundPreferenceController, dockAudioMediaPreferenceController, bootSoundPreferenceController, emergencyTonePreferenceController)));
+        arrayList.add(new PreferenceCategoryController(context, "other_sounds_and_vibrations_category").setChildren(Arrays.asList(new AbstractPreferenceController[]{dialPadTonePreferenceController, callConnectedTonePreferenceController, screenLockSoundPreferenceController, chargingSoundPreferenceController, dockingSoundPreferenceController, touchSoundPreferenceController, screenshotShutterPreferenceController, vibrateIconPreferenceController, dockAudioMediaPreferenceController, bootSoundPreferenceController, emergencyTonePreferenceController})));
         return arrayList;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     /* renamed from: onPreferenceDataChanged */
     public void lambda$onAttach$0(ListPreference listPreference) {
         UpdatableListPreferenceDialogFragment updatableListPreferenceDialogFragment = this.mDialogFragment;

@@ -1,7 +1,7 @@
 package com.google.zxing.common;
 
 import com.google.zxing.NotFoundException;
-/* loaded from: classes2.dex */
+
 public abstract class GridSampler {
     private static GridSampler gridSampler = new DefaultGridSampler();
 
@@ -13,68 +13,115 @@ public abstract class GridSampler {
         return gridSampler;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    /* JADX WARN: Removed duplicated region for block: B:14:0x0034  */
-    /* JADX WARN: Removed duplicated region for block: B:18:0x0038  */
-    /* JADX WARN: Removed duplicated region for block: B:44:0x0071  */
-    /* JADX WARN: Removed duplicated region for block: B:48:0x0075  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static void checkAndNudgePoints(BitMatrix bitMatrix, float[] fArr) throws NotFoundException {
-        int width = bitMatrix.getWidth();
-        int height = bitMatrix.getHeight();
-        boolean z = true;
-        for (int i = 0; i < fArr.length && z; i += 2) {
-            int i2 = (int) fArr[i];
-            int i3 = i + 1;
-            int i4 = (int) fArr[i3];
-            if (i2 < -1 || i2 > width || i4 < -1 || i4 > height) {
-                throw NotFoundException.getNotFoundInstance();
-            }
-            if (i2 == -1) {
-                fArr[i] = 0.0f;
-            } else if (i2 == width) {
-                fArr[i] = width - 1;
-            } else {
-                z = false;
-                if (i4 != -1) {
-                    fArr[i3] = 0.0f;
-                } else if (i4 == height) {
-                    fArr[i3] = height - 1;
-                }
-                z = true;
-            }
-            z = true;
-            if (i4 != -1) {
-            }
-            z = true;
-        }
-        boolean z2 = true;
-        for (int length = fArr.length - 2; length >= 0 && z2; length -= 2) {
-            int i5 = (int) fArr[length];
-            int i6 = length + 1;
-            int i7 = (int) fArr[i6];
-            if (i5 < -1 || i5 > width || i7 < -1 || i7 > height) {
-                throw NotFoundException.getNotFoundInstance();
-            }
-            if (i5 == -1) {
-                fArr[length] = 0.0f;
-            } else if (i5 == width) {
-                fArr[length] = width - 1;
-            } else {
-                z2 = false;
-                if (i7 != -1) {
-                    fArr[i6] = 0.0f;
-                } else if (i7 == height) {
-                    fArr[i6] = height - 1;
-                }
-                z2 = true;
-            }
-            z2 = true;
-            if (i7 != -1) {
-            }
-            z2 = true;
-        }
+    /* JADX WARNING: Removed duplicated region for block: B:16:0x0034  */
+    /* JADX WARNING: Removed duplicated region for block: B:18:0x0038  */
+    /* JADX WARNING: Removed duplicated region for block: B:38:0x0071  */
+    /* JADX WARNING: Removed duplicated region for block: B:40:0x0075  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    protected static void checkAndNudgePoints(com.google.zxing.common.BitMatrix r9, float[] r10) throws com.google.zxing.NotFoundException {
+        /*
+            int r0 = r9.getWidth()
+            int r9 = r9.getHeight()
+            r1 = 0
+            r2 = 1
+            r3 = r1
+            r4 = r2
+        L_0x000c:
+            int r5 = r10.length
+            r6 = 0
+            r7 = -1
+            if (r3 >= r5) goto L_0x0048
+            if (r4 == 0) goto L_0x0048
+            r4 = r10[r3]
+            int r4 = (int) r4
+            int r5 = r3 + 1
+            r8 = r10[r5]
+            int r8 = (int) r8
+            if (r4 < r7) goto L_0x0043
+            if (r4 > r0) goto L_0x0043
+            if (r8 < r7) goto L_0x0043
+            if (r8 > r9) goto L_0x0043
+            if (r4 != r7) goto L_0x0029
+            r10[r3] = r6
+        L_0x0027:
+            r4 = r2
+            goto L_0x0032
+        L_0x0029:
+            if (r4 != r0) goto L_0x0031
+            int r4 = r0 + -1
+            float r4 = (float) r4
+            r10[r3] = r4
+            goto L_0x0027
+        L_0x0031:
+            r4 = r1
+        L_0x0032:
+            if (r8 != r7) goto L_0x0038
+            r10[r5] = r6
+        L_0x0036:
+            r4 = r2
+            goto L_0x0040
+        L_0x0038:
+            if (r8 != r9) goto L_0x0040
+            int r4 = r9 + -1
+            float r4 = (float) r4
+            r10[r5] = r4
+            goto L_0x0036
+        L_0x0040:
+            int r3 = r3 + 2
+            goto L_0x000c
+        L_0x0043:
+            com.google.zxing.NotFoundException r9 = com.google.zxing.NotFoundException.getNotFoundInstance()
+            throw r9
+        L_0x0048:
+            int r3 = r10.length
+            int r3 = r3 + -2
+            r4 = r2
+        L_0x004c:
+            if (r3 < 0) goto L_0x0085
+            if (r4 == 0) goto L_0x0085
+            r4 = r10[r3]
+            int r4 = (int) r4
+            int r5 = r3 + 1
+            r8 = r10[r5]
+            int r8 = (int) r8
+            if (r4 < r7) goto L_0x0080
+            if (r4 > r0) goto L_0x0080
+            if (r8 < r7) goto L_0x0080
+            if (r8 > r9) goto L_0x0080
+            if (r4 != r7) goto L_0x0066
+            r10[r3] = r6
+        L_0x0064:
+            r4 = r2
+            goto L_0x006f
+        L_0x0066:
+            if (r4 != r0) goto L_0x006e
+            int r4 = r0 + -1
+            float r4 = (float) r4
+            r10[r3] = r4
+            goto L_0x0064
+        L_0x006e:
+            r4 = r1
+        L_0x006f:
+            if (r8 != r7) goto L_0x0075
+            r10[r5] = r6
+        L_0x0073:
+            r4 = r2
+            goto L_0x007d
+        L_0x0075:
+            if (r8 != r9) goto L_0x007d
+            int r4 = r9 + -1
+            float r4 = (float) r4
+            r10[r5] = r4
+            goto L_0x0073
+        L_0x007d:
+            int r3 = r3 + -2
+            goto L_0x004c
+        L_0x0080:
+            com.google.zxing.NotFoundException r9 = com.google.zxing.NotFoundException.getNotFoundInstance()
+            throw r9
+        L_0x0085:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.common.GridSampler.checkAndNudgePoints(com.google.zxing.common.BitMatrix, float[]):void");
     }
 }

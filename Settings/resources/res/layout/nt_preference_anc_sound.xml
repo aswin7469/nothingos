@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content">
+    <LinearLayout android:gravity="center" android:layout_gravity="center_horizontal" android:orientation="vertical" android:id="@+id/denoise_top_panel_layout" android:background="@drawable/nt_bluetooth_denoise_sound_background_top" android:paddingTop="32dp" android:paddingBottom="32dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="25dp">
+        <RelativeLayout android:background="@drawable/nt_bluetooth_denoise_background" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginHorizontal="16dp">
+            <LinearLayout android:gravity="center" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_centerVertical="true">
+                <View android:id="@+id/denoise_animator_view" android:background="@drawable/nt_bluetooth_denoise_selected_background" android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1" android:layout_marginStart="4dp" android:layout_marginEnd="16dp"/>
+                <View android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1"/>
+                <View android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1"/>
+            </LinearLayout>
+            <LinearLayout android:gravity="center" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_centerVertical="true">
+                <ImageView android:id="@+id/denoise_on" android:background="@drawable/nt_bluetooth_denoise_selected_background" android:layout_width="0dp" android:layout_height="40dp" android:src="@drawable/nt_ic_bluetooth_denoise_on_selected" android:scaleType="center" android:layout_weight="1" android:layout_marginStart="4dp"/>
+                <ImageView android:id="@+id/denoise_off" android:layout_width="0dp" android:layout_height="40dp" android:src="@drawable/nt_ic_bluetooth_denoise_off" android:scaleType="center" android:layout_weight="1" android:layout_marginStart="4dp"/>
+                <ImageView android:id="@+id/denoise_trans" android:layout_width="0dp" android:layout_height="40dp" android:src="@drawable/nt_ic_bluetooth_denoise_trans" android:scaleType="center" android:layout_weight="1" android:layout_marginStart="4dp" android:layout_marginEnd="4dp"/>
+            </LinearLayout>
+        </RelativeLayout>
+        <LinearLayout android:gravity="center" android:layout_gravity="center_horizontal" android:orientation="horizontal" android:paddingTop="8dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="16dp">
+            <TextView android:textSize="14sp" android:textColor="@color/nothing_bluetooth_denoise_textcolor" android:ellipsize="end" android:gravity="center" android:layout_width="0dp" android:layout_height="wrap_content" android:text="@string/anc_noise_cancellation_single_line" android:maxLines="2" android:layout_weight="1"/>
+            <TextView android:textSize="14sp" android:textColor="@color/nothing_bluetooth_denoise_textcolor" android:ellipsize="end" android:gravity="center" android:layout_width="0dp" android:layout_height="wrap_content" android:text="@string/anc_noise_off" android:maxLines="2" android:layout_weight="1"/>
+            <TextView android:textSize="14sp" android:textColor="@color/nothing_bluetooth_denoise_textcolor" android:ellipsize="end" android:gravity="center" android:layout_width="0dp" android:layout_height="wrap_content" android:text="@string/anc_noise_transparency" android:maxLines="2" android:layout_weight="1"/>
+        </LinearLayout>
+    </LinearLayout>
+    <RelativeLayout android:id="@+id/denoise_on_level" android:background="@drawable/nt_bluetooth_denoise_sound_background_bottom" android:paddingBottom="32dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:animateLayoutChanges="true" android:translationZ="-1dp" android:layout_marginHorizontal="25dp">
+        <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:layout_centerHorizontal="true" android:layout_marginHorizontal="70dp">
+            <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@+id/denoise_on_high" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="24dp">
+                    <View android:id="@+id/denoise_on_high_back" android:background="@drawable/nt_bluetooth_denoise_background_one" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_centerHorizontal="true" android:layout_marginStart="-5dp" android:layout_alignStart="@+id/denoise_on_high_image"/>
+                    <ImageView android:id="@+id/denoise_on_high_image" android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/nt_ic_bluetooth_denoise_sound_unselected" android:scaleType="center" android:layout_centerInParent="true"/>
+                </RelativeLayout>
+                <TextView android:textSize="14sp" android:textColor="@color/nothing_bluetooth_denoise_textcolor" android:ellipsize="end" android:gravity="center" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="@string/anc_noise_high" android:maxLines="2"/>
+            </LinearLayout>
+            <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@+id/denoise_on_mid" android:visibility="visible" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="24dp">
+                    <View android:background="@drawable/nt_bluetooth_denoise_background_three" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_centerHorizontal="true"/>
+                    <ImageView android:id="@+id/denoise_on_mid_image" android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/nt_ic_bluetooth_denoise_sound_unselected" android:scaleType="center" android:layout_centerInParent="true"/>
+                </RelativeLayout>
+                <TextView android:textSize="14sp" android:textColor="@color/nothing_bluetooth_denoise_textcolor" android:ellipsize="end" android:gravity="center" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="@string/anc_noise_mid" android:maxLines="2"/>
+            </LinearLayout>
+            <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@+id/denoise_on_low" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="24dp">
+                    <View android:id="@+id/denoise_on_low_back" android:background="@drawable/nt_bluetooth_denoise_background_three" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_centerHorizontal="true"/>
+                    <ImageView android:id="@+id/denoise_on_low_image" android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/nt_ic_bluetooth_denoise_sound_unselected" android:scaleType="center" android:layout_centerInParent="true"/>
+                </RelativeLayout>
+                <TextView android:textSize="14sp" android:textColor="@color/nothing_bluetooth_denoise_textcolor" android:ellipsize="end" android:gravity="center" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="@string/anc_noise_low" android:maxLines="2"/>
+            </LinearLayout>
+            <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@+id/denoise_on_adaptive" android:visibility="visible" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="24dp">
+                    <View android:id="@+id/denoise_on_adaptive_back" android:background="@drawable/nt_bluetooth_denoise_background_two" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_centerHorizontal="true" android:layout_marginEnd="-5dp" android:layout_alignEnd="@+id/denoise_on_adaptive_image"/>
+                    <ImageView android:id="@+id/denoise_on_adaptive_image" android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/nt_ic_bluetooth_denoise_sound_unselected" android:scaleType="center" android:layout_centerInParent="true"/>
+                </RelativeLayout>
+                <TextView android:textSize="14sp" android:textColor="@color/nothing_bluetooth_denoise_textcolor" android:ellipsize="end" android:gravity="center" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="@string/anc_noise_adaptive" android:maxLines="2"/>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="24dp" android:layout_marginTop="4dp" android:layout_marginHorizontal="70dp">
+            <ImageView android:id="@+id/denoise_bottom_anc_anim" android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/nt_ic_bluetooth_denoise_sound_selected" android:scaleType="center" android:layout_weight="1"/>
+            <ImageView android:id="@+id/denoise_bottom_anc_anim_mid" android:visibility="visible" android:layout_width="16dp" android:layout_height="16dp" android:scaleType="center" android:layout_weight="1"/>
+            <ImageView android:id="@+id/denoise_bottom_anc_anim_low" android:layout_width="16dp" android:layout_height="16dp" android:scaleType="center" android:layout_weight="1"/>
+            <ImageView android:id="@+id/denoise_bottom_anc_anim_adaptive" android:visibility="visible" android:layout_width="16dp" android:layout_height="16dp" android:scaleType="center" android:layout_weight="1"/>
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

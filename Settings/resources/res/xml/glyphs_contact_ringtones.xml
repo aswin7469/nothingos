@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:persistent="false" android:title="@string/nt_glyphs_ringtones">
+    <PreferenceCategory android:title="@string/nt_glyphs_all_contacts_ringtone_title">
+        <Preference android:icon="@drawable/ic_default_ringtone" android:title="@string/nt_default_ringtones_title" android:key="glyphs_default_ringtone" android:summary="@string/summary_placeholder" app:searchable="false"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/nt_glyphs_custom_contacts_ringtone_title" android:key="glyphs_contact_ringtones_list">
+        <Preference android:icon="@drawable/ic_add_contact" android:title="@string/nt_glyphs_add_contacts_ringtone_title" android:key="glyphs_add_contact_ringtone" app:searchable="false"/>
+    </PreferenceCategory>
+    <com.android.settingslib.widget.FooterPreference android:title="@string/nt_glyphs_settings_ringtone_footer_title" android:selectable="false" android:key="glyphs_contact_ringtone_footer" app:searchable="false"/>
+</PreferenceScreen>

@@ -8,16 +8,15 @@ import android.view.Display;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.SwitchPreference;
-import com.android.settings.R;
+import com.android.settings.R$bool;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.development.DeveloperOptionsPreferenceController;
-/* loaded from: classes.dex */
+
 public class ForcePeakRefreshRatePreferenceController extends DeveloperOptionsPreferenceController implements Preference.OnPreferenceChangeListener, PreferenceControllerMixin {
     static float DEFAULT_REFRESH_RATE = 60.0f;
     static float NO_CONFIG;
     float mPeakRefreshRate;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "pref_key_peak_refresh_rate";
     }
@@ -34,48 +33,48 @@ public class ForcePeakRefreshRatePreferenceController extends DeveloperOptionsPr
         Log.d("ForcePeakRefreshRateCtr", "DEFAULT_REFRESH_RATE : " + DEFAULT_REFRESH_RATE + " mPeakRefreshRate : " + this.mPeakRefreshRate);
     }
 
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = preferenceScreen.findPreference(getPreferenceKey());
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         forcePeakRefreshRate(((Boolean) obj).booleanValue());
         return true;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         ((SwitchPreference) this.mPreference).setChecked(isForcePeakRefreshRateEnabled());
     }
 
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
-        return this.mContext.getResources().getBoolean(R.bool.config_show_smooth_display) && this.mPeakRefreshRate > DEFAULT_REFRESH_RATE;
+        if (!this.mContext.getResources().getBoolean(R$bool.config_show_smooth_display) || this.mPeakRefreshRate <= DEFAULT_REFRESH_RATE) {
+            return false;
+        }
+        return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController
+    /* access modifiers changed from: protected */
     public void onDeveloperOptionsSwitchDisabled() {
         super.onDeveloperOptionsSwitchDisabled();
         Settings.System.putFloat(this.mContext.getContentResolver(), "min_refresh_rate", NO_CONFIG);
         ((SwitchPreference) this.mPreference).setChecked(false);
     }
 
-    void forcePeakRefreshRate(boolean z) {
+    /* access modifiers changed from: package-private */
+    public void forcePeakRefreshRate(boolean z) {
         Settings.System.putFloat(this.mContext.getContentResolver(), "min_refresh_rate", z ? this.mPeakRefreshRate : NO_CONFIG);
     }
 
-    boolean isForcePeakRefreshRateEnabled() {
+    /* access modifiers changed from: package-private */
+    public boolean isForcePeakRefreshRateEnabled() {
         return Settings.System.getFloat(this.mContext.getContentResolver(), "min_refresh_rate", NO_CONFIG) >= this.mPeakRefreshRate;
     }
 
     private float findPeakRefreshRate(Display.Mode[] modeArr) {
         float f = DEFAULT_REFRESH_RATE;
         for (Display.Mode mode : modeArr) {
-            if (Math.round(mode.getRefreshRate()) > f) {
+            if (((float) Math.round(mode.getRefreshRate())) > f) {
                 f = mode.getRefreshRate();
             }
         }

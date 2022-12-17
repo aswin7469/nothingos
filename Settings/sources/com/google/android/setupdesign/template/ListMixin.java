@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.InsetDrawable;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.HeaderViewListAdapter;
@@ -20,7 +19,7 @@ import com.google.android.setupdesign.items.ItemGroup;
 import com.google.android.setupdesign.items.ItemInflater;
 import com.google.android.setupdesign.util.DrawableLayoutDirectionHelper;
 import com.google.android.setupdesign.util.PartnerStyleHelper;
-/* loaded from: classes2.dex */
+
 public class ListMixin implements Mixin {
     private Drawable defaultDivider;
     private Drawable divider;
@@ -29,22 +28,22 @@ public class ListMixin implements Mixin {
     private ListView listView;
     private final TemplateLayout templateLayout;
 
-    public ListMixin(TemplateLayout templateLayout, AttributeSet attributeSet, int i) {
-        this.templateLayout = templateLayout;
-        Context context = templateLayout.getContext();
+    public ListMixin(TemplateLayout templateLayout2, AttributeSet attributeSet, int i) {
+        this.templateLayout = templateLayout2;
+        Context context = templateLayout2.getContext();
         TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.SudListMixin, i, 0);
         int resourceId = obtainStyledAttributes.getResourceId(R$styleable.SudListMixin_android_entries, 0);
         if (resourceId != 0) {
             setAdapter(new ItemAdapter((ItemGroup) new ItemInflater(context).inflate(resourceId)));
         }
-        if (isDividerShown(context)) {
+        if (isDividerShown(context, obtainStyledAttributes.getBoolean(R$styleable.SudListMixin_sudDividerShown, true))) {
             int dimensionPixelSize = obtainStyledAttributes.getDimensionPixelSize(R$styleable.SudListMixin_sudDividerInset, -1);
             if (dimensionPixelSize != -1) {
                 setDividerInset(dimensionPixelSize);
             } else {
                 int dimensionPixelSize2 = obtainStyledAttributes.getDimensionPixelSize(R$styleable.SudListMixin_sudDividerInsetStart, 0);
                 int dimensionPixelSize3 = obtainStyledAttributes.getDimensionPixelSize(R$styleable.SudListMixin_sudDividerInsetEnd, 0);
-                if (PartnerStyleHelper.shouldApplyPartnerHeavyThemeResource(templateLayout)) {
+                if (PartnerStyleHelper.shouldApplyPartnerResource((View) templateLayout2)) {
                     PartnerConfigHelper partnerConfigHelper = PartnerConfigHelper.get(context);
                     PartnerConfig partnerConfig = PartnerConfig.CONFIG_LAYOUT_MARGIN_START;
                     dimensionPixelSize2 = partnerConfigHelper.isPartnerConfigAvailable(partnerConfig) ? (int) PartnerConfigHelper.get(context).getDimension(context, partnerConfig) : dimensionPixelSize2;
@@ -56,21 +55,19 @@ public class ListMixin implements Mixin {
                 }
                 setDividerInsets(dimensionPixelSize2, dimensionPixelSize3);
             }
+        } else {
+            getListView().setDivider((Drawable) null);
         }
         obtainStyledAttributes.recycle();
     }
 
-    private boolean isDividerShown(Context context) {
-        boolean z;
-        if (PartnerStyleHelper.shouldApplyPartnerResource(this.templateLayout)) {
-            PartnerConfigHelper partnerConfigHelper = PartnerConfigHelper.get(context);
-            PartnerConfig partnerConfig = PartnerConfig.CONFIG_ITEMS_DIVIDER_SHOWN;
-            if (partnerConfigHelper.isPartnerConfigAvailable(partnerConfig) && !(z = PartnerConfigHelper.get(context).getBoolean(context, partnerConfig, true))) {
-                getListView().setDivider(null);
-                return z;
-            }
+    private boolean isDividerShown(Context context, boolean z) {
+        if (!PartnerStyleHelper.shouldApplyPartnerResource((View) this.templateLayout)) {
+            return z;
         }
-        return true;
+        PartnerConfigHelper partnerConfigHelper = PartnerConfigHelper.get(context);
+        PartnerConfig partnerConfig = PartnerConfig.CONFIG_ITEMS_DIVIDER_SHOWN;
+        return partnerConfigHelper.isPartnerConfigAvailable(partnerConfig) ? PartnerConfigHelper.get(context).getBoolean(context, partnerConfig, true) : z;
     }
 
     public ListView getListView() {
@@ -95,11 +92,11 @@ public class ListMixin implements Mixin {
 
     public ListAdapter getAdapter() {
         ListView listViewInternal = getListViewInternal();
-        if (listViewInternal != null) {
-            ListAdapter adapter = listViewInternal.getAdapter();
-            return adapter instanceof HeaderViewListAdapter ? ((HeaderViewListAdapter) adapter).getWrappedAdapter() : adapter;
+        if (listViewInternal == null) {
+            return null;
         }
-        return null;
+        ListAdapter adapter = listViewInternal.getAdapter();
+        return adapter instanceof HeaderViewListAdapter ? ((HeaderViewListAdapter) adapter).getWrappedAdapter() : adapter;
     }
 
     public void setAdapter(ListAdapter listAdapter) {
@@ -135,26 +132,17 @@ public class ListMixin implements Mixin {
 
     private void updateDivider() {
         ListView listViewInternal = getListViewInternal();
-        if (listViewInternal == null) {
-            return;
+        if (listViewInternal != null && this.templateLayout.isLayoutDirectionResolved()) {
+            if (this.defaultDivider == null) {
+                this.defaultDivider = listViewInternal.getDivider();
+            }
+            Drawable drawable = this.defaultDivider;
+            if (drawable != null) {
+                InsetDrawable createRelativeInsetDrawable = DrawableLayoutDirectionHelper.createRelativeInsetDrawable(drawable, this.dividerInsetStart, 0, this.dividerInsetEnd, 0, (View) this.templateLayout);
+                this.divider = createRelativeInsetDrawable;
+                listViewInternal.setDivider(createRelativeInsetDrawable);
+            }
         }
-        boolean z = true;
-        if (Build.VERSION.SDK_INT >= 19) {
-            z = this.templateLayout.isLayoutDirectionResolved();
-        }
-        if (!z) {
-            return;
-        }
-        if (this.defaultDivider == null) {
-            this.defaultDivider = listViewInternal.getDivider();
-        }
-        Drawable drawable = this.defaultDivider;
-        if (drawable == null) {
-            return;
-        }
-        InsetDrawable createRelativeInsetDrawable = DrawableLayoutDirectionHelper.createRelativeInsetDrawable(drawable, this.dividerInsetStart, 0, this.dividerInsetEnd, 0, this.templateLayout);
-        this.divider = createRelativeInsetDrawable;
-        listViewInternal.setDivider(createRelativeInsetDrawable);
     }
 
     public Drawable getDivider() {

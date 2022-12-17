@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
+
 public class AdbPairedDevicePreference extends Preference {
     private PairDevice mPairedDevice;
 
@@ -18,8 +20,9 @@ public class AdbPairedDevicePreference extends Preference {
         refresh();
     }
 
-    protected int getWidgetLayoutResourceId() {
-        return R.layout.preference_widget_gear_optional_background;
+    /* access modifiers changed from: protected */
+    public int getWidgetLayoutResourceId() {
+        return R$layout.preference_widget_gear_optional_background;
     }
 
     public void refresh() {
@@ -30,18 +33,17 @@ public class AdbPairedDevicePreference extends Preference {
         this.mPairedDevice = pairDevice;
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
-        View findViewById = preferenceViewHolder.findViewById(R.id.settings_button);
-        View findViewById2 = preferenceViewHolder.findViewById(R.id.settings_button_no_background);
+        View findViewById = preferenceViewHolder.findViewById(R$id.settings_button);
+        View findViewById2 = preferenceViewHolder.findViewById(R$id.settings_button_no_background);
         findViewById.setVisibility(4);
         findViewById2.setVisibility(0);
     }
 
     static void setTitle(AdbPairedDevicePreference adbPairedDevicePreference, PairDevice pairDevice) {
-        adbPairedDevicePreference.setTitle(pairDevice.getDeviceName());
-        adbPairedDevicePreference.setSummary(pairDevice.isConnected() ? adbPairedDevicePreference.getContext().getText(R.string.adb_wireless_device_connected_summary) : "");
+        adbPairedDevicePreference.setTitle((CharSequence) pairDevice.name);
+        adbPairedDevicePreference.setSummary(pairDevice.connected ? adbPairedDevicePreference.getContext().getText(R$string.adb_wireless_device_connected_summary) : "");
     }
 
     public void savePairedDeviceToExtras(Bundle bundle) {

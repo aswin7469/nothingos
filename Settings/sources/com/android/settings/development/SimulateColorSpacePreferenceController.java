@@ -6,15 +6,14 @@ import android.content.res.Resources;
 import android.provider.Settings;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.development.DeveloperOptionsPreferenceController;
-/* loaded from: classes.dex */
+
 public class SimulateColorSpacePreferenceController extends DeveloperOptionsPreferenceController implements Preference.OnPreferenceChangeListener, PreferenceControllerMixin {
     static final int SETTING_VALUE_OFF = 0;
     static final int SETTING_VALUE_ON = 1;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "simulate_color_space";
     }
@@ -23,18 +22,15 @@ public class SimulateColorSpacePreferenceController extends DeveloperOptionsPref
         super(context);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         writeSimulateColorSpace(obj);
         return true;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         updateSimulateColorSpace();
     }
 
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController
     public void onDeveloperOptionsDisabled() {
         super.onDeveloperOptionsDisabled();
         if (usingDevelopmentColorSpace()) {
@@ -51,7 +47,7 @@ public class SimulateColorSpacePreferenceController extends DeveloperOptionsPref
             listPreference.setValue(num);
             if (listPreference.findIndexOfValue(num) < 0) {
                 Resources resources = this.mContext.getResources();
-                listPreference.setSummary(resources.getString(R.string.daltonizer_type_overridden, resources.getString(R.string.accessibility_display_daltonizer_preference_title)));
+                listPreference.setSummary(resources.getString(R$string.daltonizer_type_overridden, new Object[]{resources.getString(R$string.accessibility_display_daltonizer_preference_title)}));
                 return;
             }
             listPreference.setSummary("%s");

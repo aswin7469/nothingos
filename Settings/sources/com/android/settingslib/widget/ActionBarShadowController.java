@@ -6,7 +6,7 @@ import android.view.View;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
-/* loaded from: classes.dex */
+
 public class ActionBarShadowController implements LifecycleObserver {
     static final float ELEVATION_HIGH = 8.0f;
     static final float ELEVATION_LOW = 0.0f;
@@ -36,13 +36,11 @@ public class ActionBarShadowController implements LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     private void detachScrollWatcher() {
-        this.mScrollView.setOnScrollChangeListener(null);
+        this.mScrollView.setOnScrollChangeListener((View.OnScrollChangeListener) null);
         this.mIsScrollWatcherAttached = false;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public final class ScrollChangeWatcher implements View.OnScrollChangeListener {
+    final class ScrollChangeWatcher implements View.OnScrollChangeListener {
         private final Activity mActivity;
         private final View mAnchorView = null;
 
@@ -50,7 +48,6 @@ public class ActionBarShadowController implements LifecycleObserver {
             this.mActivity = activity;
         }
 
-        @Override // android.view.View.OnScrollChangeListener
         public void onScrollChange(View view, int i, int i2, int i3, int i4) {
             updateDropShadow(view);
         }
@@ -68,13 +65,12 @@ public class ActionBarShadowController implements LifecycleObserver {
                 return;
             }
             Activity activity = this.mActivity;
-            if (activity == null || (actionBar = activity.getActionBar()) == null) {
-                return;
+            if (activity != null && (actionBar = activity.getActionBar()) != null) {
+                if (!canScrollVertically) {
+                    f = 0.0f;
+                }
+                actionBar.setElevation(f);
             }
-            if (!canScrollVertically) {
-                f = 0.0f;
-            }
-            actionBar.setElevation(f);
         }
     }
 }

@@ -33,7 +33,7 @@
         <item>IPv4/IPv6</item>
     </array>
     <array name="app_install_location_entries">
-        <item>আভ্যন্তৰীণ ডিভাইচ সঞ্চয়াগাৰ</item>
+        <item>আভ্যন্তৰীণ ডিভাইচ ষ্ট’ৰেজ</item>
         <item>গুচাব পৰা SD কাৰ্ড</item>
         <item>ছিষ্টেমটোক সিদ্ধান্ত ল’বলৈ দিয়ক</item>
     </array>
@@ -104,8 +104,8 @@
         <item>শৰীৰৰ ছেন্সৰসমূহ</item>
         <item>চেল সম্প্ৰচাৰবোৰ পঢ়ক</item>
         <item>নকল অৱস্থান</item>
-        <item>সঞ্চয়াগাৰ পঢ়ক</item>
-        <item>সঞ্চয়াগাৰত লিখক</item>
+        <item>ষ্ট’ৰেজত পঢ়ক</item>
+        <item>ষ্ট’ৰেজত লিখক</item>
         <item>স্ক্ৰীন অন কৰক</item>
         <item>একাউণ্টবোৰ বিচাৰক</item>
         <item>নেপথ্যত চলাওক</item>
@@ -171,8 +171,8 @@
         <item>শৰীৰৰ ছেন্সৰসমূহ</item>
         <item>চেল সম্প্ৰচাৰসমূহ পঢ়ক</item>
         <item>নকল অৱস্থান</item>
-        <item>সঞ্চয়াগাৰত পঢ়ক</item>
-        <item>সঞ্চয়াগাৰত লিখক</item>
+        <item>ষ্ট’ৰেজত পঢ়ক</item>
+        <item>ষ্ট’ৰেজত লিখক</item>
         <item>স্ক্ৰীন অন কৰক</item>
         <item>একাউণ্টবোৰ বিচাৰক</item>
         <item>নেপথ্যত চলাওক</item>
@@ -195,6 +195,8 @@
         <item>৩০দিনতকৈ অধিক পুৰণি</item>
         <item>৬০ দিনতকৈ অধিক পুৰণি</item>
         <item>৯০ দিনতকৈ অধিক পুৰণি</item>
+    </array>
+    <array name="avatar_image_descriptions">
     </array>
     <array name="battery_labels">
         <item>০%</item>
@@ -260,6 +262,8 @@
         <item>৪৮.০ কিল’হাৰ্টজ</item>
         <item>৮৮.২ কিল&apos;হাৰ্টজ</item>
         <item>৯৬.০ কিল’হাৰ্টজ</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
         <item>ছিষ্টেমৰ বাছনি ব্যৱহাৰ কৰক (ডিফ&apos;ল্ট)</item>
@@ -267,6 +271,8 @@
         <item>৪৮.০ কিল’হাৰ্টজ</item>
         <item>৮৮.২ কিল&apos;হাৰ্টজ</item>
         <item>৯৬.০ কিল’হাৰ্টজ</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
         <item>ছিষ্টেমৰ বাছনি ব্যৱহাৰ কৰক (ডিফ&apos;ল্ট)</item>
@@ -277,6 +283,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive অডিঅ&apos;</item>
         <item>Qualcomm® aptX™ TWS+ অডিঅ&apos;</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
         <item>ছিষ্টেমৰ বাছনি ব্যৱহাৰ কৰক (ডিফ&apos;ল্ট)</item>
@@ -287,6 +297,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive অডিঅ&apos;</item>
         <item>Qualcomm® aptX™ TWS+ অডিঅ&apos;</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -343,17 +357,10 @@
         <item>উঠঙা</item>
         <item>পোটোকা পৰা</item>
     </array>
-    <array name="captioning_font_size_selector_summaries">
-        <item>অতি সৰু পাঠৰ আকাৰ</item>
-        <item>সৰু পাঠৰ আকাৰ</item>
-        <item>ডিফ’ল্ট পাঠৰ আকাৰ</item>
-        <item>ডাঙৰ পাঠৰ আকাৰ</item>
-        <item>অতি ডাঙৰ পাঠৰ আকাৰ</item>
-    </array>
     <array name="captioning_font_size_selector_titles">
         <item>নিচেই সৰু</item>
         <item>সৰু</item>
-        <item>ডিফ’ল্ট</item>
+        <item>মধ্যম</item>
         <item>ডাঙৰ</item>
         <item>অতি ডাঙৰ</item>
     </array>
@@ -485,6 +492,14 @@
         <item>IMSI</item>
         <item>GID</item>
     </array>
+    <array name="nfc_payment_favor">
+        <item>সদায়</item>
+        <item>পৰিশোধৰ অন্য এপ্ খোল খাই থকাৰ বাদে</item>
+    </array>
+    <array name="nfc_payment_favor_values">
+        <item>@null</item>
+        <item>1</item>
+    </array>
     <array name="overlay_display_devices_entries">
         <item>নাই</item>
         <item>৪৮০পি.</item>
@@ -602,14 +617,14 @@
     </array>
     <array name="select_logpersist_summaries">
         <item>অফ কৰক</item>
-        <item>সকলো লগ বাফাৰ</item>
-        <item>ৰেডিঅ&apos; লগ বাফাৰৰ বাহিৰে সকলো</item>
+        <item>আটাইবোৰ লগ বাফাৰ</item>
+        <item>ৰেডিঅ&apos; লগ বাফাৰৰ বাহিৰে আটাইবোৰ</item>
         <item>কেৱল কাৰ্ণেল লগ বাফাৰ</item>
     </array>
     <array name="select_logpersist_titles">
         <item>অফ অৱস্থাত আছে</item>
-        <item>সকলো</item>
-        <item>ৰেডিঅ&apos;ৰ বাহিৰে সকলো</item>
+        <item>আটাইবোৰ</item>
+        <item>ৰেডিঅ&apos;ৰ বাহিৰে আটাইবোৰ</item>
         <item>কেৱল কাৰ্ণেল</item>
     </array>
     <array name="show_non_rect_clip_entries">
@@ -617,17 +632,20 @@
         <item>আয়তাকাৰ নোহোৱা ক্লিপ অঞ্চল নীলাৰে আঁকক</item>
         <item>পৰীক্ষণ কৰা চিত্ৰাংকণ কমাণ্ডবোৰ সেউজীয়া ৰঙত হাইলাইট কৰক</item>
     </array>
-    <array name="sim_color_light">
-        <item>@color/SIM_color_cyan</item>
-        <item>@color/SIM_color_blue800</item>
-        <item>@color/SIM_color_green800</item>
-        <item>@color/SIM_color_purple800</item>
-        <item>@color/SIM_color_pink800</item>
-        <item>@color/SIM_color_orange</item>
-    </array>
     <array name="swipe_direction_values">
         <item>১</item>
         <item>০</item>
+    </array>
+    <array name="switch_to_user_zero_when_docked_timeout_entries">
+        <item>কেতিয়াও নহয়</item>
+        <item>১ মিনিটৰ পাছত</item>
+        <item>৫ মিনিটৰ পাছত</item>
+    </array>
+    <array name="tare_modifiers_subfactors">
+        <item>চাৰ্জ হৈ আছে</item>
+        <item>ড’জ</item>
+        <item>পাৱাৰ সঞ্চয়কাৰী ম’ড</item>
+        <item>প্ৰক্ৰিয়াৰ স্থিতি</item>
     </array>
     <array name="timezone_filters">
         <item>আমেৰিকা</item>
@@ -636,7 +654,7 @@
         <item>এছিয়া</item>
         <item>অষ্ট্ৰেলিয়া</item>
         <item>প্ৰশান্ত মহাসাগৰীয়</item>
-        <item>সকলো</item>
+        <item>আটাইবোৰ</item>
     </array>
     <array name="track_frame_time_entries">
         <item>অফ হৈ আছে</item>
@@ -723,7 +741,7 @@
         <item>নিশ্চল</item>
     </array>
     <array name="wifi_metered_entries">
-        <item>স্ৱয়ংক্ৰিয়ভাৱে চিনাক্ত কৰক</item>
+        <item>স্বয়ংক্ৰিয়ভাৱে চিনাক্ত কৰক</item>
         <item>নিৰিখ-নিৰ্দিষ্ট হিচাপে ব্যৱহাৰ কৰক</item>
         <item>নিৰিখ অনিৰ্দিষ্ট বুলি গণ্য কৰক</item>
     </array>
@@ -756,7 +774,7 @@
     </array>
     <array name="wifi_proxy_settings">
         <item>নাই</item>
-        <item>হস্তকৃত</item>
+        <item>মেনুৱেল</item>
         <item>প্ৰক্সি স্বয়ং-কনফিগাৰেশ্বন</item>
     </array>
     <array name="wifi_signal">

@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import androidx.preference.PreferenceViewHolder;
 import androidx.preference.SwitchPreference;
-/* loaded from: classes.dex */
+
 public class AppSwitchPreference extends SwitchPreference {
     public AppSwitchPreference(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
@@ -27,7 +27,6 @@ public class AppSwitchPreference extends SwitchPreference {
         setLayoutResource(R$layout.preference_app);
     }
 
-    @Override // androidx.preference.SwitchPreference, androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         View findViewById = preferenceViewHolder.findViewById(16908352);

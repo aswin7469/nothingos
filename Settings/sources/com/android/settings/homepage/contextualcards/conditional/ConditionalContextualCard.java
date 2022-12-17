@@ -1,20 +1,19 @@
 package com.android.settings.homepage.contextualcards.conditional;
 
 import com.android.settings.homepage.contextualcards.ContextualCard;
-/* loaded from: classes.dex */
+
 public class ConditionalContextualCard extends ContextualCard {
     static final double UNSUPPORTED_RANKING_SCORE = -100.0d;
     private final CharSequence mActionText;
     private final long mConditionId;
     private final int mMetricsConstant;
 
-    @Override // com.android.settings.homepage.contextualcards.ContextualCard
     public int getCardType() {
         return 3;
     }
 
     private ConditionalContextualCard(Builder builder) {
-        super(builder);
+        super((ContextualCard.Builder) builder);
         this.mConditionId = builder.mConditionId;
         this.mMetricsConstant = builder.mMetricsConstant;
         this.mActionText = builder.mActionText;
@@ -32,11 +31,13 @@ public class ConditionalContextualCard extends ContextualCard {
         return this.mActionText;
     }
 
-    /* loaded from: classes.dex */
     public static class Builder extends ContextualCard.Builder {
-        private CharSequence mActionText;
-        private long mConditionId;
-        private int mMetricsConstant;
+        /* access modifiers changed from: private */
+        public CharSequence mActionText;
+        /* access modifiers changed from: private */
+        public long mConditionId;
+        /* access modifiers changed from: private */
+        public int mMetricsConstant;
 
         public Builder setConditionId(long j) {
             this.mConditionId = j;
@@ -53,15 +54,11 @@ public class ConditionalContextualCard extends ContextualCard {
             return this;
         }
 
-        @Override // com.android.settings.homepage.contextualcards.ContextualCard.Builder
-        /* renamed from: setCardType  reason: collision with other method in class */
-        public Builder mo390setCardType(int i) {
-            throw new IllegalArgumentException("Cannot change card type for " + Builder.class.getName());
+        public Builder setCardType(int i) {
+            throw new IllegalArgumentException("Cannot change card type for " + getClass().getName());
         }
 
-        @Override // com.android.settings.homepage.contextualcards.ContextualCard.Builder
-        /* renamed from: build  reason: collision with other method in class */
-        public ConditionalContextualCard mo389build() {
+        public ConditionalContextualCard build() {
             setRankingScore(ConditionalContextualCard.UNSUPPORTED_RANKING_SCORE);
             return new ConditionalContextualCard(this);
         }

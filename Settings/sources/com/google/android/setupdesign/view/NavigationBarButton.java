@@ -6,11 +6,10 @@ import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.Button;
+
 @SuppressLint({"AppCompatCustomView"})
-/* loaded from: classes2.dex */
 public class NavigationBarButton extends Button {
     public NavigationBarButton(Context context) {
         super(context);
@@ -23,18 +22,18 @@ public class NavigationBarButton extends Button {
     }
 
     private void init() {
-        if (!isInEditMode() && Build.VERSION.SDK_INT >= 17) {
+        if (!isInEditMode()) {
             Drawable[] compoundDrawablesRelative = getCompoundDrawablesRelative();
             for (int i = 0; i < compoundDrawablesRelative.length; i++) {
-                if (compoundDrawablesRelative[i] != null) {
-                    compoundDrawablesRelative[i] = TintedDrawable.wrap(compoundDrawablesRelative[i]);
+                Drawable drawable = compoundDrawablesRelative[i];
+                if (drawable != null) {
+                    compoundDrawablesRelative[i] = TintedDrawable.wrap(drawable);
                 }
             }
             setCompoundDrawablesRelativeWithIntrinsicBounds(compoundDrawablesRelative[0], compoundDrawablesRelative[1], compoundDrawablesRelative[2], compoundDrawablesRelative[3]);
         }
     }
 
-    @Override // android.widget.TextView
     public void setCompoundDrawables(Drawable drawable, Drawable drawable2, Drawable drawable3, Drawable drawable4) {
         if (drawable != null) {
             drawable = TintedDrawable.wrap(drawable);
@@ -52,7 +51,6 @@ public class NavigationBarButton extends Button {
         tintDrawables();
     }
 
-    @Override // android.widget.TextView
     public void setCompoundDrawablesRelative(Drawable drawable, Drawable drawable2, Drawable drawable3, Drawable drawable4) {
         if (drawable != null) {
             drawable = TintedDrawable.wrap(drawable);
@@ -70,14 +68,12 @@ public class NavigationBarButton extends Button {
         tintDrawables();
     }
 
-    @Override // android.widget.TextView
     public void setTextColor(ColorStateList colorStateList) {
         super.setTextColor(colorStateList);
         tintDrawables();
     }
 
     private void tintDrawables() {
-        Drawable[] allCompoundDrawables;
         ColorStateList textColors = getTextColors();
         if (textColors != null) {
             for (Drawable drawable : getAllCompoundDrawables()) {
@@ -90,26 +86,14 @@ public class NavigationBarButton extends Button {
     }
 
     private Drawable[] getAllCompoundDrawables() {
-        Drawable[] drawableArr = new Drawable[6];
         Drawable[] compoundDrawables = getCompoundDrawables();
-        drawableArr[0] = compoundDrawables[0];
-        drawableArr[1] = compoundDrawables[1];
-        drawableArr[2] = compoundDrawables[2];
-        drawableArr[3] = compoundDrawables[3];
-        if (Build.VERSION.SDK_INT >= 17) {
-            Drawable[] compoundDrawablesRelative = getCompoundDrawablesRelative();
-            drawableArr[4] = compoundDrawablesRelative[0];
-            drawableArr[5] = compoundDrawablesRelative[2];
-        }
-        return drawableArr;
+        Drawable[] compoundDrawablesRelative = getCompoundDrawablesRelative();
+        return new Drawable[]{compoundDrawables[0], compoundDrawables[1], compoundDrawables[2], compoundDrawables[3], compoundDrawablesRelative[0], compoundDrawablesRelative[2]};
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static class TintedDrawable extends LayerDrawable {
+    private static class TintedDrawable extends LayerDrawable {
         private ColorStateList tintList = null;
 
-        @Override // android.graphics.drawable.LayerDrawable, android.graphics.drawable.Drawable
         public boolean isStateful() {
             return true;
         }
@@ -125,7 +109,6 @@ public class NavigationBarButton extends Button {
             super(new Drawable[]{drawable});
         }
 
-        @Override // android.graphics.drawable.Drawable
         public boolean setState(int[] iArr) {
             return super.setState(iArr) || updateState();
         }
@@ -139,11 +122,11 @@ public class NavigationBarButton extends Button {
 
         private boolean updateState() {
             ColorStateList colorStateList = this.tintList;
-            if (colorStateList != null) {
-                setColorFilter(colorStateList.getColorForState(getState(), 0), PorterDuff.Mode.SRC_IN);
-                return true;
+            if (colorStateList == null) {
+                return false;
             }
-            return false;
+            setColorFilter(colorStateList.getColorForState(getState(), 0), PorterDuff.Mode.SRC_IN);
+            return true;
         }
     }
 }

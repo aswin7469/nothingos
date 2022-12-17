@@ -11,7 +11,7 @@ import android.telephony.SubscriptionManager;
 import android.text.TextUtils;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-/* loaded from: classes.dex */
+
 public abstract class ActiveSubscriptionsListener extends SubscriptionManager.OnSubscriptionsChangedListener implements AutoCloseable {
     private AtomicInteger mCacheState;
     private List<SubscriptionInfo> mCachedActiveSubscriptionInfo;
@@ -21,7 +21,8 @@ public abstract class ActiveSubscriptionsListener extends SubscriptionManager.On
     private IntentFilter mSubscriptionChangeIntentFilter;
     private BroadcastReceiver mSubscriptionChangeReceiver;
     private SubscriptionManager mSubscriptionManager;
-    private final int mTargetSubscriptionId;
+    /* access modifiers changed from: private */
+    public final int mTargetSubscriptionId;
 
     public abstract void onChanged();
 
@@ -43,32 +44,30 @@ public abstract class ActiveSubscriptionsListener extends SubscriptionManager.On
         this.mSubscriptionChangeIntentFilter.addAction("android.telephony.action.MULTI_SIM_CONFIG_CHANGED");
     }
 
-    BroadcastReceiver getSubscriptionChangeReceiver() {
-        return new BroadcastReceiver() { // from class: com.android.settings.network.ActiveSubscriptionsListener.1
-            @Override // android.content.BroadcastReceiver
+    /* access modifiers changed from: package-private */
+    public BroadcastReceiver getSubscriptionChangeReceiver() {
+        return new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
-                if (isInitialStickyBroadcast()) {
-                    return;
-                }
-                String action = intent.getAction();
-                if (TextUtils.isEmpty(action)) {
-                    return;
-                }
-                if ("android.telephony.action.CARRIER_CONFIG_CHANGED".equals(action)) {
-                    int intExtra = intent.getIntExtra("android.telephony.extra.SUBSCRIPTION_INDEX", -1);
-                    if (!ActiveSubscriptionsListener.this.clearCachedSubId(intExtra)) {
-                        return;
+                if (!isInitialStickyBroadcast()) {
+                    String action = intent.getAction();
+                    if (!TextUtils.isEmpty(action)) {
+                        if ("android.telephony.action.CARRIER_CONFIG_CHANGED".equals(action)) {
+                            int intExtra = intent.getIntExtra("android.telephony.extra.SUBSCRIPTION_INDEX", -1);
+                            if (ActiveSubscriptionsListener.this.clearCachedSubId(intExtra)) {
+                                if (SubscriptionManager.isValidSubscriptionId(ActiveSubscriptionsListener.this.mTargetSubscriptionId) && SubscriptionManager.isValidSubscriptionId(intExtra) && ActiveSubscriptionsListener.this.mTargetSubscriptionId != intExtra) {
+                                    return;
+                                }
+                            } else {
+                                return;
+                            }
+                        }
+                        ActiveSubscriptionsListener.this.onSubscriptionsChanged();
                     }
-                    if (SubscriptionManager.isValidSubscriptionId(ActiveSubscriptionsListener.this.mTargetSubscriptionId) && SubscriptionManager.isValidSubscriptionId(intExtra) && ActiveSubscriptionsListener.this.mTargetSubscriptionId != intExtra) {
-                        return;
-                    }
                 }
-                ActiveSubscriptionsListener.this.onSubscriptionsChanged();
             }
         };
     }
 
-    @Override // android.telephony.SubscriptionManager.OnSubscriptionsChangedListener
     public void onSubscriptionsChanged() {
         clearCache();
         listenerNotify();
@@ -82,7 +81,6 @@ public abstract class ActiveSubscriptionsListener extends SubscriptionManager.On
         monitorSubscriptionsChange(false);
     }
 
-    @Override // java.lang.AutoCloseable
     public void close() {
         stop();
     }
@@ -116,9 +114,9 @@ public abstract class ActiveSubscriptionsListener extends SubscriptionManager.On
         if (activeSubscriptionsInfo == null) {
             return null;
         }
-        for (SubscriptionInfo subscriptionInfo : activeSubscriptionsInfo) {
-            if (subscriptionInfo.getSubscriptionId() == i) {
-                return subscriptionInfo;
+        for (SubscriptionInfo next : activeSubscriptionsInfo) {
+            if (next.getSubscriptionId() == i) {
+                return next;
             }
         }
         return null;
@@ -137,9 +135,9 @@ public abstract class ActiveSubscriptionsListener extends SubscriptionManager.On
         if (accessibleSubscriptionsInfo == null) {
             return null;
         }
-        for (SubscriptionInfo subscriptionInfo : accessibleSubscriptionsInfo) {
-            if (subscriptionInfo.getSubscriptionId() == i) {
-                return subscriptionInfo;
+        for (SubscriptionInfo next : accessibleSubscriptionsInfo) {
+            if (next.getSubscriptionId() == i) {
+                return next;
             }
         }
         return null;
@@ -151,55 +149,52 @@ public abstract class ActiveSubscriptionsListener extends SubscriptionManager.On
         this.mCachedActiveSubscriptionInfo = null;
     }
 
-    void registerForSubscriptionsChange() {
+    /* access modifiers changed from: package-private */
+    public void registerForSubscriptionsChange() {
         getSubscriptionManager().addOnSubscriptionsChangedListener(this.mContext.getMainExecutor(), this);
     }
 
     private void monitorSubscriptionsChange(boolean z) {
-        if (z) {
-            if (!this.mCacheState.compareAndSet(0, 2)) {
+        if (!z) {
+            int andSet = this.mCacheState.getAndSet(1);
+            if (andSet <= 1) {
+                this.mCacheState.compareAndSet(1, andSet);
                 return;
             }
+            BroadcastReceiver broadcastReceiver = this.mSubscriptionChangeReceiver;
+            if (broadcastReceiver != null) {
+                this.mContext.unregisterReceiver(broadcastReceiver);
+            }
+            getSubscriptionManager().removeOnSubscriptionsChangedListener(this);
+            clearCache();
+            this.mCacheState.compareAndSet(1, 0);
+        } else if (this.mCacheState.compareAndSet(0, 2)) {
             if (this.mSubscriptionChangeReceiver == null) {
                 this.mSubscriptionChangeReceiver = getSubscriptionChangeReceiver();
             }
-            this.mContext.registerReceiver(this.mSubscriptionChangeReceiver, this.mSubscriptionChangeIntentFilter, null, new Handler(this.mLooper));
+            this.mContext.registerReceiver(this.mSubscriptionChangeReceiver, this.mSubscriptionChangeIntentFilter, (String) null, new Handler(this.mLooper), 2);
             registerForSubscriptionsChange();
             this.mCacheState.compareAndSet(2, 3);
-            return;
         }
-        int andSet = this.mCacheState.getAndSet(1);
-        if (andSet <= 1) {
-            this.mCacheState.compareAndSet(1, andSet);
-            return;
-        }
-        BroadcastReceiver broadcastReceiver = this.mSubscriptionChangeReceiver;
-        if (broadcastReceiver != null) {
-            this.mContext.unregisterReceiver(broadcastReceiver);
-        }
-        getSubscriptionManager().removeOnSubscriptionsChangedListener(this);
-        clearCache();
-        this.mCacheState.compareAndSet(1, 0);
     }
 
     private void listenerNotify() {
-        if (this.mCacheState.get() < 3) {
-            return;
+        if (this.mCacheState.get() >= 3) {
+            onChanged();
         }
-        onChanged();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public boolean clearCachedSubId(int i) {
         List<SubscriptionInfo> list;
-        if (this.mCacheState.get() >= 4 && (list = this.mCachedActiveSubscriptionInfo) != null) {
-            for (SubscriptionInfo subscriptionInfo : list) {
-                if (subscriptionInfo.getSubscriptionId() == i) {
-                    clearCache();
-                    return true;
-                }
-            }
+        if (this.mCacheState.get() < 4 || (list = this.mCachedActiveSubscriptionInfo) == null) {
             return false;
+        }
+        for (SubscriptionInfo subscriptionId : list) {
+            if (subscriptionId.getSubscriptionId() == i) {
+                clearCache();
+                return true;
+            }
         }
         return false;
     }

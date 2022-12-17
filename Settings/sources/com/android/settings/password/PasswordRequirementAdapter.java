@@ -5,8 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$layout;
+
 public class PasswordRequirementAdapter extends RecyclerView.Adapter<PasswordRequirementViewHolder> {
     private String[] mRequirements;
 
@@ -14,13 +14,10 @@ public class PasswordRequirementAdapter extends RecyclerView.Adapter<PasswordReq
         setHasStableIds(true);
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
-    /* renamed from: onCreateViewHolder  reason: collision with other method in class */
-    public PasswordRequirementViewHolder mo960onCreateViewHolder(ViewGroup viewGroup, int i) {
-        return new PasswordRequirementViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.password_requirement_item, viewGroup, false));
+    public PasswordRequirementViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        return new PasswordRequirementViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R$layout.password_requirement_item, viewGroup, false));
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public int getItemCount() {
         return this.mRequirements.length;
     }
@@ -30,19 +27,17 @@ public class PasswordRequirementAdapter extends RecyclerView.Adapter<PasswordReq
         notifyDataSetChanged();
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public long getItemId(int i) {
-        return this.mRequirements[i].hashCode();
+        return (long) this.mRequirements[i].hashCode();
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public void onBindViewHolder(PasswordRequirementViewHolder passwordRequirementViewHolder, int i) {
         passwordRequirementViewHolder.mDescriptionText.setText(this.mRequirements[i]);
     }
 
-    /* loaded from: classes.dex */
     public static class PasswordRequirementViewHolder extends RecyclerView.ViewHolder {
-        private TextView mDescriptionText;
+        /* access modifiers changed from: private */
+        public TextView mDescriptionText;
 
         public PasswordRequirementViewHolder(View view) {
             super(view);

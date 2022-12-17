@@ -1,24 +1,36 @@
 package com.google.common.util.concurrent;
 
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.AbstractOwnableSynchronizer;
 import java.util.concurrent.locks.LockSupport;
-/* loaded from: classes2.dex */
+
 abstract class InterruptibleTask<T> extends AtomicReference<Runnable> implements Runnable {
     private static final Runnable DONE = new DoNothingRunnable();
-    private static final Runnable INTERRUPTING = new DoNothingRunnable();
     private static final Runnable PARKED = new DoNothingRunnable();
 
-    abstract void afterRanInterruptibly(T t, Throwable th);
+    /* access modifiers changed from: package-private */
+    public abstract void afterRanInterruptiblyFailure(Throwable th);
 
-    abstract boolean isDone();
+    /* access modifiers changed from: package-private */
+    public abstract void afterRanInterruptiblySuccess(T t);
 
-    abstract T runInterruptibly() throws Exception;
+    /* access modifiers changed from: package-private */
+    public abstract boolean isDone();
 
-    abstract String toPendingString();
+    /* access modifiers changed from: package-private */
+    public abstract T runInterruptibly() throws Exception;
 
-    /* loaded from: classes2.dex */
+    /* access modifiers changed from: package-private */
+    public abstract String toPendingString();
+
+    InterruptibleTask() {
+    }
+
+    static {
+        Class<LockSupport> cls = LockSupport.class;
+    }
+
     private static final class DoNothingRunnable implements Runnable {
-        @Override // java.lang.Runnable
         public void run() {
         }
 
@@ -26,105 +38,108 @@ abstract class InterruptibleTask<T> extends AtomicReference<Runnable> implements
         }
     }
 
-    @Override // java.lang.Runnable
     public final void run() {
-        T runInterruptibly;
         Thread currentThread = Thread.currentThread();
-        if (!compareAndSet(null, currentThread)) {
-            return;
-        }
-        boolean z = !isDone();
-        if (z) {
-            try {
-                runInterruptibly = runInterruptibly();
-            } catch (Throwable th) {
-                if (!compareAndSet(currentThread, DONE)) {
-                    Runnable runnable = get();
-                    boolean z2 = false;
-                    int i = 0;
-                    while (true) {
-                        Runnable runnable2 = INTERRUPTING;
-                        if (runnable != runnable2 && runnable != PARKED) {
-                            break;
-                        }
-                        i++;
-                        if (i > 1000) {
-                            Runnable runnable3 = PARKED;
-                            if (runnable == runnable3 || compareAndSet(runnable2, runnable3)) {
-                                z2 = Thread.interrupted() || z2;
-                                LockSupport.park(this);
-                            }
-                        } else {
-                            Thread.yield();
-                        }
-                        runnable = get();
+        Object obj = null;
+        if (compareAndSet((Object) null, currentThread)) {
+            boolean z = !isDone();
+            if (z) {
+                try {
+                    obj = runInterruptibly();
+                } catch (Throwable th) {
+                    if (!compareAndSet(currentThread, DONE)) {
+                        waitForInterrupt(currentThread);
                     }
-                    if (z2) {
-                        currentThread.interrupt();
+                    if (z) {
+                        afterRanInterruptiblyFailure(th);
+                        return;
                     }
-                }
-                if (!z) {
                     return;
                 }
-                afterRanInterruptibly(null, th);
-                return;
             }
-        } else {
-            runInterruptibly = null;
-        }
-        if (!compareAndSet(currentThread, DONE)) {
-            Runnable runnable4 = get();
-            boolean z3 = false;
-            int i2 = 0;
-            while (true) {
-                Runnable runnable5 = INTERRUPTING;
-                if (runnable4 != runnable5 && runnable4 != PARKED) {
-                    break;
-                }
-                i2++;
-                if (i2 > 1000) {
-                    Runnable runnable6 = PARKED;
-                    if (runnable4 == runnable6 || compareAndSet(runnable5, runnable6)) {
-                        z3 = Thread.interrupted() || z3;
-                        LockSupport.park(this);
-                    }
-                } else {
-                    Thread.yield();
-                }
-                runnable4 = get();
+            if (!compareAndSet(currentThread, DONE)) {
+                waitForInterrupt(currentThread);
             }
-            if (z3) {
-                currentThread.interrupt();
+            if (z) {
+                afterRanInterruptiblySuccess(NullnessCasts.uncheckedCastNullableTToT(obj));
             }
         }
-        if (!z) {
-            return;
-        }
-        afterRanInterruptibly(runInterruptibly, null);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    private void waitForInterrupt(Thread thread) {
+        Runnable runnable = (Runnable) get();
+        Blocker blocker = null;
+        boolean z = false;
+        int i = 0;
+        while (true) {
+            boolean z2 = runnable instanceof Blocker;
+            if (!z2 && runnable != PARKED) {
+                break;
+            }
+            if (z2) {
+                blocker = (Blocker) runnable;
+            }
+            i++;
+            if (i > 1000) {
+                Runnable runnable2 = PARKED;
+                if (runnable == runnable2 || compareAndSet(runnable, runnable2)) {
+                    z = Thread.interrupted() || z;
+                    LockSupport.park(blocker);
+                }
+            } else {
+                Thread.yield();
+            }
+            runnable = (Runnable) get();
+        }
+        if (z) {
+            thread.interrupt();
+        }
+    }
+
+    /* access modifiers changed from: package-private */
     public final void interruptTask() {
-        Runnable runnable = get();
-        if (!(runnable instanceof Thread) || !compareAndSet(runnable, INTERRUPTING)) {
-            return;
-        }
-        try {
-            ((Thread) runnable).interrupt();
-        } finally {
-            if (getAndSet(DONE) == PARKED) {
-                LockSupport.unpark((Thread) runnable);
+        Runnable runnable = (Runnable) get();
+        if (runnable instanceof Thread) {
+            Blocker blocker = new Blocker();
+            blocker.setOwner(Thread.currentThread());
+            if (compareAndSet(runnable, blocker)) {
+                try {
+                    ((Thread) runnable).interrupt();
+                } finally {
+                    if (((Runnable) getAndSet(DONE)) == PARKED) {
+                        LockSupport.unpark((Thread) runnable);
+                    }
+                }
             }
         }
     }
 
-    @Override // java.util.concurrent.atomic.AtomicReference
+    static final class Blocker extends AbstractOwnableSynchronizer implements Runnable {
+        private final InterruptibleTask<?> task;
+
+        public void run() {
+        }
+
+        private Blocker(InterruptibleTask<?> interruptibleTask) {
+            this.task = interruptibleTask;
+        }
+
+        /* access modifiers changed from: private */
+        public void setOwner(Thread thread) {
+            super.setExclusiveOwnerThread(thread);
+        }
+
+        public String toString() {
+            return this.task.toString();
+        }
+    }
+
     public final String toString() {
         String str;
-        Runnable runnable = get();
+        Runnable runnable = (Runnable) get();
         if (runnable == DONE) {
             str = "running=[DONE]";
-        } else if (runnable == INTERRUPTING) {
+        } else if (runnable instanceof Blocker) {
             str = "running=[INTERRUPTED]";
         } else if (runnable instanceof Thread) {
             str = "running=[RUNNING ON " + ((Thread) runnable).getName() + "]";

@@ -6,47 +6,36 @@ import android.content.pm.PackageInfo;
 import androidx.preference.Preference;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.applications.AppStateAlarmsAndRemindersBridge;
-import com.android.settings.slices.SliceBackgroundWorker;
-/* loaded from: classes.dex */
+import com.android.settings.applications.AppStateBaseBridge;
+import com.android.settingslib.applications.ApplicationsState;
+
 public class AlarmsAndRemindersDetailPreferenceController extends AppInfoPreferenceControllerBase {
     private String mPackageName;
 
-    @Override // com.android.settings.applications.appinfo.AppInfoPreferenceControllerBase, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.applications.appinfo.AppInfoPreferenceControllerBase, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.applications.appinfo.AppInfoPreferenceControllerBase, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.applications.appinfo.AppInfoPreferenceControllerBase, com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.applications.appinfo.AppInfoPreferenceControllerBase, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.applications.appinfo.AppInfoPreferenceControllerBase, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.applications.appinfo.AppInfoPreferenceControllerBase, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.applications.appinfo.AppInfoPreferenceControllerBase, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -55,34 +44,34 @@ public class AlarmsAndRemindersDetailPreferenceController extends AppInfoPrefere
         super(context, str);
     }
 
-    @Override // com.android.settings.applications.appinfo.AppInfoPreferenceControllerBase, com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return isCandidate() ? 0 : 2;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         preference.setSummary(getPreferenceSummary());
     }
 
-    @Override // com.android.settings.applications.appinfo.AppInfoPreferenceControllerBase
-    protected Class<? extends SettingsPreferenceFragment> getDetailFragmentClass() {
+    /* access modifiers changed from: protected */
+    public Class<? extends SettingsPreferenceFragment> getDetailFragmentClass() {
         return AlarmsAndRemindersDetails.class;
     }
 
-    CharSequence getPreferenceSummary() {
+    /* access modifiers changed from: package-private */
+    public CharSequence getPreferenceSummary() {
         return AlarmsAndRemindersDetails.getSummary(this.mContext, this.mParent.getAppEntry());
     }
 
-    boolean isCandidate() {
+    /* access modifiers changed from: package-private */
+    public boolean isCandidate() {
         PackageInfo packageInfo = this.mParent.getPackageInfo();
         if (packageInfo == null) {
             return false;
         }
-        return new AppStateAlarmsAndRemindersBridge(this.mContext, null, null).createPermissionState(this.mPackageName, packageInfo.applicationInfo.uid).shouldBeVisible();
+        return new AppStateAlarmsAndRemindersBridge(this.mContext, (ApplicationsState) null, (AppStateBaseBridge.Callback) null).createPermissionState(this.mPackageName, packageInfo.applicationInfo.uid).shouldBeVisible();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setPackageName(String str) {
         this.mPackageName = str;
     }

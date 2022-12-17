@@ -9,57 +9,45 @@ import android.print.PrintJobInfo;
 import android.print.PrintManager;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$plurals;
+import com.android.settings.R$string;
 import com.android.settings.core.BasePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.RestrictedPreference;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnStart;
 import com.android.settingslib.core.lifecycle.events.OnStop;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class PrintSettingPreferenceController extends BasePreferenceController implements LifecycleObserver, OnStart, OnStop, PrintManager.PrintJobStateChangeListener {
     private static final String KEY_PRINTING_SETTINGS = "connected_device_printing";
     private final PackageManager mPackageManager;
     private Preference mPreference;
     private final PrintManager mPrintManager;
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -70,18 +58,15 @@ public class PrintSettingPreferenceController extends BasePreferenceController i
         this.mPrintManager = ((PrintManager) context.getSystemService("print")).getGlobalPrintManagerForUser(context.getUserId());
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return (!this.mPackageManager.hasSystemFeature("android.software.print") || this.mPrintManager == null) ? 3 : 0;
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = preferenceScreen.findPreference(getPreferenceKey());
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStart
     public void onStart() {
         PrintManager printManager = this.mPrintManager;
         if (printManager != null) {
@@ -89,7 +74,6 @@ public class PrintSettingPreferenceController extends BasePreferenceController i
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStop
     public void onStop() {
         PrintManager printManager = this.mPrintManager;
         if (printManager != null) {
@@ -101,21 +85,18 @@ public class PrintSettingPreferenceController extends BasePreferenceController i
         updateState(this.mPreference);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         ((RestrictedPreference) preference).checkRestrictionAndSetDisabled("no_printing");
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    /* renamed from: getSummary */
-    public CharSequence mo485getSummary() {
+    public CharSequence getSummary() {
         int i;
         List<PrintJob> printJobs = this.mPrintManager.getPrintJobs();
         if (printJobs != null) {
             i = 0;
-            for (PrintJob printJob : printJobs) {
-                if (shouldShowToUser(printJob.getInfo())) {
+            for (PrintJob info : printJobs) {
+                if (shouldShowToUser(info.getInfo())) {
                     i++;
                 }
             }
@@ -123,18 +104,17 @@ public class PrintSettingPreferenceController extends BasePreferenceController i
             i = 0;
         }
         if (i > 0) {
-            return this.mContext.getResources().getQuantityString(R.plurals.print_jobs_summary, i, Integer.valueOf(i));
+            return this.mContext.getResources().getQuantityString(R$plurals.print_jobs_summary, i, new Object[]{Integer.valueOf(i)});
         }
         List printServices = this.mPrintManager.getPrintServices(1);
         if (printServices == null || printServices.isEmpty()) {
-            return this.mContext.getText(R.string.print_settings_summary_no_service);
+            return this.mContext.getText(R$string.print_settings_summary_no_service);
         }
         int size = printServices.size();
-        return this.mContext.getResources().getQuantityString(R.plurals.print_settings_summary, size, Integer.valueOf(size));
+        return this.mContext.getResources().getQuantityString(R$plurals.print_settings_summary, size, new Object[]{Integer.valueOf(size)});
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static boolean shouldShowToUser(PrintJobInfo printJobInfo) {
+    static boolean shouldShowToUser(PrintJobInfo printJobInfo) {
         int state = printJobInfo.getState();
         return state == 2 || state == 3 || state == 4 || state == 6;
     }

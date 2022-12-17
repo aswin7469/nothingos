@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,30 +14,34 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class AppPicker extends ListActivity {
-    private static final Comparator<MyApplicationInfo> sDisplayNameComparator = new Comparator<MyApplicationInfo>() { // from class: com.android.settings.development.AppPicker.1
+    /* access modifiers changed from: private */
+    public static final Comparator<MyApplicationInfo> sDisplayNameComparator = new Comparator<MyApplicationInfo>() {
         private final Collator collator = Collator.getInstance();
 
-        @Override // java.util.Comparator
         public final int compare(MyApplicationInfo myApplicationInfo, MyApplicationInfo myApplicationInfo2) {
             return this.collator.compare(myApplicationInfo.label, myApplicationInfo2.label);
         }
     };
     private AppListAdapter mAdapter;
-    private boolean mDebuggableOnly;
-    private boolean mIncludeNothing;
-    private boolean mNonSystemOnly;
-    private String mPermissionName;
+    /* access modifiers changed from: private */
+    public boolean mDebuggableOnly;
+    /* access modifiers changed from: private */
+    public boolean mIncludeNothing;
+    /* access modifiers changed from: private */
+    public boolean mNonSystemOnly;
+    /* access modifiers changed from: private */
+    public String mPermissionName;
 
-    @Override // android.app.Activity
-    protected void onCreate(Bundle bundle) {
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         this.mPermissionName = getIntent().getStringExtra("com.android.settings.extra.REQUESTIING_PERMISSION");
@@ -53,19 +58,18 @@ public class AppPicker extends ListActivity {
         setListAdapter(this.mAdapter);
     }
 
-    @Override // android.app.Activity
     public boolean onOptionsItemSelected(MenuItem menuItem) {
-        if (menuItem.getItemId() == 16908332) {
-            handleBackPressed();
-            return true;
+        if (menuItem.getItemId() != 16908332) {
+            return super.onOptionsItemSelected(menuItem);
         }
-        return super.onOptionsItemSelected(menuItem);
+        handleBackPressed();
+        return true;
     }
 
-    @Override // android.app.ListActivity
-    protected void onListItemClick(ListView listView, View view, int i, long j) {
+    /* access modifiers changed from: protected */
+    public void onListItemClick(ListView listView, View view, int i, long j) {
         Intent intent = new Intent();
-        ApplicationInfo applicationInfo = this.mAdapter.getItem(i).info;
+        ApplicationInfo applicationInfo = ((MyApplicationInfo) this.mAdapter.getItem(i)).info;
         if (applicationInfo != null) {
             intent.setAction(applicationInfo.packageName);
         }
@@ -82,9 +86,7 @@ public class AppPicker extends ListActivity {
         finish();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public class MyApplicationInfo {
+    class MyApplicationInfo {
         ApplicationInfo info;
         CharSequence label;
 
@@ -92,7 +94,6 @@ public class AppPicker extends ListActivity {
         }
     }
 
-    /* loaded from: classes.dex */
     public class AppListAdapter extends ArrayAdapter<MyApplicationInfo> {
         private final LayoutInflater mInflater;
         private final List<MyApplicationInfo> mPackageInfoList = new ArrayList();
@@ -137,24 +138,23 @@ public class AppPicker extends ListActivity {
             Collections.sort(this.mPackageInfoList, AppPicker.sDisplayNameComparator);
             if (AppPicker.this.mIncludeNothing) {
                 MyApplicationInfo myApplicationInfo2 = new MyApplicationInfo();
-                myApplicationInfo2.label = context.getText(R.string.no_application);
+                myApplicationInfo2.label = context.getText(R$string.no_application);
                 this.mPackageInfoList.add(0, myApplicationInfo2);
             }
             addAll(this.mPackageInfoList);
         }
 
-        @Override // android.widget.ArrayAdapter, android.widget.Adapter
         public View getView(int i, View view, ViewGroup viewGroup) {
             AppViewHolder createOrRecycle = AppViewHolder.createOrRecycle(this.mInflater, view);
             View view2 = createOrRecycle.rootView;
-            MyApplicationInfo item = getItem(i);
-            createOrRecycle.appName.setText(item.label);
-            ApplicationInfo applicationInfo = item.info;
+            MyApplicationInfo myApplicationInfo = (MyApplicationInfo) getItem(i);
+            createOrRecycle.appName.setText(myApplicationInfo.label);
+            ApplicationInfo applicationInfo = myApplicationInfo.info;
             if (applicationInfo != null) {
                 createOrRecycle.appIcon.setImageDrawable(applicationInfo.loadIcon(AppPicker.this.getPackageManager()));
-                createOrRecycle.summary.setText(item.info.packageName);
+                createOrRecycle.summary.setText(myApplicationInfo.info.packageName);
             } else {
-                createOrRecycle.appIcon.setImageDrawable(null);
+                createOrRecycle.appIcon.setImageDrawable((Drawable) null);
                 createOrRecycle.summary.setText("");
             }
             createOrRecycle.disabled.setVisibility(8);

@@ -3,42 +3,51 @@ package com.android.settings.enterprise;
 import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.overlay.FeatureFactory;
 import java.util.Objects;
-/* loaded from: classes.dex */
+
 class PrivacyPreferenceControllerHelper {
     private final Context mContext;
     private final DevicePolicyManager mDevicePolicyManager;
     private final EnterprisePrivacyFeatureProvider mFeatureProvider;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public PrivacyPreferenceControllerHelper(Context context) {
+    PrivacyPreferenceControllerHelper(Context context) {
         Objects.requireNonNull(context);
+        Context context2 = context;
         this.mContext = context;
         this.mFeatureProvider = FeatureFactory.getFactory(context).getEnterprisePrivacyFeatureProvider(context);
         this.mDevicePolicyManager = (DevicePolicyManager) context.getSystemService(DevicePolicyManager.class);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void updateState(Preference preference) {
-        if (preference == null) {
-            return;
-        }
-        String deviceOwnerOrganizationName = this.mFeatureProvider.getDeviceOwnerOrganizationName();
-        if (deviceOwnerOrganizationName == null) {
-            preference.setSummary(R.string.enterprise_privacy_settings_summary_generic);
-        } else {
-            preference.setSummary(this.mContext.getResources().getString(R.string.enterprise_privacy_settings_summary_with_name, deviceOwnerOrganizationName));
+        if (preference != null) {
+            String deviceOwnerOrganizationName = this.mFeatureProvider.getDeviceOwnerOrganizationName();
+            if (deviceOwnerOrganizationName == null) {
+                preference.setSummary((CharSequence) this.mDevicePolicyManager.getResources().getString("Settings.MANAGED_DEVICE_INFO_SUMMARY", new PrivacyPreferenceControllerHelper$$ExternalSyntheticLambda0(this)));
+                return;
+            }
+            preference.setSummary((CharSequence) this.mDevicePolicyManager.getResources().getString("Settings.MANAGED_DEVICE_INFO_SUMMARY_WITH_NAME", new PrivacyPreferenceControllerHelper$$ExternalSyntheticLambda1(this, deviceOwnerOrganizationName), new Object[]{deviceOwnerOrganizationName}));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: private */
+    public /* synthetic */ String lambda$updateState$0() {
+        return this.mContext.getString(R$string.enterprise_privacy_settings_summary_generic);
+    }
+
+    /* access modifiers changed from: private */
+    public /* synthetic */ String lambda$updateState$1(String str) {
+        return this.mContext.getResources().getString(R$string.enterprise_privacy_settings_summary_with_name, new Object[]{str});
+    }
+
+    /* access modifiers changed from: package-private */
     public boolean hasDeviceOwner() {
         return this.mFeatureProvider.hasDeviceOwner();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isFinancedDevice() {
         if (this.mDevicePolicyManager.isDeviceManaged()) {
             DevicePolicyManager devicePolicyManager = this.mDevicePolicyManager;

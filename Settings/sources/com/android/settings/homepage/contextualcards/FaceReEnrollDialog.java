@@ -8,29 +8,33 @@ import android.os.Bundle;
 import android.util.Log;
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.Utils;
+import com.android.settings.biometrics.face.FaceUpdater;
 import com.android.settings.homepage.contextualcards.slices.FaceSetupSlice;
-/* loaded from: classes.dex */
+
 public class FaceReEnrollDialog extends AlertActivity implements DialogInterface.OnClickListener {
     private FaceManager mFaceManager;
+    private FaceUpdater mFaceUpdater;
     private int mReEnrollType;
 
-    protected void onCreate(Bundle bundle) {
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
         int i;
-        super.onCreate(bundle);
+        FaceReEnrollDialog.super.onCreate(bundle);
         if (getApplicationContext().getPackageManager().hasSystemFeature("android.hardware.fingerprint")) {
-            i = R.string.security_settings_face_enroll_improve_face_alert_body_fingerprint;
+            i = R$string.f148x9a538631;
         } else {
-            i = R.string.security_settings_face_enroll_improve_face_alert_body;
+            i = R$string.security_settings_face_enroll_improve_face_alert_body;
         }
-        AlertController.AlertParams alertParams = ((AlertActivity) this).mAlertParams;
-        alertParams.mTitle = getText(R.string.security_settings_face_enroll_improve_face_alert_title);
+        AlertController.AlertParams alertParams = this.mAlertParams;
+        alertParams.mTitle = getText(R$string.security_settings_face_enroll_improve_face_alert_title);
         alertParams.mMessage = getText(i);
-        alertParams.mPositiveButtonText = getText(R.string.storage_menu_set_up);
-        alertParams.mNegativeButtonText = getText(R.string.cancel);
+        alertParams.mPositiveButtonText = getText(R$string.storage_menu_set_up);
+        alertParams.mNegativeButtonText = getText(R$string.cancel);
         alertParams.mPositiveButtonListener = this;
         this.mFaceManager = Utils.getFaceManagerOrNull(getApplicationContext());
+        this.mFaceUpdater = new FaceUpdater(getApplicationContext(), this.mFaceManager);
         this.mReEnrollType = FaceSetupSlice.getReEnrollSetting(getApplicationContext(), getUserId());
         Log.d("FaceReEnrollDialog", "ReEnroll Type : " + this.mReEnrollType);
         int i2 = this.mReEnrollType;
@@ -44,7 +48,6 @@ public class FaceReEnrollDialog extends AlertActivity implements DialogInterface
         }
     }
 
-    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialogInterface, int i) {
         removeFaceAndReEnroll();
     }
@@ -55,25 +58,24 @@ public class FaceReEnrollDialog extends AlertActivity implements DialogInterface
         if (faceManager == null || !faceManager.hasEnrolledTemplates(userId)) {
             finish();
         }
-        this.mFaceManager.remove(new Face("", 0, 0L), userId, new FaceManager.RemovalCallback() { // from class: com.android.settings.homepage.contextualcards.FaceReEnrollDialog.1
+        this.mFaceUpdater.remove(new Face("", 0, 0), userId, new FaceManager.RemovalCallback() {
             public void onRemovalError(Face face, int i, CharSequence charSequence) {
-                super.onRemovalError(face, i, charSequence);
+                FaceReEnrollDialog.super.onRemovalError(face, i, charSequence);
                 FaceReEnrollDialog.this.finish();
             }
 
             public void onRemovalSucceeded(Face face, int i) {
-                super.onRemovalSucceeded(face, i);
-                if (i != 0) {
-                    return;
+                FaceReEnrollDialog.super.onRemovalSucceeded(face, i);
+                if (i == 0) {
+                    Intent intent = new Intent("android.settings.BIOMETRIC_ENROLL");
+                    FaceReEnrollDialog.this.getApplicationContext();
+                    try {
+                        FaceReEnrollDialog.this.startActivity(intent);
+                    } catch (Exception unused) {
+                        Log.e("FaceReEnrollDialog", "Failed to startActivity");
+                    }
+                    FaceReEnrollDialog.this.finish();
                 }
-                Intent intent = new Intent("android.settings.BIOMETRIC_ENROLL");
-                FaceReEnrollDialog.this.getApplicationContext();
-                try {
-                    FaceReEnrollDialog.this.startActivity(intent);
-                } catch (Exception unused) {
-                    Log.e("FaceReEnrollDialog", "Failed to startActivity");
-                }
-                FaceReEnrollDialog.this.finish();
             }
         });
     }

@@ -196,6 +196,8 @@
         <item>Cách đây hơn 60 ngày</item>
         <item>Cách đây hơn 90 ngày</item>
     </array>
+    <array name="avatar_image_descriptions">
+    </array>
     <array name="battery_labels">
         <item>0%</item>
         <item>50%</item>
@@ -260,6 +262,8 @@
         <item>48,0 kHz</item>
         <item>88,2 kHz</item>
         <item>96,0 kHz</item>
+        <item>176,4 kHz</item>
+        <item>192,0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
         <item>Sử dụng lựa chọn của hệ thống (Mặc định)</item>
@@ -267,6 +271,8 @@
         <item>48,0 kHz</item>
         <item>88,2 kHz</item>
         <item>96,0 kHz</item>
+        <item>176,4 kHz</item>
+        <item>192,0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
         <item>Sử dụng lựa chọn của hệ thống (Mặc định)</item>
@@ -277,6 +283,10 @@
         <item>LDAC</item>
         <item>Âm thanh Qualcomm® aptX™ Adaptive</item>
         <item>Âm thanh Qualcomm® aptX™ TWS+</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
         <item>Sử dụng lựa chọn của hệ thống (Mặc định)</item>
@@ -287,6 +297,10 @@
         <item>LDAC</item>
         <item>Âm thanh Qualcomm® aptX™ Adaptive</item>
         <item>Âm thanh Qualcomm® aptX™ TWS+</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -341,19 +355,12 @@
         <item>Viền ngoài</item>
         <item>Bóng đổ</item>
         <item>Tăng</item>
-        <item>Giảm</item>
-    </array>
-    <array name="captioning_font_size_selector_summaries">
-        <item>Cỡ chữ rất nhỏ</item>
-        <item>Cỡ chữ nhỏ</item>
-        <item>Cỡ chữ mặc định</item>
-        <item>Cỡ chữ lớn</item>
-        <item>Cỡ chữ rất lớn</item>
+        <item>Chìm</item>
     </array>
     <array name="captioning_font_size_selector_titles">
         <item>Rất nhỏ</item>
         <item>Nhỏ</item>
-        <item>Mặc định</item>
+        <item>Vừa</item>
         <item>Lớn</item>
         <item>Rất lớn</item>
     </array>
@@ -486,15 +493,13 @@
         <item>GID</item>
         <item>ICCID</item>
     </array>
-    <array name="res_0x7f0300b1_nt_preferred_network_mode_choices">
-        <item>3G</item>
-        <item>4G</item>
-        <item>5G</item>
+    <array name="nfc_payment_favor">
+        <item>Luôn luôn</item>
+        <item>Trừ phi một ứng dụng thanh toán khác đang mở</item>
     </array>
-    <array name="res_0x7f0300b2_nt_preferred_network_mode_values">
-        <item>21</item>
-        <item>22</item>
-        <item>33</item>
+    <array name="nfc_payment_favor_values">
+        <item>@null</item>
+        <item>1</item>
     </array>
     <array name="overlay_display_devices_entries">
         <item>Không có</item>
@@ -612,13 +617,13 @@
         <item>8 MB</item>
     </array>
     <array name="select_logpersist_summaries">
-        <item>Tắt</item>
+        <item>Đang tắt</item>
         <item>Tất cả lần tải nhật ký</item>
         <item>Tất cả trừ lần tải nhật ký qua đài</item>
         <item>chỉ vùng đệm nhật ký kernel</item>
     </array>
     <array name="select_logpersist_titles">
-        <item>Tắt</item>
+        <item>Đang tắt</item>
         <item>Tất cả</item>
         <item>Tất cả trừ đài</item>
         <item>chỉ kernel</item>
@@ -628,17 +633,20 @@
         <item>Vẽ vùng clip khác hình chữ nhật bằng màu lam</item>
         <item>Đánh dấu lệnh vẽ đã kiểm tra bằng màu lục</item>
     </array>
-    <array name="sim_color_light">
-        <item>@color/SIM_color_cyan</item>
-        <item>@color/SIM_color_blue800</item>
-        <item>@color/SIM_color_green800</item>
-        <item>@color/SIM_color_purple800</item>
-        <item>@color/SIM_color_pink800</item>
-        <item>@color/SIM_color_orange</item>
-    </array>
     <array name="swipe_direction_values">
         <item>1</item>
         <item>@null</item>
+    </array>
+    <array name="switch_to_user_zero_when_docked_timeout_entries">
+        <item>Không bao giờ</item>
+        <item>Sau 1 phút</item>
+        <item>Sau 5 phút</item>
+    </array>
+    <array name="tare_modifiers_subfactors">
+        <item>Đang sạc</item>
+        <item>Nghỉ</item>
+        <item>Chế độ tiết kiệm điện</item>
+        <item>Trạng thái xử lý</item>
     </array>
     <array name="timezone_filters">
         <item>Châu Mỹ</item>

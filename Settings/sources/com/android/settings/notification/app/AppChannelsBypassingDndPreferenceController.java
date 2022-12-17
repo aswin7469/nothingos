@@ -12,28 +12,30 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.SwitchPreference;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settings.core.SubSettingLauncher;
 import com.android.settings.notification.NotificationBackend;
-import com.android.settings.widget.PrimarySwitchPreference;
+import com.android.settingslib.PrimarySwitchPreference;
 import com.android.settingslib.RestrictedSwitchPreference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-/* loaded from: classes.dex */
-public class AppChannelsBypassingDndPreferenceController extends NotificationPreferenceController implements PreferenceControllerMixin, LifecycleObserver {
-    private RestrictedSwitchPreference mAllNotificationsToggle;
-    private List<NotificationChannel> mChannels = new ArrayList();
-    private PreferenceCategory mPreferenceCategory;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
+public class AppChannelsBypassingDndPreferenceController extends NotificationPreferenceController implements PreferenceControllerMixin, LifecycleObserver {
+    /* access modifiers changed from: private */
+    public RestrictedSwitchPreference mAllNotificationsToggle;
+    /* access modifiers changed from: private */
+    public List<NotificationChannel> mChannels = new ArrayList();
+    /* access modifiers changed from: private */
+    public PreferenceCategory mPreferenceCategory;
+
     public String getPreferenceKey() {
         return "zen_mode_bypassing_app_channels_list";
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController
-    boolean isIncludedInFilter() {
+    /* access modifiers changed from: package-private */
+    public boolean isIncludedInFilter() {
         return false;
     }
 
@@ -41,18 +43,16 @@ public class AppChannelsBypassingDndPreferenceController extends NotificationPre
         super(context, notificationBackend);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         PreferenceCategory preferenceCategory = (PreferenceCategory) preferenceScreen.findPreference("zen_mode_bypassing_app_channels_list");
         this.mPreferenceCategory = preferenceCategory;
         RestrictedSwitchPreference restrictedSwitchPreference = new RestrictedSwitchPreference(preferenceCategory.getContext());
         this.mAllNotificationsToggle = restrictedSwitchPreference;
-        restrictedSwitchPreference.setTitle(R.string.zen_mode_bypassing_app_channels_toggle_all);
+        restrictedSwitchPreference.setTitle(R$string.zen_mode_bypassing_app_channels_toggle_all);
         this.mAllNotificationsToggle.setDisabledByAdmin(this.mAdmin);
         RestrictedSwitchPreference restrictedSwitchPreference2 = this.mAllNotificationsToggle;
         restrictedSwitchPreference2.setEnabled(this.mAdmin == null || !restrictedSwitchPreference2.isDisabledByAdmin());
-        this.mAllNotificationsToggle.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() { // from class: com.android.settings.notification.app.AppChannelsBypassingDndPreferenceController.1
-            @Override // androidx.preference.Preference.OnPreferenceClickListener
+        this.mAllNotificationsToggle.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 boolean isChecked = ((SwitchPreference) preference).isChecked();
                 for (NotificationChannel notificationChannel : AppChannelsBypassingDndPreferenceController.this.mChannels) {
@@ -76,12 +76,10 @@ public class AppChannelsBypassingDndPreferenceController extends NotificationPre
         super.displayPreference(preferenceScreen);
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return this.mAppRow != null;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         if (this.mAppRow != null) {
             loadAppChannels();
@@ -89,18 +87,17 @@ public class AppChannelsBypassingDndPreferenceController extends NotificationPre
     }
 
     private void loadAppChannels() {
-        new AsyncTask<Void, Void, Void>() { // from class: com.android.settings.notification.app.AppChannelsBypassingDndPreferenceController.2
-            /* JADX INFO: Access modifiers changed from: protected */
-            @Override // android.os.AsyncTask
+        new AsyncTask<Void, Void, Void>() {
+            /* access modifiers changed from: protected */
             public Void doInBackground(Void... voidArr) {
                 ArrayList arrayList = new ArrayList();
                 AppChannelsBypassingDndPreferenceController appChannelsBypassingDndPreferenceController = AppChannelsBypassingDndPreferenceController.this;
                 NotificationBackend notificationBackend = appChannelsBypassingDndPreferenceController.mBackend;
                 NotificationBackend.AppRow appRow = appChannelsBypassingDndPreferenceController.mAppRow;
-                for (NotificationChannelGroup notificationChannelGroup : notificationBackend.getGroups(appRow.pkg, appRow.uid).getList()) {
-                    for (NotificationChannel notificationChannel : notificationChannelGroup.getChannels()) {
-                        if (!AppChannelsBypassingDndPreferenceController.this.isConversation(notificationChannel)) {
-                            arrayList.add(notificationChannel);
+                for (NotificationChannelGroup channels : notificationBackend.getGroups(appRow.pkg, appRow.uid).getList()) {
+                    for (NotificationChannel next : channels.getChannels()) {
+                        if (!AppChannelsBypassingDndPreferenceController.this.isConversation(next)) {
+                            arrayList.add(next);
                         }
                     }
                 }
@@ -109,91 +106,80 @@ public class AppChannelsBypassingDndPreferenceController extends NotificationPre
                 return null;
             }
 
-            /* JADX INFO: Access modifiers changed from: protected */
-            @Override // android.os.AsyncTask
-            public void onPostExecute(Void r1) {
+            /* access modifiers changed from: protected */
+            public void onPostExecute(Void voidR) {
                 AppChannelsBypassingDndPreferenceController appChannelsBypassingDndPreferenceController = AppChannelsBypassingDndPreferenceController.this;
-                if (((NotificationPreferenceController) appChannelsBypassingDndPreferenceController).mContext == null) {
-                    return;
+                if (appChannelsBypassingDndPreferenceController.mContext != null) {
+                    appChannelsBypassingDndPreferenceController.populateList();
                 }
-                appChannelsBypassingDndPreferenceController.populateList();
             }
         }.execute(new Void[0]);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void populateList() {
         PreferenceCategory preferenceCategory = this.mPreferenceCategory;
-        if (preferenceCategory == null) {
-            return;
+        if (preferenceCategory != null) {
+            preferenceCategory.removeAll();
+            this.mPreferenceCategory.addPreference(this.mAllNotificationsToggle);
+            for (final NotificationChannel next : this.mChannels) {
+                PrimarySwitchPreference primarySwitchPreference = new PrimarySwitchPreference(this.mContext);
+                primarySwitchPreference.setDisabledByAdmin(this.mAdmin);
+                primarySwitchPreference.setSwitchEnabled((this.mAdmin == null || !primarySwitchPreference.isDisabledByAdmin()) && isChannelConfigurable(next) && showNotification(next));
+                primarySwitchPreference.setTitle(BidiFormatter.getInstance().unicodeWrap(next.getName()));
+                primarySwitchPreference.setChecked(showNotificationInDnd(next));
+                primarySwitchPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    public boolean onPreferenceChange(Preference preference, Object obj) {
+                        next.setBypassDnd(((Boolean) obj).booleanValue());
+                        next.lockFields(1);
+                        AppChannelsBypassingDndPreferenceController appChannelsBypassingDndPreferenceController = AppChannelsBypassingDndPreferenceController.this;
+                        NotificationBackend notificationBackend = appChannelsBypassingDndPreferenceController.mBackend;
+                        NotificationBackend.AppRow appRow = appChannelsBypassingDndPreferenceController.mAppRow;
+                        notificationBackend.updateChannel(appRow.pkg, appRow.uid, next);
+                        AppChannelsBypassingDndPreferenceController.this.mAllNotificationsToggle.setChecked(AppChannelsBypassingDndPreferenceController.this.areAllChannelsBypassing());
+                        return true;
+                    }
+                });
+                Bundle bundle = new Bundle();
+                bundle.putInt("uid", this.mAppRow.uid);
+                bundle.putString("package", this.mAppRow.pkg);
+                bundle.putString("android.provider.extra.CHANNEL_ID", next.getId());
+                bundle.putBoolean("fromSettings", true);
+                primarySwitchPreference.setOnPreferenceClickListener(new C1159x5981a397(this, bundle));
+                this.mPreferenceCategory.addPreference(primarySwitchPreference);
+            }
+            this.mAllNotificationsToggle.setChecked(areAllChannelsBypassing());
         }
-        preferenceCategory.removeAll();
-        this.mPreferenceCategory.addPreference(this.mAllNotificationsToggle);
-        for (final NotificationChannel notificationChannel : this.mChannels) {
-            PrimarySwitchPreference primarySwitchPreference = new PrimarySwitchPreference(((NotificationPreferenceController) this).mContext);
-            primarySwitchPreference.setDisabledByAdmin(this.mAdmin);
-            primarySwitchPreference.setSwitchEnabled((this.mAdmin == null || !primarySwitchPreference.isDisabledByAdmin()) && isChannelConfigurable(notificationChannel) && showNotification(notificationChannel));
-            primarySwitchPreference.setTitle(BidiFormatter.getInstance().unicodeWrap(notificationChannel.getName()));
-            primarySwitchPreference.setChecked(showNotificationInDnd(notificationChannel));
-            primarySwitchPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() { // from class: com.android.settings.notification.app.AppChannelsBypassingDndPreferenceController.3
-                @Override // androidx.preference.Preference.OnPreferenceChangeListener
-                public boolean onPreferenceChange(Preference preference, Object obj) {
-                    notificationChannel.setBypassDnd(((Boolean) obj).booleanValue());
-                    notificationChannel.lockFields(1);
-                    AppChannelsBypassingDndPreferenceController appChannelsBypassingDndPreferenceController = AppChannelsBypassingDndPreferenceController.this;
-                    NotificationBackend notificationBackend = appChannelsBypassingDndPreferenceController.mBackend;
-                    NotificationBackend.AppRow appRow = appChannelsBypassingDndPreferenceController.mAppRow;
-                    notificationBackend.updateChannel(appRow.pkg, appRow.uid, notificationChannel);
-                    AppChannelsBypassingDndPreferenceController.this.mAllNotificationsToggle.setChecked(AppChannelsBypassingDndPreferenceController.this.areAllChannelsBypassing());
-                    return true;
-                }
-            });
-            final Bundle bundle = new Bundle();
-            bundle.putInt("uid", this.mAppRow.uid);
-            bundle.putString("package", this.mAppRow.pkg);
-            bundle.putString("android.provider.extra.CHANNEL_ID", notificationChannel.getId());
-            bundle.putBoolean("fromSettings", true);
-            primarySwitchPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() { // from class: com.android.settings.notification.app.AppChannelsBypassingDndPreferenceController$$ExternalSyntheticLambda0
-                @Override // androidx.preference.Preference.OnPreferenceClickListener
-                public final boolean onPreferenceClick(Preference preference) {
-                    boolean lambda$populateList$0;
-                    lambda$populateList$0 = AppChannelsBypassingDndPreferenceController.this.lambda$populateList$0(bundle, preference);
-                    return lambda$populateList$0;
-                }
-            });
-            this.mPreferenceCategory.addPreference(primarySwitchPreference);
-        }
-        this.mAllNotificationsToggle.setChecked(areAllChannelsBypassing());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ boolean lambda$populateList$0(Bundle bundle, Preference preference) {
-        new SubSettingLauncher(((NotificationPreferenceController) this).mContext).setDestination(ChannelNotificationSettings.class.getName()).setArguments(bundle).setUserHandle(UserHandle.of(this.mAppRow.userId)).setTitleRes(R.string.notification_channel_title).setSourceMetricsCategory(1840).launch();
+        new SubSettingLauncher(this.mContext).setDestination(ChannelNotificationSettings.class.getName()).setArguments(bundle).setUserHandle(UserHandle.of(this.mAppRow.userId)).setTitleRes(R$string.notification_channel_title).setSourceMetricsCategory(1840).launch();
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public boolean areAllChannelsBypassing() {
         boolean z = true;
-        for (NotificationChannel notificationChannel : this.mChannels) {
-            if (showNotification(notificationChannel)) {
-                z &= showNotificationInDnd(notificationChannel);
+        for (NotificationChannel next : this.mChannels) {
+            if (showNotification(next)) {
+                z &= showNotificationInDnd(next);
             }
         }
         return z;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public boolean showNotificationInDnd(NotificationChannel notificationChannel) {
         return notificationChannel.canBypassDnd() && showNotification(notificationChannel);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public boolean showNotification(NotificationChannel notificationChannel) {
         return notificationChannel.getImportance() != 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public boolean isConversation(NotificationChannel notificationChannel) {
         return notificationChannel.getConversationId() != null && !notificationChannel.isDemoted();
     }

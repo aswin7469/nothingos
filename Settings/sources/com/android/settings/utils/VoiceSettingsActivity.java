@@ -5,29 +5,25 @@ import android.app.VoiceInteractor;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-/* loaded from: classes.dex */
-public abstract class VoiceSettingsActivity extends Activity {
-    protected abstract boolean onVoiceSettingInteraction(Intent intent);
 
-    @Override // android.app.Activity
+public abstract class VoiceSettingsActivity extends Activity {
+    /* access modifiers changed from: protected */
+    public abstract boolean onVoiceSettingInteraction(Intent intent);
+
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        if (isVoiceInteractionRoot()) {
-            if (!onVoiceSettingInteraction(getIntent())) {
-                return;
-            }
+        if (!isVoiceInteractionRoot()) {
+            Log.v("VoiceSettingsActivity", "Cannot modify settings without voice interaction");
             finish();
-            return;
+        } else if (onVoiceSettingInteraction(getIntent())) {
+            finish();
         }
-        Log.v("VoiceSettingsActivity", "Cannot modify settings without voice interaction");
-        finish();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void notifySuccess(CharSequence charSequence) {
         if (getVoiceInteractor() != null) {
-            getVoiceInteractor().submitRequest(new VoiceInteractor.CompleteVoiceRequest(charSequence, null) { // from class: com.android.settings.utils.VoiceSettingsActivity.1
-                @Override // android.app.VoiceInteractor.CompleteVoiceRequest
+            getVoiceInteractor().submitRequest(new VoiceInteractor.CompleteVoiceRequest(charSequence, (Bundle) null) {
                 public void onCompleteResult(Bundle bundle) {
                     VoiceSettingsActivity.this.finish();
                 }
@@ -35,7 +31,7 @@ public abstract class VoiceSettingsActivity extends Activity {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void notifyFailure(CharSequence charSequence) {
         if (getVoiceInteractor() != null) {
             getVoiceInteractor().submitRequest(new VoiceInteractor.AbortVoiceRequest(charSequence, (Bundle) null));

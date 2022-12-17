@@ -9,11 +9,11 @@ import android.util.AttributeSet;
 import androidx.core.content.res.TypedArrayUtils;
 import androidx.preference.Preference;
 import androidx.preference.R$attr;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.SubSettingLauncher;
 import com.android.settings.datausage.TemplatePreference;
 import com.android.settingslib.net.DataUsageController;
-/* loaded from: classes.dex */
+
 public class DataUsagePreference extends Preference implements TemplatePreference {
     private int mSubId;
     private NetworkTemplate mTemplate;
@@ -26,42 +26,41 @@ public class DataUsagePreference extends Preference implements TemplatePreferenc
         obtainStyledAttributes.recycle();
     }
 
-    @Override // com.android.settings.datausage.TemplatePreference
     public void setTemplate(NetworkTemplate networkTemplate, int i, TemplatePreference.NetworkServices networkServices) {
         this.mTemplate = networkTemplate;
         this.mSubId = i;
         DataUsageController dataUsageController = getDataUsageController();
-        if (this.mTemplate.isMatchRuleMobile()) {
-            setTitle(R.string.app_cellular_data_usage);
+        if (this.mTemplate.getMatchRule() == 1) {
+            setTitle(R$string.app_cellular_data_usage);
         } else {
             DataUsageController.DataUsageInfo dataUsageInfo = dataUsageController.getDataUsageInfo(this.mTemplate);
             setTitle(this.mTitleRes);
-            setSummary(getContext().getString(R.string.data_usage_template, DataUsageUtils.formatDataUsage(getContext(), dataUsageInfo.usageLevel), dataUsageInfo.period));
+            setSummary((CharSequence) getContext().getString(R$string.data_usage_template, new Object[]{DataUsageUtils.formatDataUsage(getContext(), dataUsageInfo.usageLevel), dataUsageInfo.period}));
         }
         if (dataUsageController.getHistoricalUsageLevel(networkTemplate) > 0) {
             setIntent(getIntent());
             return;
         }
-        setIntent(null);
+        setIntent((Intent) null);
         setEnabled(false);
     }
 
-    @Override // androidx.preference.Preference
     public Intent getIntent() {
         Bundle bundle = new Bundle();
         bundle.putParcelable("network_template", this.mTemplate);
         bundle.putInt("sub_id", this.mSubId);
-        bundle.putInt("network_type", !this.mTemplate.isMatchRuleMobile() ? 1 : 0);
+        bundle.putInt("network_type", this.mTemplate.getMatchRule() == 1 ? 0 : 1);
         SubSettingLauncher sourceMetricsCategory = new SubSettingLauncher(getContext()).setArguments(bundle).setDestination(DataUsageList.class.getName()).setSourceMetricsCategory(0);
-        if (this.mTemplate.isMatchRuleMobile()) {
-            sourceMetricsCategory.setTitleRes(R.string.app_cellular_data_usage);
+        if (this.mTemplate.getMatchRule() == 1) {
+            sourceMetricsCategory.setTitleRes(R$string.app_cellular_data_usage);
         } else {
             sourceMetricsCategory.setTitleRes(this.mTitleRes);
         }
         return sourceMetricsCategory.toIntent();
     }
 
-    DataUsageController getDataUsageController() {
+    /* access modifiers changed from: package-private */
+    public DataUsageController getDataUsageController() {
         return new DataUsageController(getContext());
     }
 }

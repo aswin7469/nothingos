@@ -1,51 +1,40 @@
 package com.android.settings.accessibility;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.IntentFilter;
-import android.database.ContentObserver;
-import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Vibrator;
-import android.provider.Settings;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
-import com.android.settings.core.BasePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
+import com.android.settings.R$integer;
+import com.android.settings.accessibility.VibrationPreferenceConfig;
+import com.android.settings.core.SliderPreferenceController;
+import com.android.settings.widget.SeekBarPreference;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnStart;
 import com.android.settingslib.core.lifecycle.events.OnStop;
-/* loaded from: classes.dex */
-public abstract class VibrationIntensityPreferenceController extends BasePreferenceController implements LifecycleObserver, OnStart, OnStop {
-    private final String mEnabledKey;
-    private Preference mPreference;
-    private final String mSettingKey;
-    private final SettingObserver mSettingsContentObserver;
-    private final boolean mSupportRampingRinger;
-    protected final Vibrator mVibrator;
 
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
+public abstract class VibrationIntensityPreferenceController extends SliderPreferenceController implements LifecycleObserver, OnStart, OnStop {
+    private final int mMaxIntensity;
+    protected final VibrationPreferenceConfig mPreferenceConfig;
+    private final VibrationPreferenceConfig.SettingObserver mSettingsContentObserver;
 
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
-
-    protected abstract int getDefaultIntensity();
 
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
-        return super.hasAsyncUpdate();
+    public int getMin() {
+        return 0;
     }
 
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
+    public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
+        return super.hasAsyncUpdate();
     }
 
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
@@ -60,84 +49,78 @@ public abstract class VibrationIntensityPreferenceController extends BasePrefere
         return super.useDynamicSliceSummary();
     }
 
-    public VibrationIntensityPreferenceController(Context context, String str, String str2, String str3, boolean z) {
+    protected VibrationIntensityPreferenceController(Context context, String str, VibrationPreferenceConfig vibrationPreferenceConfig) {
+        this(context, str, vibrationPreferenceConfig, context.getResources().getInteger(R$integer.config_vibration_supported_intensity_levels));
+    }
+
+    protected VibrationIntensityPreferenceController(Context context, String str, VibrationPreferenceConfig vibrationPreferenceConfig, int i) {
         super(context, str);
-        this.mVibrator = (Vibrator) this.mContext.getSystemService(Vibrator.class);
-        this.mSettingKey = str2;
-        this.mEnabledKey = str3;
-        this.mSupportRampingRinger = z;
-        this.mSettingsContentObserver = new SettingObserver(str2) { // from class: com.android.settings.accessibility.VibrationIntensityPreferenceController.1
-            @Override // android.database.ContentObserver
-            public void onChange(boolean z2, Uri uri) {
-                VibrationIntensityPreferenceController vibrationIntensityPreferenceController = VibrationIntensityPreferenceController.this;
-                vibrationIntensityPreferenceController.updateState(vibrationIntensityPreferenceController.mPreference);
-            }
-        };
+        this.mPreferenceConfig = vibrationPreferenceConfig;
+        this.mSettingsContentObserver = new VibrationPreferenceConfig.SettingObserver(vibrationPreferenceConfig);
+        this.mMaxIntensity = Math.min(3, i);
     }
 
-    public VibrationIntensityPreferenceController(Context context, String str, String str2, String str3) {
-        this(context, str, str2, str3, false);
-    }
-
-    @Override // com.android.settingslib.core.lifecycle.events.OnStart
     public void onStart() {
-        ContentResolver contentResolver = this.mContext.getContentResolver();
-        SettingObserver settingObserver = this.mSettingsContentObserver;
-        contentResolver.registerContentObserver(settingObserver.uri, false, settingObserver);
+        this.mSettingsContentObserver.register(this.mContext);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStop
     public void onStop() {
-        this.mContext.getContentResolver().unregisterContentObserver(this.mSettingsContentObserver);
+        this.mSettingsContentObserver.unregister(this.mContext);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
-        this.mPreference = preferenceScreen.findPreference(getPreferenceKey());
+        SeekBarPreference seekBarPreference = (SeekBarPreference) preferenceScreen.findPreference(getPreferenceKey());
+        this.mSettingsContentObserver.onDisplayPreference(this, seekBarPreference);
+        seekBarPreference.setEnabled(this.mPreferenceConfig.isPreferenceEnabled());
+        seekBarPreference.setSummaryProvider(new VibrationIntensityPreferenceController$$ExternalSyntheticLambda0(this));
+        seekBarPreference.setMin(getMin());
+        seekBarPreference.setMax(getMax());
+        seekBarPreference.setContinuousUpdates(true);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    /* renamed from: getSummary */
-    public CharSequence mo485getSummary() {
-        int i = Settings.System.getInt(this.mContext.getContentResolver(), this.mSettingKey, getDefaultIntensity());
-        boolean z = true;
-        if (Settings.System.getInt(this.mContext.getContentResolver(), this.mEnabledKey, 1) != 1 && (!this.mSupportRampingRinger || !AccessibilitySettings.isRampingRingerEnabled(this.mContext))) {
-            z = false;
-        }
-        Context context = this.mContext;
-        if (!z) {
-            i = 0;
-        }
-        return getIntensityString(context, i);
+    /* access modifiers changed from: private */
+    public /* synthetic */ CharSequence lambda$displayPreference$0(Preference preference) {
+        return this.mPreferenceConfig.getSummary();
     }
 
-    public static CharSequence getIntensityString(Context context, int i) {
-        if (!context.getResources().getBoolean(R.bool.config_vibration_supports_multiple_intensities)) {
-            if (i == 0) {
-                return context.getString(R.string.switch_off_text);
-            }
-            return context.getString(R.string.switch_on_text);
-        } else if (i == 0) {
-            return context.getString(R.string.accessibility_vibration_intensity_off);
-        } else {
-            if (i == 1) {
-                return context.getString(R.string.accessibility_vibration_intensity_low);
-            }
-            if (i == 2) {
-                return context.getString(R.string.accessibility_vibration_intensity_medium);
-            }
-            return i != 3 ? "" : context.getString(R.string.accessibility_vibration_intensity_high);
+    public void updateState(Preference preference) {
+        super.updateState(preference);
+        if (preference != null) {
+            preference.setEnabled(this.mPreferenceConfig.isPreferenceEnabled());
         }
     }
 
-    /* loaded from: classes.dex */
-    private static class SettingObserver extends ContentObserver {
-        public final Uri uri;
+    public int getMax() {
+        return this.mMaxIntensity;
+    }
 
-        public SettingObserver(String str) {
-            super(new Handler(Looper.getMainLooper()));
-            this.uri = Settings.System.getUriFor(str);
+    public int getSliderPosition() {
+        if (!this.mPreferenceConfig.isPreferenceEnabled()) {
+            return getMin();
         }
+        return Math.min(this.mPreferenceConfig.readIntensity(), getMax());
+    }
+
+    public boolean setSliderPosition(int i) {
+        if (!this.mPreferenceConfig.isPreferenceEnabled()) {
+            return false;
+        }
+        boolean updateIntensity = this.mPreferenceConfig.updateIntensity(calculateVibrationIntensity(i));
+        if (updateIntensity && i != 0) {
+            this.mPreferenceConfig.playVibrationPreview();
+        }
+        return updateIntensity;
+    }
+
+    private int calculateVibrationIntensity(int i) {
+        int max = getMax();
+        if (i < max) {
+            return i;
+        }
+        if (max == 1) {
+            return this.mPreferenceConfig.getDefaultIntensity();
+        }
+        return 3;
     }
 }

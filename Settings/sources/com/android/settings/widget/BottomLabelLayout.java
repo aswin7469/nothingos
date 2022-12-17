@@ -5,14 +5,14 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 import com.android.settingslib.R$id;
-/* loaded from: classes.dex */
+
 public class BottomLabelLayout extends LinearLayout {
     public BottomLabelLayout(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
     }
 
-    @Override // android.widget.LinearLayout, android.view.View
-    protected void onMeasure(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         boolean z;
         int i3;
         int size = View.MeasureSpec.getSize(i);
@@ -26,7 +26,7 @@ public class BottomLabelLayout extends LinearLayout {
             z = true;
         }
         super.onMeasure(i3, i2);
-        if (isStacked || (getMeasuredWidthAndState() & (-16777216)) != 16777216) {
+        if (isStacked || (getMeasuredWidthAndState() & -16777216) != 16777216) {
             z2 = z;
         } else {
             setStacked(true);
@@ -36,7 +36,8 @@ public class BottomLabelLayout extends LinearLayout {
         }
     }
 
-    void setStacked(boolean z) {
+    /* access modifiers changed from: package-private */
+    public void setStacked(boolean z) {
         setOrientation(z ? 1 : 0);
         setGravity(z ? 8388611 : 80);
         View findViewById = findViewById(R$id.spacer);

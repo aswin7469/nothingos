@@ -1,18 +1,18 @@
 package com.android.settings.deviceinfo.legal;
 
 import android.content.pm.ModuleInfo;
-import java.util.function.Function;
-/* loaded from: classes.dex */
-public final /* synthetic */ class ModuleLicensesPreferenceController$$ExternalSyntheticLambda1 implements Function {
-    public static final /* synthetic */ ModuleLicensesPreferenceController$$ExternalSyntheticLambda1 INSTANCE = new ModuleLicensesPreferenceController$$ExternalSyntheticLambda1();
+import androidx.preference.PreferenceGroup;
+import java.util.function.Consumer;
 
-    private /* synthetic */ ModuleLicensesPreferenceController$$ExternalSyntheticLambda1() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class ModuleLicensesPreferenceController$$ExternalSyntheticLambda1 implements Consumer {
+    public final /* synthetic */ PreferenceGroup f$0;
+
+    public /* synthetic */ ModuleLicensesPreferenceController$$ExternalSyntheticLambda1(PreferenceGroup preferenceGroup) {
+        this.f$0 = preferenceGroup;
     }
 
-    @Override // java.util.function.Function
-    public final Object apply(Object obj) {
-        String lambda$displayPreference$0;
-        lambda$displayPreference$0 = ModuleLicensesPreferenceController.lambda$displayPreference$0((ModuleInfo) obj);
-        return lambda$displayPreference$0;
+    public final void accept(Object obj) {
+        this.f$0.addPreference(new ModuleLicensePreference(this.f$0.getContext(), (ModuleInfo) obj));
     }
 }

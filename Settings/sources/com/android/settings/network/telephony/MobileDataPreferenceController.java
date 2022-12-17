@@ -4,28 +4,33 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.RemoteException;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyCallback;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.SwitchPreference;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.network.MobileDataContentObserver;
 import com.android.settings.network.SubscriptionUtil;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settings.wifi.WifiPickerTrackerHelper;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnStart;
 import com.android.settingslib.core.lifecycle.events.OnStop;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-/* loaded from: classes.dex */
+
 public class MobileDataPreferenceController extends TelephonyTogglePreferenceController implements LifecycleObserver, OnStart, OnStop {
     private static final String DIALOG_TAG = "MobileDataDialog";
+    private static final String TAG = "MobileDataPreferenceController";
+    /* access modifiers changed from: private */
+    public static boolean mIsMultiSim;
     private AnotherSubCallStateListener mCallStateListener;
     private MobileDataContentObserver mDataContentObserver;
     int mDialogType;
@@ -36,37 +41,22 @@ public class MobileDataPreferenceController extends TelephonyTogglePreferenceCon
     private TelephonyManager mTelephonyManager;
     private WifiPickerTrackerHelper mWifiPickerTrackerHelper;
 
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.network.telephony.TelephonyAvailabilityCallback
     public int getAvailabilityStatus(int i) {
         return i != -1 ? 0 : 1;
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -76,38 +66,36 @@ public class MobileDataPreferenceController extends TelephonyTogglePreferenceCon
         this.mSubscriptionManager = (SubscriptionManager) context.getSystemService(SubscriptionManager.class);
         MobileDataContentObserver mobileDataContentObserver = new MobileDataContentObserver(new Handler(Looper.getMainLooper()));
         this.mDataContentObserver = mobileDataContentObserver;
-        mobileDataContentObserver.setOnMobileDataChangedListener(new MobileDataContentObserver.OnMobileDataChangedListener() { // from class: com.android.settings.network.telephony.MobileDataPreferenceController$$ExternalSyntheticLambda0
-            @Override // com.android.settings.network.MobileDataContentObserver.OnMobileDataChangedListener
-            public final void onMobileDataChanged() {
-                MobileDataPreferenceController.this.lambda$new$0();
-            }
-        });
+        mobileDataContentObserver.setOnMobileDataChangedListener(new MobileDataPreferenceController$$ExternalSyntheticLambda0(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$new$0() {
         updateState(this.mPreference);
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = (SwitchPreference) preferenceScreen.findPreference(getPreferenceKey());
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStart
     public void onStart() {
         int i = this.mSubId;
         if (i != -1) {
             this.mDataContentObserver.register(this.mContext, i);
-            if (this.mSubId != SubscriptionManager.getDefaultDataSubscriptionId()) {
-                return;
+            TelephonyManager telephonyManager = getTelephonyManager();
+            this.mTelephonyManager = telephonyManager;
+            boolean z = true;
+            if (telephonyManager.getActiveModemCount() <= 1) {
+                z = false;
             }
-            this.mCallStateListener.register(this.mContext, this.mSubId);
+            mIsMultiSim = z;
+            if (this.mSubId == SubscriptionManager.getDefaultDataSubscriptionId()) {
+                this.mCallStateListener.register(this.mContext, this.mSubId);
+            }
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStop
     public void onStop() {
         if (this.mSubId != -1) {
             this.mDataContentObserver.unRegister(this.mContext);
@@ -115,62 +103,66 @@ public class MobileDataPreferenceController extends TelephonyTogglePreferenceCon
         }
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
-        if (TextUtils.equals(preference.getKey(), getPreferenceKey())) {
-            if (!this.mNeedDialog) {
-                return true;
-            }
-            showDialog(this.mDialogType);
+        if (!TextUtils.equals(preference.getKey(), getPreferenceKey())) {
+            return false;
+        }
+        if (!this.mNeedDialog) {
             return true;
         }
-        return false;
+        showDialog(this.mDialogType);
+        return true;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean setChecked(boolean z) {
         boolean isDialogNeeded = isDialogNeeded();
         this.mNeedDialog = isDialogNeeded;
-        if (!isDialogNeeded) {
-            MobileNetworkUtils.setMobileDataEnabled(this.mContext, this.mSubId, z, false);
-            WifiPickerTrackerHelper wifiPickerTrackerHelper = this.mWifiPickerTrackerHelper;
-            if (wifiPickerTrackerHelper == null || wifiPickerTrackerHelper.isCarrierNetworkProvisionEnabled(this.mSubId)) {
-                return true;
-            }
-            this.mWifiPickerTrackerHelper.setCarrierNetworkEnabled(z);
+        if (isDialogNeeded) {
+            return false;
+        }
+        MobileNetworkUtils.setMobileDataEnabled(this.mContext, this.mSubId, z, false);
+        WifiPickerTrackerHelper wifiPickerTrackerHelper = this.mWifiPickerTrackerHelper;
+        if (wifiPickerTrackerHelper == null || wifiPickerTrackerHelper.isCarrierNetworkProvisionEnabled(this.mSubId)) {
             return true;
         }
-        return false;
+        this.mWifiPickerTrackerHelper.setCarrierNetworkEnabled(z);
+        return true;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean isChecked() {
-        return this.mTelephonyManager.isDataEnabled();
+        TelephonyManager telephonyManager = getTelephonyManager();
+        this.mTelephonyManager = telephonyManager;
+        return telephonyManager.isDataEnabled();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
-        super.updateState(preference);
-        if (isOpportunistic()) {
-            preference.setEnabled(false);
-            preference.setSummary(R.string.mobile_data_settings_summary_auto_switch);
-        } else if (!this.mCallStateListener.isIdle()) {
-            preference.setEnabled(false);
-            preference.setSummary(R.string.mobile_data_settings_summary_default_data_unavailable);
-        } else {
-            if (TelephonyUtils.isSubsidyFeatureEnabled(this.mContext) && !TelephonyUtils.isSubsidySimCard(this.mContext, SubscriptionManager.getSlotIndex(this.mSubId))) {
+        if (this.mTelephonyManager != null) {
+            super.updateState(preference);
+            if (isOpportunistic()) {
                 preference.setEnabled(false);
-            } else {
-                preference.setEnabled(true);
+                preference.setSummary(R$string.mobile_data_settings_summary_auto_switch);
+            } else if (this.mCallStateListener.isIdle()) {
+                if (!TelephonyUtils.isSubsidyFeatureEnabled(this.mContext) || TelephonyUtils.isSubsidySimCard(this.mContext, SubscriptionManager.getSlotIndex(this.mSubId))) {
+                    preference.setEnabled(true);
+                } else {
+                    preference.setEnabled(false);
+                }
+                preference.setSummary(R$string.mobile_data_settings_summary);
+            } else if (mIsMultiSim) {
+                Log.d(TAG, "nDDS voice call in ongoing");
+                if (isChecked()) {
+                    Log.d(TAG, "Do not allow the user to turn off DDS mobile data");
+                    preference.setEnabled(false);
+                    preference.setSummary(R$string.mobile_data_settings_summary_default_data_unavailable);
+                }
             }
-            preference.setSummary(R.string.mobile_data_settings_summary);
+            if (this.mSubId == -1) {
+                preference.setSelectable(false);
+                preference.setSummary(R$string.mobile_data_settings_summary_unavailable);
+                return;
+            }
+            preference.setSelectable(true);
         }
-        if (this.mSubId == -1) {
-            preference.setSelectable(false);
-            preference.setSummary(R.string.mobile_data_settings_summary_unavailable);
-            return;
-        }
-        preference.setSelectable(true);
     }
 
     private boolean isOpportunistic() {
@@ -181,71 +173,106 @@ public class MobileDataPreferenceController extends TelephonyTogglePreferenceCon
     public void init(FragmentManager fragmentManager, int i) {
         this.mFragmentManager = fragmentManager;
         this.mSubId = i;
-        this.mTelephonyManager = ((TelephonyManager) this.mContext.getSystemService(TelephonyManager.class)).createForSubscriptionId(this.mSubId);
-        this.mCallStateListener = new AnotherSubCallStateListener(this.mTelephonyManager, this.mSubscriptionManager, new Runnable() { // from class: com.android.settings.network.telephony.MobileDataPreferenceController$$ExternalSyntheticLambda1
-            @Override // java.lang.Runnable
-            public final void run() {
-                MobileDataPreferenceController.this.lambda$init$1();
-            }
-        });
+        this.mTelephonyManager = null;
+        this.mTelephonyManager = getTelephonyManager();
+        this.mCallStateListener = new AnotherSubCallStateListener(this.mTelephonyManager, this.mSubscriptionManager, new MobileDataPreferenceController$$ExternalSyntheticLambda1(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$init$1() {
         updateState(this.mPreference);
+    }
+
+    private TelephonyManager getTelephonyManager() {
+        TelephonyManager telephonyManager = this.mTelephonyManager;
+        if (telephonyManager != null) {
+            return telephonyManager;
+        }
+        TelephonyManager telephonyManager2 = (TelephonyManager) this.mContext.getSystemService(TelephonyManager.class);
+        int i = this.mSubId;
+        if (i != -1) {
+            telephonyManager2 = telephonyManager2.createForSubscriptionId(i);
+        }
+        this.mTelephonyManager = telephonyManager2;
+        return telephonyManager2;
     }
 
     public void setWifiPickerTrackerHelper(WifiPickerTrackerHelper wifiPickerTrackerHelper) {
         this.mWifiPickerTrackerHelper = wifiPickerTrackerHelper;
     }
 
-    boolean isDialogNeeded() {
-        boolean z = !isChecked();
-        boolean z2 = this.mTelephonyManager.getActiveModemCount() > 1;
+    /* access modifiers changed from: package-private */
+    public boolean isDialogNeeded() {
+        boolean z;
+        boolean z2 = !isChecked();
         int defaultDataSubscriptionId = SubscriptionManager.getDefaultDataSubscriptionId();
         boolean z3 = this.mSubscriptionManager.isActiveSubscriptionId(defaultDataSubscriptionId) && defaultDataSubscriptionId != this.mSubId;
-        if (this.mContext.getResources().getBoolean(17891701)) {
+        if (this.mContext.getResources().getBoolean(17891828)) {
             z3 = false;
         }
-        if (!z || !z2 || !z3) {
-            return false;
+        try {
+            if (this.mTelephonyManager.getImsRegistration(SubscriptionManager.getSlotIndex(this.mSubId), 1).getRegistrationTechnology() == 2) {
+                z = true;
+                Log.d(TAG, "isDialogNeeded: enableData=" + z2 + ", isMultiSim=" + mIsMultiSim + ", needToDisableOthers=" + z3 + ", isImsRegisteredOverCiwlan=" + z + ", callIdle=" + this.mCallStateListener.isIdle());
+                if (z2 && mIsMultiSim && z3) {
+                    this.mDialogType = 1;
+                    return true;
+                } else if (!this.mCallStateListener.isIdle() || !z || z2) {
+                    return false;
+                } else {
+                    this.mDialogType = 2;
+                    return true;
+                }
+            }
+        } catch (RemoteException e) {
+            Log.e(TAG, "getRegistrationTechnology failed", e);
         }
-        this.mDialogType = 1;
-        return true;
+        z = false;
+        Log.d(TAG, "isDialogNeeded: enableData=" + z2 + ", isMultiSim=" + mIsMultiSim + ", needToDisableOthers=" + z3 + ", isImsRegisteredOverCiwlan=" + z + ", callIdle=" + this.mCallStateListener.isIdle());
+        if (!(z2 || mIsMultiSim)) {
+        }
+        if (!this.mCallStateListener.isIdle()) {
+        }
+        return false;
     }
 
     private void showDialog(int i) {
         MobileDataDialogFragment.newInstance(i, this.mSubId).show(this.mFragmentManager, DIALOG_TAG);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class AnotherSubCallStateListener extends TelephonyCallback implements TelephonyCallback.CallStateListener {
+    private static class AnotherSubCallStateListener extends TelephonyCallback implements TelephonyCallback.CallStateListener {
+        private Map<Integer, AnotherSubCallStateListener> mCallbacks;
         private Runnable mRunnable;
+        private int mState = 0;
         private SubscriptionManager mSubscriptionManager;
         private TelephonyManager mTelephonyManager;
-        private int mState = 0;
-        private Map<Integer, AnotherSubCallStateListener> mCallbacks = new TreeMap();
 
         public AnotherSubCallStateListener(TelephonyManager telephonyManager, SubscriptionManager subscriptionManager, Runnable runnable) {
             this.mTelephonyManager = telephonyManager;
             this.mSubscriptionManager = subscriptionManager;
             this.mRunnable = runnable;
+            this.mCallbacks = new TreeMap();
         }
 
         public void register(Context context, int i) {
-            for (SubscriptionInfo subscriptionInfo : SubscriptionUtil.getActiveSubscriptions(this.mSubscriptionManager)) {
-                if (subscriptionInfo.getSubscriptionId() != i) {
-                    this.mTelephonyManager.createForSubscriptionId(subscriptionInfo.getSubscriptionId()).registerTelephonyCallback(context.getMainExecutor(), this);
-                    this.mCallbacks.put(Integer.valueOf(subscriptionInfo.getSubscriptionId()), this);
+            List<SubscriptionInfo> activeSubscriptions = SubscriptionUtil.getActiveSubscriptions(this.mSubscriptionManager);
+            if (MobileDataPreferenceController.mIsMultiSim) {
+                for (SubscriptionInfo next : activeSubscriptions) {
+                    if (next.getSubscriptionId() != i) {
+                        this.mTelephonyManager.createForSubscriptionId(next.getSubscriptionId()).registerTelephonyCallback(context.getMainExecutor(), this);
+                        this.mCallbacks.put(Integer.valueOf(next.getSubscriptionId()), this);
+                    }
                 }
+                return;
             }
+            this.mTelephonyManager.createForSubscriptionId(i).registerTelephonyCallback(context.getMainExecutor(), this);
+            this.mCallbacks.put(Integer.valueOf(i), this);
         }
 
         public void unregister() {
-            for (Integer num : this.mCallbacks.keySet()) {
-                int intValue = num.intValue();
-                this.mTelephonyManager.createForSubscriptionId(intValue).unregisterTelephonyCallback(this.mCallbacks.get(Integer.valueOf(intValue)));
+            for (Integer intValue : this.mCallbacks.keySet()) {
+                int intValue2 = intValue.intValue();
+                this.mTelephonyManager.createForSubscriptionId(intValue2).unregisterTelephonyCallback(this.mCallbacks.get(Integer.valueOf(intValue2)));
             }
             this.mCallbacks.clear();
         }
@@ -254,7 +281,6 @@ public class MobileDataPreferenceController extends TelephonyTogglePreferenceCon
             return this.mState == 0;
         }
 
-        @Override // android.telephony.TelephonyCallback.CallStateListener
         public void onCallStateChanged(int i) {
             this.mState = i;
             Runnable runnable = this.mRunnable;

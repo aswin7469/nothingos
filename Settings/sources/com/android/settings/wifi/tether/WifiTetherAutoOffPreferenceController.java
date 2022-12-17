@@ -9,54 +9,40 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.SwitchPreference;
 import com.android.settings.core.BasePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
-/* loaded from: classes.dex */
+
 public class WifiTetherAutoOffPreferenceController extends BasePreferenceController implements Preference.OnPreferenceChangeListener {
     private String TAG = "WifiTetherAutoOffPreferenceController";
     private SwitchPreference mPreference = null;
     private final WifiManager mWifiManager;
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return 0;
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -66,26 +52,24 @@ public class WifiTetherAutoOffPreferenceController extends BasePreferenceControl
         this.mWifiManager = (WifiManager) context.getSystemService(WifiManager.class);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = (SwitchPreference) preferenceScreen.findPreference(getPreferenceKey());
     }
 
     public void updateDisplay() {
-        if (this.mPreference != null) {
-            Log.d(this.TAG, "updateAuto");
+        SwitchPreference switchPreference = this.mPreference;
+        if (switchPreference != null) {
+            updateState(switchPreference);
         } else {
             Log.e(this.TAG, "updateDisplay Failed, cannot find switch preference");
         }
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         ((SwitchPreference) preference).setChecked(this.mWifiManager.getSoftApConfiguration().isAutoShutdownEnabled());
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         return this.mWifiManager.setSoftApConfiguration(new SoftApConfiguration.Builder(this.mWifiManager.getSoftApConfiguration()).setAutoShutdownEnabled(((Boolean) obj).booleanValue()).build());
     }

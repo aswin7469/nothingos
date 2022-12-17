@@ -4,40 +4,40 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public abstract class ViewModel {
     private final Map<String, Object> mBagOfTags = new HashMap();
     private volatile boolean mCleared = false;
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onCleared() {
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public final void clear() {
         this.mCleared = true;
         Map<String, Object> map = this.mBagOfTags;
         if (map != null) {
             synchronized (map) {
-                for (Object obj : this.mBagOfTags.values()) {
-                    closeWithRuntimeException(obj);
+                for (Object closeWithRuntimeException : this.mBagOfTags.values()) {
+                    closeWithRuntimeException(closeWithRuntimeException);
                 }
             }
         }
         onCleared();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public <T> T setTagIfAbsent(String str, T t) {
-        Object obj;
+        T t2;
         synchronized (this.mBagOfTags) {
-            obj = this.mBagOfTags.get(str);
-            if (obj == null) {
+            t2 = this.mBagOfTags.get(str);
+            if (t2 == null) {
                 this.mBagOfTags.put(str, t);
             }
         }
-        if (obj != null) {
-            t = obj;
+        if (t2 != null) {
+            t = t2;
         }
         if (this.mCleared) {
             closeWithRuntimeException(t);
@@ -45,7 +45,7 @@ public abstract class ViewModel {
         return t;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public <T> T getTag(String str) {
         T t;
         Map<String, Object> map = this.mBagOfTags;
@@ -53,7 +53,7 @@ public abstract class ViewModel {
             return null;
         }
         synchronized (map) {
-            t = (T) this.mBagOfTags.get(str);
+            t = this.mBagOfTags.get(str);
         }
         return t;
     }

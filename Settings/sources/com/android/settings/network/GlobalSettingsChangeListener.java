@@ -10,7 +10,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 import java.util.concurrent.atomic.AtomicBoolean;
-/* loaded from: classes.dex */
+
 public abstract class GlobalSettingsChangeListener extends ContentObserver implements LifecycleObserver, AutoCloseable {
     private Context mContext;
     private String mField;
@@ -44,43 +44,42 @@ public abstract class GlobalSettingsChangeListener extends ContentObserver imple
         this.mLifecycle = lifecycle;
     }
 
-    @Override // android.database.ContentObserver
     public void onChange(boolean z) {
-        if (!this.mListening.get()) {
-            return;
+        if (this.mListening.get()) {
+            onChanged(this.mField);
         }
-        onChanged(this.mField);
     }
 
+    /* access modifiers changed from: package-private */
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    void onStart() {
+    public void onStart() {
         monitorUri(true);
     }
 
+    /* access modifiers changed from: package-private */
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    void onStop() {
+    public void onStop() {
         monitorUri(false);
     }
 
+    /* access modifiers changed from: package-private */
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    void onDestroy() {
+    public void onDestroy() {
         close();
     }
 
-    @Override // java.lang.AutoCloseable
     public void close() {
         monitorUri(false);
-        notifyChangeBasedOn(null);
+        notifyChangeBasedOn((Lifecycle) null);
     }
 
     private void monitorUri(boolean z) {
-        if (!this.mListening.compareAndSet(!z, z)) {
-            return;
-        }
-        if (z) {
-            this.mContext.getContentResolver().registerContentObserver(this.mUri, false, this);
-        } else {
-            this.mContext.getContentResolver().unregisterContentObserver(this);
+        if (this.mListening.compareAndSet(!z, z)) {
+            if (z) {
+                this.mContext.getContentResolver().registerContentObserver(this.mUri, false, this);
+            } else {
+                this.mContext.getContentResolver().unregisterContentObserver(this);
+            }
         }
     }
 }

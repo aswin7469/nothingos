@@ -3,12 +3,11 @@ package com.google.zxing.oned;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.NotFoundException;
 import com.google.zxing.common.BitArray;
-/* loaded from: classes2.dex */
+
 public final class EAN8Reader extends UPCEANReader {
     private final int[] decodeMiddleCounters = new int[4];
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.google.zxing.oned.UPCEANReader
+    /* access modifiers changed from: protected */
     public int decodeMiddle(BitArray bitArray, int[] iArr, StringBuilder sb) throws NotFoundException {
         int[] iArr2 = this.decodeMiddleCounters;
         iArr2[0] = 0;
@@ -33,8 +32,8 @@ public final class EAN8Reader extends UPCEANReader {
         return i4;
     }
 
-    @Override // com.google.zxing.oned.UPCEANReader
-    BarcodeFormat getBarcodeFormat() {
+    /* access modifiers changed from: package-private */
+    public BarcodeFormat getBarcodeFormat() {
         return BarcodeFormat.EAN_8;
     }
 }

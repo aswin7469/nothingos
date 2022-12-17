@@ -11,55 +11,59 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.atomic.AtomicBoolean;
-/* loaded from: classes.dex */
+
 abstract class ModernAsyncTask<Result> {
     private static Handler sHandler;
-    private volatile Status mStatus = Status.PENDING;
     final AtomicBoolean mCancelled = new AtomicBoolean();
-    final AtomicBoolean mTaskInvoked = new AtomicBoolean();
-    private final FutureTask<Result> mFuture = new FutureTask<Result>(new Callable<Result>() { // from class: androidx.loader.content.ModernAsyncTask.1
-        @Override // java.util.concurrent.Callable
+    private final FutureTask<Result> mFuture = new FutureTask<Result>(new Callable<Result>() {
         public Result call() {
             ModernAsyncTask.this.mTaskInvoked.set(true);
             Result result = null;
             try {
                 Process.setThreadPriority(10);
-                result = (Result) ModernAsyncTask.this.doInBackground();
+                result = ModernAsyncTask.this.doInBackground();
                 Binder.flushPendingCommands();
+                ModernAsyncTask.this.postResult(result);
                 return result;
-            } finally {
+            } catch (Throwable th) {
+                ModernAsyncTask.this.postResult(result);
+                throw th;
             }
         }
-    }) { // from class: androidx.loader.content.ModernAsyncTask.2
-        @Override // java.util.concurrent.FutureTask
-        protected void done() {
+    }) {
+        /* access modifiers changed from: protected */
+        public void done() {
             try {
                 ModernAsyncTask.this.postResultIfNotInvoked(get());
             } catch (InterruptedException e) {
                 Log.w("AsyncTask", e);
-            } catch (CancellationException unused) {
-                ModernAsyncTask.this.postResultIfNotInvoked(null);
             } catch (ExecutionException e2) {
                 throw new RuntimeException("An error occurred while executing doInBackground()", e2.getCause());
+            } catch (CancellationException unused) {
+                ModernAsyncTask.this.postResultIfNotInvoked(null);
             } catch (Throwable th) {
                 throw new RuntimeException("An error occurred while executing doInBackground()", th);
             }
         }
     };
+    private volatile Status mStatus = Status.PENDING;
+    final AtomicBoolean mTaskInvoked = new AtomicBoolean();
 
-    /* loaded from: classes.dex */
     public enum Status {
         PENDING,
         RUNNING,
         FINISHED
     }
 
-    protected abstract Result doInBackground();
+    /* access modifiers changed from: protected */
+    public abstract Result doInBackground();
 
-    protected void onCancelled(Result result) {
+    /* access modifiers changed from: protected */
+    public void onCancelled(Result result) {
     }
 
-    protected void onPostExecute(Result result) {
+    /* access modifiers changed from: protected */
+    public void onPostExecute(Result result) {
     }
 
     private static Handler getHandler() {
@@ -73,16 +77,19 @@ abstract class ModernAsyncTask<Result> {
         return handler;
     }
 
-    void postResultIfNotInvoked(Result result) {
+    ModernAsyncTask() {
+    }
+
+    /* access modifiers changed from: package-private */
+    public void postResultIfNotInvoked(Result result) {
         if (!this.mTaskInvoked.get()) {
             postResult(result);
         }
     }
 
-    void postResult(final Result result) {
-        getHandler().post(new Runnable() { // from class: androidx.loader.content.ModernAsyncTask.3
-            /* JADX WARN: Multi-variable type inference failed */
-            @Override // java.lang.Runnable
+    /* access modifiers changed from: package-private */
+    public void postResult(final Result result) {
+        getHandler().post(new Runnable() {
             public void run() {
                 ModernAsyncTask.this.finish(result);
             }
@@ -98,41 +105,57 @@ abstract class ModernAsyncTask<Result> {
         return this.mFuture.cancel(z);
     }
 
-    /* renamed from: androidx.loader.content.ModernAsyncTask$4  reason: invalid class name */
-    /* loaded from: classes.dex */
-    static /* synthetic */ class AnonymousClass4 {
+    /* renamed from: androidx.loader.content.ModernAsyncTask$4 */
+    static /* synthetic */ class C02394 {
         static final /* synthetic */ int[] $SwitchMap$androidx$loader$content$ModernAsyncTask$Status;
 
+        /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|6) */
+        /* JADX WARNING: Code restructure failed: missing block: B:7:?, code lost:
+            return;
+         */
+        /* JADX WARNING: Failed to process nested try/catch */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0012 */
         static {
-            int[] iArr = new int[Status.values().length];
-            $SwitchMap$androidx$loader$content$ModernAsyncTask$Status = iArr;
-            try {
-                iArr[Status.RUNNING.ordinal()] = 1;
-            } catch (NoSuchFieldError unused) {
-            }
-            try {
-                $SwitchMap$androidx$loader$content$ModernAsyncTask$Status[Status.FINISHED.ordinal()] = 2;
-            } catch (NoSuchFieldError unused2) {
-            }
+            /*
+                androidx.loader.content.ModernAsyncTask$Status[] r0 = androidx.loader.content.ModernAsyncTask.Status.values()
+                int r0 = r0.length
+                int[] r0 = new int[r0]
+                $SwitchMap$androidx$loader$content$ModernAsyncTask$Status = r0
+                androidx.loader.content.ModernAsyncTask$Status r1 = androidx.loader.content.ModernAsyncTask.Status.RUNNING     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
+                r2 = 1
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                int[] r0 = $SwitchMap$androidx$loader$content$ModernAsyncTask$Status     // Catch:{ NoSuchFieldError -> 0x001d }
+                androidx.loader.content.ModernAsyncTask$Status r1 = androidx.loader.content.ModernAsyncTask.Status.FINISHED     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
+                r2 = 2
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: androidx.loader.content.ModernAsyncTask.C02394.<clinit>():void");
         }
     }
 
     public final void executeOnExecutor(Executor executor) {
         if (this.mStatus != Status.PENDING) {
-            int i = AnonymousClass4.$SwitchMap$androidx$loader$content$ModernAsyncTask$Status[this.mStatus.ordinal()];
+            int i = C02394.$SwitchMap$androidx$loader$content$ModernAsyncTask$Status[this.mStatus.ordinal()];
             if (i == 1) {
                 throw new IllegalStateException("Cannot execute task: the task is already running.");
-            }
-            if (i == 2) {
+            } else if (i != 2) {
+                throw new IllegalStateException("We should never reach this state");
+            } else {
                 throw new IllegalStateException("Cannot execute task: the task has already been executed (a task can be executed only once)");
             }
-            throw new IllegalStateException("We should never reach this state");
+        } else {
+            this.mStatus = Status.RUNNING;
+            executor.execute(this.mFuture);
         }
-        this.mStatus = Status.RUNNING;
-        executor.execute(this.mFuture);
     }
 
-    void finish(Result result) {
+    /* access modifiers changed from: package-private */
+    public void finish(Result result) {
         if (isCancelled()) {
             onCancelled(result);
         } else {

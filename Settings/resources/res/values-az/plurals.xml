@@ -234,11 +234,11 @@
     </plurals>
     <plurals name="notifications_sent_daily">
         <item quantity="one">Gün ərzində ~%d bildiriş</item>
-        <item quantity="other">Gün ərzində ~%d bildiriş</item>
+        <item quantity="other">Gün ərzində ~%,d bildiriş</item>
     </plurals>
     <plurals name="notifications_sent_weekly">
         <item quantity="one">Həftə ərzində ~%d bildiriş</item>
-        <item quantity="other">Həftə ərzində ~%d bildiriş</item>
+        <item quantity="other">Həftə ərzində ~%,d bildiriş</item>
     </plurals>
     <plurals name="number_of_device_admins">
         <item quantity="one">%d aktiv tətbiq</item>
@@ -320,14 +320,6 @@
         <item quantity="one">Sertifikata gevənin və ya silin</item>
         <item quantity="other">Sertifikata gevənin və ya silin</item>
     </plurals>
-    <plurals name="ssl_ca_cert_info_message">
-        <item quantity="one">%s iş profiliniz üçün e-poçt, tətbiq və təhlükəsiz veb saytları daxil olmaqla iş şəbəkə fəaliyyətinizi izləməyə icazə verəcək sertifikat səlahiyyətini quraşdırdı.\n\nBu sertifikat haqqında ətraflı məlumat üçün adminlə əlaqə saxlayın.</item>
-        <item quantity="other">%s iş profiliniz üçün e-poçt, tətbiq və təhlükəsiz veb saytları daxil olmaqla iş şəbəkə fəaliyyətinizi izləməyə icazə verəcək sertifikat səlahiyyətlərini quraşdırdı.\n\nBu sertifikatlar haqqında ətraflı məlumat üçün adminlə əlaqə saxlayın.</item>
-    </plurals>
-    <plurals name="ssl_ca_cert_info_message_device_owner">
-        <item quantity="one">%s sertifikat mənbəsini cihazınıza quraşdırdı, bu onlarda imkan verəcək ki, cihazınızda şəbəkə fəaliyyəti, e-poçt, tətbiqlər və güvənli veb səhifələrə nəzarət etsinlər.\n\nBu sertifikat haqqında ətraflı məlumat üçün adminlə əlaqə saxlayın.</item>
-        <item quantity="other">%s sertifikat mənbələrini cihazınıza quraşdırdı, bu onlarda imkan verəcək ki, cihazınızda şəbəkə fəaliyyəti, e-poçt, tətbiqlər və güvənli veb səhifələrə nəzarət etsinlər.\n\nBu sertifikatlar haqqında ətraflı məlumat üçün adminlə əlaqə saxlayın.</item>
-    </plurals>
     <plurals name="ssl_ca_cert_settings_button">
         <item quantity="one">Sertifikatı yoxlayın</item>
         <item quantity="other">Sertifikatları yoxlayın</item>
@@ -359,10 +351,6 @@
     <plurals name="wifi_saved_passpoint_access_points_summary">
         <item quantity="one">1 abunəlik</item>
         <item quantity="other">%d abunəlik</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d cihaz qoşuludur</item>
-        <item quantity="other">%1$d cihaz qoşuludur</item>
     </plurals>
     <plurals name="wrong_pin_code">
         <item quantity="one">Yanlış SIM PIN kodu, cihazınızı kiliddən çıxarmaq üçün operatorunuzla əlaqə saxlamadan öncə %d cəhdiniz qalır.</item>

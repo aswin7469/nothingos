@@ -3,7 +3,7 @@ package com.google.protobuf;
 import com.google.protobuf.Writer;
 import java.io.IOException;
 import java.util.Arrays;
-/* loaded from: classes2.dex */
+
 public final class UnknownFieldSetLite {
     private static final UnknownFieldSetLite DEFAULT_INSTANCE = new UnknownFieldSetLite(0, new int[0], new Object[0], false);
     private int count;
@@ -16,13 +16,11 @@ public final class UnknownFieldSetLite {
         return DEFAULT_INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static UnknownFieldSetLite newInstance() {
+    static UnknownFieldSetLite newInstance() {
         return new UnknownFieldSetLite();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static UnknownFieldSetLite mutableCopyOf(UnknownFieldSetLite unknownFieldSetLite, UnknownFieldSetLite unknownFieldSetLite2) {
+    static UnknownFieldSetLite mutableCopyOf(UnknownFieldSetLite unknownFieldSetLite, UnknownFieldSetLite unknownFieldSetLite2) {
         int i = unknownFieldSetLite.count + unknownFieldSetLite2.count;
         int[] copyOf = Arrays.copyOf(unknownFieldSetLite.tags, i);
         System.arraycopy(unknownFieldSetLite2.tags, 0, copyOf, unknownFieldSetLite.count, unknownFieldSetLite2.count);
@@ -47,14 +45,14 @@ public final class UnknownFieldSetLite {
         this.isMutable = false;
     }
 
-    void checkMutable() {
-        if (this.isMutable) {
-            return;
+    /* access modifiers changed from: package-private */
+    public void checkMutable() {
+        if (!this.isMutable) {
+            throw new UnsupportedOperationException();
         }
-        throw new UnsupportedOperationException();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void writeAsMessageSetTo(Writer writer) throws IOException {
         if (writer.fieldOrder() == Writer.FieldOrder.DESCENDING) {
             for (int i = this.count - 1; i >= 0; i--) {
@@ -68,17 +66,16 @@ public final class UnknownFieldSetLite {
     }
 
     public void writeTo(Writer writer) throws IOException {
-        if (this.count == 0) {
-            return;
-        }
-        if (writer.fieldOrder() == Writer.FieldOrder.ASCENDING) {
-            for (int i = 0; i < this.count; i++) {
-                writeField(this.tags[i], this.objects[i], writer);
+        if (this.count != 0) {
+            if (writer.fieldOrder() == Writer.FieldOrder.ASCENDING) {
+                for (int i = 0; i < this.count; i++) {
+                    writeField(this.tags[i], this.objects[i], writer);
+                }
+                return;
             }
-            return;
-        }
-        for (int i2 = this.count - 1; i2 >= 0; i2--) {
-            writeField(this.tags[i2], this.objects[i2], writer);
+            for (int i2 = this.count - 1; i2 >= 0; i2--) {
+                writeField(this.tags[i2], this.objects[i2], writer);
+            }
         }
     }
 
@@ -122,33 +119,33 @@ public final class UnknownFieldSetLite {
     }
 
     public int getSerializedSize() {
-        int computeUInt64Size;
-        int i = this.memoizedSerializedSize;
-        if (i != -1) {
-            return i;
+        int i;
+        int i2 = this.memoizedSerializedSize;
+        if (i2 != -1) {
+            return i2;
         }
-        int i2 = 0;
-        for (int i3 = 0; i3 < this.count; i3++) {
-            int i4 = this.tags[i3];
-            int tagFieldNumber = WireFormat.getTagFieldNumber(i4);
-            int tagWireType = WireFormat.getTagWireType(i4);
+        int i3 = 0;
+        for (int i4 = 0; i4 < this.count; i4++) {
+            int i5 = this.tags[i4];
+            int tagFieldNumber = WireFormat.getTagFieldNumber(i5);
+            int tagWireType = WireFormat.getTagWireType(i5);
             if (tagWireType == 0) {
-                computeUInt64Size = CodedOutputStream.computeUInt64Size(tagFieldNumber, ((Long) this.objects[i3]).longValue());
+                i = CodedOutputStream.computeUInt64Size(tagFieldNumber, ((Long) this.objects[i4]).longValue());
             } else if (tagWireType == 1) {
-                computeUInt64Size = CodedOutputStream.computeFixed64Size(tagFieldNumber, ((Long) this.objects[i3]).longValue());
+                i = CodedOutputStream.computeFixed64Size(tagFieldNumber, ((Long) this.objects[i4]).longValue());
             } else if (tagWireType == 2) {
-                computeUInt64Size = CodedOutputStream.computeBytesSize(tagFieldNumber, (ByteString) this.objects[i3]);
+                i = CodedOutputStream.computeBytesSize(tagFieldNumber, (ByteString) this.objects[i4]);
             } else if (tagWireType == 3) {
-                computeUInt64Size = (CodedOutputStream.computeTagSize(tagFieldNumber) * 2) + ((UnknownFieldSetLite) this.objects[i3]).getSerializedSize();
+                i = (CodedOutputStream.computeTagSize(tagFieldNumber) * 2) + ((UnknownFieldSetLite) this.objects[i4]).getSerializedSize();
             } else if (tagWireType == 5) {
-                computeUInt64Size = CodedOutputStream.computeFixed32Size(tagFieldNumber, ((Integer) this.objects[i3]).intValue());
+                i = CodedOutputStream.computeFixed32Size(tagFieldNumber, ((Integer) this.objects[i4]).intValue());
             } else {
                 throw new IllegalStateException(InvalidProtocolBufferException.invalidWireType());
             }
-            i2 += computeUInt64Size;
+            i3 += i;
         }
-        this.memoizedSerializedSize = i2;
-        return i2;
+        this.memoizedSerializedSize = i3;
+        return i3;
     }
 
     private static boolean equals(int[] iArr, int[] iArr2, int i) {
@@ -202,14 +199,14 @@ public final class UnknownFieldSetLite {
         return ((((527 + i) * 31) + hashCode(this.tags, i)) * 31) + hashCode(this.objects, this.count);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public final void printWithIndent(StringBuilder sb, int i) {
         for (int i2 = 0; i2 < this.count; i2++) {
             MessageLiteToString.printField(sb, i, String.valueOf(WireFormat.getTagFieldNumber(this.tags[i2])), this.objects[i2]);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void storeField(int i, Object obj) {
         checkMutable();
         ensureCapacity();

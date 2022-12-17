@@ -9,7 +9,8 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$style;
 import com.android.settings.biometrics.fingerprint.FingerprintEnrollEnrolling;
 import com.android.settings.core.InstrumentedActivity;
 import com.android.settings.password.ChooseLockSettingsHelper;
@@ -19,7 +20,7 @@ import com.google.android.setupcompat.template.FooterButton;
 import com.google.android.setupcompat.util.WizardManagerHelper;
 import com.google.android.setupdesign.GlifLayout;
 import com.google.android.setupdesign.util.ThemeHelper;
-/* loaded from: classes.dex */
+
 public abstract class BiometricEnrollBase extends InstrumentedActivity {
     protected long mChallenge;
     protected FooterBarMixin mFooterBarMixin;
@@ -29,13 +30,12 @@ public abstract class BiometricEnrollBase extends InstrumentedActivity {
     protected byte[] mToken;
     protected int mUserId;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.core.InstrumentedActivity, com.android.settingslib.core.lifecycle.ObservableActivity, androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setTheme(R.style.Theme_SetupWizardOverlay);
+        setTheme(R$style.Theme_SetupWizardOverlay);
         ThemeHelper.trySetDynamicColor(this);
-        this.mChallenge = getIntent().getLongExtra("challenge", -1L);
+        this.mChallenge = getIntent().getLongExtra("challenge", -1);
         this.mSensorId = getIntent().getIntExtra("sensor_id", -1);
         if (this.mToken == null) {
             this.mToken = getIntent().getByteArrayExtra("hw_auth_token");
@@ -51,8 +51,7 @@ public abstract class BiometricEnrollBase extends InstrumentedActivity {
         this.mUserId = getIntent().getIntExtra("android.intent.extra.USER_ID", UserHandle.myUserId());
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         bundle.putBoolean("launched_confirm_lock", this.mLaunchedConfirmLock);
@@ -62,8 +61,8 @@ public abstract class BiometricEnrollBase extends InstrumentedActivity {
         bundle.putInt("sensor_id", this.mSensorId);
     }
 
-    @Override // android.app.Activity
-    protected void onPostCreate(Bundle bundle) {
+    /* access modifiers changed from: protected */
+    public void onPostCreate(Bundle bundle) {
         super.onPostCreate(bundle);
         initViews();
         FooterBarMixin footerBarMixin = this.mFooterBarMixin;
@@ -73,40 +72,38 @@ public abstract class BiometricEnrollBase extends InstrumentedActivity {
         }
     }
 
-    @Override // android.app.Activity, android.view.Window.Callback
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         getWindow().setStatusBarColor(getBackgroundColor());
         getWindow().setNavigationBarColor(getBackgroundColor());
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.core.lifecycle.ObservableActivity, androidx.fragment.app.FragmentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onStop() {
         super.onStop();
-        if (isChangingConfigurations() || !shouldFinishWhenBackgrounded()) {
-            return;
+        if (!isChangingConfigurations() && shouldFinishWhenBackgrounded()) {
+            setResult(3);
+            finish();
         }
-        setResult(3);
-        finish();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean shouldFinishWhenBackgrounded() {
         return !WizardManagerHelper.isAnySetupWizard(getIntent());
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void initViews() {
         getWindow().setStatusBarColor(0);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public GlifLayout getLayout() {
-        return (GlifLayout) findViewById(R.id.setup_wizard_layout);
+        return (GlifLayout) findViewById(R$id.setup_wizard_layout);
     }
 
-    protected void setHeaderText(int i, boolean z) {
+    /* access modifiers changed from: protected */
+    public void setHeaderText(int i, boolean z) {
         TextView headerTextView = getLayout().getHeaderTextView();
         CharSequence text = headerTextView.getText();
         CharSequence text2 = getText(i);
@@ -120,31 +117,31 @@ public abstract class BiometricEnrollBase extends InstrumentedActivity {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void setHeaderText(int i) {
         setHeaderText(i, false);
         getLayout().getHeaderTextView().setContentDescription(getText(i));
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void setHeaderText(CharSequence charSequence) {
         getLayout().setHeaderText(charSequence);
         getLayout().getHeaderTextView().setContentDescription(charSequence);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void setDescriptionText(int i) {
         if (!TextUtils.equals(getLayout().getDescriptionText(), getString(i))) {
             getLayout().setDescriptionText(i);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void setDescriptionText(CharSequence charSequence) {
         getLayout().setDescriptionText(charSequence);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public FooterButton getNextButton() {
         FooterBarMixin footerBarMixin = this.mFooterBarMixin;
         if (footerBarMixin != null) {
@@ -153,7 +150,7 @@ public abstract class BiometricEnrollBase extends InstrumentedActivity {
         return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public Intent getFingerprintEnrollingIntent() {
         Intent intent = new Intent();
         intent.setClassName("com.android.settings", FingerprintEnrollEnrolling.class.getName());
@@ -168,7 +165,7 @@ public abstract class BiometricEnrollBase extends InstrumentedActivity {
         return intent;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void launchConfirmLock(int i) {
         Log.d("BiometricEnrollBase", "launchConfirmLock");
         ChooseLockSettingsHelper.Builder builder = new ChooseLockSettingsHelper.Builder(this);
@@ -184,7 +181,7 @@ public abstract class BiometricEnrollBase extends InstrumentedActivity {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public int getBackgroundColor() {
         ColorStateList colorAttr = Utils.getColorAttr(this, 16842836);
         if (colorAttr != null) {
@@ -193,7 +190,6 @@ public abstract class BiometricEnrollBase extends InstrumentedActivity {
         return 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
     public void setFooterButtonTextColor(Button button, int i) {
         if (button != null) {
             button.setTextColor(i);

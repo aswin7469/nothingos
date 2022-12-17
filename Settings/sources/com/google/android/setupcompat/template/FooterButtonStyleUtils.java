@@ -12,29 +12,35 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.InsetDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.RippleDrawable;
-import android.os.Build;
 import android.util.StateSet;
+import android.view.ViewGroup;
 import android.widget.Button;
 import com.google.android.setupcompat.R$style;
 import com.google.android.setupcompat.internal.FooterButtonPartnerConfig;
 import com.google.android.setupcompat.internal.Preconditions;
 import com.google.android.setupcompat.partnerconfig.PartnerConfig;
 import com.google.android.setupcompat.partnerconfig.PartnerConfigHelper;
-/* loaded from: classes2.dex */
+import java.util.HashMap;
+
 public class FooterButtonStyleUtils {
+    private static final HashMap<Integer, ColorStateList> defaultTextColor = new HashMap<>();
+
     public static void applyPrimaryButtonPartnerResource(Context context, Button button, boolean z) {
-        applyButtonPartnerResources(context, button, z, true, new FooterButtonPartnerConfig.Builder(null).setPartnerTheme(R$style.SucPartnerCustomizationButton_Primary).setButtonBackgroundConfig(PartnerConfig.CONFIG_FOOTER_PRIMARY_BUTTON_BG_COLOR).setButtonDisableAlphaConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_DISABLED_ALPHA).setButtonDisableBackgroundConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_DISABLED_BG_COLOR).setButtonRadiusConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_RADIUS).setButtonRippleColorAlphaConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_RIPPLE_COLOR_ALPHA).setTextColorConfig(PartnerConfig.CONFIG_FOOTER_PRIMARY_BUTTON_TEXT_COLOR).setTextSizeConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_TEXT_SIZE).setButtonMinHeight(PartnerConfig.CONFIG_FOOTER_BUTTON_MIN_HEIGHT).setTextTypeFaceConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_FONT_FAMILY).setTextStyleConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_TEXT_STYLE).build());
+        applyButtonPartnerResources(context, button, z, true, new FooterButtonPartnerConfig.Builder((FooterButton) null).setPartnerTheme(R$style.SucPartnerCustomizationButton_Primary).setButtonBackgroundConfig(PartnerConfig.CONFIG_FOOTER_PRIMARY_BUTTON_BG_COLOR).setButtonDisableAlphaConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_DISABLED_ALPHA).setButtonDisableBackgroundConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_DISABLED_BG_COLOR).setButtonDisableTextColorConfig(PartnerConfig.CONFIG_FOOTER_PRIMARY_BUTTON_DISABLED_TEXT_COLOR).setButtonRadiusConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_RADIUS).setButtonRippleColorAlphaConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_RIPPLE_COLOR_ALPHA).setTextColorConfig(PartnerConfig.CONFIG_FOOTER_PRIMARY_BUTTON_TEXT_COLOR).setMarginStartConfig(PartnerConfig.CONFIG_FOOTER_PRIMARY_BUTTON_MARGIN_START).setTextSizeConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_TEXT_SIZE).setButtonMinHeight(PartnerConfig.CONFIG_FOOTER_BUTTON_MIN_HEIGHT).setTextTypeFaceConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_FONT_FAMILY).setTextStyleConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_TEXT_STYLE).build());
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static void applyButtonPartnerResources(Context context, Button button, boolean z, boolean z2, FooterButtonPartnerConfig footerButtonPartnerConfig) {
+    static void applyButtonPartnerResources(Context context, Button button, boolean z, boolean z2, FooterButtonPartnerConfig footerButtonPartnerConfig) {
+        saveButtonDefaultTextColor(button);
         if (!z) {
             if (button.isEnabled()) {
                 updateButtonTextEnabledColorWithPartnerConfig(context, button, footerButtonPartnerConfig.getButtonTextColorConfig());
+            } else {
+                updateButtonTextDisabledColorWithPartnerConfig(context, button, footerButtonPartnerConfig.getButtonDisableTextColorConfig());
             }
             updateButtonBackgroundWithPartnerConfig(context, button, footerButtonPartnerConfig.getButtonBackgroundConfig(), footerButtonPartnerConfig.getButtonDisableAlphaConfig(), footerButtonPartnerConfig.getButtonDisableBackgroundConfig());
         }
         updateButtonRippleColorWithPartnerConfig(context, button, z, footerButtonPartnerConfig.getButtonTextColorConfig(), footerButtonPartnerConfig.getButtonRippleColorAlphaConfig());
+        updateButtonMarginStartWithPartnerConfig(context, button, footerButtonPartnerConfig.getButtonMarginStartConfig());
         updateButtonTextSizeWithPartnerConfig(context, button, footerButtonPartnerConfig.getButtonTextSizeConfig());
         updateButtonMinHeightWithPartnerConfig(context, button, footerButtonPartnerConfig.getButtonMinHeightConfig());
         updateButtonTypeFaceWithPartnerConfig(context, button, footerButtonPartnerConfig.getButtonTextTypeFaceConfig(), footerButtonPartnerConfig.getButtonTextStyleConfig());
@@ -42,8 +48,7 @@ public class FooterButtonStyleUtils {
         updateButtonIconWithPartnerConfig(context, button, footerButtonPartnerConfig.getButtonIconConfig(), z2);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static void updateButtonTextEnabledColorWithPartnerConfig(Context context, Button button, PartnerConfig partnerConfig) {
+    static void updateButtonTextEnabledColorWithPartnerConfig(Context context, Button button, PartnerConfig partnerConfig) {
         updateButtonTextEnabledColor(button, PartnerConfigHelper.get(context).getColor(context, partnerConfig));
     }
 
@@ -53,14 +58,27 @@ public class FooterButtonStyleUtils {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static void updateButtonTextDisableColor(Button button, ColorStateList colorStateList) {
+    static void updateButtonTextDisabledColorWithPartnerConfig(Context context, Button button, PartnerConfig partnerConfig) {
+        if (PartnerConfigHelper.get(context).isPartnerConfigAvailable(partnerConfig)) {
+            updateButtonTextDisabledColor(button, PartnerConfigHelper.get(context).getColor(context, partnerConfig));
+        } else {
+            updateButtonTextDisableDefaultColor(button, getButtonDefaultTextCorlor(button));
+        }
+    }
+
+    static void updateButtonTextDisabledColor(Button button, int i) {
+        if (i != 0) {
+            button.setTextColor(ColorStateList.valueOf(i));
+        }
+    }
+
+    static void updateButtonTextDisableDefaultColor(Button button, ColorStateList colorStateList) {
         button.setTextColor(colorStateList);
     }
 
     @TargetApi(29)
     static void updateButtonBackgroundWithPartnerConfig(Context context, Button button, PartnerConfig partnerConfig, PartnerConfig partnerConfig2, PartnerConfig partnerConfig3) {
-        Preconditions.checkArgument(Build.VERSION.SDK_INT >= 29, "Update button background only support on sdk Q or higher");
+        Preconditions.checkArgument(true, "Update button background only support on sdk Q or higher");
         updateButtonBackgroundTintList(context, button, PartnerConfigHelper.get(context).getColor(context, partnerConfig), PartnerConfigHelper.get(context).getFraction(context, partnerConfig2, 0.0f), PartnerConfigHelper.get(context).getColor(context, partnerConfig3));
     }
 
@@ -86,23 +104,29 @@ public class FooterButtonStyleUtils {
 
     @TargetApi(29)
     static void updateButtonRippleColorWithPartnerConfig(Context context, Button button, boolean z, PartnerConfig partnerConfig, PartnerConfig partnerConfig2) {
-        int color;
-        if (Build.VERSION.SDK_INT >= 21) {
-            if (z) {
-                color = button.getTextColors().getDefaultColor();
-            } else {
-                color = PartnerConfigHelper.get(context).getColor(context, partnerConfig);
-            }
-            updateButtonRippleColor(button, color, PartnerConfigHelper.get(context).getFraction(context, partnerConfig2));
+        int i;
+        if (z) {
+            i = button.getTextColors().getDefaultColor();
+        } else {
+            i = PartnerConfigHelper.get(context).getColor(context, partnerConfig);
         }
+        updateButtonRippleColor(button, i, PartnerConfigHelper.get(context).getFraction(context, partnerConfig2));
     }
 
     private static void updateButtonRippleColor(Button button, int i, float f) {
-        RippleDrawable rippleDrawable;
-        if (Build.VERSION.SDK_INT < 21 || (rippleDrawable = getRippleDrawable(button)) == null) {
-            return;
+        RippleDrawable rippleDrawable = getRippleDrawable(button);
+        if (rippleDrawable != null) {
+            int convertRgbToArgb = convertRgbToArgb(i, f);
+            rippleDrawable.setColor(new ColorStateList(new int[][]{new int[]{16842919}, new int[]{16842908}, StateSet.NOTHING}, new int[]{convertRgbToArgb, convertRgbToArgb, 0}));
         }
-        rippleDrawable.setColor(new ColorStateList(new int[][]{new int[]{16842919}, StateSet.NOTHING}, new int[]{convertRgbToArgb(i, f), 0}));
+    }
+
+    static void updateButtonMarginStartWithPartnerConfig(Context context, Button button, PartnerConfig partnerConfig) {
+        ViewGroup.LayoutParams layoutParams = button.getLayoutParams();
+        if (PartnerConfigHelper.get(context).isPartnerConfigAvailable(partnerConfig) && (layoutParams instanceof ViewGroup.MarginLayoutParams)) {
+            ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
+            marginLayoutParams.setMargins((int) PartnerConfigHelper.get(context).getDimension(context, partnerConfig), marginLayoutParams.topMargin, marginLayoutParams.rightMargin, marginLayoutParams.bottomMargin);
+        }
     }
 
     static void updateButtonTextSizeWithPartnerConfig(Context context, Button button, PartnerConfig partnerConfig) {
@@ -115,10 +139,9 @@ public class FooterButtonStyleUtils {
     static void updateButtonMinHeightWithPartnerConfig(Context context, Button button, PartnerConfig partnerConfig) {
         if (PartnerConfigHelper.get(context).isPartnerConfigAvailable(partnerConfig)) {
             float dimension = PartnerConfigHelper.get(context).getDimension(context, partnerConfig);
-            if (dimension <= 0.0f) {
-                return;
+            if (dimension > 0.0f) {
+                button.setMinHeight((int) dimension);
             }
-            button.setMinHeight((int) dimension);
         }
     }
 
@@ -135,80 +158,80 @@ public class FooterButtonStyleUtils {
     }
 
     static void updateButtonRadiusWithPartnerConfig(Context context, Button button, PartnerConfig partnerConfig) {
-        if (Build.VERSION.SDK_INT >= 24) {
-            float dimension = PartnerConfigHelper.get(context).getDimension(context, partnerConfig);
-            GradientDrawable gradientDrawable = getGradientDrawable(button);
-            if (gradientDrawable == null) {
-                return;
-            }
+        float dimension = PartnerConfigHelper.get(context).getDimension(context, partnerConfig);
+        GradientDrawable gradientDrawable = getGradientDrawable(button);
+        if (gradientDrawable != null) {
             gradientDrawable.setCornerRadius(dimension);
         }
     }
 
     static void updateButtonIconWithPartnerConfig(Context context, Button button, PartnerConfig partnerConfig, boolean z) {
-        if (button == null) {
-            return;
+        if (button != null) {
+            Drawable drawable = null;
+            if (partnerConfig != null) {
+                drawable = PartnerConfigHelper.get(context).getDrawable(context, partnerConfig);
+            }
+            setButtonIcon(button, drawable, z);
         }
-        Drawable drawable = null;
-        if (partnerConfig != null) {
-            drawable = PartnerConfigHelper.get(context).getDrawable(context, partnerConfig);
-        }
-        setButtonIcon(button, drawable, z);
     }
 
     private static void setButtonIcon(Button button, Drawable drawable, boolean z) {
         Drawable drawable2;
-        if (button == null) {
-            return;
-        }
-        if (drawable != null) {
-            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-        }
-        if (z) {
-            drawable2 = drawable;
-            drawable = null;
-        } else {
-            drawable2 = null;
-        }
-        if (Build.VERSION.SDK_INT >= 17) {
-            button.setCompoundDrawablesRelative(drawable, null, drawable2, null);
-        } else {
-            button.setCompoundDrawables(drawable, null, drawable2, null);
+        if (button != null) {
+            if (drawable != null) {
+                drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+            }
+            if (z) {
+                drawable2 = drawable;
+                drawable = null;
+            } else {
+                drawable2 = null;
+            }
+            button.setCompoundDrawablesRelative(drawable, (Drawable) null, drawable2, (Drawable) null);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static void updateButtonBackground(Button button, int i) {
+    static void updateButtonBackground(Button button, int i) {
         button.getBackground().mutate().setColorFilter(i, PorterDuff.Mode.SRC_ATOP);
     }
 
-    public static GradientDrawable getGradientDrawable(Button button) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            Drawable background = button.getBackground();
-            if (background instanceof InsetDrawable) {
-                return (GradientDrawable) ((LayerDrawable) ((InsetDrawable) background).getDrawable()).getDrawable(0);
-            }
-            if (!(background instanceof RippleDrawable)) {
-                return null;
-            }
-            RippleDrawable rippleDrawable = (RippleDrawable) background;
-            if (rippleDrawable.getDrawable(0) instanceof GradientDrawable) {
-                return (GradientDrawable) rippleDrawable.getDrawable(0);
-            }
-            return (GradientDrawable) ((InsetDrawable) rippleDrawable.getDrawable(0)).getDrawable();
+    private static void saveButtonDefaultTextColor(Button button) {
+        defaultTextColor.put(Integer.valueOf(button.getId()), button.getTextColors());
+    }
+
+    private static ColorStateList getButtonDefaultTextCorlor(Button button) {
+        HashMap<Integer, ColorStateList> hashMap = defaultTextColor;
+        if (hashMap.containsKey(Integer.valueOf(button.getId()))) {
+            return hashMap.get(Integer.valueOf(button.getId()));
         }
-        return null;
+        throw new IllegalStateException("There is no saved default color for button");
+    }
+
+    static void clearSavedDefaultTextColor() {
+        defaultTextColor.clear();
+    }
+
+    public static GradientDrawable getGradientDrawable(Button button) {
+        Drawable background = button.getBackground();
+        if (background instanceof InsetDrawable) {
+            return (GradientDrawable) ((LayerDrawable) ((InsetDrawable) background).getDrawable()).getDrawable(0);
+        }
+        if (!(background instanceof RippleDrawable)) {
+            return null;
+        }
+        RippleDrawable rippleDrawable = (RippleDrawable) background;
+        if (rippleDrawable.getDrawable(0) instanceof GradientDrawable) {
+            return (GradientDrawable) rippleDrawable.getDrawable(0);
+        }
+        return (GradientDrawable) ((InsetDrawable) rippleDrawable.getDrawable(0)).getDrawable();
     }
 
     static RippleDrawable getRippleDrawable(Button button) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            Drawable background = button.getBackground();
-            if (background instanceof InsetDrawable) {
-                return (RippleDrawable) ((InsetDrawable) background).getDrawable();
-            }
-            if (!(background instanceof RippleDrawable)) {
-                return null;
-            }
+        Drawable background = button.getBackground();
+        if (background instanceof InsetDrawable) {
+            return (RippleDrawable) ((InsetDrawable) background).getDrawable();
+        }
+        if (background instanceof RippleDrawable) {
             return (RippleDrawable) background;
         }
         return null;

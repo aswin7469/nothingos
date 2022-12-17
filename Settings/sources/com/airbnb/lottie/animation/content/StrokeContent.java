@@ -11,7 +11,7 @@ import com.airbnb.lottie.animation.keyframe.ValueCallbackKeyframeAnimation;
 import com.airbnb.lottie.model.content.ShapeStroke;
 import com.airbnb.lottie.model.layer.BaseLayer;
 import com.airbnb.lottie.value.LottieValueCallback;
-/* loaded from: classes.dex */
+
 public class StrokeContent extends BaseStrokeContent {
     private final BaseKeyframeAnimation<Integer, Integer> colorAnimation;
     private BaseKeyframeAnimation<ColorFilter, ColorFilter> colorFilterAnimation;
@@ -24,31 +24,27 @@ public class StrokeContent extends BaseStrokeContent {
         this.layer = baseLayer;
         this.name = shapeStroke.getName();
         this.hidden = shapeStroke.isHidden();
-        BaseKeyframeAnimation<Integer, Integer> mo180createAnimation = shapeStroke.getColor().mo180createAnimation();
-        this.colorAnimation = mo180createAnimation;
-        mo180createAnimation.addUpdateListener(this);
-        baseLayer.addAnimation(mo180createAnimation);
+        BaseKeyframeAnimation<Integer, Integer> createAnimation = shapeStroke.getColor().createAnimation();
+        this.colorAnimation = createAnimation;
+        createAnimation.addUpdateListener(this);
+        baseLayer.addAnimation(createAnimation);
     }
 
-    @Override // com.airbnb.lottie.animation.content.BaseStrokeContent, com.airbnb.lottie.animation.content.DrawingContent
     public void draw(Canvas canvas, Matrix matrix, int i) {
-        if (this.hidden) {
-            return;
+        if (!this.hidden) {
+            this.paint.setColor(((ColorKeyframeAnimation) this.colorAnimation).getIntValue());
+            BaseKeyframeAnimation<ColorFilter, ColorFilter> baseKeyframeAnimation = this.colorFilterAnimation;
+            if (baseKeyframeAnimation != null) {
+                this.paint.setColorFilter(baseKeyframeAnimation.getValue());
+            }
+            super.draw(canvas, matrix, i);
         }
-        this.paint.setColor(((ColorKeyframeAnimation) this.colorAnimation).getIntValue());
-        BaseKeyframeAnimation<ColorFilter, ColorFilter> baseKeyframeAnimation = this.colorFilterAnimation;
-        if (baseKeyframeAnimation != null) {
-            this.paint.setColorFilter(baseKeyframeAnimation.mo177getValue());
-        }
-        super.draw(canvas, matrix, i);
     }
 
-    @Override // com.airbnb.lottie.animation.content.Content
     public String getName() {
         return this.name;
     }
 
-    @Override // com.airbnb.lottie.animation.content.BaseStrokeContent, com.airbnb.lottie.model.KeyPathElement
     public <T> void addValueCallback(T t, LottieValueCallback<T> lottieValueCallback) {
         super.addValueCallback(t, lottieValueCallback);
         if (t == LottieProperty.STROKE_COLOR) {

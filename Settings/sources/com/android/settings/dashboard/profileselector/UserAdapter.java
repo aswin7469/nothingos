@@ -1,156 +1,133 @@
 package com.android.settings.dashboard.profileselector;
 
 import android.app.ActivityManager;
+import android.app.admin.DevicePolicyManager;
+import android.app.admin.DevicePolicyResourcesManager;
 import android.content.Context;
 import android.content.pm.UserInfo;
-import android.database.DataSetObserver;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.UserHandle;
 import android.os.UserManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import com.android.internal.util.UserIcons;
+import com.android.internal.widget.RecyclerView;
+import com.android.settingslib.R$id;
 import com.android.settingslib.R$layout;
-import com.android.settingslib.R$string;
-import com.android.settingslib.drawable.UserIconDrawable;
+import com.android.settingslib.Utils;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
-public class UserAdapter implements SpinnerAdapter, ListAdapter {
-    private ArrayList<UserDetails> data;
+import java.util.Objects;
+
+public class UserAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
+    private final ArrayList<UserDetails> mUserDetails;
 
-    @Override // android.widget.ListAdapter
-    public boolean areAllItemsEnabled() {
-        return true;
+    public interface OnClickListener {
+        void onClick(int i);
     }
 
-    @Override // android.widget.Adapter
-    public int getItemViewType(int i) {
-        return 0;
-    }
-
-    @Override // android.widget.Adapter
-    public int getViewTypeCount() {
-        return 1;
-    }
-
-    @Override // android.widget.Adapter
-    public boolean hasStableIds() {
-        return false;
-    }
-
-    @Override // android.widget.ListAdapter
-    public boolean isEnabled(int i) {
-        return true;
-    }
-
-    @Override // android.widget.Adapter
-    public void registerDataSetObserver(DataSetObserver dataSetObserver) {
-    }
-
-    @Override // android.widget.Adapter
-    public void unregisterDataSetObserver(DataSetObserver dataSetObserver) {
-    }
-
-    /* loaded from: classes.dex */
     public static class UserDetails {
-        private final Drawable mIcon;
-        private final String mName;
-        private final UserHandle mUserHandle;
+        /* access modifiers changed from: private */
+        public final Drawable mIcon;
+        /* access modifiers changed from: private */
+        public final String mTitle;
+        /* access modifiers changed from: private */
+        public final UserHandle mUserHandle;
 
         public UserDetails(UserHandle userHandle, UserManager userManager, Context context) {
-            Drawable defaultUserIcon;
             this.mUserHandle = userHandle;
             UserInfo userInfo = userManager.getUserInfo(userHandle.getIdentifier());
+            int colorAttrDefaultColor = Utils.getColorAttrDefaultColor(context, 17956901);
             if (userInfo.isManagedProfile()) {
-                this.mName = context.getString(R$string.managed_user_title);
-                defaultUserIcon = context.getDrawable(17302391);
+                Drawable userBadgeForDensityNoBackground = context.getPackageManager().getUserBadgeForDensityNoBackground(userHandle, 0);
+                this.mIcon = userBadgeForDensityNoBackground;
+                userBadgeForDensityNoBackground.setTint(colorAttrDefaultColor);
             } else {
-                this.mName = userInfo.name;
-                int i = userInfo.id;
-                if (userManager.getUserIcon(i) != null) {
-                    defaultUserIcon = new BitmapDrawable(context.getResources(), userManager.getUserIcon(i));
-                } else {
-                    defaultUserIcon = UserIcons.getDefaultUserIcon(context.getResources(), i, false);
-                }
+                this.mIcon = UserIcons.getDefaultUserIconInColor(context.getResources(), colorAttrDefaultColor);
             }
-            this.mIcon = encircle(context, defaultUserIcon);
+            this.mTitle = getTitle(context);
         }
 
-        private static Drawable encircle(Context context, Drawable drawable) {
-            return new UserIconDrawable(UserIconDrawable.getSizeForList(context)).setIconDrawable(drawable).bake();
+        private String getTitle(Context context) {
+            DevicePolicyManager devicePolicyManager = (DevicePolicyManager) context.getSystemService(DevicePolicyManager.class);
+            Objects.requireNonNull(devicePolicyManager);
+            DevicePolicyManager devicePolicyManager2 = devicePolicyManager;
+            DevicePolicyResourcesManager resources = devicePolicyManager.getResources();
+            int identifier = this.mUserHandle.getIdentifier();
+            if (identifier == -2 || identifier == ActivityManager.getCurrentUser()) {
+                return resources.getString("Settings.PERSONAL_CATEGORY_HEADER", new UserAdapter$UserDetails$$ExternalSyntheticLambda0(context));
+            }
+            return resources.getString("Settings.WORK_CATEGORY_HEADER", new UserAdapter$UserDetails$$ExternalSyntheticLambda1(context));
         }
     }
 
     public UserAdapter(Context context, ArrayList<UserDetails> arrayList) {
-        if (arrayList == null) {
-            throw new IllegalArgumentException("A list of user details must be provided");
+        if (arrayList != null) {
+            this.mUserDetails = arrayList;
+            this.mInflater = (LayoutInflater) context.getSystemService(LayoutInflater.class);
+            return;
         }
-        this.data = arrayList;
-        this.mInflater = (LayoutInflater) context.getSystemService("layout_inflater");
+        throw new IllegalArgumentException("A list of user details must be provided");
     }
 
     public UserHandle getUserHandle(int i) {
-        if (i < 0 || i >= this.data.size()) {
+        if (i < 0 || i >= this.mUserDetails.size()) {
             return null;
         }
-        return this.data.get(i).mUserHandle;
+        return this.mUserDetails.get(i).mUserHandle;
     }
 
-    @Override // android.widget.SpinnerAdapter
-    public View getDropDownView(int i, View view, ViewGroup viewGroup) {
-        if (view == null) {
-            view = createUser(viewGroup);
+    public View getView(int i, View view, ViewGroup viewGroup) {
+        ViewHolder viewHolder;
+        if (view != null) {
+            viewHolder = (ViewHolder) view.getTag();
+        } else {
+            view = this.mInflater.inflate(R$layout.user_preference, viewGroup, false);
+            viewHolder = new ViewHolder(view);
+            view.setTag(viewHolder);
         }
-        UserDetails userDetails = this.data.get(i);
-        ((ImageView) view.findViewById(16908294)).setImageDrawable(userDetails.mIcon);
-        ((TextView) view.findViewById(16908310)).setText(getTitle(userDetails));
+        bindViewHolder(viewHolder, i);
         return view;
     }
 
-    private int getTitle(UserDetails userDetails) {
-        int identifier = userDetails.mUserHandle.getIdentifier();
-        if (identifier == -2 || identifier == ActivityManager.getCurrentUser()) {
-            return R$string.category_personal;
-        }
-        return R$string.category_work;
+    /* access modifiers changed from: private */
+    public void bindViewHolder(ViewHolder viewHolder, int i) {
+        UserDetails item = getItem(i);
+        viewHolder.getIconView().setImageDrawable(item.mIcon);
+        viewHolder.setTitle(item.mTitle);
     }
 
-    private View createUser(ViewGroup viewGroup) {
-        return this.mInflater.inflate(R$layout.user_preference, viewGroup, false);
-    }
-
-    @Override // android.widget.Adapter
     public int getCount() {
-        return this.data.size();
+        return this.mUserDetails.size();
     }
 
-    @Override // android.widget.Adapter
-    /* renamed from: getItem */
-    public UserDetails mo295getItem(int i) {
-        return this.data.get(i);
+    public UserDetails getItem(int i) {
+        return this.mUserDetails.get(i);
     }
 
-    @Override // android.widget.Adapter
     public long getItemId(int i) {
-        return this.data.get(i).mUserHandle.getIdentifier();
+        return (long) this.mUserDetails.get(i).mUserHandle.getIdentifier();
     }
 
-    @Override // android.widget.Adapter
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        return getDropDownView(i, view, viewGroup);
-    }
+    private RecyclerView.Adapter<ViewHolder> createRecyclerViewAdapter(final OnClickListener onClickListener) {
+        return new RecyclerView.Adapter<ViewHolder>() {
+            public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+                return new ViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R$layout.user_select_item, viewGroup, false), onClickListener);
+            }
 
-    @Override // android.widget.Adapter
-    public boolean isEmpty() {
-        return this.data.isEmpty();
+            public void onBindViewHolder(ViewHolder viewHolder, int i) {
+                UserAdapter.this.bindViewHolder(viewHolder, i);
+            }
+
+            public int getItemCount() {
+                return UserAdapter.this.getCount();
+            }
+        };
     }
 
     public static UserAdapter createUserSpinnerAdapter(UserManager userManager, Context context) {
@@ -164,12 +141,55 @@ public class UserAdapter implements SpinnerAdapter, ListAdapter {
         return createUserAdapter(userManager, context, userProfiles);
     }
 
-    public static UserAdapter createUserAdapter(UserManager userManager, Context context, List<UserHandle> list) {
+    public static RecyclerView.Adapter<ViewHolder> createUserRecycleViewAdapter(Context context, List<UserHandle> list, OnClickListener onClickListener) {
+        return createUserAdapter((UserManager) context.getSystemService(UserManager.class), context, list).createRecyclerViewAdapter(onClickListener);
+    }
+
+    private static UserAdapter createUserAdapter(UserManager userManager, Context context, List<UserHandle> list) {
         ArrayList arrayList = new ArrayList(list.size());
-        int size = list.size();
-        for (int i = 0; i < size; i++) {
-            arrayList.add(new UserDetails(list.get(i), userManager, context));
+        for (UserHandle userDetails : list) {
+            arrayList.add(new UserDetails(userDetails, userManager, context));
         }
         return new UserAdapter(context, arrayList);
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        private final View mButtonView;
+        private final ImageView mIconView;
+        private final TextView mTitleView;
+
+        private ViewHolder(View view) {
+            super(view);
+            this.mIconView = (ImageView) view.findViewById(16908294);
+            this.mTitleView = (TextView) view.findViewById(16908310);
+            this.mButtonView = view.findViewById(R$id.button);
+        }
+
+        private ViewHolder(View view, OnClickListener onClickListener) {
+            this(view);
+            View view2 = this.mButtonView;
+            if (view2 != null) {
+                view2.setOnClickListener(new UserAdapter$ViewHolder$$ExternalSyntheticLambda0(this, onClickListener));
+            }
+        }
+
+        /* access modifiers changed from: private */
+        public /* synthetic */ void lambda$new$0(OnClickListener onClickListener, View view) {
+            onClickListener.onClick(getAdapterPosition());
+        }
+
+        /* access modifiers changed from: private */
+        public ImageView getIconView() {
+            return this.mIconView;
+        }
+
+        /* access modifiers changed from: private */
+        public void setTitle(CharSequence charSequence) {
+            this.mTitleView.setText(charSequence);
+            View view = this.mButtonView;
+            if (view != null) {
+                view.setContentDescription(charSequence);
+            }
+        }
     }
 }

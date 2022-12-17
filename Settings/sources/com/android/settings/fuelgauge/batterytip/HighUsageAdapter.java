@@ -10,29 +10,29 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
 import com.android.settings.Utils;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class HighUsageAdapter extends RecyclerView.Adapter<ViewHolder> {
     private final Context mContext;
     private final List<AppInfo> mHighUsageAppList;
     private final IconDrawableFactory mIconDrawableFactory;
     private final PackageManager mPackageManager;
 
-    /* loaded from: classes.dex */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView appIcon;
         public TextView appName;
         public TextView appTime;
         public View view;
 
-        public ViewHolder(View view) {
-            super(view);
-            this.view = view;
-            this.appIcon = (ImageView) view.findViewById(R.id.app_icon);
-            this.appName = (TextView) view.findViewById(R.id.app_name);
-            this.appTime = (TextView) view.findViewById(R.id.app_screen_time);
+        public ViewHolder(View view2) {
+            super(view2);
+            this.view = view2;
+            this.appIcon = (ImageView) view2.findViewById(R$id.app_icon);
+            this.appName = (TextView) view2.findViewById(R$id.app_name);
+            this.appTime = (TextView) view2.findViewById(R$id.app_screen_time);
         }
     }
 
@@ -43,13 +43,10 @@ public class HighUsageAdapter extends RecyclerView.Adapter<ViewHolder> {
         this.mPackageManager = context.getPackageManager();
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
-    /* renamed from: onCreateViewHolder  reason: collision with other method in class */
-    public ViewHolder mo960onCreateViewHolder(ViewGroup viewGroup, int i) {
-        return new ViewHolder(LayoutInflater.from(this.mContext).inflate(R.layout.app_high_usage_item, viewGroup, false));
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        return new ViewHolder(LayoutInflater.from(this.mContext).inflate(R$layout.app_high_usage_item, viewGroup, false));
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         AppInfo appInfo = this.mHighUsageAppList.get(i);
         viewHolder.appIcon.setImageDrawable(Utils.getBadgedIcon(this.mIconDrawableFactory, this.mPackageManager, appInfo.packageName, UserHandle.getUserId(appInfo.uid)));
@@ -60,7 +57,6 @@ public class HighUsageAdapter extends RecyclerView.Adapter<ViewHolder> {
         viewHolder.appName.setText(applicationLabel);
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public int getItemCount() {
         return this.mHighUsageAppList.size();
     }

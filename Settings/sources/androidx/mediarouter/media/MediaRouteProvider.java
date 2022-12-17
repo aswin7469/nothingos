@@ -9,9 +9,8 @@ import androidx.core.util.ObjectsCompat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.Executor;
-/* loaded from: classes.dex */
+
 public abstract class MediaRouteProvider {
     private Callback mCallback;
     private final Context mContext;
@@ -22,38 +21,33 @@ public abstract class MediaRouteProvider {
     private boolean mPendingDescriptorChange;
     private boolean mPendingDiscoveryRequestChange;
 
-    /* loaded from: classes.dex */
     public static abstract class Callback {
-        public abstract void onDescriptorChanged(MediaRouteProvider provider, MediaRouteProviderDescriptor descriptor);
+        public abstract void onDescriptorChanged(MediaRouteProvider mediaRouteProvider, MediaRouteProviderDescriptor mediaRouteProviderDescriptor);
     }
 
-    public void onDiscoveryRequestChanged(MediaRouteDiscoveryRequest request) {
+    public void onDiscoveryRequestChanged(MediaRouteDiscoveryRequest mediaRouteDiscoveryRequest) {
     }
 
     public MediaRouteProvider(Context context) {
-        this(context, null);
+        this(context, (ProviderMetadata) null);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public MediaRouteProvider(Context context, ProviderMetadata metadata) {
+    MediaRouteProvider(Context context, ProviderMetadata providerMetadata) {
         this.mHandler = new ProviderHandler();
-        if (context == null) {
-            throw new IllegalArgumentException("context must not be null");
-        }
-        this.mContext = context;
-        if (metadata == null) {
-            this.mMetadata = new ProviderMetadata(new ComponentName(context, getClass()));
+        if (context != null) {
+            this.mContext = context;
+            if (providerMetadata == null) {
+                this.mMetadata = new ProviderMetadata(new ComponentName(context, getClass()));
+            } else {
+                this.mMetadata = providerMetadata;
+            }
         } else {
-            this.mMetadata = metadata;
+            throw new IllegalArgumentException("context must not be null");
         }
     }
 
     public final Context getContext() {
         return this.mContext;
-    }
-
-    public final Handler getHandler() {
-        return this.mHandler;
     }
 
     public final ProviderMetadata getMetadata() {
@@ -69,23 +63,24 @@ public abstract class MediaRouteProvider {
         return this.mDiscoveryRequest;
     }
 
-    public final void setDiscoveryRequest(MediaRouteDiscoveryRequest request) {
+    public final void setDiscoveryRequest(MediaRouteDiscoveryRequest mediaRouteDiscoveryRequest) {
         MediaRouter.checkCallingThread();
-        if (ObjectsCompat.equals(this.mDiscoveryRequest, request)) {
-            return;
+        if (!ObjectsCompat.equals(this.mDiscoveryRequest, mediaRouteDiscoveryRequest)) {
+            setDiscoveryRequestInternal(mediaRouteDiscoveryRequest);
         }
-        setDiscoveryRequestInternal(request);
     }
 
-    final void setDiscoveryRequestInternal(MediaRouteDiscoveryRequest request) {
-        this.mDiscoveryRequest = request;
+    /* access modifiers changed from: package-private */
+    public final void setDiscoveryRequestInternal(MediaRouteDiscoveryRequest mediaRouteDiscoveryRequest) {
+        this.mDiscoveryRequest = mediaRouteDiscoveryRequest;
         if (!this.mPendingDiscoveryRequestChange) {
             this.mPendingDiscoveryRequestChange = true;
             this.mHandler.sendEmptyMessage(2);
         }
     }
 
-    void deliverDiscoveryRequestChanged() {
+    /* access modifiers changed from: package-private */
+    public void deliverDiscoveryRequestChanged() {
         this.mPendingDiscoveryRequestChange = false;
         onDiscoveryRequestChanged(this.mDiscoveryRequest);
     }
@@ -94,19 +89,19 @@ public abstract class MediaRouteProvider {
         return this.mDescriptor;
     }
 
-    public final void setDescriptor(MediaRouteProviderDescriptor descriptor) {
+    public final void setDescriptor(MediaRouteProviderDescriptor mediaRouteProviderDescriptor) {
         MediaRouter.checkCallingThread();
-        if (this.mDescriptor != descriptor) {
-            this.mDescriptor = descriptor;
-            if (this.mPendingDescriptorChange) {
-                return;
+        if (this.mDescriptor != mediaRouteProviderDescriptor) {
+            this.mDescriptor = mediaRouteProviderDescriptor;
+            if (!this.mPendingDescriptorChange) {
+                this.mPendingDescriptorChange = true;
+                this.mHandler.sendEmptyMessage(1);
             }
-            this.mPendingDescriptorChange = true;
-            this.mHandler.sendEmptyMessage(1);
         }
     }
 
-    void deliverDescriptorChanged() {
+    /* access modifiers changed from: package-private */
+    public void deliverDescriptorChanged() {
         this.mPendingDescriptorChange = false;
         Callback callback = this.mCallback;
         if (callback != null) {
@@ -114,40 +109,39 @@ public abstract class MediaRouteProvider {
         }
     }
 
-    public RouteController onCreateRouteController(String routeId) {
-        if (routeId != null) {
+    public RouteController onCreateRouteController(String str) {
+        if (str != null) {
             return null;
         }
         throw new IllegalArgumentException("routeId cannot be null");
     }
 
-    public RouteController onCreateRouteController(String routeId, String routeGroupId) {
-        if (routeId != null) {
-            if (routeGroupId == null) {
-                throw new IllegalArgumentException("routeGroupId cannot be null");
-            }
-            return onCreateRouteController(routeId);
+    public RouteController onCreateRouteController(String str, String str2) {
+        if (str == null) {
+            throw new IllegalArgumentException("routeId cannot be null");
+        } else if (str2 != null) {
+            return onCreateRouteController(str);
+        } else {
+            throw new IllegalArgumentException("routeGroupId cannot be null");
         }
-        throw new IllegalArgumentException("routeId cannot be null");
     }
 
-    public DynamicGroupRouteController onCreateDynamicGroupRouteController(String initialMemberRouteId) {
-        if (initialMemberRouteId != null) {
+    public DynamicGroupRouteController onCreateDynamicGroupRouteController(String str) {
+        if (str != null) {
             return null;
         }
         throw new IllegalArgumentException("initialMemberRouteId cannot be null.");
     }
 
-    /* loaded from: classes.dex */
     public static final class ProviderMetadata {
         private final ComponentName mComponentName;
 
-        /* JADX INFO: Access modifiers changed from: package-private */
-        public ProviderMetadata(ComponentName componentName) {
-            if (componentName == null) {
-                throw new IllegalArgumentException("componentName must not be null");
+        ProviderMetadata(ComponentName componentName) {
+            if (componentName != null) {
+                this.mComponentName = componentName;
+                return;
             }
-            this.mComponentName = componentName;
+            throw new IllegalArgumentException("componentName must not be null");
         }
 
         public String getPackageName() {
@@ -163,7 +157,6 @@ public abstract class MediaRouteProvider {
         }
     }
 
-    /* loaded from: classes.dex */
     public static abstract class RouteController {
         public void onRelease() {
         }
@@ -171,22 +164,21 @@ public abstract class MediaRouteProvider {
         public void onSelect() {
         }
 
-        public void onSetVolume(int volume) {
+        public void onSetVolume(int i) {
         }
 
         @Deprecated
         public void onUnselect() {
         }
 
-        public void onUpdateVolume(int delta) {
+        public void onUpdateVolume(int i) {
         }
 
-        public void onUnselect(int reason) {
+        public void onUnselect(int i) {
             onUnselect();
         }
     }
 
-    /* loaded from: classes.dex */
     public static abstract class DynamicGroupRouteController extends RouteController {
         Executor mExecutor;
         OnDynamicRoutesChangedListener mListener;
@@ -194,9 +186,8 @@ public abstract class MediaRouteProvider {
         MediaRouteDescriptor mPendingGroupRoute;
         Collection<DynamicRouteDescriptor> mPendingRoutes;
 
-        /* loaded from: classes.dex */
         interface OnDynamicRoutesChangedListener {
-            void onRoutesChanged(DynamicGroupRouteController controller, MediaRouteDescriptor groupRoute, Collection<DynamicRouteDescriptor> routes);
+            void onRoutesChanged(DynamicGroupRouteController dynamicGroupRouteController, MediaRouteDescriptor mediaRouteDescriptor, Collection<DynamicRouteDescriptor> collection);
         }
 
         public String getGroupableSelectionTitle() {
@@ -207,60 +198,61 @@ public abstract class MediaRouteProvider {
             return null;
         }
 
-        public abstract void onAddMemberRoute(String routeId);
+        public abstract void onAddMemberRoute(String str);
 
-        public abstract void onRemoveMemberRoute(String routeId);
+        public abstract void onRemoveMemberRoute(String str);
 
-        public abstract void onUpdateMemberRoutes(List<String> routeIds);
+        public abstract void onUpdateMemberRoutes(List<String> list);
 
-        /* JADX INFO: Access modifiers changed from: package-private */
-        public void setOnDynamicRoutesChangedListener(Executor executor, final OnDynamicRoutesChangedListener listener) {
+        /* access modifiers changed from: package-private */
+        public void setOnDynamicRoutesChangedListener(Executor executor, final OnDynamicRoutesChangedListener onDynamicRoutesChangedListener) {
             synchronized (this.mLock) {
                 if (executor == null) {
                     throw new NullPointerException("Executor shouldn't be null");
-                }
-                if (listener == null) {
+                } else if (onDynamicRoutesChangedListener != null) {
+                    this.mExecutor = executor;
+                    this.mListener = onDynamicRoutesChangedListener;
+                    Collection<DynamicRouteDescriptor> collection = this.mPendingRoutes;
+                    if (collection != null && !collection.isEmpty()) {
+                        final MediaRouteDescriptor mediaRouteDescriptor = this.mPendingGroupRoute;
+                        final Collection<DynamicRouteDescriptor> collection2 = this.mPendingRoutes;
+                        this.mPendingGroupRoute = null;
+                        this.mPendingRoutes = null;
+                        this.mExecutor.execute(new Runnable() {
+                            public void run() {
+                                onDynamicRoutesChangedListener.onRoutesChanged(DynamicGroupRouteController.this, mediaRouteDescriptor, collection2);
+                            }
+                        });
+                    }
+                } else {
                     throw new NullPointerException("Listener shouldn't be null");
                 }
-                this.mExecutor = executor;
-                this.mListener = listener;
-                Collection<DynamicRouteDescriptor> collection = this.mPendingRoutes;
-                if (collection != null && !collection.isEmpty()) {
-                    final MediaRouteDescriptor mediaRouteDescriptor = this.mPendingGroupRoute;
-                    final Collection<DynamicRouteDescriptor> collection2 = this.mPendingRoutes;
-                    this.mPendingGroupRoute = null;
-                    this.mPendingRoutes = null;
-                    this.mExecutor.execute(new Runnable() { // from class: androidx.mediarouter.media.MediaRouteProvider.DynamicGroupRouteController.1
-                        @Override // java.lang.Runnable
-                        public void run() {
-                            listener.onRoutesChanged(DynamicGroupRouteController.this, mediaRouteDescriptor, collection2);
-                        }
-                    });
-                }
             }
         }
 
-        public final void notifyDynamicRoutesChanged(final MediaRouteDescriptor groupRoute, final Collection<DynamicRouteDescriptor> dynamicRoutes) {
-            Objects.requireNonNull(groupRoute, "groupRoute must not be null");
-            Objects.requireNonNull(dynamicRoutes, "dynamicRoutes must not be null");
-            synchronized (this.mLock) {
-                Executor executor = this.mExecutor;
-                if (executor != null) {
-                    final OnDynamicRoutesChangedListener onDynamicRoutesChangedListener = this.mListener;
-                    executor.execute(new Runnable() { // from class: androidx.mediarouter.media.MediaRouteProvider.DynamicGroupRouteController.3
-                        @Override // java.lang.Runnable
-                        public void run() {
-                            onDynamicRoutesChangedListener.onRoutesChanged(DynamicGroupRouteController.this, groupRoute, dynamicRoutes);
-                        }
-                    });
-                } else {
-                    this.mPendingGroupRoute = groupRoute;
-                    this.mPendingRoutes = new ArrayList(dynamicRoutes);
+        public final void notifyDynamicRoutesChanged(final MediaRouteDescriptor mediaRouteDescriptor, final Collection<DynamicRouteDescriptor> collection) {
+            if (mediaRouteDescriptor == null) {
+                throw new NullPointerException("groupRoute must not be null");
+            } else if (collection != null) {
+                synchronized (this.mLock) {
+                    Executor executor = this.mExecutor;
+                    if (executor != null) {
+                        final OnDynamicRoutesChangedListener onDynamicRoutesChangedListener = this.mListener;
+                        executor.execute(new Runnable() {
+                            public void run() {
+                                onDynamicRoutesChangedListener.onRoutesChanged(DynamicGroupRouteController.this, mediaRouteDescriptor, collection);
+                            }
+                        });
+                    } else {
+                        this.mPendingGroupRoute = mediaRouteDescriptor;
+                        this.mPendingRoutes = new ArrayList(collection);
+                    }
                 }
+            } else {
+                throw new NullPointerException("dynamicRoutes must not be null");
             }
         }
 
-        /* loaded from: classes.dex */
         public static final class DynamicRouteDescriptor {
             final boolean mIsGroupable;
             final boolean mIsTransferable;
@@ -268,12 +260,12 @@ public abstract class MediaRouteProvider {
             final MediaRouteDescriptor mMediaRouteDescriptor;
             final int mSelectionState;
 
-            DynamicRouteDescriptor(MediaRouteDescriptor mediaRouteDescriptor, int selectionState, boolean isUnselectable, boolean isGroupable, boolean isTransferable) {
+            DynamicRouteDescriptor(MediaRouteDescriptor mediaRouteDescriptor, int i, boolean z, boolean z2, boolean z3) {
                 this.mMediaRouteDescriptor = mediaRouteDescriptor;
-                this.mSelectionState = selectionState;
-                this.mIsUnselectable = isUnselectable;
-                this.mIsGroupable = isGroupable;
-                this.mIsTransferable = isTransferable;
+                this.mSelectionState = i;
+                this.mIsUnselectable = z;
+                this.mIsGroupable = z2;
+                this.mIsTransferable = z3;
             }
 
             public MediaRouteDescriptor getRouteDescriptor() {
@@ -296,44 +288,45 @@ public abstract class MediaRouteProvider {
                 return this.mIsTransferable;
             }
 
-            /* JADX INFO: Access modifiers changed from: package-private */
-            public static DynamicRouteDescriptor fromBundle(Bundle bundle) {
+            static DynamicRouteDescriptor fromBundle(Bundle bundle) {
                 if (bundle == null) {
                     return null;
                 }
                 return new DynamicRouteDescriptor(MediaRouteDescriptor.fromBundle(bundle.getBundle("mrDescriptor")), bundle.getInt("selectionState", 1), bundle.getBoolean("isUnselectable", false), bundle.getBoolean("isGroupable", false), bundle.getBoolean("isTransferable", false));
             }
 
-            /* loaded from: classes.dex */
             public static final class Builder {
-                private final MediaRouteDescriptor mRouteDescriptor;
-                private int mSelectionState = 1;
-                private boolean mIsUnselectable = false;
                 private boolean mIsGroupable = false;
                 private boolean mIsTransferable = false;
+                private boolean mIsUnselectable = false;
+                private final MediaRouteDescriptor mRouteDescriptor;
+                private int mSelectionState = 1;
 
-                public Builder(MediaRouteDescriptor descriptor) {
-                    Objects.requireNonNull(descriptor, "descriptor must not be null");
-                    this.mRouteDescriptor = descriptor;
+                public Builder(MediaRouteDescriptor mediaRouteDescriptor) {
+                    if (mediaRouteDescriptor != null) {
+                        this.mRouteDescriptor = mediaRouteDescriptor;
+                        return;
+                    }
+                    throw new NullPointerException("descriptor must not be null");
                 }
 
-                public Builder setSelectionState(int state) {
-                    this.mSelectionState = state;
+                public Builder setSelectionState(int i) {
+                    this.mSelectionState = i;
                     return this;
                 }
 
-                public Builder setIsUnselectable(boolean value) {
-                    this.mIsUnselectable = value;
+                public Builder setIsUnselectable(boolean z) {
+                    this.mIsUnselectable = z;
                     return this;
                 }
 
-                public Builder setIsGroupable(boolean value) {
-                    this.mIsGroupable = value;
+                public Builder setIsGroupable(boolean z) {
+                    this.mIsGroupable = z;
                     return this;
                 }
 
-                public Builder setIsTransferable(boolean value) {
-                    this.mIsTransferable = value;
+                public Builder setIsTransferable(boolean z) {
+                    this.mIsTransferable = z;
                     return this;
                 }
 
@@ -344,19 +337,15 @@ public abstract class MediaRouteProvider {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public final class ProviderHandler extends Handler {
+    private final class ProviderHandler extends Handler {
         ProviderHandler() {
         }
 
-        @Override // android.os.Handler
-        public void handleMessage(Message msg) {
-            int i = msg.what;
+        public void handleMessage(Message message) {
+            int i = message.what;
             if (i == 1) {
                 MediaRouteProvider.this.deliverDescriptorChanged();
-            } else if (i != 2) {
-            } else {
+            } else if (i == 2) {
                 MediaRouteProvider.this.deliverDiscoveryRequestChanged();
             }
         }

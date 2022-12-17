@@ -2,7 +2,7 @@ package com.android.settings.network.ims;
 
 import android.telephony.ims.ProvisioningManager;
 import android.util.Log;
-/* loaded from: classes.dex */
+
 public class ImsQueryProvisioningStat {
     private volatile int mCapability;
     private volatile int mSubId;

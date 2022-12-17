@@ -1,5 +1,5 @@
 package androidx.appcompat;
-/* loaded from: classes.dex */
+
 public final class R$dimen {
     public static final int abc_action_bar_stacked_max_height = 2131165193;
     public static final int abc_action_bar_stacked_tab_max_width = 2131165194;
@@ -12,8 +12,4 @@ public final class R$dimen {
     public static final int abc_star_big = 2131165272;
     public static final int abc_star_medium = 2131165273;
     public static final int abc_star_small = 2131165274;
-    public static final int tooltip_precise_anchor_extra_offset = 2131166313;
-    public static final int tooltip_precise_anchor_threshold = 2131166314;
-    public static final int tooltip_y_offset_non_touch = 2131166316;
-    public static final int tooltip_y_offset_touch = 2131166317;
 }

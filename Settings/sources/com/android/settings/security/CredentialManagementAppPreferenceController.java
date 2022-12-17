@@ -11,12 +11,11 @@ import android.security.KeyChain;
 import android.util.Log;
 import androidx.preference.Preference;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.BasePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-/* loaded from: classes.dex */
+
 public class CredentialManagementAppPreferenceController extends BasePreferenceController {
     private static final String TAG = "CredentialManagementApp";
     private String mCredentialManagerPackageName;
@@ -25,47 +24,34 @@ public class CredentialManagementAppPreferenceController extends BasePreferenceC
     private boolean mHasCredentialManagerPackage;
     private final PackageManager mPackageManager;
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return 0;
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -75,18 +61,12 @@ public class CredentialManagementAppPreferenceController extends BasePreferenceC
         this.mPackageManager = context.getPackageManager();
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    public void updateState(final Preference preference) {
-        this.mExecutor.execute(new Runnable() { // from class: com.android.settings.security.CredentialManagementAppPreferenceController$$ExternalSyntheticLambda1
-            @Override // java.lang.Runnable
-            public final void run() {
-                CredentialManagementAppPreferenceController.this.lambda$updateState$1(preference);
-            }
-        });
+    public void updateState(Preference preference) {
+        this.mExecutor.execute(new C1343xc202846d(this, preference));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$updateState$1(final Preference preference) {
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$updateState$1(Preference preference) {
         try {
             IKeyChainService service = KeyChain.bind(this.mContext).getService();
             this.mHasCredentialManagerPackage = service.hasCredentialManagementApp();
@@ -94,15 +74,10 @@ public class CredentialManagementAppPreferenceController extends BasePreferenceC
         } catch (RemoteException | InterruptedException unused) {
             Log.e(TAG, "Unable to display credential management app preference");
         }
-        this.mHandler.post(new Runnable() { // from class: com.android.settings.security.CredentialManagementAppPreferenceController$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                CredentialManagementAppPreferenceController.this.lambda$updateState$0(preference);
-            }
-        });
+        this.mHandler.post(new C1344xc202846e(this, preference));
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
     /* renamed from: displayPreference */
     public void lambda$updateState$0(Preference preference) {
@@ -110,13 +85,12 @@ public class CredentialManagementAppPreferenceController extends BasePreferenceC
             preference.setEnabled(true);
             try {
                 preference.setSummary(this.mPackageManager.getApplicationInfo(this.mCredentialManagerPackageName, 0).loadLabel(this.mPackageManager));
-                return;
             } catch (PackageManager.NameNotFoundException unused) {
-                preference.setSummary(this.mCredentialManagerPackageName);
-                return;
+                preference.setSummary((CharSequence) this.mCredentialManagerPackageName);
             }
+        } else {
+            preference.setEnabled(false);
+            preference.setSummary(R$string.no_certificate_management_app);
         }
-        preference.setEnabled(false);
-        preference.setSummary(R.string.no_certificate_management_app);
     }
 }

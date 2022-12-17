@@ -15,57 +15,46 @@ import android.telephony.ims.ImsMmTelManager;
 import android.util.Log;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
+import com.android.settings.R$string;
 import com.android.settings.network.ims.WifiCallingQueryImsState;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnStart;
 import com.android.settingslib.core.lifecycle.events.OnStop;
-/* loaded from: classes.dex */
+
 public class WifiCallingPreferenceController extends TelephonyBasePreferenceController implements LifecycleObserver, OnStart, OnStop {
     private static final String TAG = "WifiCallingPreference";
     Integer mCallState;
     CarrierConfigManager mCarrierConfigManager;
     private ImsMmTelManager mImsMmTelManager;
-    private Preference mPreference;
+    /* access modifiers changed from: private */
+    public Preference mPreference;
     PhoneAccountHandle mSimCallManager;
     private PhoneTelephonyCallback mTelephonyCallback = new PhoneTelephonyCallback();
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -75,22 +64,18 @@ public class WifiCallingPreferenceController extends TelephonyBasePreferenceCont
         this.mCarrierConfigManager = (CarrierConfigManager) context.getSystemService(CarrierConfigManager.class);
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.network.telephony.TelephonyAvailabilityCallback
     public int getAvailabilityStatus(int i) {
-        return (!SubscriptionManager.isValidSubscriptionId(i) || !MobileNetworkUtils.isWifiCallingEnabled(this.mContext, i, null, null)) ? 3 : 0;
+        return (!SubscriptionManager.isValidSubscriptionId(i) || !MobileNetworkUtils.isWifiCallingEnabled(this.mContext, i, (WifiCallingQueryImsState) null, (PhoneAccountHandle) null)) ? 3 : 0;
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStart
     public void onStart() {
         this.mTelephonyCallback.register(this.mContext, this.mSubId);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStop
     public void onStop() {
         this.mTelephonyCallback.unregister();
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         Preference findPreference = preferenceScreen.findPreference(getPreferenceKey());
@@ -101,7 +86,6 @@ public class WifiCallingPreferenceController extends TelephonyBasePreferenceCont
         }
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         if (this.mCallState == null || preference == null) {
@@ -113,16 +97,15 @@ public class WifiCallingPreferenceController extends TelephonyBasePreferenceCont
         boolean z = false;
         if (phoneAccountHandle != null) {
             Intent buildPhoneAccountConfigureIntent = MobileNetworkUtils.buildPhoneAccountConfigureIntent(this.mContext, phoneAccountHandle);
-            if (buildPhoneAccountConfigureIntent == null) {
+            if (buildPhoneAccountConfigureIntent != null) {
+                PackageManager packageManager = this.mContext.getPackageManager();
+                preference.setTitle(packageManager.queryIntentActivities(buildPhoneAccountConfigureIntent, 0).get(0).loadLabel(packageManager));
+                preference.setIntent(buildPhoneAccountConfigureIntent);
+            } else {
                 return;
             }
-            PackageManager packageManager = this.mContext.getPackageManager();
-            preference.setTitle(packageManager.queryIntentActivities(buildPhoneAccountConfigureIntent, 0).get(0).loadLabel(packageManager));
-            preference.setIntent(buildPhoneAccountConfigureIntent);
         } else {
-            String string = SubscriptionManager.getResourcesForSubId(this.mContext, this.mSubId).getString(MobileNetworkUtils.getWfcTitle(this.mContext, this.mSubId));
-            Log.d(TAG, "updateState wfTitle=" + string + " subId=" + this.mSubId);
-            preference.setTitle(string);
+            preference.setTitle((CharSequence) SubscriptionManager.getResourcesForSubId(this.mContext, this.mSubId).getString(R$string.wifi_calling_settings_title));
             charSequence = getResourceIdForWfcMode(this.mSubId);
         }
         preference.setSummary(charSequence);
@@ -134,31 +117,31 @@ public class WifiCallingPreferenceController extends TelephonyBasePreferenceCont
 
     private CharSequence getResourceIdForWfcMode(int i) {
         int i2;
-        int voWiFiModeSetting;
+        int i3;
         PersistableBundle configForSubId;
         if (queryImsState(i).isEnabledByUser()) {
             boolean z = false;
             CarrierConfigManager carrierConfigManager = this.mCarrierConfigManager;
-            if (carrierConfigManager != null && (configForSubId = carrierConfigManager.getConfigForSubId(i)) != null) {
+            if (!(carrierConfigManager == null || (configForSubId = carrierConfigManager.getConfigForSubId(i)) == null)) {
                 z = configForSubId.getBoolean("use_wfc_home_network_mode_in_roaming_network_bool");
             }
-            if (getTelephonyManager(this.mContext, i).isNetworkRoaming() && !z) {
-                voWiFiModeSetting = this.mImsMmTelManager.getVoWiFiRoamingModeSetting();
+            if (!getTelephonyManager(this.mContext, i).isNetworkRoaming() || z) {
+                i3 = this.mImsMmTelManager.getVoWiFiModeSetting();
             } else {
-                voWiFiModeSetting = this.mImsMmTelManager.getVoWiFiModeSetting();
+                i3 = this.mImsMmTelManager.getVoWiFiRoamingModeSetting();
             }
-            if (voWiFiModeSetting == 0) {
-                i2 = 17041618;
-            } else if (voWiFiModeSetting == 1) {
-                i2 = 17041616;
-            } else if (voWiFiModeSetting == 2) {
-                i2 = 17041619;
-            } else if (voWiFiModeSetting == 10) {
-                i2 = 17041617;
+            if (i3 == 0) {
+                i2 = 17041739;
+            } else if (i3 == 1) {
+                i2 = 17041737;
+            } else if (i3 == 2) {
+                i2 = 17041740;
+            } else if (i3 == 10) {
+                i2 = 17041738;
             }
             return SubscriptionManager.getResourcesForSubId(this.mContext, i).getText(i2);
         }
-        i2 = 17041649;
+        i2 = 17041770;
         return SubscriptionManager.getResourcesForSubId(this.mContext, i).getText(i2);
     }
 
@@ -169,31 +152,51 @@ public class WifiCallingPreferenceController extends TelephonyBasePreferenceCont
         return this;
     }
 
-    WifiCallingQueryImsState queryImsState(int i) {
+    /* access modifiers changed from: package-private */
+    public WifiCallingQueryImsState queryImsState(int i) {
         return new WifiCallingQueryImsState(this.mContext, i);
     }
 
-    protected ImsMmTelManager getImsMmTelManager(int i) {
+    /* access modifiers changed from: protected */
+    public ImsMmTelManager getImsMmTelManager(int i) {
         if (!SubscriptionManager.isValidSubscriptionId(i)) {
             return null;
         }
         return ImsMmTelManager.createForSubscriptionId(i);
     }
 
-    TelephonyManager getTelephonyManager(Context context, int i) {
-        TelephonyManager createForSubscriptionId;
-        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(TelephonyManager.class);
-        return (SubscriptionManager.isValidSubscriptionId(i) && (createForSubscriptionId = telephonyManager.createForSubscriptionId(i)) != null) ? createForSubscriptionId : telephonyManager;
+    /* access modifiers changed from: package-private */
+    /* JADX WARNING: Code restructure failed: missing block: B:3:0x000f, code lost:
+        r1 = r0.createForSubscriptionId(r2);
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public android.telephony.TelephonyManager getTelephonyManager(android.content.Context r1, int r2) {
+        /*
+            r0 = this;
+            java.lang.Class<android.telephony.TelephonyManager> r0 = android.telephony.TelephonyManager.class
+            java.lang.Object r0 = r1.getSystemService(r0)
+            android.telephony.TelephonyManager r0 = (android.telephony.TelephonyManager) r0
+            boolean r1 = android.telephony.SubscriptionManager.isValidSubscriptionId(r2)
+            if (r1 != 0) goto L_0x000f
+            return r0
+        L_0x000f:
+            android.telephony.TelephonyManager r1 = r0.createForSubscriptionId(r2)
+            if (r1 != 0) goto L_0x0016
+            goto L_0x0017
+        L_0x0016:
+            r0 = r1
+        L_0x0017:
+            return r0
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.network.telephony.WifiCallingPreferenceController.getTelephonyManager(android.content.Context, int):android.telephony.TelephonyManager");
     }
 
-    /* loaded from: classes.dex */
     private class PhoneTelephonyCallback extends TelephonyCallback implements TelephonyCallback.CallStateListener {
         private TelephonyManager mTelephonyManager;
 
         private PhoneTelephonyCallback() {
         }
 
-        @Override // android.telephony.TelephonyCallback.CallStateListener
         public void onCallStateChanged(int i) {
             WifiCallingPreferenceController.this.mCallState = Integer.valueOf(i);
             WifiCallingPreferenceController wifiCallingPreferenceController = WifiCallingPreferenceController.this;

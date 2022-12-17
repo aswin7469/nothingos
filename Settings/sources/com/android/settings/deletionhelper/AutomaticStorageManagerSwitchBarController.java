@@ -11,7 +11,7 @@ import com.android.settings.widget.SettingsMainSwitchBar;
 import com.android.settingslib.Utils;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
 import com.android.settingslib.widget.OnMainSwitchChangeListener;
-/* loaded from: classes.dex */
+
 public class AutomaticStorageManagerSwitchBarController implements OnMainSwitchChangeListener {
     private Context mContext;
     private Preference mDaysToRetainPreference;
@@ -33,8 +33,7 @@ public class AutomaticStorageManagerSwitchBarController implements OnMainSwitchC
         this.mSwitchBar.addOnSwitchChangeListener(this);
     }
 
-    @Override // com.android.settingslib.widget.OnMainSwitchChangeListener
-    public void onSwitchChanged(Switch r3, boolean z) {
+    public void onSwitchChanged(Switch switchR, boolean z) {
         this.mMetrics.action(this.mContext, 489, z);
         this.mDaysToRetainPreference.setEnabled(z);
         Settings.Secure.putInt(this.mContext.getContentResolver(), "automatic_storage_manager_enabled", z ? 1 : 0);
@@ -48,9 +47,8 @@ public class AutomaticStorageManagerSwitchBarController implements OnMainSwitchC
     }
 
     private void maybeShowWarning() {
-        if (SystemProperties.getBoolean("ro.storage_manager.enabled", false)) {
-            return;
+        if (!SystemProperties.getBoolean("ro.storage_manager.enabled", false)) {
+            ActivationWarningFragment.newInstance().show(this.mFragmentManager, "ActivationWarningFragment");
         }
-        ActivationWarningFragment.newInstance().show(this.mFragmentManager, "ActivationWarningFragment");
     }
 }

@@ -9,33 +9,30 @@ import androidx.appcompat.view.menu.MenuPresenter;
 import androidx.appcompat.view.menu.SubMenuBuilder;
 import com.google.android.material.badge.BadgeUtils;
 import com.google.android.material.internal.ParcelableSparseArray;
-/* loaded from: classes2.dex */
+
 public class NavigationBarPresenter implements MenuPresenter {
-    private int id;
+
+    /* renamed from: id */
+    private int f238id;
     private MenuBuilder menu;
     private NavigationBarMenuView menuView;
     private boolean updateSuspended = false;
 
-    @Override // androidx.appcompat.view.menu.MenuPresenter
     public boolean collapseItemActionView(MenuBuilder menuBuilder, MenuItemImpl menuItemImpl) {
         return false;
     }
 
-    @Override // androidx.appcompat.view.menu.MenuPresenter
     public boolean expandItemActionView(MenuBuilder menuBuilder, MenuItemImpl menuItemImpl) {
         return false;
     }
 
-    @Override // androidx.appcompat.view.menu.MenuPresenter
     public boolean flagActionItems() {
         return false;
     }
 
-    @Override // androidx.appcompat.view.menu.MenuPresenter
     public void onCloseMenu(MenuBuilder menuBuilder, boolean z) {
     }
 
-    @Override // androidx.appcompat.view.menu.MenuPresenter
     public boolean onSubMenuSelected(SubMenuBuilder subMenuBuilder) {
         return false;
     }
@@ -44,34 +41,29 @@ public class NavigationBarPresenter implements MenuPresenter {
         this.menuView = navigationBarMenuView;
     }
 
-    @Override // androidx.appcompat.view.menu.MenuPresenter
     public void initForMenu(Context context, MenuBuilder menuBuilder) {
         this.menu = menuBuilder;
         this.menuView.initialize(menuBuilder);
     }
 
-    @Override // androidx.appcompat.view.menu.MenuPresenter
     public void updateMenuView(boolean z) {
-        if (this.updateSuspended) {
-            return;
-        }
-        if (z) {
-            this.menuView.buildMenuView();
-        } else {
-            this.menuView.updateMenuView();
+        if (!this.updateSuspended) {
+            if (z) {
+                this.menuView.buildMenuView();
+            } else {
+                this.menuView.updateMenuView();
+            }
         }
     }
 
     public void setId(int i) {
-        this.id = i;
+        this.f238id = i;
     }
 
-    @Override // androidx.appcompat.view.menu.MenuPresenter
     public int getId() {
-        return this.id;
+        return this.f238id;
     }
 
-    @Override // androidx.appcompat.view.menu.MenuPresenter
     public Parcelable onSaveInstanceState() {
         SavedState savedState = new SavedState();
         savedState.selectedItemId = this.menuView.getSelectedItemId();
@@ -79,12 +71,11 @@ public class NavigationBarPresenter implements MenuPresenter {
         return savedState;
     }
 
-    @Override // androidx.appcompat.view.menu.MenuPresenter
     public void onRestoreInstanceState(Parcelable parcelable) {
         if (parcelable instanceof SavedState) {
             SavedState savedState = (SavedState) parcelable;
             this.menuView.tryRestoreSelectedItemId(savedState.selectedItemId);
-            this.menuView.setBadgeDrawables(BadgeUtils.createBadgeDrawablesFromSavedStates(this.menuView.getContext(), savedState.badgeSavedStates));
+            this.menuView.restoreBadgeDrawables(BadgeUtils.createBadgeDrawablesFromSavedStates(this.menuView.getContext(), savedState.badgeSavedStates));
         }
     }
 
@@ -92,28 +83,19 @@ public class NavigationBarPresenter implements MenuPresenter {
         this.updateSuspended = z;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes2.dex */
-    public static class SavedState implements Parcelable {
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() { // from class: com.google.android.material.navigation.NavigationBarPresenter.SavedState.1
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: createFromParcel */
-            public SavedState mo700createFromParcel(Parcel parcel) {
+    static class SavedState implements Parcelable {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel parcel) {
                 return new SavedState(parcel);
             }
 
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: newArray */
-            public SavedState[] mo701newArray(int i) {
+            public SavedState[] newArray(int i) {
                 return new SavedState[i];
             }
         };
         ParcelableSparseArray badgeSavedStates;
         int selectedItemId;
 
-        @Override // android.os.Parcelable
         public int describeContents() {
             return 0;
         }
@@ -126,7 +108,6 @@ public class NavigationBarPresenter implements MenuPresenter {
             this.badgeSavedStates = (ParcelableSparseArray) parcel.readParcelable(getClass().getClassLoader());
         }
 
-        @Override // android.os.Parcelable
         public void writeToParcel(Parcel parcel, int i) {
             parcel.writeInt(this.selectedItemId);
             parcel.writeParcelable(this.badgeSavedStates, 0);

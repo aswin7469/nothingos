@@ -1,17 +1,19 @@
 package com.airbnb.lottie.utils;
-/* loaded from: classes.dex */
+
 public class MeanCalculator {
-    private int n;
+
+    /* renamed from: n */
+    private int f134n;
     private float sum;
 
     public void add(float f) {
         float f2 = this.sum + f;
         this.sum = f2;
-        int i = this.n + 1;
-        this.n = i;
+        int i = this.f134n + 1;
+        this.f134n = i;
         if (i == Integer.MAX_VALUE) {
             this.sum = f2 / 2.0f;
-            this.n = i / 2;
+            this.f134n = i / 2;
         }
     }
 }

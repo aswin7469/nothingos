@@ -4,9 +4,8 @@ import com.google.protobuf.MapEntryLite;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes2.dex */
-public interface Reader {
+
+interface Reader {
     int getFieldNumber() throws IOException;
 
     int getTag();

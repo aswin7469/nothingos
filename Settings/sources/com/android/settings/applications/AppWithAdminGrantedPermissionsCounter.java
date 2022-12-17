@@ -1,13 +1,14 @@
 package com.android.settings.applications;
 
 import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageManager;
 import android.content.pm.PackageManager;
 import android.os.RemoteException;
 import android.os.UserHandle;
-/* loaded from: classes.dex */
+
 public abstract class AppWithAdminGrantedPermissionsCounter extends AppCounter {
     private final DevicePolicyManager mDevicePolicyManager;
     private final IPackageManager mPackageManagerService;
@@ -20,15 +21,15 @@ public abstract class AppWithAdminGrantedPermissionsCounter extends AppCounter {
         this.mDevicePolicyManager = devicePolicyManager;
     }
 
-    @Override // com.android.settings.applications.AppCounter
-    protected boolean includeInCount(ApplicationInfo applicationInfo) {
+    /* access modifiers changed from: protected */
+    public boolean includeInCount(ApplicationInfo applicationInfo) {
         return includeInCount(this.mPermissions, this.mDevicePolicyManager, this.mPm, this.mPackageManagerService, applicationInfo);
     }
 
     public static boolean includeInCount(String[] strArr, DevicePolicyManager devicePolicyManager, PackageManager packageManager, IPackageManager iPackageManager, ApplicationInfo applicationInfo) {
         if (applicationInfo.targetSdkVersion >= 23) {
-            for (String str : strArr) {
-                if (devicePolicyManager.getPermissionGrantState(null, applicationInfo.packageName, str) == 1) {
+            for (String permissionGrantState : strArr) {
+                if (devicePolicyManager.getPermissionGrantState((ComponentName) null, applicationInfo.packageName, permissionGrantState) == 1) {
                     return true;
                 }
             }
@@ -37,8 +38,8 @@ public abstract class AppWithAdminGrantedPermissionsCounter extends AppCounter {
             return false;
         } else {
             try {
-                for (String str2 : strArr) {
-                    if (iPackageManager.checkUidPermission(str2, applicationInfo.uid) == 0) {
+                for (String checkUidPermission : strArr) {
+                    if (iPackageManager.checkUidPermission(checkUidPermission, applicationInfo.uid) == 0) {
                         return true;
                     }
                 }

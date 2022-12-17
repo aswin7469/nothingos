@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:settings="http://schemas.android.com/apk/res-auto" android:persistent="false" android:title="@string/nt_glyphs_add_new_ringtone_title" android:key="key_main_screen">
-    <PreferenceCategory android:title="@string/nt_glyphs_add_new_ringtone_tip" android:key="key_phone_category">
-        <com.nt.settings.glyphs.widget.GlyphsRingtoneListPreference android:key="key_glyphs_ringTone_list" settings:controller="com.nt.settings.glyphs.GlyphsRingtoneListPreferenceController"/>
-    </PreferenceCategory>
-</PreferenceScreen>

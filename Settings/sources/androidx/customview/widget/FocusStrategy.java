@@ -4,15 +4,13 @@ import android.graphics.Rect;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-/* loaded from: classes.dex */
+
 class FocusStrategy {
 
-    /* loaded from: classes.dex */
     public interface BoundsAdapter<T> {
         void obtainBounds(T t, Rect rect);
     }
 
-    /* loaded from: classes.dex */
     public interface CollectionAdapter<T, V> {
         V get(T t, int i);
 
@@ -30,40 +28,51 @@ class FocusStrategy {
             arrayList.add(collectionAdapter.get(l, i2));
         }
         Collections.sort(arrayList, new SequentialComparator(z, boundsAdapter));
-        if (i != 1) {
-            if (i == 2) {
-                return (T) getNextFocusable(t, arrayList, z2);
-            }
-            throw new IllegalArgumentException("direction must be one of {FOCUS_FORWARD, FOCUS_BACKWARD}.");
+        if (i == 1) {
+            return getPreviousFocusable(t, arrayList, z2);
         }
-        return (T) getPreviousFocusable(t, arrayList, z2);
+        if (i == 2) {
+            return getNextFocusable(t, arrayList, z2);
+        }
+        throw new IllegalArgumentException("direction must be one of {FOCUS_FORWARD, FOCUS_BACKWARD}.");
     }
 
     private static <T> T getNextFocusable(T t, ArrayList<T> arrayList, boolean z) {
+        int i;
         int size = arrayList.size();
-        int lastIndexOf = (t == null ? -1 : arrayList.lastIndexOf(t)) + 1;
-        if (lastIndexOf < size) {
-            return arrayList.get(lastIndexOf);
+        if (t == null) {
+            i = -1;
+        } else {
+            i = arrayList.lastIndexOf(t);
         }
-        if (z && size > 0) {
-            return arrayList.get(0);
+        int i2 = i + 1;
+        if (i2 < size) {
+            return arrayList.get(i2);
         }
-        return null;
+        if (!z || size <= 0) {
+            return null;
+        }
+        return arrayList.get(0);
     }
 
     private static <T> T getPreviousFocusable(T t, ArrayList<T> arrayList, boolean z) {
+        int i;
         int size = arrayList.size();
-        int indexOf = (t == null ? size : arrayList.indexOf(t)) - 1;
-        if (indexOf >= 0) {
-            return arrayList.get(indexOf);
+        if (t == null) {
+            i = size;
+        } else {
+            i = arrayList.indexOf(t);
         }
-        if (z && size > 0) {
-            return arrayList.get(size - 1);
+        int i2 = i - 1;
+        if (i2 >= 0) {
+            return arrayList.get(i2);
         }
-        return null;
+        if (!z || size <= 0) {
+            return null;
+        }
+        return arrayList.get(size - 1);
     }
 
-    /* loaded from: classes.dex */
     private static class SequentialComparator<T> implements Comparator<T> {
         private final BoundsAdapter<T> mAdapter;
         private final boolean mIsLayoutRtl;
@@ -75,7 +84,6 @@ class FocusStrategy {
             this.mAdapter = boundsAdapter;
         }
 
-        @Override // java.util.Comparator
         public int compare(T t, T t2) {
             Rect rect = this.mTemp1;
             Rect rect2 = this.mTemp2;
@@ -92,10 +100,11 @@ class FocusStrategy {
             int i3 = rect.left;
             int i4 = rect2.left;
             if (i3 < i4) {
-                return this.mIsLayoutRtl ? 1 : -1;
-            } else if (i3 > i4) {
-                return this.mIsLayoutRtl ? -1 : 1;
-            } else {
+                if (this.mIsLayoutRtl) {
+                    return 1;
+                }
+                return -1;
+            } else if (i3 <= i4) {
                 int i5 = rect.bottom;
                 int i6 = rect2.bottom;
                 if (i5 < i6) {
@@ -107,12 +116,22 @@ class FocusStrategy {
                 int i7 = rect.right;
                 int i8 = rect2.right;
                 if (i7 < i8) {
-                    return this.mIsLayoutRtl ? 1 : -1;
+                    if (this.mIsLayoutRtl) {
+                        return 1;
+                    }
+                    return -1;
                 } else if (i7 <= i8) {
                     return 0;
                 } else {
-                    return this.mIsLayoutRtl ? -1 : 1;
+                    if (this.mIsLayoutRtl) {
+                        return -1;
+                    }
+                    return 1;
                 }
+            } else if (this.mIsLayoutRtl) {
+                return -1;
+            } else {
+                return 1;
             }
         }
     }
@@ -153,7 +172,10 @@ class FocusStrategy {
         if (!isCandidate(rect, rect3, i) || beamBeats(i, rect, rect2, rect3)) {
             return true;
         }
-        return !beamBeats(i, rect, rect3, rect2) && getWeightedDistanceFor(majorAxisDistance(i, rect, rect2), minorAxisDistance(i, rect, rect2)) < getWeightedDistanceFor(majorAxisDistance(i, rect, rect3), minorAxisDistance(i, rect, rect3));
+        if (!beamBeats(i, rect, rect3, rect2) && getWeightedDistanceFor(majorAxisDistance(i, rect, rect2), minorAxisDistance(i, rect, rect2)) < getWeightedDistanceFor(majorAxisDistance(i, rect, rect3), minorAxisDistance(i, rect, rect3))) {
+            return true;
+        }
+        return false;
     }
 
     private static boolean beamBeats(int i, Rect rect, Rect rect2, Rect rect3) {
@@ -161,22 +183,37 @@ class FocusStrategy {
         if (beamsOverlap(i, rect, rect3) || !beamsOverlap) {
             return false;
         }
-        return !isToDirectionOf(i, rect, rect3) || i == 17 || i == 66 || majorAxisDistance(i, rect, rect2) < majorAxisDistanceToFarEdge(i, rect, rect3);
+        if (!isToDirectionOf(i, rect, rect3) || i == 17 || i == 66) {
+            return true;
+        }
+        if (majorAxisDistance(i, rect, rect2) < majorAxisDistanceToFarEdge(i, rect, rect3)) {
+            return true;
+        }
+        return false;
     }
 
     private static boolean isCandidate(Rect rect, Rect rect2, int i) {
         if (i == 17) {
             int i2 = rect.right;
             int i3 = rect2.right;
-            return (i2 > i3 || rect.left >= i3) && rect.left > rect2.left;
+            if ((i2 > i3 || rect.left >= i3) && rect.left > rect2.left) {
+                return true;
+            }
+            return false;
         } else if (i == 33) {
             int i4 = rect.bottom;
             int i5 = rect2.bottom;
-            return (i4 > i5 || rect.top >= i5) && rect.top > rect2.top;
+            if ((i4 > i5 || rect.top >= i5) && rect.top > rect2.top) {
+                return true;
+            }
+            return false;
         } else if (i == 66) {
             int i6 = rect.left;
             int i7 = rect2.left;
-            return (i6 < i7 || rect.right <= i7) && rect.right < rect2.right;
+            if ((i6 < i7 || rect.right <= i7) && rect.right < rect2.right) {
+                return true;
+            }
+            return false;
         } else if (i == 130) {
             int i8 = rect.top;
             int i9 = rect2.top;
@@ -195,22 +232,39 @@ class FocusStrategy {
                     }
                 }
             }
-            return rect2.right >= rect.left && rect2.left <= rect.right;
+            if (rect2.right < rect.left || rect2.left > rect.right) {
+                return false;
+            }
+            return true;
         }
-        return rect2.bottom >= rect.top && rect2.top <= rect.bottom;
+        if (rect2.bottom < rect.top || rect2.top > rect.bottom) {
+            return false;
+        }
+        return true;
     }
 
     private static boolean isToDirectionOf(int i, Rect rect, Rect rect2) {
-        if (i == 17) {
-            return rect.left >= rect2.right;
-        } else if (i == 33) {
-            return rect.top >= rect2.bottom;
-        } else if (i == 66) {
-            return rect.right <= rect2.left;
-        } else if (i != 130) {
-            throw new IllegalArgumentException("direction must be one of {FOCUS_UP, FOCUS_DOWN, FOCUS_LEFT, FOCUS_RIGHT}.");
+        if (i != 17) {
+            if (i != 33) {
+                if (i != 66) {
+                    if (i == 130) {
+                        return rect.bottom <= rect2.top;
+                    }
+                    throw new IllegalArgumentException("direction must be one of {FOCUS_UP, FOCUS_DOWN, FOCUS_LEFT, FOCUS_RIGHT}.");
+                } else if (rect.right <= rect2.left) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else if (rect.top >= rect2.bottom) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (rect.left >= rect2.right) {
+            return true;
         } else {
-            return rect.bottom <= rect2.top;
+            return false;
         }
     }
 

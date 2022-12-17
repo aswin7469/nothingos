@@ -16,48 +16,42 @@ import com.android.settingslib.core.AbstractPreferenceController;
 import com.android.settingslib.core.lifecycle.Lifecycle;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class DisplaySettings extends DashboardFragment {
-    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R.xml.display_settings) { // from class: com.android.settings.DisplaySettings.1
-        @Override // com.android.settings.search.BaseSearchIndexProvider
+    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R$xml.display_settings) {
         public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
-            return DisplaySettings.buildPreferenceControllers(context, null);
+            return DisplaySettings.buildPreferenceControllers(context, (Lifecycle) null);
         }
     };
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "DisplaySettings";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 46;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.display_settings;
+        return R$xml.display_settings;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment
-    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+    /* access modifiers changed from: protected */
+    public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
         return buildPreferenceControllers(context, getSettingsLifecycle());
     }
 
-    @Override // com.android.settings.support.actionbar.HelpResourceProvider
     public int getHelpResource() {
-        return R.string.help_uri_display;
+        return R$string.help_uri_display;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static List<AbstractPreferenceController> buildPreferenceControllers(Context context, Lifecycle lifecycle) {
         ArrayList arrayList = new ArrayList();
         arrayList.add(new CameraGesturePreferenceController(context));

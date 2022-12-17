@@ -6,20 +6,20 @@ import android.net.wifi.WifiManager;
 import android.net.wifi.hotspot2.PasspointConfiguration;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class WifiSavedConfigUtils {
     public static List<AccessPoint> getAllConfigs(Context context, WifiManager wifiManager) {
         ArrayList arrayList = new ArrayList();
-        for (WifiConfiguration wifiConfiguration : wifiManager.getConfiguredNetworks()) {
-            if (!wifiConfiguration.isPasspoint() && !wifiConfiguration.isEphemeral()) {
-                arrayList.add(new AccessPoint(context, wifiConfiguration));
+        for (WifiConfiguration next : wifiManager.getConfiguredNetworks()) {
+            if (!next.isPasspoint() && !next.isEphemeral()) {
+                arrayList.add(new AccessPoint(context, next));
             }
         }
         try {
             List<PasspointConfiguration> passpointConfigurations = wifiManager.getPasspointConfigurations();
             if (passpointConfigurations != null) {
-                for (PasspointConfiguration passpointConfiguration : passpointConfigurations) {
-                    arrayList.add(new AccessPoint(context, passpointConfiguration));
+                for (PasspointConfiguration accessPoint : passpointConfigurations) {
+                    arrayList.add(new AccessPoint(context, accessPoint));
                 }
             }
         } catch (UnsupportedOperationException unused) {

@@ -1,16 +1,10 @@
 package com.android.settings.homepage.contextualcards;
 
-import java.util.ArrayList;
-import java.util.function.Supplier;
-/* loaded from: classes.dex */
-public final /* synthetic */ class ContextualCardManager$$ExternalSyntheticLambda8 implements Supplier {
-    public static final /* synthetic */ ContextualCardManager$$ExternalSyntheticLambda8 INSTANCE = new ContextualCardManager$$ExternalSyntheticLambda8();
+import java.util.function.Function;
 
-    private /* synthetic */ ContextualCardManager$$ExternalSyntheticLambda8() {
-    }
-
-    @Override // java.util.function.Supplier
-    public final Object get() {
-        return new ArrayList();
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class ContextualCardManager$$ExternalSyntheticLambda8 implements Function {
+    public final Object apply(Object obj) {
+        return Integer.valueOf(((ContextualCard) obj).getCardType());
     }
 }

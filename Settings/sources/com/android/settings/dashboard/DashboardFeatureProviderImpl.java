@@ -1,5 +1,6 @@
 package com.android.settings.dashboard;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,11 +17,16 @@ import android.widget.Toast;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
 import androidx.preference.SwitchPreference;
-import com.android.settings.R;
+import com.android.settings.R$dimen;
+import com.android.settings.R$string;
 import com.android.settings.Utils;
+import com.android.settings.activityembedding.ActivityEmbeddingRulesController;
+import com.android.settings.activityembedding.ActivityEmbeddingUtils;
 import com.android.settings.dashboard.profileselector.ProfileSelectDialog;
+import com.android.settings.homepage.TopLevelHighlightMixin;
+import com.android.settings.homepage.TopLevelSettings;
 import com.android.settings.overlay.FeatureFactory;
-import com.android.settings.widget.PrimarySwitchPreference;
+import com.android.settingslib.PrimarySwitchPreference;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
 import com.android.settingslib.drawer.ActivityTile;
 import com.android.settingslib.drawer.DashboardCategory;
@@ -28,11 +34,10 @@ import com.android.settingslib.drawer.Tile;
 import com.android.settingslib.drawer.TileUtils;
 import com.android.settingslib.utils.ThreadUtils;
 import com.android.settingslib.widget.AdaptiveIcon;
-import com.nt.settings.utils.NtUtils;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class DashboardFeatureProviderImpl implements DashboardFeatureProvider {
     private final CategoryManager mCategoryManager;
     protected final Context mContext;
@@ -46,17 +51,14 @@ public class DashboardFeatureProviderImpl implements DashboardFeatureProvider {
         this.mPackageManager = context.getPackageManager();
     }
 
-    @Override // com.android.settings.dashboard.DashboardFeatureProvider
     public DashboardCategory getTilesForCategory(String str) {
         return this.mCategoryManager.getTilesByCategory(this.mContext, str);
     }
 
-    @Override // com.android.settings.dashboard.DashboardFeatureProvider
     public List<DashboardCategory> getAllCategories() {
         return this.mCategoryManager.getCategories(this.mContext);
     }
 
-    @Override // com.android.settings.dashboard.DashboardFeatureProvider
     public String getDashboardKeyForTile(Tile tile) {
         if (tile == null) {
             return null;
@@ -67,107 +69,120 @@ public class DashboardFeatureProviderImpl implements DashboardFeatureProvider {
         return "dashboard_tile_pref_" + tile.getIntent().getComponent().getClassName();
     }
 
-    @Override // com.android.settings.dashboard.DashboardFeatureProvider
-    public List<DynamicDataObserver> bindPreferenceToTileAndGetObservers(final FragmentActivity fragmentActivity, boolean z, final int i, Preference preference, final Tile tile, String str, int i2) {
+    public List<DynamicDataObserver> bindPreferenceToTileAndGetObservers(FragmentActivity fragmentActivity, DashboardFragment dashboardFragment, boolean z, Preference preference, Tile tile, String str, int i) {
         String str2;
         String str3;
-        if (preference == null) {
+        Preference preference2 = preference;
+        Tile tile2 = tile;
+        int i2 = i;
+        if (preference2 == null) {
             return null;
         }
         if (!TextUtils.isEmpty(str)) {
-            preference.setKey(str);
+            preference2.setKey(str);
         } else {
-            preference.setKey(getDashboardKeyForTile(tile));
+            String str4 = str;
+            preference2.setKey(getDashboardKeyForTile(tile2));
         }
         ArrayList arrayList = new ArrayList();
-        DynamicDataObserver bindTitleAndGetObserver = bindTitleAndGetObserver(preference, tile);
+        DynamicDataObserver bindTitleAndGetObserver = bindTitleAndGetObserver(preference2, tile2);
         if (bindTitleAndGetObserver != null) {
             arrayList.add(bindTitleAndGetObserver);
         }
-        DynamicDataObserver bindSummaryAndGetObserver = bindSummaryAndGetObserver(preference, tile);
+        DynamicDataObserver bindSummaryAndGetObserver = bindSummaryAndGetObserver(preference2, tile2);
         if (bindSummaryAndGetObserver != null) {
             arrayList.add(bindSummaryAndGetObserver);
         }
-        DynamicDataObserver bindSwitchAndGetObserver = bindSwitchAndGetObserver(preference, tile);
+        DynamicDataObserver bindSwitchAndGetObserver = bindSwitchAndGetObserver(preference2, tile2);
         if (bindSwitchAndGetObserver != null) {
             arrayList.add(bindSwitchAndGetObserver);
         }
-        bindIcon(preference, tile, z);
-        if (tile instanceof ActivityTile) {
+        bindIcon(preference2, tile2, z);
+        if (tile2 instanceof ActivityTile) {
+            int metricsCategory = dashboardFragment.getMetricsCategory();
             Bundle metaData = tile.getMetaData();
             if (metaData != null) {
-                str3 = metaData.getString("com.android.settings.FRAGMENT_CLASS");
-                str2 = metaData.getString("com.android.settings.intent.action");
+                str2 = metaData.getString("com.android.settings.FRAGMENT_CLASS");
+                str3 = metaData.getString("com.android.settings.intent.action");
             } else {
-                str2 = null;
                 str3 = null;
+                str2 = null;
             }
-            if (!TextUtils.isEmpty(str3)) {
-                preference.setFragment(str3);
+            if (!TextUtils.isEmpty(str2)) {
+                preference2.setFragment(str2);
             } else {
-                final Intent intent = new Intent(tile.getIntent());
-                intent.putExtra(":settings:source_metrics", i);
-                if (str2 != null) {
-                    intent.setAction(str2);
+                Intent intent = new Intent(tile.getIntent());
+                intent.putExtra(":settings:source_metrics", metricsCategory);
+                if (str3 != null) {
+                    intent.setAction(str3);
                 }
-                preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() { // from class: com.android.settings.dashboard.DashboardFeatureProviderImpl$$ExternalSyntheticLambda1
-                    @Override // androidx.preference.Preference.OnPreferenceClickListener
-                    public final boolean onPreferenceClick(Preference preference2) {
-                        boolean lambda$bindPreferenceToTileAndGetObservers$0;
-                        lambda$bindPreferenceToTileAndGetObservers$0 = DashboardFeatureProviderImpl.this.lambda$bindPreferenceToTileAndGetObservers$0(fragmentActivity, tile, intent, i, preference2);
-                        return lambda$bindPreferenceToTileAndGetObservers$0;
-                    }
-                });
+                if (dashboardFragment instanceof TopLevelSettings) {
+                    ActivityEmbeddingRulesController.registerTwoPanePairRuleForSettingsHome(this.mContext, new ComponentName(tile.getPackageName(), tile.getComponentName()), str3, true);
+                }
+                preference2.setOnPreferenceClickListener(new DashboardFeatureProviderImpl$$ExternalSyntheticLambda1(this, dashboardFragment, str, fragmentActivity, tile, intent, metricsCategory));
             }
         }
         if (tile.hasOrder()) {
             String packageName = fragmentActivity.getPackageName();
             int order = tile.getOrder();
             if (TextUtils.equals(packageName, tile.getIntent().getComponent().getPackageName()) || i2 == Integer.MAX_VALUE) {
-                preference.setOrder(order);
+                preference2.setOrder(order);
             } else {
-                preference.setOrder(order + i2);
+                preference2.setOrder(order + i2);
             }
         }
-        if (!arrayList.isEmpty()) {
-            return arrayList;
+        if (arrayList.isEmpty()) {
+            return null;
         }
-        return null;
+        return arrayList;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ boolean lambda$bindPreferenceToTileAndGetObservers$0(FragmentActivity fragmentActivity, Tile tile, Intent intent, int i, Preference preference) {
-        launchIntentOrSelectProfile(fragmentActivity, tile, intent, i);
+    /* access modifiers changed from: private */
+    public /* synthetic */ boolean lambda$bindPreferenceToTileAndGetObservers$0(DashboardFragment dashboardFragment, String str, FragmentActivity fragmentActivity, Tile tile, Intent intent, int i, Preference preference) {
+        boolean z;
+        TopLevelHighlightMixin topLevelHighlightMixin;
+        if (!(dashboardFragment instanceof TopLevelSettings) || !ActivityEmbeddingUtils.isEmbeddingActivityEnabled(this.mContext)) {
+            topLevelHighlightMixin = null;
+            z = false;
+        } else {
+            TopLevelSettings topLevelSettings = (TopLevelSettings) dashboardFragment;
+            topLevelHighlightMixin = topLevelSettings.getHighlightMixin();
+            z = topLevelSettings.isDuplicateClick(preference);
+            topLevelSettings.setHighlightPreferenceKey(str);
+        }
+        FragmentActivity fragmentActivity2 = fragmentActivity;
+        Tile tile2 = tile;
+        Intent intent2 = intent;
+        int i2 = i;
+        launchIntentOrSelectProfile(fragmentActivity2, tile2, intent2, i2, topLevelHighlightMixin, z);
         return true;
     }
 
     private DynamicDataObserver createDynamicDataObserver(final String str, final Uri uri, final Preference preference) {
-        return new DynamicDataObserver() { // from class: com.android.settings.dashboard.DashboardFeatureProviderImpl.1
-            @Override // com.android.settings.dashboard.DynamicDataObserver
+        return new DynamicDataObserver() {
             public Uri getUri() {
                 return uri;
             }
 
-            @Override // com.android.settings.dashboard.DynamicDataObserver
             public void onDataChanged() {
-                String str2 = str;
-                str2.hashCode();
+                String str = str;
+                str.hashCode();
                 char c = 65535;
-                switch (str2.hashCode()) {
+                switch (str.hashCode()) {
                     case -2097433649:
-                        if (str2.equals("getDynamicTitle")) {
+                        if (str.equals("getDynamicTitle")) {
                             c = 0;
                             break;
                         }
                         break;
                     case -1844463779:
-                        if (str2.equals("getDynamicSummary")) {
+                        if (str.equals("getDynamicSummary")) {
                             c = 1;
                             break;
                         }
                         break;
                     case 162535197:
-                        if (str2.equals("isChecked")) {
+                        if (str.equals("isChecked")) {
                             c = 2;
                             break;
                         }
@@ -175,13 +190,13 @@ public class DashboardFeatureProviderImpl implements DashboardFeatureProvider {
                 }
                 switch (c) {
                     case 0:
-                        DashboardFeatureProviderImpl.this.refreshTitle(uri, preference);
+                        DashboardFeatureProviderImpl.this.refreshTitle(uri, preference, this);
                         return;
                     case 1:
-                        DashboardFeatureProviderImpl.this.refreshSummary(uri, preference);
+                        DashboardFeatureProviderImpl.this.refreshSummary(uri, preference, this);
                         return;
                     case 2:
-                        DashboardFeatureProviderImpl.this.refreshSwitch(uri, preference);
+                        DashboardFeatureProviderImpl.this.refreshSwitch(uri, preference, this);
                         return;
                     default:
                         return;
@@ -193,43 +208,26 @@ public class DashboardFeatureProviderImpl implements DashboardFeatureProvider {
     private DynamicDataObserver bindTitleAndGetObserver(Preference preference, Tile tile) {
         CharSequence title = tile.getTitle(this.mContext.getApplicationContext());
         if (title != null) {
-            if (NtUtils.isChineseLanguage() && title.equals("Android System Intelligence")) {
-                Log.d("DashboardFeatureImpl", "@_@ ----- reset title for chinese");
-                preference.setTitle(this.mContext.getString(R.string.asi_settings_activity_title));
-                return null;
-            }
             preference.setTitle(title);
             return null;
         } else if (tile.getMetaData() == null || !tile.getMetaData().containsKey("com.android.settings.title_uri")) {
             return null;
         } else {
-            preference.setTitle(R.string.summary_placeholder);
-            Uri completeUri = TileUtils.getCompleteUri(tile, "com.android.settings.title_uri", "getDynamicTitle");
-            refreshTitle(completeUri, preference);
-            return createDynamicDataObserver("getDynamicTitle", completeUri, preference);
+            preference.setTitle(R$string.summary_placeholder);
+            return createDynamicDataObserver("getDynamicTitle", TileUtils.getCompleteUri(tile, "com.android.settings.title_uri", "getDynamicTitle"), preference);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public void refreshTitle(final Uri uri, final Preference preference) {
-        ThreadUtils.postOnBackgroundThread(new Runnable() { // from class: com.android.settings.dashboard.DashboardFeatureProviderImpl$$ExternalSyntheticLambda6
-            @Override // java.lang.Runnable
-            public final void run() {
-                DashboardFeatureProviderImpl.this.lambda$refreshTitle$2(uri, preference);
-            }
-        });
+    /* access modifiers changed from: private */
+    public void refreshTitle(Uri uri, Preference preference, DynamicDataObserver dynamicDataObserver) {
+        ThreadUtils.postOnBackgroundThread((Runnable) new DashboardFeatureProviderImpl$$ExternalSyntheticLambda7(this, uri, preference, dynamicDataObserver));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$refreshTitle$2(Uri uri, final Preference preference) {
-        final String textFromUri = TileUtils.getTextFromUri(this.mContext, uri, new ArrayMap(), "com.android.settings.title");
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$refreshTitle$2(Uri uri, Preference preference, DynamicDataObserver dynamicDataObserver) {
+        String textFromUri = TileUtils.getTextFromUri(this.mContext, uri, new ArrayMap(), "com.android.settings.title");
         if (!TextUtils.equals(textFromUri, preference.getTitle())) {
-            ThreadUtils.postOnMainThread(new Runnable() { // from class: com.android.settings.dashboard.DashboardFeatureProviderImpl$$ExternalSyntheticLambda3
-                @Override // java.lang.Runnable
-                public final void run() {
-                    Preference.this.setTitle(textFromUri);
-                }
-            });
+            dynamicDataObserver.post(new DashboardFeatureProviderImpl$$ExternalSyntheticLambda11(preference, textFromUri));
         }
     }
 
@@ -241,33 +239,21 @@ public class DashboardFeatureProviderImpl implements DashboardFeatureProvider {
         } else if (tile.getMetaData() == null || !tile.getMetaData().containsKey("com.android.settings.summary_uri")) {
             return null;
         } else {
-            preference.setSummary(R.string.summary_placeholder);
-            Uri completeUri = TileUtils.getCompleteUri(tile, "com.android.settings.summary_uri", "getDynamicSummary");
-            refreshSummary(completeUri, preference);
-            return createDynamicDataObserver("getDynamicSummary", completeUri, preference);
+            preference.setSummary(R$string.summary_placeholder);
+            return createDynamicDataObserver("getDynamicSummary", TileUtils.getCompleteUri(tile, "com.android.settings.summary_uri", "getDynamicSummary"), preference);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public void refreshSummary(final Uri uri, final Preference preference) {
-        ThreadUtils.postOnBackgroundThread(new Runnable() { // from class: com.android.settings.dashboard.DashboardFeatureProviderImpl$$ExternalSyntheticLambda4
-            @Override // java.lang.Runnable
-            public final void run() {
-                DashboardFeatureProviderImpl.this.lambda$refreshSummary$4(uri, preference);
-            }
-        });
+    /* access modifiers changed from: private */
+    public void refreshSummary(Uri uri, Preference preference, DynamicDataObserver dynamicDataObserver) {
+        ThreadUtils.postOnBackgroundThread((Runnable) new DashboardFeatureProviderImpl$$ExternalSyntheticLambda6(this, uri, preference, dynamicDataObserver));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$refreshSummary$4(Uri uri, final Preference preference) {
-        final String textFromUri = TileUtils.getTextFromUri(this.mContext, uri, new ArrayMap(), "com.android.settings.summary");
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$refreshSummary$4(Uri uri, Preference preference, DynamicDataObserver dynamicDataObserver) {
+        String textFromUri = TileUtils.getTextFromUri(this.mContext, uri, new ArrayMap(), "com.android.settings.summary");
         if (!TextUtils.equals(textFromUri, preference.getSummary())) {
-            ThreadUtils.postOnMainThread(new Runnable() { // from class: com.android.settings.dashboard.DashboardFeatureProviderImpl$$ExternalSyntheticLambda2
-                @Override // java.lang.Runnable
-                public final void run() {
-                    Preference.this.setSummary(textFromUri);
-                }
-            });
+            dynamicDataObserver.post(new DashboardFeatureProviderImpl$$ExternalSyntheticLambda9(preference, textFromUri));
         }
     }
 
@@ -275,84 +261,51 @@ public class DashboardFeatureProviderImpl implements DashboardFeatureProvider {
         if (!tile.hasSwitch()) {
             return null;
         }
-        final Uri completeUri = TileUtils.getCompleteUri(tile, "com.android.settings.switch_uri", "onCheckedChanged");
-        preference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() { // from class: com.android.settings.dashboard.DashboardFeatureProviderImpl$$ExternalSyntheticLambda0
-            @Override // androidx.preference.Preference.OnPreferenceChangeListener
-            public final boolean onPreferenceChange(Preference preference2, Object obj) {
-                boolean lambda$bindSwitchAndGetObserver$5;
-                lambda$bindSwitchAndGetObserver$5 = DashboardFeatureProviderImpl.this.lambda$bindSwitchAndGetObserver$5(completeUri, preference2, obj);
-                return lambda$bindSwitchAndGetObserver$5;
-            }
-        });
-        Uri completeUri2 = TileUtils.getCompleteUri(tile, "com.android.settings.switch_uri", "isChecked");
+        preference.setOnPreferenceChangeListener(new DashboardFeatureProviderImpl$$ExternalSyntheticLambda3(this, TileUtils.getCompleteUri(tile, "com.android.settings.switch_uri", "onCheckedChanged")));
+        Uri completeUri = TileUtils.getCompleteUri(tile, "com.android.settings.switch_uri", "isChecked");
         setSwitchEnabled(preference, false);
-        refreshSwitch(completeUri2, preference);
-        return createDynamicDataObserver("isChecked", completeUri2, preference);
+        return createDynamicDataObserver("isChecked", completeUri, preference);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ boolean lambda$bindSwitchAndGetObserver$5(Uri uri, Preference preference, Object obj) {
         onCheckedChanged(uri, preference, ((Boolean) obj).booleanValue());
         return true;
     }
 
-    private void onCheckedChanged(final Uri uri, final Preference preference, final boolean z) {
+    private void onCheckedChanged(Uri uri, Preference preference, boolean z) {
         setSwitchEnabled(preference, false);
-        ThreadUtils.postOnBackgroundThread(new Runnable() { // from class: com.android.settings.dashboard.DashboardFeatureProviderImpl$$ExternalSyntheticLambda7
-            @Override // java.lang.Runnable
-            public final void run() {
-                DashboardFeatureProviderImpl.this.lambda$onCheckedChanged$7(uri, z, preference);
-            }
-        });
+        ThreadUtils.postOnBackgroundThread((Runnable) new DashboardFeatureProviderImpl$$ExternalSyntheticLambda4(this, uri, z, preference));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onCheckedChanged$7(Uri uri, final boolean z, final Preference preference) {
-        final Bundle putBooleanToUriAndGetResult = TileUtils.putBooleanToUriAndGetResult(this.mContext, uri, new ArrayMap(), "checked_state", z);
-        ThreadUtils.postOnMainThread(new Runnable() { // from class: com.android.settings.dashboard.DashboardFeatureProviderImpl$$ExternalSyntheticLambda8
-            @Override // java.lang.Runnable
-            public final void run() {
-                DashboardFeatureProviderImpl.this.lambda$onCheckedChanged$6(preference, putBooleanToUriAndGetResult, z);
-            }
-        });
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$onCheckedChanged$7(Uri uri, boolean z, Preference preference) {
+        ThreadUtils.postOnMainThread(new DashboardFeatureProviderImpl$$ExternalSyntheticLambda8(this, preference, TileUtils.putBooleanToUriAndGetResult(this.mContext, uri, new ArrayMap(), "checked_state", z), z));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onCheckedChanged$6(Preference preference, Bundle bundle, boolean z) {
         setSwitchEnabled(preference, true);
-        if (!bundle.getBoolean("set_checked_error")) {
-            return;
-        }
-        setSwitchChecked(preference, !z);
-        String string = bundle.getString("set_checked_error_message");
-        if (TextUtils.isEmpty(string)) {
-            return;
-        }
-        Toast.makeText(this.mContext, string, 0).show();
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public void refreshSwitch(final Uri uri, final Preference preference) {
-        ThreadUtils.postOnBackgroundThread(new Runnable() { // from class: com.android.settings.dashboard.DashboardFeatureProviderImpl$$ExternalSyntheticLambda5
-            @Override // java.lang.Runnable
-            public final void run() {
-                DashboardFeatureProviderImpl.this.lambda$refreshSwitch$9(uri, preference);
+        if (bundle.getBoolean("set_checked_error")) {
+            setSwitchChecked(preference, !z);
+            String string = bundle.getString("set_checked_error_message");
+            if (!TextUtils.isEmpty(string)) {
+                Toast.makeText(this.mContext, string, 0).show();
             }
-        });
+        }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$refreshSwitch$9(Uri uri, final Preference preference) {
-        final boolean booleanFromUri = TileUtils.getBooleanFromUri(this.mContext, uri, new ArrayMap(), "checked_state");
-        ThreadUtils.postOnMainThread(new Runnable() { // from class: com.android.settings.dashboard.DashboardFeatureProviderImpl$$ExternalSyntheticLambda10
-            @Override // java.lang.Runnable
-            public final void run() {
-                DashboardFeatureProviderImpl.this.lambda$refreshSwitch$8(preference, booleanFromUri);
-            }
-        });
+    /* access modifiers changed from: private */
+    public void refreshSwitch(Uri uri, Preference preference, DynamicDataObserver dynamicDataObserver) {
+        ThreadUtils.postOnBackgroundThread((Runnable) new DashboardFeatureProviderImpl$$ExternalSyntheticLambda5(this, uri, dynamicDataObserver, preference));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$refreshSwitch$9(Uri uri, DynamicDataObserver dynamicDataObserver, Preference preference) {
+        dynamicDataObserver.post(new DashboardFeatureProviderImpl$$ExternalSyntheticLambda10(this, preference, TileUtils.getBooleanFromUri(this.mContext, uri, new ArrayMap(), "checked_state")));
+    }
+
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$refreshSwitch$8(Preference preference, boolean z) {
         setSwitchChecked(preference, z);
         setSwitchEnabled(preference, true);
@@ -361,8 +314,7 @@ public class DashboardFeatureProviderImpl implements DashboardFeatureProvider {
     private void setSwitchChecked(Preference preference, boolean z) {
         if (preference instanceof PrimarySwitchPreference) {
             ((PrimarySwitchPreference) preference).setChecked(z);
-        } else if (!(preference instanceof SwitchPreference)) {
-        } else {
+        } else if (preference instanceof SwitchPreference) {
             ((SwitchPreference) preference).setChecked(z);
         }
     }
@@ -375,89 +327,92 @@ public class DashboardFeatureProviderImpl implements DashboardFeatureProvider {
         }
     }
 
-    void bindIcon(final Preference preference, final Tile tile, final boolean z) {
-        if (tile.getMetaData() != null && tile.getMetaData().containsKey("com.android.settings.icon_uri")) {
+    /* access modifiers changed from: package-private */
+    public void bindIcon(Preference preference, Tile tile, boolean z) {
+        if (tile.getMetaData() == null || !tile.getMetaData().containsKey("com.android.settings.icon_uri")) {
+            Icon icon = tile.getIcon(preference.getContext());
+            if (icon != null) {
+                setPreferenceIcon(preference, tile, z, tile.getPackageName(), icon);
+                return;
+            }
+            return;
+        }
+        if (preference != null && preference.getIcon() == null) {
             setPreferenceIcon(preference, tile, z, this.mContext.getPackageName(), Icon.createWithResource(this.mContext, 17170445));
-            ThreadUtils.postOnBackgroundThread(new Runnable() { // from class: com.android.settings.dashboard.DashboardFeatureProviderImpl$$ExternalSyntheticLambda11
-                @Override // java.lang.Runnable
-                public final void run() {
-                    DashboardFeatureProviderImpl.this.lambda$bindIcon$11(tile, preference, z);
-                }
-            });
-            return;
         }
-        Icon icon = tile.getIcon(preference.getContext());
-        if (icon == null) {
-            return;
-        }
-        setPreferenceIcon(preference, tile, z, tile.getPackageName(), icon);
+        ThreadUtils.postOnBackgroundThread((Runnable) new DashboardFeatureProviderImpl$$ExternalSyntheticLambda0(this, tile, preference, z));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$bindIcon$11(final Tile tile, final Preference preference, final boolean z) {
-        String packageName;
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$bindIcon$11(Tile tile, Preference preference, boolean z) {
+        String str;
         Intent intent = tile.getIntent();
         if (!TextUtils.isEmpty(intent.getPackage())) {
-            packageName = intent.getPackage();
+            str = intent.getPackage();
         } else {
-            packageName = intent.getComponent() != null ? intent.getComponent().getPackageName() : null;
+            str = intent.getComponent() != null ? intent.getComponent().getPackageName() : null;
         }
         ArrayMap arrayMap = new ArrayMap();
         Uri completeUri = TileUtils.getCompleteUri(tile, "com.android.settings.icon_uri", "getProviderIcon");
-        final Pair<String, Integer> iconFromUri = TileUtils.getIconFromUri(this.mContext, packageName, completeUri, arrayMap);
+        Pair<String, Integer> iconFromUri = TileUtils.getIconFromUri(this.mContext, str, completeUri, arrayMap);
         if (iconFromUri == null) {
             Log.w("DashboardFeatureImpl", "Failed to get icon from uri " + completeUri);
             return;
         }
-        final Icon createWithResource = Icon.createWithResource((String) iconFromUri.first, ((Integer) iconFromUri.second).intValue());
-        ThreadUtils.postOnMainThread(new Runnable() { // from class: com.android.settings.dashboard.DashboardFeatureProviderImpl$$ExternalSyntheticLambda9
-            @Override // java.lang.Runnable
-            public final void run() {
-                DashboardFeatureProviderImpl.this.lambda$bindIcon$10(preference, tile, z, iconFromUri, createWithResource);
-            }
-        });
+        ThreadUtils.postOnMainThread(new DashboardFeatureProviderImpl$$ExternalSyntheticLambda2(this, preference, tile, z, iconFromUri, Icon.createWithResource((String) iconFromUri.first, ((Integer) iconFromUri.second).intValue())));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$bindIcon$10(Preference preference, Tile tile, boolean z, Pair pair, Icon icon) {
         setPreferenceIcon(preference, tile, z, (String) pair.first, icon);
     }
 
     private void setPreferenceIcon(Preference preference, Tile tile, boolean z, String str, Icon icon) {
         Drawable loadDrawable = icon.loadDrawable(preference.getContext());
+        if (loadDrawable == null) {
+            Log.w("DashboardFeatureImpl", "Set null preference icon for: " + str);
+            preference.setIcon((Drawable) null);
+            return;
+        }
         if (TextUtils.equals(tile.getCategory(), "com.android.settings.category.ia.homepage")) {
             loadDrawable.setTint(Utils.getHomepageIconColor(preference.getContext()));
         } else if (z && !TextUtils.equals(this.mContext.getPackageName(), str)) {
-            AdaptiveIcon adaptiveIcon = new AdaptiveIcon(this.mContext, loadDrawable, R.dimen.dashboard_tile_foreground_image_inset);
+            AdaptiveIcon adaptiveIcon = new AdaptiveIcon(this.mContext, loadDrawable, R$dimen.dashboard_tile_foreground_image_inset);
             adaptiveIcon.setBackgroundColor(this.mContext, tile);
             loadDrawable = adaptiveIcon;
         }
         preference.setIcon(loadDrawable);
     }
 
-    private void launchIntentOrSelectProfile(FragmentActivity fragmentActivity, Tile tile, Intent intent, int i) {
+    private void launchIntentOrSelectProfile(FragmentActivity fragmentActivity, Tile tile, Intent intent, int i, TopLevelHighlightMixin topLevelHighlightMixin, boolean z) {
         if (!isIntentResolvable(intent)) {
             Log.w("DashboardFeatureImpl", "Cannot resolve intent, skipping. " + intent);
             return;
         }
         ProfileSelectDialog.updateUserHandlesIfNeeded(this.mContext, tile);
-        this.mMetricsFeatureProvider.logStartedIntent(intent, i);
         if (tile.userHandle == null || tile.isPrimaryProfileOnly()) {
-            fragmentActivity.startActivityForResult(intent, 0);
-        } else if (tile.userHandle.size() == 1) {
-            fragmentActivity.startActivityForResultAsUser(intent, 0, tile.userHandle.get(0));
-        } else {
+            if (!z) {
+                this.mMetricsFeatureProvider.logStartedIntent(intent, i);
+                fragmentActivity.startActivity(intent);
+            }
+        } else if (tile.userHandle.size() != 1) {
             UserHandle userHandle = (UserHandle) intent.getParcelableExtra("android.intent.extra.USER");
-            if (userHandle != null && tile.userHandle.contains(userHandle)) {
-                fragmentActivity.startActivityForResultAsUser(intent, 0, userHandle);
-                return;
+            if (userHandle == null || !tile.userHandle.contains(userHandle)) {
+                List<UserHandle> resolvableUsers = getResolvableUsers(intent, tile);
+                if (resolvableUsers.size() != 1) {
+                    this.mMetricsFeatureProvider.logStartedIntent(intent, i);
+                    ProfileSelectDialog.show(fragmentActivity.getSupportFragmentManager(), tile, i, topLevelHighlightMixin, topLevelHighlightMixin, topLevelHighlightMixin);
+                } else if (!z) {
+                    this.mMetricsFeatureProvider.logStartedIntent(intent, i);
+                    fragmentActivity.startActivityAsUser(intent, resolvableUsers.get(0));
+                }
+            } else if (!z) {
+                this.mMetricsFeatureProvider.logStartedIntent(intent, i);
+                fragmentActivity.startActivityAsUser(intent, userHandle);
             }
-            List<UserHandle> resolvableUsers = getResolvableUsers(intent, tile);
-            if (resolvableUsers.size() == 1) {
-                fragmentActivity.startActivityForResultAsUser(intent, 0, resolvableUsers.get(0));
-            } else {
-                ProfileSelectDialog.show(fragmentActivity.getSupportFragmentManager(), tile, i);
-            }
+        } else if (!z) {
+            this.mMetricsFeatureProvider.logStartedIntent(intent, i);
+            fragmentActivity.startActivityAsUser(intent, tile.userHandle.get(0));
         }
     }
 

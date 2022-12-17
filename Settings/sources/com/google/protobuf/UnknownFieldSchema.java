@@ -1,63 +1,66 @@
 package com.google.protobuf;
 
 import java.io.IOException;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes2.dex */
-public abstract class UnknownFieldSchema<T, B> {
-    abstract void addFixed32(B b, int i, int i2);
 
-    abstract void addFixed64(B b, int i, long j);
+abstract class UnknownFieldSchema<T, B> {
+    /* access modifiers changed from: package-private */
+    public abstract void addFixed32(B b, int i, int i2);
 
-    abstract void addGroup(B b, int i, T t);
+    /* access modifiers changed from: package-private */
+    public abstract void addFixed64(B b, int i, long j);
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
+    public abstract void addGroup(B b, int i, T t);
+
+    /* access modifiers changed from: package-private */
     public abstract void addLengthDelimited(B b, int i, ByteString byteString);
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public abstract void addVarint(B b, int i, long j);
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: getBuilderFromMessage */
-    public abstract B mo926getBuilderFromMessage(Object obj);
+    /* access modifiers changed from: package-private */
+    public abstract B getBuilderFromMessage(Object obj);
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: getFromMessage */
-    public abstract T mo927getFromMessage(Object obj);
+    /* access modifiers changed from: package-private */
+    public abstract T getFromMessage(Object obj);
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public abstract int getSerializedSize(T t);
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public abstract int getSerializedSizeAsMessageSet(T t);
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public abstract void makeImmutable(Object obj);
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public abstract T merge(T t, T t2);
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: newBuilder */
-    public abstract B mo928newBuilder();
+    /* access modifiers changed from: package-private */
+    public abstract B newBuilder();
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public abstract void setBuilderToMessage(Object obj, B b);
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public abstract void setToMessage(Object obj, T t);
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public abstract boolean shouldDiscardUnknownFields(Reader reader);
 
-    abstract T toImmutable(B b);
+    /* access modifiers changed from: package-private */
+    public abstract T toImmutable(B b);
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public abstract void writeAsMessageSetTo(T t, Writer writer) throws IOException;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public abstract void writeTo(T t, Writer writer) throws IOException;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    UnknownFieldSchema() {
+    }
+
+    /* access modifiers changed from: package-private */
     public final boolean mergeOneFieldFrom(B b, Reader reader) throws IOException {
         int tag = reader.getTag();
         int tagFieldNumber = WireFormat.getTagFieldNumber(tag);
@@ -71,29 +74,41 @@ public abstract class UnknownFieldSchema<T, B> {
         } else if (tagWireType == 2) {
             addLengthDelimited(b, tagFieldNumber, reader.readBytes());
             return true;
-        } else if (tagWireType != 3) {
-            if (tagWireType == 4) {
-                return false;
+        } else if (tagWireType == 3) {
+            Object newBuilder = newBuilder();
+            int makeTag = WireFormat.makeTag(tagFieldNumber, 4);
+            mergeFrom(newBuilder, reader);
+            if (makeTag == reader.getTag()) {
+                addGroup(b, tagFieldNumber, toImmutable(newBuilder));
+                return true;
             }
+            throw InvalidProtocolBufferException.invalidEndTag();
+        } else if (tagWireType == 4) {
+            return false;
+        } else {
             if (tagWireType == 5) {
                 addFixed32(b, tagFieldNumber, reader.readFixed32());
                 return true;
             }
             throw InvalidProtocolBufferException.invalidWireType();
-        } else {
-            B mo928newBuilder = mo928newBuilder();
-            int makeTag = WireFormat.makeTag(tagFieldNumber, 4);
-            mergeFrom(mo928newBuilder, reader);
-            if (makeTag != reader.getTag()) {
-                throw InvalidProtocolBufferException.invalidEndTag();
-            }
-            addGroup(b, tagFieldNumber, toImmutable(mo928newBuilder));
-            return true;
         }
     }
 
-    final void mergeFrom(B b, Reader reader) throws IOException {
-        while (reader.getFieldNumber() != Integer.MAX_VALUE && mergeOneFieldFrom(b, reader)) {
-        }
+    /* access modifiers changed from: package-private */
+    /* JADX WARNING: Removed duplicated region for block: B:0:0x0000 A[LOOP:0: B:0:0x0000->B:3:0x000d, LOOP_START, MTH_ENTER_BLOCK] */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public final void mergeFrom(B r3, com.google.protobuf.Reader r4) throws java.io.IOException {
+        /*
+            r2 = this;
+        L_0x0000:
+            int r0 = r4.getFieldNumber()
+            r1 = 2147483647(0x7fffffff, float:NaN)
+            if (r0 == r1) goto L_0x000f
+            boolean r0 = r2.mergeOneFieldFrom(r3, r4)
+            if (r0 != 0) goto L_0x0000
+        L_0x000f:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.google.protobuf.UnknownFieldSchema.mergeFrom(java.lang.Object, com.google.protobuf.Reader):void");
     }
 }

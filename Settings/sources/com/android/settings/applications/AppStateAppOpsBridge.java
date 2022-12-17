@@ -13,11 +13,12 @@ import android.util.Log;
 import android.util.SparseArray;
 import com.android.settings.applications.AppStateBaseBridge;
 import com.android.settingslib.applications.ApplicationsState;
+import com.android.settingslib.applications.RecentAppOpsAccess;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public abstract class AppStateAppOpsBridge extends AppStateBaseBridge {
     private final AppOpsManager mAppOpsManager;
     private final int[] mAppOpsOpCodes;
@@ -31,8 +32,7 @@ public abstract class AppStateAppOpsBridge extends AppStateBaseBridge {
         this(context, applicationsState, callback, i, strArr, AppGlobals.getPackageManager());
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public AppStateAppOpsBridge(Context context, ApplicationsState applicationsState, AppStateBaseBridge.Callback callback, int[] iArr, String[] strArr) {
+    AppStateAppOpsBridge(Context context, ApplicationsState applicationsState, AppStateBaseBridge.Callback callback, int[] iArr, String[] strArr) {
         this(context, applicationsState, callback, iArr, strArr, AppGlobals.getPackageManager());
     }
 
@@ -63,8 +63,8 @@ public abstract class AppStateAppOpsBridge extends AppStateBaseBridge {
     }
 
     private boolean doesAnyPermissionMatch(String str, String[] strArr) {
-        for (String str2 : strArr) {
-            if (str.equals(str2)) {
+        for (String equals : strArr) {
+            if (str.equals(equals)) {
                 return true;
             }
         }
@@ -106,8 +106,7 @@ public abstract class AppStateAppOpsBridge extends AppStateBaseBridge {
         return permissionState;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.applications.AppStateBaseBridge
+    /* access modifiers changed from: protected */
     public void loadAllExtraInfo() {
         SparseArray<ArrayMap<String, PermissionState>> entries = getEntries();
         loadPermissionsStates(entries);
@@ -117,13 +116,13 @@ public abstract class AppStateAppOpsBridge extends AppStateBaseBridge {
         for (int i = 0; i < size; i++) {
             ApplicationsState.AppEntry appEntry = allApps.get(i);
             int userId = UserHandle.getUserId(appEntry.info.uid);
-            PermissionState permissionState = null;
+            Object obj = null;
             if (entries != null) {
-                ArrayMap<String, PermissionState> arrayMap = entries.get(userId);
+                ArrayMap arrayMap = entries.get(userId);
                 if (arrayMap != null) {
-                    permissionState = arrayMap.get(appEntry.info.packageName);
+                    obj = arrayMap.get(appEntry.info.packageName);
                 }
-                appEntry.extraInfo = permissionState;
+                appEntry.extraInfo = obj;
             } else {
                 appEntry.extraInfo = null;
             }
@@ -132,25 +131,25 @@ public abstract class AppStateAppOpsBridge extends AppStateBaseBridge {
 
     private SparseArray<ArrayMap<String, PermissionState>> getEntries() {
         try {
-            HashSet<String> hashSet = new HashSet();
-            for (String str : this.mPermissions) {
-                String[] appOpPermissionPackages = this.mIPackageManager.getAppOpPermissionPackages(str);
-                if (appOpPermissionPackages != null) {
-                    hashSet.addAll(Arrays.asList(appOpPermissionPackages));
+            HashSet<String> hashSet = new HashSet<>();
+            for (String appOpPermissionPackages : this.mPermissions) {
+                String[] appOpPermissionPackages2 = this.mIPackageManager.getAppOpPermissionPackages(appOpPermissionPackages);
+                if (appOpPermissionPackages2 != null) {
+                    hashSet.addAll(Arrays.asList(appOpPermissionPackages2));
                 }
             }
             if (hashSet.isEmpty()) {
                 return null;
             }
             SparseArray<ArrayMap<String, PermissionState>> sparseArray = new SparseArray<>();
-            for (UserHandle userHandle : this.mProfiles) {
-                ArrayMap<String, PermissionState> arrayMap = new ArrayMap<>();
-                int identifier = userHandle.getIdentifier();
+            for (UserHandle next : this.mProfiles) {
+                ArrayMap arrayMap = new ArrayMap();
+                int identifier = next.getIdentifier();
                 sparseArray.put(identifier, arrayMap);
-                for (String str2 : hashSet) {
-                    boolean isPackageAvailable = this.mIPackageManager.isPackageAvailable(str2, identifier);
-                    if (!shouldIgnorePackage(str2) && isPackageAvailable) {
-                        arrayMap.put(str2, new PermissionState(str2, userHandle));
+                for (String str : hashSet) {
+                    boolean isPackageAvailable = this.mIPackageManager.isPackageAvailable(str, identifier);
+                    if (!shouldIgnorePackage(str) && isPackageAvailable) {
+                        arrayMap.put(str, new PermissionState(str, next));
                     }
                 }
             }
@@ -162,59 +161,56 @@ public abstract class AppStateAppOpsBridge extends AppStateBaseBridge {
     }
 
     private void loadPermissionsStates(SparseArray<ArrayMap<String, PermissionState>> sparseArray) {
-        if (sparseArray == null) {
-            return;
-        }
-        try {
-            for (UserHandle userHandle : this.mProfiles) {
-                int identifier = userHandle.getIdentifier();
-                ArrayMap<String, PermissionState> arrayMap = sparseArray.get(identifier);
-                if (arrayMap != null) {
-                    List list = this.mIPackageManager.getPackagesHoldingPermissions(this.mPermissions, 0, identifier).getList();
-                    int size = list != null ? list.size() : 0;
-                    for (int i = 0; i < size; i++) {
-                        PackageInfo packageInfo = (PackageInfo) list.get(i);
-                        PermissionState permissionState = arrayMap.get(packageInfo.packageName);
-                        if (permissionState != null) {
-                            permissionState.packageInfo = packageInfo;
-                            permissionState.staticPermissionGranted = true;
+        if (sparseArray != null) {
+            try {
+                for (UserHandle identifier : this.mProfiles) {
+                    int identifier2 = identifier.getIdentifier();
+                    ArrayMap arrayMap = sparseArray.get(identifier2);
+                    if (arrayMap != null) {
+                        List list = this.mIPackageManager.getPackagesHoldingPermissions(this.mPermissions, 0, identifier2).getList();
+                        int size = list != null ? list.size() : 0;
+                        for (int i = 0; i < size; i++) {
+                            PackageInfo packageInfo = (PackageInfo) list.get(i);
+                            PermissionState permissionState = (PermissionState) arrayMap.get(packageInfo.packageName);
+                            if (permissionState != null) {
+                                permissionState.packageInfo = packageInfo;
+                                permissionState.staticPermissionGranted = true;
+                            }
                         }
                     }
                 }
+            } catch (RemoteException e) {
+                Log.w("AppStateAppOpsBridge", "PackageManager is dead. Can't get list of packages granted " + this.mPermissions, e);
             }
-        } catch (RemoteException e) {
-            Log.w("AppStateAppOpsBridge", "PackageManager is dead. Can't get list of packages granted " + this.mPermissions, e);
         }
     }
 
     private void loadAppOpsStates(SparseArray<ArrayMap<String, PermissionState>> sparseArray) {
-        ArrayMap<String, PermissionState> arrayMap;
-        if (sparseArray == null) {
-            return;
-        }
-        List packagesForOps = this.mAppOpsManager.getPackagesForOps(this.mAppOpsOpCodes);
-        int size = packagesForOps != null ? packagesForOps.size() : 0;
-        for (int i = 0; i < size; i++) {
-            AppOpsManager.PackageOps packageOps = (AppOpsManager.PackageOps) packagesForOps.get(i);
-            int userId = UserHandle.getUserId(packageOps.getUid());
-            if (isThisUserAProfileOfCurrentUser(userId) && (arrayMap = sparseArray.get(userId)) != null) {
-                PermissionState permissionState = arrayMap.get(packageOps.getPackageName());
-                if (permissionState == null) {
-                    Log.w("AppStateAppOpsBridge", "AppOp permission exists for package " + packageOps.getPackageName() + " of user " + userId + " but package doesn't exist or did not request " + Arrays.toString(this.mPermissions) + " access");
-                } else if (packageOps.getOps().size() < 1) {
-                    Log.w("AppStateAppOpsBridge", "No AppOps permission exists for package " + packageOps.getPackageName());
-                } else {
-                    permissionState.appOpMode = ((AppOpsManager.OpEntry) packageOps.getOps().get(0)).getMode();
+        ArrayMap arrayMap;
+        if (sparseArray != null) {
+            List packagesForOps = this.mAppOpsManager.getPackagesForOps(this.mAppOpsOpCodes);
+            int size = packagesForOps != null ? packagesForOps.size() : 0;
+            for (int i = 0; i < size; i++) {
+                AppOpsManager.PackageOps packageOps = (AppOpsManager.PackageOps) packagesForOps.get(i);
+                int userId = UserHandle.getUserId(packageOps.getUid());
+                if (isThisUserAProfileOfCurrentUser(userId) && (arrayMap = sparseArray.get(userId)) != null) {
+                    PermissionState permissionState = (PermissionState) arrayMap.get(packageOps.getPackageName());
+                    if (permissionState == null) {
+                        Log.w("AppStateAppOpsBridge", "AppOp permission exists for package " + packageOps.getPackageName() + " of user " + userId + " but package doesn't exist or did not request " + Arrays.toString(this.mPermissions) + " access");
+                    } else if (packageOps.getOps().size() < 1) {
+                        Log.w("AppStateAppOpsBridge", "No AppOps permission exists for package " + packageOps.getPackageName());
+                    } else {
+                        permissionState.appOpMode = ((AppOpsManager.OpEntry) packageOps.getOps().get(0)).getMode();
+                    }
                 }
             }
         }
     }
 
     private boolean shouldIgnorePackage(String str) {
-        return str.equals("android") || str.equals(this.mContext.getPackageName());
+        return str.equals(RecentAppOpsAccess.ANDROID_SYSTEM_PACKAGE_NAME) || str.equals(this.mContext.getPackageName());
     }
 
-    /* loaded from: classes.dex */
     public static class PermissionState {
         public int appOpMode = 3;
         public PackageInfo packageInfo;
@@ -223,9 +219,9 @@ public abstract class AppStateAppOpsBridge extends AppStateBaseBridge {
         public boolean staticPermissionGranted;
         public final UserHandle userHandle;
 
-        public PermissionState(String str, UserHandle userHandle) {
+        public PermissionState(String str, UserHandle userHandle2) {
             this.packageName = str;
-            this.userHandle = userHandle;
+            this.userHandle = userHandle2;
         }
 
         public boolean isPermissible() {

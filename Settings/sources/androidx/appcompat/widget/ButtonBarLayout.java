@@ -8,11 +8,11 @@ import android.widget.LinearLayout;
 import androidx.appcompat.R$id;
 import androidx.appcompat.R$styleable;
 import androidx.core.view.ViewCompat;
-/* loaded from: classes.dex */
+
 public class ButtonBarLayout extends LinearLayout {
     private boolean mAllowStacking;
     private int mLastWidthSize = -1;
-    private int mMinimumHeight = 0;
+    private boolean mStacked;
 
     public ButtonBarLayout(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -21,22 +21,25 @@ public class ButtonBarLayout extends LinearLayout {
         ViewCompat.saveAttributeDataForStyleable(this, context, iArr, attributeSet, obtainStyledAttributes, 0, 0);
         this.mAllowStacking = obtainStyledAttributes.getBoolean(R$styleable.ButtonBarLayout_allowStacking, true);
         obtainStyledAttributes.recycle();
+        if (getOrientation() == 1) {
+            setStacked(this.mAllowStacking);
+        }
     }
 
     public void setAllowStacking(boolean z) {
         if (this.mAllowStacking != z) {
             this.mAllowStacking = z;
-            if (!z && getOrientation() == 1) {
+            if (!z && isStacked()) {
                 setStacked(false);
             }
             requestLayout();
         }
     }
 
-    @Override // android.widget.LinearLayout, android.view.View
-    protected void onMeasure(int i, int i2) {
-        int i3;
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         boolean z;
+        int i3;
         int size = View.MeasureSpec.getSize(i);
         int i4 = 0;
         if (this.mAllowStacking) {
@@ -54,7 +57,7 @@ public class ButtonBarLayout extends LinearLayout {
         }
         super.onMeasure(i3, i2);
         if (this.mAllowStacking && !isStacked()) {
-            if ((getMeasuredWidthAndState() & (-16777216)) == 16777216) {
+            if ((getMeasuredWidthAndState() & -16777216) == 16777216) {
                 setStacked(true);
                 z = true;
             }
@@ -79,6 +82,9 @@ public class ButtonBarLayout extends LinearLayout {
         }
         if (ViewCompat.getMinimumHeight(this) != i4) {
             setMinimumHeight(i4);
+            if (i2 == 0) {
+                super.onMeasure(i, i2);
+            }
         }
     }
 
@@ -93,24 +99,25 @@ public class ButtonBarLayout extends LinearLayout {
         return -1;
     }
 
-    @Override // android.view.View
-    public int getMinimumHeight() {
-        return Math.max(this.mMinimumHeight, super.getMinimumHeight());
-    }
-
     private void setStacked(boolean z) {
-        setOrientation(z ? 1 : 0);
-        setGravity(z ? 8388613 : 80);
-        View findViewById = findViewById(R$id.spacer);
-        if (findViewById != null) {
-            findViewById.setVisibility(z ? 8 : 4);
+        if (this.mStacked == z) {
+            return;
         }
-        for (int childCount = getChildCount() - 2; childCount >= 0; childCount--) {
-            bringChildToFront(getChildAt(childCount));
+        if (!z || this.mAllowStacking) {
+            this.mStacked = z;
+            setOrientation(z ? 1 : 0);
+            setGravity(z ? 8388613 : 80);
+            View findViewById = findViewById(R$id.spacer);
+            if (findViewById != null) {
+                findViewById.setVisibility(z ? 8 : 4);
+            }
+            for (int childCount = getChildCount() - 2; childCount >= 0; childCount--) {
+                bringChildToFront(getChildAt(childCount));
+            }
         }
     }
 
     private boolean isStacked() {
-        return getOrientation() == 1;
+        return this.mStacked;
     }
 }

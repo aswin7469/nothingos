@@ -4,9 +4,9 @@ import android.app.INotificationManager;
 import android.app.NotificationChannel;
 import android.app.NotificationChannelGroup;
 import android.app.NotificationHistory;
-import android.app.role.RoleManager;
 import android.app.usage.IUsageStatsManager;
 import android.app.usage.UsageEvents;
+import android.companion.AssociationInfo;
 import android.companion.ICompanionDeviceManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -26,10 +26,10 @@ import android.service.notification.ConversationChannelWrapper;
 import android.service.notification.NotificationListenerFilter;
 import android.util.IconDrawableFactory;
 import android.util.Log;
+import com.android.internal.util.CollectionUtils;
 import com.android.settingslib.R$dimen;
 import com.android.settingslib.R$plurals;
 import com.android.settingslib.R$string;
-import com.android.settingslib.Utils;
 import com.android.settingslib.bluetooth.CachedBluetoothDevice;
 import com.android.settingslib.bluetooth.LocalBluetoothManager;
 import com.android.settingslib.notification.ConversationIconFactory;
@@ -39,12 +39,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-/* loaded from: classes.dex */
-public class NotificationBackend {
-    static IUsageStatsManager sUsageStatsManager = IUsageStatsManager.Stub.asInterface(ServiceManager.getService("usagestats"));
-    static INotificationManager sINM = INotificationManager.Stub.asInterface(ServiceManager.getService("notification"));
 
-    /* loaded from: classes.dex */
+public class NotificationBackend {
+    static INotificationManager sINM = INotificationManager.Stub.asInterface(ServiceManager.getService("notification"));
+    static IUsageStatsManager sUsageStatsManager = IUsageStatsManager.Stub.asInterface(ServiceManager.getService("usagestats"));
+
     public static class AppRow extends Row {
         public boolean banned;
         public int blockedChannelCount;
@@ -63,7 +62,6 @@ public class NotificationBackend {
         public int userId;
     }
 
-    /* loaded from: classes.dex */
     public static class NotificationsSentState {
         public int avgSentDaily = 0;
         public int avgSentWeekly = 0;
@@ -92,30 +90,25 @@ public class NotificationBackend {
         return appRow;
     }
 
-    public AppRow loadAppRow(Context context, PackageManager packageManager, RoleManager roleManager, PackageInfo packageInfo) {
+    public AppRow loadAppRow(Context context, PackageManager packageManager, PackageInfo packageInfo) {
         AppRow loadAppRow = loadAppRow(context, packageManager, packageInfo.applicationInfo);
-        recordCanBeBlocked(context, packageManager, roleManager, packageInfo, loadAppRow);
+        recordCanBeBlocked(packageInfo, loadAppRow);
         return loadAppRow;
     }
 
-    void recordCanBeBlocked(Context context, PackageManager packageManager, RoleManager roleManager, PackageInfo packageInfo, AppRow appRow) {
-        appRow.systemApp = Utils.isSystemPackage(context.getResources(), packageManager, packageInfo);
-        List heldRolesFromController = roleManager.getHeldRolesFromController(packageInfo.packageName);
-        if (heldRolesFromController.contains("android.app.role.DIALER") || heldRolesFromController.contains("android.app.role.EMERGENCY")) {
-            appRow.systemApp = true;
+    /* access modifiers changed from: package-private */
+    public void recordCanBeBlocked(PackageInfo packageInfo, AppRow appRow) {
+        try {
+            boolean isImportanceLocked = sINM.isImportanceLocked(packageInfo.packageName, packageInfo.applicationInfo.uid);
+            appRow.lockedImportance = isImportanceLocked;
+            appRow.systemApp = isImportanceLocked;
+        } catch (RemoteException e) {
+            Log.w("NotificationBackend", "Error calling NMS", e);
         }
-        markAppRowWithBlockables(context.getResources().getStringArray(17236072), appRow, packageInfo.packageName);
-    }
-
-    static void markAppRowWithBlockables(String[] strArr, AppRow appRow, String str) {
-        if (strArr != null) {
-            int length = strArr.length;
-            for (int i = 0; i < length; i++) {
-                String str2 = strArr[i];
-                if (str2 != null && !str2.contains(":") && str.equals(strArr[i])) {
-                    appRow.lockedImportance = true;
-                    appRow.systemApp = true;
-                }
+        if (packageInfo.applicationInfo.targetSdkVersion > 32) {
+            String[] strArr = packageInfo.requestedPermissions;
+            if (strArr == null || Arrays.stream(strArr).noneMatch(new NotificationBackend$$ExternalSyntheticLambda1())) {
+                appRow.lockedImportance = true;
             }
         }
     }
@@ -123,18 +116,18 @@ public class NotificationBackend {
     public static CharSequence getDeviceList(ICompanionDeviceManager iCompanionDeviceManager, LocalBluetoothManager localBluetoothManager, String str, int i) {
         StringBuilder sb = new StringBuilder();
         try {
-            List<String> associations = iCompanionDeviceManager.getAssociations(str, i);
-            if (associations != null) {
+            List<String> mapNotNull = CollectionUtils.mapNotNull(iCompanionDeviceManager.getAssociations(str, i), new NotificationBackend$$ExternalSyntheticLambda0());
+            if (mapNotNull != null) {
                 boolean z = false;
-                for (String str2 : associations) {
-                    for (CachedBluetoothDevice cachedBluetoothDevice : localBluetoothManager.getCachedDeviceManager().getCachedDevicesCopy()) {
-                        if (Objects.equals(str2, cachedBluetoothDevice.getAddress())) {
+                for (String str2 : mapNotNull) {
+                    for (CachedBluetoothDevice next : localBluetoothManager.getCachedDeviceManager().getCachedDevicesCopy()) {
+                        if (Objects.equals(str2, next.getAddress())) {
                             if (z) {
                                 sb.append(", ");
                             } else {
                                 z = true;
                             }
-                            sb.append(cachedBluetoothDevice.getName());
+                            sb.append(next.getName());
                         }
                     }
                 }
@@ -145,17 +138,53 @@ public class NotificationBackend {
         return sb.toString();
     }
 
-    public boolean isSystemApp(Context context, ApplicationInfo applicationInfo) {
-        try {
-            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(applicationInfo.packageName, 64);
-            RoleManager roleManager = (RoleManager) context.getSystemService(RoleManager.class);
-            AppRow appRow = new AppRow();
-            recordCanBeBlocked(context, context.getPackageManager(), roleManager, packageInfo, appRow);
-            return appRow.systemApp;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-            return false;
+    /* access modifiers changed from: private */
+    public static /* synthetic */ String lambda$getDeviceList$1(AssociationInfo associationInfo) {
+        if (associationInfo.isSelfManaged()) {
+            return null;
         }
+        return associationInfo.getDeviceMacAddress().toString();
+    }
+
+    /* JADX WARNING: Removed duplicated region for block: B:13:0x002a  */
+    /* JADX WARNING: Removed duplicated region for block: B:19:? A[RETURN, SYNTHETIC] */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public boolean enableSwitch(android.content.Context r3, android.content.pm.ApplicationInfo r4) {
+        /*
+            r2 = this;
+            r0 = 0
+            android.content.pm.PackageManager r3 = r3.getPackageManager()     // Catch:{ NameNotFoundException -> 0x002c }
+            java.lang.String r4 = r4.packageName     // Catch:{ NameNotFoundException -> 0x002c }
+            r1 = 4096(0x1000, float:5.74E-42)
+            android.content.pm.PackageInfo r3 = r3.getPackageInfo(r4, r1)     // Catch:{ NameNotFoundException -> 0x002c }
+            com.android.settings.notification.NotificationBackend$AppRow r4 = new com.android.settings.notification.NotificationBackend$AppRow     // Catch:{ NameNotFoundException -> 0x002c }
+            r4.<init>()     // Catch:{ NameNotFoundException -> 0x002c }
+            r2.recordCanBeBlocked(r3, r4)     // Catch:{ NameNotFoundException -> 0x002c }
+            boolean r2 = r4.systemApp     // Catch:{ NameNotFoundException -> 0x002c }
+            r3 = 1
+            if (r2 == 0) goto L_0x0023
+            if (r2 == 0) goto L_0x0021
+            boolean r2 = r4.banned     // Catch:{ NameNotFoundException -> 0x002c }
+            if (r2 == 0) goto L_0x0021
+            goto L_0x0023
+        L_0x0021:
+            r2 = r0
+            goto L_0x0024
+        L_0x0023:
+            r2 = r3
+        L_0x0024:
+            if (r2 == 0) goto L_0x002b
+            boolean r2 = r4.lockedImportance     // Catch:{ NameNotFoundException -> 0x002c }
+            if (r2 != 0) goto L_0x002b
+            r0 = r3
+        L_0x002b:
+            return r0
+        L_0x002c:
+            r2 = move-exception
+            r2.printStackTrace()
+            return r0
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.notification.NotificationBackend.enableSwitch(android.content.Context, android.content.pm.ApplicationInfo):boolean");
     }
 
     public boolean getNotificationsBanned(String str, int i) {
@@ -170,7 +199,7 @@ public class NotificationBackend {
     public boolean setNotificationsEnabledForPackage(String str, int i, boolean z) {
         try {
             if (onlyHasDefaultChannel(str, i)) {
-                NotificationChannel channel = getChannel(str, i, "miscellaneous", null);
+                NotificationChannel channel = getChannel(str, i, "miscellaneous", (String) null);
                 channel.setImportance(z ? -1000 : 0);
                 updateChannel(str, i, channel);
             }
@@ -306,6 +335,15 @@ public class NotificationBackend {
         }
     }
 
+    public boolean hasSentValidBubble(String str, int i) {
+        try {
+            return sINM.hasSentValidBubble(str, i);
+        } catch (Exception e) {
+            Log.w("NotificationBackend", "Error calling NoMan", e);
+            return false;
+        }
+    }
+
     public ParceledListSlice<NotificationChannel> getNotificationChannelsBypassingDnd(String str, int i) {
         try {
             return sINM.getNotificationChannelsBypassingDnd(str, i);
@@ -402,7 +440,8 @@ public class NotificationBackend {
         }
     }
 
-    protected void recordAggregatedUsageEvents(Context context, AppRow appRow) {
+    /* access modifiers changed from: protected */
+    public void recordAggregatedUsageEvents(Context context, AppRow appRow) {
         UsageEvents usageEvents;
         long currentTimeMillis = System.currentTimeMillis();
         try {
@@ -414,7 +453,8 @@ public class NotificationBackend {
         recordAggregatedUsageEvents(usageEvents, appRow);
     }
 
-    protected void recordAggregatedUsageEvents(UsageEvents usageEvents, AppRow appRow) {
+    /* access modifiers changed from: protected */
+    public void recordAggregatedUsageEvents(UsageEvents usageEvents, AppRow appRow) {
         String str;
         appRow.sentByChannel = new HashMap();
         appRow.sentByApp = new NotificationsSentState();
@@ -449,28 +489,27 @@ public class NotificationBackend {
             if (notificationsSentState.lastSent == 0) {
                 return context.getString(R$string.notifications_sent_never);
             }
-            return StringUtil.formatRelativeTime(context, System.currentTimeMillis() - notificationsSentState.lastSent, true);
+            return StringUtil.formatRelativeTime(context, (double) (System.currentTimeMillis() - notificationsSentState.lastSent), true);
         } else if (notificationsSentState.avgSentDaily > 0) {
             Resources resources = context.getResources();
             int i = R$plurals.notifications_sent_daily;
             int i2 = notificationsSentState.avgSentDaily;
-            return resources.getQuantityString(i, i2, Integer.valueOf(i2));
+            return resources.getQuantityString(i, i2, new Object[]{Integer.valueOf(i2)});
         } else {
             Resources resources2 = context.getResources();
             int i3 = R$plurals.notifications_sent_weekly;
             int i4 = notificationsSentState.avgSentWeekly;
-            return resources2.getQuantityString(i3, i4, Integer.valueOf(i4));
+            return resources2.getQuantityString(i3, i4, new Object[]{Integer.valueOf(i4)});
         }
     }
 
     private void calculateAvgSentCounts(NotificationsSentState notificationsSentState) {
         if (notificationsSentState != null) {
-            notificationsSentState.avgSentDaily = Math.round(notificationsSentState.sentCount / 7.0f);
+            notificationsSentState.avgSentDaily = Math.round(((float) notificationsSentState.sentCount) / 7.0f);
             int i = notificationsSentState.sentCount;
-            if (i >= 7) {
-                return;
+            if (i < 7) {
+                notificationsSentState.avgSentWeekly = i;
             }
-            notificationsSentState.avgSentWeekly = i;
         }
     }
 
@@ -506,7 +545,10 @@ public class NotificationBackend {
             if (componentName != null) {
                 return componentName.equals(sINM.getAllowedNotificationAssistant());
             }
-            return sINM.getAllowedNotificationAssistant() == null;
+            if (sINM.getAllowedNotificationAssistant() == null) {
+                return true;
+            }
+            return false;
         } catch (Exception e) {
             Log.w("NotificationBackend", "Error calling NoMan", e);
             return false;
@@ -522,7 +564,7 @@ public class NotificationBackend {
     }
 
     public ShortcutInfo getConversationInfo(Context context, String str, int i, String str2) {
-        List<ShortcutInfo> shortcuts = ((LauncherApps) context.getSystemService(LauncherApps.class)).getShortcuts(new LauncherApps.ShortcutQuery().setPackage(str).setQueryFlags(1041).setShortcutIds(Arrays.asList(str2)), UserHandle.of(UserHandle.getUserId(i)));
+        List<ShortcutInfo> shortcuts = ((LauncherApps) context.getSystemService(LauncherApps.class)).getShortcuts(new LauncherApps.ShortcutQuery().setPackage(str).setQueryFlags(1041).setShortcutIds(Arrays.asList(new String[]{str2})), UserHandle.of(UserHandle.getUserId(i)));
         if (shortcuts == null || shortcuts.isEmpty()) {
             return null;
         }
@@ -572,7 +614,11 @@ public class NotificationBackend {
         }
     }
 
-    /* loaded from: classes.dex */
+    /* access modifiers changed from: package-private */
+    public void setNm(INotificationManager iNotificationManager) {
+        sINM = iNotificationManager;
+    }
+
     static class Row {
         Row() {
         }

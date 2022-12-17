@@ -1,13 +1,11 @@
 package androidx.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
-import androidx.lifecycle.LifecycleOwner;
 import java.lang.reflect.Field;
-/* loaded from: classes.dex */
+
 final class ImmLeaksCleaner implements LifecycleEventObserver {
     private static Field sHField;
     private static Field sNextServedViewField;
@@ -15,54 +13,76 @@ final class ImmLeaksCleaner implements LifecycleEventObserver {
     private static Field sServedViewField;
     private Activity mActivity;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public ImmLeaksCleaner(Activity activity) {
-        this.mActivity = activity;
+    /* JADX WARNING: Can't wrap try/catch for region: R(3:29|30|31) */
+    /* JADX WARNING: Code restructure failed: missing block: B:31:0x0045, code lost:
+        return;
+     */
+    /* JADX WARNING: Missing exception handler attribute for start block: B:29:0x0044 */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void onStateChanged(androidx.lifecycle.LifecycleOwner r2, androidx.lifecycle.Lifecycle.Event r3) {
+        /*
+            r1 = this;
+            androidx.lifecycle.Lifecycle$Event r2 = androidx.lifecycle.Lifecycle.Event.ON_DESTROY
+            if (r3 == r2) goto L_0x0005
+            return
+        L_0x0005:
+            int r2 = sReflectedFieldsInitialized
+            if (r2 != 0) goto L_0x000c
+            initializeReflectiveFields()
+        L_0x000c:
+            int r2 = sReflectedFieldsInitialized
+            r3 = 1
+            if (r2 != r3) goto L_0x004e
+            android.app.Activity r1 = r1.mActivity
+            java.lang.String r2 = "input_method"
+            java.lang.Object r1 = r1.getSystemService(r2)
+            android.view.inputmethod.InputMethodManager r1 = (android.view.inputmethod.InputMethodManager) r1
+            java.lang.reflect.Field r2 = sHField     // Catch:{ IllegalAccessException -> 0x004e }
+            java.lang.Object r2 = r2.get(r1)     // Catch:{ IllegalAccessException -> 0x004e }
+            if (r2 != 0) goto L_0x0024
+            return
+        L_0x0024:
+            monitor-enter(r2)
+            java.lang.reflect.Field r3 = sServedViewField     // Catch:{ IllegalAccessException -> 0x004a, ClassCastException -> 0x0048 }
+            java.lang.Object r3 = r3.get(r1)     // Catch:{ IllegalAccessException -> 0x004a, ClassCastException -> 0x0048 }
+            android.view.View r3 = (android.view.View) r3     // Catch:{ IllegalAccessException -> 0x004a, ClassCastException -> 0x0048 }
+            if (r3 != 0) goto L_0x0031
+            monitor-exit(r2)     // Catch:{ all -> 0x0046 }
+            return
+        L_0x0031:
+            boolean r3 = r3.isAttachedToWindow()     // Catch:{ all -> 0x0046 }
+            if (r3 == 0) goto L_0x0039
+            monitor-exit(r2)     // Catch:{ all -> 0x0046 }
+            return
+        L_0x0039:
+            java.lang.reflect.Field r3 = sNextServedViewField     // Catch:{ IllegalAccessException -> 0x0044 }
+            r0 = 0
+            r3.set(r1, r0)     // Catch:{ IllegalAccessException -> 0x0044 }
+            monitor-exit(r2)     // Catch:{ all -> 0x0046 }
+            r1.isActive()
+            goto L_0x004e
+        L_0x0044:
+            monitor-exit(r2)     // Catch:{ all -> 0x0046 }
+            return
+        L_0x0046:
+            r1 = move-exception
+            goto L_0x004c
+        L_0x0048:
+            monitor-exit(r2)     // Catch:{ all -> 0x0046 }
+            return
+        L_0x004a:
+            monitor-exit(r2)     // Catch:{ all -> 0x0046 }
+            return
+        L_0x004c:
+            monitor-exit(r2)     // Catch:{ all -> 0x0046 }
+            throw r1
+        L_0x004e:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.activity.ImmLeaksCleaner.onStateChanged(androidx.lifecycle.LifecycleOwner, androidx.lifecycle.Lifecycle$Event):void");
     }
 
-    @Override // androidx.lifecycle.LifecycleEventObserver
-    public void onStateChanged(LifecycleOwner lifecycleOwner, Lifecycle.Event event) {
-        if (event != Lifecycle.Event.ON_DESTROY) {
-            return;
-        }
-        if (sReflectedFieldsInitialized == 0) {
-            initializeReflectiveFields();
-        }
-        if (sReflectedFieldsInitialized != 1) {
-            return;
-        }
-        InputMethodManager inputMethodManager = (InputMethodManager) this.mActivity.getSystemService("input_method");
-        try {
-            Object obj = sHField.get(inputMethodManager);
-            if (obj == null) {
-                return;
-            }
-            synchronized (obj) {
-                try {
-                    try {
-                        View view = (View) sServedViewField.get(inputMethodManager);
-                        if (view == null) {
-                            return;
-                        }
-                        if (view.isAttachedToWindow()) {
-                            return;
-                        }
-                        try {
-                            sNextServedViewField.set(inputMethodManager, null);
-                            inputMethodManager.isActive();
-                        } catch (IllegalAccessException unused) {
-                        }
-                    } catch (Throwable th) {
-                        throw th;
-                    }
-                } catch (ClassCastException unused2) {
-                } catch (IllegalAccessException unused3) {
-                }
-            }
-        } catch (IllegalAccessException unused4) {
-        }
-    }
-
+    @SuppressLint({"SoonBlockedPrivateApi"})
     private static void initializeReflectiveFields() {
         try {
             sReflectedFieldsInitialized = 2;

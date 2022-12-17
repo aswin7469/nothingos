@@ -5,7 +5,7 @@ import android.telecom.TelecomManager;
 import android.telephony.SubscriptionManager;
 import android.telephony.ims.ImsException;
 import android.util.Log;
-/* loaded from: classes.dex */
+
 public class VtQueryImsState extends ImsQueryController {
     private Context mContext;
     private int mSubId;
@@ -16,7 +16,8 @@ public class VtQueryImsState extends ImsQueryController {
         this.mSubId = i;
     }
 
-    boolean isEnabledByUser(int i) {
+    /* access modifiers changed from: package-private */
+    public boolean isEnabledByUser(int i) {
         if (!SubscriptionManager.isValidSubscriptionId(i)) {
             return false;
         }
@@ -28,10 +29,10 @@ public class VtQueryImsState extends ImsQueryController {
             return false;
         }
         try {
-            if (!isEnabledByPlatform(this.mSubId)) {
+            if (!isEnabledByPlatform(this.mSubId) || !isServiceStateReady(this.mSubId)) {
                 return false;
             }
-            return isServiceStateReady(this.mSubId);
+            return true;
         } catch (ImsException | IllegalArgumentException | InterruptedException e) {
             Log.w("VtQueryImsState", "fail to get Vt ready. subId=" + this.mSubId, e);
             return false;
@@ -42,10 +43,14 @@ public class VtQueryImsState extends ImsQueryController {
         if (!SubscriptionManager.isValidSubscriptionId(this.mSubId)) {
             return false;
         }
-        return !isTtyEnabled(this.mContext) || isTtyOnVolteEnabled(this.mSubId);
+        if (!isTtyEnabled(this.mContext) || isTtyOnVolteEnabled(this.mSubId)) {
+            return true;
+        }
+        return false;
     }
 
-    boolean isTtyEnabled(Context context) {
+    /* access modifiers changed from: package-private */
+    public boolean isTtyEnabled(Context context) {
         return ((TelecomManager) context.getSystemService(TelecomManager.class)).getCurrentTtyMode() != 0;
     }
 

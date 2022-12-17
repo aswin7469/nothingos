@@ -5,7 +5,6 @@ import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.View;
@@ -18,13 +17,9 @@ import com.google.android.setupdesign.R$layout;
 import com.google.android.setupdesign.R$styleable;
 import com.google.android.setupdesign.util.LayoutStyler;
 import com.google.android.setupdesign.view.CheckableLinearLayout;
-/* loaded from: classes2.dex */
+
 public class ExpandableSwitchItem extends SwitchItem implements View.OnClickListener {
-    private CharSequence collapsedSummary;
-    private CharSequence expandedSummary;
-    private boolean isExpanded = false;
-    private final AccessibilityDelegateCompat accessibilityDelegate = new AccessibilityDelegateCompat() { // from class: com.google.android.setupdesign.items.ExpandableSwitchItem.1
-        @Override // androidx.core.view.AccessibilityDelegateCompat
+    private final AccessibilityDelegateCompat accessibilityDelegate = new AccessibilityDelegateCompat() {
         public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
             AccessibilityNodeInfoCompat.AccessibilityActionCompat accessibilityActionCompat;
             super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfoCompat);
@@ -36,16 +31,18 @@ public class ExpandableSwitchItem extends SwitchItem implements View.OnClickList
             accessibilityNodeInfoCompat.addAction(accessibilityActionCompat);
         }
 
-        @Override // androidx.core.view.AccessibilityDelegateCompat
         public boolean performAccessibilityAction(View view, int i, Bundle bundle) {
-            if (i == 262144 || i == 524288) {
-                ExpandableSwitchItem expandableSwitchItem = ExpandableSwitchItem.this;
-                expandableSwitchItem.setExpanded(!expandableSwitchItem.isExpanded());
-                return true;
+            if (i != 262144 && i != 524288) {
+                return super.performAccessibilityAction(view, i, bundle);
             }
-            return super.performAccessibilityAction(view, i, bundle);
+            ExpandableSwitchItem expandableSwitchItem = ExpandableSwitchItem.this;
+            expandableSwitchItem.setExpanded(!expandableSwitchItem.isExpanded());
+            return true;
         }
     };
+    private CharSequence collapsedSummary;
+    private CharSequence expandedSummary;
+    private boolean isExpanded = false;
 
     public ExpandableSwitchItem() {
         setIconGravity(48);
@@ -60,12 +57,11 @@ public class ExpandableSwitchItem extends SwitchItem implements View.OnClickList
         obtainStyledAttributes.recycle();
     }
 
-    @Override // com.google.android.setupdesign.items.SwitchItem, com.google.android.setupdesign.items.Item
-    protected int getDefaultLayoutResource() {
+    /* access modifiers changed from: protected */
+    public int getDefaultLayoutResource() {
         return R$layout.sud_items_expandable_switch;
     }
 
-    @Override // com.google.android.setupdesign.items.Item
     public CharSequence getSummary() {
         return this.isExpanded ? getExpandedSummary() : getCollapsedSummary();
     }
@@ -75,11 +71,10 @@ public class ExpandableSwitchItem extends SwitchItem implements View.OnClickList
     }
 
     public void setExpanded(boolean z) {
-        if (this.isExpanded == z) {
-            return;
+        if (this.isExpanded != z) {
+            this.isExpanded = z;
+            notifyItemChanged();
         }
-        this.isExpanded = z;
-        notifyItemChanged();
     }
 
     public CharSequence getCollapsedSummary() {
@@ -90,7 +85,6 @@ public class ExpandableSwitchItem extends SwitchItem implements View.OnClickList
         return this.expandedSummary;
     }
 
-    @Override // com.google.android.setupdesign.items.SwitchItem, com.google.android.setupdesign.items.Item, com.google.android.setupdesign.items.IItem
     public void onBindView(View view) {
         super.onBindView(view);
         View findViewById = view.findViewById(R$id.sud_items_expandable_switch_content);
@@ -106,14 +100,11 @@ public class ExpandableSwitchItem extends SwitchItem implements View.OnClickList
         LayoutStyler.applyPartnerCustomizationLayoutPaddingStyle(findViewById);
     }
 
-    @Override // android.view.View.OnClickListener
     public void onClick(View view) {
         setExpanded(!isExpanded());
     }
 
     private void tintCompoundDrawables(View view) {
-        Drawable[] compoundDrawables;
-        Drawable[] compoundDrawablesRelative;
         TypedArray obtainStyledAttributes = view.getContext().obtainStyledAttributes(new int[]{16842806});
         ColorStateList colorStateList = obtainStyledAttributes.getColorStateList(0);
         obtainStyledAttributes.recycle();
@@ -123,9 +114,6 @@ public class ExpandableSwitchItem extends SwitchItem implements View.OnClickList
                 if (drawable != null) {
                     drawable.setColorFilter(colorStateList.getDefaultColor(), PorterDuff.Mode.SRC_IN);
                 }
-            }
-            if (Build.VERSION.SDK_INT < 17) {
-                return;
             }
             for (Drawable drawable2 : textView.getCompoundDrawablesRelative()) {
                 if (drawable2 != null) {

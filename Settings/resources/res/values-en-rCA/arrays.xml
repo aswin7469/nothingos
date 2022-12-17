@@ -196,6 +196,8 @@
         <item>Over 60 days old</item>
         <item>Over 90 days old</item>
     </array>
+    <array name="avatar_image_descriptions">
+    </array>
     <array name="battery_labels">
         <item>0%</item>
         <item>50%</item>
@@ -260,6 +262,8 @@
         <item>48.0 kHz</item>
         <item>88.2 kHz</item>
         <item>96.0 kHz</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
         <item>Use system selection (default)</item>
@@ -267,6 +271,8 @@
         <item>48.0 kHz</item>
         <item>88.2 kHz</item>
         <item>96.0 kHz</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
         <item>Use system selection (default)</item>
@@ -277,6 +283,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive audio</item>
         <item>Qualcomm® aptX™ TWS+ audio</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
         <item>Use system selection (default)</item>
@@ -287,6 +297,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive audio</item>
         <item>Qualcomm® aptX™ TWS+ audio</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -345,17 +359,10 @@
         <item>Raised</item>
         <item>Depressed</item>
     </array>
-    <array name="captioning_font_size_selector_summaries">
-        <item>Very small text size</item>
-        <item>Small text size</item>
-        <item>Default text size</item>
-        <item>Large text size</item>
-        <item>Very large text size</item>
-    </array>
     <array name="captioning_font_size_selector_titles">
         <item>Very small</item>
         <item>Small</item>
-        <item>Default</item>
+        <item>Medium</item>
         <item>Large</item>
         <item>Very large</item>
     </array>
@@ -486,6 +493,14 @@
         <item>SPN</item>
         <item>IMSI</item>
         <item>GID</item>
+    </array>
+    <array name="nfc_payment_favor">
+        <item>Always</item>
+        <item>Except when another payment app is open</item>
+    </array>
+    <array name="nfc_payment_favor_values">
+        <item>@null</item>
+        <item>1</item>
     </array>
     <array name="overlay_display_devices_entries">
         <item>None</item>
@@ -619,17 +634,20 @@
         <item>Draw non-rectangular clip region in blue</item>
         <item>Highlight tested drawing commands in green</item>
     </array>
-    <array name="sim_color_light">
-        <item>@color/SIM_color_cyan</item>
-        <item>@color/SIM_color_blue800</item>
-        <item>@color/SIM_color_green800</item>
-        <item>@color/SIM_color_purple800</item>
-        <item>@color/SIM_color_pink800</item>
-        <item>@color/SIM_color_orange</item>
-    </array>
     <array name="swipe_direction_values">
         <item>1</item>
         <item>@null</item>
+    </array>
+    <array name="switch_to_user_zero_when_docked_timeout_entries">
+        <item>Never</item>
+        <item>After one minute</item>
+        <item>After five minutes</item>
+    </array>
+    <array name="tare_modifiers_subfactors">
+        <item>Charging</item>
+        <item>Doze</item>
+        <item>Power Save Mode</item>
+        <item>Process state</item>
     </array>
     <array name="timezone_filters">
         <item>America</item>

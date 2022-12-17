@@ -11,22 +11,24 @@ import com.android.settingslib.core.lifecycle.Lifecycle;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnStart;
 import com.android.settingslib.core.lifecycle.events.OnStop;
-/* loaded from: classes.dex */
+
 public abstract class GroupBluetoothDetailsController extends AbstractPreferenceController implements PreferenceControllerMixin, LifecycleObserver, OnStop, OnStart, BluetoothCallback {
     protected final Context mContext;
     protected final PreferenceFragmentCompat mFragment;
     protected LocalBluetoothManager mLocalManager;
 
-    protected abstract void init(PreferenceScreen preferenceScreen);
+    /* access modifiers changed from: protected */
+    public abstract void init(PreferenceScreen preferenceScreen);
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return true;
     }
 
-    protected abstract void loadDevices();
+    /* access modifiers changed from: protected */
+    public abstract void loadDevices();
 
-    protected abstract void refresh();
+    /* access modifiers changed from: protected */
+    public abstract void refresh();
 
     public GroupBluetoothDetailsController(Context context, PreferenceFragmentCompat preferenceFragmentCompat, int i, Lifecycle lifecycle) {
         super(context);
@@ -36,7 +38,6 @@ public abstract class GroupBluetoothDetailsController extends AbstractPreference
         this.mLocalManager = Utils.getLocalBtManager(context);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStart
     public void onStart() {
         this.mLocalManager.getEventManager().registerCallback(this);
         loadDevices();
@@ -47,7 +48,6 @@ public abstract class GroupBluetoothDetailsController extends AbstractPreference
         this.mLocalManager.getEventManager().unregisterCallback(this);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public final void displayPreference(PreferenceScreen preferenceScreen) {
         init(preferenceScreen);
         super.displayPreference(preferenceScreen);

@@ -23,7 +23,7 @@ import com.android.settings.fuelgauge.batterytip.tips.RestrictAppTip;
 import com.android.settings.fuelgauge.batterytip.tips.UnrestrictAppTip;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class BatteryTipUtils {
     public static List<AppInfo> getRestrictedAppsList(AppOpsManager appOpsManager, UserManager userManager) {
         List<UserHandle> userProfiles = userManager.getUserProfiles();
@@ -46,28 +46,28 @@ public class BatteryTipUtils {
 
     public static BatteryTipAction getActionForBatteryTip(BatteryTip batteryTip, SettingsActivity settingsActivity, InstrumentedPreferenceFragment instrumentedPreferenceFragment) {
         int type = batteryTip.getType();
-        if (type != 0) {
-            if (type == 1) {
-                if (batteryTip.getState() == 1) {
-                    return new OpenRestrictAppFragmentAction(instrumentedPreferenceFragment, (RestrictAppTip) batteryTip);
-                }
-                return new RestrictAppAction(settingsActivity, (RestrictAppTip) batteryTip);
-            } else if (type == 3 || type == 5) {
+        if (type == 0) {
+            return new SmartBatteryAction(settingsActivity, instrumentedPreferenceFragment);
+        }
+        if (type != 1) {
+            if (type == 3 || type == 5) {
                 return new OpenBatterySaverAction(settingsActivity);
-            } else {
-                if (type == 7) {
-                    return new UnrestrictAppAction(settingsActivity, (UnrestrictAppTip) batteryTip);
-                }
-                if (type == 8) {
-                    return new BatteryDefenderAction(settingsActivity);
-                }
+            }
+            if (type == 7) {
+                return new UnrestrictAppAction(settingsActivity, (UnrestrictAppTip) batteryTip);
+            }
+            if (type != 8) {
                 return null;
             }
+            return new BatteryDefenderAction(settingsActivity);
+        } else if (batteryTip.getState() == 1) {
+            return new OpenRestrictAppFragmentAction(instrumentedPreferenceFragment, (RestrictAppTip) batteryTip);
+        } else {
+            return new RestrictAppAction(settingsActivity, (RestrictAppTip) batteryTip);
         }
-        return new SmartBatteryAction(settingsActivity, instrumentedPreferenceFragment);
     }
 
     public static void uploadAnomalyPendingIntent(Context context, StatsManager statsManager) throws StatsManager.StatsUnavailableException {
-        statsManager.setBroadcastSubscriber(PendingIntent.getBroadcast(context, 0, new Intent(context, AnomalyDetectionReceiver.class), 167772160), 1L, 1L);
+        statsManager.setBroadcastSubscriber(PendingIntent.getBroadcast(context, 0, new Intent(context, AnomalyDetectionReceiver.class), 167772160), 1, 1);
     }
 }

@@ -13,48 +13,47 @@ import com.android.settings.password.SetNewPasswordController;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
 import com.google.android.setupcompat.util.WizardManagerHelper;
 import java.util.List;
-/* loaded from: classes.dex */
-public class SetNewPasswordActivity extends Activity implements SetNewPasswordController.Ui {
-    private String mNewPasswordAction;
-    private SetNewPasswordController mSetNewPasswordController;
-    private int mRequestedMinComplexity = 0;
-    private boolean mDevicePasswordRequirementOnly = false;
-    private String mCallerAppName = null;
 
-    @Override // android.app.Activity
-    protected void onCreate(Bundle bundle) {
+public class SetNewPasswordActivity extends Activity implements SetNewPasswordController.C1301Ui {
+    private String mCallerAppName = null;
+    private boolean mDevicePasswordRequirementOnly = false;
+    private String mNewPasswordAction;
+    private int mRequestedMinComplexity = 0;
+    private SetNewPasswordController mSetNewPasswordController;
+
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         Intent intent = getIntent();
         String action = intent.getAction();
         this.mNewPasswordAction = action;
-        if (!"android.app.action.SET_NEW_PASSWORD".equals(action) && !"android.app.action.SET_NEW_PARENT_PROFILE_PASSWORD".equals(this.mNewPasswordAction)) {
-            Log.e("SetNewPasswordActivity", "Unexpected action to launch this activity");
-            finish();
+        if ("android.app.action.SET_NEW_PASSWORD".equals(action) || "android.app.action.SET_NEW_PARENT_PROFILE_PASSWORD".equals(this.mNewPasswordAction)) {
+            logSetNewPasswordIntent();
+            IBinder activityToken = getActivityToken();
+            this.mCallerAppName = (String) PasswordUtils.getCallingAppLabel(this, activityToken);
+            if ("android.app.action.SET_NEW_PASSWORD".equals(this.mNewPasswordAction) && intent.hasExtra("android.app.extra.PASSWORD_COMPLEXITY")) {
+                if (PasswordUtils.isCallingAppPermitted(this, activityToken, "android.permission.REQUEST_PASSWORD_COMPLEXITY")) {
+                    this.mRequestedMinComplexity = PasswordMetrics.sanitizeComplexityLevel(intent.getIntExtra("android.app.extra.PASSWORD_COMPLEXITY", 0));
+                } else {
+                    PasswordUtils.crashCallingApplication(activityToken, "Must have permission android.permission.REQUEST_PASSWORD_COMPLEXITY to use extra android.app.extra.PASSWORD_COMPLEXITY", 5);
+                    finish();
+                    return;
+                }
+            }
+            if ("android.app.action.SET_NEW_PARENT_PROFILE_PASSWORD".equals(this.mNewPasswordAction)) {
+                boolean booleanExtra = intent.getBooleanExtra("android.app.extra.DEVICE_PASSWORD_REQUIREMENT_ONLY", false);
+                this.mDevicePasswordRequirementOnly = booleanExtra;
+                Log.i("SetNewPasswordActivity", String.format("DEVICE_PASSWORD_REQUIREMENT_ONLY: %b", new Object[]{Boolean.valueOf(booleanExtra)}));
+            }
+            SetNewPasswordController create = SetNewPasswordController.create(this, this, intent, activityToken);
+            this.mSetNewPasswordController = create;
+            create.dispatchSetNewPasswordIntent();
             return;
         }
-        logSetNewPasswordIntent();
-        IBinder activityToken = getActivityToken();
-        this.mCallerAppName = (String) PasswordUtils.getCallingAppLabel(this, activityToken);
-        if ("android.app.action.SET_NEW_PASSWORD".equals(this.mNewPasswordAction) && intent.hasExtra("android.app.extra.PASSWORD_COMPLEXITY")) {
-            if (PasswordUtils.isCallingAppPermitted(this, activityToken, "android.permission.REQUEST_PASSWORD_COMPLEXITY")) {
-                this.mRequestedMinComplexity = PasswordMetrics.sanitizeComplexityLevel(intent.getIntExtra("android.app.extra.PASSWORD_COMPLEXITY", 0));
-            } else {
-                PasswordUtils.crashCallingApplication(activityToken, "Must have permission android.permission.REQUEST_PASSWORD_COMPLEXITY to use extra android.app.extra.PASSWORD_COMPLEXITY", 5);
-                finish();
-                return;
-            }
-        }
-        if ("android.app.action.SET_NEW_PARENT_PROFILE_PASSWORD".equals(this.mNewPasswordAction)) {
-            boolean booleanExtra = intent.getBooleanExtra("android.app.extra.DEVICE_PASSWORD_REQUIREMENT_ONLY", false);
-            this.mDevicePasswordRequirementOnly = booleanExtra;
-            Log.i("SetNewPasswordActivity", String.format("DEVICE_PASSWORD_REQUIREMENT_ONLY: %b", Boolean.valueOf(booleanExtra)));
-        }
-        SetNewPasswordController create = SetNewPasswordController.create(this, this, intent, activityToken);
-        this.mSetNewPasswordController = create;
-        create.dispatchSetNewPasswordIntent();
+        Log.e("SetNewPasswordActivity", "Unexpected action to launch this activity");
+        finish();
     }
 
-    @Override // com.android.settings.password.SetNewPasswordController.Ui
     public void launchChooseLock(Bundle bundle) {
         Intent intent;
         if (WizardManagerHelper.isAnySetupWizard(getIntent())) {
@@ -87,8 +86,8 @@ public class SetNewPasswordActivity extends Activity implements SetNewPasswordCo
         if (activeAdmins == null) {
             return false;
         }
-        for (ComponentName componentName : activeAdmins) {
-            if (componentName.getPackageName().equals(callingAppPackageName)) {
+        for (ComponentName packageName : activeAdmins) {
+            if (packageName.getPackageName().equals(callingAppPackageName)) {
                 return true;
             }
         }

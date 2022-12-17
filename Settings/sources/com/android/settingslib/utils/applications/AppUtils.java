@@ -2,7 +2,7 @@ package com.android.settingslib.utils.applications;
 
 import android.content.pm.PackageManager;
 import android.util.Log;
-/* loaded from: classes.dex */
+
 public class AppUtils {
     private static final String TAG = "AppUtils";
 

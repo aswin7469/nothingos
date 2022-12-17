@@ -1,26 +1,29 @@
 package com.android.settings.applications.managedomainurls;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.UserHandle;
-import android.util.ArraySet;
-import android.util.IconDrawableFactory;
-import com.android.settings.R;
-import com.android.settings.Utils;
+import android.content.pm.verify.domain.DomainVerificationManager;
+import android.content.pm.verify.domain.DomainVerificationUserState;
+import android.graphics.drawable.Drawable;
+import androidx.preference.PreferenceViewHolder;
+import com.android.settings.R$drawable;
+import com.android.settings.R$string;
+import com.android.settings.applications.intentpicker.IntentPickerUtils;
+import com.android.settingslib.applications.AppUtils;
 import com.android.settingslib.applications.ApplicationsState;
+import com.android.settingslib.utils.ThreadUtils;
 import com.android.settingslib.widget.AppPreference;
-/* loaded from: classes.dex */
-public class DomainAppPreference extends AppPreference {
-    private final ApplicationsState.AppEntry mEntry;
-    private final IconDrawableFactory mIconDrawableFactory;
-    private final PackageManager mPm;
 
-    public DomainAppPreference(Context context, IconDrawableFactory iconDrawableFactory, ApplicationsState.AppEntry appEntry) {
+public class DomainAppPreference extends AppPreference {
+    private Drawable mCacheIcon;
+    private final DomainVerificationManager mDomainVerificationManager;
+    private final ApplicationsState.AppEntry mEntry;
+
+    public DomainAppPreference(Context context, ApplicationsState.AppEntry appEntry) {
         super(context);
-        this.mIconDrawableFactory = iconDrawableFactory;
-        this.mPm = context.getPackageManager();
+        this.mDomainVerificationManager = (DomainVerificationManager) context.getSystemService(DomainVerificationManager.class);
         this.mEntry = appEntry;
         appEntry.ensureLabel(getContext());
+        this.mCacheIcon = AppUtils.getIconFromCache(appEntry);
         setState();
     }
 
@@ -34,19 +37,43 @@ public class DomainAppPreference extends AppPreference {
     }
 
     private void setState() {
-        setTitle(this.mEntry.label);
-        setIcon(this.mIconDrawableFactory.getBadgedIcon(this.mEntry.info));
+        setTitle((CharSequence) this.mEntry.label);
+        Drawable drawable = this.mCacheIcon;
+        if (drawable != null) {
+            setIcon(drawable);
+        } else {
+            setIcon(R$drawable.empty_icon);
+        }
         setSummary(getDomainsSummary(this.mEntry.info.packageName));
     }
 
     private CharSequence getDomainsSummary(String str) {
-        if (this.mPm.getIntentVerificationStatusAsUser(str, UserHandle.myUserId()) == 3) {
-            return getContext().getText(R.string.domain_urls_summary_none);
+        return getContext().getText(isLinkHandlingAllowed(str) ? R$string.app_link_open_always : R$string.app_link_open_never);
+    }
+
+    private boolean isLinkHandlingAllowed(String str) {
+        DomainVerificationUserState domainVerificationUserState = IntentPickerUtils.getDomainVerificationUserState(this.mDomainVerificationManager, str);
+        if (domainVerificationUserState == null) {
+            return false;
         }
-        ArraySet<String> handledDomains = Utils.getHandledDomains(this.mPm, str);
-        if (handledDomains.isEmpty()) {
-            return getContext().getText(R.string.domain_urls_summary_none);
+        return domainVerificationUserState.isLinkHandlingAllowed();
+    }
+
+    public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
+        if (this.mCacheIcon == null) {
+            ThreadUtils.postOnBackgroundThread((Runnable) new DomainAppPreference$$ExternalSyntheticLambda0(this));
         }
-        return handledDomains.size() == 1 ? getContext().getString(R.string.domain_urls_summary_one, handledDomains.valueAt(0)) : getContext().getString(R.string.domain_urls_summary_some, handledDomains.valueAt(0));
+        super.onBindViewHolder(preferenceViewHolder);
+    }
+
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$onBindViewHolder$1() {
+        ThreadUtils.postOnMainThread(new DomainAppPreference$$ExternalSyntheticLambda1(this, AppUtils.getIcon(getContext(), this.mEntry)));
+    }
+
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$onBindViewHolder$0(Drawable drawable) {
+        setIcon(drawable);
+        this.mCacheIcon = drawable;
     }
 }

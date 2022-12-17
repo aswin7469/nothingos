@@ -12,10 +12,12 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import androidx.preference.R$styleable;
 import com.android.settingslib.utils.BuildCompatUtils;
+import com.nothing.p006ui.support.NtCustSwitch;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class MainSwitchBar extends LinearLayout implements CompoundButton.OnCheckedChangeListener {
     private int mBackgroundActivatedColor;
     private int mBackgroundColor;
@@ -23,12 +25,12 @@ public class MainSwitchBar extends LinearLayout implements CompoundButton.OnChec
     private Drawable mBackgroundOff;
     private Drawable mBackgroundOn;
     private View mFrameView;
-    protected Switch mSwitch;
+    protected NtCustSwitch mSwitch;
     private final List<OnMainSwitchChangeListener> mSwitchChangeListeners;
     protected TextView mTextView;
 
     public MainSwitchBar(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public MainSwitchBar(Context context, AttributeSet attributeSet) {
@@ -53,46 +55,43 @@ public class MainSwitchBar extends LinearLayout implements CompoundButton.OnChec
         setClickable(true);
         this.mFrameView = findViewById(R$id.frame);
         this.mTextView = (TextView) findViewById(R$id.switch_text);
-        this.mSwitch = (Switch) findViewById(16908352);
+        this.mSwitch = (NtCustSwitch) findViewById(16908352);
         if (BuildCompatUtils.isAtLeastS()) {
             this.mBackgroundOn = getContext().getDrawable(R$drawable.settingslib_switch_bar_bg_on);
             this.mBackgroundOff = getContext().getDrawable(R$drawable.settingslib_switch_bar_bg_off);
             this.mBackgroundDisabled = getContext().getDrawable(R$drawable.settingslib_switch_bar_bg_disabled);
         }
-        addOnSwitchChangeListener(new OnMainSwitchChangeListener() { // from class: com.android.settingslib.widget.MainSwitchBar$$ExternalSyntheticLambda0
-            @Override // com.android.settingslib.widget.OnMainSwitchChangeListener
-            public final void onSwitchChanged(Switch r1, boolean z) {
-                MainSwitchBar.this.lambda$new$0(r1, z);
-            }
-        });
+        addOnSwitchChangeListener(new MainSwitchBar$$ExternalSyntheticLambda0(this));
+        if (this.mSwitch.getVisibility() == 0) {
+            this.mSwitch.setOnCheckedChangeListener(this);
+        }
         setChecked(this.mSwitch.isChecked());
         if (attributeSet != null) {
-            TypedArray obtainStyledAttributes2 = context.obtainStyledAttributes(attributeSet, androidx.preference.R$styleable.Preference, 0, 0);
-            setTitle(obtainStyledAttributes2.getText(androidx.preference.R$styleable.Preference_android_title));
+            TypedArray obtainStyledAttributes2 = context.obtainStyledAttributes(attributeSet, R$styleable.Preference, 0, 0);
+            setTitle(obtainStyledAttributes2.getText(R$styleable.Preference_android_title));
             obtainStyledAttributes2.recycle();
         }
-        setBackground(true);
+        setBackground(this.mSwitch.isChecked());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$0(Switch r1, boolean z) {
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$new$0(Switch switchR, boolean z) {
         setChecked(z);
     }
 
-    @Override // android.widget.CompoundButton.OnCheckedChangeListener
     public void onCheckedChanged(CompoundButton compoundButton, boolean z) {
         propagateChecked(z);
     }
 
-    @Override // android.view.View
     public boolean performClick() {
-        return this.mSwitch.performClick();
+        this.mSwitch.performClick();
+        return super.performClick();
     }
 
     public void setChecked(boolean z) {
-        Switch r0 = this.mSwitch;
-        if (r0 != null) {
-            r0.setChecked(z);
+        NtCustSwitch ntCustSwitch = this.mSwitch;
+        if (ntCustSwitch != null) {
+            ntCustSwitch.setChecked(z);
         }
         setBackground(z);
     }
@@ -101,7 +100,7 @@ public class MainSwitchBar extends LinearLayout implements CompoundButton.OnChec
         return this.mSwitch.isChecked();
     }
 
-    public final Switch getSwitch() {
+    public final NtCustSwitch getSwitch() {
         return this.mSwitch;
     }
 
@@ -120,7 +119,7 @@ public class MainSwitchBar extends LinearLayout implements CompoundButton.OnChec
     public void hide() {
         if (isShowing()) {
             setVisibility(8);
-            this.mSwitch.setOnCheckedChangeListener(null);
+            this.mSwitch.setOnCheckedChangeListener((CompoundButton.OnCheckedChangeListener) null);
         }
     }
 
@@ -138,17 +137,17 @@ public class MainSwitchBar extends LinearLayout implements CompoundButton.OnChec
         this.mSwitchChangeListeners.remove(onMainSwitchChangeListener);
     }
 
-    @Override // android.view.View
     public void setEnabled(boolean z) {
         super.setEnabled(z);
         this.mTextView.setEnabled(z);
         this.mSwitch.setEnabled(z);
-        if (BuildCompatUtils.isAtLeastS()) {
-            if (z) {
-                this.mFrameView.setBackground(isChecked() ? this.mBackgroundOn : this.mBackgroundOff);
-            } else {
-                this.mFrameView.setBackground(this.mBackgroundDisabled);
-            }
+        if (!BuildCompatUtils.isAtLeastS()) {
+            return;
+        }
+        if (z) {
+            this.mFrameView.setBackground(isChecked() ? this.mBackgroundOn : this.mBackgroundOff);
+        } else {
+            this.mFrameView.setBackground(this.mBackgroundDisabled);
         }
     }
 
@@ -168,21 +167,13 @@ public class MainSwitchBar extends LinearLayout implements CompoundButton.OnChec
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class SavedState extends View.BaseSavedState {
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() { // from class: com.android.settingslib.widget.MainSwitchBar.SavedState.1
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: createFromParcel */
-            public SavedState mo618createFromParcel(Parcel parcel) {
+    static class SavedState extends View.BaseSavedState {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel parcel) {
                 return new SavedState(parcel);
             }
 
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: newArray */
-            public SavedState[] mo619newArray(int i) {
+            public SavedState[] newArray(int i) {
                 return new SavedState[i];
             }
         };
@@ -195,11 +186,10 @@ public class MainSwitchBar extends LinearLayout implements CompoundButton.OnChec
 
         private SavedState(Parcel parcel) {
             super(parcel);
-            this.mChecked = ((Boolean) parcel.readValue(null)).booleanValue();
-            this.mVisible = ((Boolean) parcel.readValue(null)).booleanValue();
+            this.mChecked = ((Boolean) parcel.readValue((ClassLoader) null)).booleanValue();
+            this.mVisible = ((Boolean) parcel.readValue((ClassLoader) null)).booleanValue();
         }
 
-        @Override // android.view.View.BaseSavedState, android.view.AbsSavedState, android.os.Parcelable
         public void writeToParcel(Parcel parcel, int i) {
             super.writeToParcel(parcel, i);
             parcel.writeValue(Boolean.valueOf(this.mChecked));
@@ -211,7 +201,6 @@ public class MainSwitchBar extends LinearLayout implements CompoundButton.OnChec
         }
     }
 
-    @Override // android.view.View
     public Parcelable onSaveInstanceState() {
         SavedState savedState = new SavedState(super.onSaveInstanceState());
         savedState.mChecked = this.mSwitch.isChecked();
@@ -219,7 +208,6 @@ public class MainSwitchBar extends LinearLayout implements CompoundButton.OnChec
         return savedState;
     }
 
-    @Override // android.view.View
     public void onRestoreInstanceState(Parcelable parcelable) {
         SavedState savedState = (SavedState) parcelable;
         super.onRestoreInstanceState(savedState.getSuperState());

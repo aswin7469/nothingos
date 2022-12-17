@@ -3,30 +3,41 @@ package com.android.settingslib.inputmethod;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
+import com.android.internal.annotations.GuardedBy;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class InputMethodSettingValuesWrapper {
     private static final String TAG = "InputMethodSettingValuesWrapper";
-    private static volatile InputMethodSettingValuesWrapper sInstance;
+    @GuardedBy({"sInstanceMapLock"})
+    private static SparseArray<InputMethodSettingValuesWrapper> sInstanceMap = new SparseArray<>();
+    private static final Object sInstanceMapLock = new Object();
     private final ContentResolver mContentResolver;
     private final InputMethodManager mImm;
     private final ArrayList<InputMethodInfo> mMethodList = new ArrayList<>();
 
     public static InputMethodSettingValuesWrapper getInstance(Context context) {
-        if (sInstance == null) {
-            synchronized (TAG) {
-                if (sInstance == null) {
-                    sInstance = new InputMethodSettingValuesWrapper(context);
-                }
+        int userId = context.getUserId();
+        synchronized (sInstanceMapLock) {
+            if (sInstanceMap.size() == 0) {
+                InputMethodSettingValuesWrapper inputMethodSettingValuesWrapper = new InputMethodSettingValuesWrapper(context);
+                sInstanceMap.put(userId, inputMethodSettingValuesWrapper);
+                return inputMethodSettingValuesWrapper;
+            } else if (sInstanceMap.indexOfKey(userId) >= 0) {
+                InputMethodSettingValuesWrapper inputMethodSettingValuesWrapper2 = sInstanceMap.get(userId);
+                return inputMethodSettingValuesWrapper2;
+            } else {
+                InputMethodSettingValuesWrapper inputMethodSettingValuesWrapper3 = new InputMethodSettingValuesWrapper(context);
+                sInstanceMap.put(context.getUserId(), inputMethodSettingValuesWrapper3);
+                return inputMethodSettingValuesWrapper3;
             }
         }
-        return sInstance;
     }
 
     private InputMethodSettingValuesWrapper(Context context) {
@@ -37,7 +48,7 @@ public class InputMethodSettingValuesWrapper {
 
     public void refreshAllInputMethodAndSubtypes() {
         this.mMethodList.clear();
-        this.mMethodList.addAll(this.mImm.getInputMethodList());
+        this.mMethodList.addAll(this.mImm.getInputMethodListAsUser(this.mContentResolver.getUserId(), 1));
     }
 
     public List<InputMethodInfo> getInputMethodList() {
@@ -46,17 +57,20 @@ public class InputMethodSettingValuesWrapper {
 
     public boolean isAlwaysCheckedIme(InputMethodInfo inputMethodInfo) {
         boolean isEnabledImi = isEnabledImi(inputMethodInfo);
-        if (getEnabledInputMethodList().size() > 1 || !isEnabledImi) {
-            int enabledValidNonAuxAsciiCapableImeCount = getEnabledValidNonAuxAsciiCapableImeCount();
-            return enabledValidNonAuxAsciiCapableImeCount <= 1 && (enabledValidNonAuxAsciiCapableImeCount != 1 || isEnabledImi) && inputMethodInfo.isSystem() && InputMethodAndSubtypeUtil.isValidNonAuxAsciiCapableIme(inputMethodInfo);
+        if (getEnabledInputMethodList().size() <= 1 && isEnabledImi) {
+            return true;
+        }
+        int enabledValidNonAuxAsciiCapableImeCount = getEnabledValidNonAuxAsciiCapableImeCount();
+        if (enabledValidNonAuxAsciiCapableImeCount > 1 || ((enabledValidNonAuxAsciiCapableImeCount == 1 && !isEnabledImi) || !inputMethodInfo.isSystem() || !InputMethodAndSubtypeUtil.isValidNonAuxAsciiCapableIme(inputMethodInfo))) {
+            return false;
         }
         return true;
     }
 
     private int getEnabledValidNonAuxAsciiCapableImeCount() {
         int i = 0;
-        for (InputMethodInfo inputMethodInfo : getEnabledInputMethodList()) {
-            if (InputMethodAndSubtypeUtil.isValidNonAuxAsciiCapableIme(inputMethodInfo)) {
+        for (InputMethodInfo isValidNonAuxAsciiCapableIme : getEnabledInputMethodList()) {
+            if (InputMethodAndSubtypeUtil.isValidNonAuxAsciiCapableIme(isValidNonAuxAsciiCapableIme)) {
                 i++;
             }
         }
@@ -67,8 +81,8 @@ public class InputMethodSettingValuesWrapper {
     }
 
     public boolean isEnabledImi(InputMethodInfo inputMethodInfo) {
-        for (InputMethodInfo inputMethodInfo2 : getEnabledInputMethodList()) {
-            if (inputMethodInfo2.getId().equals(inputMethodInfo.getId())) {
+        for (InputMethodInfo id : getEnabledInputMethodList()) {
+            if (id.getId().equals(inputMethodInfo.getId())) {
                 return true;
             }
         }

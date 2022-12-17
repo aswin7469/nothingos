@@ -1,18 +1,21 @@
 package com.android.wifitrackerlib;
 
 import android.net.wifi.ScanResult;
-import java.util.function.ToIntFunction;
-/* loaded from: classes.dex */
-public final /* synthetic */ class StandardWifiEntry$$ExternalSyntheticLambda6 implements ToIntFunction {
-    public static final /* synthetic */ StandardWifiEntry$$ExternalSyntheticLambda6 INSTANCE = new StandardWifiEntry$$ExternalSyntheticLambda6();
+import java.util.function.Consumer;
 
-    private /* synthetic */ StandardWifiEntry$$ExternalSyntheticLambda6() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class StandardWifiEntry$$ExternalSyntheticLambda6 implements Consumer {
+    public final /* synthetic */ StandardWifiEntry f$0;
+    public final /* synthetic */ StringBuilder f$1;
+    public final /* synthetic */ long f$2;
+
+    public /* synthetic */ StandardWifiEntry$$ExternalSyntheticLambda6(StandardWifiEntry standardWifiEntry, StringBuilder sb, long j) {
+        this.f$0 = standardWifiEntry;
+        this.f$1 = sb;
+        this.f$2 = j;
     }
 
-    @Override // java.util.function.ToIntFunction
-    public final int applyAsInt(Object obj) {
-        int lambda$getScanResultDescription$4;
-        lambda$getScanResultDescription$4 = StandardWifiEntry.lambda$getScanResultDescription$4((ScanResult) obj);
-        return lambda$getScanResultDescription$4;
+    public final void accept(Object obj) {
+        this.f$0.lambda$getScanResultDescription$6(this.f$1, this.f$2, (ScanResult) obj);
     }
 }

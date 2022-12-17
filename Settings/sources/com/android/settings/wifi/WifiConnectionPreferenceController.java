@@ -13,7 +13,7 @@ import androidx.lifecycle.OnLifecycleEvent;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.SubSettingLauncher;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settings.wifi.details.WifiNetworkDetailsFragment;
@@ -23,7 +23,7 @@ import com.android.settingslib.wifi.WifiEntryPreference;
 import com.android.wifitrackerlib.WifiEntry;
 import com.android.wifitrackerlib.WifiPickerTracker;
 import java.time.ZoneOffset;
-/* loaded from: classes.dex */
+
 public class WifiConnectionPreferenceController extends AbstractPreferenceController implements WifiPickerTracker.WifiPickerTrackerCallback, LifecycleObserver {
     private int mMetricsCategory;
     private Context mPrefContext;
@@ -35,24 +35,22 @@ public class WifiConnectionPreferenceController extends AbstractPreferenceContro
     private HandlerThread mWorkerThread;
     private int order;
 
-    /* loaded from: classes.dex */
     public interface UpdateListener {
         void onChildrenUpdated();
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "active_wifi_connection";
     }
 
-    @Override // com.android.wifitrackerlib.WifiPickerTracker.WifiPickerTrackerCallback
     public void onNumSavedNetworksChanged() {
     }
 
-    @Override // com.android.wifitrackerlib.WifiPickerTracker.WifiPickerTrackerCallback
     public void onNumSavedSubscriptionsChanged() {
     }
 
+    /* JADX WARNING: type inference failed for: r5v0, types: [com.android.settings.wifi.WifiConnectionPreferenceController$1, java.time.Clock] */
+    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public WifiConnectionPreferenceController(Context context, Lifecycle lifecycle, UpdateListener updateListener, String str, int i, int i2) {
         super(context);
         lifecycle.addObserver(this);
@@ -63,11 +61,12 @@ public class WifiConnectionPreferenceController extends AbstractPreferenceContro
         HandlerThread handlerThread = new HandlerThread("WifiConnPrefCtrl{" + Integer.toHexString(System.identityHashCode(this)) + "}", 10);
         this.mWorkerThread = handlerThread;
         handlerThread.start();
-        this.mWifiPickerTracker = FeatureFactory.getFactory(context).getWifiTrackerLibProvider().createWifiPickerTracker(lifecycle, context, new Handler(Looper.getMainLooper()), this.mWorkerThread.getThreadHandler(), new SimpleClock(ZoneOffset.UTC) { // from class: com.android.settings.wifi.WifiConnectionPreferenceController.1
+        ? r5 = new SimpleClock(ZoneOffset.UTC) {
             public long millis() {
                 return SystemClock.elapsedRealtime();
             }
-        }, 15000L, 10000L, this);
+        };
+        this.mWifiPickerTracker = FeatureFactory.getFactory(context).getWifiTrackerLibProvider().createWifiPickerTracker(lifecycle, context, new Handler(Looper.getMainLooper()), this.mWorkerThread.getThreadHandler(), r5, 15000, 10000, this);
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
@@ -75,12 +74,10 @@ public class WifiConnectionPreferenceController extends AbstractPreferenceContro
         this.mWorkerThread.quit();
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return this.mWifiPickerTracker.getConnectedWifiEntry() != null;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreferenceGroup = (PreferenceGroup) preferenceScreen.findPreference(this.mPreferenceGroupKey);
@@ -88,43 +85,35 @@ public class WifiConnectionPreferenceController extends AbstractPreferenceContro
         update();
     }
 
-    private void updatePreference(final WifiEntry wifiEntry) {
+    private void updatePreference(WifiEntry wifiEntry) {
         WifiEntryPreference wifiEntryPreference = this.mPreference;
         if (wifiEntryPreference != null) {
             this.mPreferenceGroup.removePreference(wifiEntryPreference);
             this.mPreference = null;
         }
-        if (wifiEntry == null || this.mPrefContext == null) {
-            return;
+        if (wifiEntry != null && this.mPrefContext != null) {
+            WifiEntryPreference wifiEntryPreference2 = new WifiEntryPreference(this.mPrefContext, wifiEntry);
+            this.mPreference = wifiEntryPreference2;
+            wifiEntryPreference2.setKey("active_wifi_connection");
+            this.mPreference.refresh();
+            this.mPreference.setOrder(this.order);
+            this.mPreference.setOnPreferenceClickListener(new WifiConnectionPreferenceController$$ExternalSyntheticLambda0(this, wifiEntry));
+            this.mPreferenceGroup.addPreference(this.mPreference);
         }
-        WifiEntryPreference wifiEntryPreference2 = new WifiEntryPreference(this.mPrefContext, wifiEntry);
-        this.mPreference = wifiEntryPreference2;
-        wifiEntryPreference2.setKey("active_wifi_connection");
-        this.mPreference.refresh();
-        this.mPreference.setOrder(this.order);
-        this.mPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() { // from class: com.android.settings.wifi.WifiConnectionPreferenceController$$ExternalSyntheticLambda0
-            @Override // androidx.preference.Preference.OnPreferenceClickListener
-            public final boolean onPreferenceClick(Preference preference) {
-                boolean lambda$updatePreference$0;
-                lambda$updatePreference$0 = WifiConnectionPreferenceController.this.lambda$updatePreference$0(wifiEntry, preference);
-                return lambda$updatePreference$0;
-            }
-        });
-        this.mPreferenceGroup.addPreference(this.mPreference);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ boolean lambda$updatePreference$0(WifiEntry wifiEntry, Preference preference) {
         Bundle bundle = new Bundle();
         bundle.putString("key_chosen_wifientry_key", wifiEntry.getKey());
-        new SubSettingLauncher(this.mPrefContext).setTitleRes(R.string.pref_title_network_details).setDestination(WifiNetworkDetailsFragment.class.getName()).setArguments(bundle).setSourceMetricsCategory(this.mMetricsCategory).launch();
+        new SubSettingLauncher(this.mPrefContext).setTitleRes(R$string.pref_title_network_details).setDestination(WifiNetworkDetailsFragment.class.getName()).setArguments(bundle).setSourceMetricsCategory(this.mMetricsCategory).launch();
         return true;
     }
 
     private void update() {
         WifiEntry connectedWifiEntry = this.mWifiPickerTracker.getConnectedWifiEntry();
         if (connectedWifiEntry == null) {
-            updatePreference(null);
+            updatePreference((WifiEntry) null);
         } else {
             WifiEntryPreference wifiEntryPreference = this.mPreference;
             if (wifiEntryPreference == null || !wifiEntryPreference.getWifiEntry().equals(connectedWifiEntry)) {
@@ -139,12 +128,10 @@ public class WifiConnectionPreferenceController extends AbstractPreferenceContro
         this.mUpdateListener.onChildrenUpdated();
     }
 
-    @Override // com.android.wifitrackerlib.BaseWifiTracker.BaseWifiTrackerCallback
     public void onWifiStateChanged() {
         update();
     }
 
-    @Override // com.android.wifitrackerlib.WifiPickerTracker.WifiPickerTrackerCallback
     public void onWifiEntriesChanged() {
         update();
     }

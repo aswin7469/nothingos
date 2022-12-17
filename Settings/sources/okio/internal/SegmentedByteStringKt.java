@@ -3,8 +3,8 @@ package okio.internal;
 import kotlin.jvm.internal.Intrinsics;
 import okio.SegmentedByteString;
 import org.jetbrains.annotations.NotNull;
+
 /* compiled from: SegmentedByteString.kt */
-/* loaded from: classes2.dex */
 public final class SegmentedByteStringKt {
     public static final int binarySearch(@NotNull int[] iArr, int i, int i2, int i3) {
         Intrinsics.checkNotNullParameter(iArr, "<this>");

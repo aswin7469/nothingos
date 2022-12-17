@@ -9,95 +9,86 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
+
 public class ShortcutPreference extends Preference {
-    private OnClickCallback mClickCallback = null;
     private boolean mChecked = false;
+    private OnClickCallback mClickCallback = null;
     private boolean mSettingsEditable = true;
 
-    /* loaded from: classes.dex */
     public interface OnClickCallback {
         void onSettingsClicked(ShortcutPreference shortcutPreference);
 
         void onToggleClicked(ShortcutPreference shortcutPreference);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public ShortcutPreference(Context context, AttributeSet attributeSet) {
+    ShortcutPreference(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        setLayoutResource(R.layout.accessibility_shortcut_secondary_action);
-        setWidgetLayoutResource(R.layout.preference_widget_primary_switch);
+        setLayoutResource(R$layout.accessibility_shortcut_secondary_action);
+        setWidgetLayoutResource(R$layout.preference_widget_primary_switch);
         setIconSpaceReserved(false);
+        setOnPreferenceClickListener(new ShortcutPreference$$ExternalSyntheticLambda4(this));
     }
 
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: private */
+    public /* synthetic */ boolean lambda$new$0(Preference preference) {
+        callOnSettingsClicked();
+        return true;
+    }
+
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         TypedValue typedValue = new TypedValue();
         getContext().getTheme().resolveAttribute(16843534, typedValue, true);
-        LinearLayout linearLayout = (LinearLayout) preferenceViewHolder.itemView.findViewById(R.id.main_frame);
+        LinearLayout linearLayout = (LinearLayout) preferenceViewHolder.itemView.findViewById(R$id.main_frame);
         int i = 0;
         if (linearLayout != null) {
-            linearLayout.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.accessibility.ShortcutPreference$$ExternalSyntheticLambda2
-                @Override // android.view.View.OnClickListener
-                public final void onClick(View view) {
-                    ShortcutPreference.this.lambda$onBindViewHolder$0(view);
-                }
-            });
+            linearLayout.setOnClickListener(new ShortcutPreference$$ExternalSyntheticLambda0(this));
             linearLayout.setClickable(this.mSettingsEditable);
             linearLayout.setFocusable(this.mSettingsEditable);
             linearLayout.setBackgroundResource(this.mSettingsEditable ? typedValue.resourceId : 0);
         }
-        Switch r1 = (Switch) preferenceViewHolder.itemView.findViewById(R.id.switchWidget);
-        if (r1 != null) {
-            r1.setOnTouchListener(ShortcutPreference$$ExternalSyntheticLambda3.INSTANCE);
-            r1.setContentDescription(getContext().getText(R.string.accessibility_shortcut_settings));
-            r1.setChecked(this.mChecked);
-            r1.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.accessibility.ShortcutPreference$$ExternalSyntheticLambda1
-                @Override // android.view.View.OnClickListener
-                public final void onClick(View view) {
-                    ShortcutPreference.this.lambda$onBindViewHolder$2(view);
-                }
-            });
-            r1.setClickable(this.mSettingsEditable);
-            r1.setFocusable(this.mSettingsEditable);
-            r1.setBackgroundResource(this.mSettingsEditable ? typedValue.resourceId : 0);
+        Switch switchR = (Switch) preferenceViewHolder.itemView.findViewById(R$id.switchWidget);
+        if (switchR != null) {
+            switchR.setOnTouchListener(new ShortcutPreference$$ExternalSyntheticLambda1());
+            switchR.setContentDescription(getContext().getText(R$string.accessibility_shortcut_settings));
+            switchR.setChecked(this.mChecked);
+            switchR.setOnClickListener(new ShortcutPreference$$ExternalSyntheticLambda2(this));
+            switchR.setClickable(this.mSettingsEditable);
+            switchR.setFocusable(this.mSettingsEditable);
+            switchR.setBackgroundResource(this.mSettingsEditable ? typedValue.resourceId : 0);
         }
-        View findViewById = preferenceViewHolder.itemView.findViewById(R.id.divider);
+        View findViewById = preferenceViewHolder.itemView.findViewById(R$id.divider);
         if (findViewById != null) {
             if (!this.mSettingsEditable) {
                 i = 8;
             }
             findViewById.setVisibility(i);
         }
-        preferenceViewHolder.itemView.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.accessibility.ShortcutPreference$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                ShortcutPreference.this.lambda$onBindViewHolder$3(view);
-            }
-        });
+        preferenceViewHolder.itemView.setOnClickListener(new ShortcutPreference$$ExternalSyntheticLambda3(this));
         preferenceViewHolder.itemView.setClickable(!this.mSettingsEditable);
         preferenceViewHolder.itemView.setFocusable(!this.mSettingsEditable);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onBindViewHolder$0(View view) {
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$onBindViewHolder$1(View view) {
         callOnSettingsClicked();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ boolean lambda$onBindViewHolder$1(View view, MotionEvent motionEvent) {
+    /* access modifiers changed from: private */
+    public static /* synthetic */ boolean lambda$onBindViewHolder$2(View view, MotionEvent motionEvent) {
         return motionEvent.getActionMasked() == 2;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onBindViewHolder$2(View view) {
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$onBindViewHolder$3(View view) {
         callOnToggleClicked();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onBindViewHolder$3(View view) {
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$onBindViewHolder$4(View view) {
         callOnToggleClicked();
     }
 

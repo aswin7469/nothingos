@@ -2,15 +2,13 @@ package androidx.fragment.app;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import androidx.core.util.Preconditions;
-import androidx.lifecycle.ViewModelStoreOwner;
-/* loaded from: classes.dex */
+
 public class FragmentController {
     private final FragmentHostCallback<?> mHost;
 
@@ -37,18 +35,6 @@ public class FragmentController {
 
     public void noteStateNotSaved() {
         this.mHost.mFragmentManager.noteStateNotSaved();
-    }
-
-    public Parcelable saveAllState() {
-        return this.mHost.mFragmentManager.saveAllState();
-    }
-
-    public void restoreSaveState(Parcelable parcelable) {
-        FragmentHostCallback<?> fragmentHostCallback = this.mHost;
-        if (!(fragmentHostCallback instanceof ViewModelStoreOwner)) {
-            throw new IllegalStateException("Your FragmentHostCallback must implement ViewModelStoreOwner to call restoreSaveState(). Call restoreAllState()  if you're still using retainNestedNonConfig().");
-        }
-        fragmentHostCallback.mFragmentManager.restoreSaveState(parcelable);
     }
 
     public void dispatchCreate() {

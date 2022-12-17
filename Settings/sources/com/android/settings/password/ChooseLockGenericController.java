@@ -4,10 +4,11 @@ import android.app.admin.PasswordMetrics;
 import android.content.Context;
 import android.os.UserManager;
 import com.android.internal.widget.LockPatternUtils;
-import com.android.settings.R;
+import com.android.settings.R$bool;
+import com.android.settings.R$string;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class ChooseLockGenericController {
     private final int mAppRequestedMinComplexity;
     private final Context mContext;
@@ -29,7 +30,6 @@ public class ChooseLockGenericController {
         this.mUnificationProfileId = i3;
     }
 
-    /* loaded from: classes.dex */
     public static class Builder {
         private int mAppRequestedMinComplexity;
         private final Context mContext;
@@ -86,11 +86,17 @@ public class ChooseLockGenericController {
 
     public boolean isScreenLockVisible(ScreenLockType screenLockType) {
         boolean isManagedProfile = ((UserManager) this.mContext.getSystemService(UserManager.class)).isManagedProfile(this.mUserId);
-        switch (AnonymousClass1.$SwitchMap$com$android$settings$password$ScreenLockType[screenLockType.ordinal()]) {
+        switch (C12641.$SwitchMap$com$android$settings$password$ScreenLockType[screenLockType.ordinal()]) {
             case 1:
-                return !this.mHideInsecureScreenLockTypes && !this.mContext.getResources().getBoolean(R.bool.config_hide_none_security_option) && !isManagedProfile;
+                if (this.mHideInsecureScreenLockTypes || this.mContext.getResources().getBoolean(R$bool.config_hide_none_security_option) || isManagedProfile) {
+                    return false;
+                }
+                return true;
             case 2:
-                return !this.mHideInsecureScreenLockTypes && !this.mContext.getResources().getBoolean(R.bool.config_hide_swipe_security_option) && !isManagedProfile;
+                if (this.mHideInsecureScreenLockTypes || this.mContext.getResources().getBoolean(R$bool.config_hide_swipe_security_option) || isManagedProfile) {
+                    return false;
+                }
+                return true;
             case 3:
                 return this.mManagedPasswordProvider.isManagedPasswordChoosable();
             case 4:
@@ -102,44 +108,69 @@ public class ChooseLockGenericController {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.android.settings.password.ChooseLockGenericController$1  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public static /* synthetic */ class AnonymousClass1 {
+    /* renamed from: com.android.settings.password.ChooseLockGenericController$1 */
+    static /* synthetic */ class C12641 {
         static final /* synthetic */ int[] $SwitchMap$com$android$settings$password$ScreenLockType;
 
+        /* JADX WARNING: Can't wrap try/catch for region: R(14:0|1|2|3|4|5|6|7|8|9|10|11|12|14) */
+        /* JADX WARNING: Failed to process nested try/catch */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:11:0x003e */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0012 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001d */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:7:0x0028 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:9:0x0033 */
         static {
-            int[] iArr = new int[ScreenLockType.values().length];
-            $SwitchMap$com$android$settings$password$ScreenLockType = iArr;
-            try {
-                iArr[ScreenLockType.NONE.ordinal()] = 1;
-            } catch (NoSuchFieldError unused) {
-            }
-            try {
-                $SwitchMap$com$android$settings$password$ScreenLockType[ScreenLockType.SWIPE.ordinal()] = 2;
-            } catch (NoSuchFieldError unused2) {
-            }
-            try {
-                $SwitchMap$com$android$settings$password$ScreenLockType[ScreenLockType.MANAGED.ordinal()] = 3;
-            } catch (NoSuchFieldError unused3) {
-            }
-            try {
-                $SwitchMap$com$android$settings$password$ScreenLockType[ScreenLockType.PIN.ordinal()] = 4;
-            } catch (NoSuchFieldError unused4) {
-            }
-            try {
-                $SwitchMap$com$android$settings$password$ScreenLockType[ScreenLockType.PATTERN.ordinal()] = 5;
-            } catch (NoSuchFieldError unused5) {
-            }
-            try {
-                $SwitchMap$com$android$settings$password$ScreenLockType[ScreenLockType.PASSWORD.ordinal()] = 6;
-            } catch (NoSuchFieldError unused6) {
-            }
+            /*
+                com.android.settings.password.ScreenLockType[] r0 = com.android.settings.password.ScreenLockType.values()
+                int r0 = r0.length
+                int[] r0 = new int[r0]
+                $SwitchMap$com$android$settings$password$ScreenLockType = r0
+                com.android.settings.password.ScreenLockType r1 = com.android.settings.password.ScreenLockType.NONE     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
+                r2 = 1
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                int[] r0 = $SwitchMap$com$android$settings$password$ScreenLockType     // Catch:{ NoSuchFieldError -> 0x001d }
+                com.android.settings.password.ScreenLockType r1 = com.android.settings.password.ScreenLockType.SWIPE     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
+                r2 = 2
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                int[] r0 = $SwitchMap$com$android$settings$password$ScreenLockType     // Catch:{ NoSuchFieldError -> 0x0028 }
+                com.android.settings.password.ScreenLockType r1 = com.android.settings.password.ScreenLockType.MANAGED     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
+                r2 = 3
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
+            L_0x0028:
+                int[] r0 = $SwitchMap$com$android$settings$password$ScreenLockType     // Catch:{ NoSuchFieldError -> 0x0033 }
+                com.android.settings.password.ScreenLockType r1 = com.android.settings.password.ScreenLockType.PIN     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
+                r2 = 4
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0033 }
+            L_0x0033:
+                int[] r0 = $SwitchMap$com$android$settings$password$ScreenLockType     // Catch:{ NoSuchFieldError -> 0x003e }
+                com.android.settings.password.ScreenLockType r1 = com.android.settings.password.ScreenLockType.PATTERN     // Catch:{ NoSuchFieldError -> 0x003e }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x003e }
+                r2 = 5
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x003e }
+            L_0x003e:
+                int[] r0 = $SwitchMap$com$android$settings$password$ScreenLockType     // Catch:{ NoSuchFieldError -> 0x0049 }
+                com.android.settings.password.ScreenLockType r1 = com.android.settings.password.ScreenLockType.PASSWORD     // Catch:{ NoSuchFieldError -> 0x0049 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0049 }
+                r2 = 6
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0049 }
+            L_0x0049:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.android.settings.password.ChooseLockGenericController.C12641.<clinit>():void");
         }
     }
 
     public boolean isScreenLockEnabled(ScreenLockType screenLockType) {
-        return !this.mLockPatternUtils.isCredentialsDisabledForUser(this.mUserId) && screenLockType.maxQuality >= upgradeQuality(0);
+        if (this.mLockPatternUtils.isCredentialsDisabledForUser(this.mUserId) || screenLockType.maxQuality < upgradeQuality(0)) {
+            return false;
+        }
+        return true;
     }
 
     public int upgradeQuality(int i) {
@@ -147,26 +178,25 @@ public class ChooseLockGenericController {
     }
 
     public CharSequence getTitle(ScreenLockType screenLockType) {
-        switch (AnonymousClass1.$SwitchMap$com$android$settings$password$ScreenLockType[screenLockType.ordinal()]) {
+        switch (C12641.$SwitchMap$com$android$settings$password$ScreenLockType[screenLockType.ordinal()]) {
             case 1:
-                return this.mContext.getText(R.string.unlock_set_unlock_off_title);
+                return this.mContext.getText(R$string.unlock_set_unlock_off_title);
             case 2:
-                return this.mContext.getText(R.string.unlock_set_unlock_none_title);
+                return this.mContext.getText(R$string.unlock_set_unlock_none_title);
             case 3:
                 return this.mManagedPasswordProvider.getPickerOptionTitle(false);
             case 4:
-                return this.mContext.getText(R.string.unlock_set_unlock_pin_title);
+                return this.mContext.getText(R$string.unlock_set_unlock_pin_title);
             case 5:
-                return this.mContext.getText(R.string.unlock_set_unlock_pattern_title);
+                return this.mContext.getText(R$string.unlock_set_unlock_pattern_title);
             case 6:
-                return this.mContext.getText(R.string.unlock_set_unlock_password_title);
+                return this.mContext.getText(R$string.unlock_set_unlock_password_title);
             default:
                 return null;
         }
     }
 
     public List<ScreenLockType> getVisibleAndEnabledScreenLockTypes() {
-        ScreenLockType[] values;
         ArrayList arrayList = new ArrayList();
         for (ScreenLockType screenLockType : ScreenLockType.values()) {
             if (isScreenLockVisible(screenLockType) && isScreenLockEnabled(screenLockType)) {

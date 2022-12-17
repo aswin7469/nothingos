@@ -7,51 +7,36 @@ import android.text.TextUtils;
 import android.widget.Switch;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
+import com.android.settings.R$string;
 import com.android.settings.core.TogglePreferenceController;
 import com.android.settings.overlay.FeatureFactory;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
 import com.android.settingslib.widget.MainSwitchPreference;
 import com.android.settingslib.widget.OnMainSwitchChangeListener;
 import java.time.LocalTime;
-/* loaded from: classes.dex */
+
 public class NightDisplayActivationPreferenceController extends TogglePreferenceController implements OnMainSwitchChangeListener {
     private ColorDisplayManager mColorDisplayManager;
     private final MetricsFeatureProvider mMetricsFeatureProvider;
     private MainSwitchPreference mPreference;
     private NightDisplayTimeFormatter mTimeFormatter;
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public boolean isPublicSlice() {
         return true;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -63,17 +48,18 @@ public class NightDisplayActivationPreferenceController extends TogglePreference
         this.mMetricsFeatureProvider = FeatureFactory.getFactory(context).getMetricsFeatureProvider();
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return ColorDisplayManager.isNightDisplayAvailable(this.mContext) ? 1 : 3;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public boolean isSliceable() {
         return TextUtils.equals(getPreferenceKey(), "night_display_activated");
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
+    public int getSliceHighlightMenuRes() {
+        return R$string.menu_key_display;
+    }
+
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         MainSwitchPreference mainSwitchPreference = (MainSwitchPreference) preferenceScreen.findPreference(getPreferenceKey());
@@ -82,45 +68,41 @@ public class NightDisplayActivationPreferenceController extends TogglePreference
         this.mPreference.updateStatus(this.mColorDisplayManager.isNightDisplayActivated());
     }
 
-    @Override // com.android.settingslib.widget.OnMainSwitchChangeListener
-    public void onSwitchChanged(Switch r1, boolean z) {
+    public void onSwitchChanged(Switch switchR, boolean z) {
         if (z != this.mColorDisplayManager.isNightDisplayActivated()) {
             setChecked(z);
         }
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public final void updateState(Preference preference) {
         updateStateInternal();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean isChecked() {
         return this.mColorDisplayManager.isNightDisplayActivated();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean setChecked(boolean z) {
         return this.mColorDisplayManager.setNightDisplayActivated(z);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    /* renamed from: getSummary */
-    public CharSequence mo485getSummary() {
+    public CharSequence getSummary() {
         return this.mTimeFormatter.getAutoModeSummary(this.mContext, this.mColorDisplayManager);
     }
 
     private void updateStateInternal() {
-        LocalTime nightDisplayCustomEndTime;
+        LocalTime localTime;
         boolean isNightDisplayActivated = this.mColorDisplayManager.isNightDisplayActivated();
-        if (this.mColorDisplayManager.getNightDisplayAutoMode() == 1) {
+        int nightDisplayAutoMode = this.mColorDisplayManager.getNightDisplayAutoMode();
+        this.mPreference.setChecked(isNightDisplayActivated);
+        if (nightDisplayAutoMode == 1) {
             NightDisplayTimeFormatter nightDisplayTimeFormatter = this.mTimeFormatter;
             if (isNightDisplayActivated) {
-                nightDisplayCustomEndTime = this.mColorDisplayManager.getNightDisplayCustomStartTime();
+                localTime = this.mColorDisplayManager.getNightDisplayCustomStartTime();
             } else {
-                nightDisplayCustomEndTime = this.mColorDisplayManager.getNightDisplayCustomEndTime();
+                localTime = this.mColorDisplayManager.getNightDisplayCustomEndTime();
             }
-            nightDisplayTimeFormatter.getFormattedTimeString(nightDisplayCustomEndTime);
+            nightDisplayTimeFormatter.getFormattedTimeString(localTime);
         }
     }
 }

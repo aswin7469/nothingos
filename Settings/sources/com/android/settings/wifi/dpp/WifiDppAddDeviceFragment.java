@@ -13,22 +13,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import com.android.settings.R;
+import com.android.settings.R$drawable;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
 import com.google.android.setupcompat.template.FooterButton;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-/* loaded from: classes.dex */
+
 public class WifiDppAddDeviceFragment extends WifiDppQrCodeBaseFragment {
     private Button mChooseDifferentNetwork;
     private OnClickChooseDifferentNetworkListener mClickChooseDifferentNetworkListener;
     private int mLatestStatusCode = 0;
     private ImageView mWifiApPictureView;
 
-    /* loaded from: classes.dex */
     public interface OnClickChooseDifferentNetworkListener {
         void onClickChooseDifferentNetwork();
     }
@@ -37,19 +39,16 @@ public class WifiDppAddDeviceFragment extends WifiDppQrCodeBaseFragment {
         return (i == -3 || i == -1) ? false : true;
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1595;
     }
 
-    @Override // com.android.settings.wifi.dpp.WifiDppQrCodeBaseFragment
-    protected boolean isFooterAvailable() {
+    /* access modifiers changed from: protected */
+    public boolean isFooterAvailable() {
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class EasyConnectConfiguratorStatusCallback extends EasyConnectStatusCallback {
+    private class EasyConnectConfiguratorStatusCallback extends EasyConnectStatusCallback {
         public void onEnrolleeSuccess(int i) {
         }
 
@@ -83,62 +82,53 @@ public class WifiDppAddDeviceFragment extends WifiDppQrCodeBaseFragment {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void showSuccessUi(boolean z) {
-        setHeaderIconImageResource(R.drawable.ic_devices_check_circle_green_32dp);
-        setHeaderTitle(R.string.wifi_dpp_wifi_shared_with_device, new Object[0]);
+        setHeaderIconImageResource(R$drawable.ic_devices_check_circle_green_32dp);
+        setHeaderTitle(R$string.wifi_dpp_wifi_shared_with_device, new Object[0]);
         setProgressBarShown(isEasyConnectHandshaking());
         this.mSummary.setVisibility(4);
-        this.mWifiApPictureView.setImageResource(R.drawable.wifi_dpp_success);
+        this.mWifiApPictureView.setImageResource(R$drawable.wifi_dpp_success);
         this.mChooseDifferentNetwork.setVisibility(4);
-        this.mLeftButton.setText(getContext(), R.string.wifi_dpp_add_another_device);
-        this.mLeftButton.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.wifi.dpp.WifiDppAddDeviceFragment$$ExternalSyntheticLambda1
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                WifiDppAddDeviceFragment.this.lambda$showSuccessUi$0(view);
-            }
-        });
-        this.mRightButton.setText(getContext(), R.string.done);
-        this.mRightButton.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.wifi.dpp.WifiDppAddDeviceFragment$$ExternalSyntheticLambda2
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                WifiDppAddDeviceFragment.this.lambda$showSuccessUi$1(view);
-            }
-        });
+        this.mLeftButton.setText(getContext(), R$string.wifi_dpp_add_another_device);
+        this.mLeftButton.setOnClickListener(new WifiDppAddDeviceFragment$$ExternalSyntheticLambda4(this));
+        this.mRightButton.setText(getContext(), R$string.done);
+        this.mRightButton.setOnClickListener(new WifiDppAddDeviceFragment$$ExternalSyntheticLambda5(this));
         this.mRightButton.setVisibility(0);
         if (!z) {
             this.mLatestStatusCode = 1;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$showSuccessUi$0(View view) {
         getFragmentManager().popBackStack();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$showSuccessUi$1(View view) {
         FragmentActivity activity = getActivity();
         activity.setResult(-1);
         activity.finish();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public Intent getResultIntent(int i, String str, SparseArray<int[]> sparseArray, int[] iArr) {
         Intent intent = new Intent();
         intent.putExtra("android.provider.extra.EASY_CONNECT_ERROR_CODE", i);
         if (!TextUtils.isEmpty(str)) {
             intent.putExtra("android.provider.extra.EASY_CONNECT_ATTEMPTED_SSID", str);
         }
-        if (sparseArray != null && sparseArray.size() != 0) {
+        if (!(sparseArray == null || sparseArray.size() == 0)) {
             JSONObject jSONObject = new JSONObject();
             int i2 = 0;
             while (true) {
                 try {
                     int keyAt = sparseArray.keyAt(i2);
                     JSONArray jSONArray = new JSONArray();
-                    for (int i3 : sparseArray.get(keyAt)) {
-                        jSONArray.put(i3);
+                    int[] iArr2 = sparseArray.get(keyAt);
+                    for (int put : iArr2) {
+                        jSONArray.put(put);
                     }
                     try {
                         jSONObject.put(Integer.toString(keyAt), jSONArray);
@@ -146,92 +136,88 @@ public class WifiDppAddDeviceFragment extends WifiDppQrCodeBaseFragment {
                     } catch (JSONException unused) {
                         jSONObject = new JSONObject();
                         intent.putExtra("android.provider.extra.EASY_CONNECT_CHANNEL_LIST", jSONObject.toString());
-                        if (iArr != null) {
-                            intent.putExtra("android.provider.extra.EASY_CONNECT_BAND_LIST", iArr);
-                        }
+                        intent.putExtra("android.provider.extra.EASY_CONNECT_BAND_LIST", iArr);
                         return intent;
                     }
                 } catch (ArrayIndexOutOfBoundsException unused2) {
+                    intent.putExtra("android.provider.extra.EASY_CONNECT_CHANNEL_LIST", jSONObject.toString());
+                    intent.putExtra("android.provider.extra.EASY_CONNECT_BAND_LIST", iArr);
+                    return intent;
                 }
             }
         }
-        if (iArr != null && iArr.length != 0) {
+        if (!(iArr == null || iArr.length == 0)) {
             intent.putExtra("android.provider.extra.EASY_CONNECT_BAND_LIST", iArr);
         }
         return intent;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public void showErrorUi(int i, final Intent intent, boolean z) {
-        CharSequence text;
+    /* access modifiers changed from: private */
+    public void showErrorUi(int i, Intent intent, boolean z) {
+        CharSequence charSequence;
         int i2 = 0;
         switch (i) {
             case -12:
-                text = getText(R.string.wifi_dpp_failure_enrollee_rejected_configuration);
+                charSequence = getText(R$string.wifi_dpp_failure_enrollee_rejected_configuration);
                 break;
             case -11:
-                text = getText(R.string.wifi_dpp_failure_enrollee_authentication);
+                charSequence = getText(R$string.wifi_dpp_failure_enrollee_authentication);
                 break;
             case -10:
-                text = getText(R.string.wifi_dpp_failure_cannot_find_network);
+                charSequence = getText(R$string.wifi_dpp_failure_cannot_find_network);
                 break;
             case -9:
                 throw new IllegalStateException("Wi-Fi DPP configurator used a non-PSK/non-SAEnetwork to handshake");
             case -8:
-                text = getString(R.string.wifi_dpp_failure_not_supported, getSsid());
+                charSequence = getString(R$string.wifi_dpp_failure_not_supported, getSsid());
                 break;
             case -7:
-                text = getText(R.string.wifi_dpp_failure_generic);
+                charSequence = getText(R$string.wifi_dpp_failure_generic);
                 break;
             case -6:
-                text = getText(R.string.wifi_dpp_failure_timeout);
+                charSequence = getText(R$string.wifi_dpp_failure_timeout);
                 break;
             case -5:
-                if (z) {
-                    return;
-                }
-                if (i == this.mLatestStatusCode) {
+                if (!z) {
+                    if (i != this.mLatestStatusCode) {
+                        this.mLatestStatusCode = i;
+                        ((WifiManager) getContext().getSystemService(WifiManager.class)).stopEasyConnectSession();
+                        startWifiDppConfiguratorInitiator();
+                        return;
+                    }
                     throw new IllegalStateException("Tried restarting EasyConnectSession but stillreceiving EASY_CONNECT_EVENT_FAILURE_BUSY");
                 }
-                this.mLatestStatusCode = i;
-                ((WifiManager) getContext().getSystemService(WifiManager.class)).stopEasyConnectSession();
-                startWifiDppConfiguratorInitiator();
                 return;
             case -4:
-                text = getText(R.string.wifi_dpp_failure_authentication_or_configuration);
+                charSequence = getText(R$string.wifi_dpp_failure_authentication_or_configuration);
                 break;
             case -3:
-                text = getText(R.string.wifi_dpp_failure_not_compatible);
+                charSequence = getText(R$string.wifi_dpp_failure_not_compatible);
                 break;
             case -2:
-                text = getText(R.string.wifi_dpp_failure_authentication_or_configuration);
+                charSequence = getText(R$string.wifi_dpp_failure_authentication_or_configuration);
                 break;
             case -1:
-                text = getText(R.string.wifi_dpp_qr_code_is_not_valid_format);
+                charSequence = getText(R$string.wifi_dpp_qr_code_is_not_valid_format);
                 break;
             default:
                 throw new IllegalStateException("Unexpected Wi-Fi DPP error");
         }
-        setHeaderTitle(R.string.wifi_dpp_could_not_add_device, new Object[0]);
-        this.mSummary.setText(text);
-        this.mWifiApPictureView.setImageResource(R.drawable.wifi_dpp_error);
+        setHeaderTitle(R$string.wifi_dpp_could_not_add_device, new Object[0]);
+        this.mSummary.setText(charSequence);
+        this.mWifiApPictureView.setImageResource(R$drawable.wifi_dpp_error);
         this.mChooseDifferentNetwork.setVisibility(4);
         FooterButton footerButton = this.mLeftButton;
         if (hasRetryButton(i)) {
-            this.mRightButton.setText(getContext(), R.string.retry);
+            this.mRightButton.setText(getContext(), R$string.retry);
         } else {
-            this.mRightButton.setText(getContext(), R.string.done);
+            this.mRightButton.setText(getContext(), R$string.done);
             footerButton = this.mRightButton;
             this.mLeftButton.setVisibility(4);
         }
-        footerButton.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.wifi.dpp.WifiDppAddDeviceFragment$$ExternalSyntheticLambda5
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                WifiDppAddDeviceFragment.this.lambda$showErrorUi$2(intent, view);
-            }
-        });
+        footerButton.setOnClickListener(new WifiDppAddDeviceFragment$$ExternalSyntheticLambda6(this, intent));
         if (isEasyConnectHandshaking()) {
-            this.mSummary.setText(R.string.wifi_dpp_sharing_wifi_with_this_device);
+            this.mSummary.setText(R$string.wifi_dpp_sharing_wifi_with_this_device);
         }
         setProgressBarShown(isEasyConnectHandshaking());
         FooterButton footerButton2 = this.mRightButton;
@@ -244,80 +230,56 @@ public class WifiDppAddDeviceFragment extends WifiDppQrCodeBaseFragment {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$showErrorUi$2(Intent intent, View view) {
         getActivity().setResult(0, intent);
         getActivity().finish();
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         if (bundle != null) {
             this.mLatestStatusCode = bundle.getInt("key_latest_status_code");
         }
-        final WifiDppInitiatorViewModel wifiDppInitiatorViewModel = (WifiDppInitiatorViewModel) ViewModelProviders.of(this).get(WifiDppInitiatorViewModel.class);
-        wifiDppInitiatorViewModel.getStatusCode().observe(this, new Observer() { // from class: com.android.settings.wifi.dpp.WifiDppAddDeviceFragment$$ExternalSyntheticLambda6
-            @Override // androidx.lifecycle.Observer
-            public final void onChanged(Object obj) {
-                WifiDppAddDeviceFragment.this.lambda$onCreate$3(wifiDppInitiatorViewModel, (Integer) obj);
-            }
-        });
+        WifiDppInitiatorViewModel wifiDppInitiatorViewModel = (WifiDppInitiatorViewModel) ViewModelProviders.m6of((Fragment) this).get(WifiDppInitiatorViewModel.class);
+        wifiDppInitiatorViewModel.getStatusCode().observe(this, new WifiDppAddDeviceFragment$$ExternalSyntheticLambda0(this, wifiDppInitiatorViewModel));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onCreate$3(WifiDppInitiatorViewModel wifiDppInitiatorViewModel, Integer num) {
-        if (wifiDppInitiatorViewModel.isWifiDppHandshaking()) {
-            return;
-        }
-        int intValue = num.intValue();
-        if (intValue == 1) {
-            new EasyConnectConfiguratorStatusCallback().onConfiguratorSuccess(intValue);
-        } else {
-            new EasyConnectConfiguratorStatusCallback().onFailure(intValue, wifiDppInitiatorViewModel.getTriedSsid(), wifiDppInitiatorViewModel.getTriedChannels(), wifiDppInitiatorViewModel.getBandArray());
+        if (!wifiDppInitiatorViewModel.isWifiDppHandshaking()) {
+            int intValue = num.intValue();
+            if (intValue == 1) {
+                new EasyConnectConfiguratorStatusCallback().onConfiguratorSuccess(intValue);
+            } else {
+                new EasyConnectConfiguratorStatusCallback().onFailure(intValue, wifiDppInitiatorViewModel.getTriedSsid(), wifiDppInitiatorViewModel.getTriedChannels(), wifiDppInitiatorViewModel.getBandArray());
+            }
         }
     }
 
-    @Override // androidx.fragment.app.Fragment
     public final View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
-        return layoutInflater.inflate(R.layout.wifi_dpp_add_device_fragment, viewGroup, false);
+        return layoutInflater.inflate(R$layout.wifi_dpp_add_device_fragment, viewGroup, false);
     }
 
-    @Override // com.android.settings.wifi.dpp.WifiDppQrCodeBaseFragment, androidx.fragment.app.Fragment
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
-        setHeaderIconImageResource(R.drawable.ic_devices_other_32dp);
+        setHeaderIconImageResource(R$drawable.ic_devices_other_32dp);
         String information = ((WifiDppConfiguratorActivity) getActivity()).getWifiDppQrCode().getInformation();
         int i = 0;
         if (TextUtils.isEmpty(information)) {
-            setHeaderTitle(R.string.wifi_dpp_device_found, new Object[0]);
+            setHeaderTitle(R$string.wifi_dpp_device_found, new Object[0]);
         } else {
             setHeaderTitle(information);
         }
         updateSummary();
-        this.mWifiApPictureView = (ImageView) view.findViewById(R.id.wifi_ap_picture_view);
-        Button button = (Button) view.findViewById(R.id.choose_different_network);
+        this.mWifiApPictureView = (ImageView) view.findViewById(R$id.wifi_ap_picture_view);
+        Button button = (Button) view.findViewById(R$id.choose_different_network);
         this.mChooseDifferentNetwork = button;
-        button.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.wifi.dpp.WifiDppAddDeviceFragment$$ExternalSyntheticLambda4
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view2) {
-                WifiDppAddDeviceFragment.this.lambda$onViewCreated$4(view2);
-            }
-        });
-        this.mLeftButton.setText(getContext(), R.string.cancel);
-        this.mLeftButton.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.wifi.dpp.WifiDppAddDeviceFragment$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view2) {
-                WifiDppAddDeviceFragment.this.lambda$onViewCreated$5(view2);
-            }
-        });
-        this.mRightButton.setText(getContext(), R.string.wifi_dpp_share_wifi);
-        this.mRightButton.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.wifi.dpp.WifiDppAddDeviceFragment$$ExternalSyntheticLambda3
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view2) {
-                WifiDppAddDeviceFragment.this.lambda$onViewCreated$6(view2);
-            }
-        });
+        button.setOnClickListener(new WifiDppAddDeviceFragment$$ExternalSyntheticLambda1(this));
+        this.mLeftButton.setText(getContext(), R$string.cancel);
+        this.mLeftButton.setOnClickListener(new WifiDppAddDeviceFragment$$ExternalSyntheticLambda2(this));
+        this.mRightButton.setText(getContext(), R$string.wifi_dpp_share_wifi);
+        this.mRightButton.setOnClickListener(new WifiDppAddDeviceFragment$$ExternalSyntheticLambda3(this));
         if (bundle != null) {
             int i2 = this.mLatestStatusCode;
             if (i2 == 1) {
@@ -330,22 +292,22 @@ public class WifiDppAddDeviceFragment extends WifiDppQrCodeBaseFragment {
                 }
                 footerButton.setVisibility(i);
             } else {
-                showErrorUi(i2, null, true);
+                showErrorUi(i2, (Intent) null, true);
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onViewCreated$4(View view) {
         this.mClickChooseDifferentNetworkListener.onClickChooseDifferentNetwork();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onViewCreated$5(View view) {
         getActivity().finish();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onViewCreated$6(View view) {
         setProgressBarShown(true);
         this.mRightButton.setVisibility(4);
@@ -353,7 +315,6 @@ public class WifiDppAddDeviceFragment extends WifiDppQrCodeBaseFragment {
         updateSummary();
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onSaveInstanceState(Bundle bundle) {
         bundle.putInt("key_latest_status_code", this.mLatestStatusCode);
         super.onSaveInstanceState(bundle);
@@ -361,37 +322,35 @@ public class WifiDppAddDeviceFragment extends WifiDppQrCodeBaseFragment {
 
     private String getSsid() {
         WifiNetworkConfig wifiNetworkConfig = ((WifiDppConfiguratorActivity) getActivity()).getWifiNetworkConfig();
-        if (!WifiNetworkConfig.isValidConfig(wifiNetworkConfig)) {
-            throw new IllegalStateException("Invalid Wi-Fi network for configuring");
+        if (WifiNetworkConfig.isValidConfig(wifiNetworkConfig)) {
+            return wifiNetworkConfig.getSsid();
         }
-        return wifiNetworkConfig.getSsid();
+        throw new IllegalStateException("Invalid Wi-Fi network for configuring");
     }
 
     private void startWifiDppConfiguratorInitiator() {
-        ((WifiDppInitiatorViewModel) ViewModelProviders.of(this).get(WifiDppInitiatorViewModel.class)).startEasyConnectAsConfiguratorInitiator(((WifiDppConfiguratorActivity) getActivity()).getWifiDppQrCode().getQrCode(), ((WifiDppConfiguratorActivity) getActivity()).getWifiNetworkConfig().getNetworkId());
+        ((WifiDppInitiatorViewModel) ViewModelProviders.m6of((Fragment) this).get(WifiDppInitiatorViewModel.class)).startEasyConnectAsConfiguratorInitiator(((WifiDppConfiguratorActivity) getActivity()).getWifiDppQrCode().getQrCode(), ((WifiDppConfiguratorActivity) getActivity()).getWifiNetworkConfig().getNetworkId());
     }
 
-    @Override // com.android.settings.core.InstrumentedFragment, com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         this.mClickChooseDifferentNetworkListener = (OnClickChooseDifferentNetworkListener) context;
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onDetach() {
         this.mClickChooseDifferentNetworkListener = null;
         super.onDetach();
     }
 
     private boolean isEasyConnectHandshaking() {
-        return ((WifiDppInitiatorViewModel) ViewModelProviders.of(this).get(WifiDppInitiatorViewModel.class)).isWifiDppHandshaking();
+        return ((WifiDppInitiatorViewModel) ViewModelProviders.m6of((Fragment) this).get(WifiDppInitiatorViewModel.class)).isWifiDppHandshaking();
     }
 
     private void updateSummary() {
         if (isEasyConnectHandshaking()) {
-            this.mSummary.setText(R.string.wifi_dpp_sharing_wifi_with_this_device);
-        } else {
-            this.mSummary.setText(getString(R.string.wifi_dpp_add_device_to_wifi, getSsid()));
+            this.mSummary.setText(R$string.wifi_dpp_sharing_wifi_with_this_device);
+            return;
         }
+        this.mSummary.setText(getString(R$string.wifi_dpp_add_device_to_wifi, getSsid()));
     }
 }

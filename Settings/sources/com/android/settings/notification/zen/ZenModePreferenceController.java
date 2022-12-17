@@ -11,56 +11,42 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import com.android.settings.core.BasePreferenceController;
 import com.android.settings.notification.zen.ZenModeSettings;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnPause;
 import com.android.settingslib.core.lifecycle.events.OnResume;
-/* loaded from: classes.dex */
+
 public class ZenModePreferenceController extends BasePreferenceController implements LifecycleObserver, OnResume, OnPause {
     private SettingObserver mSettingObserver;
     private ZenModeSettings.SummaryBuilder mSummaryBuilder;
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return 1;
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -70,13 +56,11 @@ public class ZenModePreferenceController extends BasePreferenceController implem
         this.mSummaryBuilder = new ZenModeSettings.SummaryBuilder(context);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mSettingObserver = new SettingObserver(preferenceScreen.findPreference(getPreferenceKey()));
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnResume
     public void onResume() {
         SettingObserver settingObserver = this.mSettingObserver;
         if (settingObserver != null) {
@@ -84,7 +68,6 @@ public class ZenModePreferenceController extends BasePreferenceController implem
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnPause
     public void onPause() {
         SettingObserver settingObserver = this.mSettingObserver;
         if (settingObserver != null) {
@@ -92,19 +75,17 @@ public class ZenModePreferenceController extends BasePreferenceController implem
         }
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         if (preference.isEnabled()) {
-            preference.setSummary(this.mSummaryBuilder.getSoundSummary());
+            preference.setSummary((CharSequence) this.mSummaryBuilder.getSoundSummary());
         }
     }
 
-    /* loaded from: classes.dex */
     class SettingObserver extends ContentObserver {
-        private final Preference mPreference;
-        private final Uri ZEN_MODE_URI = Settings.Global.getUriFor("zen_mode");
         private final Uri ZEN_MODE_CONFIG_ETAG_URI = Settings.Global.getUriFor("zen_mode_config_etag");
+        private final Uri ZEN_MODE_URI = Settings.Global.getUriFor("zen_mode");
+        private final Preference mPreference;
 
         public SettingObserver(Preference preference) {
             super(new Handler());
@@ -120,7 +101,6 @@ public class ZenModePreferenceController extends BasePreferenceController implem
             contentResolver.unregisterContentObserver(this);
         }
 
-        @Override // android.database.ContentObserver
         public void onChange(boolean z, Uri uri) {
             super.onChange(z, uri);
             if (this.ZEN_MODE_URI.equals(uri)) {

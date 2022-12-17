@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:gravity="center_horizontal" android:orientation="vertical" android:clipChildren="false" android:layout_width="match_parent" android:layout_height="wrap_content">
+    <androidx.viewpager.widget.ViewPager android:id="@+id/vp_content" android:clipChildren="false" android:layout_width="match_parent" android:layout_height="375dp" android:layout_marginTop="20dp" android:layout_weight="1"/>
+    <TextView android:textSize="16sp" android:textColor="?android:attr/textColorSecondary" android:id="@+id/tv_ringtone_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="32dp"/>
+    <TextView android:textSize="20sp" android:textColor="?android:attr/textColorSecondary" android:id="@+id/tv_ringtone_index" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:fontFamily="NDot57"/>
+</LinearLayout>

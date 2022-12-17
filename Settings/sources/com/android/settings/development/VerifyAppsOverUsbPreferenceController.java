@@ -11,21 +11,18 @@ import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.RestrictedLockUtilsInternal;
 import com.android.settingslib.RestrictedSwitchPreference;
 import com.android.settingslib.development.DeveloperOptionsPreferenceController;
-/* loaded from: classes.dex */
+
 public class VerifyAppsOverUsbPreferenceController extends DeveloperOptionsPreferenceController implements Preference.OnPreferenceChangeListener, AdbOnChangeListener, PreferenceControllerMixin {
     static final int SETTING_VALUE_OFF = 0;
     static final int SETTING_VALUE_ON = 1;
     private final PackageManager mPackageManager;
     private final RestrictedLockUtilsDelegate mRestrictedLockUtils = new RestrictedLockUtilsDelegate();
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "verify_apps_over_usb";
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public class RestrictedLockUtilsDelegate {
+    class RestrictedLockUtilsDelegate {
         RestrictedLockUtilsDelegate() {
         }
 
@@ -39,24 +36,21 @@ public class VerifyAppsOverUsbPreferenceController extends DeveloperOptionsPrefe
         this.mPackageManager = context.getPackageManager();
     }
 
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return Settings.Global.getInt(this.mContext.getContentResolver(), "verifier_setting_visible", 1) > 0;
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         Settings.Global.putInt(this.mContext.getContentResolver(), "verifier_verify_adb_installs", ((Boolean) obj).booleanValue() ? 1 : 0);
         return true;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         RestrictedSwitchPreference restrictedSwitchPreference = (RestrictedSwitchPreference) preference;
         boolean z = false;
         if (!shouldBeEnabled()) {
             restrictedSwitchPreference.setChecked(false);
-            restrictedSwitchPreference.setDisabledByAdmin(null);
+            restrictedSwitchPreference.setDisabledByAdmin((RestrictedLockUtils.EnforcedAdmin) null);
             restrictedSwitchPreference.setEnabled(false);
             return;
         }
@@ -73,15 +67,13 @@ public class VerifyAppsOverUsbPreferenceController extends DeveloperOptionsPrefe
         restrictedSwitchPreference.setChecked(z);
     }
 
-    @Override // com.android.settings.development.AdbOnChangeListener
     public void onAdbSettingChanged() {
         if (isAvailable()) {
             updateState(this.mPreference);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController
+    /* access modifiers changed from: protected */
     public void onDeveloperOptionsSwitchEnabled() {
         super.onDeveloperOptionsSwitchEnabled();
         updateState(this.mPreference);

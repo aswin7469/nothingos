@@ -3,51 +3,52 @@ package com.google.android.setupdesign.template;
 import android.util.Log;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.setupdesign.template.RequireScrollMixin;
-/* loaded from: classes2.dex */
+
 public class RecyclerViewScrollHandlingDelegate implements RequireScrollMixin.ScrollHandlingDelegate {
     private final RecyclerView recyclerView;
-    private final RequireScrollMixin requireScrollMixin;
+    /* access modifiers changed from: private */
+    public final RequireScrollMixin requireScrollMixin;
 
-    public RecyclerViewScrollHandlingDelegate(RequireScrollMixin requireScrollMixin, RecyclerView recyclerView) {
-        this.requireScrollMixin = requireScrollMixin;
-        this.recyclerView = recyclerView;
+    public RecyclerViewScrollHandlingDelegate(RequireScrollMixin requireScrollMixin2, RecyclerView recyclerView2) {
+        this.requireScrollMixin = requireScrollMixin2;
+        this.recyclerView = recyclerView2;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public boolean canScrollDown() {
-        RecyclerView recyclerView = this.recyclerView;
-        if (recyclerView != null) {
-            int computeVerticalScrollOffset = recyclerView.computeVerticalScrollOffset();
-            int computeVerticalScrollRange = this.recyclerView.computeVerticalScrollRange() - this.recyclerView.computeVerticalScrollExtent();
-            return computeVerticalScrollRange != 0 && computeVerticalScrollOffset < computeVerticalScrollRange - 1;
+        RecyclerView recyclerView2 = this.recyclerView;
+        if (recyclerView2 == null) {
+            return false;
         }
-        return false;
+        int computeVerticalScrollOffset = recyclerView2.computeVerticalScrollOffset();
+        int computeVerticalScrollRange = this.recyclerView.computeVerticalScrollRange() - this.recyclerView.computeVerticalScrollExtent();
+        if (computeVerticalScrollRange == 0 || computeVerticalScrollOffset >= computeVerticalScrollRange - 1) {
+            return false;
+        }
+        return true;
     }
 
-    @Override // com.google.android.setupdesign.template.RequireScrollMixin.ScrollHandlingDelegate
     public void startListening() {
-        RecyclerView recyclerView = this.recyclerView;
-        if (recyclerView != null) {
-            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() { // from class: com.google.android.setupdesign.template.RecyclerViewScrollHandlingDelegate.1
-                @Override // androidx.recyclerview.widget.RecyclerView.OnScrollListener
-                public void onScrolled(RecyclerView recyclerView2, int i, int i2) {
+        RecyclerView recyclerView2 = this.recyclerView;
+        if (recyclerView2 != null) {
+            recyclerView2.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                public void onScrolled(RecyclerView recyclerView, int i, int i2) {
                     RecyclerViewScrollHandlingDelegate.this.requireScrollMixin.notifyScrollabilityChange(RecyclerViewScrollHandlingDelegate.this.canScrollDown());
                 }
             });
-            if (!canScrollDown()) {
+            if (canScrollDown()) {
+                this.requireScrollMixin.notifyScrollabilityChange(true);
                 return;
             }
-            this.requireScrollMixin.notifyScrollabilityChange(true);
             return;
         }
         Log.w("RVRequireScrollMixin", "Cannot require scroll. Recycler view is null.");
     }
 
-    @Override // com.google.android.setupdesign.template.RequireScrollMixin.ScrollHandlingDelegate
     public void pageScrollDown() {
-        RecyclerView recyclerView = this.recyclerView;
-        if (recyclerView != null) {
-            this.recyclerView.smoothScrollBy(0, recyclerView.getHeight());
+        RecyclerView recyclerView2 = this.recyclerView;
+        if (recyclerView2 != null) {
+            this.recyclerView.smoothScrollBy(0, recyclerView2.getHeight());
         }
     }
 }

@@ -5,7 +5,7 @@ import android.telecom.TelecomManager;
 import android.telephony.SubscriptionManager;
 import android.telephony.ims.ImsException;
 import android.util.Log;
-/* loaded from: classes.dex */
+
 public class WifiCallingQueryImsState extends ImsQueryController {
     private Context mContext;
     private int mSubId;
@@ -16,7 +16,8 @@ public class WifiCallingQueryImsState extends ImsQueryController {
         this.mSubId = i;
     }
 
-    boolean isEnabledByUser(int i) {
+    /* access modifiers changed from: package-private */
+    public boolean isEnabledByUser(int i) {
         if (!SubscriptionManager.isValidSubscriptionId(i)) {
             return false;
         }
@@ -40,25 +41,29 @@ public class WifiCallingQueryImsState extends ImsQueryController {
     }
 
     public boolean isReadyToWifiCalling() {
-        if (SubscriptionManager.isValidSubscriptionId(this.mSubId) && isWifiCallingProvisioned()) {
-            try {
-                return isServiceStateReady(this.mSubId);
-            } catch (ImsException | IllegalArgumentException | InterruptedException e) {
-                Log.w("WifiCallingQueryImsState", "fail to get WFC service status. subId=" + this.mSubId, e);
-                return false;
-            }
+        if (!SubscriptionManager.isValidSubscriptionId(this.mSubId) || !isWifiCallingProvisioned()) {
+            return false;
         }
-        return false;
+        try {
+            return isServiceStateReady(this.mSubId);
+        } catch (ImsException | IllegalArgumentException | InterruptedException e) {
+            Log.w("WifiCallingQueryImsState", "fail to get WFC service status. subId=" + this.mSubId, e);
+            return false;
+        }
     }
 
     public boolean isAllowUserControl() {
         if (!SubscriptionManager.isValidSubscriptionId(this.mSubId)) {
             return false;
         }
-        return !isTtyEnabled(this.mContext) || isTtyOnVolteEnabled(this.mSubId);
+        if (!isTtyEnabled(this.mContext) || isTtyOnVolteEnabled(this.mSubId)) {
+            return true;
+        }
+        return false;
     }
 
-    boolean isTtyEnabled(Context context) {
+    /* access modifiers changed from: package-private */
+    public boolean isTtyEnabled(Context context) {
         return ((TelecomManager) context.getSystemService(TelecomManager.class)).getCurrentTtyMode() != 0;
     }
 

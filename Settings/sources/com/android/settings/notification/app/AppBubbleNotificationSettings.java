@@ -1,9 +1,13 @@
 package com.android.settings.notification.app;
 
+import android.app.NotificationChannel;
+import android.app.NotificationChannelGroup;
 import android.content.Context;
+import android.content.pm.ShortcutInfo;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.Log;
-import com.android.settings.R;
+import com.android.settings.R$xml;
 import com.android.settings.notification.AppBubbleListPreferenceController;
 import com.android.settings.notification.NotificationBackend;
 import com.android.settings.notification.app.GlobalBubblePermissionObserverMixin;
@@ -12,43 +16,38 @@ import com.android.settings.search.BaseSearchIndexProvider;
 import com.android.settingslib.core.AbstractPreferenceController;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class AppBubbleNotificationSettings extends NotificationSettings implements GlobalBubblePermissionObserverMixin.Listener {
-    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider() { // from class: com.android.settings.notification.app.AppBubbleNotificationSettings.1
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // com.android.settings.search.BaseSearchIndexProvider
+    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider() {
+        /* access modifiers changed from: protected */
         public boolean isPageSearchEnabled(Context context) {
             return false;
         }
 
-        @Override // com.android.settings.search.BaseSearchIndexProvider
         public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
-            return new ArrayList(AppBubbleNotificationSettings.getPreferenceControllers(context, null, null));
+            return new ArrayList(AppBubbleNotificationSettings.getPreferenceControllers(context, (AppBubbleNotificationSettings) null, (NotificationSettings.DependentFieldListener) null));
         }
     };
     private GlobalBubblePermissionObserverMixin mObserverMixin;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "AppBubNotiSettings";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1700;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.app_bubble_notification_settings;
+        return R$xml.app_bubble_notification_settings;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment
-    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
-        ((NotificationSettings) this).mControllers = getPreferenceControllers(context, this, this.mDependentFieldListener);
-        return new ArrayList(((NotificationSettings) this).mControllers);
+    /* access modifiers changed from: protected */
+    public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+        this.mControllers = getPreferenceControllers(context, this, this.mDependentFieldListener);
+        return new ArrayList(this.mControllers);
     }
 
     protected static List<NotificationPreferenceController> getPreferenceControllers(Context context, AppBubbleNotificationSettings appBubbleNotificationSettings, NotificationSettings.DependentFieldListener dependentFieldListener) {
@@ -59,12 +58,10 @@ public class AppBubbleNotificationSettings extends NotificationSettings implemen
         return arrayList;
     }
 
-    @Override // com.android.settings.notification.app.GlobalBubblePermissionObserverMixin.Listener
     public void onGlobalBubblePermissionChanged() {
         updatePreferenceStates();
     }
 
-    @Override // com.android.settings.notification.app.NotificationSettings, com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
         if (this.mUid < 0 || TextUtils.isEmpty(this.mPkg) || this.mPkgInfo == null) {
@@ -72,9 +69,9 @@ public class AppBubbleNotificationSettings extends NotificationSettings implemen
             finish();
             return;
         }
-        for (NotificationPreferenceController notificationPreferenceController : ((NotificationSettings) this).mControllers) {
-            notificationPreferenceController.onResume(this.mAppRow, null, null, null, null, this.mSuspendedAppsAdmin, null);
-            notificationPreferenceController.displayPreference(getPreferenceScreen());
+        for (NotificationPreferenceController next : this.mControllers) {
+            next.onResume(this.mAppRow, (NotificationChannel) null, (NotificationChannelGroup) null, (Drawable) null, (ShortcutInfo) null, this.mSuspendedAppsAdmin, (List<String>) null);
+            next.displayPreference(getPreferenceScreen());
         }
         updatePreferenceStates();
         GlobalBubblePermissionObserverMixin globalBubblePermissionObserverMixin = new GlobalBubblePermissionObserverMixin(getContext(), this);
@@ -82,7 +79,6 @@ public class AppBubbleNotificationSettings extends NotificationSettings implemen
         globalBubblePermissionObserverMixin.onStart();
     }
 
-    @Override // com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onPause() {
         this.mObserverMixin.onStop();
         super.onPause();

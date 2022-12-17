@@ -12,138 +12,107 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.UserHandle;
 import android.provider.Settings;
+import android.service.autofill.AutofillServiceInfo;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
 import com.android.internal.content.PackageMonitor;
-import com.android.settings.R;
+import com.android.settings.R$drawable;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.applications.defaultapps.DefaultAppPickerFragment;
-import com.android.settings.applications.defaultapps.DefaultAutofillPicker;
 import com.android.settingslib.applications.DefaultAppInfo;
 import com.android.settingslib.utils.ThreadUtils;
 import com.android.settingslib.widget.CandidateInfo;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class DefaultAutofillPicker extends DefaultAppPickerFragment {
     static final Intent AUTOFILL_PROBE = new Intent("android.service.autofill.AutofillService");
-    private DialogInterface.OnClickListener mCancelListener;
-    private final PackageMonitor mSettingsPackageMonitor = new AnonymousClass1();
+    /* access modifiers changed from: private */
+    public DialogInterface.OnClickListener mCancelListener;
+    private final PackageMonitor mSettingsPackageMonitor = new PackageMonitor() {
+        /* access modifiers changed from: private */
+        public /* synthetic */ void lambda$onPackageAdded$0() {
+            DefaultAutofillPicker.this.update();
+        }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
+        public void onPackageAdded(String str, int i) {
+            ThreadUtils.postOnMainThread(new DefaultAutofillPicker$1$$ExternalSyntheticLambda1(this));
+        }
+
+        /* access modifiers changed from: private */
+        public /* synthetic */ void lambda$onPackageModified$1() {
+            DefaultAutofillPicker.this.update();
+        }
+
+        public void onPackageModified(String str) {
+            ThreadUtils.postOnMainThread(new DefaultAutofillPicker$1$$ExternalSyntheticLambda2(this));
+        }
+
+        /* access modifiers changed from: private */
+        public /* synthetic */ void lambda$onPackageRemoved$2() {
+            DefaultAutofillPicker.this.update();
+        }
+
+        public void onPackageRemoved(String str, int i) {
+            ThreadUtils.postOnMainThread(new DefaultAutofillPicker$1$$ExternalSyntheticLambda0(this));
+        }
+    };
+
     public int getMetricsCategory() {
         return 792;
     }
 
-    @Override // com.android.settings.widget.RadioButtonPickerFragment
-    protected boolean shouldShowItemNone() {
+    /* access modifiers changed from: protected */
+    public boolean shouldShowItemNone() {
         return true;
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        final FragmentActivity activity = getActivity();
-        if (activity != null && activity.getIntent().getStringExtra("package_name") != null) {
-            this.mCancelListener = new DialogInterface.OnClickListener() { // from class: com.android.settings.applications.defaultapps.DefaultAutofillPicker$$ExternalSyntheticLambda0
-                @Override // android.content.DialogInterface.OnClickListener
-                public final void onClick(DialogInterface dialogInterface, int i) {
-                    DefaultAutofillPicker.lambda$onCreate$0(activity, dialogInterface, i);
-                }
-            };
+        FragmentActivity activity = getActivity();
+        if (!(activity == null || activity.getIntent().getStringExtra("package_name") == null)) {
+            this.mCancelListener = new DefaultAutofillPicker$$ExternalSyntheticLambda0(activity);
             this.mUserId = UserHandle.myUserId();
         }
         this.mSettingsPackageMonitor.register(activity, activity.getMainLooper(), false);
         update();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ void lambda$onCreate$0(Activity activity, DialogInterface dialogInterface, int i) {
         activity.setResult(0);
         activity.finish();
     }
 
-    @Override // com.android.settings.applications.defaultapps.DefaultAppPickerFragment
-    protected DefaultAppPickerFragment.ConfirmationDialogFragment newConfirmationDialogFragment(String str, CharSequence charSequence) {
+    /* access modifiers changed from: protected */
+    public DefaultAppPickerFragment.ConfirmationDialogFragment newConfirmationDialogFragment(String str, CharSequence charSequence) {
         AutofillPickerConfirmationDialogFragment autofillPickerConfirmationDialogFragment = new AutofillPickerConfirmationDialogFragment();
         autofillPickerConfirmationDialogFragment.init(this, str, charSequence);
         return autofillPickerConfirmationDialogFragment;
     }
 
-    /* loaded from: classes.dex */
     public static class AutofillPickerConfirmationDialogFragment extends DefaultAppPickerFragment.ConfirmationDialogFragment {
-        @Override // com.android.settingslib.core.lifecycle.ObservableDialogFragment, androidx.fragment.app.DialogFragment, androidx.fragment.app.Fragment
         public void onCreate(Bundle bundle) {
             setCancelListener(((DefaultAutofillPicker) getTargetFragment()).mCancelListener);
             super.onCreate(bundle);
         }
     }
 
-    @Override // com.android.settings.widget.RadioButtonPickerFragment, com.android.settings.core.InstrumentedPreferenceFragment
-    protected int getPreferenceScreenResId() {
-        return R.xml.default_autofill_settings;
+    /* access modifiers changed from: protected */
+    public int getPreferenceScreenResId() {
+        return R$xml.default_autofill_settings;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.android.settings.applications.defaultapps.DefaultAutofillPicker$1  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public class AnonymousClass1 extends PackageMonitor {
-        AnonymousClass1() {
-        }
-
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onPackageAdded$0() {
-            DefaultAutofillPicker.this.update();
-        }
-
-        public void onPackageAdded(String str, int i) {
-            ThreadUtils.postOnMainThread(new Runnable() { // from class: com.android.settings.applications.defaultapps.DefaultAutofillPicker$1$$ExternalSyntheticLambda1
-                @Override // java.lang.Runnable
-                public final void run() {
-                    DefaultAutofillPicker.AnonymousClass1.this.lambda$onPackageAdded$0();
-                }
-            });
-        }
-
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onPackageModified$1() {
-            DefaultAutofillPicker.this.update();
-        }
-
-        public void onPackageModified(String str) {
-            ThreadUtils.postOnMainThread(new Runnable() { // from class: com.android.settings.applications.defaultapps.DefaultAutofillPicker$1$$ExternalSyntheticLambda2
-                @Override // java.lang.Runnable
-                public final void run() {
-                    DefaultAutofillPicker.AnonymousClass1.this.lambda$onPackageModified$1();
-                }
-            });
-        }
-
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onPackageRemoved$2() {
-            DefaultAutofillPicker.this.update();
-        }
-
-        public void onPackageRemoved(String str, int i) {
-            ThreadUtils.postOnMainThread(new Runnable() { // from class: com.android.settings.applications.defaultapps.DefaultAutofillPicker$1$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    DefaultAutofillPicker.AnonymousClass1.this.lambda$onPackageRemoved$2();
-                }
-            });
-        }
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void update() {
         updateCandidates();
         addAddServicePreference();
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onDestroy() {
         this.mSettingsPackageMonitor.unregister();
         super.onDestroy();
@@ -154,25 +123,18 @@ public class DefaultAutofillPicker extends DefaultAppPickerFragment {
         if (TextUtils.isEmpty(stringForUser)) {
             return null;
         }
-        final Intent intent = new Intent("android.intent.action.VIEW", Uri.parse(stringForUser));
-        final Context prefContext = getPrefContext();
+        Intent intent = new Intent("android.intent.action.VIEW", Uri.parse(stringForUser));
+        Context prefContext = getPrefContext();
         Preference preference = new Preference(prefContext);
-        preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() { // from class: com.android.settings.applications.defaultapps.DefaultAutofillPicker$$ExternalSyntheticLambda1
-            @Override // androidx.preference.Preference.OnPreferenceClickListener
-            public final boolean onPreferenceClick(Preference preference2) {
-                boolean lambda$newAddServicePreferenceOrNull$1;
-                lambda$newAddServicePreferenceOrNull$1 = DefaultAutofillPicker.this.lambda$newAddServicePreferenceOrNull$1(prefContext, intent, preference2);
-                return lambda$newAddServicePreferenceOrNull$1;
-            }
-        });
-        preference.setTitle(R.string.print_menu_item_add_service);
-        preference.setIcon(R.drawable.ic_add_24dp);
+        preference.setOnPreferenceClickListener(new DefaultAutofillPicker$$ExternalSyntheticLambda1(this, prefContext, intent));
+        preference.setTitle(R$string.print_menu_item_add_service);
+        preference.setIcon(R$drawable.ic_add_24dp);
         preference.setOrder(2147483646);
         preference.setPersistent(false);
         return preference;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ boolean lambda$newAddServicePreferenceOrNull$1(Context context, Intent intent, Preference preference) {
         context.startActivityAsUser(intent, UserHandle.of(this.mUserId));
         return true;
@@ -185,8 +147,8 @@ public class DefaultAutofillPicker extends DefaultAppPickerFragment {
         }
     }
 
-    @Override // com.android.settings.widget.RadioButtonPickerFragment
-    protected List<DefaultAppInfo> getCandidates() {
+    /* access modifiers changed from: protected */
+    public List<DefaultAppInfo> getCandidates() {
         ArrayList arrayList = new ArrayList();
         List<ResolveInfo> queryIntentServicesAsUser = this.mPm.queryIntentServicesAsUser(AUTOFILL_PROBE, 128, this.mUserId);
         Context context = getContext();
@@ -199,7 +161,7 @@ public class DefaultAutofillPicker extends DefaultAppPickerFragment {
                 arrayList.add(new DefaultAppInfo(context, packageManager, i, new ComponentName(serviceInfo.packageName, serviceInfo.name)));
             }
             if ("android.permission.BIND_AUTOFILL".equals(str)) {
-                Log.w("DefaultAutofillPicker", "AutofillService from '" + resolveInfo.serviceInfo.packageName + "' uses unsupported permission android.permission.BIND_AUTOFILL. It works for now, but might not be supported on future releases");
+                Log.w("DefaultAutofillPicker", "AutofillService from '" + resolveInfo.serviceInfo.packageName + "' uses unsupported permission " + "android.permission.BIND_AUTOFILL" + ". It works for now, but might not be supported on future releases");
                 PackageManager packageManager2 = this.mPm;
                 int i2 = this.mUserId;
                 ServiceInfo serviceInfo2 = resolveInfo.serviceInfo;
@@ -218,21 +180,22 @@ public class DefaultAutofillPicker extends DefaultAppPickerFragment {
         return unflattenFromString.flattenToString();
     }
 
-    @Override // com.android.settings.widget.RadioButtonPickerFragment
-    protected String getDefaultKey() {
+    /* access modifiers changed from: protected */
+    public String getDefaultKey() {
         return getDefaultKey(getContext(), this.mUserId);
     }
 
-    @Override // com.android.settings.applications.defaultapps.DefaultAppPickerFragment
-    protected CharSequence getConfirmationMessage(CandidateInfo candidateInfo) {
+    /* access modifiers changed from: protected */
+    public CharSequence getConfirmationMessage(CandidateInfo candidateInfo) {
         if (candidateInfo == null) {
             return null;
         }
-        return Html.fromHtml(getContext().getString(R.string.autofill_confirmation_message, candidateInfo.loadLabel()));
+        CharSequence loadLabel = candidateInfo.loadLabel();
+        return Html.fromHtml(getContext().getString(R$string.autofill_confirmation_message, new Object[]{loadLabel}));
     }
 
-    @Override // com.android.settings.widget.RadioButtonPickerFragment
-    protected boolean setDefaultKey(String str) {
+    /* access modifiers changed from: protected */
+    public boolean setDefaultKey(String str) {
         String stringExtra;
         Settings.Secure.putStringForUser(getContext().getContentResolver(), "autofill_service", str, this.mUserId);
         FragmentActivity activity = getActivity();
@@ -244,7 +207,6 @@ public class DefaultAutofillPicker extends DefaultAppPickerFragment {
         return true;
     }
 
-    /* loaded from: classes.dex */
     static final class AutofillSettingIntentProvider {
         private final Context mContext;
         private final String mSelectedKey;
@@ -256,31 +218,16 @@ public class DefaultAutofillPicker extends DefaultAppPickerFragment {
             this.mUserId = i;
         }
 
-        /* JADX WARN: Code restructure failed: missing block: B:10:0x0049, code lost:
-            return null;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:13:0x005c, code lost:
-            return new android.content.Intent("android.intent.action.MAIN").setComponent(new android.content.ComponentName(r1.packageName, r6));
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:7:0x0038, code lost:
-            r6 = new android.service.autofill.AutofillServiceInfo(r6.mContext, r1).getSettingsActivity();
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:9:0x0047, code lost:
-            if (android.text.TextUtils.isEmpty(r6) == false) goto L12;
-         */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
         public Intent getIntent() {
-            Iterator it = this.mContext.getPackageManager().queryIntentServicesAsUser(DefaultAutofillPicker.AUTOFILL_PROBE, 128, this.mUserId).iterator();
-            while (true) {
-                if (!it.hasNext()) {
-                    break;
-                }
-                ServiceInfo serviceInfo = ((ResolveInfo) it.next()).serviceInfo;
+            for (ResolveInfo resolveInfo : this.mContext.getPackageManager().queryIntentServicesAsUser(DefaultAutofillPicker.AUTOFILL_PROBE, 128, this.mUserId)) {
+                ServiceInfo serviceInfo = resolveInfo.serviceInfo;
                 if (TextUtils.equals(this.mSelectedKey, new ComponentName(serviceInfo.packageName, serviceInfo.name).flattenToString())) {
                     try {
-                        break;
+                        String settingsActivity = new AutofillServiceInfo(this.mContext, serviceInfo).getSettingsActivity();
+                        if (TextUtils.isEmpty(settingsActivity)) {
+                            return null;
+                        }
+                        return new Intent("android.intent.action.MAIN").setComponent(new ComponentName(serviceInfo.packageName, settingsActivity));
                     } catch (SecurityException e) {
                         Log.w("DefaultAutofillPicker", "Error getting info for " + serviceInfo + ": " + e);
                     }

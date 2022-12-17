@@ -13,10 +13,10 @@ import com.android.settingslib.bluetooth.LocalBluetoothManager;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-/* loaded from: classes.dex */
+
 public class GroupConnectedBluetoothDeviceUpdater extends GroupBluetoothDeviceUpdater implements Preference.OnPreferenceClickListener {
-    @Override // com.android.settings.bluetooth.BluetoothDeviceUpdater
-    protected String getPreferenceKey() {
+    /* access modifiers changed from: protected */
+    public String getPreferenceKey() {
         return "connected_group_bt";
     }
 
@@ -24,7 +24,6 @@ public class GroupConnectedBluetoothDeviceUpdater extends GroupBluetoothDeviceUp
         super(context, dashboardFragment, devicePreferenceCallback);
     }
 
-    @Override // com.android.settings.bluetooth.BluetoothDeviceUpdater
     public boolean isFilterMatched(CachedBluetoothDevice cachedBluetoothDevice) {
         boolean z = isDeviceConnected(cachedBluetoothDevice) && isGroupDevice(cachedBluetoothDevice);
         if (GroupBluetoothDeviceUpdater.DBG) {
@@ -33,7 +32,6 @@ public class GroupConnectedBluetoothDeviceUpdater extends GroupBluetoothDeviceUp
         return z;
     }
 
-    @Override // com.android.settings.bluetooth.BluetoothDeviceUpdater
     public void forceUpdate() {
         LocalBluetoothManager localBluetoothManager = this.mLocalManager;
         if (localBluetoothManager == null) {
@@ -43,8 +41,8 @@ public class GroupConnectedBluetoothDeviceUpdater extends GroupBluetoothDeviceUp
         Collection<CachedBluetoothDevice> cachedDevicesCopy = localBluetoothManager.getCachedDeviceManager().getCachedDevicesCopy();
         CachedBluetoothDeviceManager cachedDeviceManager = this.mLocalManager.getCachedDeviceManager();
         if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-            for (CachedBluetoothDevice cachedBluetoothDevice : cachedDevicesCopy) {
-                update(cachedBluetoothDevice);
+            for (CachedBluetoothDevice update : cachedDevicesCopy) {
+                update(update);
             }
             return;
         }
@@ -75,8 +73,7 @@ public class GroupConnectedBluetoothDeviceUpdater extends GroupBluetoothDeviceUp
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.bluetooth.BluetoothDeviceUpdater
+    /* access modifiers changed from: protected */
     public void addPreference(CachedBluetoothDevice cachedBluetoothDevice, int i) {
         BluetoothDevice device = cachedBluetoothDevice.getDevice();
         if (!this.mPreferenceMap.containsKey(device)) {
@@ -88,7 +85,6 @@ public class GroupConnectedBluetoothDeviceUpdater extends GroupBluetoothDeviceUp
         }
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceClickListener
     public boolean onPreferenceClick(Preference preference) {
         if (GroupBluetoothDeviceUpdater.DBG) {
             Log.d("GroupConnectedBluetoothDeviceUpdater", " onPreferenceClick " + preference);

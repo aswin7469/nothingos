@@ -3,11 +3,10 @@ package com.android.settings.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.Switch;
-/* loaded from: classes.dex */
+
 public class ToggleSwitch extends Switch {
     private OnBeforeCheckedChangeListener mOnBeforeListener;
 
-    /* loaded from: classes.dex */
     public interface OnBeforeCheckedChangeListener {
         boolean onBeforeCheckedChanged(ToggleSwitch toggleSwitch, boolean z);
     }
@@ -32,7 +31,6 @@ public class ToggleSwitch extends Switch {
         this.mOnBeforeListener = onBeforeCheckedChangeListener;
     }
 
-    @Override // android.widget.Switch, android.widget.CompoundButton, android.widget.Checkable
     public void setChecked(boolean z) {
         OnBeforeCheckedChangeListener onBeforeCheckedChangeListener = this.mOnBeforeListener;
         if (onBeforeCheckedChangeListener == null || !onBeforeCheckedChangeListener.onBeforeCheckedChanged(this, z)) {

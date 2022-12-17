@@ -4,20 +4,20 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$dimen;
+
 public class MessageBubbleBackground extends LinearLayout {
     private final int mSnapWidthPixels;
 
     public MessageBubbleBackground(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.mSnapWidthPixels = context.getResources().getDimensionPixelSize(R.dimen.conversation_bubble_width_snap);
+        this.mSnapWidthPixels = context.getResources().getDimensionPixelSize(R$dimen.conversation_bubble_width_snap);
     }
 
-    @Override // android.widget.LinearLayout, android.view.View
-    protected void onMeasure(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         super.onMeasure(i, i2);
         int paddingLeft = getPaddingLeft() + getPaddingRight();
-        super.onMeasure(View.MeasureSpec.makeMeasureSpec(Math.min(View.MeasureSpec.getSize(i) - paddingLeft, (int) (Math.ceil((getMeasuredWidth() - paddingLeft) / this.mSnapWidthPixels) * this.mSnapWidthPixels)) + paddingLeft, 1073741824), i2);
+        super.onMeasure(View.MeasureSpec.makeMeasureSpec(Math.min(View.MeasureSpec.getSize(i) - paddingLeft, (int) (Math.ceil((double) (((float) (getMeasuredWidth() - paddingLeft)) / ((float) this.mSnapWidthPixels))) * ((double) this.mSnapWidthPixels))) + paddingLeft, 1073741824), i2);
     }
 }

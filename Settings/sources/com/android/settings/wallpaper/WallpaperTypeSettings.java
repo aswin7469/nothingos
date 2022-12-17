@@ -1,29 +1,25 @@
 package com.android.settings.wallpaper;
 
-import androidx.constraintlayout.widget.R$styleable;
-import com.android.settings.R;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.dashboard.DashboardFragment;
-/* loaded from: classes.dex */
+
 public class WallpaperTypeSettings extends DashboardFragment {
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "WallpaperTypeSettings";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
-        return R$styleable.Constraint_layout_goneMarginRight;
+        return 101;
     }
 
-    @Override // com.android.settings.support.actionbar.HelpResourceProvider
     public int getHelpResource() {
-        return R.string.help_uri_wallpaper;
+        return R$string.help_uri_wallpaper;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.wallpaper_settings;
+        return R$xml.wallpaper_settings;
     }
 }

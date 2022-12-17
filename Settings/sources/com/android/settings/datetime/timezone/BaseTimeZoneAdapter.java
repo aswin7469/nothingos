@@ -8,26 +8,29 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
 import com.android.settings.datetime.timezone.BaseTimeZoneAdapter.AdapterItem;
 import com.android.settings.datetime.timezone.BaseTimeZonePicker;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-/* loaded from: classes.dex */
+
 public class BaseTimeZoneAdapter<T extends AdapterItem> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     static final int TYPE_HEADER = 0;
     static final int TYPE_ITEM = 1;
     private BaseTimeZoneAdapter<T>.ArrayFilter mFilter;
     private final CharSequence mHeaderText;
-    private List<T> mItems;
-    private final Locale mLocale;
+    /* access modifiers changed from: private */
+    public List<T> mItems;
+    /* access modifiers changed from: private */
+    public final Locale mLocale;
     private final BaseTimeZonePicker.OnListItemClickListener<T> mOnListItemClickListener;
-    private final List<T> mOriginalItems;
+    /* access modifiers changed from: private */
+    public final List<T> mOriginalItems;
     private final boolean mShowHeader;
     private final boolean mShowItemSummary;
 
-    /* loaded from: classes.dex */
     public interface AdapterItem {
         String getCurrentTime();
 
@@ -53,50 +56,42 @@ public class BaseTimeZoneAdapter<T extends AdapterItem> extends RecyclerView.Ada
         setHasStableIds(true);
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
-    /* renamed from: onCreateViewHolder */
-    public RecyclerView.ViewHolder mo960onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         LayoutInflater from = LayoutInflater.from(viewGroup.getContext());
-        if (i != 0) {
-            if (i == 1) {
-                return new ItemViewHolder(from.inflate(R.layout.time_zone_search_item, viewGroup, false), this.mOnListItemClickListener);
-            }
-            throw new IllegalArgumentException("Unexpected viewType: " + i);
+        if (i == 0) {
+            return new HeaderViewHolder(from.inflate(R$layout.time_zone_search_header, viewGroup, false));
         }
-        return new HeaderViewHolder(from.inflate(R.layout.time_zone_search_header, viewGroup, false));
+        if (i == 1) {
+            return new ItemViewHolder(from.inflate(R$layout.time_zone_search_item, viewGroup, false), this.mOnListItemClickListener);
+        }
+        throw new IllegalArgumentException("Unexpected viewType: " + i);
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i) {
         if (viewHolder instanceof HeaderViewHolder) {
             ((HeaderViewHolder) viewHolder).setText(this.mHeaderText);
-        } else if (!(viewHolder instanceof ItemViewHolder)) {
-        } else {
+        } else if (viewHolder instanceof ItemViewHolder) {
             ItemViewHolder itemViewHolder = (ItemViewHolder) viewHolder;
             itemViewHolder.setAdapterItem(getDataItem(i));
             itemViewHolder.mSummaryFrame.setVisibility(this.mShowItemSummary ? 0 : 8);
         }
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public long getItemId(int i) {
         if (isPositionHeader(i)) {
-            return -1L;
+            return -1;
         }
         return getDataItem(i).getItemId();
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public int getItemCount() {
         return this.mItems.size() + getHeaderCount();
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public int getItemViewType(int i) {
-        return !isPositionHeader(i) ? 1 : 0;
+        return isPositionHeader(i) ^ true ? 1 : 0;
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public final void setHasStableIds(boolean z) {
         super.setHasStableIds(z);
     }
@@ -117,10 +112,9 @@ public class BaseTimeZoneAdapter<T extends AdapterItem> extends RecyclerView.Ada
     }
 
     public T getDataItem(int i) {
-        return this.mItems.get(i - getHeaderCount());
+        return (AdapterItem) this.mItems.get(i - getHeaderCount());
     }
 
-    /* loaded from: classes.dex */
     private static class HeaderViewHolder extends RecyclerView.ViewHolder {
         private final TextView mTextView;
 
@@ -134,7 +128,6 @@ public class BaseTimeZoneAdapter<T extends AdapterItem> extends RecyclerView.Ada
         }
     }
 
-    /* loaded from: classes.dex */
     public static class ItemViewHolder<T extends AdapterItem> extends RecyclerView.ViewHolder implements View.OnClickListener {
         final TextView mIconTextView;
         private T mItem;
@@ -147,11 +140,11 @@ public class BaseTimeZoneAdapter<T extends AdapterItem> extends RecyclerView.Ada
         public ItemViewHolder(View view, BaseTimeZonePicker.OnListItemClickListener<T> onListItemClickListener) {
             super(view);
             view.setOnClickListener(this);
-            this.mSummaryFrame = view.findViewById(R.id.summary_frame);
+            this.mSummaryFrame = view.findViewById(R$id.summary_frame);
             this.mTitleView = (TextView) view.findViewById(16908310);
-            this.mIconTextView = (TextView) view.findViewById(R.id.icon_text);
+            this.mIconTextView = (TextView) view.findViewById(R$id.icon_text);
             this.mSummaryView = (TextView) view.findViewById(16908304);
-            this.mTimeView = (TextView) view.findViewById(R.id.current_time);
+            this.mTimeView = (TextView) view.findViewById(R$id.current_time);
             this.mOnListItemClickListener = onListItemClickListener;
         }
 
@@ -163,13 +156,11 @@ public class BaseTimeZoneAdapter<T extends AdapterItem> extends RecyclerView.Ada
             this.mTimeView.setText(t.getCurrentTime());
         }
 
-        @Override // android.view.View.OnClickListener
         public void onClick(View view) {
             this.mOnListItemClickListener.onListItemClick(this.mItem);
         }
     }
 
-    /* loaded from: classes.dex */
     public class ArrayFilter extends Filter {
         private BreakIterator mBreakIterator;
 
@@ -177,8 +168,8 @@ public class BaseTimeZoneAdapter<T extends AdapterItem> extends RecyclerView.Ada
             this.mBreakIterator = BreakIterator.getWordInstance(BaseTimeZoneAdapter.this.mLocale);
         }
 
-        @Override // android.widget.Filter
-        protected Filter.FilterResults performFiltering(CharSequence charSequence) {
+        /* access modifiers changed from: protected */
+        public Filter.FilterResults performFiltering(CharSequence charSequence) {
             List list;
             if (TextUtils.isEmpty(charSequence)) {
                 list = BaseTimeZoneAdapter.this.mOriginalItems;
@@ -190,26 +181,26 @@ public class BaseTimeZoneAdapter<T extends AdapterItem> extends RecyclerView.Ada
                     int length = searchKeys.length;
                     int i = 0;
                     while (true) {
-                        if (i < length) {
-                            String lowerCase2 = searchKeys[i].toLowerCase(BaseTimeZoneAdapter.this.mLocale);
-                            if (lowerCase2.startsWith(lowerCase)) {
+                        if (i >= length) {
+                            break;
+                        }
+                        String lowerCase2 = searchKeys[i].toLowerCase(BaseTimeZoneAdapter.this.mLocale);
+                        if (lowerCase2.startsWith(lowerCase)) {
+                            arrayList.add(adapterItem);
+                            break;
+                        }
+                        this.mBreakIterator.setText(lowerCase2);
+                        int next = this.mBreakIterator.next();
+                        int i2 = 0;
+                        while (next != -1) {
+                            if (this.mBreakIterator.getRuleStatus() != 0 && lowerCase2.startsWith(lowerCase, i2)) {
                                 arrayList.add(adapterItem);
                                 break;
                             }
-                            this.mBreakIterator.setText(lowerCase2);
-                            int next = this.mBreakIterator.next();
-                            int i2 = 0;
-                            while (next != -1) {
-                                if (this.mBreakIterator.getRuleStatus() == 0 || !lowerCase2.startsWith(lowerCase, i2)) {
-                                    i2 = next;
-                                    next = this.mBreakIterator.next();
-                                } else {
-                                    arrayList.add(adapterItem);
-                                    break;
-                                }
-                            }
-                            i++;
+                            i2 = next;
+                            next = this.mBreakIterator.next();
                         }
+                        i++;
                     }
                 }
                 list = arrayList;
@@ -220,7 +211,6 @@ public class BaseTimeZoneAdapter<T extends AdapterItem> extends RecyclerView.Ada
             return filterResults;
         }
 
-        @Override // android.widget.Filter
         public void publishResults(CharSequence charSequence, Filter.FilterResults filterResults) {
             BaseTimeZoneAdapter.this.mItems = (List) filterResults.values;
             BaseTimeZoneAdapter.this.notifyDataSetChanged();

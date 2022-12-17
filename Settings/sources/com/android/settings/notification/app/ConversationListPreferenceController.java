@@ -8,7 +8,8 @@ import android.service.notification.ConversationChannelWrapper;
 import android.text.TextUtils;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceGroup;
-import com.android.settings.R;
+import androidx.preference.PreferenceScreen;
+import com.android.settings.R$string;
 import com.android.settings.core.SubSettingLauncher;
 import com.android.settings.notification.NotificationBackend;
 import com.android.settingslib.core.AbstractPreferenceController;
@@ -16,100 +17,119 @@ import com.android.settingslib.widget.AppPreference;
 import java.text.Collator;
 import java.util.Comparator;
 import java.util.List;
-/* loaded from: classes.dex */
+import java.util.concurrent.atomic.AtomicInteger;
+
 public abstract class ConversationListPreferenceController extends AbstractPreferenceController {
     protected final NotificationBackend mBackend;
-    protected Comparator<ConversationChannelWrapper> mConversationComparator = new Comparator<ConversationChannelWrapper>() { // from class: com.android.settings.notification.app.ConversationListPreferenceController.1
+    Comparator<ConversationChannelWrapper> mConversationComparator = new Comparator<ConversationChannelWrapper>() {
         private final Collator sCollator = Collator.getInstance();
 
-        @Override // java.util.Comparator
         public int compare(ConversationChannelWrapper conversationChannelWrapper, ConversationChannelWrapper conversationChannelWrapper2) {
-            if (conversationChannelWrapper.getShortcutInfo() == null || conversationChannelWrapper2.getShortcutInfo() != null) {
-                if (conversationChannelWrapper.getShortcutInfo() == null && conversationChannelWrapper2.getShortcutInfo() != null) {
-                    return 1;
-                }
-                if (conversationChannelWrapper.getShortcutInfo() == null && conversationChannelWrapper2.getShortcutInfo() == null) {
-                    return conversationChannelWrapper.getNotificationChannel().getId().compareTo(conversationChannelWrapper2.getNotificationChannel().getId());
-                }
-                if (conversationChannelWrapper.getShortcutInfo().getLabel() == null && conversationChannelWrapper2.getShortcutInfo().getLabel() != null) {
-                    return 1;
-                }
-                if (conversationChannelWrapper.getShortcutInfo().getLabel() != null && conversationChannelWrapper2.getShortcutInfo().getLabel() == null) {
-                    return -1;
-                }
+            if (conversationChannelWrapper.getShortcutInfo() != null && conversationChannelWrapper2.getShortcutInfo() == null) {
+                return -1;
+            }
+            if (conversationChannelWrapper.getShortcutInfo() == null && conversationChannelWrapper2.getShortcutInfo() != null) {
+                return 1;
+            }
+            if (conversationChannelWrapper.getShortcutInfo() == null && conversationChannelWrapper2.getShortcutInfo() == null) {
+                return conversationChannelWrapper.getNotificationChannel().getId().compareTo(conversationChannelWrapper2.getNotificationChannel().getId());
+            }
+            if (conversationChannelWrapper.getShortcutInfo().getLabel() == null && conversationChannelWrapper2.getShortcutInfo().getLabel() != null) {
+                return 1;
+            }
+            if (conversationChannelWrapper.getShortcutInfo().getLabel() == null || conversationChannelWrapper2.getShortcutInfo().getLabel() != null) {
                 return this.sCollator.compare(conversationChannelWrapper.getShortcutInfo().getLabel().toString(), conversationChannelWrapper2.getShortcutInfo().getLabel().toString());
             }
             return -1;
         }
     };
+    private PreferenceGroup mPreferenceGroup;
 
-    abstract Preference getSummaryPreference();
+    /* access modifiers changed from: package-private */
+    public abstract Preference getSummaryPreference();
 
-    abstract boolean matchesFilter(ConversationChannelWrapper conversationChannelWrapper);
+    public boolean isAvailable() {
+        return true;
+    }
+
+    /* access modifiers changed from: package-private */
+    public abstract boolean matchesFilter(ConversationChannelWrapper conversationChannelWrapper);
 
     public ConversationListPreferenceController(Context context, NotificationBackend notificationBackend) {
         super(context);
         this.mBackend = notificationBackend;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public void populateList(List<ConversationChannelWrapper> list, PreferenceGroup preferenceGroup) {
-        preferenceGroup.setVisible(false);
-        preferenceGroup.removeAll();
+    public void displayPreference(PreferenceScreen preferenceScreen) {
+        super.displayPreference(preferenceScreen);
+        this.mPreferenceGroup = (PreferenceGroup) preferenceScreen.findPreference(getPreferenceKey());
+    }
+
+    /* access modifiers changed from: package-private */
+    public boolean updateList(List<ConversationChannelWrapper> list) {
+        boolean z = false;
+        this.mPreferenceGroup.setVisible(false);
+        this.mPreferenceGroup.removeAll();
         if (list != null) {
-            populateConversations(list, preferenceGroup);
+            populateConversations(list);
         }
-        if (preferenceGroup.getPreferenceCount() != 0) {
+        if (this.mPreferenceGroup.getPreferenceCount() != 0) {
+            z = true;
+        }
+        if (z) {
             Preference summaryPreference = getSummaryPreference();
             if (summaryPreference != null) {
-                preferenceGroup.addPreference(summaryPreference);
+                summaryPreference.setKey(getPreferenceKey() + "_summary");
+                this.mPreferenceGroup.addPreference(summaryPreference);
             }
-            preferenceGroup.setVisible(true);
+            this.mPreferenceGroup.setVisible(true);
         }
+        return z;
     }
 
-    protected void populateConversations(List<ConversationChannelWrapper> list, PreferenceGroup preferenceGroup) {
-        int i = 100;
-        for (ConversationChannelWrapper conversationChannelWrapper : list) {
-            if (!conversationChannelWrapper.getNotificationChannel().isDemoted() && matchesFilter(conversationChannelWrapper)) {
-                preferenceGroup.addPreference(createConversationPref(conversationChannelWrapper, i));
-                i++;
-            }
-        }
+    /* access modifiers changed from: package-private */
+    public void populateConversations(List<ConversationChannelWrapper> list) {
+        list.stream().filter(new ConversationListPreferenceController$$ExternalSyntheticLambda0(this)).sorted(this.mConversationComparator).map(new ConversationListPreferenceController$$ExternalSyntheticLambda1(this)).forEachOrdered(new ConversationListPreferenceController$$ExternalSyntheticLambda2(this, new AtomicInteger(100)));
     }
 
-    protected Preference createConversationPref(final ConversationChannelWrapper conversationChannelWrapper, int i) {
-        final AppPreference appPreference = new AppPreference(this.mContext);
-        appPreference.setOrder(i);
+    /* access modifiers changed from: private */
+    public /* synthetic */ boolean lambda$populateConversations$0(ConversationChannelWrapper conversationChannelWrapper) {
+        return !conversationChannelWrapper.getNotificationChannel().isDemoted() && matchesFilter(conversationChannelWrapper);
+    }
+
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$populateConversations$1(AtomicInteger atomicInteger, Preference preference) {
+        preference.setOrder(atomicInteger.getAndIncrement());
+        this.mPreferenceGroup.addPreference(preference);
+    }
+
+    /* access modifiers changed from: private */
+    public Preference createConversationPref(ConversationChannelWrapper conversationChannelWrapper) {
+        AppPreference appPreference = new AppPreference(this.mContext);
         appPreference.setTitle(getTitle(conversationChannelWrapper));
         appPreference.setSummary(getSummary(conversationChannelWrapper));
         appPreference.setIcon(this.mBackend.getConversationDrawable(this.mContext, conversationChannelWrapper.getShortcutInfo(), conversationChannelWrapper.getPkg(), conversationChannelWrapper.getUid(), conversationChannelWrapper.getNotificationChannel().isImportantConversation()));
         appPreference.setKey(conversationChannelWrapper.getNotificationChannel().getId());
-        appPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() { // from class: com.android.settings.notification.app.ConversationListPreferenceController$$ExternalSyntheticLambda0
-            @Override // androidx.preference.Preference.OnPreferenceClickListener
-            public final boolean onPreferenceClick(Preference preference) {
-                boolean lambda$createConversationPref$0;
-                lambda$createConversationPref$0 = ConversationListPreferenceController.this.lambda$createConversationPref$0(conversationChannelWrapper, appPreference, preference);
-                return lambda$createConversationPref$0;
-            }
-        });
+        appPreference.setOnPreferenceClickListener(new ConversationListPreferenceController$$ExternalSyntheticLambda3(this, conversationChannelWrapper, appPreference));
         return appPreference;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ boolean lambda$createConversationPref$0(ConversationChannelWrapper conversationChannelWrapper, AppPreference appPreference, Preference preference) {
+    /* access modifiers changed from: private */
+    public /* synthetic */ boolean lambda$createConversationPref$2(ConversationChannelWrapper conversationChannelWrapper, AppPreference appPreference, Preference preference) {
         getSubSettingLauncher(conversationChannelWrapper, appPreference.getTitle()).launch();
         return true;
     }
 
-    CharSequence getSummary(ConversationChannelWrapper conversationChannelWrapper) {
+    /* access modifiers changed from: package-private */
+    public CharSequence getSummary(ConversationChannelWrapper conversationChannelWrapper) {
         if (TextUtils.isEmpty(conversationChannelWrapper.getGroupLabel())) {
             return conversationChannelWrapper.getParentChannelLabel();
         }
-        return this.mContext.getString(R.string.notification_conversation_summary, conversationChannelWrapper.getParentChannelLabel(), conversationChannelWrapper.getGroupLabel());
+        return this.mContext.getString(R$string.notification_conversation_summary, new Object[]{conversationChannelWrapper.getParentChannelLabel(), conversationChannelWrapper.getGroupLabel()});
     }
 
-    CharSequence getTitle(ConversationChannelWrapper conversationChannelWrapper) {
+    /* access modifiers changed from: package-private */
+    public CharSequence getTitle(ConversationChannelWrapper conversationChannelWrapper) {
         ShortcutInfo shortcutInfo = conversationChannelWrapper.getShortcutInfo();
         if (shortcutInfo != null) {
             return shortcutInfo.getLabel();
@@ -117,7 +137,8 @@ public abstract class ConversationListPreferenceController extends AbstractPrefe
         return conversationChannelWrapper.getNotificationChannel().getName();
     }
 
-    SubSettingLauncher getSubSettingLauncher(ConversationChannelWrapper conversationChannelWrapper, CharSequence charSequence) {
+    /* access modifiers changed from: package-private */
+    public SubSettingLauncher getSubSettingLauncher(ConversationChannelWrapper conversationChannelWrapper, CharSequence charSequence) {
         Bundle bundle = new Bundle();
         bundle.putInt("uid", conversationChannelWrapper.getUid());
         bundle.putString("package", conversationChannelWrapper.getPkg());

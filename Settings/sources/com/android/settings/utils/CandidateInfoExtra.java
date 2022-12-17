@@ -2,13 +2,12 @@ package com.android.settings.utils;
 
 import android.graphics.drawable.Drawable;
 import com.android.settingslib.widget.CandidateInfo;
-/* loaded from: classes.dex */
+
 public class CandidateInfoExtra extends CandidateInfo {
     private final String mKey;
     private final CharSequence mLabel;
     private final CharSequence mSummary;
 
-    @Override // com.android.settingslib.widget.CandidateInfo
     public Drawable loadIcon() {
         return null;
     }
@@ -20,7 +19,6 @@ public class CandidateInfoExtra extends CandidateInfo {
         this.mKey = str;
     }
 
-    @Override // com.android.settingslib.widget.CandidateInfo
     public CharSequence loadLabel() {
         return this.mLabel;
     }
@@ -29,7 +27,6 @@ public class CandidateInfoExtra extends CandidateInfo {
         return this.mSummary;
     }
 
-    @Override // com.android.settingslib.widget.CandidateInfo
     public String getKey() {
         return this.mKey;
     }

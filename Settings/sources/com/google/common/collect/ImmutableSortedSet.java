@@ -1,150 +1,80 @@
 package com.google.common.collect;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableSet;
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import com.google.errorprone.annotations.concurrent.LazyInit;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.NavigableSet;
-import java.util.SortedSet;
-/* loaded from: classes2.dex */
+
 public abstract class ImmutableSortedSet<E> extends ImmutableSortedSetFauxverideShim<E> implements NavigableSet<E>, SortedIterable<E> {
     final transient Comparator<? super E> comparator;
-    @LazyInit
     transient ImmutableSortedSet<E> descendingSet;
 
-    abstract ImmutableSortedSet<E> createDescendingSet();
+    /* access modifiers changed from: package-private */
+    public abstract ImmutableSortedSet<E> createDescendingSet();
 
-    @Override // java.util.NavigableSet
-    /* renamed from: descendingIterator */
-    public abstract UnmodifiableIterator<E> mo790descendingIterator();
+    public abstract UnmodifiableIterator<E> descendingIterator();
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public abstract ImmutableSortedSet<E> headSetImpl(E e, boolean z);
 
-    abstract ImmutableSortedSet<E> subSetImpl(E e, boolean z, E e2, boolean z2);
+    public abstract UnmodifiableIterator<E> iterator();
 
-    abstract ImmutableSortedSet<E> tailSetImpl(E e, boolean z);
+    /* access modifiers changed from: package-private */
+    public abstract ImmutableSortedSet<E> subSetImpl(E e, boolean z, E e2, boolean z2);
 
-    /* JADX WARN: Multi-variable type inference failed */
-    @Override // java.util.NavigableSet
-    /* renamed from: headSet  reason: collision with other method in class */
-    public /* bridge */ /* synthetic */ NavigableSet mo792headSet(Object obj, boolean z) {
-        return headSet((ImmutableSortedSet<E>) obj, z);
-    }
+    /* access modifiers changed from: package-private */
+    public abstract ImmutableSortedSet<E> tailSetImpl(E e, boolean z);
 
-    /* JADX WARN: Multi-variable type inference failed */
-    @Override // java.util.NavigableSet, java.util.SortedSet
-    /* renamed from: headSet  reason: collision with other method in class */
-    public /* bridge */ /* synthetic */ SortedSet mo793headSet(Object obj) {
-        return headSet((ImmutableSortedSet<E>) obj);
-    }
-
-    @Override // com.google.common.collect.ImmutableSet, com.google.common.collect.ImmutableCollection, java.util.AbstractCollection, java.util.Collection, java.lang.Iterable
-    /* renamed from: iterator */
-    public /* bridge */ /* synthetic */ Iterator mo831iterator() {
-        return mo759iterator();
-    }
-
-    /* JADX WARN: Multi-variable type inference failed */
-    @Override // java.util.NavigableSet
-    /* renamed from: subSet  reason: collision with other method in class */
-    public /* bridge */ /* synthetic */ NavigableSet mo794subSet(Object obj, boolean z, Object obj2, boolean z2) {
-        return subSet((boolean) obj, z, (boolean) obj2, z2);
-    }
-
-    /* JADX WARN: Multi-variable type inference failed */
-    @Override // java.util.NavigableSet
-    /* renamed from: tailSet  reason: collision with other method in class */
-    public /* bridge */ /* synthetic */ NavigableSet mo796tailSet(Object obj, boolean z) {
-        return tailSet((ImmutableSortedSet<E>) obj, z);
-    }
-
-    /* JADX WARN: Multi-variable type inference failed */
-    @Override // java.util.NavigableSet, java.util.SortedSet
-    /* renamed from: tailSet  reason: collision with other method in class */
-    public /* bridge */ /* synthetic */ SortedSet mo797tailSet(Object obj) {
-        return tailSet((ImmutableSortedSet<E>) obj);
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static <E> RegularImmutableSortedSet<E> emptySet(Comparator<? super E> comparator) {
-        if (Ordering.natural().equals(comparator)) {
-            return (RegularImmutableSortedSet<E>) RegularImmutableSortedSet.NATURAL_EMPTY_SET;
+    static <E> RegularImmutableSortedSet<E> emptySet(Comparator<? super E> comparator2) {
+        if (Ordering.natural().equals(comparator2)) {
+            return RegularImmutableSortedSet.NATURAL_EMPTY_SET;
         }
-        return new RegularImmutableSortedSet<>(ImmutableList.of(), comparator);
+        return new RegularImmutableSortedSet<>(ImmutableList.m25of(), comparator2);
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    static <E> ImmutableSortedSet<E> construct(Comparator<? super E> comparator, int i, E... eArr) {
+    static <E> ImmutableSortedSet<E> construct(Comparator<? super E> comparator2, int i, E... eArr) {
         if (i == 0) {
-            return emptySet(comparator);
+            return emptySet(comparator2);
         }
         ObjectArrays.checkElementsNotNull(eArr, i);
-        Arrays.sort(eArr, 0, i, comparator);
+        Arrays.sort(eArr, 0, i, comparator2);
         int i2 = 1;
         for (int i3 = 1; i3 < i; i3++) {
-            Object obj = (Object) eArr[i3];
-            if (comparator.compare(obj, (Object) eArr[i2 - 1]) != 0) {
-                eArr[i2] = obj;
+            E e = eArr[i3];
+            if (comparator2.compare(e, eArr[i2 - 1]) != 0) {
+                eArr[i2] = e;
                 i2++;
             }
         }
         Arrays.fill(eArr, i2, i, (Object) null);
         if (i2 < eArr.length / 2) {
-            eArr = (E[]) Arrays.copyOf(eArr, i2);
+            eArr = Arrays.copyOf(eArr, i2);
         }
-        return new RegularImmutableSortedSet(ImmutableList.asImmutableList(eArr, i2), comparator);
+        return new RegularImmutableSortedSet(ImmutableList.asImmutableList(eArr, i2), comparator2);
     }
 
-    /* loaded from: classes2.dex */
     public static final class Builder<E> extends ImmutableSet.Builder<E> {
         private final Comparator<? super E> comparator;
 
-        /* JADX WARN: Multi-variable type inference failed */
-        @Override // com.google.common.collect.ImmutableSet.Builder, com.google.common.collect.ImmutableCollection.ArrayBasedBuilder, com.google.common.collect.ImmutableCollection.Builder
-        @CanIgnoreReturnValue
-        /* renamed from: add */
-        public /* bridge */ /* synthetic */ ImmutableCollection.Builder mo798add(Object obj) {
-            return mo798add((Builder<E>) obj);
+        public Builder(Comparator<? super E> comparator2) {
+            this.comparator = (Comparator) Preconditions.checkNotNull(comparator2);
         }
 
-        /* JADX WARN: Multi-variable type inference failed */
-        @Override // com.google.common.collect.ImmutableSet.Builder, com.google.common.collect.ImmutableCollection.ArrayBasedBuilder, com.google.common.collect.ImmutableCollection.Builder
-        @CanIgnoreReturnValue
-        /* renamed from: add  reason: collision with other method in class */
-        public /* bridge */ /* synthetic */ ImmutableSet.Builder mo798add(Object obj) {
-            return mo798add((Builder<E>) obj);
-        }
-
-        public Builder(Comparator<? super E> comparator) {
-            this.comparator = (Comparator) Preconditions.checkNotNull(comparator);
-        }
-
-        @Override // com.google.common.collect.ImmutableSet.Builder, com.google.common.collect.ImmutableCollection.ArrayBasedBuilder, com.google.common.collect.ImmutableCollection.Builder
-        @CanIgnoreReturnValue
-        /* renamed from: add */
-        public Builder<E> mo798add(E e) {
-            super.mo798add((Builder<E>) e);
+        public Builder<E> add(E e) {
+            super.add((Object) e);
             return this;
         }
 
-        @Override // com.google.common.collect.ImmutableSet.Builder, com.google.common.collect.ImmutableCollection.ArrayBasedBuilder
-        @CanIgnoreReturnValue
         public Builder<E> add(E... eArr) {
-            super.add((Object[]) eArr);
+            super.add(eArr);
             return this;
         }
 
-        @Override // com.google.common.collect.ImmutableSet.Builder
-        /* renamed from: build  reason: collision with other method in class */
-        public ImmutableSortedSet<E> mo799build() {
+        public ImmutableSortedSet<E> build() {
             ImmutableSortedSet<E> construct = ImmutableSortedSet.construct(this.comparator, this.size, this.contents);
             this.size = construct.size();
             this.forceCopy = true;
@@ -152,43 +82,35 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSortedSetFauxveride
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int unsafeCompare(Object obj, Object obj2) {
         return unsafeCompare(this.comparator, obj, obj2);
     }
 
-    static int unsafeCompare(Comparator<?> comparator, Object obj, Object obj2) {
-        return comparator.compare(obj, obj2);
+    static int unsafeCompare(Comparator<?> comparator2, Object obj, Object obj2) {
+        return comparator2.compare(obj, obj2);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public ImmutableSortedSet(Comparator<? super E> comparator) {
-        this.comparator = comparator;
+    ImmutableSortedSet(Comparator<? super E> comparator2) {
+        this.comparator = comparator2;
     }
 
-    @Override // java.util.SortedSet, com.google.common.collect.SortedIterable
     public Comparator<? super E> comparator() {
         return this.comparator;
     }
 
-    @Override // java.util.NavigableSet, java.util.SortedSet
     public ImmutableSortedSet<E> headSet(E e) {
-        return headSet((ImmutableSortedSet<E>) e, false);
+        return headSet(e, false);
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    @Override // java.util.NavigableSet
     public ImmutableSortedSet<E> headSet(E e, boolean z) {
         return headSetImpl(Preconditions.checkNotNull(e), z);
     }
 
-    @Override // java.util.NavigableSet, java.util.SortedSet
-    /* renamed from: subSet */
-    public ImmutableSortedSet<E> mo795subSet(E e, E e2) {
-        return subSet((boolean) e, true, (boolean) e2, false);
+    public ImmutableSortedSet<E> subSet(E e, E e2) {
+        return subSet(e, true, e2, false);
     }
 
-    @Override // java.util.NavigableSet
     public ImmutableSortedSet<E> subSet(E e, boolean z, E e2, boolean z2) {
         Preconditions.checkNotNull(e);
         Preconditions.checkNotNull(e2);
@@ -196,88 +118,72 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSortedSetFauxveride
         return subSetImpl(e, z, e2, z2);
     }
 
-    @Override // java.util.NavigableSet, java.util.SortedSet
     public ImmutableSortedSet<E> tailSet(E e) {
-        return tailSet((ImmutableSortedSet<E>) e, true);
+        return tailSet(e, true);
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    @Override // java.util.NavigableSet
     public ImmutableSortedSet<E> tailSet(E e, boolean z) {
         return tailSetImpl(Preconditions.checkNotNull(e), z);
     }
 
-    @Override // java.util.NavigableSet
     public E lower(E e) {
-        return (E) Iterators.getNext(headSet((ImmutableSortedSet<E>) e, false).mo790descendingIterator(), null);
+        return Iterators.getNext(headSet(e, false).descendingIterator(), null);
     }
 
-    @Override // java.util.NavigableSet
     public E floor(E e) {
-        return (E) Iterators.getNext(headSet((ImmutableSortedSet<E>) e, true).mo790descendingIterator(), null);
+        return Iterators.getNext(headSet(e, true).descendingIterator(), null);
     }
 
-    @Override // java.util.NavigableSet
     public E ceiling(E e) {
-        return (E) Iterables.getFirst(tailSet((ImmutableSortedSet<E>) e, true), null);
+        return Iterables.getFirst(tailSet(e, true), null);
     }
 
-    @Override // java.util.NavigableSet
     public E higher(E e) {
-        return (E) Iterables.getFirst(tailSet((ImmutableSortedSet<E>) e, false), null);
+        return Iterables.getFirst(tailSet(e, false), null);
     }
 
-    @Override // java.util.SortedSet
     public E first() {
-        return mo759iterator().next();
+        return iterator().next();
     }
 
-    @Override // java.util.SortedSet
     public E last() {
-        return mo790descendingIterator().next();
+        return descendingIterator().next();
     }
 
-    @Override // java.util.NavigableSet
-    @CanIgnoreReturnValue
     @Deprecated
     public final E pollFirst() {
         throw new UnsupportedOperationException();
     }
 
-    @Override // java.util.NavigableSet
-    @CanIgnoreReturnValue
     @Deprecated
     public final E pollLast() {
         throw new UnsupportedOperationException();
     }
 
-    @Override // java.util.NavigableSet
-    /* renamed from: descendingSet */
-    public ImmutableSortedSet<E> mo791descendingSet() {
+    public ImmutableSortedSet<E> descendingSet() {
         ImmutableSortedSet<E> immutableSortedSet = this.descendingSet;
-        if (immutableSortedSet == null) {
-            ImmutableSortedSet<E> createDescendingSet = createDescendingSet();
-            this.descendingSet = createDescendingSet;
-            createDescendingSet.descendingSet = this;
-            return createDescendingSet;
+        if (immutableSortedSet != null) {
+            return immutableSortedSet;
         }
-        return immutableSortedSet;
+        ImmutableSortedSet<E> createDescendingSet = createDescendingSet();
+        this.descendingSet = createDescendingSet;
+        createDescendingSet.descendingSet = this;
+        return createDescendingSet;
     }
 
-    /* loaded from: classes2.dex */
     private static class SerializedForm<E> implements Serializable {
         private static final long serialVersionUID = 0;
         final Comparator<? super E> comparator;
         final Object[] elements;
 
-        public SerializedForm(Comparator<? super E> comparator, Object[] objArr) {
-            this.comparator = comparator;
+        public SerializedForm(Comparator<? super E> comparator2, Object[] objArr) {
+            this.comparator = comparator2;
             this.elements = objArr;
         }
 
-        /* JADX WARN: Multi-variable type inference failed */
-        Object readResolve() {
-            return new Builder(this.comparator).add(this.elements).mo799build();
+        /* access modifiers changed from: package-private */
+        public Object readResolve() {
+            return new Builder(this.comparator).add((E[]) this.elements).build();
         }
     }
 
@@ -285,8 +191,8 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSortedSetFauxveride
         throw new InvalidObjectException("Use SerializedForm");
     }
 
-    @Override // com.google.common.collect.ImmutableSet, com.google.common.collect.ImmutableCollection
-    Object writeReplace() {
+    /* access modifiers changed from: package-private */
+    public Object writeReplace() {
         return new SerializedForm(this.comparator, toArray());
     }
 }

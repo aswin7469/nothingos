@@ -8,7 +8,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
-import com.android.settings.R;
+import com.android.settings.R$bool;
 import com.android.settings.homepage.contextualcards.logging.ContextualCardLogUtils;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settings.slices.CustomSliceRegistry;
@@ -19,17 +19,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-/* loaded from: classes.dex */
+
 public class ContextualCardLoader extends AsyncLoaderCompat<List<ContextualCard>> {
     static final String CONTEXTUAL_CARD_COUNT = "contextual_card_count";
     static final int DEFAULT_CARD_COUNT = 3;
     private final Context mContext;
     Uri mNotifyUri;
-    private final ContentObserver mObserver = new ContentObserver(new Handler(Looper.getMainLooper())) { // from class: com.android.settings.homepage.contextualcards.ContextualCardLoader.1
-        @Override // android.database.ContentObserver
+    private final ContentObserver mObserver = new ContentObserver(new Handler(Looper.getMainLooper())) {
         public void onChange(boolean z, Uri uri) {
             if (ContextualCardLoader.this.isStarted()) {
                 ContextualCardLoader contextualCardLoader = ContextualCardLoader.this;
@@ -39,24 +36,20 @@ public class ContextualCardLoader extends AsyncLoaderCompat<List<ContextualCard>
         }
     };
 
-    /* loaded from: classes.dex */
     public interface CardContentLoaderListener {
         void onFinishCardLoading(List<ContextualCard> list);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.utils.AsyncLoaderCompat
+    /* access modifiers changed from: protected */
     public void onDiscardResult(List<ContextualCard> list) {
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public ContextualCardLoader(Context context) {
+    ContextualCardLoader(Context context) {
         super(context);
         this.mContext = context.getApplicationContext();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.utils.AsyncLoaderCompat, androidx.loader.content.Loader
+    /* access modifiers changed from: protected */
     public void onStartLoading() {
         super.onStartLoading();
         this.mNotifyUri = null;
@@ -64,18 +57,15 @@ public class ContextualCardLoader extends AsyncLoaderCompat<List<ContextualCard>
         this.mContext.getContentResolver().registerContentObserver(CardContentProvider.DELETE_CARD_URI, false, this.mObserver);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.utils.AsyncLoaderCompat, androidx.loader.content.Loader
+    /* access modifiers changed from: protected */
     public void onStopLoading() {
         super.onStopLoading();
         this.mContext.getContentResolver().unregisterContentObserver(this.mObserver);
     }
 
-    @Override // androidx.loader.content.AsyncTaskLoader
-    /* renamed from: loadInBackground  reason: collision with other method in class */
-    public List<ContextualCard> mo611loadInBackground() {
+    public List<ContextualCard> loadInBackground() {
         ArrayList arrayList = new ArrayList();
-        if (this.mContext.getResources().getBoolean(R.bool.config_use_legacy_suggestion)) {
+        if (this.mContext.getResources().getBoolean(R$bool.config_use_legacy_suggestion)) {
             Log.d("ContextualCardLoader", "Skipping - in legacy suggestion mode");
             return arrayList;
         }
@@ -86,7 +76,7 @@ public class ContextualCardLoader extends AsyncLoaderCompat<List<ContextualCard>
                 while (!contextualCardsFromProvider.isAfterLast()) {
                     ContextualCard contextualCard = new ContextualCard(contextualCardsFromProvider);
                     if (isLargeCard(contextualCard)) {
-                        arrayList.add(contextualCard.mutate().setIsLargeCard(true).mo389build());
+                        arrayList.add(contextualCard.mutate().setIsLargeCard(true).build());
                     } else {
                         arrayList.add(contextualCard);
                     }
@@ -96,36 +86,20 @@ public class ContextualCardLoader extends AsyncLoaderCompat<List<ContextualCard>
             contextualCardsFromProvider.close();
             return getDisplayableCards(arrayList);
         } catch (Throwable th) {
-            if (contextualCardsFromProvider != null) {
-                try {
-                    contextualCardsFromProvider.close();
-                } catch (Throwable th2) {
-                    th.addSuppressed(th2);
-                }
-            }
-            throw th;
+            th.addSuppressed(th);
         }
+        throw th;
     }
 
-    List<ContextualCard> getDisplayableCards(List<ContextualCard> list) {
+    /* access modifiers changed from: package-private */
+    public List<ContextualCard> getDisplayableCards(List<ContextualCard> list) {
         List<ContextualCard> filterEligibleCards = filterEligibleCards(list);
-        final ArrayList arrayList = new ArrayList();
-        final ArrayList arrayList2 = new ArrayList();
-        final ArrayList arrayList3 = new ArrayList();
-        final int cardCount = getCardCount();
-        filterEligibleCards.forEach(new Consumer() { // from class: com.android.settings.homepage.contextualcards.ContextualCardLoader$$ExternalSyntheticLambda0
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                ContextualCardLoader.lambda$getDisplayableCards$0(arrayList, cardCount, arrayList3, (ContextualCard) obj);
-            }
-        });
-        final int size = cardCount - arrayList.size();
-        filterEligibleCards.forEach(new Consumer() { // from class: com.android.settings.homepage.contextualcards.ContextualCardLoader$$ExternalSyntheticLambda1
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                ContextualCardLoader.lambda$getDisplayableCards$1(arrayList2, size, arrayList3, (ContextualCard) obj);
-            }
-        });
+        ArrayList arrayList = new ArrayList();
+        ArrayList arrayList2 = new ArrayList();
+        ArrayList arrayList3 = new ArrayList();
+        int cardCount = getCardCount();
+        filterEligibleCards.forEach(new ContextualCardLoader$$ExternalSyntheticLambda1(arrayList, cardCount, arrayList3));
+        filterEligibleCards.forEach(new ContextualCardLoader$$ExternalSyntheticLambda2(arrayList2, cardCount - arrayList.size(), arrayList3));
         arrayList2.addAll(arrayList);
         if (!CardContentProvider.DELETE_CARD_URI.equals(this.mNotifyUri)) {
             FeatureFactory.getFactory(this.mContext).getMetricsFeatureProvider().action(this.mContext, 1664, ContextualCardLogUtils.buildCardListLog(arrayList3));
@@ -133,39 +107,40 @@ public class ContextualCardLoader extends AsyncLoaderCompat<List<ContextualCard>
         return arrayList2;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ void lambda$getDisplayableCards$0(List list, int i, List list2, ContextualCard contextualCard) {
-        if (contextualCard.getCategory() != 6) {
-            return;
-        }
-        if (list.size() < i) {
-            list.add(contextualCard);
-        } else {
-            list2.add(contextualCard);
-        }
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ void lambda$getDisplayableCards$1(List list, int i, List list2, ContextualCard contextualCard) {
         if (contextualCard.getCategory() == 6) {
-            return;
-        }
-        if (list.size() < i) {
-            list.add(contextualCard);
-        } else {
-            list2.add(contextualCard);
+            if (list.size() < i) {
+                list.add(contextualCard);
+            } else {
+                list2.add(contextualCard);
+            }
         }
     }
 
-    int getCardCount() {
+    /* access modifiers changed from: private */
+    public static /* synthetic */ void lambda$getDisplayableCards$1(List list, int i, List list2, ContextualCard contextualCard) {
+        if (contextualCard.getCategory() != 6) {
+            if (list.size() < i) {
+                list.add(contextualCard);
+            } else {
+                list2.add(contextualCard);
+            }
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public int getCardCount() {
         return Settings.Global.getInt(this.mContext.getContentResolver(), CONTEXTUAL_CARD_COUNT, 3);
     }
 
-    Cursor getContextualCardsFromProvider() {
+    /* access modifiers changed from: package-private */
+    public Cursor getContextualCardsFromProvider() {
         return FeatureFactory.getFactory(this.mContext).getContextualCardFeatureProvider(this.mContext).getContextualCards();
     }
 
-    List<ContextualCard> filterEligibleCards(List<ContextualCard> list) {
+    /* access modifiers changed from: package-private */
+    public List<ContextualCard> filterEligibleCards(List<ContextualCard> list) {
         if (list.isEmpty()) {
             return list;
         }
@@ -173,14 +148,7 @@ public class ContextualCardLoader extends AsyncLoaderCompat<List<ContextualCard>
         ArrayList arrayList = new ArrayList();
         List arrayList2 = new ArrayList();
         try {
-            arrayList2 = newFixedThreadPool.invokeAll((List) list.stream().map(new Function() { // from class: com.android.settings.homepage.contextualcards.ContextualCardLoader$$ExternalSyntheticLambda2
-                @Override // java.util.function.Function
-                public final Object apply(Object obj) {
-                    EligibleCardChecker lambda$filterEligibleCards$2;
-                    lambda$filterEligibleCards$2 = ContextualCardLoader.this.lambda$filterEligibleCards$2((ContextualCard) obj);
-                    return lambda$filterEligibleCards$2;
-                }
-            }).collect(Collectors.toList()), 400L, TimeUnit.MILLISECONDS);
+            arrayList2 = newFixedThreadPool.invokeAll((List) list.stream().map(new ContextualCardLoader$$ExternalSyntheticLambda0(this)).collect(Collectors.toList()), 400, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             Log.w("ContextualCardLoader", "Failed to get eligible states for all cards", e);
         }
@@ -203,7 +171,7 @@ public class ContextualCardLoader extends AsyncLoaderCompat<List<ContextualCard>
         return arrayList;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ EligibleCardChecker lambda$filterEligibleCards$2(ContextualCard contextualCard) {
         return new EligibleCardChecker(this.mContext, contextualCard);
     }

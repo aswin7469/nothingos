@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/prv/res/android" android:layout_width="match_parent" android:layout_height="match_parent">
-    <include android:id="@+id/r_angle_description_layout" android:visibility="gone" layout="@layout/r_angle_description"/>
-    <RelativeLayout android:id="@+id/r_angle_item_layout" android:layout_width="match_parent" android:layout_height="match_parent" android:minHeight="@dimen/list_preferred_item_height" android:paddingEnd="@dimen/nt_setting_content_margin_side">
-        <ImageView android:id="@+id/app_icon" android:layout_centerVertical="true" style="@style/listview_item_icon"/>
-        <Switch android:id="@+id/r_angle_switch" android:focusable="false" android:clickable="false" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerVertical="true" android:layout_alignParentEnd="true"/>
-        <TextView android:textSize="@dimen/listview_item_title_size" android:textColor="@color/nt_settings_display_app_name" android:ellipsize="end" android:id="@+id/app_name" android:layout_width="match_parent" android:layout_height="wrap_content" android:singleLine="true" android:layout_centerVertical="true" android:fontFamily="regular" android:textAlignment="viewStart" android:layout_marginEnd="5dp" android:layout_toStartOf="@+id/r_angle_switch" android:layout_toEndOf="@+id/app_icon"/>
-    </RelativeLayout>
-</RelativeLayout>

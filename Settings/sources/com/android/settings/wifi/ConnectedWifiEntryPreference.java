@@ -6,13 +6,11 @@ import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceViewHolder;
 import com.android.settingslib.R$id;
 import com.android.settingslib.R$layout;
-import com.android.settingslib.wifi.LongPressWifiEntryPreference;
 import com.android.wifitrackerlib.WifiEntry;
-/* loaded from: classes.dex */
+
 public class ConnectedWifiEntryPreference extends LongPressWifiEntryPreference {
     private OnGearClickListener mOnGearClickListener;
 
-    /* loaded from: classes.dex */
     public interface OnGearClickListener {
         void onGearClick(ConnectedWifiEntryPreference connectedWifiEntryPreference);
     }
@@ -27,7 +25,6 @@ public class ConnectedWifiEntryPreference extends LongPressWifiEntryPreference {
         notifyChanged();
     }
 
-    @Override // com.android.settingslib.wifi.LongPressWifiEntryPreference, com.android.settingslib.wifi.WifiEntryPreference, androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         View findViewById = preferenceViewHolder.findViewById(R$id.settings_button);
@@ -43,12 +40,10 @@ public class ConnectedWifiEntryPreference extends LongPressWifiEntryPreference {
         findViewById2.setVisibility(i);
     }
 
-    @Override // com.android.settingslib.wifi.WifiEntryPreference, android.view.View.OnClickListener
     public void onClick(View view) {
         OnGearClickListener onGearClickListener;
-        if (view.getId() != R$id.settings_button || (onGearClickListener = this.mOnGearClickListener) == null) {
-            return;
+        if (view.getId() == R$id.settings_button && (onGearClickListener = this.mOnGearClickListener) != null) {
+            onGearClickListener.onGearClick(this);
         }
-        onGearClickListener.onGearClick(this);
     }
 }

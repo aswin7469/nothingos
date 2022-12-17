@@ -2,7 +2,7 @@ package com.google.zxing.datamatrix.encoder;
 
 import com.google.zxing.Dimension;
 import java.nio.charset.Charset;
-/* loaded from: classes2.dex */
+
 final class EncoderContext {
     private final StringBuilder codewords;
     private Dimension maxSize;
@@ -14,17 +14,19 @@ final class EncoderContext {
     private int skipAtEnd;
     private SymbolInfo symbolInfo;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public EncoderContext(String str) {
+    EncoderContext(String str) {
         byte[] bytes = str.getBytes(Charset.forName("ISO-8859-1"));
         StringBuilder sb = new StringBuilder(bytes.length);
         int length = bytes.length;
-        for (int i = 0; i < length; i++) {
+        int i = 0;
+        while (i < length) {
             char c = (char) (bytes[i] & 255);
-            if (c == '?' && str.charAt(i) != '?') {
+            if (c != '?' || str.charAt(i) == '?') {
+                sb.append(c);
+                i++;
+            } else {
                 throw new IllegalArgumentException("Message contains characters outside ISO-8859-1 encoding.");
             }
-            sb.append(c);
         }
         this.msg = sb.toString();
         this.shape = SymbolShapeHint.FORCE_NONE;
@@ -102,8 +104,8 @@ final class EncoderContext {
     }
 
     public void updateSymbolInfo(int i) {
-        SymbolInfo symbolInfo = this.symbolInfo;
-        if (symbolInfo == null || i > symbolInfo.getDataCapacity()) {
+        SymbolInfo symbolInfo2 = this.symbolInfo;
+        if (symbolInfo2 == null || i > symbolInfo2.getDataCapacity()) {
             this.symbolInfo = SymbolInfo.lookup(i, this.shape, this.minSize, this.maxSize, true);
         }
     }

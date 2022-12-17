@@ -196,6 +196,8 @@
         <item>تم إنشاؤها قبل أكثر من 60 يومًا.</item>
         <item>تم إنشاؤها قبل أكثر من 90 يومًا.</item>
     </array>
+    <array name="avatar_image_descriptions">
+    </array>
     <array name="battery_labels">
         <item>٠‏٪</item>
         <item>٥٠٪</item>
@@ -260,6 +262,8 @@
         <item>48.0 كيلو هرتز</item>
         <item>88.2 كيلو هرتز</item>
         <item>96.0 كيلو هرتز</item>
+        <item>176.4 كيلو هرتز</item>
+        <item>192.0 كيلو هرتز</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
         <item>استخدام اختيار النظام (تلقائي)</item>
@@ -267,6 +271,8 @@
         <item>48.0 كيلو هرتز</item>
         <item>88.2 كيلو هرتز</item>
         <item>96.0 كيلو هرتز</item>
+        <item>176.4 كيلو هرتز</item>
+        <item>192.0 كيلو هرتز</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
         <item>استخدام اختيار النظام (تلقائي)</item>
@@ -277,6 +283,10 @@
         <item>LDAC</item>
         <item>ﺹﻮﺗ Qualcomm® aptX™ Adaptive</item>
         <item>ﺹﻮﺗ Qualcomm® aptX™ TWS+</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
         <item>استخدام اختيار النظام (تلقائي)</item>
@@ -287,6 +297,10 @@
         <item>LDAC</item>
         <item>ﺹﻮﺗ Qualcomm® aptX™ Adaptive</item>
         <item>ﺹﻮﺗ Qualcomm® aptX™ TWS+</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -343,17 +357,10 @@
         <item>مرتفعة</item>
         <item>منخفضة</item>
     </array>
-    <array name="captioning_font_size_selector_summaries">
-        <item>حجم نص صغير جدًا</item>
-        <item>حجم نص صغير</item>
-        <item>حجم النص التلقائي</item>
-        <item>حجم نص كبير</item>
-        <item>حجم نص كبير جدًا</item>
-    </array>
     <array name="captioning_font_size_selector_titles">
         <item>صغير جدًا</item>
         <item>صغير</item>
-        <item>تلقائي</item>
+        <item>متوسط</item>
         <item>كبير</item>
         <item>كبير جدًا</item>
     </array>
@@ -486,15 +493,13 @@
         <item>GID</item>
         <item>ICCID</item>
     </array>
-    <array name="res_0x7f0300b1_nt_preferred_network_mode_choices">
-        <item>3G</item>
-        <item>4G</item>
-        <item>5G</item>
+    <array name="nfc_payment_favor">
+        <item>دائمًا</item>
+        <item>إلا إذا كان هناك تطبيق دفع آخر مفتوحًا</item>
     </array>
-    <array name="res_0x7f0300b2_nt_preferred_network_mode_values">
-        <item>21</item>
-        <item>22</item>
-        <item>33</item>
+    <array name="nfc_payment_favor_values">
+        <item>@null</item>
+        <item>1</item>
     </array>
     <array name="overlay_display_devices_entries">
         <item>بدون محاكاة</item>
@@ -628,17 +633,20 @@
         <item>رسم منطقة قصاصة غير مستطيلة بالأزرق</item>
         <item>إبراز أوامر رسم تم اختبارها بالأخضر</item>
     </array>
-    <array name="sim_color_light">
-        <item>@color/SIM_color_cyan</item>
-        <item>@color/SIM_color_blue800</item>
-        <item>@color/SIM_color_green800</item>
-        <item>@color/SIM_color_purple800</item>
-        <item>@color/SIM_color_pink800</item>
-        <item>@color/SIM_color_orange</item>
-    </array>
     <array name="swipe_direction_values">
         <item>1</item>
         <item>@null</item>
+    </array>
+    <array name="switch_to_user_zero_when_docked_timeout_entries">
+        <item>أبدًا</item>
+        <item>بعد دقيقة واحدة</item>
+        <item>بعد 5 دقائق</item>
+    </array>
+    <array name="tare_modifiers_subfactors">
+        <item>الشحن</item>
+        <item>القيلولة</item>
+        <item>وضع توفير الطاقة</item>
+        <item>حالة المعالجة</item>
     </array>
     <array name="timezone_filters">
         <item>أمريكا</item>

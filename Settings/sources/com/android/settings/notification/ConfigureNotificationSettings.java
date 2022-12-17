@@ -10,7 +10,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.RingtonePreference;
 import com.android.settings.core.OnActivityResultListener;
 import com.android.settings.dashboard.DashboardFragment;
@@ -18,16 +19,14 @@ import com.android.settings.search.BaseSearchIndexProvider;
 import com.android.settingslib.core.AbstractPreferenceController;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class ConfigureNotificationSettings extends DashboardFragment implements OnActivityResultListener {
     static final String KEY_SWIPE_DOWN = "gesture_swipe_down_fingerprint_notifications";
-    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R.xml.configure_notification_settings) { // from class: com.android.settings.notification.ConfigureNotificationSettings.2
-        @Override // com.android.settings.search.BaseSearchIndexProvider
+    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R$xml.configure_notification_settings) {
         public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
-            return ConfigureNotificationSettings.buildPreferenceControllers(context, null, null);
+            return ConfigureNotificationSettings.buildPreferenceControllers(context, (Application) null, (Fragment) null);
         }
 
-        @Override // com.android.settings.search.BaseSearchIndexProvider, com.android.settingslib.search.Indexable$SearchIndexProvider
         public List<String> getNonIndexableKeys(Context context) {
             List<String> nonIndexableKeys = super.getNonIndexableKeys(context);
             nonIndexableKeys.add(ConfigureNotificationSettings.KEY_SWIPE_DOWN);
@@ -37,30 +36,32 @@ public class ConfigureNotificationSettings extends DashboardFragment implements 
     private NotificationAssistantPreferenceController mNotificationAssistantPreferenceController;
     private RingtonePreference mRequestPreference;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "ConfigNotiSettings";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 337;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
-    public int getPreferenceScreenResId() {
-        return R.xml.configure_notification_settings;
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        replaceEnterpriseStringTitle("lock_screen_work_redact", "Settings.WORK_PROFILE_LOCK_SCREEN_REDACT_NOTIFICATION_TITLE", R$string.lock_screen_notifs_redact_work);
+        replaceEnterpriseStringSummary("lock_screen_work_redact", "Settings.WORK_PROFILE_LOCK_SCREEN_REDACT_NOTIFICATION_SUMMARY", R$string.lock_screen_notifs_redact_work_summary);
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment
-    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+    /* access modifiers changed from: protected */
+    public int getPreferenceScreenResId() {
+        return R$xml.configure_notification_settings;
+    }
+
+    /* access modifiers changed from: protected */
+    public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
         FragmentActivity activity = getActivity();
         return buildPreferenceControllers(context, activity != null ? activity.getApplication() : null, this);
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         NotificationAssistantPreferenceController notificationAssistantPreferenceController = (NotificationAssistantPreferenceController) use(NotificationAssistantPreferenceController.class);
@@ -69,12 +70,11 @@ public class ConfigureNotificationSettings extends DashboardFragment implements 
         this.mNotificationAssistantPreferenceController.setBackend(new NotificationBackend());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static List<AbstractPreferenceController> buildPreferenceControllers(Context context, Application application, Fragment fragment) {
         ArrayList arrayList = new ArrayList();
         arrayList.add(new ShowOnLockScreenNotificationPreferenceController(context, "lock_screen_notifications"));
-        arrayList.add(new NotificationRingtonePreferenceController(context) { // from class: com.android.settings.notification.ConfigureNotificationSettings.1
-            @Override // com.android.settings.notification.NotificationRingtonePreferenceController, com.android.settingslib.core.AbstractPreferenceController
+        arrayList.add(new NotificationRingtonePreferenceController(context) {
             public String getPreferenceKey() {
                 return "notification_default_ringtone";
             }
@@ -83,20 +83,18 @@ public class ConfigureNotificationSettings extends DashboardFragment implements 
         return arrayList;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.preference.PreferenceManager.OnPreferenceTreeClickListener
     public boolean onPreferenceTreeClick(Preference preference) {
-        if (preference instanceof RingtonePreference) {
-            writePreferenceClickMetric(preference);
-            RingtonePreference ringtonePreference = (RingtonePreference) preference;
-            this.mRequestPreference = ringtonePreference;
-            ringtonePreference.onPrepareRingtonePickerIntent(ringtonePreference.getIntent());
-            getActivity().startActivityForResultAsUser(this.mRequestPreference.getIntent(), 200, null, UserHandle.of(this.mRequestPreference.getUserId()));
-            return true;
+        if (!(preference instanceof RingtonePreference)) {
+            return super.onPreferenceTreeClick(preference);
         }
-        return super.onPreferenceTreeClick(preference);
+        writePreferenceClickMetric(preference);
+        RingtonePreference ringtonePreference = (RingtonePreference) preference;
+        this.mRequestPreference = ringtonePreference;
+        ringtonePreference.onPrepareRingtonePickerIntent(ringtonePreference.getIntent());
+        getActivity().startActivityForResultAsUser(this.mRequestPreference.getIntent(), 200, (Bundle) null, UserHandle.of(this.mRequestPreference.getUserId()));
+        return true;
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onActivityResult(int i, int i2, Intent intent) {
         RingtonePreference ringtonePreference = this.mRequestPreference;
         if (ringtonePreference != null) {
@@ -105,7 +103,6 @@ public class ConfigureNotificationSettings extends DashboardFragment implements 
         }
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         RingtonePreference ringtonePreference = this.mRequestPreference;
@@ -114,7 +111,7 @@ public class ConfigureNotificationSettings extends DashboardFragment implements 
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void enableNAS(ComponentName componentName) {
         PreferenceScreen preferenceScreen = getPreferenceScreen();
         NotificationAssistantPreferenceController notificationAssistantPreferenceController = (NotificationAssistantPreferenceController) use(NotificationAssistantPreferenceController.class);

@@ -7,13 +7,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
-/* loaded from: classes.dex */
+
 public class TwoTargetPreference extends Preference {
     private int mIconSize;
     private int mMediumIconSize;
     private int mSmallIconSize;
 
-    protected int getSecondTargetResId() {
+    /* access modifiers changed from: protected */
+    public int getSecondTargetResId() {
         return 0;
     }
 
@@ -51,7 +52,6 @@ public class TwoTargetPreference extends Preference {
         this.mIconSize = i;
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         ImageView imageView = (ImageView) preferenceViewHolder.itemView.findViewById(16908294);
@@ -78,7 +78,8 @@ public class TwoTargetPreference extends Preference {
         }
     }
 
-    protected boolean shouldHideSecondTarget() {
+    /* access modifiers changed from: protected */
+    public boolean shouldHideSecondTarget() {
         return getSecondTargetResId() == 0;
     }
 }

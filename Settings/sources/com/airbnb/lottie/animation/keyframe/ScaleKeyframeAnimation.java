@@ -5,36 +5,30 @@ import com.airbnb.lottie.value.Keyframe;
 import com.airbnb.lottie.value.LottieValueCallback;
 import com.airbnb.lottie.value.ScaleXY;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class ScaleKeyframeAnimation extends KeyframeAnimation<ScaleXY> {
     private final ScaleXY scaleXY = new ScaleXY();
-
-    @Override // com.airbnb.lottie.animation.keyframe.BaseKeyframeAnimation
-    /* renamed from: getValue  reason: collision with other method in class */
-    public /* bridge */ /* synthetic */ Object mo179getValue(Keyframe keyframe, float f) {
-        return mo179getValue((Keyframe<ScaleXY>) keyframe, f);
-    }
 
     public ScaleKeyframeAnimation(List<Keyframe<ScaleXY>> list) {
         super(list);
     }
 
-    @Override // com.airbnb.lottie.animation.keyframe.BaseKeyframeAnimation
-    /* renamed from: getValue */
-    public ScaleXY mo179getValue(Keyframe<ScaleXY> keyframe, float f) {
-        ScaleXY scaleXY;
-        ScaleXY scaleXY2;
-        ScaleXY scaleXY3 = keyframe.startValue;
-        if (scaleXY3 == null || (scaleXY = keyframe.endValue) == null) {
+    public ScaleXY getValue(Keyframe<ScaleXY> keyframe, float f) {
+        T t;
+        T t2 = keyframe.startValue;
+        if (t2 == null || (t = keyframe.endValue) == null) {
             throw new IllegalStateException("Missing values for keyframe.");
         }
-        ScaleXY scaleXY4 = scaleXY3;
-        ScaleXY scaleXY5 = scaleXY;
+        ScaleXY scaleXY2 = (ScaleXY) t2;
+        ScaleXY scaleXY3 = (ScaleXY) t;
         LottieValueCallback<A> lottieValueCallback = this.valueCallback;
-        if (lottieValueCallback != 0 && (scaleXY2 = (ScaleXY) lottieValueCallback.getValueInternal(keyframe.startFrame, keyframe.endFrame.floatValue(), scaleXY4, scaleXY5, f, getLinearCurrentKeyframeProgress(), getProgress())) != null) {
-            return scaleXY2;
+        if (lottieValueCallback != null) {
+            ScaleXY scaleXY4 = (ScaleXY) lottieValueCallback.getValueInternal(keyframe.startFrame, keyframe.endFrame.floatValue(), scaleXY2, scaleXY3, f, getLinearCurrentKeyframeProgress(), getProgress());
+            if (scaleXY4 != null) {
+                return scaleXY4;
+            }
         }
-        this.scaleXY.set(MiscUtils.lerp(scaleXY4.getScaleX(), scaleXY5.getScaleX(), f), MiscUtils.lerp(scaleXY4.getScaleY(), scaleXY5.getScaleY(), f));
+        this.scaleXY.set(MiscUtils.lerp(scaleXY2.getScaleX(), scaleXY3.getScaleX(), f), MiscUtils.lerp(scaleXY2.getScaleY(), scaleXY3.getScaleY(), f));
         return this.scaleXY;
     }
 }

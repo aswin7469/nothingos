@@ -6,7 +6,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.Checkable;
 import android.widget.LinearLayout;
-/* loaded from: classes.dex */
+
 public class CheckableLinearLayout extends LinearLayout implements Checkable {
     private boolean mChecked;
     private float mDisabledAlpha;
@@ -18,7 +18,6 @@ public class CheckableLinearLayout extends LinearLayout implements Checkable {
         this.mDisabledAlpha = typedValue.getFloat();
     }
 
-    @Override // android.view.View
     public void setEnabled(boolean z) {
         super.setEnabled(z);
         int childCount = getChildCount();
@@ -27,18 +26,15 @@ public class CheckableLinearLayout extends LinearLayout implements Checkable {
         }
     }
 
-    @Override // android.widget.Checkable
     public void setChecked(boolean z) {
         this.mChecked = z;
         updateChecked();
     }
 
-    @Override // android.widget.Checkable
     public boolean isChecked() {
         return this.mChecked;
     }
 
-    @Override // android.widget.Checkable
     public void toggle() {
         setChecked(!this.mChecked);
     }

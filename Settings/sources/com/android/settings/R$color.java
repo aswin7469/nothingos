@@ -1,0 +1,47 @@
+package com.android.settings;
+
+public final class R$color {
+    public static final int SIM_color_blue800 = 2131099649;
+    public static final int SIM_color_cyan = 2131099650;
+    public static final int SIM_color_green800 = 2131099651;
+    public static final int SIM_color_orange = 2131099653;
+    public static final int SIM_color_pink800 = 2131099655;
+    public static final int SIM_color_purple800 = 2131099657;
+    public static final int SIM_dark_mode_color_blue = 2131099660;
+    public static final int SIM_dark_mode_color_cyan = 2131099661;
+    public static final int SIM_dark_mode_color_green = 2131099662;
+    public static final int SIM_dark_mode_color_orange = 2131099663;
+    public static final int SIM_dark_mode_color_pink = 2131099664;
+    public static final int SIM_dark_mode_color_purple = 2131099665;
+    public static final int about_device_title_color = 2131099693;
+    public static final int accent_select_primary_text = 2131099698;
+    public static final int accent_select_secondary_text = 2131099699;
+    public static final int back_gesture_indicator = 2131099708;
+    public static final int battery_bad_color_light = 2131099720;
+    public static final int battery_good_color_light = 2131099722;
+    public static final int battery_icon_color_error = 2131099723;
+    public static final int colorAccent = 2131099765;
+    public static final int disabled_text_color = 2131099816;
+    public static final int dream_card_icon_color_state_list = 2131099819;
+    public static final int face_anim_particle_color_1 = 2131099823;
+    public static final int face_anim_particle_color_2 = 2131099824;
+    public static final int face_anim_particle_color_3 = 2131099825;
+    public static final int face_anim_particle_color_4 = 2131099826;
+    public static final int face_anim_particle_error = 2131099827;
+    public static final int homepage_generic_icon_background = 2131099850;
+    public static final int message_bubble_incoming = 2131100294;
+    public static final int message_bubble_outgoing = 2131100295;
+    public static final int message_icon_color = 2131100298;
+    public static final int message_text_incoming = 2131100301;
+    public static final int message_text_outgoing = 2131100302;
+    public static final int meter_background_color = 2131100303;
+    public static final int palette_list_gradient_background = 2131100428;
+    public static final int preference_highlight_color = 2131100430;
+    public static final int running_processes_free_ram = 2131100446;
+    public static final int running_processes_system_ram = 2131100447;
+    public static final int settings_two_pane_background_color = 2131100461;
+    public static final int sim_noitification = 2131100553;
+    public static final int timestamp_text_incoming = 2131100680;
+    public static final int timestamp_text_outgoing = 2131100681;
+    public static final int week_check_text_selector = 2131100688;
+}

@@ -2,60 +2,58 @@ package com.android.settings.applications;
 
 import android.content.Context;
 import android.provider.SearchIndexableResource;
-import com.android.settings.R;
+import android.provider.Settings;
+import android.text.TextUtils;
+import android.util.Log;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.dashboard.DashboardFragment;
 import com.android.settings.search.BaseSearchIndexProvider;
 import com.android.settingslib.core.AbstractPreferenceController;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class AppDashboardFragment extends DashboardFragment {
-    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider() { // from class: com.android.settings.applications.AppDashboardFragment.1
-        @Override // com.android.settings.search.BaseSearchIndexProvider, com.android.settingslib.search.Indexable$SearchIndexProvider
+    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider() {
         public List<SearchIndexableResource> getXmlResourcesToIndex(Context context, boolean z) {
             SearchIndexableResource searchIndexableResource = new SearchIndexableResource(context);
-            searchIndexableResource.xmlResId = R.xml.apps;
-            return Arrays.asList(searchIndexableResource);
+            searchIndexableResource.xmlResId = R$xml.apps;
+            return Arrays.asList(new SearchIndexableResource[]{searchIndexableResource});
         }
 
-        @Override // com.android.settings.search.BaseSearchIndexProvider
         public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
             return AppDashboardFragment.buildPreferenceControllers(context);
         }
     };
     private AppsPreferenceController mAppsPreferenceController;
+    private String mIconPackPackageName = null;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "AppDashboardFragment";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 65;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static List<AbstractPreferenceController> buildPreferenceControllers(Context context) {
         ArrayList arrayList = new ArrayList();
         arrayList.add(new AppsPreferenceController(context));
         return arrayList;
     }
 
-    @Override // com.android.settings.support.actionbar.HelpResourceProvider
     public int getHelpResource() {
-        return R.string.help_url_apps_and_notifications;
+        return R$string.help_url_apps_and_notifications;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.apps;
+        return R$xml.apps;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         ((SpecialAppAccessPreferenceController) use(SpecialAppAccessPreferenceController.class)).setSession(getSettingsLifecycle());
@@ -66,8 +64,18 @@ public class AppDashboardFragment extends DashboardFragment {
         getSettingsLifecycle().addObserver((HibernatedAppsPreferenceController) use(HibernatedAppsPreferenceController.class));
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment
-    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+    /* access modifiers changed from: protected */
+    public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
         return buildPreferenceControllers(context);
+    }
+
+    public void onResume() {
+        super.onResume();
+        String string = Settings.System.getString(getContentResolver(), "nothing_icon_pack");
+        Log.d("AppDashboardFragment", "onResume packageName:" + string + ", mIconPackPackageName:" + this.mIconPackPackageName);
+        if (!TextUtils.equals(this.mIconPackPackageName, string)) {
+            ((AppsPreferenceController) use(AppsPreferenceController.class)).refreshUi();
+            this.mIconPackPackageName = string;
+        }
     }
 }

@@ -1,17 +1,16 @@
 package com.android.settings.panel;
 
-import android.view.ViewTreeObserver;
-/* loaded from: classes.dex */
-public final /* synthetic */ class PanelFragment$$ExternalSyntheticLambda3 implements ViewTreeObserver.OnPreDrawListener {
-    public static final /* synthetic */ PanelFragment$$ExternalSyntheticLambda3 INSTANCE = new PanelFragment$$ExternalSyntheticLambda3();
+import android.view.View;
 
-    private /* synthetic */ PanelFragment$$ExternalSyntheticLambda3() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class PanelFragment$$ExternalSyntheticLambda3 implements View.OnClickListener {
+    public final /* synthetic */ PanelFragment f$0;
+
+    public /* synthetic */ PanelFragment$$ExternalSyntheticLambda3(PanelFragment panelFragment) {
+        this.f$0 = panelFragment;
     }
 
-    @Override // android.view.ViewTreeObserver.OnPreDrawListener
-    public final boolean onPreDraw() {
-        boolean lambda$new$0;
-        lambda$new$0 = PanelFragment.lambda$new$0();
-        return lambda$new$0;
+    public final void onClick(View view) {
+        this.f$0.lambda$getCloseListener$5(view);
     }
 }

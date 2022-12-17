@@ -3,8 +3,8 @@ package com.android.settings.wifi;
 import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.widget.Toast;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$string;
+
 public class WifiConnectListener implements WifiManager.ActionListener {
     private final Context mContext;
 
@@ -18,7 +18,7 @@ public class WifiConnectListener implements WifiManager.ActionListener {
     public void onFailure(int i) {
         Context context = this.mContext;
         if (context != null) {
-            Toast.makeText(context, R.string.wifi_failed_connect_message, 0).show();
+            Toast.makeText(context, R$string.wifi_failed_connect_message, 0).show();
         }
     }
 }

@@ -5,23 +5,25 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.widget.TextView;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class WifiConfigInfo extends Activity {
     private TextView mConfigList;
     private WifiManager mWifiManager;
 
-    @Override // android.app.Activity
-    protected void onCreate(Bundle bundle) {
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         this.mWifiManager = (WifiManager) getSystemService("wifi");
-        setContentView(R.layout.wifi_config_info);
-        this.mConfigList = (TextView) findViewById(R.id.config_list);
+        setContentView(R$layout.wifi_config_info);
+        this.mConfigList = (TextView) findViewById(R$id.config_list);
     }
 
-    @Override // android.app.Activity
-    protected void onResume() {
+    /* access modifiers changed from: protected */
+    public void onResume() {
         super.onResume();
         if (this.mWifiManager.isWifiEnabled()) {
             List<WifiConfiguration> configuredNetworks = this.mWifiManager.getConfiguredNetworks();
@@ -32,6 +34,6 @@ public class WifiConfigInfo extends Activity {
             this.mConfigList.setText(stringBuffer);
             return;
         }
-        this.mConfigList.setText(R.string.wifi_state_disabled);
+        this.mConfigList.setText(R$string.wifi_state_disabled);
     }
 }

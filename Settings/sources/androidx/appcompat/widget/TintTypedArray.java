@@ -9,7 +9,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.res.ResourcesCompat;
-/* loaded from: classes.dex */
+
 public class TintTypedArray {
     private final Context mContext;
     private TypedValue mTypedValue;
@@ -38,10 +38,10 @@ public class TintTypedArray {
 
     public Drawable getDrawable(int i) {
         int resourceId;
-        if (this.mWrapped.hasValue(i) && (resourceId = this.mWrapped.getResourceId(i, 0)) != 0) {
-            return AppCompatResources.getDrawable(this.mContext, resourceId);
+        if (!this.mWrapped.hasValue(i) || (resourceId = this.mWrapped.getResourceId(i, 0)) == 0) {
+            return this.mWrapped.getDrawable(i);
         }
-        return this.mWrapped.getDrawable(i);
+        return AppCompatResources.getDrawable(this.mContext, resourceId);
     }
 
     public Drawable getDrawableIfKnown(int i) {
@@ -90,7 +90,10 @@ public class TintTypedArray {
     public ColorStateList getColorStateList(int i) {
         int resourceId;
         ColorStateList colorStateList;
-        return (!this.mWrapped.hasValue(i) || (resourceId = this.mWrapped.getResourceId(i, 0)) == 0 || (colorStateList = AppCompatResources.getColorStateList(this.mContext, resourceId)) == null) ? this.mWrapped.getColorStateList(i) : colorStateList;
+        if (!this.mWrapped.hasValue(i) || (resourceId = this.mWrapped.getResourceId(i, 0)) == 0 || (colorStateList = AppCompatResources.getColorStateList(this.mContext, resourceId)) == null) {
+            return this.mWrapped.getColorStateList(i);
+        }
+        return colorStateList;
     }
 
     public int getInteger(int i, int i2) {

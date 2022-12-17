@@ -7,14 +7,14 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import androidx.preference.R$styleable;
+
 @SuppressLint({"AppCompatCustomView"})
-/* loaded from: classes.dex */
 public class PreferenceImageView extends ImageView {
     private int mMaxHeight;
     private int mMaxWidth;
 
     public PreferenceImageView(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public PreferenceImageView(Context context, AttributeSet attributeSet) {
@@ -31,30 +31,26 @@ public class PreferenceImageView extends ImageView {
         obtainStyledAttributes.recycle();
     }
 
-    @Override // android.widget.ImageView
     public void setMaxWidth(int i) {
         this.mMaxWidth = i;
         super.setMaxWidth(i);
     }
 
-    @Override // android.widget.ImageView
     public int getMaxWidth() {
         return this.mMaxWidth;
     }
 
-    @Override // android.widget.ImageView
     public void setMaxHeight(int i) {
         this.mMaxHeight = i;
         super.setMaxHeight(i);
     }
 
-    @Override // android.widget.ImageView
     public int getMaxHeight() {
         return this.mMaxHeight;
     }
 
-    @Override // android.widget.ImageView, android.view.View
-    protected void onMeasure(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         int mode = View.MeasureSpec.getMode(i);
         if (mode == Integer.MIN_VALUE || mode == 0) {
             int size = View.MeasureSpec.getSize(i);

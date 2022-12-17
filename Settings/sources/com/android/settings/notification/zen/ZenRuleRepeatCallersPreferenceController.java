@@ -7,21 +7,23 @@ import android.util.Log;
 import android.util.Pair;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import androidx.preference.SwitchPreference;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settingslib.core.lifecycle.Lifecycle;
-/* loaded from: classes.dex */
+import com.nothing.p006ui.support.NtCustSwitchPreference;
+
 public class ZenRuleRepeatCallersPreferenceController extends AbstractZenCustomRulePreferenceController implements Preference.OnPreferenceChangeListener {
     private final int mRepeatCallersThreshold;
 
-    @Override // com.android.settings.notification.zen.AbstractZenCustomRulePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public /* bridge */ /* synthetic */ boolean isAvailable() {
         return super.isAvailable();
     }
 
-    @Override // com.android.settings.notification.zen.AbstractZenCustomRulePreferenceController
-    public /* bridge */ /* synthetic */ void onResume(AutomaticZenRule automaticZenRule, String str) {
-        super.onResume(automaticZenRule, str);
+    public /* bridge */ /* synthetic */ void onResume() {
+        super.onResume();
+    }
+
+    public /* bridge */ /* synthetic */ void setIdAndRule(String str, AutomaticZenRule automaticZenRule) {
+        super.setIdAndRule(str, automaticZenRule);
     }
 
     public ZenRuleRepeatCallersPreferenceController(Context context, String str, Lifecycle lifecycle, int i) {
@@ -29,46 +31,42 @@ public class ZenRuleRepeatCallersPreferenceController extends AbstractZenCustomR
         this.mRepeatCallersThreshold = i;
     }
 
-    @Override // com.android.settings.notification.zen.AbstractZenModePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         setRepeatCallerSummary(preferenceScreen.findPreference(this.KEY));
     }
 
-    @Override // com.android.settings.notification.zen.AbstractZenCustomRulePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         AutomaticZenRule automaticZenRule = this.mRule;
-        if (automaticZenRule == null || automaticZenRule.getZenPolicy() == null) {
-            return;
+        if (automaticZenRule != null && automaticZenRule.getZenPolicy() != null) {
+            NtCustSwitchPreference ntCustSwitchPreference = (NtCustSwitchPreference) preference;
+            boolean z = false;
+            if (this.mRule.getZenPolicy().getPriorityCallSenders() == 1) {
+                ntCustSwitchPreference.setEnabled(false);
+                ntCustSwitchPreference.setChecked(true);
+                return;
+            }
+            ntCustSwitchPreference.setEnabled(true);
+            if (this.mRule.getZenPolicy().getPriorityCategoryRepeatCallers() == 1) {
+                z = true;
+            }
+            ntCustSwitchPreference.setChecked(z);
         }
-        SwitchPreference switchPreference = (SwitchPreference) preference;
-        boolean z = false;
-        if (this.mRule.getZenPolicy().getPriorityCallSenders() == 1) {
-            switchPreference.setEnabled(false);
-            switchPreference.setChecked(true);
-            return;
-        }
-        switchPreference.setEnabled(true);
-        if (this.mRule.getZenPolicy().getPriorityCategoryRepeatCallers() == 1) {
-            z = true;
-        }
-        switchPreference.setChecked(z);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         boolean booleanValue = ((Boolean) obj).booleanValue();
         if (ZenModeSettingsBase.DEBUG) {
-            Log.d("PrefControllerMixin", this.KEY + " onPrefChange mRule=" + this.mRule + " mCategory=4 allow=" + booleanValue);
+            Log.d("PrefControllerMixin", this.KEY + " onPrefChange mRule=" + this.mRule + " mCategory=" + 4 + " allow=" + booleanValue);
         }
-        this.mMetricsFeatureProvider.action(this.mContext, 171, Pair.create(1602, Integer.valueOf(booleanValue ? 1 : 0)), Pair.create(1603, this.mId));
+        this.mMetricsFeatureProvider.action(this.mContext, 171, (Pair<Integer, Object>[]) new Pair[]{Pair.create(1602, Integer.valueOf(booleanValue ? 1 : 0)), Pair.create(1603, this.mId)});
         this.mRule.setZenPolicy(new ZenPolicy.Builder(this.mRule.getZenPolicy()).allowRepeatCallers(booleanValue).build());
         this.mBackend.updateZenRule(this.mId, this.mRule);
         return true;
     }
 
     private void setRepeatCallerSummary(Preference preference) {
-        preference.setSummary(this.mContext.getString(R.string.zen_mode_repeat_callers_summary, Integer.valueOf(this.mRepeatCallersThreshold)));
+        preference.setSummary((CharSequence) this.mContext.getString(R$string.zen_mode_repeat_callers_summary, new Object[]{Integer.valueOf(this.mRepeatCallersThreshold)}));
     }
 }

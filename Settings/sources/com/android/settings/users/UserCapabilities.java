@@ -6,22 +6,23 @@ import android.content.pm.UserInfo;
 import android.os.UserHandle;
 import android.os.UserManager;
 import android.provider.Settings;
+import com.android.settings.R$bool;
 import com.android.settings.Utils;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.RestrictedLockUtilsInternal;
-/* loaded from: classes.dex */
+
 public class UserCapabilities {
     boolean mCanAddGuest;
+    boolean mCanAddRestrictedProfile;
+    boolean mCanAddUser = true;
     boolean mDisallowAddUser;
     boolean mDisallowAddUserSetByAdmin;
     boolean mDisallowSwitchUser;
+    boolean mEnabled = true;
     RestrictedLockUtils.EnforcedAdmin mEnforcedAdmin;
     boolean mIsAdmin;
     boolean mIsGuest;
     boolean mUserSwitcherEnabled;
-    boolean mEnabled = true;
-    boolean mCanAddUser = true;
-    boolean mCanAddRestrictedProfile = true;
 
     private UserCapabilities() {
     }
@@ -29,6 +30,7 @@ public class UserCapabilities {
     public static UserCapabilities create(Context context) {
         UserManager userManager = (UserManager) context.getSystemService("user");
         UserCapabilities userCapabilities = new UserCapabilities();
+        boolean z = false;
         if (!UserManager.supportsMultipleUsers() || Utils.isMonkeyRunning()) {
             userCapabilities.mEnabled = false;
             return userCapabilities;
@@ -36,9 +38,11 @@ public class UserCapabilities {
         UserInfo userInfo = userManager.getUserInfo(UserHandle.myUserId());
         userCapabilities.mIsGuest = userInfo.isGuest();
         userCapabilities.mIsAdmin = userInfo.isAdmin();
-        if (((DevicePolicyManager) context.getSystemService("device_policy")).isDeviceManaged() || Utils.isVoiceCapable(context)) {
-            userCapabilities.mCanAddRestrictedProfile = false;
+        DevicePolicyManager devicePolicyManager = (DevicePolicyManager) context.getSystemService("device_policy");
+        if (context.getResources().getBoolean(R$bool.config_offer_restricted_profiles) && !devicePolicyManager.isDeviceManaged() && userManager.isUserTypeEnabled("android.os.usertype.full.RESTRICTED")) {
+            z = true;
         }
+        userCapabilities.mCanAddRestrictedProfile = z;
         userCapabilities.updateAddUserCapabilities(context);
         return userCapabilities;
     }
@@ -53,11 +57,11 @@ public class UserCapabilities {
         this.mDisallowAddUser = enforcedAdmin != null || hasBaseUserRestriction;
         this.mUserSwitcherEnabled = userManager.isUserSwitcherEnabled();
         this.mCanAddUser = true;
-        if (!this.mIsAdmin || UserManager.getMaxSupportedUsers() < 2 || !UserManager.supportsMultipleUsers() || this.mDisallowAddUser) {
+        if (!this.mIsAdmin || UserManager.getMaxSupportedUsers() < 2 || !UserManager.supportsMultipleUsers() || this.mDisallowAddUser || (!userManager.isUserTypeEnabled("android.os.usertype.full.SECONDARY") && !this.mCanAddRestrictedProfile)) {
             this.mCanAddUser = false;
         }
         boolean z2 = this.mIsAdmin || Settings.Global.getInt(context.getContentResolver(), "add_users_when_locked", 0) == 1;
-        if (this.mIsGuest || this.mDisallowAddUser || !z2) {
+        if (this.mIsGuest || this.mDisallowAddUser || !z2 || !userManager.isUserTypeEnabled("android.os.usertype.full.GUEST")) {
             z = false;
         }
         this.mCanAddGuest = z;

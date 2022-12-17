@@ -6,11 +6,10 @@ import com.google.common.primitives.Ints;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.RandomAccess;
-/* loaded from: classes2.dex */
+
 public final class Lists {
     public static <E> ArrayList<E> newArrayList() {
         return new ArrayList<>();
@@ -32,15 +31,10 @@ public final class Lists {
 
     static int computeArrayListCapacity(int i) {
         CollectPreconditions.checkNonnegative(i, "arraySize");
-        return Ints.saturatedCast(i + 5 + (i / 10));
+        return Ints.saturatedCast(((long) i) + 5 + ((long) (i / 10)));
     }
 
-    public static <E> LinkedList<E> newLinkedList() {
-        return new LinkedList<>();
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static boolean equalsImpl(List<?> list, Object obj) {
+    static boolean equalsImpl(List<?> list, Object obj) {
         if (obj == Preconditions.checkNotNull(list)) {
             return true;
         }
@@ -63,8 +57,7 @@ public final class Lists {
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static int indexOfImpl(List<?> list, Object obj) {
+    static int indexOfImpl(List<?> list, Object obj) {
         if (list instanceof RandomAccess) {
             return indexOfRandomAccess(list, obj);
         }
@@ -98,8 +91,7 @@ public final class Lists {
         return -1;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static int lastIndexOfImpl(List<?> list, Object obj) {
+    static int lastIndexOfImpl(List<?> list, Object obj) {
         if (list instanceof RandomAccess) {
             return lastIndexOfRandomAccess(list, obj);
         }

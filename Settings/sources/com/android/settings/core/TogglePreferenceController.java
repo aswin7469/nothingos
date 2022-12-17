@@ -2,22 +2,20 @@ package com.android.settings.core;
 
 import android.content.Context;
 import android.content.IntentFilter;
+import android.widget.Switch;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.TwoStatePreference;
 import com.android.settings.overlay.FeatureFactory;
-import com.android.settings.slices.SliceBackgroundWorker;
-import com.android.settings.widget.PrimarySwitchPreference;
 import com.android.settings.widget.TwoStateButtonPreference;
-/* loaded from: classes.dex */
+import com.android.settingslib.PrimarySwitchPreference;
+import com.android.settingslib.core.instrumentation.SettingsJankMonitor;
+import com.android.settingslib.widget.MainSwitchPreference;
+
 public abstract class TogglePreferenceController extends BasePreferenceController implements Preference.OnPreferenceChangeListener {
     private static final String TAG = "TogglePrefController";
 
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
@@ -25,7 +23,8 @@ public abstract class TogglePreferenceController extends BasePreferenceControlle
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
+    public abstract int getSliceHighlightMenuRes();
+
     public int getSliceType() {
         return 1;
     }
@@ -35,10 +34,6 @@ public abstract class TogglePreferenceController extends BasePreferenceControlle
     }
 
     public abstract boolean isChecked();
-
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
 
     public boolean isPublicSlice() {
         return false;
@@ -58,7 +53,22 @@ public abstract class TogglePreferenceController extends BasePreferenceControlle
         super(context, str);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
+    public void displayPreference(PreferenceScreen preferenceScreen) {
+        super.displayPreference(preferenceScreen);
+        Preference findPreference = preferenceScreen.findPreference(getPreferenceKey());
+        if (findPreference instanceof MainSwitchPreference) {
+            ((MainSwitchPreference) findPreference).addOnSwitchChangeListener(new TogglePreferenceController$$ExternalSyntheticLambda0(this));
+        }
+        if (findPreference != null) {
+            findPreference.setOnPreferenceChangeListener(this);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$displayPreference$0(Switch switchR, boolean z) {
+        SettingsJankMonitor.detectToggleJank(getPreferenceKey(), switchR);
+    }
+
     public void updateState(Preference preference) {
         if (preference instanceof TwoStatePreference) {
             ((TwoStatePreference) preference).setChecked(isChecked());
@@ -71,16 +81,6 @@ public abstract class TogglePreferenceController extends BasePreferenceControlle
         }
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
-    public void displayPreference(PreferenceScreen preferenceScreen) {
-        super.displayPreference(preferenceScreen);
-        Preference findPreference = preferenceScreen.findPreference(getPreferenceKey());
-        if (findPreference != null) {
-            findPreference.setOnPreferenceChangeListener(this);
-        }
-    }
-
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public final boolean onPreferenceChange(Preference preference, Object obj) {
         if ((preference instanceof PrimarySwitchPreference) || (preference instanceof TwoStateButtonPreference)) {
             FeatureFactory.getFactory(this.mContext).getMetricsFeatureProvider().logClickedPreference(preference, getMetricsCategory());

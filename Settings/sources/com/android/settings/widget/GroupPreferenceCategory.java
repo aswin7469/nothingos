@@ -3,7 +3,7 @@ package com.android.settings.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 import androidx.preference.PreferenceCategory;
-/* loaded from: classes.dex */
+
 public class GroupPreferenceCategory extends PreferenceCategory {
     private int mGroupId = -1;
 

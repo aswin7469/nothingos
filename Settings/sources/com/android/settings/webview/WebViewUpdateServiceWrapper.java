@@ -10,10 +10,10 @@ import android.webkit.UserPackage;
 import android.webkit.WebViewFactory;
 import android.webkit.WebViewProviderInfo;
 import android.widget.Toast;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class WebViewUpdateServiceWrapper {
     public PackageInfo getCurrentWebViewPackage() {
         try {
@@ -55,6 +55,6 @@ public class WebViewUpdateServiceWrapper {
     }
 
     public void showInvalidChoiceToast(Context context) {
-        Toast.makeText(context, R.string.select_webview_provider_toast_text, 0).show();
+        Toast.makeText(context, R$string.select_webview_provider_toast_text, 0).show();
     }
 }

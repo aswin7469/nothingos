@@ -10,7 +10,7 @@ import com.google.android.setupcompat.util.WizardManagerHelper;
 import com.google.android.setupdesign.R$color;
 import com.google.android.setupdesign.R$style;
 import java.util.Objects;
-/* loaded from: classes2.dex */
+
 public final class ThemeHelper {
     private static final Logger LOG = new Logger("ThemeHelper");
 
@@ -22,12 +22,12 @@ public final class ThemeHelper {
         return PartnerConfigHelper.shouldApplyExtendedPartnerConfig(context);
     }
 
-    public static boolean isSetupWizardDynamicColorEnabled(Context context) {
-        return PartnerConfigHelper.isSetupWizardDynamicColorEnabled(context);
+    public static boolean shouldApplyMaterialYouStyle(Context context) {
+        return PartnerConfigHelper.shouldApplyMaterialYouStyle(context);
     }
 
     public static boolean shouldApplyDynamicColor(Context context) {
-        return shouldApplyExtendedPartnerConfig(context) && isSetupWizardDynamicColorEnabled(context);
+        return PartnerConfigHelper.isSetupWizardDynamicColorEnabled(context);
     }
 
     public static int getDynamicColorTheme(Context context) {
@@ -37,19 +37,19 @@ public final class ThemeHelper {
             boolean isSetupWizardDayNightEnabled = isSetupWizardDayNightEnabled(context);
             if (!isAnySetupWizard) {
                 if (isSetupWizardDayNightEnabled) {
-                    i = R$style.SudFullDynamicColorThemeGlifV3_DayNight;
+                    i = R$style.SudFullDynamicColorTheme_DayNight;
                 } else {
-                    i = R$style.SudFullDynamicColorThemeGlifV3_Light;
+                    i = R$style.SudFullDynamicColorTheme_Light;
                 }
                 Logger logger = LOG;
                 StringBuilder sb = new StringBuilder();
                 sb.append("Return ");
-                sb.append(isSetupWizardDayNightEnabled ? "SudFullDynamicColorThemeGlifV3_DayNight" : "SudFullDynamicColorThemeGlifV3_Light");
+                sb.append(isSetupWizardDayNightEnabled ? "SudFullDynamicColorTheme_DayNight" : "SudFullDynamicColorTheme_Light");
                 logger.atInfo(sb.toString());
             } else if (isSetupWizardDayNightEnabled) {
-                i = R$style.SudDynamicColorThemeGlifV3_DayNight;
+                i = R$style.SudDynamicColorTheme_DayNight;
             } else {
-                i = R$style.SudDynamicColorThemeGlifV3_Light;
+                i = R$style.SudDynamicColorTheme_Light;
             }
             Logger logger2 = LOG;
             StringBuilder sb2 = new StringBuilder();
@@ -71,17 +71,17 @@ public final class ThemeHelper {
             Logger logger3 = LOG;
             String message = e.getMessage();
             Objects.requireNonNull(message);
-            logger3.e(message);
+            logger3.mo21683e(message);
             return 0;
         }
     }
 
     public static boolean trySetDynamicColor(Context context) {
-        if (!shouldApplyExtendedPartnerConfig(context)) {
-            LOG.w("SetupWizard does not supports the extended partner configs.");
+        if (!BuildCompatUtils.isAtLeastS()) {
+            LOG.mo21687w("Dynamic color require platform version at least S.");
             return false;
-        } else if (!isSetupWizardDynamicColorEnabled(context)) {
-            LOG.w("SetupWizard does not support the dynamic color or supporting status unknown.");
+        } else if (!shouldApplyDynamicColor(context)) {
+            LOG.mo21687w("SetupWizard does not support the dynamic color or supporting status unknown.");
             return false;
         } else {
             try {
@@ -91,19 +91,19 @@ public final class ThemeHelper {
                     lookupActivityFromContext.setTheme(dynamicColorTheme);
                     return true;
                 }
-                LOG.w("Error occurred on getting dynamic color theme.");
+                LOG.mo21687w("Error occurred on getting dynamic color theme.");
                 return false;
             } catch (IllegalArgumentException e) {
                 Logger logger = LOG;
                 String message = e.getMessage();
                 Objects.requireNonNull(message);
-                logger.e(message);
+                logger.mo21683e(message);
                 return false;
             }
         }
     }
 
     private static String colorIntToHex(Context context, int i) {
-        return String.format("#%06X", Integer.valueOf(context.getResources().getColor(i) & 16777215));
+        return String.format("#%06X", new Object[]{Integer.valueOf(context.getResources().getColor(i) & 16777215)});
     }
 }

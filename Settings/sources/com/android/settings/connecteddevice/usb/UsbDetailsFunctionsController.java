@@ -8,13 +8,13 @@ import android.os.HandlerExecutor;
 import android.util.Log;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.Utils;
-import com.android.settingslib.widget.RadioButtonPreference;
+import com.android.settingslib.widget.SelectorWithWidgetPreference;
 import java.util.LinkedHashMap;
 import java.util.Map;
-/* loaded from: classes.dex */
-public class UsbDetailsFunctionsController extends UsbDetailsController implements RadioButtonPreference.OnClickListener {
+
+public class UsbDetailsFunctionsController extends UsbDetailsController implements SelectorWithWidgetPreference.OnClickListener {
     private static final boolean DEBUG = Log.isLoggable("UsbFunctionsCtrl", 3);
     static final Map<Long, Integer> FUNCTIONS_MAP;
     private Handler mHandler;
@@ -27,7 +27,6 @@ public class UsbDetailsFunctionsController extends UsbDetailsController implemen
         return (j & 2) != 0;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "usb_details_functions";
     }
@@ -35,11 +34,11 @@ public class UsbDetailsFunctionsController extends UsbDetailsController implemen
     static {
         LinkedHashMap linkedHashMap = new LinkedHashMap();
         FUNCTIONS_MAP = linkedHashMap;
-        linkedHashMap.put(4L, Integer.valueOf(R.string.usb_use_file_transfers));
-        linkedHashMap.put(32L, Integer.valueOf(R.string.usb_use_tethering));
-        linkedHashMap.put(8L, Integer.valueOf(R.string.usb_use_MIDI));
-        linkedHashMap.put(16L, Integer.valueOf(R.string.usb_use_photo_transfers));
-        linkedHashMap.put(0L, Integer.valueOf(R.string.usb_use_charging_only));
+        linkedHashMap.put(4L, Integer.valueOf(R$string.usb_use_file_transfers));
+        linkedHashMap.put(32L, Integer.valueOf(R$string.usb_use_tethering));
+        linkedHashMap.put(8L, Integer.valueOf(R$string.usb_use_MIDI));
+        linkedHashMap.put(16L, Integer.valueOf(R$string.usb_use_photo_transfers));
+        linkedHashMap.put(0L, Integer.valueOf(R$string.usb_use_charging_only));
     }
 
     public UsbDetailsFunctionsController(Context context, UsbDetailsFragment usbDetailsFragment, UsbBackend usbBackend) {
@@ -48,29 +47,27 @@ public class UsbDetailsFunctionsController extends UsbDetailsController implemen
         this.mHandler = new Handler(context.getMainLooper());
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mProfilesContainer = (PreferenceCategory) preferenceScreen.findPreference(getPreferenceKey());
         refresh(false, this.mUsbBackend.getDefaultUsbFunctions(), 0, 0);
     }
 
-    private RadioButtonPreference getProfilePreference(String str, int i) {
-        RadioButtonPreference radioButtonPreference = (RadioButtonPreference) this.mProfilesContainer.findPreference(str);
-        if (radioButtonPreference == null) {
-            RadioButtonPreference radioButtonPreference2 = new RadioButtonPreference(this.mProfilesContainer.getContext());
-            radioButtonPreference2.setKey(str);
-            radioButtonPreference2.setTitle(i);
-            radioButtonPreference2.setSingleLineTitle(false);
-            radioButtonPreference2.setOnClickListener(this);
-            this.mProfilesContainer.addPreference(radioButtonPreference2);
-            return radioButtonPreference2;
+    private SelectorWithWidgetPreference getProfilePreference(String str, int i) {
+        SelectorWithWidgetPreference selectorWithWidgetPreference = (SelectorWithWidgetPreference) this.mProfilesContainer.findPreference(str);
+        if (selectorWithWidgetPreference != null) {
+            return selectorWithWidgetPreference;
         }
-        return radioButtonPreference;
+        SelectorWithWidgetPreference selectorWithWidgetPreference2 = new SelectorWithWidgetPreference(this.mProfilesContainer.getContext());
+        selectorWithWidgetPreference2.setKey(str);
+        selectorWithWidgetPreference2.setTitle(i);
+        selectorWithWidgetPreference2.setSingleLineTitle(false);
+        selectorWithWidgetPreference2.setOnClickListener(this);
+        this.mProfilesContainer.addPreference(selectorWithWidgetPreference2);
+        return selectorWithWidgetPreference2;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.connecteddevice.usb.UsbDetailsController
+    /* access modifiers changed from: protected */
     public void refresh(boolean z, long j, int i, int i2) {
         if (DEBUG) {
             Log.d("UsbFunctionsCtrl", "refresh() connected : " + z + ", functions : " + j + ", powerRole : " + i + ", dataRole : " + i2);
@@ -80,43 +77,39 @@ public class UsbDetailsFunctionsController extends UsbDetailsController implemen
         } else {
             this.mProfilesContainer.setEnabled(true);
         }
-        for (Long l : FUNCTIONS_MAP.keySet()) {
-            long longValue = l.longValue();
-            RadioButtonPreference profilePreference = getProfilePreference(UsbBackend.usbFunctionsToString(longValue), FUNCTIONS_MAP.get(Long.valueOf(longValue)).intValue());
-            if (this.mUsbBackend.areFunctionsSupported(longValue)) {
-                if (isAccessoryMode(j)) {
-                    profilePreference.setChecked(4 == longValue);
-                } else if (j == 1024) {
-                    profilePreference.setChecked(32 == longValue);
-                } else {
-                    profilePreference.setChecked(j == longValue);
-                }
-            } else {
+        for (Long longValue : FUNCTIONS_MAP.keySet()) {
+            long longValue2 = longValue.longValue();
+            SelectorWithWidgetPreference profilePreference = getProfilePreference(UsbBackend.usbFunctionsToString(longValue2), FUNCTIONS_MAP.get(Long.valueOf(longValue2)).intValue());
+            if (!this.mUsbBackend.areFunctionsSupported(longValue2)) {
                 this.mProfilesContainer.removePreference(profilePreference);
+            } else if (isAccessoryMode(j)) {
+                profilePreference.setChecked(4 == longValue2);
+            } else if (j == 1024) {
+                profilePreference.setChecked(32 == longValue2);
+            } else {
+                profilePreference.setChecked(j == longValue2);
             }
         }
     }
 
-    @Override // com.android.settingslib.widget.RadioButtonPreference.OnClickListener
-    public void onRadioButtonClicked(RadioButtonPreference radioButtonPreference) {
-        long usbFunctionsFromString = UsbBackend.usbFunctionsFromString(radioButtonPreference.getKey());
+    public void onRadioButtonClicked(SelectorWithWidgetPreference selectorWithWidgetPreference) {
+        long usbFunctionsFromString = UsbBackend.usbFunctionsFromString(selectorWithWidgetPreference.getKey());
         long currentFunctions = this.mUsbBackend.getCurrentFunctions();
         if (DEBUG) {
             Log.d("UsbFunctionsCtrl", "onRadioButtonClicked() function : " + usbFunctionsFromString + ", toString() : " + UsbManager.usbFunctionsToString(usbFunctionsFromString) + ", previousFunction : " + currentFunctions + ", toString() : " + UsbManager.usbFunctionsToString(currentFunctions));
         }
-        if (usbFunctionsFromString == currentFunctions || Utils.isMonkeyRunning() || isClickEventIgnored(usbFunctionsFromString, currentFunctions)) {
-            return;
-        }
-        this.mPreviousFunction = currentFunctions;
-        RadioButtonPreference radioButtonPreference2 = (RadioButtonPreference) this.mProfilesContainer.findPreference(UsbBackend.usbFunctionsToString(currentFunctions));
-        if (radioButtonPreference2 != null) {
-            radioButtonPreference2.setChecked(false);
-            radioButtonPreference.setChecked(true);
-        }
-        if (usbFunctionsFromString == 32 || usbFunctionsFromString == 1024) {
-            this.mTetheringManager.startTethering(1, new HandlerExecutor(this.mHandler), this.mOnStartTetheringCallback);
-        } else {
-            this.mUsbBackend.setCurrentFunctions(usbFunctionsFromString);
+        if (usbFunctionsFromString != currentFunctions && !Utils.isMonkeyRunning() && !isClickEventIgnored(usbFunctionsFromString, currentFunctions)) {
+            this.mPreviousFunction = currentFunctions;
+            SelectorWithWidgetPreference selectorWithWidgetPreference2 = (SelectorWithWidgetPreference) this.mProfilesContainer.findPreference(UsbBackend.usbFunctionsToString(currentFunctions));
+            if (selectorWithWidgetPreference2 != null) {
+                selectorWithWidgetPreference2.setChecked(false);
+                selectorWithWidgetPreference.setChecked(true);
+            }
+            if (usbFunctionsFromString == 32 || usbFunctionsFromString == 1024) {
+                this.mTetheringManager.startTethering(1, new HandlerExecutor(this.mHandler), this.mOnStartTetheringCallback);
+            } else {
+                this.mUsbBackend.setCurrentFunctions(usbFunctionsFromString);
+            }
         }
     }
 
@@ -124,12 +117,10 @@ public class UsbDetailsFunctionsController extends UsbDetailsController implemen
         return isAccessoryMode(j2) && j == 4;
     }
 
-    @Override // com.android.settings.connecteddevice.usb.UsbDetailsController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return !Utils.isMonkeyRunning();
     }
 
-    /* loaded from: classes.dex */
     final class OnStartTetheringCallback implements TetheringManager.StartTetheringCallback {
         OnStartTetheringCallback() {
         }

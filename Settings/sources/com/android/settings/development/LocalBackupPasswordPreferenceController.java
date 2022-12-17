@@ -6,15 +6,14 @@ import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.UserManager;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.development.DeveloperOptionsPreferenceController;
-/* loaded from: classes.dex */
+
 public class LocalBackupPasswordPreferenceController extends DeveloperOptionsPreferenceController implements PreferenceControllerMixin {
     private final IBackupManager mBackupManager = IBackupManager.Stub.asInterface(ServiceManager.getService("backup"));
     private final UserManager mUserManager;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "local_backup_password";
     }
@@ -24,7 +23,6 @@ public class LocalBackupPasswordPreferenceController extends DeveloperOptionsPre
         this.mUserManager = (UserManager) context.getSystemService("user");
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         updatePasswordSummary(preference);
     }
@@ -32,20 +30,20 @@ public class LocalBackupPasswordPreferenceController extends DeveloperOptionsPre
     private void updatePasswordSummary(Preference preference) {
         preference.setEnabled(isAdminUser() && this.mBackupManager != null);
         IBackupManager iBackupManager = this.mBackupManager;
-        if (iBackupManager == null) {
-            return;
-        }
-        try {
-            if (iBackupManager.hasBackupPassword()) {
-                preference.setSummary(R.string.local_backup_password_summary_change);
-            } else {
-                preference.setSummary(R.string.local_backup_password_summary_none);
+        if (iBackupManager != null) {
+            try {
+                if (iBackupManager.hasBackupPassword()) {
+                    preference.setSummary(R$string.local_backup_password_summary_change);
+                } else {
+                    preference.setSummary(R$string.local_backup_password_summary_none);
+                }
+            } catch (RemoteException unused) {
             }
-        } catch (RemoteException unused) {
         }
     }
 
-    boolean isAdminUser() {
+    /* access modifiers changed from: package-private */
+    public boolean isAdminUser() {
         return this.mUserManager.isAdminUser();
     }
 }

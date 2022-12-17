@@ -1,11 +1,10 @@
 package com.google.protobuf;
 
 import com.google.protobuf.Internal;
-import java.util.AbstractList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.RandomAccess;
-/* loaded from: classes2.dex */
+
 final class FloatArrayList extends AbstractProtobufList<Float> implements Internal.FloatList, RandomAccess, PrimitiveNonBoxingCollection {
     private static final FloatArrayList EMPTY_LIST;
     private float[] array;
@@ -26,19 +25,19 @@ final class FloatArrayList extends AbstractProtobufList<Float> implements Intern
         this.size = i;
     }
 
-    @Override // java.util.AbstractList
-    protected void removeRange(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public void removeRange(int i, int i2) {
         ensureIsMutable();
-        if (i2 < i) {
-            throw new IndexOutOfBoundsException("toIndex < fromIndex");
+        if (i2 >= i) {
+            float[] fArr = this.array;
+            System.arraycopy(fArr, i2, fArr, i, this.size - i2);
+            this.size -= i2 - i;
+            this.modCount++;
+            return;
         }
-        float[] fArr = this.array;
-        System.arraycopy(fArr, i2, fArr, i, this.size - i2);
-        this.size -= i2 - i;
-        ((AbstractList) this).modCount++;
+        throw new IndexOutOfBoundsException("toIndex < fromIndex");
     }
 
-    @Override // com.google.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.Collection, java.util.List
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
@@ -59,7 +58,6 @@ final class FloatArrayList extends AbstractProtobufList<Float> implements Intern
         return true;
     }
 
-    @Override // com.google.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.Collection, java.util.List
     public int hashCode() {
         int i = 1;
         for (int i2 = 0; i2 < this.size; i2++) {
@@ -68,18 +66,14 @@ final class FloatArrayList extends AbstractProtobufList<Float> implements Intern
         return i;
     }
 
-    @Override // com.google.protobuf.Internal.ProtobufList
-    /* renamed from: mutableCopyWithCapacity */
-    public Internal.ProtobufList<Float> mo922mutableCopyWithCapacity(int i) {
-        if (i < this.size) {
-            throw new IllegalArgumentException();
+    public Internal.FloatList mutableCopyWithCapacity(int i) {
+        if (i >= this.size) {
+            return new FloatArrayList(Arrays.copyOf(this.array, i), this.size);
         }
-        return new FloatArrayList(Arrays.copyOf(this.array, i), this.size);
+        throw new IllegalArgumentException();
     }
 
-    @Override // java.util.AbstractList, java.util.List
-    /* renamed from: get */
-    public Float mo903get(int i) {
+    public Float get(int i) {
         return Float.valueOf(getFloat(i));
     }
 
@@ -88,12 +82,10 @@ final class FloatArrayList extends AbstractProtobufList<Float> implements Intern
         return this.array[i];
     }
 
-    @Override // java.util.AbstractCollection, java.util.Collection, java.util.List
     public int size() {
         return this.size;
     }
 
-    @Override // java.util.AbstractList, java.util.List
     public Float set(int i, Float f) {
         return Float.valueOf(setFloat(i, f.floatValue()));
     }
@@ -107,7 +99,6 @@ final class FloatArrayList extends AbstractProtobufList<Float> implements Intern
         return f2;
     }
 
-    @Override // java.util.AbstractList, java.util.List
     public void add(int i, Float f) {
         addFloat(i, f.floatValue());
     }
@@ -126,17 +117,16 @@ final class FloatArrayList extends AbstractProtobufList<Float> implements Intern
         if (i2 < fArr.length) {
             System.arraycopy(fArr, i, fArr, i + 1, i2 - i);
         } else {
-            float[] fArr2 = new float[((i2 * 3) / 2) + 1];
+            float[] fArr2 = new float[(((i2 * 3) / 2) + 1)];
             System.arraycopy(fArr, 0, fArr2, 0, i);
             System.arraycopy(this.array, i, fArr2, i + 1, this.size - i);
             this.array = fArr2;
         }
         this.array[i] = f;
         this.size++;
-        ((AbstractList) this).modCount++;
+        this.modCount++;
     }
 
-    @Override // com.google.protobuf.AbstractProtobufList, java.util.AbstractCollection, java.util.Collection, java.util.List
     public boolean addAll(Collection<? extends Float> collection) {
         ensureIsMutable();
         Internal.checkNotNull(collection);
@@ -149,21 +139,20 @@ final class FloatArrayList extends AbstractProtobufList<Float> implements Intern
             return false;
         }
         int i2 = this.size;
-        if (Integer.MAX_VALUE - i2 < i) {
-            throw new OutOfMemoryError();
+        if (Integer.MAX_VALUE - i2 >= i) {
+            int i3 = i2 + i;
+            float[] fArr = this.array;
+            if (i3 > fArr.length) {
+                this.array = Arrays.copyOf(fArr, i3);
+            }
+            System.arraycopy(floatArrayList.array, 0, this.array, this.size, floatArrayList.size);
+            this.size = i3;
+            this.modCount++;
+            return true;
         }
-        int i3 = i2 + i;
-        float[] fArr = this.array;
-        if (i3 > fArr.length) {
-            this.array = Arrays.copyOf(fArr, i3);
-        }
-        System.arraycopy(floatArrayList.array, 0, this.array, this.size, floatArrayList.size);
-        this.size = i3;
-        ((AbstractList) this).modCount++;
-        return true;
+        throw new OutOfMemoryError();
     }
 
-    @Override // com.google.protobuf.AbstractProtobufList, java.util.AbstractCollection, java.util.Collection, java.util.List
     public boolean remove(Object obj) {
         ensureIsMutable();
         for (int i = 0; i < this.size; i++) {
@@ -171,26 +160,24 @@ final class FloatArrayList extends AbstractProtobufList<Float> implements Intern
                 float[] fArr = this.array;
                 System.arraycopy(fArr, i + 1, fArr, i, (this.size - i) - 1);
                 this.size--;
-                ((AbstractList) this).modCount++;
+                this.modCount++;
                 return true;
             }
         }
         return false;
     }
 
-    @Override // java.util.AbstractList, java.util.List
-    /* renamed from: remove */
-    public Float mo904remove(int i) {
-        int i2;
+    public Float remove(int i) {
         ensureIsMutable();
         ensureIndexInRange(i);
         float[] fArr = this.array;
         float f = fArr[i];
-        if (i < this.size - 1) {
+        int i2 = this.size;
+        if (i < i2 - 1) {
             System.arraycopy(fArr, i + 1, fArr, i, (i2 - i) - 1);
         }
         this.size--;
-        ((AbstractList) this).modCount++;
+        this.modCount++;
         return Float.valueOf(f);
     }
 

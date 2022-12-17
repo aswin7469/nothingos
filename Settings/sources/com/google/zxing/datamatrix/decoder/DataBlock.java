@@ -1,7 +1,7 @@
 package com.google.zxing.datamatrix.decoder;
 
 import com.google.zxing.datamatrix.decoder.Version;
-/* loaded from: classes2.dex */
+
 final class DataBlock {
     private final byte[] codewords;
     private final int numDataCodewords;
@@ -11,21 +11,20 @@ final class DataBlock {
         this.codewords = bArr;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static DataBlock[] getDataBlocks(byte[] bArr, Version version) {
+    static DataBlock[] getDataBlocks(byte[] bArr, Version version) {
         Version.ECBlocks eCBlocks = version.getECBlocks();
         Version.ECB[] eCBlocks2 = eCBlocks.getECBlocks();
         int i = 0;
-        for (Version.ECB ecb : eCBlocks2) {
-            i += ecb.getCount();
+        for (Version.ECB count : eCBlocks2) {
+            i += count.getCount();
         }
         DataBlock[] dataBlockArr = new DataBlock[i];
         int i2 = 0;
-        for (Version.ECB ecb2 : eCBlocks2) {
+        for (Version.ECB ecb : eCBlocks2) {
             int i3 = 0;
-            while (i3 < ecb2.getCount()) {
-                int dataCodewords = ecb2.getDataCodewords();
-                dataBlockArr[i2] = new DataBlock(dataCodewords, new byte[eCBlocks.getECCodewords() + dataCodewords]);
+            while (i3 < ecb.getCount()) {
+                int dataCodewords = ecb.getDataCodewords();
+                dataBlockArr[i2] = new DataBlock(dataCodewords, new byte[(eCBlocks.getECCodewords() + dataCodewords)]);
                 i3++;
                 i2++;
             }
@@ -65,12 +64,12 @@ final class DataBlock {
         throw new IllegalArgumentException();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getNumDataCodewords() {
         return this.numDataCodewords;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public byte[] getCodewords() {
         return this.codewords;
     }

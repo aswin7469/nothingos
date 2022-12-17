@@ -3,7 +3,7 @@ package com.google.android.setupcompat.logging.internal;
 import android.os.Bundle;
 import com.google.android.setupcompat.logging.CustomEvent;
 import com.google.android.setupcompat.logging.MetricKey;
-/* loaded from: classes2.dex */
+
 public final class MetricBundleConverter {
     public static Bundle createBundleForLogging(CustomEvent customEvent) {
         Bundle bundle = new Bundle();

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:fitsSystemWindows="true" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_marginStart="24dp" android:layout_marginEnd="24dp">
-    <LinearLayout android:orientation="vertical" android:id="@+id/fingerprint_enrolling_notice_layout" android:layout_width="match_parent" android:layout_height="350dp">
-        <TextView android:textSize="34dp" android:id="@+id/fingerprint_enrolling_title" android:paddingTop="108dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nt_fp_enrolling_title_pre_enroll" android:fontFamily="NDot57"/>
+<RelativeLayout xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:fitsSystemWindows="true" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_marginStart="24dp" android:layout_marginEnd="24dp">
+    <LinearLayout android:orientation="vertical" android:id="@+id/fingerprint_enrolling_notice_layout" android:layout_width="match_parent" android:layout_height="290dp">
+        <TextView android:textSize="34dp" android:id="@+id/fingerprint_enrolling_title" android:paddingTop="28dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nt_fp_enrolling_title_pre_enroll"/>
         <TextView android:textSize="16dp" android:id="@+id/fingerprint_enrolling_summary" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:text="@string/nt_fp_enrolling_summary_pre_enroll" android:layout_below="@+id/fingerprint_enrolling_title"/>
     </LinearLayout>
     <com.airbnb.lottie.LottieAnimationView android:id="@+id/fingerprint_enroll_progress" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@+id/fingerprint_enrolling_notice_layout" android:layout_centerHorizontal="true"/>
     <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:id="@+id/fingerprint_enrolling_guide" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="130dp" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true">
-        <TextView android:textSize="18dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nt_fp_hold_to_start" android:fontFamily="NDot57"/>
-        <TextView android:textSize="30dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="@string/nt_arrow" android:rotation="90" android:fontFamily="NDot57"/>
+        <TextView android:textSize="18dp" android:id="@+id/nt_fp_hold_to_start" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nt_fp_hold_to_start"/>
+        <TextView android:textSize="30dp" android:id="@+id/nt_arrow" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="@string/nt_arrow" android:rotation="90"/>
     </LinearLayout>
 </RelativeLayout>

@@ -2,24 +2,27 @@ package com.android.settings.fuelgauge;
 
 import android.app.AppOpsManager;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 import com.android.settingslib.fuelgauge.PowerAllowlistBackend;
-/* loaded from: classes.dex */
+
 public class BatteryOptimizeUtils {
-    private boolean mAllowListed;
+    boolean mAllowListed;
     AppOpsManager mAppOpsManager;
     BatteryUtils mBatteryUtils;
-    private int mMode;
+    int mMode;
     private final String mPackageName;
     PowerAllowlistBackend mPowerAllowListBackend;
     private final int mUid;
 
-    /* loaded from: classes.dex */
-    public enum AppUsageState {
-        UNKNOWN,
-        RESTRICTED,
-        UNRESTRICTED,
-        OPTIMIZED
+    public static int getAppOptimizationMode(int i, boolean z) {
+        if (!z && i == 1) {
+            return 1;
+        }
+        if (!z || i != 0) {
+            return (z || i != 0) ? 0 : 3;
+        }
+        return 2;
     }
 
     public BatteryOptimizeUtils(Context context, int i, String str) {
@@ -32,67 +35,29 @@ public class BatteryOptimizeUtils {
         this.mAllowListed = this.mPowerAllowListBackend.isAllowlisted(str);
     }
 
-    public AppUsageState getAppUsageState() {
+    public int getAppOptimizationMode() {
         refreshState();
-        boolean z = this.mAllowListed;
-        if (!z && this.mMode == 1) {
-            return AppUsageState.RESTRICTED;
-        }
-        if (z && this.mMode == 0) {
-            return AppUsageState.UNRESTRICTED;
-        }
-        if (!z && this.mMode == 0) {
-            return AppUsageState.OPTIMIZED;
-        }
-        Log.d("BatteryOptimizeUtils", "get unknown app usage state.");
-        return AppUsageState.UNKNOWN;
+        return getAppOptimizationMode(this.mMode, this.mAllowListed);
     }
 
-    public void setAppUsageState(AppUsageState appUsageState) {
-        try {
-            setAppUsageStateInternal(appUsageState);
-        } catch (Exception e) {
-            Log.e("BatteryOptimizeUtils", "setAppUsageState() is failed for " + this.mPackageName, e);
+    public void setAppUsageState(int i) {
+        if (getAppOptimizationMode(this.mMode, this.mAllowListed) == i) {
+            Log.w("BatteryOptimizeUtils", "set the same optimization mode for: " + this.mPackageName);
+            return;
         }
+        AsyncTask.execute(new BatteryOptimizeUtils$$ExternalSyntheticLambda0(this, i));
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.android.settings.fuelgauge.BatteryOptimizeUtils$1  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public static /* synthetic */ class AnonymousClass1 {
-        static final /* synthetic */ int[] $SwitchMap$com$android$settings$fuelgauge$BatteryOptimizeUtils$AppUsageState;
-
-        static {
-            int[] iArr = new int[AppUsageState.values().length];
-            $SwitchMap$com$android$settings$fuelgauge$BatteryOptimizeUtils$AppUsageState = iArr;
-            try {
-                iArr[AppUsageState.RESTRICTED.ordinal()] = 1;
-            } catch (NoSuchFieldError unused) {
-            }
-            try {
-                $SwitchMap$com$android$settings$fuelgauge$BatteryOptimizeUtils$AppUsageState[AppUsageState.UNRESTRICTED.ordinal()] = 2;
-            } catch (NoSuchFieldError unused2) {
-            }
-            try {
-                $SwitchMap$com$android$settings$fuelgauge$BatteryOptimizeUtils$AppUsageState[AppUsageState.OPTIMIZED.ordinal()] = 3;
-            } catch (NoSuchFieldError unused3) {
-            }
-        }
-    }
-
-    private void setAppUsageStateInternal(AppUsageState appUsageState) {
-        int i = AnonymousClass1.$SwitchMap$com$android$settings$fuelgauge$BatteryOptimizeUtils$AppUsageState[appUsageState.ordinal()];
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$setAppUsageState$0(int i) {
         if (i == 1) {
-            this.mBatteryUtils.setForceAppStandby(this.mUid, this.mPackageName, 1);
-            this.mPowerAllowListBackend.removeApp(this.mPackageName);
+            setAppOptimizationMode(1, false);
         } else if (i == 2) {
-            this.mBatteryUtils.setForceAppStandby(this.mUid, this.mPackageName, 0);
-            this.mPowerAllowListBackend.addApp(this.mPackageName);
-        } else if (i == 3) {
-            this.mBatteryUtils.setForceAppStandby(this.mUid, this.mPackageName, 0);
-            this.mPowerAllowListBackend.removeApp(this.mPackageName);
+            setAppOptimizationMode(0, true);
+        } else if (i != 3) {
+            Log.d("BatteryOptimizeUtils", "set unknown app optimization mode.");
         } else {
-            Log.d("BatteryOptimizeUtils", "set unknown app usage state.");
+            setAppOptimizationMode(0, false);
         }
     }
 
@@ -105,16 +70,29 @@ public class BatteryOptimizeUtils {
         return this.mPowerAllowListBackend.isSysAllowlisted(this.mPackageName) || this.mPowerAllowListBackend.isDefaultActiveApp(this.mPackageName);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public String getPackageName() {
         String str = this.mPackageName;
         return str == null ? "unknown" : str;
+    }
+
+    private void setAppOptimizationMode(int i, boolean z) {
+        try {
+            this.mBatteryUtils.setForceAppStandby(this.mUid, this.mPackageName, i);
+            if (z) {
+                this.mPowerAllowListBackend.addApp(this.mPackageName);
+            } else {
+                this.mPowerAllowListBackend.removeApp(this.mPackageName);
+            }
+        } catch (Exception e) {
+            Log.e("BatteryOptimizeUtils", "set OPTIMIZED failed for " + this.mPackageName, e);
+        }
     }
 
     private void refreshState() {
         this.mPowerAllowListBackend.refreshList();
         this.mAllowListed = this.mPowerAllowListBackend.isAllowlisted(this.mPackageName);
         this.mMode = this.mAppOpsManager.checkOpNoThrow(70, this.mUid, this.mPackageName);
-        Log.d("BatteryOptimizeUtils", String.format("refresh %s state, allowlisted = %s, mode = %d", this.mPackageName, Boolean.valueOf(this.mAllowListed), Integer.valueOf(this.mMode)));
+        Log.d("BatteryOptimizeUtils", String.format("refresh %s state, allowlisted = %s, mode = %d", new Object[]{this.mPackageName, Boolean.valueOf(this.mAllowListed), Integer.valueOf(this.mMode)}));
     }
 }

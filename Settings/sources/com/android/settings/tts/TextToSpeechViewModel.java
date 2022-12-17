@@ -4,7 +4,7 @@ import android.app.Application;
 import android.speech.tts.TextToSpeech;
 import android.util.Pair;
 import androidx.lifecycle.AndroidViewModel;
-/* loaded from: classes.dex */
+
 public class TextToSpeechViewModel extends AndroidViewModel {
     private final Application mApplication;
     private TextToSpeech mTts;
@@ -14,19 +14,18 @@ public class TextToSpeechViewModel extends AndroidViewModel {
         this.mApplication = application;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.lifecycle.ViewModel
+    /* access modifiers changed from: protected */
     public void onCleared() {
         shutdownTts();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void shutdownTts() {
         this.mTts.shutdown();
         this.mTts = null;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public Pair<TextToSpeech, Boolean> getTtsAndWhetherNew(TextToSpeech.OnInitListener onInitListener) {
         boolean z;
         if (this.mTts == null) {

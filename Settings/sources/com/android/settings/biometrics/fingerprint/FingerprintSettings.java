@@ -1,6 +1,8 @@
 package com.android.settings.biometrics.fingerprint;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,9 +13,9 @@ import android.hardware.fingerprint.FingerprintSensorPropertiesInternal;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Parcelable;
 import android.os.UserHandle;
 import android.os.UserManager;
+import android.provider.Settings;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -22,20 +24,23 @@ import android.view.View;
 import android.widget.ImeAwareEditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
-import androidx.constraintlayout.widget.R$styleable;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.PreferenceViewHolder;
-import com.android.settings.R;
+import com.android.settings.R$drawable;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.SubSettings;
 import com.android.settings.Utils;
 import com.android.settings.biometrics.BiometricUtils;
 import com.android.settings.biometrics.fingerprint.FingerprintAuthenticateSidecar;
 import com.android.settings.biometrics.fingerprint.FingerprintRemoveSidecar;
-import com.android.settings.biometrics.fingerprint.FingerprintSettings;
 import com.android.settings.core.instrumentation.InstrumentedDialogFragment;
 import com.android.settings.password.ChooseLockGeneric;
 import com.android.settings.password.ChooseLockSettingsHelper;
@@ -45,74 +50,87 @@ import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.RestrictedLockUtilsInternal;
 import com.android.settingslib.widget.FooterPreference;
 import com.android.settingslib.widget.TwoTargetPreference;
-import com.nt.settings.utils.NtUtils;
+import com.nothing.p006ui.support.NtCustSwitchPreference;
+import com.nothing.settings.security.SecurityUtils;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class FingerprintSettings extends SubSettings {
-    @Override // com.android.settings.SettingsActivity, android.app.Activity
     public Intent getIntent() {
         Intent intent = new Intent(super.getIntent());
         intent.putExtra(":settings:show_fragment", FingerprintSettingsFragment.class.getName());
         return intent;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.SubSettings, com.android.settings.SettingsActivity
+    /* access modifiers changed from: protected */
     public boolean isValidFragment(String str) {
         return FingerprintSettingsFragment.class.getName().equals(str);
     }
 
-    @Override // com.android.settings.SettingsActivity, com.android.settings.core.SettingsBaseActivity, androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setTitle(getText(R.string.security_settings_fingerprint_preference_title));
+        setTitle(getText(R$string.security_settings_fingerprint_preference_title));
     }
 
-    /* loaded from: classes.dex */
     public static class FingerprintSettingsFragment extends SettingsPreferenceFragment implements Preference.OnPreferenceChangeListener, FingerprintPreference.OnDeleteClickListener {
-        private FingerprintAuthenticateSidecar mAuthenticateSidecar;
-        private long mChallenge;
-        private boolean mEnrollClicked;
-        private FingerprintManager mFingerprintManager;
-        private HashMap<Integer, String> mFingerprintsRenaming;
-        private CharSequence mFooterTitle;
-        private Drawable mHighlightDrawable;
-        private boolean mInFingerprintLockout;
-        private boolean mLaunchedConfirm;
-        private FingerprintRemoveSidecar mRemovalSidecar;
-        private List<FingerprintSensorPropertiesInternal> mSensorProperties;
-        private byte[] mToken;
-        private int mUserId;
-        FingerprintAuthenticateSidecar.Listener mAuthenticateListener = new FingerprintAuthenticateSidecar.Listener() { // from class: com.android.settings.biometrics.fingerprint.FingerprintSettings.FingerprintSettingsFragment.1
-            @Override // com.android.settings.biometrics.fingerprint.FingerprintAuthenticateSidecar.Listener
+        FingerprintAuthenticateSidecar.Listener mAuthenticateListener = new FingerprintAuthenticateSidecar.Listener() {
             public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult authenticationResult) {
                 FingerprintSettingsFragment.this.mHandler.obtainMessage(1001, authenticationResult.getFingerprint().getBiometricId(), 0).sendToTarget();
             }
 
-            @Override // com.android.settings.biometrics.fingerprint.FingerprintAuthenticateSidecar.Listener
             public void onAuthenticationFailed() {
                 FingerprintSettingsFragment.this.mHandler.obtainMessage(1002).sendToTarget();
             }
 
-            @Override // com.android.settings.biometrics.fingerprint.FingerprintAuthenticateSidecar.Listener
             public void onAuthenticationError(int i, CharSequence charSequence) {
                 FingerprintSettingsFragment.this.mHandler.obtainMessage(1003, i, 0, charSequence).sendToTarget();
             }
 
-            @Override // com.android.settings.biometrics.fingerprint.FingerprintAuthenticateSidecar.Listener
             public void onAuthenticationHelp(int i, CharSequence charSequence) {
                 FingerprintSettingsFragment.this.mHandler.obtainMessage(1004, i, 0, charSequence).sendToTarget();
             }
         };
-        FingerprintRemoveSidecar.Listener mRemovalListener = new FingerprintRemoveSidecar.Listener() { // from class: com.android.settings.biometrics.fingerprint.FingerprintSettings.FingerprintSettingsFragment.2
-            @Override // com.android.settings.biometrics.fingerprint.FingerprintRemoveSidecar.Listener
+        private FingerprintAuthenticateSidecar mAuthenticateSidecar;
+        private long mChallenge;
+        private boolean mEnrollClicked;
+        private final Runnable mFingerprintLockoutReset = new Runnable() {
+            public void run() {
+                FingerprintSettingsFragment.this.mInFingerprintLockout = false;
+                FingerprintSettingsFragment.this.retryFingerprint();
+            }
+        };
+        private FingerprintManager mFingerprintManager;
+        private FingerprintUpdater mFingerprintUpdater;
+        private HashMap<Integer, String> mFingerprintsRenaming;
+        private final List<Object> mFooterColumns = new ArrayList();
+        private CharSequence mFooterTitle;
+        /* access modifiers changed from: private */
+        public final Handler mHandler = new Handler() {
+            public void handleMessage(Message message) {
+                int i = message.what;
+                if (i == 1000) {
+                    FingerprintSettingsFragment.this.removeFingerprintPreference(message.arg1);
+                    FingerprintSettingsFragment.this.updateAddPreference();
+                    FingerprintSettingsFragment.this.retryFingerprint();
+                } else if (i == 1001) {
+                    FingerprintSettingsFragment.this.highlightFingerprintItem(message.arg1);
+                    FingerprintSettingsFragment.this.retryFingerprint();
+                } else if (i == 1003) {
+                    FingerprintSettingsFragment.this.handleError(message.arg1, (CharSequence) message.obj);
+                }
+            }
+        };
+        private Drawable mHighlightDrawable;
+        /* access modifiers changed from: private */
+        public boolean mInFingerprintLockout;
+        private boolean mLaunchedConfirm;
+        FingerprintRemoveSidecar.Listener mRemovalListener = new FingerprintRemoveSidecar.Listener() {
             public void onRemovalSucceeded(Fingerprint fingerprint) {
                 FingerprintSettingsFragment.this.mHandler.obtainMessage(1000, fingerprint.getBiometricId(), 0).sendToTarget();
                 updateDialog();
             }
 
-            @Override // com.android.settings.biometrics.fingerprint.FingerprintRemoveSidecar.Listener
             public void onRemovalError(Fingerprint fingerprint, int i, CharSequence charSequence) {
                 FragmentActivity activity = FingerprintSettingsFragment.this.getActivity();
                 if (activity != null) {
@@ -128,43 +146,23 @@ public class FingerprintSettings extends SubSettings {
                 }
             }
         };
-        private final Handler mHandler = new Handler() { // from class: com.android.settings.biometrics.fingerprint.FingerprintSettings.FingerprintSettingsFragment.3
-            @Override // android.os.Handler
-            public void handleMessage(Message message) {
-                int i = message.what;
-                if (i == 1000) {
-                    FingerprintSettingsFragment.this.removeFingerprintPreference(message.arg1);
-                    FingerprintSettingsFragment.this.updateAddPreference();
-                    FingerprintSettingsFragment.this.retryFingerprint();
-                } else if (i == 1001) {
-                    FingerprintSettingsFragment.this.highlightFingerprintItem(message.arg1);
-                    FingerprintSettingsFragment.this.retryFingerprint();
-                } else if (i != 1003) {
-                } else {
-                    FingerprintSettingsFragment.this.handleError(message.arg1, (CharSequence) message.obj);
-                }
-            }
-        };
-        private final Runnable mFingerprintLockoutReset = new Runnable() { // from class: com.android.settings.biometrics.fingerprint.FingerprintSettings.FingerprintSettingsFragment.5
-            @Override // java.lang.Runnable
-            public void run() {
-                FingerprintSettingsFragment.this.mInFingerprintLockout = false;
-                FingerprintSettingsFragment.this.retryFingerprint();
-            }
-        };
+        private FingerprintRemoveSidecar mRemovalSidecar;
+        private List<FingerprintSensorPropertiesInternal> mSensorProperties;
+        private byte[] mToken;
+        private int mUserId;
 
-        @Override // com.android.settingslib.core.instrumentation.Instrumentable
         public int getMetricsCategory() {
             return 49;
         }
 
-        protected void handleError(int i, CharSequence charSequence) {
+        /* access modifiers changed from: protected */
+        public void handleError(int i, CharSequence charSequence) {
             FragmentActivity activity;
             if (i != 5) {
                 if (i == 7) {
                     this.mInFingerprintLockout = true;
                     if (!this.mHandler.hasCallbacks(this.mFingerprintLockoutReset)) {
-                        this.mHandler.postDelayed(this.mFingerprintLockoutReset, 30000L);
+                        this.mHandler.postDelayed(this.mFingerprintLockoutReset, 30000);
                     }
                 } else if (i == 9) {
                     this.mInFingerprintLockout = true;
@@ -178,7 +176,7 @@ public class FingerprintSettings extends SubSettings {
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public void retryFingerprint() {
             if (!isUdfps() && !this.mRemovalSidecar.inProgress() && this.mFingerprintManager.getEnrolledFingerprints(this.mUserId).size() != 0 && !this.mLaunchedConfirm && !this.mInFingerprintLockout) {
                 this.mAuthenticateSidecar.startAuthentication(this.mUserId);
@@ -186,30 +184,29 @@ public class FingerprintSettings extends SubSettings {
             }
         }
 
-        @Override // com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
         public void onCreate(Bundle bundle) {
-            int i;
             super.onCreate(bundle);
-            final FragmentActivity activity = getActivity();
+            FragmentActivity activity = getActivity();
             FingerprintManager fingerprintManagerOrNull = Utils.getFingerprintManagerOrNull(activity);
             this.mFingerprintManager = fingerprintManagerOrNull;
-            this.mSensorProperties = fingerprintManagerOrNull.getSensorPropertiesInternal();
+            this.mFingerprintUpdater = new FingerprintUpdater(activity, fingerprintManagerOrNull);
+            this.mSensorProperties = this.mFingerprintManager.getSensorPropertiesInternal();
             this.mToken = getIntent().getByteArrayExtra("hw_auth_token");
-            this.mChallenge = activity.getIntent().getLongExtra("challenge", -1L);
+            this.mChallenge = activity.getIntent().getLongExtra("challenge", -1);
             FingerprintAuthenticateSidecar fingerprintAuthenticateSidecar = (FingerprintAuthenticateSidecar) getFragmentManager().findFragmentByTag("authenticate_sidecar");
             this.mAuthenticateSidecar = fingerprintAuthenticateSidecar;
             if (fingerprintAuthenticateSidecar == null) {
                 this.mAuthenticateSidecar = new FingerprintAuthenticateSidecar();
-                getFragmentManager().beginTransaction().add(this.mAuthenticateSidecar, "authenticate_sidecar").commit();
+                getFragmentManager().beginTransaction().add((Fragment) this.mAuthenticateSidecar, "authenticate_sidecar").commit();
             }
             this.mAuthenticateSidecar.setFingerprintManager(this.mFingerprintManager);
             FingerprintRemoveSidecar fingerprintRemoveSidecar = (FingerprintRemoveSidecar) getFragmentManager().findFragmentByTag("removal_sidecar");
             this.mRemovalSidecar = fingerprintRemoveSidecar;
             if (fingerprintRemoveSidecar == null) {
                 this.mRemovalSidecar = new FingerprintRemoveSidecar();
-                getFragmentManager().beginTransaction().add(this.mRemovalSidecar, "removal_sidecar").commit();
+                getFragmentManager().beginTransaction().add((Fragment) this.mRemovalSidecar, "removal_sidecar").commit();
             }
-            this.mRemovalSidecar.setFingerprintManager(this.mFingerprintManager);
+            this.mRemovalSidecar.setFingerprintUpdater(this.mFingerprintUpdater);
             this.mRemovalSidecar.setListener(this.mRemovalListener);
             RenameDialog renameDialog = (RenameDialog) getFragmentManager().findFragmentByTag(RenameDialog.class.getName());
             if (renameDialog != null) {
@@ -226,42 +223,44 @@ public class FingerprintSettings extends SubSettings {
                 this.mLaunchedConfirm = true;
                 launchChooseOrConfirmLock();
             }
+            updateFooterColumns(activity);
+        }
+
+        private void updateFooterColumns(final Activity activity) {
+            int i;
             final RestrictedLockUtils.EnforcedAdmin checkIfKeyguardFeaturesDisabled = RestrictedLockUtilsInternal.checkIfKeyguardFeaturesDisabled(activity, 32, this.mUserId);
-            AnnotationSpan.LinkInfo linkInfo = new AnnotationSpan.LinkInfo("admin_details", new View.OnClickListener() { // from class: com.android.settings.biometrics.fingerprint.FingerprintSettings$FingerprintSettingsFragment$$ExternalSyntheticLambda2
-                @Override // android.view.View.OnClickListener
+            AnnotationSpan.LinkInfo linkInfo = new AnnotationSpan.LinkInfo("admin_details", new View.OnClickListener() {
                 public final void onClick(View view) {
                     RestrictedLockUtils.sendShowAdminSupportDetailsIntent(activity, checkIfKeyguardFeaturesDisabled);
                 }
             });
             AnnotationSpan.LinkInfo linkInfo2 = new AnnotationSpan.LinkInfo(activity, "url", HelpUtils.getHelpIntent(activity, getString(getHelpResource()), activity.getClass().getName()));
             if (checkIfKeyguardFeaturesDisabled != null) {
-                i = R.string.security_settings_fingerprint_enroll_disclaimer_lockscreen_disabled;
+                i = R$string.f152x60fec2a1;
             } else {
-                i = R.string.nt_fp_settings_introduction;
+                i = R$string.nt_fp_settings_introduction;
             }
             this.mFooterTitle = AnnotationSpan.linkify(getText(i), linkInfo2, linkInfo);
         }
 
         private boolean isUdfps() {
-            for (FingerprintSensorPropertiesInternal fingerprintSensorPropertiesInternal : this.mSensorProperties) {
-                if (fingerprintSensorPropertiesInternal.isAnyUdfpsType()) {
+            for (FingerprintSensorPropertiesInternal isAnyUdfpsType : this.mSensorProperties) {
+                if (isAnyUdfpsType.isAnyUdfpsType()) {
                     return true;
                 }
             }
             return false;
         }
 
-        protected void removeFingerprintPreference(int i) {
+        /* access modifiers changed from: protected */
+        public void removeFingerprintPreference(int i) {
             String genKey = genKey(i);
             Preference findPreference = findPreference(genKey);
-            if (findPreference != null) {
-                if (getPreferenceScreen().removePreference(findPreference)) {
-                    return;
-                }
+            if (findPreference == null) {
+                Log.w("FingerprintSettings", "Can't find preference to remove: " + genKey);
+            } else if (!getPreferenceScreen().removePreference(findPreference)) {
                 Log.w("FingerprintSettings", "Failed to remove preference with key " + genKey);
-                return;
             }
-            Log.w("FingerprintSettings", "Can't find preference to remove: " + genKey);
         }
 
         private PreferenceScreen createPreferenceHierarchy() {
@@ -269,7 +268,7 @@ public class FingerprintSettings extends SubSettings {
             if (preferenceScreen != null) {
                 preferenceScreen.removeAll();
             }
-            addPreferencesFromResource(R.xml.security_settings_fingerprint);
+            addPreferencesFromResource(R$xml.security_settings_fingerprint);
             PreferenceScreen preferenceScreen2 = getPreferenceScreen();
             addFingerprintItemPreferences(preferenceScreen2);
             setPreferenceScreen(preferenceScreen2);
@@ -287,57 +286,69 @@ public class FingerprintSettings extends SubSettings {
                 fingerprintPreference.setTitle(fingerprint.getName());
                 fingerprintPreference.setFingerprint(fingerprint);
                 fingerprintPreference.setPersistent(false);
-                fingerprintPreference.setIcon(R.drawable.ic_fingerprint);
+                fingerprintPreference.setIcon(R$drawable.ic_fingerprint_24dp);
                 if (this.mRemovalSidecar.isRemovingFingerprint(fingerprint.getBiometricId())) {
                     fingerprintPreference.setEnabled(false);
                 }
                 if (this.mFingerprintsRenaming.containsKey(Integer.valueOf(fingerprint.getBiometricId()))) {
-                    fingerprintPreference.setTitle(this.mFingerprintsRenaming.get(Integer.valueOf(fingerprint.getBiometricId())));
+                    fingerprintPreference.setTitle((CharSequence) this.mFingerprintsRenaming.get(Integer.valueOf(fingerprint.getBiometricId())));
                 }
                 preferenceGroup.addPreference(fingerprintPreference);
                 fingerprintPreference.setOnPreferenceChangeListener(this);
             }
             Preference preference = new Preference(preferenceGroup.getContext());
             preference.setKey("key_fingerprint_add");
-            preference.setTitle(R.string.fingerprint_add_title);
-            preference.setIcon(R.drawable.ic_add_24dp);
+            preference.setTitle(R$string.fingerprint_add_title);
+            preference.setIcon(R$drawable.ic_add_24dp);
             preferenceGroup.addPreference(preference);
             preference.setOnPreferenceChangeListener(this);
             updateAddPreference();
+            NtCustSwitchPreference ntCustSwitchPreference = new NtCustSwitchPreference(preferenceGroup.getContext());
+            ntCustSwitchPreference.setKey("key_fingerprint_motion_show_icon");
+            ntCustSwitchPreference.setTitle(R$string.nt_fingerprint_motion_show_fp_icon_title);
+            ntCustSwitchPreference.setSummary(R$string.nt_fingerprint_motion_show_fp_icon_summary);
+            ntCustSwitchPreference.setChecked(isMotionTriggerShowFpIconEnabled());
+            ntCustSwitchPreference.setOnPreferenceChangeListener(this);
+            preferenceGroup.addPreference(ntCustSwitchPreference);
             createFooterPreference(preferenceGroup);
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        private void setMotionTriggerShowFpIconEnabled(boolean z) {
+            Settings.Secure.putInt(getContext().getContentResolver(), "motion_trigger_show_fp_icon", z ? 1 : 0);
+        }
+
+        private boolean isMotionTriggerShowFpIconEnabled() {
+            return Settings.Secure.getInt(getContext().getContentResolver(), "motion_trigger_show_fp_icon", 1) == 1;
+        }
+
+        /* access modifiers changed from: private */
         public void updateAddPreference() {
-            if (getActivity() == null) {
-                return;
+            if (getActivity() != null) {
+                Preference findPreference = findPreference("key_fingerprint_add");
+                int integer = getContext().getResources().getInteger(17694832);
+                boolean z = true;
+                boolean z2 = this.mFingerprintManager.getEnrolledFingerprints(this.mUserId).size() >= integer;
+                boolean inProgress = this.mRemovalSidecar.inProgress();
+                findPreference.setSummary((CharSequence) z2 ? getContext().getString(R$string.fingerprint_add_max, new Object[]{Integer.valueOf(integer)}) : "");
+                if (z2 || inProgress || this.mToken == null) {
+                    z = false;
+                }
+                findPreference.setEnabled(z);
+                SecurityUtils.updateGestureMode(this.mFingerprintManager.getEnrolledFingerprints(this.mUserId).size() > 0 ? 3 : 4);
             }
-            Preference findPreference = findPreference("key_fingerprint_add");
-            int integer = getContext().getResources().getInteger(17694823);
-            boolean z = true;
-            boolean z2 = this.mFingerprintManager.getEnrolledFingerprints(this.mUserId).size() >= integer;
-            boolean inProgress = this.mRemovalSidecar.inProgress();
-            findPreference.setSummary(z2 ? getContext().getString(R.string.fingerprint_add_max, Integer.valueOf(integer)) : "");
-            if (z2 || inProgress || this.mToken == null) {
-                z = false;
-            }
-            findPreference.setEnabled(z);
-            NtUtils.updateGestureMode(this.mFingerprintManager.getEnrolledFingerprints(this.mUserId).size() > 0 ? 3 : 4);
         }
 
         private void createFooterPreference(PreferenceGroup preferenceGroup) {
             FragmentActivity activity = getActivity();
-            if (activity == null) {
-                return;
+            if (activity != null) {
+                preferenceGroup.addPreference(new FooterPreference.Builder(activity).setTitle(this.mFooterTitle).build());
             }
-            preferenceGroup.addPreference(new FooterPreference.Builder(activity).setTitle(this.mFooterTitle).build());
         }
 
         private static String genKey(int i) {
             return "key_fingerprint_item_" + i;
         }
 
-        @Override // com.android.settings.SettingsPreferenceFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
         public void onResume() {
             super.onResume();
             this.mInFingerprintLockout = false;
@@ -353,39 +364,35 @@ public class FingerprintSettings extends SubSettings {
             retryFingerprint();
         }
 
-        @Override // com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
         public void onPause() {
             super.onPause();
             FingerprintRemoveSidecar fingerprintRemoveSidecar = this.mRemovalSidecar;
             if (fingerprintRemoveSidecar != null) {
-                fingerprintRemoveSidecar.setListener(null);
+                fingerprintRemoveSidecar.setListener((FingerprintRemoveSidecar.Listener) null);
             }
             FingerprintAuthenticateSidecar fingerprintAuthenticateSidecar = this.mAuthenticateSidecar;
             if (fingerprintAuthenticateSidecar != null) {
-                fingerprintAuthenticateSidecar.setListener(null);
+                fingerprintAuthenticateSidecar.setListener((FingerprintAuthenticateSidecar.Listener) null);
                 this.mAuthenticateSidecar.stopAuthentication();
             }
         }
 
-        @Override // com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
         public void onStop() {
             super.onStop();
-            if (getActivity().isChangingConfigurations() || this.mLaunchedConfirm || this.mEnrollClicked) {
-                return;
+            if (!getActivity().isChangingConfigurations() && !this.mLaunchedConfirm && !this.mEnrollClicked) {
+                getActivity().finish();
             }
-            getActivity().finish();
         }
 
-        @Override // com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
         public void onSaveInstanceState(Bundle bundle) {
             bundle.putByteArray("hw_auth_token", this.mToken);
             bundle.putBoolean("launched_confirm", this.mLaunchedConfirm);
             bundle.putSerializable("mFingerprintsRenaming", this.mFingerprintsRenaming);
         }
 
-        @Override // com.android.settings.core.InstrumentedPreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.preference.PreferenceManager.OnPreferenceTreeClickListener
         public boolean onPreferenceTreeClick(Preference preference) {
-            if ("key_fingerprint_add".equals(preference.getKey())) {
+            String key = preference.getKey();
+            if ("key_fingerprint_add".equals(key)) {
                 this.mEnrollClicked = true;
                 Intent intent = new Intent();
                 intent.setClassName("com.android.settings", FingerprintEnrollEnrolling.class.getName());
@@ -394,34 +401,32 @@ public class FingerprintSettings extends SubSettings {
                 startActivityForResult(intent, 10);
             } else if (preference instanceof FingerprintPreference) {
                 showRenameDialog(((FingerprintPreference) preference).getFingerprint());
+            } else if ("key_fingerprint_motion_show_icon".equals(key)) {
+                setMotionTriggerShowFpIconEnabled(((NtCustSwitchPreference) preference).isChecked());
             }
             return super.onPreferenceTreeClick(preference);
         }
 
-        @Override // com.android.settings.biometrics.fingerprint.FingerprintSettings.FingerprintPreference.OnDeleteClickListener
         public void onDeleteClick(FingerprintPreference fingerprintPreference) {
             boolean z = true;
             if (this.mFingerprintManager.getEnrolledFingerprints(this.mUserId).size() <= 1) {
                 z = false;
             }
-            Parcelable fingerprint = fingerprintPreference.getFingerprint();
-            if (z) {
-                if (this.mRemovalSidecar.inProgress()) {
-                    Log.d("FingerprintSettings", "Fingerprint delete in progress, skipping");
-                    return;
-                } else {
-                    DeleteFingerprintDialog.newInstance(fingerprint, this).show(getFragmentManager(), DeleteFingerprintDialog.class.getName());
-                    return;
-                }
+            Fingerprint fingerprint = fingerprintPreference.getFingerprint();
+            if (!z) {
+                ConfirmLastDeleteDialog confirmLastDeleteDialog = new ConfirmLastDeleteDialog();
+                boolean isManagedProfile = UserManager.get(getContext()).isManagedProfile(this.mUserId);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("fingerprint", fingerprint);
+                bundle.putBoolean("isProfileChallengeUser", isManagedProfile);
+                confirmLastDeleteDialog.setArguments(bundle);
+                confirmLastDeleteDialog.setTargetFragment(this, 0);
+                confirmLastDeleteDialog.show(getFragmentManager(), ConfirmLastDeleteDialog.class.getName());
+            } else if (this.mRemovalSidecar.inProgress()) {
+                Log.d("FingerprintSettings", "Fingerprint delete in progress, skipping");
+            } else {
+                DeleteFingerprintDialog.newInstance(fingerprint, this).show(getFragmentManager(), DeleteFingerprintDialog.class.getName());
             }
-            ConfirmLastDeleteDialog confirmLastDeleteDialog = new ConfirmLastDeleteDialog();
-            boolean isManagedProfile = UserManager.get(getContext()).isManagedProfile(this.mUserId);
-            Bundle bundle = new Bundle();
-            bundle.putParcelable("fingerprint", fingerprint);
-            bundle.putBoolean("isProfileChallengeUser", isManagedProfile);
-            confirmLastDeleteDialog.setArguments(bundle);
-            confirmLastDeleteDialog.setTargetFragment(this, 0);
-            confirmLastDeleteDialog.show(getFragmentManager(), ConfirmLastDeleteDialog.class.getName());
         }
 
         private void showRenameDialog(Fingerprint fingerprint) {
@@ -432,12 +437,7 @@ public class FingerprintSettings extends SubSettings {
             } else {
                 bundle.putParcelable("fingerprint", fingerprint);
             }
-            renameDialog.setOnDismissListener(new DialogInterface.OnDismissListener() { // from class: com.android.settings.biometrics.fingerprint.FingerprintSettings$FingerprintSettingsFragment$$ExternalSyntheticLambda0
-                @Override // android.content.DialogInterface.OnDismissListener
-                public final void onDismiss(DialogInterface dialogInterface) {
-                    FingerprintSettings.FingerprintSettingsFragment.this.lambda$showRenameDialog$1(dialogInterface);
-                }
-            });
+            renameDialog.setOnDismissListener(new C0760xd2803eaa(this));
             renameDialog.setDeleteInProgress(this.mRemovalSidecar.inProgress());
             renameDialog.setArguments(bundle);
             renameDialog.setTargetFragment(this, 0);
@@ -445,69 +445,55 @@ public class FingerprintSettings extends SubSettings {
             this.mAuthenticateSidecar.stopAuthentication();
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$showRenameDialog$1(DialogInterface dialogInterface) {
+        /* access modifiers changed from: private */
+        public /* synthetic */ void lambda$showRenameDialog$0(DialogInterface dialogInterface) {
             retryFingerprint();
         }
 
-        @Override // androidx.preference.Preference.OnPreferenceChangeListener
         public boolean onPreferenceChange(Preference preference, Object obj) {
             String key = preference.getKey();
             if ("fingerprint_enable_keyguard_toggle".equals(key)) {
                 return true;
             }
-            Log.v("FingerprintSettings", "Unknown key:" + key);
+            "key_fingerprint_motion_show_icon".equals(key);
             return true;
         }
 
-        @Override // com.android.settings.support.actionbar.HelpResourceProvider
         public int getHelpResource() {
-            return R.string.help_url_fingerprint;
+            return R$string.help_url_fingerprint;
         }
 
-        @Override // androidx.fragment.app.Fragment
-        public void onActivityResult(int i, int i2, final Intent intent) {
+        public void onActivityResult(int i, int i2, Intent intent) {
             super.onActivityResult(i, i2, intent);
-            if (i != 101 && i != 102) {
-                if (i != 10) {
-                    return;
+            if (i == 101 || i == 102) {
+                this.mLaunchedConfirm = false;
+                if (i2 != 1 && i2 != -1) {
+                    Log.d("FingerprintSettings", "Password not confirmed");
+                    finish();
+                } else if (intent == null || !BiometricUtils.containsGatekeeperPasswordHandle(intent)) {
+                    Log.d("FingerprintSettings", "Data null or GK PW missing");
+                    finish();
+                } else {
+                    this.mFingerprintManager.generateChallenge(this.mUserId, new C0759xd2803ea9(this, intent));
                 }
+            } else if (i == 10) {
                 this.mEnrollClicked = false;
-                if (i2 != 3) {
-                    return;
+                if (i2 == 3) {
+                    FragmentActivity activity = getActivity();
+                    activity.setResult(i2);
+                    activity.finish();
                 }
-                FragmentActivity activity = getActivity();
-                activity.setResult(i2);
-                activity.finish();
-                return;
             }
-            this.mLaunchedConfirm = false;
-            if (i2 == 1 || i2 == -1) {
-                if (intent != null && BiometricUtils.containsGatekeeperPasswordHandle(intent)) {
-                    this.mFingerprintManager.generateChallenge(this.mUserId, new FingerprintManager.GenerateChallengeCallback() { // from class: com.android.settings.biometrics.fingerprint.FingerprintSettings$FingerprintSettingsFragment$$ExternalSyntheticLambda1
-                        public final void onChallengeGenerated(int i3, int i4, long j) {
-                            FingerprintSettings.FingerprintSettingsFragment.this.lambda$onActivityResult$2(intent, i3, i4, j);
-                        }
-                    });
-                    return;
-                }
-                Log.d("FingerprintSettings", "Data null or GK PW missing");
-                finish();
-                return;
-            }
-            Log.d("FingerprintSettings", "Password not confirmed");
-            finish();
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onActivityResult$2(Intent intent, int i, int i2, long j) {
-            this.mToken = BiometricUtils.requestGatekeeperHat(getActivity(), intent, this.mUserId, j);
+        /* access modifiers changed from: private */
+        public /* synthetic */ void lambda$onActivityResult$1(Intent intent, int i, int i2, long j) {
+            this.mToken = BiometricUtils.requestGatekeeperHat((Context) getActivity(), intent, this.mUserId, j);
             this.mChallenge = j;
-            BiometricUtils.removeGatekeeperPasswordHandle(getActivity(), intent);
+            BiometricUtils.removeGatekeeperPasswordHandle((Context) getActivity(), intent);
             updateAddPreference();
         }
 
-        @Override // com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
         public void onDestroy() {
             super.onDestroy();
             if (getActivity().isFinishing()) {
@@ -518,44 +504,66 @@ public class FingerprintSettings extends SubSettings {
         private Drawable getHighlightDrawable() {
             FragmentActivity activity;
             if (this.mHighlightDrawable == null && (activity = getActivity()) != null) {
-                this.mHighlightDrawable = activity.getDrawable(R.drawable.preference_highlight);
+                this.mHighlightDrawable = activity.getDrawable(R$drawable.preference_highlight);
             }
             return this.mHighlightDrawable;
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public void highlightFingerprintItem(int i) {
-            final View view;
-            FingerprintPreference fingerprintPreference = (FingerprintPreference) findPreference(genKey(i));
-            Drawable highlightDrawable = getHighlightDrawable();
-            if (highlightDrawable == null || fingerprintPreference == null || (view = fingerprintPreference.getView()) == null) {
-                return;
-            }
-            highlightDrawable.setHotspot(view.getWidth() / 2, view.getHeight() / 2);
-            view.setBackground(highlightDrawable);
-            view.setPressed(true);
-            view.setPressed(false);
-            this.mHandler.postDelayed(new Runnable() { // from class: com.android.settings.biometrics.fingerprint.FingerprintSettings.FingerprintSettingsFragment.4
-                @Override // java.lang.Runnable
-                public void run() {
-                    view.setBackground(null);
-                }
-            }, 500L);
+        /* access modifiers changed from: private */
+        /* JADX WARNING: Code restructure failed: missing block: B:3:0x0012, code lost:
+            r4 = r4.getView();
+         */
+        /* Code decompiled incorrectly, please refer to instructions dump. */
+        public void highlightFingerprintItem(int r4) {
+            /*
+                r3 = this;
+                java.lang.String r4 = genKey(r4)
+                androidx.preference.Preference r4 = r3.findPreference(r4)
+                com.android.settings.biometrics.fingerprint.FingerprintSettings$FingerprintPreference r4 = (com.android.settings.biometrics.fingerprint.FingerprintSettings.FingerprintPreference) r4
+                android.graphics.drawable.Drawable r0 = r3.getHighlightDrawable()
+                if (r0 == 0) goto L_0x0041
+                if (r4 == 0) goto L_0x0041
+                android.view.View r4 = r4.getView()
+                if (r4 != 0) goto L_0x0019
+                return
+            L_0x0019:
+                int r1 = r4.getWidth()
+                int r1 = r1 / 2
+                int r2 = r4.getHeight()
+                int r2 = r2 / 2
+                float r1 = (float) r1
+                float r2 = (float) r2
+                r0.setHotspot(r1, r2)
+                r4.setBackground(r0)
+                r0 = 1
+                r4.setPressed(r0)
+                r0 = 0
+                r4.setPressed(r0)
+                android.os.Handler r0 = r3.mHandler
+                com.android.settings.biometrics.fingerprint.FingerprintSettings$FingerprintSettingsFragment$5 r1 = new com.android.settings.biometrics.fingerprint.FingerprintSettings$FingerprintSettingsFragment$5
+                r1.<init>(r4)
+                r3 = 500(0x1f4, double:2.47E-321)
+                r0.postDelayed(r1, r3)
+            L_0x0041:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.android.settings.biometrics.fingerprint.FingerprintSettings.FingerprintSettingsFragment.highlightFingerprintItem(int):void");
         }
 
         private void launchChooseOrConfirmLock() {
             Intent intent = new Intent();
-            if (!new ChooseLockSettingsHelper.Builder(getActivity(), this).setRequestCode(R$styleable.Constraint_layout_goneMarginRight).setTitle(getString(R.string.security_settings_fingerprint_preference_title)).setRequestGatekeeperPasswordHandle(true).setUserId(this.mUserId).setForegroundOnly(true).setReturnCredentials(true).show()) {
+            if (!new ChooseLockSettingsHelper.Builder(getActivity(), this).setRequestCode(101).setTitle(getString(R$string.security_settings_fingerprint_preference_title)).setRequestGatekeeperPasswordHandle(true).setUserId(this.mUserId).setForegroundOnly(true).setReturnCredentials(true).show()) {
                 intent.setClassName("com.android.settings", ChooseLockGeneric.class.getName());
                 intent.putExtra("hide_insecure_options", true);
                 intent.putExtra("android.intent.extra.USER_ID", this.mUserId);
                 intent.putExtra("request_gk_pw_handle", true);
                 intent.putExtra("android.intent.extra.USER_ID", this.mUserId);
-                startActivityForResult(intent, R$styleable.Constraint_layout_goneMarginStart);
+                startActivityForResult(intent, 102);
             }
         }
 
-        void deleteFingerPrint(Fingerprint fingerprint) {
+        /* access modifiers changed from: package-private */
+        public void deleteFingerPrint(Fingerprint fingerprint) {
             this.mRemovalSidecar.startRemove(fingerprint, this.mUserId);
             Preference findPreference = findPreference(genKey(fingerprint.getBiometricId()));
             if (findPreference != null) {
@@ -564,7 +572,7 @@ public class FingerprintSettings extends SubSettings {
             updateAddPreference();
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public void renameFingerPrint(int i, String str) {
             this.mFingerprintManager.rename(i, this.mUserId, str);
             if (!TextUtils.isEmpty(str)) {
@@ -573,12 +581,10 @@ public class FingerprintSettings extends SubSettings {
             updatePreferences();
         }
 
-        /* loaded from: classes.dex */
         public static class DeleteFingerprintDialog extends InstrumentedDialogFragment implements DialogInterface.OnClickListener {
             private AlertDialog mAlertDialog;
             private Fingerprint mFp;
 
-            @Override // com.android.settingslib.core.instrumentation.Instrumentable
             public int getMetricsCategory() {
                 return 570;
             }
@@ -592,16 +598,15 @@ public class FingerprintSettings extends SubSettings {
                 return deleteFingerprintDialog;
             }
 
-            @Override // androidx.fragment.app.DialogFragment
             public Dialog onCreateDialog(Bundle bundle) {
                 Fingerprint parcelable = getArguments().getParcelable("fingerprint");
                 this.mFp = parcelable;
-                AlertDialog create = new AlertDialog.Builder(getActivity()).setTitle(getString(R.string.fingerprint_delete_title, parcelable.getName())).setMessage(R.string.fingerprint_delete_message).setPositiveButton(R.string.security_settings_fingerprint_enroll_dialog_delete, this).setNegativeButton(R.string.cancel, (DialogInterface.OnClickListener) null).create();
+                String string = getString(R$string.fingerprint_delete_title, parcelable.getName());
+                AlertDialog create = new AlertDialog.Builder(getActivity()).setTitle((CharSequence) string).setMessage((CharSequence) getString(R$string.nt_fingerprint_delete_message, this.mFp.getName())).setPositiveButton(R$string.security_settings_fingerprint_enroll_dialog_delete, (DialogInterface.OnClickListener) this).setNegativeButton(R$string.cancel, (DialogInterface.OnClickListener) null).create();
                 this.mAlertDialog = create;
                 return create;
             }
 
-            @Override // android.content.DialogInterface.OnClickListener
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (i == -1) {
                     int biometricId = this.mFp.getBiometricId();
@@ -612,10 +617,9 @@ public class FingerprintSettings extends SubSettings {
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public static InputFilter[] getFilters() {
-            return new InputFilter[]{new InputFilter() { // from class: com.android.settings.biometrics.fingerprint.FingerprintSettings.FingerprintSettingsFragment.6
-                @Override // android.text.InputFilter
+            return new InputFilter[]{new InputFilter() {
                 public CharSequence filter(CharSequence charSequence, int i, int i2, Spanned spanned, int i3, int i4) {
                     while (i < i2) {
                         if (charSequence.charAt(i) < ' ') {
@@ -625,18 +629,21 @@ public class FingerprintSettings extends SubSettings {
                     }
                     return null;
                 }
-            }, new InputFilter.LengthFilter(20)};
+            }};
         }
 
-        /* loaded from: classes.dex */
         public static class RenameDialog extends InstrumentedDialogFragment {
-            private AlertDialog mAlertDialog;
-            private boolean mDeleteInProgress;
-            private ImeAwareEditText mDialogTextField;
-            private DialogInterface.OnDismissListener mDismissListener;
-            private Fingerprint mFp;
+            /* access modifiers changed from: private */
+            public AlertDialog mAlertDialog;
+            /* access modifiers changed from: private */
+            public boolean mDeleteInProgress;
+            /* access modifiers changed from: private */
+            public ImeAwareEditText mDialogTextField;
+            /* access modifiers changed from: private */
+            public DialogInterface.OnDismissListener mDismissListener;
+            /* access modifiers changed from: private */
+            public Fingerprint mFp;
 
-            @Override // com.android.settingslib.core.instrumentation.Instrumentable
             public int getMetricsCategory() {
                 return 570;
             }
@@ -645,16 +652,14 @@ public class FingerprintSettings extends SubSettings {
                 this.mDeleteInProgress = z;
             }
 
-            @Override // androidx.fragment.app.DialogFragment, android.content.DialogInterface.OnCancelListener
             public void onCancel(DialogInterface dialogInterface) {
                 super.onCancel(dialogInterface);
                 this.mDismissListener.onDismiss(dialogInterface);
             }
 
-            @Override // androidx.fragment.app.DialogFragment
             public Dialog onCreateDialog(Bundle bundle) {
-                final String str;
                 final int i;
+                final String str;
                 this.mFp = getArguments().getParcelable("fingerprint");
                 final int i2 = -1;
                 if (bundle != null) {
@@ -666,14 +671,13 @@ public class FingerprintSettings extends SubSettings {
                     str = null;
                     i = -1;
                 }
-                AlertDialog create = new AlertDialog.Builder(getActivity()).setView(R.layout.fingerprint_rename_dialog).setPositiveButton(R.string.security_settings_fingerprint_enroll_dialog_ok, new DialogInterface.OnClickListener() { // from class: com.android.settings.biometrics.fingerprint.FingerprintSettings.FingerprintSettingsFragment.RenameDialog.1
-                    @Override // android.content.DialogInterface.OnClickListener
-                    public void onClick(DialogInterface dialogInterface, int i4) {
+                AlertDialog create = new AlertDialog.Builder(getActivity()).setView(R$layout.fingerprint_rename_dialog).setPositiveButton(R$string.security_settings_fingerprint_enroll_dialog_ok, (DialogInterface.OnClickListener) new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogInterface, int i) {
                         String obj = RenameDialog.this.mDialogTextField.getText().toString();
                         CharSequence name = RenameDialog.this.mFp.getName();
                         if (!TextUtils.equals(obj, name)) {
-                            Log.d("FingerprintSettings", "rename " + ((Object) name) + " to " + obj);
-                            ((InstrumentedDialogFragment) RenameDialog.this).mMetricsFeatureProvider.action(RenameDialog.this.getContext(), 254, RenameDialog.this.mFp.getBiometricId());
+                            Log.d("FingerprintSettings", "rename " + name + " to " + obj);
+                            RenameDialog.this.mMetricsFeatureProvider.action(RenameDialog.this.getContext(), 254, RenameDialog.this.mFp.getBiometricId());
                             ((FingerprintSettingsFragment) RenameDialog.this.getTargetFragment()).renameFingerPrint(RenameDialog.this.mFp.getBiometricId(), obj);
                         }
                         RenameDialog.this.mDismissListener.onDismiss(dialogInterface);
@@ -681,11 +685,10 @@ public class FingerprintSettings extends SubSettings {
                     }
                 }).create();
                 this.mAlertDialog = create;
-                create.setOnShowListener(new DialogInterface.OnShowListener() { // from class: com.android.settings.biometrics.fingerprint.FingerprintSettings.FingerprintSettingsFragment.RenameDialog.2
-                    @Override // android.content.DialogInterface.OnShowListener
+                create.setOnShowListener(new DialogInterface.OnShowListener() {
                     public void onShow(DialogInterface dialogInterface) {
                         RenameDialog renameDialog = RenameDialog.this;
-                        renameDialog.mDialogTextField = renameDialog.mAlertDialog.findViewById(R.id.fingerprint_rename_field);
+                        renameDialog.mDialogTextField = renameDialog.mAlertDialog.findViewById(R$id.fingerprint_rename_field);
                         CharSequence charSequence = str;
                         if (charSequence == null) {
                             charSequence = RenameDialog.this.mFp.getName();
@@ -719,7 +722,6 @@ public class FingerprintSettings extends SubSettings {
                 }
             }
 
-            @Override // androidx.fragment.app.DialogFragment, androidx.fragment.app.Fragment
             public void onSaveInstanceState(Bundle bundle) {
                 super.onSaveInstanceState(bundle);
                 ImeAwareEditText imeAwareEditText = this.mDialogTextField;
@@ -731,35 +733,31 @@ public class FingerprintSettings extends SubSettings {
             }
         }
 
-        /* loaded from: classes.dex */
         public static class ConfirmLastDeleteDialog extends InstrumentedDialogFragment {
-            private Fingerprint mFp;
+            /* access modifiers changed from: private */
+            public Fingerprint mFp;
 
-            @Override // com.android.settingslib.core.instrumentation.Instrumentable
             public int getMetricsCategory() {
                 return 571;
             }
 
-            @Override // androidx.fragment.app.DialogFragment
             public Dialog onCreateDialog(Bundle bundle) {
-                int i;
                 this.mFp = getArguments().getParcelable("fingerprint");
                 boolean z = getArguments().getBoolean("isProfileChallengeUser");
-                AlertDialog.Builder title = new AlertDialog.Builder(getActivity()).setTitle(R.string.fingerprint_last_delete_title);
-                if (z) {
-                    i = R.string.fingerprint_last_delete_message_profile_challenge;
-                } else {
-                    i = R.string.fingerprint_last_delete_message;
+                String string = getString(R$string.nt_fingerprint_last_delete_title, this.mFp.getName());
+                getString(R$string.fingerprint_v2_delete_message, this.mFp.getName());
+                DevicePolicyManager devicePolicyManager = (DevicePolicyManager) getContext().getSystemService(DevicePolicyManager.class);
+                int i = R$string.fingerprint_last_delete_message_profile_challenge;
+                if (!z) {
+                    i = R$string.nt_fingerprint_last_delete_message;
                 }
-                return title.setMessage(i).setPositiveButton(R.string.fingerprint_last_delete_confirm, new DialogInterface.OnClickListener() { // from class: com.android.settings.biometrics.fingerprint.FingerprintSettings.FingerprintSettingsFragment.ConfirmLastDeleteDialog.2
-                    @Override // android.content.DialogInterface.OnClickListener
-                    public void onClick(DialogInterface dialogInterface, int i2) {
+                return new AlertDialog.Builder(getActivity()).setTitle((CharSequence) string).setMessage(i).setPositiveButton(R$string.fingerprint_last_delete_confirm, (DialogInterface.OnClickListener) new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogInterface, int i) {
                         ((FingerprintSettingsFragment) ConfirmLastDeleteDialog.this.getTargetFragment()).deleteFingerPrint(ConfirmLastDeleteDialog.this.mFp);
                         dialogInterface.dismiss();
                     }
-                }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() { // from class: com.android.settings.biometrics.fingerprint.FingerprintSettings.FingerprintSettingsFragment.ConfirmLastDeleteDialog.1
-                    @Override // android.content.DialogInterface.OnClickListener
-                    public void onClick(DialogInterface dialogInterface, int i2) {
+                }).setNegativeButton(R$string.cancel, (DialogInterface.OnClickListener) new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
                     }
                 }).create();
@@ -767,14 +765,13 @@ public class FingerprintSettings extends SubSettings {
         }
     }
 
-    /* loaded from: classes.dex */
     public static class FingerprintPreference extends TwoTargetPreference {
         private View mDeleteView;
         private Fingerprint mFingerprint;
-        private final OnDeleteClickListener mOnDeleteClickListener;
+        /* access modifiers changed from: private */
+        public final OnDeleteClickListener mOnDeleteClickListener;
         private View mView;
 
-        /* loaded from: classes.dex */
         public interface OnDeleteClickListener {
             void onDeleteClick(FingerprintPreference fingerprintPreference);
         }
@@ -796,21 +793,19 @@ public class FingerprintSettings extends SubSettings {
             return this.mFingerprint;
         }
 
-        @Override // com.android.settingslib.widget.TwoTargetPreference
-        protected int getSecondTargetResId() {
-            return R.layout.preference_widget_delete;
+        /* access modifiers changed from: protected */
+        public int getSecondTargetResId() {
+            return R$layout.preference_widget_delete;
         }
 
-        @Override // com.android.settingslib.widget.TwoTargetPreference, androidx.preference.Preference
         public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
             super.onBindViewHolder(preferenceViewHolder);
             View view = preferenceViewHolder.itemView;
             this.mView = view;
-            View findViewById = view.findViewById(R.id.delete_button);
+            View findViewById = view.findViewById(R$id.delete_button);
             this.mDeleteView = findViewById;
-            findViewById.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.biometrics.fingerprint.FingerprintSettings.FingerprintPreference.1
-                @Override // android.view.View.OnClickListener
-                public void onClick(View view2) {
+            findViewById.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
                     if (FingerprintPreference.this.mOnDeleteClickListener != null) {
                         FingerprintPreference.this.mOnDeleteClickListener.onDeleteClick(FingerprintPreference.this);
                     }

@@ -9,13 +9,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$string;
 import com.android.settings.SetupRedactionInterstitial;
 import com.android.settings.password.ChooseLockGenericController;
 import com.android.settings.password.ChooseLockPassword;
 import com.android.settings.password.ChooseLockTypeDialogFragment;
-import com.android.settings.password.SetupChooseLockPassword;
-/* loaded from: classes.dex */
+
 public class SetupChooseLockPassword extends ChooseLockPassword {
     public static Intent modifyIntentForSetup(Context context, Intent intent) {
         intent.setClass(context, SetupChooseLockPassword.class);
@@ -23,35 +23,31 @@ public class SetupChooseLockPassword extends ChooseLockPassword {
         return intent;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.password.ChooseLockPassword, com.android.settings.SettingsActivity
+    /* access modifiers changed from: protected */
     public boolean isValidFragment(String str) {
         return SetupChooseLockPasswordFragment.class.getName().equals(str);
     }
 
-    @Override // com.android.settings.password.ChooseLockPassword
-    Class<? extends Fragment> getFragmentClass() {
+    /* access modifiers changed from: package-private */
+    public Class<? extends Fragment> getFragmentClass() {
         return SetupChooseLockPasswordFragment.class;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.password.ChooseLockPassword, com.android.settings.SettingsActivity, com.android.settings.core.SettingsBaseActivity, androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        findViewById(R.id.content_parent).setFitsSystemWindows(false);
+        findViewById(R$id.content_parent).setFitsSystemWindows(false);
     }
 
-    /* loaded from: classes.dex */
     public static class SetupChooseLockPasswordFragment extends ChooseLockPassword.ChooseLockPasswordFragment implements ChooseLockTypeDialogFragment.OnLockTypeSelectedListener {
         private boolean mLeftButtonIsSkip;
         private Button mOptionsButton;
 
-        @Override // com.android.settings.password.ChooseLockPassword.ChooseLockPasswordFragment
-        protected int getStageType() {
+        /* access modifiers changed from: protected */
+        public int getStageType() {
             return 0;
         }
 
-        @Override // com.android.settings.password.ChooseLockPassword.ChooseLockPasswordFragment, androidx.fragment.app.Fragment
         public void onViewCreated(View view, Bundle bundle) {
             super.onViewCreated(view, bundle);
             FragmentActivity activity = getActivity();
@@ -63,27 +59,20 @@ public class SetupChooseLockPassword extends ChooseLockPassword {
             if (!z) {
                 Log.w("SetupChooseLockPassword", "Visible screen lock types is empty!");
             }
-            if (!booleanExtra || !z) {
-                return;
+            if (booleanExtra && z) {
+                Button button = (Button) view.findViewById(R$id.screen_lock_options);
+                this.mOptionsButton = button;
+                button.setVisibility(0);
+                this.mOptionsButton.setOnClickListener(new C1302x8037cc4f(this));
             }
-            Button button = (Button) view.findViewById(R.id.screen_lock_options);
-            this.mOptionsButton = button;
-            button.setVisibility(0);
-            this.mOptionsButton.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.password.SetupChooseLockPassword$SetupChooseLockPasswordFragment$$ExternalSyntheticLambda0
-                @Override // android.view.View.OnClickListener
-                public final void onClick(View view2) {
-                    SetupChooseLockPassword.SetupChooseLockPasswordFragment.this.lambda$onViewCreated$0(view2);
-                }
-            });
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public /* synthetic */ void lambda$onViewCreated$0(View view) {
             ChooseLockTypeDialogFragment.newInstance(this.mUserId).show(getChildFragmentManager(), "skip_screen_lock_dialog");
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // com.android.settings.password.ChooseLockPassword.ChooseLockPasswordFragment
+        /* access modifiers changed from: protected */
         public void onSkipOrClearButtonClick(View view) {
             if (this.mLeftButtonIsSkip) {
                 Intent intent = getActivity().getIntent();
@@ -95,32 +84,29 @@ public class SetupChooseLockPassword extends ChooseLockPassword {
             super.onSkipOrClearButtonClick(view);
         }
 
-        @Override // com.android.settings.password.ChooseLockPassword.ChooseLockPasswordFragment
-        protected Intent getRedactionInterstitialIntent(Context context) {
+        /* access modifiers changed from: protected */
+        public Intent getRedactionInterstitialIntent(Context context) {
             SetupRedactionInterstitial.setEnabled(context, true);
             return null;
         }
 
-        @Override // com.android.settings.password.ChooseLockTypeDialogFragment.OnLockTypeSelectedListener
         public void onLockTypeSelected(ScreenLockType screenLockType) {
-            if (screenLockType == (this.mIsAlphaMode ? ScreenLockType.PASSWORD : ScreenLockType.PIN)) {
-                return;
+            if (screenLockType != (this.mIsAlphaMode ? ScreenLockType.PASSWORD : ScreenLockType.PIN)) {
+                startChooseLockActivity(screenLockType, getActivity());
             }
-            startChooseLockActivity(screenLockType, getActivity());
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // com.android.settings.password.ChooseLockPassword.ChooseLockPasswordFragment
+        /* access modifiers changed from: protected */
         public void updateUi() {
             super.updateUi();
             ChooseLockPassword.ChooseLockPasswordFragment.Stage stage = this.mUiStage;
             ChooseLockPassword.ChooseLockPasswordFragment.Stage stage2 = ChooseLockPassword.ChooseLockPasswordFragment.Stage.Introduction;
             int i = 0;
             if (stage == stage2) {
-                this.mSkipOrClearButton.setText(getActivity(), R.string.skip_label);
+                this.mSkipOrClearButton.setText(getActivity(), R$string.skip_label);
                 this.mLeftButtonIsSkip = true;
             } else {
-                this.mSkipOrClearButton.setText(getActivity(), R.string.lockpassword_clear_label);
+                this.mSkipOrClearButton.setText(getActivity(), R$string.lockpassword_clear_label);
                 this.mLeftButtonIsSkip = false;
             }
             Button button = this.mOptionsButton;

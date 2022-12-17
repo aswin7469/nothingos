@@ -2,8 +2,9 @@ package com.android.settings.development.bluetooth;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$array;
+import com.android.settings.R$id;
+
 public class BluetoothSampleRateDialogPreference extends BaseBluetoothDialogPreference {
     public BluetoothSampleRateDialogPreference(Context context) {
         super(context);
@@ -25,24 +26,26 @@ public class BluetoothSampleRateDialogPreference extends BaseBluetoothDialogPref
         initialize(context);
     }
 
-    @Override // com.android.settings.development.bluetooth.BaseBluetoothDialogPreference
-    protected int getRadioButtonGroupId() {
-        return R.id.bluetooth_audio_sample_rate_radio_group;
+    /* access modifiers changed from: protected */
+    public int getRadioButtonGroupId() {
+        return R$id.bluetooth_audio_sample_rate_radio_group;
     }
 
     private void initialize(Context context) {
-        this.mRadioButtonIds.add(Integer.valueOf(R.id.bluetooth_audio_sample_rate_default));
-        this.mRadioButtonIds.add(Integer.valueOf(R.id.bluetooth_audio_sample_rate_441));
-        this.mRadioButtonIds.add(Integer.valueOf(R.id.bluetooth_audio_sample_rate_480));
-        this.mRadioButtonIds.add(Integer.valueOf(R.id.bluetooth_audio_sample_rate_882));
-        this.mRadioButtonIds.add(Integer.valueOf(R.id.bluetooth_audio_sample_rate_960));
-        this.mRadioButtonIds.add(Integer.valueOf(R.id.bluetooth_audio_sample_rate_1764));
-        this.mRadioButtonIds.add(Integer.valueOf(R.id.bluetooth_audio_sample_rate_1920));
-        for (String str : context.getResources().getStringArray(R.array.bluetooth_a2dp_codec_sample_rate_titles)) {
-            this.mRadioButtonStrings.add(str);
+        this.mRadioButtonIds.add(Integer.valueOf(R$id.bluetooth_audio_sample_rate_default));
+        this.mRadioButtonIds.add(Integer.valueOf(R$id.bluetooth_audio_sample_rate_441));
+        this.mRadioButtonIds.add(Integer.valueOf(R$id.bluetooth_audio_sample_rate_480));
+        this.mRadioButtonIds.add(Integer.valueOf(R$id.bluetooth_audio_sample_rate_882));
+        this.mRadioButtonIds.add(Integer.valueOf(R$id.bluetooth_audio_sample_rate_960));
+        this.mRadioButtonIds.add(Integer.valueOf(R$id.bluetooth_audio_sample_rate_1764));
+        this.mRadioButtonIds.add(Integer.valueOf(R$id.bluetooth_audio_sample_rate_1920));
+        String[] stringArray = context.getResources().getStringArray(R$array.bluetooth_a2dp_codec_sample_rate_titles);
+        for (String add : stringArray) {
+            this.mRadioButtonStrings.add(add);
         }
-        for (String str2 : context.getResources().getStringArray(R.array.bluetooth_a2dp_codec_sample_rate_summaries)) {
-            this.mSummaryStrings.add(str2);
+        String[] stringArray2 = context.getResources().getStringArray(R$array.bluetooth_a2dp_codec_sample_rate_summaries);
+        for (String add2 : stringArray2) {
+            this.mSummaryStrings.add(add2);
         }
     }
 }

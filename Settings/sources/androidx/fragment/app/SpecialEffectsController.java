@@ -3,31 +3,29 @@ package androidx.fragment.app;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.core.os.CancellationSignal;
+import androidx.core.p002os.CancellationSignal;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.R$id;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public abstract class SpecialEffectsController {
+
+abstract class SpecialEffectsController {
     private final ViewGroup mContainer;
+    boolean mIsContainerPostponed = false;
+    boolean mOperationDirectionIsPop = false;
     final ArrayList<Operation> mPendingOperations = new ArrayList<>();
     final ArrayList<Operation> mRunningOperations = new ArrayList<>();
-    boolean mOperationDirectionIsPop = false;
-    boolean mIsContainerPostponed = false;
 
-    abstract void executeOperations(List<Operation> list, boolean z);
+    /* access modifiers changed from: package-private */
+    public abstract void executeOperations(List<Operation> list, boolean z);
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static SpecialEffectsController getOrCreateController(ViewGroup viewGroup, FragmentManager fragmentManager) {
+    static SpecialEffectsController getOrCreateController(ViewGroup viewGroup, FragmentManager fragmentManager) {
         return getOrCreateController(viewGroup, fragmentManager.getSpecialEffectsControllerFactory());
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static SpecialEffectsController getOrCreateController(ViewGroup viewGroup, SpecialEffectsControllerFactory specialEffectsControllerFactory) {
+    static SpecialEffectsController getOrCreateController(ViewGroup viewGroup, SpecialEffectsControllerFactory specialEffectsControllerFactory) {
         int i = R$id.special_effects_controller_view_tag;
         Object tag = viewGroup.getTag(i);
         if (tag instanceof SpecialEffectsController) {
@@ -38,8 +36,7 @@ public abstract class SpecialEffectsController {
         return createController;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public SpecialEffectsController(ViewGroup viewGroup) {
+    SpecialEffectsController(ViewGroup viewGroup) {
         this.mContainer = viewGroup;
     }
 
@@ -47,17 +44,12 @@ public abstract class SpecialEffectsController {
         return this.mContainer;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public Operation.LifecycleImpact getAwaitingCompletionLifecycleImpact(FragmentStateManager fragmentStateManager) {
         Operation findPendingOperation = findPendingOperation(fragmentStateManager.getFragment());
-        if (findPendingOperation != null) {
-            return findPendingOperation.getLifecycleImpact();
-        }
+        Operation.LifecycleImpact lifecycleImpact = findPendingOperation != null ? findPendingOperation.getLifecycleImpact() : null;
         Operation findRunningOperation = findRunningOperation(fragmentStateManager.getFragment());
-        if (findRunningOperation == null) {
-            return null;
-        }
-        return findRunningOperation.getLifecycleImpact();
+        return (findRunningOperation == null || !(lifecycleImpact == null || lifecycleImpact == Operation.LifecycleImpact.NONE)) ? lifecycleImpact : findRunningOperation.getLifecycleImpact();
     }
 
     private Operation findPendingOperation(Fragment fragment) {
@@ -82,7 +74,7 @@ public abstract class SpecialEffectsController {
         return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void enqueueAdd(Operation.State state, FragmentStateManager fragmentStateManager) {
         if (FragmentManager.isLoggingEnabled(2)) {
             Log.v("FragmentManager", "SpecialEffectsController: Enqueuing add operation for fragment " + fragmentStateManager.getFragment());
@@ -90,7 +82,7 @@ public abstract class SpecialEffectsController {
         enqueue(state, Operation.LifecycleImpact.ADDING, fragmentStateManager);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void enqueueShow(FragmentStateManager fragmentStateManager) {
         if (FragmentManager.isLoggingEnabled(2)) {
             Log.v("FragmentManager", "SpecialEffectsController: Enqueuing show operation for fragment " + fragmentStateManager.getFragment());
@@ -98,7 +90,7 @@ public abstract class SpecialEffectsController {
         enqueue(Operation.State.VISIBLE, Operation.LifecycleImpact.NONE, fragmentStateManager);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void enqueueHide(FragmentStateManager fragmentStateManager) {
         if (FragmentManager.isLoggingEnabled(2)) {
             Log.v("FragmentManager", "SpecialEffectsController: Enqueuing hide operation for fragment " + fragmentStateManager.getFragment());
@@ -106,7 +98,7 @@ public abstract class SpecialEffectsController {
         enqueue(Operation.State.GONE, Operation.LifecycleImpact.NONE, fragmentStateManager);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void enqueueRemove(FragmentStateManager fragmentStateManager) {
         if (FragmentManager.isLoggingEnabled(2)) {
             Log.v("FragmentManager", "SpecialEffectsController: Enqueuing remove operation for fragment " + fragmentStateManager.getFragment());
@@ -124,16 +116,14 @@ public abstract class SpecialEffectsController {
             }
             final FragmentStateManagerOperation fragmentStateManagerOperation = new FragmentStateManagerOperation(state, lifecycleImpact, fragmentStateManager, cancellationSignal);
             this.mPendingOperations.add(fragmentStateManagerOperation);
-            fragmentStateManagerOperation.addCompletionListener(new Runnable() { // from class: androidx.fragment.app.SpecialEffectsController.1
-                @Override // java.lang.Runnable
+            fragmentStateManagerOperation.addCompletionListener(new Runnable() {
                 public void run() {
                     if (SpecialEffectsController.this.mPendingOperations.contains(fragmentStateManagerOperation)) {
                         fragmentStateManagerOperation.getFinalState().applyState(fragmentStateManagerOperation.getFragment().mView);
                     }
                 }
             });
-            fragmentStateManagerOperation.addCompletionListener(new Runnable() { // from class: androidx.fragment.app.SpecialEffectsController.2
-                @Override // java.lang.Runnable
+            fragmentStateManagerOperation.addCompletionListener(new Runnable() {
                 public void run() {
                     SpecialEffectsController.this.mPendingOperations.remove(fragmentStateManagerOperation);
                     SpecialEffectsController.this.mRunningOperations.remove(fragmentStateManagerOperation);
@@ -142,12 +132,12 @@ public abstract class SpecialEffectsController {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void updateOperationDirection(boolean z) {
         this.mOperationDirectionIsPop = z;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void markPostponedState() {
         synchronized (this.mPendingOperations) {
             updateFinalState();
@@ -170,7 +160,7 @@ public abstract class SpecialEffectsController {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void forcePostponedExecutePendingOperations() {
         if (this.mIsContainerPostponed) {
             this.mIsContainerPostponed = false;
@@ -178,46 +168,45 @@ public abstract class SpecialEffectsController {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void executePendingOperations() {
-        if (this.mIsContainerPostponed) {
-            return;
-        }
-        if (!ViewCompat.isAttachedToWindow(this.mContainer)) {
-            forceCompleteAllOperations();
-            this.mOperationDirectionIsPop = false;
-            return;
-        }
-        synchronized (this.mPendingOperations) {
-            if (!this.mPendingOperations.isEmpty()) {
-                ArrayList arrayList = new ArrayList(this.mRunningOperations);
-                this.mRunningOperations.clear();
-                Iterator it = arrayList.iterator();
-                while (it.hasNext()) {
-                    Operation operation = (Operation) it.next();
-                    if (FragmentManager.isLoggingEnabled(2)) {
-                        Log.v("FragmentManager", "SpecialEffectsController: Cancelling operation " + operation);
-                    }
-                    operation.cancel();
-                    if (!operation.isComplete()) {
-                        this.mRunningOperations.add(operation);
-                    }
-                }
-                updateFinalState();
-                ArrayList arrayList2 = new ArrayList(this.mPendingOperations);
-                this.mPendingOperations.clear();
-                this.mRunningOperations.addAll(arrayList2);
-                Iterator it2 = arrayList2.iterator();
-                while (it2.hasNext()) {
-                    ((Operation) it2.next()).onStart();
-                }
-                executeOperations(arrayList2, this.mOperationDirectionIsPop);
+        if (!this.mIsContainerPostponed) {
+            if (!ViewCompat.isAttachedToWindow(this.mContainer)) {
+                forceCompleteAllOperations();
                 this.mOperationDirectionIsPop = false;
+                return;
+            }
+            synchronized (this.mPendingOperations) {
+                if (!this.mPendingOperations.isEmpty()) {
+                    ArrayList arrayList = new ArrayList(this.mRunningOperations);
+                    this.mRunningOperations.clear();
+                    Iterator it = arrayList.iterator();
+                    while (it.hasNext()) {
+                        Operation operation = (Operation) it.next();
+                        if (FragmentManager.isLoggingEnabled(2)) {
+                            Log.v("FragmentManager", "SpecialEffectsController: Cancelling operation " + operation);
+                        }
+                        operation.cancel();
+                        if (!operation.isComplete()) {
+                            this.mRunningOperations.add(operation);
+                        }
+                    }
+                    updateFinalState();
+                    ArrayList arrayList2 = new ArrayList(this.mPendingOperations);
+                    this.mPendingOperations.clear();
+                    this.mRunningOperations.addAll(arrayList2);
+                    Iterator it2 = arrayList2.iterator();
+                    while (it2.hasNext()) {
+                        ((Operation) it2.next()).onStart();
+                    }
+                    executeOperations(arrayList2, this.mOperationDirectionIsPop);
+                    this.mOperationDirectionIsPop = false;
+                }
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void forceCompleteAllOperations() {
         String str;
         String str2;
@@ -277,70 +266,62 @@ public abstract class SpecialEffectsController {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class Operation {
+    static class Operation {
+        private final List<Runnable> mCompletionListeners = new ArrayList();
         private State mFinalState;
         private final Fragment mFragment;
-        private LifecycleImpact mLifecycleImpact;
-        private final List<Runnable> mCompletionListeners = new ArrayList();
-        private final HashSet<CancellationSignal> mSpecialEffectsSignals = new HashSet<>();
         private boolean mIsCanceled = false;
         private boolean mIsComplete = false;
+        private LifecycleImpact mLifecycleImpact;
+        private final HashSet<CancellationSignal> mSpecialEffectsSignals = new HashSet<>();
 
-        /* JADX INFO: Access modifiers changed from: package-private */
-        /* loaded from: classes.dex */
-        public enum LifecycleImpact {
+        enum LifecycleImpact {
             NONE,
             ADDING,
             REMOVING
         }
 
-        void onStart() {
+        /* access modifiers changed from: package-private */
+        public void onStart() {
         }
 
-        /* JADX INFO: Access modifiers changed from: package-private */
-        /* loaded from: classes.dex */
-        public enum State {
+        enum State {
             REMOVED,
             VISIBLE,
             GONE,
             INVISIBLE;
 
-            /* JADX INFO: Access modifiers changed from: package-private */
-            public static State from(View view) {
+            static State from(View view) {
                 if (view.getAlpha() == 0.0f && view.getVisibility() == 0) {
                     return INVISIBLE;
                 }
                 return from(view.getVisibility());
             }
 
-            /* JADX INFO: Access modifiers changed from: package-private */
-            public static State from(int i) {
-                if (i != 0) {
-                    if (i == 4) {
-                        return INVISIBLE;
-                    }
-                    if (i == 8) {
-                        return GONE;
-                    }
-                    throw new IllegalArgumentException("Unknown visibility " + i);
+            static State from(int i) {
+                if (i == 0) {
+                    return VISIBLE;
                 }
-                return VISIBLE;
+                if (i == 4) {
+                    return INVISIBLE;
+                }
+                if (i == 8) {
+                    return GONE;
+                }
+                throw new IllegalArgumentException("Unknown visibility " + i);
             }
 
-            /* JADX INFO: Access modifiers changed from: package-private */
+            /* access modifiers changed from: package-private */
             public void applyState(View view) {
-                int i = AnonymousClass3.$SwitchMap$androidx$fragment$app$SpecialEffectsController$Operation$State[ordinal()];
+                int i = C02213.f42xe493b431[ordinal()];
                 if (i == 1) {
                     ViewGroup viewGroup = (ViewGroup) view.getParent();
-                    if (viewGroup == null) {
-                        return;
+                    if (viewGroup != null) {
+                        if (FragmentManager.isLoggingEnabled(2)) {
+                            Log.v("FragmentManager", "SpecialEffectsController: Removing view " + view + " from container " + viewGroup);
+                        }
+                        viewGroup.removeView(view);
                     }
-                    if (FragmentManager.isLoggingEnabled(2)) {
-                        Log.v("FragmentManager", "SpecialEffectsController: Removing view " + view + " from container " + viewGroup);
-                    }
-                    viewGroup.removeView(view);
                 } else if (i == 2) {
                     if (FragmentManager.isLoggingEnabled(2)) {
                         Log.v("FragmentManager", "SpecialEffectsController: Setting view " + view + " to VISIBLE");
@@ -351,8 +332,7 @@ public abstract class SpecialEffectsController {
                         Log.v("FragmentManager", "SpecialEffectsController: Setting view " + view + " to GONE");
                     }
                     view.setVisibility(8);
-                } else if (i != 4) {
-                } else {
+                } else if (i == 4) {
                     if (FragmentManager.isLoggingEnabled(2)) {
                         Log.v("FragmentManager", "SpecialEffectsController: Setting view " + view + " to INVISIBLE");
                     }
@@ -365,8 +345,7 @@ public abstract class SpecialEffectsController {
             this.mFinalState = state;
             this.mLifecycleImpact = lifecycleImpact;
             this.mFragment = fragment;
-            cancellationSignal.setOnCancelListener(new CancellationSignal.OnCancelListener() { // from class: androidx.fragment.app.SpecialEffectsController.Operation.1
-                @Override // androidx.core.os.CancellationSignal.OnCancelListener
+            cancellationSignal.setOnCancelListener(new CancellationSignal.OnCancelListener() {
                 public void onCancel() {
                     Operation.this.cancel();
                 }
@@ -377,7 +356,8 @@ public abstract class SpecialEffectsController {
             return this.mFinalState;
         }
 
-        LifecycleImpact getLifecycleImpact() {
+        /* access modifiers changed from: package-private */
+        public LifecycleImpact getLifecycleImpact() {
             return this.mLifecycleImpact;
         }
 
@@ -385,56 +365,56 @@ public abstract class SpecialEffectsController {
             return this.mFragment;
         }
 
-        final boolean isCanceled() {
+        /* access modifiers changed from: package-private */
+        public final boolean isCanceled() {
             return this.mIsCanceled;
         }
 
         public String toString() {
-            return "Operation {" + Integer.toHexString(System.identityHashCode(this)) + "} {mFinalState = " + this.mFinalState + "} {mLifecycleImpact = " + this.mLifecycleImpact + "} {mFragment = " + this.mFragment + "}";
+            return "Operation " + "{" + Integer.toHexString(System.identityHashCode(this)) + "} " + "{" + "mFinalState = " + this.mFinalState + "} " + "{" + "mLifecycleImpact = " + this.mLifecycleImpact + "} " + "{" + "mFragment = " + this.mFragment + "}";
         }
 
-        final void cancel() {
-            if (isCanceled()) {
-                return;
-            }
-            this.mIsCanceled = true;
-            if (this.mSpecialEffectsSignals.isEmpty()) {
-                complete();
-                return;
-            }
-            Iterator it = new ArrayList(this.mSpecialEffectsSignals).iterator();
-            while (it.hasNext()) {
-                ((CancellationSignal) it.next()).cancel();
-            }
-        }
-
-        final void mergeWith(State state, LifecycleImpact lifecycleImpact) {
-            int i = AnonymousClass3.$SwitchMap$androidx$fragment$app$SpecialEffectsController$Operation$LifecycleImpact[lifecycleImpact.ordinal()];
-            if (i == 1) {
-                if (this.mFinalState != State.REMOVED) {
+        /* access modifiers changed from: package-private */
+        public final void cancel() {
+            if (!isCanceled()) {
+                this.mIsCanceled = true;
+                if (this.mSpecialEffectsSignals.isEmpty()) {
+                    complete();
                     return;
                 }
+                Iterator it = new ArrayList(this.mSpecialEffectsSignals).iterator();
+                while (it.hasNext()) {
+                    ((CancellationSignal) it.next()).cancel();
+                }
+            }
+        }
+
+        /* access modifiers changed from: package-private */
+        public final void mergeWith(State state, LifecycleImpact lifecycleImpact) {
+            int i = C02213.f41xb9e640f0[lifecycleImpact.ordinal()];
+            if (i != 1) {
+                if (i == 2) {
+                    if (FragmentManager.isLoggingEnabled(2)) {
+                        Log.v("FragmentManager", "SpecialEffectsController: For fragment " + this.mFragment + " mFinalState = " + this.mFinalState + " -> REMOVED. mLifecycleImpact  = " + this.mLifecycleImpact + " to REMOVING.");
+                    }
+                    this.mFinalState = State.REMOVED;
+                    this.mLifecycleImpact = LifecycleImpact.REMOVING;
+                } else if (i == 3 && this.mFinalState != State.REMOVED) {
+                    if (FragmentManager.isLoggingEnabled(2)) {
+                        Log.v("FragmentManager", "SpecialEffectsController: For fragment " + this.mFragment + " mFinalState = " + this.mFinalState + " -> " + state + ". ");
+                    }
+                    this.mFinalState = state;
+                }
+            } else if (this.mFinalState == State.REMOVED) {
                 if (FragmentManager.isLoggingEnabled(2)) {
                     Log.v("FragmentManager", "SpecialEffectsController: For fragment " + this.mFragment + " mFinalState = REMOVED -> VISIBLE. mLifecycleImpact = " + this.mLifecycleImpact + " to ADDING.");
                 }
                 this.mFinalState = State.VISIBLE;
                 this.mLifecycleImpact = LifecycleImpact.ADDING;
-            } else if (i == 2) {
-                if (FragmentManager.isLoggingEnabled(2)) {
-                    Log.v("FragmentManager", "SpecialEffectsController: For fragment " + this.mFragment + " mFinalState = " + this.mFinalState + " -> REMOVED. mLifecycleImpact  = " + this.mLifecycleImpact + " to REMOVING.");
-                }
-                this.mFinalState = State.REMOVED;
-                this.mLifecycleImpact = LifecycleImpact.REMOVING;
-            } else if (i != 3 || this.mFinalState == State.REMOVED) {
-            } else {
-                if (FragmentManager.isLoggingEnabled(2)) {
-                    Log.v("FragmentManager", "SpecialEffectsController: For fragment " + this.mFragment + " mFinalState = " + this.mFinalState + " -> " + state + ". ");
-                }
-                this.mFinalState = state;
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: package-private */
+        /* access modifiers changed from: package-private */
         public final void addCompletionListener(Runnable runnable) {
             this.mCompletionListeners.add(runnable);
         }
@@ -445,76 +425,98 @@ public abstract class SpecialEffectsController {
         }
 
         public final void completeSpecialEffect(CancellationSignal cancellationSignal) {
-            if (!this.mSpecialEffectsSignals.remove(cancellationSignal) || !this.mSpecialEffectsSignals.isEmpty()) {
-                return;
+            if (this.mSpecialEffectsSignals.remove(cancellationSignal) && this.mSpecialEffectsSignals.isEmpty()) {
+                complete();
             }
-            complete();
         }
 
-        final boolean isComplete() {
+        /* access modifiers changed from: package-private */
+        public final boolean isComplete() {
             return this.mIsComplete;
         }
 
         public void complete() {
-            if (this.mIsComplete) {
-                return;
-            }
-            if (FragmentManager.isLoggingEnabled(2)) {
-                Log.v("FragmentManager", "SpecialEffectsController: " + this + " has called complete.");
-            }
-            this.mIsComplete = true;
-            for (Runnable runnable : this.mCompletionListeners) {
-                runnable.run();
+            if (!this.mIsComplete) {
+                if (FragmentManager.isLoggingEnabled(2)) {
+                    Log.v("FragmentManager", "SpecialEffectsController: " + this + " has called complete.");
+                }
+                this.mIsComplete = true;
+                for (Runnable run : this.mCompletionListeners) {
+                    run.run();
+                }
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: androidx.fragment.app.SpecialEffectsController$3  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public static /* synthetic */ class AnonymousClass3 {
-        static final /* synthetic */ int[] $SwitchMap$androidx$fragment$app$SpecialEffectsController$Operation$LifecycleImpact;
-        static final /* synthetic */ int[] $SwitchMap$androidx$fragment$app$SpecialEffectsController$Operation$State;
+    /* renamed from: androidx.fragment.app.SpecialEffectsController$3 */
+    static /* synthetic */ class C02213 {
 
+        /* renamed from: $SwitchMap$androidx$fragment$app$SpecialEffectsController$Operation$LifecycleImpact */
+        static final /* synthetic */ int[] f41xb9e640f0;
+
+        /* renamed from: $SwitchMap$androidx$fragment$app$SpecialEffectsController$Operation$State */
+        static final /* synthetic */ int[] f42xe493b431;
+
+        /* JADX WARNING: Can't wrap try/catch for region: R(17:0|(2:1|2)|3|(2:5|6)|7|9|10|11|13|14|15|16|17|18|19|20|22) */
+        /* JADX WARNING: Can't wrap try/catch for region: R(19:0|1|2|3|5|6|7|9|10|11|13|14|15|16|17|18|19|20|22) */
+        /* JADX WARNING: Failed to process nested try/catch */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:15:0x0039 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:17:0x0043 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:19:0x004d */
         static {
-            int[] iArr = new int[Operation.LifecycleImpact.values().length];
-            $SwitchMap$androidx$fragment$app$SpecialEffectsController$Operation$LifecycleImpact = iArr;
-            try {
-                iArr[Operation.LifecycleImpact.ADDING.ordinal()] = 1;
-            } catch (NoSuchFieldError unused) {
-            }
-            try {
-                $SwitchMap$androidx$fragment$app$SpecialEffectsController$Operation$LifecycleImpact[Operation.LifecycleImpact.REMOVING.ordinal()] = 2;
-            } catch (NoSuchFieldError unused2) {
-            }
-            try {
-                $SwitchMap$androidx$fragment$app$SpecialEffectsController$Operation$LifecycleImpact[Operation.LifecycleImpact.NONE.ordinal()] = 3;
-            } catch (NoSuchFieldError unused3) {
-            }
-            int[] iArr2 = new int[Operation.State.values().length];
-            $SwitchMap$androidx$fragment$app$SpecialEffectsController$Operation$State = iArr2;
-            try {
-                iArr2[Operation.State.REMOVED.ordinal()] = 1;
-            } catch (NoSuchFieldError unused4) {
-            }
-            try {
-                $SwitchMap$androidx$fragment$app$SpecialEffectsController$Operation$State[Operation.State.VISIBLE.ordinal()] = 2;
-            } catch (NoSuchFieldError unused5) {
-            }
-            try {
-                $SwitchMap$androidx$fragment$app$SpecialEffectsController$Operation$State[Operation.State.GONE.ordinal()] = 3;
-            } catch (NoSuchFieldError unused6) {
-            }
-            try {
-                $SwitchMap$androidx$fragment$app$SpecialEffectsController$Operation$State[Operation.State.INVISIBLE.ordinal()] = 4;
-            } catch (NoSuchFieldError unused7) {
-            }
+            /*
+                androidx.fragment.app.SpecialEffectsController$Operation$LifecycleImpact[] r0 = androidx.fragment.app.SpecialEffectsController.Operation.LifecycleImpact.values()
+                int r0 = r0.length
+                int[] r0 = new int[r0]
+                f41xb9e640f0 = r0
+                r1 = 1
+                androidx.fragment.app.SpecialEffectsController$Operation$LifecycleImpact r2 = androidx.fragment.app.SpecialEffectsController.Operation.LifecycleImpact.ADDING     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r2 = r2.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
+                r0[r2] = r1     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                r0 = 2
+                int[] r2 = f41xb9e640f0     // Catch:{ NoSuchFieldError -> 0x001d }
+                androidx.fragment.app.SpecialEffectsController$Operation$LifecycleImpact r3 = androidx.fragment.app.SpecialEffectsController.Operation.LifecycleImpact.REMOVING     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r3 = r3.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
+                r2[r3] = r0     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                r2 = 3
+                int[] r3 = f41xb9e640f0     // Catch:{ NoSuchFieldError -> 0x0028 }
+                androidx.fragment.app.SpecialEffectsController$Operation$LifecycleImpact r4 = androidx.fragment.app.SpecialEffectsController.Operation.LifecycleImpact.NONE     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int r4 = r4.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
+                r3[r4] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
+            L_0x0028:
+                androidx.fragment.app.SpecialEffectsController$Operation$State[] r3 = androidx.fragment.app.SpecialEffectsController.Operation.State.values()
+                int r3 = r3.length
+                int[] r3 = new int[r3]
+                f42xe493b431 = r3
+                androidx.fragment.app.SpecialEffectsController$Operation$State r4 = androidx.fragment.app.SpecialEffectsController.Operation.State.REMOVED     // Catch:{ NoSuchFieldError -> 0x0039 }
+                int r4 = r4.ordinal()     // Catch:{ NoSuchFieldError -> 0x0039 }
+                r3[r4] = r1     // Catch:{ NoSuchFieldError -> 0x0039 }
+            L_0x0039:
+                int[] r1 = f42xe493b431     // Catch:{ NoSuchFieldError -> 0x0043 }
+                androidx.fragment.app.SpecialEffectsController$Operation$State r3 = androidx.fragment.app.SpecialEffectsController.Operation.State.VISIBLE     // Catch:{ NoSuchFieldError -> 0x0043 }
+                int r3 = r3.ordinal()     // Catch:{ NoSuchFieldError -> 0x0043 }
+                r1[r3] = r0     // Catch:{ NoSuchFieldError -> 0x0043 }
+            L_0x0043:
+                int[] r0 = f42xe493b431     // Catch:{ NoSuchFieldError -> 0x004d }
+                androidx.fragment.app.SpecialEffectsController$Operation$State r1 = androidx.fragment.app.SpecialEffectsController.Operation.State.GONE     // Catch:{ NoSuchFieldError -> 0x004d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x004d }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x004d }
+            L_0x004d:
+                int[] r0 = f42xe493b431     // Catch:{ NoSuchFieldError -> 0x0058 }
+                androidx.fragment.app.SpecialEffectsController$Operation$State r1 = androidx.fragment.app.SpecialEffectsController.Operation.State.INVISIBLE     // Catch:{ NoSuchFieldError -> 0x0058 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0058 }
+                r2 = 4
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0058 }
+            L_0x0058:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: androidx.fragment.app.SpecialEffectsController.C02213.<clinit>():void");
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class FragmentStateManagerOperation extends Operation {
+    private static class FragmentStateManagerOperation extends Operation {
         private final FragmentStateManager mFragmentStateManager;
 
         FragmentStateManagerOperation(Operation.State state, Operation.LifecycleImpact lifecycleImpact, FragmentStateManager fragmentStateManager, CancellationSignal cancellationSignal) {
@@ -522,8 +524,8 @@ public abstract class SpecialEffectsController {
             this.mFragmentStateManager = fragmentStateManager;
         }
 
-        @Override // androidx.fragment.app.SpecialEffectsController.Operation
-        void onStart() {
+        /* access modifiers changed from: package-private */
+        public void onStart() {
             if (getLifecycleImpact() == Operation.LifecycleImpact.ADDING) {
                 Fragment fragment = this.mFragmentStateManager.getFragment();
                 View findFocus = fragment.mView.findFocus();
@@ -545,7 +547,6 @@ public abstract class SpecialEffectsController {
             }
         }
 
-        @Override // androidx.fragment.app.SpecialEffectsController.Operation
         public void complete() {
             super.complete();
             this.mFragmentStateManager.moveToExpectedState();

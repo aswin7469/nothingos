@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="abc_slice_duration_days">
-        <item quantity="one">před %d dnem</item>
-        <item quantity="few">před %d dny</item>
-        <item quantity="many">před %d dne</item>
-        <item quantity="other">před %d dny</item>
+        <item quantity="one">Před %d dnem</item>
+        <item quantity="few">Před %d dny</item>
+        <item quantity="many">Před %d dny</item>
+        <item quantity="other">Před %d dny</item>
     </plurals>
     <plurals name="abc_slice_duration_min">
-        <item quantity="one">před %d min</item>
-        <item quantity="few">před %d min</item>
-        <item quantity="many">před %d min</item>
-        <item quantity="other">před %d min</item>
+        <item quantity="one">Před %d min</item>
+        <item quantity="few">Před %d min</item>
+        <item quantity="many">Před %d min</item>
+        <item quantity="other">Před %d min</item>
     </plurals>
     <plurals name="abc_slice_duration_years">
-        <item quantity="one">před %d rokem</item>
-        <item quantity="few">před %d lety</item>
-        <item quantity="many">před %d roku</item>
-        <item quantity="other">před %d lety</item>
+        <item quantity="one">Před %d r.</item>
+        <item quantity="few">Před %d r.</item>
+        <item quantity="many">Před %d r.</item>
+        <item quantity="other">Před %d r.</item>
     </plurals>
     <plurals name="accessibility_usage_summary">
         <item quantity="one">1 aplikace má plný přístup k vašemu zařízení</item>
@@ -350,15 +350,15 @@
     </plurals>
     <plurals name="notifications_sent_daily">
         <item quantity="one">~%d oznámení za den</item>
-        <item quantity="few">~%d oznámení za den</item>
-        <item quantity="many">~%d oznámení za den</item>
-        <item quantity="other">~%d oznámení za den</item>
+        <item quantity="few">~%,d oznámení za den</item>
+        <item quantity="many">~%,d oznámení za den</item>
+        <item quantity="other">~%,d oznámení za den</item>
     </plurals>
     <plurals name="notifications_sent_weekly">
         <item quantity="one">~%d oznámení za týden</item>
-        <item quantity="few">~%d oznámení za týden</item>
-        <item quantity="many">~%d oznámení za týden</item>
-        <item quantity="other">~%d oznámení za týden</item>
+        <item quantity="few">~%,d oznámení za týden</item>
+        <item quantity="many">~%,d oznámení za týden</item>
+        <item quantity="other">~%,d oznámení za týden</item>
     </plurals>
     <plurals name="number_of_device_admins">
         <item quantity="one">%d aktivní aplikace</item>
@@ -480,18 +480,6 @@
         <item quantity="many">Označit certifikáty jako důvěryhodné nebo je odstranit</item>
         <item quantity="other">Označit certifikáty jako důvěryhodné nebo je odstranit</item>
     </plurals>
-    <plurals name="ssl_ca_cert_info_message">
-        <item quantity="one">Doména %s pro váš pracovní profil nainstalovala certifikační autoritu, která může umožnit monitorování aktivity v pracovní síti, včetně odesílání e-mailů, aplikací a zabezpečených webů.\n\nDalší informace o tomto certifikátu vám poskytne administrátor.</item>
-        <item quantity="few">Doména %s pro váš pracovní profil nainstalovala certifikační autority, které mohou umožnit monitorování aktivity v pracovní síti, včetně odesílání e-mailů, aplikací a zabezpečených webů.\n\nDalší informace o těchto certifikátech vám poskytne administrátor.</item>
-        <item quantity="many">Doména %s pro váš pracovní profil nainstalovala certifikační autority, které mohou umožnit monitorování aktivity v pracovní síti, včetně odesílání e-mailů, aplikací a zabezpečených webů.\n\nDalší informace o těchto certifikátech vám poskytne administrátor.</item>
-        <item quantity="other">Doména %s pro váš pracovní profil nainstalovala certifikační autority, které mohou umožnit monitorování aktivity v pracovní síti, včetně odesílání e-mailů, aplikací a zabezpečených webů.\n\nDalší informace o těchto certifikátech vám poskytne administrátor.</item>
-    </plurals>
-    <plurals name="ssl_ca_cert_info_message_device_owner">
-        <item quantity="one">Doména %s do vašeho zařízení nainstalovala certifikační autoritu, která umožňuje sledování aktivity zařízení na síti, včetně e-mailů, aplikací a zabezpečených webů.\n\nDalší informace o tomto certifikátu vám poskytne administrátor.</item>
-        <item quantity="few">Doména %s do vašeho zařízení nainstalovala certifikační autority, které umožňují sledování aktivity zařízení na síti, včetně e-mailů, aplikací a zabezpečených webů.\n\nDalší informace o těchto certifikátech vám poskytne administrátor.</item>
-        <item quantity="many">Doména %s do vašeho zařízení nainstalovala certifikační autority, které umožňují sledování aktivity zařízení na síti, včetně e-mailů, aplikací a zabezpečených webů.\n\nDalší informace o těchto certifikátech vám poskytne administrátor.</item>
-        <item quantity="other">Doména %s do vašeho zařízení nainstalovala certifikační autority, které umožňují sledování aktivity zařízení na síti, včetně e-mailů, aplikací a zabezpečených webů.\n\nDalší informace o těchto certifikátech vám poskytne administrátor.</item>
-    </plurals>
     <plurals name="ssl_ca_cert_settings_button">
         <item quantity="one">Zkontrolovat certifikát</item>
         <item quantity="few">Zkontrolovat certifikáty</item>
@@ -539,12 +527,6 @@
         <item quantity="few">%d odběry</item>
         <item quantity="many">%d odběru</item>
         <item quantity="other">%d odběrů</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">Připojeno %1$d zařízení</item>
-        <item quantity="few">Připojena %1$d zařízení</item>
-        <item quantity="many">Připojeno %1$d zařízení</item>
-        <item quantity="other">Připojeno %1$d zařízení</item>
     </plurals>
     <plurals name="wrong_pin_code">
         <item quantity="one">Zadali jste nesprávný PIN SIM karty. Zbývá %d pokus, poté bude muset zařízení odemknout operátor.</item>

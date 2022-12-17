@@ -1,15 +1,16 @@
 package com.google.android.setupcompat.internal;
-/* loaded from: classes2.dex */
-public final /* synthetic */ class ClockProvider$$ExternalSyntheticLambda1 implements Ticker {
-    public static final /* synthetic */ ClockProvider$$ExternalSyntheticLambda1 INSTANCE = new ClockProvider$$ExternalSyntheticLambda1();
 
-    private /* synthetic */ ClockProvider$$ExternalSyntheticLambda1() {
+import com.google.android.setupcompat.internal.ClockProvider;
+
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class ClockProvider$$ExternalSyntheticLambda1 implements Ticker {
+    public final /* synthetic */ ClockProvider.Supplier f$0;
+
+    public /* synthetic */ ClockProvider$$ExternalSyntheticLambda1(ClockProvider.Supplier supplier) {
+        this.f$0 = supplier;
     }
 
-    @Override // com.google.android.setupcompat.internal.Ticker
     public final long read() {
-        long nanoTime;
-        nanoTime = System.nanoTime();
-        return nanoTime;
+        return ((Long) this.f$0.get()).longValue();
     }
 }

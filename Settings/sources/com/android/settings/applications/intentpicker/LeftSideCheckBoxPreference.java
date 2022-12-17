@@ -4,16 +4,16 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.CheckBox;
 import androidx.preference.PreferenceViewHolder;
-import com.android.settings.R;
+import com.android.settings.R$layout;
 import com.android.settingslib.widget.TwoTargetPreference;
-/* loaded from: classes.dex */
+
 public class LeftSideCheckBoxPreference extends TwoTargetPreference {
     private CheckBox mCheckBox;
     private boolean mChecked;
 
     public LeftSideCheckBoxPreference(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
-        setLayoutResource(R.layout.preference_checkable_two_target);
+        setLayoutResource(R$layout.preference_checkable_two_target);
     }
 
     public LeftSideCheckBoxPreference(Context context, AttributeSet attributeSet, int i) {
@@ -27,10 +27,9 @@ public class LeftSideCheckBoxPreference extends TwoTargetPreference {
     public LeftSideCheckBoxPreference(Context context, boolean z) {
         super(context);
         this.mChecked = z;
-        setLayoutResource(R.layout.preference_checkable_two_target);
+        setLayoutResource(R$layout.preference_checkable_two_target);
     }
 
-    @Override // com.android.settingslib.widget.TwoTargetPreference, androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         CheckBox checkBox = (CheckBox) preferenceViewHolder.findViewById(16908289);
@@ -40,8 +39,7 @@ public class LeftSideCheckBoxPreference extends TwoTargetPreference {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public void onClick() {
         CheckBox checkBox = this.mCheckBox;
         if (checkBox != null) {

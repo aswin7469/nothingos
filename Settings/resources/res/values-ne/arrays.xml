@@ -106,7 +106,7 @@
         <item>स्थानको नक्कल गर्नुहोस्</item>
         <item>भण्डारण पढ्नुहोस्</item>
         <item>भण्डारण लेख्नहोस्</item>
-        <item>स्क्रिन सक्रिय गर्नुहोस्</item>
+        <item>स्क्रिन अन गर्नुहोस्</item>
         <item>खाताहरू प्राप्त गर्नुहोस्</item>
         <item>पृष्ठभूमिमा सञ्चालन गर्नुहोस्</item>
         <item>पहुँचको मात्रा</item>
@@ -168,12 +168,12 @@
         <item>SIP प्रयोग गर्नुहोस्</item>
         <item>बहिर्गमन कललाई प्रशोधन गर्नुहोस्</item>
         <item>फिंगरप्रिन्ट</item>
-        <item>शारीरिक सेन्सरहरू</item>
+        <item>बडी सेन्सरहरू</item>
         <item>मोबाइल प्रसारणहरू पढ्नुहोस्</item>
         <item>स्थान नक्कल गर्नुहोस्</item>
         <item>भण्डारण पढ्नुहोस्</item>
         <item>भण्डारण लेख्नुहोस्</item>
-        <item>स्क्रिन सक्रिय गर्नुहोस्</item>
+        <item>स्क्रिन अन गर्नुहोस्</item>
         <item>खाताहरू प्राप्त गर्नुहोस्</item>
         <item>पृष्ठभूमिमा सञ्चालन गर्नुहोस्</item>
         <item>पहुँचको मात्रा</item>
@@ -195,6 +195,8 @@
         <item>कम्तीमा ३० दिन पुरानो</item>
         <item>कम्तीमा ६० दिन पुरानो</item>
         <item>कम्तीमा ९० दिन पुरानो</item>
+    </array>
+    <array name="avatar_image_descriptions">
     </array>
     <array name="battery_labels">
         <item>०%</item>
@@ -260,6 +262,8 @@
         <item>४८.० kHz</item>
         <item>८८.२ kHz</item>
         <item>९६.० kHz</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
         <item>सिस्टमको छनौट प्रयोग गरियोस् (डिफल्ट)</item>
@@ -267,6 +271,8 @@
         <item>४८.० kHz</item>
         <item>८८.२ kHz</item>
         <item>९६.० kHz</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
         <item>सिस्टमको छनौट प्रयोग गरियोस् (डिफल्ट)</item>
@@ -277,6 +283,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive अडियो</item>
         <item>Qualcomm® aptX™ TWS+ अडियो</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
         <item>सिस्टमको छनौट प्रयोग गरियोस् (डिफल्ट)</item>
@@ -287,6 +297,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive अडियो</item>
         <item>Qualcomm® aptX™ TWS+ अडियो</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -343,17 +357,10 @@
         <item>उठेको</item>
         <item>दबेको</item>
     </array>
-    <array name="captioning_font_size_selector_summaries">
-        <item>धेरै सानो आकारको पाठ</item>
-        <item>सानो आकारको पाठ</item>
-        <item>टेक्स्टको डिफल्ट आकार</item>
-        <item>ठुलो आकारको पाठ</item>
-        <item>धेरै ठुलो आकारको पाठ</item>
-    </array>
     <array name="captioning_font_size_selector_titles">
         <item>ज्यादै साना</item>
         <item>सानो</item>
-        <item>डिफल्ट</item>
+        <item>मध्यम</item>
         <item>ठुलो</item>
         <item>ज्यादै ठुलो</item>
     </array>
@@ -485,6 +492,14 @@
         <item>IMSI</item>
         <item>GID</item>
         <item>ICCID</item>
+    </array>
+    <array name="nfc_payment_favor">
+        <item>सधैँ</item>
+        <item>भुक्तानी गर्न प्रयोग गरिने अर्को एप खुला भएको अवस्थामा बाहेक</item>
+    </array>
+    <array name="nfc_payment_favor_values">
+        <item>@null</item>
+        <item>1</item>
     </array>
     <array name="overlay_display_devices_entries">
         <item>कुनै पनि होइन</item>
@@ -618,17 +633,20 @@
         <item>गैर आयातकार क्षेत्र निलो रङमा कोर्नुहोस्</item>
         <item>हाइलाइट परीक्षण चित्र कोर्ने आदेशहरू हरियोमा</item>
     </array>
-    <array name="sim_color_light">
-        <item>@color/SIM_color_cyan</item>
-        <item>@color/SIM_color_blue800</item>
-        <item>@color/SIM_color_green800</item>
-        <item>@color/SIM_color_purple800</item>
-        <item>@color/SIM_color_pink800</item>
-        <item>@color/SIM_color_orange</item>
-    </array>
     <array name="swipe_direction_values">
         <item>१</item>
         <item>@null</item>
+    </array>
+    <array name="switch_to_user_zero_when_docked_timeout_entries">
+        <item>कहिल्यै पनि होइन</item>
+        <item>१ मिनेटपछि</item>
+        <item>५ मिनेटपछि</item>
+    </array>
+    <array name="tare_modifiers_subfactors">
+        <item>चार्ज गरिँदै छ</item>
+        <item>डोज</item>
+        <item>ब्याट्री सेभर मोड</item>
+        <item>प्रोसेस स्थिति</item>
     </array>
     <array name="timezone_filters">
         <item>अमेरिका</item>

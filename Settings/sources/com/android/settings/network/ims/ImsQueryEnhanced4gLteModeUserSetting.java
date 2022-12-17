@@ -2,7 +2,7 @@ package com.android.settings.network.ims;
 
 import android.telephony.ims.ImsMmTelManager;
 import android.util.Log;
-/* loaded from: classes.dex */
+
 public class ImsQueryEnhanced4gLteModeUserSetting {
     private volatile int mSubId;
 

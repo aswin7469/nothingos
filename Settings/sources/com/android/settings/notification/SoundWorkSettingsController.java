@@ -1,6 +1,7 @@
 package com.android.settings.notification;
 
 import android.app.Dialog;
+import android.app.admin.DevicePolicyManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,7 +20,7 @@ import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.TwoStatePreference;
 import com.android.settings.DefaultRingtonePreference;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.Utils;
 import com.android.settings.core.instrumentation.InstrumentedDialogFragment;
 import com.android.settingslib.core.AbstractPreferenceController;
@@ -27,7 +28,7 @@ import com.android.settingslib.core.lifecycle.Lifecycle;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnPause;
 import com.android.settingslib.core.lifecycle.events.OnResume;
-/* loaded from: classes.dex */
+
 public class SoundWorkSettingsController extends AbstractPreferenceController implements Preference.OnPreferenceChangeListener, LifecycleObserver, OnResume, OnPause {
     private final AudioHelper mHelper;
     private int mManagedProfileId;
@@ -41,12 +42,10 @@ public class SoundWorkSettingsController extends AbstractPreferenceController im
     private Preference mWorkPhoneRingtonePreference;
     private TwoStatePreference mWorkUsePersonalSounds;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return null;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
         return false;
     }
@@ -57,16 +56,14 @@ public class SoundWorkSettingsController extends AbstractPreferenceController im
 
     SoundWorkSettingsController(Context context, SoundWorkSettings soundWorkSettings, Lifecycle lifecycle, AudioHelper audioHelper) {
         super(context);
-        this.mManagedProfileReceiver = new BroadcastReceiver() { // from class: com.android.settings.notification.SoundWorkSettingsController.1
-            @Override // android.content.BroadcastReceiver
-            public void onReceive(Context context2, Intent intent) {
+        this.mManagedProfileReceiver = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
                 int identifier = ((UserHandle) intent.getExtra("android.intent.extra.USER")).getIdentifier();
                 String action = intent.getAction();
                 action.hashCode();
                 if (action.equals("android.intent.action.MANAGED_PROFILE_ADDED")) {
                     SoundWorkSettingsController.this.onManagedProfileAdded(identifier);
-                } else if (!action.equals("android.intent.action.MANAGED_PROFILE_REMOVED")) {
-                } else {
+                } else if (action.equals("android.intent.action.MANAGED_PROFILE_REMOVED")) {
                     SoundWorkSettingsController.this.onManagedProfileRemoved(identifier);
                 }
             }
@@ -80,13 +77,11 @@ public class SoundWorkSettingsController extends AbstractPreferenceController im
         }
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mScreen = preferenceScreen;
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnResume
     public void onResume() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.MANAGED_PROFILE_ADDED");
@@ -96,28 +91,25 @@ public class SoundWorkSettingsController extends AbstractPreferenceController im
         updateWorkPreferences();
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnPause
     public void onPause() {
         this.mContext.unregisterReceiver(this.mManagedProfileReceiver);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return this.mHelper.getManagedProfileId(this.mUserManager) != -10000 && shouldShowRingtoneSettings();
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         int i;
         if ("work_ringtone".equals(preference.getKey())) {
             i = 1;
-        } else if (!"work_notification_ringtone".equals(preference.getKey())) {
+        } else if ("work_notification_ringtone".equals(preference.getKey())) {
+            i = 2;
+        } else {
             if ("work_alarm_ringtone".equals(preference.getKey())) {
                 i = 4;
             }
             return true;
-        } else {
-            i = 2;
         }
         preference.setSummary(updateRingtoneName(getManagedProfileContext(), i));
         return true;
@@ -129,7 +121,7 @@ public class SoundWorkSettingsController extends AbstractPreferenceController im
 
     private CharSequence updateRingtoneName(Context context, int i) {
         if (context == null || !this.mHelper.isUserUnlocked(this.mUserManager, context.getUserId())) {
-            return this.mContext.getString(R.string.managed_profile_not_available_label);
+            return this.mContext.getString(R$string.managed_profile_not_available_label);
         }
         return Ringtone.getTitle(context, RingtoneManager.getActualDefaultRingtoneUri(context, i), false, true);
     }
@@ -150,42 +142,34 @@ public class SoundWorkSettingsController extends AbstractPreferenceController im
     }
 
     private void updateWorkPreferences() {
-        if (!isAvailable()) {
-            return;
-        }
-        if (this.mWorkUsePersonalSounds == null) {
-            TwoStatePreference twoStatePreference = (TwoStatePreference) this.mScreen.findPreference("work_use_personal_sounds");
-            this.mWorkUsePersonalSounds = twoStatePreference;
-            twoStatePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() { // from class: com.android.settings.notification.SoundWorkSettingsController$$ExternalSyntheticLambda0
-                @Override // androidx.preference.Preference.OnPreferenceChangeListener
-                public final boolean onPreferenceChange(Preference preference, Object obj) {
-                    boolean lambda$updateWorkPreferences$0;
-                    lambda$updateWorkPreferences$0 = SoundWorkSettingsController.this.lambda$updateWorkPreferences$0(preference, obj);
-                    return lambda$updateWorkPreferences$0;
-                }
-            });
-        }
-        if (this.mWorkPhoneRingtonePreference == null) {
-            this.mWorkPhoneRingtonePreference = initWorkPreference(this.mScreen, "work_ringtone");
-        }
-        if (this.mWorkNotificationRingtonePreference == null) {
-            this.mWorkNotificationRingtonePreference = initWorkPreference(this.mScreen, "work_notification_ringtone");
-        }
-        if (this.mWorkAlarmRingtonePreference == null) {
-            this.mWorkAlarmRingtonePreference = initWorkPreference(this.mScreen, "work_alarm_ringtone");
-        }
-        if (!this.mVoiceCapable) {
-            this.mWorkPhoneRingtonePreference.setVisible(false);
-            this.mWorkPhoneRingtonePreference = null;
-        }
-        if (Settings.Secure.getIntForUser(getManagedProfileContext().getContentResolver(), "sync_parent_sounds", 0, this.mManagedProfileId) == 1) {
-            enableWorkSyncSettings();
-        } else {
-            disableWorkSyncSettings();
+        if (isAvailable()) {
+            if (this.mWorkUsePersonalSounds == null) {
+                TwoStatePreference twoStatePreference = (TwoStatePreference) this.mScreen.findPreference("work_use_personal_sounds");
+                this.mWorkUsePersonalSounds = twoStatePreference;
+                twoStatePreference.setOnPreferenceChangeListener(new SoundWorkSettingsController$$ExternalSyntheticLambda0(this));
+            }
+            if (this.mWorkPhoneRingtonePreference == null) {
+                this.mWorkPhoneRingtonePreference = initWorkPreference(this.mScreen, "work_ringtone");
+            }
+            if (this.mWorkNotificationRingtonePreference == null) {
+                this.mWorkNotificationRingtonePreference = initWorkPreference(this.mScreen, "work_notification_ringtone");
+            }
+            if (this.mWorkAlarmRingtonePreference == null) {
+                this.mWorkAlarmRingtonePreference = initWorkPreference(this.mScreen, "work_alarm_ringtone");
+            }
+            if (!this.mVoiceCapable) {
+                this.mWorkPhoneRingtonePreference.setVisible(false);
+                this.mWorkPhoneRingtonePreference = null;
+            }
+            if (Settings.Secure.getIntForUser(getManagedProfileContext().getContentResolver(), "sync_parent_sounds", 0, this.mManagedProfileId) == 1) {
+                enableWorkSyncSettings();
+            } else {
+                disableWorkSyncSettings();
+            }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ boolean lambda$updateWorkPreferences$0(Preference preference, Object obj) {
         if (((Boolean) obj).booleanValue()) {
             UnifyWorkDialogFragment.show(this.mParent);
@@ -195,26 +179,30 @@ public class SoundWorkSettingsController extends AbstractPreferenceController im
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void enableWorkSync() {
-        RingtoneManager.enableSyncFromParent(getManagedProfileContext());
+        Settings.Secure.putIntForUser(getManagedProfileContext().getContentResolver(), "sync_parent_sounds", 1, this.mManagedProfileId);
         enableWorkSyncSettings();
     }
 
     private void enableWorkSyncSettings() {
         this.mWorkUsePersonalSounds.setChecked(true);
+        String string = ((DevicePolicyManager) this.mContext.getSystemService(DevicePolicyManager.class)).getResources().getString("Settings.WORK_PROFILE_SYNC_WITH_PERSONAL_SOUNDS_ACTIVE_SUMMARY", new SoundWorkSettingsController$$ExternalSyntheticLambda1(this));
         Preference preference = this.mWorkPhoneRingtonePreference;
         if (preference != null) {
-            preference.setSummary(R.string.work_sound_same_as_personal);
+            preference.setSummary((CharSequence) string);
         }
-        Preference preference2 = this.mWorkNotificationRingtonePreference;
-        int i = R.string.work_sound_same_as_personal;
-        preference2.setSummary(i);
-        this.mWorkAlarmRingtonePreference.setSummary(i);
+        this.mWorkNotificationRingtonePreference.setSummary((CharSequence) string);
+        this.mWorkAlarmRingtonePreference.setSummary((CharSequence) string);
+    }
+
+    /* access modifiers changed from: private */
+    public /* synthetic */ String lambda$enableWorkSyncSettings$1() {
+        return this.mContext.getString(R$string.work_sound_same_as_personal);
     }
 
     private void disableWorkSync() {
-        RingtoneManager.disableSyncFromParent(getManagedProfileContext());
+        Settings.Secure.putIntForUser(getManagedProfileContext().getContentResolver(), "sync_parent_sounds", 0, this.mManagedProfileId);
         disableWorkSyncSettings();
     }
 
@@ -252,9 +240,7 @@ public class SoundWorkSettingsController extends AbstractPreferenceController im
         }
     }
 
-    /* loaded from: classes.dex */
     public static class UnifyWorkDialogFragment extends InstrumentedDialogFragment implements DialogInterface.OnClickListener {
-        @Override // com.android.settingslib.core.instrumentation.Instrumentable
         public int getMetricsCategory() {
             return 553;
         }
@@ -268,12 +254,12 @@ public class SoundWorkSettingsController extends AbstractPreferenceController im
             }
         }
 
-        @Override // androidx.fragment.app.DialogFragment
         public Dialog onCreateDialog(Bundle bundle) {
-            return new AlertDialog.Builder(getActivity()).setTitle(R.string.work_sync_dialog_title).setMessage(R.string.work_sync_dialog_message).setPositiveButton(R.string.work_sync_dialog_yes, this).setNegativeButton(17039369, (DialogInterface.OnClickListener) null).create();
+            Context applicationContext = getActivity().getApplicationContext();
+            DevicePolicyManager devicePolicyManager = (DevicePolicyManager) applicationContext.getSystemService(DevicePolicyManager.class);
+            return new AlertDialog.Builder(getActivity()).setTitle((CharSequence) devicePolicyManager.getResources().getString("Settings.ENABLE_WORK_PROFILE_SYNC_WITH_PERSONAL_SOUNDS_DIALOG_TITLE", new C1150xf34bd176(applicationContext))).setMessage((CharSequence) devicePolicyManager.getResources().getString("Settings.ENABLE_WORK_PROFILE_SYNC_WITH_PERSONAL_SOUNDS_DIALOG_MESSAGE", new C1151xf34bd177(applicationContext))).setPositiveButton(R$string.work_sync_dialog_yes, (DialogInterface.OnClickListener) this).setNegativeButton(17039369, (DialogInterface.OnClickListener) null).create();
         }
 
-        @Override // android.content.DialogInterface.OnClickListener
         public void onClick(DialogInterface dialogInterface, int i) {
             SoundWorkSettings soundWorkSettings = (SoundWorkSettings) getTargetFragment();
             if (soundWorkSettings.isAdded()) {

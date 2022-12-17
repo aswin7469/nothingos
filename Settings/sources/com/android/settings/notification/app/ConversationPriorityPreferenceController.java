@@ -7,11 +7,10 @@ import androidx.preference.Preference;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settings.notification.NotificationBackend;
 import com.android.settings.notification.app.NotificationSettings;
-/* loaded from: classes.dex */
+
 public class ConversationPriorityPreferenceController extends NotificationPreferenceController implements PreferenceControllerMixin, Preference.OnPreferenceChangeListener {
     private final NotificationSettings.DependentFieldListener mDependentFieldListener;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "priority";
     }
@@ -21,29 +20,29 @@ public class ConversationPriorityPreferenceController extends NotificationPrefer
         this.mDependentFieldListener = dependentFieldListener;
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
-        return (!super.isAvailable() || this.mAppRow == null || this.mChannel == null) ? false : true;
+        if (!super.isAvailable() || this.mAppRow == null || this.mChannel == null) {
+            return false;
+        }
+        return true;
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController
-    boolean isIncludedInFilter() {
+    /* access modifiers changed from: package-private */
+    public boolean isIncludedInFilter() {
         return this.mPreferenceFilter.contains("importance") || this.mPreferenceFilter.contains("conversation");
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         if (this.mAppRow != null) {
-            preference.setEnabled(this.mAdmin == null && !this.mChannel.isImportanceLockedByOEM());
+            preference.setEnabled(this.mAdmin == null && isChannelConfigurable(this.mChannel));
             ConversationPriorityPreference conversationPriorityPreference = (ConversationPriorityPreference) preference;
-            conversationPriorityPreference.setConfigurable(!this.mChannel.isImportanceLockedByOEM());
+            conversationPriorityPreference.setConfigurable(isChannelConfigurable(this.mChannel));
             conversationPriorityPreference.setImportance(this.mChannel.getImportance());
             conversationPriorityPreference.setOriginalImportance(this.mChannel.getOriginalImportance());
             conversationPriorityPreference.setPriorityConversation(this.mChannel.isImportantConversation());
         }
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         NotificationChannel notificationChannel = this.mChannel;
         if (notificationChannel == null) {

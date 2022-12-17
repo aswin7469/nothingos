@@ -11,12 +11,11 @@ import androidx.preference.Preference;
 import androidx.preference.SwitchPreference;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.development.DeveloperOptionsPreferenceController;
-/* loaded from: classes.dex */
+
 public class WaitForDebuggerPreferenceController extends DeveloperOptionsPreferenceController implements Preference.OnPreferenceChangeListener, PreferenceControllerMixin, OnActivityResultListener {
     static final int SETTING_VALUE_OFF = 0;
     static final int SETTING_VALUE_ON = 1;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "wait_for_debugger";
     }
@@ -25,24 +24,21 @@ public class WaitForDebuggerPreferenceController extends DeveloperOptionsPrefere
         super(context);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         writeDebuggerAppOptions(Settings.Global.getString(this.mContext.getContentResolver(), "debug_app"), ((Boolean) obj).booleanValue(), true);
         return true;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         updateState(this.mPreference, Settings.Global.getString(this.mContext.getContentResolver(), "debug_app"));
     }
 
-    @Override // com.android.settings.development.OnActivityResultListener
     public boolean onActivityResult(int i, int i2, Intent intent) {
-        if (i == 1 && i2 == -1) {
-            updateState(this.mPreference, intent.getAction());
-            return true;
+        if (i != 1 || i2 != -1) {
+            return false;
         }
-        return false;
+        updateState(this.mPreference, intent.getAction());
+        return true;
     }
 
     private void updateState(Preference preference, String str) {
@@ -56,15 +52,15 @@ public class WaitForDebuggerPreferenceController extends DeveloperOptionsPrefere
         switchPreference.setEnabled(!TextUtils.isEmpty(str));
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController
+    /* access modifiers changed from: protected */
     public void onDeveloperOptionsSwitchDisabled() {
         super.onDeveloperOptionsSwitchDisabled();
-        writeDebuggerAppOptions(null, false, false);
+        writeDebuggerAppOptions((String) null, false, false);
         ((SwitchPreference) this.mPreference).setChecked(false);
     }
 
-    IActivityManager getActivityManagerService() {
+    /* access modifiers changed from: package-private */
+    public IActivityManager getActivityManagerService() {
         return ActivityManager.getService();
     }
 

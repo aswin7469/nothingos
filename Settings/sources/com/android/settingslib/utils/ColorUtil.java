@@ -2,7 +2,7 @@ package com.android.settingslib.utils;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-/* loaded from: classes.dex */
+
 public class ColorUtil {
     public static float getDisabledAlpha(Context context) {
         TypedArray obtainStyledAttributes = context.obtainStyledAttributes(new int[]{16842803});

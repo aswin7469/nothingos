@@ -16,16 +16,16 @@ import android.widget.TextView;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
 import com.android.settingslib.utils.BuildCompatUtils;
-/* loaded from: classes.dex */
-public class BannerMessagePreference extends Preference {
-    private static final boolean IS_AT_LEAST_S = BuildCompatUtils.isAtLeastS();
-    private String mSubtitle;
-    private final ButtonInfo mPositiveButtonInfo = new ButtonInfo();
-    private final ButtonInfo mNegativeButtonInfo = new ButtonInfo();
-    private final DismissButtonInfo mDismissButtonInfo = new DismissButtonInfo();
-    private AttentionLevel mAttentionLevel = AttentionLevel.HIGH;
 
-    /* loaded from: classes.dex */
+public class BannerMessagePreference extends Preference {
+    /* access modifiers changed from: private */
+    public static final boolean IS_AT_LEAST_S = BuildCompatUtils.isAtLeastS();
+    private AttentionLevel mAttentionLevel = AttentionLevel.HIGH;
+    private final DismissButtonInfo mDismissButtonInfo = new DismissButtonInfo();
+    private final ButtonInfo mNegativeButtonInfo = new ButtonInfo();
+    private final ButtonInfo mPositiveButtonInfo = new ButtonInfo();
+    private String mSubtitle;
+
     public enum AttentionLevel {
         HIGH(0, R$color.banner_background_attention_high, R$color.banner_accent_attention_high),
         MEDIUM(1, R$color.banner_background_attention_medium, R$color.banner_accent_attention_medium),
@@ -35,14 +35,13 @@ public class BannerMessagePreference extends Preference {
         private final int mAttrValue;
         private final int mBackgroundColorResId;
 
-        AttentionLevel(int i, int i2, int i3) {
+        private AttentionLevel(int i, int i2, int i3) {
             this.mAttrValue = i;
             this.mBackgroundColorResId = i2;
             this.mAccentColorResId = i3;
         }
 
         static AttentionLevel fromAttr(int i) {
-            AttentionLevel[] values;
             for (AttentionLevel attentionLevel : values()) {
                 if (attentionLevel.mAttrValue == i) {
                     return attentionLevel;
@@ -62,7 +61,7 @@ public class BannerMessagePreference extends Preference {
 
     public BannerMessagePreference(Context context) {
         super(context);
-        init(context, null);
+        init(context, (AttributeSet) null);
     }
 
     public BannerMessagePreference(Context context, AttributeSet attributeSet) {
@@ -83,16 +82,14 @@ public class BannerMessagePreference extends Preference {
     private void init(Context context, AttributeSet attributeSet) {
         setSelectable(false);
         setLayoutResource(R$layout.settingslib_banner_message);
-        if (!IS_AT_LEAST_S || attributeSet == null) {
-            return;
+        if (IS_AT_LEAST_S && attributeSet != null) {
+            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.BannerMessagePreference);
+            this.mAttentionLevel = AttentionLevel.fromAttr(obtainStyledAttributes.getInt(R$styleable.BannerMessagePreference_attentionLevel, 0));
+            this.mSubtitle = obtainStyledAttributes.getString(R$styleable.BannerMessagePreference_subtitle);
+            obtainStyledAttributes.recycle();
         }
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.BannerMessagePreference);
-        this.mAttentionLevel = AttentionLevel.fromAttr(obtainStyledAttributes.getInt(R$styleable.BannerMessagePreference_attentionLevel, 0));
-        this.mSubtitle = obtainStyledAttributes.getString(R$styleable.BannerMessagePreference_subtitle);
-        obtainStyledAttributes.recycle();
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         Context context = getContext();
@@ -104,9 +101,18 @@ public class BannerMessagePreference extends Preference {
         ((TextView) preferenceViewHolder.findViewById(R$id.banner_summary)).setText(getSummary());
         this.mPositiveButtonInfo.mButton = (Button) preferenceViewHolder.findViewById(R$id.banner_positive_btn);
         this.mNegativeButtonInfo.mButton = (Button) preferenceViewHolder.findViewById(R$id.banner_negative_btn);
+        Resources.Theme theme = context.getTheme();
+        int color = context.getResources().getColor(this.mAttentionLevel.getAccentColorResId(), theme);
+        ImageView imageView = (ImageView) preferenceViewHolder.findViewById(R$id.banner_icon);
+        if (imageView != null) {
+            Drawable icon = getIcon();
+            if (icon == null) {
+                icon = getContext().getDrawable(R$drawable.ic_warning);
+            }
+            imageView.setImageDrawable(icon);
+            imageView.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
+        }
         if (IS_AT_LEAST_S) {
-            Resources.Theme theme = context.getTheme();
-            int color = context.getResources().getColor(this.mAttentionLevel.getAccentColorResId(), theme);
             int color2 = context.getResources().getColor(this.mAttentionLevel.getBackgroundColorResId(), theme);
             preferenceViewHolder.setDividerAllowedAbove(false);
             preferenceViewHolder.setDividerAllowedBelow(false);
@@ -121,15 +127,6 @@ public class BannerMessagePreference extends Preference {
                 i = 0;
             }
             textView2.setVisibility(i);
-            ImageView imageView = (ImageView) preferenceViewHolder.findViewById(R$id.banner_icon);
-            if (imageView != null) {
-                Drawable icon = getIcon();
-                if (icon == null) {
-                    icon = getContext().getDrawable(R$drawable.ic_warning);
-                }
-                imageView.setImageDrawable(icon);
-                imageView.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
-            }
         } else {
             preferenceViewHolder.setDividerAllowedAbove(true);
             preferenceViewHolder.setDividerAllowedBelow(true);
@@ -158,19 +155,22 @@ public class BannerMessagePreference extends Preference {
         return this;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class ButtonInfo {
-        private Button mButton;
-        private int mColor;
+    static class ButtonInfo {
+        /* access modifiers changed from: private */
+        public Button mButton;
+        /* access modifiers changed from: private */
+        public int mColor;
         private boolean mIsVisible = true;
-        private View.OnClickListener mListener;
-        private CharSequence mText;
+        /* access modifiers changed from: private */
+        public View.OnClickListener mListener;
+        /* access modifiers changed from: private */
+        public CharSequence mText;
 
         ButtonInfo() {
         }
 
-        void setUpButton() {
+        /* access modifiers changed from: package-private */
+        public void setUpButton() {
             this.mButton.setText(this.mText);
             this.mButton.setOnClickListener(this.mListener);
             if (BannerMessagePreference.IS_AT_LEAST_S) {
@@ -188,16 +188,17 @@ public class BannerMessagePreference extends Preference {
         }
     }
 
-    /* loaded from: classes.dex */
     static class DismissButtonInfo {
-        private ImageButton mButton;
+        /* access modifiers changed from: private */
+        public ImageButton mButton;
         private boolean mIsVisible = true;
         private View.OnClickListener mListener;
 
         DismissButtonInfo() {
         }
 
-        void setUpButton() {
+        /* access modifiers changed from: package-private */
+        public void setUpButton() {
             this.mButton.setOnClickListener(this.mListener);
             if (shouldBeVisible()) {
                 this.mButton.setVisibility(0);

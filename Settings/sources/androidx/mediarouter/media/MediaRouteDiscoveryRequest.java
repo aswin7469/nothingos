@@ -1,20 +1,21 @@
 package androidx.mediarouter.media;
 
 import android.os.Bundle;
-/* loaded from: classes.dex */
+
 public final class MediaRouteDiscoveryRequest {
     private final Bundle mBundle;
     private MediaRouteSelector mSelector;
 
-    public MediaRouteDiscoveryRequest(MediaRouteSelector selector, boolean activeScan) {
-        if (selector == null) {
-            throw new IllegalArgumentException("selector must not be null");
+    public MediaRouteDiscoveryRequest(MediaRouteSelector mediaRouteSelector, boolean z) {
+        if (mediaRouteSelector != null) {
+            Bundle bundle = new Bundle();
+            this.mBundle = bundle;
+            this.mSelector = mediaRouteSelector;
+            bundle.putBundle("selector", mediaRouteSelector.asBundle());
+            bundle.putBoolean("activeScan", z);
+            return;
         }
-        Bundle bundle = new Bundle();
-        this.mBundle = bundle;
-        this.mSelector = selector;
-        bundle.putBundle("selector", selector.asBundle());
-        bundle.putBoolean("activeScan", activeScan);
+        throw new IllegalArgumentException("selector must not be null");
     }
 
     public MediaRouteSelector getSelector() {
@@ -26,10 +27,9 @@ public final class MediaRouteDiscoveryRequest {
         if (this.mSelector == null) {
             MediaRouteSelector fromBundle = MediaRouteSelector.fromBundle(this.mBundle.getBundle("selector"));
             this.mSelector = fromBundle;
-            if (fromBundle != null) {
-                return;
+            if (fromBundle == null) {
+                this.mSelector = MediaRouteSelector.EMPTY;
             }
-            this.mSelector = MediaRouteSelector.EMPTY;
         }
     }
 
@@ -42,16 +42,19 @@ public final class MediaRouteDiscoveryRequest {
         return this.mSelector.isValid();
     }
 
-    public boolean equals(Object o) {
-        if (o instanceof MediaRouteDiscoveryRequest) {
-            MediaRouteDiscoveryRequest mediaRouteDiscoveryRequest = (MediaRouteDiscoveryRequest) o;
-            return getSelector().equals(mediaRouteDiscoveryRequest.getSelector()) && isActiveScan() == mediaRouteDiscoveryRequest.isActiveScan();
+    public boolean equals(Object obj) {
+        if (!(obj instanceof MediaRouteDiscoveryRequest)) {
+            return false;
         }
-        return false;
+        MediaRouteDiscoveryRequest mediaRouteDiscoveryRequest = (MediaRouteDiscoveryRequest) obj;
+        if (!getSelector().equals(mediaRouteDiscoveryRequest.getSelector()) || isActiveScan() != mediaRouteDiscoveryRequest.isActiveScan()) {
+            return false;
+        }
+        return true;
     }
 
     public int hashCode() {
-        return isActiveScan() ^ getSelector().hashCode();
+        return isActiveScan() ^ getSelector().hashCode() ? 1 : 0;
     }
 
     public String toString() {

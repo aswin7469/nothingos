@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.setupdesign.template.RecyclerMixin;
 import com.google.android.setupdesign.template.RecyclerViewScrollHandlingDelegate;
 import com.google.android.setupdesign.template.RequireScrollMixin;
-/* loaded from: classes2.dex */
+
 public class GlifRecyclerLayout extends GlifLayout {
     protected RecyclerMixin recyclerMixin;
 
@@ -25,7 +25,7 @@ public class GlifRecyclerLayout extends GlifLayout {
 
     public GlifRecyclerLayout(Context context, int i, int i2) {
         super(context, i, i2);
-        init(null, 0);
+        init((AttributeSet) null, 0);
     }
 
     public GlifRecyclerLayout(Context context, AttributeSet attributeSet) {
@@ -40,28 +40,26 @@ public class GlifRecyclerLayout extends GlifLayout {
     }
 
     private void init(AttributeSet attributeSet, int i) {
-        if (isInEditMode()) {
-            return;
+        if (!isInEditMode()) {
+            this.recyclerMixin.parseAttributes(attributeSet, i);
+            registerMixin(RecyclerMixin.class, this.recyclerMixin);
+            RequireScrollMixin requireScrollMixin = (RequireScrollMixin) getMixin(RequireScrollMixin.class);
+            requireScrollMixin.setScrollHandlingDelegate(new RecyclerViewScrollHandlingDelegate(requireScrollMixin, getRecyclerView()));
+            View findManagedViewById = findManagedViewById(R$id.sud_landscape_content_area);
+            if (findManagedViewById != null) {
+                tryApplyPartnerCustomizationContentPaddingTopStyle(findManagedViewById);
+            }
+            updateLandscapeMiddleHorizontalSpacing();
         }
-        this.recyclerMixin.parseAttributes(attributeSet, i);
-        registerMixin(RecyclerMixin.class, this.recyclerMixin);
-        RequireScrollMixin requireScrollMixin = (RequireScrollMixin) getMixin(RequireScrollMixin.class);
-        requireScrollMixin.setScrollHandlingDelegate(new RecyclerViewScrollHandlingDelegate(requireScrollMixin, getRecyclerView()));
-        View findManagedViewById = findManagedViewById(R$id.sud_landscape_content_area);
-        if (findManagedViewById != null) {
-            GlifLayout.applyPartnerCustomizationContentPaddingTopStyle(findManagedViewById);
-        }
-        updateLandscapeMiddleHorizontalSpacing();
     }
 
-    @Override // android.widget.FrameLayout, android.view.ViewGroup, android.view.View
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
         this.recyclerMixin.onLayout();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.google.android.setupdesign.GlifLayout, com.google.android.setupcompat.PartnerCustomizationLayout, com.google.android.setupcompat.internal.TemplateLayout
+    /* access modifiers changed from: protected */
     public View onInflateTemplate(LayoutInflater layoutInflater, int i) {
         if (i == 0) {
             i = R$layout.sud_glif_recycler_template;
@@ -69,8 +67,8 @@ public class GlifRecyclerLayout extends GlifLayout {
         return super.onInflateTemplate(layoutInflater, i);
     }
 
-    @Override // com.google.android.setupcompat.internal.TemplateLayout
-    protected void onTemplateInflated() {
+    /* access modifiers changed from: protected */
+    public void onTemplateInflated() {
         View findViewById = findViewById(R$id.sud_recycler_view);
         if (findViewById instanceof RecyclerView) {
             this.recyclerMixin = new RecyclerMixin(this, (RecyclerView) findViewById);
@@ -79,8 +77,7 @@ public class GlifRecyclerLayout extends GlifLayout {
         throw new IllegalStateException("GlifRecyclerLayout should use a template with recycler view");
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.google.android.setupdesign.GlifLayout, com.google.android.setupcompat.PartnerCustomizationLayout, com.google.android.setupcompat.internal.TemplateLayout
+    /* access modifiers changed from: protected */
     public ViewGroup findContainer(int i) {
         if (i == 0) {
             i = R$id.sud_recycler_view;
@@ -88,11 +85,13 @@ public class GlifRecyclerLayout extends GlifLayout {
         return super.findContainer(i);
     }
 
-    @Override // com.google.android.setupcompat.internal.TemplateLayout
     public <T extends View> T findManagedViewById(int i) {
-        T t;
+        T findViewById;
         View header = this.recyclerMixin.getHeader();
-        return (header == null || (t = (T) header.findViewById(i)) == null) ? (T) super.findViewById(i) : t;
+        if (header == null || (findViewById = header.findViewById(i)) == null) {
+            return super.findViewById(i);
+        }
+        return findViewById;
     }
 
     public void setDividerItemDecoration(DividerItemDecoration dividerItemDecoration) {

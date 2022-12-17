@@ -5,54 +5,50 @@ import android.database.ContentObserver;
 import android.os.Handler;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
-/* loaded from: classes.dex */
+
 public class Loader<D> {
+    private boolean mAbandoned = false;
+    private boolean mContentChanged = false;
     private Context mContext;
     private int mId;
     private OnLoadCompleteListener<D> mListener;
-    private OnLoadCanceledListener<D> mOnLoadCanceledListener;
-    private boolean mStarted = false;
-    private boolean mAbandoned = false;
-    private boolean mReset = true;
-    private boolean mContentChanged = false;
     private boolean mProcessingChange = false;
+    private boolean mReset = true;
+    private boolean mStarted = false;
 
-    /* loaded from: classes.dex */
-    public interface OnLoadCanceledListener<D> {
-        void onLoadCanceled(Loader<D> loader);
-    }
-
-    /* loaded from: classes.dex */
     public interface OnLoadCompleteListener<D> {
         void onLoadComplete(Loader<D> loader, D d);
     }
 
-    protected void onAbandon() {
+    public void deliverCancellation() {
     }
 
-    protected boolean onCancelLoad() {
+    /* access modifiers changed from: protected */
+    public void onAbandon() {
+    }
+
+    /* access modifiers changed from: protected */
+    public boolean onCancelLoad() {
         throw null;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onForceLoad() {
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onReset() {
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onStartLoading() {
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onStopLoading() {
     }
 
-    /* loaded from: classes.dex */
     public final class ForceLoadContentObserver extends ContentObserver {
-        @Override // android.database.ContentObserver
         public boolean deliverSelfNotifications() {
             return true;
         }
@@ -61,7 +57,6 @@ public class Loader<D> {
             super(new Handler());
         }
 
-        @Override // android.database.ContentObserver
         public void onChange(boolean z) {
             Loader.this.onContentChanged();
         }
@@ -78,35 +73,28 @@ public class Loader<D> {
         }
     }
 
-    public void deliverCancellation() {
-        OnLoadCanceledListener<D> onLoadCanceledListener = this.mOnLoadCanceledListener;
-        if (onLoadCanceledListener != null) {
-            onLoadCanceledListener.onLoadCanceled(this);
-        }
-    }
-
     public Context getContext() {
         return this.mContext;
     }
 
     public void registerListener(int i, OnLoadCompleteListener<D> onLoadCompleteListener) {
-        if (this.mListener != null) {
-            throw new IllegalStateException("There is already a listener registered");
+        if (this.mListener == null) {
+            this.mListener = onLoadCompleteListener;
+            this.mId = i;
+            return;
         }
-        this.mListener = onLoadCompleteListener;
-        this.mId = i;
+        throw new IllegalStateException("There is already a listener registered");
     }
 
     public void unregisterListener(OnLoadCompleteListener<D> onLoadCompleteListener) {
         OnLoadCompleteListener<D> onLoadCompleteListener2 = this.mListener;
-        if (onLoadCompleteListener2 != null) {
-            if (onLoadCompleteListener2 != onLoadCompleteListener) {
-                throw new IllegalArgumentException("Attempting to unregister the wrong listener");
-            }
+        if (onLoadCompleteListener2 == null) {
+            throw new IllegalStateException("No listener register");
+        } else if (onLoadCompleteListener2 == onLoadCompleteListener) {
             this.mListener = null;
-            return;
+        } else {
+            throw new IllegalArgumentException("Attempting to unregister the wrong listener");
         }
-        throw new IllegalStateException("No listener register");
     }
 
     public boolean isStarted() {

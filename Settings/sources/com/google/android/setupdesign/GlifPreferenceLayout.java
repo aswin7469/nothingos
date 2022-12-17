@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.setupdesign.template.RecyclerMixin;
-/* loaded from: classes2.dex */
+
 public class GlifPreferenceLayout extends GlifRecyclerLayout {
     public GlifPreferenceLayout(Context context) {
         super(context);
@@ -26,8 +26,7 @@ public class GlifPreferenceLayout extends GlifRecyclerLayout {
         super(context, attributeSet, i);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.google.android.setupdesign.GlifRecyclerLayout, com.google.android.setupdesign.GlifLayout, com.google.android.setupcompat.PartnerCustomizationLayout, com.google.android.setupcompat.internal.TemplateLayout
+    /* access modifiers changed from: protected */
     public ViewGroup findContainer(int i) {
         if (i == 0) {
             i = R$id.sud_layout_content;
@@ -39,8 +38,7 @@ public class GlifPreferenceLayout extends GlifRecyclerLayout {
         return this.recyclerMixin.getRecyclerView();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.google.android.setupdesign.GlifRecyclerLayout, com.google.android.setupdesign.GlifLayout, com.google.android.setupcompat.PartnerCustomizationLayout, com.google.android.setupcompat.internal.TemplateLayout
+    /* access modifiers changed from: protected */
     public View onInflateTemplate(LayoutInflater layoutInflater, int i) {
         if (i == 0) {
             i = R$layout.sud_glif_preference_template;
@@ -48,8 +46,8 @@ public class GlifPreferenceLayout extends GlifRecyclerLayout {
         return super.onInflateTemplate(layoutInflater, i);
     }
 
-    @Override // com.google.android.setupdesign.GlifRecyclerLayout, com.google.android.setupcompat.internal.TemplateLayout
-    protected void onTemplateInflated() {
-        this.recyclerMixin = new RecyclerMixin(this, (RecyclerView) LayoutInflater.from(getContext()).inflate(R$layout.sud_glif_preference_recycler_view, (ViewGroup) this, false));
+    /* access modifiers changed from: protected */
+    public void onTemplateInflated() {
+        this.recyclerMixin = new RecyclerMixin(this, (RecyclerView) LayoutInflater.from(getContext()).inflate(R$layout.sud_glif_preference_recycler_view, this, false));
     }
 }

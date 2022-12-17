@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import androidx.preference.PreferenceViewHolder;
 import com.android.settingslib.RestrictedSwitchPreference;
-/* loaded from: classes.dex */
+
 public class FilterTouchesRestrictedSwitchPreference extends RestrictedSwitchPreference {
     public FilterTouchesRestrictedSwitchPreference(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
@@ -23,7 +23,6 @@ public class FilterTouchesRestrictedSwitchPreference extends RestrictedSwitchPre
         super(context);
     }
 
-    @Override // com.android.settingslib.RestrictedSwitchPreference, androidx.preference.SwitchPreference, androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         View findViewById = preferenceViewHolder.findViewById(16908352);

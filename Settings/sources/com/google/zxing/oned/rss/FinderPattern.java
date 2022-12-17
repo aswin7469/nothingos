@@ -1,7 +1,7 @@
 package com.google.zxing.oned.rss;
 
 import com.google.zxing.ResultPoint;
-/* loaded from: classes2.dex */
+
 public final class FinderPattern {
     private final ResultPoint[] resultPoints;
     private final int[] startEnd;
@@ -10,8 +10,8 @@ public final class FinderPattern {
     public FinderPattern(int i, int[] iArr, int i2, int i3, int i4) {
         this.value = i;
         this.startEnd = iArr;
-        float f = i4;
-        this.resultPoints = new ResultPoint[]{new ResultPoint(i2, f), new ResultPoint(i3, f)};
+        float f = (float) i4;
+        this.resultPoints = new ResultPoint[]{new ResultPoint((float) i2, f), new ResultPoint((float) i3, f)};
     }
 
     public int getValue() {
@@ -27,7 +27,10 @@ public final class FinderPattern {
     }
 
     public boolean equals(Object obj) {
-        return (obj instanceof FinderPattern) && this.value == ((FinderPattern) obj).value;
+        if ((obj instanceof FinderPattern) && this.value == ((FinderPattern) obj).value) {
+            return true;
+        }
+        return false;
     }
 
     public int hashCode() {

@@ -14,15 +14,17 @@ import android.widget.ImageView;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.OnLifecycleEvent;
-import com.android.settings.R;
+import com.android.settings.R$bool;
+import com.android.settings.R$drawable;
+import com.android.settings.R$string;
+import com.android.settings.activityembedding.ActivityEmbeddingRulesController;
 import com.android.settings.homepage.SettingsHomepageActivity;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settingslib.utils.ThreadUtils;
 import java.net.URISyntaxException;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class AvatarViewMixin implements LifecycleObserver {
     static final Intent INTENT_GET_ACCOUNT_DATA = new Intent("android.content.action.SETTINGS_ACCOUNT_DATA");
     String mAccountName;
@@ -31,43 +33,36 @@ public class AvatarViewMixin implements LifecycleObserver {
     private final Context mContext;
 
     public static boolean isAvatarSupported(Context context) {
-        if (!context.getResources().getBoolean(R.bool.config_show_avatar_in_homepage)) {
-            Log.d("AvatarViewMixin", "Feature disabled by config. Skipping");
-            return false;
+        if (context.getResources().getBoolean(R$bool.config_show_avatar_in_homepage)) {
+            return true;
         }
-        return true;
+        Log.d("AvatarViewMixin", "Feature disabled by config. Skipping");
+        return false;
     }
 
-    public AvatarViewMixin(final SettingsHomepageActivity settingsHomepageActivity, final ImageView imageView) {
+    public AvatarViewMixin(SettingsHomepageActivity settingsHomepageActivity, ImageView imageView) {
         this.mContext = settingsHomepageActivity.getApplicationContext();
         this.mAvatarView = imageView;
-        imageView.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.accounts.AvatarViewMixin$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                AvatarViewMixin.this.lambda$new$0(settingsHomepageActivity, view);
-            }
-        });
+        imageView.setOnClickListener(new AvatarViewMixin$$ExternalSyntheticLambda0(this, settingsHomepageActivity));
         MutableLiveData<Bitmap> mutableLiveData = new MutableLiveData<>();
         this.mAvatarImage = mutableLiveData;
-        mutableLiveData.observe(settingsHomepageActivity, new Observer() { // from class: com.android.settings.accounts.AvatarViewMixin$$ExternalSyntheticLambda1
-            @Override // androidx.lifecycle.Observer
-            public final void onChanged(Object obj) {
-                imageView.setImageBitmap((Bitmap) obj);
-            }
-        });
+        mutableLiveData.observe(settingsHomepageActivity, new AvatarViewMixin$$ExternalSyntheticLambda1(imageView));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$new$0(SettingsHomepageActivity settingsHomepageActivity, View view) {
         try {
-            Intent parseUri = Intent.parseUri(this.mContext.getResources().getString(R.string.config_account_intent_uri), 1);
+            Intent parseUri = Intent.parseUri(this.mContext.getResources().getString(R$string.config_account_intent_uri), 1);
             if (!TextUtils.isEmpty(this.mAccountName)) {
                 parseUri.putExtra("extra.accountName", this.mAccountName);
             }
-            if (this.mContext.getPackageManager().queryIntentActivities(parseUri, 1048576).isEmpty()) {
+            List<ResolveInfo> queryIntentActivities = this.mContext.getPackageManager().queryIntentActivities(parseUri, 1048576);
+            if (queryIntentActivities.isEmpty()) {
                 Log.w("AvatarViewMixin", "Cannot find any matching action VIEW_ACCOUNT intent.");
                 return;
             }
+            parseUri.setComponent(queryIntentActivities.get(0).getComponentInfo().getComponentName());
+            ActivityEmbeddingRulesController.registerTwoPanePairRuleForSettingsHome(this.mContext, parseUri.getComponent(), parseUri.getAction(), false, true, false);
             FeatureFactory.getFactory(this.mContext).getMetricsFeatureProvider().logSettingsTileClick("avatar_icon", 1502);
             settingsHomepageActivity.startActivity(parseUri);
         } catch (URISyntaxException e) {
@@ -82,35 +77,31 @@ public class AvatarViewMixin implements LifecycleObserver {
             return;
         }
         this.mAccountName = null;
-        this.mAvatarView.setImageResource(R.drawable.ic_account_circle_24dp);
+        this.mAvatarView.setImageResource(R$drawable.ic_account_circle_24dp);
     }
 
-    boolean hasAccount() {
+    /* access modifiers changed from: package-private */
+    public boolean hasAccount() {
         Account[] accounts = FeatureFactory.getFactory(this.mContext).getAccountFeatureProvider().getAccounts(this.mContext);
         return accounts != null && accounts.length > 0;
     }
 
     private void loadAccount() {
-        final String queryProviderAuthority = queryProviderAuthority();
-        if (TextUtils.isEmpty(queryProviderAuthority)) {
-            return;
+        String queryProviderAuthority = queryProviderAuthority();
+        if (!TextUtils.isEmpty(queryProviderAuthority)) {
+            ThreadUtils.postOnBackgroundThread((Runnable) new AvatarViewMixin$$ExternalSyntheticLambda2(this, queryProviderAuthority));
         }
-        ThreadUtils.postOnBackgroundThread(new Runnable() { // from class: com.android.settings.accounts.AvatarViewMixin$$ExternalSyntheticLambda2
-            @Override // java.lang.Runnable
-            public final void run() {
-                AvatarViewMixin.this.lambda$loadAccount$2(queryProviderAuthority);
-            }
-        });
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$loadAccount$2(String str) {
         Bundle call = this.mContext.getContentResolver().call(new Uri.Builder().scheme("content").authority(str).build(), "getAccountAvatar", (String) null, (Bundle) null);
         this.mAccountName = call.getString("account_name", "");
         this.mAvatarImage.postValue((Bitmap) call.getParcelable("account_avatar"));
     }
 
-    String queryProviderAuthority() {
+    /* access modifiers changed from: package-private */
+    public String queryProviderAuthority() {
         List<ResolveInfo> queryIntentContentProviders = this.mContext.getPackageManager().queryIntentContentProviders(INTENT_GET_ACCOUNT_DATA, 1048576);
         if (queryIntentContentProviders.size() == 1) {
             return queryIntentContentProviders.get(0).providerInfo.authority;

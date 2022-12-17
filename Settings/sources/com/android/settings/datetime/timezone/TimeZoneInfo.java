@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import com.android.settingslib.datetime.ZoneGetter;
 import java.util.Date;
 import java.util.Locale;
-/* loaded from: classes.dex */
+
 public class TimeZoneInfo {
     private final String mDaylightName;
     private final String mExemplarLocation;
@@ -18,9 +18,9 @@ public class TimeZoneInfo {
     private final TimeZone mTimeZone;
 
     public TimeZoneInfo(Builder builder) {
-        TimeZone timeZone = builder.mTimeZone;
-        this.mTimeZone = timeZone;
-        this.mId = timeZone.getID();
+        TimeZone r0 = builder.mTimeZone;
+        this.mTimeZone = r0;
+        this.mId = r0.getID();
         this.mGenericName = builder.mGenericName;
         this.mStandardName = builder.mStandardName;
         this.mDaylightName = builder.mDaylightName;
@@ -56,20 +56,26 @@ public class TimeZoneInfo {
         return this.mGmtOffset;
     }
 
-    /* loaded from: classes.dex */
     public static class Builder {
-        private String mDaylightName;
-        private String mExemplarLocation;
-        private String mGenericName;
-        private CharSequence mGmtOffset;
-        private String mStandardName;
-        private final TimeZone mTimeZone;
+        /* access modifiers changed from: private */
+        public String mDaylightName;
+        /* access modifiers changed from: private */
+        public String mExemplarLocation;
+        /* access modifiers changed from: private */
+        public String mGenericName;
+        /* access modifiers changed from: private */
+        public CharSequence mGmtOffset;
+        /* access modifiers changed from: private */
+        public String mStandardName;
+        /* access modifiers changed from: private */
+        public final TimeZone mTimeZone;
 
         public Builder(TimeZone timeZone) {
-            if (timeZone == null) {
-                throw new IllegalArgumentException("TimeZone must not be null!");
+            if (timeZone != null) {
+                this.mTimeZone = timeZone;
+                return;
             }
-            this.mTimeZone = timeZone;
+            throw new IllegalArgumentException("TimeZone must not be null!");
         }
 
         public Builder setGenericName(String str) {
@@ -98,14 +104,13 @@ public class TimeZoneInfo {
         }
 
         public TimeZoneInfo build() {
-            if (TextUtils.isEmpty(this.mGmtOffset)) {
-                throw new IllegalStateException("gmtOffset must not be empty!");
+            if (!TextUtils.isEmpty(this.mGmtOffset)) {
+                return new TimeZoneInfo(this);
             }
-            return new TimeZoneInfo(this);
+            throw new IllegalStateException("gmtOffset must not be empty!");
         }
     }
 
-    /* loaded from: classes.dex */
     public static class Formatter {
         private final Locale mLocale;
         private final Date mNow;
@@ -122,15 +127,26 @@ public class TimeZoneInfo {
         }
 
         public TimeZoneInfo format(TimeZone timeZone) {
-            String canonicalZoneId = getCanonicalZoneId(timeZone);
+            String r0 = TimeZoneInfo.getCanonicalZoneId(timeZone);
             TimeZoneNames timeZoneNames = this.mTimeZoneFormat.getTimeZoneNames();
-            return new Builder(timeZone).setGenericName(timeZoneNames.getDisplayName(canonicalZoneId, TimeZoneNames.NameType.LONG_GENERIC, this.mNow.getTime())).setStandardName(timeZoneNames.getDisplayName(canonicalZoneId, TimeZoneNames.NameType.LONG_STANDARD, this.mNow.getTime())).setDaylightName(timeZoneNames.getDisplayName(canonicalZoneId, TimeZoneNames.NameType.LONG_DAYLIGHT, this.mNow.getTime())).setExemplarLocation(timeZoneNames.getExemplarLocationName(canonicalZoneId)).setGmtOffset(ZoneGetter.getGmtOffsetText(this.mTimeZoneFormat, this.mLocale, java.util.TimeZone.getTimeZone(canonicalZoneId), this.mNow)).build();
+            return new Builder(timeZone).setGenericName(timeZoneNames.getDisplayName(r0, TimeZoneNames.NameType.LONG_GENERIC, this.mNow.getTime())).setStandardName(timeZoneNames.getDisplayName(r0, TimeZoneNames.NameType.LONG_STANDARD, this.mNow.getTime())).setDaylightName(timeZoneNames.getDisplayName(r0, TimeZoneNames.NameType.LONG_DAYLIGHT, this.mNow.getTime())).setExemplarLocation(timeZoneNames.getExemplarLocationName(r0)).setGmtOffset(ZoneGetter.getGmtOffsetText(this.mTimeZoneFormat, this.mLocale, TimeZoneInfo.toJavaTimeZone(r0), this.mNow)).build();
         }
+    }
 
-        private static String getCanonicalZoneId(TimeZone timeZone) {
-            String id = timeZone.getID();
-            String canonicalID = TimeZone.getCanonicalID(id);
-            return canonicalID != null ? canonicalID : id;
-        }
+    /* access modifiers changed from: package-private */
+    public java.util.TimeZone getJavaTimeZone() {
+        return toJavaTimeZone(getCanonicalZoneId(this.mTimeZone));
+    }
+
+    /* access modifiers changed from: private */
+    public static java.util.TimeZone toJavaTimeZone(String str) {
+        return java.util.TimeZone.getTimeZone(str);
+    }
+
+    /* access modifiers changed from: private */
+    public static String getCanonicalZoneId(TimeZone timeZone) {
+        String id = timeZone.getID();
+        String canonicalID = TimeZone.getCanonicalID(id);
+        return canonicalID != null ? canonicalID : id;
     }
 }

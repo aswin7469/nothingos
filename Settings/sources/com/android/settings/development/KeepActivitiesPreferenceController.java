@@ -10,12 +10,11 @@ import androidx.preference.PreferenceScreen;
 import androidx.preference.SwitchPreference;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.development.DeveloperOptionsPreferenceController;
-/* loaded from: classes.dex */
+
 public class KeepActivitiesPreferenceController extends DeveloperOptionsPreferenceController implements Preference.OnPreferenceChangeListener, PreferenceControllerMixin {
     static final int SETTING_VALUE_OFF = 0;
     private IActivityManager mActivityManager;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "immediately_destroy_activities";
     }
@@ -24,19 +23,16 @@ public class KeepActivitiesPreferenceController extends DeveloperOptionsPreferen
         super(context);
     }
 
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mActivityManager = getActivityManager();
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         writeImmediatelyDestroyActivitiesOptions(((Boolean) obj).booleanValue());
         return true;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         boolean z = false;
         int i = Settings.Global.getInt(this.mContext.getContentResolver(), "always_finish_activities", 0);
@@ -47,8 +43,7 @@ public class KeepActivitiesPreferenceController extends DeveloperOptionsPreferen
         switchPreference.setChecked(z);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController
+    /* access modifiers changed from: protected */
     public void onDeveloperOptionsSwitchDisabled() {
         super.onDeveloperOptionsSwitchDisabled();
         writeImmediatelyDestroyActivitiesOptions(false);
@@ -62,7 +57,8 @@ public class KeepActivitiesPreferenceController extends DeveloperOptionsPreferen
         }
     }
 
-    IActivityManager getActivityManager() {
+    /* access modifiers changed from: package-private */
+    public IActivityManager getActivityManager() {
         return ActivityManager.getService();
     }
 }

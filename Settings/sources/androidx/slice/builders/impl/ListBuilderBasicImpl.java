@@ -8,7 +8,7 @@ import androidx.slice.SliceSpec;
 import androidx.slice.builders.ListBuilder;
 import androidx.slice.builders.SliceAction;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public class ListBuilderBasicImpl extends TemplateBuilderImpl implements ListBuilder {
     private Bundle mHostExtras;
     private IconCompat mIconCompat;
@@ -18,97 +18,86 @@ public class ListBuilderBasicImpl extends TemplateBuilderImpl implements ListBui
     private CharSequence mSubtitle;
     private CharSequence mTitle;
 
-    @Override // androidx.slice.builders.impl.ListBuilder
-    public void addAction(SliceAction action) {
+    public void addAction(SliceAction sliceAction) {
     }
 
-    public ListBuilderBasicImpl(Slice.Builder b, SliceSpec spec) {
-        super(b, spec);
+    public ListBuilderBasicImpl(Slice.Builder builder, SliceSpec sliceSpec) {
+        super(builder, sliceSpec);
     }
 
-    @Override // androidx.slice.builders.impl.ListBuilder
-    public void addRow(ListBuilder.RowBuilder builder) {
-        if (this.mTitle == null && builder.getTitle() != null) {
-            this.mTitle = builder.getTitle();
+    public void addRow(ListBuilder.RowBuilder rowBuilder) {
+        if (this.mTitle == null && rowBuilder.getTitle() != null) {
+            this.mTitle = rowBuilder.getTitle();
         }
-        if (this.mSubtitle == null && builder.getSubtitle() != null) {
-            this.mSubtitle = builder.getSubtitle();
+        if (this.mSubtitle == null && rowBuilder.getSubtitle() != null) {
+            this.mSubtitle = rowBuilder.getSubtitle();
         }
-        if (this.mSliceAction == null && builder.getPrimaryAction() != null) {
-            this.mSliceAction = builder.getPrimaryAction();
+        if (this.mSliceAction == null && rowBuilder.getPrimaryAction() != null) {
+            this.mSliceAction = rowBuilder.getPrimaryAction();
         }
-        if (this.mSliceAction == null && builder.getTitleAction() != null) {
-            this.mSliceAction = builder.getTitleAction();
+        if (this.mSliceAction == null && rowBuilder.getTitleAction() != null) {
+            this.mSliceAction = rowBuilder.getTitleAction();
         }
-        if (this.mIconCompat != null || builder.getTitleIcon() == null) {
-            return;
-        }
-        this.mIconCompat = builder.getTitleIcon();
-    }
-
-    @Override // androidx.slice.builders.impl.ListBuilder
-    public void setHeader(ListBuilder.HeaderBuilder builder) {
-        if (builder.getTitle() != null) {
-            this.mTitle = builder.getTitle();
-        }
-        if (builder.getSubtitle() != null) {
-            this.mSubtitle = builder.getSubtitle();
-        }
-        if (builder.getPrimaryAction() != null) {
-            this.mSliceAction = builder.getPrimaryAction();
+        if (this.mIconCompat == null && rowBuilder.getTitleIcon() != null) {
+            this.mIconCompat = rowBuilder.getTitleIcon();
         }
     }
 
-    @Override // androidx.slice.builders.impl.ListBuilder
-    public void addInputRange(ListBuilder.InputRangeBuilder builder) {
-        if (this.mTitle == null && builder.getTitle() != null) {
-            this.mTitle = builder.getTitle();
+    public void setHeader(ListBuilder.HeaderBuilder headerBuilder) {
+        if (headerBuilder.getTitle() != null) {
+            this.mTitle = headerBuilder.getTitle();
         }
-        if (this.mSubtitle == null && builder.getSubtitle() != null) {
-            this.mSubtitle = builder.getSubtitle();
+        if (headerBuilder.getSubtitle() != null) {
+            this.mSubtitle = headerBuilder.getSubtitle();
         }
-        if (this.mSliceAction == null && builder.getPrimaryAction() != null) {
-            this.mSliceAction = builder.getPrimaryAction();
+        if (headerBuilder.getPrimaryAction() != null) {
+            this.mSliceAction = headerBuilder.getPrimaryAction();
         }
-        if (this.mIconCompat != null || builder.getThumb() == null) {
-            return;
-        }
-        this.mIconCompat = builder.getThumb();
     }
 
-    @Override // androidx.slice.builders.impl.ListBuilder
-    public void setColor(int color) {
-        getBuilder().addInt(color, "color", new String[0]);
-    }
-
-    @Override // androidx.slice.builders.impl.ListBuilder
-    public void setKeywords(Set<String> keywords) {
-        this.mKeywords = keywords;
-    }
-
-    @Override // androidx.slice.builders.impl.ListBuilder
-    public void setTtl(long ttl) {
-        long j = -1;
-        if (ttl != -1) {
-            j = getClock().currentTimeMillis() + ttl;
+    public void addInputRange(ListBuilder.InputRangeBuilder inputRangeBuilder) {
+        if (this.mTitle == null && inputRangeBuilder.getTitle() != null) {
+            this.mTitle = inputRangeBuilder.getTitle();
         }
-        getBuilder().addTimestamp(j, "millis", "ttl");
+        if (this.mSubtitle == null && inputRangeBuilder.getSubtitle() != null) {
+            this.mSubtitle = inputRangeBuilder.getSubtitle();
+        }
+        if (this.mSliceAction == null && inputRangeBuilder.getPrimaryAction() != null) {
+            this.mSliceAction = inputRangeBuilder.getPrimaryAction();
+        }
+        if (this.mIconCompat == null && inputRangeBuilder.getThumb() != null) {
+            this.mIconCompat = inputRangeBuilder.getThumb();
+        }
     }
 
-    @Override // androidx.slice.builders.impl.ListBuilder
-    public void setIsError(boolean isError) {
-        this.mIsError = isError;
+    public void setColor(int i) {
+        getBuilder().addInt(i, "color", new String[0]);
     }
 
-    @Override // androidx.slice.builders.impl.TemplateBuilderImpl
+    public void setKeywords(Set<String> set) {
+        this.mKeywords = set;
+    }
+
+    public void setTtl(long j) {
+        long j2 = -1;
+        if (j != -1) {
+            j2 = getClock().currentTimeMillis() + j;
+        }
+        getBuilder().addTimestamp(j2, "millis", "ttl");
+    }
+
+    public void setIsError(boolean z) {
+        this.mIsError = z;
+    }
+
     public void apply(Slice.Builder builder) {
         if (this.mIsError) {
             builder.addHints("error");
         }
         if (this.mKeywords != null) {
             Slice.Builder builder2 = new Slice.Builder(getBuilder());
-            for (String str : this.mKeywords) {
-                builder2.addText(str, (String) null, new String[0]);
+            for (String addText : this.mKeywords) {
+                builder2.addText((CharSequence) addText, (String) null, new String[0]);
             }
             builder.addSubSlice(builder2.addHints("keywords").build());
         }
@@ -125,11 +114,11 @@ public class ListBuilderBasicImpl extends TemplateBuilderImpl implements ListBui
         }
         CharSequence charSequence = this.mTitle;
         if (charSequence != null) {
-            builder3.addItem(new SliceItem(charSequence, "text", (String) null, new String[]{"title"}));
+            builder3.addItem(new SliceItem((Object) charSequence, "text", (String) null, new String[]{"title"}));
         }
         CharSequence charSequence2 = this.mSubtitle;
         if (charSequence2 != null) {
-            builder3.addItem(new SliceItem(charSequence2, "text", (String) null, new String[0]));
+            builder3.addItem(new SliceItem((Object) charSequence2, "text", (String) null, new String[0]));
         }
         IconCompat iconCompat = this.mIconCompat;
         if (iconCompat != null) {
@@ -137,7 +126,7 @@ public class ListBuilderBasicImpl extends TemplateBuilderImpl implements ListBui
         }
         Bundle bundle = this.mHostExtras;
         if (bundle != null) {
-            builder3.addItem(new SliceItem(bundle, "bundle", "host_extras", new String[0]));
+            builder3.addItem(new SliceItem((Object) bundle, "bundle", "host_extras", new String[0]));
         }
         builder.addSubSlice(builder3.build());
     }

@@ -1,17 +1,16 @@
 package com.android.settings.bluetooth;
 
 import android.content.Context;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settingslib.bluetooth.CachedBluetoothDevice;
 import com.android.settingslib.core.lifecycle.Lifecycle;
-import com.android.settingslib.widget.FooterPreference;
-/* loaded from: classes.dex */
-public class BluetoothDetailsMacAddressController extends BluetoothDetailsController {
-    private FooterPreference mFooterPreference;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
+public class BluetoothDetailsMacAddressController extends BluetoothDetailsController {
+    private Preference mFooterPreference;
+
     public String getPreferenceKey() {
         return "device_details_footer";
     }
@@ -20,15 +19,16 @@ public class BluetoothDetailsMacAddressController extends BluetoothDetailsContro
         super(context, preferenceFragmentCompat, cachedBluetoothDevice, lifecycle);
     }
 
-    @Override // com.android.settings.bluetooth.BluetoothDetailsController
-    protected void init(PreferenceScreen preferenceScreen) {
-        FooterPreference footerPreference = (FooterPreference) preferenceScreen.findPreference("device_details_footer");
-        this.mFooterPreference = footerPreference;
-        footerPreference.setTitle(((BluetoothDetailsController) this).mContext.getString(R.string.bluetooth_device_mac_address, this.mCachedDevice.getAddress()));
+    /* access modifiers changed from: protected */
+    public void init(PreferenceScreen preferenceScreen) {
+        Preference findPreference = preferenceScreen.findPreference("device_details_footer");
+        this.mFooterPreference = findPreference;
+        findPreference.setTitle(R$string.bluetooth);
+        this.mFooterPreference.setSummary((CharSequence) this.mCachedDevice.getAddress());
     }
 
-    @Override // com.android.settings.bluetooth.BluetoothDetailsController
-    protected void refresh() {
-        this.mFooterPreference.setTitle(((BluetoothDetailsController) this).mContext.getString(R.string.bluetooth_device_mac_address, this.mCachedDevice.getAddress()));
+    /* access modifiers changed from: protected */
+    public void refresh() {
+        this.mFooterPreference.setSummary((CharSequence) this.mCachedDevice.getAddress());
     }
 }

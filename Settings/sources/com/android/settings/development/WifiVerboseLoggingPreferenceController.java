@@ -6,13 +6,12 @@ import androidx.preference.Preference;
 import androidx.preference.SwitchPreference;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.development.DeveloperOptionsPreferenceController;
-/* loaded from: classes.dex */
+
 public class WifiVerboseLoggingPreferenceController extends DeveloperOptionsPreferenceController implements Preference.OnPreferenceChangeListener, PreferenceControllerMixin {
     static final int SETTING_VALUE_OFF = 0;
     static final int SETTING_VALUE_ON = 1;
     private final WifiManager mWifiManager;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "wifi_verbose_logging";
     }
@@ -22,19 +21,16 @@ public class WifiVerboseLoggingPreferenceController extends DeveloperOptionsPref
         this.mWifiManager = (WifiManager) context.getSystemService("wifi");
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         this.mWifiManager.setVerboseLoggingEnabled(((Boolean) obj).booleanValue());
         return true;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         ((SwitchPreference) this.mPreference).setChecked(this.mWifiManager.isVerboseLoggingEnabled());
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController
+    /* access modifiers changed from: protected */
     public void onDeveloperOptionsSwitchDisabled() {
         super.onDeveloperOptionsSwitchDisabled();
         this.mWifiManager.setVerboseLoggingEnabled(false);

@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import android.util.SparseIntArray;
 import androidx.preference.Preference;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
-/* loaded from: classes.dex */
+
 public abstract class BatteryTip implements Comparable<BatteryTip>, Parcelable {
     static final SparseIntArray TIP_ORDER;
     protected boolean mNeedUpdate;
@@ -14,7 +14,6 @@ public abstract class BatteryTip implements Comparable<BatteryTip>, Parcelable {
     protected int mState;
     protected int mType;
 
-    @Override // android.os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -50,23 +49,20 @@ public abstract class BatteryTip implements Comparable<BatteryTip>, Parcelable {
         sparseIntArray.append(7, 8);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public BatteryTip(Parcel parcel) {
+    BatteryTip(Parcel parcel) {
         this.mType = parcel.readInt();
         this.mState = parcel.readInt();
         this.mShowDialog = parcel.readBoolean();
         this.mNeedUpdate = parcel.readBoolean();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public BatteryTip(int i, int i2, boolean z) {
+    BatteryTip(int i, int i2, boolean z) {
         this.mType = i;
         this.mState = i2;
         this.mShowDialog = z;
         this.mNeedUpdate = true;
     }
 
-    @Override // android.os.Parcelable
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeInt(this.mType);
         parcel.writeInt(this.mState);
@@ -105,7 +101,6 @@ public abstract class BatteryTip implements Comparable<BatteryTip>, Parcelable {
         return this.mState != 2;
     }
 
-    @Override // java.lang.Comparable
     public int compareTo(BatteryTip batteryTip) {
         SparseIntArray sparseIntArray = TIP_ORDER;
         return sparseIntArray.get(this.mType) - sparseIntArray.get(batteryTip.mType);

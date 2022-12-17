@@ -6,54 +6,41 @@ import android.util.Log;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
-import com.android.settings.slices.SliceBackgroundWorker;
+import com.android.settings.R$string;
 import com.android.settings.widget.PreferenceCategoryController;
 import com.android.settingslib.core.lifecycle.Lifecycle;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
-/* loaded from: classes.dex */
+
 public class NetworkProviderSimsCategoryController extends PreferenceCategoryController implements LifecycleObserver {
     private static final String KEY_PREFERENCE_CATEGORY_SIM = "provider_model_sim_category";
     private static final String LOG_TAG = "NetworkProviderSimsCategoryController";
     private NetworkProviderSimListController mNetworkProviderSimListController;
     private PreferenceCategory mPreferenceCategory;
 
-    @Override // com.android.settings.widget.PreferenceCategoryController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.widget.PreferenceCategoryController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.widget.PreferenceCategoryController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.widget.PreferenceCategoryController, com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.widget.PreferenceCategoryController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.widget.PreferenceCategoryController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.widget.PreferenceCategoryController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.widget.PreferenceCategoryController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -63,13 +50,11 @@ public class NetworkProviderSimsCategoryController extends PreferenceCategoryCon
         this.mNetworkProviderSimListController = new NetworkProviderSimListController(this.mContext, lifecycle);
     }
 
-    @Override // com.android.settings.widget.PreferenceCategoryController, com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         NetworkProviderSimListController networkProviderSimListController = this.mNetworkProviderSimListController;
         return (networkProviderSimListController == null || !networkProviderSimListController.isAvailable()) ? 2 : 0;
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mNetworkProviderSimListController.displayPreference(preferenceScreen);
@@ -82,7 +67,6 @@ public class NetworkProviderSimsCategoryController extends PreferenceCategoryCon
         }
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         int i;
         super.updateState(preference);
@@ -94,10 +78,10 @@ public class NetworkProviderSimsCategoryController extends PreferenceCategoryCon
         int preferenceCount = preferenceCategory.getPreferenceCount();
         Context context = this.mContext;
         if (preferenceCount > 1) {
-            i = R.string.provider_network_settings_title;
+            i = R$string.provider_network_settings_title;
         } else {
-            i = R.string.sim_category_title;
+            i = R$string.sim_category_title;
         }
-        this.mPreferenceCategory.setTitle(context.getString(i));
+        this.mPreferenceCategory.setTitle((CharSequence) context.getString(i));
     }
 }

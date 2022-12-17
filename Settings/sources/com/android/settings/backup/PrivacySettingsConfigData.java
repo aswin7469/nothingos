@@ -1,7 +1,7 @@
 package com.android.settings.backup;
 
 import android.content.Intent;
-/* loaded from: classes.dex */
+
 public class PrivacySettingsConfigData {
     private static PrivacySettingsConfigData sInstance;
     private boolean mBackupEnabled = false;

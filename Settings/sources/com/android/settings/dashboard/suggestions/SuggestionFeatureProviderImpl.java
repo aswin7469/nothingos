@@ -16,21 +16,18 @@ import com.android.settings.wallpaper.StyleSuggestionActivity;
 import com.android.settings.wallpaper.WallpaperSuggestionActivity;
 import com.android.settings.wifi.calling.WifiCallingSuggestionActivity;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
-/* loaded from: classes.dex */
+
 public class SuggestionFeatureProviderImpl implements SuggestionFeatureProvider {
     private final MetricsFeatureProvider mMetricsFeatureProvider;
 
-    @Override // com.android.settings.dashboard.suggestions.SuggestionFeatureProvider
     public Class<? extends Fragment> getContextualSuggestionFragment() {
         return null;
     }
 
-    @Override // com.android.settings.dashboard.suggestions.SuggestionFeatureProvider
     public ComponentName getSuggestionServiceComponent() {
         return new ComponentName("com.android.settings.intelligence", "com.android.settings.intelligence.suggestions.SuggestionService");
     }
 
-    @Override // com.android.settings.dashboard.suggestions.SuggestionFeatureProvider
     public boolean isSuggestionComplete(Context context, ComponentName componentName) {
         String className = componentName.getClassName();
         if (className.equals(WallpaperSuggestionActivity.class.getName())) {
@@ -54,13 +51,12 @@ public class SuggestionFeatureProviderImpl implements SuggestionFeatureProvider 
         if (className.equals(Settings.NightDisplaySuggestionActivity.class.getName())) {
             return NightDisplayPreferenceController.isSuggestionComplete(context);
         }
-        if (!className.equals(ZenSuggestionActivity.class.getName())) {
-            return false;
+        if (className.equals(ZenSuggestionActivity.class.getName())) {
+            return ZenOnboardingActivity.isSuggestionComplete(context);
         }
-        return ZenOnboardingActivity.isSuggestionComplete(context);
+        return false;
     }
 
-    @Override // com.android.settings.dashboard.suggestions.SuggestionFeatureProvider
     public SharedPreferences getSharedPrefs(Context context) {
         return context.getSharedPreferences("suggestions", 0);
     }

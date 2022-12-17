@@ -5,22 +5,20 @@ import android.util.DisplayMetrics;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
-/* loaded from: classes.dex */
+
 class SmoothCalendarLayoutManager extends LinearLayoutManager {
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public SmoothCalendarLayoutManager(Context context, int i, boolean z) {
+    SmoothCalendarLayoutManager(Context context, int i, boolean z) {
         super(context, i, z);
     }
 
-    @Override // androidx.recyclerview.widget.LinearLayoutManager, androidx.recyclerview.widget.RecyclerView.LayoutManager
     public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int i) {
-        LinearSmoothScroller linearSmoothScroller = new LinearSmoothScroller(recyclerView.getContext()) { // from class: com.google.android.material.datepicker.SmoothCalendarLayoutManager.1
-            @Override // androidx.recyclerview.widget.LinearSmoothScroller
-            protected float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
-                return 100.0f / displayMetrics.densityDpi;
+        C16771 r2 = new LinearSmoothScroller(recyclerView.getContext()) {
+            /* access modifiers changed from: protected */
+            public float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
+                return 100.0f / ((float) displayMetrics.densityDpi);
             }
         };
-        linearSmoothScroller.setTargetPosition(i);
-        startSmoothScroll(linearSmoothScroller);
+        r2.setTargetPosition(i);
+        startSmoothScroll(r2);
     }
 }

@@ -7,7 +7,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.TintTypedArray;
-/* loaded from: classes.dex */
+
 public final class ExpandedMenuView extends ListView implements MenuBuilder.ItemInvoker, MenuView, AdapterView.OnItemClickListener {
     private static final int[] TINT_ATTRS = {16842964, 16843049};
     private int mAnimations;
@@ -30,23 +30,20 @@ public final class ExpandedMenuView extends ListView implements MenuBuilder.Item
         obtainStyledAttributes.recycle();
     }
 
-    @Override // androidx.appcompat.view.menu.MenuView
     public void initialize(MenuBuilder menuBuilder) {
         this.mMenu = menuBuilder;
     }
 
-    @Override // android.widget.ListView, android.widget.AbsListView, android.widget.AdapterView, android.view.ViewGroup, android.view.View
-    protected void onDetachedFromWindow() {
+    /* access modifiers changed from: protected */
+    public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         setChildrenDrawingCacheEnabled(false);
     }
 
-    @Override // androidx.appcompat.view.menu.MenuBuilder.ItemInvoker
     public boolean invokeItem(MenuItemImpl menuItemImpl) {
         return this.mMenu.performItemAction(menuItemImpl, 0);
     }
 
-    @Override // android.widget.AdapterView.OnItemClickListener
     public void onItemClick(AdapterView adapterView, View view, int i, long j) {
         invokeItem((MenuItemImpl) getAdapter().getItem(i));
     }

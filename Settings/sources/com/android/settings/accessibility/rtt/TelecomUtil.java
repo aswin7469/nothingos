@@ -10,7 +10,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-/* loaded from: classes.dex */
+
 public abstract class TelecomUtil {
     public static List<PhoneAccountHandle> getCallCapablePhoneAccounts(Context context) {
         return (List) Optional.ofNullable(getTelecomManager(context).getCallCapablePhoneAccounts()).orElse(new ArrayList());
@@ -21,7 +21,7 @@ public abstract class TelecomUtil {
     }
 
     public static int getSubIdForPhoneAccountHandle(Context context, PhoneAccountHandle phoneAccountHandle) {
-        return ((Integer) getSubscriptionInfo(context, phoneAccountHandle).map(TelecomUtil$$ExternalSyntheticLambda0.INSTANCE).orElse(-1)).intValue();
+        return ((Integer) getSubscriptionInfo(context, phoneAccountHandle).map(new TelecomUtil$$ExternalSyntheticLambda0()).orElse(-1)).intValue();
     }
 
     private static Optional<SubscriptionInfo> getSubscriptionInfo(Context context, PhoneAccountHandle phoneAccountHandle) {
@@ -32,9 +32,9 @@ public abstract class TelecomUtil {
         if (activeSubscriptionInfoList == null) {
             return Optional.empty();
         }
-        for (SubscriptionInfo subscriptionInfo : activeSubscriptionInfoList) {
-            if (phoneAccountHandle.getId().startsWith(subscriptionInfo.getIccId())) {
-                return Optional.of(subscriptionInfo);
+        for (SubscriptionInfo next : activeSubscriptionInfoList) {
+            if (phoneAccountHandle.getId().startsWith(next.getIccId())) {
+                return Optional.of(next);
             }
         }
         Log.d("TelecomUtil", "Failed to find SubscriptionInfo for phoneAccountHandle");

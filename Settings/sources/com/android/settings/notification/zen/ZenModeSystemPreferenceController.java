@@ -5,14 +5,12 @@ import android.util.Log;
 import androidx.preference.Preference;
 import androidx.preference.SwitchPreference;
 import com.android.settingslib.core.lifecycle.Lifecycle;
-/* loaded from: classes.dex */
+
 public class ZenModeSystemPreferenceController extends AbstractZenModePreferenceController implements Preference.OnPreferenceChangeListener {
-    @Override // com.android.settings.notification.zen.AbstractZenModePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "zen_mode_system";
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return true;
     }
@@ -21,7 +19,6 @@ public class ZenModeSystemPreferenceController extends AbstractZenModePreference
         super(context, "zen_mode_system", lifecycle);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         SwitchPreference switchPreference = (SwitchPreference) preference;
@@ -29,16 +26,15 @@ public class ZenModeSystemPreferenceController extends AbstractZenModePreference
         if (zenMode == 2) {
             switchPreference.setEnabled(false);
             switchPreference.setChecked(false);
-        } else if (zenMode == 3) {
-            switchPreference.setEnabled(false);
-            switchPreference.setChecked(false);
-        } else {
+        } else if (zenMode != 3) {
             switchPreference.setEnabled(true);
             switchPreference.setChecked(this.mBackend.isPriorityCategoryEnabled(128));
+        } else {
+            switchPreference.setEnabled(false);
+            switchPreference.setChecked(false);
         }
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         boolean booleanValue = ((Boolean) obj).booleanValue();
         if (ZenModeSettingsBase.DEBUG) {

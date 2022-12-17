@@ -6,9 +6,8 @@ import androidx.preference.Preference;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settings.notification.NotificationBackend;
 import com.android.settingslib.RestrictedSwitchPreference;
-/* loaded from: classes.dex */
+
 public class LightsPreferenceController extends NotificationPreferenceController implements PreferenceControllerMixin, Preference.OnPreferenceChangeListener {
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "lights";
     }
@@ -17,17 +16,18 @@ public class LightsPreferenceController extends NotificationPreferenceController
         super(context, notificationBackend);
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
-        return super.isAvailable() && this.mChannel != null && checkCanBeVisible(3) && canPulseLight() && !isDefaultChannel();
+        if (super.isAvailable() && this.mChannel != null && checkCanBeVisible(3) && canPulseLight() && !isDefaultChannel()) {
+            return true;
+        }
+        return false;
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController
-    boolean isIncludedInFilter() {
+    /* access modifiers changed from: package-private */
+    public boolean isIncludedInFilter() {
         return this.mPreferenceFilter.contains("locked");
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         if (this.mChannel != null) {
             RestrictedSwitchPreference restrictedSwitchPreference = (RestrictedSwitchPreference) preference;
@@ -37,17 +37,20 @@ public class LightsPreferenceController extends NotificationPreferenceController
         }
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
-        if (this.mChannel != null) {
-            this.mChannel.enableLights(((Boolean) obj).booleanValue());
-            saveChannel();
+        if (this.mChannel == null) {
             return true;
         }
+        this.mChannel.enableLights(((Boolean) obj).booleanValue());
+        saveChannel();
         return true;
     }
 
-    boolean canPulseLight() {
-        return ((NotificationPreferenceController) this).mContext.getResources().getBoolean(17891577) && Settings.System.getInt(((NotificationPreferenceController) this).mContext.getContentResolver(), "notification_light_pulse", 0) == 1;
+    /* access modifiers changed from: package-private */
+    public boolean canPulseLight() {
+        if (this.mContext.getResources().getBoolean(17891684) && Settings.System.getInt(this.mContext.getContentResolver(), "notification_light_pulse", 0) == 1) {
+            return true;
+        }
+        return false;
     }
 }

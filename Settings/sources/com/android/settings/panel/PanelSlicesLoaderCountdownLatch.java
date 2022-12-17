@@ -4,22 +4,21 @@ import android.net.Uri;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
-/* loaded from: classes.dex */
+
 public class PanelSlicesLoaderCountdownLatch {
     private final CountDownLatch mCountDownLatch;
-    private boolean slicesReadyToLoad = false;
     private final Set<Uri> mLoadedSlices = new HashSet();
+    private boolean slicesReadyToLoad = false;
 
     public PanelSlicesLoaderCountdownLatch(int i) {
         this.mCountDownLatch = new CountDownLatch(i);
     }
 
     public void markSliceLoaded(Uri uri) {
-        if (this.mLoadedSlices.contains(uri)) {
-            return;
+        if (!this.mLoadedSlices.contains(uri)) {
+            this.mLoadedSlices.add(uri);
+            this.mCountDownLatch.countDown();
         }
-        this.mLoadedSlices.add(uri);
-        this.mCountDownLatch.countDown();
     }
 
     public boolean isSliceLoaded(Uri uri) {

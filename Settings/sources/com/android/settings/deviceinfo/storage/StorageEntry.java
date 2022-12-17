@@ -8,22 +8,16 @@ import android.os.storage.StorageManager;
 import android.os.storage.VolumeInfo;
 import android.os.storage.VolumeRecord;
 import android.text.TextUtils;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import java.io.File;
-/* loaded from: classes.dex */
+
 public class StorageEntry implements Comparable<StorageEntry>, Parcelable {
-    public static final Parcelable.Creator<StorageEntry> CREATOR = new Parcelable.Creator<StorageEntry>() { // from class: com.android.settings.deviceinfo.storage.StorageEntry.1
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: createFromParcel */
-        public StorageEntry mo323createFromParcel(Parcel parcel) {
+    public static final Parcelable.Creator<StorageEntry> CREATOR = new Parcelable.Creator<StorageEntry>() {
+        public StorageEntry createFromParcel(Parcel parcel) {
             return new StorageEntry(parcel);
         }
 
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: newArray */
-        public StorageEntry[] mo324newArray(int i) {
+        public StorageEntry[] newArray(int i) {
             return new StorageEntry[i];
         }
     };
@@ -32,7 +26,6 @@ public class StorageEntry implements Comparable<StorageEntry>, Parcelable {
     private final VolumeInfo mVolumeInfo;
     private final String mVolumeInfoDescription;
 
-    @Override // android.os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -42,7 +35,7 @@ public class StorageEntry implements Comparable<StorageEntry>, Parcelable {
         this.mUnsupportedDiskInfo = null;
         this.mMissingVolumeRecord = null;
         if (isDefaultInternalStorage()) {
-            this.mVolumeInfoDescription = context.getResources().getString(R.string.storage_default_internal_storage);
+            this.mVolumeInfoDescription = context.getResources().getString(R$string.storage_default_internal_storage);
         } else {
             this.mVolumeInfoDescription = ((StorageManager) context.getSystemService(StorageManager.class)).getBestVolumeDescription(volumeInfo);
         }
@@ -69,7 +62,6 @@ public class StorageEntry implements Comparable<StorageEntry>, Parcelable {
         this.mVolumeInfoDescription = parcel.readString();
     }
 
-    @Override // android.os.Parcelable
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeParcelable(this.mVolumeInfo, 0);
         parcel.writeParcelable(this.mUnsupportedDiskInfo, 0);
@@ -114,42 +106,41 @@ public class StorageEntry implements Comparable<StorageEntry>, Parcelable {
         return this.mMissingVolumeRecord.toString();
     }
 
-    @Override // java.lang.Comparable
     public int compareTo(StorageEntry storageEntry) {
-        if (!isDefaultInternalStorage() || storageEntry.isDefaultInternalStorage()) {
-            if (!isDefaultInternalStorage() && storageEntry.isDefaultInternalStorage()) {
-                return 1;
-            }
-            if (isVolumeInfo() && !storageEntry.isVolumeInfo()) {
-                return -1;
-            }
-            if (!isVolumeInfo() && storageEntry.isVolumeInfo()) {
-                return 1;
-            }
-            if (isPrivate() && !storageEntry.isPrivate()) {
-                return -1;
-            }
-            if (!isPrivate() && storageEntry.isPrivate()) {
-                return 1;
-            }
-            if (isMounted() && !storageEntry.isMounted()) {
-                return -1;
-            }
-            if (!isMounted() && storageEntry.isMounted()) {
-                return 1;
-            }
-            if (!isVolumeRecordMissed() && storageEntry.isVolumeRecordMissed()) {
-                return -1;
-            }
-            if ((isVolumeRecordMissed() && !storageEntry.isVolumeRecordMissed()) || getDescription() == null) {
-                return 1;
-            }
-            if (storageEntry.getDescription() != null) {
-                return getDescription().compareTo(storageEntry.getDescription());
-            }
+        if (isDefaultInternalStorage() && !storageEntry.isDefaultInternalStorage()) {
             return -1;
         }
-        return -1;
+        if (!isDefaultInternalStorage() && storageEntry.isDefaultInternalStorage()) {
+            return 1;
+        }
+        if (isVolumeInfo() && !storageEntry.isVolumeInfo()) {
+            return -1;
+        }
+        if (!isVolumeInfo() && storageEntry.isVolumeInfo()) {
+            return 1;
+        }
+        if (isPrivate() && !storageEntry.isPrivate()) {
+            return -1;
+        }
+        if (!isPrivate() && storageEntry.isPrivate()) {
+            return 1;
+        }
+        if (isMounted() && !storageEntry.isMounted()) {
+            return -1;
+        }
+        if (!isMounted() && storageEntry.isMounted()) {
+            return 1;
+        }
+        if (!isVolumeRecordMissed() && storageEntry.isVolumeRecordMissed()) {
+            return -1;
+        }
+        if ((isVolumeRecordMissed() && !storageEntry.isVolumeRecordMissed()) || getDescription() == null) {
+            return 1;
+        }
+        if (storageEntry.getDescription() == null) {
+            return -1;
+        }
+        return getDescription().compareTo(storageEntry.getDescription());
     }
 
     public static StorageEntry getDefaultInternalStorageEntry(Context context) {
@@ -169,7 +160,10 @@ public class StorageEntry implements Comparable<StorageEntry>, Parcelable {
     }
 
     public boolean isDefaultInternalStorage() {
-        return isVolumeInfo() && this.mVolumeInfo.getType() == 1 && TextUtils.equals(this.mVolumeInfo.getId(), "private");
+        if (!isVolumeInfo() || this.mVolumeInfo.getType() != 1 || !TextUtils.equals(this.mVolumeInfo.getId(), "private")) {
+            return false;
+        }
+        return true;
     }
 
     public boolean isMounted() {
@@ -177,7 +171,10 @@ public class StorageEntry implements Comparable<StorageEntry>, Parcelable {
         if (volumeInfo == null) {
             return false;
         }
-        return volumeInfo.getState() == 2 || this.mVolumeInfo.getState() == 3;
+        if (volumeInfo.getState() == 2 || this.mVolumeInfo.getState() == 3) {
+            return true;
+        }
+        return false;
     }
 
     public boolean isUnmounted() {
@@ -224,20 +221,20 @@ public class StorageEntry implements Comparable<StorageEntry>, Parcelable {
         if (isVolumeInfo()) {
             return this.mVolumeInfo.getDiskId();
         }
-        if (!isDiskInfoUnsupported()) {
-            return null;
+        if (isDiskInfoUnsupported()) {
+            return this.mUnsupportedDiskInfo.getId();
         }
-        return this.mUnsupportedDiskInfo.getId();
+        return null;
     }
 
     public String getFsUuid() {
         if (isVolumeInfo()) {
             return this.mVolumeInfo.getFsUuid();
         }
-        if (!isDiskInfoUnsupported()) {
-            return this.mMissingVolumeRecord.getFsUuid();
+        if (isDiskInfoUnsupported()) {
+            return null;
         }
-        return null;
+        return this.mMissingVolumeRecord.getFsUuid();
     }
 
     public File getPath() {

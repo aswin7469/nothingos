@@ -8,29 +8,32 @@ import com.google.zxing.ResultPoint;
 import com.google.zxing.common.BitArray;
 import java.util.EnumMap;
 import java.util.Map;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes2.dex */
-public final class UPCEANExtension5Support {
+
+final class UPCEANExtension5Support {
     private static final int[] CHECK_DIGIT_ENCODINGS = {24, 20, 18, 17, 12, 6, 3, 10, 9, 5};
     private final int[] decodeMiddleCounters = new int[4];
     private final StringBuilder decodeRowStringBuffer = new StringBuilder();
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    UPCEANExtension5Support() {
+    }
+
+    /* access modifiers changed from: package-private */
     public Result decodeRow(int i, BitArray bitArray, int[] iArr) throws NotFoundException {
         StringBuilder sb = this.decodeRowStringBuffer;
         sb.setLength(0);
         int decodeMiddle = decodeMiddle(bitArray, iArr, sb);
         String sb2 = sb.toString();
         Map<ResultMetadataType, Object> parseExtensionString = parseExtensionString(sb2);
-        float f = i;
-        Result result = new Result(sb2, null, new ResultPoint[]{new ResultPoint((iArr[0] + iArr[1]) / 2.0f, f), new ResultPoint(decodeMiddle, f)}, BarcodeFormat.UPC_EAN_EXTENSION);
+        float f = (float) i;
+        Result result = new Result(sb2, (byte[]) null, new ResultPoint[]{new ResultPoint(((float) (iArr[0] + iArr[1])) / 2.0f, f), new ResultPoint((float) decodeMiddle, f)}, BarcodeFormat.UPC_EAN_EXTENSION);
         if (parseExtensionString != null) {
             result.putAllMetadata(parseExtensionString);
         }
         return result;
     }
 
-    int decodeMiddle(BitArray bitArray, int[] iArr, StringBuilder sb) throws NotFoundException {
+    /* access modifiers changed from: package-private */
+    public int decodeMiddle(BitArray bitArray, int[] iArr, StringBuilder sb) throws NotFoundException {
         int[] iArr2 = this.decodeMiddleCounters;
         iArr2[0] = 0;
         iArr2[1] = 0;
@@ -52,13 +55,13 @@ public final class UPCEANExtension5Support {
                 i = bitArray.getNextUnset(bitArray.getNextSet(i));
             }
         }
-        if (sb.length() != 5) {
+        if (sb.length() == 5) {
+            if (extensionChecksum(sb.toString()) == determineCheckDigit(i2)) {
+                return i;
+            }
             throw NotFoundException.getNotFoundInstance();
         }
-        if (extensionChecksum(sb.toString()) != determineCheckDigit(i2)) {
-            throw NotFoundException.getNotFoundInstance();
-        }
-        return i;
+        throw NotFoundException.getNotFoundInstance();
     }
 
     private static int extensionChecksum(CharSequence charSequence) {
@@ -85,22 +88,22 @@ public final class UPCEANExtension5Support {
 
     private static Map<ResultMetadataType, Object> parseExtensionString(String str) {
         String parseExtension5String;
-        if (str.length() == 5 && (parseExtension5String = parseExtension5String(str)) != null) {
-            EnumMap enumMap = new EnumMap(ResultMetadataType.class);
-            enumMap.put((EnumMap) ResultMetadataType.SUGGESTED_PRICE, (ResultMetadataType) parseExtension5String);
-            return enumMap;
+        if (str.length() != 5 || (parseExtension5String = parseExtension5String(str)) == null) {
+            return null;
         }
-        return null;
+        EnumMap enumMap = new EnumMap(ResultMetadataType.class);
+        enumMap.put(ResultMetadataType.SUGGESTED_PRICE, parseExtension5String);
+        return enumMap;
     }
 
     private static String parseExtension5String(String str) {
-        String valueOf;
+        String str2;
         char charAt = str.charAt(0);
-        String str2 = "";
+        String str3 = "";
         if (charAt == '0') {
-            str2 = "£";
+            str3 = "£";
         } else if (charAt == '5') {
-            str2 = "$";
+            str3 = "$";
         } else if (charAt == '9') {
             if ("90000".equals(str)) {
                 return null;
@@ -113,13 +116,13 @@ public final class UPCEANExtension5Support {
             }
         }
         int parseInt = Integer.parseInt(str.substring(1));
-        String valueOf2 = String.valueOf(parseInt / 100);
+        String valueOf = String.valueOf(parseInt / 100);
         int i = parseInt % 100;
         if (i < 10) {
-            valueOf = "0" + i;
+            str2 = "0" + i;
         } else {
-            valueOf = String.valueOf(i);
+            str2 = String.valueOf(i);
         }
-        return str2 + valueOf2 + '.' + valueOf;
+        return str3 + valueOf + '.' + str2;
     }
 }

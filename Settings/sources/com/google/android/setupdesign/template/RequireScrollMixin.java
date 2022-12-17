@@ -7,22 +7,22 @@ import android.view.View;
 import com.google.android.setupcompat.internal.TemplateLayout;
 import com.google.android.setupcompat.template.FooterButton;
 import com.google.android.setupcompat.template.Mixin;
-/* loaded from: classes2.dex */
-public class RequireScrollMixin implements Mixin {
-    private ScrollHandlingDelegate delegate;
-    private OnRequireScrollStateChangedListener listener;
-    private final Handler handler = new Handler(Looper.getMainLooper());
-    private boolean requiringScrollToBottom = false;
-    private boolean everScrolledToBottom = false;
 
-    /* loaded from: classes2.dex */
+public class RequireScrollMixin implements Mixin {
+    /* access modifiers changed from: private */
+    public ScrollHandlingDelegate delegate;
+    private boolean everScrolledToBottom = false;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    /* access modifiers changed from: private */
+    public OnRequireScrollStateChangedListener listener;
+    /* access modifiers changed from: private */
+    public boolean requiringScrollToBottom = false;
+
     public interface OnRequireScrollStateChangedListener {
         void onRequireScrollStateChanged(boolean z);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes2.dex */
-    public interface ScrollHandlingDelegate {
+    interface ScrollHandlingDelegate {
         void pageScrollDown();
 
         void startListening();
@@ -40,18 +40,16 @@ public class RequireScrollMixin implements Mixin {
     }
 
     public View.OnClickListener createOnClickListener(final View.OnClickListener onClickListener) {
-        return new View.OnClickListener() { // from class: com.google.android.setupdesign.template.RequireScrollMixin.1
-            @Override // android.view.View.OnClickListener
+        return new View.OnClickListener() {
             public void onClick(View view) {
                 if (RequireScrollMixin.this.requiringScrollToBottom) {
                     RequireScrollMixin.this.delegate.pageScrollDown();
                     return;
                 }
-                View.OnClickListener onClickListener2 = onClickListener;
-                if (onClickListener2 == null) {
-                    return;
+                View.OnClickListener onClickListener = onClickListener;
+                if (onClickListener != null) {
+                    onClickListener.onClick(view);
                 }
-                onClickListener2.onClick(view);
             }
         };
     }
@@ -63,8 +61,7 @@ public class RequireScrollMixin implements Mixin {
     public void requireScrollWithButton(final FooterButton footerButton, final CharSequence charSequence, View.OnClickListener onClickListener) {
         final CharSequence text = footerButton.getText();
         footerButton.setOnClickListener(createOnClickListener(onClickListener));
-        setOnRequireScrollStateChangedListener(new OnRequireScrollStateChangedListener() { // from class: com.google.android.setupdesign.template.RequireScrollMixin.4
-            @Override // com.google.android.setupdesign.template.RequireScrollMixin.OnRequireScrollStateChangedListener
+        setOnRequireScrollStateChangedListener(new OnRequireScrollStateChangedListener() {
             public void onRequireScrollStateChanged(boolean z) {
                 footerButton.setText(z ? charSequence : text);
             }
@@ -76,27 +73,22 @@ public class RequireScrollMixin implements Mixin {
         this.delegate.startListening();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void notifyScrollabilityChange(boolean z) {
-        if (z == this.requiringScrollToBottom) {
-            return;
-        }
-        if (z) {
-            if (this.everScrolledToBottom) {
-                return;
+        if (z != this.requiringScrollToBottom) {
+            if (!z) {
+                postScrollStateChange(false);
+                this.requiringScrollToBottom = false;
+                this.everScrolledToBottom = true;
+            } else if (!this.everScrolledToBottom) {
+                postScrollStateChange(true);
+                this.requiringScrollToBottom = true;
             }
-            postScrollStateChange(true);
-            this.requiringScrollToBottom = true;
-            return;
         }
-        postScrollStateChange(false);
-        this.requiringScrollToBottom = false;
-        this.everScrolledToBottom = true;
     }
 
     private void postScrollStateChange(final boolean z) {
-        this.handler.post(new Runnable() { // from class: com.google.android.setupdesign.template.RequireScrollMixin.5
-            @Override // java.lang.Runnable
+        this.handler.post(new Runnable() {
             public void run() {
                 if (RequireScrollMixin.this.listener != null) {
                     RequireScrollMixin.this.listener.onRequireScrollStateChanged(z);

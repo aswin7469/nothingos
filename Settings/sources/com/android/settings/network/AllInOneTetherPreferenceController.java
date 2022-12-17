@@ -12,77 +12,63 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.BasePreferenceController;
 import com.android.settings.network.TetherEnabler;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settings.widget.GenericSwitchController;
-import com.android.settings.widget.PrimarySwitchPreference;
+import com.android.settingslib.PrimarySwitchPreference;
 import com.android.settingslib.RestrictedLockUtilsInternal;
 import com.android.settingslib.TetherUtil;
 import java.util.concurrent.atomic.AtomicReference;
-/* loaded from: classes.dex */
+
 public class AllInOneTetherPreferenceController extends BasePreferenceController implements LifecycleObserver, TetherEnabler.OnTetherStateUpdateListener {
     private static final String TAG = "AllInOneTetherPreferenceController";
     private final boolean mAdminDisallowedTetherConfig;
     private final BluetoothAdapter mBluetoothAdapter;
-    private final AtomicReference<BluetoothPan> mBluetoothPan;
+    /* access modifiers changed from: private */
+    public final AtomicReference<BluetoothPan> mBluetoothPan;
     final BluetoothProfile.ServiceListener mBtProfileServiceListener;
     private PrimarySwitchPreference mPreference;
     private TetherEnabler mTetherEnabler;
     private int mTetheringState;
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
 
     AllInOneTetherPreferenceController() {
-        super(null, "test");
-        this.mBtProfileServiceListener = new BluetoothProfile.ServiceListener() { // from class: com.android.settings.network.AllInOneTetherPreferenceController.1
-            @Override // android.bluetooth.BluetoothProfile.ServiceListener
+        super((Context) null, "test");
+        this.mBtProfileServiceListener = new BluetoothProfile.ServiceListener() {
             public void onServiceConnected(int i, BluetoothProfile bluetoothProfile) {
                 AllInOneTetherPreferenceController.this.mBluetoothPan.set((BluetoothPan) bluetoothProfile);
             }
 
-            @Override // android.bluetooth.BluetoothProfile.ServiceListener
             public void onServiceDisconnected(int i) {
-                AllInOneTetherPreferenceController.this.mBluetoothPan.set(null);
+                AllInOneTetherPreferenceController.this.mBluetoothPan.set((Object) null);
             }
         };
         this.mAdminDisallowedTetherConfig = false;
@@ -92,15 +78,13 @@ public class AllInOneTetherPreferenceController extends BasePreferenceController
 
     public AllInOneTetherPreferenceController(Context context, String str) {
         super(context, str);
-        this.mBtProfileServiceListener = new BluetoothProfile.ServiceListener() { // from class: com.android.settings.network.AllInOneTetherPreferenceController.1
-            @Override // android.bluetooth.BluetoothProfile.ServiceListener
+        this.mBtProfileServiceListener = new BluetoothProfile.ServiceListener() {
             public void onServiceConnected(int i, BluetoothProfile bluetoothProfile) {
                 AllInOneTetherPreferenceController.this.mBluetoothPan.set((BluetoothPan) bluetoothProfile);
             }
 
-            @Override // android.bluetooth.BluetoothProfile.ServiceListener
             public void onServiceDisconnected(int i) {
-                AllInOneTetherPreferenceController.this.mBluetoothPan.set(null);
+                AllInOneTetherPreferenceController.this.mBluetoothPan.set((Object) null);
             }
         };
         this.mBluetoothPan = new AtomicReference<>();
@@ -108,59 +92,55 @@ public class AllInOneTetherPreferenceController extends BasePreferenceController
         this.mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = (PrimarySwitchPreference) preferenceScreen.findPreference(this.mPreferenceKey);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return (!TetherUtil.isTetherAvailable(this.mContext) || !FeatureFlagUtils.isEnabled(this.mContext, "settings_tether_all_in_one")) ? 2 : 0;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    /* renamed from: getSummary */
-    public CharSequence mo485getSummary() {
+    public CharSequence getSummary() {
         int i = this.mTetheringState;
         switch (i) {
             case 0:
-                return this.mContext.getString(R.string.tether_settings_summary_off);
+                return this.mContext.getString(R$string.tether_settings_summary_off);
             case 1:
-                return this.mContext.getString(R.string.tether_settings_summary_hotspot_only);
+                return this.mContext.getString(R$string.tether_settings_summary_hotspot_only);
             case 2:
-                return this.mContext.getString(R.string.tether_settings_summary_usb_tethering_only);
+                return this.mContext.getString(R$string.tether_settings_summary_usb_tethering_only);
             case 3:
-                return this.mContext.getString(R.string.tether_settings_summary_hotspot_and_usb);
+                return this.mContext.getString(R$string.tether_settings_summary_hotspot_and_usb);
             case 4:
-                return this.mContext.getString(R.string.tether_settings_summary_bluetooth_tethering_only);
+                return this.mContext.getString(R$string.tether_settings_summary_bluetooth_tethering_only);
             case 5:
-                return this.mContext.getString(R.string.tether_settings_summary_hotspot_and_bluetooth);
+                return this.mContext.getString(R$string.tether_settings_summary_hotspot_and_bluetooth);
             case 6:
-                return this.mContext.getString(R.string.tether_settings_summary_usb_and_bluetooth);
+                return this.mContext.getString(R$string.tether_settings_summary_usb_and_bluetooth);
             case 7:
-                return this.mContext.getString(R.string.tether_settings_summary_hotspot_and_usb_and_bluetooth);
+                return this.mContext.getString(R$string.tether_settings_summary_hotspot_and_usb_and_bluetooth);
             default:
                 switch (i) {
                     case 32:
-                        return this.mContext.getString(R.string.tether_settings_summary_ethernet_tethering_only);
+                        return this.mContext.getString(R$string.tether_settings_summary_ethernet_tethering_only);
                     case 33:
-                        return this.mContext.getString(R.string.tether_settings_summary_hotspot_and_ethernet);
+                        return this.mContext.getString(R$string.tether_settings_summary_hotspot_and_ethernet);
                     case 34:
-                        return this.mContext.getString(R.string.tether_settings_summary_usb_and_ethernet);
+                        return this.mContext.getString(R$string.tether_settings_summary_usb_and_ethernet);
                     case 35:
-                        return this.mContext.getString(R.string.tether_settings_summary_hotspot_and_usb_and_ethernet);
+                        return this.mContext.getString(R$string.tether_settings_summary_hotspot_and_usb_and_ethernet);
                     case 36:
-                        return this.mContext.getString(R.string.tether_settings_summary_bluetooth_and_ethernet);
+                        return this.mContext.getString(R$string.tether_settings_summary_bluetooth_and_ethernet);
                     case 37:
-                        return this.mContext.getString(R.string.tether_settings_summary_hotspot_and_bluetooth_and_ethernet);
+                        return this.mContext.getString(R$string.tether_settings_summary_hotspot_and_bluetooth_and_ethernet);
                     case 38:
-                        return this.mContext.getString(R.string.tether_settings_summary_usb_and_bluetooth_and_ethernet);
+                        return this.mContext.getString(R$string.tether_settings_summary_usb_and_bluetooth_and_ethernet);
                     case 39:
-                        return this.mContext.getString(R.string.tether_settings_summary_all);
+                        return this.mContext.getString(R$string.tether_settings_summary_all);
                     default:
                         Log.e(TAG, "Unknown tethering state");
-                        return this.mContext.getString(R.string.summary_placeholder);
+                        return this.mContext.getString(R$string.summary_placeholder);
                 }
         }
     }
@@ -168,10 +148,9 @@ public class AllInOneTetherPreferenceController extends BasePreferenceController
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     public void onCreate() {
         BluetoothAdapter bluetoothAdapter = this.mBluetoothAdapter;
-        if (bluetoothAdapter == null || bluetoothAdapter.getState() != 12) {
-            return;
+        if (bluetoothAdapter != null && bluetoothAdapter.getState() == 12) {
+            this.mBluetoothAdapter.getProfileProxy(this.mContext, this.mBtProfileServiceListener, 5);
         }
-        this.mBluetoothAdapter.getProfileProxy(this.mContext, this.mBtProfileServiceListener, 5);
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
@@ -193,28 +172,26 @@ public class AllInOneTetherPreferenceController extends BasePreferenceController
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     public void onDestroy() {
         BluetoothAdapter bluetoothAdapter;
-        BluetoothProfile andSet = this.mBluetoothPan.getAndSet(null);
-        if (andSet == null || (bluetoothAdapter = this.mBluetoothAdapter) == null) {
-            return;
+        BluetoothProfile andSet = this.mBluetoothPan.getAndSet((Object) null);
+        if (andSet != null && (bluetoothAdapter = this.mBluetoothAdapter) != null) {
+            bluetoothAdapter.closeProfileProxy(5, andSet);
         }
-        bluetoothAdapter.closeProfileProxy(5, andSet);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void initEnabler(Lifecycle lifecycle) {
         if (this.mPreference != null) {
             TetherEnabler tetherEnabler = new TetherEnabler(this.mContext, new GenericSwitchController(this.mPreference), this.mBluetoothPan);
             this.mTetherEnabler = tetherEnabler;
-            if (lifecycle == null) {
+            if (lifecycle != null) {
+                lifecycle.addObserver(tetherEnabler);
                 return;
             }
-            lifecycle.addObserver(tetherEnabler);
             return;
         }
         Log.e(TAG, "TetherEnabler is not initialized");
     }
 
-    @Override // com.android.settings.network.TetherEnabler.OnTetherStateUpdateListener
     public void onTetherStateUpdated(int i) {
         this.mTetheringState = i;
         updateState(this.mPreference);

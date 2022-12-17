@@ -9,7 +9,7 @@ import com.google.zxing.common.reedsolomon.GenericGF;
 import com.google.zxing.common.reedsolomon.ReedSolomonDecoder;
 import com.google.zxing.common.reedsolomon.ReedSolomonException;
 import java.util.Map;
-/* loaded from: classes2.dex */
+
 public final class Decoder {
     private final ReedSolomonDecoder rsDecoder = new ReedSolomonDecoder(GenericGF.QR_CODE_FIELD_256);
 
@@ -19,43 +19,44 @@ public final class Decoder {
         FormatException formatException = null;
         try {
             return decode(bitMatrixParser, map);
-        } catch (ChecksumException e2) {
-            e = e2;
+        } catch (FormatException e2) {
+            FormatException formatException2 = e2;
+            e = null;
+            formatException = formatException2;
             try {
                 bitMatrixParser.remask();
                 bitMatrixParser.setMirror(true);
                 bitMatrixParser.readVersion();
                 bitMatrixParser.readFormatInformation();
                 bitMatrixParser.mirror();
-                DecoderResult decode = this.decode(bitMatrixParser, map);
+                DecoderResult decode = decode(bitMatrixParser, map);
                 decode.setOther(new QRCodeDecoderMetaData(true));
                 return decode;
-            } catch (ChecksumException e3) {
+            } catch (FormatException e3) {
                 if (formatException != null) {
                     throw formatException;
-                }
-                if (e != null) {
+                } else if (e != null) {
                     throw e;
+                } else {
+                    throw e3;
                 }
-                throw e3;
-            } catch (FormatException e4) {
+            } catch (ChecksumException e4) {
                 if (formatException != null) {
                     throw formatException;
-                }
-                if (e != null) {
+                } else if (e != null) {
                     throw e;
+                } else {
+                    throw e4;
                 }
-                throw e4;
             }
-        } catch (FormatException e5) {
-            e = null;
-            formatException = e5;
+        } catch (ChecksumException e5) {
+            e = e5;
             bitMatrixParser.remask();
             bitMatrixParser.setMirror(true);
             bitMatrixParser.readVersion();
             bitMatrixParser.readFormatInformation();
             bitMatrixParser.mirror();
-            DecoderResult decode2 = this.decode(bitMatrixParser, map);
+            DecoderResult decode2 = decode(bitMatrixParser, map);
             decode2.setOther(new QRCodeDecoderMetaData(true));
             return decode2;
         }
@@ -66,17 +67,17 @@ public final class Decoder {
         ErrorCorrectionLevel errorCorrectionLevel = bitMatrixParser.readFormatInformation().getErrorCorrectionLevel();
         DataBlock[] dataBlocks = DataBlock.getDataBlocks(bitMatrixParser.readCodewords(), readVersion, errorCorrectionLevel);
         int i = 0;
-        for (DataBlock dataBlock : dataBlocks) {
-            i += dataBlock.getNumDataCodewords();
+        for (DataBlock numDataCodewords : dataBlocks) {
+            i += numDataCodewords.getNumDataCodewords();
         }
         byte[] bArr = new byte[i];
         int i2 = 0;
-        for (DataBlock dataBlock2 : dataBlocks) {
-            byte[] codewords = dataBlock2.getCodewords();
-            int numDataCodewords = dataBlock2.getNumDataCodewords();
-            correctErrors(codewords, numDataCodewords);
+        for (DataBlock dataBlock : dataBlocks) {
+            byte[] codewords = dataBlock.getCodewords();
+            int numDataCodewords2 = dataBlock.getNumDataCodewords();
+            correctErrors(codewords, numDataCodewords2);
             int i3 = 0;
-            while (i3 < numDataCodewords) {
+            while (i3 < numDataCodewords2) {
                 bArr[i2] = codewords[i3];
                 i3++;
                 i2++;

@@ -4,15 +4,18 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.os.Build;
-import android.view.ViewConfiguration;
+import android.util.AttributeSet;
 import androidx.appcompat.R$attr;
 import androidx.appcompat.R$bool;
 import androidx.appcompat.R$dimen;
 import androidx.appcompat.R$styleable;
-/* loaded from: classes.dex */
+
 public class ActionBarPolicy {
     private Context mContext;
+
+    public boolean showsOverflowMenuButton() {
+        return true;
+    }
 
     public static ActionBarPolicy get(Context context) {
         return new ActionBarPolicy(context);
@@ -41,17 +44,10 @@ public class ActionBarPolicy {
         if (i > 640 && i2 > 480) {
             return 4;
         }
-        if (i > 480 && i2 > 640) {
-            return 4;
+        if (i <= 480 || i2 <= 640) {
+            return i >= 360 ? 3 : 2;
         }
-        return i >= 360 ? 3 : 2;
-    }
-
-    public boolean showsOverflowMenuButton() {
-        if (Build.VERSION.SDK_INT >= 19) {
-            return true;
-        }
-        return !ViewConfiguration.get(this.mContext).hasPermanentMenuKey();
+        return 4;
     }
 
     public int getEmbeddedMenuWidthLimit() {
@@ -63,7 +59,7 @@ public class ActionBarPolicy {
     }
 
     public int getTabContainerHeight() {
-        TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(null, R$styleable.ActionBar, R$attr.actionBarStyle, 0);
+        TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes((AttributeSet) null, R$styleable.ActionBar, R$attr.actionBarStyle, 0);
         int layoutDimension = obtainStyledAttributes.getLayoutDimension(R$styleable.ActionBar_height, 0);
         Resources resources = this.mContext.getResources();
         if (!hasEmbeddedTabs()) {

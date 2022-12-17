@@ -2,7 +2,7 @@ package okio;
 
 import java.io.InputStream;
 import org.jetbrains.annotations.NotNull;
-/* loaded from: classes2.dex */
+
 public final class Okio {
     @NotNull
     public static final BufferedSource buffer(@NotNull Source source) {

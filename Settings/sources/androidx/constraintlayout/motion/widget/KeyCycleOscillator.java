@@ -1,7 +1,6 @@
 package androidx.constraintlayout.motion.widget;
 
 import android.annotation.TargetApi;
-import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import androidx.constraintlayout.motion.utils.CurveFit;
@@ -16,15 +15,15 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
-/* loaded from: classes.dex */
+
 public abstract class KeyCycleOscillator {
     private CurveFit mCurveFit;
     protected ConstraintAttribute mCustom;
     private CycleOscillator mCycleOscillator;
     private String mType;
-    private int mWaveShape = 0;
     public int mVariesBy = 0;
     ArrayList<WavePoint> mWavePoints = new ArrayList<>();
+    private int mWaveShape = 0;
 
     public abstract void setProperty(View view, float f);
 
@@ -32,9 +31,7 @@ public abstract class KeyCycleOscillator {
         return this.mVariesBy == 1;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class WavePoint {
+    static class WavePoint {
         float mOffset;
         float mPeriod;
         int mPosition;
@@ -54,7 +51,7 @@ public abstract class KeyCycleOscillator {
         Iterator<WavePoint> it = this.mWavePoints.iterator();
         while (it.hasNext()) {
             WavePoint next = it.next();
-            str = str + "[" + next.mPosition + " , " + decimalFormat.format(next.mValue) + "] ";
+            str = str + "[" + next.mPosition + " , " + decimalFormat.format((double) next.mValue) + "] ";
         }
         return str;
     }
@@ -71,8 +68,7 @@ public abstract class KeyCycleOscillator {
         return (float) this.mCycleOscillator.getSlope(f);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static KeyCycleOscillator makeSpline(String str) {
+    static KeyCycleOscillator makeSpline(String str) {
         if (str.startsWith("CUSTOM")) {
             return new CustomSet();
         }
@@ -128,19 +124,19 @@ public abstract class KeyCycleOscillator {
                 break;
             case -797520672:
                 if (str.equals("waveVariesBy")) {
-                    c = '\b';
+                    c = 8;
                     break;
                 }
                 break;
             case -40300674:
                 if (str.equals("rotation")) {
-                    c = '\t';
+                    c = 9;
                     break;
                 }
                 break;
             case -4379043:
                 if (str.equals("elevation")) {
-                    c = '\n';
+                    c = 10;
                     break;
                 }
                 break;
@@ -152,13 +148,13 @@ public abstract class KeyCycleOscillator {
                 break;
             case 92909918:
                 if (str.equals("alpha")) {
-                    c = '\f';
+                    c = 12;
                     break;
                 }
                 break;
             case 156108012:
                 if (str.equals("waveOffset")) {
-                    c = '\r';
+                    c = 13;
                     break;
                 }
                 break;
@@ -180,17 +176,17 @@ public abstract class KeyCycleOscillator {
                 return new ScaleXset();
             case 7:
                 return new ScaleYset();
-            case '\b':
+            case 8:
                 return new AlphaSet();
-            case '\t':
+            case 9:
                 return new RotationSet();
-            case '\n':
+            case 10:
                 return new ElevationSet();
             case 11:
                 return new PathRotateSet();
-            case '\f':
+            case 12:
                 return new AlphaSet();
-            case '\r':
+            case 13:
                 return new AlphaSet();
             default:
                 return null;
@@ -217,98 +213,83 @@ public abstract class KeyCycleOscillator {
     @TargetApi(19)
     public void setup(float f) {
         int size = this.mWavePoints.size();
-        if (size == 0) {
-            return;
-        }
-        Collections.sort(this.mWavePoints, new Comparator<WavePoint>() { // from class: androidx.constraintlayout.motion.widget.KeyCycleOscillator.1
-            @Override // java.util.Comparator
-            public int compare(WavePoint wavePoint, WavePoint wavePoint2) {
-                return Integer.compare(wavePoint.mPosition, wavePoint2.mPosition);
+        if (size != 0) {
+            Collections.sort(this.mWavePoints, new Comparator<WavePoint>() {
+                public int compare(WavePoint wavePoint, WavePoint wavePoint2) {
+                    return Integer.compare(wavePoint.mPosition, wavePoint2.mPosition);
+                }
+            });
+            double[] dArr = new double[size];
+            int[] iArr = new int[2];
+            iArr[1] = 2;
+            iArr[0] = size;
+            double[][] dArr2 = (double[][]) Array.newInstance(double.class, iArr);
+            this.mCycleOscillator = new CycleOscillator(this.mWaveShape, this.mVariesBy, size);
+            Iterator<WavePoint> it = this.mWavePoints.iterator();
+            int i = 0;
+            while (it.hasNext()) {
+                WavePoint next = it.next();
+                float f2 = next.mPeriod;
+                dArr[i] = ((double) f2) * 0.01d;
+                double[] dArr3 = dArr2[i];
+                float f3 = next.mValue;
+                dArr3[0] = (double) f3;
+                float f4 = next.mOffset;
+                dArr3[1] = (double) f4;
+                this.mCycleOscillator.setPoint(i, next.mPosition, f2, f4, f3);
+                i++;
             }
-        });
-        double[] dArr = new double[size];
-        double[][] dArr2 = (double[][]) Array.newInstance(double.class, size, 2);
-        this.mCycleOscillator = new CycleOscillator(this.mWaveShape, this.mVariesBy, size);
-        Iterator<WavePoint> it = this.mWavePoints.iterator();
-        int i = 0;
-        while (it.hasNext()) {
-            WavePoint next = it.next();
-            float f2 = next.mPeriod;
-            dArr[i] = f2 * 0.01d;
-            double[] dArr3 = dArr2[i];
-            float f3 = next.mValue;
-            dArr3[0] = f3;
-            double[] dArr4 = dArr2[i];
-            float f4 = next.mOffset;
-            dArr4[1] = f4;
-            this.mCycleOscillator.setPoint(i, next.mPosition, f2, f4, f3);
-            i++;
+            this.mCycleOscillator.setup(f);
+            this.mCurveFit = CurveFit.get(0, dArr, dArr2);
         }
-        this.mCycleOscillator.setup(f);
-        this.mCurveFit = CurveFit.get(0, dArr, dArr2);
     }
 
-    /* loaded from: classes.dex */
     static class ElevationSet extends KeyCycleOscillator {
         ElevationSet() {
         }
 
-        @Override // androidx.constraintlayout.motion.widget.KeyCycleOscillator
         public void setProperty(View view, float f) {
-            if (Build.VERSION.SDK_INT >= 21) {
-                view.setElevation(get(f));
-            }
+            view.setElevation(get(f));
         }
     }
 
-    /* loaded from: classes.dex */
     static class AlphaSet extends KeyCycleOscillator {
         AlphaSet() {
         }
 
-        @Override // androidx.constraintlayout.motion.widget.KeyCycleOscillator
         public void setProperty(View view, float f) {
             view.setAlpha(get(f));
         }
     }
 
-    /* loaded from: classes.dex */
     static class RotationSet extends KeyCycleOscillator {
         RotationSet() {
         }
 
-        @Override // androidx.constraintlayout.motion.widget.KeyCycleOscillator
         public void setProperty(View view, float f) {
             view.setRotation(get(f));
         }
     }
 
-    /* loaded from: classes.dex */
     static class RotationXset extends KeyCycleOscillator {
         RotationXset() {
         }
 
-        @Override // androidx.constraintlayout.motion.widget.KeyCycleOscillator
         public void setProperty(View view, float f) {
             view.setRotationX(get(f));
         }
     }
 
-    /* loaded from: classes.dex */
     static class RotationYset extends KeyCycleOscillator {
         RotationYset() {
         }
 
-        @Override // androidx.constraintlayout.motion.widget.KeyCycleOscillator
         public void setProperty(View view, float f) {
             view.setRotationY(get(f));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class PathRotateSet extends KeyCycleOscillator {
-        @Override // androidx.constraintlayout.motion.widget.KeyCycleOscillator
+    static class PathRotateSet extends KeyCycleOscillator {
         public void setProperty(View view, float f) {
         }
 
@@ -320,115 +301,97 @@ public abstract class KeyCycleOscillator {
         }
     }
 
-    /* loaded from: classes.dex */
     static class ScaleXset extends KeyCycleOscillator {
         ScaleXset() {
         }
 
-        @Override // androidx.constraintlayout.motion.widget.KeyCycleOscillator
         public void setProperty(View view, float f) {
             view.setScaleX(get(f));
         }
     }
 
-    /* loaded from: classes.dex */
     static class ScaleYset extends KeyCycleOscillator {
         ScaleYset() {
         }
 
-        @Override // androidx.constraintlayout.motion.widget.KeyCycleOscillator
         public void setProperty(View view, float f) {
             view.setScaleY(get(f));
         }
     }
 
-    /* loaded from: classes.dex */
     static class TranslationXset extends KeyCycleOscillator {
         TranslationXset() {
         }
 
-        @Override // androidx.constraintlayout.motion.widget.KeyCycleOscillator
         public void setProperty(View view, float f) {
             view.setTranslationX(get(f));
         }
     }
 
-    /* loaded from: classes.dex */
     static class TranslationYset extends KeyCycleOscillator {
         TranslationYset() {
         }
 
-        @Override // androidx.constraintlayout.motion.widget.KeyCycleOscillator
         public void setProperty(View view, float f) {
             view.setTranslationY(get(f));
         }
     }
 
-    /* loaded from: classes.dex */
     static class TranslationZset extends KeyCycleOscillator {
         TranslationZset() {
         }
 
-        @Override // androidx.constraintlayout.motion.widget.KeyCycleOscillator
         public void setProperty(View view, float f) {
-            if (Build.VERSION.SDK_INT >= 21) {
-                view.setTranslationZ(get(f));
-            }
+            view.setTranslationZ(get(f));
         }
     }
 
-    /* loaded from: classes.dex */
     static class CustomSet extends KeyCycleOscillator {
         float[] value = new float[1];
 
         CustomSet() {
         }
 
-        @Override // androidx.constraintlayout.motion.widget.KeyCycleOscillator
         public void setProperty(View view, float f) {
             this.value[0] = get(f);
             this.mCustom.setInterpolatedValue(view, this.value);
         }
     }
 
-    /* loaded from: classes.dex */
     static class ProgressSet extends KeyCycleOscillator {
         boolean mNoMethod = false;
 
         ProgressSet() {
         }
 
-        @Override // androidx.constraintlayout.motion.widget.KeyCycleOscillator
         public void setProperty(View view, float f) {
             if (view instanceof MotionLayout) {
                 ((MotionLayout) view).setProgress(get(f));
-            } else if (this.mNoMethod) {
-            } else {
+            } else if (!this.mNoMethod) {
                 Method method = null;
                 try {
-                    method = view.getClass().getMethod("setProgress", Float.TYPE);
+                    method = view.getClass().getMethod("setProgress", new Class[]{Float.TYPE});
                 } catch (NoSuchMethodException unused) {
                     this.mNoMethod = true;
                 }
-                if (method == null) {
-                    return;
-                }
-                try {
-                    method.invoke(view, Float.valueOf(get(f)));
-                } catch (IllegalAccessException e) {
-                    Log.e("KeyCycleOscillator", "unable to setProgress", e);
-                } catch (InvocationTargetException e2) {
-                    Log.e("KeyCycleOscillator", "unable to setProgress", e2);
+                if (method != null) {
+                    try {
+                        method.invoke(view, new Object[]{Float.valueOf(get(f))});
+                    } catch (IllegalAccessException e) {
+                        Log.e("KeyCycleOscillator", "unable to setProgress", e);
+                    } catch (InvocationTargetException e2) {
+                        Log.e("KeyCycleOscillator", "unable to setProgress", e2);
+                    }
                 }
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class CycleOscillator {
+    static class CycleOscillator {
         CurveFit mCurveFit;
+        public HashMap<String, ConstraintAttribute> mCustomConstraints = new HashMap<>();
         float[] mOffset;
+        Oscillator mOscillator = new Oscillator();
         float mPathLength;
         float[] mPeriod;
         double[] mPosition;
@@ -438,8 +401,6 @@ public abstract class KeyCycleOscillator {
         float[] mValues;
         private final int mVariesBy;
         int mWaveShape;
-        Oscillator mOscillator = new Oscillator();
-        public HashMap<String, ConstraintAttribute> mCustomConstraints = new HashMap<>();
 
         CycleOscillator(int i, int i2, int i3) {
             this.mWaveShape = i;
@@ -455,19 +416,19 @@ public abstract class KeyCycleOscillator {
         public double getValues(float f) {
             CurveFit curveFit = this.mCurveFit;
             if (curveFit != null) {
-                curveFit.getPos(f, this.mSplineValueCache);
+                curveFit.getPos((double) f, this.mSplineValueCache);
             } else {
                 double[] dArr = this.mSplineValueCache;
-                dArr[0] = this.mOffset[0];
-                dArr[1] = this.mValues[0];
+                dArr[0] = (double) this.mOffset[0];
+                dArr[1] = (double) this.mValues[0];
             }
-            return this.mSplineValueCache[0] + (this.mOscillator.getValue(f) * this.mSplineValueCache[1]);
+            return this.mSplineValueCache[0] + (this.mOscillator.getValue((double) f) * this.mSplineValueCache[1]);
         }
 
         public double getSlope(float f) {
             CurveFit curveFit = this.mCurveFit;
             if (curveFit != null) {
-                double d = f;
+                double d = (double) f;
                 curveFit.getSlope(d, this.mSplineSlopeCache);
                 this.mCurveFit.getPos(d, this.mSplineValueCache);
             } else {
@@ -475,7 +436,7 @@ public abstract class KeyCycleOscillator {
                 dArr[0] = 0.0d;
                 dArr[1] = 0.0d;
             }
-            double d2 = f;
+            double d2 = (double) f;
             double value = this.mOscillator.getValue(d2);
             double slope = this.mOscillator.getSlope(d2);
             double[] dArr2 = this.mSplineSlopeCache;
@@ -483,35 +444,40 @@ public abstract class KeyCycleOscillator {
         }
 
         public void setPoint(int i, int i2, float f, float f2, float f3) {
-            this.mPosition[i] = i2 / 100.0d;
+            this.mPosition[i] = ((double) i2) / 100.0d;
             this.mPeriod[i] = f;
             this.mOffset[i] = f2;
             this.mValues[i] = f3;
         }
 
         public void setup(float f) {
-            float[] fArr;
             this.mPathLength = f;
-            double[][] dArr = (double[][]) Array.newInstance(double.class, this.mPosition.length, 2);
-            float[] fArr2 = this.mValues;
-            this.mSplineValueCache = new double[fArr2.length + 1];
-            this.mSplineSlopeCache = new double[fArr2.length + 1];
+            int length = this.mPosition.length;
+            int[] iArr = new int[2];
+            iArr[1] = 2;
+            iArr[0] = length;
+            double[][] dArr = (double[][]) Array.newInstance(double.class, iArr);
+            float[] fArr = this.mValues;
+            this.mSplineValueCache = new double[(fArr.length + 1)];
+            this.mSplineSlopeCache = new double[(fArr.length + 1)];
             if (this.mPosition[0] > 0.0d) {
                 this.mOscillator.addPoint(0.0d, this.mPeriod[0]);
             }
             double[] dArr2 = this.mPosition;
-            int length = dArr2.length - 1;
-            if (dArr2[length] < 1.0d) {
-                this.mOscillator.addPoint(1.0d, this.mPeriod[length]);
+            int length2 = dArr2.length - 1;
+            if (dArr2[length2] < 1.0d) {
+                this.mOscillator.addPoint(1.0d, this.mPeriod[length2]);
             }
             for (int i = 0; i < dArr.length; i++) {
-                dArr[i][0] = this.mOffset[i];
+                dArr[i][0] = (double) this.mOffset[i];
                 int i2 = 0;
                 while (true) {
-                    if (i2 < this.mValues.length) {
-                        dArr[i2][1] = fArr[i2];
-                        i2++;
+                    float[] fArr2 = this.mValues;
+                    if (i2 >= fArr2.length) {
+                        break;
                     }
+                    dArr[i2][1] = (double) fArr2[i2];
+                    i2++;
                 }
                 this.mOscillator.addPoint(this.mPosition[i], this.mPeriod[i]);
             }

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:persistent="false" android:title="@string/nt_glyphs_default_ringtone" app:searchable="false">
+    <com.nothing.settings.glyphs.preference.RingtoneSelectorPreference android:key="key_glyphs_ringtone_selector" android:order="-130" app:isLoop="true"/>
+    <com.nothing.p006ui.support.NtCustSwitchPreference android:title="@string/nt_glyphs_ringtone_sound_only" android:key="key_glyphs_switch_sound_only" android:summary="@string/nt_glyphs_sound_only_switch_summary" android:order="-120"/>
+</PreferenceScreen>

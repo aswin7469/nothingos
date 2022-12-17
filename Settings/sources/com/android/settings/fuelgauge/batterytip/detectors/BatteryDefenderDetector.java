@@ -3,7 +3,7 @@ package com.android.settings.fuelgauge.batterytip.detectors;
 import com.android.settings.fuelgauge.BatteryInfo;
 import com.android.settings.fuelgauge.batterytip.tips.BatteryDefenderTip;
 import com.android.settings.fuelgauge.batterytip.tips.BatteryTip;
-/* loaded from: classes.dex */
+
 public class BatteryDefenderDetector {
     private BatteryInfo mBatteryInfo;
 

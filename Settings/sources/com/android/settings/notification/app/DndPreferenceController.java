@@ -5,9 +5,8 @@ import androidx.preference.Preference;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settings.notification.NotificationBackend;
 import com.android.settingslib.RestrictedSwitchPreference;
-/* loaded from: classes.dex */
+
 public class DndPreferenceController extends NotificationPreferenceController implements PreferenceControllerMixin, Preference.OnPreferenceChangeListener {
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "bypass_dnd";
     }
@@ -16,17 +15,15 @@ public class DndPreferenceController extends NotificationPreferenceController im
         super(context, notificationBackend);
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return super.isAvailable() && this.mChannel != null;
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController
-    boolean isIncludedInFilter() {
+    /* access modifiers changed from: package-private */
+    public boolean isIncludedInFilter() {
         return this.mPreferenceFilter.contains("zen");
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         if (this.mChannel != null) {
             RestrictedSwitchPreference restrictedSwitchPreference = (RestrictedSwitchPreference) preference;
@@ -36,7 +33,6 @@ public class DndPreferenceController extends NotificationPreferenceController im
         }
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         if (this.mChannel != null) {
             this.mChannel.setBypassDnd(((Boolean) obj).booleanValue());

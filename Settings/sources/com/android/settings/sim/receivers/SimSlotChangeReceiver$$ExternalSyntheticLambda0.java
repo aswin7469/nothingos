@@ -1,12 +1,21 @@
 package com.android.settings.sim.receivers;
 
 import android.content.BroadcastReceiver;
-/* loaded from: classes.dex */
-public final /* synthetic */ class SimSlotChangeReceiver$$ExternalSyntheticLambda0 implements Runnable {
-    public final /* synthetic */ BroadcastReceiver.PendingResult f$0;
+import android.content.Context;
 
-    @Override // java.lang.Runnable
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class SimSlotChangeReceiver$$ExternalSyntheticLambda0 implements Runnable {
+    public final /* synthetic */ SimSlotChangeReceiver f$0;
+    public final /* synthetic */ Context f$1;
+    public final /* synthetic */ BroadcastReceiver.PendingResult f$2;
+
+    public /* synthetic */ SimSlotChangeReceiver$$ExternalSyntheticLambda0(SimSlotChangeReceiver simSlotChangeReceiver, Context context, BroadcastReceiver.PendingResult pendingResult) {
+        this.f$0 = simSlotChangeReceiver;
+        this.f$1 = context;
+        this.f$2 = pendingResult;
+    }
+
     public final void run() {
-        this.f$0.finish();
+        this.f$0.lambda$onReceive$0(this.f$1, this.f$2);
     }
 }

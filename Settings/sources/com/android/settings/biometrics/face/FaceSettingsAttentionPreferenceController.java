@@ -8,55 +8,39 @@ import android.provider.Settings;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.SwitchPreference;
 import com.android.settings.Utils;
-import com.android.settings.slices.SliceBackgroundWorker;
-import com.android.settingslib.core.AbstractPreferenceController;
-/* loaded from: classes.dex */
+
 public class FaceSettingsAttentionPreferenceController extends FaceSettingsPreferenceController {
     public static final String KEY = "security_settings_face_require_attention";
     private FaceManager mFaceManager;
     private final FaceManager.GetFeatureCallback mGetFeatureCallback;
-    private SwitchPreference mPreference;
+    /* access modifiers changed from: private */
+    public SwitchPreference mPreference;
     private final FaceManager.SetFeatureCallback mSetFeatureCallback;
     private byte[] mToken;
 
-    @Override // com.android.settings.biometrics.face.FaceSettingsPreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return 0;
     }
 
-    @Override // com.android.settings.biometrics.face.FaceSettingsPreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.biometrics.face.FaceSettingsPreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.biometrics.face.FaceSettingsPreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.biometrics.face.FaceSettingsPreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.biometrics.face.FaceSettingsPreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
 
     public FaceSettingsAttentionPreferenceController(Context context, String str) {
         super(context, str);
-        this.mSetFeatureCallback = new FaceManager.SetFeatureCallback() { // from class: com.android.settings.biometrics.face.FaceSettingsAttentionPreferenceController.1
+        this.mSetFeatureCallback = new FaceManager.SetFeatureCallback() {
             public void onCompleted(boolean z, int i) {
                 if (i == 1) {
                     FaceSettingsAttentionPreferenceController.this.mPreference.setEnabled(true);
@@ -64,13 +48,13 @@ public class FaceSettingsAttentionPreferenceController extends FaceSettingsPrefe
                         FaceSettingsAttentionPreferenceController.this.mPreference.setChecked(!FaceSettingsAttentionPreferenceController.this.mPreference.isChecked());
                         return;
                     }
-                    ContentResolver contentResolver = ((AbstractPreferenceController) FaceSettingsAttentionPreferenceController.this).mContext.getContentResolver();
+                    ContentResolver contentResolver = FaceSettingsAttentionPreferenceController.this.mContext.getContentResolver();
                     boolean isChecked = FaceSettingsAttentionPreferenceController.this.mPreference.isChecked();
                     Settings.Secure.putIntForUser(contentResolver, "face_unlock_attention_required", isChecked ? 1 : 0, FaceSettingsAttentionPreferenceController.this.getUserId());
                 }
             }
         };
-        this.mGetFeatureCallback = new FaceManager.GetFeatureCallback() { // from class: com.android.settings.biometrics.face.FaceSettingsAttentionPreferenceController.2
+        this.mGetFeatureCallback = new FaceManager.GetFeatureCallback() {
             public void onCompleted(boolean z, int[] iArr, boolean[] zArr) {
                 boolean z2 = false;
                 for (int i = 0; i < iArr.length; i++) {
@@ -93,13 +77,11 @@ public class FaceSettingsAttentionPreferenceController extends FaceSettingsPrefe
         this.mToken = bArr;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = (SwitchPreference) preferenceScreen.findPreference(KEY);
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean isChecked() {
         if (!FaceSettings.isFaceHardwareDetected(this.mContext)) {
             return true;
@@ -109,7 +91,6 @@ public class FaceSettingsAttentionPreferenceController extends FaceSettingsPrefe
         return true;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean setChecked(boolean z) {
         this.mPreference.setEnabled(false);
         this.mPreference.setChecked(z);

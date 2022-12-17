@@ -2,7 +2,7 @@ package com.android.settingslib.core.instrumentation;
 
 import android.content.Context;
 import android.util.Pair;
-/* loaded from: classes.dex */
+
 public interface LogWriter {
     void action(int i, int i2, int i3, String str, int i4);
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -15,7 +16,7 @@ import com.airbnb.lottie.utils.Utils;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public class ImageAssetManager {
     private static final Object bitmapHashLock = new Object();
     private final Context context;
@@ -24,10 +25,10 @@ public class ImageAssetManager {
     private String imagesFolder;
 
     public ImageAssetManager(Drawable.Callback callback, String str, ImageAssetDelegate imageAssetDelegate, Map<String, LottieImageAsset> map) {
-        String str2;
         this.imagesFolder = str;
         if (!TextUtils.isEmpty(str)) {
-            if (this.imagesFolder.charAt(str2.length() - 1) != '/') {
+            String str2 = this.imagesFolder;
+            if (str2.charAt(str2.length() - 1) != '/') {
                 this.imagesFolder += '/';
             }
         }
@@ -50,7 +51,7 @@ public class ImageAssetManager {
         if (bitmap == null) {
             LottieImageAsset lottieImageAsset = this.imageAssets.get(str);
             Bitmap bitmap2 = lottieImageAsset.getBitmap();
-            lottieImageAsset.setBitmap(null);
+            lottieImageAsset.setBitmap((Bitmap) null);
             return bitmap2;
         }
         Bitmap bitmap3 = this.imageAssets.get(str).getBitmap();
@@ -79,29 +80,30 @@ public class ImageAssetManager {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = true;
         options.inDensity = 160;
-        if (fileName.startsWith("data:") && fileName.indexOf("base64,") > 0) {
+        if (!fileName.startsWith("data:") || fileName.indexOf("base64,") <= 0) {
+            try {
+                if (!TextUtils.isEmpty(this.imagesFolder)) {
+                    AssetManager assets = this.context.getAssets();
+                    return putBitmap(str, Utils.resizeBitmapIfNeeded(BitmapFactory.decodeStream(assets.open(this.imagesFolder + fileName), (Rect) null, options), lottieImageAsset.getWidth(), lottieImageAsset.getHeight()));
+                }
+                throw new IllegalStateException("You must set an images folder before loading an image. Set it with LottieComposition#setImagesFolder or LottieDrawable#setImagesFolder");
+            } catch (IOException e) {
+                Logger.warning("Unable to open asset.", e);
+                return null;
+            }
+        } else {
             try {
                 byte[] decode = Base64.decode(fileName.substring(fileName.indexOf(44) + 1), 0);
                 return putBitmap(str, BitmapFactory.decodeByteArray(decode, 0, decode.length, options));
-            } catch (IllegalArgumentException e) {
-                Logger.warning("data URL did not have correct base64 format.", e);
+            } catch (IllegalArgumentException e2) {
+                Logger.warning("data URL did not have correct base64 format.", e2);
                 return null;
             }
         }
-        try {
-            if (TextUtils.isEmpty(this.imagesFolder)) {
-                throw new IllegalStateException("You must set an images folder before loading an image. Set it with LottieComposition#setImagesFolder or LottieDrawable#setImagesFolder");
-            }
-            AssetManager assets = this.context.getAssets();
-            return putBitmap(str, Utils.resizeBitmapIfNeeded(BitmapFactory.decodeStream(assets.open(this.imagesFolder + fileName), null, options), lottieImageAsset.getWidth(), lottieImageAsset.getHeight()));
-        } catch (IOException e2) {
-            Logger.warning("Unable to open asset.", e2);
-            return null;
-        }
     }
 
-    public boolean hasSameContext(Context context) {
-        return (context == null && this.context == null) || this.context.equals(context);
+    public boolean hasSameContext(Context context2) {
+        return (context2 == null && this.context == null) || this.context.equals(context2);
     }
 
     private Bitmap putBitmap(String str, Bitmap bitmap) {

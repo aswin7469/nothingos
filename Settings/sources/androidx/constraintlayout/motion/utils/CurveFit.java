@@ -1,5 +1,5 @@
 package androidx.constraintlayout.motion.utils;
-/* loaded from: classes.dex */
+
 public abstract class CurveFit {
     public abstract double getPos(double d, int i);
 
@@ -17,25 +17,23 @@ public abstract class CurveFit {
         if (dArr.length == 1) {
             i = 2;
         }
-        if (i != 0) {
-            if (i == 2) {
-                return new Constant(dArr[0], dArr2[0]);
-            }
+        if (i == 0) {
+            return new MonotonicCurveFit(dArr, dArr2);
+        }
+        if (i != 2) {
             return new LinearCurveFit(dArr, dArr2);
         }
-        return new MonotonicCurveFit(dArr, dArr2);
+        return new Constant(dArr[0], dArr2[0]);
     }
 
     public static CurveFit getArc(int[] iArr, double[] dArr, double[][] dArr2) {
         return new ArcCurveFit(iArr, dArr, dArr2);
     }
 
-    /* loaded from: classes.dex */
     static class Constant extends CurveFit {
         double mTime;
         double[] mValue;
 
-        @Override // androidx.constraintlayout.motion.utils.CurveFit
         public double getSlope(double d, int i) {
             return 0.0d;
         }
@@ -45,13 +43,11 @@ public abstract class CurveFit {
             this.mValue = dArr;
         }
 
-        @Override // androidx.constraintlayout.motion.utils.CurveFit
         public void getPos(double d, double[] dArr) {
             double[] dArr2 = this.mValue;
             System.arraycopy(dArr2, 0, dArr, 0, dArr2.length);
         }
 
-        @Override // androidx.constraintlayout.motion.utils.CurveFit
         public void getPos(double d, float[] fArr) {
             int i = 0;
             while (true) {
@@ -65,19 +61,16 @@ public abstract class CurveFit {
             }
         }
 
-        @Override // androidx.constraintlayout.motion.utils.CurveFit
         public double getPos(double d, int i) {
             return this.mValue[i];
         }
 
-        @Override // androidx.constraintlayout.motion.utils.CurveFit
         public void getSlope(double d, double[] dArr) {
             for (int i = 0; i < this.mValue.length; i++) {
                 dArr[i] = 0.0d;
             }
         }
 
-        @Override // androidx.constraintlayout.motion.utils.CurveFit
         public double[] getTimePoints() {
             return new double[]{this.mTime};
         }

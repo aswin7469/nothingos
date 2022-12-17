@@ -1,19 +1,23 @@
 package androidx.core.view.accessibility;
 
-import android.os.Build;
 import android.view.accessibility.AccessibilityEvent;
-/* loaded from: classes.dex */
+
 public final class AccessibilityEventCompat {
-    public static void setContentChangeTypes(AccessibilityEvent event, int changeTypes) {
-        if (Build.VERSION.SDK_INT >= 19) {
-            event.setContentChangeTypes(changeTypes);
-        }
+    public static void setContentChangeTypes(AccessibilityEvent accessibilityEvent, int i) {
+        Api19Impl.setContentChangeTypes(accessibilityEvent, i);
     }
 
-    public static int getContentChangeTypes(AccessibilityEvent event) {
-        if (Build.VERSION.SDK_INT >= 19) {
-            return event.getContentChangeTypes();
+    public static int getContentChangeTypes(AccessibilityEvent accessibilityEvent) {
+        return Api19Impl.getContentChangeTypes(accessibilityEvent);
+    }
+
+    static class Api19Impl {
+        static void setContentChangeTypes(AccessibilityEvent accessibilityEvent, int i) {
+            accessibilityEvent.setContentChangeTypes(i);
         }
-        return 0;
+
+        static int getContentChangeTypes(AccessibilityEvent accessibilityEvent) {
+            return accessibilityEvent.getContentChangeTypes();
+        }
     }
 }

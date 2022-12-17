@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android" android:height="24dp" android:width="24dp" android:viewportWidth="24" android:viewportHeight="24">
-    <path android:fillColor="@color/tesla_icon_color" android:pathData="M10.7879,3C10.5227,3 10.2683,3.1054 10.0808,3.2929L3.2929,10.0808C3.1054,10.2683 3,10.5227 3,10.7879V12.7273V20C3,20.5523 3.4477,21 4,21H20C20.5523,21 21,20.5523 21,20V12.7273V4C21,3.4477 20.5523,3 20,3H10.7879ZM5.2021,11L11.2021,5H19V7H12.7419C12.471,7 12.2117,7.1099 12.0233,7.3046L9.1201,10.3046C8.9361,10.4948 8.8387,10.7454 8.8387,11H5.2021ZM5,13.7273H19V19H5V13.7273Z" android:fillAlpha="0.8" android:fillType="evenOdd"/>
-</vector>

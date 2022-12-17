@@ -5,9 +5,8 @@ import com.android.settings.intelligence.ContextualCardProto$ContextualCard;
 import com.android.settings.intelligence.ContextualCardProto$ContextualCardList;
 import com.android.settings.slices.CustomSliceRegistry;
 import com.google.android.settings.intelligence.libs.contextualcards.ContextualCardProvider;
-/* loaded from: classes.dex */
+
 public class SettingsContextualCardProvider extends ContextualCardProvider {
-    @Override // com.google.android.settings.intelligence.libs.contextualcards.ContextualCardProvider
     public ContextualCardProto$ContextualCardList getContextualCards() {
         ContextualCardProto$ContextualCard.Builder newBuilder = ContextualCardProto$ContextualCard.newBuilder();
         Uri uri = CustomSliceRegistry.CONTEXTUAL_WIFI_SLICE_URI;
@@ -26,6 +25,6 @@ public class SettingsContextualCardProvider extends ContextualCardProvider {
         Uri uri6 = CustomSliceRegistry.FACE_ENROLL_SLICE_URI;
         ContextualCardProto$ContextualCard.Builder newBuilder6 = ContextualCardProto$ContextualCard.newBuilder();
         Uri uri7 = CustomSliceRegistry.DARK_THEME_SLICE_URI;
-        return ContextualCardProto$ContextualCardList.newBuilder().addCard(cardName.setCardCategory(category).mo908build()).addCard(newBuilder2.setSliceUri(uri2.toString()).setCardName(uri2.toString()).setCardCategory(category).mo908build()).addCard(newBuilder3.setSliceUri(uri3.toString()).setCardName(uri3.toString()).setCardCategory(category).mo908build()).addCard(newBuilder4.setSliceUri(uri4.toString()).setCardName(uri4.toString()).setCardCategory(category).mo908build()).addCard(cardName2.setCardCategory(category2).mo908build()).addCard(newBuilder5.setSliceUri(uri6.toString()).setCardName(uri6.toString()).setCardCategory(category2).mo908build()).addCard(newBuilder6.setSliceUri(uri7.toString()).setCardName(uri7.toString()).setCardCategory(category).mo908build()).mo908build();
+        return (ContextualCardProto$ContextualCardList) ContextualCardProto$ContextualCardList.newBuilder().addCard((ContextualCardProto$ContextualCard) cardName.setCardCategory(category).build()).addCard((ContextualCardProto$ContextualCard) newBuilder2.setSliceUri(uri2.toString()).setCardName(uri2.toString()).setCardCategory(category).build()).addCard((ContextualCardProto$ContextualCard) newBuilder3.setSliceUri(uri3.toString()).setCardName(uri3.toString()).setCardCategory(category).build()).addCard((ContextualCardProto$ContextualCard) newBuilder4.setSliceUri(uri4.toString()).setCardName(uri4.toString()).setCardCategory(category).build()).addCard((ContextualCardProto$ContextualCard) cardName2.setCardCategory(category2).build()).addCard((ContextualCardProto$ContextualCard) newBuilder5.setSliceUri(uri6.toString()).setCardName(uri6.toString()).setCardCategory(category2).build()).addCard((ContextualCardProto$ContextualCard) newBuilder6.setSliceUri(uri7.toString()).setCardName(uri7.toString()).setCardCategory(category).build()).build();
     }
 }

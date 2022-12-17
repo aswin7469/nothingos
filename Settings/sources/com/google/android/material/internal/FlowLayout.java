@@ -10,7 +10,7 @@ import androidx.core.view.MarginLayoutParamsCompat;
 import androidx.core.view.ViewCompat;
 import com.google.android.material.R$id;
 import com.google.android.material.R$styleable;
-/* loaded from: classes2.dex */
+
 public class FlowLayout extends ViewGroup {
     private int itemSpacing;
     private int lineSpacing;
@@ -18,7 +18,7 @@ public class FlowLayout extends ViewGroup {
     private boolean singleLine;
 
     public FlowLayout(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public FlowLayout(Context context, AttributeSet attributeSet) {
@@ -45,20 +45,22 @@ public class FlowLayout extends ViewGroup {
         obtainStyledAttributes.recycle();
     }
 
-    protected int getLineSpacing() {
+    /* access modifiers changed from: protected */
+    public int getLineSpacing() {
         return this.lineSpacing;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void setLineSpacing(int i) {
         this.lineSpacing = i;
     }
 
-    protected int getItemSpacing() {
+    /* access modifiers changed from: protected */
+    public int getItemSpacing() {
         return this.itemSpacing;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void setItemSpacing(int i) {
         this.itemSpacing = i;
     }
@@ -71,8 +73,8 @@ public class FlowLayout extends ViewGroup {
         this.singleLine = z;
     }
 
-    @Override // android.view.View
-    protected void onMeasure(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         int i3;
         int i4;
         int i5;
@@ -88,32 +90,35 @@ public class FlowLayout extends ViewGroup {
         int i8 = 0;
         for (int i9 = 0; i9 < getChildCount(); i9++) {
             View childAt = getChildAt(i9);
-            if (childAt.getVisibility() != 8) {
+            if (childAt.getVisibility() == 8) {
+                int i10 = i;
+                int i11 = i2;
+            } else {
                 measureChild(childAt, i, i2);
                 ViewGroup.LayoutParams layoutParams = childAt.getLayoutParams();
                 if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
                     ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
-                    i3 = marginLayoutParams.leftMargin + 0;
-                    i4 = marginLayoutParams.rightMargin + 0;
+                    i4 = marginLayoutParams.leftMargin + 0;
+                    i3 = marginLayoutParams.rightMargin + 0;
                 } else {
-                    i3 = 0;
                     i4 = 0;
+                    i3 = 0;
                 }
-                int i10 = paddingLeft;
-                if (paddingLeft + i3 + childAt.getMeasuredWidth() <= paddingRight || isSingleLine()) {
-                    i5 = i10;
+                int i12 = paddingLeft;
+                if (paddingLeft + i4 + childAt.getMeasuredWidth() <= paddingRight || isSingleLine()) {
+                    i5 = i12;
                 } else {
                     i5 = getPaddingLeft();
                     i7 = this.lineSpacing + paddingTop;
                 }
-                int measuredWidth = i5 + i3 + childAt.getMeasuredWidth();
+                int measuredWidth = i5 + i4 + childAt.getMeasuredWidth();
                 int measuredHeight = i7 + childAt.getMeasuredHeight();
                 if (measuredWidth > i8) {
                     i8 = measuredWidth;
                 }
-                paddingLeft = i5 + i3 + i4 + childAt.getMeasuredWidth() + this.itemSpacing;
+                paddingLeft = i5 + i4 + i3 + childAt.getMeasuredWidth() + this.itemSpacing;
                 if (i9 == getChildCount() - 1) {
-                    i8 += i4;
+                    i8 += i3;
                 }
                 paddingTop = measuredHeight;
             }
@@ -128,8 +133,8 @@ public class FlowLayout extends ViewGroup {
         return Math.min(i3, i);
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         int i5;
         int i6;
         if (getChildCount() == 0) {
@@ -152,34 +157,34 @@ public class FlowLayout extends ViewGroup {
                 ViewGroup.LayoutParams layoutParams = childAt.getLayoutParams();
                 if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
                     ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
-                    i6 = MarginLayoutParamsCompat.getMarginStart(marginLayoutParams);
-                    i5 = MarginLayoutParamsCompat.getMarginEnd(marginLayoutParams);
+                    i5 = MarginLayoutParamsCompat.getMarginStart(marginLayoutParams);
+                    i6 = MarginLayoutParamsCompat.getMarginEnd(marginLayoutParams);
                 } else {
-                    i5 = 0;
                     i6 = 0;
+                    i5 = 0;
                 }
-                int measuredWidth = i8 + i6 + childAt.getMeasuredWidth();
+                int measuredWidth = i8 + i5 + childAt.getMeasuredWidth();
                 if (!this.singleLine && measuredWidth > i7) {
                     i9 = this.lineSpacing + paddingTop;
                     this.rowCount++;
                     i8 = paddingRight;
                 }
                 childAt.setTag(R$id.row_index_key, Integer.valueOf(this.rowCount - 1));
-                int i11 = i8 + i6;
+                int i11 = i8 + i5;
                 int measuredWidth2 = childAt.getMeasuredWidth() + i11;
                 int measuredHeight = childAt.getMeasuredHeight() + i9;
                 if (z2) {
-                    childAt.layout(i7 - measuredWidth2, i9, (i7 - i8) - i6, measuredHeight);
+                    childAt.layout(i7 - measuredWidth2, i9, (i7 - i8) - i5, measuredHeight);
                 } else {
                     childAt.layout(i11, i9, measuredWidth2, measuredHeight);
                 }
-                i8 += i6 + i5 + childAt.getMeasuredWidth() + this.itemSpacing;
+                i8 += i5 + i6 + childAt.getMeasuredWidth() + this.itemSpacing;
                 paddingTop = measuredHeight;
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public int getRowCount() {
         return this.rowCount;
     }

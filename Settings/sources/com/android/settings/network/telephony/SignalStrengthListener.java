@@ -10,14 +10,14 @@ import com.google.common.collect.UnmodifiableIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-/* loaded from: classes.dex */
+
 public class SignalStrengthListener {
     private TelephonyManager mBaseTelephonyManager;
-    private Callback mCallback;
+    /* access modifiers changed from: private */
+    public Callback mCallback;
     private Context mContext;
     Map<Integer, SignalStrengthTelephonyCallback> mTelephonyCallbacks = new TreeMap();
 
-    /* loaded from: classes.dex */
     public interface Callback {
         void onSignalStrengthChanged();
     }
@@ -29,40 +29,37 @@ public class SignalStrengthListener {
     }
 
     public void resume() {
-        for (Integer num : this.mTelephonyCallbacks.keySet()) {
-            startListening(num.intValue());
+        for (Integer intValue : this.mTelephonyCallbacks.keySet()) {
+            startListening(intValue.intValue());
         }
     }
 
     public void pause() {
-        for (Integer num : this.mTelephonyCallbacks.keySet()) {
-            stopListening(num.intValue());
+        for (Integer intValue : this.mTelephonyCallbacks.keySet()) {
+            stopListening(intValue.intValue());
         }
     }
 
     public void updateSubscriptionIds(Set<Integer> set) {
         ArraySet arraySet = new ArraySet(this.mTelephonyCallbacks.keySet());
-        UnmodifiableIterator mo828iterator = Sets.difference(arraySet, set).mo828iterator();
-        while (mo828iterator.hasNext()) {
-            int intValue = ((Integer) mo828iterator.next()).intValue();
+        UnmodifiableIterator<Integer> it = Sets.difference(arraySet, set).iterator();
+        while (it.hasNext()) {
+            int intValue = it.next().intValue();
             stopListening(intValue);
             this.mTelephonyCallbacks.remove(Integer.valueOf(intValue));
         }
-        UnmodifiableIterator mo828iterator2 = Sets.difference(set, arraySet).mo828iterator();
-        while (mo828iterator2.hasNext()) {
-            int intValue2 = ((Integer) mo828iterator2.next()).intValue();
+        UnmodifiableIterator<Integer> it2 = Sets.difference(set, arraySet).iterator();
+        while (it2.hasNext()) {
+            int intValue2 = it2.next().intValue();
             this.mTelephonyCallbacks.put(Integer.valueOf(intValue2), new SignalStrengthTelephonyCallback());
             startListening(intValue2);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public class SignalStrengthTelephonyCallback extends TelephonyCallback implements TelephonyCallback.SignalStrengthsListener {
+    class SignalStrengthTelephonyCallback extends TelephonyCallback implements TelephonyCallback.SignalStrengthsListener {
         SignalStrengthTelephonyCallback() {
         }
 
-        @Override // android.telephony.TelephonyCallback.SignalStrengthsListener
         public void onSignalStrengthsChanged(SignalStrength signalStrength) {
             SignalStrengthListener.this.mCallback.onSignalStrengthChanged();
         }

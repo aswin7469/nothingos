@@ -1,7 +1,7 @@
 package com.airbnb.lottie.model;
 
 import android.graphics.PointF;
-/* loaded from: classes.dex */
+
 public class CubicCurveData {
     private final PointF controlPoint1;
     private final PointF controlPoint2;

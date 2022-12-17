@@ -4,26 +4,19 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import com.google.android.material.datepicker.CalendarConstraints;
 import java.util.Arrays;
-/* loaded from: classes.dex */
+
 public class DateValidatorPointForward implements CalendarConstraints.DateValidator {
-    public static final Parcelable.Creator<DateValidatorPointForward> CREATOR = new Parcelable.Creator<DateValidatorPointForward>() { // from class: com.google.android.material.datepicker.DateValidatorPointForward.1
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: createFromParcel */
-        public DateValidatorPointForward mo673createFromParcel(Parcel parcel) {
+    public static final Parcelable.Creator<DateValidatorPointForward> CREATOR = new Parcelable.Creator<DateValidatorPointForward>() {
+        public DateValidatorPointForward createFromParcel(Parcel parcel) {
             return new DateValidatorPointForward(parcel.readLong());
         }
 
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: newArray */
-        public DateValidatorPointForward[] mo674newArray(int i) {
+        public DateValidatorPointForward[] newArray(int i) {
             return new DateValidatorPointForward[i];
         }
     };
     private final long point;
 
-    @Override // android.os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -36,12 +29,10 @@ public class DateValidatorPointForward implements CalendarConstraints.DateValida
         return new DateValidatorPointForward(j);
     }
 
-    @Override // com.google.android.material.datepicker.CalendarConstraints.DateValidator
     public boolean isValid(long j) {
         return j >= this.point;
     }
 
-    @Override // android.os.Parcelable
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeLong(this.point);
     }
@@ -50,7 +41,13 @@ public class DateValidatorPointForward implements CalendarConstraints.DateValida
         if (this == obj) {
             return true;
         }
-        return (obj instanceof DateValidatorPointForward) && this.point == ((DateValidatorPointForward) obj).point;
+        if (!(obj instanceof DateValidatorPointForward)) {
+            return false;
+        }
+        if (this.point == ((DateValidatorPointForward) obj).point) {
+            return true;
+        }
+        return false;
     }
 
     public int hashCode() {

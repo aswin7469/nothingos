@@ -1,7 +1,7 @@
 package com.google.android.setupcompat.util;
 
 import android.util.Log;
-/* loaded from: classes2.dex */
+
 public final class Logger {
     private final String prefix;
 
@@ -29,15 +29,18 @@ public final class Logger {
         }
     }
 
-    public void w(String str) {
+    /* renamed from: w */
+    public void mo21687w(String str) {
         Log.w("SetupLibrary", this.prefix.concat(str));
     }
 
-    public void e(String str) {
+    /* renamed from: e */
+    public void mo21683e(String str) {
         Log.e("SetupLibrary", this.prefix.concat(str));
     }
 
-    public void e(String str, Throwable th) {
+    /* renamed from: e */
+    public void mo21684e(String str, Throwable th) {
         Log.e("SetupLibrary", this.prefix.concat(str), th);
     }
 }

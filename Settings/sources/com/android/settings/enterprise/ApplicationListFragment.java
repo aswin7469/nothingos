@@ -1,7 +1,9 @@
 package com.android.settings.enterprise;
 
 import android.content.Context;
-import com.android.settings.R;
+import android.os.Bundle;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.applications.ApplicationFeatureProvider;
 import com.android.settings.dashboard.DashboardFragment;
 import com.android.settings.enterprise.ApplicationListPreferenceController;
@@ -9,32 +11,33 @@ import com.android.settings.overlay.FeatureFactory;
 import com.android.settingslib.core.AbstractPreferenceController;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public abstract class ApplicationListFragment extends DashboardFragment implements ApplicationListPreferenceController.ApplicationListBuilder {
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "EnterprisePrivacySettings";
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
-    public int getPreferenceScreenResId() {
-        return R.xml.app_list_disclosure_settings;
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        replaceEnterpriseStringTitle("enterprise_privacy_apps_footer", "Settings.ADMIN_ACTION_APPS_COUNT_ESTIMATED", R$string.enterprise_privacy_apps_count_estimation_info);
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment
-    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+    /* access modifiers changed from: protected */
+    public int getPreferenceScreenResId() {
+        return R$xml.app_list_disclosure_settings;
+    }
+
+    /* access modifiers changed from: protected */
+    public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
         ArrayList arrayList = new ArrayList();
         arrayList.add(new ApplicationListPreferenceController(context, this, context.getPackageManager(), this));
         return arrayList;
     }
 
-    /* loaded from: classes.dex */
     private static abstract class AdminGrantedPermission extends ApplicationListFragment {
         private final String[] mPermissions;
 
-        @Override // com.android.settingslib.core.instrumentation.Instrumentable
         public int getMetricsCategory() {
             return 939;
         }
@@ -43,20 +46,16 @@ public abstract class ApplicationListFragment extends DashboardFragment implemen
             this.mPermissions = strArr;
         }
 
-        @Override // com.android.settings.enterprise.ApplicationListPreferenceController.ApplicationListBuilder
         public void buildApplicationList(Context context, ApplicationFeatureProvider.ListOfAppsCallback listOfAppsCallback) {
             FeatureFactory.getFactory(context).getApplicationFeatureProvider(context).listAppsWithAdminGrantedPermissions(this.mPermissions, listOfAppsCallback);
         }
     }
 
-    /* loaded from: classes.dex */
     public static class AdminGrantedPermissionCamera extends AdminGrantedPermission {
-        @Override // com.android.settings.enterprise.ApplicationListFragment.AdminGrantedPermission, com.android.settings.enterprise.ApplicationListPreferenceController.ApplicationListBuilder
         public /* bridge */ /* synthetic */ void buildApplicationList(Context context, ApplicationFeatureProvider.ListOfAppsCallback listOfAppsCallback) {
             super.buildApplicationList(context, listOfAppsCallback);
         }
 
-        @Override // com.android.settings.enterprise.ApplicationListFragment.AdminGrantedPermission, com.android.settingslib.core.instrumentation.Instrumentable
         public /* bridge */ /* synthetic */ int getMetricsCategory() {
             return super.getMetricsCategory();
         }
@@ -66,14 +65,11 @@ public abstract class ApplicationListFragment extends DashboardFragment implemen
         }
     }
 
-    /* loaded from: classes.dex */
     public static class AdminGrantedPermissionLocation extends AdminGrantedPermission {
-        @Override // com.android.settings.enterprise.ApplicationListFragment.AdminGrantedPermission, com.android.settings.enterprise.ApplicationListPreferenceController.ApplicationListBuilder
         public /* bridge */ /* synthetic */ void buildApplicationList(Context context, ApplicationFeatureProvider.ListOfAppsCallback listOfAppsCallback) {
             super.buildApplicationList(context, listOfAppsCallback);
         }
 
-        @Override // com.android.settings.enterprise.ApplicationListFragment.AdminGrantedPermission, com.android.settingslib.core.instrumentation.Instrumentable
         public /* bridge */ /* synthetic */ int getMetricsCategory() {
             return super.getMetricsCategory();
         }
@@ -83,14 +79,11 @@ public abstract class ApplicationListFragment extends DashboardFragment implemen
         }
     }
 
-    /* loaded from: classes.dex */
     public static class AdminGrantedPermissionMicrophone extends AdminGrantedPermission {
-        @Override // com.android.settings.enterprise.ApplicationListFragment.AdminGrantedPermission, com.android.settings.enterprise.ApplicationListPreferenceController.ApplicationListBuilder
         public /* bridge */ /* synthetic */ void buildApplicationList(Context context, ApplicationFeatureProvider.ListOfAppsCallback listOfAppsCallback) {
             super.buildApplicationList(context, listOfAppsCallback);
         }
 
-        @Override // com.android.settings.enterprise.ApplicationListFragment.AdminGrantedPermission, com.android.settingslib.core.instrumentation.Instrumentable
         public /* bridge */ /* synthetic */ int getMetricsCategory() {
             return super.getMetricsCategory();
         }
@@ -100,14 +93,11 @@ public abstract class ApplicationListFragment extends DashboardFragment implemen
         }
     }
 
-    /* loaded from: classes.dex */
     public static class EnterpriseInstalledPackages extends ApplicationListFragment {
-        @Override // com.android.settingslib.core.instrumentation.Instrumentable
         public int getMetricsCategory() {
             return 938;
         }
 
-        @Override // com.android.settings.enterprise.ApplicationListPreferenceController.ApplicationListBuilder
         public void buildApplicationList(Context context, ApplicationFeatureProvider.ListOfAppsCallback listOfAppsCallback) {
             FeatureFactory.getFactory(context).getApplicationFeatureProvider(context).listPolicyInstalledApps(listOfAppsCallback);
         }

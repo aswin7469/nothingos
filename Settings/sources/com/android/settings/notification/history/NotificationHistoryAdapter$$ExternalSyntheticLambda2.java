@@ -1,18 +1,16 @@
 package com.android.settings.notification.history;
 
-import android.app.NotificationHistory;
-import java.util.Comparator;
-/* loaded from: classes.dex */
-public final /* synthetic */ class NotificationHistoryAdapter$$ExternalSyntheticLambda2 implements Comparator {
-    public static final /* synthetic */ NotificationHistoryAdapter$$ExternalSyntheticLambda2 INSTANCE = new NotificationHistoryAdapter$$ExternalSyntheticLambda2();
+import android.view.View;
 
-    private /* synthetic */ NotificationHistoryAdapter$$ExternalSyntheticLambda2() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class NotificationHistoryAdapter$$ExternalSyntheticLambda2 implements View.OnLongClickListener {
+    public final /* synthetic */ View.OnClickListener f$0;
+
+    public /* synthetic */ NotificationHistoryAdapter$$ExternalSyntheticLambda2(View.OnClickListener onClickListener) {
+        this.f$0 = onClickListener;
     }
 
-    @Override // java.util.Comparator
-    public final int compare(Object obj, Object obj2) {
-        int lambda$onRebuildComplete$2;
-        lambda$onRebuildComplete$2 = NotificationHistoryAdapter.lambda$onRebuildComplete$2((NotificationHistory.HistoricalNotification) obj, (NotificationHistory.HistoricalNotification) obj2);
-        return lambda$onRebuildComplete$2;
+    public final boolean onLongClick(View view) {
+        return this.f$0.onClick(view);
     }
 }

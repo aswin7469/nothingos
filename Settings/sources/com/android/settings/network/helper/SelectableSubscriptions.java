@@ -14,62 +14,49 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.function.Function;
-import java.util.function.IntFunction;
-import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-/* loaded from: classes.dex */
+
 public class SelectableSubscriptions implements Callable<List<SubscriptionAnnotation>> {
     private Context mContext;
     private Predicate<SubscriptionAnnotation> mFilter;
     private Function<List<SubscriptionAnnotation>, List<SubscriptionAnnotation>> mFinisher;
     private Supplier<List<SubscriptionInfo>> mSubscriptions;
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ List lambda$new$4(List list) {
         return list;
     }
 
-    public SelectableSubscriptions(final Context context, boolean z) {
+    public SelectableSubscriptions(Context context, boolean z) {
         Supplier<List<SubscriptionInfo>> supplier;
         this.mContext = context;
         if (z) {
-            supplier = new Supplier() { // from class: com.android.settings.network.helper.SelectableSubscriptions$$ExternalSyntheticLambda8
-                @Override // java.util.function.Supplier
-                public final Object get() {
-                    List lambda$new$0;
-                    lambda$new$0 = SelectableSubscriptions.this.lambda$new$0(context);
-                    return lambda$new$0;
-                }
-            };
+            supplier = new SelectableSubscriptions$$ExternalSyntheticLambda3(this, context);
         } else {
-            supplier = new Supplier() { // from class: com.android.settings.network.helper.SelectableSubscriptions$$ExternalSyntheticLambda9
-                @Override // java.util.function.Supplier
-                public final Object get() {
-                    List lambda$new$1;
-                    lambda$new$1 = SelectableSubscriptions.this.lambda$new$1(context);
-                    return lambda$new$1;
-                }
-            };
+            supplier = new SelectableSubscriptions$$ExternalSyntheticLambda4(this, context);
         }
         this.mSubscriptions = supplier;
         if (z) {
-            this.mFilter = SelectableSubscriptions$$ExternalSyntheticLambda7.INSTANCE;
+            this.mFilter = new SelectableSubscriptions$$ExternalSyntheticLambda5();
         } else {
-            this.mFilter = SelectableSubscriptions$$ExternalSyntheticLambda6.INSTANCE;
+            this.mFilter = new SelectableSubscriptions$$ExternalSyntheticLambda6();
         }
-        this.mFinisher = SelectableSubscriptions$$ExternalSyntheticLambda3.INSTANCE;
+        this.mFinisher = new SelectableSubscriptions$$ExternalSyntheticLambda7();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ boolean lambda$new$2(SubscriptionAnnotation subscriptionAnnotation) {
         if (subscriptionAnnotation.isExisted()) {
             return true;
         }
-        return subscriptionAnnotation.getType() == 2 && subscriptionAnnotation.isDisplayAllowed();
+        if (subscriptionAnnotation.getType() != 2 || !subscriptionAnnotation.isDisplayAllowed()) {
+            return false;
+        }
+        return true;
     }
 
     public SelectableSubscriptions addFinisher(UnaryOperator<List<SubscriptionAnnotation>> unaryOperator) {
@@ -77,84 +64,64 @@ public class SelectableSubscriptions implements Callable<List<SubscriptionAnnota
         return this;
     }
 
-    @Override // java.util.concurrent.Callable
     public List<SubscriptionAnnotation> call() {
         TelephonyManager telephonyManager = (TelephonyManager) this.mContext.getSystemService(TelephonyManager.class);
         try {
-            Future postOnBackgroundThread = ThreadUtils.postOnBackgroundThread(new QueryEsimCardId(telephonyManager));
-            Future postOnBackgroundThread2 = ThreadUtils.postOnBackgroundThread(new QuerySimSlotIndex(telephonyManager, true, true));
-            Future postOnBackgroundThread3 = ThreadUtils.postOnBackgroundThread(new QuerySimSlotIndex(telephonyManager, false, true));
-            final List<SubscriptionInfo> list = this.mSubscriptions.get();
-            final List<Integer> atomicToList = atomicToList((AtomicIntegerArray) postOnBackgroundThread.get());
-            final List<Integer> atomicToList2 = atomicToList((AtomicIntegerArray) postOnBackgroundThread2.get());
-            final List<Integer> atomicToList3 = atomicToList((AtomicIntegerArray) postOnBackgroundThread3.get());
-            if (list == null) {
-                return Collections.emptyList();
-            }
-            return (List) IntStream.range(0, list.size()).mapToObj(new IntFunction() { // from class: com.android.settings.network.helper.SelectableSubscriptions$$ExternalSyntheticLambda4
-                @Override // java.util.function.IntFunction
-                public final Object apply(int i) {
-                    SubscriptionAnnotation.Builder lambda$call$5;
-                    lambda$call$5 = SelectableSubscriptions.lambda$call$5(list, i);
-                    return lambda$call$5;
-                }
-            }).map(new Function() { // from class: com.android.settings.network.helper.SelectableSubscriptions$$ExternalSyntheticLambda0
-                @Override // java.util.function.Function
-                public final Object apply(Object obj) {
-                    SubscriptionAnnotation lambda$call$6;
-                    lambda$call$6 = SelectableSubscriptions.this.lambda$call$6(atomicToList, atomicToList2, atomicToList3, (SubscriptionAnnotation.Builder) obj);
-                    return lambda$call$6;
-                }
-            }).filter(this.mFilter).collect(Collectors.collectingAndThen(Collectors.toList(), this.mFinisher));
+            Future postOnBackgroundThread = ThreadUtils.postOnBackgroundThread((Callable) new QueryEsimCardId(telephonyManager));
+            Future postOnBackgroundThread2 = ThreadUtils.postOnBackgroundThread((Callable) new QuerySimSlotIndex(telephonyManager, true, true));
+            Future postOnBackgroundThread3 = ThreadUtils.postOnBackgroundThread((Callable) new QuerySimSlotIndex(telephonyManager, false, true));
+            List list = this.mSubscriptions.get();
+            return (List) IntStream.range(0, list.size()).mapToObj(new SelectableSubscriptions$$ExternalSyntheticLambda0(list)).map(new SelectableSubscriptions$$ExternalSyntheticLambda1(this, atomicToList((AtomicIntegerArray) postOnBackgroundThread.get()), atomicToList((AtomicIntegerArray) postOnBackgroundThread2.get()), atomicToList((AtomicIntegerArray) postOnBackgroundThread3.get()))).filter(this.mFilter).collect(Collectors.collectingAndThen(Collectors.toList(), this.mFinisher));
         } catch (Exception e) {
             Log.w("SelectableSubscriptions", "Fail to request subIdList", e);
             return Collections.emptyList();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ SubscriptionAnnotation.Builder lambda$call$5(List list, int i) {
         return new SubscriptionAnnotation.Builder(list, i);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ SubscriptionAnnotation lambda$call$6(List list, List list2, List list3, SubscriptionAnnotation.Builder builder) {
         return builder.build(this.mContext, list, list2, list3);
     }
 
-    protected List<SubscriptionInfo> getSubInfoList(Context context, Function<SubscriptionManager, List<SubscriptionInfo>> function) {
+    /* access modifiers changed from: protected */
+    public List<SubscriptionInfo> getSubInfoList(Context context, Function<SubscriptionManager, List<SubscriptionInfo>> function) {
+        List<SubscriptionInfo> list;
         SubscriptionManager subscriptionManager = getSubscriptionManager(context);
-        return subscriptionManager == null ? Collections.emptyList() : function.apply(subscriptionManager);
+        if (subscriptionManager == null) {
+            list = null;
+        } else {
+            list = function.apply(subscriptionManager);
+        }
+        return list == null ? Collections.emptyList() : list;
     }
 
-    protected SubscriptionManager getSubscriptionManager(Context context) {
+    /* access modifiers changed from: protected */
+    public SubscriptionManager getSubscriptionManager(Context context) {
         return (SubscriptionManager) context.getSystemService(SubscriptionManager.class);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     /* renamed from: getAvailableSubInfoList */
     public List<SubscriptionInfo> lambda$new$0(Context context) {
-        return getSubInfoList(context, SelectableSubscriptions$$ExternalSyntheticLambda2.INSTANCE);
+        return getSubInfoList(context, new SelectableSubscriptions$$ExternalSyntheticLambda8());
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     /* renamed from: getActiveSubInfoList */
     public List<SubscriptionInfo> lambda$new$1(Context context) {
-        return getSubInfoList(context, SelectableSubscriptions$$ExternalSyntheticLambda1.INSTANCE);
+        return getSubInfoList(context, new SelectableSubscriptions$$ExternalSyntheticLambda9());
     }
 
     @Keep
-    protected static List<Integer> atomicToList(final AtomicIntegerArray atomicIntegerArray) {
+    protected static List<Integer> atomicToList(AtomicIntegerArray atomicIntegerArray) {
         if (atomicIntegerArray == null) {
             return Collections.emptyList();
         }
-        return (List) IntStream.range(0, atomicIntegerArray.length()).map(new IntUnaryOperator() { // from class: com.android.settings.network.helper.SelectableSubscriptions$$ExternalSyntheticLambda5
-            @Override // java.util.function.IntUnaryOperator
-            public final int applyAsInt(int i) {
-                int i2;
-                i2 = atomicIntegerArray.get(i);
-                return i2;
-            }
-        }).boxed().collect(Collectors.toList());
+        return (List) IntStream.range(0, atomicIntegerArray.length()).map(new SelectableSubscriptions$$ExternalSyntheticLambda2(atomicIntegerArray)).boxed().collect(Collectors.toList());
     }
 }

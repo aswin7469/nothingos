@@ -4,12 +4,11 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import com.android.settings.SettingsActivity;
-/* loaded from: classes.dex */
+
 public class InputMethodAndSubtypeEnablerActivity extends SettingsActivity {
     private static final String FRAGMENT_NAME = InputMethodAndSubtypeEnabler.class.getName();
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.SettingsActivity, com.android.settings.core.SettingsBaseActivity, androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         ActionBar actionBar = getActionBar();
@@ -19,13 +18,11 @@ public class InputMethodAndSubtypeEnablerActivity extends SettingsActivity {
         }
     }
 
-    @Override // com.android.settings.core.SettingsBaseActivity, android.app.Activity
     public boolean onNavigateUp() {
         finish();
         return true;
     }
 
-    @Override // com.android.settings.SettingsActivity, android.app.Activity
     public Intent getIntent() {
         Intent intent = new Intent(super.getIntent());
         if (!intent.hasExtra(":settings:show_fragment")) {
@@ -34,8 +31,7 @@ public class InputMethodAndSubtypeEnablerActivity extends SettingsActivity {
         return intent;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.SettingsActivity
+    /* access modifiers changed from: protected */
     public boolean isValidFragment(String str) {
         return FRAGMENT_NAME.equals(str);
     }

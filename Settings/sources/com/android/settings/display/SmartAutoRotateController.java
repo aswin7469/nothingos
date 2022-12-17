@@ -17,18 +17,20 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.view.RotationPolicy;
+import com.android.settings.R$string;
 import com.android.settings.core.TogglePreferenceController;
 import com.android.settings.overlay.FeatureFactory;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
-/* loaded from: classes.dex */
+import com.android.settingslib.devicestate.DeviceStateRotationLockSettingsManager;
+
 public class SmartAutoRotateController extends TogglePreferenceController implements LifecycleObserver {
+    private final DeviceStateRotationLockSettingsManager mDeviceStateAutoRotateSettingsManager;
+    private final DeviceStateRotationLockSettingsManager.DeviceStateRotationLockSettingsListener mDeviceStateRotationLockSettingsListener = new SmartAutoRotateController$$ExternalSyntheticLambda0(this);
     private final MetricsFeatureProvider mMetricsFeatureProvider;
     private final PowerManager mPowerManager;
-    private Preference mPreference;
+    protected Preference mPreference;
     private final SensorPrivacyManager mPrivacyManager;
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() { // from class: com.android.settings.display.SmartAutoRotateController.1
-        @Override // android.content.BroadcastReceiver
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             SmartAutoRotateController smartAutoRotateController = SmartAutoRotateController.this;
             smartAutoRotateController.updateState(smartAutoRotateController.mPreference);
@@ -36,67 +38,57 @@ public class SmartAutoRotateController extends TogglePreferenceController implem
     };
     private RotationPolicy.RotationPolicyListener mRotationPolicyListener;
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
+    }
+
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$new$0() {
+        updateState(this.mPreference);
     }
 
     public SmartAutoRotateController(Context context, String str) {
         super(context, str);
         this.mMetricsFeatureProvider = FeatureFactory.getFactory(context).getMetricsFeatureProvider();
-        SensorPrivacyManager sensorPrivacyManager = SensorPrivacyManager.getInstance(context);
-        this.mPrivacyManager = sensorPrivacyManager;
-        sensorPrivacyManager.addSensorPrivacyListener(2, new SensorPrivacyManager.OnSensorPrivacyChangedListener() { // from class: com.android.settings.display.SmartAutoRotateController$$ExternalSyntheticLambda0
-            public final void onSensorPrivacyChanged(int i, boolean z) {
-                SmartAutoRotateController.this.lambda$new$0(i, z);
-            }
-        });
+        SensorPrivacyManager instance = SensorPrivacyManager.getInstance(context);
+        this.mPrivacyManager = instance;
+        instance.addSensorPrivacyListener(2, new SmartAutoRotateController$$ExternalSyntheticLambda1(this));
         this.mPowerManager = (PowerManager) context.getSystemService(PowerManager.class);
+        this.mDeviceStateAutoRotateSettingsManager = DeviceStateRotationLockSettingsManager.getInstance(context);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$0(int i, boolean z) {
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$new$1(int i, boolean z) {
         updateState(this.mPreference);
     }
 
-    public void init(Lifecycle lifecycle) {
-        lifecycle.addObserver(this);
-    }
-
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         if (!isRotationResolverServiceAvailable(this.mContext)) {
             return 3;
         }
-        return (RotationPolicy.isRotationLocked(this.mContext) || !hasSufficientPermission(this.mContext) || isCameraLocked() || isPowerSaveMode()) ? 5 : 0;
+        return (isRotationLocked() || !hasSufficientPermission(this.mContext) || isCameraLocked() || isPowerSaveMode()) ? 5 : 0;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settingslib.core.AbstractPreferenceController
+    /* access modifiers changed from: protected */
+    public boolean isRotationLocked() {
+        if (DeviceStateAutoRotationHelper.isDeviceStateRotationEnabled(this.mContext)) {
+            return this.mDeviceStateAutoRotateSettingsManager.isRotationLockedForAllStates();
+        }
+        return RotationPolicy.isRotationLocked(this.mContext);
+    }
+
     public void updateState(Preference preference) {
         super.updateState(preference);
         if (preference != null) {
@@ -104,13 +96,15 @@ public class SmartAutoRotateController extends TogglePreferenceController implem
         }
     }
 
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    boolean isCameraLocked() {
+    public boolean isCameraLocked() {
         return this.mPrivacyManager.isSensorPrivacyEnabled(2);
     }
 
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    boolean isPowerSaveMode() {
+    public boolean isPowerSaveMode() {
         return this.mPowerManager.isPowerSaveMode();
     }
 
@@ -118,7 +112,7 @@ public class SmartAutoRotateController extends TogglePreferenceController implem
     public void onStart() {
         this.mContext.registerReceiver(this.mReceiver, new IntentFilter("android.os.action.POWER_SAVE_MODE_CHANGED"));
         if (this.mRotationPolicyListener == null) {
-            this.mRotationPolicyListener = new RotationPolicy.RotationPolicyListener() { // from class: com.android.settings.display.SmartAutoRotateController.2
+            this.mRotationPolicyListener = new RotationPolicy.RotationPolicyListener() {
                 public void onChange() {
                     SmartAutoRotateController smartAutoRotateController = SmartAutoRotateController.this;
                     smartAutoRotateController.updateState(smartAutoRotateController.mPreference);
@@ -126,6 +120,7 @@ public class SmartAutoRotateController extends TogglePreferenceController implem
             };
         }
         RotationPolicy.registerRotationPolicyListener(this.mContext, this.mRotationPolicyListener);
+        this.mDeviceStateAutoRotateSettingsManager.registerListener(this.mDeviceStateRotationLockSettingsListener);
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
@@ -136,36 +131,42 @@ public class SmartAutoRotateController extends TogglePreferenceController implem
             RotationPolicy.unregisterRotationPolicyListener(this.mContext, rotationPolicyListener);
             this.mRotationPolicyListener = null;
         }
+        this.mDeviceStateAutoRotateSettingsManager.unregisterListener(this.mDeviceStateRotationLockSettingsListener);
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean isChecked() {
-        return !RotationPolicy.isRotationLocked(this.mContext) && hasSufficientPermission(this.mContext) && !isCameraLocked() && !isPowerSaveMode() && Settings.Secure.getInt(this.mContext.getContentResolver(), "camera_autorotate", 0) == 1;
+        if (isRotationLocked() || !hasSufficientPermission(this.mContext) || isCameraLocked() || isPowerSaveMode() || Settings.Secure.getInt(this.mContext.getContentResolver(), "camera_autorotate", 0) != 1) {
+            return false;
+        }
+        return true;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = preferenceScreen.findPreference(getPreferenceKey());
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean setChecked(boolean z) {
         this.mMetricsFeatureProvider.action(this.mContext, 1751, z);
         Settings.Secure.putInt(this.mContext.getContentResolver(), "camera_autorotate", z ? 1 : 0);
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    public int getSliceHighlightMenuRes() {
+        return R$string.menu_key_display;
+    }
+
     public static boolean isRotationResolverServiceAvailable(Context context) {
         ResolveInfo resolveService;
         PackageManager packageManager = context.getPackageManager();
         String rotationResolverPackageName = packageManager.getRotationResolverPackageName();
-        return (TextUtils.isEmpty(rotationResolverPackageName) || (resolveService = packageManager.resolveService(new Intent("android.service.rotationresolver.RotationResolverService").setPackage(rotationResolverPackageName), 1048576)) == null || resolveService.serviceInfo == null) ? false : true;
+        if (TextUtils.isEmpty(rotationResolverPackageName) || (resolveService = packageManager.resolveService(new Intent("android.service.rotationresolver.RotationResolverService").setPackage(rotationResolverPackageName), 1048576)) == null || resolveService.serviceInfo == null) {
+            return false;
+        }
+        return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static boolean hasSufficientPermission(Context context) {
+    static boolean hasSufficientPermission(Context context) {
         PackageManager packageManager = context.getPackageManager();
         String rotationResolverPackageName = packageManager.getRotationResolverPackageName();
         return rotationResolverPackageName != null && packageManager.checkPermission("android.permission.CAMERA", rotationResolverPackageName) == 0;

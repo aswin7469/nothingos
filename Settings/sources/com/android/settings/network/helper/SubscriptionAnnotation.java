@@ -7,7 +7,7 @@ import android.telephony.SubscriptionManager;
 import androidx.annotation.Keep;
 import com.android.settings.network.SubscriptionUtil;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class SubscriptionAnnotation {
     public static final ParcelUuid EMPTY_UUID = ParcelUuid.fromString("0-0-0-0-0");
     private boolean mIsActive;
@@ -15,9 +15,8 @@ public class SubscriptionAnnotation {
     private boolean mIsExisted;
     private int mOrderWithinList;
     private SubscriptionInfo mSubInfo;
-    private int mType;
+    private int mType = 0;
 
-    /* loaded from: classes.dex */
     public static class Builder {
         private int mIndexWithinList;
         private List<SubscriptionInfo> mSubInfoList;
@@ -35,30 +34,27 @@ public class SubscriptionAnnotation {
     @Keep
     protected SubscriptionAnnotation(List<SubscriptionInfo> list, int i, Context context, List<Integer> list2, List<Integer> list3, List<Integer> list4) {
         boolean z = false;
-        this.mType = 0;
-        if (i < 0 || i >= list.size()) {
-            return;
+        if (i >= 0 && i < list.size()) {
+            SubscriptionInfo subscriptionInfo = list.get(i);
+            this.mSubInfo = subscriptionInfo;
+            if (subscriptionInfo != null) {
+                this.mOrderWithinList = i;
+                int i2 = subscriptionInfo.isEmbedded() ? 2 : 1;
+                this.mType = i2;
+                this.mIsExisted = true;
+                if (i2 == 2) {
+                    int cardId = this.mSubInfo.getCardId();
+                    this.mIsActive = list4.contains(Integer.valueOf(this.mSubInfo.getSimSlotIndex()));
+                    this.mIsAllowToDisplay = (cardId < 0 || isDisplayAllowed(context)) ? true : z;
+                    return;
+                }
+                if (this.mSubInfo.getSimSlotIndex() > -1 && list4.contains(Integer.valueOf(this.mSubInfo.getSimSlotIndex()))) {
+                    z = true;
+                }
+                this.mIsActive = z;
+                this.mIsAllowToDisplay = isDisplayAllowed(context);
+            }
         }
-        SubscriptionInfo subscriptionInfo = list.get(i);
-        this.mSubInfo = subscriptionInfo;
-        if (subscriptionInfo == null) {
-            return;
-        }
-        this.mOrderWithinList = i;
-        int i2 = subscriptionInfo.isEmbedded() ? 2 : 1;
-        this.mType = i2;
-        this.mIsExisted = true;
-        if (i2 == 2) {
-            int cardId = this.mSubInfo.getCardId();
-            this.mIsActive = list4.contains(Integer.valueOf(this.mSubInfo.getSimSlotIndex()));
-            this.mIsAllowToDisplay = (cardId < 0 || isDisplayAllowed(context)) ? true : z;
-            return;
-        }
-        if (this.mSubInfo.getSimSlotIndex() > -1 && list4.contains(Integer.valueOf(this.mSubInfo.getSimSlotIndex()))) {
-            z = true;
-        }
-        this.mIsActive = z;
-        this.mIsAllowToDisplay = isDisplayAllowed(context);
     }
 
     @Keep

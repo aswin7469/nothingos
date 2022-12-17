@@ -5,24 +5,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.usb.UsbPortStatus;
+import android.util.Log;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnPause;
 import com.android.settingslib.core.lifecycle.events.OnResume;
-/* loaded from: classes.dex */
+
 public class UsbConnectionBroadcastReceiver extends BroadcastReceiver implements LifecycleObserver, OnResume, OnPause {
+    private static final boolean DEBUG = Log.isLoggable("UsbBroadcastReceiver", 3);
     private boolean mConnected;
     private Context mContext;
+    private int mDataRole = 0;
+    private long mFunctions = 0;
     private boolean mListeningToUsbEvents;
+    private int mPowerRole = 0;
     private UsbBackend mUsbBackend;
     private UsbConnectionListener mUsbConnectionListener;
-    private long mFunctions = 0;
-    private int mDataRole = 0;
-    private int mPowerRole = 0;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public interface UsbConnectionListener {
-        void onUsbConnectionChanged(boolean z, long j, int i, int i2);
+    interface UsbConnectionListener {
+        void onUsbConnectionChanged(boolean z, long j, int i, int i2, boolean z2);
     }
 
     public UsbConnectionBroadcastReceiver(Context context, UsbConnectionListener usbConnectionListener, UsbBackend usbBackend) {
@@ -31,9 +31,12 @@ public class UsbConnectionBroadcastReceiver extends BroadcastReceiver implements
         this.mUsbBackend = usbBackend;
     }
 
-    @Override // android.content.BroadcastReceiver
     public void onReceive(Context context, Intent intent) {
         UsbPortStatus parcelable;
+        if (DEBUG) {
+            Log.d("UsbBroadcastReceiver", "onReceive() action : " + intent.getAction());
+        }
+        boolean z = intent.getExtras() != null ? intent.getExtras().getBoolean("configured") : false;
         if ("android.hardware.usb.action.USB_STATE".equals(intent.getAction())) {
             this.mConnected = intent.getExtras().getBoolean("connected") || intent.getExtras().getBoolean("host_connected");
             long j = 0;
@@ -64,7 +67,7 @@ public class UsbConnectionBroadcastReceiver extends BroadcastReceiver implements
         }
         UsbConnectionListener usbConnectionListener = this.mUsbConnectionListener;
         if (usbConnectionListener != null) {
-            usbConnectionListener.onUsbConnectionChanged(this.mConnected, this.mFunctions, this.mPowerRole, this.mDataRole);
+            usbConnectionListener.onUsbConnectionChanged(this.mConnected, this.mFunctions, this.mPowerRole, this.mDataRole, z);
         }
     }
 
@@ -89,12 +92,10 @@ public class UsbConnectionBroadcastReceiver extends BroadcastReceiver implements
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnResume
     public void onResume() {
         register();
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnPause
     public void onPause() {
         unregister();
     }

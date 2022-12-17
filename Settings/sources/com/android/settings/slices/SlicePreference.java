@@ -4,14 +4,15 @@ import android.content.Context;
 import android.util.AttributeSet;
 import androidx.slice.Slice;
 import androidx.slice.widget.SliceView;
-import com.android.settings.R;
+import com.android.settings.R$attr;
+import com.android.settings.R$id;
 import com.android.settingslib.widget.LayoutPreference;
-/* loaded from: classes.dex */
+
 public class SlicePreference extends LayoutPreference {
     private SliceView mSliceView;
 
     public SlicePreference(Context context, AttributeSet attributeSet) {
-        super(context, attributeSet, R.attr.slicePreferenceStyle);
+        super(context, attributeSet, R$attr.slicePreferenceStyle);
         init();
     }
 
@@ -21,7 +22,7 @@ public class SlicePreference extends LayoutPreference {
     }
 
     private void init() {
-        SliceView sliceView = (SliceView) findViewById(R.id.slice_view);
+        SliceView sliceView = (SliceView) findViewById(R$id.slice_view);
         this.mSliceView = sliceView;
         sliceView.setShowTitleItems(true);
         this.mSliceView.setScrollable(false);

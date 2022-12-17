@@ -6,11 +6,11 @@ import android.hardware.display.AmbientDisplayConfiguration;
 import com.android.settings.aware.AwareFeatureProvider;
 import com.android.settings.core.BasePreferenceController;
 import com.android.settings.overlay.FeatureFactory;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.core.AbstractPreferenceController;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class GesturesSettingPreferenceController extends BasePreferenceController {
     private static final String FAKE_PREF_KEY = "fake_key_only_for_get_available";
     private static final String KEY_GESTURES_SETTINGS = "gesture_settings";
@@ -18,42 +18,30 @@ public class GesturesSettingPreferenceController extends BasePreferenceControlle
     private final AssistGestureFeatureProvider mFeatureProvider;
     private List<AbstractPreferenceController> mGestureControllers;
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -64,21 +52,29 @@ public class GesturesSettingPreferenceController extends BasePreferenceControlle
         this.mAwareFeatureProvider = FeatureFactory.getFactory(context).getAwareFeatureProvider();
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         boolean z;
         if (this.mGestureControllers == null) {
             this.mGestureControllers = buildAllPreferenceControllers(this.mContext);
         }
-        loop0: while (true) {
+        Iterator<AbstractPreferenceController> it = this.mGestureControllers.iterator();
+        loop0:
+        while (true) {
             z = false;
-            for (AbstractPreferenceController abstractPreferenceController : this.mGestureControllers) {
-                if (z || abstractPreferenceController.isAvailable()) {
+            while (true) {
+                if (!it.hasNext()) {
+                    break loop0;
+                }
+                AbstractPreferenceController next = it.next();
+                if (z || next.isAvailable()) {
                     z = true;
                 }
             }
         }
-        return z ? 0 : 3;
+        if (z) {
+            return 0;
+        }
+        return 3;
     }
 
     private static List<AbstractPreferenceController> buildAllPreferenceControllers(Context context) {

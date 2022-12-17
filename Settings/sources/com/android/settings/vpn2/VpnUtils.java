@@ -6,7 +6,7 @@ import android.os.RemoteException;
 import android.provider.Settings;
 import android.security.LegacyVpnProfileStore;
 import com.android.internal.net.VpnConfig;
-/* loaded from: classes.dex */
+
 public class VpnUtils {
     public static String getLockdownVpn() {
         byte[] bArr = LegacyVpnProfileStore.get("LOCKDOWN_VPN");
@@ -35,7 +35,10 @@ public class VpnUtils {
         if (getLockdownVpn() != null) {
             return true;
         }
-        return (getVpnManager(context).getAlwaysOnVpnPackageForUser(userId) == null || Settings.Secure.getIntForUser(context.getContentResolver(), "always_on_vpn_lockdown", 0, userId) == 0) ? false : true;
+        if (getVpnManager(context).getAlwaysOnVpnPackageForUser(userId) == null || Settings.Secure.getIntForUser(context.getContentResolver(), "always_on_vpn_lockdown", 0, userId) == 0) {
+            return false;
+        }
+        return true;
     }
 
     public static boolean isVpnActive(Context context) throws RemoteException {
@@ -60,11 +63,11 @@ public class VpnUtils {
 
     public static boolean disconnectLegacyVpn(Context context) {
         int userId = context.getUserId();
-        if (getVpnManager(context).getLegacyVpnInfo(userId) != null) {
-            clearLockdownVpn(context);
-            getVpnManager(context).prepareVpn(null, "[Legacy VPN]", userId);
-            return true;
+        if (getVpnManager(context).getLegacyVpnInfo(userId) == null) {
+            return false;
         }
-        return false;
+        clearLockdownVpn(context);
+        getVpnManager(context).prepareVpn((String) null, "[Legacy VPN]", userId);
+        return true;
     }
 }

@@ -8,7 +8,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Checkable;
 import android.widget.RelativeLayout;
-/* loaded from: classes.dex */
+
 public class CheckableRelativeLayout extends RelativeLayout implements Checkable {
     private Checkable mCheckable;
     private View mCheckableChild;
@@ -22,8 +22,8 @@ public class CheckableRelativeLayout extends RelativeLayout implements Checkable
         super(context, attributeSet);
     }
 
-    @Override // android.view.View
-    protected void onFinishInflate() {
+    /* access modifiers changed from: protected */
+    public void onFinishInflate() {
         View findFirstCheckableView = findFirstCheckableView(this);
         this.mCheckableChild = findFirstCheckableView;
         if (findFirstCheckableView != null) {
@@ -52,7 +52,6 @@ public class CheckableRelativeLayout extends RelativeLayout implements Checkable
         return null;
     }
 
-    @Override // android.widget.Checkable
     public void setChecked(boolean z) {
         if (this.mChecked != z) {
             this.mChecked = z;
@@ -67,29 +66,24 @@ public class CheckableRelativeLayout extends RelativeLayout implements Checkable
 
     private void setStateDescriptionIfNeeded() {
         View view = this.mCheckableChild;
-        if (view == null) {
-            return;
+        if (view != null) {
+            setStateDescription(view.getStateDescription());
         }
-        setStateDescription(view.getStateDescription());
     }
 
-    @Override // android.widget.Checkable
     public boolean isChecked() {
         return this.mChecked;
     }
 
-    @Override // android.widget.Checkable
     public void toggle() {
         setChecked(!this.mChecked);
     }
 
-    @Override // android.view.View
     public void onInitializeAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
         super.onInitializeAccessibilityEvent(accessibilityEvent);
         accessibilityEvent.setChecked(this.mChecked);
     }
 
-    @Override // android.view.View
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo accessibilityNodeInfo) {
         super.onInitializeAccessibilityNodeInfo(accessibilityNodeInfo);
         accessibilityNodeInfo.setChecked(this.mChecked);

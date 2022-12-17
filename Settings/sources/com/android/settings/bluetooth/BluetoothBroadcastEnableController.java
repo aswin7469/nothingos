@@ -11,35 +11,29 @@ import android.util.Log;
 import androidx.annotation.Keep;
 import androidx.preference.PreferenceScreen;
 import com.android.settings.core.TogglePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.RestrictedSwitchPreference;
 import com.android.settingslib.bluetooth.BluetoothCallback;
 import com.android.settingslib.bluetooth.BroadcastProfile;
 import com.android.settingslib.bluetooth.CachedBluetoothDevice;
 import com.android.settingslib.bluetooth.LocalBluetoothManager;
+import com.android.settingslib.core.lifecycle.Lifecycle;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnDestroy;
-import com.android.settingslib.core.lifecycle.events.OnPause;
-import com.android.settingslib.core.lifecycle.events.OnResume;
 import java.util.UUID;
+
 @Keep
-/* loaded from: classes.dex */
-public class BluetoothBroadcastEnableController extends TogglePreferenceController implements LifecycleObserver, OnResume, OnPause, OnDestroy, BluetoothCallback {
+public class BluetoothBroadcastEnableController extends TogglePreferenceController implements LifecycleObserver, OnDestroy, BluetoothCallback {
     public static final String BLUETOOTH_LE_AUDIO_MASK_PROP = "persist.vendor.service.bt.adv_audio_mask";
     public static final int BROADCAST_AUDIO_MASK = 4;
     public static final String KEY_BROADCAST_ENABLE = "bluetooth_screen_broadcast_enable";
     public static final String TAG = "BluetoothBroadcastEnableController";
-    private BluetoothAdapter mBluetoothAdapter;
-    private Context mContext;
-    private RestrictedSwitchPreference mPreference = null;
-    private boolean mState = false;
-    private boolean reset_pending = false;
-    private BroadcastProfile mBapBroadcastProfile = null;
     private boolean isBluetoothLeBroadcastAudioSupported = false;
+    /* access modifiers changed from: private */
+    public BroadcastProfile mBapBroadcastProfile = null;
+    private BluetoothAdapter mBluetoothAdapter;
     private boolean mCallbacksRegistered = false;
-    private LocalBluetoothManager mManager = null;
-    private final Handler mHandler = new Handler() { // from class: com.android.settings.bluetooth.BluetoothBroadcastEnableController.1
-        @Override // android.os.Handler
+    private Context mContext;
+    private final Handler mHandler = new Handler() {
         public void handleMessage(Message message) {
             Log.d(BluetoothBroadcastEnableController.TAG, "BT state, msg = " + Integer.toString(message.what));
             switch (message.what) {
@@ -49,10 +43,10 @@ public class BluetoothBroadcastEnableController extends TogglePreferenceControll
                     BluetoothBroadcastEnableController.this.reset_pending = false;
                     BluetoothBroadcastEnableController.this.onStateChanged(false);
                     BluetoothBroadcastEnableController.this.mBapBroadcastProfile = null;
-                    if (BluetoothBroadcastEnableController.this.mPreference == null) {
+                    if (BluetoothBroadcastEnableController.this.mPreference != null) {
+                        BluetoothBroadcastEnableController.this.mPreference.setEnabled(false);
                         return;
                     }
-                    BluetoothBroadcastEnableController.this.mPreference.setEnabled(false);
                     return;
                 case 12:
                     if (BluetoothBroadcastEnableController.this.mPreference != null) {
@@ -66,95 +60,80 @@ public class BluetoothBroadcastEnableController extends TogglePreferenceControll
             }
         }
     };
+    /* access modifiers changed from: private */
+    public LocalBluetoothManager mManager = null;
+    /* access modifiers changed from: private */
+    public RestrictedSwitchPreference mPreference = null;
+    private boolean mState = false;
+    /* access modifiers changed from: private */
+    public boolean reset_pending = false;
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public /* bridge */ /* synthetic */ void onA2dpCodecConfigChanged(CachedBluetoothDevice cachedBluetoothDevice, BluetoothCodecStatus bluetoothCodecStatus) {
         super.onA2dpCodecConfigChanged(cachedBluetoothDevice, bluetoothCodecStatus);
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public /* bridge */ /* synthetic */ void onAclConnectionStateChanged(CachedBluetoothDevice cachedBluetoothDevice, int i) {
         super.onAclConnectionStateChanged(cachedBluetoothDevice, i);
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public /* bridge */ /* synthetic */ void onActiveDeviceChanged(CachedBluetoothDevice cachedBluetoothDevice, int i) {
         super.onActiveDeviceChanged(cachedBluetoothDevice, i);
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public /* bridge */ /* synthetic */ void onAudioModeChanged() {
         super.onAudioModeChanged();
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public /* bridge */ /* synthetic */ void onConnectionStateChanged(CachedBluetoothDevice cachedBluetoothDevice, int i) {
         super.onConnectionStateChanged(cachedBluetoothDevice, i);
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public /* bridge */ /* synthetic */ void onDeviceAdded(CachedBluetoothDevice cachedBluetoothDevice) {
         super.onDeviceAdded(cachedBluetoothDevice);
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public /* bridge */ /* synthetic */ void onDeviceBondStateChanged(CachedBluetoothDevice cachedBluetoothDevice, int i) {
         super.onDeviceBondStateChanged(cachedBluetoothDevice, i);
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public /* bridge */ /* synthetic */ void onDeviceDeleted(CachedBluetoothDevice cachedBluetoothDevice) {
         super.onDeviceDeleted(cachedBluetoothDevice);
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public /* bridge */ /* synthetic */ void onGroupDiscoveryStatusChanged(int i, int i2, int i3) {
         super.onGroupDiscoveryStatusChanged(i, i2, i3);
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public /* bridge */ /* synthetic */ void onNewGroupFound(CachedBluetoothDevice cachedBluetoothDevice, int i, UUID uuid) {
         super.onNewGroupFound(cachedBluetoothDevice, i, uuid);
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public /* bridge */ /* synthetic */ void onProfileConnectionStateChanged(CachedBluetoothDevice cachedBluetoothDevice, int i, int i2) {
         super.onProfileConnectionStateChanged(cachedBluetoothDevice, i, i2);
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public /* bridge */ /* synthetic */ void onScanningStateChanged(boolean z) {
         super.onScanningStateChanged(z);
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
 
-    public BluetoothBroadcastEnableController(Context context, String str) {
+    public BluetoothBroadcastEnableController(Context context, String str, Lifecycle lifecycle) {
         super(context, str);
-        Log.d(TAG, "Constructor() with key");
+        Log.d(TAG, "Constructor()");
+        if (lifecycle != null) {
+            lifecycle.addObserver(this);
+        }
         Init(context);
     }
 
@@ -190,7 +169,7 @@ public class BluetoothBroadcastEnableController extends TogglePreferenceControll
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void onStateChanged(boolean z) {
         Log.d(TAG, "onStateChanged " + Boolean.toString(z));
         this.mState = z;
@@ -198,14 +177,12 @@ public class BluetoothBroadcastEnableController extends TogglePreferenceControll
         if (restrictedSwitchPreference != null) {
             restrictedSwitchPreference.setChecked(z);
         }
-        if (this.mState || !this.reset_pending) {
-            return;
+        if (!this.mState && this.reset_pending) {
+            this.reset_pending = false;
+            updateState(true);
         }
-        this.reset_pending = false;
-        updateState(true);
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public void onBluetoothStateChanged(int i) {
         Log.d(TAG, "onBluetoothStateChanged" + Integer.toString(i));
         switch (i) {
@@ -217,14 +194,13 @@ public class BluetoothBroadcastEnableController extends TogglePreferenceControll
                 return;
             case 12:
                 Handler handler2 = this.mHandler;
-                handler2.sendMessageDelayed(handler2.obtainMessage(i), 200L);
+                handler2.sendMessageDelayed(handler2.obtainMessage(i), 200);
                 return;
             default:
                 return;
         }
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public void onBroadcastStateChanged(int i) {
         Log.d(TAG, "onBroadcastStateChanged" + Integer.toString(i));
         if (i == 10) {
@@ -233,8 +209,7 @@ public class BluetoothBroadcastEnableController extends TogglePreferenceControll
                 restrictedSwitchPreference.setEnabled(true);
             }
             onStateChanged(false);
-        } else if (i != 12) {
-        } else {
+        } else if (i == 12) {
             RestrictedSwitchPreference restrictedSwitchPreference2 = this.mPreference;
             if (restrictedSwitchPreference2 != null) {
                 restrictedSwitchPreference2.setEnabled(true);
@@ -243,7 +218,6 @@ public class BluetoothBroadcastEnableController extends TogglePreferenceControll
         }
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public void onBroadcastKeyGenerated() {
         Log.d(TAG, "onBroadcastKeyGenerated");
         if (this.mState) {
@@ -252,13 +226,11 @@ public class BluetoothBroadcastEnableController extends TogglePreferenceControll
         }
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         Log.d(TAG, "getPreferenceKey");
         return KEY_BROADCAST_ENABLE;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         Log.d(TAG, "displayPreference");
@@ -268,68 +240,55 @@ public class BluetoothBroadcastEnableController extends TogglePreferenceControll
             BluetoothAdapter defaultAdapter = BluetoothAdapter.getDefaultAdapter();
             this.mBluetoothAdapter = defaultAdapter;
             onBluetoothStateChanged(defaultAdapter.getState());
-            if (this.mBluetoothAdapter.getState() != 12 || !this.mBapBroadcastProfile.isProfileReady()) {
-                return;
+            if (this.mBluetoothAdapter.getState() == 12 && this.mBapBroadcastProfile.isProfileReady()) {
+                int broadcastStatus = this.mBapBroadcastProfile.getBroadcastStatus();
+                Log.d(TAG, "get status done");
+                if (broadcastStatus == 12 || broadcastStatus == 14) {
+                    onStateChanged(true);
+                } else {
+                    onStateChanged(false);
+                }
             }
-            int broadcastStatus = this.mBapBroadcastProfile.getBroadcastStatus();
-            Log.d(TAG, "get status done");
-            if (broadcastStatus == 12 || broadcastStatus == 14) {
-                onStateChanged(true);
-                return;
-            } else {
-                onStateChanged(false);
-                return;
-            }
+        } else {
+            restrictedSwitchPreference.setVisible(false);
         }
-        restrictedSwitchPreference.setVisible(false);
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean isChecked() {
         return this.mState;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean setChecked(boolean z) {
         updateState(z);
         return true;
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         Log.d(TAG, "getAvailabilityStatus");
         return this.isBluetoothLeBroadcastAudioSupported ? 0 : 3;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public boolean hasAsyncUpdate() {
         Log.d(TAG, "hasAsyncUpdate");
         return true;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public boolean isPublicSlice() {
         Log.d(TAG, "isPublicSlice");
         return true;
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnResume
-    public void onResume() {
-        Log.d(TAG, "onResume");
-    }
-
-    @Override // com.android.settingslib.core.lifecycle.events.OnPause
-    public void onPause() {
-        Log.d(TAG, "onPause");
-    }
-
-    @Override // com.android.settingslib.core.lifecycle.events.OnDestroy
     public void onDestroy() {
-        Log.d(TAG, "onDestory");
+        Log.d(TAG, "onDestroy");
         this.mCallbacksRegistered = false;
         LocalBluetoothManager localBluetoothManager = this.mManager;
         if (localBluetoothManager != null) {
             localBluetoothManager.getEventManager().unregisterCallback(this);
         }
+    }
+
+    public int getSliceHighlightMenuRes() {
+        Log.d(TAG, "getSliceHighlightMenuRes");
+        return this.isBluetoothLeBroadcastAudioSupported ? 0 : 3;
     }
 }

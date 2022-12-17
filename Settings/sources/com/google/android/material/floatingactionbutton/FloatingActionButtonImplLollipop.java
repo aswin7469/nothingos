@@ -11,7 +11,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.RippleDrawable;
-import android.os.Build;
 import android.view.View;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Preconditions;
@@ -21,30 +20,30 @@ import com.google.android.material.shadow.ShadowViewDelegate;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.ShapeAppearanceModel;
 import java.util.ArrayList;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes2.dex */
-public class FloatingActionButtonImplLollipop extends FloatingActionButtonImpl {
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // com.google.android.material.floatingactionbutton.FloatingActionButtonImpl
+
+class FloatingActionButtonImplLollipop extends FloatingActionButtonImpl {
+    /* access modifiers changed from: package-private */
     public void jumpDrawableToCurrentState() {
     }
 
-    @Override // com.google.android.material.floatingactionbutton.FloatingActionButtonImpl
-    boolean requirePreDrawListener() {
+    /* access modifiers changed from: package-private */
+    public void onDrawableStateChanged(int[] iArr) {
+    }
+
+    /* access modifiers changed from: package-private */
+    public boolean requirePreDrawListener() {
         return false;
     }
 
-    @Override // com.google.android.material.floatingactionbutton.FloatingActionButtonImpl
-    void updateFromViewRotation() {
+    /* access modifiers changed from: package-private */
+    public void updateFromViewRotation() {
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public FloatingActionButtonImplLollipop(FloatingActionButton floatingActionButton, ShadowViewDelegate shadowViewDelegate) {
+    FloatingActionButtonImplLollipop(FloatingActionButton floatingActionButton, ShadowViewDelegate shadowViewDelegate) {
         super(floatingActionButton, shadowViewDelegate);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // com.google.android.material.floatingactionbutton.FloatingActionButtonImpl
+    /* access modifiers changed from: package-private */
     public void initializeBackgroundDrawable(ColorStateList colorStateList, PorterDuff.Mode mode, ColorStateList colorStateList2, int i) {
         Drawable drawable;
         MaterialShapeDrawable createShapeDrawable = createShapeDrawable();
@@ -61,13 +60,12 @@ public class FloatingActionButtonImplLollipop extends FloatingActionButtonImpl {
             this.borderDrawable = null;
             drawable = this.shapeDrawable;
         }
-        RippleDrawable rippleDrawable = new RippleDrawable(RippleUtils.sanitizeRippleDrawableColor(colorStateList2), drawable, null);
+        RippleDrawable rippleDrawable = new RippleDrawable(RippleUtils.sanitizeRippleDrawableColor(colorStateList2), drawable, (Drawable) null);
         this.rippleDrawable = rippleDrawable;
         this.contentBackground = rippleDrawable;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // com.google.android.material.floatingactionbutton.FloatingActionButtonImpl
+    /* access modifiers changed from: package-private */
     public void setRippleColor(ColorStateList colorStateList) {
         Drawable drawable = this.rippleDrawable;
         if (drawable instanceof RippleDrawable) {
@@ -77,31 +75,22 @@ public class FloatingActionButtonImplLollipop extends FloatingActionButtonImpl {
         }
     }
 
-    @Override // com.google.android.material.floatingactionbutton.FloatingActionButtonImpl
-    void onElevationsChanged(float f, float f2, float f3) {
-        int i = Build.VERSION.SDK_INT;
-        if (i == 21) {
-            this.view.refreshDrawableState();
-        } else {
-            StateListAnimator stateListAnimator = new StateListAnimator();
-            stateListAnimator.addState(FloatingActionButtonImpl.PRESSED_ENABLED_STATE_SET, createElevationAnimator(f, f3));
-            stateListAnimator.addState(FloatingActionButtonImpl.HOVERED_FOCUSED_ENABLED_STATE_SET, createElevationAnimator(f, f2));
-            stateListAnimator.addState(FloatingActionButtonImpl.FOCUSED_ENABLED_STATE_SET, createElevationAnimator(f, f2));
-            stateListAnimator.addState(FloatingActionButtonImpl.HOVERED_ENABLED_STATE_SET, createElevationAnimator(f, f2));
-            AnimatorSet animatorSet = new AnimatorSet();
-            ArrayList arrayList = new ArrayList();
-            arrayList.add(ObjectAnimator.ofFloat(this.view, "elevation", f).setDuration(0L));
-            if (i >= 22 && i <= 24) {
-                FloatingActionButton floatingActionButton = this.view;
-                arrayList.add(ObjectAnimator.ofFloat(floatingActionButton, View.TRANSLATION_Z, floatingActionButton.getTranslationZ()).setDuration(100L));
-            }
-            arrayList.add(ObjectAnimator.ofFloat(this.view, View.TRANSLATION_Z, 0.0f).setDuration(100L));
-            animatorSet.playSequentially((Animator[]) arrayList.toArray(new Animator[0]));
-            animatorSet.setInterpolator(FloatingActionButtonImpl.ELEVATION_ANIM_INTERPOLATOR);
-            stateListAnimator.addState(FloatingActionButtonImpl.ENABLED_STATE_SET, animatorSet);
-            stateListAnimator.addState(FloatingActionButtonImpl.EMPTY_STATE_SET, createElevationAnimator(0.0f, 0.0f));
-            this.view.setStateListAnimator(stateListAnimator);
-        }
+    /* access modifiers changed from: package-private */
+    public void onElevationsChanged(float f, float f2, float f3) {
+        StateListAnimator stateListAnimator = new StateListAnimator();
+        stateListAnimator.addState(FloatingActionButtonImpl.PRESSED_ENABLED_STATE_SET, createElevationAnimator(f, f3));
+        stateListAnimator.addState(FloatingActionButtonImpl.HOVERED_FOCUSED_ENABLED_STATE_SET, createElevationAnimator(f, f2));
+        stateListAnimator.addState(FloatingActionButtonImpl.FOCUSED_ENABLED_STATE_SET, createElevationAnimator(f, f2));
+        stateListAnimator.addState(FloatingActionButtonImpl.HOVERED_ENABLED_STATE_SET, createElevationAnimator(f, f2));
+        AnimatorSet animatorSet = new AnimatorSet();
+        ArrayList arrayList = new ArrayList();
+        arrayList.add(ObjectAnimator.ofFloat(this.view, "elevation", new float[]{f}).setDuration(0));
+        arrayList.add(ObjectAnimator.ofFloat(this.view, View.TRANSLATION_Z, new float[]{0.0f}).setDuration(100));
+        animatorSet.playSequentially((Animator[]) arrayList.toArray(new Animator[0]));
+        animatorSet.setInterpolator(FloatingActionButtonImpl.ELEVATION_ANIM_INTERPOLATOR);
+        stateListAnimator.addState(FloatingActionButtonImpl.ENABLED_STATE_SET, animatorSet);
+        stateListAnimator.addState(FloatingActionButtonImpl.EMPTY_STATE_SET, createElevationAnimator(0.0f, 0.0f));
+        this.view.setStateListAnimator(stateListAnimator);
         if (shouldAddPadding()) {
             updatePadding();
         }
@@ -109,65 +98,41 @@ public class FloatingActionButtonImplLollipop extends FloatingActionButtonImpl {
 
     private Animator createElevationAnimator(float f, float f2) {
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.play(ObjectAnimator.ofFloat(this.view, "elevation", f).setDuration(0L)).with(ObjectAnimator.ofFloat(this.view, View.TRANSLATION_Z, f2).setDuration(100L));
+        animatorSet.play(ObjectAnimator.ofFloat(this.view, "elevation", new float[]{f}).setDuration(0)).with(ObjectAnimator.ofFloat(this.view, View.TRANSLATION_Z, new float[]{f2}).setDuration(100));
         animatorSet.setInterpolator(FloatingActionButtonImpl.ELEVATION_ANIM_INTERPOLATOR);
         return animatorSet;
     }
 
-    @Override // com.google.android.material.floatingactionbutton.FloatingActionButtonImpl
     public float getElevation() {
         return this.view.getElevation();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // com.google.android.material.floatingactionbutton.FloatingActionButtonImpl
+    /* access modifiers changed from: package-private */
     public void onCompatShadowChanged() {
         updatePadding();
     }
 
-    @Override // com.google.android.material.floatingactionbutton.FloatingActionButtonImpl
-    boolean shouldAddPadding() {
+    /* access modifiers changed from: package-private */
+    public boolean shouldAddPadding() {
         return this.shadowViewDelegate.isCompatPaddingEnabled() || !shouldExpandBoundsForA11y();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // com.google.android.material.floatingactionbutton.FloatingActionButtonImpl
-    public void onDrawableStateChanged(int[] iArr) {
-        if (Build.VERSION.SDK_INT == 21) {
-            if (this.view.isEnabled()) {
-                this.view.setElevation(this.elevation);
-                if (this.view.isPressed()) {
-                    this.view.setTranslationZ(this.pressedTranslationZ);
-                    return;
-                } else if (this.view.isFocused() || this.view.isHovered()) {
-                    this.view.setTranslationZ(this.hoveredFocusedTranslationZ);
-                    return;
-                } else {
-                    this.view.setTranslationZ(0.0f);
-                    return;
-                }
-            }
-            this.view.setElevation(0.0f);
-            this.view.setTranslationZ(0.0f);
-        }
-    }
-
-    BorderDrawable createBorderDrawable(int i, ColorStateList colorStateList) {
+    /* access modifiers changed from: package-private */
+    public BorderDrawable createBorderDrawable(int i, ColorStateList colorStateList) {
         Context context = this.view.getContext();
         BorderDrawable borderDrawable = new BorderDrawable((ShapeAppearanceModel) Preconditions.checkNotNull(this.shapeAppearance));
         borderDrawable.setGradientColors(ContextCompat.getColor(context, R$color.design_fab_stroke_top_outer_color), ContextCompat.getColor(context, R$color.design_fab_stroke_top_inner_color), ContextCompat.getColor(context, R$color.design_fab_stroke_end_inner_color), ContextCompat.getColor(context, R$color.design_fab_stroke_end_outer_color));
-        borderDrawable.setBorderWidth(i);
+        borderDrawable.setBorderWidth((float) i);
         borderDrawable.setBorderTint(colorStateList);
         return borderDrawable;
     }
 
-    @Override // com.google.android.material.floatingactionbutton.FloatingActionButtonImpl
-    MaterialShapeDrawable createShapeDrawable() {
+    /* access modifiers changed from: package-private */
+    public MaterialShapeDrawable createShapeDrawable() {
         return new AlwaysStatefulMaterialShapeDrawable((ShapeAppearanceModel) Preconditions.checkNotNull(this.shapeAppearance));
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // com.google.android.material.floatingactionbutton.FloatingActionButtonImpl
+    /* access modifiers changed from: package-private */
     public void getPadding(Rect rect) {
         if (this.shadowViewDelegate.isCompatPaddingEnabled()) {
             super.getPadding(rect);
@@ -179,10 +144,7 @@ public class FloatingActionButtonImplLollipop extends FloatingActionButtonImpl {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes2.dex */
-    public static class AlwaysStatefulMaterialShapeDrawable extends MaterialShapeDrawable {
-        @Override // com.google.android.material.shape.MaterialShapeDrawable, android.graphics.drawable.Drawable
+    static class AlwaysStatefulMaterialShapeDrawable extends MaterialShapeDrawable {
         public boolean isStateful() {
             return true;
         }

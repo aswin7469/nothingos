@@ -5,8 +5,9 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.TextUtils;
 import androidx.slice.Slice;
+import com.android.settings.dashboard.DashboardFragment;
 import com.android.settings.homepage.contextualcards.slices.SliceContextualCardRenderer;
-/* loaded from: classes.dex */
+
 public class ContextualCard {
     private final long mAppVersion;
     private final Builder mBuilder;
@@ -104,8 +105,7 @@ public class ContextualCard {
         this.mSlice = builder.mSlice;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public ContextualCard(Cursor cursor) {
+    ContextualCard(Cursor cursor) {
         Builder builder = new Builder();
         this.mBuilder = builder;
         String string = cursor.getString(cursor.getColumnIndex("name"));
@@ -113,14 +113,14 @@ public class ContextualCard {
         builder.setName(string);
         int i = cursor.getInt(cursor.getColumnIndex("type"));
         this.mCardType = i;
-        builder.mo390setCardType(i);
+        builder.setCardType(i);
         double d = cursor.getDouble(cursor.getColumnIndex("score"));
         this.mRankingScore = d;
         builder.setRankingScore(d);
         String string2 = cursor.getString(cursor.getColumnIndex("slice_uri"));
         this.mSliceUri = string2;
         builder.setSliceUri(Uri.parse(string2));
-        int i2 = cursor.getInt(cursor.getColumnIndex("category"));
+        int i2 = cursor.getInt(cursor.getColumnIndex(DashboardFragment.CATEGORY));
         this.mCategory = i2;
         builder.setCategory(i2);
         String string3 = cursor.getString(cursor.getColumnIndex("package_name"));
@@ -136,7 +136,7 @@ public class ContextualCard {
         this.mIsLargeCard = false;
         builder.setIsLargeCard(false);
         this.mIconDrawable = null;
-        builder.setIconDrawable(null);
+        builder.setIconDrawable((Drawable) null);
         int viewTypeByCardType = getViewTypeByCardType(i);
         this.mViewType = viewTypeByCardType;
         builder.setViewType(viewTypeByCardType);
@@ -145,7 +145,7 @@ public class ContextualCard {
         this.mHasInlineAction = false;
         builder.setHasInlineAction(false);
         this.mSlice = null;
-        builder.setSlice(null);
+        builder.setSlice((Slice) null);
     }
 
     public int hashCode() {
@@ -156,10 +156,10 @@ public class ContextualCard {
         if (this == obj) {
             return true;
         }
-        if (obj instanceof ContextualCard) {
-            return TextUtils.equals(this.mName, ((ContextualCard) obj).mName);
+        if (!(obj instanceof ContextualCard)) {
+            return false;
         }
-        return false;
+        return TextUtils.equals(this.mName, ((ContextualCard) obj).mName);
     }
 
     private int getViewTypeByCardType(int i) {
@@ -169,31 +169,44 @@ public class ContextualCard {
         return 0;
     }
 
-    /* loaded from: classes.dex */
     public static class Builder {
-        private long mAppVersion;
-        private int mCardType;
-        private int mCategory;
-        private boolean mHasInlineAction;
-        private Drawable mIconDrawable;
-        private boolean mIsLargeCard;
-        private boolean mIsPendingDismiss;
-        private String mName;
-        private String mPackageName;
-        private double mRankingScore;
-        private Slice mSlice;
-        private String mSliceUri;
-        private String mSummaryText;
-        private String mTitleText;
-        private int mViewType;
+        /* access modifiers changed from: private */
+        public long mAppVersion;
+        /* access modifiers changed from: private */
+        public int mCardType;
+        /* access modifiers changed from: private */
+        public int mCategory;
+        /* access modifiers changed from: private */
+        public boolean mHasInlineAction;
+        /* access modifiers changed from: private */
+        public Drawable mIconDrawable;
+        /* access modifiers changed from: private */
+        public boolean mIsLargeCard;
+        /* access modifiers changed from: private */
+        public boolean mIsPendingDismiss;
+        /* access modifiers changed from: private */
+        public String mName;
+        /* access modifiers changed from: private */
+        public String mPackageName;
+        /* access modifiers changed from: private */
+        public double mRankingScore;
+        /* access modifiers changed from: private */
+        public Slice mSlice;
+        /* access modifiers changed from: private */
+        public String mSliceUri;
+        /* access modifiers changed from: private */
+        public String mSummaryText;
+        /* access modifiers changed from: private */
+        public String mTitleText;
+        /* access modifiers changed from: private */
+        public int mViewType;
 
         public Builder setName(String str) {
             this.mName = str;
             return this;
         }
 
-        /* renamed from: setCardType */
-        public Builder mo390setCardType(int i) {
+        public Builder setCardType(int i) {
             this.mCardType = i;
             return this;
         }
@@ -263,8 +276,7 @@ public class ContextualCard {
             return this;
         }
 
-        /* renamed from: build */
-        public ContextualCard mo389build() {
+        public ContextualCard build() {
             return new ContextualCard(this);
         }
     }

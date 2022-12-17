@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<com.google.android.setupdesign.GlifLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/setup_wizard_layout" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_marginTop="52dp">
-    <RelativeLayout android:gravity="center_vertical" android:layout_width="match_parent" android:layout_height="match_parent">
-        <include android:id="@+id/face_notice_layout" layout="@layout/nt_face_enroll_introduction"/>
-        <include android:id="@+id/face_camerapreview_layout" android:visibility="invisible" layout="@layout/nt_face_enroll_enrolling"/>
-        <include android:id="@+id/face_registerssuccess_layout" android:visibility="invisible" layout="@layout/nt_face_enroll_finish"/>
-    </RelativeLayout>
-</com.google.android.setupdesign.GlifLayout>

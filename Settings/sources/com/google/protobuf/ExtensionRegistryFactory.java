@@ -1,7 +1,6 @@
 package com.google.protobuf;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes2.dex */
-public final class ExtensionRegistryFactory {
+
+final class ExtensionRegistryFactory {
     static final Class<?> EXTENSION_REGISTRY_CLASS = reflectExtensionRegistry();
 
     static Class<?> reflectExtensionRegistry() {
@@ -23,6 +22,6 @@ public final class ExtensionRegistryFactory {
     }
 
     private static final ExtensionRegistryLite invokeSubclassFactory(String str) throws Exception {
-        return (ExtensionRegistryLite) EXTENSION_REGISTRY_CLASS.getDeclaredMethod(str, new Class[0]).invoke(null, new Object[0]);
+        return (ExtensionRegistryLite) EXTENSION_REGISTRY_CLASS.getDeclaredMethod(str, new Class[0]).invoke((Object) null, new Object[0]);
     }
 }

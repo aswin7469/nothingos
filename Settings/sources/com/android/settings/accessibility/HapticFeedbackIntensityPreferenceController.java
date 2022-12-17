@@ -1,63 +1,73 @@
 package com.android.settings.accessibility;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.IntentFilter;
-import com.android.settings.slices.SliceBackgroundWorker;
-/* loaded from: classes.dex */
+import android.provider.Settings;
+
 public class HapticFeedbackIntensityPreferenceController extends VibrationIntensityPreferenceController {
-    static final String PREF_KEY = "touch_vibration_preference_screen";
-
-    @Override // com.android.settings.accessibility.VibrationIntensityPreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return 0;
     }
 
-    @Override // com.android.settings.accessibility.VibrationIntensityPreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.accessibility.VibrationIntensityPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.accessibility.VibrationIntensityPreferenceController, com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.accessibility.VibrationIntensityPreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.accessibility.VibrationIntensityPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.accessibility.VibrationIntensityPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.accessibility.VibrationIntensityPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
 
-    public HapticFeedbackIntensityPreferenceController(Context context) {
-        super(context, PREF_KEY, "haptic_feedback_intensity", "haptic_feedback_enabled");
+    public static final class HapticFeedbackVibrationPreferenceConfig extends VibrationPreferenceConfig {
+        public HapticFeedbackVibrationPreferenceConfig(Context context) {
+            super(context, "haptic_feedback_intensity", 18);
+        }
+
+        public int readIntensity() {
+            if (Settings.System.getInt(this.mContentResolver, "haptic_feedback_enabled", 1) == 0) {
+                return 0;
+            }
+            return super.readIntensity();
+        }
+
+        public boolean updateIntensity(int i) {
+            boolean updateIntensity = super.updateIntensity(i);
+            int i2 = i == 0 ? 1 : 0;
+            Settings.System.putInt(this.mContentResolver, "haptic_feedback_enabled", i2 ^ 1);
+            ContentResolver contentResolver = this.mContentResolver;
+            if (i2 != 0) {
+                i = getDefaultIntensity();
+            }
+            Settings.System.putInt(contentResolver, "hardware_haptic_feedback_intensity", i);
+            return updateIntensity;
+        }
     }
 
-    @Override // com.android.settings.accessibility.VibrationIntensityPreferenceController
-    protected int getDefaultIntensity() {
-        return this.mVibrator.getDefaultHapticFeedbackIntensity();
+    public HapticFeedbackIntensityPreferenceController(Context context, String str) {
+        super(context, str, new HapticFeedbackVibrationPreferenceConfig(context));
+    }
+
+    protected HapticFeedbackIntensityPreferenceController(Context context, String str, int i) {
+        super(context, str, new HapticFeedbackVibrationPreferenceConfig(context), i);
     }
 }

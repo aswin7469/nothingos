@@ -14,7 +14,7 @@ import androidx.slice.core.SliceQuery;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public class ListBuilderImpl extends TemplateBuilderImpl implements ListBuilder {
     private boolean mFirstRowChecked;
     private boolean mFirstRowHasText;
@@ -25,12 +25,11 @@ public class ListBuilderImpl extends TemplateBuilderImpl implements ListBuilder 
     private List<Slice> mSliceActions;
     private Slice mSliceHeader;
 
-    public ListBuilderImpl(final Slice.Builder b, final SliceSpec spec, final Clock clock) {
-        super(b, spec, clock);
+    public ListBuilderImpl(Slice.Builder builder, SliceSpec sliceSpec, Clock clock) {
+        super(builder, sliceSpec, clock);
     }
 
-    @Override // androidx.slice.builders.impl.TemplateBuilderImpl
-    public void apply(final Slice.Builder builder) {
+    public void apply(Slice.Builder builder) {
         builder.addLong(getClock().currentTimeMillis(), "millis", "last_updated");
         Slice slice = this.mSliceHeader;
         if (slice != null) {
@@ -48,18 +47,17 @@ public class ListBuilderImpl extends TemplateBuilderImpl implements ListBuilder 
         }
         if (this.mKeywords != null) {
             Slice.Builder builder3 = new Slice.Builder(getBuilder());
-            for (String str : this.mKeywords) {
-                builder3.addText(str, (String) null, new String[0]);
+            for (String addText : this.mKeywords) {
+                builder3.addText((CharSequence) addText, (String) null, new String[0]);
             }
             getBuilder().addSubSlice(builder3.addHints("keywords").build());
         }
         Bundle bundle = this.mHostExtras;
         if (bundle != null) {
-            builder.addItem(new SliceItem(bundle, "bundle", "host_extras", new String[0]));
+            builder.addItem(new SliceItem((Object) bundle, "bundle", "host_extras", new String[0]));
         }
     }
 
-    @Override // androidx.slice.builders.impl.TemplateBuilderImpl
     public Slice build() {
         Slice build = super.build();
         boolean z = true;
@@ -70,112 +68,103 @@ public class ListBuilderImpl extends TemplateBuilderImpl implements ListBuilder 
         String[] strArr = {"shortcut", "title"};
         SliceItem find = SliceQuery.find(build, "action", strArr, (String[]) null);
         List<SliceItem> findAll = SliceQuery.findAll(build, "slice", strArr, (String[]) null);
-        if (!z2 && !z && find == null && (findAll == null || findAll.isEmpty())) {
+        if (z2 || z || find != null || (findAll != null && !findAll.isEmpty())) {
+            boolean z3 = this.mFirstRowChecked;
+            if (z3 && !this.mIsFirstRowTypeValid) {
+                throw new IllegalStateException("A slice cannot have the first row be constructed from a GridRowBuilder, consider using #setHeader.");
+            } else if (!z3 || this.mFirstRowHasText) {
+                return build;
+            } else {
+                throw new IllegalStateException("A slice requires the first row to have some text.");
+            }
+        } else {
             throw new IllegalStateException("A slice requires a primary action; ensure one of your builders has called #setPrimaryAction with a valid SliceAction.");
         }
-        boolean z3 = this.mFirstRowChecked;
-        if (z3 && !this.mIsFirstRowTypeValid) {
-            throw new IllegalStateException("A slice cannot have the first row be constructed from a GridRowBuilder, consider using #setHeader.");
-        }
-        if (z3 && !this.mFirstRowHasText) {
-            throw new IllegalStateException("A slice requires the first row to have some text.");
-        }
-        return build;
     }
 
-    @Override // androidx.slice.builders.impl.ListBuilder
-    public void addRow(ListBuilder.RowBuilder builder) {
+    public void addRow(ListBuilder.RowBuilder rowBuilder) {
         RowBuilderImpl rowBuilderImpl = new RowBuilderImpl(createChildBuilder());
-        rowBuilderImpl.fillFrom(builder);
+        rowBuilderImpl.fillFrom(rowBuilder);
         checkRow(true, rowBuilderImpl.hasText());
         addRow(rowBuilderImpl);
     }
 
-    public void addRow(RowBuilderImpl builder) {
-        checkRow(true, builder.hasText());
-        builder.getBuilder().addHints("list_item");
-        if (builder.isEndOfSection()) {
-            builder.getBuilder().addHints("end_of_section");
+    public void addRow(RowBuilderImpl rowBuilderImpl) {
+        checkRow(true, rowBuilderImpl.hasText());
+        rowBuilderImpl.getBuilder().addHints("list_item");
+        if (rowBuilderImpl.isEndOfSection()) {
+            rowBuilderImpl.getBuilder().addHints("end_of_section");
         }
-        getBuilder().addSubSlice(builder.build());
+        getBuilder().addSubSlice(rowBuilderImpl.build());
     }
 
-    @Override // androidx.slice.builders.impl.ListBuilder
-    public void setHeader(ListBuilder.HeaderBuilder builder) {
+    public void setHeader(ListBuilder.HeaderBuilder headerBuilder) {
         this.mIsFirstRowTypeValid = true;
         this.mFirstRowHasText = true;
         this.mFirstRowChecked = true;
         HeaderBuilderImpl headerBuilderImpl = new HeaderBuilderImpl(this);
-        headerBuilderImpl.fillFrom(builder);
+        headerBuilderImpl.fillFrom(headerBuilder);
         this.mSliceHeader = headerBuilderImpl.build();
     }
 
-    @Override // androidx.slice.builders.impl.ListBuilder
-    public void addAction(SliceAction action) {
+    public void addAction(SliceAction sliceAction) {
         if (this.mSliceActions == null) {
             this.mSliceActions = new ArrayList();
         }
-        this.mSliceActions.add(action.buildSlice(new Slice.Builder(getBuilder()).addHints("actions")));
+        this.mSliceActions.add(sliceAction.buildSlice(new Slice.Builder(getBuilder()).addHints("actions")));
     }
 
-    @Override // androidx.slice.builders.impl.ListBuilder
-    public void addInputRange(final ListBuilder.InputRangeBuilder builder) {
-        InputRangeBuilderImpl inputRangeBuilderImpl = new InputRangeBuilderImpl(createChildBuilder(), builder);
+    public void addInputRange(ListBuilder.InputRangeBuilder inputRangeBuilder) {
+        InputRangeBuilderImpl inputRangeBuilderImpl = new InputRangeBuilderImpl(createChildBuilder(), inputRangeBuilder);
         checkRow(true, inputRangeBuilderImpl.hasText());
         getBuilder().addSubSlice(inputRangeBuilderImpl.build(), "range");
     }
 
-    @Override // androidx.slice.builders.impl.ListBuilder
-    public void setColor(int color) {
-        getBuilder().addInt(color, "color", new String[0]);
+    public void setColor(int i) {
+        getBuilder().addInt(i, "color", new String[0]);
     }
 
-    @Override // androidx.slice.builders.impl.ListBuilder
-    public void setKeywords(Set<String> keywords) {
-        this.mKeywords = keywords;
+    public void setKeywords(Set<String> set) {
+        this.mKeywords = set;
     }
 
-    @Override // androidx.slice.builders.impl.ListBuilder
-    public void setTtl(long ttl) {
-        long j = -1;
-        if (ttl != -1) {
-            j = getClock().currentTimeMillis() + ttl;
+    public void setTtl(long j) {
+        long j2 = -1;
+        if (j != -1) {
+            j2 = getClock().currentTimeMillis() + j;
         }
-        getBuilder().addTimestamp(j, "millis", "ttl");
+        getBuilder().addTimestamp(j2, "millis", "ttl");
     }
 
-    @Override // androidx.slice.builders.impl.ListBuilder
-    public void setIsError(boolean isError) {
-        this.mIsError = isError;
+    public void setIsError(boolean z) {
+        this.mIsError = z;
     }
 
-    private void checkRow(boolean isTypeValid, boolean hasText) {
+    private void checkRow(boolean z, boolean z2) {
         if (!this.mFirstRowChecked) {
             this.mFirstRowChecked = true;
-            this.mIsFirstRowTypeValid = isTypeValid;
-            this.mFirstRowHasText = hasText;
+            this.mIsFirstRowTypeValid = z;
+            this.mFirstRowHasText = z2;
         }
     }
 
-    /* loaded from: classes.dex */
     public static class RangeBuilderImpl extends TemplateBuilderImpl {
         protected CharSequence mContentDescr;
+        protected int mLayoutDir = -1;
+        protected int mMax = 100;
+        protected int mMin = 0;
+        private int mMode = 0;
         protected SliceAction mPrimaryAction;
         private Slice mStartItem;
         protected CharSequence mSubtitle;
         protected CharSequence mTitle;
-        protected int mMin = 0;
-        protected int mMax = 100;
         protected int mValue = 0;
         protected boolean mValueSet = false;
-        protected int mLayoutDir = -1;
-        private int mMode = 0;
 
-        RangeBuilderImpl(Slice.Builder sb, ListBuilder.RangeBuilder builder) {
-            super(sb, null);
+        RangeBuilderImpl(Slice.Builder builder, ListBuilder.RangeBuilder rangeBuilder) {
+            super(builder, (SliceSpec) null);
         }
 
-        @Override // androidx.slice.builders.impl.TemplateBuilderImpl
         public void apply(Slice.Builder builder) {
             int i;
             if (!this.mValueSet) {
@@ -213,37 +202,37 @@ public class ListBuilderImpl extends TemplateBuilderImpl implements ListBuilder 
             builder.addHints("list_item").addInt(this.mMin, "min", new String[0]).addInt(this.mMax, "max", new String[0]).addInt(this.mValue, "value", new String[0]).addInt(this.mMode, "range_mode", new String[0]);
         }
 
-        boolean hasText() {
+        /* access modifiers changed from: package-private */
+        public boolean hasText() {
             return (this.mTitle == null && this.mSubtitle == null) ? false : true;
         }
     }
 
-    /* loaded from: classes.dex */
     public static class InputRangeBuilderImpl extends RangeBuilderImpl {
         private final PendingIntent mAction;
         private final ArrayList<Slice> mEndItems = new ArrayList<>();
         private Slice mStartItem;
         private final IconCompat mThumb;
 
-        InputRangeBuilderImpl(Slice.Builder sb, ListBuilder.InputRangeBuilder builder) {
-            super(sb, null);
-            this.mValueSet = builder.isValueSet();
-            this.mMin = builder.getMin();
-            this.mMax = builder.getMax();
-            this.mValue = builder.getValue();
-            this.mTitle = builder.getTitle();
-            this.mSubtitle = builder.getSubtitle();
-            this.mContentDescr = builder.getContentDescription();
-            this.mPrimaryAction = builder.getPrimaryAction();
-            this.mLayoutDir = builder.getLayoutDirection();
-            this.mAction = builder.getInputAction();
-            this.mThumb = builder.getThumb();
-            if (builder.getTitleIcon() != null) {
-                setTitleItem(builder.getTitleIcon(), builder.getTitleImageMode(), builder.isTitleItemLoading());
+        InputRangeBuilderImpl(Slice.Builder builder, ListBuilder.InputRangeBuilder inputRangeBuilder) {
+            super(builder, (ListBuilder.RangeBuilder) null);
+            this.mValueSet = inputRangeBuilder.isValueSet();
+            this.mMin = inputRangeBuilder.getMin();
+            this.mMax = inputRangeBuilder.getMax();
+            this.mValue = inputRangeBuilder.getValue();
+            this.mTitle = inputRangeBuilder.getTitle();
+            this.mSubtitle = inputRangeBuilder.getSubtitle();
+            this.mContentDescr = inputRangeBuilder.getContentDescription();
+            this.mPrimaryAction = inputRangeBuilder.getPrimaryAction();
+            this.mLayoutDir = inputRangeBuilder.getLayoutDirection();
+            this.mAction = inputRangeBuilder.getInputAction();
+            this.mThumb = inputRangeBuilder.getThumb();
+            if (inputRangeBuilder.getTitleIcon() != null) {
+                setTitleItem(inputRangeBuilder.getTitleIcon(), inputRangeBuilder.getTitleImageMode(), inputRangeBuilder.isTitleItemLoading());
             }
-            List<Object> endItems = builder.getEndItems();
-            List<Integer> endTypes = builder.getEndTypes();
-            List<Boolean> endLoads = builder.getEndLoads();
+            List<Object> endItems = inputRangeBuilder.getEndItems();
+            List<Integer> endTypes = inputRangeBuilder.getEndTypes();
+            List<Boolean> endLoads = inputRangeBuilder.getEndLoads();
             for (int i = 0; i < endItems.size(); i++) {
                 if (endTypes.get(i).intValue() == 2) {
                     addEndItem((SliceAction) endItems.get(i), endLoads.get(i).booleanValue());
@@ -251,45 +240,45 @@ public class ListBuilderImpl extends TemplateBuilderImpl implements ListBuilder 
             }
         }
 
-        void setTitleItem(IconCompat icon, int imageMode, boolean isLoading) {
-            Slice.Builder addIcon = new Slice.Builder(getBuilder()).addIcon(icon, (String) null, parseImageMode(imageMode, isLoading));
-            if (isLoading) {
+        /* access modifiers changed from: package-private */
+        public void setTitleItem(IconCompat iconCompat, int i, boolean z) {
+            Slice.Builder addIcon = new Slice.Builder(getBuilder()).addIcon(iconCompat, (String) null, (List<String>) parseImageMode(i, z));
+            if (z) {
                 addIcon.addHints("partial");
             }
             this.mStartItem = addIcon.addHints("title").build();
         }
 
-        private void addEndItem(SliceAction action, boolean isLoading) {
+        private void addEndItem(SliceAction sliceAction, boolean z) {
             Slice.Builder builder = new Slice.Builder(getBuilder());
-            if (isLoading) {
+            if (z) {
                 builder.addHints("partial");
             }
-            this.mEndItems.add(action.buildSlice(builder));
+            this.mEndItems.add(sliceAction.buildSlice(builder));
         }
 
-        @Override // androidx.slice.builders.impl.ListBuilderImpl.RangeBuilderImpl, androidx.slice.builders.impl.TemplateBuilderImpl
         public void apply(Slice.Builder builder) {
-            if (this.mAction == null) {
-                throw new IllegalStateException("Input ranges must have an associated action.");
+            if (this.mAction != null) {
+                Slice.Builder builder2 = new Slice.Builder(builder);
+                super.apply(builder2);
+                IconCompat iconCompat = this.mThumb;
+                if (iconCompat != null) {
+                    builder2.addIcon(iconCompat, (String) null, new String[0]);
+                }
+                builder.addAction(this.mAction, builder2.build(), "range").addHints("list_item");
+                Slice slice = this.mStartItem;
+                if (slice != null) {
+                    builder.addSubSlice(slice);
+                }
+                for (int i = 0; i < this.mEndItems.size(); i++) {
+                    builder.addSubSlice(this.mEndItems.get(i));
+                }
+                return;
             }
-            Slice.Builder builder2 = new Slice.Builder(builder);
-            super.apply(builder2);
-            IconCompat iconCompat = this.mThumb;
-            if (iconCompat != null) {
-                builder2.addIcon(iconCompat, (String) null, new String[0]);
-            }
-            builder.addAction(this.mAction, builder2.build(), "range").addHints("list_item");
-            Slice slice = this.mStartItem;
-            if (slice != null) {
-                builder.addSubSlice(slice);
-            }
-            for (int i = 0; i < this.mEndItems.size(); i++) {
-                builder.addSubSlice(this.mEndItems.get(i));
-            }
+            throw new IllegalStateException("Input ranges must have an associated action.");
         }
     }
 
-    /* loaded from: classes.dex */
     public static class RowBuilderImpl extends TemplateBuilderImpl {
         private CharSequence mContentDescr;
         private final ArrayList<Slice> mEndItems = new ArrayList<>();
@@ -300,37 +289,38 @@ public class ListBuilderImpl extends TemplateBuilderImpl implements ListBuilder 
         private SliceItem mTitleItem;
 
         RowBuilderImpl(Slice.Builder builder) {
-            super(builder, null);
+            super(builder, (SliceSpec) null);
         }
 
-        void fillFrom(ListBuilder.RowBuilder builder) {
-            if (builder.getUri() != null) {
-                setBuilder(new Slice.Builder(builder.getUri()));
+        /* access modifiers changed from: package-private */
+        public void fillFrom(ListBuilder.RowBuilder rowBuilder) {
+            if (rowBuilder.getUri() != null) {
+                setBuilder(new Slice.Builder(rowBuilder.getUri()));
             }
-            setPrimaryAction(builder.getPrimaryAction());
-            this.mIsEndOfSection = builder.isEndOfSection();
-            if (builder.getLayoutDirection() != -1) {
-                setLayoutDirection(builder.getLayoutDirection());
+            setPrimaryAction(rowBuilder.getPrimaryAction());
+            this.mIsEndOfSection = rowBuilder.isEndOfSection();
+            if (rowBuilder.getLayoutDirection() != -1) {
+                setLayoutDirection(rowBuilder.getLayoutDirection());
             }
-            if (builder.getTitleAction() != null || builder.isTitleActionLoading()) {
-                setTitleItem(builder.getTitleAction(), builder.isTitleActionLoading());
-            } else if (builder.getTitleIcon() != null || builder.isTitleItemLoading()) {
-                setTitleItem(builder.getTitleIcon(), builder.getTitleImageMode(), builder.isTitleItemLoading());
-            } else if (builder.getTimeStamp() != -1) {
-                setTitleItem(builder.getTimeStamp());
+            if (rowBuilder.getTitleAction() != null || rowBuilder.isTitleActionLoading()) {
+                setTitleItem(rowBuilder.getTitleAction(), rowBuilder.isTitleActionLoading());
+            } else if (rowBuilder.getTitleIcon() != null || rowBuilder.isTitleItemLoading()) {
+                setTitleItem(rowBuilder.getTitleIcon(), rowBuilder.getTitleImageMode(), rowBuilder.isTitleItemLoading());
+            } else if (rowBuilder.getTimeStamp() != -1) {
+                setTitleItem(rowBuilder.getTimeStamp());
             }
-            if (builder.getTitle() != null || builder.isTitleLoading()) {
-                setTitle(builder.getTitle(), builder.isTitleLoading());
+            if (rowBuilder.getTitle() != null || rowBuilder.isTitleLoading()) {
+                setTitle(rowBuilder.getTitle(), rowBuilder.isTitleLoading());
             }
-            if (builder.getSubtitle() != null || builder.isSubtitleLoading()) {
-                setSubtitle(builder.getSubtitle(), builder.isSubtitleLoading());
+            if (rowBuilder.getSubtitle() != null || rowBuilder.isSubtitleLoading()) {
+                setSubtitle(rowBuilder.getSubtitle(), rowBuilder.isSubtitleLoading());
             }
-            if (builder.getContentDescription() != null) {
-                setContentDescription(builder.getContentDescription());
+            if (rowBuilder.getContentDescription() != null) {
+                setContentDescription(rowBuilder.getContentDescription());
             }
-            List<Object> endItems = builder.getEndItems();
-            List<Integer> endTypes = builder.getEndTypes();
-            List<Boolean> endLoads = builder.getEndLoads();
+            List<Object> endItems = rowBuilder.getEndItems();
+            List<Integer> endTypes = rowBuilder.getEndTypes();
+            List<Boolean> endLoads = rowBuilder.getEndLoads();
             for (int i = 0; i < endItems.size(); i++) {
                 int intValue = endTypes.get(i).intValue();
                 if (intValue == 0) {
@@ -344,111 +334,111 @@ public class ListBuilderImpl extends TemplateBuilderImpl implements ListBuilder 
             }
         }
 
-        private void setTitleItem(long timeStamp) {
-            this.mStartItem = new Slice.Builder(getBuilder()).addTimestamp(timeStamp, null, new String[0]).addHints("title").build();
+        private void setTitleItem(long j) {
+            this.mStartItem = new Slice.Builder(getBuilder()).addTimestamp(j, (String) null, new String[0]).addHints("title").build();
         }
 
-        private void setTitleItem(final IconCompat icon, final int imageMode, final boolean isLoading) {
-            Slice.Builder addIcon = new Slice.Builder(getBuilder()).addIcon(icon, (String) null, parseImageMode(imageMode, isLoading));
-            if (isLoading) {
+        private void setTitleItem(IconCompat iconCompat, int i, boolean z) {
+            Slice.Builder addIcon = new Slice.Builder(getBuilder()).addIcon(iconCompat, (String) null, (List<String>) parseImageMode(i, z));
+            if (z) {
                 addIcon.addHints("partial");
             }
             this.mStartItem = addIcon.addHints("title").build();
         }
 
-        private void setTitleItem(final SliceAction action, final boolean isLoading) {
+        private void setTitleItem(SliceAction sliceAction, boolean z) {
             Slice.Builder addHints = new Slice.Builder(getBuilder()).addHints("title");
-            if (isLoading) {
+            if (z) {
                 addHints.addHints("partial");
             }
-            this.mStartItem = action.buildSlice(addHints);
+            this.mStartItem = sliceAction.buildSlice(addHints);
         }
 
-        private void setPrimaryAction(SliceAction action) {
-            this.mPrimaryAction = action;
+        private void setPrimaryAction(SliceAction sliceAction) {
+            this.mPrimaryAction = sliceAction;
         }
 
-        private void setTitle(final CharSequence title, final boolean isLoading) {
-            SliceItem sliceItem = new SliceItem(title, "text", (String) null, new String[]{"title"});
+        private void setTitle(CharSequence charSequence, boolean z) {
+            SliceItem sliceItem = new SliceItem((Object) charSequence, "text", (String) null, new String[]{"title"});
             this.mTitleItem = sliceItem;
-            if (isLoading) {
+            if (z) {
                 sliceItem.addHint("partial");
             }
         }
 
-        private void setSubtitle(final CharSequence subtitle, final boolean isLoading) {
-            SliceItem sliceItem = new SliceItem(subtitle, "text", (String) null, new String[0]);
+        private void setSubtitle(CharSequence charSequence, boolean z) {
+            SliceItem sliceItem = new SliceItem((Object) charSequence, "text", (String) null, new String[0]);
             this.mSubtitleItem = sliceItem;
-            if (isLoading) {
+            if (z) {
                 sliceItem.addHint("partial");
             }
         }
 
-        protected void addEndItem(long timeStamp) {
-            this.mEndItems.add(new Slice.Builder(getBuilder()).addTimestamp(timeStamp, null, new String[0]).build());
+        /* access modifiers changed from: protected */
+        public void addEndItem(long j) {
+            this.mEndItems.add(new Slice.Builder(getBuilder()).addTimestamp(j, (String) null, new String[0]).build());
         }
 
-        private void addEndItem(final IconCompat icon, final int imageMode, final boolean isLoading) {
-            Slice.Builder addIcon = new Slice.Builder(getBuilder()).addIcon(icon, (String) null, parseImageMode(imageMode, isLoading));
-            if (isLoading) {
+        private void addEndItem(IconCompat iconCompat, int i, boolean z) {
+            Slice.Builder addIcon = new Slice.Builder(getBuilder()).addIcon(iconCompat, (String) null, (List<String>) parseImageMode(i, z));
+            if (z) {
                 addIcon.addHints("partial");
             }
             this.mEndItems.add(addIcon.build());
         }
 
-        private void addEndItem(final SliceAction action, final boolean isLoading) {
+        private void addEndItem(SliceAction sliceAction, boolean z) {
             Slice.Builder builder = new Slice.Builder(getBuilder());
-            if (isLoading) {
+            if (z) {
                 builder.addHints("partial");
             }
-            this.mEndItems.add(action.buildSlice(builder));
+            this.mEndItems.add(sliceAction.buildSlice(builder));
         }
 
-        private void setContentDescription(CharSequence description) {
-            this.mContentDescr = description;
+        private void setContentDescription(CharSequence charSequence) {
+            this.mContentDescr = charSequence;
         }
 
-        private void setLayoutDirection(int layoutDirection) {
-            getBuilder().addInt(layoutDirection, "layout_direction", new String[0]);
+        private void setLayoutDirection(int i) {
+            getBuilder().addInt(i, "layout_direction", new String[0]);
         }
 
         public boolean isEndOfSection() {
             return this.mIsEndOfSection;
         }
 
-        boolean hasText() {
+        /* access modifiers changed from: package-private */
+        public boolean hasText() {
             return (this.mTitleItem == null && this.mSubtitleItem == null) ? false : true;
         }
 
-        @Override // androidx.slice.builders.impl.TemplateBuilderImpl
-        public void apply(Slice.Builder b) {
+        public void apply(Slice.Builder builder) {
             Slice slice = this.mStartItem;
             if (slice != null) {
-                b.addSubSlice(slice);
+                builder.addSubSlice(slice);
             }
             SliceItem sliceItem = this.mTitleItem;
             if (sliceItem != null) {
-                b.addItem(sliceItem);
+                builder.addItem(sliceItem);
             }
             SliceItem sliceItem2 = this.mSubtitleItem;
             if (sliceItem2 != null) {
-                b.addItem(sliceItem2);
+                builder.addItem(sliceItem2);
             }
             for (int i = 0; i < this.mEndItems.size(); i++) {
-                b.addSubSlice(this.mEndItems.get(i));
+                builder.addSubSlice(this.mEndItems.get(i));
             }
             CharSequence charSequence = this.mContentDescr;
             if (charSequence != null) {
-                b.addText(charSequence, "content_description", new String[0]);
+                builder.addText(charSequence, "content_description", new String[0]);
             }
             SliceAction sliceAction = this.mPrimaryAction;
             if (sliceAction != null) {
-                sliceAction.setPrimaryAction(b);
+                sliceAction.setPrimaryAction(builder);
             }
         }
     }
 
-    /* loaded from: classes.dex */
     public static class HeaderBuilderImpl extends TemplateBuilderImpl {
         private CharSequence mContentDescr;
         private SliceAction mPrimaryAction;
@@ -456,93 +446,93 @@ public class ListBuilderImpl extends TemplateBuilderImpl implements ListBuilder 
         private SliceItem mSummaryItem;
         private SliceItem mTitleItem;
 
-        HeaderBuilderImpl(ListBuilderImpl parent) {
-            super(parent.createChildBuilder(), null);
+        HeaderBuilderImpl(ListBuilderImpl listBuilderImpl) {
+            super(listBuilderImpl.createChildBuilder(), (SliceSpec) null);
         }
 
-        void fillFrom(ListBuilder.HeaderBuilder builder) {
-            if (builder.getUri() != null) {
-                setBuilder(new Slice.Builder(builder.getUri()));
+        /* access modifiers changed from: package-private */
+        public void fillFrom(ListBuilder.HeaderBuilder headerBuilder) {
+            if (headerBuilder.getUri() != null) {
+                setBuilder(new Slice.Builder(headerBuilder.getUri()));
             }
-            setPrimaryAction(builder.getPrimaryAction());
-            if (builder.getLayoutDirection() != -1) {
-                setLayoutDirection(builder.getLayoutDirection());
+            setPrimaryAction(headerBuilder.getPrimaryAction());
+            if (headerBuilder.getLayoutDirection() != -1) {
+                setLayoutDirection(headerBuilder.getLayoutDirection());
             }
-            if (builder.getTitle() != null || builder.isTitleLoading()) {
-                setTitle(builder.getTitle(), builder.isTitleLoading());
+            if (headerBuilder.getTitle() != null || headerBuilder.isTitleLoading()) {
+                setTitle(headerBuilder.getTitle(), headerBuilder.isTitleLoading());
             }
-            if (builder.getSubtitle() != null || builder.isSubtitleLoading()) {
-                setSubtitle(builder.getSubtitle(), builder.isSubtitleLoading());
+            if (headerBuilder.getSubtitle() != null || headerBuilder.isSubtitleLoading()) {
+                setSubtitle(headerBuilder.getSubtitle(), headerBuilder.isSubtitleLoading());
             }
-            if (builder.getSummary() != null || builder.isSummaryLoading()) {
-                setSummary(builder.getSummary(), builder.isSummaryLoading());
+            if (headerBuilder.getSummary() != null || headerBuilder.isSummaryLoading()) {
+                setSummary(headerBuilder.getSummary(), headerBuilder.isSummaryLoading());
             }
-            if (builder.getContentDescription() != null) {
-                setContentDescription(builder.getContentDescription());
+            if (headerBuilder.getContentDescription() != null) {
+                setContentDescription(headerBuilder.getContentDescription());
             }
         }
 
-        @Override // androidx.slice.builders.impl.TemplateBuilderImpl
-        public void apply(Slice.Builder b) {
+        public void apply(Slice.Builder builder) {
             SliceItem sliceItem = this.mTitleItem;
             if (sliceItem != null) {
-                b.addItem(sliceItem);
+                builder.addItem(sliceItem);
             }
             SliceItem sliceItem2 = this.mSubtitleItem;
             if (sliceItem2 != null) {
-                b.addItem(sliceItem2);
+                builder.addItem(sliceItem2);
             }
             SliceItem sliceItem3 = this.mSummaryItem;
             if (sliceItem3 != null) {
-                b.addItem(sliceItem3);
+                builder.addItem(sliceItem3);
             }
             CharSequence charSequence = this.mContentDescr;
             if (charSequence != null) {
-                b.addText(charSequence, "content_description", new String[0]);
+                builder.addText(charSequence, "content_description", new String[0]);
             }
             SliceAction sliceAction = this.mPrimaryAction;
             if (sliceAction != null) {
-                sliceAction.setPrimaryAction(b);
+                sliceAction.setPrimaryAction(builder);
             }
             if (this.mSubtitleItem == null && this.mTitleItem == null) {
                 throw new IllegalStateException("Header requires a title or subtitle to be set.");
             }
         }
 
-        private void setTitle(CharSequence title, boolean isLoading) {
-            SliceItem sliceItem = new SliceItem(title, "text", (String) null, new String[]{"title"});
+        private void setTitle(CharSequence charSequence, boolean z) {
+            SliceItem sliceItem = new SliceItem((Object) charSequence, "text", (String) null, new String[]{"title"});
             this.mTitleItem = sliceItem;
-            if (isLoading) {
+            if (z) {
                 sliceItem.addHint("partial");
             }
         }
 
-        private void setSubtitle(CharSequence subtitle, boolean isLoading) {
-            SliceItem sliceItem = new SliceItem(subtitle, "text", (String) null, new String[0]);
+        private void setSubtitle(CharSequence charSequence, boolean z) {
+            SliceItem sliceItem = new SliceItem((Object) charSequence, "text", (String) null, new String[0]);
             this.mSubtitleItem = sliceItem;
-            if (isLoading) {
+            if (z) {
                 sliceItem.addHint("partial");
             }
         }
 
-        private void setSummary(CharSequence summarySubtitle, boolean isLoading) {
-            SliceItem sliceItem = new SliceItem(summarySubtitle, "text", (String) null, new String[]{"summary"});
+        private void setSummary(CharSequence charSequence, boolean z) {
+            SliceItem sliceItem = new SliceItem((Object) charSequence, "text", (String) null, new String[]{"summary"});
             this.mSummaryItem = sliceItem;
-            if (isLoading) {
+            if (z) {
                 sliceItem.addHint("partial");
             }
         }
 
-        private void setPrimaryAction(SliceAction action) {
-            this.mPrimaryAction = action;
+        private void setPrimaryAction(SliceAction sliceAction) {
+            this.mPrimaryAction = sliceAction;
         }
 
-        private void setContentDescription(CharSequence description) {
-            this.mContentDescr = description;
+        private void setContentDescription(CharSequence charSequence) {
+            this.mContentDescr = charSequence;
         }
 
-        private void setLayoutDirection(int layoutDirection) {
-            getBuilder().addInt(layoutDirection, "layout_direction", new String[0]);
+        private void setLayoutDirection(int i) {
+            getBuilder().addInt(i, "layout_direction", new String[0]);
         }
     }
 }

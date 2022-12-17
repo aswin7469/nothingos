@@ -15,17 +15,16 @@ import androidx.lifecycle.OnLifecycleEvent;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$plurals;
+import com.android.settings.R$string;
 import com.android.settings.applications.appinfo.AppInfoDashboardFragment;
 import com.android.settings.core.BasePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.Utils;
 import com.android.settingslib.applications.ApplicationsState;
-import com.android.settingslib.core.AbstractPreferenceController;
 import com.android.settingslib.utils.StringUtil;
 import com.android.settingslib.widget.AppPreference;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class AppsPreferenceController extends BasePreferenceController implements LifecycleObserver {
     static final String KEY_ALL_APP_INFO = "all_app_infos";
     static final String KEY_GENERAL_CATEGORY = "general_category";
@@ -33,56 +32,43 @@ public class AppsPreferenceController extends BasePreferenceController implement
     static final String KEY_SEE_ALL = "see_all_apps";
     public static final int SHOW_RECENT_APP_COUNT = 4;
     Preference mAllAppsInfoPref;
+    private final ApplicationsState mApplicationsState = ApplicationsState.getInstance((Application) this.mContext.getApplicationContext());
     PreferenceCategory mGeneralCategory;
     private Fragment mHost;
+    private boolean mInitialLaunch = false;
     List<UsageStats> mRecentApps;
     PreferenceCategory mRecentAppsCategory;
     Preference mSeeAllPref;
-    private boolean mInitialLaunch = false;
-    private final ApplicationsState mApplicationsState = ApplicationsState.getInstance((Application) this.mContext.getApplicationContext());
     private final int mUserId = UserHandle.myUserId();
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return 1;
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -95,7 +81,6 @@ public class AppsPreferenceController extends BasePreferenceController implement
         this.mHost = fragment;
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         initPreferences(preferenceScreen);
@@ -103,7 +88,6 @@ public class AppsPreferenceController extends BasePreferenceController implement
         this.mInitialLaunch = true;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         if (!this.mInitialLaunch) {
@@ -116,7 +100,7 @@ public class AppsPreferenceController extends BasePreferenceController implement
         this.mInitialLaunch = false;
     }
 
-    void refreshUi() {
+    public void refreshUi() {
         loadAllAppsCount();
         List<UsageStats> loadRecentApps = loadRecentApps();
         this.mRecentApps = loadRecentApps;
@@ -134,23 +118,25 @@ public class AppsPreferenceController extends BasePreferenceController implement
         this.mSeeAllPref.setVisible(false);
     }
 
-    void loadAllAppsCount() {
+    /* access modifiers changed from: package-private */
+    public void loadAllAppsCount() {
         Context context = this.mContext;
-        new InstalledAppCounter(context, -1, context.getPackageManager()) { // from class: com.android.settings.applications.AppsPreferenceController.1
-            @Override // com.android.settings.applications.AppCounter
-            protected void onCountComplete(int i) {
+        new InstalledAppCounter(context, -1, context.getPackageManager()) {
+            /* access modifiers changed from: protected */
+            public void onCountComplete(int i) {
                 if (!AppsPreferenceController.this.mRecentApps.isEmpty()) {
                     AppsPreferenceController appsPreferenceController = AppsPreferenceController.this;
-                    appsPreferenceController.mSeeAllPref.setTitle(((AbstractPreferenceController) appsPreferenceController).mContext.getResources().getQuantityString(R.plurals.see_all_apps_title, i, Integer.valueOf(i)));
+                    appsPreferenceController.mSeeAllPref.setTitle((CharSequence) appsPreferenceController.mContext.getResources().getQuantityString(R$plurals.see_all_apps_title, i, new Object[]{Integer.valueOf(i)}));
                     return;
                 }
                 AppsPreferenceController appsPreferenceController2 = AppsPreferenceController.this;
-                appsPreferenceController2.mAllAppsInfoPref.setSummary(((AbstractPreferenceController) appsPreferenceController2).mContext.getString(R.string.apps_summary, Integer.valueOf(i)));
+                appsPreferenceController2.mAllAppsInfoPref.setSummary((CharSequence) appsPreferenceController2.mContext.getString(R$string.apps_summary, new Object[]{Integer.valueOf(i)}));
             }
         }.execute(new Void[0]);
     }
 
-    List<UsageStats> loadRecentApps() {
+    /* access modifiers changed from: package-private */
+    public List<UsageStats> loadRecentApps() {
         RecentAppStatsMixin recentAppStatsMixin = new RecentAppStatsMixin(this.mContext, 4);
         recentAppStatsMixin.loadDisplayableRecentApps(4);
         return recentAppStatsMixin.mRecentApps;
@@ -180,9 +166,9 @@ public class AppsPreferenceController extends BasePreferenceController implement
                 }
             }
             int i2 = 0;
-            for (UsageStats usageStats : this.mRecentApps) {
-                final String packageName = usageStats.getPackageName();
-                final ApplicationsState.AppEntry entry = this.mApplicationsState.getEntry(packageName, this.mUserId);
+            for (UsageStats next : this.mRecentApps) {
+                String packageName = next.getPackageName();
+                ApplicationsState.AppEntry entry = this.mApplicationsState.getEntry(packageName, this.mUserId);
                 if (entry != null) {
                     Preference preference2 = (Preference) arrayMap.remove(packageName);
                     if (preference2 == null) {
@@ -192,34 +178,27 @@ public class AppsPreferenceController extends BasePreferenceController implement
                         z = true;
                     }
                     preference2.setKey(packageName);
-                    preference2.setTitle(entry.label);
+                    preference2.setTitle((CharSequence) entry.label);
                     preference2.setIcon(Utils.getBadgedIcon(this.mContext, entry.info));
-                    preference2.setSummary(StringUtil.formatRelativeTime(this.mContext, System.currentTimeMillis() - usageStats.getLastTimeUsed(), false, RelativeDateTimeFormatter.Style.SHORT));
+                    preference2.setSummary(StringUtil.formatRelativeTime(this.mContext, (double) (System.currentTimeMillis() - next.getLastTimeUsed()), false, RelativeDateTimeFormatter.Style.SHORT));
                     int i3 = i2 + 1;
                     preference2.setOrder(i2);
-                    preference2.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() { // from class: com.android.settings.applications.AppsPreferenceController$$ExternalSyntheticLambda0
-                        @Override // androidx.preference.Preference.OnPreferenceClickListener
-                        public final boolean onPreferenceClick(Preference preference3) {
-                            boolean lambda$displayRecentApps$0;
-                            lambda$displayRecentApps$0 = AppsPreferenceController.this.lambda$displayRecentApps$0(packageName, entry, preference3);
-                            return lambda$displayRecentApps$0;
-                        }
-                    });
+                    preference2.setOnPreferenceClickListener(new AppsPreferenceController$$ExternalSyntheticLambda0(this, packageName, entry));
                     if (!z) {
                         this.mRecentAppsCategory.addPreference(preference2);
                     }
                     i2 = i3;
                 }
             }
-            for (Preference preference3 : arrayMap.values()) {
-                this.mRecentAppsCategory.removePreference(preference3);
+            for (Preference removePreference : arrayMap.values()) {
+                this.mRecentAppsCategory.removePreference(removePreference);
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ boolean lambda$displayRecentApps$0(String str, ApplicationsState.AppEntry appEntry, Preference preference) {
-        AppInfoBase.startAppInfoFragment(AppInfoDashboardFragment.class, R.string.application_info_label, str, appEntry.info.uid, this.mHost, 1001, getMetricsCategory());
+        AppInfoBase.startAppInfoFragment(AppInfoDashboardFragment.class, this.mContext.getString(R$string.application_info_label), str, appEntry.info.uid, this.mHost, 1001, getMetricsCategory());
         return true;
     }
 }

@@ -9,38 +9,28 @@ import android.os.storage.StorageManager;
 import android.os.storage.VolumeInfo;
 import android.os.storage.VolumeRecord;
 import android.provider.DocumentsContract;
-import android.text.TextUtils;
-import android.text.format.Formatter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
 import com.android.internal.util.Preconditions;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.deviceinfo.storage.StorageUtils;
+import com.android.settingslib.widget.UsageProgressBarPreference;
 import java.io.File;
 import java.util.Objects;
-/* loaded from: classes.dex */
+
 public class PublicVolumeSettings extends SettingsPreferenceFragment {
     private DiskInfo mDisk;
     private Preference mFormatPrivate;
     private Preference mFormatPublic;
     private boolean mIsPermittedToAdopt;
     private Preference mMount;
-    private StorageManager mStorageManager;
-    private StorageSummaryPreference mSummary;
-    private Button mUnmount;
-    private VolumeInfo mVolume;
-    private String mVolumeId;
-    private final View.OnClickListener mUnmountListener = new View.OnClickListener() { // from class: com.android.settings.deviceinfo.PublicVolumeSettings.1
-        @Override // android.view.View.OnClickListener
-        public void onClick(View view) {
-            new StorageUtils.UnmountTask(PublicVolumeSettings.this.getActivity(), PublicVolumeSettings.this.mVolume).execute(new Void[0]);
-        }
-    };
-    private final StorageEventListener mStorageListener = new StorageEventListener() { // from class: com.android.settings.deviceinfo.PublicVolumeSettings.2
+    private final StorageEventListener mStorageListener = new StorageEventListener() {
         public void onVolumeStateChanged(VolumeInfo volumeInfo, int i, int i2) {
             if (Objects.equals(PublicVolumeSettings.this.mVolume.getId(), volumeInfo.getId())) {
                 PublicVolumeSettings.this.mVolume = volumeInfo;
@@ -56,8 +46,20 @@ public class PublicVolumeSettings extends SettingsPreferenceFragment {
             }
         }
     };
+    /* access modifiers changed from: private */
+    public StorageManager mStorageManager;
+    private UsageProgressBarPreference mSummary;
+    private Button mUnmount;
+    private final View.OnClickListener mUnmountListener = new View.OnClickListener() {
+        public void onClick(View view) {
+            new StorageUtils.UnmountTask(PublicVolumeSettings.this.getActivity(), PublicVolumeSettings.this.mVolume).execute(new Void[0]);
+        }
+    };
+    /* access modifiers changed from: private */
+    public VolumeInfo mVolume;
+    /* access modifiers changed from: private */
+    public String mVolumeId;
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 42;
     }
@@ -67,7 +69,6 @@ public class PublicVolumeSettings extends SettingsPreferenceFragment {
         return volumeInfo != null && volumeInfo.getType() == 0 && this.mVolume.isMountedReadable();
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         FragmentActivity activity = getActivity();
@@ -89,28 +90,25 @@ public class PublicVolumeSettings extends SettingsPreferenceFragment {
         this.mDisk = findDiskById;
         Preconditions.checkNotNull(findDiskById);
         this.mVolumeId = this.mVolume.getId();
-        addPreferencesFromResource(R.xml.device_info_storage_volume);
+        addPreferencesFromResource(R$xml.device_info_storage_volume);
         getPreferenceScreen().setOrderingAsAdded(true);
-        this.mSummary = new StorageSummaryPreference(getPrefContext());
-        this.mMount = buildAction(R.string.storage_menu_mount);
+        this.mSummary = new UsageProgressBarPreference(getPrefContext());
+        this.mMount = buildAction(R$string.storage_menu_mount);
         Button button = new Button(getActivity());
         this.mUnmount = button;
-        button.setText(R.string.storage_menu_unmount);
+        button.setText(R$string.storage_menu_unmount);
         this.mUnmount.setOnClickListener(this.mUnmountListener);
-        this.mFormatPublic = buildAction(R.string.storage_menu_format);
-        if (!this.mIsPermittedToAdopt) {
-            return;
+        this.mFormatPublic = buildAction(R$string.storage_menu_format);
+        if (this.mIsPermittedToAdopt) {
+            this.mFormatPrivate = buildAction(R$string.storage_menu_format_private);
         }
-        this.mFormatPrivate = buildAction(R.string.storage_menu_format_private);
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, androidx.fragment.app.Fragment
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-        if (!isVolumeValid()) {
-            return;
+        if (isVolumeValid()) {
+            ((ViewGroup) getActivity().findViewById(R$id.container_material)).addView(this.mUnmount, new ViewGroup.LayoutParams(-1, -2));
         }
-        ((ViewGroup) getActivity().findViewById(R.id.container_material)).addView(this.mUnmount, new ViewGroup.LayoutParams(-1, -2));
     }
 
     public void update() {
@@ -126,9 +124,8 @@ public class PublicVolumeSettings extends SettingsPreferenceFragment {
             File path = this.mVolume.getPath();
             long totalSpace = path.getTotalSpace();
             long freeSpace = totalSpace - path.getFreeSpace();
-            Formatter.BytesResult formatBytes = Formatter.formatBytes(getResources(), freeSpace, 0);
-            this.mSummary.setTitle(TextUtils.expandTemplate(getText(R.string.storage_size_large), formatBytes.value, formatBytes.units));
-            this.mSummary.setSummary(getString(R.string.storage_volume_used, Formatter.formatFileSize(activity, totalSpace)));
+            this.mSummary.setUsageSummary(StorageUtils.getStorageSummary(activity, R$string.storage_usage_summary, freeSpace));
+            this.mSummary.setTotalSummary(StorageUtils.getStorageSummary(activity, R$string.storage_total_summary, totalSpace));
             this.mSummary.setPercent(freeSpace, totalSpace);
         }
         if (this.mVolume.getState() == 0) {
@@ -138,10 +135,9 @@ public class PublicVolumeSettings extends SettingsPreferenceFragment {
             this.mUnmount.setVisibility(8);
         }
         addPreference(this.mFormatPublic);
-        if (!this.mDisk.isAdoptable() || !this.mIsPermittedToAdopt) {
-            return;
+        if (this.mDisk.isAdoptable() && this.mIsPermittedToAdopt) {
+            addPreference(this.mFormatPrivate);
         }
-        addPreference(this.mFormatPrivate);
     }
 
     private void addPreference(Preference preference) {
@@ -155,7 +151,6 @@ public class PublicVolumeSettings extends SettingsPreferenceFragment {
         return preference;
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
         this.mVolume = this.mStorageManager.findVolumeById(this.mVolumeId);
@@ -167,13 +162,11 @@ public class PublicVolumeSettings extends SettingsPreferenceFragment {
         update();
     }
 
-    @Override // com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onPause() {
         super.onPause();
         this.mStorageManager.unregisterListener(this.mStorageListener);
     }
 
-    @Override // com.android.settings.core.InstrumentedPreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.preference.PreferenceManager.OnPreferenceTreeClickListener
     public boolean onPreferenceTreeClick(Preference preference) {
         if (preference == this.mMount) {
             new StorageUtils.MountTask(getActivity(), this.mVolume).execute(new Void[0]);

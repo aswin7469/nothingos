@@ -1,17 +1,19 @@
 package com.android.settings.notification.history;
 
-import java.util.Comparator;
-/* loaded from: classes.dex */
-public final /* synthetic */ class HistoryLoader$$ExternalSyntheticLambda2 implements Comparator {
-    public static final /* synthetic */ HistoryLoader$$ExternalSyntheticLambda2 INSTANCE = new HistoryLoader$$ExternalSyntheticLambda2();
+import com.android.settings.notification.history.HistoryLoader;
+import java.util.List;
 
-    private /* synthetic */ HistoryLoader$$ExternalSyntheticLambda2() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class HistoryLoader$$ExternalSyntheticLambda2 implements Runnable {
+    public final /* synthetic */ HistoryLoader.OnHistoryLoaderListener f$0;
+    public final /* synthetic */ List f$1;
+
+    public /* synthetic */ HistoryLoader$$ExternalSyntheticLambda2(HistoryLoader.OnHistoryLoaderListener onHistoryLoaderListener, List list) {
+        this.f$0 = onHistoryLoaderListener;
+        this.f$1 = list;
     }
 
-    @Override // java.util.Comparator
-    public final int compare(Object obj, Object obj2) {
-        int lambda$load$0;
-        lambda$load$0 = HistoryLoader.lambda$load$0((NotificationHistoryPackage) obj, (NotificationHistoryPackage) obj2);
-        return lambda$load$0;
+    public final void run() {
+        this.f$0.onHistoryLoaded(this.f$1);
     }
 }

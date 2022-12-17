@@ -9,45 +9,46 @@ import android.view.View;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.SubSettingLauncher;
 import com.android.settings.notification.NotificationBackend;
 import com.android.settings.notification.app.ConversationListSettings;
-import com.android.settingslib.core.AbstractPreferenceController;
 import com.android.settingslib.core.lifecycle.Lifecycle;
-import com.android.settingslib.widget.RadioButtonPreference;
+import com.android.settingslib.widget.SelectorWithWidgetPreference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-/* loaded from: classes.dex */
+
 public class ZenModePriorityConversationsPreferenceController extends AbstractZenModePreferenceController {
     static final String KEY_ALL = "conversations_all";
     static final String KEY_IMPORTANT = "conversations_important";
     static final String KEY_NONE = "conversations_none";
-    private final NotificationBackend mNotificationBackend;
-    private PreferenceCategory mPreferenceCategory;
-    private Context mPreferenceScreenContext;
-    private int mNumImportantConversations = -1;
-    private int mNumConversations = -1;
-    private List<RadioButtonPreference> mRadioButtonPreferences = new ArrayList();
-    private View.OnClickListener mConversationSettingsWidgetClickListener = new View.OnClickListener() { // from class: com.android.settings.notification.zen.ZenModePriorityConversationsPreferenceController.2
-        @Override // android.view.View.OnClickListener
+    private View.OnClickListener mConversationSettingsWidgetClickListener = new View.OnClickListener() {
         public void onClick(View view) {
             new SubSettingLauncher(ZenModePriorityConversationsPreferenceController.this.mPreferenceScreenContext).setDestination(ConversationListSettings.class.getName()).setSourceMetricsCategory(1837).launch();
         }
     };
-    private RadioButtonPreference.OnClickListener mRadioButtonClickListener = new RadioButtonPreference.OnClickListener() { // from class: com.android.settings.notification.zen.ZenModePriorityConversationsPreferenceController.3
-        @Override // com.android.settingslib.widget.RadioButtonPreference.OnClickListener
-        public void onRadioButtonClicked(RadioButtonPreference radioButtonPreference) {
-            int keyToSetting = ZenModePriorityConversationsPreferenceController.keyToSetting(radioButtonPreference.getKey());
-            if (keyToSetting != ZenModePriorityConversationsPreferenceController.this.mBackend.getPriorityConversationSenders()) {
-                ZenModePriorityConversationsPreferenceController.this.mBackend.saveConversationSenders(keyToSetting);
+    /* access modifiers changed from: private */
+    public final NotificationBackend mNotificationBackend;
+    /* access modifiers changed from: private */
+    public int mNumConversations = -1;
+    /* access modifiers changed from: private */
+    public int mNumImportantConversations = -1;
+    /* access modifiers changed from: private */
+    public PreferenceCategory mPreferenceCategory;
+    /* access modifiers changed from: private */
+    public Context mPreferenceScreenContext;
+    private SelectorWithWidgetPreference.OnClickListener mRadioButtonClickListener = new SelectorWithWidgetPreference.OnClickListener() {
+        public void onRadioButtonClicked(SelectorWithWidgetPreference selectorWithWidgetPreference) {
+            int r2 = ZenModePriorityConversationsPreferenceController.keyToSetting(selectorWithWidgetPreference.getKey());
+            if (r2 != ZenModePriorityConversationsPreferenceController.this.mBackend.getPriorityConversationSenders()) {
+                ZenModePriorityConversationsPreferenceController.this.mBackend.saveConversationSenders(r2);
             }
         }
     };
+    private List<SelectorWithWidgetPreference> mSelectorWithWidgetPreferences = new ArrayList();
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return true;
     }
@@ -57,41 +58,37 @@ public class ZenModePriorityConversationsPreferenceController extends AbstractZe
         this.mNotificationBackend = notificationBackend;
     }
 
-    @Override // com.android.settings.notification.zen.AbstractZenModePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         this.mPreferenceScreenContext = preferenceScreen.getContext();
         PreferenceCategory preferenceCategory = (PreferenceCategory) preferenceScreen.findPreference(getPreferenceKey());
         this.mPreferenceCategory = preferenceCategory;
         if (preferenceCategory.findPreference(KEY_ALL) == null) {
-            makeRadioPreference(KEY_ALL, R.string.zen_mode_from_all_conversations);
-            makeRadioPreference(KEY_IMPORTANT, R.string.zen_mode_from_important_conversations);
-            makeRadioPreference(KEY_NONE, R.string.zen_mode_from_no_conversations);
+            makeRadioPreference(KEY_ALL, R$string.zen_mode_from_all_conversations);
+            makeRadioPreference(KEY_IMPORTANT, R$string.zen_mode_from_important_conversations);
+            makeRadioPreference(KEY_NONE, R$string.zen_mode_from_no_conversations);
             updateChannelCounts();
         }
         super.displayPreference(preferenceScreen);
     }
 
-    @Override // com.android.settings.notification.zen.AbstractZenModePreferenceController, com.android.settingslib.core.lifecycle.events.OnResume
     public void onResume() {
         super.onResume();
         updateChannelCounts();
     }
 
-    @Override // com.android.settings.notification.zen.AbstractZenModePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return this.KEY;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         int priorityConversationSenders = this.mBackend.getPriorityConversationSenders();
-        for (RadioButtonPreference radioButtonPreference : this.mRadioButtonPreferences) {
-            radioButtonPreference.setChecked(keyToSetting(radioButtonPreference.getKey()) == priorityConversationSenders);
-            radioButtonPreference.setSummary(getSummary(radioButtonPreference.getKey()));
+        for (SelectorWithWidgetPreference next : this.mSelectorWithWidgetPreferences) {
+            next.setChecked(keyToSetting(next.getKey()) == priorityConversationSenders);
+            next.setSummary((CharSequence) getSummary(next.getKey()));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static int keyToSetting(String str) {
         str.hashCode();
         if (!str.equals(KEY_IMPORTANT)) {
@@ -112,24 +109,23 @@ public class ZenModePriorityConversationsPreferenceController extends AbstractZe
         if (i == -1) {
             return null;
         }
-        MessageFormat messageFormat = new MessageFormat(this.mContext.getString(R.string.zen_mode_conversations_count), Locale.getDefault());
+        MessageFormat messageFormat = new MessageFormat(this.mContext.getString(R$string.zen_mode_conversations_count), Locale.getDefault());
         HashMap hashMap = new HashMap();
         hashMap.put("count", Integer.valueOf(i));
         return messageFormat.format(hashMap);
     }
 
     private void updateChannelCounts() {
-        new AsyncTask<Void, Void, Void>() { // from class: com.android.settings.notification.zen.ZenModePriorityConversationsPreferenceController.1
-            /* JADX INFO: Access modifiers changed from: protected */
-            @Override // android.os.AsyncTask
+        new AsyncTask<Void, Void, Void>() {
+            /* access modifiers changed from: protected */
             public Void doInBackground(Void... voidArr) {
                 int i;
                 int i2 = 0;
                 ParceledListSlice<ConversationChannelWrapper> conversations = ZenModePriorityConversationsPreferenceController.this.mNotificationBackend.getConversations(false);
                 if (conversations != null) {
                     i = 0;
-                    for (ConversationChannelWrapper conversationChannelWrapper : conversations.getList()) {
-                        if (!conversationChannelWrapper.getNotificationChannel().isDemoted()) {
+                    for (ConversationChannelWrapper notificationChannel : conversations.getList()) {
+                        if (!notificationChannel.getNotificationChannel().isDemoted()) {
                             i++;
                         }
                     }
@@ -139,8 +135,8 @@ public class ZenModePriorityConversationsPreferenceController extends AbstractZe
                 ZenModePriorityConversationsPreferenceController.this.mNumConversations = i;
                 ParceledListSlice<ConversationChannelWrapper> conversations2 = ZenModePriorityConversationsPreferenceController.this.mNotificationBackend.getConversations(true);
                 if (conversations2 != null) {
-                    for (ConversationChannelWrapper conversationChannelWrapper2 : conversations2.getList()) {
-                        if (!conversationChannelWrapper2.getNotificationChannel().isDemoted()) {
+                    for (ConversationChannelWrapper notificationChannel2 : conversations2.getList()) {
+                        if (!notificationChannel2.getNotificationChannel().isDemoted()) {
                             i2++;
                         }
                     }
@@ -149,28 +145,26 @@ public class ZenModePriorityConversationsPreferenceController extends AbstractZe
                 return null;
             }
 
-            /* JADX INFO: Access modifiers changed from: protected */
-            @Override // android.os.AsyncTask
-            public void onPostExecute(Void r1) {
-                if (((AbstractPreferenceController) ZenModePriorityConversationsPreferenceController.this).mContext == null) {
-                    return;
+            /* access modifiers changed from: protected */
+            public void onPostExecute(Void voidR) {
+                if (ZenModePriorityConversationsPreferenceController.this.mContext != null) {
+                    ZenModePriorityConversationsPreferenceController zenModePriorityConversationsPreferenceController = ZenModePriorityConversationsPreferenceController.this;
+                    zenModePriorityConversationsPreferenceController.updateState(zenModePriorityConversationsPreferenceController.mPreferenceCategory);
                 }
-                ZenModePriorityConversationsPreferenceController zenModePriorityConversationsPreferenceController = ZenModePriorityConversationsPreferenceController.this;
-                zenModePriorityConversationsPreferenceController.updateState(zenModePriorityConversationsPreferenceController.mPreferenceCategory);
             }
         }.execute(new Void[0]);
     }
 
-    private RadioButtonPreference makeRadioPreference(String str, int i) {
-        RadioButtonPreference radioButtonPreference = new RadioButtonPreference(this.mPreferenceCategory.getContext());
+    private SelectorWithWidgetPreference makeRadioPreference(String str, int i) {
+        SelectorWithWidgetPreference selectorWithWidgetPreference = new SelectorWithWidgetPreference(this.mPreferenceCategory.getContext());
         if (KEY_ALL.equals(str) || KEY_IMPORTANT.equals(str)) {
-            radioButtonPreference.setExtraWidgetOnClickListener(this.mConversationSettingsWidgetClickListener);
+            selectorWithWidgetPreference.setExtraWidgetOnClickListener(this.mConversationSettingsWidgetClickListener);
         }
-        radioButtonPreference.setKey(str);
-        radioButtonPreference.setTitle(i);
-        radioButtonPreference.setOnClickListener(this.mRadioButtonClickListener);
-        this.mPreferenceCategory.addPreference(radioButtonPreference);
-        this.mRadioButtonPreferences.add(radioButtonPreference);
-        return radioButtonPreference;
+        selectorWithWidgetPreference.setKey(str);
+        selectorWithWidgetPreference.setTitle(i);
+        selectorWithWidgetPreference.setOnClickListener(this.mRadioButtonClickListener);
+        this.mPreferenceCategory.addPreference(selectorWithWidgetPreference);
+        this.mSelectorWithWidgetPreferences.add(selectorWithWidgetPreference);
+        return selectorWithWidgetPreference;
     }
 }

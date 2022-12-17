@@ -4,9 +4,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 import androidx.preference.ListPreference;
 import com.android.internal.app.LocalePicker;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class LocalePreference extends ListPreference {
     public LocalePreference(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -25,7 +25,7 @@ public class LocalePreference extends ListPreference {
         int i2 = size + 1;
         CharSequence[] charSequenceArr = new CharSequence[i2];
         CharSequence[] charSequenceArr2 = new CharSequence[i2];
-        charSequenceArr[0] = context.getResources().getString(R.string.locale_default);
+        charSequenceArr[0] = context.getResources().getString(R$string.locale_default);
         charSequenceArr2[0] = "";
         while (i < size) {
             LocalePicker.LocaleInfo localeInfo = (LocalePicker.LocaleInfo) allAssetLocales.get(i);

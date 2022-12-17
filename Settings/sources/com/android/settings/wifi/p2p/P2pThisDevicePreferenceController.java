@@ -7,16 +7,14 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.core.AbstractPreferenceController;
-/* loaded from: classes.dex */
+
 public class P2pThisDevicePreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin {
     private Preference mPreference;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "p2p_this_device";
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return true;
     }
@@ -25,7 +23,6 @@ public class P2pThisDevicePreferenceController extends AbstractPreferenceControl
         super(context);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = preferenceScreen.findPreference(getPreferenceKey());
@@ -39,13 +36,12 @@ public class P2pThisDevicePreferenceController extends AbstractPreferenceControl
     }
 
     public void updateDeviceName(WifiP2pDevice wifiP2pDevice) {
-        if (this.mPreference == null || wifiP2pDevice == null) {
-            return;
-        }
-        if (TextUtils.isEmpty(wifiP2pDevice.deviceName)) {
-            this.mPreference.setTitle(wifiP2pDevice.deviceAddress);
-        } else {
-            this.mPreference.setTitle(wifiP2pDevice.deviceName);
+        if (this.mPreference != null && wifiP2pDevice != null) {
+            if (TextUtils.isEmpty(wifiP2pDevice.deviceName)) {
+                this.mPreference.setTitle((CharSequence) wifiP2pDevice.deviceAddress);
+            } else {
+                this.mPreference.setTitle((CharSequence) wifiP2pDevice.deviceName);
+            }
         }
     }
 }

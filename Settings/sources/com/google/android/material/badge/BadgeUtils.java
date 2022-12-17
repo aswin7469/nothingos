@@ -3,20 +3,16 @@ package com.google.android.material.badge;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
-import android.os.Build;
+import android.graphics.drawable.Drawable;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.FrameLayout;
 import com.google.android.material.R$dimen;
-import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.badge.BadgeState;
 import com.google.android.material.internal.ParcelableSparseArray;
-/* loaded from: classes.dex */
-public class BadgeUtils {
-    public static final boolean USE_COMPAT_PARENT;
 
-    static {
-        USE_COMPAT_PARENT = Build.VERSION.SDK_INT < 18;
-    }
+public class BadgeUtils {
+    public static final boolean USE_COMPAT_PARENT = false;
 
     public static void updateBadgeBounds(Rect rect, float f, float f2, float f3, float f4) {
         rect.set((int) (f - f3), (int) (f2 - f4), (int) (f + f3), (int) (f2 + f4));
@@ -26,21 +22,20 @@ public class BadgeUtils {
         setBadgeDrawableBounds(badgeDrawable, view, frameLayout);
         if (badgeDrawable.getCustomBadgeParent() != null) {
             badgeDrawable.getCustomBadgeParent().setForeground(badgeDrawable);
-        } else if (USE_COMPAT_PARENT) {
-            throw new IllegalArgumentException("Trying to reference null customBadgeParent");
-        } else {
+        } else if (!USE_COMPAT_PARENT) {
             view.getOverlay().add(badgeDrawable);
+        } else {
+            throw new IllegalArgumentException("Trying to reference null customBadgeParent");
         }
     }
 
     public static void detachBadgeDrawable(BadgeDrawable badgeDrawable, View view) {
-        if (badgeDrawable == null) {
-            return;
-        }
-        if (USE_COMPAT_PARENT || badgeDrawable.getCustomBadgeParent() != null) {
-            badgeDrawable.getCustomBadgeParent().setForeground(null);
-        } else {
-            view.getOverlay().remove(badgeDrawable);
+        if (badgeDrawable != null) {
+            if (USE_COMPAT_PARENT || badgeDrawable.getCustomBadgeParent() != null) {
+                badgeDrawable.getCustomBadgeParent().setForeground((Drawable) null);
+            } else {
+                view.getOverlay().remove(badgeDrawable);
+            }
         }
     }
 
@@ -63,26 +58,32 @@ public class BadgeUtils {
 
     public static ParcelableSparseArray createParcelableBadgeStates(SparseArray<BadgeDrawable> sparseArray) {
         ParcelableSparseArray parcelableSparseArray = new ParcelableSparseArray();
-        for (int i = 0; i < sparseArray.size(); i++) {
+        int i = 0;
+        while (i < sparseArray.size()) {
             int keyAt = sparseArray.keyAt(i);
             BadgeDrawable valueAt = sparseArray.valueAt(i);
-            if (valueAt == null) {
+            if (valueAt != null) {
+                parcelableSparseArray.put(keyAt, valueAt.getSavedState());
+                i++;
+            } else {
                 throw new IllegalArgumentException("badgeDrawable cannot be null");
             }
-            parcelableSparseArray.put(keyAt, valueAt.getSavedState());
         }
         return parcelableSparseArray;
     }
 
     public static SparseArray<BadgeDrawable> createBadgeDrawablesFromSavedStates(Context context, ParcelableSparseArray parcelableSparseArray) {
         SparseArray<BadgeDrawable> sparseArray = new SparseArray<>(parcelableSparseArray.size());
-        for (int i = 0; i < parcelableSparseArray.size(); i++) {
+        int i = 0;
+        while (i < parcelableSparseArray.size()) {
             int keyAt = parcelableSparseArray.keyAt(i);
-            BadgeDrawable.SavedState savedState = (BadgeDrawable.SavedState) parcelableSparseArray.valueAt(i);
-            if (savedState == null) {
+            BadgeState.State state = (BadgeState.State) parcelableSparseArray.valueAt(i);
+            if (state != null) {
+                sparseArray.put(keyAt, BadgeDrawable.createFromSavedState(context, state));
+                i++;
+            } else {
                 throw new IllegalArgumentException("BadgeDrawable's savedState cannot be null");
             }
-            sparseArray.put(keyAt, BadgeDrawable.createFromSavedState(context, savedState));
         }
         return sparseArray;
     }

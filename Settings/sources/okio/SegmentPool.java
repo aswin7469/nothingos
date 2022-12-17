@@ -3,17 +3,17 @@ package okio;
 import java.util.concurrent.atomic.AtomicReference;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
+
 /* compiled from: SegmentPool.kt */
-/* loaded from: classes2.dex */
 public final class SegmentPool {
     private static final int HASH_BUCKET_COUNT;
     @NotNull
-    private static final AtomicReference<Segment>[] hashBuckets;
-    @NotNull
     public static final SegmentPool INSTANCE = new SegmentPool();
-    private static final int MAX_SIZE = 65536;
     @NotNull
     private static final Segment LOCK = new Segment(new byte[0], 0, 0, false, false);
+    private static final int MAX_SIZE = 65536;
+    @NotNull
+    private static final AtomicReference<Segment>[] hashBuckets;
 
     private SegmentPool() {
     }
@@ -37,7 +37,7 @@ public final class SegmentPool {
             return new Segment();
         }
         if (andSet == null) {
-            firstRef.set(null);
+            firstRef.set((Object) null);
             return new Segment();
         }
         firstRef.set(andSet.next);
@@ -49,27 +49,28 @@ public final class SegmentPool {
     public static final void recycle(@NotNull Segment segment) {
         AtomicReference<Segment> firstRef;
         Segment segment2;
+        int i;
         Intrinsics.checkNotNullParameter(segment, "segment");
         if (!(segment.next == null && segment.prev == null)) {
             throw new IllegalArgumentException("Failed requirement.".toString());
+        } else if (!segment.shared && (segment2 = firstRef.get()) != LOCK) {
+            if (segment2 == null) {
+                i = 0;
+            } else {
+                i = segment2.limit;
+            }
+            if (i < MAX_SIZE) {
+                segment.next = segment2;
+                segment.pos = 0;
+                segment.limit = i + 8192;
+                if (!(firstRef = INSTANCE.firstRef()).compareAndSet(segment2, segment)) {
+                    segment.next = null;
+                }
+            }
         }
-        if (segment.shared || (segment2 = (firstRef = INSTANCE.firstRef()).get()) == LOCK) {
-            return;
-        }
-        int i = segment2 == null ? 0 : segment2.limit;
-        if (i >= MAX_SIZE) {
-            return;
-        }
-        segment.next = segment2;
-        segment.pos = 0;
-        segment.limit = i + 8192;
-        if (firstRef.compareAndSet(segment2, segment)) {
-            return;
-        }
-        segment.next = null;
     }
 
     private final AtomicReference<Segment> firstRef() {
-        return hashBuckets[(int) (Thread.currentThread().getId() & (HASH_BUCKET_COUNT - 1))];
+        return hashBuckets[(int) (Thread.currentThread().getId() & (((long) HASH_BUCKET_COUNT) - 1))];
     }
 }

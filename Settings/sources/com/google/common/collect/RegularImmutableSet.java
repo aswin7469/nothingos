@@ -1,37 +1,41 @@
 package com.google.common.collect;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes2.dex */
-public final class RegularImmutableSet<E> extends ImmutableSet<E> {
-    static final RegularImmutableSet<Object> EMPTY = new RegularImmutableSet<>(new Object[0], 0, null, 0, 0);
+
+final class RegularImmutableSet<E> extends ImmutableSet<E> {
+    static final RegularImmutableSet<Object> EMPTY;
+    private static final Object[] EMPTY_ARRAY;
     final transient Object[] elements;
     private final transient int hashCode;
     private final transient int mask;
     private final transient int size;
     final transient Object[] table;
 
-    @Override // com.google.common.collect.ImmutableCollection
-    int internalArrayStart() {
+    /* access modifiers changed from: package-private */
+    public int internalArrayStart() {
         return 0;
     }
 
-    @Override // com.google.common.collect.ImmutableSet
-    boolean isHashCodeFast() {
+    /* access modifiers changed from: package-private */
+    public boolean isHashCodeFast() {
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public RegularImmutableSet(Object[] objArr, int i, Object[] objArr2, int i2, int i3) {
+    static {
+        Object[] objArr = new Object[0];
+        EMPTY_ARRAY = objArr;
+        EMPTY = new RegularImmutableSet(objArr, 0, objArr, 0, 0);
+    }
+
+    RegularImmutableSet(Object[] objArr, int i, Object[] objArr2, int i2, int i3) {
         this.elements = objArr;
+        this.hashCode = i;
         this.table = objArr2;
         this.mask = i2;
-        this.hashCode = i;
         this.size = i3;
     }
 
-    @Override // com.google.common.collect.ImmutableCollection, java.util.AbstractCollection, java.util.Collection
     public boolean contains(Object obj) {
         Object[] objArr = this.table;
-        if (obj == null || objArr == null) {
+        if (obj == null || objArr.length == 0) {
             return false;
         }
         int smearedHash = Hashing.smearedHash(obj);
@@ -48,39 +52,35 @@ public final class RegularImmutableSet<E> extends ImmutableSet<E> {
         }
     }
 
-    @Override // java.util.AbstractCollection, java.util.Collection, java.util.Set
     public int size() {
         return this.size;
     }
 
-    @Override // com.google.common.collect.ImmutableSet, com.google.common.collect.ImmutableCollection, java.util.AbstractCollection, java.util.Collection, java.lang.Iterable
-    /* renamed from: iterator */
-    public UnmodifiableIterator<E> mo831iterator() {
-        return asList().mo831iterator();
+    public UnmodifiableIterator<E> iterator() {
+        return asList().iterator();
     }
 
-    @Override // com.google.common.collect.ImmutableCollection
-    Object[] internalArray() {
+    /* access modifiers changed from: package-private */
+    public Object[] internalArray() {
         return this.elements;
     }
 
-    @Override // com.google.common.collect.ImmutableCollection
-    int internalArrayEnd() {
+    /* access modifiers changed from: package-private */
+    public int internalArrayEnd() {
         return this.size;
     }
 
-    @Override // com.google.common.collect.ImmutableCollection
-    int copyIntoArray(Object[] objArr, int i) {
+    /* access modifiers changed from: package-private */
+    public int copyIntoArray(Object[] objArr, int i) {
         System.arraycopy(this.elements, 0, objArr, i, this.size);
         return i + this.size;
     }
 
-    @Override // com.google.common.collect.ImmutableSet
-    ImmutableList<E> createAsList() {
+    /* access modifiers changed from: package-private */
+    public ImmutableList<E> createAsList() {
         return ImmutableList.asImmutableList(this.elements, this.size);
     }
 
-    @Override // com.google.common.collect.ImmutableSet, java.util.Collection, java.util.Set
     public int hashCode() {
         return this.hashCode;
     }

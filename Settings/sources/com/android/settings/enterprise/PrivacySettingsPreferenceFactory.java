@@ -2,7 +2,7 @@ package com.android.settings.enterprise;
 
 import android.app.admin.DevicePolicyManager;
 import android.content.Context;
-/* loaded from: classes.dex */
+
 public class PrivacySettingsPreferenceFactory {
     public static PrivacySettingsPreference createPrivacySettingsPreference(Context context) {
         if (isFinancedDevice(context)) {

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:layout_width="match_parent" android:layout_height="wrap_content">
+    <LinearLayout android:id="@+id/permission" android:background="@drawable/nt_bluetooth_permission_background" android:layout_width="match_parent" android:layout_height="116dp" android:layout_margin="24dp">
+        <ImageView android:layout_gravity="center_vertical" android:id="@+id/permission_icon" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/nt_permission_icon" android:layout_marginStart="26dp"/>
+        <LinearLayout android:layout_gravity="center_vertical" android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="26dp">
+            <TextView android:textAppearance="@android:style/TextAppearance.Holo.Light.Medium" android:textSize="20sp" android:textColor="?android:attr/textColorPrimary" android:ellipsize="marquee" android:id="@+id/permission_title" android:fadingEdge="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Nearby devices" android:singleLine="true" android:textAlignment="viewStart"/>
+            <TextView android:textAppearance="@android:style/DialogWindowTitle.DeviceDefault" android:textSize="14sp" android:textColor="?android:attr/textColorSecondary" android:id="@+id/permission_summary" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Turn on Nearby devices \10 permission to explore more." android:maxLines="10" android:textAlignment="viewStart"/>
+        </LinearLayout>
+        <LinearLayout android:gravity="right|center_vertical|center_horizontal|center|end" android:orientation="vertical" android:id="@+id/widget_frame" android:layout_width="wrap_content" android:layout_height="match_parent" android:minWidth="58dp"/>
+    </LinearLayout>
+</LinearLayout>

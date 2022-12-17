@@ -1,96 +1,85 @@
 package kotlin.collections;
 
 import java.util.Collection;
-import java.util.Objects;
 import kotlin.jvm.internal.CollectionToArray;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
+
 /* compiled from: AbstractCollection.kt */
-/* loaded from: classes2.dex */
 public abstract class AbstractCollection<E> implements Collection<E> {
-    @Override // java.util.Collection
     public boolean add(E e) {
         throw new UnsupportedOperationException("Operation is not supported for read-only collection");
     }
 
-    @Override // java.util.Collection
     public boolean addAll(Collection<? extends E> collection) {
         throw new UnsupportedOperationException("Operation is not supported for read-only collection");
     }
 
-    @Override // java.util.Collection
     public void clear() {
         throw new UnsupportedOperationException("Operation is not supported for read-only collection");
     }
 
     public abstract int getSize();
 
-    @Override // java.util.Collection
     public boolean remove(Object obj) {
         throw new UnsupportedOperationException("Operation is not supported for read-only collection");
     }
 
-    @Override // java.util.Collection
     public boolean removeAll(Collection<? extends Object> collection) {
         throw new UnsupportedOperationException("Operation is not supported for read-only collection");
     }
 
-    @Override // java.util.Collection
     public boolean retainAll(Collection<? extends Object> collection) {
         throw new UnsupportedOperationException("Operation is not supported for read-only collection");
     }
 
-    @Override // java.util.Collection
+    protected AbstractCollection() {
+    }
+
     public final /* bridge */ int size() {
         return getSize();
     }
 
-    @Override // java.util.Collection
-    public boolean isEmpty() {
-        return size() == 0;
-    }
-
-    @NotNull
-    public String toString() {
-        return CollectionsKt___CollectionsKt.joinToString$default(this, ", ", "[", "]", 0, null, new AbstractCollection$toString$1(this), 24, null);
-    }
-
-    @Override // java.util.Collection
-    @NotNull
-    public Object[] toArray() {
-        return CollectionToArray.toArray(this);
-    }
-
-    @Override // java.util.Collection
-    @NotNull
-    public <T> T[] toArray(@NotNull T[] array) {
-        Intrinsics.checkNotNullParameter(array, "array");
-        T[] tArr = (T[]) CollectionToArray.toArray(this, array);
-        Objects.requireNonNull(tArr, "null cannot be cast to non-null type kotlin.Array<T>");
-        return tArr;
-    }
-
-    @Override // java.util.Collection
-    public boolean containsAll(@NotNull Collection<? extends Object> elements) {
-        Intrinsics.checkNotNullParameter(elements, "elements");
-        if (elements.isEmpty()) {
+    public boolean containsAll(@NotNull Collection<? extends Object> collection) {
+        Intrinsics.checkNotNullParameter(collection, "elements");
+        Iterable<Object> iterable = collection;
+        if (((Collection) iterable).isEmpty()) {
             return true;
         }
-        for (Object obj : elements) {
-            if (!contains(obj)) {
+        for (Object contains : iterable) {
+            if (!contains(contains)) {
                 return false;
             }
         }
         return true;
     }
 
-    @Override // java.util.Collection
-    public boolean contains(Object obj) {
+    public boolean isEmpty() {
+        return size() == 0;
+    }
+
+    @NotNull
+    public String toString() {
+        return CollectionsKt___CollectionsKt.joinToString$default(this, ", ", "[", "]", 0, (CharSequence) null, new AbstractCollection$toString$1(this), 24, (Object) null);
+    }
+
+    @NotNull
+    public Object[] toArray() {
+        return CollectionToArray.toArray(this);
+    }
+
+    @NotNull
+    public <T> T[] toArray(@NotNull T[] tArr) {
+        Intrinsics.checkNotNullParameter(tArr, "array");
+        return CollectionToArray.toArray(this, tArr);
+    }
+
+    public boolean contains(E e) {
         if (isEmpty()) {
             return false;
         }
-        for (E e : this) {
-            if (Intrinsics.areEqual(e, obj)) {
+        for (Object areEqual : this) {
+            if (Intrinsics.areEqual(areEqual, e)) {
                 return true;
             }
         }

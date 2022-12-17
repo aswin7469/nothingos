@@ -9,15 +9,15 @@ import android.content.pm.ComponentInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ServiceInfo;
 import android.os.Bundle;
+import android.service.notification.ZenPolicy;
 import android.util.Log;
 import android.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.preference.Preference;
 import com.android.settings.notification.zen.ZenRuleNameDialog;
-import com.android.settingslib.core.AbstractPreferenceController;
 import com.android.settingslib.core.lifecycle.Lifecycle;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public abstract class AbstractZenModeAutomaticRulePreferenceController extends AbstractZenModePreferenceController {
     protected ZenModeBackend mBackend;
     protected Fragment mParent;
@@ -30,13 +30,12 @@ public abstract class AbstractZenModeAutomaticRulePreferenceController extends A
         this.mParent = fragment;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         this.mRules = this.mBackend.getAutomaticZenRules();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public Map.Entry<String, AutomaticZenRule>[] getRules() {
         if (this.mRules == null) {
             this.mRules = this.mBackend.getAutomaticZenRules();
@@ -44,14 +43,13 @@ public abstract class AbstractZenModeAutomaticRulePreferenceController extends A
         return this.mRules;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void showNameRuleDialog(ZenRuleInfo zenRuleInfo, Fragment fragment) {
-        ZenRuleNameDialog.show(fragment, null, zenRuleInfo.defaultConditionId, new RuleNameChangeListener(zenRuleInfo));
+        ZenRuleNameDialog.show(fragment, (String) null, zenRuleInfo.defaultConditionId, new RuleNameChangeListener(zenRuleInfo));
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public static Intent getRuleIntent(String str, ComponentName componentName, String str2) {
-        Intent putExtra = new Intent().addFlags(67108864).putExtra("android.service.notification.extra.RULE_ID", str2);
+    protected static Intent getRuleIntent(String str, ComponentName componentName, String str2) {
+        Intent putExtra = new Intent().addFlags(67108864).putExtra("android.service.notification.extra.RULE_ID", str2).putExtra("android.app.extra.AUTOMATIC_RULE_ID", str2);
         if (componentName != null) {
             putExtra.setComponent(componentName);
         } else {
@@ -62,25 +60,25 @@ public abstract class AbstractZenModeAutomaticRulePreferenceController extends A
 
     public static ZenRuleInfo getRuleInfo(PackageManager packageManager, ComponentInfo componentInfo) {
         Bundle bundle;
-        String string;
+        String str;
         int i;
         ComponentName componentName = null;
-        if (componentInfo != null && (bundle = componentInfo.metaData) != null) {
+        if (!(componentInfo == null || (bundle = componentInfo.metaData) == null)) {
             boolean z = componentInfo instanceof ServiceInfo;
             if (z) {
-                string = bundle.getString("android.service.zen.automatic.ruleType");
+                str = bundle.getString("android.service.zen.automatic.ruleType");
             } else {
-                string = bundle.getString("android.service.zen.automatic.ruleType");
+                str = bundle.getString("android.service.zen.automatic.ruleType");
             }
-            ComponentName settingsActivity = getSettingsActivity(packageManager, null, componentInfo);
-            if (string != null && !string.trim().isEmpty() && settingsActivity != null) {
+            ComponentName settingsActivity = getSettingsActivity(packageManager, (AutomaticZenRule) null, componentInfo);
+            if (!(str == null || str.trim().isEmpty() || settingsActivity == null)) {
                 ZenRuleInfo zenRuleInfo = new ZenRuleInfo();
                 if (z) {
                     componentName = new ComponentName(componentInfo.packageName, componentInfo.name);
                 }
                 zenRuleInfo.serviceComponent = componentName;
                 zenRuleInfo.settingsAction = "android.settings.ZEN_MODE_EXTERNAL_RULE_SETTINGS";
-                zenRuleInfo.title = string;
+                zenRuleInfo.title = str;
                 zenRuleInfo.packageName = componentInfo.packageName;
                 zenRuleInfo.configurationActivity = settingsActivity;
                 zenRuleInfo.packageLabel = componentInfo.applicationInfo.loadLabel(packageManager);
@@ -96,32 +94,31 @@ public abstract class AbstractZenModeAutomaticRulePreferenceController extends A
         return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public static ComponentName getSettingsActivity(PackageManager packageManager, AutomaticZenRule automaticZenRule, ComponentInfo componentInfo) {
+    protected static ComponentName getSettingsActivity(PackageManager packageManager, AutomaticZenRule automaticZenRule, ComponentInfo componentInfo) {
+        ComponentName componentName;
         String string;
-        ComponentName unflattenFromString;
         String packageName = automaticZenRule != null ? automaticZenRule.getPackageName() : componentInfo.packageName;
         if (automaticZenRule == null || automaticZenRule.getConfigurationActivity() == null) {
             if (componentInfo != null) {
                 if (componentInfo instanceof ActivityInfo) {
-                    unflattenFromString = new ComponentName(componentInfo.packageName, componentInfo.name);
+                    componentName = new ComponentName(componentInfo.packageName, componentInfo.name);
                 } else {
                     Bundle bundle = componentInfo.metaData;
-                    if (bundle != null && (string = bundle.getString("android.service.zen.automatic.configurationActivity")) != null) {
-                        unflattenFromString = ComponentName.unflattenFromString(string);
+                    if (!(bundle == null || (string = bundle.getString("android.service.zen.automatic.configurationActivity")) == null)) {
+                        componentName = ComponentName.unflattenFromString(string);
                     }
                 }
             }
-            unflattenFromString = null;
+            componentName = null;
         } else {
-            unflattenFromString = automaticZenRule.getConfigurationActivity();
+            componentName = automaticZenRule.getConfigurationActivity();
         }
-        if (unflattenFromString == null || packageName == null) {
-            return unflattenFromString;
+        if (componentName == null || packageName == null) {
+            return componentName;
         }
         try {
-            if (packageManager.getPackageUid(packageName, 0) == packageManager.getPackageUid(unflattenFromString.getPackageName(), 0)) {
-                return unflattenFromString;
+            if (packageManager.getPackageUid(packageName, 0) == packageManager.getPackageUid(componentName.getPackageName(), 0)) {
+                return componentName;
             }
             Log.w("PrefControllerMixin", "Config activity not in owner package for " + automaticZenRule.getName());
             return null;
@@ -131,7 +128,6 @@ public abstract class AbstractZenModeAutomaticRulePreferenceController extends A
         }
     }
 
-    /* loaded from: classes.dex */
     public class RuleNameChangeListener implements ZenRuleNameDialog.PositiveClickListener {
         ZenRuleInfo mRuleInfo;
 
@@ -139,14 +135,13 @@ public abstract class AbstractZenModeAutomaticRulePreferenceController extends A
             this.mRuleInfo = zenRuleInfo;
         }
 
-        @Override // com.android.settings.notification.zen.ZenRuleNameDialog.PositiveClickListener
         public void onOk(String str, Fragment fragment) {
             AbstractZenModeAutomaticRulePreferenceController abstractZenModeAutomaticRulePreferenceController = AbstractZenModeAutomaticRulePreferenceController.this;
-            abstractZenModeAutomaticRulePreferenceController.mMetricsFeatureProvider.action(((AbstractPreferenceController) abstractZenModeAutomaticRulePreferenceController).mContext, 1267, new Pair[0]);
+            abstractZenModeAutomaticRulePreferenceController.mMetricsFeatureProvider.action(abstractZenModeAutomaticRulePreferenceController.mContext, 1267, (Pair<Integer, Object>[]) new Pair[0]);
             ZenRuleInfo zenRuleInfo = this.mRuleInfo;
-            String addZenRule = AbstractZenModeAutomaticRulePreferenceController.this.mBackend.addZenRule(new AutomaticZenRule(str, zenRuleInfo.serviceComponent, zenRuleInfo.configurationActivity, zenRuleInfo.defaultConditionId, null, 2, true));
+            String addZenRule = AbstractZenModeAutomaticRulePreferenceController.this.mBackend.addZenRule(new AutomaticZenRule(str, zenRuleInfo.serviceComponent, zenRuleInfo.configurationActivity, zenRuleInfo.defaultConditionId, (ZenPolicy) null, 2, true));
             if (addZenRule != null) {
-                fragment.startActivity(AbstractZenModeAutomaticRulePreferenceController.getRuleIntent(this.mRuleInfo.settingsAction, null, addZenRule));
+                fragment.startActivity(AbstractZenModeAutomaticRulePreferenceController.getRuleIntent(this.mRuleInfo.settingsAction, (ComponentName) null, addZenRule));
             }
         }
     }

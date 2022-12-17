@@ -12,11 +12,13 @@ import android.os.storage.StorageManager;
 import android.os.storage.VolumeInfo;
 import android.text.format.DateUtils;
 import android.text.format.Formatter;
+import android.util.DataUnit;
 import android.util.Log;
 import java.io.IOException;
 import java.util.UUID;
-/* loaded from: classes.dex */
+
 public abstract class MigrateEstimateTask extends AsyncTask<Void, Void, Long> {
+    private static final long SPEED_ESTIMATE_BPS = DataUnit.MEBIBYTES.toBytes(10);
     private final Context mContext;
     private long mSizeBytes = -1;
 
@@ -27,11 +29,10 @@ public abstract class MigrateEstimateTask extends AsyncTask<Void, Void, Long> {
     }
 
     public void copyFrom(Intent intent) {
-        this.mSizeBytes = intent.getLongExtra("size_bytes", -1L);
+        this.mSizeBytes = intent.getLongExtra("size_bytes", -1);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.os.AsyncTask
+    /* access modifiers changed from: protected */
     public Long doInBackground(Void... voidArr) {
         long j = this.mSizeBytes;
         if (j != -1) {
@@ -63,11 +64,10 @@ public abstract class MigrateEstimateTask extends AsyncTask<Void, Void, Long> {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.os.AsyncTask
+    /* access modifiers changed from: protected */
     public void onPostExecute(Long l) {
         long longValue = l.longValue();
         this.mSizeBytes = longValue;
-        onPostExecute(Formatter.formatFileSize(this.mContext, this.mSizeBytes), DateUtils.formatDuration(Math.max((longValue * 1000) / 10485760, 1000L)).toString());
+        onPostExecute(Formatter.formatFileSize(this.mContext, this.mSizeBytes), DateUtils.formatDuration(Math.max((longValue * 1000) / SPEED_ESTIMATE_BPS, 1000)).toString());
     }
 }

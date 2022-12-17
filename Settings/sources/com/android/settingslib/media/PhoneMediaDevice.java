@@ -3,28 +3,25 @@ package com.android.settingslib.media;
 import android.content.Context;
 import android.media.MediaRoute2Info;
 import android.media.MediaRouter2Manager;
-import com.android.settingslib.R$drawable;
 import com.android.settingslib.R$string;
-/* loaded from: classes.dex */
+
 public class PhoneMediaDevice extends MediaDevice {
+    private final DeviceIconUtil mDeviceIconUtil = new DeviceIconUtil();
     private String mSummary = "";
 
-    @Override // com.android.settingslib.media.MediaDevice
     public boolean isConnected() {
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public PhoneMediaDevice(Context context, MediaRouter2Manager mediaRouter2Manager, MediaRoute2Info mediaRoute2Info, String str) {
+    PhoneMediaDevice(Context context, MediaRouter2Manager mediaRouter2Manager, MediaRoute2Info mediaRoute2Info, String str) {
         super(context, mediaRouter2Manager, mediaRoute2Info, str);
         initDeviceRecord();
     }
 
-    @Override // com.android.settingslib.media.MediaDevice
     public String getName() {
-        CharSequence string;
+        CharSequence charSequence;
         int type = this.mRouteInfo.getType();
-        if (type != 3 && type != 4) {
+        if (!(type == 3 || type == 4)) {
             if (type != 9) {
                 if (type != 22) {
                     switch (type) {
@@ -34,41 +31,29 @@ public class PhoneMediaDevice extends MediaDevice {
                         case 13:
                             break;
                         default:
-                            string = this.mContext.getString(R$string.media_transfer_this_device_name);
+                            charSequence = this.mContext.getString(R$string.media_transfer_this_device_name);
                             break;
                     }
-                    return string.toString();
                 }
             }
-            string = this.mRouteInfo.getName();
-            return string.toString();
+            charSequence = this.mRouteInfo.getName();
+            return charSequence.toString();
         }
-        string = this.mContext.getString(R$string.media_transfer_wired_usb_device_name);
-        return string.toString();
+        charSequence = this.mContext.getString(R$string.media_transfer_wired_usb_device_name);
+        return charSequence.toString();
     }
 
-    int getDrawableResId() {
-        int type = this.mRouteInfo.getType();
-        if (type != 3 && type != 4 && type != 9 && type != 22) {
-            switch (type) {
-                case 11:
-                case 12:
-                case 13:
-                    break;
-                default:
-                    return R$drawable.ic_smartphone;
-            }
-        }
-        return R$drawable.ic_headphone;
+    /* access modifiers changed from: package-private */
+    public int getDrawableResId() {
+        return this.mDeviceIconUtil.getIconResIdFromMediaRouteType(this.mRouteInfo.getType());
     }
 
-    @Override // com.android.settingslib.media.MediaDevice
     public String getId() {
         int type = this.mRouteInfo.getType();
         if (type == 3 || type == 4) {
             return "wired_headset_media_device_id";
         }
-        if (type != 9 && type != 22) {
+        if (!(type == 9 || type == 22)) {
             switch (type) {
                 case 11:
                 case 12:

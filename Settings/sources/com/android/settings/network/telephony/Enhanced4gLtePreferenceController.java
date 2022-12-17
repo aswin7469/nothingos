@@ -2,40 +2,25 @@ package com.android.settings.network.telephony;
 
 import android.content.Context;
 import android.content.IntentFilter;
-import com.android.settings.slices.SliceBackgroundWorker;
-/* loaded from: classes.dex */
-public class Enhanced4gLtePreferenceController extends Enhanced4gBasePreferenceController {
-    @Override // com.android.settings.network.telephony.Enhanced4gBasePreferenceController, com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
 
-    @Override // com.android.settings.network.telephony.Enhanced4gBasePreferenceController, com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+public class Enhanced4gLtePreferenceController extends Enhanced4gBasePreferenceController {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.network.telephony.Enhanced4gBasePreferenceController, com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.network.telephony.Enhanced4gBasePreferenceController
-    protected int getMode() {
+    /* access modifiers changed from: protected */
+    public int getMode() {
         return 0;
     }
 
-    @Override // com.android.settings.network.telephony.Enhanced4gBasePreferenceController, com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.network.telephony.Enhanced4gBasePreferenceController, com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.network.telephony.Enhanced4gBasePreferenceController, com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }

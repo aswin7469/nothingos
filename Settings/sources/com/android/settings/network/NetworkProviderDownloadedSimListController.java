@@ -12,9 +12,8 @@ import androidx.lifecycle.OnLifecycleEvent;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.network.SubscriptionsChangeListener;
-import com.android.settings.network.telephony.MobileNetworkActivity;
 import com.android.settings.network.telephony.MobileNetworkUtils;
 import com.android.settingslib.core.AbstractPreferenceController;
 import com.android.settingslib.core.lifecycle.Lifecycle;
@@ -22,27 +21,24 @@ import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public class NetworkProviderDownloadedSimListController extends AbstractPreferenceController implements LifecycleObserver, SubscriptionsChangeListener.SubscriptionsChangeListenerClient {
     private SubscriptionsChangeListener mChangeListener;
-    private PreferenceCategory mPreferenceCategory;
-    private SubscriptionManager mSubscriptionManager;
-    final BroadcastReceiver mDataSubscriptionChangedReceiver = new BroadcastReceiver() { // from class: com.android.settings.network.NetworkProviderDownloadedSimListController.1
-        @Override // android.content.BroadcastReceiver
+    final BroadcastReceiver mDataSubscriptionChangedReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals("android.intent.action.ACTION_DEFAULT_DATA_SUBSCRIPTION_CHANGED")) {
                 NetworkProviderDownloadedSimListController.this.update();
             }
         }
     };
-    private Map<Integer, Preference> mPreferences = new ArrayMap();
+    private PreferenceCategory mPreferenceCategory;
+    private Map<Integer, Preference> mPreferences;
+    private SubscriptionManager mSubscriptionManager;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "provider_model_downloaded_sim_list";
     }
 
-    @Override // com.android.settings.network.SubscriptionsChangeListener.SubscriptionsChangeListenerClient
     public void onAirplaneModeChanged(boolean z) {
     }
 
@@ -50,6 +46,7 @@ public class NetworkProviderDownloadedSimListController extends AbstractPreferen
         super(context);
         this.mSubscriptionManager = (SubscriptionManager) context.getSystemService(SubscriptionManager.class);
         this.mChangeListener = new SubscriptionsChangeListener(context, this);
+        this.mPreferences = new ArrayMap();
         lifecycle.addObserver(this);
     }
 
@@ -71,7 +68,6 @@ public class NetworkProviderDownloadedSimListController extends AbstractPreferen
         }
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreferenceCategory = (PreferenceCategory) preferenceScreen.findPreference("provider_model_downloaded_sim_category");
@@ -79,96 +75,86 @@ public class NetworkProviderDownloadedSimListController extends AbstractPreferen
         update();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void update() {
-        if (this.mPreferenceCategory == null) {
-            return;
-        }
-        Map<Integer, Preference> map = this.mPreferences;
-        this.mPreferences = new ArrayMap();
-        for (final SubscriptionInfo subscriptionInfo : getAvailableDownloadedSubscriptions()) {
-            int subscriptionId = subscriptionInfo.getSubscriptionId();
-            Preference remove = map.remove(Integer.valueOf(subscriptionId));
-            if (remove == null) {
-                remove = new Preference(this.mPreferenceCategory.getContext());
-                this.mPreferenceCategory.addPreference(remove);
-            }
-            remove.setTitle(SubscriptionUtil.getUniqueSubscriptionDisplayName(subscriptionInfo, this.mContext));
-            remove.setSummary(getSummary(subscriptionId));
-            remove.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() { // from class: com.android.settings.network.NetworkProviderDownloadedSimListController$$ExternalSyntheticLambda0
-                @Override // androidx.preference.Preference.OnPreferenceClickListener
-                public final boolean onPreferenceClick(Preference preference) {
-                    boolean lambda$update$0;
-                    lambda$update$0 = NetworkProviderDownloadedSimListController.this.lambda$update$0(subscriptionInfo, preference);
-                    return lambda$update$0;
+        if (this.mPreferenceCategory != null) {
+            Map<Integer, Preference> map = this.mPreferences;
+            this.mPreferences = new ArrayMap();
+            for (SubscriptionInfo next : getAvailableDownloadedSubscriptions()) {
+                int subscriptionId = next.getSubscriptionId();
+                Preference remove = map.remove(Integer.valueOf(subscriptionId));
+                if (remove == null) {
+                    remove = new Preference(this.mPreferenceCategory.getContext());
+                    this.mPreferenceCategory.addPreference(remove);
                 }
-            });
-            this.mPreferences.put(Integer.valueOf(subscriptionId), remove);
-        }
-        for (Preference preference : map.values()) {
-            this.mPreferenceCategory.removePreference(preference);
+                remove.setTitle(SubscriptionUtil.getUniqueSubscriptionDisplayName(next, this.mContext));
+                remove.setSummary(getSummary(subscriptionId));
+                remove.setOnPreferenceClickListener(new C1070xc6269a(this, next));
+                this.mPreferences.put(Integer.valueOf(subscriptionId), remove);
+            }
+            for (Preference removePreference : map.values()) {
+                this.mPreferenceCategory.removePreference(removePreference);
+            }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ boolean lambda$update$0(SubscriptionInfo subscriptionInfo, Preference preference) {
-        Intent intent = new Intent(this.mContext, MobileNetworkActivity.class);
-        intent.putExtra("android.provider.extra.SUB_ID", subscriptionInfo.getSubscriptionId());
-        this.mContext.startActivity(intent);
+        MobileNetworkUtils.launchMobileNetworkSettings(this.mContext, subscriptionInfo);
         return true;
     }
 
     public CharSequence getSummary(int i) {
-        if (this.mSubscriptionManager.isActiveSubscriptionId(i)) {
-            CharSequence defaultSimConfig = SubscriptionUtil.getDefaultSimConfig(this.mContext, i);
-            String string = this.mContext.getResources().getString(R.string.sim_category_active_sim);
-            if (defaultSimConfig == null) {
-                return string;
-            }
-            StringBuilder sb = new StringBuilder();
-            sb.append((CharSequence) string);
-            sb.append(defaultSimConfig);
-            return sb;
+        if (!this.mSubscriptionManager.isActiveSubscriptionId(i)) {
+            return this.mContext.getString(R$string.sim_category_inactive_sim);
         }
-        return this.mContext.getString(R.string.sim_category_inactive_sim);
+        CharSequence defaultSimConfig = SubscriptionUtil.getDefaultSimConfig(this.mContext, i);
+        String string = this.mContext.getResources().getString(R$string.sim_category_active_sim);
+        if (defaultSimConfig == null) {
+            return string;
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(string);
+        sb.append(defaultSimConfig);
+        return sb;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return !getAvailableDownloadedSubscriptions().isEmpty();
     }
 
     private List<SubscriptionInfo> getAvailableDownloadedSubscriptions() {
         ArrayList arrayList = new ArrayList();
-        for (SubscriptionInfo subscriptionInfo : SubscriptionUtil.getAvailableSubscriptions(this.mContext)) {
-            if (subscriptionInfo.isEmbedded()) {
-                arrayList.add(subscriptionInfo);
+        for (SubscriptionInfo next : SubscriptionUtil.getAvailableSubscriptions(this.mContext)) {
+            if (next.isEmbedded()) {
+                arrayList.add(next);
             }
         }
         return arrayList;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         refreshSummary(this.mPreferenceCategory);
         update();
     }
 
-    @Override // com.android.settings.network.SubscriptionsChangeListener.SubscriptionsChangeListenerClient
     public void onSubscriptionsChanged() {
         update();
     }
 
-    protected int getDefaultVoiceSubscriptionId() {
+    /* access modifiers changed from: protected */
+    public int getDefaultVoiceSubscriptionId() {
         return SubscriptionManager.getDefaultVoiceSubscriptionId();
     }
 
-    protected int getDefaultSmsSubscriptionId() {
+    /* access modifiers changed from: protected */
+    public int getDefaultSmsSubscriptionId() {
         return SubscriptionManager.getDefaultSmsSubscriptionId();
     }
 
-    protected int getDefaultDataSubscriptionId() {
+    /* access modifiers changed from: protected */
+    public int getDefaultDataSubscriptionId() {
         return SubscriptionManager.getDefaultDataSubscriptionId();
     }
 }

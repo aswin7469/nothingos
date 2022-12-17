@@ -4,9 +4,8 @@ import android.content.Context;
 import android.content.om.IOverlayManager;
 import android.content.pm.PackageManager;
 import android.os.ServiceManager;
-/* loaded from: classes.dex */
+
 public class EmulateDisplayCutoutPreferenceController extends OverlayCategoryPreferenceController {
-    @Override // com.android.settings.development.OverlayCategoryPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "display_cutout_emulation";
     }

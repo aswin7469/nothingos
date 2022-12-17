@@ -1,7 +1,7 @@
 package com.airbnb.lottie.model;
 
 import androidx.core.util.Pair;
-/* loaded from: classes.dex */
+
 public class MutablePair<T> {
     T first;
     T second;
@@ -16,7 +16,10 @@ public class MutablePair<T> {
             return false;
         }
         Pair pair = (Pair) obj;
-        return objectsEqual(pair.first, this.first) && objectsEqual(pair.second, this.second);
+        if (!objectsEqual(pair.first, this.first) || !objectsEqual(pair.second, this.second)) {
+            return false;
+        }
+        return true;
     }
 
     private static boolean objectsEqual(Object obj, Object obj2) {

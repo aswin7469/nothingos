@@ -14,12 +14,12 @@ import android.telephony.SubscriptionManager;
 import android.text.TextUtils;
 import android.util.Log;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$array;
+import com.android.settings.R$string;
 import com.android.settings.accessibility.rtt.TelecomUtil;
 import com.android.settings.core.BasePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class RTTSettingPreferenceController extends BasePreferenceController {
     private static final String DIALER_RTT_CONFIGURATION = "dialer_rtt_configuration";
     private static final String TAG = "RTTSettingsCtr";
@@ -30,42 +30,30 @@ public class RTTSettingPreferenceController extends BasePreferenceController {
     private final PackageManager mPackageManager;
     Intent mRTTIntent;
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -73,51 +61,52 @@ public class RTTSettingPreferenceController extends BasePreferenceController {
     public RTTSettingPreferenceController(Context context, String str) {
         super(context, str);
         this.mContext = context;
-        this.mModes = context.getResources().getTextArray(R.array.rtt_setting_mode);
-        this.mDialerPackage = context.getString(R.string.config_rtt_setting_package_name);
+        this.mModes = context.getResources().getTextArray(R$array.rtt_setting_mode);
+        this.mDialerPackage = context.getString(R$string.config_rtt_setting_package_name);
         this.mPackageManager = context.getPackageManager();
         this.mCarrierConfigManager = (CarrierConfigManager) context.getSystemService(CarrierConfigManager.class);
-        this.mRTTIntent = new Intent(context.getString(R.string.config_rtt_setting_intent_action));
+        this.mRTTIntent = new Intent(context.getString(R$string.config_rtt_setting_intent_action));
         Log.d(TAG, "init controller");
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         List<ResolveInfo> queryIntentActivities = this.mPackageManager.queryIntentActivities(this.mRTTIntent, 0);
-        return (queryIntentActivities == null || queryIntentActivities.isEmpty() || !isRttSettingSupported()) ? 3 : 0;
+        if (queryIntentActivities == null || queryIntentActivities.isEmpty() || !isRttSettingSupported()) {
+            return 3;
+        }
+        return 0;
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         preferenceScreen.findPreference(getPreferenceKey()).setIntent(this.mRTTIntent);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    /* renamed from: getSummary */
-    public CharSequence mo485getSummary() {
+    public CharSequence getSummary() {
         int i = Settings.Secure.getInt(this.mContext.getContentResolver(), DIALER_RTT_CONFIGURATION, 0);
         Log.d(TAG, "DIALER_RTT_CONFIGURATION value =  " + i);
         return this.mModes[i];
     }
 
-    boolean isRttSettingSupported() {
+    /* access modifiers changed from: package-private */
+    public boolean isRttSettingSupported() {
         Log.d(TAG, "isRttSettingSupported [start]");
         if (!isDefaultDialerSupportedRTT(this.mContext)) {
             Log.d(TAG, "Dialer doesn't support RTT.");
             return false;
         }
-        for (PhoneAccountHandle phoneAccountHandle : TelecomUtil.getCallCapablePhoneAccounts(this.mContext)) {
-            int subIdForPhoneAccountHandle = TelecomUtil.getSubIdForPhoneAccountHandle(this.mContext, phoneAccountHandle);
+        for (PhoneAccountHandle next : TelecomUtil.getCallCapablePhoneAccounts(this.mContext)) {
+            int subIdForPhoneAccountHandle = TelecomUtil.getSubIdForPhoneAccountHandle(this.mContext, next);
             Log.d(TAG, "subscription id for the device: " + subIdForPhoneAccountHandle);
-            boolean isRttSupportedByTelecom = isRttSupportedByTelecom(phoneAccountHandle);
+            boolean isRttSupportedByTelecom = isRttSupportedByTelecom(next);
             Log.d(TAG, "rtt calling supported by telecom:: " + isRttSupportedByTelecom);
             if (isRttSupportedByTelecom) {
-                if (this.mCarrierConfigManager.getConfigForSubId(subIdForPhoneAccountHandle) != null && getBooleanCarrierConfig("ignore_rtt_mode_setting_bool")) {
+                if (this.mCarrierConfigManager.getConfigForSubId(subIdForPhoneAccountHandle) == null || !getBooleanCarrierConfig("ignore_rtt_mode_setting_bool")) {
+                    Log.d(TAG, "IGNORE_RTT_MODE_SETTING_BOOL is false.");
+                } else {
                     Log.d(TAG, "RTT visibility setting is supported.");
                     return true;
                 }
-                Log.d(TAG, "IGNORE_RTT_MODE_SETTING_BOOL is false.");
             }
         }
         Log.d(TAG, "isRttSettingSupported [Not support]");
@@ -145,6 +134,6 @@ public class RTTSettingPreferenceController extends BasePreferenceController {
     }
 
     private static boolean isDefaultDialerSupportedRTT(Context context) {
-        return TextUtils.equals(context.getString(R.string.config_rtt_setting_package_name), TelecomUtil.getTelecomManager(context).getDefaultDialerPackage());
+        return TextUtils.equals(context.getString(R$string.config_rtt_setting_package_name), TelecomUtil.getTelecomManager(context).getDefaultDialerPackage());
     }
 }

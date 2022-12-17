@@ -10,9 +10,8 @@ import android.graphics.Path;
 import android.graphics.PathMeasure;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.os.Build;
 import android.provider.Settings;
-import com.airbnb.lottie.L;
+import com.airbnb.lottie.C0462L;
 import com.airbnb.lottie.animation.content.TrimPathContent;
 import com.airbnb.lottie.animation.keyframe.FloatKeyframeAnimation;
 import java.io.Closeable;
@@ -23,24 +22,24 @@ import java.net.UnknownHostException;
 import java.net.UnknownServiceException;
 import java.nio.channels.ClosedChannelException;
 import javax.net.ssl.SSLException;
-/* loaded from: classes.dex */
+
 public final class Utils {
+    private static final float INV_SQRT_2 = ((float) (Math.sqrt(2.0d) / 2.0d));
+    private static float dpScale = -1.0f;
     private static final PathMeasure pathMeasure = new PathMeasure();
+    private static final float[] points = new float[4];
     private static final Path tempPath = new Path();
     private static final Path tempPath2 = new Path();
-    private static final float[] points = new float[4];
-    private static final float INV_SQRT_2 = (float) (Math.sqrt(2.0d) / 2.0d);
-    private static float dpScale = -1.0f;
 
     public static int hashFor(float f, float f2, float f3, float f4) {
-        int i = f != 0.0f ? (int) (527 * f) : 17;
+        int i = f != 0.0f ? (int) (((float) 527) * f) : 17;
         if (f2 != 0.0f) {
-            i = (int) (i * 31 * f2);
+            i = (int) (((float) (i * 31)) * f2);
         }
         if (f3 != 0.0f) {
-            i = (int) (i * 31 * f3);
+            i = (int) (((float) (i * 31)) * f3);
         }
-        return f4 != 0.0f ? (int) (i * 31 * f4) : i;
+        return f4 != 0.0f ? (int) (((float) (i * 31)) * f4) : i;
     }
 
     public static boolean isAtLeastVersion(int i, int i2, int i3, int i4, int i5, int i6) {
@@ -53,19 +52,22 @@ public final class Utils {
         if (i2 < i5) {
             return false;
         }
-        return i2 > i5 || i3 >= i6;
+        if (i2 > i5) {
+            return true;
+        }
+        return i3 >= i6;
     }
 
     public static Path createPath(PointF pointF, PointF pointF2, PointF pointF3, PointF pointF4) {
         Path path = new Path();
         path.moveTo(pointF.x, pointF.y);
-        if (pointF3 != null && pointF4 != null && (pointF3.length() != 0.0f || pointF4.length() != 0.0f)) {
+        if (pointF3 == null || pointF4 == null || (pointF3.length() == 0.0f && pointF4.length() == 0.0f)) {
+            path.lineTo(pointF2.x, pointF2.y);
+        } else {
             float f = pointF.x;
             float f2 = pointF2.x;
             float f3 = pointF2.y;
             path.cubicTo(pointF3.x + f, pointF.y + pointF3.y, f2 + pointF4.x, f3 + pointF4.y, f2, f3);
-        } else {
-            path.lineTo(pointF2.x, pointF2.y);
         }
         return path;
     }
@@ -89,7 +91,7 @@ public final class Utils {
         fArr[2] = f;
         fArr[3] = f;
         matrix.mapPoints(fArr);
-        return (float) Math.hypot(fArr[2] - fArr[0], fArr[3] - fArr[1]);
+        return (float) Math.hypot((double) (fArr[2] - fArr[0]), (double) (fArr[3] - fArr[1]));
     }
 
     public static boolean hasZeroScaleAxis(Matrix matrix) {
@@ -103,21 +105,20 @@ public final class Utils {
     }
 
     public static void applyTrimPathIfNeeded(Path path, TrimPathContent trimPathContent) {
-        if (trimPathContent == null || trimPathContent.isHidden()) {
-            return;
+        if (trimPathContent != null && !trimPathContent.isHidden()) {
+            applyTrimPathIfNeeded(path, ((FloatKeyframeAnimation) trimPathContent.getStart()).getFloatValue() / 100.0f, ((FloatKeyframeAnimation) trimPathContent.getEnd()).getFloatValue() / 100.0f, ((FloatKeyframeAnimation) trimPathContent.getOffset()).getFloatValue() / 360.0f);
         }
-        applyTrimPathIfNeeded(path, ((FloatKeyframeAnimation) trimPathContent.getStart()).getFloatValue() / 100.0f, ((FloatKeyframeAnimation) trimPathContent.getEnd()).getFloatValue() / 100.0f, ((FloatKeyframeAnimation) trimPathContent.getOffset()).getFloatValue() / 360.0f);
     }
 
     public static void applyTrimPathIfNeeded(Path path, float f, float f2, float f3) {
-        L.beginSection("applyTrimPathIfNeeded");
+        C0462L.beginSection("applyTrimPathIfNeeded");
         PathMeasure pathMeasure2 = pathMeasure;
         pathMeasure2.setPath(path, false);
         float length = pathMeasure2.getLength();
         if (f == 1.0f && f2 == 0.0f) {
-            L.endSection("applyTrimPathIfNeeded");
-        } else if (length < 1.0f || Math.abs((f2 - f) - 1.0f) < 0.01d) {
-            L.endSection("applyTrimPathIfNeeded");
+            C0462L.endSection("applyTrimPathIfNeeded");
+        } else if (length < 1.0f || ((double) Math.abs((f2 - f) - 1.0f)) < 0.01d) {
+            C0462L.endSection("applyTrimPathIfNeeded");
         } else {
             float f4 = f * length;
             float f5 = f2 * length;
@@ -125,19 +126,19 @@ public final class Utils {
             float min = Math.min(f4, f5) + f6;
             float max = Math.max(f4, f5) + f6;
             if (min >= length && max >= length) {
-                min = MiscUtils.floorMod(min, length);
-                max = MiscUtils.floorMod(max, length);
+                min = (float) MiscUtils.floorMod(min, length);
+                max = (float) MiscUtils.floorMod(max, length);
             }
             if (min < 0.0f) {
-                min = MiscUtils.floorMod(min, length);
+                min = (float) MiscUtils.floorMod(min, length);
             }
             if (max < 0.0f) {
-                max = MiscUtils.floorMod(max, length);
+                max = (float) MiscUtils.floorMod(max, length);
             }
             int i = (min > max ? 1 : (min == max ? 0 : -1));
             if (i == 0) {
                 path.reset();
-                L.endSection("applyTrimPathIfNeeded");
+                C0462L.endSection("applyTrimPathIfNeeded");
                 return;
             }
             if (i >= 0) {
@@ -158,7 +159,7 @@ public final class Utils {
                 path2.addPath(path4);
             }
             path.set(path2);
-            L.endSection("applyTrimPathIfNeeded");
+            C0462L.endSection("applyTrimPathIfNeeded");
         }
     }
 
@@ -170,10 +171,7 @@ public final class Utils {
     }
 
     public static float getAnimationScale(Context context) {
-        if (Build.VERSION.SDK_INT >= 17) {
-            return Settings.Global.getFloat(context.getContentResolver(), "animator_duration_scale", 1.0f);
-        }
-        return Settings.System.getFloat(context.getContentResolver(), "animator_duration_scale", 1.0f);
+        return Settings.Global.getFloat(context.getContentResolver(), "animator_duration_scale", 1.0f);
     }
 
     public static Bitmap resizeBitmapIfNeeded(Bitmap bitmap, int i, int i2) {
@@ -194,12 +192,8 @@ public final class Utils {
     }
 
     public static void saveLayerCompat(Canvas canvas, RectF rectF, Paint paint, int i) {
-        L.beginSection("Utils#saveLayer");
-        if (Build.VERSION.SDK_INT < 23) {
-            canvas.saveLayer(rectF, paint, i);
-        } else {
-            canvas.saveLayer(rectF, paint);
-        }
-        L.endSection("Utils#saveLayer");
+        C0462L.beginSection("Utils#saveLayer");
+        canvas.saveLayer(rectF, paint);
+        C0462L.endSection("Utils#saveLayer");
     }
 }

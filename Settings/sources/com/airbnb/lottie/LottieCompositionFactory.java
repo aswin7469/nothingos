@@ -18,20 +18,18 @@ import java.util.concurrent.Callable;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import okio.Okio;
-/* loaded from: classes.dex */
+
 public class LottieCompositionFactory {
-    private static final Map<String, LottieTask<LottieComposition>> taskCache = new HashMap();
+    /* access modifiers changed from: private */
+    public static final Map<String, LottieTask<LottieComposition>> taskCache = new HashMap();
 
     public static LottieTask<LottieComposition> fromUrl(Context context, String str) {
         return fromUrl(context, str, "url_" + str);
     }
 
     public static LottieTask<LottieComposition> fromUrl(final Context context, final String str, String str2) {
-        return cache(str2, new Callable<LottieResult<LottieComposition>>() { // from class: com.airbnb.lottie.LottieCompositionFactory.1
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // java.util.concurrent.Callable
-            /* renamed from: call */
-            public LottieResult<LottieComposition> mo164call() {
+        return cache(str2, new Callable<LottieResult<LottieComposition>>() {
+            public LottieResult<LottieComposition> call() {
                 return NetworkFetcher.fetchSync(context, str);
             }
         });
@@ -43,11 +41,8 @@ public class LottieCompositionFactory {
 
     public static LottieTask<LottieComposition> fromAsset(Context context, final String str, final String str2) {
         final Context applicationContext = context.getApplicationContext();
-        return cache(str2, new Callable<LottieResult<LottieComposition>>() { // from class: com.airbnb.lottie.LottieCompositionFactory.2
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // java.util.concurrent.Callable
-            /* renamed from: call */
-            public LottieResult<LottieComposition> mo165call() {
+        return cache(str2, new Callable<LottieResult<LottieComposition>>() {
+            public LottieResult<LottieComposition> call() {
                 return LottieCompositionFactory.fromAssetSync(applicationContext, str, str2);
             }
         });
@@ -60,7 +55,7 @@ public class LottieCompositionFactory {
             }
             return fromJsonInputStreamSync(context.getAssets().open(str), str2);
         } catch (IOException e) {
-            return new LottieResult<>(e);
+            return new LottieResult<>((Throwable) e);
         }
     }
 
@@ -71,16 +66,13 @@ public class LottieCompositionFactory {
     public static LottieTask<LottieComposition> fromRawRes(Context context, final int i, String str) {
         final WeakReference weakReference = new WeakReference(context);
         final Context applicationContext = context.getApplicationContext();
-        return cache(str, new Callable<LottieResult<LottieComposition>>() { // from class: com.airbnb.lottie.LottieCompositionFactory.3
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // java.util.concurrent.Callable
-            /* renamed from: call */
-            public LottieResult<LottieComposition> mo166call() {
-                Context context2 = (Context) weakReference.get();
-                if (context2 == null) {
-                    context2 = applicationContext;
+        return cache(str, new Callable<LottieResult<LottieComposition>>() {
+            public LottieResult<LottieComposition> call() {
+                Context context = (Context) weakReference.get();
+                if (context == null) {
+                    context = applicationContext;
                 }
-                return LottieCompositionFactory.fromRawResSync(context2, i);
+                return LottieCompositionFactory.fromRawResSync(context, i);
             }
         });
     }
@@ -93,7 +85,7 @@ public class LottieCompositionFactory {
         try {
             return fromJsonInputStreamSync(context.getResources().openRawResource(i), str);
         } catch (Resources.NotFoundException e) {
-            return new LottieResult<>(e);
+            return new LottieResult<>((Throwable) e);
         }
     }
 
@@ -110,11 +102,8 @@ public class LottieCompositionFactory {
     }
 
     public static LottieTask<LottieComposition> fromJsonInputStream(final InputStream inputStream, final String str) {
-        return cache(str, new Callable<LottieResult<LottieComposition>>() { // from class: com.airbnb.lottie.LottieCompositionFactory.4
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // java.util.concurrent.Callable
-            /* renamed from: call */
-            public LottieResult<LottieComposition> mo167call() {
+        return cache(str, new Callable<LottieResult<LottieComposition>>() {
+            public LottieResult<LottieComposition> call() {
                 return LottieCompositionFactory.fromJsonInputStreamSync(inputStream, str);
             }
         });
@@ -126,7 +115,7 @@ public class LottieCompositionFactory {
 
     private static LottieResult<LottieComposition> fromJsonInputStreamSync(InputStream inputStream, String str, boolean z) {
         try {
-            return fromJsonReaderSync(JsonReader.of(Okio.buffer(Okio.source(inputStream))), str);
+            return fromJsonReaderSync(JsonReader.m8of(Okio.buffer(Okio.source(inputStream))), str);
         } finally {
             if (z) {
                 Utils.closeQuietly(inputStream);
@@ -140,23 +129,21 @@ public class LottieCompositionFactory {
 
     private static LottieResult<LottieComposition> fromJsonReaderSyncInternal(JsonReader jsonReader, String str, boolean z) {
         try {
-            try {
-                LottieComposition parse = LottieCompositionMoshiParser.parse(jsonReader);
-                if (str != null) {
-                    LottieCompositionCache.getInstance().put(str, parse);
-                }
-                LottieResult<LottieComposition> lottieResult = new LottieResult<>(parse);
-                if (z) {
-                    Utils.closeQuietly(jsonReader);
-                }
-                return lottieResult;
-            } catch (Exception e) {
-                LottieResult<LottieComposition> lottieResult2 = new LottieResult<>(e);
-                if (z) {
-                    Utils.closeQuietly(jsonReader);
-                }
-                return lottieResult2;
+            LottieComposition parse = LottieCompositionMoshiParser.parse(jsonReader);
+            if (str != null) {
+                LottieCompositionCache.getInstance().put(str, parse);
             }
+            LottieResult<LottieComposition> lottieResult = new LottieResult<>(parse);
+            if (z) {
+                Utils.closeQuietly(jsonReader);
+            }
+            return lottieResult;
+        } catch (Exception e) {
+            LottieResult<LottieComposition> lottieResult2 = new LottieResult<>((Throwable) e);
+            if (z) {
+                Utils.closeQuietly(jsonReader);
+            }
+            return lottieResult2;
         } catch (Throwable th) {
             if (z) {
                 Utils.closeQuietly(jsonReader);
@@ -174,7 +161,6 @@ public class LottieCompositionFactory {
     }
 
     private static LottieResult<LottieComposition> fromZipStreamSyncInternal(ZipInputStream zipInputStream, String str) {
-        String[] split;
         HashMap hashMap = new HashMap();
         try {
             ZipEntry nextEntry = zipInputStream.getNextEntry();
@@ -184,17 +170,20 @@ public class LottieCompositionFactory {
                 if (name.contains("__MACOSX")) {
                     zipInputStream.closeEntry();
                 } else if (nextEntry.getName().contains(".json")) {
-                    lottieComposition = fromJsonReaderSyncInternal(JsonReader.of(Okio.buffer(Okio.source(zipInputStream))), null, false).getValue();
+                    lottieComposition = fromJsonReaderSyncInternal(JsonReader.m8of(Okio.buffer(Okio.source(zipInputStream))), (String) null, false).getValue();
                 } else {
-                    if (!name.contains(".png") && !name.contains(".webp")) {
-                        zipInputStream.closeEntry();
+                    if (!name.contains(".png")) {
+                        if (!name.contains(".webp")) {
+                            zipInputStream.closeEntry();
+                        }
                     }
-                    hashMap.put(name.split("/")[split.length - 1], BitmapFactory.decodeStream(zipInputStream));
+                    String[] split = name.split("/");
+                    hashMap.put(split[split.length - 1], BitmapFactory.decodeStream(zipInputStream));
                 }
                 nextEntry = zipInputStream.getNextEntry();
             }
             if (lottieComposition == null) {
-                return new LottieResult<>(new IllegalArgumentException("Unable to parse composition"));
+                return new LottieResult<>((Throwable) new IllegalArgumentException("Unable to parse composition"));
             }
             for (Map.Entry entry : hashMap.entrySet()) {
                 LottieImageAsset findImageAssetForFileName = findImageAssetForFileName(lottieComposition, (String) entry.getKey());
@@ -202,9 +191,9 @@ public class LottieCompositionFactory {
                     findImageAssetForFileName.setBitmap(Utils.resizeBitmapIfNeeded((Bitmap) entry.getValue(), findImageAssetForFileName.getWidth(), findImageAssetForFileName.getHeight()));
                 }
             }
-            for (Map.Entry<String, LottieImageAsset> entry2 : lottieComposition.getImages().entrySet()) {
-                if (entry2.getValue().getBitmap() == null) {
-                    return new LottieResult<>(new IllegalStateException("There is no image for " + entry2.getValue().getFileName()));
+            for (Map.Entry next : lottieComposition.getImages().entrySet()) {
+                if (((LottieImageAsset) next.getValue()).getBitmap() == null) {
+                    return new LottieResult<>((Throwable) new IllegalStateException("There is no image for " + ((LottieImageAsset) next.getValue()).getFileName()));
                 }
             }
             if (str != null) {
@@ -212,14 +201,14 @@ public class LottieCompositionFactory {
             }
             return new LottieResult<>(lottieComposition);
         } catch (IOException e) {
-            return new LottieResult<>(e);
+            return new LottieResult<>((Throwable) e);
         }
     }
 
     private static LottieImageAsset findImageAssetForFileName(LottieComposition lottieComposition, String str) {
-        for (LottieImageAsset lottieImageAsset : lottieComposition.getImages().values()) {
-            if (lottieImageAsset.getFileName().equals(str)) {
-                return lottieImageAsset;
+        for (LottieImageAsset next : lottieComposition.getImages().values()) {
+            if (next.getFileName().equals(str)) {
+                return next;
             }
         }
         return null;
@@ -228,11 +217,8 @@ public class LottieCompositionFactory {
     private static LottieTask<LottieComposition> cache(final String str, Callable<LottieResult<LottieComposition>> callable) {
         final LottieComposition lottieComposition = str == null ? null : LottieCompositionCache.getInstance().get(str);
         if (lottieComposition != null) {
-            return new LottieTask<>(new Callable<LottieResult<LottieComposition>>() { // from class: com.airbnb.lottie.LottieCompositionFactory.9
-                /* JADX WARN: Can't rename method to resolve collision */
-                @Override // java.util.concurrent.Callable
-                /* renamed from: call */
-                public LottieResult<LottieComposition> mo168call() {
+            return new LottieTask<>(new Callable<LottieResult<LottieComposition>>() {
+                public LottieResult<LottieComposition> call() {
                     return new LottieResult<>(LottieComposition.this);
                 }
             });
@@ -245,14 +231,12 @@ public class LottieCompositionFactory {
         }
         LottieTask<LottieComposition> lottieTask = new LottieTask<>(callable);
         if (str != null) {
-            lottieTask.addListener(new LottieListener<LottieComposition>() { // from class: com.airbnb.lottie.LottieCompositionFactory.10
-                @Override // com.airbnb.lottie.LottieListener
-                public void onResult(LottieComposition lottieComposition2) {
+            lottieTask.addListener(new LottieListener<LottieComposition>() {
+                public void onResult(LottieComposition lottieComposition) {
                     LottieCompositionFactory.taskCache.remove(str);
                 }
             });
-            lottieTask.addFailureListener(new LottieListener<Throwable>() { // from class: com.airbnb.lottie.LottieCompositionFactory.11
-                @Override // com.airbnb.lottie.LottieListener
+            lottieTask.addFailureListener(new LottieListener<Throwable>() {
                 public void onResult(Throwable th) {
                     LottieCompositionFactory.taskCache.remove(str);
                 }

@@ -8,20 +8,14 @@ import com.google.android.setupcompat.internal.Preconditions;
 import com.google.android.setupcompat.internal.Validations;
 import com.google.android.setupcompat.util.ObjectUtils;
 import java.util.regex.Pattern;
-/* loaded from: classes2.dex */
+
 public final class MetricKey implements Parcelable {
-    public static final Parcelable.Creator<MetricKey> CREATOR = new Parcelable.Creator<MetricKey>() { // from class: com.google.android.setupcompat.logging.MetricKey.1
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: createFromParcel */
-        public MetricKey mo729createFromParcel(Parcel parcel) {
+    public static final Parcelable.Creator<MetricKey> CREATOR = new Parcelable.Creator<MetricKey>() {
+        public MetricKey createFromParcel(Parcel parcel) {
             return new MetricKey(parcel.readString(), parcel.readString());
         }
 
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: newArray */
-        public MetricKey[] mo730newArray(int i) {
+        public MetricKey[] newArray(int i) {
             return new MetricKey[i];
         }
     };
@@ -31,7 +25,6 @@ public final class MetricKey implements Parcelable {
     private final String name;
     private final String screenName;
 
-    @Override // android.os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -60,7 +53,6 @@ public final class MetricKey implements Parcelable {
         return this.screenName;
     }
 
-    @Override // android.os.Parcelable
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(this.name);
         parcel.writeString(this.screenName);
@@ -74,7 +66,10 @@ public final class MetricKey implements Parcelable {
             return false;
         }
         MetricKey metricKey = (MetricKey) obj;
-        return ObjectUtils.equals(this.name, metricKey.name) && ObjectUtils.equals(this.screenName, metricKey.screenName);
+        if (!ObjectUtils.equals(this.name, metricKey.name) || !ObjectUtils.equals(this.screenName, metricKey.screenName)) {
+            return false;
+        }
+        return true;
     }
 
     public int hashCode() {

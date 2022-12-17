@@ -17,14 +17,13 @@ import com.android.settingslib.core.lifecycle.events.OnPause;
 import com.android.settingslib.core.lifecycle.events.OnResume;
 import java.util.Arrays;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class AssistFlashScreenPreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin, Preference.OnPreferenceChangeListener, LifecycleObserver, OnResume, OnPause {
     private final AssistUtils mAssistUtils;
     private Preference mPreference;
     private PreferenceScreen mScreen;
     private final SettingObserver mSettingObserver = new SettingObserver();
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "flash";
     }
@@ -37,67 +36,61 @@ public class AssistFlashScreenPreferenceController extends AbstractPreferenceCon
         }
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return getCurrentAssist() != null && allowDisablingAssistDisclosure();
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         this.mScreen = preferenceScreen;
         this.mPreference = preferenceScreen.findPreference(getPreferenceKey());
         super.displayPreference(preferenceScreen);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnResume
     public void onResume() {
         this.mSettingObserver.register(this.mContext.getContentResolver(), true);
         updatePreference();
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         updatePreference();
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnPause
     public void onPause() {
         this.mSettingObserver.register(this.mContext.getContentResolver(), false);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         Settings.Secure.putInt(this.mContext.getContentResolver(), "assist_disclosure_enabled", ((Boolean) obj).booleanValue() ? 1 : 0);
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updatePreference() {
         Preference preference = this.mPreference;
-        if (preference == null || !(preference instanceof TwoStatePreference)) {
-            return;
-        }
-        if (isAvailable()) {
-            if (this.mScreen.findPreference(getPreferenceKey()) == null) {
+        if (preference != null && (preference instanceof TwoStatePreference)) {
+            if (!isAvailable()) {
+                this.mScreen.removePreference(this.mPreference);
+            } else if (this.mScreen.findPreference(getPreferenceKey()) == null) {
                 this.mScreen.addPreference(this.mPreference);
             }
-        } else {
-            this.mScreen.removePreference(this.mPreference);
+            ComponentName currentAssist = getCurrentAssist();
+            this.mPreference.setEnabled(AssistContextPreferenceController.isChecked(this.mContext) && isPreInstalledAssistant(currentAssist));
+            ((TwoStatePreference) this.mPreference).setChecked(willShowFlash(currentAssist));
         }
-        ComponentName currentAssist = getCurrentAssist();
-        this.mPreference.setEnabled(AssistContextPreferenceController.isChecked(this.mContext) && isPreInstalledAssistant(currentAssist));
-        ((TwoStatePreference) this.mPreference).setChecked(willShowFlash(currentAssist));
     }
 
-    boolean willShowFlash(ComponentName componentName) {
+    /* access modifiers changed from: package-private */
+    public boolean willShowFlash(ComponentName componentName) {
         return AssistUtils.shouldDisclose(this.mContext, componentName);
     }
 
-    boolean isPreInstalledAssistant(ComponentName componentName) {
+    /* access modifiers changed from: package-private */
+    public boolean isPreInstalledAssistant(ComponentName componentName) {
         return AssistUtils.isPreinstalledAssistant(this.mContext, componentName);
     }
 
-    boolean allowDisablingAssistDisclosure() {
+    /* access modifiers changed from: package-private */
+    public boolean allowDisablingAssistDisclosure() {
         return AssistUtils.allowDisablingAssistDisclosure(this.mContext);
     }
 
@@ -105,20 +98,18 @@ public class AssistFlashScreenPreferenceController extends AbstractPreferenceCon
         return this.mAssistUtils.getAssistComponentForUser(UserHandle.myUserId());
     }
 
-    /* loaded from: classes.dex */
     class SettingObserver extends AssistSettingObserver {
-        private final Uri URI = Settings.Secure.getUriFor("assist_disclosure_enabled");
         private final Uri CONTEXT_URI = Settings.Secure.getUriFor("assist_structure_enabled");
+        private final Uri URI = Settings.Secure.getUriFor("assist_disclosure_enabled");
 
         SettingObserver() {
         }
 
-        @Override // com.android.settings.applications.assist.AssistSettingObserver
-        protected List<Uri> getSettingUris() {
-            return Arrays.asList(this.URI, this.CONTEXT_URI);
+        /* access modifiers changed from: protected */
+        public List<Uri> getSettingUris() {
+            return Arrays.asList(new Uri[]{this.URI, this.CONTEXT_URI});
         }
 
-        @Override // com.android.settings.applications.assist.AssistSettingObserver
         public void onSettingChange() {
             AssistFlashScreenPreferenceController.this.updatePreference();
         }

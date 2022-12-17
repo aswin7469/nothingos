@@ -31,48 +31,50 @@ import com.android.settings.enterprise.ActionDisabledByAdminDialogHelper;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.RestrictedLockUtilsInternal;
 import com.android.settingslib.bluetooth.LocalBluetoothManager;
-/* loaded from: classes.dex */
+
 public class ResetNetworkConfirm extends InstrumentedFragment {
     Activity mActivity;
-    private AlertDialog mAlertDialog;
+    /* access modifiers changed from: private */
+    public AlertDialog mAlertDialog;
     View mContentView;
     boolean mEraseEsim;
-    private ProgressDialog mProgressDialog;
-    ResetNetworkTask mResetNetworkTask;
-    private SubscriptionManager.OnSubscriptionsChangedListener mSubscriptionsChangedListener;
-    private int mSubId = -1;
-    View.OnClickListener mFinalClickListener = new View.OnClickListener() { // from class: com.android.settings.ResetNetworkConfirm.1
-        @Override // android.view.View.OnClickListener
+    View.OnClickListener mFinalClickListener = new View.OnClickListener() {
         public void onClick(View view) {
-            if (Utils.isMonkeyRunning()) {
-                return;
-            }
-            if (ResetNetworkConfirm.this.mSubId != -1) {
-                SubscriptionManager subscriptionManager = ResetNetworkConfirm.this.getSubscriptionManager();
-                ResetNetworkConfirm.this.stopMonitorSubscriptionChange(subscriptionManager);
-                ResetNetworkConfirm resetNetworkConfirm = ResetNetworkConfirm.this;
-                if (!resetNetworkConfirm.isSubscriptionRemainActive(subscriptionManager, resetNetworkConfirm.mSubId)) {
-                    Log.w("ResetNetworkConfirm", "subId " + ResetNetworkConfirm.this.mSubId + " disappear when confirm");
-                    ResetNetworkConfirm.this.mActivity.finish();
-                    return;
+            if (!Utils.isMonkeyRunning()) {
+                if (ResetNetworkConfirm.this.mSubId != -1) {
+                    SubscriptionManager r4 = ResetNetworkConfirm.this.getSubscriptionManager();
+                    ResetNetworkConfirm.this.stopMonitorSubscriptionChange(r4);
+                    ResetNetworkConfirm resetNetworkConfirm = ResetNetworkConfirm.this;
+                    if (!resetNetworkConfirm.isSubscriptionRemainActive(r4, resetNetworkConfirm.mSubId)) {
+                        Log.w("ResetNetworkConfirm", "subId " + ResetNetworkConfirm.this.mSubId + " disappear when confirm");
+                        ResetNetworkConfirm.this.mActivity.finish();
+                        return;
+                    }
                 }
+                if (ResetNetworkConfirm.this.mProgressDialog != null && ResetNetworkConfirm.this.mProgressDialog.isShowing()) {
+                    ResetNetworkConfirm.this.mProgressDialog.dismiss();
+                }
+                ResetNetworkConfirm resetNetworkConfirm2 = ResetNetworkConfirm.this;
+                resetNetworkConfirm2.mProgressDialog = resetNetworkConfirm2.getProgressDialog(resetNetworkConfirm2.mActivity);
+                ResetNetworkConfirm.this.mProgressDialog.show();
+                ResetNetworkConfirm resetNetworkConfirm3 = ResetNetworkConfirm.this;
+                ResetNetworkConfirm resetNetworkConfirm4 = ResetNetworkConfirm.this;
+                resetNetworkConfirm3.mResetNetworkTask = new ResetNetworkTask(resetNetworkConfirm4.mActivity);
+                ResetNetworkConfirm.this.mResetNetworkTask.execute(new Void[0]);
             }
-            ResetNetworkConfirm resetNetworkConfirm2 = ResetNetworkConfirm.this;
-            resetNetworkConfirm2.mProgressDialog = resetNetworkConfirm2.getProgressDialog(resetNetworkConfirm2.mActivity);
-            ResetNetworkConfirm.this.mProgressDialog.show();
-            ResetNetworkConfirm resetNetworkConfirm3 = ResetNetworkConfirm.this;
-            ResetNetworkConfirm resetNetworkConfirm4 = ResetNetworkConfirm.this;
-            resetNetworkConfirm3.mResetNetworkTask = new ResetNetworkTask(resetNetworkConfirm4.mActivity);
-            ResetNetworkConfirm.this.mResetNetworkTask.execute(new Void[0]);
         }
     };
+    /* access modifiers changed from: private */
+    public ProgressDialog mProgressDialog;
+    ResetNetworkTask mResetNetworkTask;
+    /* access modifiers changed from: private */
+    public int mSubId = -1;
+    private SubscriptionManager.OnSubscriptionsChangedListener mSubscriptionsChangedListener;
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 84;
     }
 
-    /* loaded from: classes.dex */
     private class ResetNetworkTask extends AsyncTask<Void, Void, Boolean> {
         private final Context mContext;
         private final String mPackageName;
@@ -82,8 +84,7 @@ public class ResetNetworkConfirm extends InstrumentedFragment {
             this.mPackageName = context.getPackageName();
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // android.os.AsyncTask
+        /* access modifiers changed from: protected */
         public Boolean doInBackground(Void... voidArr) {
             BluetoothAdapter adapter;
             ConnectivityManager connectivityManager = (ConnectivityManager) this.mContext.getSystemService("connectivity");
@@ -109,95 +110,89 @@ public class ResetNetworkConfirm extends InstrumentedFragment {
                 networkPolicyManager.factoryReset(createForSubscriptionId.getSubscriberId());
             }
             BluetoothManager bluetoothManager = (BluetoothManager) this.mContext.getSystemService("bluetooth");
-            if (bluetoothManager != null && (adapter = bluetoothManager.getAdapter()) != null) {
-                adapter.factoryReset();
-                LocalBluetoothManager localBluetoothManager = LocalBluetoothManager.getInstance(this.mContext, null);
-                if (localBluetoothManager != null) {
-                    localBluetoothManager.getCachedDeviceManager().clearAllDevices();
+            if (!(bluetoothManager == null || (adapter = bluetoothManager.getAdapter()) == null)) {
+                adapter.clearBluetooth();
+                LocalBluetoothManager instance = LocalBluetoothManager.getInstance(this.mContext, (LocalBluetoothManager.BluetoothManagerCallback) null);
+                if (instance != null) {
+                    instance.getCachedDeviceManager().clearAllDevices();
                 }
             }
             ResetNetworkConfirm.this.restoreDefaultApn(this.mContext);
             Log.d("ResetNetworkTask", "network factoryReset complete. succeeded: " + String.valueOf(wipeEuiccData));
-            bluetoothManager.getAdapter().disable();
             return Boolean.valueOf(wipeEuiccData);
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // android.os.AsyncTask
+        /* access modifiers changed from: protected */
         public void onPostExecute(Boolean bool) {
-            ResetNetworkConfirm.this.mProgressDialog.dismiss();
-            if (bool.booleanValue()) {
-                Toast.makeText(this.mContext, R.string.reset_network_complete_toast, 0).show();
-                return;
+            if (ResetNetworkConfirm.this.mProgressDialog != null && ResetNetworkConfirm.this.mProgressDialog.isShowing()) {
+                ResetNetworkConfirm.this.mProgressDialog.dismiss();
             }
-            ResetNetworkConfirm.this.mAlertDialog = new AlertDialog.Builder(this.mContext).setTitle(R.string.reset_esim_error_title).setMessage(R.string.reset_esim_error_msg).setPositiveButton(17039370, (DialogInterface.OnClickListener) null).show();
+            if (bool.booleanValue()) {
+                Toast.makeText(this.mContext, R$string.reset_network_complete_toast, 0).show();
+            } else {
+                ResetNetworkConfirm.this.mAlertDialog = new AlertDialog.Builder(this.mContext).setTitle(R$string.reset_esim_error_title).setMessage(R$string.reset_esim_error_msg).setPositiveButton(17039370, (DialogInterface.OnClickListener) null).show();
+            }
         }
     }
 
-    void p2pFactoryReset(Context context) {
+    /* access modifiers changed from: package-private */
+    public void p2pFactoryReset(Context context) {
         WifiP2pManager.Channel initialize;
         WifiP2pManager wifiP2pManager = (WifiP2pManager) context.getSystemService("wifip2p");
-        if (wifiP2pManager == null || (initialize = wifiP2pManager.initialize(context.getApplicationContext(), context.getMainLooper(), null)) == null) {
-            return;
+        if (wifiP2pManager != null && (initialize = wifiP2pManager.initialize(context.getApplicationContext(), context.getMainLooper(), (WifiP2pManager.ChannelListener) null)) != null) {
+            wifiP2pManager.factoryReset(initialize, (WifiP2pManager.ActionListener) null);
         }
-        wifiP2pManager.factoryReset(initialize, null);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public ProgressDialog getProgressDialog(Context context) {
         ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
-        progressDialog.setMessage(context.getString(R.string.main_clear_progress_text));
+        progressDialog.setMessage(context.getString(R$string.main_clear_progress_text));
         return progressDialog;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void restoreDefaultApn(Context context) {
         Uri parse = Uri.parse("content://telephony/carriers/restore");
         if (SubscriptionManager.isUsableSubscriptionId(this.mSubId)) {
             parse = Uri.withAppendedPath(parse, "subId/" + String.valueOf(this.mSubId));
         }
-        context.getContentResolver().delete(parse, null, null);
+        context.getContentResolver().delete(parse, (String) null, (String[]) null);
     }
 
     private void establishFinalConfirmationState() {
-        this.mContentView.findViewById(R.id.execute_reset_network).setOnClickListener(this.mFinalClickListener);
+        this.mContentView.findViewById(R$id.execute_reset_network).setOnClickListener(this.mFinalClickListener);
     }
 
-    void setSubtitle() {
+    /* access modifiers changed from: package-private */
+    public void setSubtitle() {
         if (this.mEraseEsim) {
-            ((TextView) this.mContentView.findViewById(R.id.reset_network_confirm)).setText(R.string.reset_network_final_desc_esim);
+            ((TextView) this.mContentView.findViewById(R$id.reset_network_confirm)).setText(R$string.reset_network_final_desc_esim);
         }
     }
 
-    @Override // androidx.fragment.app.Fragment
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
         RestrictedLockUtils.EnforcedAdmin checkIfRestrictionEnforced = RestrictedLockUtilsInternal.checkIfRestrictionEnforced(this.mActivity, "no_network_reset", UserHandle.myUserId());
         if (RestrictedLockUtilsInternal.hasBaseUserRestriction(this.mActivity, "no_network_reset", UserHandle.myUserId())) {
-            return layoutInflater.inflate(R.layout.network_reset_disallowed_screen, (ViewGroup) null);
+            return layoutInflater.inflate(R$layout.network_reset_disallowed_screen, (ViewGroup) null);
         }
         if (checkIfRestrictionEnforced != null) {
-            new ActionDisabledByAdminDialogHelper(this.mActivity).prepareDialogBuilder("no_network_reset", checkIfRestrictionEnforced).setOnDismissListener(new DialogInterface.OnDismissListener() { // from class: com.android.settings.ResetNetworkConfirm$$ExternalSyntheticLambda0
-                @Override // android.content.DialogInterface.OnDismissListener
-                public final void onDismiss(DialogInterface dialogInterface) {
-                    ResetNetworkConfirm.this.lambda$onCreateView$0(dialogInterface);
-                }
-            }).show();
+            new ActionDisabledByAdminDialogHelper(this.mActivity).prepareDialogBuilder("no_network_reset", checkIfRestrictionEnforced).setOnDismissListener(new ResetNetworkConfirm$$ExternalSyntheticLambda0(this)).show();
             return new View(this.mActivity);
         }
-        this.mContentView = layoutInflater.inflate(R.layout.reset_network_confirm, (ViewGroup) null);
+        this.mContentView = layoutInflater.inflate(R$layout.reset_network_confirm, (ViewGroup) null);
         establishFinalConfirmationState();
         setSubtitle();
         return this.mContentView;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onCreateView$0(DialogInterface dialogInterface) {
         this.mActivity.finish();
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         Bundle arguments = getArguments();
@@ -206,13 +201,12 @@ public class ResetNetworkConfirm extends InstrumentedFragment {
             this.mEraseEsim = arguments.getBoolean("erase_esim");
         }
         this.mActivity = getActivity();
-        if (this.mSubId == -1) {
-            return;
+        if (this.mSubId != -1) {
+            startMonitorSubscriptionChange(getSubscriptionManager());
         }
-        startMonitorSubscriptionChange(getSubscriptionManager());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public SubscriptionManager getSubscriptionManager() {
         SubscriptionManager subscriptionManager = (SubscriptionManager) this.mActivity.getSystemService(SubscriptionManager.class);
         if (subscriptionManager == null) {
@@ -222,41 +216,36 @@ public class ResetNetworkConfirm extends InstrumentedFragment {
     }
 
     private void startMonitorSubscriptionChange(SubscriptionManager subscriptionManager) {
-        if (subscriptionManager == null) {
-            return;
-        }
-        this.mSubscriptionsChangedListener = new SubscriptionManager.OnSubscriptionsChangedListener(Looper.getMainLooper()) { // from class: com.android.settings.ResetNetworkConfirm.2
-            @Override // android.telephony.SubscriptionManager.OnSubscriptionsChangedListener
-            public void onSubscriptionsChanged() {
-                SubscriptionManager subscriptionManager2 = ResetNetworkConfirm.this.getSubscriptionManager();
-                ResetNetworkConfirm resetNetworkConfirm = ResetNetworkConfirm.this;
-                if (resetNetworkConfirm.isSubscriptionRemainActive(subscriptionManager2, resetNetworkConfirm.mSubId)) {
-                    return;
+        if (subscriptionManager != null) {
+            this.mSubscriptionsChangedListener = new SubscriptionManager.OnSubscriptionsChangedListener(Looper.getMainLooper()) {
+                public void onSubscriptionsChanged() {
+                    SubscriptionManager r0 = ResetNetworkConfirm.this.getSubscriptionManager();
+                    ResetNetworkConfirm resetNetworkConfirm = ResetNetworkConfirm.this;
+                    if (!resetNetworkConfirm.isSubscriptionRemainActive(r0, resetNetworkConfirm.mSubId)) {
+                        Log.w("ResetNetworkConfirm", "subId " + ResetNetworkConfirm.this.mSubId + " no longer active.");
+                        ResetNetworkConfirm.this.stopMonitorSubscriptionChange(r0);
+                        ResetNetworkConfirm.this.mActivity.finish();
+                    }
                 }
-                Log.w("ResetNetworkConfirm", "subId " + ResetNetworkConfirm.this.mSubId + " no longer active.");
-                ResetNetworkConfirm.this.stopMonitorSubscriptionChange(subscriptionManager2);
-                ResetNetworkConfirm.this.mActivity.finish();
-            }
-        };
-        subscriptionManager.addOnSubscriptionsChangedListener(this.mActivity.getMainExecutor(), this.mSubscriptionsChangedListener);
+            };
+            subscriptionManager.addOnSubscriptionsChangedListener(this.mActivity.getMainExecutor(), this.mSubscriptionsChangedListener);
+        }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public boolean isSubscriptionRemainActive(SubscriptionManager subscriptionManager, int i) {
         return (subscriptionManager == null || subscriptionManager.getActiveSubscriptionInfo(i) == null) ? false : true;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void stopMonitorSubscriptionChange(SubscriptionManager subscriptionManager) {
         SubscriptionManager.OnSubscriptionsChangedListener onSubscriptionsChangedListener;
-        if (subscriptionManager == null || (onSubscriptionsChangedListener = this.mSubscriptionsChangedListener) == null) {
-            return;
+        if (subscriptionManager != null && (onSubscriptionsChangedListener = this.mSubscriptionsChangedListener) != null) {
+            subscriptionManager.removeOnSubscriptionsChangedListener(onSubscriptionsChangedListener);
+            this.mSubscriptionsChangedListener = null;
         }
-        subscriptionManager.removeOnSubscriptionsChangedListener(onSubscriptionsChangedListener);
-        this.mSubscriptionsChangedListener = null;
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onDestroy() {
         ResetNetworkTask resetNetworkTask = this.mResetNetworkTask;
         if (resetNetworkTask != null) {

@@ -1,6 +1,5 @@
 package androidx.appcompat.widget;
 
-import android.annotation.SuppressLint;
 import android.app.SearchableInfo;
 import android.content.ComponentName;
 import android.content.Context;
@@ -26,36 +25,31 @@ import androidx.appcompat.R$id;
 import androidx.core.content.ContextCompat;
 import androidx.cursoradapter.widget.ResourceCursorAdapter;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.WeakHashMap;
-/* JADX INFO: Access modifiers changed from: package-private */
-@SuppressLint({"RestrictedAPI"})
-/* loaded from: classes.dex */
-public class SuggestionsAdapter extends ResourceCursorAdapter implements View.OnClickListener {
+
+class SuggestionsAdapter extends ResourceCursorAdapter implements View.OnClickListener {
+    private boolean mClosed = false;
     private final int mCommitIconResId;
+    private int mFlagsCol = -1;
+    private int mIconName1Col = -1;
+    private int mIconName2Col = -1;
     private final WeakHashMap<String, Drawable.ConstantState> mOutsideDrawablesCache;
     private final Context mProviderContext;
+    private int mQueryRefinement = 1;
     private final SearchView mSearchView;
     private final SearchableInfo mSearchable;
-    private ColorStateList mUrlColor;
-    private boolean mClosed = false;
-    private int mQueryRefinement = 1;
     private int mText1Col = -1;
     private int mText2Col = -1;
     private int mText2UrlCol = -1;
-    private int mIconName1Col = -1;
-    private int mIconName2Col = -1;
-    private int mFlagsCol = -1;
+    private ColorStateList mUrlColor;
 
-    @Override // android.widget.BaseAdapter, android.widget.Adapter
     public boolean hasStableIds() {
         return false;
     }
 
     public SuggestionsAdapter(Context context, SearchView searchView, SearchableInfo searchableInfo, WeakHashMap<String, Drawable.ConstantState> weakHashMap) {
-        super(context, searchView.getSuggestionRowLayout(), null, true);
+        super(context, searchView.getSuggestionRowLayout(), (Cursor) null, true);
         this.mSearchView = searchView;
         this.mSearchable = searchableInfo;
         this.mCommitIconResId = searchView.getSuggestionCommitIconResId();
@@ -67,7 +61,6 @@ public class SuggestionsAdapter extends ResourceCursorAdapter implements View.On
         this.mQueryRefinement = i;
     }
 
-    @Override // androidx.cursoradapter.widget.CursorFilter.CursorFilterClient
     public Cursor runQueryOnBackgroundThread(CharSequence charSequence) {
         String charSequence2 = charSequence == null ? "" : charSequence.toString();
         if (this.mSearchView.getVisibility() == 0 && this.mSearchView.getWindowVisibility() == 0) {
@@ -84,13 +77,11 @@ public class SuggestionsAdapter extends ResourceCursorAdapter implements View.On
         return null;
     }
 
-    @Override // android.widget.BaseAdapter
     public void notifyDataSetChanged() {
         super.notifyDataSetChanged();
         updateSpinnerState(getCursor());
     }
 
-    @Override // android.widget.BaseAdapter
     public void notifyDataSetInvalidated() {
         super.notifyDataSetInvalidated();
         updateSpinnerState(getCursor());
@@ -103,33 +94,30 @@ public class SuggestionsAdapter extends ResourceCursorAdapter implements View.On
         }
     }
 
-    @Override // androidx.cursoradapter.widget.CursorAdapter, androidx.cursoradapter.widget.CursorFilter.CursorFilterClient
     public void changeCursor(Cursor cursor) {
         if (this.mClosed) {
             Log.w("SuggestionsAdapter", "Tried to change cursor after adapter was closed.");
-            if (cursor == null) {
+            if (cursor != null) {
+                cursor.close();
                 return;
             }
-            cursor.close();
             return;
         }
         try {
             super.changeCursor(cursor);
-            if (cursor == null) {
-                return;
+            if (cursor != null) {
+                this.mText1Col = cursor.getColumnIndex("suggest_text_1");
+                this.mText2Col = cursor.getColumnIndex("suggest_text_2");
+                this.mText2UrlCol = cursor.getColumnIndex("suggest_text_2_url");
+                this.mIconName1Col = cursor.getColumnIndex("suggest_icon_1");
+                this.mIconName2Col = cursor.getColumnIndex("suggest_icon_2");
+                this.mFlagsCol = cursor.getColumnIndex("suggest_flags");
             }
-            this.mText1Col = cursor.getColumnIndex("suggest_text_1");
-            this.mText2Col = cursor.getColumnIndex("suggest_text_2");
-            this.mText2UrlCol = cursor.getColumnIndex("suggest_text_2_url");
-            this.mIconName1Col = cursor.getColumnIndex("suggest_icon_1");
-            this.mIconName2Col = cursor.getColumnIndex("suggest_icon_2");
-            this.mFlagsCol = cursor.getColumnIndex("suggest_flags");
         } catch (Exception e) {
             Log.e("SuggestionsAdapter", "error changing cursor and caching columns", e);
         }
     }
 
-    @Override // androidx.cursoradapter.widget.ResourceCursorAdapter, androidx.cursoradapter.widget.CursorAdapter
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
         View newView = super.newView(context, cursor, viewGroup);
         newView.setTag(new ChildViewCache(newView));
@@ -137,9 +125,7 @@ public class SuggestionsAdapter extends ResourceCursorAdapter implements View.On
         return newView;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static final class ChildViewCache {
+    private static final class ChildViewCache {
         public final ImageView mIcon1;
         public final ImageView mIcon2;
         public final ImageView mIconRefine;
@@ -155,9 +141,8 @@ public class SuggestionsAdapter extends ResourceCursorAdapter implements View.On
         }
     }
 
-    @Override // androidx.cursoradapter.widget.CursorAdapter
     public void bindView(View view, Context context, Cursor cursor) {
-        CharSequence stringOrNull;
+        CharSequence charSequence;
         ChildViewCache childViewCache = (ChildViewCache) view.getTag();
         int i = this.mFlagsCol;
         int i2 = i != -1 ? cursor.getInt(i) : 0;
@@ -165,13 +150,13 @@ public class SuggestionsAdapter extends ResourceCursorAdapter implements View.On
             setViewText(childViewCache.mText1, getStringOrNull(cursor, this.mText1Col));
         }
         if (childViewCache.mText2 != null) {
-            String stringOrNull2 = getStringOrNull(cursor, this.mText2UrlCol);
-            if (stringOrNull2 != null) {
-                stringOrNull = formatUrl(stringOrNull2);
+            String stringOrNull = getStringOrNull(cursor, this.mText2UrlCol);
+            if (stringOrNull != null) {
+                charSequence = formatUrl(stringOrNull);
             } else {
-                stringOrNull = getStringOrNull(cursor, this.mText2Col);
+                charSequence = getStringOrNull(cursor, this.mText2Col);
             }
-            if (TextUtils.isEmpty(stringOrNull)) {
+            if (TextUtils.isEmpty(charSequence)) {
                 TextView textView = childViewCache.mText1;
                 if (textView != null) {
                     textView.setSingleLine(false);
@@ -184,7 +169,7 @@ public class SuggestionsAdapter extends ResourceCursorAdapter implements View.On
                     childViewCache.mText1.setMaxLines(1);
                 }
             }
-            setViewText(childViewCache.mText2, stringOrNull);
+            setViewText(childViewCache.mText2, charSequence);
         }
         ImageView imageView = childViewCache.mIcon1;
         if (imageView != null) {
@@ -204,7 +189,6 @@ public class SuggestionsAdapter extends ResourceCursorAdapter implements View.On
         childViewCache.mIconRefine.setVisibility(8);
     }
 
-    @Override // android.view.View.OnClickListener
     public void onClick(View view) {
         Object tag = view.getTag();
         if (tag instanceof CharSequence) {
@@ -215,11 +199,11 @@ public class SuggestionsAdapter extends ResourceCursorAdapter implements View.On
     private CharSequence formatUrl(CharSequence charSequence) {
         if (this.mUrlColor == null) {
             TypedValue typedValue = new TypedValue();
-            this.mContext.getTheme().resolveAttribute(R$attr.textColorSearchUrl, typedValue, true);
-            this.mUrlColor = this.mContext.getResources().getColorStateList(typedValue.resourceId);
+            this.mProviderContext.getTheme().resolveAttribute(R$attr.textColorSearchUrl, typedValue, true);
+            this.mUrlColor = this.mProviderContext.getResources().getColorStateList(typedValue.resourceId);
         }
         SpannableString spannableString = new SpannableString(charSequence);
-        spannableString.setSpan(new TextAppearanceSpan(null, 0, 0, this.mUrlColor, null), 0, charSequence.length(), 33);
+        spannableString.setSpan(new TextAppearanceSpan((String) null, 0, 0, this.mUrlColor, (ColorStateList) null), 0, charSequence.length(), 33);
         return spannableString;
     }
 
@@ -238,7 +222,10 @@ public class SuggestionsAdapter extends ResourceCursorAdapter implements View.On
             return null;
         }
         Drawable drawableFromResourceValue = getDrawableFromResourceValue(cursor.getString(i));
-        return drawableFromResourceValue != null ? drawableFromResourceValue : getDefaultIcon1();
+        if (drawableFromResourceValue != null) {
+            return drawableFromResourceValue;
+        }
+        return getDefaultIcon1();
     }
 
     private Drawable getIcon2(Cursor cursor) {
@@ -260,7 +247,6 @@ public class SuggestionsAdapter extends ResourceCursorAdapter implements View.On
         drawable.setVisible(true, false);
     }
 
-    @Override // androidx.cursoradapter.widget.CursorAdapter, androidx.cursoradapter.widget.CursorFilter.CursorFilterClient
     public CharSequence convertToString(Cursor cursor) {
         String columnString;
         String columnString2;
@@ -274,19 +260,18 @@ public class SuggestionsAdapter extends ResourceCursorAdapter implements View.On
         if (this.mSearchable.shouldRewriteQueryFromData() && (columnString2 = getColumnString(cursor, "suggest_intent_data")) != null) {
             return columnString2;
         }
-        if (this.mSearchable.shouldRewriteQueryFromText() && (columnString = getColumnString(cursor, "suggest_text_1")) != null) {
-            return columnString;
+        if (!this.mSearchable.shouldRewriteQueryFromText() || (columnString = getColumnString(cursor, "suggest_text_1")) == null) {
+            return null;
         }
-        return null;
+        return columnString;
     }
 
-    @Override // androidx.cursoradapter.widget.CursorAdapter, android.widget.Adapter
     public View getView(int i, View view, ViewGroup viewGroup) {
         try {
             return super.getView(i, view, viewGroup);
         } catch (RuntimeException e) {
             Log.w("SuggestionsAdapter", "Search suggestions cursor threw exception.", e);
-            View newView = this.newView(this.mContext, this.mCursor, viewGroup);
+            View newView = newView(this.mProviderContext, getCursor(), viewGroup);
             if (newView != null) {
                 ((ChildViewCache) newView.getTag()).mText1.setText(e.toString());
             }
@@ -294,13 +279,12 @@ public class SuggestionsAdapter extends ResourceCursorAdapter implements View.On
         }
     }
 
-    @Override // androidx.cursoradapter.widget.CursorAdapter, android.widget.BaseAdapter, android.widget.SpinnerAdapter
     public View getDropDownView(int i, View view, ViewGroup viewGroup) {
         try {
             return super.getDropDownView(i, view, viewGroup);
         } catch (RuntimeException e) {
             Log.w("SuggestionsAdapter", "Search suggestions cursor threw exception.", e);
-            View newDropDownView = this.newDropDownView(this.mContext, this.mCursor, viewGroup);
+            View newDropDownView = newDropDownView(this.mProviderContext, getCursor(), viewGroup);
             if (newDropDownView != null) {
                 ((ChildViewCache) newDropDownView.getTag()).mText1.setText(e.toString());
             }
@@ -322,10 +306,7 @@ public class SuggestionsAdapter extends ResourceCursorAdapter implements View.On
             Drawable drawable = ContextCompat.getDrawable(this.mProviderContext, parseInt);
             storeInIconCache(str2, drawable);
             return drawable;
-        } catch (Resources.NotFoundException unused) {
-            Log.w("SuggestionsAdapter", "Icon resource not found: " + str);
-            return null;
-        } catch (NumberFormatException unused2) {
+        } catch (NumberFormatException unused) {
             Drawable checkIconCache2 = checkIconCache(str);
             if (checkIconCache2 != null) {
                 return checkIconCache2;
@@ -333,35 +314,98 @@ public class SuggestionsAdapter extends ResourceCursorAdapter implements View.On
             Drawable drawable2 = getDrawable(Uri.parse(str));
             storeInIconCache(str, drawable2);
             return drawable2;
+        } catch (Resources.NotFoundException unused2) {
+            Log.w("SuggestionsAdapter", "Icon resource not found: " + str);
+            return null;
         }
     }
 
-    private Drawable getDrawable(Uri uri) {
-        try {
-            if ("android.resource".equals(uri.getScheme())) {
-                try {
-                    return getDrawableFromResourceUri(uri);
-                } catch (Resources.NotFoundException unused) {
-                    throw new FileNotFoundException("Resource does not exist: " + uri);
-                }
-            }
-            InputStream openInputStream = this.mProviderContext.getContentResolver().openInputStream(uri);
-            if (openInputStream == null) {
-                throw new FileNotFoundException("Failed to open " + uri);
-            }
-            Drawable createFromStream = Drawable.createFromStream(openInputStream, null);
-            try {
-                openInputStream.close();
-            } catch (IOException e) {
-                Log.e("SuggestionsAdapter", "Error closing icon stream for " + uri, e);
-            }
-            return createFromStream;
-        } catch (FileNotFoundException e2) {
-            Log.w("SuggestionsAdapter", "Icon not found: " + uri + ", " + e2.getMessage());
-            return null;
-        }
-        Log.w("SuggestionsAdapter", "Icon not found: " + uri + ", " + e2.getMessage());
-        return null;
+    /* JADX WARNING: Can't wrap try/catch for region: R(3:7|8|9) */
+    /* JADX WARNING: Code restructure failed: missing block: B:9:0x002c, code lost:
+        throw new java.io.FileNotFoundException("Resource does not exist: " + r6);
+     */
+    /* JADX WARNING: Missing exception handler attribute for start block: B:7:0x0016 */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private android.graphics.drawable.Drawable getDrawable(android.net.Uri r6) {
+        /*
+            r5 = this;
+            java.lang.String r0 = "Error closing icon stream for "
+            java.lang.String r1 = "SuggestionsAdapter"
+            r2 = 0
+            java.lang.String r3 = r6.getScheme()     // Catch:{ FileNotFoundException -> 0x0085 }
+            java.lang.String r4 = "android.resource"
+            boolean r3 = r4.equals(r3)     // Catch:{ FileNotFoundException -> 0x0085 }
+            if (r3 == 0) goto L_0x002d
+            android.graphics.drawable.Drawable r5 = r5.getDrawableFromResourceUri(r6)     // Catch:{ NotFoundException -> 0x0016 }
+            return r5
+        L_0x0016:
+            java.io.FileNotFoundException r5 = new java.io.FileNotFoundException     // Catch:{ FileNotFoundException -> 0x0085 }
+            java.lang.StringBuilder r0 = new java.lang.StringBuilder     // Catch:{ FileNotFoundException -> 0x0085 }
+            r0.<init>()     // Catch:{ FileNotFoundException -> 0x0085 }
+            java.lang.String r3 = "Resource does not exist: "
+            r0.append(r3)     // Catch:{ FileNotFoundException -> 0x0085 }
+            r0.append(r6)     // Catch:{ FileNotFoundException -> 0x0085 }
+            java.lang.String r0 = r0.toString()     // Catch:{ FileNotFoundException -> 0x0085 }
+            r5.<init>(r0)     // Catch:{ FileNotFoundException -> 0x0085 }
+            throw r5     // Catch:{ FileNotFoundException -> 0x0085 }
+        L_0x002d:
+            android.content.Context r5 = r5.mProviderContext     // Catch:{ FileNotFoundException -> 0x0085 }
+            android.content.ContentResolver r5 = r5.getContentResolver()     // Catch:{ FileNotFoundException -> 0x0085 }
+            java.io.InputStream r5 = r5.openInputStream(r6)     // Catch:{ FileNotFoundException -> 0x0085 }
+            if (r5 == 0) goto L_0x006e
+            android.graphics.drawable.Drawable r3 = android.graphics.drawable.Drawable.createFromStream(r5, r2)     // Catch:{ all -> 0x0055 }
+            r5.close()     // Catch:{ IOException -> 0x0041 }
+            goto L_0x0054
+        L_0x0041:
+            r5 = move-exception
+            java.lang.StringBuilder r4 = new java.lang.StringBuilder     // Catch:{ FileNotFoundException -> 0x0085 }
+            r4.<init>()     // Catch:{ FileNotFoundException -> 0x0085 }
+            r4.append(r0)     // Catch:{ FileNotFoundException -> 0x0085 }
+            r4.append(r6)     // Catch:{ FileNotFoundException -> 0x0085 }
+            java.lang.String r0 = r4.toString()     // Catch:{ FileNotFoundException -> 0x0085 }
+            android.util.Log.e(r1, r0, r5)     // Catch:{ FileNotFoundException -> 0x0085 }
+        L_0x0054:
+            return r3
+        L_0x0055:
+            r3 = move-exception
+            r5.close()     // Catch:{ IOException -> 0x005a }
+            goto L_0x006d
+        L_0x005a:
+            r5 = move-exception
+            java.lang.StringBuilder r4 = new java.lang.StringBuilder     // Catch:{ FileNotFoundException -> 0x0085 }
+            r4.<init>()     // Catch:{ FileNotFoundException -> 0x0085 }
+            r4.append(r0)     // Catch:{ FileNotFoundException -> 0x0085 }
+            r4.append(r6)     // Catch:{ FileNotFoundException -> 0x0085 }
+            java.lang.String r0 = r4.toString()     // Catch:{ FileNotFoundException -> 0x0085 }
+            android.util.Log.e(r1, r0, r5)     // Catch:{ FileNotFoundException -> 0x0085 }
+        L_0x006d:
+            throw r3     // Catch:{ FileNotFoundException -> 0x0085 }
+        L_0x006e:
+            java.io.FileNotFoundException r5 = new java.io.FileNotFoundException     // Catch:{ FileNotFoundException -> 0x0085 }
+            java.lang.StringBuilder r0 = new java.lang.StringBuilder     // Catch:{ FileNotFoundException -> 0x0085 }
+            r0.<init>()     // Catch:{ FileNotFoundException -> 0x0085 }
+            java.lang.String r3 = "Failed to open "
+            r0.append(r3)     // Catch:{ FileNotFoundException -> 0x0085 }
+            r0.append(r6)     // Catch:{ FileNotFoundException -> 0x0085 }
+            java.lang.String r0 = r0.toString()     // Catch:{ FileNotFoundException -> 0x0085 }
+            r5.<init>(r0)     // Catch:{ FileNotFoundException -> 0x0085 }
+            throw r5     // Catch:{ FileNotFoundException -> 0x0085 }
+        L_0x0085:
+            r5 = move-exception
+            java.lang.StringBuilder r0 = new java.lang.StringBuilder
+            r0.<init>()
+            java.lang.String r3 = "Icon not found: "
+            r0.append(r3)
+            r0.append(r6)
+            java.lang.String r6 = ", "
+            r0.append(r6)
+            java.lang.String r5 = r5.getMessage()
+            r0.append(r5)
+            java.lang.String r5 = r0.toString()
+            android.util.Log.w(r1, r5)
+            return r2
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.appcompat.widget.SuggestionsAdapter.getDrawable(android.net.Uri):android.graphics.drawable.Drawable");
     }
 
     private Drawable checkIconCache(String str) {
@@ -380,7 +424,10 @@ public class SuggestionsAdapter extends ResourceCursorAdapter implements View.On
 
     private Drawable getDefaultIcon1() {
         Drawable activityIconWithCache = getActivityIconWithCache(this.mSearchable.getSearchActivity());
-        return activityIconWithCache != null ? activityIconWithCache : this.mContext.getPackageManager().getDefaultActivityIcon();
+        if (activityIconWithCache != null) {
+            return activityIconWithCache;
+        }
+        return this.mProviderContext.getPackageManager().getDefaultActivityIcon();
     }
 
     private Drawable getActivityIconWithCache(ComponentName componentName) {
@@ -388,10 +435,10 @@ public class SuggestionsAdapter extends ResourceCursorAdapter implements View.On
         Drawable.ConstantState constantState = null;
         if (this.mOutsideDrawablesCache.containsKey(flattenToShortString)) {
             Drawable.ConstantState constantState2 = this.mOutsideDrawablesCache.get(flattenToShortString);
-            if (constantState2 != null) {
-                return constantState2.newDrawable(this.mProviderContext.getResources());
+            if (constantState2 == null) {
+                return null;
             }
-            return null;
+            return constantState2.newDrawable(this.mProviderContext.getResources());
         }
         Drawable activityIcon = getActivityIcon(componentName);
         if (activityIcon != null) {
@@ -402,7 +449,7 @@ public class SuggestionsAdapter extends ResourceCursorAdapter implements View.On
     }
 
     private Drawable getActivityIcon(ComponentName componentName) {
-        PackageManager packageManager = this.mContext.getPackageManager();
+        PackageManager packageManager = this.mProviderContext.getPackageManager();
         try {
             ActivityInfo activityInfo = packageManager.getActivityInfo(componentName, 128);
             int iconResource = activityInfo.getIconResource();
@@ -437,40 +484,43 @@ public class SuggestionsAdapter extends ResourceCursorAdapter implements View.On
         }
     }
 
-    Drawable getDrawableFromResourceUri(Uri uri) throws FileNotFoundException {
-        int parseInt;
+    /* access modifiers changed from: package-private */
+    public Drawable getDrawableFromResourceUri(Uri uri) throws FileNotFoundException {
+        int i;
         String authority = uri.getAuthority();
-        if (TextUtils.isEmpty(authority)) {
-            throw new FileNotFoundException("No authority: " + uri);
-        }
-        try {
-            Resources resourcesForApplication = this.mContext.getPackageManager().getResourcesForApplication(authority);
-            List<String> pathSegments = uri.getPathSegments();
-            if (pathSegments == null) {
-                throw new FileNotFoundException("No path: " + uri);
-            }
-            int size = pathSegments.size();
-            if (size == 1) {
-                try {
-                    parseInt = Integer.parseInt(pathSegments.get(0));
-                } catch (NumberFormatException unused) {
-                    throw new FileNotFoundException("Single path segment is not a resource ID: " + uri);
+        if (!TextUtils.isEmpty(authority)) {
+            try {
+                Resources resourcesForApplication = this.mProviderContext.getPackageManager().getResourcesForApplication(authority);
+                List<String> pathSegments = uri.getPathSegments();
+                if (pathSegments != null) {
+                    int size = pathSegments.size();
+                    if (size == 1) {
+                        try {
+                            i = Integer.parseInt(pathSegments.get(0));
+                        } catch (NumberFormatException unused) {
+                            throw new FileNotFoundException("Single path segment is not a resource ID: " + uri);
+                        }
+                    } else if (size == 2) {
+                        i = resourcesForApplication.getIdentifier(pathSegments.get(1), pathSegments.get(0), authority);
+                    } else {
+                        throw new FileNotFoundException("More than two path segments: " + uri);
+                    }
+                    if (i != 0) {
+                        return resourcesForApplication.getDrawable(i);
+                    }
+                    throw new FileNotFoundException("No resource found for: " + uri);
                 }
-            } else if (size == 2) {
-                parseInt = resourcesForApplication.getIdentifier(pathSegments.get(1), pathSegments.get(0), authority);
-            } else {
-                throw new FileNotFoundException("More than two path segments: " + uri);
+                throw new FileNotFoundException("No path: " + uri);
+            } catch (PackageManager.NameNotFoundException unused2) {
+                throw new FileNotFoundException("No package found for authority: " + uri);
             }
-            if (parseInt == 0) {
-                throw new FileNotFoundException("No resource found for: " + uri);
-            }
-            return resourcesForApplication.getDrawable(parseInt);
-        } catch (PackageManager.NameNotFoundException unused2) {
-            throw new FileNotFoundException("No package found for authority: " + uri);
+        } else {
+            throw new FileNotFoundException("No authority: " + uri);
         }
     }
 
-    Cursor getSearchManagerSuggestions(SearchableInfo searchableInfo, String str, int i) {
+    /* access modifiers changed from: package-private */
+    public Cursor getSearchManagerSuggestions(SearchableInfo searchableInfo, String str, int i) {
         String suggestAuthority;
         String[] strArr = null;
         if (searchableInfo == null || (suggestAuthority = searchableInfo.getSuggestAuthority()) == null) {
@@ -492,6 +542,6 @@ public class SuggestionsAdapter extends ResourceCursorAdapter implements View.On
         if (i > 0) {
             fragment.appendQueryParameter("limit", String.valueOf(i));
         }
-        return this.mContext.getContentResolver().query(fragment.build(), null, suggestSelection, strArr2, null);
+        return this.mProviderContext.getContentResolver().query(fragment.build(), (String[]) null, suggestSelection, strArr2, (String) null);
     }
 }

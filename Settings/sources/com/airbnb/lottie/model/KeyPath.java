@@ -3,7 +3,7 @@ package com.airbnb.lottie.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class KeyPath {
     private final List<String> keys;
     private KeyPathElement resolvedElement;
@@ -40,7 +40,10 @@ public class KeyPath {
         if (i >= this.keys.size()) {
             return false;
         }
-        return this.keys.get(i).equals(str) || this.keys.get(i).equals("**") || this.keys.get(i).equals("*");
+        if (this.keys.get(i).equals(str) || this.keys.get(i).equals("**") || this.keys.get(i).equals("*")) {
+            return true;
+        }
+        return false;
     }
 
     public int incrementDepthBy(String str, int i) {
@@ -50,7 +53,10 @@ public class KeyPath {
         if (!this.keys.get(i).equals("**")) {
             return 1;
         }
-        return (i != this.keys.size() - 1 && this.keys.get(i + 1).equals(str)) ? 2 : 0;
+        if (i != this.keys.size() - 1 && this.keys.get(i + 1).equals(str)) {
+            return 2;
+        }
+        return 0;
     }
 
     public boolean fullyResolvesTo(String str, int i) {
@@ -60,23 +66,33 @@ public class KeyPath {
         boolean z = i == this.keys.size() - 1;
         String str2 = this.keys.get(i);
         if (!str2.equals("**")) {
-            return (z || (i == this.keys.size() + (-2) && endsWithGlobstar())) && (str2.equals(str) || str2.equals("*"));
+            boolean z2 = str2.equals(str) || str2.equals("*");
+            if ((z || (i == this.keys.size() - 2 && endsWithGlobstar())) && z2) {
+                return true;
+            }
+            return false;
         }
         if (!z && this.keys.get(i + 1).equals(str)) {
-            return i == this.keys.size() + (-2) || (i == this.keys.size() + (-3) && endsWithGlobstar());
+            if (i == this.keys.size() - 2 || (i == this.keys.size() - 3 && endsWithGlobstar())) {
+                return true;
+            }
+            return false;
         } else if (z) {
             return true;
         } else {
             int i2 = i + 1;
-            if (i2 >= this.keys.size() - 1) {
-                return this.keys.get(i2).equals(str);
+            if (i2 < this.keys.size() - 1) {
+                return false;
             }
-            return false;
+            return this.keys.get(i2).equals(str);
         }
     }
 
     public boolean propagateToChildren(String str, int i) {
-        return "__container".equals(str) || i < this.keys.size() - 1 || this.keys.get(i).equals("**");
+        if (!"__container".equals(str) && i >= this.keys.size() - 1 && !this.keys.get(i).equals("**")) {
+            return false;
+        }
+        return true;
     }
 
     private boolean isContainer(String str) {

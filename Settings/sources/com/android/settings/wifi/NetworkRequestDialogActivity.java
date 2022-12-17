@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,31 +12,29 @@ import android.os.HandlerExecutor;
 import android.os.Message;
 import android.widget.Toast;
 import androidx.fragment.app.FragmentActivity;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.wifi.NetworkRequestErrorDialogFragment;
+import com.android.wifitrackerlib.WifiEntry;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class NetworkRequestDialogActivity extends FragmentActivity implements WifiManager.NetworkRequestMatchCallback {
     private static String TAG = "NetworkRequestDialogActivity";
     NetworkRequestDialogBaseFragment mDialogFragment;
-    private final Handler mHandler = new Handler() { // from class: com.android.settings.wifi.NetworkRequestDialogActivity.1
-        @Override // android.os.Handler
+    private final Handler mHandler = new Handler() {
         public void handleMessage(Message message) {
-            if (message.what != 0) {
-                return;
+            if (message.what == 0) {
+                removeMessages(0);
+                NetworkRequestDialogActivity.this.stopScanningAndPopErrorDialog(NetworkRequestErrorDialogFragment.ERROR_DIALOG_TYPE.TIME_OUT);
             }
-            removeMessages(0);
-            NetworkRequestDialogActivity.this.stopScanningAndPopErrorDialog(NetworkRequestErrorDialogFragment.ERROR_DIALOG_TYPE.TIME_OUT);
         }
     };
-    private boolean mIsSpecifiedSsid;
+    boolean mIsSpecifiedSsid;
     private WifiConfiguration mMatchedConfig;
     ProgressDialog mProgressDialog;
-    private boolean mShowingErrorDialog;
+    boolean mShowingErrorDialog;
     private WifiManager.NetworkRequestUserSelectionCallback mUserSelectionCallback;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         Intent intent = getIntent();
@@ -43,7 +42,7 @@ public class NetworkRequestDialogActivity extends FragmentActivity implements Wi
             this.mIsSpecifiedSsid = intent.getBooleanExtra("com.android.settings.wifi.extra.REQUEST_IS_FOR_SINGLE_NETWORK", false);
         }
         if (this.mIsSpecifiedSsid) {
-            showProgressDialog(getString(R.string.network_connection_searching_message));
+            showProgressDialog(getString(R$string.network_connection_searching_message));
             return;
         }
         NetworkRequestDialogFragment newInstance = NetworkRequestDialogFragment.newInstance();
@@ -71,7 +70,8 @@ public class NetworkRequestDialogActivity extends FragmentActivity implements Wi
         this.mDialogFragment.show(getSupportFragmentManager(), TAG);
     }
 
-    private void dismissDialogs() {
+    /* access modifiers changed from: package-private */
+    public void dismissDialogs() {
         NetworkRequestDialogBaseFragment networkRequestDialogBaseFragment = this.mDialogFragment;
         if (networkRequestDialogBaseFragment != null) {
             networkRequestDialogBaseFragment.dismiss();
@@ -84,19 +84,17 @@ public class NetworkRequestDialogActivity extends FragmentActivity implements Wi
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.fragment.app.FragmentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onResume() {
         super.onResume();
         WifiManager wifiManager = (WifiManager) getSystemService(WifiManager.class);
         if (wifiManager != null) {
             wifiManager.registerNetworkRequestMatchCallback(new HandlerExecutor(this.mHandler), this);
         }
-        this.mHandler.sendEmptyMessageDelayed(0, 30000L);
+        this.mHandler.sendEmptyMessageDelayed(0, 30000);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.fragment.app.FragmentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onPause() {
         this.mHandler.removeMessages(0);
         WifiManager wifiManager = (WifiManager) getSystemService(WifiManager.class);
@@ -106,7 +104,8 @@ public class NetworkRequestDialogActivity extends FragmentActivity implements Wi
         super.onPause();
     }
 
-    protected void stopScanningAndPopErrorDialog(NetworkRequestErrorDialogFragment.ERROR_DIALOG_TYPE error_dialog_type) {
+    /* access modifiers changed from: protected */
+    public void stopScanningAndPopErrorDialog(NetworkRequestErrorDialogFragment.ERROR_DIALOG_TYPE error_dialog_type) {
         dismissDialogs();
         NetworkRequestErrorDialogFragment newInstance = NetworkRequestErrorDialogFragment.newInstance();
         newInstance.setRejectCallback(this.mUserSelectionCallback);
@@ -120,8 +119,11 @@ public class NetworkRequestDialogActivity extends FragmentActivity implements Wi
     public void onUserSelectionCallbackRegistration(WifiManager.NetworkRequestUserSelectionCallback networkRequestUserSelectionCallback) {
         if (this.mIsSpecifiedSsid) {
             this.mUserSelectionCallback = networkRequestUserSelectionCallback;
-        } else {
-            this.mDialogFragment.onUserSelectionCallbackRegistration(networkRequestUserSelectionCallback);
+            return;
+        }
+        NetworkRequestDialogBaseFragment networkRequestDialogBaseFragment = this.mDialogFragment;
+        if (networkRequestDialogBaseFragment != null) {
+            networkRequestDialogBaseFragment.onUserSelectionCallbackRegistration(networkRequestUserSelectionCallback);
         }
     }
 
@@ -130,25 +132,24 @@ public class NetworkRequestDialogActivity extends FragmentActivity implements Wi
     }
 
     public void onMatch(List<ScanResult> list) {
-        if (this.mShowingErrorDialog) {
-            return;
-        }
-        this.mHandler.removeMessages(0);
-        if (this.mIsSpecifiedSsid) {
-            if (this.mMatchedConfig != null) {
-                return;
+        if (!this.mShowingErrorDialog) {
+            this.mHandler.removeMessages(0);
+            if (!this.mIsSpecifiedSsid) {
+                NetworkRequestDialogBaseFragment networkRequestDialogBaseFragment = this.mDialogFragment;
+                if (networkRequestDialogBaseFragment != null) {
+                    networkRequestDialogBaseFragment.onMatch(list);
+                }
+            } else if (this.mMatchedConfig == null) {
+                WifiConfiguration wifiConfig = WifiUtils.getWifiConfig((WifiEntry) null, list.get(0));
+                this.mMatchedConfig = wifiConfig;
+                showSingleSsidRequestDialog(WifiInfo.sanitizeSsid(wifiConfig.SSID), false);
             }
-            WifiConfiguration wifiConfig = WifiUtils.getWifiConfig(null, list.get(0));
-            this.mMatchedConfig = wifiConfig;
-            showSingleSsidRequestDialog(android.net.wifi.WifiInfo.sanitizeSsid(wifiConfig.SSID), false);
-            return;
         }
-        this.mDialogFragment.onMatch(list);
     }
 
     public void onUserSelectionConnectSuccess(WifiConfiguration wifiConfiguration) {
         if (!isFinishing()) {
-            Toast.makeText(this, R.string.network_connection_connect_successful, 0).show();
+            Toast.makeText(this, R$string.network_connection_connect_successful, 0).show();
             setResult(-1);
             finish();
         }
@@ -156,7 +157,7 @@ public class NetworkRequestDialogActivity extends FragmentActivity implements Wi
 
     public void onUserSelectionConnectFailure(WifiConfiguration wifiConfiguration) {
         if (!isFinishing()) {
-            Toast.makeText(this, R.string.network_connection_connect_failure, 0).show();
+            Toast.makeText(this, R$string.network_connection_connect_failure, 0).show();
             setResult(-1);
             finish();
         }
@@ -166,16 +167,16 @@ public class NetworkRequestDialogActivity extends FragmentActivity implements Wi
         WifiManager.NetworkRequestUserSelectionCallback networkRequestUserSelectionCallback = this.mUserSelectionCallback;
         if (networkRequestUserSelectionCallback != null) {
             networkRequestUserSelectionCallback.select(this.mMatchedConfig);
-            showProgressDialog(getString(R.string.network_connection_connecting_message));
+            showProgressDialog(getString(R$string.network_connection_connecting_message));
         }
     }
 
     public void onClickRescanButton() {
-        this.mHandler.sendEmptyMessageDelayed(0, 30000L);
+        this.mHandler.sendEmptyMessageDelayed(0, 30000);
         this.mShowingErrorDialog = false;
         if (this.mIsSpecifiedSsid) {
             this.mMatchedConfig = null;
-            showProgressDialog(getString(R.string.network_connection_searching_message));
+            showProgressDialog(getString(R$string.network_connection_searching_message));
             return;
         }
         NetworkRequestDialogFragment newInstance = NetworkRequestDialogFragment.newInstance();

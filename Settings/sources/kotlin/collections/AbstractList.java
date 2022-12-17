@@ -10,197 +10,181 @@ import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 /* compiled from: AbstractList.kt */
-/* loaded from: classes2.dex */
 public abstract class AbstractList<E> extends AbstractCollection<E> implements List<E> {
     @NotNull
-    public static final Companion Companion = new Companion(null);
+    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
 
-    @Override // java.util.List
     public void add(int i, E e) {
         throw new UnsupportedOperationException("Operation is not supported for read-only collection");
     }
 
-    @Override // java.util.List
     public boolean addAll(int i, Collection<? extends E> collection) {
         throw new UnsupportedOperationException("Operation is not supported for read-only collection");
     }
 
-    @Override // java.util.List
-    /* renamed from: get */
-    public abstract E mo967get(int i);
+    public abstract E get(int i);
 
-    @Override // java.util.List
     public E remove(int i) {
         throw new UnsupportedOperationException("Operation is not supported for read-only collection");
     }
 
-    @Override // java.util.List
     public E set(int i, E e) {
         throw new UnsupportedOperationException("Operation is not supported for read-only collection");
     }
 
-    @Override // java.util.Collection, java.lang.Iterable, java.util.List
+    protected AbstractList() {
+    }
+
     @NotNull
     public Iterator<E> iterator() {
-        return new IteratorImpl();
+        return new IteratorImpl(this);
     }
 
-    @Override // java.util.List
     @NotNull
     public ListIterator<E> listIterator() {
-        return new ListIteratorImpl(0);
+        return new ListIteratorImpl(this, 0);
     }
 
-    @Override // java.util.List
     @NotNull
     public ListIterator<E> listIterator(int i) {
-        return new ListIteratorImpl(i);
+        return new ListIteratorImpl(this, i);
     }
 
-    @Override // java.util.List
     @NotNull
     public List<E> subList(int i, int i2) {
         return new SubList(this, i, i2);
     }
 
     /* compiled from: AbstractList.kt */
-    /* loaded from: classes2.dex */
     private static final class SubList<E> extends AbstractList<E> implements RandomAccess {
         private int _size;
         private final int fromIndex;
+        @NotNull
         private final AbstractList<E> list;
 
-        /* JADX WARN: Multi-variable type inference failed */
-        public SubList(@NotNull AbstractList<? extends E> list, int i, int i2) {
-            Intrinsics.checkNotNullParameter(list, "list");
-            this.list = list;
+        public SubList(@NotNull AbstractList<? extends E> abstractList, int i, int i2) {
+            Intrinsics.checkNotNullParameter(abstractList, "list");
+            this.list = abstractList;
             this.fromIndex = i;
-            AbstractList.Companion.checkRangeIndexes$kotlin_stdlib(i, i2, list.size());
+            AbstractList.Companion.checkRangeIndexes$kotlin_stdlib(i, i2, abstractList.size());
             this._size = i2 - i;
         }
 
-        @Override // kotlin.collections.AbstractList, java.util.List
-        /* renamed from: get */
-        public E mo967get(int i) {
+        public E get(int i) {
             AbstractList.Companion.checkElementIndex$kotlin_stdlib(i, this._size);
-            return this.list.mo967get(this.fromIndex + i);
+            return this.list.get(this.fromIndex + i);
         }
 
-        @Override // kotlin.collections.AbstractCollection
         public int getSize() {
             return this._size;
         }
     }
 
-    @Override // java.util.Collection, java.util.List
     public boolean equals(@Nullable Object obj) {
         if (obj == this) {
             return true;
         }
-        if (obj instanceof List) {
-            return Companion.orderedEquals$kotlin_stdlib(this, (Collection) obj);
+        if (!(obj instanceof List)) {
+            return false;
         }
-        return false;
+        return Companion.orderedEquals$kotlin_stdlib(this, (Collection) obj);
     }
 
-    @Override // java.util.Collection, java.util.List
     public int hashCode() {
         return Companion.orderedHashCode$kotlin_stdlib(this);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
     /* compiled from: AbstractList.kt */
-    /* loaded from: classes2.dex */
-    public class IteratorImpl implements Iterator<E> {
+    private class IteratorImpl implements Iterator<E> {
         private int index;
+        final /* synthetic */ AbstractList<E> this$0;
 
-        @Override // java.util.Iterator
         public void remove() {
             throw new UnsupportedOperationException("Operation is not supported for read-only collection");
         }
 
-        public IteratorImpl() {
+        public IteratorImpl(AbstractList abstractList) {
+            Intrinsics.checkNotNullParameter(abstractList, "this$0");
+            this.this$0 = abstractList;
         }
 
-        protected final int getIndex() {
+        /* access modifiers changed from: protected */
+        public final int getIndex() {
             return this.index;
         }
 
-        protected final void setIndex(int i) {
+        /* access modifiers changed from: protected */
+        public final void setIndex(int i) {
             this.index = i;
         }
 
-        @Override // java.util.Iterator
         public boolean hasNext() {
-            return this.index < AbstractList.this.size();
+            return this.index < this.this$0.size();
         }
 
-        @Override // java.util.Iterator
         public E next() {
-            if (!hasNext()) {
-                throw new NoSuchElementException();
+            if (hasNext()) {
+                AbstractList<E> abstractList = this.this$0;
+                int i = this.index;
+                this.index = i + 1;
+                return abstractList.get(i);
             }
-            AbstractList abstractList = AbstractList.this;
-            int i = this.index;
-            this.index = i + 1;
-            return (E) abstractList.mo967get(i);
+            throw new NoSuchElementException();
         }
     }
 
     /* compiled from: AbstractList.kt */
-    /* loaded from: classes2.dex */
     private class ListIteratorImpl extends AbstractList<E>.IteratorImpl implements ListIterator<E> {
-        @Override // java.util.ListIterator
+        final /* synthetic */ AbstractList<E> this$0;
+
         public void add(E e) {
             throw new UnsupportedOperationException("Operation is not supported for read-only collection");
         }
 
-        @Override // java.util.ListIterator
         public void set(E e) {
             throw new UnsupportedOperationException("Operation is not supported for read-only collection");
         }
 
-        public ListIteratorImpl(int i) {
-            super();
-            AbstractList.Companion.checkPositionIndex$kotlin_stdlib(i, AbstractList.this.size());
+        /* JADX INFO: super call moved to the top of the method (can break code semantics) */
+        public ListIteratorImpl(AbstractList abstractList, int i) {
+            super(abstractList);
+            Intrinsics.checkNotNullParameter(abstractList, "this$0");
+            this.this$0 = abstractList;
+            AbstractList.Companion.checkPositionIndex$kotlin_stdlib(i, abstractList.size());
             setIndex(i);
         }
 
-        @Override // java.util.ListIterator
         public boolean hasPrevious() {
             return getIndex() > 0;
         }
 
-        @Override // java.util.ListIterator
         public int nextIndex() {
             return getIndex();
         }
 
-        @Override // java.util.ListIterator
         public E previous() {
-            if (!hasPrevious()) {
-                throw new NoSuchElementException();
+            if (hasPrevious()) {
+                AbstractList<E> abstractList = this.this$0;
+                setIndex(getIndex() - 1);
+                return abstractList.get(getIndex());
             }
-            AbstractList abstractList = AbstractList.this;
-            setIndex(getIndex() - 1);
-            return (E) abstractList.mo967get(getIndex());
+            throw new NoSuchElementException();
         }
 
-        @Override // java.util.ListIterator
         public int previousIndex() {
             return getIndex() - 1;
         }
     }
 
     /* compiled from: AbstractList.kt */
-    /* loaded from: classes2.dex */
     public static final class Companion {
-        private Companion() {
-        }
-
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
             this();
+        }
+
+        private Companion() {
         }
 
         public final void checkElementIndex$kotlin_stdlib(int i, int i2) {
@@ -218,33 +202,36 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
         public final void checkRangeIndexes$kotlin_stdlib(int i, int i2, int i3) {
             if (i < 0 || i2 > i3) {
                 throw new IndexOutOfBoundsException("fromIndex: " + i + ", toIndex: " + i2 + ", size: " + i3);
-            } else if (i <= i2) {
-            } else {
+            } else if (i > i2) {
                 throw new IllegalArgumentException("fromIndex: " + i + " > toIndex: " + i2);
             }
         }
 
-        public final int orderedHashCode$kotlin_stdlib(@NotNull Collection<?> c) {
-            Intrinsics.checkNotNullParameter(c, "c");
-            Iterator<?> it = c.iterator();
-            int i = 1;
-            while (it.hasNext()) {
-                Object next = it.next();
-                i = (i * 31) + (next != null ? next.hashCode() : 0);
+        public final int orderedHashCode$kotlin_stdlib(@NotNull Collection<?> collection) {
+            int i;
+            Intrinsics.checkNotNullParameter(collection, "c");
+            int i2 = 1;
+            for (Object next : collection) {
+                int i3 = i2 * 31;
+                if (next == null) {
+                    i = 0;
+                } else {
+                    i = next.hashCode();
+                }
+                i2 = i3 + i;
             }
-            return i;
+            return i2;
         }
 
-        public final boolean orderedEquals$kotlin_stdlib(@NotNull Collection<?> c, @NotNull Collection<?> other) {
-            Intrinsics.checkNotNullParameter(c, "c");
-            Intrinsics.checkNotNullParameter(other, "other");
-            if (c.size() != other.size()) {
+        public final boolean orderedEquals$kotlin_stdlib(@NotNull Collection<?> collection, @NotNull Collection<?> collection2) {
+            Intrinsics.checkNotNullParameter(collection, "c");
+            Intrinsics.checkNotNullParameter(collection2, "other");
+            if (collection.size() != collection2.size()) {
                 return false;
             }
-            Iterator<?> it = other.iterator();
-            Iterator<?> it2 = c.iterator();
-            while (it2.hasNext()) {
-                if (!Intrinsics.areEqual(it2.next(), it.next())) {
+            Iterator<?> it = collection2.iterator();
+            for (Object areEqual : collection) {
+                if (!Intrinsics.areEqual(areEqual, it.next())) {
                     return false;
                 }
             }
@@ -252,11 +239,10 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
         }
     }
 
-    @Override // java.util.List
-    public int indexOf(Object obj) {
+    public int indexOf(E e) {
         int i = 0;
-        for (E e : this) {
-            if (Intrinsics.areEqual(e, obj)) {
+        for (Object areEqual : this) {
+            if (Intrinsics.areEqual(areEqual, e)) {
                 return i;
             }
             i++;
@@ -264,11 +250,10 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
         return -1;
     }
 
-    @Override // java.util.List
-    public int lastIndexOf(Object obj) {
-        ListIterator<E> listIterator = listIterator(size());
+    public int lastIndexOf(E e) {
+        ListIterator listIterator = listIterator(size());
         while (listIterator.hasPrevious()) {
-            if (Intrinsics.areEqual(listIterator.previous(), obj)) {
+            if (Intrinsics.areEqual(listIterator.previous(), e)) {
                 return listIterator.nextIndex();
             }
         }

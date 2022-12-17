@@ -8,16 +8,14 @@ import androidx.preference.Preference;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.core.AbstractPreferenceController;
 import com.android.settingslib.utils.ThreadUtils;
-/* loaded from: classes.dex */
+
 public abstract class RingtonePreferenceControllerBase extends AbstractPreferenceController implements PreferenceControllerMixin {
     public abstract int getRingtoneType();
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
         return false;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return true;
     }
@@ -26,30 +24,18 @@ public abstract class RingtonePreferenceControllerBase extends AbstractPreferenc
         super(context);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    public void updateState(final Preference preference) {
-        ThreadUtils.postOnBackgroundThread(new Runnable() { // from class: com.android.settings.notification.RingtonePreferenceControllerBase$$ExternalSyntheticLambda1
-            @Override // java.lang.Runnable
-            public final void run() {
-                RingtonePreferenceControllerBase.this.lambda$updateState$0(preference);
-            }
-        });
+    public void updateState(Preference preference) {
+        ThreadUtils.postOnBackgroundThread((Runnable) new RingtonePreferenceControllerBase$$ExternalSyntheticLambda0(this, preference));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     /* renamed from: updateSummary */
-    public void lambda$updateState$0(final Preference preference) {
+    public void lambda$updateState$0(Preference preference) {
         try {
-            final String title = Ringtone.getTitle(this.mContext, RingtoneManager.getActualDefaultRingtoneUri(this.mContext, getRingtoneType()), false, true);
-            if (title == null) {
-                return;
+            String title = Ringtone.getTitle(this.mContext, RingtoneManager.getActualDefaultRingtoneUri(this.mContext, getRingtoneType()), false, true);
+            if (title != null) {
+                ThreadUtils.postOnMainThread(new RingtonePreferenceControllerBase$$ExternalSyntheticLambda1(preference, title));
             }
-            ThreadUtils.postOnMainThread(new Runnable() { // from class: com.android.settings.notification.RingtonePreferenceControllerBase$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    Preference.this.setSummary(title);
-                }
-            });
         } catch (IllegalArgumentException e) {
             Log.w("PrefControllerMixin", "Error getting ringtone summary.", e);
         }

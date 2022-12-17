@@ -1,15 +1,16 @@
 package com.android.settings.sim.smartForwarding;
 
-import android.content.DialogInterface;
-/* loaded from: classes.dex */
-public final /* synthetic */ class MDNHandlerFragment$$ExternalSyntheticLambda0 implements DialogInterface.OnClickListener {
-    public static final /* synthetic */ MDNHandlerFragment$$ExternalSyntheticLambda0 INSTANCE = new MDNHandlerFragment$$ExternalSyntheticLambda0();
+import android.view.View;
 
-    private /* synthetic */ MDNHandlerFragment$$ExternalSyntheticLambda0() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class MDNHandlerFragment$$ExternalSyntheticLambda0 implements View.OnClickListener {
+    public final /* synthetic */ MDNHandlerFragment f$0;
+
+    public /* synthetic */ MDNHandlerFragment$$ExternalSyntheticLambda0(MDNHandlerFragment mDNHandlerFragment) {
+        this.f$0 = mDNHandlerFragment;
     }
 
-    @Override // android.content.DialogInterface.OnClickListener
-    public final void onClick(DialogInterface dialogInterface, int i) {
-        dialogInterface.dismiss();
+    public final void onClick(View view) {
+        this.f$0.lambda$onCreateView$0(view);
     }
 }

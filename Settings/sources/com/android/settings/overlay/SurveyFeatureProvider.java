@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-/* loaded from: classes.dex */
+
 public interface SurveyFeatureProvider {
     BroadcastReceiver createAndRegisterReceiver(Activity activity);
 
@@ -17,9 +17,10 @@ public interface SurveyFeatureProvider {
     boolean showSurveyIfAvailable(Activity activity, String str);
 
     static void unregisterReceiver(Activity activity, BroadcastReceiver broadcastReceiver) {
-        if (activity == null) {
-            throw new IllegalStateException("Cannot unregister receiver if activity is null");
+        if (activity != null) {
+            LocalBroadcastManager.getInstance(activity).unregisterReceiver(broadcastReceiver);
+            return;
         }
-        LocalBroadcastManager.getInstance(activity).unregisterReceiver(broadcastReceiver);
+        throw new IllegalStateException("Cannot unregister receiver if activity is null");
     }
 }

@@ -12,7 +12,7 @@ import android.widget.ListView;
 import com.google.android.setupdesign.template.ListMixin;
 import com.google.android.setupdesign.template.ListViewScrollHandlingDelegate;
 import com.google.android.setupdesign.template.RequireScrollMixin;
-/* loaded from: classes2.dex */
+
 public class SetupWizardListLayout extends SetupWizardLayout {
     private ListMixin listMixin;
 
@@ -22,7 +22,7 @@ public class SetupWizardListLayout extends SetupWizardLayout {
 
     public SetupWizardListLayout(Context context, int i, int i2) {
         super(context, i, i2);
-        init(null, 0);
+        init((AttributeSet) null, 0);
     }
 
     public SetupWizardListLayout(Context context, AttributeSet attributeSet) {
@@ -37,34 +37,33 @@ public class SetupWizardListLayout extends SetupWizardLayout {
     }
 
     private void init(AttributeSet attributeSet, int i) {
-        if (isInEditMode()) {
-            return;
+        if (!isInEditMode()) {
+            ListMixin listMixin2 = new ListMixin(this, attributeSet, i);
+            this.listMixin = listMixin2;
+            registerMixin(ListMixin.class, listMixin2);
+            RequireScrollMixin requireScrollMixin = (RequireScrollMixin) getMixin(RequireScrollMixin.class);
+            requireScrollMixin.setScrollHandlingDelegate(new ListViewScrollHandlingDelegate(requireScrollMixin, getListView()));
         }
-        ListMixin listMixin = new ListMixin(this, attributeSet, i);
-        this.listMixin = listMixin;
-        registerMixin(ListMixin.class, listMixin);
-        RequireScrollMixin requireScrollMixin = (RequireScrollMixin) getMixin(RequireScrollMixin.class);
-        requireScrollMixin.setScrollHandlingDelegate(new ListViewScrollHandlingDelegate(requireScrollMixin, getListView()));
     }
 
-    @Override // com.google.android.setupdesign.SetupWizardLayout, com.google.android.setupcompat.internal.TemplateLayout
-    protected View onInflateTemplate(LayoutInflater layoutInflater, int i) {
+    /* access modifiers changed from: protected */
+    public View onInflateTemplate(LayoutInflater layoutInflater, int i) {
         if (i == 0) {
             i = R$layout.sud_list_template;
         }
         return super.onInflateTemplate(layoutInflater, i);
     }
 
-    @Override // com.google.android.setupdesign.SetupWizardLayout, com.google.android.setupcompat.internal.TemplateLayout
-    protected ViewGroup findContainer(int i) {
+    /* access modifiers changed from: protected */
+    public ViewGroup findContainer(int i) {
         if (i == 0) {
             i = 16908298;
         }
         return super.findContainer(i);
     }
 
-    @Override // android.widget.FrameLayout, android.view.ViewGroup, android.view.View
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
         this.listMixin.onLayout();
     }
@@ -77,8 +76,7 @@ public class SetupWizardListLayout extends SetupWizardLayout {
         this.listMixin.setAdapter(listAdapter);
     }
 
-    /* renamed from: getAdapter */
-    public ListAdapter mo735getAdapter() {
+    public ListAdapter getAdapter() {
         return this.listMixin.getAdapter();
     }
 

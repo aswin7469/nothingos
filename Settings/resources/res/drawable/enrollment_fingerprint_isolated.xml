@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android" android:name="enrollment_fingerprint_isolated" android:height="88dp" android:width="88dp" android:viewportWidth="176" android:viewportHeight="176">
+<vector xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:name="enrollment_fingerprint_isolated" android:height="88dp" android:width="88dp" android:viewportWidth="176" android:viewportHeight="176">
     <group android:name="fingerprint_ridges_2" android:translateX="88" android:translateY="87.6668">
         <group android:name="ridge_5">
             <path android:name="ridge_5_path" android:pathData="M 24.9488677979,32.3508300781 c -1.81059265137,0.338500976562 -3.58520507812,0.447387695312 -4.62879943848,0.447387695312 c -4.12730407715,0.0 -8.05894470215,-0.96842956543 -11.5207061768,-3.45275878906 c -5.33699035645,-3.830078125 -8.56369018555,-10.0885009766 -8.56369018555,-17.1589355469" android:strokeColor="#4d4285f4" android:strokeWidth="5" android:trimPathEnd="0" android:strokeLineCap="round"/>

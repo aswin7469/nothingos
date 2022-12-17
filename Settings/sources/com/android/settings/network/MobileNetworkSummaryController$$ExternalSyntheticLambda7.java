@@ -1,16 +1,16 @@
 package com.android.settings.network;
 
-import com.android.settings.network.helper.SubscriptionAnnotation;
-import java.util.function.ToIntFunction;
-/* loaded from: classes.dex */
-public final /* synthetic */ class MobileNetworkSummaryController$$ExternalSyntheticLambda7 implements ToIntFunction {
-    public static final /* synthetic */ MobileNetworkSummaryController$$ExternalSyntheticLambda7 INSTANCE = new MobileNetworkSummaryController$$ExternalSyntheticLambda7();
+import java.util.function.Consumer;
 
-    private /* synthetic */ MobileNetworkSummaryController$$ExternalSyntheticLambda7() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class MobileNetworkSummaryController$$ExternalSyntheticLambda7 implements Consumer {
+    public final /* synthetic */ MobileNetworkSummaryController f$0;
+
+    public /* synthetic */ MobileNetworkSummaryController$$ExternalSyntheticLambda7(MobileNetworkSummaryController mobileNetworkSummaryController) {
+        this.f$0 = mobileNetworkSummaryController;
     }
 
-    @Override // java.util.function.ToIntFunction
-    public final int applyAsInt(Object obj) {
-        return ((SubscriptionAnnotation) obj).getSubscriptionId();
+    public final void accept(Object obj) {
+        this.f$0.lambda$onSubscriptionsChanged$6((MobileNetworkSummaryStatus) obj);
     }
 }

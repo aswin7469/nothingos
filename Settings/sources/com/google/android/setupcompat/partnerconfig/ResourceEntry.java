@@ -3,10 +3,9 @@ package com.google.android.setupcompat.partnerconfig;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-/* loaded from: classes2.dex */
+
 public final class ResourceEntry {
     static final String KEY_FALLBACK_CONFIG = "fallbackConfig";
     static final String KEY_PACKAGE_NAME = "packageName";
@@ -36,15 +35,19 @@ public final class ResourceEntry {
         return null;
     }
 
-    public ResourceEntry(String str, String str2, int i, Resources resources) {
+    public ResourceEntry(String str, String str2, int i, Resources resources2) {
         this.packageName = str;
         this.resourceName = str2;
         this.resourceId = i;
-        this.resources = resources;
+        this.resources = resources2;
     }
 
     public String getPackageName() {
         return this.packageName;
+    }
+
+    public String getResourceName() {
+        return this.resourceName;
     }
 
     public int getResourceId() {
@@ -57,9 +60,6 @@ public final class ResourceEntry {
 
     private static Resources getResourcesByPackageName(Context context, String str) throws PackageManager.NameNotFoundException {
         PackageManager packageManager = context.getPackageManager();
-        if (Build.VERSION.SDK_INT >= 24) {
-            return packageManager.getResourcesForApplication(packageManager.getApplicationInfo(str, 512));
-        }
         return packageManager.getResourcesForApplication(packageManager.getApplicationInfo(str, 512));
     }
 }

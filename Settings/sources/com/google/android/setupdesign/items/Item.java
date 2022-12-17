@@ -14,8 +14,9 @@ import com.google.android.setupdesign.R$layout;
 import com.google.android.setupdesign.R$styleable;
 import com.google.android.setupdesign.util.ItemStyler;
 import com.google.android.setupdesign.util.LayoutStyler;
-/* loaded from: classes2.dex */
+
 public class Item extends AbstractItem {
+    private CharSequence contentDescription;
     private boolean enabled;
     private Drawable icon;
     private int iconGravity;
@@ -44,6 +45,7 @@ public class Item extends AbstractItem {
         this.icon = obtainStyledAttributes.getDrawable(R$styleable.SudItem_android_icon);
         this.title = obtainStyledAttributes.getText(R$styleable.SudItem_android_title);
         this.summary = obtainStyledAttributes.getText(R$styleable.SudItem_android_summary);
+        this.contentDescription = obtainStyledAttributes.getText(R$styleable.SudItem_android_contentDescription);
         this.layoutRes = obtainStyledAttributes.getResourceId(R$styleable.SudItem_android_layout, getDefaultLayoutResource());
         this.visible = obtainStyledAttributes.getBoolean(R$styleable.SudItem_android_visible, true);
         this.iconTint = obtainStyledAttributes.getColor(R$styleable.SudItem_sudIconTint, 0);
@@ -51,7 +53,8 @@ public class Item extends AbstractItem {
         obtainStyledAttributes.recycle();
     }
 
-    protected int getDefaultLayoutResource() {
+    /* access modifiers changed from: protected */
+    public int getDefaultLayoutResource() {
         return R$layout.sud_items_default;
     }
 
@@ -60,12 +63,10 @@ public class Item extends AbstractItem {
         notifyItemChanged();
     }
 
-    @Override // com.google.android.setupdesign.items.AbstractItem, com.google.android.setupdesign.items.ItemHierarchy
     public int getCount() {
         return isVisible() ? 1 : 0;
     }
 
-    @Override // com.google.android.setupdesign.items.IItem
     public boolean isEnabled() {
         return this.enabled;
     }
@@ -78,7 +79,6 @@ public class Item extends AbstractItem {
         this.iconGravity = i;
     }
 
-    @Override // com.google.android.setupdesign.items.IItem
     public int getLayoutResource() {
         return this.layoutRes;
     }
@@ -101,11 +101,18 @@ public class Item extends AbstractItem {
         return this.title;
     }
 
+    public CharSequence getContentDescription() {
+        return this.contentDescription;
+    }
+
     public boolean isVisible() {
         return this.visible;
     }
 
-    @Override // com.google.android.setupdesign.items.AbstractItemHierarchy
+    private boolean hasSummary(CharSequence charSequence) {
+        return charSequence != null && charSequence.length() > 0;
+    }
+
     public int getViewId() {
         return getId();
     }
@@ -113,20 +120,21 @@ public class Item extends AbstractItem {
     public void onBindView(View view) {
         ((TextView) view.findViewById(R$id.sud_items_title)).setText(getTitle());
         TextView textView = (TextView) view.findViewById(R$id.sud_items_summary);
-        CharSequence summary = getSummary();
-        if (summary != null && summary.length() > 0) {
-            textView.setText(summary);
+        CharSequence summary2 = getSummary();
+        if (hasSummary(summary2)) {
+            textView.setText(summary2);
             textView.setVisibility(0);
         } else {
             textView.setVisibility(8);
         }
+        view.setContentDescription(getContentDescription());
         View findViewById = view.findViewById(R$id.sud_items_icon_container);
-        Drawable icon = getIcon();
-        if (icon != null) {
+        Drawable icon2 = getIcon();
+        if (icon2 != null) {
             ImageView imageView = (ImageView) view.findViewById(R$id.sud_items_icon);
-            imageView.setImageDrawable(null);
-            onMergeIconStateAndLevels(imageView, icon);
-            imageView.setImageDrawable(icon);
+            imageView.setImageDrawable((Drawable) null);
+            onMergeIconStateAndLevels(imageView, icon2);
+            imageView.setImageDrawable(icon2);
             int i = this.iconTint;
             if (i != 0) {
                 imageView.setColorFilter(i);
@@ -148,7 +156,8 @@ public class Item extends AbstractItem {
         ItemStyler.applyPartnerCustomizationItemStyle(view);
     }
 
-    protected void onMergeIconStateAndLevels(ImageView imageView, Drawable drawable) {
+    /* access modifiers changed from: protected */
+    public void onMergeIconStateAndLevels(ImageView imageView, Drawable drawable) {
         imageView.setImageState(drawable.getState(), false);
         imageView.setImageLevel(drawable.getLevel());
     }

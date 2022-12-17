@@ -5,11 +5,11 @@ import com.google.protobuf.Internal;
 import com.google.protobuf.MessageLiteOrBuilder;
 import com.google.protobuf.Parser;
 import java.util.List;
-import java.util.Objects;
-/* loaded from: classes.dex */
+
 public final class ContextualCardProto$ContextualCardList extends GeneratedMessageLite<ContextualCardProto$ContextualCardList, Builder> implements MessageLiteOrBuilder {
     public static final int CARD_FIELD_NUMBER = 1;
-    private static final ContextualCardProto$ContextualCardList DEFAULT_INSTANCE;
+    /* access modifiers changed from: private */
+    public static final ContextualCardProto$ContextualCardList DEFAULT_INSTANCE;
     private static volatile Parser<ContextualCardProto$ContextualCardList> PARSER;
     private Internal.ProtobufList<ContextualCardProto$ContextualCard> card_ = GeneratedMessageLite.emptyProtobufList();
 
@@ -26,23 +26,18 @@ public final class ContextualCardProto$ContextualCardList extends GeneratedMessa
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void addCard(ContextualCardProto$ContextualCard contextualCardProto$ContextualCard) {
-        Objects.requireNonNull(contextualCardProto$ContextualCard);
+        contextualCardProto$ContextualCard.getClass();
         ensureCardIsMutable();
         this.card_.add(contextualCardProto$ContextualCard);
     }
 
     public static Builder newBuilder() {
-        return DEFAULT_INSTANCE.createBuilder();
+        return (Builder) DEFAULT_INSTANCE.createBuilder();
     }
 
-    /* loaded from: classes.dex */
     public static final class Builder extends GeneratedMessageLite.Builder<ContextualCardProto$ContextualCardList, Builder> implements MessageLiteOrBuilder {
-        /* synthetic */ Builder(ContextualCardProto$1 contextualCardProto$1) {
-            this();
-        }
-
         private Builder() {
             super(ContextualCardProto$ContextualCardList.DEFAULT_INSTANCE);
         }
@@ -54,13 +49,13 @@ public final class ContextualCardProto$ContextualCardList extends GeneratedMessa
         }
     }
 
-    @Override // com.google.protobuf.GeneratedMessageLite
-    protected final Object dynamicMethod(GeneratedMessageLite.MethodToInvoke methodToInvoke, Object obj, Object obj2) {
-        switch (ContextualCardProto$1.$SwitchMap$com$google$protobuf$GeneratedMessageLite$MethodToInvoke[methodToInvoke.ordinal()]) {
+    /* access modifiers changed from: protected */
+    public final Object dynamicMethod(GeneratedMessageLite.MethodToInvoke methodToInvoke, Object obj, Object obj2) {
+        switch (ContextualCardProto$1.f201xa1df5c61[methodToInvoke.ordinal()]) {
             case 1:
                 return new ContextualCardProto$ContextualCardList();
             case 2:
-                return new Builder(null);
+                return new Builder();
             case 3:
                 return GeneratedMessageLite.newMessageInfo(DEFAULT_INSTANCE, "\u0001\u0001\u0000\u0000\u0001\u0001\u0001\u0000\u0001\u0000\u0001\u001b", new Object[]{"card_", ContextualCardProto$ContextualCard.class});
             case 4:

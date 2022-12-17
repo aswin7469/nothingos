@@ -1,15 +1,16 @@
 package com.android.settings.biometrics.face;
 
 import android.content.DialogInterface;
-/* loaded from: classes.dex */
-public final /* synthetic */ class FaceEnrollAccessibilityDialog$$ExternalSyntheticLambda1 implements DialogInterface.OnClickListener {
-    public static final /* synthetic */ FaceEnrollAccessibilityDialog$$ExternalSyntheticLambda1 INSTANCE = new FaceEnrollAccessibilityDialog$$ExternalSyntheticLambda1();
 
-    private /* synthetic */ FaceEnrollAccessibilityDialog$$ExternalSyntheticLambda1() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class FaceEnrollAccessibilityDialog$$ExternalSyntheticLambda1 implements DialogInterface.OnClickListener {
+    public final /* synthetic */ FaceEnrollAccessibilityDialog f$0;
+
+    public /* synthetic */ FaceEnrollAccessibilityDialog$$ExternalSyntheticLambda1(FaceEnrollAccessibilityDialog faceEnrollAccessibilityDialog) {
+        this.f$0 = faceEnrollAccessibilityDialog;
     }
 
-    @Override // android.content.DialogInterface.OnClickListener
     public final void onClick(DialogInterface dialogInterface, int i) {
-        dialogInterface.cancel();
+        this.f$0.lambda$onCreateDialog$1(dialogInterface, i);
     }
 }

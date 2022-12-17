@@ -7,11 +7,10 @@ import android.os.PowerManager;
 import android.util.Log;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.instrumentation.InstrumentedDialogFragment;
-/* loaded from: classes.dex */
+
 public class DisableDevSettingsDialogFragment extends InstrumentedDialogFragment implements DialogInterface.OnClickListener {
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1591;
     }
@@ -26,12 +25,10 @@ public class DisableDevSettingsDialogFragment extends InstrumentedDialogFragment
         disableDevSettingsDialogFragment.show(developmentSettingsDashboardFragment.getActivity().getSupportFragmentManager(), "DisableDevSettingDlg");
     }
 
-    @Override // androidx.fragment.app.DialogFragment
     public Dialog onCreateDialog(Bundle bundle) {
-        return new AlertDialog.Builder(getActivity()).setMessage(R.string.bluetooth_disable_a2dp_hw_offload_dialog_message).setTitle(R.string.bluetooth_disable_a2dp_hw_offload_dialog_title).setPositiveButton(R.string.bluetooth_disable_a2dp_hw_offload_dialog_confirm, this).setNegativeButton(R.string.bluetooth_disable_a2dp_hw_offload_dialog_cancel, this).create();
+        return new AlertDialog.Builder(getActivity()).setMessage(R$string.bluetooth_disable_hw_offload_dialog_message).setTitle(R$string.bluetooth_disable_hw_offload_dialog_title).setPositiveButton(R$string.bluetooth_disable_hw_offload_dialog_confirm, (DialogInterface.OnClickListener) this).setNegativeButton(R$string.bluetooth_disable_hw_offload_dialog_cancel, (DialogInterface.OnClickListener) this).create();
     }
 
-    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialogInterface, int i) {
         Fragment targetFragment = getTargetFragment();
         if (!(targetFragment instanceof DevelopmentSettingsDashboardFragment)) {
@@ -40,7 +37,7 @@ public class DisableDevSettingsDialogFragment extends InstrumentedDialogFragment
         DevelopmentSettingsDashboardFragment developmentSettingsDashboardFragment = (DevelopmentSettingsDashboardFragment) targetFragment;
         if (i == -1) {
             developmentSettingsDashboardFragment.onDisableDevelopmentOptionsConfirmed();
-            ((PowerManager) getContext().getSystemService(PowerManager.class)).reboot(null);
+            ((PowerManager) getContext().getSystemService(PowerManager.class)).reboot((String) null);
             return;
         }
         developmentSettingsDashboardFragment.onDisableDevelopmentOptionsRejected();

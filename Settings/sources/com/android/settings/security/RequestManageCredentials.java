@@ -7,7 +7,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.UserInfo;
-import android.net.Uri;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -25,23 +25,26 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public class RequestManageCredentials extends Activity {
     private AppUriAuthenticationPolicy mAuthenticationPolicy;
     private LinearLayout mButtonPanel;
     private String mCredentialManagerPackage;
-    private ExtendedFloatingActionButton mExtendedFab;
+    /* access modifiers changed from: private */
+    public boolean mDisplayingButtonPanel = false;
+    /* access modifiers changed from: private */
+    public ExtendedFloatingActionButton mExtendedFab;
+    private boolean mIsLandscapeMode = false;
     private KeyChain.KeyChainConnection mKeyChainConnection;
     private HandlerThread mKeyChainTread;
     private LinearLayoutManager mLayoutManager;
     private RecyclerView mRecyclerView;
-    private boolean mDisplayingButtonPanel = false;
-    private boolean mIsLandscapeMode = false;
 
-    @Override // android.app.Activity
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         if (!"android.security.MANAGE_CREDENTIALS".equals(getIntent().getAction())) {
@@ -62,21 +65,21 @@ public class RequestManageCredentials extends Activity {
                 return;
             }
             DevicePolicyEventLogger.createEvent(178).setStrings(new String[]{this.mCredentialManagerPackage}).write();
-            setContentView(R.layout.request_manage_credentials);
+            setContentView(R$layout.request_manage_credentials);
             getWindow().addSystemFlags(524288);
             this.mIsLandscapeMode = getResources().getConfiguration().orientation == 2;
             HandlerThread handlerThread = new HandlerThread("KeyChainConnection");
             this.mKeyChainTread = handlerThread;
             handlerThread.start();
             this.mKeyChainConnection = getKeyChainConnection(this, this.mKeyChainTread);
-            AppUriAuthenticationPolicy appUriAuthenticationPolicy = (AppUriAuthenticationPolicy) getIntent().getParcelableExtra("android.security.extra.AUTHENTICATION_POLICY");
-            if (!isValidAuthenticationPolicy(appUriAuthenticationPolicy)) {
+            AppUriAuthenticationPolicy parcelableExtra = getIntent().getParcelableExtra("android.security.extra.AUTHENTICATION_POLICY");
+            if (!isValidAuthenticationPolicy(parcelableExtra)) {
                 Log.e("ManageCredentials", "Invalid authentication policy");
                 logRequestFailure();
                 finishWithResultCancelled();
                 return;
             }
-            this.mAuthenticationPolicy = appUriAuthenticationPolicy;
+            this.mAuthenticationPolicy = parcelableExtra;
             DevicePolicyEventLogger.createEvent(179).setStrings(new String[]{getNumberOfAuthenticationPolicyApps(this.mAuthenticationPolicy), getNumberOfAuthenticationPolicyUris(this.mAuthenticationPolicy)}).write();
             if (this.mIsLandscapeMode) {
                 loadHeader();
@@ -88,8 +91,8 @@ public class RequestManageCredentials extends Activity {
         }
     }
 
-    @Override // android.app.Activity
-    protected void onDestroy() {
+    /* access modifiers changed from: protected */
+    public void onDestroy() {
         super.onDestroy();
         KeyChain.KeyChainConnection keyChainConnection = this.mKeyChainConnection;
         if (keyChainConnection != null) {
@@ -102,8 +105,8 @@ public class RequestManageCredentials extends Activity {
     private boolean isValidAuthenticationPolicy(AppUriAuthenticationPolicy appUriAuthenticationPolicy) {
         if (appUriAuthenticationPolicy != null && !appUriAuthenticationPolicy.getAppAndUriMappings().isEmpty()) {
             try {
-                for (String str : appUriAuthenticationPolicy.getAliases()) {
-                    if (this.mKeyChainConnection.getService().requestPrivateKey(str) != null) {
+                for (String requestPrivateKey : appUriAuthenticationPolicy.getAliases()) {
+                    if (this.mKeyChainConnection.getService().requestPrivateKey(requestPrivateKey) != null) {
                         return false;
                     }
                 }
@@ -121,8 +124,8 @@ public class RequestManageCredentials extends Activity {
     }
 
     private boolean hasManagedProfile() {
-        for (UserInfo userInfo : ((UserManager) getSystemService(UserManager.class)).getProfiles(getUserId())) {
-            if (userInfo.isManagedProfile()) {
+        for (UserInfo isManagedProfile : ((UserManager) getSystemService(UserManager.class)).getProfiles(getUserId())) {
+            if (isManagedProfile.isManagedProfile()) {
                 return true;
             }
         }
@@ -131,77 +134,62 @@ public class RequestManageCredentials extends Activity {
 
     private void loadRecyclerView() {
         this.mLayoutManager = new LinearLayoutManager(this);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.apps_list);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R$id.apps_list);
         this.mRecyclerView = recyclerView;
         recyclerView.setLayoutManager(this.mLayoutManager);
         this.mRecyclerView.setAdapter(new CredentialManagementAppAdapter(this, this.mCredentialManagerPackage, this.mAuthenticationPolicy.getAppAndUriMappings(), !this.mIsLandscapeMode, false));
     }
 
     private void loadButtons() {
-        this.mButtonPanel = (LinearLayout) findViewById(R.id.button_panel);
-        Button button = (Button) findViewById(R.id.dont_allow_button);
+        this.mButtonPanel = (LinearLayout) findViewById(R$id.button_panel);
+        Button button = (Button) findViewById(R$id.dont_allow_button);
         button.setFilterTouchesWhenObscured(true);
-        Button button2 = (Button) findViewById(R.id.allow_button);
+        Button button2 = (Button) findViewById(R$id.allow_button);
         button2.setFilterTouchesWhenObscured(true);
-        button.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.security.RequestManageCredentials$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                RequestManageCredentials.this.lambda$loadButtons$0(view);
-            }
-        });
-        button2.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.security.RequestManageCredentials$$ExternalSyntheticLambda2
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                RequestManageCredentials.this.lambda$loadButtons$1(view);
-            }
-        });
+        button.setOnClickListener(new RequestManageCredentials$$ExternalSyntheticLambda1(this));
+        button2.setOnClickListener(new RequestManageCredentials$$ExternalSyntheticLambda2(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$loadButtons$0(View view) {
         DevicePolicyEventLogger.createEvent(181).write();
         finishWithResultCancelled();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$loadButtons$1(View view) {
         setOrUpdateCredentialManagementAppAndFinish();
     }
 
     private void loadExtendedFloatingActionButton() {
-        ExtendedFloatingActionButton extendedFloatingActionButton = (ExtendedFloatingActionButton) findViewById(R.id.extended_fab);
+        ExtendedFloatingActionButton extendedFloatingActionButton = (ExtendedFloatingActionButton) findViewById(R$id.extended_fab);
         this.mExtendedFab = extendedFloatingActionButton;
-        extendedFloatingActionButton.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.security.RequestManageCredentials$$ExternalSyntheticLambda1
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                RequestManageCredentials.this.lambda$loadExtendedFloatingActionButton$2(view);
-            }
-        });
+        extendedFloatingActionButton.setOnClickListener(new RequestManageCredentials$$ExternalSyntheticLambda0(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$loadExtendedFloatingActionButton$2(View view) {
-        int size;
+        int i;
         if (this.mIsLandscapeMode) {
-            size = this.mAuthenticationPolicy.getAppAndUriMappings().size() - 1;
+            i = this.mAuthenticationPolicy.getAppAndUriMappings().size() - 1;
         } else {
-            size = this.mAuthenticationPolicy.getAppAndUriMappings().size();
+            i = this.mAuthenticationPolicy.getAppAndUriMappings().size();
         }
-        this.mRecyclerView.scrollToPosition(size);
+        this.mRecyclerView.scrollToPosition(i);
         this.mExtendedFab.hide();
         showButtonPanel();
     }
 
     private void loadHeader() {
-        ImageView imageView = (ImageView) findViewById(R.id.credential_management_app_icon);
-        TextView textView = (TextView) findViewById(R.id.credential_management_app_title);
+        ImageView imageView = (ImageView) findViewById(R$id.credential_management_app_icon);
+        TextView textView = (TextView) findViewById(R$id.credential_management_app_title);
         try {
             ApplicationInfo applicationInfo = getPackageManager().getApplicationInfo(this.mCredentialManagerPackage, 0);
             imageView.setImageDrawable(getPackageManager().getApplicationIcon(applicationInfo));
-            textView.setText(TextUtils.expandTemplate(getText(R.string.request_manage_credentials_title), applicationInfo.loadLabel(getPackageManager())));
+            textView.setText(TextUtils.expandTemplate(getText(R$string.request_manage_credentials_title), new CharSequence[]{applicationInfo.loadLabel(getPackageManager())}));
         } catch (PackageManager.NameNotFoundException unused) {
-            imageView.setImageDrawable(null);
-            textView.setText(TextUtils.expandTemplate(getText(R.string.request_manage_credentials_title), this.mCredentialManagerPackage));
+            imageView.setImageDrawable((Drawable) null);
+            textView.setText(TextUtils.expandTemplate(getText(R$string.request_manage_credentials_title), new CharSequence[]{this.mCredentialManagerPackage}));
         }
     }
 
@@ -217,7 +205,8 @@ public class RequestManageCredentials extends Activity {
         finish();
     }
 
-    KeyChain.KeyChainConnection getKeyChainConnection(Context context, HandlerThread handlerThread) {
+    /* access modifiers changed from: package-private */
+    public KeyChain.KeyChainConnection getKeyChainConnection(Context context, HandlerThread handlerThread) {
         try {
             return KeyChain.bindAsUser(context, new Handler(handlerThread.getLooper()), Process.myUserHandle());
         } catch (InterruptedException e) {
@@ -226,8 +215,7 @@ public class RequestManageCredentials extends Activity {
     }
 
     private void addOnScrollListener() {
-        this.mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() { // from class: com.android.settings.security.RequestManageCredentials.1
-            @Override // androidx.recyclerview.widget.RecyclerView.OnScrollListener
+        this.mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             public void onScrolled(RecyclerView recyclerView, int i, int i2) {
                 super.onScrolled(recyclerView, i, i2);
                 if (!RequestManageCredentials.this.mDisplayingButtonPanel) {
@@ -246,22 +234,25 @@ public class RequestManageCredentials extends Activity {
         });
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void showButtonPanel() {
         this.mRecyclerView.setPadding(0, 0, 0, (int) ((getResources().getDisplayMetrics().density * 60.0f) + 0.5f));
         this.mButtonPanel.setVisibility(0);
         this.mDisplayingButtonPanel = true;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void hideButtonPanel() {
         this.mRecyclerView.setPadding(0, 0, 0, 0);
         this.mButtonPanel.setVisibility(8);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public boolean isRecyclerScrollable() {
-        return (this.mLayoutManager == null || this.mRecyclerView.getAdapter() == null || this.mLayoutManager.findLastCompletelyVisibleItemPosition() >= this.mRecyclerView.getAdapter().getItemCount() - 1) ? false : true;
+        if (this.mLayoutManager == null || this.mRecyclerView.getAdapter() == null || this.mLayoutManager.findLastCompletelyVisibleItemPosition() >= this.mRecyclerView.getAdapter().getItemCount() - 1) {
+            return false;
+        }
+        return true;
     }
 
     private void finishWithResultCancelled() {
@@ -275,8 +266,8 @@ public class RequestManageCredentials extends Activity {
 
     private String getNumberOfAuthenticationPolicyUris(AppUriAuthenticationPolicy appUriAuthenticationPolicy) {
         int i = 0;
-        for (Map.Entry<String, Map<Uri, String>> entry : appUriAuthenticationPolicy.getAppAndUriMappings().entrySet()) {
-            i += entry.getValue().size();
+        for (Map.Entry value : appUriAuthenticationPolicy.getAppAndUriMappings().entrySet()) {
+            i += ((Map) value.getValue()).size();
         }
         return String.valueOf(i);
     }

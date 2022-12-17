@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="abc_slice_duration_days">
-        <item quantity="one">%d ദിവസം മുൻപ്</item>
-        <item quantity="other">%d ദിവസം മുൻപ്</item>
+        <item quantity="one">%d ദിവസം മുമ്പ്</item>
+        <item quantity="other">%d ദിവസം മുമ്പ്</item>
     </plurals>
     <plurals name="abc_slice_duration_min">
-        <item quantity="one">%d മിനിറ്റ് മുൻപ്</item>
-        <item quantity="other">%d മിനിറ്റ് മുൻപ്</item>
+        <item quantity="one">%d മിനിറ്റ് മുമ്പ്</item>
+        <item quantity="other">%d മിനിറ്റ് മുമ്പ്</item>
     </plurals>
     <plurals name="abc_slice_duration_years">
-        <item quantity="one">%d വർഷം മുൻപ്</item>
-        <item quantity="other">%d വർഷം മുൻപ്</item>
+        <item quantity="one">%d വർഷം മുമ്പ്</item>
+        <item quantity="other">%d വർഷം മുമ്പ്</item>
     </plurals>
     <plurals name="accessibility_usage_summary">
         <item quantity="one">നിങ്ങളുടെ ഉപകരണത്തിലേക്ക് ഒരു ആപ്പിന് പൂർണ്ണ ആക്‌സസുണ്ട്</item>
@@ -234,11 +234,11 @@
     </plurals>
     <plurals name="notifications_sent_daily">
         <item quantity="one">പ്രതിദിനം ~%d അറിയിപ്പ്</item>
-        <item quantity="other">പ്രതിദിനം ~%d അറിയിപ്പുകൾ</item>
+        <item quantity="other">പ്രതിദിനം ~%,d അറിയിപ്പുകൾ</item>
     </plurals>
     <plurals name="notifications_sent_weekly">
         <item quantity="one">പ്രതിവാരം ~%d അറിയിപ്പ്</item>
-        <item quantity="other">പ്രതിവാരം ~%d അറിയിപ്പുകൾ</item>
+        <item quantity="other">പ്രതിവാരം ~%,d അറിയിപ്പുകൾ</item>
     </plurals>
     <plurals name="number_of_device_admins">
         <item quantity="one">%d ആപ്പ് സജീവമാണ്</item>
@@ -320,14 +320,6 @@
         <item quantity="one">സർട്ടിഫിക്കറ്റ് പരിചിതമാക്കുക അല്ലെങ്കിൽ നീക്കംചെയ്യുക</item>
         <item quantity="other">സർട്ടിഫിക്കറ്റുകൾ പരിചിതമാക്കുക അല്ലെങ്കിൽ നീക്കംചെയ്യുക</item>
     </plurals>
-    <plurals name="ssl_ca_cert_info_message">
-        <item quantity="one">നിങ്ങളുടെ ഔദ്യോഗിക പ്രൊഫൈലിന് %s ഒരു സർട്ടിഫിക്കറ്റ് അതോറിറ്റി ഇൻസ്റ്റാൾ ചെയ്തിട്ടുണ്ട്, ഇമെയിലുകളും ആപ്‌സും സുരക്ഷിത വെബ്‌സൈറ്റുകളും ഉൾപ്പെടെ, ഔദ്യോഗിക നെറ്റ്‌വർക്ക് ആക്റ്റിവിറ്റി നിരീക്ഷിക്കുന്നതിന് ഇത് അവരെ അനുവദിച്ചേക്കാം.\n\nഈ സർട്ടിഫിക്കറ്റിനെ കുറിച്ചുള്ള കൂടുതൽ വിവരങ്ങൾക്ക്, നിങ്ങളുടെ അഡ്മിനുമായി ബന്ധപ്പെടുക.</item>
-        <item quantity="other">നിങ്ങളുടെ ഔദ്യോഗിക പ്രൊഫൈലിന് %s സർട്ടിഫിക്കറ്റ് അതോറിറ്റികൾ ഇൻസ്റ്റാൾ ചെയ്തിട്ടുണ്ട്, ഇമെയിലുകളും ആപ്‌സും സുരക്ഷിത വെബ്‌സൈറ്റുകളും ഉൾപ്പെടെ, ഔദ്യോഗിക നെറ്റ്‌വർക്ക് ആക്റ്റിവിറ്റി നിരീക്ഷിക്കുന്നതിന് ഇത് അവരെ അനുവദിച്ചേക്കാം.\n\nഈ സർട്ടിഫിക്കറ്റുകളെ കുറിച്ചുള്ള കൂടുതൽ വിവരങ്ങൾക്ക്, നിങ്ങളുടെ അഡ്മിനുമായി ബന്ധപ്പെടുക.</item>
-    </plurals>
-    <plurals name="ssl_ca_cert_info_message_device_owner">
-        <item quantity="one">നിങ്ങളുടെ ഔദ്യോഗിക പ്രൊഫൈലിന് %s ഒരു സർട്ടിഫിക്കറ്റ് അതോറിറ്റി ഇൻസ്റ്റാൾ ചെയ്തിട്ടുണ്ട്, ഇമെയിലുകളും ആപ്‌സും സുരക്ഷിത വെബ്‌സൈറ്റുകളും ഉൾപ്പെടെ, ഔദ്യോഗിക നെറ്റ്‌വർക്ക് ആക്റ്റിവിറ്റി നിരീക്ഷിക്കുന്നതിന് ഇത് അവരെ അനുവദിച്ചേക്കാം.\n\nഈ സർട്ടിഫിക്കറ്റിനെ കുറിച്ചുള്ള കൂടുതൽ വിവരങ്ങൾക്ക്, നിങ്ങളുടെ അഡ്മിനുമായി ബന്ധപ്പെടുക.</item>
-        <item quantity="other">നിങ്ങളുടെ ഔദ്യോഗിക പ്രൊഫൈലിന് %s സർട്ടിഫിക്കറ്റ് അതോറിറ്റികൾ ഇൻസ്റ്റാൾ ചെയ്തിട്ടുണ്ട്, ഇമെയിലുകളും ആപ്‌സും സുരക്ഷിത വെബ്‌സൈറ്റുകളും ഉൾപ്പെടെ, ഔദ്യോഗിക നെറ്റ്‌വർക്ക് ആക്റ്റിവിറ്റി നിരീക്ഷിക്കുന്നതിന് ഇത് അവരെ അനുവദിച്ചേക്കാം.\n\nഈ സർട്ടിഫിക്കറ്റുകളെ കുറിച്ചുള്ള കൂടുതൽ വിവരങ്ങൾക്ക്, നിങ്ങളുടെ അഡ്മിനുമായി ബന്ധപ്പെടുക.</item>
-    </plurals>
     <plurals name="ssl_ca_cert_settings_button">
         <item quantity="one">സർട്ടിഫിക്കറ്റ് പരിശോധിക്കുക</item>
         <item quantity="other">സർട്ടിഫിക്കറ്റുകൾ പരിശോധിക്കുക</item>
@@ -359,10 +351,6 @@
     <plurals name="wifi_saved_passpoint_access_points_summary">
         <item quantity="one">1 സബ്‌സ്‌ക്രിപ്‌ഷൻ</item>
         <item quantity="other">%d സബ്‌സ്‌ക്രിപ്‌ഷനുകൾ</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d ഉപകരണം കണക്‌റ്റ് ചെയ്‌തു</item>
-        <item quantity="other">%1$d ഉപകരണങ്ങൾ കണക്‌റ്റ് ചെയ്‌തു</item>
     </plurals>
     <plurals name="wrong_pin_code">
         <item quantity="one">SIM PIN കോഡ് തെറ്റാണ്, നിങ്ങളുടെ ഉപകരണം അൺലോക്കുചെയ്യാൻ കാരിയറെ ബന്ധപ്പെടേണ്ടതിന് മുമ്പായി %d ശ്രമം കൂടി ശേഷിക്കുന്നു.</item>

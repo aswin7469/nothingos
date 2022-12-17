@@ -1,7 +1,7 @@
 package com.airbnb.lottie.value;
 
 import com.airbnb.lottie.animation.keyframe.BaseKeyframeAnimation;
-/* loaded from: classes.dex */
+
 public class LottieValueCallback<T> {
     private BaseKeyframeAnimation<?, ?> animation;
     private final LottieFrameInfo<T> frameInfo;
@@ -14,7 +14,6 @@ public class LottieValueCallback<T> {
 
     public LottieValueCallback(T t) {
         this.frameInfo = new LottieFrameInfo<>();
-        this.value = null;
         this.value = t;
     }
 

@@ -196,6 +196,8 @@
         <item>60 ਦਿਨਾਂ ਤੋਂ ਜ਼ਿਆਦਾ ਪੁਰਾਣੀ</item>
         <item>90 ਦਿਨਾਂ ਤੋਂ ਜ਼ਿਆਦਾ ਪੁਰਾਣੀ</item>
     </array>
+    <array name="avatar_image_descriptions">
+    </array>
     <array name="battery_labels">
         <item>0%</item>
         <item>50%</item>
@@ -260,6 +262,8 @@
         <item>48.0 kHz</item>
         <item>88.2 kHz</item>
         <item>96.0 kHz</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
         <item>ਸਿਸਟਮ ਚੋਣ ਦੀ ਵਰਤੋਂ ਕਰੋ (ਪੂਰਵ-ਨਿਰਧਾਰਿਤ)</item>
@@ -267,6 +271,8 @@
         <item>48.0 kHz</item>
         <item>88.2 kHz</item>
         <item>96.0 kHz</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
         <item>ਸਿਸਟਮ ਚੋਣ ਦੀ ਵਰਤੋਂ ਕਰੋ (ਪੂਰਵ-ਨਿਰਧਾਰਿਤ)</item>
@@ -277,6 +283,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive ਆਡੀਓ</item>
         <item>Qualcomm® aptX™ TWS+ ਆਡੀਓ</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
         <item>ਸਿਸਟਮ ਚੋਣ ਦੀ ਵਰਤੋਂ ਕਰੋ (ਪੂਰਵ-ਨਿਰਧਾਰਿਤ)</item>
@@ -287,6 +297,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive ਆਡੀਓ</item>
         <item>Qualcomm® aptX™ TWS+ ਆਡੀਓ</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -343,17 +357,10 @@
         <item>ਵਧਾਏ ਗਏ</item>
         <item>ਨਿਰਾਸ਼</item>
     </array>
-    <array name="captioning_font_size_selector_summaries">
-        <item>ਲਿਖਤ ਦਾ ਬਹੁਤ ਛੋਟਾ ਆਕਾਰ</item>
-        <item>ਲਿਖਤ ਦਾ ਛੋਟਾ ਆਕਾਰ</item>
-        <item>ਲਿਖਤ ਦਾ ਪੂਰਵ-ਨਿਰਧਾਰਿਤ ਆਕਾਰ</item>
-        <item>ਲਿਖਤ ਦਾ ਵੱਡਾ ਆਕਾਰ</item>
-        <item>ਲਿਖਤ ਦਾ ਬਹੁਤ ਵੱਡਾ ਆਕਾਰ</item>
-    </array>
     <array name="captioning_font_size_selector_titles">
         <item>ਬਹੁਤ ਛੋਟਾ</item>
         <item>ਛੋਟਾ</item>
-        <item>ਪੂਰਵ-ਨਿਰਧਾਰਿਤ</item>
+        <item>ਦਰਮਿਆਨਾ</item>
         <item>ਵੱਡਾ</item>
         <item>ਬਹੁਤ ਵੱਡਾ</item>
     </array>
@@ -471,7 +478,7 @@
     </array>
     <array name="long_press_timeout_selector_list_titles">
         <item>ਘੱਟ ਸਮੇਂ ਲਈ</item>
-        <item>ਔਸਤ</item>
+        <item>ਦਰਮਿਆਨੇ ਸਮੇਂ ਲਈ</item>
         <item>ਲੰਬੇ ਸਮੇਂ ਲਈ</item>
     </array>
     <array name="long_press_timeout_selector_titles">
@@ -485,6 +492,14 @@
         <item>IMSI</item>
         <item>GID</item>
         <item>ICCID</item>
+    </array>
+    <array name="nfc_payment_favor">
+        <item>ਹਮੇਸ਼ਾਂ</item>
+        <item>ਸਿਵਾਏ ਇਸਦੇ ਜਦੋਂ ਦੂਜੀ ਭੁਗਤਾਨ ਐਪ ਖੁੱਲ੍ਹੀ ਹੋਵੇ</item>
+    </array>
+    <array name="nfc_payment_favor_values">
+        <item>@null</item>
+        <item>1</item>
     </array>
     <array name="overlay_display_devices_entries">
         <item>ਕੋਈ ਨਹੀਂ</item>
@@ -618,17 +633,20 @@
         <item>ਨੀਲੇ ਵਿੱਚ ਗ਼ੈਰ-ਆਇਤਾਕਾਰ ਕਲਿਪ ਖੇਤਰ ਡ੍ਰਾ ਕਰੋ</item>
         <item>ਜਾਂਚ ਕੀਤੀਆਂ ਡ੍ਰਾਇੰਗ ਕਮਾਂਡਾਂ ਹਰੇ ਵਿੱਚ ਉਜਾਗਰ ਕਰੋ</item>
     </array>
-    <array name="sim_color_light">
-        <item>@color/SIM_color_cyan</item>
-        <item>@color/SIM_color_blue800</item>
-        <item>@color/SIM_color_green800</item>
-        <item>@color/SIM_color_purple800</item>
-        <item>@color/SIM_color_pink800</item>
-        <item>@color/SIM_color_orange</item>
-    </array>
     <array name="swipe_direction_values">
         <item>1</item>
         <item>@null</item>
+    </array>
+    <array name="switch_to_user_zero_when_docked_timeout_entries">
+        <item>ਕਦੇ ਵੀ ਨਹੀਂ</item>
+        <item>1 ਮਿੰਟ ਬਾਅਦ</item>
+        <item>5 ਮਿੰਟਾਂ ਬਾਅਦ</item>
+    </array>
+    <array name="tare_modifiers_subfactors">
+        <item>ਚਾਰਜ ਹੋ ਰਹੀ ਹੈ</item>
+        <item>ਡੋਜ਼</item>
+        <item>ਪਾਵਰ ਸੇਵ ਮੋਡ</item>
+        <item>ਪ੍ਰਕਿਰਿਆ ਦੀ ਸਥਿਤੀ</item>
     </array>
     <array name="timezone_filters">
         <item>ਅਮਰੀਕਾ</item>

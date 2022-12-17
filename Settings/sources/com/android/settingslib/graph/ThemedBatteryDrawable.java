@@ -22,12 +22,15 @@ import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 /* compiled from: ThemedBatteryDrawable.kt */
-/* loaded from: classes.dex */
 public class ThemedBatteryDrawable extends Drawable {
     @NotNull
-    public static final Companion Companion = new Companion(null);
+    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
+    private int backgroundColor = -65281;
     private int batteryLevel;
+    @NotNull
+    private final Path boltPath = new Path();
     private boolean charging;
     @NotNull
     private int[] colorLevels;
@@ -40,66 +43,61 @@ public class ThemedBatteryDrawable extends Drawable {
     @NotNull
     private final Paint errorPaint;
     @NotNull
+    private final Path errorPerimeterPath = new Path();
+    private int fillColor = -65281;
+    @NotNull
     private final Paint fillColorStrokePaint;
     @NotNull
     private final Paint fillColorStrokeProtection;
     @NotNull
-    private final Paint fillPaint;
-    private int intrinsicHeight;
-    private int intrinsicWidth;
-    private boolean invertFillIcon;
-    private boolean powerSaveEnabled;
-    @NotNull
-    private final Path perimeterPath = new Path();
-    @NotNull
-    private final Path scaledPerimeter = new Path();
-    @NotNull
-    private final Path errorPerimeterPath = new Path();
-    @NotNull
-    private final Path scaledErrorPerimeter = new Path();
-    @NotNull
     private final Path fillMask = new Path();
     @NotNull
-    private final Path scaledFill = new Path();
+    private final Paint fillPaint;
     @NotNull
     private final RectF fillRect = new RectF();
+    private int intrinsicHeight;
+    private int intrinsicWidth;
     @NotNull
-    private final RectF levelRect = new RectF();
+    private final Function0<Unit> invalidateRunnable = new ThemedBatteryDrawable$invalidateRunnable$1(this);
+    private boolean invertFillIcon;
+    private int levelColor = -65281;
     @NotNull
     private final Path levelPath = new Path();
     @NotNull
-    private final Matrix scaleMatrix = new Matrix();
+    private final RectF levelRect = new RectF();
     @NotNull
     private final Rect padding = new Rect();
     @NotNull
-    private final Path unifiedPath = new Path();
+    private final Path perimeterPath = new Path();
     @NotNull
-    private final Path boltPath = new Path();
+    private final Path plusPath = new Path();
+    private boolean powerSaveEnabled;
+    @NotNull
+    private final Matrix scaleMatrix = new Matrix();
     @NotNull
     private final Path scaledBolt = new Path();
     @NotNull
-    private final Path plusPath = new Path();
+    private final Path scaledErrorPerimeter = new Path();
+    @NotNull
+    private final Path scaledFill = new Path();
+    @NotNull
+    private final Path scaledPerimeter = new Path();
     @NotNull
     private final Path scaledPlus = new Path();
-    private int fillColor = -65281;
-    private int backgroundColor = -65281;
-    private int levelColor = -65281;
     @NotNull
-    private final Function0<Unit> invalidateRunnable = new ThemedBatteryDrawable$invalidateRunnable$1(this);
+    private final Path unifiedPath = new Path();
 
-    @Override // android.graphics.drawable.Drawable
     public int getOpacity() {
         return -1;
     }
 
-    @Override // android.graphics.drawable.Drawable
     public void setAlpha(int i) {
     }
 
-    public ThemedBatteryDrawable(@NotNull Context context, int i) {
-        Intrinsics.checkNotNullParameter(context, "context");
-        this.context = context;
-        this.criticalLevel = context.getResources().getInteger(17694768);
+    public ThemedBatteryDrawable(@NotNull Context context2, int i) {
+        Intrinsics.checkNotNullParameter(context2, "context");
+        this.context = context2;
+        this.criticalLevel = context2.getResources().getInteger(17694772);
         Paint paint = new Paint(1);
         paint.setColor(i);
         paint.setAlpha(255);
@@ -109,7 +107,6 @@ public class ThemedBatteryDrawable extends Drawable {
         paint.setBlendMode(BlendMode.SRC);
         paint.setStrokeMiter(5.0f);
         paint.setStrokeJoin(Paint.Join.ROUND);
-        Unit unit = Unit.INSTANCE;
         this.fillColorStrokePaint = paint;
         Paint paint2 = new Paint(1);
         paint2.setDither(true);
@@ -127,7 +124,7 @@ public class ThemedBatteryDrawable extends Drawable {
         paint3.setStyle(Paint.Style.FILL_AND_STROKE);
         this.fillPaint = paint3;
         Paint paint4 = new Paint(1);
-        paint4.setColor(Utils.getColorStateListDefaultColor(context, R$color.batterymeter_plus_color));
+        paint4.setColor(Utils.getColorStateListDefaultColor(context2, R$color.batterymeter_plus_color));
         paint4.setAlpha(255);
         paint4.setDither(true);
         paint4.setStrokeWidth(0.0f);
@@ -141,30 +138,25 @@ public class ThemedBatteryDrawable extends Drawable {
         paint5.setStrokeWidth(0.0f);
         paint5.setStyle(Paint.Style.FILL_AND_STROKE);
         this.dualToneBackgroundFill = paint5;
-        float f = context.getResources().getDisplayMetrics().density;
+        float f = context2.getResources().getDisplayMetrics().density;
         this.intrinsicHeight = (int) (20.0f * f);
         this.intrinsicWidth = (int) (f * 12.0f);
-        Resources resources = context.getResources();
+        Resources resources = context2.getResources();
         TypedArray obtainTypedArray = resources.obtainTypedArray(R$array.batterymeter_color_levels);
         TypedArray obtainTypedArray2 = resources.obtainTypedArray(R$array.batterymeter_color_values);
         int length = obtainTypedArray.length();
-        this.colorLevels = new int[length * 2];
-        if (length > 0) {
-            int i2 = 0;
-            while (true) {
-                int i3 = i2 + 1;
-                int i4 = i2 * 2;
-                this.colorLevels[i4] = obtainTypedArray.getInt(i2, 0);
-                if (obtainTypedArray2.getType(i2) == 2) {
-                    this.colorLevels[i4 + 1] = Utils.getColorAttrDefaultColor(this.context, obtainTypedArray2.getThemeAttributeId(i2, 0));
-                } else {
-                    this.colorLevels[i4 + 1] = obtainTypedArray2.getColor(i2, 0);
-                }
-                if (i3 >= length) {
-                    break;
-                }
-                i2 = i3;
+        this.colorLevels = new int[(length * 2)];
+        int i2 = 0;
+        while (i2 < length) {
+            int i3 = i2 + 1;
+            int i4 = i2 * 2;
+            this.colorLevels[i4] = obtainTypedArray.getInt(i2, 0);
+            if (obtainTypedArray2.getType(i2) == 2) {
+                this.colorLevels[i4 + 1] = Utils.getColorAttrDefaultColor(this.context, obtainTypedArray2.getThemeAttributeId(i2, 0));
+            } else {
+                this.colorLevels[i4 + 1] = obtainTypedArray2.getColor(i2, 0);
             }
+            i2 = i3;
         }
         obtainTypedArray.recycle();
         obtainTypedArray2.recycle();
@@ -193,23 +185,22 @@ public class ThemedBatteryDrawable extends Drawable {
         postInvalidate();
     }
 
-    @Override // android.graphics.drawable.Drawable
-    public void draw(@NotNull Canvas c) {
-        float height;
-        Intrinsics.checkNotNullParameter(c, "c");
-        c.saveLayer(null, null);
+    public void draw(@NotNull Canvas canvas) {
+        float f;
+        Intrinsics.checkNotNullParameter(canvas, "c");
+        canvas.saveLayer((RectF) null, (Paint) null);
         this.unifiedPath.reset();
         this.levelPath.reset();
         this.levelRect.set(this.fillRect);
         int i = this.batteryLevel;
-        float f = i / 100.0f;
+        float f2 = ((float) i) / 100.0f;
         if (i >= 95) {
-            height = this.fillRect.top;
+            f = this.fillRect.top;
         } else {
             RectF rectF = this.fillRect;
-            height = (rectF.height() * (1 - f)) + rectF.top;
+            f = (rectF.height() * (((float) 1) - f2)) + rectF.top;
         }
-        this.levelRect.top = (float) Math.floor(height);
+        this.levelRect.top = (float) Math.floor((double) f);
         this.levelPath.addRect(this.levelRect, Path.Direction.CCW);
         this.unifiedPath.addPath(this.scaledPerimeter);
         if (!this.dualTone) {
@@ -219,38 +210,38 @@ public class ThemedBatteryDrawable extends Drawable {
         if (this.charging) {
             this.unifiedPath.op(this.scaledBolt, Path.Op.DIFFERENCE);
             if (!this.invertFillIcon) {
-                c.drawPath(this.scaledBolt, this.fillPaint);
+                canvas.drawPath(this.scaledBolt, this.fillPaint);
             }
         }
         if (this.dualTone) {
-            c.drawPath(this.unifiedPath, this.dualToneBackgroundFill);
-            c.save();
-            c.clipRect(0.0f, getBounds().bottom - (getBounds().height() * f), getBounds().right, getBounds().bottom);
-            c.drawPath(this.unifiedPath, this.fillPaint);
-            c.restore();
+            canvas.drawPath(this.unifiedPath, this.dualToneBackgroundFill);
+            canvas.save();
+            canvas.clipRect(0.0f, ((float) getBounds().bottom) - (((float) getBounds().height()) * f2), (float) getBounds().right, (float) getBounds().bottom);
+            canvas.drawPath(this.unifiedPath, this.fillPaint);
+            canvas.restore();
         } else {
             this.fillPaint.setColor(this.fillColor);
-            c.drawPath(this.unifiedPath, this.fillPaint);
+            canvas.drawPath(this.unifiedPath, this.fillPaint);
             this.fillPaint.setColor(this.levelColor);
             if (this.batteryLevel <= 15 && !this.charging) {
-                c.save();
-                c.clipPath(this.scaledFill);
-                c.drawPath(this.levelPath, this.fillPaint);
-                c.restore();
+                canvas.save();
+                canvas.clipPath(this.scaledFill);
+                canvas.drawPath(this.levelPath, this.fillPaint);
+                canvas.restore();
             }
         }
         if (this.charging) {
-            c.clipOutPath(this.scaledBolt);
+            canvas.clipOutPath(this.scaledBolt);
             if (this.invertFillIcon) {
-                c.drawPath(this.scaledBolt, this.fillColorStrokePaint);
+                canvas.drawPath(this.scaledBolt, this.fillColorStrokePaint);
             } else {
-                c.drawPath(this.scaledBolt, this.fillColorStrokeProtection);
+                canvas.drawPath(this.scaledBolt, this.fillColorStrokeProtection);
             }
         } else if (this.powerSaveEnabled) {
-            c.drawPath(this.scaledErrorPerimeter, this.errorPaint);
-            c.drawPath(this.scaledPlus, this.errorPaint);
+            canvas.drawPath(this.scaledErrorPerimeter, this.errorPaint);
+            canvas.drawPath(this.scaledPlus, this.errorPaint);
         }
-        c.restore();
+        canvas.restore();
     }
 
     private final int batteryColorForLevel(int i) {
@@ -265,21 +256,19 @@ public class ThemedBatteryDrawable extends Drawable {
         int i3 = 0;
         while (true) {
             int[] iArr = this.colorLevels;
-            if (i2 < iArr.length) {
-                int i4 = iArr[i2];
-                int i5 = iArr[i2 + 1];
-                if (i <= i4) {
-                    return i2 == iArr.length + (-2) ? this.fillColor : i5;
-                }
-                i2 += 2;
-                i3 = i5;
-            } else {
+            if (i2 >= iArr.length) {
                 return i3;
             }
+            int i4 = iArr[i2];
+            int i5 = iArr[i2 + 1];
+            if (i <= i4) {
+                return i2 == iArr.length + -2 ? this.fillColor : i5;
+            }
+            i2 += 2;
+            i3 = i5;
         }
     }
 
-    @Override // android.graphics.drawable.Drawable
     public void setColorFilter(@Nullable ColorFilter colorFilter) {
         this.fillPaint.setColorFilter(colorFilter);
         this.fillColorStrokePaint.setColorFilter(colorFilter);
@@ -287,13 +276,7 @@ public class ThemedBatteryDrawable extends Drawable {
     }
 
     public void setBatteryLevel(int i) {
-        boolean z;
-        if (i >= 67) {
-            z = true;
-        } else {
-            z = i <= 33 ? false : this.invertFillIcon;
-        }
-        this.invertFillIcon = z;
+        this.invertFillIcon = i >= 67 ? true : i <= 33 ? false : this.invertFillIcon;
         this.batteryLevel = i;
         this.levelColor = batteryColorForLevel(i);
         invalidateSelf();
@@ -303,27 +286,15 @@ public class ThemedBatteryDrawable extends Drawable {
         return this.batteryLevel;
     }
 
-    @Override // android.graphics.drawable.Drawable
-    protected void onBoundsChange(@Nullable Rect rect) {
+    /* access modifiers changed from: protected */
+    public void onBoundsChange(@Nullable Rect rect) {
         super.onBoundsChange(rect);
         updateSize();
     }
 
     private final void postInvalidate() {
-        final Function0<Unit> function0 = this.invalidateRunnable;
-        unscheduleSelf(new Runnable() { // from class: com.android.settingslib.graph.ThemedBatteryDrawable$sam$java_lang_Runnable$0
-            @Override // java.lang.Runnable
-            public final /* synthetic */ void run() {
-                Function0.this.invoke();
-            }
-        });
-        final Function0<Unit> function02 = this.invalidateRunnable;
-        scheduleSelf(new Runnable() { // from class: com.android.settingslib.graph.ThemedBatteryDrawable$sam$java_lang_Runnable$0
-            @Override // java.lang.Runnable
-            public final /* synthetic */ void run() {
-                Function0.this.invoke();
-            }
-        }, 0L);
+        unscheduleSelf(new ThemedBatteryDrawable$sam$java_lang_Runnable$0(this.invalidateRunnable));
+        scheduleSelf(new ThemedBatteryDrawable$sam$java_lang_Runnable$0(this.invalidateRunnable), 0);
     }
 
     private final void updateSize() {
@@ -331,7 +302,7 @@ public class ThemedBatteryDrawable extends Drawable {
         if (bounds.isEmpty()) {
             this.scaleMatrix.setScale(1.0f, 1.0f);
         } else {
-            this.scaleMatrix.setScale(bounds.right / 12.0f, bounds.bottom / 20.0f);
+            this.scaleMatrix.setScale(((float) bounds.right) / 12.0f, ((float) bounds.bottom) / 20.0f);
         }
         this.perimeterPath.transform(this.scaleMatrix, this.scaledPerimeter);
         this.errorPerimeterPath.transform(this.scaleMatrix, this.scaledErrorPerimeter);
@@ -339,25 +310,24 @@ public class ThemedBatteryDrawable extends Drawable {
         this.scaledFill.computeBounds(this.fillRect, true);
         this.boltPath.transform(this.scaleMatrix, this.scaledBolt);
         this.plusPath.transform(this.scaleMatrix, this.scaledPlus);
-        float max = Math.max((bounds.right / 12.0f) * 3.0f, 6.0f);
+        float max = Math.max((((float) bounds.right) / 12.0f) * 3.0f, 6.0f);
         this.fillColorStrokePaint.setStrokeWidth(max);
         this.fillColorStrokeProtection.setStrokeWidth(max);
     }
 
     private final void loadPaths() {
-        this.perimeterPath.set(PathParser.createPathFromPathData(this.context.getResources().getString(17039867)));
+        this.perimeterPath.set(PathParser.createPathFromPathData(this.context.getResources().getString(17039891)));
         this.perimeterPath.computeBounds(new RectF(), true);
-        this.errorPerimeterPath.set(PathParser.createPathFromPathData(this.context.getResources().getString(17039865)));
+        this.errorPerimeterPath.set(PathParser.createPathFromPathData(this.context.getResources().getString(17039889)));
         this.errorPerimeterPath.computeBounds(new RectF(), true);
-        this.fillMask.set(PathParser.createPathFromPathData(this.context.getResources().getString(17039866)));
+        this.fillMask.set(PathParser.createPathFromPathData(this.context.getResources().getString(17039890)));
         this.fillMask.computeBounds(this.fillRect, true);
-        this.boltPath.set(PathParser.createPathFromPathData(this.context.getResources().getString(17039864)));
-        this.plusPath.set(PathParser.createPathFromPathData(this.context.getResources().getString(17039868)));
-        this.dualTone = this.context.getResources().getBoolean(17891382);
+        this.boltPath.set(PathParser.createPathFromPathData(this.context.getResources().getString(17039888)));
+        this.plusPath.set(PathParser.createPathFromPathData(this.context.getResources().getString(17039892)));
+        this.dualTone = this.context.getResources().getBoolean(17891385);
     }
 
     /* compiled from: ThemedBatteryDrawable.kt */
-    /* loaded from: classes.dex */
     public static final class Companion {
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
             this();

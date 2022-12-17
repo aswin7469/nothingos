@@ -27,109 +27,97 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.nothing.p006ui.support.NtCustSwitch;
+
 public class WifiSarTest extends Activity implements SensorEventListener {
     private AudioManager mAudioManager;
-    private Switch mBtConnectedEnabler;
-    private EditText mCountryCodeEditText;
-    private Switch mEarpieceOnEnabler;
-    private Button mGetCountryCodeButton;
-    private Button mGetSarSetButton;
-    private TextView mGetSarSetTextView;
-    private Switch mManulMdoeEnabler;
-    private Switch mModemActiveEnabler;
-    private Switch mSarSensorNearEnabler;
-    private Sensor mSensor;
-    private SensorManager mSensorManager;
-    private Button mSetCountryCodeButton;
-    private Button mStartSarTestButton;
-    private Button mUpdateAllStatusButton;
-    private Switch mWifi24GEnabler;
-    private WifiManager mWifiManager;
-    private int mWifiState;
-    private boolean mIsModemActive = false;
-    private boolean mIsBtConnected = false;
-    private boolean mIsSarSensorNear = false;
-    private boolean mIsEarpieceOn = false;
-    private boolean mIsWifi24G = false;
-    private boolean mSwitchingWifiManulMode = false;
-    private boolean mIsStartTest = false;
-    private boolean mIsSarSensorNearReal = false;
-    private boolean mIsModemActiveReal = false;
-    private boolean mPhone0Active = false;
-    private boolean mPhone1Active = false;
-    View.OnClickListener mUpdateAllListener = new View.OnClickListener() { // from class: com.android.settings.sar.WifiSarTest.1
-        @Override // android.view.View.OnClickListener
-        public void onClick(View view) {
-            WifiSarTest.this.updateAllStatus();
+    CompoundButton.OnCheckedChangeListener mBtConnectedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+        public void onCheckedChanged(CompoundButton compoundButton, boolean z) {
+            WifiSarTest.this.mIsBtConnected = z;
         }
     };
-    View.OnClickListener mGetSarListener = new View.OnClickListener() { // from class: com.android.settings.sar.WifiSarTest.2
-        @Override // android.view.View.OnClickListener
+    private NtCustSwitch mBtConnectedEnabler;
+    /* access modifiers changed from: private */
+    public EditText mCountryCodeEditText;
+    CompoundButton.OnCheckedChangeListener mEarpieceOnChangeListener = new CompoundButton.OnCheckedChangeListener() {
+        public void onCheckedChanged(CompoundButton compoundButton, boolean z) {
+            WifiSarTest.this.mIsEarpieceOn = z;
+        }
+    };
+    private NtCustSwitch mEarpieceOnEnabler;
+    private Button mGetCountryCodeButton;
+    View.OnClickListener mGetCountryCodeListener = new View.OnClickListener() {
+        public void onClick(View view) {
+            if (WifiSarTest.this.mWifiManager != null) {
+                String countryCode = WifiSarTest.this.mWifiManager.getCountryCode();
+                if (WifiSarTest.this.mCountryCodeEditText != null) {
+                    WifiSarTest.this.mCountryCodeEditText.setText(countryCode);
+                }
+            }
+        }
+    };
+    View.OnClickListener mGetSarListener = new View.OnClickListener() {
         public void onClick(View view) {
             Log.d("WifiSarTest", "get sar button onClick");
             WifiSarTest.this.updateGetSarSetTextView();
         }
     };
-    View.OnClickListener mGetCountryCodeListener = new View.OnClickListener() { // from class: com.android.settings.sar.WifiSarTest.3
-        @Override // android.view.View.OnClickListener
-        public void onClick(View view) {
-            if (WifiSarTest.this.mWifiManager != null) {
-                String countryCode = WifiSarTest.this.mWifiManager.getCountryCode();
-                if (WifiSarTest.this.mCountryCodeEditText == null) {
-                    return;
-                }
-                WifiSarTest.this.mCountryCodeEditText.setText(countryCode);
+    private Button mGetSarSetButton;
+    private TextView mGetSarSetTextView;
+    /* access modifiers changed from: private */
+    public boolean mIsBtConnected = false;
+    /* access modifiers changed from: private */
+    public boolean mIsEarpieceOn = false;
+    /* access modifiers changed from: private */
+    public boolean mIsModemActive = false;
+    /* access modifiers changed from: private */
+    public boolean mIsSarSensorNear = false;
+    private boolean mIsSarSensorNearReal = false;
+    /* access modifiers changed from: private */
+    public boolean mIsStartTest = false;
+    /* access modifiers changed from: private */
+    public boolean mIsWifi24G = false;
+    private NtCustSwitch mManulMdoeEnabler;
+    CompoundButton.OnCheckedChangeListener mManulModeChangeListener = new CompoundButton.OnCheckedChangeListener() {
+        public void onCheckedChanged(CompoundButton compoundButton, boolean z) {
+            SystemProperties.set("debug.wifi.sar.manul", z ? "1" : "0");
+            Toast.makeText(WifiSarTest.this.getApplicationContext(), "Need to Re-enable wifi, wati a moments", 0).show();
+            WifiSarTest.this.mSwitchingWifiManulMode = true;
+            if (1 == WifiSarTest.this.mWifiState) {
+                WifiSarTest.this.enableWifi(true);
+            } else {
+                WifiSarTest.this.enableWifi(false);
             }
+            WifiSarTest.this.setAllEnable(false);
         }
     };
-    View.OnClickListener mSetCountryCodeListener = new View.OnClickListener() { // from class: com.android.settings.sar.WifiSarTest.4
-        @Override // android.view.View.OnClickListener
-        public void onClick(View view) {
-            if (WifiSarTest.this.mCountryCodeEditText != null) {
-                WifiSarTest wifiSarTest = WifiSarTest.this;
-                wifiSarTest.doUpdateCountryCode(wifiSarTest.mCountryCodeEditText.getText().toString());
-            }
+    CompoundButton.OnCheckedChangeListener mModemActiveChangeListener = new CompoundButton.OnCheckedChangeListener() {
+        public void onCheckedChanged(CompoundButton compoundButton, boolean z) {
+            WifiSarTest.this.mIsModemActive = z;
         }
     };
-    View.OnClickListener mStartListener = new View.OnClickListener() { // from class: com.android.settings.sar.WifiSarTest.5
-        @Override // android.view.View.OnClickListener
-        public void onClick(View view) {
-            if (WifiSarTest.this.isManulModeOn()) {
-                if (!WifiSarTest.this.mIsStartTest) {
-                    WifiSarTest.this.setSarTestRunning(true);
-                    WifiSarTest.this.mIsStartTest = true;
-                    WifiSarTest.this.updateStartButtonStarted();
-                    return;
-                }
-                WifiSarTest.this.setSarTestRunning(false);
-                WifiSarTest.this.mIsStartTest = false;
-                WifiSarTest.this.updateStartButtonStarted();
-                return;
-            }
-            Toast.makeText(WifiSarTest.this.getApplicationContext(), "Enable Manul Mode First!!", 1).show();
-        }
-    };
-    final BroadcastReceiver mReceiver = new BroadcastReceiver() { // from class: com.android.settings.sar.WifiSarTest.6
-        @Override // android.content.BroadcastReceiver
+    private NtCustSwitch mModemActiveEnabler;
+    /* access modifiers changed from: private */
+    public boolean mPhone0Active = false;
+    /* access modifiers changed from: private */
+    public boolean mPhone1Active = false;
+    final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             boolean z = false;
             if ("android.net.wifi.WIFI_STATE_CHANGED".equals(action)) {
                 int intExtra = intent.getIntExtra("wifi_state", 4);
-                if (!WifiSarTest.this.mSwitchingWifiManulMode || 3 != intExtra) {
-                    if (WifiSarTest.this.mSwitchingWifiManulMode && 1 == intExtra) {
-                        WifiSarTest.this.enableWifi(true);
-                    }
-                } else {
+                if (WifiSarTest.this.mSwitchingWifiManulMode && 3 == intExtra) {
                     Toast.makeText(WifiSarTest.this.getApplicationContext(), "Re-eable wifi completed!", 0).show();
                     WifiSarTest.this.setAllEnable(true);
                     WifiSarTest.this.mSwitchingWifiManulMode = false;
+                } else if (WifiSarTest.this.mSwitchingWifiManulMode && 1 == intExtra) {
+                    WifiSarTest.this.enableWifi(true);
                 }
                 WifiSarTest.this.mWifiState = intExtra;
-            } else if (!"android.intent.action.RRC_STATE".equals(action)) {
-            } else {
+            } else if ("android.intent.action.RRC_STATE".equals(action)) {
                 int intExtra2 = intent.getIntExtra("phone", -1);
                 int intExtra3 = intent.getIntExtra("state", -1);
                 Log.d("WifiSarTest", "RRC_STATE phone id: " + intExtra2 + ", state: " + intExtra3);
@@ -150,82 +138,88 @@ public class WifiSarTest extends Activity implements SensorEventListener {
                 if (wifiSarTest.mPhone0Active || WifiSarTest.this.mPhone1Active) {
                     z = true;
                 }
-                wifiSarTest.mIsModemActiveReal = z;
+                wifiSarTest.mIsModemActive = z;
             }
         }
     };
-    CompoundButton.OnCheckedChangeListener mManulModeChangeListener = new CompoundButton.OnCheckedChangeListener() { // from class: com.android.settings.sar.WifiSarTest.7
-        @Override // android.widget.CompoundButton.OnCheckedChangeListener
-        public void onCheckedChanged(CompoundButton compoundButton, boolean z) {
-            SystemProperties.set("debug.wifi.sar.manul", z ? "1" : "0");
-            Toast.makeText(WifiSarTest.this.getApplicationContext(), "Need to Re-enable wifi, wati a moments", 0).show();
-            WifiSarTest.this.mSwitchingWifiManulMode = true;
-            if (1 == WifiSarTest.this.mWifiState) {
-                WifiSarTest.this.enableWifi(true);
-            } else {
-                WifiSarTest.this.enableWifi(false);
-            }
-            WifiSarTest.this.setAllEnable(false);
-        }
-    };
-    CompoundButton.OnCheckedChangeListener mModemActiveChangeListener = new CompoundButton.OnCheckedChangeListener() { // from class: com.android.settings.sar.WifiSarTest.8
-        @Override // android.widget.CompoundButton.OnCheckedChangeListener
-        public void onCheckedChanged(CompoundButton compoundButton, boolean z) {
-            WifiSarTest.this.mIsModemActive = z;
-        }
-    };
-    CompoundButton.OnCheckedChangeListener mBtConnectedChangeListener = new CompoundButton.OnCheckedChangeListener() { // from class: com.android.settings.sar.WifiSarTest.9
-        @Override // android.widget.CompoundButton.OnCheckedChangeListener
-        public void onCheckedChanged(CompoundButton compoundButton, boolean z) {
-            WifiSarTest.this.mIsBtConnected = z;
-        }
-    };
-    CompoundButton.OnCheckedChangeListener mSarSensorChangeListener = new CompoundButton.OnCheckedChangeListener() { // from class: com.android.settings.sar.WifiSarTest.10
-        @Override // android.widget.CompoundButton.OnCheckedChangeListener
+    CompoundButton.OnCheckedChangeListener mSarSensorChangeListener = new CompoundButton.OnCheckedChangeListener() {
         public void onCheckedChanged(CompoundButton compoundButton, boolean z) {
             WifiSarTest.this.mIsSarSensorNear = z;
         }
     };
-    CompoundButton.OnCheckedChangeListener mEarpieceOnChangeListener = new CompoundButton.OnCheckedChangeListener() { // from class: com.android.settings.sar.WifiSarTest.11
-        @Override // android.widget.CompoundButton.OnCheckedChangeListener
-        public void onCheckedChanged(CompoundButton compoundButton, boolean z) {
-            WifiSarTest.this.mIsEarpieceOn = z;
+    private NtCustSwitch mSarSensorNearEnabler;
+    private Sensor mSensor;
+    private SensorManager mSensorManager;
+    private Button mSetCountryCodeButton;
+    View.OnClickListener mSetCountryCodeListener = new View.OnClickListener() {
+        public void onClick(View view) {
+            if (WifiSarTest.this.mCountryCodeEditText != null) {
+                WifiSarTest wifiSarTest = WifiSarTest.this;
+                wifiSarTest.doUpdateCountryCode(wifiSarTest.mCountryCodeEditText.getText().toString());
+            }
         }
     };
-    CompoundButton.OnCheckedChangeListener mWifi24GChangeListener = new CompoundButton.OnCheckedChangeListener() { // from class: com.android.settings.sar.WifiSarTest.12
-        @Override // android.widget.CompoundButton.OnCheckedChangeListener
+    View.OnClickListener mStartListener = new View.OnClickListener() {
+        public void onClick(View view) {
+            if (!WifiSarTest.this.isManulModeOn()) {
+                Toast.makeText(WifiSarTest.this.getApplicationContext(), "Enable Manul Mode First!!", 1).show();
+            } else if (!WifiSarTest.this.mIsStartTest) {
+                WifiSarTest.this.setSarTestRunning(true);
+                WifiSarTest.this.mIsStartTest = true;
+                WifiSarTest.this.updateStartButtonStarted();
+            } else {
+                WifiSarTest.this.setSarTestRunning(false);
+                WifiSarTest.this.mIsStartTest = false;
+                WifiSarTest.this.updateStartButtonStarted();
+            }
+        }
+    };
+    private Button mStartSarTestButton;
+    /* access modifiers changed from: private */
+    public boolean mSwitchingWifiManulMode = false;
+    View.OnClickListener mUpdateAllListener = new View.OnClickListener() {
+        public void onClick(View view) {
+            WifiSarTest.this.updateAllStatus();
+        }
+    };
+    private Button mUpdateAllStatusButton;
+    CompoundButton.OnCheckedChangeListener mWifi24GChangeListener = new CompoundButton.OnCheckedChangeListener() {
         public void onCheckedChanged(CompoundButton compoundButton, boolean z) {
             WifiSarTest.this.mIsWifi24G = z;
         }
     };
+    private NtCustSwitch mWifi24GEnabler;
+    /* access modifiers changed from: private */
+    public WifiManager mWifiManager;
+    /* access modifiers changed from: private */
+    public int mWifiState;
 
-    @Override // android.hardware.SensorEventListener
     public final void onAccuracyChanged(Sensor sensor, int i) {
     }
 
-    @Override // android.app.Activity
-    protected void onCreate(Bundle bundle) {
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setContentView(R.layout.testing_wifi_sar);
-        this.mManulMdoeEnabler = (Switch) findViewById(R.id.wifi_sar_manul_mode_sw);
-        this.mModemActiveEnabler = (Switch) findViewById(R.id.wifi_sar_modem_active_sw);
-        this.mBtConnectedEnabler = (Switch) findViewById(R.id.wifi_sar_bt_connected_sw);
-        this.mSarSensorNearEnabler = (Switch) findViewById(R.id.wifi_sar_sensor_near_sw);
-        this.mEarpieceOnEnabler = (Switch) findViewById(R.id.wifi_sar_earpiece_on_sw);
-        this.mWifi24GEnabler = (Switch) findViewById(R.id.wifi_sar_wifi_band_sw);
-        this.mGetSarSetTextView = (TextView) findViewById(R.id.wifi_sar_get_sar_set_tv);
-        this.mGetSarSetButton = (Button) findViewById(R.id.wifi_sar_get_sar_set_bt);
-        this.mUpdateAllStatusButton = (Button) findViewById(R.id.update_all_status);
-        this.mCountryCodeEditText = (EditText) findViewById(R.id.country_code_et);
-        this.mGetCountryCodeButton = (Button) findViewById(R.id.get_country_code_bt);
-        this.mSetCountryCodeButton = (Button) findViewById(R.id.set_country_code_bt);
-        this.mStartSarTestButton = (Button) findViewById(R.id.start);
+        setContentView(R$layout.testing_wifi_sar);
+        this.mManulMdoeEnabler = (NtCustSwitch) findViewById(R$id.wifi_sar_manul_mode_sw);
+        this.mModemActiveEnabler = (NtCustSwitch) findViewById(R$id.wifi_sar_modem_active_sw);
+        this.mBtConnectedEnabler = (NtCustSwitch) findViewById(R$id.wifi_sar_bt_connected_sw);
+        this.mSarSensorNearEnabler = (NtCustSwitch) findViewById(R$id.wifi_sar_sensor_near_sw);
+        this.mEarpieceOnEnabler = (NtCustSwitch) findViewById(R$id.wifi_sar_earpiece_on_sw);
+        this.mWifi24GEnabler = (NtCustSwitch) findViewById(R$id.wifi_sar_wifi_band_sw);
+        this.mGetSarSetTextView = (TextView) findViewById(R$id.wifi_sar_get_sar_set_tv);
+        this.mGetSarSetButton = (Button) findViewById(R$id.wifi_sar_get_sar_set_bt);
+        this.mUpdateAllStatusButton = (Button) findViewById(R$id.update_all_status);
+        this.mCountryCodeEditText = (EditText) findViewById(R$id.country_code_et);
+        this.mGetCountryCodeButton = (Button) findViewById(R$id.get_country_code_bt);
+        this.mSetCountryCodeButton = (Button) findViewById(R$id.set_country_code_bt);
+        this.mStartSarTestButton = (Button) findViewById(R$id.start);
         this.mWifiManager = (WifiManager) getSystemService(WifiManager.class);
         this.mAudioManager = (AudioManager) getSystemService(AudioManager.class);
     }
 
-    @Override // android.app.Activity
-    protected void onResume() {
+    /* access modifiers changed from: protected */
+    public void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.net.wifi.WIFI_STATE_CHANGED");
@@ -245,10 +239,9 @@ public class WifiSarTest extends Activity implements SensorEventListener {
         registerSarSensorListeners();
     }
 
-    @Override // android.hardware.SensorEventListener
     public final void onSensorChanged(SensorEvent sensorEvent) {
         float[] fArr = sensorEvent.values;
-        if (1.0d == fArr[0] || 1.0d == fArr[6]) {
+        if (1.0d == ((double) fArr[0]) || 1.0d == ((double) fArr[6])) {
             this.mIsSarSensorNearReal = true;
         } else {
             this.mIsSarSensorNearReal = false;
@@ -270,10 +263,9 @@ public class WifiSarTest extends Activity implements SensorEventListener {
     }
 
     private void updateButtonListener(Button button, View.OnClickListener onClickListener) {
-        if (button == null) {
-            return;
+        if (button != null) {
+            button.setOnClickListener(onClickListener);
         }
-        button.setOnClickListener(onClickListener);
     }
 
     private boolean isVoiceCallStreamActive() {
@@ -283,7 +275,10 @@ public class WifiSarTest extends Activity implements SensorEventListener {
             return false;
         }
         int mode = audioManager.getMode();
-        return mode == 3 || mode == 2;
+        if (mode == 3 || mode == 2) {
+            return true;
+        }
+        return false;
     }
 
     private boolean isVoiceCallOnEarpiece() {
@@ -299,22 +294,24 @@ public class WifiSarTest extends Activity implements SensorEventListener {
         if (bluetoothAdapter == null) {
             return false;
         }
-        return 2 == bluetoothAdapter.getConnectionState() || Settings.Global.getInt(getContentResolver(), "bluetooth_opp_state", -1) > 0;
+        if (2 == bluetoothAdapter.getConnectionState() || Settings.Global.getInt(getContentResolver(), "bluetooth_opp_state", -1) > 0) {
+            return true;
+        }
+        return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateAllStatus() {
         WifiManager wifiManager;
         WifiManager wifiManager2;
         boolean z;
-        Switch r0 = this.mManulMdoeEnabler;
-        if (r0 != null) {
-            r0.setChecked(isManulModeOn());
+        NtCustSwitch ntCustSwitch = this.mManulMdoeEnabler;
+        if (ntCustSwitch != null) {
+            ntCustSwitch.setChecked(isManulModeOn());
         }
-        Switch r02 = this.mModemActiveEnabler;
-        if (r02 != null) {
-            r02.setChecked(this.mIsModemActiveReal);
-            this.mIsSarSensorNear = this.mIsSarSensorNearReal;
+        NtCustSwitch ntCustSwitch2 = this.mModemActiveEnabler;
+        if (ntCustSwitch2 != null) {
+            ntCustSwitch2.setChecked(this.mIsModemActive);
         }
         if (this.mBtConnectedEnabler != null) {
             if (isBtConnectState(BluetoothAdapter.getDefaultAdapter())) {
@@ -323,10 +320,9 @@ public class WifiSarTest extends Activity implements SensorEventListener {
                 this.mBtConnectedEnabler.setChecked(false);
             }
         }
-        Switch r03 = this.mSarSensorNearEnabler;
-        if (r03 != null) {
-            r03.setChecked(this.mIsSarSensorNearReal);
-            this.mIsSarSensorNear = this.mIsSarSensorNearReal;
+        NtCustSwitch ntCustSwitch3 = this.mSarSensorNearEnabler;
+        if (ntCustSwitch3 != null) {
+            ntCustSwitch3.setChecked(this.mIsSarSensorNearReal);
         }
         if (this.mEarpieceOnEnabler != null) {
             if (isVoiceCallStreamActive()) {
@@ -337,22 +333,21 @@ public class WifiSarTest extends Activity implements SensorEventListener {
             }
             this.mEarpieceOnEnabler.setChecked(z);
         }
-        if (this.mWifi24GEnabler != null && (wifiManager2 = this.mWifiManager) != null) {
+        if (!(this.mWifi24GEnabler == null || (wifiManager2 = this.mWifiManager) == null)) {
             WifiInfo connectionInfo = wifiManager2.getConnectionInfo();
-            if (connectionInfo != null && connectionInfo.getSupplicantState() == SupplicantState.COMPLETED && connectionInfo.is24GHz()) {
-                this.mWifi24GEnabler.setChecked(true);
-            } else {
+            if (connectionInfo == null || connectionInfo.getSupplicantState() != SupplicantState.COMPLETED || !connectionInfo.is24GHz()) {
                 this.mWifi24GEnabler.setChecked(false);
+            } else {
+                this.mWifi24GEnabler.setChecked(true);
             }
         }
         updateGetSarSetTextView();
-        if (this.mCountryCodeEditText == null || (wifiManager = this.mWifiManager) == null) {
-            return;
+        if (this.mCountryCodeEditText != null && (wifiManager = this.mWifiManager) != null) {
+            this.mCountryCodeEditText.setText(wifiManager.getCountryCode());
         }
-        this.mCountryCodeEditText.setText(wifiManager.getCountryCode());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateGetSarSetTextView() {
         if (this.mGetSarSetTextView != null) {
             String string = Settings.Global.getString(getContentResolver(), "wifi_sar_curr_set");
@@ -363,7 +358,7 @@ public class WifiSarTest extends Activity implements SensorEventListener {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void doUpdateCountryCode(String str) {
         String trim;
         WifiManager wifiManager = this.mWifiManager;
@@ -372,19 +367,18 @@ public class WifiSarTest extends Activity implements SensorEventListener {
                 this.mWifiManager.setWifiEnabled(true);
                 Toast.makeText(getApplicationContext(), "Enabling wifi", 0).show();
                 try {
-                    Thread.sleep(2000L);
+                    Thread.sleep(2000);
                 } catch (InterruptedException unused) {
                 }
             }
             this.mWifiManager.disconnect();
-            if (this.mCountryCodeEditText == null || str == null || (trim = str.trim()) == null || trim.length() != 2) {
-                return;
+            if (this.mCountryCodeEditText != null && str != null && (trim = str.trim()) != null && trim.length() == 2) {
+                this.mWifiManager.setOverrideCountryCode(trim);
             }
-            this.mWifiManager.setOverrideCountryCode(trim);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateStartButtonStarted() {
         Button button = this.mStartSarTestButton;
         if (button != null) {
@@ -418,24 +412,38 @@ public class WifiSarTest extends Activity implements SensorEventListener {
             if (!isBtConnected() && !isModemActive()) {
                 return 0;
             }
-            if ((!isBtConnected() && isModemActive()) || (isBtConnected() && !isModemActive())) {
-                return (!isBtConnected() || !isWifi24G()) ? 1 : 0;
-            } else if (isBtConnected() && isModemActive()) {
-                return isWifi24G() ? 1 : 2;
+            if ((isBtConnected() || !isModemActive()) && (!isBtConnected() || isModemActive())) {
+                if (isBtConnected() && isModemActive()) {
+                    if (isWifi24G()) {
+                        return 1;
+                    }
+                    return 2;
+                }
+            } else if (!isBtConnected() || !isWifi24G()) {
+                return 1;
+            } else {
+                return 0;
             }
         } else if (!isBtConnected() && !isModemActive() && (isEarpieceOn() || isSarSensorNear())) {
             return 0;
         } else {
-            if ((!isBtConnected() && isModemActive()) || (isBtConnected() && !isModemActive())) {
-                return (!isBtConnected() || !isWifi24G()) ? 1 : 0;
-            } else if (isBtConnected() && isModemActive()) {
-                return isWifi24G() ? 1 : 2;
+            if ((isBtConnected() || !isModemActive()) && (!isBtConnected() || isModemActive())) {
+                if (isBtConnected() && isModemActive()) {
+                    if (isWifi24G()) {
+                        return 1;
+                    }
+                    return 2;
+                }
+            } else if (!isBtConnected() || !isWifi24G()) {
+                return 1;
+            } else {
+                return 0;
             }
         }
         return 5;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setSarTestRunning(boolean z) {
         int i;
         if (z) {
@@ -451,38 +459,38 @@ public class WifiSarTest extends Activity implements SensorEventListener {
         }
     }
 
-    @Override // android.app.Activity
-    protected void onPause() {
+    /* access modifiers changed from: protected */
+    public void onPause() {
         super.onPause();
         unregisterReceiver(this.mReceiver);
         this.mSensorManager.unregisterListener(this);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setAllEnable(boolean z) {
-        Switch r0 = this.mManulMdoeEnabler;
-        if (r0 != null) {
-            r0.setEnabled(z);
+        NtCustSwitch ntCustSwitch = this.mManulMdoeEnabler;
+        if (ntCustSwitch != null) {
+            ntCustSwitch.setEnabled(z);
         }
-        Switch r02 = this.mModemActiveEnabler;
-        if (r02 != null) {
-            r02.setEnabled(z);
+        NtCustSwitch ntCustSwitch2 = this.mModemActiveEnabler;
+        if (ntCustSwitch2 != null) {
+            ntCustSwitch2.setEnabled(z);
         }
-        Switch r03 = this.mBtConnectedEnabler;
-        if (r03 != null) {
-            r03.setEnabled(z);
+        NtCustSwitch ntCustSwitch3 = this.mBtConnectedEnabler;
+        if (ntCustSwitch3 != null) {
+            ntCustSwitch3.setEnabled(z);
         }
-        Switch r04 = this.mSarSensorNearEnabler;
-        if (r04 != null) {
-            r04.setEnabled(z);
+        NtCustSwitch ntCustSwitch4 = this.mSarSensorNearEnabler;
+        if (ntCustSwitch4 != null) {
+            ntCustSwitch4.setEnabled(z);
         }
-        Switch r05 = this.mEarpieceOnEnabler;
-        if (r05 != null) {
-            r05.setEnabled(z);
+        NtCustSwitch ntCustSwitch5 = this.mEarpieceOnEnabler;
+        if (ntCustSwitch5 != null) {
+            ntCustSwitch5.setEnabled(z);
         }
-        Switch r06 = this.mWifi24GEnabler;
-        if (r06 != null) {
-            r06.setEnabled(z);
+        NtCustSwitch ntCustSwitch6 = this.mWifi24GEnabler;
+        if (ntCustSwitch6 != null) {
+            ntCustSwitch6.setEnabled(z);
         }
         Button button = this.mGetSarSetButton;
         if (button != null) {
@@ -502,25 +510,23 @@ public class WifiSarTest extends Activity implements SensorEventListener {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void enableWifi(boolean z) {
         WifiManager wifiManager = this.mWifiManager;
-        if (wifiManager == null) {
-            return;
+        if (wifiManager != null) {
+            wifiManager.setWifiEnabled(z);
         }
-        wifiManager.setWifiEnabled(z);
     }
 
-    private void upateSwitchListener(Switch r1, CompoundButton.OnCheckedChangeListener onCheckedChangeListener, boolean z) {
-        if (r1 == null) {
-            return;
+    private void upateSwitchListener(Switch switchR, CompoundButton.OnCheckedChangeListener onCheckedChangeListener, boolean z) {
+        if (switchR != null) {
+            switchR.setOnCheckedChangeListener((CompoundButton.OnCheckedChangeListener) null);
+            switchR.setChecked(z);
+            switchR.setOnCheckedChangeListener(onCheckedChangeListener);
         }
-        r1.setOnCheckedChangeListener(null);
-        r1.setChecked(z);
-        r1.setOnCheckedChangeListener(onCheckedChangeListener);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public boolean isManulModeOn() {
         return "1".equals(SystemProperties.get("debug.wifi.sar.manul", "0"));
     }

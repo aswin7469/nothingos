@@ -3,110 +3,90 @@ package com.android.settings.network;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.net.EthernetManager;
+import android.net.IpConfiguration;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.TextUtils;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.OnLifecycleEvent;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.settings.network.EthernetTetherPreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
-/* loaded from: classes.dex */
+import java.util.HashSet;
+
 public final class EthernetTetherPreferenceController extends TetherBasePreferenceController {
+    private final HashSet<String> mAvailableInterfaces = new HashSet<>();
     @VisibleForTesting
-    EthernetManager.Listener mEthernetListener;
+    EthernetManager.InterfaceStateListener mEthernetListener;
     private final EthernetManager mEthernetManager;
-    private final String mEthernetRegex;
 
-    @Override // com.android.settings.network.TetherBasePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.network.TetherBasePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.network.TetherBasePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.network.TetherBasePreferenceController
     public int getTetherType() {
         return 5;
     }
 
-    @Override // com.android.settings.network.TetherBasePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.network.TetherBasePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.network.TetherBasePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
 
     public EthernetTetherPreferenceController(Context context, String str) {
         super(context, str);
-        this.mEthernetRegex = context.getString(17039939);
-        this.mEthernetManager = (EthernetManager) context.getSystemService("ethernet");
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.android.settings.network.EthernetTetherPreferenceController$1  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public class AnonymousClass1 implements EthernetManager.Listener {
-        AnonymousClass1() {
-        }
-
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onAvailabilityChanged$0() {
-            EthernetTetherPreferenceController ethernetTetherPreferenceController = EthernetTetherPreferenceController.this;
-            ethernetTetherPreferenceController.updateState(ethernetTetherPreferenceController.mPreference);
-        }
-
-        public void onAvailabilityChanged(String str, boolean z) {
-            new Handler(Looper.getMainLooper()).post(new Runnable() { // from class: com.android.settings.network.EthernetTetherPreferenceController$1$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    EthernetTetherPreferenceController.AnonymousClass1.this.lambda$onAvailabilityChanged$0();
-                }
-            });
-        }
+        this.mEthernetManager = (EthernetManager) context.getSystemService(EthernetManager.class);
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     public void onStart() {
-        AnonymousClass1 anonymousClass1 = new AnonymousClass1();
-        this.mEthernetListener = anonymousClass1;
-        this.mEthernetManager.addListener(anonymousClass1);
+        this.mEthernetListener = new EthernetTetherPreferenceController$$ExternalSyntheticLambda0(this);
+        Handler handler = new Handler(Looper.getMainLooper());
+        EthernetManager ethernetManager = this.mEthernetManager;
+        if (ethernetManager != null) {
+            ethernetManager.addInterfaceStateListener(new EthernetTetherPreferenceController$$ExternalSyntheticLambda1(handler), this.mEthernetListener);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$onStart$0(String str, int i, int i2, IpConfiguration ipConfiguration) {
+        if (i == 2) {
+            this.mAvailableInterfaces.add(str);
+        } else {
+            this.mAvailableInterfaces.remove(str);
+        }
+        updateState(this.mPreference);
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     public void onStop() {
-        this.mEthernetManager.removeListener(this.mEthernetListener);
-        this.mEthernetListener = null;
+        EthernetManager ethernetManager = this.mEthernetManager;
+        if (ethernetManager != null) {
+            ethernetManager.removeInterfaceStateListener(this.mEthernetListener);
+        }
     }
 
-    @Override // com.android.settings.network.TetherBasePreferenceController
     public boolean shouldEnable() {
-        for (String str : this.mTm.getTetherableIfaces()) {
-            if (str.matches(this.mEthernetRegex)) {
+        ensureRunningOnMainLoopThread();
+        for (String contains : this.mTm.getTetherableIfaces()) {
+            if (this.mAvailableInterfaces.contains(contains)) {
                 return true;
             }
         }
         return false;
     }
 
-    @Override // com.android.settings.network.TetherBasePreferenceController
     public boolean shouldShow() {
-        return !TextUtils.isEmpty(this.mEthernetRegex);
+        return this.mEthernetManager != null;
+    }
+
+    private void ensureRunningOnMainLoopThread() {
+        if (Looper.getMainLooper().getThread() != Thread.currentThread()) {
+            throw new IllegalStateException("Not running on main loop thread: " + Thread.currentThread().getName());
+        }
     }
 }

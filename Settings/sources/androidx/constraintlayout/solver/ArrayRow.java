@@ -2,19 +2,19 @@ package androidx.constraintlayout.solver;
 
 import androidx.constraintlayout.solver.LinearSystem;
 import androidx.constraintlayout.solver.SolverVariable;
-/* loaded from: classes.dex */
+
 public class ArrayRow implements LinearSystem.Row {
-    public final ArrayLinkedVariables variables;
-    SolverVariable variable = null;
     float constantValue = 0.0f;
-    boolean used = false;
     boolean isSimpleDefinition = false;
+    boolean used = false;
+    SolverVariable variable = null;
+    public final ArrayLinkedVariables variables;
 
     public ArrayRow(Cache cache) {
         this.variables = new ArrayLinkedVariables(this, cache);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean hasKeyVariable() {
         SolverVariable solverVariable = this.variable;
         return solverVariable != null && (solverVariable.mType == SolverVariable.Type.UNRESTRICTED || this.constantValue >= 0.0f);
@@ -24,52 +24,135 @@ public class ArrayRow implements LinearSystem.Row {
         return toReadableString();
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:21:0x00bd  */
-    /* JADX WARN: Removed duplicated region for block: B:25:0x00cd  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    String toReadableString() {
-        boolean z;
-        float variableValue;
-        int i;
-        String str = (this.variable == null ? "0" : "" + this.variable) + " = ";
-        if (this.constantValue != 0.0f) {
-            str = str + this.constantValue;
-            z = true;
-        } else {
-            z = false;
-        }
-        int i2 = this.variables.currentSize;
-        for (int i3 = 0; i3 < i2; i3++) {
-            SolverVariable variable = this.variables.getVariable(i3);
-            if (variable != null && (this.variables.getVariableValue(i3)) != 0.0f) {
-                String solverVariable = variable.toString();
-                if (!z) {
-                    if (variableValue < 0.0f) {
-                        str = str + "- ";
-                        variableValue *= -1.0f;
-                    }
-                    str = variableValue == 1.0f ? str + solverVariable : str + variableValue + " " + solverVariable;
-                    z = true;
-                } else if (i > 0) {
-                    str = str + " + ";
-                    if (variableValue == 1.0f) {
-                    }
-                    z = true;
-                } else {
-                    str = str + " - ";
-                    variableValue *= -1.0f;
-                    if (variableValue == 1.0f) {
-                    }
-                    z = true;
-                }
-            }
-        }
-        if (!z) {
-            return str + "0.0";
-        }
-        return str;
+    /* access modifiers changed from: package-private */
+    /* JADX WARNING: Removed duplicated region for block: B:25:0x00bd  */
+    /* JADX WARNING: Removed duplicated region for block: B:26:0x00cd  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public java.lang.String toReadableString() {
+        /*
+            r10 = this;
+            androidx.constraintlayout.solver.SolverVariable r0 = r10.variable
+            java.lang.String r1 = ""
+            if (r0 != 0) goto L_0x0018
+            java.lang.StringBuilder r0 = new java.lang.StringBuilder
+            r0.<init>()
+            r0.append(r1)
+            java.lang.String r1 = "0"
+            r0.append(r1)
+            java.lang.String r0 = r0.toString()
+            goto L_0x0029
+        L_0x0018:
+            java.lang.StringBuilder r0 = new java.lang.StringBuilder
+            r0.<init>()
+            r0.append(r1)
+            androidx.constraintlayout.solver.SolverVariable r1 = r10.variable
+            r0.append(r1)
+            java.lang.String r0 = r0.toString()
+        L_0x0029:
+            java.lang.StringBuilder r1 = new java.lang.StringBuilder
+            r1.<init>()
+            r1.append(r0)
+            java.lang.String r0 = " = "
+            r1.append(r0)
+            java.lang.String r0 = r1.toString()
+            float r1 = r10.constantValue
+            r2 = 0
+            int r1 = (r1 > r2 ? 1 : (r1 == r2 ? 0 : -1))
+            r3 = 0
+            r4 = 1
+            if (r1 == 0) goto L_0x0056
+            java.lang.StringBuilder r1 = new java.lang.StringBuilder
+            r1.<init>()
+            r1.append(r0)
+            float r0 = r10.constantValue
+            r1.append(r0)
+            java.lang.String r0 = r1.toString()
+            r1 = r4
+            goto L_0x0057
+        L_0x0056:
+            r1 = r3
+        L_0x0057:
+            androidx.constraintlayout.solver.ArrayLinkedVariables r5 = r10.variables
+            int r5 = r5.currentSize
+        L_0x005b:
+            if (r3 >= r5) goto L_0x00e9
+            androidx.constraintlayout.solver.ArrayLinkedVariables r6 = r10.variables
+            androidx.constraintlayout.solver.SolverVariable r6 = r6.getVariable(r3)
+            if (r6 != 0) goto L_0x0067
+            goto L_0x00e5
+        L_0x0067:
+            androidx.constraintlayout.solver.ArrayLinkedVariables r7 = r10.variables
+            float r7 = r7.getVariableValue(r3)
+            int r8 = (r7 > r2 ? 1 : (r7 == r2 ? 0 : -1))
+            if (r8 != 0) goto L_0x0073
+            goto L_0x00e5
+        L_0x0073:
+            java.lang.String r6 = r6.toString()
+            r9 = -1082130432(0xffffffffbf800000, float:-1.0)
+            if (r1 != 0) goto L_0x0091
+            int r1 = (r7 > r2 ? 1 : (r7 == r2 ? 0 : -1))
+            if (r1 >= 0) goto L_0x00b7
+            java.lang.StringBuilder r1 = new java.lang.StringBuilder
+            r1.<init>()
+            r1.append(r0)
+            java.lang.String r0 = "- "
+            r1.append(r0)
+            java.lang.String r0 = r1.toString()
+            goto L_0x00b6
+        L_0x0091:
+            if (r8 <= 0) goto L_0x00a5
+            java.lang.StringBuilder r1 = new java.lang.StringBuilder
+            r1.<init>()
+            r1.append(r0)
+            java.lang.String r0 = " + "
+            r1.append(r0)
+            java.lang.String r0 = r1.toString()
+            goto L_0x00b7
+        L_0x00a5:
+            java.lang.StringBuilder r1 = new java.lang.StringBuilder
+            r1.<init>()
+            r1.append(r0)
+            java.lang.String r0 = " - "
+            r1.append(r0)
+            java.lang.String r0 = r1.toString()
+        L_0x00b6:
+            float r7 = r7 * r9
+        L_0x00b7:
+            r1 = 1065353216(0x3f800000, float:1.0)
+            int r1 = (r7 > r1 ? 1 : (r7 == r1 ? 0 : -1))
+            if (r1 != 0) goto L_0x00cd
+            java.lang.StringBuilder r1 = new java.lang.StringBuilder
+            r1.<init>()
+            r1.append(r0)
+            r1.append(r6)
+            java.lang.String r0 = r1.toString()
+            goto L_0x00e4
+        L_0x00cd:
+            java.lang.StringBuilder r1 = new java.lang.StringBuilder
+            r1.<init>()
+            r1.append(r0)
+            r1.append(r7)
+            java.lang.String r0 = " "
+            r1.append(r0)
+            r1.append(r6)
+            java.lang.String r0 = r1.toString()
+        L_0x00e4:
+            r1 = r4
+        L_0x00e5:
+            int r3 = r3 + 1
+            goto L_0x005b
+        L_0x00e9:
+            if (r1 != 0) goto L_0x00fc
+            java.lang.StringBuilder r10 = new java.lang.StringBuilder
+            r10.<init>()
+            r10.append(r0)
+            java.lang.String r0 = "0.0"
+            r10.append(r0)
+            java.lang.String r0 = r10.toString()
+        L_0x00fc:
+            return r0
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.constraintlayout.solver.ArrayRow.toReadableString():java.lang.String");
     }
 
     public void reset() {
@@ -79,15 +162,15 @@ public class ArrayRow implements LinearSystem.Row {
         this.isSimpleDefinition = false;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean hasVariable(SolverVariable solverVariable) {
         return this.variables.containsKey(solverVariable);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public ArrayRow createRowDefinition(SolverVariable solverVariable, int i) {
         this.variable = solverVariable;
-        float f = i;
+        float f = (float) i;
         solverVariable.computedValue = f;
         this.constantValue = f;
         this.isSimpleDefinition = true;
@@ -96,10 +179,10 @@ public class ArrayRow implements LinearSystem.Row {
 
     public ArrayRow createRowEquals(SolverVariable solverVariable, int i) {
         if (i < 0) {
-            this.constantValue = i * (-1);
+            this.constantValue = (float) (i * -1);
             this.variables.put(solverVariable, 1.0f);
         } else {
-            this.constantValue = i;
+            this.constantValue = (float) i;
             this.variables.put(solverVariable, -1.0f);
         }
         return this;
@@ -112,7 +195,7 @@ public class ArrayRow implements LinearSystem.Row {
                 i *= -1;
                 z = true;
             }
-            this.constantValue = i;
+            this.constantValue = (float) i;
         }
         if (!z) {
             this.variables.put(solverVariable, -1.0f);
@@ -124,9 +207,9 @@ public class ArrayRow implements LinearSystem.Row {
         return this;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public ArrayRow addSingleError(SolverVariable solverVariable, int i) {
-        this.variables.put(solverVariable, i);
+        this.variables.put(solverVariable, (float) i);
         return this;
     }
 
@@ -137,7 +220,7 @@ public class ArrayRow implements LinearSystem.Row {
                 i *= -1;
                 z = true;
             }
-            this.constantValue = i;
+            this.constantValue = (float) i;
         }
         if (!z) {
             this.variables.put(solverVariable, -1.0f);
@@ -158,7 +241,7 @@ public class ArrayRow implements LinearSystem.Row {
                 i *= -1;
                 z = true;
             }
-            this.constantValue = i;
+            this.constantValue = (float) i;
         }
         if (!z) {
             this.variables.put(solverVariable, -1.0f);
@@ -195,7 +278,7 @@ public class ArrayRow implements LinearSystem.Row {
         return this;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public ArrayRow createRowCentering(SolverVariable solverVariable, SolverVariable solverVariable2, int i, float f, SolverVariable solverVariable3, SolverVariable solverVariable4, int i2) {
         if (solverVariable2 == solverVariable3) {
             this.variables.put(solverVariable, 1.0f);
@@ -209,24 +292,24 @@ public class ArrayRow implements LinearSystem.Row {
             this.variables.put(solverVariable3, -1.0f);
             this.variables.put(solverVariable4, 1.0f);
             if (i > 0 || i2 > 0) {
-                this.constantValue = (-i) + i2;
+                this.constantValue = (float) ((-i) + i2);
             }
         } else if (f <= 0.0f) {
             this.variables.put(solverVariable, -1.0f);
             this.variables.put(solverVariable2, 1.0f);
-            this.constantValue = i;
+            this.constantValue = (float) i;
         } else if (f >= 1.0f) {
             this.variables.put(solverVariable4, -1.0f);
             this.variables.put(solverVariable3, 1.0f);
-            this.constantValue = -i2;
+            this.constantValue = (float) (-i2);
         } else {
             float f2 = 1.0f - f;
             this.variables.put(solverVariable, f2 * 1.0f);
-            this.variables.put(solverVariable2, f2 * (-1.0f));
-            this.variables.put(solverVariable3, (-1.0f) * f);
+            this.variables.put(solverVariable2, f2 * -1.0f);
+            this.variables.put(solverVariable3, -1.0f * f);
             this.variables.put(solverVariable4, 1.0f * f);
             if (i > 0 || i2 > 0) {
-                this.constantValue = ((-i) * f2) + (i2 * f);
+                this.constantValue = (((float) (-i)) * f2) + (((float) i2) * f);
             }
         }
         return this;
@@ -238,7 +321,7 @@ public class ArrayRow implements LinearSystem.Row {
         return this;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public ArrayRow createRowDimensionPercent(SolverVariable solverVariable, SolverVariable solverVariable2, float f) {
         this.variables.put(solverVariable, -1.0f);
         this.variables.put(solverVariable2, f);
@@ -262,16 +345,16 @@ public class ArrayRow implements LinearSystem.Row {
         return this;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void ensurePositiveConstant() {
         float f = this.constantValue;
         if (f < 0.0f) {
-            this.constantValue = f * (-1.0f);
+            this.constantValue = f * -1.0f;
             this.variables.invert();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean chooseSubject(LinearSystem linearSystem) {
         boolean z;
         SolverVariable chooseSubject = this.variables.chooseSubject(linearSystem);
@@ -287,25 +370,24 @@ public class ArrayRow implements LinearSystem.Row {
         return z;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public SolverVariable pickPivot(SolverVariable solverVariable) {
-        return this.variables.getPivotCandidate(null, solverVariable);
+        return this.variables.getPivotCandidate((boolean[]) null, solverVariable);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void pivot(SolverVariable solverVariable) {
         SolverVariable solverVariable2 = this.variable;
         if (solverVariable2 != null) {
             this.variables.put(solverVariable2, -1.0f);
             this.variable = null;
         }
-        float remove = this.variables.remove(solverVariable, true) * (-1.0f);
+        float remove = this.variables.remove(solverVariable, true) * -1.0f;
         this.variable = solverVariable;
-        if (remove == 1.0f) {
-            return;
+        if (remove != 1.0f) {
+            this.constantValue /= remove;
+            this.variables.divideByAmount(remove);
         }
-        this.constantValue /= remove;
-        this.variables.divideByAmount(remove);
     }
 
     public boolean isEmpty() {
@@ -316,19 +398,16 @@ public class ArrayRow implements LinearSystem.Row {
         this.variables.updateFromRow(this, arrayRow, z);
     }
 
-    @Override // androidx.constraintlayout.solver.LinearSystem.Row
     public SolverVariable getPivotCandidate(LinearSystem linearSystem, boolean[] zArr) {
-        return this.variables.getPivotCandidate(zArr, null);
+        return this.variables.getPivotCandidate(zArr, (SolverVariable) null);
     }
 
-    @Override // androidx.constraintlayout.solver.LinearSystem.Row
     public void clear() {
         this.variables.clear();
         this.variable = null;
         this.constantValue = 0.0f;
     }
 
-    @Override // androidx.constraintlayout.solver.LinearSystem.Row
     public void initFromRow(LinearSystem.Row row) {
         if (row instanceof ArrayRow) {
             ArrayRow arrayRow = (ArrayRow) row;
@@ -337,16 +416,16 @@ public class ArrayRow implements LinearSystem.Row {
             int i = 0;
             while (true) {
                 ArrayLinkedVariables arrayLinkedVariables = arrayRow.variables;
-                if (i >= arrayLinkedVariables.currentSize) {
+                if (i < arrayLinkedVariables.currentSize) {
+                    this.variables.add(arrayLinkedVariables.getVariable(i), arrayRow.variables.getVariableValue(i), true);
+                    i++;
+                } else {
                     return;
                 }
-                this.variables.add(arrayLinkedVariables.getVariable(i), arrayRow.variables.getVariableValue(i), true);
-                i++;
             }
         }
     }
 
-    @Override // androidx.constraintlayout.solver.LinearSystem.Row
     public void addError(SolverVariable solverVariable) {
         int i = solverVariable.strength;
         float f = 1.0f;
@@ -364,7 +443,6 @@ public class ArrayRow implements LinearSystem.Row {
         this.variables.put(solverVariable, f);
     }
 
-    @Override // androidx.constraintlayout.solver.LinearSystem.Row
     public SolverVariable getKey() {
         return this.variable;
     }

@@ -3,7 +3,7 @@ package com.google.zxing.qrcode.encoder;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.google.zxing.qrcode.decoder.Mode;
 import com.google.zxing.qrcode.decoder.Version;
-/* loaded from: classes2.dex */
+
 public final class QRCode {
     private ErrorCorrectionLevel ecLevel;
     private int maskPattern = -1;
@@ -40,16 +40,16 @@ public final class QRCode {
         return sb.toString();
     }
 
-    public void setMode(Mode mode) {
-        this.mode = mode;
+    public void setMode(Mode mode2) {
+        this.mode = mode2;
     }
 
     public void setECLevel(ErrorCorrectionLevel errorCorrectionLevel) {
         this.ecLevel = errorCorrectionLevel;
     }
 
-    public void setVersion(Version version) {
-        this.version = version;
+    public void setVersion(Version version2) {
+        this.version = version2;
     }
 
     public void setMaskPattern(int i) {

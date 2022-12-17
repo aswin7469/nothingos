@@ -7,18 +7,18 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$string;
 import com.android.settingslib.CustomDialogPreferenceCompat;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public abstract class BaseBluetoothDialogPreference extends CustomDialogPreferenceCompat implements RadioGroup.OnCheckedChangeListener {
     private Callback mCallback;
     protected List<Integer> mRadioButtonIds = new ArrayList();
     protected List<String> mRadioButtonStrings = new ArrayList();
     protected List<String> mSummaryStrings = new ArrayList();
 
-    /* loaded from: classes.dex */
     public interface Callback {
         int getCurrentConfigIndex();
 
@@ -27,12 +27,13 @@ public abstract class BaseBluetoothDialogPreference extends CustomDialogPreferen
         void onIndexUpdated(int i);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public int getDefaultIndex() {
         return 0;
     }
 
-    protected abstract int getRadioButtonGroupId();
+    /* access modifiers changed from: protected */
+    public abstract int getRadioButtonGroupId();
 
     public BaseBluetoothDialogPreference(Context context) {
         super(context);
@@ -50,8 +51,8 @@ public abstract class BaseBluetoothDialogPreference extends CustomDialogPreferen
         super(context, attributeSet, i, i2);
     }
 
-    @Override // com.android.settingslib.CustomDialogPreferenceCompat
-    protected void onBindDialogView(View view) {
+    /* access modifiers changed from: protected */
+    public void onBindDialogView(View view) {
         super.onBindDialogView(view);
         if (this.mCallback == null) {
             Log.e("BaseBluetoothDlgPref", "Unable to show dialog by the callback is null");
@@ -80,17 +81,16 @@ public abstract class BaseBluetoothDialogPreference extends CustomDialogPreferen
                 radioButton.setText(this.mRadioButtonStrings.get(i));
                 radioButton.setEnabled(selectableIndex.contains(Integer.valueOf(i)));
             }
-            TextView textView = (TextView) view.findViewById(R.id.bluetooth_audio_codec_help_info);
+            TextView textView = (TextView) view.findViewById(R$id.bluetooth_audio_codec_help_info);
             if (selectableIndex.size() == this.mRadioButtonIds.size()) {
                 textView.setVisibility(8);
                 return;
             }
-            textView.setText(R.string.bluetooth_select_a2dp_codec_type_help_info);
+            textView.setText(R$string.bluetooth_select_a2dp_codec_type_help_info);
             textView.setVisibility(0);
         }
     }
 
-    @Override // android.widget.RadioGroup.OnCheckedChangeListener
     public void onCheckedChanged(RadioGroup radioGroup, int i) {
         Callback callback = this.mCallback;
         if (callback == null) {
@@ -105,12 +105,15 @@ public abstract class BaseBluetoothDialogPreference extends CustomDialogPreferen
         this.mCallback = callback;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public String generateSummary(int i) {
-        if (i <= this.mSummaryStrings.size()) {
-            return i == getDefaultIndex() ? this.mSummaryStrings.get(getDefaultIndex()) : String.format(getContext().getResources().getString(R.string.bluetooth_select_a2dp_codec_streaming_label), this.mSummaryStrings.get(i));
+        if (i > this.mSummaryStrings.size()) {
+            Log.e("BaseBluetoothDlgPref", "Unable to get summary of " + i + ". Size is " + this.mSummaryStrings.size());
+            return null;
+        } else if (i == getDefaultIndex()) {
+            return this.mSummaryStrings.get(getDefaultIndex());
+        } else {
+            return String.format(getContext().getResources().getString(R$string.bluetooth_select_a2dp_codec_streaming_label), new Object[]{this.mSummaryStrings.get(i)});
         }
-        Log.e("BaseBluetoothDlgPref", "Unable to get summary of " + i + ". Size is " + this.mSummaryStrings.size());
-        return null;
     }
 }

@@ -7,13 +7,13 @@ import androidx.preference.Preference;
 import com.android.settings.connecteddevice.DevicePreferenceCallback;
 import com.android.settings.dashboard.DashboardFragment;
 import com.android.settingslib.bluetooth.CachedBluetoothDevice;
-/* loaded from: classes.dex */
+
 public class AvailableMediaBluetoothDeviceUpdater extends BluetoothDeviceUpdater implements Preference.OnPreferenceClickListener {
     private static final boolean DBG = Log.isLoggable("AvailableMediaBluetoothDeviceUpdater", 3);
     private final AudioManager mAudioManager;
 
-    @Override // com.android.settings.bluetooth.BluetoothDeviceUpdater
-    protected String getPreferenceKey() {
+    /* access modifiers changed from: protected */
+    public String getPreferenceKey() {
         return "available_media_bt";
     }
 
@@ -22,53 +22,55 @@ public class AvailableMediaBluetoothDeviceUpdater extends BluetoothDeviceUpdater
         this.mAudioManager = (AudioManager) context.getSystemService("audio");
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public void onAudioModeChanged() {
         forceUpdate();
     }
 
-    @Override // com.android.settings.bluetooth.BluetoothDeviceUpdater
     public boolean isFilterMatched(CachedBluetoothDevice cachedBluetoothDevice) {
-        boolean isConnectedHfpDevice;
+        boolean z;
         int mode = this.mAudioManager.getMode();
         int i = (mode == 1 || mode == 2 || mode == 3) ? 1 : 2;
-        if (isDeviceConnected(cachedBluetoothDevice)) {
-            boolean z = DBG;
-            if (z) {
-                Log.d("AvailableMediaBluetoothDeviceUpdater", "isFilterMatched() current audio profile : " + i);
+        if (!isDeviceConnected(cachedBluetoothDevice) || !isDeviceInCachedDevicesList(cachedBluetoothDevice)) {
+            return false;
+        }
+        boolean z2 = DBG;
+        if (z2) {
+            Log.d("AvailableMediaBluetoothDeviceUpdater", "isFilterMatched() current audio profile : " + i);
+        }
+        if (cachedBluetoothDevice.isConnectedHearingAidDevice() || cachedBluetoothDevice.isConnectedLeAudioDevice()) {
+            Log.d("AvailableMediaBluetoothDeviceUpdater", "isFilterMatched() device : " + cachedBluetoothDevice.getName() + ", the profile is connected.");
+            z = true;
+        } else {
+            z = false;
+        }
+        if (!z) {
+            if (i == 1) {
+                z = cachedBluetoothDevice.isConnectedHfpDevice();
+            } else if (i == 2) {
+                z = cachedBluetoothDevice.isConnectedA2dpDevice();
             }
-            if (cachedBluetoothDevice.isConnectedHearingAidDevice()) {
-                return true;
-            }
-            if (i != 1) {
-                isConnectedHfpDevice = i != 2 ? false : cachedBluetoothDevice.isConnectedA2dpDevice();
-            } else {
-                isConnectedHfpDevice = cachedBluetoothDevice.isConnectedHfpDevice();
-            }
-            if (z) {
-                Log.d("AvailableMediaBluetoothDeviceUpdater", "isFilterMatched() device : " + cachedBluetoothDevice.getName() + ", isFilterMatched : " + isConnectedHfpDevice);
-            }
-            if (isConnectedHfpDevice) {
-                if (isGroupDevice(cachedBluetoothDevice)) {
-                    if (!z) {
-                        return false;
-                    }
-                    Log.d("AvailableMediaBluetoothDeviceUpdater", "It is GroupDevice ignore showing ");
-                    return false;
-                } else if (isPrivateAddr(cachedBluetoothDevice)) {
-                    if (!z) {
-                        return false;
-                    }
-                    Log.d("AvailableMediaBluetoothDeviceUpdater", "It is isPrivateAddr ignore showing ");
+        }
+        if (z2) {
+            Log.d("AvailableMediaBluetoothDeviceUpdater", "isFilterMatched() device : " + cachedBluetoothDevice.getName() + ", isFilterMatched : " + z);
+        }
+        if (z) {
+            if (isGroupDevice(cachedBluetoothDevice)) {
+                if (!z2) {
                     return false;
                 }
+                Log.d("AvailableMediaBluetoothDeviceUpdater", "It is GroupDevice ignore showing ");
+                return false;
+            } else if (isPrivateAddr(cachedBluetoothDevice)) {
+                if (!z2) {
+                    return false;
+                }
+                Log.d("AvailableMediaBluetoothDeviceUpdater", "It is isPrivateAddr ignore showing ");
+                return false;
             }
-            return isConnectedHfpDevice;
         }
-        return false;
+        return z;
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceClickListener
     public boolean onPreferenceClick(Preference preference) {
         this.mMetricsFeatureProvider.logClickedPreference(preference, this.mFragment.getMetricsCategory());
         return ((BluetoothDevicePreference) preference).getBluetoothDevice().setActive();

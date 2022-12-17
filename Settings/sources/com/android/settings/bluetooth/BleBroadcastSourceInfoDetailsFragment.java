@@ -3,14 +3,14 @@ package com.android.settings.bluetooth;
 import android.bluetooth.BleBroadcastSourceInfo;
 import android.content.Context;
 import android.util.Log;
-import com.android.settings.R;
+import com.android.settings.R$xml;
 import com.android.settings.dashboard.RestrictedDashboardFragment;
 import com.android.settingslib.bluetooth.CachedBluetoothDevice;
 import com.android.settingslib.bluetooth.LocalBluetoothManager;
 import com.android.settingslib.core.AbstractPreferenceController;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class BleBroadcastSourceInfoDetailsFragment extends RestrictedDashboardFragment {
     BleBroadcastSourceInfo mBleBroadcastSourceInfo;
     CachedBluetoothDevice mCachedDevice;
@@ -18,13 +18,11 @@ public class BleBroadcastSourceInfoDetailsFragment extends RestrictedDashboardFr
     LocalBluetoothManager mManager;
     Integer mSourceInfoIndex = -1;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "SourceInfoDetailsFrg";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1009;
     }
@@ -33,11 +31,11 @@ public class BleBroadcastSourceInfoDetailsFragment extends RestrictedDashboardFr
         super("no_config_bluetooth");
     }
 
-    CachedBluetoothDevice getCachedDevice(String str) {
+    /* access modifiers changed from: package-private */
+    public CachedBluetoothDevice getCachedDevice(String str) {
         return this.mManager.getCachedDeviceManager().findDevice(this.mManager.getBluetoothAdapter().getRemoteDevice(str));
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
         this.mDeviceAddress = getArguments().getString("device_address");
         this.mManager = Utils.getLocalBtManager(context);
@@ -51,24 +49,23 @@ public class BleBroadcastSourceInfoDetailsFragment extends RestrictedDashboardFr
         } else if (this.mBleBroadcastSourceInfo == null) {
             Log.w("SourceInfoDetailsFrg", "onAttach()  mBleBroadcastSourceInfo null!");
             finish();
-        } else if (this.mSourceInfoIndex != null) {
-        } else {
+        } else if (this.mSourceInfoIndex == null) {
             Log.w("SourceInfoDetailsFrg", "onAttach()  mSourceInfoIndex null!");
             finish();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.bcast_source_info_details_fragment;
+        return R$xml.bcast_source_info_details_fragment;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment
-    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+    /* access modifiers changed from: protected */
+    public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
         ArrayList arrayList = new ArrayList();
-        if (this.mCachedDevice != null && this.mBleBroadcastSourceInfo != null) {
-            arrayList.add(new BleBroadcastSourceInfoDetailsController(context, this, this.mBleBroadcastSourceInfo, this.mCachedDevice, this.mSourceInfoIndex.intValue(), getSettingsLifecycle()));
+        if (!(this.mCachedDevice == null || this.mBleBroadcastSourceInfo == null)) {
+            Context context2 = context;
+            arrayList.add(new BleBroadcastSourceInfoDetailsController(context2, this, this.mBleBroadcastSourceInfo, this.mCachedDevice, this.mSourceInfoIndex.intValue(), getSettingsLifecycle()));
         }
         return arrayList;
     }

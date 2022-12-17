@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-/* loaded from: classes.dex */
+
 public class BarView extends LinearLayout {
     private TextView mBarSummary;
     private TextView mBarTitle;
@@ -30,11 +30,13 @@ public class BarView extends LinearLayout {
         this.mBarView.setBackgroundColor(color2);
     }
 
-    CharSequence getTitle() {
+    /* access modifiers changed from: package-private */
+    public CharSequence getTitle() {
         return this.mBarTitle.getText();
     }
 
-    CharSequence getSummary() {
+    /* access modifiers changed from: package-private */
+    public CharSequence getSummary() {
         return this.mBarSummary.getText();
     }
 

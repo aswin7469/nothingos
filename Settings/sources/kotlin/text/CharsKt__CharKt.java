@@ -1,6 +1,6 @@
 package kotlin.text;
+
 /* compiled from: Char.kt */
-/* loaded from: classes2.dex */
 class CharsKt__CharKt extends CharsKt__CharJVMKt {
     public static final boolean equals(char c, char c2, boolean z) {
         if (c == c2) {
@@ -9,6 +9,11 @@ class CharsKt__CharKt extends CharsKt__CharJVMKt {
         if (!z) {
             return false;
         }
-        return Character.toUpperCase(c) == Character.toUpperCase(c2) || Character.toLowerCase(c) == Character.toLowerCase(c2);
+        char upperCase = Character.toUpperCase(c);
+        char upperCase2 = Character.toUpperCase(c2);
+        if (upperCase == upperCase2 || Character.toLowerCase(upperCase) == Character.toLowerCase(upperCase2)) {
+            return true;
+        }
+        return false;
     }
 }

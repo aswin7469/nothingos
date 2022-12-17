@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:settings="http://schemas.android.com/apk/res-auto" android:title="@string/source_info_details_title">
+<PreferenceScreen xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:title="@string/source_info_details_title">
     <PreferenceCategory android:key="broadcast_source_details_category">
         <Preference android:title="@string/bcast_source_info_sid" android:key="broadcast_si_sourceId" android:summary="00"/>
         <Preference android:title="@string/bcast_source_address" android:key="broadcast_si_source_address" android:summary="00:00:00:00:00:00"/>
@@ -7,8 +7,8 @@
         <MultiSelectListPreference android:persistent="false" android:entries="@array/bcast_channel_selection" android:title="@string/bcast_audio_sync_state" android:key="broadcast_si_audio_state" android:entryValues="@array/bcast_channel_selection" style="@style/SettingsMultiSelectListPreference"/>
         <Preference android:title="@string/bcast_source_enc_status" android:key="broadcast_si_encryption_state" android:summary="No encryption key"/>
         <Preference android:title="@string/bcast_source_metadata" android:key="broadcast_si_metadata" android:summary="Music"/>
-        <SwitchPreference android:title="@string/bcast_enable_audio_sync" android:key="broadcast_si_enable_audio_sync" android:defaultValue="false"/>
+        <com.nothing.p006ui.support.NtCustSwitchPreference android:title="@string/bcast_enable_audio_sync" android:key="broadcast_si_enable_audio_sync" android:defaultValue="false"/>
         <EditTextPreference android:ems="16" android:title="@string/bcast_update_code_title" android:key="update_broadcast_code" android:summary="@string/bcast_update_code_summary" android:defaultValue="" android:inputType="text"/>
-        <com.android.settingslib.widget.ActionButtonsPreference android:title="@string/bcast_info_update" android:key="bcast_si_update_button" settings:allowDividerBelow="true"/>
+        <com.android.settingslib.widget.ActionButtonsPreference android:title="@string/bcast_info_update" android:key="bcast_si_update_button" app:allowDividerBelow="true"/>
     </PreferenceCategory>
 </PreferenceScreen>

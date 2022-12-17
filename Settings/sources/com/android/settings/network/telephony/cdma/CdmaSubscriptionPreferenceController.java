@@ -8,49 +8,36 @@ import android.text.TextUtils;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import com.android.settings.network.telephony.MobileNetworkUtils;
-import com.android.settings.slices.SliceBackgroundWorker;
-/* loaded from: classes.dex */
+
 public class CdmaSubscriptionPreferenceController extends CdmaBasePreferenceController implements Preference.OnPreferenceChangeListener {
     private static final String TYPE_NV = "NV";
     private static final String TYPE_RUIM = "RUIM";
     ListPreference mPreference;
 
-    @Override // com.android.settings.network.telephony.cdma.CdmaBasePreferenceController, com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.network.telephony.cdma.CdmaBasePreferenceController, com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.network.telephony.cdma.CdmaBasePreferenceController, com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.network.telephony.cdma.CdmaBasePreferenceController, com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.network.telephony.cdma.CdmaBasePreferenceController, com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.network.telephony.cdma.CdmaBasePreferenceController, com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.network.telephony.cdma.CdmaBasePreferenceController, com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.network.telephony.cdma.CdmaBasePreferenceController, com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -59,12 +46,10 @@ public class CdmaSubscriptionPreferenceController extends CdmaBasePreferenceCont
         super(context, str);
     }
 
-    @Override // com.android.settings.network.telephony.cdma.CdmaBasePreferenceController, com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.network.telephony.TelephonyAvailabilityCallback
     public int getAvailabilityStatus(int i) {
         return (!MobileNetworkUtils.isCdmaOptions(this.mContext, i) || !deviceSupportsNvAndRuim()) ? 2 : 0;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         ListPreference listPreference = (ListPreference) preference;
@@ -75,7 +60,6 @@ public class CdmaSubscriptionPreferenceController extends CdmaBasePreferenceCont
         }
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         int parseInt = Integer.parseInt((String) obj);
         try {
@@ -87,29 +71,34 @@ public class CdmaSubscriptionPreferenceController extends CdmaBasePreferenceCont
         }
     }
 
-    boolean deviceSupportsNvAndRuim() {
+    /* access modifiers changed from: package-private */
+    public boolean deviceSupportsNvAndRuim() {
         boolean z;
         boolean z2;
         String rilSubscriptionTypes = getRilSubscriptionTypes();
         if (!TextUtils.isEmpty(rilSubscriptionTypes)) {
-            z = false;
             z2 = false;
-            for (String str : rilSubscriptionTypes.split(",")) {
-                String trim = str.trim();
-                if (trim.equalsIgnoreCase(TYPE_NV)) {
-                    z = true;
-                } else if (trim.equalsIgnoreCase(TYPE_RUIM)) {
+            z = false;
+            for (String trim : rilSubscriptionTypes.split(",")) {
+                String trim2 = trim.trim();
+                if (trim2.equalsIgnoreCase(TYPE_NV)) {
                     z2 = true;
+                } else if (trim2.equalsIgnoreCase(TYPE_RUIM)) {
+                    z = true;
                 }
             }
         } else {
-            z = false;
             z2 = false;
+            z = false;
         }
-        return z && z2;
+        if (!z2 || !z) {
+            return false;
+        }
+        return true;
     }
 
-    protected String getRilSubscriptionTypes() {
+    /* access modifiers changed from: protected */
+    public String getRilSubscriptionTypes() {
         return SystemProperties.get("ril.subscription.types");
     }
 }

@@ -3,21 +3,21 @@ package androidx.slice.builders.impl;
 import androidx.slice.builders.ListBuilder;
 import androidx.slice.builders.SliceAction;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public interface ListBuilder {
-    void addAction(SliceAction action);
+    void addAction(SliceAction sliceAction);
 
-    void addInputRange(ListBuilder.InputRangeBuilder builder);
+    void addInputRange(ListBuilder.InputRangeBuilder inputRangeBuilder);
 
-    void addRow(ListBuilder.RowBuilder impl);
+    void addRow(ListBuilder.RowBuilder rowBuilder);
 
-    void setColor(int color);
+    void setColor(int i);
 
-    void setHeader(ListBuilder.HeaderBuilder impl);
+    void setHeader(ListBuilder.HeaderBuilder headerBuilder);
 
-    void setIsError(boolean isError);
+    void setIsError(boolean z);
 
-    void setKeywords(Set<String> keywords);
+    void setKeywords(Set<String> set);
 
-    void setTtl(long ttl);
+    void setTtl(long j);
 }

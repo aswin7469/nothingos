@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="abc_slice_duration_days">
-        <item quantity="one">Il y a %d jour</item>
-        <item quantity="other">Il y a %d jours</item>
+        <item quantity="one">Il y a %d j</item>
+        <item quantity="other">Il y a %d j</item>
     </plurals>
     <plurals name="abc_slice_duration_min">
-        <item quantity="one">Il y a %d minute</item>
-        <item quantity="other">Il y a %d minutes</item>
+        <item quantity="one">Il y a %d min</item>
+        <item quantity="other">Il y a %d min</item>
     </plurals>
     <plurals name="abc_slice_duration_years">
         <item quantity="one">Il y a %d an</item>
@@ -141,8 +141,8 @@
         <item quantity="other">%1$d applications sur %2$d ont accès à la position</item>
     </plurals>
     <plurals name="location_settings_summary_location_on">
-        <item quantity="one">Activé : %1$d application a accès à la position</item>
-        <item quantity="other">Activé : %1$d applications ont accès à la position</item>
+        <item quantity="one">Activée : %1$d application a accès à la position</item>
+        <item quantity="other">Activée : %1$d applications ont accès à la position</item>
     </plurals>
     <plurals name="lockpassword_password_requires_letters">
         <item quantity="one">Doit contenir au moins %d lettre</item>
@@ -233,12 +233,12 @@
         <item quantity="other">%d catégories désactivées</item>
     </plurals>
     <plurals name="notifications_sent_daily">
-        <item quantity="one">~%d notification par jour</item>
-        <item quantity="other">~%d notifications par jour</item>
+        <item quantity="one">~%,d notification par jour</item>
+        <item quantity="other">~%,d notifications par jour</item>
     </plurals>
     <plurals name="notifications_sent_weekly">
-        <item quantity="one">~%d notification par semaine</item>
-        <item quantity="other">~%d notifications par semaine</item>
+        <item quantity="one">~%,d notification par semaine</item>
+        <item quantity="other">~%,d notifications par semaine</item>
     </plurals>
     <plurals name="number_of_device_admins">
         <item quantity="one">%d application active</item>
@@ -320,14 +320,6 @@
         <item quantity="one">Faire confiance au certificat ou le supprimer</item>
         <item quantity="other">Faire confiance aux certificats ou les supprimer</item>
     </plurals>
-    <plurals name="ssl_ca_cert_info_message">
-        <item quantity="one">%s a installé une autorité de certification pour votre profil professionnel, ce qui peut leur permettre de surveiller l&apos;activité du réseau, y compris les courriels, les applications et les sites Web sécurisés.\n\nPour en savoir plus sur ce certificat, communiquez avec votre administrateur.</item>
-        <item quantity="other">%s a installé des autorités de certification pour votre profil professionnel, ce qui peut leur permettre de surveiller l&apos;activité du réseau, y compris les courriels, les applications et les sites Web sécurisés.\n\nPour en savoir plus sur ces certificats, communiquez avec votre administrateur.</item>
-    </plurals>
-    <plurals name="ssl_ca_cert_info_message_device_owner">
-        <item quantity="one">%s a installé une autorité de certification sur votre appareil, ce qui peut leur permettre de surveiller son activité réseau, y compris les courriels, les applications et les sites Web sécurisés.\n\nPour en savoir plus sur ce certificat, communiquez avec votre administrateur.</item>
-        <item quantity="other">%s a installé des autorités de certification sur votre appareil, ce qui peut leur permettre de surveiller son activité réseau, y compris les courriels, les applications et les sites Web sécurisés.\n\nPour en savoir plus sur ces certificats, communiquez avec votre administrateur.</item>
-    </plurals>
     <plurals name="ssl_ca_cert_settings_button">
         <item quantity="one">Vérifier le certificat</item>
         <item quantity="other">Vérifier les certificats</item>
@@ -359,10 +351,6 @@
     <plurals name="wifi_saved_passpoint_access_points_summary">
         <item quantity="one">%d abonnement</item>
         <item quantity="other">%d abonnements</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d appareil connecté</item>
-        <item quantity="other">%1$d appareils connectés</item>
     </plurals>
     <plurals name="wrong_pin_code">
         <item quantity="one">Le NIP de la carte SIM incorrect. Il vous reste %d tentative.</item>

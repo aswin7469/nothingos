@@ -18,31 +18,31 @@ import com.google.android.setupdesign.R$styleable;
 import com.google.android.setupdesign.util.Partner$ResourceEntry;
 import java.io.IOException;
 import java.util.Map;
+
 @TargetApi(14)
-/* loaded from: classes2.dex */
 public class IllustrationVideoView extends TextureView implements Animatable, TextureView.SurfaceTextureListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnSeekCompleteListener, MediaPlayer.OnInfoListener, MediaPlayer.OnErrorListener {
+    private float aspectRatio = 1.0f;
+    private boolean isMediaPlayerLoading = false;
     protected MediaPlayer mediaPlayer;
     private boolean prepared;
-    Surface surface;
-    private String videoResPackageName;
-    private float aspectRatio = 1.0f;
-    private int videoResId = 0;
     private boolean shouldPauseVideoWhenFinished = true;
+    Surface surface;
+    private int videoResId = 0;
+    private String videoResPackageName;
     private int visibility = 0;
-    private boolean isMediaPlayerLoading = false;
 
-    protected void onRenderingStart() {
+    /* access modifiers changed from: protected */
+    public void onRenderingStart() {
     }
 
-    @Override // android.view.TextureView.SurfaceTextureListener
     public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i2) {
     }
 
-    @Override // android.view.TextureView.SurfaceTextureListener
     public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
     }
 
-    protected boolean shouldLoop() {
+    /* access modifiers changed from: protected */
+    public boolean shouldLoop() {
         return true;
     }
 
@@ -66,12 +66,12 @@ public class IllustrationVideoView extends TextureView implements Animatable, Te
         setSurfaceTextureListener(this);
     }
 
-    @Override // android.view.View
-    protected void onMeasure(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         int size = View.MeasureSpec.getSize(i);
         int size2 = View.MeasureSpec.getSize(i2);
-        float f = size2;
-        float f2 = size;
+        float f = (float) size2;
+        float f2 = (float) size;
         float f3 = this.aspectRatio;
         if (f < f2 * f3) {
             size = (int) (f / f3);
@@ -105,7 +105,6 @@ public class IllustrationVideoView extends TextureView implements Animatable, Te
         this.shouldPauseVideoWhenFinished = z;
     }
 
-    @Override // android.view.View
     public void onWindowFocusChanged(boolean z) {
         super.onWindowFocusChanged(z);
         if (z) {
@@ -115,37 +114,38 @@ public class IllustrationVideoView extends TextureView implements Animatable, Te
         }
     }
 
-    protected void createMediaPlayer() {
-        MediaPlayer mediaPlayer = this.mediaPlayer;
-        if (mediaPlayer != null) {
-            mediaPlayer.release();
+    /* access modifiers changed from: protected */
+    public void createMediaPlayer() {
+        MediaPlayer mediaPlayer2 = this.mediaPlayer;
+        if (mediaPlayer2 != null) {
+            mediaPlayer2.release();
         }
-        if (this.surface == null || this.videoResId == 0) {
-            return;
+        if (this.surface != null && this.videoResId != 0) {
+            MediaPlayer mediaPlayer3 = new MediaPlayer();
+            this.mediaPlayer = mediaPlayer3;
+            mediaPlayer3.setSurface(this.surface);
+            this.mediaPlayer.setOnPreparedListener(this);
+            this.mediaPlayer.setOnSeekCompleteListener(this);
+            this.mediaPlayer.setOnInfoListener(this);
+            this.mediaPlayer.setOnErrorListener(this);
+            setVideoResourceInternal(this.videoResId, this.videoResPackageName);
         }
-        MediaPlayer mediaPlayer2 = new MediaPlayer();
-        this.mediaPlayer = mediaPlayer2;
-        mediaPlayer2.setSurface(this.surface);
-        this.mediaPlayer.setOnPreparedListener(this);
-        this.mediaPlayer.setOnSeekCompleteListener(this);
-        this.mediaPlayer.setOnInfoListener(this);
-        this.mediaPlayer.setOnErrorListener(this);
-        setVideoResourceInternal(this.videoResId, this.videoResPackageName);
     }
 
     private void setVideoResourceInternal(int i, String str) {
         try {
-            this.mediaPlayer.setDataSource(getContext(), Uri.parse("android.resource://" + str + "/" + i), (Map<String, String>) null);
+            this.mediaPlayer.setDataSource(getContext(), Uri.parse("android.resource://" + str + "/" + i), (Map) null);
             this.mediaPlayer.prepareAsync();
         } catch (IOException e) {
             Log.e("IllustrationVideoView", "Unable to set video data source: " + i, e);
         }
     }
 
-    protected void createSurface() {
-        Surface surface = this.surface;
-        if (surface != null) {
-            surface.release();
+    /* access modifiers changed from: protected */
+    public void createSurface() {
+        Surface surface2 = this.surface;
+        if (surface2 != null) {
+            surface2.release();
             this.surface = null;
         }
         SurfaceTexture surfaceTexture = getSurfaceTexture();
@@ -155,8 +155,8 @@ public class IllustrationVideoView extends TextureView implements Animatable, Te
         }
     }
 
-    @Override // android.view.View
-    protected void onWindowVisibilityChanged(int i) {
+    /* access modifiers changed from: protected */
+    public void onWindowVisibilityChanged(int i) {
         super.onWindowVisibilityChanged(i);
         if (i == 0) {
             reattach();
@@ -165,7 +165,6 @@ public class IllustrationVideoView extends TextureView implements Animatable, Te
         }
     }
 
-    @Override // android.view.View
     public void setVisibility(int i) {
         this.visibility = i;
         if (this.isMediaPlayerLoading && i == 0) {
@@ -180,15 +179,15 @@ public class IllustrationVideoView extends TextureView implements Animatable, Te
     }
 
     public void release() {
-        MediaPlayer mediaPlayer = this.mediaPlayer;
-        if (mediaPlayer != null) {
-            mediaPlayer.release();
+        MediaPlayer mediaPlayer2 = this.mediaPlayer;
+        if (mediaPlayer2 != null) {
+            mediaPlayer2.release();
             this.mediaPlayer = null;
             this.prepared = false;
         }
-        Surface surface = this.surface;
-        if (surface != null) {
-            surface.release();
+        Surface surface2 = this.surface;
+        if (surface2 != null) {
+            surface2.release();
             this.surface = null;
         }
     }
@@ -200,55 +199,46 @@ public class IllustrationVideoView extends TextureView implements Animatable, Te
     }
 
     private void initVideo() {
-        if (getWindowVisibility() != 0) {
-            return;
-        }
-        createSurface();
-        if (this.surface != null) {
-            createMediaPlayer();
-        } else {
-            Log.i("IllustrationVideoView", "Surface is null");
+        if (getWindowVisibility() == 0) {
+            createSurface();
+            if (this.surface != null) {
+                createMediaPlayer();
+            } else {
+                Log.i("IllustrationVideoView", "Surface is null");
+            }
         }
     }
 
-    @Override // android.view.TextureView.SurfaceTextureListener
     public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i2) {
         setIsMediaPlayerLoading(true);
         initVideo();
     }
 
-    @Override // android.view.TextureView.SurfaceTextureListener
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
         release();
         return true;
     }
 
-    @Override // android.graphics.drawable.Animatable
     public void start() {
-        MediaPlayer mediaPlayer;
-        if (!this.prepared || (mediaPlayer = this.mediaPlayer) == null || mediaPlayer.isPlaying()) {
-            return;
+        MediaPlayer mediaPlayer2;
+        if (this.prepared && (mediaPlayer2 = this.mediaPlayer) != null && !mediaPlayer2.isPlaying()) {
+            this.mediaPlayer.start();
         }
-        this.mediaPlayer.start();
     }
 
-    @Override // android.graphics.drawable.Animatable
     public void stop() {
-        MediaPlayer mediaPlayer;
-        if (!this.shouldPauseVideoWhenFinished || !this.prepared || (mediaPlayer = this.mediaPlayer) == null) {
-            return;
+        MediaPlayer mediaPlayer2;
+        if (this.shouldPauseVideoWhenFinished && this.prepared && (mediaPlayer2 = this.mediaPlayer) != null) {
+            mediaPlayer2.pause();
         }
-        mediaPlayer.pause();
     }
 
-    @Override // android.graphics.drawable.Animatable
     public boolean isRunning() {
-        MediaPlayer mediaPlayer = this.mediaPlayer;
-        return mediaPlayer != null && mediaPlayer.isPlaying();
+        MediaPlayer mediaPlayer2 = this.mediaPlayer;
+        return mediaPlayer2 != null && mediaPlayer2.isPlaying();
     }
 
-    @Override // android.media.MediaPlayer.OnInfoListener
-    public boolean onInfo(MediaPlayer mediaPlayer, int i, int i2) {
+    public boolean onInfo(MediaPlayer mediaPlayer2, int i, int i2) {
         if (i == 3) {
             setIsMediaPlayerLoading(false);
             onRenderingStart();
@@ -256,16 +246,15 @@ public class IllustrationVideoView extends TextureView implements Animatable, Te
         return false;
     }
 
-    @Override // android.media.MediaPlayer.OnPreparedListener
-    public void onPrepared(MediaPlayer mediaPlayer) {
+    public void onPrepared(MediaPlayer mediaPlayer2) {
         float f;
         this.prepared = true;
-        mediaPlayer.setLooping(shouldLoop());
-        if (mediaPlayer.getVideoWidth() > 0 && mediaPlayer.getVideoHeight() > 0) {
-            f = mediaPlayer.getVideoHeight() / mediaPlayer.getVideoWidth();
-        } else {
-            Log.w("IllustrationVideoView", "Unexpected video size=" + mediaPlayer.getVideoWidth() + "x" + mediaPlayer.getVideoHeight());
+        mediaPlayer2.setLooping(shouldLoop());
+        if (mediaPlayer2.getVideoWidth() <= 0 || mediaPlayer2.getVideoHeight() <= 0) {
+            Log.w("IllustrationVideoView", "Unexpected video size=" + mediaPlayer2.getVideoWidth() + "x" + mediaPlayer2.getVideoHeight());
             f = 0.0f;
+        } else {
+            f = ((float) mediaPlayer2.getVideoHeight()) / ((float) mediaPlayer2.getVideoWidth());
         }
         if (Float.compare(this.aspectRatio, f) != 0) {
             this.aspectRatio = f;
@@ -276,29 +265,28 @@ public class IllustrationVideoView extends TextureView implements Animatable, Te
         }
     }
 
-    @Override // android.media.MediaPlayer.OnSeekCompleteListener
-    public void onSeekComplete(MediaPlayer mediaPlayer) {
+    public void onSeekComplete(MediaPlayer mediaPlayer2) {
         if (isPrepared()) {
-            mediaPlayer.start();
+            mediaPlayer2.start();
         } else {
             Log.e("IllustrationVideoView", "Seek complete but media player not prepared");
         }
     }
 
     public int getCurrentPosition() {
-        MediaPlayer mediaPlayer = this.mediaPlayer;
-        if (mediaPlayer == null) {
+        MediaPlayer mediaPlayer2 = this.mediaPlayer;
+        if (mediaPlayer2 == null) {
             return 0;
         }
-        return mediaPlayer.getCurrentPosition();
+        return mediaPlayer2.getCurrentPosition();
     }
 
-    protected boolean isPrepared() {
+    /* access modifiers changed from: protected */
+    public boolean isPrepared() {
         return this.prepared;
     }
 
-    @Override // android.media.MediaPlayer.OnErrorListener
-    public boolean onError(MediaPlayer mediaPlayer, int i, int i2) {
+    public boolean onError(MediaPlayer mediaPlayer2, int i, int i2) {
         Log.w("IllustrationVideoView", "MediaPlayer error. what=" + i + " extra=" + i2);
         return false;
     }
@@ -307,7 +295,8 @@ public class IllustrationVideoView extends TextureView implements Animatable, Te
         return this.mediaPlayer;
     }
 
-    protected float getAspectRatio() {
+    /* access modifiers changed from: protected */
+    public float getAspectRatio() {
         return this.aspectRatio;
     }
 }

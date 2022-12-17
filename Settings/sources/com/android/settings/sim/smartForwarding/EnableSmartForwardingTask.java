@@ -5,7 +5,6 @@ import android.telephony.CallForwardingInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import com.android.settings.sim.smartForwarding.EnableSmartForwardingTask;
 import com.google.common.util.concurrent.SettableFuture;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,42 +17,41 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
-/* loaded from: classes.dex */
-public class EnableSmartForwardingTask implements Callable<FeatureResult> {
-    private final String[] mCallForwardingNumber;
-    private final SubscriptionManager sm;
-    private final TelephonyManager tm;
-    FeatureResult mResult = new FeatureResult(false, null);
-    SettableFuture<FeatureResult> client = SettableFuture.create();
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public interface Command {
+public class EnableSmartForwardingTask implements Callable<FeatureResult> {
+    SettableFuture<FeatureResult> client = SettableFuture.create();
+    private final String[] mCallForwardingNumber;
+    FeatureResult mResult = new FeatureResult(false, (SlotUTData[]) null);
+    /* access modifiers changed from: private */
+
+    /* renamed from: sm */
+    public final SubscriptionManager f220sm;
+    /* access modifiers changed from: private */
+
+    /* renamed from: tm */
+    public final TelephonyManager f221tm;
+
+    interface Command {
         boolean process() throws Exception;
     }
 
     public EnableSmartForwardingTask(Context context, String[] strArr) {
-        this.tm = (TelephonyManager) context.getSystemService(TelephonyManager.class);
-        this.sm = (SubscriptionManager) context.getSystemService(SubscriptionManager.class);
+        this.f221tm = (TelephonyManager) context.getSystemService(TelephonyManager.class);
+        this.f220sm = (SubscriptionManager) context.getSystemService(SubscriptionManager.class);
         this.mCallForwardingNumber = strArr;
     }
 
-    /* JADX WARN: Can't rename method to resolve collision */
-    @Override // java.util.concurrent.Callable
-    /* renamed from: call */
-    public FeatureResult mo521call() throws TimeoutException, InterruptedException, ExecutionException {
+    public FeatureResult call() throws TimeoutException, InterruptedException, ExecutionException {
         FlowController flowController = new FlowController();
         if (flowController.init(this.mCallForwardingNumber)) {
             flowController.startProcess();
         } else {
             this.client.set(this.mResult);
         }
-        return this.client.get(20L, TimeUnit.SECONDS);
+        return (FeatureResult) this.client.get(20, TimeUnit.SECONDS);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public class FlowController {
+    class FlowController {
         private SlotUTData[] mSlotUTData;
         private final ArrayList<Command> mSteps = new ArrayList<>();
 
@@ -69,46 +67,48 @@ public class EnableSmartForwardingTask implements Callable<FeatureResult> {
         }
 
         private boolean initObject(String[] strArr) {
+            String[] strArr2 = strArr;
             ExecutorService newSingleThreadExecutor = Executors.newSingleThreadExecutor();
-            if (EnableSmartForwardingTask.this.tm != null && EnableSmartForwardingTask.this.sm != null) {
-                if (strArr.length == EnableSmartForwardingTask.this.tm.getActiveModemCount()) {
-                    this.mSlotUTData = new SlotUTData[EnableSmartForwardingTask.this.tm.getActiveModemCount()];
-                    for (int i = 0; i < this.mSlotUTData.length; i++) {
-                        int[] subscriptionIds = EnableSmartForwardingTask.this.sm.getSubscriptionIds(i);
-                        if (subscriptionIds.length < 1) {
-                            Log.e("SmartForwarding", "getSubscriptionIds() return empty sub id list.");
-                            return false;
-                        }
-                        int i2 = subscriptionIds[0];
-                        if (!EnableSmartForwardingTask.this.sm.isActiveSubId(i2)) {
-                            EnableSmartForwardingTask.this.mResult.setReason(FeatureResult.FailedReason.SIM_NOT_ACTIVE);
-                            return false;
-                        }
-                        QueryCallWaitingCommand queryCallWaitingCommand = new QueryCallWaitingCommand(EnableSmartForwardingTask.this.tm, newSingleThreadExecutor, i2);
-                        QueryCallForwardingCommand queryCallForwardingCommand = new QueryCallForwardingCommand(EnableSmartForwardingTask.this.tm, newSingleThreadExecutor, i2);
-                        this.mSlotUTData[i] = new SlotUTData(i2, strArr[i], queryCallWaitingCommand, queryCallForwardingCommand, new UpdateCallWaitingCommand(EnableSmartForwardingTask.this.tm, newSingleThreadExecutor, queryCallWaitingCommand, i2), new UpdateCallForwardingCommand(EnableSmartForwardingTask.this.tm, newSingleThreadExecutor, queryCallForwardingCommand, i2, strArr[i]));
-                    }
-                    return true;
-                }
+            if (EnableSmartForwardingTask.this.f221tm == null || EnableSmartForwardingTask.this.f220sm == null) {
+                Log.e("SmartForwarding", "TelephonyManager or SubscriptionManager is null");
+                return false;
+            } else if (strArr2.length != EnableSmartForwardingTask.this.f221tm.getActiveModemCount()) {
                 Log.e("SmartForwarding", "The length of PhoneNum array should same as phone count.");
                 return false;
+            } else {
+                this.mSlotUTData = new SlotUTData[EnableSmartForwardingTask.this.f221tm.getActiveModemCount()];
+                for (int i = 0; i < this.mSlotUTData.length; i++) {
+                    int[] subscriptionIds = EnableSmartForwardingTask.this.f220sm.getSubscriptionIds(i);
+                    if (subscriptionIds.length < 1) {
+                        Log.e("SmartForwarding", "getSubscriptionIds() return empty sub id list.");
+                        return false;
+                    }
+                    int i2 = subscriptionIds[0];
+                    if (!EnableSmartForwardingTask.this.f220sm.isActiveSubId(i2)) {
+                        EnableSmartForwardingTask.this.mResult.setReason(FeatureResult.FailedReason.SIM_NOT_ACTIVE);
+                        return false;
+                    }
+                    QueryCallWaitingCommand queryCallWaitingCommand = new QueryCallWaitingCommand(EnableSmartForwardingTask.this.f221tm, newSingleThreadExecutor, i2);
+                    QueryCallForwardingCommand queryCallForwardingCommand = new QueryCallForwardingCommand(EnableSmartForwardingTask.this.f221tm, newSingleThreadExecutor, i2);
+                    QueryCallForwardingCommand queryCallForwardingCommand2 = queryCallForwardingCommand;
+                    this.mSlotUTData[i] = new SlotUTData(i2, strArr2[i], queryCallWaitingCommand, queryCallForwardingCommand2, new UpdateCallWaitingCommand(EnableSmartForwardingTask.this.f221tm, newSingleThreadExecutor, queryCallWaitingCommand, i2), new UpdateCallForwardingCommand(EnableSmartForwardingTask.this.f221tm, newSingleThreadExecutor, queryCallForwardingCommand, i2, strArr2[i]));
+                }
+                return true;
             }
-            Log.e("SmartForwarding", "TelephonyManager or SubscriptionManager is null");
-            return false;
         }
 
         private void initSteps() {
-            for (SlotUTData slotUTData : this.mSlotUTData) {
-                this.mSteps.add(slotUTData.getQueryCallWaitingCommand());
+            for (SlotUTData queryCallWaitingCommand : this.mSlotUTData) {
+                this.mSteps.add(queryCallWaitingCommand.getQueryCallWaitingCommand());
             }
-            for (SlotUTData slotUTData2 : this.mSlotUTData) {
-                this.mSteps.add(slotUTData2.getQueryCallForwardingCommand());
+            for (SlotUTData queryCallForwardingCommand : this.mSlotUTData) {
+                this.mSteps.add(queryCallForwardingCommand.getQueryCallForwardingCommand());
             }
-            for (SlotUTData slotUTData3 : this.mSlotUTData) {
-                this.mSteps.add(slotUTData3.getUpdateCallWaitingCommand());
+            for (SlotUTData updateCallWaitingCommand : this.mSlotUTData) {
+                this.mSteps.add(updateCallWaitingCommand.getUpdateCallWaitingCommand());
             }
-            for (SlotUTData slotUTData4 : this.mSlotUTData) {
-                this.mSteps.add(slotUTData4.getUpdateCallForwardingCommand());
+            for (SlotUTData updateCallForwardingCommand : this.mSlotUTData) {
+                this.mSteps.add(updateCallForwardingCommand.getUpdateCallForwardingCommand());
             }
         }
 
@@ -132,15 +132,15 @@ public class EnableSmartForwardingTask implements Callable<FeatureResult> {
                 }
                 z2 = z;
             }
-            if (!z2) {
-                restoreAllSteps(i);
+            if (z2) {
+                EnableSmartForwardingTask.this.mResult.result = true;
+                EnableSmartForwardingTask.this.mResult.slotUTData = this.mSlotUTData;
+                Log.d("SmartForwarding", "Smart forwarding successful");
                 EnableSmartForwardingTask enableSmartForwardingTask = EnableSmartForwardingTask.this;
                 enableSmartForwardingTask.client.set(enableSmartForwardingTask.mResult);
                 return;
             }
-            EnableSmartForwardingTask.this.mResult.result = true;
-            EnableSmartForwardingTask.this.mResult.slotUTData = this.mSlotUTData;
-            Log.d("SmartForwarding", "Smart forwarding successful");
+            restoreAllSteps(i);
             EnableSmartForwardingTask enableSmartForwardingTask2 = EnableSmartForwardingTask.this;
             enableSmartForwardingTask2.client.set(enableSmartForwardingTask2.mResult);
         }
@@ -148,18 +148,16 @@ public class EnableSmartForwardingTask implements Callable<FeatureResult> {
         private void restoreAllSteps(int i) {
             List<Command> subList = this.mSteps.subList(0, i);
             Collections.reverse(subList);
-            for (Command command : subList) {
-                Log.d("SmartForwarding", "restoreStep: " + command);
-                if (command instanceof UpdateCommand) {
-                    ((UpdateCommand) command).onRestore();
+            for (Command next : subList) {
+                Log.d("SmartForwarding", "restoreStep: " + next);
+                if (next instanceof UpdateCommand) {
+                    ((UpdateCommand) next).onRestore();
                 }
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public final class SlotUTData {
+    final class SlotUTData {
         String mCallForwardingNumber;
         QueryCallForwardingCommand mQueryCallForwarding;
         QueryCallWaitingCommand mQueryCallWaiting;
@@ -193,16 +191,17 @@ public class EnableSmartForwardingTask implements Callable<FeatureResult> {
         }
     }
 
-    /* loaded from: classes.dex */
     static abstract class QueryCommand<T> implements Command {
         Executor executor;
         int subId;
-        TelephonyManager tm;
 
-        public QueryCommand(TelephonyManager telephonyManager, Executor executor, int i) {
+        /* renamed from: tm */
+        TelephonyManager f222tm;
+
+        public QueryCommand(TelephonyManager telephonyManager, Executor executor2, int i) {
             this.subId = i;
-            this.tm = telephonyManager;
-            this.executor = executor;
+            this.f222tm = telephonyManager;
+            this.executor = executor2;
         }
 
         public String toString() {
@@ -210,19 +209,20 @@ public class EnableSmartForwardingTask implements Callable<FeatureResult> {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static abstract class UpdateCommand<T> implements Command {
+    static abstract class UpdateCommand<T> implements Command {
         Executor executor;
         int subId;
-        TelephonyManager tm;
 
-        abstract void onRestore();
+        /* renamed from: tm */
+        TelephonyManager f223tm;
 
-        public UpdateCommand(TelephonyManager telephonyManager, Executor executor, int i) {
+        /* access modifiers changed from: package-private */
+        public abstract void onRestore();
+
+        public UpdateCommand(TelephonyManager telephonyManager, Executor executor2, int i) {
             this.subId = i;
-            this.tm = telephonyManager;
-            this.executor = executor;
+            this.f223tm = telephonyManager;
+            this.executor = executor2;
         }
 
         public String toString() {
@@ -230,9 +230,7 @@ public class EnableSmartForwardingTask implements Callable<FeatureResult> {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class QueryCallWaitingCommand extends QueryCommand<Integer> {
+    static class QueryCallWaitingCommand extends QueryCommand<Integer> {
         int result;
         SettableFuture<Boolean> resultFuture = SettableFuture.create();
 
@@ -240,18 +238,13 @@ public class EnableSmartForwardingTask implements Callable<FeatureResult> {
             super(telephonyManager, executor, i);
         }
 
-        @Override // com.android.settings.sim.smartForwarding.EnableSmartForwardingTask.Command
         public boolean process() throws Exception {
-            this.tm.createForSubscriptionId(this.subId).getCallWaitingStatus(this.executor, new Consumer() { // from class: com.android.settings.sim.smartForwarding.EnableSmartForwardingTask$QueryCallWaitingCommand$$ExternalSyntheticLambda0
-                @Override // java.util.function.Consumer
-                public final void accept(Object obj) {
-                    EnableSmartForwardingTask.QueryCallWaitingCommand.this.queryStatusCallBack(((Integer) obj).intValue());
-                }
-            });
-            return this.resultFuture.get().booleanValue();
+            this.f222tm.createForSubscriptionId(this.subId).getCallWaitingStatus(this.executor, new C1358x192f5cd7(this));
+            return ((Boolean) this.resultFuture.get()).booleanValue();
         }
 
-        Integer getResult() {
+        /* access modifiers changed from: package-private */
+        public Integer getResult() {
             return Integer.valueOf(this.result);
         }
 
@@ -266,9 +259,7 @@ public class EnableSmartForwardingTask implements Callable<FeatureResult> {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class QueryCallForwardingCommand extends QueryCommand<CallForwardingInfo> {
+    static class QueryCallForwardingCommand extends QueryCommand<CallForwardingInfo> {
         CallForwardingInfo result;
         SettableFuture<Boolean> resultFuture = SettableFuture.create();
 
@@ -276,9 +267,8 @@ public class EnableSmartForwardingTask implements Callable<FeatureResult> {
             super(telephonyManager, executor, i);
         }
 
-        @Override // com.android.settings.sim.smartForwarding.EnableSmartForwardingTask.Command
         public boolean process() throws Exception {
-            this.tm.createForSubscriptionId(this.subId).getCallForwarding(3, this.executor, new TelephonyManager.CallForwardingInfoCallback() { // from class: com.android.settings.sim.smartForwarding.EnableSmartForwardingTask.QueryCallForwardingCommand.1
+            this.f222tm.createForSubscriptionId(this.subId).getCallForwarding(3, this.executor, new TelephonyManager.CallForwardingInfoCallback() {
                 public void onCallForwardingInfoAvailable(CallForwardingInfo callForwardingInfo) {
                     Log.d("SmartForwarding", "Call Forwarding result: " + callForwardingInfo);
                     QueryCallForwardingCommand queryCallForwardingCommand = QueryCallForwardingCommand.this;
@@ -291,17 +281,16 @@ public class EnableSmartForwardingTask implements Callable<FeatureResult> {
                     QueryCallForwardingCommand.this.resultFuture.set(Boolean.FALSE);
                 }
             });
-            return this.resultFuture.get().booleanValue();
+            return ((Boolean) this.resultFuture.get()).booleanValue();
         }
 
-        CallForwardingInfo getResult() {
+        /* access modifiers changed from: package-private */
+        public CallForwardingInfo getResult() {
             return this.result;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class UpdateCallWaitingCommand extends UpdateCommand<Integer> {
+    static class UpdateCallWaitingCommand extends UpdateCommand<Integer> {
         QueryCallWaitingCommand queryResult;
         SettableFuture<Boolean> resultFuture = SettableFuture.create();
 
@@ -310,15 +299,9 @@ public class EnableSmartForwardingTask implements Callable<FeatureResult> {
             this.queryResult = queryCallWaitingCommand;
         }
 
-        @Override // com.android.settings.sim.smartForwarding.EnableSmartForwardingTask.Command
         public boolean process() throws Exception {
-            this.tm.createForSubscriptionId(this.subId).setCallWaitingEnabled(true, this.executor, new Consumer() { // from class: com.android.settings.sim.smartForwarding.EnableSmartForwardingTask$UpdateCallWaitingCommand$$ExternalSyntheticLambda0
-                @Override // java.util.function.Consumer
-                public final void accept(Object obj) {
-                    EnableSmartForwardingTask.UpdateCallWaitingCommand.this.updateStatusCallBack(((Integer) obj).intValue());
-                }
-            });
-            return this.resultFuture.get().booleanValue();
+            this.f223tm.createForSubscriptionId(this.subId).setCallWaitingEnabled(true, this.executor, new C1360xf4424410(this));
+            return ((Boolean) this.resultFuture.get()).booleanValue();
         }
 
         public void updateStatusCallBack(int i) {
@@ -330,18 +313,16 @@ public class EnableSmartForwardingTask implements Callable<FeatureResult> {
             }
         }
 
-        @Override // com.android.settings.sim.smartForwarding.EnableSmartForwardingTask.UpdateCommand
-        void onRestore() {
+        /* access modifiers changed from: package-private */
+        public void onRestore() {
             Log.d("SmartForwarding", "onRestore: " + this);
             if (this.queryResult.getResult().intValue() != 1) {
-                this.tm.createForSubscriptionId(this.subId).setCallWaitingEnabled(false, null, null);
+                this.f223tm.createForSubscriptionId(this.subId).setCallWaitingEnabled(false, (Executor) null, (Consumer) null);
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class UpdateCallForwardingCommand extends UpdateCommand<Integer> {
+    static class UpdateCallForwardingCommand extends UpdateCommand<Integer> {
         String phoneNum;
         QueryCallForwardingCommand queryResult;
         SettableFuture<Boolean> resultFuture = SettableFuture.create();
@@ -352,15 +333,9 @@ public class EnableSmartForwardingTask implements Callable<FeatureResult> {
             this.queryResult = queryCallForwardingCommand;
         }
 
-        @Override // com.android.settings.sim.smartForwarding.EnableSmartForwardingTask.Command
         public boolean process() throws Exception {
-            this.tm.createForSubscriptionId(this.subId).setCallForwarding(new CallForwardingInfo(true, 3, this.phoneNum, 3), this.executor, new Consumer() { // from class: com.android.settings.sim.smartForwarding.EnableSmartForwardingTask$UpdateCallForwardingCommand$$ExternalSyntheticLambda0
-                @Override // java.util.function.Consumer
-                public final void accept(Object obj) {
-                    EnableSmartForwardingTask.UpdateCallForwardingCommand.this.updateStatusCallBack(((Integer) obj).intValue());
-                }
-            });
-            return this.resultFuture.get().booleanValue();
+            this.f223tm.createForSubscriptionId(this.subId).setCallForwarding(new CallForwardingInfo(true, 3, this.phoneNum, 3), this.executor, new C1359x438b917a(this));
+            return ((Boolean) this.resultFuture.get()).booleanValue();
         }
 
         public void updateStatusCallBack(int i) {
@@ -372,22 +347,21 @@ public class EnableSmartForwardingTask implements Callable<FeatureResult> {
             }
         }
 
-        @Override // com.android.settings.sim.smartForwarding.EnableSmartForwardingTask.UpdateCommand
-        void onRestore() {
+        /* access modifiers changed from: package-private */
+        public void onRestore() {
             Log.d("SmartForwarding", "onRestore: " + this);
-            this.tm.createForSubscriptionId(this.subId).setCallForwarding(this.queryResult.getResult(), null, null);
+            this.f223tm.createForSubscriptionId(this.subId).setCallForwarding(this.queryResult.getResult(), (Executor) null, (Consumer) null);
         }
     }
 
-    /* loaded from: classes.dex */
     public static class FeatureResult {
         private FailedReason reason;
-        private boolean result;
-        private SlotUTData[] slotUTData;
+        /* access modifiers changed from: private */
+        public boolean result;
+        /* access modifiers changed from: private */
+        public SlotUTData[] slotUTData;
 
-        /* JADX INFO: Access modifiers changed from: package-private */
-        /* loaded from: classes.dex */
-        public enum FailedReason {
+        enum FailedReason {
             NETWORK_ERROR,
             SIM_NOT_ACTIVE
         }

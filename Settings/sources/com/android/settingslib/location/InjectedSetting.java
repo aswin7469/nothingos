@@ -6,8 +6,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import com.android.internal.annotations.Immutable;
 import java.util.Objects;
+
 @Immutable
-/* loaded from: classes.dex */
 public class InjectedSetting {
     public final String className;
     public final int iconId;
@@ -28,7 +28,7 @@ public class InjectedSetting {
     }
 
     public String toString() {
-        return "InjectedSetting{mPackageName='" + this.packageName + "', mClassName='" + this.className + "', label=" + this.title + ", iconId=" + this.iconId + ", userId=" + this.mUserHandle.getIdentifier() + ", settingsActivity='" + this.settingsActivity + "', userRestriction='" + this.userRestriction + '}';
+        return "InjectedSetting{mPackageName='" + this.packageName + '\'' + ", mClassName='" + this.className + '\'' + ", label=" + this.title + ", iconId=" + this.iconId + ", userId=" + this.mUserHandle.getIdentifier() + ", settingsActivity='" + this.settingsActivity + '\'' + ", userRestriction='" + this.userRestriction + '}';
     }
 
     public Intent getServiceIntent() {
@@ -45,7 +45,10 @@ public class InjectedSetting {
             return false;
         }
         InjectedSetting injectedSetting = (InjectedSetting) obj;
-        return Objects.equals(this.packageName, injectedSetting.packageName) && Objects.equals(this.className, injectedSetting.className) && Objects.equals(this.title, injectedSetting.title) && Objects.equals(Integer.valueOf(this.iconId), Integer.valueOf(injectedSetting.iconId)) && Objects.equals(this.mUserHandle, injectedSetting.mUserHandle) && Objects.equals(this.settingsActivity, injectedSetting.settingsActivity) && Objects.equals(this.userRestriction, injectedSetting.userRestriction);
+        if (!Objects.equals(this.packageName, injectedSetting.packageName) || !Objects.equals(this.className, injectedSetting.className) || !Objects.equals(this.title, injectedSetting.title) || !Objects.equals(Integer.valueOf(this.iconId), Integer.valueOf(injectedSetting.iconId)) || !Objects.equals(this.mUserHandle, injectedSetting.mUserHandle) || !Objects.equals(this.settingsActivity, injectedSetting.settingsActivity) || !Objects.equals(this.userRestriction, injectedSetting.userRestriction)) {
+            return false;
+        }
+        return true;
     }
 
     public int hashCode() {
@@ -60,15 +63,21 @@ public class InjectedSetting {
         return hashCode2 + i;
     }
 
-    /* loaded from: classes.dex */
     public static class Builder {
-        private String mClassName;
-        private int mIconId;
-        private String mPackageName;
-        private String mSettingsActivity;
-        private String mTitle;
-        private UserHandle mUserHandle;
-        private String mUserRestriction;
+        /* access modifiers changed from: private */
+        public String mClassName;
+        /* access modifiers changed from: private */
+        public int mIconId;
+        /* access modifiers changed from: private */
+        public String mPackageName;
+        /* access modifiers changed from: private */
+        public String mSettingsActivity;
+        /* access modifiers changed from: private */
+        public String mTitle;
+        /* access modifiers changed from: private */
+        public UserHandle mUserHandle;
+        /* access modifiers changed from: private */
+        public String mUserRestriction;
 
         public Builder setPackageName(String str) {
             this.mPackageName = str;
@@ -106,13 +115,13 @@ public class InjectedSetting {
         }
 
         public InjectedSetting build() {
-            if (this.mPackageName == null || this.mClassName == null || TextUtils.isEmpty(this.mTitle) || TextUtils.isEmpty(this.mSettingsActivity)) {
-                if (Log.isLoggable("SettingsInjector", 5)) {
-                    Log.w("SettingsInjector", "Illegal setting specification: package=" + this.mPackageName + ", class=" + this.mClassName + ", title=" + this.mTitle + ", settingsActivity=" + this.mSettingsActivity);
-                }
-                return null;
+            if (this.mPackageName != null && this.mClassName != null && !TextUtils.isEmpty(this.mTitle) && !TextUtils.isEmpty(this.mSettingsActivity)) {
+                return new InjectedSetting(this);
             }
-            return new InjectedSetting(this);
+            if (Log.isLoggable("SettingsInjector", 5)) {
+                Log.w("SettingsInjector", "Illegal setting specification: package=" + this.mPackageName + ", class=" + this.mClassName + ", title=" + this.mTitle + ", settingsActivity=" + this.mSettingsActivity);
+            }
+            return null;
         }
     }
 }

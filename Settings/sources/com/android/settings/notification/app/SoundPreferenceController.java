@@ -11,13 +11,12 @@ import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settings.notification.NotificationBackend;
 import com.android.settings.notification.app.NotificationSettings;
-/* loaded from: classes.dex */
+
 public class SoundPreferenceController extends NotificationPreferenceController implements PreferenceControllerMixin, Preference.OnPreferenceChangeListener, PreferenceManager.OnActivityResultListener {
     private final SettingsPreferenceFragment mFragment;
     private final NotificationSettings.DependentFieldListener mListener;
     private NotificationSoundPreference mPreference;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "ringtone";
     }
@@ -28,51 +27,48 @@ public class SoundPreferenceController extends NotificationPreferenceController 
         this.mListener = dependentFieldListener;
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
-        return super.isAvailable() && this.mChannel != null && checkCanBeVisible(3) && !isDefaultChannel();
+        if (super.isAvailable() && this.mChannel != null && checkCanBeVisible(3) && !isDefaultChannel()) {
+            return true;
+        }
+        return false;
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController
-    boolean isIncludedInFilter() {
+    /* access modifiers changed from: package-private */
+    public boolean isIncludedInFilter() {
         return this.mPreferenceFilter.contains("sound");
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = (NotificationSoundPreference) preferenceScreen.findPreference(getPreferenceKey());
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
-        if (this.mAppRow == null || this.mChannel == null) {
-            return;
+        if (this.mAppRow != null && this.mChannel != null) {
+            NotificationSoundPreference notificationSoundPreference = (NotificationSoundPreference) preference;
+            notificationSoundPreference.setEnabled(this.mAdmin == null);
+            notificationSoundPreference.setRingtone(this.mChannel.getSound());
         }
-        NotificationSoundPreference notificationSoundPreference = (NotificationSoundPreference) preference;
-        notificationSoundPreference.setEnabled(this.mAdmin == null);
-        notificationSoundPreference.setRingtone(this.mChannel.getSound());
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         NotificationChannel notificationChannel = this.mChannel;
-        if (notificationChannel != null) {
-            notificationChannel.setSound((Uri) obj, notificationChannel.getAudioAttributes());
-            saveChannel();
+        if (notificationChannel == null) {
             return true;
         }
+        notificationChannel.setSound((Uri) obj, notificationChannel.getAudioAttributes());
+        saveChannel();
         return true;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
         if (!"ringtone".equals(preference.getKey()) || this.mFragment == null) {
             return false;
         }
         NotificationSoundPreference notificationSoundPreference = (NotificationSoundPreference) preference;
         NotificationChannel notificationChannel = this.mChannel;
-        if (notificationChannel != null && notificationChannel.getAudioAttributes() != null) {
+        if (!(notificationChannel == null || notificationChannel.getAudioAttributes() == null)) {
             if (4 == this.mChannel.getAudioAttributes().getUsage()) {
                 notificationSoundPreference.setRingtoneType(4);
             } else if (6 == this.mChannel.getAudioAttributes().getUsage()) {
@@ -86,21 +82,19 @@ public class SoundPreferenceController extends NotificationPreferenceController 
         return true;
     }
 
-    @Override // android.preference.PreferenceManager.OnActivityResultListener
     public boolean onActivityResult(int i, int i2, Intent intent) {
-        if (200 == i) {
-            NotificationSoundPreference notificationSoundPreference = this.mPreference;
-            if (notificationSoundPreference != null) {
-                notificationSoundPreference.onActivityResult(i, i2, intent);
-            }
-            this.mListener.onFieldValueChanged();
-            return true;
+        if (200 != i) {
+            return false;
         }
-        return false;
+        NotificationSoundPreference notificationSoundPreference = this.mPreference;
+        if (notificationSoundPreference != null) {
+            notificationSoundPreference.onActivityResult(i, i2, intent);
+        }
+        this.mListener.onFieldValueChanged();
+        return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public static boolean hasValidSound(NotificationChannel notificationChannel) {
+    protected static boolean hasValidSound(NotificationChannel notificationChannel) {
         return (notificationChannel == null || notificationChannel.getSound() == null || Uri.EMPTY.equals(notificationChannel.getSound())) ? false : true;
     }
 }

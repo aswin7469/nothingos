@@ -2,25 +2,24 @@ package com.google.zxing.oned.rss.expanded.decoders;
 
 import com.google.zxing.NotFoundException;
 import com.google.zxing.common.BitArray;
-/* loaded from: classes2.dex */
+
 public abstract class AbstractExpandedDecoder {
     private final GeneralAppIdDecoder generalDecoder;
     private final BitArray information;
 
     public abstract String parseInformation() throws NotFoundException;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public AbstractExpandedDecoder(BitArray bitArray) {
+    AbstractExpandedDecoder(BitArray bitArray) {
         this.information = bitArray;
         this.generalDecoder = new GeneralAppIdDecoder(bitArray);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public final BitArray getInformation() {
         return this.information;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public final GeneralAppIdDecoder getGeneralDecoder() {
         return this.generalDecoder;
     }

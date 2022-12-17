@@ -3,12 +3,10 @@ package com.android.settings.homepage.contextualcards.logging;
 import android.util.Log;
 import com.android.settings.homepage.contextualcards.ContextualCard;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class ContextualCardLogUtils {
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static final class TapTarget {
+    private static final class TapTarget {
         static int TARGET_DEFAULT = 0;
         static int TARGET_SLIDER = 3;
         static int TARGET_TITLE = 1;
@@ -26,26 +24,26 @@ public class ContextualCardLogUtils {
     public static String buildCardListLog(List<ContextualCard> list) {
         StringBuilder sb = new StringBuilder();
         sb.append(list.size());
-        for (ContextualCard contextualCard : list) {
+        for (ContextualCard next : list) {
             sb.append("|");
-            sb.append(contextualCard.getTextSliceUri());
+            sb.append(next.getTextSliceUri());
             sb.append("|");
-            sb.append(contextualCard.getRankingScore());
+            sb.append(next.getRankingScore());
         }
         return sb.toString();
     }
 
     public static int actionTypeToTapTarget(int i) {
-        if (i != 0) {
-            if (i == 2) {
-                return TapTarget.TARGET_SLIDER;
-            }
-            if (i == 3) {
-                return TapTarget.TARGET_TITLE;
-            }
-            Log.w("ContextualCardLogUtils", "unknown type " + i);
-            return TapTarget.TARGET_DEFAULT;
+        if (i == 0) {
+            return TapTarget.TARGET_TOGGLE;
         }
-        return TapTarget.TARGET_TOGGLE;
+        if (i == 2) {
+            return TapTarget.TARGET_SLIDER;
+        }
+        if (i == 3) {
+            return TapTarget.TARGET_TITLE;
+        }
+        Log.w("ContextualCardLogUtils", "unknown type " + i);
+        return TapTarget.TARGET_DEFAULT;
     }
 }

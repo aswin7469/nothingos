@@ -5,14 +5,12 @@ import android.util.Log;
 import androidx.preference.Preference;
 import androidx.preference.SwitchPreference;
 import com.android.settingslib.core.lifecycle.Lifecycle;
-/* loaded from: classes.dex */
+
 public class ZenModeRemindersPreferenceController extends AbstractZenModePreferenceController implements Preference.OnPreferenceChangeListener {
-    @Override // com.android.settings.notification.zen.AbstractZenModePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "zen_mode_reminders";
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return true;
     }
@@ -21,7 +19,6 @@ public class ZenModeRemindersPreferenceController extends AbstractZenModePrefere
         super(context, "zen_mode_reminders", lifecycle);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         SwitchPreference switchPreference = (SwitchPreference) preference;
@@ -35,7 +32,6 @@ public class ZenModeRemindersPreferenceController extends AbstractZenModePrefere
         switchPreference.setChecked(this.mBackend.isPriorityCategoryEnabled(1));
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         boolean booleanValue = ((Boolean) obj).booleanValue();
         if (ZenModeSettingsBase.DEBUG) {

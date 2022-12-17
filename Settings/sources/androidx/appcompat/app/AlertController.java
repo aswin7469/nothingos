@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -18,18 +17,14 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.ViewStub;
 import android.view.Window;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckedTextView;
-import android.widget.CursorAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import androidx.appcompat.R$attr;
 import androidx.appcompat.R$id;
@@ -38,11 +33,56 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.widget.NestedScrollView;
 import java.lang.ref.WeakReference;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class AlertController {
+
+class AlertController {
     ListAdapter mAdapter;
     private int mAlertDialogLayout;
+    private final View.OnClickListener mButtonHandler = new View.OnClickListener() {
+        /* JADX WARNING: Code restructure failed: missing block: B:12:0x0020, code lost:
+            r3 = r0.mButtonNeutralMessage;
+         */
+        /* Code decompiled incorrectly, please refer to instructions dump. */
+        public void onClick(android.view.View r3) {
+            /*
+                r2 = this;
+                androidx.appcompat.app.AlertController r0 = androidx.appcompat.app.AlertController.this
+                android.widget.Button r1 = r0.mButtonPositive
+                if (r3 != r1) goto L_0x000f
+                android.os.Message r1 = r0.mButtonPositiveMessage
+                if (r1 == 0) goto L_0x000f
+                android.os.Message r3 = android.os.Message.obtain(r1)
+                goto L_0x002a
+            L_0x000f:
+                android.widget.Button r1 = r0.mButtonNegative
+                if (r3 != r1) goto L_0x001c
+                android.os.Message r1 = r0.mButtonNegativeMessage
+                if (r1 == 0) goto L_0x001c
+                android.os.Message r3 = android.os.Message.obtain(r1)
+                goto L_0x002a
+            L_0x001c:
+                android.widget.Button r1 = r0.mButtonNeutral
+                if (r3 != r1) goto L_0x0029
+                android.os.Message r3 = r0.mButtonNeutralMessage
+                if (r3 == 0) goto L_0x0029
+                android.os.Message r3 = android.os.Message.obtain(r3)
+                goto L_0x002a
+            L_0x0029:
+                r3 = 0
+            L_0x002a:
+                if (r3 == 0) goto L_0x002f
+                r3.sendToTarget()
+            L_0x002f:
+                androidx.appcompat.app.AlertController r2 = androidx.appcompat.app.AlertController.this
+                android.os.Handler r3 = r2.mHandler
+                r0 = 1
+                androidx.appcompat.app.AppCompatDialog r2 = r2.mDialog
+                android.os.Message r2 = r3.obtainMessage(r0, r2)
+                r2.sendToTarget()
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: androidx.appcompat.app.AlertController.C00231.onClick(android.view.View):void");
+        }
+    };
     private final int mButtonIconDimen;
     Button mButtonNegative;
     private Drawable mButtonNegativeIcon;
@@ -52,16 +92,19 @@ public class AlertController {
     private Drawable mButtonNeutralIcon;
     Message mButtonNeutralMessage;
     private CharSequence mButtonNeutralText;
+    private int mButtonPanelLayoutHint = 0;
     private int mButtonPanelSideLayout;
     Button mButtonPositive;
     private Drawable mButtonPositiveIcon;
     Message mButtonPositiveMessage;
     private CharSequence mButtonPositiveText;
+    int mCheckedItem = -1;
     private final Context mContext;
     private View mCustomTitleView;
     final AppCompatDialog mDialog;
     Handler mHandler;
     private Drawable mIcon;
+    private int mIconId = 0;
     private ImageView mIconView;
     int mListItemLayout;
     int mListLayout;
@@ -79,36 +122,10 @@ public class AlertController {
     private int mViewSpacingBottom;
     private int mViewSpacingLeft;
     private int mViewSpacingRight;
+    private boolean mViewSpacingSpecified = false;
     private int mViewSpacingTop;
     private final Window mWindow;
-    private boolean mViewSpacingSpecified = false;
-    private int mIconId = 0;
-    int mCheckedItem = -1;
-    private int mButtonPanelLayoutHint = 0;
-    private final View.OnClickListener mButtonHandler = new View.OnClickListener() { // from class: androidx.appcompat.app.AlertController.1
-        @Override // android.view.View.OnClickListener
-        public void onClick(View view) {
-            Message obtain;
-            Message message;
-            Message message2;
-            Message message3;
-            AlertController alertController = AlertController.this;
-            if (view == alertController.mButtonPositive && (message3 = alertController.mButtonPositiveMessage) != null) {
-                obtain = Message.obtain(message3);
-            } else if (view == alertController.mButtonNegative && (message2 = alertController.mButtonNegativeMessage) != null) {
-                obtain = Message.obtain(message2);
-            } else {
-                obtain = (view != alertController.mButtonNeutral || (message = alertController.mButtonNeutralMessage) == null) ? null : Message.obtain(message);
-            }
-            if (obtain != null) {
-                obtain.sendToTarget();
-            }
-            AlertController alertController2 = AlertController.this;
-            alertController2.mHandler.obtainMessage(1, alertController2.mDialog).sendToTarget();
-        }
-    };
 
-    /* loaded from: classes.dex */
     private static final class ButtonHandler extends Handler {
         private WeakReference<DialogInterface> mDialog;
 
@@ -116,13 +133,11 @@ public class AlertController {
             this.mDialog = new WeakReference<>(dialogInterface);
         }
 
-        @Override // android.os.Handler
         public void handleMessage(Message message) {
             int i = message.what;
             if (i == -3 || i == -2 || i == -1) {
-                ((DialogInterface.OnClickListener) message.obj).onClick(this.mDialog.get(), message.what);
-            } else if (i != 1) {
-            } else {
+                ((DialogInterface.OnClickListener) message.obj).onClick((DialogInterface) this.mDialog.get(), message.what);
+            } else if (i == 1) {
                 ((DialogInterface) message.obj).dismiss();
             }
         }
@@ -131,7 +146,10 @@ public class AlertController {
     private static boolean shouldCenterSingleButton(Context context) {
         TypedValue typedValue = new TypedValue();
         context.getTheme().resolveAttribute(R$attr.alertDialogCenterButtons, typedValue, true);
-        return typedValue.data != 0;
+        if (typedValue.data != 0) {
+            return true;
+        }
+        return false;
     }
 
     public AlertController(Context context, AppCompatDialog appCompatDialog, Window window) {
@@ -139,7 +157,7 @@ public class AlertController {
         this.mDialog = appCompatDialog;
         this.mWindow = window;
         this.mHandler = new ButtonHandler(appCompatDialog);
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(null, R$styleable.AlertDialog, R$attr.alertDialogStyle, 0);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes((AttributeSet) null, R$styleable.AlertDialog, R$attr.alertDialogStyle, 0);
         this.mAlertDialogLayout = obtainStyledAttributes.getResourceId(R$styleable.AlertDialog_android_layout, 0);
         this.mButtonPanelSideLayout = obtainStyledAttributes.getResourceId(R$styleable.AlertDialog_buttonPanelSideLayout, 0);
         this.mListLayout = obtainStyledAttributes.getResourceId(R$styleable.AlertDialog_listLayout, 0);
@@ -180,7 +198,10 @@ public class AlertController {
         if (i == 0) {
             return this.mAlertDialogLayout;
         }
-        return this.mButtonPanelLayoutHint == 1 ? i : this.mAlertDialogLayout;
+        if (this.mButtonPanelLayoutHint == 1) {
+            return i;
+        }
+        return this.mAlertDialogLayout;
     }
 
     public void setTitle(CharSequence charSequence) {
@@ -250,28 +271,30 @@ public class AlertController {
         this.mIcon = null;
         this.mIconId = i;
         ImageView imageView = this.mIconView;
-        if (imageView != null) {
-            if (i != 0) {
-                imageView.setVisibility(0);
-                this.mIconView.setImageResource(this.mIconId);
-                return;
-            }
-            imageView.setVisibility(8);
+        if (imageView == null) {
+            return;
         }
+        if (i != 0) {
+            imageView.setVisibility(0);
+            this.mIconView.setImageResource(this.mIconId);
+            return;
+        }
+        imageView.setVisibility(8);
     }
 
     public void setIcon(Drawable drawable) {
         this.mIcon = drawable;
         this.mIconId = 0;
         ImageView imageView = this.mIconView;
-        if (imageView != null) {
-            if (drawable != null) {
-                imageView.setVisibility(0);
-                this.mIconView.setImageDrawable(drawable);
-                return;
-            }
-            imageView.setVisibility(8);
+        if (imageView == null) {
+            return;
         }
+        if (drawable != null) {
+            imageView.setVisibility(0);
+            this.mIconView.setImageDrawable(drawable);
+            return;
+        }
+        imageView.setVisibility(8);
     }
 
     public int getIconAttributeResId(int i) {
@@ -285,16 +308,16 @@ public class AlertController {
     }
 
     public Button getButton(int i) {
-        if (i != -3) {
-            if (i == -2) {
-                return this.mButtonNegative;
-            }
-            if (i == -1) {
-                return this.mButtonPositive;
-            }
+        if (i == -3) {
+            return this.mButtonNeutral;
+        }
+        if (i == -2) {
+            return this.mButtonNegative;
+        }
+        if (i != -1) {
             return null;
         }
-        return this.mButtonNeutral;
+        return this.mButtonPositive;
     }
 
     public boolean onKeyDown(int i, KeyEvent keyEvent) {
@@ -327,8 +350,8 @@ public class AlertController {
     }
 
     private void setupView() {
-        View findViewById;
         ListAdapter listAdapter;
+        View findViewById;
         View findViewById2;
         View findViewById3 = this.mWindow.findViewById(R$id.parentPanel);
         int i = R$id.topPanel;
@@ -348,126 +371,65 @@ public class AlertController {
         setupContent(resolvePanel2);
         setupButtons(resolvePanel3);
         setupTitle(resolvePanel);
-        int i4 = 0;
-        Object[] objArr = viewGroup.getVisibility() != 8 ? 1 : null;
-        boolean z = (resolvePanel == null || resolvePanel.getVisibility() == 8) ? false : true;
-        boolean z2 = (resolvePanel3 == null || resolvePanel3.getVisibility() == 8) ? false : true;
-        if (!z2 && resolvePanel2 != null && (findViewById2 = resolvePanel2.findViewById(R$id.textSpacerNoButtons)) != null) {
+        char c = 0;
+        boolean z = viewGroup.getVisibility() != 8;
+        boolean z2 = (resolvePanel == null || resolvePanel.getVisibility() == 8) ? false : true;
+        boolean z3 = (resolvePanel3 == null || resolvePanel3.getVisibility() == 8) ? false : true;
+        if (!(z3 || resolvePanel2 == null || (findViewById2 = resolvePanel2.findViewById(R$id.textSpacerNoButtons)) == null)) {
             findViewById2.setVisibility(0);
         }
-        if (z) {
+        if (z2) {
             NestedScrollView nestedScrollView = this.mScrollView;
             if (nestedScrollView != null) {
                 nestedScrollView.setClipToPadding(true);
             }
             View view = null;
-            if (this.mMessage != null || this.mListView != null) {
+            if (!(this.mMessage == null && this.mListView == null)) {
                 view = resolvePanel.findViewById(R$id.titleDividerNoCustom);
             }
             if (view != null) {
                 view.setVisibility(0);
             }
-        } else if (resolvePanel2 != null && (findViewById = resolvePanel2.findViewById(R$id.textSpacerNoTitle)) != null) {
+        } else if (!(resolvePanel2 == null || (findViewById = resolvePanel2.findViewById(R$id.textSpacerNoTitle)) == null)) {
             findViewById.setVisibility(0);
         }
         ListView listView = this.mListView;
         if (listView instanceof RecycleListView) {
-            ((RecycleListView) listView).setHasDecor(z, z2);
+            ((RecycleListView) listView).setHasDecor(z2, z3);
         }
-        if (objArr == null) {
+        if (!z) {
             View view2 = this.mListView;
             if (view2 == null) {
                 view2 = this.mScrollView;
             }
             if (view2 != null) {
-                if (z2) {
-                    i4 = 2;
+                if (z3) {
+                    c = 2;
                 }
-                int i5 = z ? 1 : 0;
-                char c = z ? 1 : 0;
-                setScrollIndicators(resolvePanel2, view2, i5 | i4, 3);
+                setScrollIndicators(resolvePanel2, view2, z2 | c ? 1 : 0, 3);
             }
         }
         ListView listView2 = this.mListView;
-        if (listView2 == null || (listAdapter = this.mAdapter) == null) {
-            return;
+        if (listView2 != null && (listAdapter = this.mAdapter) != null) {
+            listView2.setAdapter(listAdapter);
+            int i4 = this.mCheckedItem;
+            if (i4 > -1) {
+                listView2.setItemChecked(i4, true);
+                listView2.setSelection(i4);
+            }
         }
-        listView2.setAdapter(listAdapter);
-        int i6 = this.mCheckedItem;
-        if (i6 <= -1) {
-            return;
-        }
-        listView2.setItemChecked(i6, true);
-        listView2.setSelection(i6);
     }
 
     private void setScrollIndicators(ViewGroup viewGroup, View view, int i, int i2) {
-        final View findViewById = this.mWindow.findViewById(R$id.scrollIndicatorUp);
-        final View findViewById2 = this.mWindow.findViewById(R$id.scrollIndicatorDown);
-        if (Build.VERSION.SDK_INT >= 23) {
-            ViewCompat.setScrollIndicators(view, i, i2);
-            if (findViewById != null) {
-                viewGroup.removeView(findViewById);
-            }
-            if (findViewById2 == null) {
-                return;
-            }
-            viewGroup.removeView(findViewById2);
-            return;
-        }
-        if (findViewById != null && (i & 1) == 0) {
-            viewGroup.removeView(findViewById);
-            findViewById = null;
-        }
-        if (findViewById2 != null && (i & 2) == 0) {
-            viewGroup.removeView(findViewById2);
-            findViewById2 = null;
-        }
-        if (findViewById == null && findViewById2 == null) {
-            return;
-        }
-        if (this.mMessage != null) {
-            this.mScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() { // from class: androidx.appcompat.app.AlertController.2
-                @Override // androidx.core.widget.NestedScrollView.OnScrollChangeListener
-                public void onScrollChange(NestedScrollView nestedScrollView, int i3, int i4, int i5, int i6) {
-                    AlertController.manageScrollIndicators(nestedScrollView, findViewById, findViewById2);
-                }
-            });
-            this.mScrollView.post(new Runnable() { // from class: androidx.appcompat.app.AlertController.3
-                @Override // java.lang.Runnable
-                public void run() {
-                    AlertController.manageScrollIndicators(AlertController.this.mScrollView, findViewById, findViewById2);
-                }
-            });
-            return;
-        }
-        ListView listView = this.mListView;
-        if (listView != null) {
-            listView.setOnScrollListener(new AbsListView.OnScrollListener() { // from class: androidx.appcompat.app.AlertController.4
-                @Override // android.widget.AbsListView.OnScrollListener
-                public void onScrollStateChanged(AbsListView absListView, int i3) {
-                }
-
-                @Override // android.widget.AbsListView.OnScrollListener
-                public void onScroll(AbsListView absListView, int i3, int i4, int i5) {
-                    AlertController.manageScrollIndicators(absListView, findViewById, findViewById2);
-                }
-            });
-            this.mListView.post(new Runnable() { // from class: androidx.appcompat.app.AlertController.5
-                @Override // java.lang.Runnable
-                public void run() {
-                    AlertController.manageScrollIndicators(AlertController.this.mListView, findViewById, findViewById2);
-                }
-            });
-            return;
-        }
+        View findViewById = this.mWindow.findViewById(R$id.scrollIndicatorUp);
+        View findViewById2 = this.mWindow.findViewById(R$id.scrollIndicatorDown);
+        ViewCompat.setScrollIndicators(view, i, i2);
         if (findViewById != null) {
             viewGroup.removeView(findViewById);
         }
-        if (findViewById2 == null) {
-            return;
+        if (findViewById2 != null) {
+            viewGroup.removeView(findViewById2);
         }
-        viewGroup.removeView(findViewById2);
     }
 
     private void setupCustomContent(ViewGroup viewGroup) {
@@ -488,10 +450,10 @@ public class AlertController {
             if (this.mViewSpacingSpecified) {
                 frameLayout.setPadding(this.mViewSpacingLeft, this.mViewSpacingTop, this.mViewSpacingRight, this.mViewSpacingBottom);
             }
-            if (this.mListView == null) {
+            if (this.mListView != null) {
+                ((LinearLayoutCompat.LayoutParams) viewGroup.getLayoutParams()).weight = 0.0f;
                 return;
             }
-            ((LinearLayout.LayoutParams) ((LinearLayoutCompat.LayoutParams) viewGroup.getLayoutParams())).weight = 0.0f;
             return;
         }
         viewGroup.setVisibility(8);
@@ -504,27 +466,27 @@ public class AlertController {
             return;
         }
         this.mIconView = (ImageView) this.mWindow.findViewById(16908294);
-        if ((!TextUtils.isEmpty(this.mTitle)) && this.mShowTitle) {
-            TextView textView = (TextView) this.mWindow.findViewById(R$id.alertTitle);
-            this.mTitleView = textView;
-            textView.setText(this.mTitle);
-            int i = this.mIconId;
-            if (i != 0) {
-                this.mIconView.setImageResource(i);
-                return;
-            }
-            Drawable drawable = this.mIcon;
-            if (drawable != null) {
-                this.mIconView.setImageDrawable(drawable);
-                return;
-            }
-            this.mTitleView.setPadding(this.mIconView.getPaddingLeft(), this.mIconView.getPaddingTop(), this.mIconView.getPaddingRight(), this.mIconView.getPaddingBottom());
+        if (!(!TextUtils.isEmpty(this.mTitle)) || !this.mShowTitle) {
+            this.mWindow.findViewById(R$id.title_template).setVisibility(8);
             this.mIconView.setVisibility(8);
+            viewGroup.setVisibility(8);
             return;
         }
-        this.mWindow.findViewById(R$id.title_template).setVisibility(8);
+        TextView textView = (TextView) this.mWindow.findViewById(R$id.alertTitle);
+        this.mTitleView = textView;
+        textView.setText(this.mTitle);
+        int i = this.mIconId;
+        if (i != 0) {
+            this.mIconView.setImageResource(i);
+            return;
+        }
+        Drawable drawable = this.mIcon;
+        if (drawable != null) {
+            this.mIconView.setImageDrawable(drawable);
+            return;
+        }
+        this.mTitleView.setPadding(this.mIconView.getPaddingLeft(), this.mIconView.getPaddingTop(), this.mIconView.getPaddingRight(), this.mIconView.getPaddingBottom());
         this.mIconView.setVisibility(8);
-        viewGroup.setVisibility(8);
     }
 
     private void setupContent(ViewGroup viewGroup) {
@@ -534,36 +496,22 @@ public class AlertController {
         this.mScrollView.setNestedScrollingEnabled(false);
         TextView textView = (TextView) viewGroup.findViewById(16908299);
         this.mMessageView = textView;
-        if (textView == null) {
-            return;
-        }
-        CharSequence charSequence = this.mMessage;
-        if (charSequence != null) {
-            textView.setText(charSequence);
-            return;
-        }
-        textView.setVisibility(8);
-        this.mScrollView.removeView(this.mMessageView);
-        if (this.mListView != null) {
-            ViewGroup viewGroup2 = (ViewGroup) this.mScrollView.getParent();
-            int indexOfChild = viewGroup2.indexOfChild(this.mScrollView);
-            viewGroup2.removeViewAt(indexOfChild);
-            viewGroup2.addView(this.mListView, indexOfChild, new ViewGroup.LayoutParams(-1, -1));
-            return;
-        }
-        viewGroup.setVisibility(8);
-    }
-
-    static void manageScrollIndicators(View view, View view2, View view3) {
-        int i = 0;
-        if (view2 != null) {
-            view2.setVisibility(view.canScrollVertically(-1) ? 0 : 4);
-        }
-        if (view3 != null) {
-            if (!view.canScrollVertically(1)) {
-                i = 4;
+        if (textView != null) {
+            CharSequence charSequence = this.mMessage;
+            if (charSequence != null) {
+                textView.setText(charSequence);
+                return;
             }
-            view3.setVisibility(i);
+            textView.setVisibility(8);
+            this.mScrollView.removeView(this.mMessageView);
+            if (this.mListView != null) {
+                ViewGroup viewGroup2 = (ViewGroup) this.mScrollView.getParent();
+                int indexOfChild = viewGroup2.indexOfChild(this.mScrollView);
+                viewGroup2.removeViewAt(indexOfChild);
+                viewGroup2.addView(this.mListView, indexOfChild, new ViewGroup.LayoutParams(-1, -1));
+                return;
+            }
+            viewGroup.setVisibility(8);
         }
     }
 
@@ -573,51 +521,51 @@ public class AlertController {
         this.mButtonPositive = button;
         button.setOnClickListener(this.mButtonHandler);
         boolean z2 = true;
-        if (TextUtils.isEmpty(this.mButtonPositiveText) && this.mButtonPositiveIcon == null) {
-            this.mButtonPositive.setVisibility(8);
-            z = false;
-        } else {
+        if (!TextUtils.isEmpty(this.mButtonPositiveText) || this.mButtonPositiveIcon != null) {
             this.mButtonPositive.setText(this.mButtonPositiveText);
             Drawable drawable = this.mButtonPositiveIcon;
             if (drawable != null) {
                 int i = this.mButtonIconDimen;
                 drawable.setBounds(0, 0, i, i);
-                this.mButtonPositive.setCompoundDrawables(this.mButtonPositiveIcon, null, null, null);
+                this.mButtonPositive.setCompoundDrawables(this.mButtonPositiveIcon, (Drawable) null, (Drawable) null, (Drawable) null);
             }
             this.mButtonPositive.setVisibility(0);
             z = true;
+        } else {
+            this.mButtonPositive.setVisibility(8);
+            z = false;
         }
         Button button2 = (Button) viewGroup.findViewById(16908314);
         this.mButtonNegative = button2;
         button2.setOnClickListener(this.mButtonHandler);
-        if (TextUtils.isEmpty(this.mButtonNegativeText) && this.mButtonNegativeIcon == null) {
-            this.mButtonNegative.setVisibility(8);
-        } else {
+        if (!TextUtils.isEmpty(this.mButtonNegativeText) || this.mButtonNegativeIcon != null) {
             this.mButtonNegative.setText(this.mButtonNegativeText);
             Drawable drawable2 = this.mButtonNegativeIcon;
             if (drawable2 != null) {
                 int i2 = this.mButtonIconDimen;
                 drawable2.setBounds(0, 0, i2, i2);
-                this.mButtonNegative.setCompoundDrawables(this.mButtonNegativeIcon, null, null, null);
+                this.mButtonNegative.setCompoundDrawables(this.mButtonNegativeIcon, (Drawable) null, (Drawable) null, (Drawable) null);
             }
             this.mButtonNegative.setVisibility(0);
             z |= true;
+        } else {
+            this.mButtonNegative.setVisibility(8);
         }
         Button button3 = (Button) viewGroup.findViewById(16908315);
         this.mButtonNeutral = button3;
         button3.setOnClickListener(this.mButtonHandler);
-        if (TextUtils.isEmpty(this.mButtonNeutralText) && this.mButtonNeutralIcon == null) {
-            this.mButtonNeutral.setVisibility(8);
-        } else {
+        if (!TextUtils.isEmpty(this.mButtonNeutralText) || this.mButtonNeutralIcon != null) {
             this.mButtonNeutral.setText(this.mButtonNeutralText);
             Drawable drawable3 = this.mButtonNeutralIcon;
             if (drawable3 != null) {
                 int i3 = this.mButtonIconDimen;
                 drawable3.setBounds(0, 0, i3, i3);
-                this.mButtonNeutral.setCompoundDrawables(this.mButtonNeutralIcon, null, null, null);
+                this.mButtonNeutral.setCompoundDrawables(this.mButtonNeutralIcon, (Drawable) null, (Drawable) null, (Drawable) null);
             }
             this.mButtonNeutral.setVisibility(0);
             z |= true;
+        } else {
+            this.mButtonNeutral.setVisibility(8);
         }
         if (shouldCenterSingleButton(this.mContext)) {
             if (z) {
@@ -643,13 +591,12 @@ public class AlertController {
         button.setLayoutParams(layoutParams);
     }
 
-    /* loaded from: classes.dex */
     public static class RecycleListView extends ListView {
         private final int mPaddingBottomNoButtons;
         private final int mPaddingTopNoTitle;
 
         public RecycleListView(Context context) {
-            this(context, null);
+            this(context, (AttributeSet) null);
         }
 
         public RecycleListView(Context context, AttributeSet attributeSet) {
@@ -666,14 +613,17 @@ public class AlertController {
         }
     }
 
-    /* loaded from: classes.dex */
     public static class AlertParams {
         public ListAdapter mAdapter;
+        public boolean mCancelable;
+        public int mCheckedItem = -1;
         public boolean[] mCheckedItems;
         public final Context mContext;
         public Cursor mCursor;
         public View mCustomTitleView;
         public Drawable mIcon;
+        public int mIconAttrId = 0;
+        public int mIconId = 0;
         public final LayoutInflater mInflater;
         public String mIsCheckedColumn;
         public boolean mIsMultiChoice;
@@ -693,31 +643,22 @@ public class AlertController {
         public DialogInterface.OnDismissListener mOnDismissListener;
         public AdapterView.OnItemSelectedListener mOnItemSelectedListener;
         public DialogInterface.OnKeyListener mOnKeyListener;
-        public OnPrepareListViewListener mOnPrepareListViewListener;
         public Drawable mPositiveButtonIcon;
         public DialogInterface.OnClickListener mPositiveButtonListener;
         public CharSequence mPositiveButtonText;
+        public boolean mRecycleOnMeasure = true;
         public CharSequence mTitle;
         public View mView;
         public int mViewLayoutResId;
         public int mViewSpacingBottom;
         public int mViewSpacingLeft;
         public int mViewSpacingRight;
-        public int mViewSpacingTop;
-        public int mIconId = 0;
-        public int mIconAttrId = 0;
         public boolean mViewSpacingSpecified = false;
-        public int mCheckedItem = -1;
-        public boolean mRecycleOnMeasure = true;
-        public boolean mCancelable = true;
-
-        /* loaded from: classes.dex */
-        public interface OnPrepareListViewListener {
-            void onPrepareListView(ListView listView);
-        }
+        public int mViewSpacingTop;
 
         public AlertParams(Context context) {
             this.mContext = context;
+            this.mCancelable = true;
             this.mInflater = (LayoutInflater) context.getSystemService("layout_inflater");
         }
 
@@ -748,150 +689,152 @@ public class AlertController {
                 alertController.setMessage(charSequence2);
             }
             CharSequence charSequence3 = this.mPositiveButtonText;
-            if (charSequence3 != null || this.mPositiveButtonIcon != null) {
-                alertController.setButton(-1, charSequence3, this.mPositiveButtonListener, null, this.mPositiveButtonIcon);
+            if (!(charSequence3 == null && this.mPositiveButtonIcon == null)) {
+                alertController.setButton(-1, charSequence3, this.mPositiveButtonListener, (Message) null, this.mPositiveButtonIcon);
             }
             CharSequence charSequence4 = this.mNegativeButtonText;
-            if (charSequence4 != null || this.mNegativeButtonIcon != null) {
-                alertController.setButton(-2, charSequence4, this.mNegativeButtonListener, null, this.mNegativeButtonIcon);
+            if (!(charSequence4 == null && this.mNegativeButtonIcon == null)) {
+                alertController.setButton(-2, charSequence4, this.mNegativeButtonListener, (Message) null, this.mNegativeButtonIcon);
             }
             CharSequence charSequence5 = this.mNeutralButtonText;
-            if (charSequence5 != null || this.mNeutralButtonIcon != null) {
-                alertController.setButton(-3, charSequence5, this.mNeutralButtonListener, null, this.mNeutralButtonIcon);
+            if (!(charSequence5 == null && this.mNeutralButtonIcon == null)) {
+                alertController.setButton(-3, charSequence5, this.mNeutralButtonListener, (Message) null, this.mNeutralButtonIcon);
             }
-            if (this.mItems != null || this.mCursor != null || this.mAdapter != null) {
+            if (!(this.mItems == null && this.mCursor == null && this.mAdapter == null)) {
                 createListView(alertController);
             }
             View view2 = this.mView;
-            if (view2 != null) {
-                if (this.mViewSpacingSpecified) {
-                    alertController.setView(view2, this.mViewSpacingLeft, this.mViewSpacingTop, this.mViewSpacingRight, this.mViewSpacingBottom);
-                    return;
-                } else {
-                    alertController.setView(view2);
-                    return;
+            if (view2 == null) {
+                int i3 = this.mViewLayoutResId;
+                if (i3 != 0) {
+                    alertController.setView(i3);
                 }
+            } else if (this.mViewSpacingSpecified) {
+                alertController.setView(view2, this.mViewSpacingLeft, this.mViewSpacingTop, this.mViewSpacingRight, this.mViewSpacingBottom);
+            } else {
+                alertController.setView(view2);
             }
-            int i3 = this.mViewLayoutResId;
-            if (i3 == 0) {
-                return;
-            }
-            alertController.setView(i3);
         }
 
-        private void createListView(final AlertController alertController) {
-            int i;
-            ListAdapter listAdapter;
-            final RecycleListView recycleListView = (RecycleListView) this.mInflater.inflate(alertController.mListLayout, (ViewGroup) null);
-            if (this.mIsMultiChoice) {
-                if (this.mCursor == null) {
-                    listAdapter = new ArrayAdapter<CharSequence>(this.mContext, alertController.mMultiChoiceItemLayout, 16908308, this.mItems) { // from class: androidx.appcompat.app.AlertController.AlertParams.1
-                        @Override // android.widget.ArrayAdapter, android.widget.Adapter
-                        public View getView(int i2, View view, ViewGroup viewGroup) {
-                            View view2 = super.getView(i2, view, viewGroup);
-                            boolean[] zArr = AlertParams.this.mCheckedItems;
-                            if (zArr != null && zArr[i2]) {
-                                recycleListView.setItemChecked(i2, true);
-                            }
-                            return view2;
-                        }
-                    };
-                } else {
-                    listAdapter = new CursorAdapter(this.mContext, this.mCursor, false) { // from class: androidx.appcompat.app.AlertController.AlertParams.2
-                        private final int mIsCheckedIndex;
-                        private final int mLabelIndex;
-
-                        {
-                            Cursor cursor = getCursor();
-                            this.mLabelIndex = cursor.getColumnIndexOrThrow(AlertParams.this.mLabelColumn);
-                            this.mIsCheckedIndex = cursor.getColumnIndexOrThrow(AlertParams.this.mIsCheckedColumn);
-                        }
-
-                        @Override // android.widget.CursorAdapter
-                        public void bindView(View view, Context context, Cursor cursor) {
-                            ((CheckedTextView) view.findViewById(16908308)).setText(cursor.getString(this.mLabelIndex));
-                            RecycleListView recycleListView2 = recycleListView;
-                            int position = cursor.getPosition();
-                            int i2 = cursor.getInt(this.mIsCheckedIndex);
-                            boolean z = true;
-                            if (i2 != 1) {
-                                z = false;
-                            }
-                            recycleListView2.setItemChecked(position, z);
-                        }
-
-                        @Override // android.widget.CursorAdapter
-                        public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-                            return AlertParams.this.mInflater.inflate(alertController.mMultiChoiceItemLayout, viewGroup, false);
-                        }
-                    };
-                }
-            } else {
-                if (this.mIsSingleChoice) {
-                    i = alertController.mSingleChoiceItemLayout;
-                } else {
-                    i = alertController.mListItemLayout;
-                }
-                int i2 = i;
-                if (this.mCursor != null) {
-                    listAdapter = new SimpleCursorAdapter(this.mContext, i2, this.mCursor, new String[]{this.mLabelColumn}, new int[]{16908308});
-                } else {
-                    listAdapter = this.mAdapter;
-                    if (listAdapter == null) {
-                        listAdapter = new CheckedItemAdapter(this.mContext, i2, 16908308, this.mItems);
-                    }
-                }
-            }
-            OnPrepareListViewListener onPrepareListViewListener = this.mOnPrepareListViewListener;
-            if (onPrepareListViewListener != null) {
-                onPrepareListViewListener.onPrepareListView(recycleListView);
-            }
-            alertController.mAdapter = listAdapter;
-            alertController.mCheckedItem = this.mCheckedItem;
-            if (this.mOnClickListener != null) {
-                recycleListView.setOnItemClickListener(new AdapterView.OnItemClickListener() { // from class: androidx.appcompat.app.AlertController.AlertParams.3
-                    @Override // android.widget.AdapterView.OnItemClickListener
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i3, long j) {
-                        AlertParams.this.mOnClickListener.onClick(alertController.mDialog, i3);
-                        if (!AlertParams.this.mIsSingleChoice) {
-                            alertController.mDialog.dismiss();
-                        }
-                    }
-                });
-            } else if (this.mOnCheckboxClickListener != null) {
-                recycleListView.setOnItemClickListener(new AdapterView.OnItemClickListener() { // from class: androidx.appcompat.app.AlertController.AlertParams.4
-                    @Override // android.widget.AdapterView.OnItemClickListener
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i3, long j) {
-                        boolean[] zArr = AlertParams.this.mCheckedItems;
-                        if (zArr != null) {
-                            zArr[i3] = recycleListView.isItemChecked(i3);
-                        }
-                        AlertParams.this.mOnCheckboxClickListener.onClick(alertController.mDialog, i3, recycleListView.isItemChecked(i3));
-                    }
-                });
-            }
-            AdapterView.OnItemSelectedListener onItemSelectedListener = this.mOnItemSelectedListener;
-            if (onItemSelectedListener != null) {
-                recycleListView.setOnItemSelectedListener(onItemSelectedListener);
-            }
-            if (this.mIsSingleChoice) {
-                recycleListView.setChoiceMode(1);
-            } else if (this.mIsMultiChoice) {
-                recycleListView.setChoiceMode(2);
-            }
-            alertController.mListView = recycleListView;
+        /* JADX WARNING: type inference failed for: r9v0, types: [android.widget.ListAdapter] */
+        /* JADX WARNING: type inference failed for: r9v3 */
+        /* JADX WARNING: type inference failed for: r9v4 */
+        /* JADX WARNING: type inference failed for: r2v5, types: [android.widget.SimpleCursorAdapter] */
+        /* JADX WARNING: type inference failed for: r1v20, types: [androidx.appcompat.app.AlertController$AlertParams$2] */
+        /* JADX WARNING: type inference failed for: r1v21, types: [androidx.appcompat.app.AlertController$AlertParams$1] */
+        /* JADX WARNING: Multi-variable type inference failed */
+        /* Code decompiled incorrectly, please refer to instructions dump. */
+        private void createListView(final androidx.appcompat.app.AlertController r11) {
+            /*
+                r10 = this;
+                android.view.LayoutInflater r0 = r10.mInflater
+                int r1 = r11.mListLayout
+                r2 = 0
+                android.view.View r0 = r0.inflate(r1, r2)
+                androidx.appcompat.app.AlertController$RecycleListView r0 = (androidx.appcompat.app.AlertController.RecycleListView) r0
+                boolean r1 = r10.mIsMultiChoice
+                r8 = 1
+                if (r1 == 0) goto L_0x0035
+                android.database.Cursor r1 = r10.mCursor
+                if (r1 != 0) goto L_0x0026
+                androidx.appcompat.app.AlertController$AlertParams$1 r9 = new androidx.appcompat.app.AlertController$AlertParams$1
+                android.content.Context r3 = r10.mContext
+                int r4 = r11.mMultiChoiceItemLayout
+                r5 = 16908308(0x1020014, float:2.3877285E-38)
+                java.lang.CharSequence[] r6 = r10.mItems
+                r1 = r9
+                r2 = r10
+                r7 = r0
+                r1.<init>(r3, r4, r5, r6, r7)
+                goto L_0x006b
+            L_0x0026:
+                androidx.appcompat.app.AlertController$AlertParams$2 r9 = new androidx.appcompat.app.AlertController$AlertParams$2
+                android.content.Context r3 = r10.mContext
+                android.database.Cursor r4 = r10.mCursor
+                r5 = 0
+                r1 = r9
+                r2 = r10
+                r6 = r0
+                r7 = r11
+                r1.<init>(r3, r4, r5, r6, r7)
+                goto L_0x006b
+            L_0x0035:
+                boolean r1 = r10.mIsSingleChoice
+                if (r1 == 0) goto L_0x003c
+                int r1 = r11.mSingleChoiceItemLayout
+                goto L_0x003e
+            L_0x003c:
+                int r1 = r11.mListItemLayout
+            L_0x003e:
+                r4 = r1
+                android.database.Cursor r1 = r10.mCursor
+                r2 = 16908308(0x1020014, float:2.3877285E-38)
+                if (r1 == 0) goto L_0x005d
+                android.widget.SimpleCursorAdapter r9 = new android.widget.SimpleCursorAdapter
+                android.content.Context r3 = r10.mContext
+                android.database.Cursor r5 = r10.mCursor
+                java.lang.String[] r6 = new java.lang.String[r8]
+                java.lang.String r1 = r10.mLabelColumn
+                r7 = 0
+                r6[r7] = r1
+                int[] r1 = new int[r8]
+                r1[r7] = r2
+                r2 = r9
+                r7 = r1
+                r2.<init>(r3, r4, r5, r6, r7)
+                goto L_0x006b
+            L_0x005d:
+                android.widget.ListAdapter r9 = r10.mAdapter
+                if (r9 == 0) goto L_0x0062
+                goto L_0x006b
+            L_0x0062:
+                androidx.appcompat.app.AlertController$CheckedItemAdapter r9 = new androidx.appcompat.app.AlertController$CheckedItemAdapter
+                android.content.Context r1 = r10.mContext
+                java.lang.CharSequence[] r3 = r10.mItems
+                r9.<init>(r1, r4, r2, r3)
+            L_0x006b:
+                r11.mAdapter = r9
+                int r1 = r10.mCheckedItem
+                r11.mCheckedItem = r1
+                android.content.DialogInterface$OnClickListener r1 = r10.mOnClickListener
+                if (r1 == 0) goto L_0x007e
+                androidx.appcompat.app.AlertController$AlertParams$3 r1 = new androidx.appcompat.app.AlertController$AlertParams$3
+                r1.<init>(r11)
+                r0.setOnItemClickListener(r1)
+                goto L_0x008a
+            L_0x007e:
+                android.content.DialogInterface$OnMultiChoiceClickListener r1 = r10.mOnCheckboxClickListener
+                if (r1 == 0) goto L_0x008a
+                androidx.appcompat.app.AlertController$AlertParams$4 r1 = new androidx.appcompat.app.AlertController$AlertParams$4
+                r1.<init>(r0, r11)
+                r0.setOnItemClickListener(r1)
+            L_0x008a:
+                android.widget.AdapterView$OnItemSelectedListener r1 = r10.mOnItemSelectedListener
+                if (r1 == 0) goto L_0x0091
+                r0.setOnItemSelectedListener(r1)
+            L_0x0091:
+                boolean r1 = r10.mIsSingleChoice
+                if (r1 == 0) goto L_0x0099
+                r0.setChoiceMode(r8)
+                goto L_0x00a1
+            L_0x0099:
+                boolean r10 = r10.mIsMultiChoice
+                if (r10 == 0) goto L_0x00a1
+                r10 = 2
+                r0.setChoiceMode(r10)
+            L_0x00a1:
+                r11.mListView = r0
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: androidx.appcompat.app.AlertController.AlertParams.createListView(androidx.appcompat.app.AlertController):void");
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class CheckedItemAdapter extends ArrayAdapter<CharSequence> {
-        @Override // android.widget.ArrayAdapter, android.widget.Adapter
+    private static class CheckedItemAdapter extends ArrayAdapter<CharSequence> {
         public long getItemId(int i) {
-            return i;
+            return (long) i;
         }
 
-        @Override // android.widget.BaseAdapter, android.widget.Adapter
         public boolean hasStableIds() {
             return true;
         }

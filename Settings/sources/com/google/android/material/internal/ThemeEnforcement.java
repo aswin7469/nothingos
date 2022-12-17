@@ -7,7 +7,7 @@ import android.util.TypedValue;
 import androidx.appcompat.widget.TintTypedArray;
 import com.google.android.material.R$attr;
 import com.google.android.material.R$styleable;
-/* loaded from: classes2.dex */
+
 public final class ThemeEnforcement {
     private static final int[] APPCOMPAT_CHECK_ATTRS = {R$attr.colorPrimary};
     private static final int[] MATERIAL_CHECK_ATTRS = {R$attr.colorPrimaryVariant};
@@ -61,8 +61,8 @@ public final class ThemeEnforcement {
 
     private static boolean isCustomTextAppearanceValid(Context context, AttributeSet attributeSet, int[] iArr, int i, int i2, int... iArr2) {
         TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, iArr, i, i2);
-        for (int i3 : iArr2) {
-            if (obtainStyledAttributes.getResourceId(i3, -1) == -1) {
+        for (int resourceId : iArr2) {
+            if (obtainStyledAttributes.getResourceId(resourceId, -1) == -1) {
                 obtainStyledAttributes.recycle();
                 return false;
             }
@@ -92,9 +92,8 @@ public final class ThemeEnforcement {
     }
 
     private static void checkTheme(Context context, int[] iArr, String str) {
-        if (isTheme(context, iArr)) {
-            return;
+        if (!isTheme(context, iArr)) {
+            throw new IllegalArgumentException("The style on this component requires your app theme to be " + str + " (or a descendant).");
         }
-        throw new IllegalArgumentException("The style on this component requires your app theme to be " + str + " (or a descendant).");
     }
 }

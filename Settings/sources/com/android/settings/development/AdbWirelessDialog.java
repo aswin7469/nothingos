@@ -6,20 +6,19 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.appcompat.app.AlertDialog;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$layout;
+
 public class AdbWirelessDialog extends AlertDialog implements AdbWirelessDialogUiBase, DialogInterface.OnClickListener {
     private AdbWirelessDialogController mController;
     private final AdbWirelessDialogListener mListener;
     private final int mMode;
     private View mView;
 
-    /* loaded from: classes.dex */
     public interface AdbWirelessDialogListener {
-        default void onCancel() {
+        void onCancel() {
         }
 
-        default void onDismiss() {
+        void onDismiss() {
         }
     }
 
@@ -33,18 +32,16 @@ public class AdbWirelessDialog extends AlertDialog implements AdbWirelessDialogU
         this.mMode = i;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.appcompat.app.AlertDialog, androidx.appcompat.app.AppCompatDialog, android.app.Dialog
+    /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
-        View inflate = getLayoutInflater().inflate(R.layout.adb_wireless_dialog, (ViewGroup) null);
+        View inflate = getLayoutInflater().inflate(R$layout.adb_wireless_dialog, (ViewGroup) null);
         this.mView = inflate;
         setView(inflate);
         this.mController = new AdbWirelessDialogController(this, this.mView, this.mMode);
         super.onCreate(bundle);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.appcompat.app.AppCompatDialog, android.app.Dialog
+    /* access modifiers changed from: protected */
     public void onStop() {
         super.onStop();
         dismiss();
@@ -54,25 +51,21 @@ public class AdbWirelessDialog extends AlertDialog implements AdbWirelessDialogU
         }
     }
 
-    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialogInterface, int i) {
         AdbWirelessDialogListener adbWirelessDialogListener = this.mListener;
-        if (adbWirelessDialogListener == null || i != -2) {
-            return;
+        if (adbWirelessDialogListener != null && i == -2) {
+            adbWirelessDialogListener.onCancel();
         }
-        adbWirelessDialogListener.onCancel();
     }
 
     public AdbWirelessDialogController getController() {
         return this.mController;
     }
 
-    @Override // com.android.settings.development.AdbWirelessDialogUiBase
     public void setSubmitButton(CharSequence charSequence) {
         setButton(-1, charSequence, this);
     }
 
-    @Override // com.android.settings.development.AdbWirelessDialogUiBase
     public void setCancelButton(CharSequence charSequence) {
         setButton(-2, charSequence, this);
     }

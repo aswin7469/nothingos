@@ -196,6 +196,8 @@
         <item>60 ദിവസത്തിലധികം പഴയത്</item>
         <item>90 ദിവസത്തിലധികം പഴയത്</item>
     </array>
+    <array name="avatar_image_descriptions">
+    </array>
     <array name="battery_labels">
         <item>0%</item>
         <item>50%</item>
@@ -260,6 +262,8 @@
         <item>48.0 kHz</item>
         <item>88.2 kHz</item>
         <item>96.0 kHz</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
         <item>സിസ്റ്റം സെലക്ഷൻ ഉപയോഗിക്കൂ ‌(ഡിഫോൾട്ട്)</item>
@@ -267,6 +271,8 @@
         <item>48.0 kHz</item>
         <item>88.2 kHz</item>
         <item>96.0 kHz</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
         <item>സിസ്റ്റം സെലക്ഷൻ ഉപയോഗിക്കൂ ‌(ഡിഫോൾട്ട്)</item>
@@ -277,6 +283,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive ഓഡിയോ</item>
         <item>Qualcomm® aptX™ TWS+ ഓഡിയോ</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
         <item>സിസ്റ്റം സെലക്ഷൻ ഉപയോഗിക്കൂ ‌(ഡിഫോൾട്ട്)</item>
@@ -287,6 +297,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive ഓഡിയോ</item>
         <item>Qualcomm® aptX™ TWS+ ഓഡിയോ</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -343,17 +357,10 @@
         <item>ഉയർന്ന് നിൽക്കുന്നത്</item>
         <item>താഴ്ന്നത്</item>
     </array>
-    <array name="captioning_font_size_selector_summaries">
-        <item>വളരെ ചെറിയ ടെക്‌സ്‌റ്റ് വലുപ്പം</item>
-        <item>ചെറിയ ടെക്‌സ്‌റ്റ് വലുപ്പം</item>
-        <item>ഡിഫോൾട്ട് ടെക്‌സ്‌റ്റ് വലുപ്പം</item>
-        <item>വലിയ ടെക്‌സ്‌റ്റ് വലുപ്പം</item>
-        <item>വളരെ വലിയ ടെക്‌സ്‌റ്റ് വലുപ്പം</item>
-    </array>
     <array name="captioning_font_size_selector_titles">
         <item>തീരെ ചെറുത്</item>
         <item>ചെറുത്</item>
-        <item>ഡിഫോൾട്ട്</item>
+        <item>ഇടത്തരം</item>
         <item>വലുത്</item>
         <item>വളരെ വലുത്</item>
     </array>
@@ -486,15 +493,13 @@
         <item>GID</item>
         <item>ICCID</item>
     </array>
-    <array name="res_0x7f0300b1_nt_preferred_network_mode_choices">
-        <item>3G</item>
-        <item>4G</item>
-        <item>5G</item>
+    <array name="nfc_payment_favor">
+        <item>എല്ലായ്‌പ്പോഴും</item>
+        <item>മറ്റൊരു പേയ്‌മെന്റ് ആപ്പ് തുറന്നിരിക്കുമ്പോൾ ഒഴികെ</item>
     </array>
-    <array name="res_0x7f0300b2_nt_preferred_network_mode_values">
-        <item>21</item>
-        <item>22</item>
-        <item>33</item>
+    <array name="nfc_payment_favor_values">
+        <item>@null</item>
+        <item>1</item>
     </array>
     <array name="overlay_display_devices_entries">
         <item>ഒന്നുമില്ല</item>
@@ -628,17 +633,20 @@
         <item>നീലനിറത്തിൽ ചതുരമല്ലാത്ത ക്ലിപ്പ് ഭാഗം വരയ്‌ക്കുക</item>
         <item>പരിശോധിച്ച ഡ്രോയിംഗ് കമാൻഡുകൾ പച്ചനിറത്തിൽ ഹൈലൈറ്റുചെയ്യുക</item>
     </array>
-    <array name="sim_color_light">
-        <item>@color/SIM_color_cyan</item>
-        <item>@color/SIM_color_blue800</item>
-        <item>@color/SIM_color_green800</item>
-        <item>@color/SIM_color_purple800</item>
-        <item>@color/SIM_color_pink800</item>
-        <item>@color/SIM_color_orange</item>
-    </array>
     <array name="swipe_direction_values">
         <item>1</item>
         <item>@null</item>
+    </array>
+    <array name="switch_to_user_zero_when_docked_timeout_entries">
+        <item>ഒരിക്കലും വേണ്ട</item>
+        <item>ഒരു മിനിറ്റിന് ശേഷം</item>
+        <item>5 മിനിറ്റിന് ശേഷം</item>
+    </array>
+    <array name="tare_modifiers_subfactors">
+        <item>ചാർജ് ചെയ്യുന്നു</item>
+        <item>ഡോസ്</item>
+        <item>ഊർജ്ജം ലാഭിക്കൽ മോഡ്</item>
+        <item>പ്രോസസിന്റെ നില</item>
     </array>
     <array name="timezone_filters">
         <item>അമേരിക്ക</item>

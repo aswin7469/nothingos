@@ -10,14 +10,15 @@ import android.os.UserManager;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.Settings;
-import com.android.settings.applications.AppInfoBase;
 import com.android.settings.applications.AppInfoWithHeader;
+import com.android.settings.applications.AppStateBaseBridge;
 import com.android.settings.applications.AppStateInstallAppsBridge;
 import com.android.settingslib.RestrictedSwitchPreference;
 import com.android.settingslib.applications.ApplicationsState;
-/* loaded from: classes.dex */
+
 public class ExternalSourcesDetails extends AppInfoWithHeader implements Preference.OnPreferenceChangeListener {
     private AppStateInstallAppsBridge mAppBridge;
     private AppOpsManager mAppOpsManager;
@@ -25,49 +26,46 @@ public class ExternalSourcesDetails extends AppInfoWithHeader implements Prefere
     private RestrictedSwitchPreference mSwitchPref;
     private UserManager mUserManager;
 
-    @Override // com.android.settings.applications.AppInfoBase
-    protected AlertDialog createDialog(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public AlertDialog createDialog(int i, int i2) {
         return null;
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 808;
     }
 
-    @Override // com.android.settings.applications.AppInfoBase, com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         FragmentActivity activity = getActivity();
-        this.mAppBridge = new AppStateInstallAppsBridge(activity, ((AppInfoBase) this).mState, null);
+        this.mAppBridge = new AppStateInstallAppsBridge(activity, this.mState, (AppStateBaseBridge.Callback) null);
         this.mAppOpsManager = (AppOpsManager) activity.getSystemService("appops");
         this.mUserManager = UserManager.get(activity);
-        addPreferencesFromResource(R.xml.external_sources_details);
+        addPreferencesFromResource(R$xml.external_sources_details);
         RestrictedSwitchPreference restrictedSwitchPreference = (RestrictedSwitchPreference) findPreference("external_sources_settings_switch");
         this.mSwitchPref = restrictedSwitchPreference;
         restrictedSwitchPreference.setOnPreferenceChangeListener(this);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         boolean booleanValue = ((Boolean) obj).booleanValue();
         int i = 0;
-        if (preference == this.mSwitchPref) {
-            AppStateInstallAppsBridge.InstallAppsState installAppsState = this.mInstallAppsState;
-            if (installAppsState == null || booleanValue == installAppsState.canInstallApps()) {
-                return true;
-            }
-            if (Settings.ManageAppExternalSourcesActivity.class.getName().equals(getIntent().getComponent().getClassName())) {
-                if (booleanValue) {
-                    i = -1;
-                }
-                setResult(i);
-            }
-            setCanInstallApps(booleanValue);
-            refreshUi();
+        if (preference != this.mSwitchPref) {
+            return false;
+        }
+        AppStateInstallAppsBridge.InstallAppsState installAppsState = this.mInstallAppsState;
+        if (installAppsState == null || booleanValue == installAppsState.canInstallApps()) {
             return true;
         }
-        return false;
+        if (Settings.ManageAppExternalSourcesActivity.class.getName().equals(getIntent().getComponent().getClassName())) {
+            if (booleanValue) {
+                i = -1;
+            }
+            setResult(i);
+        }
+        setCanInstallApps(booleanValue);
+        refreshUi();
+        return true;
     }
 
     public static CharSequence getPreferenceSummary(Context context, ApplicationsState.AppEntry appEntry) {
@@ -76,17 +74,17 @@ public class ExternalSourcesDetails extends AppInfoWithHeader implements Prefere
         UserManager userManager = UserManager.get(context);
         int userRestrictionSource = userManager.getUserRestrictionSource("no_install_unknown_sources_globally", userHandleForUid) | userManager.getUserRestrictionSource("no_install_unknown_sources", userHandleForUid);
         if ((userRestrictionSource & 1) != 0) {
-            return context.getString(R.string.disabled_by_admin);
+            return context.getString(R$string.disabled_by_admin);
         }
         if (userRestrictionSource != 0) {
-            return context.getString(R.string.disabled);
+            return context.getString(R$string.disabled);
         }
-        AppStateInstallAppsBridge appStateInstallAppsBridge = new AppStateInstallAppsBridge(context, null, null);
+        AppStateInstallAppsBridge appStateInstallAppsBridge = new AppStateInstallAppsBridge(context, (ApplicationsState) null, (AppStateBaseBridge.Callback) null);
         ApplicationInfo applicationInfo = appEntry.info;
         if (appStateInstallAppsBridge.createInstallAppsStateFor(applicationInfo.packageName, applicationInfo.uid).canInstallApps()) {
-            i = R.string.app_permission_summary_allowed;
+            i = R$string.app_permission_summary_allowed;
         } else {
-            i = R.string.app_permission_summary_not_allowed;
+            i = R$string.app_permission_summary_not_allowed;
         }
         return context.getString(i);
     }
@@ -95,15 +93,15 @@ public class ExternalSourcesDetails extends AppInfoWithHeader implements Prefere
         this.mAppOpsManager.setMode(66, this.mPackageInfo.applicationInfo.uid, this.mPackageName, z ? 0 : 2);
     }
 
-    @Override // com.android.settings.applications.AppInfoBase
-    protected boolean refreshUi() {
+    /* access modifiers changed from: protected */
+    public boolean refreshUi() {
         PackageInfo packageInfo = this.mPackageInfo;
         if (packageInfo == null || packageInfo.applicationInfo == null) {
             return false;
         }
         if (this.mUserManager.hasBaseUserRestriction("no_install_unknown_sources", UserHandle.of(UserHandle.myUserId()))) {
             this.mSwitchPref.setChecked(false);
-            this.mSwitchPref.setSummary(R.string.disabled);
+            this.mSwitchPref.setSummary(R$string.disabled);
             this.mSwitchPref.setEnabled(false);
             return true;
         }

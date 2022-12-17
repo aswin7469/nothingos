@@ -4,25 +4,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.provider.Settings;
 import androidx.preference.Preference;
-/* loaded from: classes.dex */
-public class BubbleCategoryPreferenceController extends NotificationPreferenceController {
-    static final int ON = 1;
+import com.android.settings.notification.NotificationBackend;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
+public class BubbleCategoryPreferenceController extends NotificationPreferenceController {
+
+    /* renamed from: ON */
+    static final int f212ON = 1;
+
     public String getPreferenceKey() {
         return "bubbles";
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController
-    boolean isIncludedInFilter() {
+    /* access modifiers changed from: package-private */
+    public boolean isIncludedInFilter() {
         return false;
     }
 
     public BubbleCategoryPreferenceController(Context context) {
-        super(context, null);
+        super(context, (NotificationBackend) null);
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         if (!super.isAvailable()) {
             return false;
@@ -30,7 +31,6 @@ public class BubbleCategoryPreferenceController extends NotificationPreferenceCo
         return areBubblesEnabled();
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         if (this.mAppRow != null) {
@@ -42,6 +42,6 @@ public class BubbleCategoryPreferenceController extends NotificationPreferenceCo
     }
 
     private boolean areBubblesEnabled() {
-        return Settings.Secure.getInt(((NotificationPreferenceController) this).mContext.getContentResolver(), "notification_bubbles", 1) == 1;
+        return Settings.Secure.getInt(this.mContext.getContentResolver(), "notification_bubbles", 1) == 1;
     }
 }

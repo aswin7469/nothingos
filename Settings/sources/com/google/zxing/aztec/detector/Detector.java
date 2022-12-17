@@ -10,7 +10,7 @@ import com.google.zxing.common.detector.WhiteRectangleDetector;
 import com.google.zxing.common.reedsolomon.GenericGF;
 import com.google.zxing.common.reedsolomon.ReedSolomonDecoder;
 import com.google.zxing.common.reedsolomon.ReedSolomonException;
-/* loaded from: classes2.dex */
+
 public final class Detector {
     private static final int[] EXPECTED_CORNER_BITS = {3808, 476, 2107, 1799};
     private boolean compact;
@@ -50,13 +50,13 @@ public final class Detector {
         for (int i2 = 0; i2 < 4; i2++) {
             int i3 = iArr[(this.shift + i2) % 4];
             if (this.compact) {
-                j = j3 << 7;
-                j2 = (i3 >> 1) & 127;
+                j2 = j3 << 7;
+                j = (long) ((i3 >> 1) & 127);
             } else {
-                j = j3 << 10;
-                j2 = ((i3 >> 2) & 992) + ((i3 >> 1) & 31);
+                j2 = j3 << 10;
+                j = (long) (((i3 >> 2) & 992) + ((i3 >> 1) & 31));
             }
-            j3 = j + j2;
+            j3 = j2 + j;
         }
         int correctedParameterData = getCorrectedParameterData(j3, this.compact);
         if (this.compact) {
@@ -122,7 +122,7 @@ public final class Detector {
             Point firstDifferent3 = getFirstDifferent(point3, z, -1, 1);
             Point firstDifferent4 = getFirstDifferent(point4, z, -1, -1);
             if (this.nbCenterLayers > 2) {
-                double distance = (distance(firstDifferent4, firstDifferent) * this.nbCenterLayers) / (distance(point4, point) * (this.nbCenterLayers + 2));
+                double distance = (double) ((distance(firstDifferent4, firstDifferent) * ((float) this.nbCenterLayers)) / (distance(point4, point) * ((float) (this.nbCenterLayers + 2))));
                 if (distance < 0.75d || distance > 1.25d || !isWhiteOrBlackRectangle(firstDifferent, firstDifferent2, firstDifferent3, firstDifferent4)) {
                     break;
                 }
@@ -135,13 +135,13 @@ public final class Detector {
             point3 = firstDifferent3;
         }
         int i = this.nbCenterLayers;
-        if (i != 5 && i != 7) {
-            throw NotFoundException.getNotFoundInstance();
+        if (i == 5 || i == 7) {
+            this.compact = i == 5;
+            ResultPoint[] resultPointArr = {new ResultPoint(((float) point.getX()) + 0.5f, ((float) point.getY()) - 0.5f), new ResultPoint(((float) point2.getX()) + 0.5f, ((float) point2.getY()) + 0.5f), new ResultPoint(((float) point3.getX()) - 0.5f, ((float) point3.getY()) + 0.5f), new ResultPoint(((float) point4.getX()) - 0.5f, ((float) point4.getY()) - 0.5f)};
+            int i2 = this.nbCenterLayers;
+            return expandSquare(resultPointArr, (float) ((i2 * 2) - 3), (float) (i2 * 2));
         }
-        this.compact = i == 5;
-        ResultPoint[] resultPointArr = {new ResultPoint(point.getX() + 0.5f, point.getY() - 0.5f), new ResultPoint(point2.getX() + 0.5f, point2.getY() + 0.5f), new ResultPoint(point3.getX() - 0.5f, point3.getY() + 0.5f), new ResultPoint(point4.getX() - 0.5f, point4.getY() - 0.5f)};
-        int i2 = this.nbCenterLayers;
-        return expandSquare(resultPointArr, (i2 * 2) - 3, i2 * 2);
+        throw NotFoundException.getNotFoundInstance();
     }
 
     private Point getMatrixCenter() {
@@ -156,9 +156,9 @@ public final class Detector {
         try {
             ResultPoint[] detect = new WhiteRectangleDetector(this.image).detect();
             resultPoint3 = detect[0];
-            resultPoint4 = detect[1];
-            resultPoint2 = detect[2];
-            resultPoint = detect[3];
+            resultPoint2 = detect[1];
+            resultPoint = detect[2];
+            resultPoint4 = detect[3];
         } catch (NotFoundException unused) {
             int width = this.image.getWidth() / 2;
             int height = this.image.getHeight() / 2;
@@ -169,56 +169,59 @@ public final class Detector {
             ResultPoint resultPoint10 = getFirstDifferent(new Point(i, i3), false, 1, 1).toResultPoint();
             int i4 = width - 7;
             ResultPoint resultPoint11 = getFirstDifferent(new Point(i4, i3), false, -1, 1).toResultPoint();
-            resultPoint = getFirstDifferent(new Point(i4, i2), false, -1, -1).toResultPoint();
-            resultPoint2 = resultPoint11;
+            resultPoint4 = getFirstDifferent(new Point(i4, i2), false, -1, -1).toResultPoint();
+            ResultPoint resultPoint12 = resultPoint10;
+            resultPoint = resultPoint11;
             resultPoint3 = resultPoint9;
-            resultPoint4 = resultPoint10;
+            resultPoint2 = resultPoint12;
         }
-        int round = MathUtils.round((((resultPoint3.getX() + resultPoint.getX()) + resultPoint4.getX()) + resultPoint2.getX()) / 4.0f);
-        int round2 = MathUtils.round((((resultPoint3.getY() + resultPoint.getY()) + resultPoint4.getY()) + resultPoint2.getY()) / 4.0f);
+        int round = MathUtils.round((((resultPoint3.getX() + resultPoint4.getX()) + resultPoint2.getX()) + resultPoint.getX()) / 4.0f);
+        int round2 = MathUtils.round((((resultPoint3.getY() + resultPoint4.getY()) + resultPoint2.getY()) + resultPoint.getY()) / 4.0f);
         try {
             ResultPoint[] detect2 = new WhiteRectangleDetector(this.image, 15, round, round2).detect();
-            resultPoint5 = detect2[0];
+            resultPoint7 = detect2[0];
             resultPoint6 = detect2[1];
-            resultPoint7 = detect2[2];
-            resultPoint8 = detect2[3];
+            resultPoint8 = detect2[2];
+            resultPoint5 = detect2[3];
         } catch (NotFoundException unused2) {
             int i5 = round + 7;
             int i6 = round2 - 7;
-            resultPoint5 = this.getFirstDifferent(new Point(i5, i6), false, 1, -1).toResultPoint();
+            resultPoint7 = this.getFirstDifferent(new Point(i5, i6), false, 1, -1).toResultPoint();
             int i7 = round2 + 7;
             resultPoint6 = this.getFirstDifferent(new Point(i5, i7), false, 1, 1).toResultPoint();
             int i8 = round - 7;
-            resultPoint7 = this.getFirstDifferent(new Point(i8, i7), false, -1, 1).toResultPoint();
-            resultPoint8 = this.getFirstDifferent(new Point(i8, i6), false, -1, -1).toResultPoint();
+            resultPoint8 = this.getFirstDifferent(new Point(i8, i7), false, -1, 1).toResultPoint();
+            resultPoint5 = this.getFirstDifferent(new Point(i8, i6), false, -1, -1).toResultPoint();
         }
-        return new Point(MathUtils.round((((resultPoint5.getX() + resultPoint8.getX()) + resultPoint6.getX()) + resultPoint7.getX()) / 4.0f), MathUtils.round((((resultPoint5.getY() + resultPoint8.getY()) + resultPoint6.getY()) + resultPoint7.getY()) / 4.0f));
+        return new Point(MathUtils.round((((resultPoint7.getX() + resultPoint5.getX()) + resultPoint6.getX()) + resultPoint8.getX()) / 4.0f), MathUtils.round((((resultPoint7.getY() + resultPoint5.getY()) + resultPoint6.getY()) + resultPoint8.getY()) / 4.0f));
     }
 
     private ResultPoint[] getMatrixCornerPoints(ResultPoint[] resultPointArr) {
-        return expandSquare(resultPointArr, this.nbCenterLayers * 2, getDimension());
+        return expandSquare(resultPointArr, (float) (this.nbCenterLayers * 2), (float) getDimension());
     }
 
     private BitMatrix sampleGrid(BitMatrix bitMatrix, ResultPoint resultPoint, ResultPoint resultPoint2, ResultPoint resultPoint3, ResultPoint resultPoint4) throws NotFoundException {
-        GridSampler gridSampler = GridSampler.getInstance();
+        GridSampler instance = GridSampler.getInstance();
         int dimension = getDimension();
-        float f = dimension / 2.0f;
-        int i = this.nbCenterLayers;
-        float f2 = f - i;
-        float f3 = f + i;
-        return gridSampler.sampleGrid(bitMatrix, dimension, dimension, f2, f2, f3, f2, f3, f3, f2, f3, resultPoint.getX(), resultPoint.getY(), resultPoint2.getX(), resultPoint2.getY(), resultPoint3.getX(), resultPoint3.getY(), resultPoint4.getX(), resultPoint4.getY());
+        int i = dimension;
+        int i2 = dimension;
+        float f = ((float) dimension) / 2.0f;
+        int i3 = this.nbCenterLayers;
+        float f2 = f - ((float) i3);
+        float f3 = f + ((float) i3);
+        return instance.sampleGrid(bitMatrix, i2, i, f2, f2, f3, f2, f3, f3, f2, f3, resultPoint.getX(), resultPoint.getY(), resultPoint2.getX(), resultPoint2.getY(), resultPoint3.getX(), resultPoint3.getY(), resultPoint4.getX(), resultPoint4.getY());
     }
 
     private int sampleLine(ResultPoint resultPoint, ResultPoint resultPoint2, int i) {
         float distance = distance(resultPoint, resultPoint2);
-        float f = distance / i;
+        float f = distance / ((float) i);
         float x = resultPoint.getX();
         float y = resultPoint.getY();
         float x2 = ((resultPoint2.getX() - resultPoint.getX()) * f) / distance;
         float y2 = (f * (resultPoint2.getY() - resultPoint.getY())) / distance;
         int i2 = 0;
         for (int i3 = 0; i3 < i; i3++) {
-            float f2 = i3;
+            float f2 = (float) i3;
             if (this.image.get(MathUtils.round((f2 * x2) + x), MathUtils.round((f2 * y2) + y))) {
                 i2 |= 1 << ((i - i3) - 1);
             }
@@ -232,33 +235,36 @@ public final class Detector {
         Point point7 = new Point(point3.getX() + 3, point3.getY() - 3);
         Point point8 = new Point(point4.getX() + 3, point4.getY() + 3);
         int color = getColor(point8, point5);
-        return color != 0 && getColor(point5, point6) == color && getColor(point6, point7) == color && getColor(point7, point8) == color;
+        if (color != 0 && getColor(point5, point6) == color && getColor(point6, point7) == color && getColor(point7, point8) == color) {
+            return true;
+        }
+        return false;
     }
 
     private int getColor(Point point, Point point2) {
         float distance = distance(point, point2);
-        float x = (point2.getX() - point.getX()) / distance;
-        float y = (point2.getY() - point.getY()) / distance;
-        float x2 = point.getX();
-        float y2 = point.getY();
+        float x = ((float) (point2.getX() - point.getX())) / distance;
+        float y = ((float) (point2.getY() - point.getY())) / distance;
+        float x2 = (float) point.getX();
+        float y2 = (float) point.getY();
         boolean z = this.image.get(point.getX(), point.getY());
         boolean z2 = false;
         int i = 0;
-        for (int i2 = 0; i2 < distance; i2++) {
+        for (int i2 = 0; ((float) i2) < distance; i2++) {
             x2 += x;
             y2 += y;
             if (this.image.get(MathUtils.round(x2), MathUtils.round(y2)) != z) {
                 i++;
             }
         }
-        float f = i / distance;
-        if (f <= 0.1f || f >= 0.9f) {
-            if (f <= 0.1f) {
-                z2 = true;
-            }
-            return z2 == z ? 1 : -1;
+        float f = ((float) i) / distance;
+        if (f > 0.1f && f < 0.9f) {
+            return 0;
         }
-        return 0;
+        if (f <= 0.1f) {
+            z2 = true;
+        }
+        return z2 == z ? 1 : -1;
     }
 
     private Point getFirstDifferent(Point point, boolean z, int i, int i2) {
@@ -267,20 +273,22 @@ public final class Detector {
         while (true) {
             y += i2;
             if (!isValid(x, y) || this.image.get(x, y) != z) {
-                break;
+                int i3 = x - i;
+                int i4 = y - i2;
+            } else {
+                x += i;
             }
-            x += i;
         }
-        int i3 = x - i;
-        int i4 = y - i2;
-        while (isValid(i3, i4) && this.image.get(i3, i4) == z) {
-            i3 += i;
+        int i32 = x - i;
+        int i42 = y - i2;
+        while (isValid(i32, i42) && this.image.get(i32, i42) == z) {
+            i32 += i;
         }
-        int i5 = i3 - i;
-        while (isValid(i5, i4) && this.image.get(i5, i4) == z) {
-            i4 += i2;
+        int i5 = i32 - i;
+        while (isValid(i5, i42) && this.image.get(i5, i42) == z) {
+            i42 += i2;
         }
-        return new Point(i5, i4 - i2);
+        return new Point(i5, i42 - i2);
     }
 
     private static ResultPoint[] expandSquare(ResultPoint[] resultPointArr, float f, float f2) {
@@ -323,34 +331,42 @@ public final class Detector {
             return (this.nbLayers * 4) + 11;
         }
         int i = this.nbLayers;
-        return i <= 4 ? (i * 4) + 15 : (i * 4) + ((((i - 4) / 8) + 1) * 2) + 15;
+        if (i <= 4) {
+            return (i * 4) + 15;
+        }
+        return (i * 4) + ((((i - 4) / 8) + 1) * 2) + 15;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes2.dex */
-    public static final class Point {
-        private final int x;
-        private final int y;
+    static final class Point {
 
-        ResultPoint toResultPoint() {
-            return new ResultPoint(getX(), getY());
+        /* renamed from: x */
+        private final int f248x;
+
+        /* renamed from: y */
+        private final int f249y;
+
+        /* access modifiers changed from: package-private */
+        public ResultPoint toResultPoint() {
+            return new ResultPoint((float) getX(), (float) getY());
         }
 
         Point(int i, int i2) {
-            this.x = i;
-            this.y = i2;
+            this.f248x = i;
+            this.f249y = i2;
         }
 
-        int getX() {
-            return this.x;
+        /* access modifiers changed from: package-private */
+        public int getX() {
+            return this.f248x;
         }
 
-        int getY() {
-            return this.y;
+        /* access modifiers changed from: package-private */
+        public int getY() {
+            return this.f249y;
         }
 
         public String toString() {
-            return "<" + this.x + ' ' + this.y + '>';
+            return "<" + this.f248x + ' ' + this.f249y + '>';
         }
     }
 }

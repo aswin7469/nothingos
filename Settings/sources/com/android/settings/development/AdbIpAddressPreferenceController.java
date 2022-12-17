@@ -10,25 +10,23 @@ import android.os.ServiceManager;
 import android.util.Log;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settingslib.core.lifecycle.Lifecycle;
 import com.android.settingslib.deviceinfo.AbstractConnectivityPreferenceController;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.util.Iterator;
-/* loaded from: classes.dex */
+
 public class AdbIpAddressPreferenceController extends AbstractConnectivityPreferenceController {
     private static final String[] CONNECTIVITY_INTENTS = {"android.net.conn.CONNECTIVITY_CHANGE", "android.net.wifi.LINK_CONFIGURATION_CHANGED", "android.net.wifi.STATE_CHANGE"};
     private Preference mAdbIpAddrPref;
     private IAdbManager mAdbManager = IAdbManager.Stub.asInterface(ServiceManager.getService("adb"));
     private final ConnectivityManager mCM;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "adb_ip_addr_pref";
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return true;
     }
@@ -38,25 +36,24 @@ public class AdbIpAddressPreferenceController extends AbstractConnectivityPrefer
         this.mCM = (ConnectivityManager) context.getSystemService(ConnectivityManager.class);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mAdbIpAddrPref = preferenceScreen.findPreference("adb_ip_addr_pref");
         updateConnectivity();
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         updateConnectivity();
     }
 
-    @Override // com.android.settingslib.deviceinfo.AbstractConnectivityPreferenceController
-    protected String[] getConnectivityIntents() {
+    /* access modifiers changed from: protected */
+    public String[] getConnectivityIntents() {
         return CONNECTIVITY_INTENTS;
     }
 
-    protected int getPort() {
+    /* access modifiers changed from: protected */
+    public int getPort() {
         try {
             return this.mAdbManager.getAdbWirelessPort();
         } catch (RemoteException unused) {
@@ -69,20 +66,20 @@ public class AdbIpAddressPreferenceController extends AbstractConnectivityPrefer
         return getDefaultIpAddresses(this.mCM);
     }
 
-    @Override // com.android.settingslib.deviceinfo.AbstractConnectivityPreferenceController
-    protected void updateConnectivity() {
+    /* access modifiers changed from: protected */
+    public void updateConnectivity() {
         String defaultIpAddresses = getDefaultIpAddresses(this.mCM);
         if (defaultIpAddresses != null) {
             int port = getPort();
             if (port <= 0) {
-                this.mAdbIpAddrPref.setSummary(R.string.status_unavailable);
+                this.mAdbIpAddrPref.setSummary(R$string.status_unavailable);
             } else {
                 defaultIpAddresses = defaultIpAddresses + ":" + port;
             }
-            this.mAdbIpAddrPref.setSummary(defaultIpAddresses);
+            this.mAdbIpAddrPref.setSummary((CharSequence) defaultIpAddresses);
             return;
         }
-        this.mAdbIpAddrPref.setSummary(R.string.status_unavailable);
+        this.mAdbIpAddrPref.setSummary(R$string.status_unavailable);
     }
 
     private static String getDefaultIpAddresses(ConnectivityManager connectivityManager) {

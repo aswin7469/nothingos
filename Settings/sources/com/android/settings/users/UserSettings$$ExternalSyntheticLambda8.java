@@ -1,18 +1,18 @@
 package com.android.settings.users;
 
-import android.content.pm.UserInfo;
-import java.util.function.Predicate;
-/* loaded from: classes.dex */
-public final /* synthetic */ class UserSettings$$ExternalSyntheticLambda8 implements Predicate {
-    public static final /* synthetic */ UserSettings$$ExternalSyntheticLambda8 INSTANCE = new UserSettings$$ExternalSyntheticLambda8();
+import com.android.settingslib.users.UserCreatingDialog;
 
-    private /* synthetic */ UserSettings$$ExternalSyntheticLambda8() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class UserSettings$$ExternalSyntheticLambda8 implements Runnable {
+    public final /* synthetic */ UserSettings f$0;
+    public final /* synthetic */ UserCreatingDialog f$1;
+
+    public /* synthetic */ UserSettings$$ExternalSyntheticLambda8(UserSettings userSettings, UserCreatingDialog userCreatingDialog) {
+        this.f$0 = userSettings;
+        this.f$1 = userCreatingDialog;
     }
 
-    @Override // java.util.function.Predicate
-    public final boolean test(Object obj) {
-        boolean lambda$getRealUsersCount$6;
-        lambda$getRealUsersCount$6 = UserSettings.lambda$getRealUsersCount$6((UserInfo) obj);
-        return lambda$getRealUsersCount$6;
+    public final void run() {
+        this.f$0.lambda$onAddGuestClicked$1(this.f$1);
     }
 }

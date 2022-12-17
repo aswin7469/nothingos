@@ -6,14 +6,14 @@ import android.widget.RadioButton;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.RestrictedLockUtilsInternal;
 import com.android.settingslib.utils.ColorUtil;
-/* loaded from: classes.dex */
+
 public class RestrictedRadioButton extends RadioButton {
     private Context mContext;
     private boolean mDisabledByAdmin;
     private RestrictedLockUtils.EnforcedAdmin mEnforcedAdmin;
 
     public RestrictedRadioButton(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public RestrictedRadioButton(Context context, AttributeSet attributeSet) {
@@ -29,13 +29,12 @@ public class RestrictedRadioButton extends RadioButton {
         this.mContext = context;
     }
 
-    @Override // android.widget.CompoundButton, android.view.View
     public boolean performClick() {
-        if (this.mDisabledByAdmin) {
-            RestrictedLockUtils.sendShowAdminSupportDetailsIntent(this.mContext, this.mEnforcedAdmin);
-            return true;
+        if (!this.mDisabledByAdmin) {
+            return super.performClick();
         }
-        return super.performClick();
+        RestrictedLockUtils.sendShowAdminSupportDetailsIntent(this.mContext, this.mEnforcedAdmin);
+        return true;
     }
 
     public void setDisabledByAdmin(RestrictedLockUtils.EnforcedAdmin enforcedAdmin) {

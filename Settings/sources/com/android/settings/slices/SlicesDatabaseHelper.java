@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import android.util.Log;
 import java.util.Locale;
-/* loaded from: classes.dex */
+
 public class SlicesDatabaseHelper extends SQLiteOpenHelper {
     private static SlicesDatabaseHelper sSingleton;
     private final Context mContext;
@@ -23,24 +23,22 @@ public class SlicesDatabaseHelper extends SQLiteOpenHelper {
     }
 
     private SlicesDatabaseHelper(Context context) {
-        super(context, "slices_index.db", (SQLiteDatabase.CursorFactory) null, 8);
+        super(context, "slices_index.db", (SQLiteDatabase.CursorFactory) null, 9);
         this.mContext = context;
     }
 
-    @Override // android.database.sqlite.SQLiteOpenHelper
     public void onCreate(SQLiteDatabase sQLiteDatabase) {
         createDatabases(sQLiteDatabase);
     }
 
-    @Override // android.database.sqlite.SQLiteOpenHelper
     public void onUpgrade(SQLiteDatabase sQLiteDatabase, int i, int i2) {
-        if (i < 8) {
+        if (i < 9) {
             Log.d("SlicesDatabaseHelper", "Reconstructing DB from " + i + " to " + i2);
             reconstruct(sQLiteDatabase);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void reconstruct(SQLiteDatabase sQLiteDatabase) {
         this.mContext.getSharedPreferences("slices_shared_prefs", 0).edit().clear().apply();
         dropTables(sQLiteDatabase);
@@ -57,7 +55,7 @@ public class SlicesDatabaseHelper extends SQLiteOpenHelper {
     }
 
     private void createDatabases(SQLiteDatabase sQLiteDatabase) {
-        sQLiteDatabase.execSQL("CREATE VIRTUAL TABLE slices_index USING fts4(key, slice_uri, title, summary, screentitle, keywords, icon, fragment, controller, slice_type, unavailable_slice_subtitle, public_slice INTEGER DEFAULT 0 );");
+        sQLiteDatabase.execSQL("CREATE VIRTUAL TABLE slices_index USING fts4(key, slice_uri, title, summary, screentitle, keywords, icon, fragment, controller, slice_type, unavailable_slice_subtitle, public_slice, highlight_menu INTEGER DEFAULT 0 );");
         Log.d("SlicesDatabaseHelper", "Created databases");
     }
 
@@ -81,7 +79,8 @@ public class SlicesDatabaseHelper extends SQLiteOpenHelper {
         return this.mContext.getSharedPreferences("slices_shared_prefs", 0).getBoolean(Locale.getDefault().toString(), false);
     }
 
-    String getBuildTag() {
+    /* access modifiers changed from: package-private */
+    public String getBuildTag() {
         return Build.FINGERPRINT;
     }
 }

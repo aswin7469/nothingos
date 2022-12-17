@@ -1,26 +1,30 @@
 package com.google.common.base;
 
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import java.lang.reflect.Array;
 import java.util.Arrays;
-/* loaded from: classes2.dex */
+import java.util.Collection;
+import java.util.Map;
+
 public final class MoreObjects {
     public static <T> T firstNonNull(T t, T t2) {
         if (t != null) {
             return t;
         }
-        java.util.Objects.requireNonNull(t2, "Both parameters are null");
-        return t2;
+        if (t2 != null) {
+            return t2;
+        }
+        throw new NullPointerException("Both parameters are null");
     }
 
     public static ToStringHelper toStringHelper(Object obj) {
         return new ToStringHelper(obj.getClass().getSimpleName());
     }
 
-    /* loaded from: classes2.dex */
     public static final class ToStringHelper {
         private final String className;
         private final ValueHolder holderHead;
         private ValueHolder holderTail;
+        private boolean omitEmptyValues;
         private boolean omitNullValues;
 
         private ToStringHelper(String str) {
@@ -28,47 +32,76 @@ public final class MoreObjects {
             this.holderHead = valueHolder;
             this.holderTail = valueHolder;
             this.omitNullValues = false;
+            this.omitEmptyValues = false;
             this.className = (String) Preconditions.checkNotNull(str);
         }
 
-        @CanIgnoreReturnValue
         public ToStringHelper add(String str, Object obj) {
             return addHolder(str, obj);
         }
 
-        @CanIgnoreReturnValue
         public ToStringHelper add(String str, int i) {
-            return addHolder(str, String.valueOf(i));
+            return addUnconditionalHolder(str, String.valueOf(i));
         }
 
-        @CanIgnoreReturnValue
         public ToStringHelper addValue(Object obj) {
             return addHolder(obj);
         }
 
+        private static boolean isEmpty(Object obj) {
+            if (obj instanceof CharSequence) {
+                if (((CharSequence) obj).length() == 0) {
+                    return true;
+                }
+                return false;
+            } else if (obj instanceof Collection) {
+                return ((Collection) obj).isEmpty();
+            } else {
+                if (obj instanceof Map) {
+                    return ((Map) obj).isEmpty();
+                }
+                if (obj instanceof Optional) {
+                    return !((Optional) obj).isPresent();
+                }
+                if (!obj.getClass().isArray()) {
+                    return false;
+                }
+                if (Array.getLength(obj) == 0) {
+                    return true;
+                }
+                return false;
+            }
+        }
+
         public String toString() {
             boolean z = this.omitNullValues;
+            boolean z2 = this.omitEmptyValues;
             StringBuilder sb = new StringBuilder(32);
             sb.append(this.className);
             sb.append('{');
             String str = "";
             for (ValueHolder valueHolder = this.holderHead.next; valueHolder != null; valueHolder = valueHolder.next) {
                 Object obj = valueHolder.value;
-                if (!z || obj != null) {
-                    sb.append(str);
-                    String str2 = valueHolder.name;
-                    if (str2 != null) {
-                        sb.append(str2);
-                        sb.append('=');
+                if (!(valueHolder instanceof UnconditionalValueHolder)) {
+                    if (obj == null) {
+                        if (z) {
+                        }
+                    } else if (z2 && isEmpty(obj)) {
                     }
-                    if (obj != null && obj.getClass().isArray()) {
-                        String deepToString = Arrays.deepToString(new Object[]{obj});
-                        sb.append((CharSequence) deepToString, 1, deepToString.length() - 1);
-                    } else {
-                        sb.append(obj);
-                    }
-                    str = ", ";
                 }
+                sb.append(str);
+                String str2 = valueHolder.name;
+                if (str2 != null) {
+                    sb.append(str2);
+                    sb.append('=');
+                }
+                if (obj == null || !obj.getClass().isArray()) {
+                    sb.append(obj);
+                } else {
+                    String deepToString = Arrays.deepToString(new Object[]{obj});
+                    sb.append(deepToString, 1, deepToString.length() - 1);
+                }
+                str = ", ";
             }
             sb.append('}');
             return sb.toString();
@@ -93,14 +126,32 @@ public final class MoreObjects {
             return this;
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        /* loaded from: classes2.dex */
-        public static final class ValueHolder {
+        private UnconditionalValueHolder addUnconditionalHolder() {
+            UnconditionalValueHolder unconditionalValueHolder = new UnconditionalValueHolder();
+            this.holderTail.next = unconditionalValueHolder;
+            this.holderTail = unconditionalValueHolder;
+            return unconditionalValueHolder;
+        }
+
+        private ToStringHelper addUnconditionalHolder(String str, Object obj) {
+            UnconditionalValueHolder addUnconditionalHolder = addUnconditionalHolder();
+            addUnconditionalHolder.value = obj;
+            addUnconditionalHolder.name = (String) Preconditions.checkNotNull(str);
+            return this;
+        }
+
+        private static class ValueHolder {
             String name;
             ValueHolder next;
             Object value;
 
             private ValueHolder() {
+            }
+        }
+
+        private static final class UnconditionalValueHolder extends ValueHolder {
+            private UnconditionalValueHolder() {
+                super();
             }
         }
     }

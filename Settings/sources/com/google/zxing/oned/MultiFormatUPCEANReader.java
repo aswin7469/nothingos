@@ -9,12 +9,17 @@ import com.google.zxing.common.BitArray;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
-/* loaded from: classes2.dex */
+
 public final class MultiFormatUPCEANReader extends OneDReader {
     private final UPCEANReader[] readers;
 
     public MultiFormatUPCEANReader(Map<DecodeHintType, ?> map) {
-        Collection collection = map == null ? null : (Collection) map.get(DecodeHintType.POSSIBLE_FORMATS);
+        Collection collection;
+        if (map == null) {
+            collection = null;
+        } else {
+            collection = (Collection) map.get(DecodeHintType.POSSIBLE_FORMATS);
+        }
         ArrayList arrayList = new ArrayList();
         if (collection != null) {
             if (collection.contains(BarcodeFormat.EAN_13)) {
@@ -37,17 +42,21 @@ public final class MultiFormatUPCEANReader extends OneDReader {
         this.readers = (UPCEANReader[]) arrayList.toArray(new UPCEANReader[arrayList.size()]);
     }
 
-    @Override // com.google.zxing.oned.OneDReader
     public Result decodeRow(int i, BitArray bitArray, Map<DecodeHintType, ?> map) throws NotFoundException {
+        Collection collection;
         int[] findStartGuardPattern = UPCEANReader.findStartGuardPattern(bitArray);
         UPCEANReader[] uPCEANReaderArr = this.readers;
-        int length = uPCEANReaderArr.length;
         boolean z = false;
-        for (int i2 = 0; i2 < length; i2++) {
+        int i2 = 0;
+        while (i2 < uPCEANReaderArr.length) {
             try {
                 Result decodeRow = uPCEANReaderArr[i2].decodeRow(i, bitArray, findStartGuardPattern, map);
                 boolean z2 = decodeRow.getBarcodeFormat() == BarcodeFormat.EAN_13 && decodeRow.getText().charAt(0) == '0';
-                Collection collection = map == null ? null : (Collection) map.get(DecodeHintType.POSSIBLE_FORMATS);
+                if (map == null) {
+                    collection = null;
+                } else {
+                    collection = (Collection) map.get(DecodeHintType.POSSIBLE_FORMATS);
+                }
                 if (collection == null || collection.contains(BarcodeFormat.UPC_A)) {
                     z = true;
                 }
@@ -58,15 +67,15 @@ public final class MultiFormatUPCEANReader extends OneDReader {
                 result.putAllMetadata(decodeRow.getResultMetadata());
                 return result;
             } catch (ReaderException unused) {
+                i2++;
             }
         }
         throw NotFoundException.getNotFoundInstance();
     }
 
-    @Override // com.google.zxing.oned.OneDReader, com.google.zxing.Reader
     public void reset() {
-        for (UPCEANReader uPCEANReader : this.readers) {
-            uPCEANReader.reset();
+        for (UPCEANReader reset : this.readers) {
+            reset.reset();
         }
     }
 }

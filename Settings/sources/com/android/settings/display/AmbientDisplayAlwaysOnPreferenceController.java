@@ -11,55 +11,39 @@ import android.os.UserHandle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceScreen;
+import com.android.settings.R$string;
 import com.android.settings.core.TogglePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.nothing.experience.AppTracking;
-/* loaded from: classes.dex */
+import com.nothing.settings.widget.PrimarySwitchPreference;
+
 public class AmbientDisplayAlwaysOnPreferenceController extends TogglePreferenceController {
     private static final String AOD_SUPPRESSED_TOKEN = "winddown";
     private static final int MY_USER = UserHandle.myUserId();
     private static final String PROP_AWARE_AVAILABLE = "ro.vendor.aware_available";
-    private AmbientDisplayConfiguration mConfig;
-    private final int ON = 1;
     private final int OFF = 0;
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
+    /* renamed from: ON */
+    private final int f179ON = 1;
+    private AmbientDisplayConfiguration mConfig;
+    private Preference mPreference;
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    /* renamed from: getSummary */
-    public CharSequence mo485getSummary() {
-        return "";
-    }
-
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public boolean isPublicSlice() {
         return true;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -68,35 +52,56 @@ public class AmbientDisplayAlwaysOnPreferenceController extends TogglePreference
         super(context, str);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
-        return (!isAvailable(getConfig()) || SystemProperties.getBoolean(PROP_AWARE_AVAILABLE, false)) ? 3 : 0;
+        if (!isAvailable(getConfig()) || SystemProperties.getBoolean(PROP_AWARE_AVAILABLE, false)) {
+            return 3;
+        }
+        return 0;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settingslib.core.AbstractPreferenceController
+    public void displayPreference(PreferenceScreen preferenceScreen) {
+        super.displayPreference(preferenceScreen);
+        this.mPreference = preferenceScreen.findPreference("ambient_display_always_on");
+    }
+
     public void updateState(Preference preference) {
         super.updateState(preference);
+        Preference preference2 = this.mPreference;
+        if (preference2 instanceof PrimarySwitchPreference) {
+            ((PrimarySwitchPreference) preference2).setChecked(isChecked());
+        }
         refreshSummary(preference);
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public boolean isSliceable() {
         return TextUtils.equals(getPreferenceKey(), "ambient_display_always_on");
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
+    public int getSliceHighlightMenuRes() {
+        return R$string.menu_key_display;
+    }
+
     public boolean isChecked() {
         return getConfig().alwaysOnEnabled(MY_USER);
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean setChecked(boolean z) {
         Bundle bundle = new Bundle();
         bundle.putInt("aod", z ? 1 : 0);
         AppTracking.getInstance(this.mContext).logProductEvent("Display_Event", bundle);
         Settings.Secure.putInt(this.mContext.getContentResolver(), "doze_always_on", z);
         return true;
+    }
+
+    public CharSequence getSummary() {
+        int i;
+        Context context = this.mContext;
+        if (isAodSuppressedByBedtime(context)) {
+            i = R$string.aware_summary_when_bedtime_on;
+        } else {
+            i = R$string.doze_always_on_summary;
+        }
+        return context.getText(i);
     }
 
     public AmbientDisplayAlwaysOnPreferenceController setConfig(AmbientDisplayConfiguration ambientDisplayConfiguration) {
@@ -117,7 +122,7 @@ public class AmbientDisplayAlwaysOnPreferenceController extends TogglePreference
 
     public static boolean isAodSuppressedByBedtime(Context context) {
         try {
-            return ((PowerManager) context.getSystemService(PowerManager.class)).isAmbientDisplaySuppressedForTokenByApp(AOD_SUPPRESSED_TOKEN, context.getPackageManager().getApplicationInfo(context.getString(17039920), 0).uid);
+            return ((PowerManager) context.getSystemService(PowerManager.class)).isAmbientDisplaySuppressedForTokenByApp(AOD_SUPPRESSED_TOKEN, context.getPackageManager().getApplicationInfo(context.getString(17039951), 0).uid);
         } catch (PackageManager.NameNotFoundException unused) {
             return false;
         }

@@ -8,9 +8,8 @@ import com.android.settings.development.BluetoothA2dpConfigStore;
 import com.android.settingslib.core.lifecycle.Lifecycle;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class BluetoothSampleRateDialogPreferenceController extends AbstractBluetoothDialogPreferenceController {
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "bluetooth_sample_rate_settings";
     }
@@ -19,61 +18,73 @@ public class BluetoothSampleRateDialogPreferenceController extends AbstractBluet
         super(context, lifecycle, bluetoothA2dpConfigStore);
     }
 
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         ((BaseBluetoothDialogPreference) this.mPreference).setCallback(this);
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    @Override // com.android.settings.development.bluetooth.AbstractBluetoothDialogPreferenceController
-    protected void writeConfigurationValues(int i) {
-        int i2;
-        switch (i) {
-            case 0:
-                BluetoothCodecConfig currentCodecConfig = getCurrentCodecConfig();
-                if (currentCodecConfig != null) {
-                    i2 = AbstractBluetoothDialogPreferenceController.getHighestSampleRate(getSelectableByCodecType(currentCodecConfig.getCodecType()));
-                    break;
-                }
-                i2 = 0;
-                break;
-            case 1:
-                i2 = 1;
-                break;
-            case 2:
-                i2 = 2;
-                break;
-            case 3:
-                i2 = 4;
-                break;
-            case 4:
-                i2 = 8;
-                break;
-            case 5:
-                i2 = 16;
-                break;
-            case 6:
-                i2 = 32;
-                break;
-            default:
-                i2 = 0;
-                break;
-        }
-        this.mBluetoothA2dpConfigStore.setSampleRate(i2);
+    /* access modifiers changed from: protected */
+    /* JADX WARNING: Can't fix incorrect switch cases order */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void writeConfigurationValues(int r1) {
+        /*
+            r0 = this;
+            switch(r1) {
+                case 0: goto L_0x0013;
+                case 1: goto L_0x0011;
+                case 2: goto L_0x000f;
+                case 3: goto L_0x000d;
+                case 4: goto L_0x000a;
+                case 5: goto L_0x0007;
+                case 6: goto L_0x0004;
+                default: goto L_0x0003;
+            }
+        L_0x0003:
+            goto L_0x0026
+        L_0x0004:
+            r1 = 32
+            goto L_0x0027
+        L_0x0007:
+            r1 = 16
+            goto L_0x0027
+        L_0x000a:
+            r1 = 8
+            goto L_0x0027
+        L_0x000d:
+            r1 = 4
+            goto L_0x0027
+        L_0x000f:
+            r1 = 2
+            goto L_0x0027
+        L_0x0011:
+            r1 = 1
+            goto L_0x0027
+        L_0x0013:
+            android.bluetooth.BluetoothCodecConfig r1 = r0.getCurrentCodecConfig()
+            if (r1 == 0) goto L_0x0026
+            int r1 = r1.getCodecType()
+            android.bluetooth.BluetoothCodecConfig r1 = r0.getSelectableByCodecType(r1)
+            int r1 = com.android.settings.development.bluetooth.AbstractBluetoothDialogPreferenceController.getHighestSampleRate(r1)
+            goto L_0x0027
+        L_0x0026:
+            r1 = 0
+        L_0x0027:
+            com.android.settings.development.BluetoothA2dpConfigStore r0 = r0.mBluetoothA2dpConfigStore
+            r0.setSampleRate(r1)
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.development.bluetooth.BluetoothSampleRateDialogPreferenceController.writeConfigurationValues(int):void");
     }
 
-    @Override // com.android.settings.development.bluetooth.AbstractBluetoothDialogPreferenceController
-    protected int getCurrentIndexByConfig(BluetoothCodecConfig bluetoothCodecConfig) {
+    /* access modifiers changed from: protected */
+    public int getCurrentIndexByConfig(BluetoothCodecConfig bluetoothCodecConfig) {
         if (bluetoothCodecConfig == null) {
             Log.e("BtSampleRateCtr", "Unable to get current config index. Config is null.");
         }
         return convertCfgToBtnIndex(bluetoothCodecConfig.getSampleRate());
     }
 
-    @Override // com.android.settings.development.bluetooth.BaseBluetoothDialogPreference.Callback
     public List<Integer> getSelectableIndex() {
-        int[] iArr;
         ArrayList arrayList = new ArrayList();
         arrayList.add(Integer.valueOf(getDefaultIndex()));
         BluetoothCodecConfig currentCodecConfig = getCurrentCodecConfig();
@@ -88,27 +99,28 @@ public class BluetoothSampleRateDialogPreferenceController extends AbstractBluet
         return arrayList;
     }
 
-    int convertCfgToBtnIndex(int i) {
+    /* access modifiers changed from: package-private */
+    public int convertCfgToBtnIndex(int i) {
         int defaultIndex = getDefaultIndex();
-        if (i != 1) {
-            if (i == 2) {
-                return 2;
-            }
-            if (i == 4) {
-                return 3;
-            }
-            if (i == 8) {
-                return 4;
-            }
-            if (i == 16) {
-                return 5;
-            }
-            if (i == 32) {
-                return 6;
-            }
-            Log.e("BtSampleRateCtr", "Unsupported config:" + i);
-            return defaultIndex;
+        if (i == 1) {
+            return 1;
         }
-        return 1;
+        if (i == 2) {
+            return 2;
+        }
+        if (i == 4) {
+            return 3;
+        }
+        if (i == 8) {
+            return 4;
+        }
+        if (i == 16) {
+            return 5;
+        }
+        if (i == 32) {
+            return 6;
+        }
+        Log.e("BtSampleRateCtr", "Unsupported config:" + i);
+        return defaultIndex;
     }
 }

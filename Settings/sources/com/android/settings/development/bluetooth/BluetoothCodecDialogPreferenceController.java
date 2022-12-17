@@ -11,11 +11,10 @@ import com.android.settings.development.bluetooth.AbstractBluetoothPreferenceCon
 import com.android.settingslib.core.lifecycle.Lifecycle;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class BluetoothCodecDialogPreferenceController extends AbstractBluetoothDialogPreferenceController {
     private final AbstractBluetoothPreferenceController.Callback mCallback;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "bluetooth_audio_codec_settings";
     }
@@ -25,26 +24,24 @@ public class BluetoothCodecDialogPreferenceController extends AbstractBluetoothD
         this.mCallback = callback;
     }
 
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         ((BaseBluetoothDialogPreference) this.mPreference).setCallback(this);
     }
 
-    @Override // com.android.settings.development.bluetooth.BaseBluetoothDialogPreference.Callback
     public List<Integer> getSelectableIndex() {
-        BluetoothCodecConfig[] selectableConfigs;
+        List<BluetoothCodecConfig> selectableConfigs;
         ArrayList arrayList = new ArrayList();
         BluetoothA2dp bluetoothA2dp = this.mBluetoothA2dp;
         arrayList.add(Integer.valueOf(getDefaultIndex()));
         if (bluetoothA2dp == null) {
             return arrayList;
         }
-        BluetoothDevice activeDevice = bluetoothA2dp.getActiveDevice();
-        if (activeDevice == null) {
+        BluetoothDevice a2dpActiveDevice = getA2dpActiveDevice();
+        if (a2dpActiveDevice == null) {
             Log.d("BtCodecCtr", "Unable to get selectable index. No Active Bluetooth device");
             return arrayList;
-        } else if (bluetoothA2dp.isOptionalCodecsEnabled(activeDevice) == 1 && (selectableConfigs = getSelectableConfigs(activeDevice)) != null) {
+        } else if (bluetoothA2dp.isOptionalCodecsEnabled(a2dpActiveDevice) == 1 && (selectableConfigs = getSelectableConfigs(a2dpActiveDevice)) != null) {
             return getIndexFromConfig(selectableConfigs);
         } else {
             arrayList.add(Integer.valueOf(convertCfgToBtnIndex(0)));
@@ -52,14 +49,14 @@ public class BluetoothCodecDialogPreferenceController extends AbstractBluetoothD
         }
     }
 
-    @Override // com.android.settings.development.bluetooth.AbstractBluetoothDialogPreferenceController
-    protected void writeConfigurationValues(int i) {
+    /* access modifiers changed from: protected */
+    public void writeConfigurationValues(int i) {
         int i2 = 0;
         int i3 = 1000000;
         switch (i) {
             case 0:
-                BluetoothDevice activeDevice = this.mBluetoothA2dp.getActiveDevice();
-                i2 = AbstractBluetoothDialogPreferenceController.getHighestCodec(this.mBluetoothA2dp, activeDevice, getSelectableConfigs(activeDevice));
+                BluetoothDevice a2dpActiveDevice = getA2dpActiveDevice();
+                i2 = AbstractBluetoothDialogPreferenceController.getHighestCodec(this.mBluetoothA2dp, a2dpActiveDevice, getSelectableConfigs(a2dpActiveDevice));
                 break;
             case 1:
                 break;
@@ -76,22 +73,22 @@ public class BluetoothCodecDialogPreferenceController extends AbstractBluetoothD
                 i2 = 4;
                 break;
             case 6:
-                i2 = 9;
-                break;
-            case 7:
                 i2 = 10;
                 break;
+            case 7:
+                i2 = 11;
+                break;
             case 8:
-                i2 = 7;
+                i2 = 8;
                 break;
             case 9:
-                i2 = 6;
+                i2 = 7;
                 break;
             case 10:
-                i2 = 5;
+                i2 = 6;
                 break;
             case 11:
-                i2 = 8;
+                i2 = 9;
                 break;
             default:
                 i3 = 0;
@@ -108,34 +105,33 @@ public class BluetoothCodecDialogPreferenceController extends AbstractBluetoothD
         this.mBluetoothA2dpConfigStore.setChannelMode(AbstractBluetoothDialogPreferenceController.getHighestChannelMode(selectableByCodecType));
     }
 
-    @Override // com.android.settings.development.bluetooth.AbstractBluetoothDialogPreferenceController
-    protected int getCurrentIndexByConfig(BluetoothCodecConfig bluetoothCodecConfig) {
+    /* access modifiers changed from: protected */
+    public int getCurrentIndexByConfig(BluetoothCodecConfig bluetoothCodecConfig) {
         if (bluetoothCodecConfig == null) {
             Log.e("BtCodecCtr", "Unable to get current config index. Config is null.");
         }
         return convertCfgToBtnIndex(bluetoothCodecConfig.getCodecType());
     }
 
-    @Override // com.android.settings.development.bluetooth.AbstractBluetoothDialogPreferenceController, com.android.settings.development.bluetooth.BaseBluetoothDialogPreference.Callback
     public void onIndexUpdated(int i) {
         super.onIndexUpdated(i);
         this.mCallback.onBluetoothCodecChanged();
     }
 
-    @Override // com.android.settings.development.bluetooth.AbstractBluetoothDialogPreferenceController
     public void onHDAudioEnabled(boolean z) {
         writeConfigurationValues(0);
     }
 
-    private List<Integer> getIndexFromConfig(BluetoothCodecConfig[] bluetoothCodecConfigArr) {
+    private List<Integer> getIndexFromConfig(List<BluetoothCodecConfig> list) {
         ArrayList arrayList = new ArrayList();
-        for (BluetoothCodecConfig bluetoothCodecConfig : bluetoothCodecConfigArr) {
-            arrayList.add(Integer.valueOf(convertCfgToBtnIndex(bluetoothCodecConfig.getCodecType())));
+        for (BluetoothCodecConfig codecType : list) {
+            arrayList.add(Integer.valueOf(convertCfgToBtnIndex(codecType.getCodecType())));
         }
         return arrayList;
     }
 
-    int convertCfgToBtnIndex(int i) {
+    /* access modifiers changed from: package-private */
+    public int convertCfgToBtnIndex(int i) {
         int defaultIndex = getDefaultIndex();
         switch (i) {
             case 0:
@@ -148,17 +144,17 @@ public class BluetoothCodecDialogPreferenceController extends AbstractBluetoothD
                 return 4;
             case 4:
                 return 5;
-            case 5:
-                return 10;
             case 6:
-                return 9;
+                return 10;
             case 7:
-                return 8;
+                return 9;
             case 8:
-                return 11;
+                return 8;
             case 9:
-                return 6;
+                return 11;
             case 10:
+                return 6;
+            case 11:
                 return 7;
             default:
                 Log.e("BtCodecCtr", "Unsupported config:" + i);

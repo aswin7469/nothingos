@@ -18,7 +18,7 @@ import android.provider.Settings;
 import android.util.FeatureFlagUtils;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.RestrictedLockUtilsInternal;
 import com.android.settingslib.TetherUtil;
@@ -31,47 +31,42 @@ import com.android.settingslib.core.lifecycle.events.OnDestroy;
 import com.android.settingslib.core.lifecycle.events.OnPause;
 import com.android.settingslib.core.lifecycle.events.OnResume;
 import java.util.concurrent.atomic.AtomicReference;
-/* loaded from: classes.dex */
+
 public class TetherPreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin, LifecycleObserver, OnCreate, OnResume, OnPause, OnDestroy {
     private final boolean mAdminDisallowedTetherConfig;
     private SettingObserver mAirplaneModeObserver;
     private final BluetoothAdapter mBluetoothAdapter;
-    private final AtomicReference<BluetoothPan> mBluetoothPan;
+    /* access modifiers changed from: private */
+    public final AtomicReference<BluetoothPan> mBluetoothPan;
     final BluetoothProfile.ServiceListener mBtProfileServiceListener;
     private Preference mPreference;
     private TetherBroadcastReceiver mTetherReceiver;
     private final TetheringManager mTetheringManager;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "tether_settings";
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnCreate
     public void onCreate(Bundle bundle) {
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnDestroy
     public void onDestroy() {
     }
 
     TetherPreferenceController() {
-        super(null);
-        this.mBtProfileServiceListener = new BluetoothProfile.ServiceListener() { // from class: com.android.settings.network.TetherPreferenceController.1
-            @Override // android.bluetooth.BluetoothProfile.ServiceListener
+        super((Context) null);
+        this.mBtProfileServiceListener = new BluetoothProfile.ServiceListener() {
             public void onServiceConnected(int i, BluetoothProfile bluetoothProfile) {
                 TetherPreferenceController.this.mBluetoothPan.set((BluetoothPan) bluetoothProfile);
                 TetherPreferenceController.this.updateSummary();
             }
 
-            @Override // android.bluetooth.BluetoothProfile.ServiceListener
             public void onServiceDisconnected(int i) {
                 BluetoothAdapter defaultAdapter = BluetoothAdapter.getDefaultAdapter();
-                BluetoothProfile bluetoothProfile = (BluetoothProfile) TetherPreferenceController.this.mBluetoothPan.getAndSet(null);
-                if (bluetoothProfile == null || defaultAdapter == null) {
-                    return;
+                BluetoothProfile bluetoothProfile = (BluetoothProfile) TetherPreferenceController.this.mBluetoothPan.getAndSet((Object) null);
+                if (bluetoothProfile != null && defaultAdapter != null) {
+                    defaultAdapter.closeProfileProxy(5, bluetoothProfile);
                 }
-                defaultAdapter.closeProfileProxy(5, bluetoothProfile);
             }
         };
         this.mAdminDisallowedTetherConfig = false;
@@ -82,21 +77,18 @@ public class TetherPreferenceController extends AbstractPreferenceController imp
 
     public TetherPreferenceController(Context context, Lifecycle lifecycle) {
         super(context);
-        this.mBtProfileServiceListener = new BluetoothProfile.ServiceListener() { // from class: com.android.settings.network.TetherPreferenceController.1
-            @Override // android.bluetooth.BluetoothProfile.ServiceListener
+        this.mBtProfileServiceListener = new BluetoothProfile.ServiceListener() {
             public void onServiceConnected(int i, BluetoothProfile bluetoothProfile) {
                 TetherPreferenceController.this.mBluetoothPan.set((BluetoothPan) bluetoothProfile);
                 TetherPreferenceController.this.updateSummary();
             }
 
-            @Override // android.bluetooth.BluetoothProfile.ServiceListener
             public void onServiceDisconnected(int i) {
                 BluetoothAdapter defaultAdapter = BluetoothAdapter.getDefaultAdapter();
-                BluetoothProfile bluetoothProfile = (BluetoothProfile) TetherPreferenceController.this.mBluetoothPan.getAndSet(null);
-                if (bluetoothProfile == null || defaultAdapter == null) {
-                    return;
+                BluetoothProfile bluetoothProfile = (BluetoothProfile) TetherPreferenceController.this.mBluetoothPan.getAndSet((Object) null);
+                if (bluetoothProfile != null && defaultAdapter != null) {
+                    defaultAdapter.closeProfileProxy(5, bluetoothProfile);
                 }
-                defaultAdapter.closeProfileProxy(5, bluetoothProfile);
             }
         };
         this.mBluetoothPan = new AtomicReference<>();
@@ -108,28 +100,23 @@ public class TetherPreferenceController extends AbstractPreferenceController imp
         }
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         Preference findPreference = preferenceScreen.findPreference("tether_settings");
         this.mPreference = findPreference;
-        if (findPreference == null || this.mAdminDisallowedTetherConfig) {
-            return;
+        if (findPreference != null && !this.mAdminDisallowedTetherConfig) {
+            findPreference.setTitle(Utils.getTetheringLabel(this.mTetheringManager));
         }
-        findPreference.setTitle(Utils.getTetheringLabel(this.mTetheringManager));
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return TetherUtil.isTetherAvailable(this.mContext) && !FeatureFlagUtils.isEnabled(this.mContext, "settings_tether_all_in_one");
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         updateSummary();
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnResume
     public void onResume() {
         BluetoothAdapter bluetoothAdapter = this.mBluetoothAdapter;
         if (bluetoothAdapter != null && bluetoothAdapter.getState() == 12 && this.mBluetoothPan.get() == null) {
@@ -147,11 +134,10 @@ public class TetherPreferenceController extends AbstractPreferenceController imp
         contentResolver.registerContentObserver(settingObserver.uri, false, settingObserver);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnPause
     public void onPause() {
         BluetoothAdapter bluetoothAdapter;
-        BluetoothProfile andSet = this.mBluetoothPan.getAndSet(null);
-        if (andSet != null && (bluetoothAdapter = this.mBluetoothAdapter) != null) {
+        BluetoothProfile andSet = this.mBluetoothPan.getAndSet((Object) null);
+        if (!(andSet == null || (bluetoothAdapter = this.mBluetoothAdapter) == null)) {
             bluetoothAdapter.closeProfileProxy(5, andSet);
         }
         if (this.mAirplaneModeObserver != null) {
@@ -167,74 +153,68 @@ public class TetherPreferenceController extends AbstractPreferenceController imp
         return RestrictedLockUtilsInternal.checkIfRestrictionEnforced(context, "no_config_tethering", UserHandle.myUserId()) != null;
     }
 
-    void updateSummary() {
+    /* access modifiers changed from: package-private */
+    public void updateSummary() {
         boolean z;
         boolean z2;
         BluetoothAdapter bluetoothAdapter;
-        if (this.mPreference == null) {
-            return;
-        }
-        String[] tetheredIfaces = this.mTetheringManager.getTetheredIfaces();
-        String[] tetherableWifiRegexs = this.mTetheringManager.getTetherableWifiRegexs();
-        String[] tetherableBluetoothRegexs = this.mTetheringManager.getTetherableBluetoothRegexs();
-        boolean z3 = false;
-        if (tetheredIfaces != null) {
-            if (tetherableWifiRegexs != null) {
-                z2 = false;
-                for (String str : tetheredIfaces) {
-                    int length = tetherableWifiRegexs.length;
-                    int i = 0;
-                    while (true) {
-                        if (i >= length) {
-                            break;
-                        } else if (str.matches(tetherableWifiRegexs[i])) {
-                            z2 = true;
-                            break;
-                        } else {
-                            i++;
+        if (this.mPreference != null) {
+            String[] tetheredIfaces = this.mTetheringManager.getTetheredIfaces();
+            String[] tetherableWifiRegexs = this.mTetheringManager.getTetherableWifiRegexs();
+            String[] tetherableBluetoothRegexs = this.mTetheringManager.getTetherableBluetoothRegexs();
+            boolean z3 = false;
+            if (tetheredIfaces != null) {
+                if (tetherableWifiRegexs != null) {
+                    z = false;
+                    for (String str : tetheredIfaces) {
+                        int length = tetherableWifiRegexs.length;
+                        int i = 0;
+                        while (true) {
+                            if (i >= length) {
+                                break;
+                            } else if (str.matches(tetherableWifiRegexs[i])) {
+                                z = true;
+                                break;
+                            } else {
+                                i++;
+                            }
                         }
                     }
+                } else {
+                    z = false;
                 }
+                z2 = tetheredIfaces.length > 1 ? true : tetheredIfaces.length == 1 ? !z : false;
             } else {
                 z2 = false;
+                z = false;
             }
-            if (tetheredIfaces.length > 1) {
-                z = true;
+            if (!z2 && tetherableBluetoothRegexs != null && tetherableBluetoothRegexs.length > 0 && (bluetoothAdapter = this.mBluetoothAdapter) != null && bluetoothAdapter.getState() == 12) {
+                BluetoothPan bluetoothPan = this.mBluetoothPan.get();
+                if (bluetoothPan != null && bluetoothPan.isTetheringOn()) {
+                    z3 = true;
+                }
+                z2 = z3;
+            }
+            if (!z && !z2) {
+                this.mPreference.setSummary(R$string.switch_off_text);
+            } else if (z && z2) {
+                this.mPreference.setSummary(R$string.tether_settings_summary_hotspot_on_tether_on);
+            } else if (z) {
+                this.mPreference.setSummary(R$string.tether_settings_summary_hotspot_on_tether_off);
             } else {
-                z = tetheredIfaces.length == 1 ? !z2 : false;
+                this.mPreference.setSummary(R$string.tether_settings_summary_hotspot_off_tether_on);
             }
-        } else {
-            z = false;
-            z2 = false;
-        }
-        if (!z && tetherableBluetoothRegexs != null && tetherableBluetoothRegexs.length > 0 && (bluetoothAdapter = this.mBluetoothAdapter) != null && bluetoothAdapter.getState() == 12) {
-            BluetoothPan bluetoothPan = this.mBluetoothPan.get();
-            if (bluetoothPan != null && bluetoothPan.isTetheringOn()) {
-                z3 = true;
-            }
-            z = z3;
-        }
-        if (!z2 && !z) {
-            this.mPreference.setSummary(R.string.switch_off_text);
-        } else if (z2 && z) {
-            this.mPreference.setSummary(R.string.tether_settings_summary_hotspot_on_tether_on);
-        } else if (z2) {
-            this.mPreference.setSummary(R.string.tether_settings_summary_hotspot_on_tether_off);
-        } else {
-            this.mPreference.setSummary(R.string.tether_settings_summary_hotspot_off_tether_on);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateSummaryToOff() {
         Preference preference = this.mPreference;
-        if (preference == null) {
-            return;
+        if (preference != null) {
+            preference.setSummary(R$string.switch_off_text);
         }
-        preference.setSummary(R.string.switch_off_text);
     }
 
-    /* loaded from: classes.dex */
     class SettingObserver extends ContentObserver {
         public final Uri uri = Settings.Global.getUriFor("airplane_mode_on");
 
@@ -242,28 +222,24 @@ public class TetherPreferenceController extends AbstractPreferenceController imp
             super(new Handler());
         }
 
-        @Override // android.database.ContentObserver
-        public void onChange(boolean z, Uri uri) {
-            super.onChange(z, uri);
-            if (this.uri.equals(uri)) {
+        public void onChange(boolean z, Uri uri2) {
+            super.onChange(z, uri2);
+            if (this.uri.equals(uri2)) {
                 boolean z2 = false;
-                if (Settings.Global.getInt(((AbstractPreferenceController) TetherPreferenceController.this).mContext.getContentResolver(), "airplane_mode_on", 0) != 0) {
+                if (Settings.Global.getInt(TetherPreferenceController.this.mContext.getContentResolver(), "airplane_mode_on", 0) != 0) {
                     z2 = true;
                 }
-                if (!z2) {
-                    return;
+                if (z2) {
+                    TetherPreferenceController.this.updateSummaryToOff();
                 }
-                TetherPreferenceController.this.updateSummaryToOff();
             }
         }
     }
 
-    /* loaded from: classes.dex */
     class TetherBroadcastReceiver extends BroadcastReceiver {
         TetherBroadcastReceiver() {
         }
 
-        @Override // android.content.BroadcastReceiver
         public void onReceive(Context context, Intent intent) {
             TetherPreferenceController.this.updateSummary();
         }

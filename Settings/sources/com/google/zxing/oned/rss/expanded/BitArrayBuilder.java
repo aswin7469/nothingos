@@ -2,10 +2,9 @@ package com.google.zxing.oned.rss.expanded;
 
 import com.google.zxing.common.BitArray;
 import java.util.List;
-/* loaded from: classes2.dex */
+
 final class BitArrayBuilder {
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static BitArray buildBitArray(List<ExpandedPair> list) {
+    static BitArray buildBitArray(List<ExpandedPair> list) {
         int size = (list.size() << 1) - 1;
         if (list.get(list.size() - 1).getRightChar() == null) {
             size--;

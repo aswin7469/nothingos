@@ -16,36 +16,36 @@ import com.google.zxing.pdf417.detector.Detector;
 import com.google.zxing.pdf417.detector.PDF417DetectorResult;
 import java.util.ArrayList;
 import java.util.Map;
-/* loaded from: classes2.dex */
+
 public final class PDF417Reader implements Reader {
-    @Override // com.google.zxing.Reader
     public void reset() {
     }
 
-    @Override // com.google.zxing.Reader
     public Result decode(BinaryBitmap binaryBitmap, Map<DecodeHintType, ?> map) throws NotFoundException, FormatException, ChecksumException {
+        Result result;
         Result[] decode = decode(binaryBitmap, map, false);
-        if (decode == null || decode.length == 0 || decode[0] == null) {
-            throw NotFoundException.getNotFoundInstance();
+        if (decode != null && decode.length != 0 && (result = decode[0]) != null) {
+            return result;
         }
-        return decode[0];
+        throw NotFoundException.getNotFoundInstance();
     }
 
     private static Result[] decode(BinaryBitmap binaryBitmap, Map<DecodeHintType, ?> map, boolean z) throws NotFoundException, FormatException, ChecksumException {
         ArrayList arrayList = new ArrayList();
         PDF417DetectorResult detect = Detector.detect(binaryBitmap, map, z);
-        for (ResultPoint[] resultPointArr : detect.getPoints()) {
-            DecoderResult decode = PDF417ScanningDecoder.decode(detect.getBits(), resultPointArr[4], resultPointArr[5], resultPointArr[6], resultPointArr[7], getMinCodewordWidth(resultPointArr), getMaxCodewordWidth(resultPointArr));
-            if (decode == null) {
+        for (ResultPoint[] next : detect.getPoints()) {
+            DecoderResult decode = PDF417ScanningDecoder.decode(detect.getBits(), next[4], next[5], next[6], next[7], getMinCodewordWidth(next), getMaxCodewordWidth(next));
+            if (decode != null) {
+                Result result = new Result(decode.getText(), decode.getRawBytes(), next, BarcodeFormat.PDF_417);
+                result.putMetadata(ResultMetadataType.ERROR_CORRECTION_LEVEL, decode.getECLevel());
+                PDF417ResultMetadata pDF417ResultMetadata = (PDF417ResultMetadata) decode.getOther();
+                if (pDF417ResultMetadata != null) {
+                    result.putMetadata(ResultMetadataType.PDF417_EXTRA_METADATA, pDF417ResultMetadata);
+                }
+                arrayList.add(result);
+            } else {
                 throw NotFoundException.getNotFoundInstance();
             }
-            Result result = new Result(decode.getText(), decode.getRawBytes(), resultPointArr, BarcodeFormat.PDF_417);
-            result.putMetadata(ResultMetadataType.ERROR_CORRECTION_LEVEL, decode.getECLevel());
-            PDF417ResultMetadata pDF417ResultMetadata = (PDF417ResultMetadata) decode.getOther();
-            if (pDF417ResultMetadata != null) {
-                result.putMetadata(ResultMetadataType.PDF417_EXTRA_METADATA, pDF417ResultMetadata);
-            }
-            arrayList.add(result);
         }
         return (Result[]) arrayList.toArray(new Result[arrayList.size()]);
     }

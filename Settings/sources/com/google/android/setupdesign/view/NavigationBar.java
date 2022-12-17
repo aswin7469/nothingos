@@ -13,14 +13,13 @@ import com.google.android.setupdesign.R$attr;
 import com.google.android.setupdesign.R$id;
 import com.google.android.setupdesign.R$layout;
 import com.google.android.setupdesign.R$style;
-/* loaded from: classes2.dex */
+
 public class NavigationBar extends LinearLayout implements View.OnClickListener {
     private Button backButton;
     private NavigationBarListener listener;
     private Button moreButton;
     private Button nextButton;
 
-    /* loaded from: classes2.dex */
     public interface NavigationBarListener {
         void onNavigateBack();
 
@@ -66,13 +65,12 @@ public class NavigationBar extends LinearLayout implements View.OnClickListener 
     }
 
     private void init() {
-        if (isInEditMode()) {
-            return;
+        if (!isInEditMode()) {
+            View.inflate(getContext(), R$layout.sud_navbar_view, this);
+            this.nextButton = (Button) findViewById(R$id.sud_navbar_next);
+            this.backButton = (Button) findViewById(R$id.sud_navbar_back);
+            this.moreButton = (Button) findViewById(R$id.sud_navbar_more);
         }
-        View.inflate(getContext(), R$layout.sud_navbar_view, this);
-        this.nextButton = (Button) findViewById(R$id.sud_navbar_next);
-        this.backButton = (Button) findViewById(R$id.sud_navbar_back);
-        this.moreButton = (Button) findViewById(R$id.sud_navbar_more);
     }
 
     public Button getBackButton() {
@@ -95,15 +93,14 @@ public class NavigationBar extends LinearLayout implements View.OnClickListener 
         }
     }
 
-    @Override // android.view.View.OnClickListener
     public void onClick(View view) {
-        if (this.listener != null) {
-            if (view == getBackButton()) {
-                this.listener.onNavigateBack();
-            } else if (view != getNextButton()) {
-            } else {
-                this.listener.onNavigateNext();
-            }
+        if (this.listener == null) {
+            return;
+        }
+        if (view == getBackButton()) {
+            this.listener.onNavigateBack();
+        } else if (view == getNextButton()) {
+            this.listener.onNavigateNext();
         }
     }
 }

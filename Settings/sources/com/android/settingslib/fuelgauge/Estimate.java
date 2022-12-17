@@ -9,11 +9,11 @@ import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 /* compiled from: Estimate.kt */
-/* loaded from: classes.dex */
 public final class Estimate {
     @NotNull
-    public static final Companion Companion = new Companion(null);
+    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
     private final long averageDischargeTime;
     private final long estimateMillis;
     private final boolean isBasedOnUsage;
@@ -51,7 +51,6 @@ public final class Estimate {
     }
 
     /* compiled from: Estimate.kt */
-    /* loaded from: classes.dex */
     public static final class Companion {
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
             this();
@@ -64,15 +63,15 @@ public final class Estimate {
         public final Estimate getCachedEstimateIfAvailable(@NotNull Context context) {
             Intrinsics.checkNotNullParameter(context, "context");
             ContentResolver contentResolver = context.getContentResolver();
-            if (Duration.between(getLastCacheUpdateTime(context), Instant.now()).compareTo(Duration.ofMinutes(1L)) > 0) {
+            if (Duration.between(getLastCacheUpdateTime(context), Instant.now()).compareTo(Duration.ofMinutes(1)) > 0) {
                 return null;
             }
-            long j = Settings.Global.getLong(contentResolver, "time_remaining_estimate_millis", -1L);
+            long j = Settings.Global.getLong(contentResolver, "time_remaining_estimate_millis", -1);
             boolean z = false;
             if (Settings.Global.getInt(contentResolver, "time_remaining_estimate_based_on_usage", 0) == 1) {
                 z = true;
             }
-            return new Estimate(j, z, Settings.Global.getLong(contentResolver, "average_time_to_discharge", -1L));
+            return new Estimate(j, z, Settings.Global.getLong(contentResolver, "average_time_to_discharge", -1));
         }
 
         public final void storeCachedEstimate(@NotNull Context context, @NotNull Estimate estimate) {
@@ -88,8 +87,8 @@ public final class Estimate {
         @NotNull
         public final Instant getLastCacheUpdateTime(@NotNull Context context) {
             Intrinsics.checkNotNullParameter(context, "context");
-            Instant ofEpochMilli = Instant.ofEpochMilli(Settings.Global.getLong(context.getContentResolver(), "battery_estimates_last_update_time", -1L));
-            Intrinsics.checkNotNullExpressionValue(ofEpochMilli, "ofEpochMilli(\n                    Settings.Global.getLong(\n                            context.contentResolver,\n                            Settings.Global.BATTERY_ESTIMATES_LAST_UPDATE_TIME,\n                            -1))");
+            Instant ofEpochMilli = Instant.ofEpochMilli(Settings.Global.getLong(context.getContentResolver(), "battery_estimates_last_update_time", -1));
+            Intrinsics.checkNotNullExpressionValue(ofEpochMilli, "ofEpochMilli(\n          …                     -1))");
             return ofEpochMilli;
         }
     }

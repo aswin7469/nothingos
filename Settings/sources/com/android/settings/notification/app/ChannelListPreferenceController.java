@@ -11,27 +11,29 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceGroup;
 import androidx.preference.SwitchPreference;
-import com.android.settings.R;
+import com.android.settings.R$drawable;
+import com.android.settings.R$string;
 import com.android.settings.core.SubSettingLauncher;
 import com.android.settings.notification.NotificationBackend;
-import com.android.settings.widget.PrimarySwitchPreference;
+import com.android.settingslib.PrimarySwitchPreference;
 import com.android.settingslib.RestrictedSwitchPreference;
 import com.android.settingslib.Utils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-/* loaded from: classes.dex */
-public class ChannelListPreferenceController extends NotificationPreferenceController {
-    private List<NotificationChannelGroup> mChannelGroupList;
-    private PreferenceCategory mPreference;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
+public class ChannelListPreferenceController extends NotificationPreferenceController {
+    /* access modifiers changed from: private */
+    public List<NotificationChannelGroup> mChannelGroupList;
+    /* access modifiers changed from: private */
+    public PreferenceCategory mPreference;
+
     public String getPreferenceKey() {
         return "channels";
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController
-    boolean isIncludedInFilter() {
+    /* access modifiers changed from: package-private */
+    public boolean isIncludedInFilter() {
         return false;
     }
 
@@ -39,24 +41,24 @@ public class ChannelListPreferenceController extends NotificationPreferenceContr
         super(context, notificationBackend);
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         NotificationBackend.AppRow appRow = this.mAppRow;
-        if (appRow != null && !appRow.banned) {
-            if (this.mChannel == null) {
-                return true;
-            }
-            return !this.mBackend.onlyHasDefaultChannel(appRow.pkg, appRow.uid) && !"miscellaneous".equals(this.mChannel.getId());
+        if (appRow == null || appRow.banned) {
+            return false;
         }
-        return false;
+        if (this.mChannel == null) {
+            return true;
+        }
+        if (this.mBackend.onlyHasDefaultChannel(appRow.pkg, appRow.uid) || "miscellaneous".equals(this.mChannel.getId())) {
+            return false;
+        }
+        return true;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         this.mPreference = (PreferenceCategory) preference;
-        new AsyncTask<Void, Void, Void>() { // from class: com.android.settings.notification.app.ChannelListPreferenceController.1
-            /* JADX INFO: Access modifiers changed from: protected */
-            @Override // android.os.AsyncTask
+        new AsyncTask<Void, Void, Void>() {
+            /* access modifiers changed from: protected */
             public Void doInBackground(Void... voidArr) {
                 ChannelListPreferenceController channelListPreferenceController = ChannelListPreferenceController.this;
                 NotificationBackend notificationBackend = channelListPreferenceController.mBackend;
@@ -66,38 +68,35 @@ public class ChannelListPreferenceController extends NotificationPreferenceContr
                 return null;
             }
 
-            /* JADX INFO: Access modifiers changed from: protected */
-            @Override // android.os.AsyncTask
-            public void onPostExecute(Void r2) {
+            /* access modifiers changed from: protected */
+            public void onPostExecute(Void voidR) {
                 ChannelListPreferenceController channelListPreferenceController = ChannelListPreferenceController.this;
-                if (((NotificationPreferenceController) channelListPreferenceController).mContext == null) {
-                    return;
+                if (channelListPreferenceController.mContext != null) {
+                    channelListPreferenceController.updateFullList(channelListPreferenceController.mPreference, ChannelListPreferenceController.this.mChannelGroupList);
                 }
-                channelListPreferenceController.updateFullList(channelListPreferenceController.mPreference, ChannelListPreferenceController.this.mChannelGroupList);
             }
         }.execute(new Void[0]);
     }
 
-    void updateFullList(PreferenceCategory preferenceCategory, List<NotificationChannelGroup> list) {
-        if (list.isEmpty()) {
-            if (preferenceCategory.getPreferenceCount() == 1 && "zeroCategories".equals(preferenceCategory.getPreference(0).getKey())) {
-                PreferenceGroup preferenceGroup = (PreferenceGroup) preferenceCategory.getPreference(0);
-                preferenceGroup.setTitle(R.string.notification_channels);
-                preferenceGroup.getPreference(0).setTitle(R.string.no_channels);
-                return;
-            }
+    /* access modifiers changed from: package-private */
+    public void updateFullList(PreferenceCategory preferenceCategory, List<NotificationChannelGroup> list) {
+        if (!list.isEmpty()) {
+            updateGroupList(preferenceCategory, list);
+        } else if (preferenceCategory.getPreferenceCount() != 1 || !"zeroCategories".equals(preferenceCategory.getPreference(0).getKey())) {
             preferenceCategory.removeAll();
-            PreferenceCategory preferenceCategory2 = new PreferenceCategory(((NotificationPreferenceController) this).mContext);
-            preferenceCategory2.setTitle(R.string.notification_channels);
+            PreferenceCategory preferenceCategory2 = new PreferenceCategory(this.mContext);
+            preferenceCategory2.setTitle(R$string.notification_channels);
             preferenceCategory2.setKey("zeroCategories");
             preferenceCategory.addPreference(preferenceCategory2);
-            Preference preference = new Preference(((NotificationPreferenceController) this).mContext);
-            preference.setTitle(R.string.no_channels);
+            Preference preference = new Preference(this.mContext);
+            preference.setTitle(R$string.no_channels);
             preference.setEnabled(false);
             preferenceCategory2.addPreference(preference);
-            return;
+        } else {
+            PreferenceGroup preferenceGroup = (PreferenceGroup) preferenceCategory.getPreference(0);
+            preferenceGroup.setTitle(R$string.notification_channels);
+            preferenceGroup.getPreference(0).setTitle(R$string.no_channels);
         }
-        updateGroupList(preferenceCategory, list);
     }
 
     private PreferenceCategory findOrCreateGroupCategoryForKey(PreferenceCategory preferenceCategory, String str, int i) {
@@ -118,7 +117,7 @@ public class ChannelListPreferenceController extends NotificationPreferenceContr
                 return (PreferenceCategory) preference2;
             }
         }
-        PreferenceCategory preferenceCategory2 = new PreferenceCategory(((NotificationPreferenceController) this).mContext);
+        PreferenceCategory preferenceCategory2 = new PreferenceCategory(this.mContext);
         preferenceCategory2.setOrder(i);
         preferenceCategory2.setKey(str);
         preferenceCategory.addPreference(preferenceCategory2);
@@ -128,7 +127,7 @@ public class ChannelListPreferenceController extends NotificationPreferenceContr
     private void updateGroupList(PreferenceCategory preferenceCategory, List<NotificationChannelGroup> list) {
         int size = list.size();
         int preferenceCount = preferenceCategory.getPreferenceCount();
-        ArrayList<PreferenceCategory> arrayList = new ArrayList(size);
+        ArrayList<PreferenceCategory> arrayList = new ArrayList<>(size);
         boolean z = false;
         for (int i = 0; i < size; i++) {
             NotificationChannelGroup notificationChannelGroup = list.get(i);
@@ -143,8 +142,8 @@ public class ChannelListPreferenceController extends NotificationPreferenceContr
         }
         if (z2 || z) {
             preferenceCategory.removeAll();
-            for (PreferenceCategory preferenceCategory2 : arrayList) {
-                preferenceCategory.addPreference(preferenceCategory2);
+            for (PreferenceCategory addPreference : arrayList) {
+                preferenceCategory.addPreference(addPreference);
             }
         }
     }
@@ -164,7 +163,7 @@ public class ChannelListPreferenceController extends NotificationPreferenceContr
                 return (PrimarySwitchPreference) preference2;
             }
         }
-        PrimarySwitchPreference primarySwitchPreference = new PrimarySwitchPreference(((NotificationPreferenceController) this).mContext);
+        PrimarySwitchPreference primarySwitchPreference = new PrimarySwitchPreference(this.mContext);
         primarySwitchPreference.setOrder(i);
         primarySwitchPreference.setKey(str);
         preferenceGroup.addPreference(primarySwitchPreference);
@@ -173,9 +172,9 @@ public class ChannelListPreferenceController extends NotificationPreferenceContr
 
     private void updateGroupPreferences(NotificationChannelGroup notificationChannelGroup, PreferenceGroup preferenceGroup) {
         int preferenceCount = preferenceGroup.getPreferenceCount();
-        ArrayList<Preference> arrayList = new ArrayList();
+        ArrayList<Preference> arrayList = new ArrayList<>();
         if (notificationChannelGroup.getId() == null) {
-            preferenceGroup.setTitle(R.string.notification_channels_other);
+            preferenceGroup.setTitle(R$string.notification_channels_other);
         } else {
             preferenceGroup.setTitle(notificationChannelGroup.getName());
             arrayList.add(addOrUpdateGroupToggle(preferenceGroup, notificationChannelGroup));
@@ -184,10 +183,10 @@ public class ChannelListPreferenceController extends NotificationPreferenceContr
         boolean z2 = preferenceGroup.getPreferenceCount() == arrayList.size();
         List<NotificationChannel> emptyList = notificationChannelGroup.isBlocked() ? Collections.emptyList() : notificationChannelGroup.getChannels();
         Collections.sort(emptyList, NotificationPreferenceController.CHANNEL_COMPARATOR);
-        for (NotificationChannel notificationChannel : emptyList) {
-            if (TextUtils.isEmpty(notificationChannel.getConversationId()) || notificationChannel.isDemoted()) {
-                PrimarySwitchPreference findOrCreateChannelPrefForKey = findOrCreateChannelPrefForKey(preferenceGroup, notificationChannel.getId(), arrayList.size());
-                updateSingleChannelPrefs(findOrCreateChannelPrefForKey, notificationChannel, notificationChannelGroup.isBlocked());
+        for (NotificationChannel next : emptyList) {
+            if (TextUtils.isEmpty(next.getConversationId()) || next.isDemoted()) {
+                PrimarySwitchPreference findOrCreateChannelPrefForKey = findOrCreateChannelPrefForKey(preferenceGroup, next.getId(), arrayList.size());
+                updateSingleChannelPrefs(findOrCreateChannelPrefForKey, next, notificationChannelGroup.isBlocked());
                 arrayList.add(findOrCreateChannelPrefForKey);
             }
         }
@@ -199,45 +198,38 @@ public class ChannelListPreferenceController extends NotificationPreferenceContr
         }
         if (z3 || z) {
             preferenceGroup.removeAll();
-            for (Preference preference : arrayList) {
-                preferenceGroup.addPreference(preference);
+            for (Preference addPreference : arrayList) {
+                preferenceGroup.addPreference(addPreference);
             }
         }
     }
 
-    private Preference addOrUpdateGroupToggle(PreferenceGroup preferenceGroup, final NotificationChannelGroup notificationChannelGroup) {
-        RestrictedSwitchPreference restrictedSwitchPreference;
+    private Preference addOrUpdateGroupToggle(PreferenceGroup preferenceGroup, NotificationChannelGroup notificationChannelGroup) {
         boolean z;
+        RestrictedSwitchPreference restrictedSwitchPreference;
         boolean z2 = false;
-        if (preferenceGroup.getPreferenceCount() > 0 && (preferenceGroup.getPreference(0) instanceof RestrictedSwitchPreference)) {
+        if (preferenceGroup.getPreferenceCount() <= 0 || !(preferenceGroup.getPreference(0) instanceof RestrictedSwitchPreference)) {
+            restrictedSwitchPreference = new RestrictedSwitchPreference(this.mContext);
+            z = true;
+        } else {
             restrictedSwitchPreference = (RestrictedSwitchPreference) preferenceGroup.getPreference(0);
             z = false;
-        } else {
-            restrictedSwitchPreference = new RestrictedSwitchPreference(((NotificationPreferenceController) this).mContext);
-            z = true;
         }
         restrictedSwitchPreference.setOrder(-1);
-        restrictedSwitchPreference.setTitle(((NotificationPreferenceController) this).mContext.getString(R.string.notification_switch_label, notificationChannelGroup.getName()));
+        restrictedSwitchPreference.setTitle((CharSequence) this.mContext.getString(R$string.notification_switch_label, new Object[]{notificationChannelGroup.getName()}));
         if (this.mAdmin == null && isChannelGroupBlockable(notificationChannelGroup)) {
             z2 = true;
         }
         restrictedSwitchPreference.setEnabled(z2);
         restrictedSwitchPreference.setChecked(true ^ notificationChannelGroup.isBlocked());
-        restrictedSwitchPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() { // from class: com.android.settings.notification.app.ChannelListPreferenceController$$ExternalSyntheticLambda1
-            @Override // androidx.preference.Preference.OnPreferenceClickListener
-            public final boolean onPreferenceClick(Preference preference) {
-                boolean lambda$addOrUpdateGroupToggle$0;
-                lambda$addOrUpdateGroupToggle$0 = ChannelListPreferenceController.this.lambda$addOrUpdateGroupToggle$0(notificationChannelGroup, preference);
-                return lambda$addOrUpdateGroupToggle$0;
-            }
-        });
+        restrictedSwitchPreference.setOnPreferenceClickListener(new ChannelListPreferenceController$$ExternalSyntheticLambda0(this, notificationChannelGroup));
         if (z) {
             preferenceGroup.addPreference(restrictedSwitchPreference);
         }
         return restrictedSwitchPreference;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ boolean lambda$addOrUpdateGroupToggle$0(NotificationChannelGroup notificationChannelGroup, Preference preference) {
         notificationChannelGroup.setBlocked(!((SwitchPreference) preference).isChecked());
         NotificationBackend notificationBackend = this.mBackend;
@@ -247,17 +239,17 @@ public class ChannelListPreferenceController extends NotificationPreferenceContr
         return true;
     }
 
-    private void updateSingleChannelPrefs(PrimarySwitchPreference primarySwitchPreference, final NotificationChannel notificationChannel, boolean z) {
+    private void updateSingleChannelPrefs(PrimarySwitchPreference primarySwitchPreference, NotificationChannel notificationChannel, boolean z) {
         boolean z2 = false;
         primarySwitchPreference.setSwitchEnabled(this.mAdmin == null && isChannelBlockable(notificationChannel) && isChannelConfigurable(notificationChannel) && !z);
         if (notificationChannel.getImportance() > 2) {
             primarySwitchPreference.setIcon(getAlertingIcon());
         } else {
-            primarySwitchPreference.setIcon(R.drawable.empty_icon);
+            primarySwitchPreference.setIcon(R$drawable.empty_icon);
         }
         primarySwitchPreference.setIconSize(2);
         primarySwitchPreference.setTitle(notificationChannel.getName());
-        primarySwitchPreference.setSummary(NotificationBackend.getSentSummary(((NotificationPreferenceController) this).mContext, this.mAppRow.sentByChannel.get(notificationChannel.getId()), false));
+        primarySwitchPreference.setSummary(NotificationBackend.getSentSummary(this.mContext, this.mAppRow.sentByChannel.get(notificationChannel.getId()), false));
         if (notificationChannel.getImportance() != 0) {
             z2 = true;
         }
@@ -267,23 +259,16 @@ public class ChannelListPreferenceController extends NotificationPreferenceContr
         bundle.putString("package", this.mAppRow.pkg);
         bundle.putString("android.provider.extra.CHANNEL_ID", notificationChannel.getId());
         bundle.putBoolean("fromSettings", true);
-        primarySwitchPreference.setIntent(new SubSettingLauncher(((NotificationPreferenceController) this).mContext).setDestination(ChannelNotificationSettings.class.getName()).setArguments(bundle).setTitleRes(R.string.notification_channel_title).setSourceMetricsCategory(72).toIntent());
-        primarySwitchPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() { // from class: com.android.settings.notification.app.ChannelListPreferenceController$$ExternalSyntheticLambda0
-            @Override // androidx.preference.Preference.OnPreferenceChangeListener
-            public final boolean onPreferenceChange(Preference preference, Object obj) {
-                boolean lambda$updateSingleChannelPrefs$1;
-                lambda$updateSingleChannelPrefs$1 = ChannelListPreferenceController.this.lambda$updateSingleChannelPrefs$1(notificationChannel, preference, obj);
-                return lambda$updateSingleChannelPrefs$1;
-            }
-        });
+        primarySwitchPreference.setIntent(new SubSettingLauncher(this.mContext).setDestination(ChannelNotificationSettings.class.getName()).setArguments(bundle).setTitleRes(R$string.notification_channel_title).setSourceMetricsCategory(72).toIntent());
+        primarySwitchPreference.setOnPreferenceChangeListener(new ChannelListPreferenceController$$ExternalSyntheticLambda1(this, notificationChannel));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ boolean lambda$updateSingleChannelPrefs$1(NotificationChannel notificationChannel, Preference preference, Object obj) {
         notificationChannel.setImportance(((Boolean) obj).booleanValue() ? Math.max(notificationChannel.getOriginalImportance(), 2) : 0);
         notificationChannel.lockFields(4);
         PrimarySwitchPreference primarySwitchPreference = (PrimarySwitchPreference) preference;
-        primarySwitchPreference.setIcon(R.drawable.empty_icon);
+        primarySwitchPreference.setIcon(R$drawable.empty_icon);
         if (notificationChannel.getImportance() > 2) {
             primarySwitchPreference.setIcon(getAlertingIcon());
         }
@@ -294,16 +279,16 @@ public class ChannelListPreferenceController extends NotificationPreferenceContr
     }
 
     private Drawable getAlertingIcon() {
-        Drawable drawable = ((NotificationPreferenceController) this).mContext.getDrawable(R.drawable.ic_notifications_alert);
-        drawable.setTintList(Utils.getColorAccent(((NotificationPreferenceController) this).mContext));
+        Drawable drawable = this.mContext.getDrawable(R$drawable.ic_notifications_alert);
+        drawable.setTintList(Utils.getColorAccent(this.mContext));
         return drawable;
     }
 
-    protected void onGroupBlockStateChanged(NotificationChannelGroup notificationChannelGroup) {
+    /* access modifiers changed from: protected */
+    public void onGroupBlockStateChanged(NotificationChannelGroup notificationChannelGroup) {
         PreferenceGroup preferenceGroup;
-        if (notificationChannelGroup == null || (preferenceGroup = (PreferenceGroup) this.mPreference.findPreference(notificationChannelGroup.getId())) == null) {
-            return;
+        if (notificationChannelGroup != null && (preferenceGroup = (PreferenceGroup) this.mPreference.findPreference(notificationChannelGroup.getId())) != null) {
+            updateGroupPreferences(notificationChannelGroup, preferenceGroup);
         }
-        updateGroupPreferences(notificationChannelGroup, preferenceGroup);
     }
 }

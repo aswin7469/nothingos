@@ -10,7 +10,7 @@ import com.airbnb.lottie.value.Keyframe;
 import com.airbnb.lottie.value.LottieValueCallback;
 import com.airbnb.lottie.value.ScaleXY;
 import java.util.Collections;
-/* loaded from: classes.dex */
+
 public class TransformKeyframeAnimation {
     private BaseKeyframeAnimation<PointF, PointF> anchorPoint;
     private BaseKeyframeAnimation<?, Float> endOpacity;
@@ -28,11 +28,11 @@ public class TransformKeyframeAnimation {
     private BaseKeyframeAnimation<?, Float> startOpacity;
 
     public TransformKeyframeAnimation(AnimatableTransform animatableTransform) {
-        this.anchorPoint = animatableTransform.getAnchorPoint() == null ? null : animatableTransform.getAnchorPoint().mo180createAnimation();
-        this.position = animatableTransform.getPosition() == null ? null : animatableTransform.getPosition().mo180createAnimation();
-        this.scale = animatableTransform.getScale() == null ? null : animatableTransform.getScale().mo180createAnimation();
-        this.rotation = animatableTransform.getRotation() == null ? null : animatableTransform.getRotation().mo180createAnimation();
-        FloatKeyframeAnimation floatKeyframeAnimation = animatableTransform.getSkew() == null ? null : (FloatKeyframeAnimation) animatableTransform.getSkew().mo180createAnimation();
+        this.anchorPoint = animatableTransform.getAnchorPoint() == null ? null : animatableTransform.getAnchorPoint().createAnimation();
+        this.position = animatableTransform.getPosition() == null ? null : animatableTransform.getPosition().createAnimation();
+        this.scale = animatableTransform.getScale() == null ? null : animatableTransform.getScale().createAnimation();
+        this.rotation = animatableTransform.getRotation() == null ? null : animatableTransform.getRotation().createAnimation();
+        FloatKeyframeAnimation floatKeyframeAnimation = animatableTransform.getSkew() == null ? null : (FloatKeyframeAnimation) animatableTransform.getSkew().createAnimation();
         this.skew = floatKeyframeAnimation;
         if (floatKeyframeAnimation != null) {
             this.skewMatrix1 = new Matrix();
@@ -45,17 +45,17 @@ public class TransformKeyframeAnimation {
             this.skewMatrix3 = null;
             this.skewValues = null;
         }
-        this.skewAngle = animatableTransform.getSkewAngle() == null ? null : (FloatKeyframeAnimation) animatableTransform.getSkewAngle().mo180createAnimation();
+        this.skewAngle = animatableTransform.getSkewAngle() == null ? null : (FloatKeyframeAnimation) animatableTransform.getSkewAngle().createAnimation();
         if (animatableTransform.getOpacity() != null) {
-            this.opacity = animatableTransform.getOpacity().mo180createAnimation();
+            this.opacity = animatableTransform.getOpacity().createAnimation();
         }
         if (animatableTransform.getStartOpacity() != null) {
-            this.startOpacity = animatableTransform.getStartOpacity().mo180createAnimation();
+            this.startOpacity = animatableTransform.getStartOpacity().createAnimation();
         } else {
             this.startOpacity = null;
         }
         if (animatableTransform.getEndOpacity() != null) {
-            this.endOpacity = animatableTransform.getEndOpacity().mo180createAnimation();
+            this.endOpacity = animatableTransform.getEndOpacity().createAnimation();
         } else {
             this.endOpacity = null;
         }
@@ -164,52 +164,52 @@ public class TransformKeyframeAnimation {
     }
 
     public Matrix getMatrix() {
-        float floatValue;
+        float f;
         this.matrix.reset();
         BaseKeyframeAnimation<?, PointF> baseKeyframeAnimation = this.position;
         if (baseKeyframeAnimation != null) {
-            PointF mo177getValue = baseKeyframeAnimation.mo177getValue();
-            float f = mo177getValue.x;
-            if (f != 0.0f || mo177getValue.y != 0.0f) {
-                this.matrix.preTranslate(f, mo177getValue.y);
+            PointF value = baseKeyframeAnimation.getValue();
+            float f2 = value.x;
+            if (!(f2 == 0.0f && value.y == 0.0f)) {
+                this.matrix.preTranslate(f2, value.y);
             }
         }
         BaseKeyframeAnimation<Float, Float> baseKeyframeAnimation2 = this.rotation;
         if (baseKeyframeAnimation2 != null) {
             if (baseKeyframeAnimation2 instanceof ValueCallbackKeyframeAnimation) {
-                floatValue = baseKeyframeAnimation2.mo177getValue().floatValue();
+                f = baseKeyframeAnimation2.getValue().floatValue();
             } else {
-                floatValue = ((FloatKeyframeAnimation) baseKeyframeAnimation2).getFloatValue();
+                f = ((FloatKeyframeAnimation) baseKeyframeAnimation2).getFloatValue();
             }
-            if (floatValue != 0.0f) {
-                this.matrix.preRotate(floatValue);
+            if (f != 0.0f) {
+                this.matrix.preRotate(f);
             }
         }
         if (this.skew != null) {
             FloatKeyframeAnimation floatKeyframeAnimation = this.skewAngle;
-            float cos = floatKeyframeAnimation == null ? 0.0f : (float) Math.cos(Math.toRadians((-floatKeyframeAnimation.getFloatValue()) + 90.0f));
+            float cos = floatKeyframeAnimation == null ? 0.0f : (float) Math.cos(Math.toRadians((double) ((-floatKeyframeAnimation.getFloatValue()) + 90.0f)));
             FloatKeyframeAnimation floatKeyframeAnimation2 = this.skewAngle;
-            float sin = floatKeyframeAnimation2 == null ? 1.0f : (float) Math.sin(Math.toRadians((-floatKeyframeAnimation2.getFloatValue()) + 90.0f));
+            float sin = floatKeyframeAnimation2 == null ? 1.0f : (float) Math.sin(Math.toRadians((double) ((-floatKeyframeAnimation2.getFloatValue()) + 90.0f)));
             clearSkewValues();
             float[] fArr = this.skewValues;
             fArr[0] = cos;
             fArr[1] = sin;
-            float f2 = -sin;
-            fArr[3] = f2;
+            float f3 = -sin;
+            fArr[3] = f3;
             fArr[4] = cos;
             fArr[8] = 1.0f;
             this.skewMatrix1.setValues(fArr);
             clearSkewValues();
             float[] fArr2 = this.skewValues;
             fArr2[0] = 1.0f;
-            fArr2[3] = (float) Math.tan(Math.toRadians(this.skew.getFloatValue()));
+            fArr2[3] = (float) Math.tan(Math.toRadians((double) this.skew.getFloatValue()));
             fArr2[4] = 1.0f;
             fArr2[8] = 1.0f;
             this.skewMatrix2.setValues(fArr2);
             clearSkewValues();
             float[] fArr3 = this.skewValues;
             fArr3[0] = cos;
-            fArr3[1] = f2;
+            fArr3[1] = f3;
             fArr3[3] = sin;
             fArr3[4] = cos;
             fArr3[8] = 1.0f;
@@ -220,17 +220,17 @@ public class TransformKeyframeAnimation {
         }
         BaseKeyframeAnimation<ScaleXY, ScaleXY> baseKeyframeAnimation3 = this.scale;
         if (baseKeyframeAnimation3 != null) {
-            ScaleXY mo177getValue2 = baseKeyframeAnimation3.mo177getValue();
-            if (mo177getValue2.getScaleX() != 1.0f || mo177getValue2.getScaleY() != 1.0f) {
-                this.matrix.preScale(mo177getValue2.getScaleX(), mo177getValue2.getScaleY());
+            ScaleXY value2 = baseKeyframeAnimation3.getValue();
+            if (!(value2.getScaleX() == 1.0f && value2.getScaleY() == 1.0f)) {
+                this.matrix.preScale(value2.getScaleX(), value2.getScaleY());
             }
         }
         BaseKeyframeAnimation<PointF, PointF> baseKeyframeAnimation4 = this.anchorPoint;
         if (baseKeyframeAnimation4 != null) {
-            PointF mo177getValue3 = baseKeyframeAnimation4.mo177getValue();
-            float f3 = mo177getValue3.x;
-            if (f3 != 0.0f || mo177getValue3.y != 0.0f) {
-                this.matrix.preTranslate(-f3, -mo177getValue3.y);
+            PointF value3 = baseKeyframeAnimation4.getValue();
+            float f4 = value3.x;
+            if (!(f4 == 0.0f && value3.y == 0.0f)) {
+                this.matrix.preTranslate(-f4, -value3.y);
             }
         }
         return this.matrix;
@@ -245,32 +245,32 @@ public class TransformKeyframeAnimation {
     public Matrix getMatrixForRepeater(float f) {
         BaseKeyframeAnimation<?, PointF> baseKeyframeAnimation = this.position;
         PointF pointF = null;
-        PointF mo177getValue = baseKeyframeAnimation == null ? null : baseKeyframeAnimation.mo177getValue();
+        PointF value = baseKeyframeAnimation == null ? null : baseKeyframeAnimation.getValue();
         BaseKeyframeAnimation<ScaleXY, ScaleXY> baseKeyframeAnimation2 = this.scale;
-        ScaleXY mo177getValue2 = baseKeyframeAnimation2 == null ? null : baseKeyframeAnimation2.mo177getValue();
+        ScaleXY value2 = baseKeyframeAnimation2 == null ? null : baseKeyframeAnimation2.getValue();
         this.matrix.reset();
-        if (mo177getValue != null) {
-            this.matrix.preTranslate(mo177getValue.x * f, mo177getValue.y * f);
+        if (value != null) {
+            this.matrix.preTranslate(value.x * f, value.y * f);
         }
-        if (mo177getValue2 != null) {
-            double d = f;
-            this.matrix.preScale((float) Math.pow(mo177getValue2.getScaleX(), d), (float) Math.pow(mo177getValue2.getScaleY(), d));
+        if (value2 != null) {
+            double d = (double) f;
+            this.matrix.preScale((float) Math.pow((double) value2.getScaleX(), d), (float) Math.pow((double) value2.getScaleY(), d));
         }
         BaseKeyframeAnimation<Float, Float> baseKeyframeAnimation3 = this.rotation;
         if (baseKeyframeAnimation3 != null) {
-            float floatValue = baseKeyframeAnimation3.mo177getValue().floatValue();
+            float floatValue = baseKeyframeAnimation3.getValue().floatValue();
             BaseKeyframeAnimation<PointF, PointF> baseKeyframeAnimation4 = this.anchorPoint;
             if (baseKeyframeAnimation4 != null) {
-                pointF = baseKeyframeAnimation4.mo177getValue();
+                pointF = baseKeyframeAnimation4.getValue();
             }
-            Matrix matrix = this.matrix;
+            Matrix matrix2 = this.matrix;
             float f2 = floatValue * f;
             float f3 = 0.0f;
             float f4 = pointF == null ? 0.0f : pointF.x;
             if (pointF != null) {
                 f3 = pointF.y;
             }
-            matrix.preRotate(f2, f4, f3);
+            matrix2.preRotate(f2, f4, f3);
         }
         return this.matrix;
     }
@@ -320,33 +320,35 @@ public class TransformKeyframeAnimation {
             }
             baseKeyframeAnimation7.setValueCallback(lottieValueCallback);
             return true;
-        } else if (t == LottieProperty.TRANSFORM_START_OPACITY && (baseKeyframeAnimation2 = this.startOpacity) != null) {
-            if (baseKeyframeAnimation2 == null) {
-                this.startOpacity = new ValueCallbackKeyframeAnimation(lottieValueCallback, 100);
-                return true;
-            }
-            baseKeyframeAnimation2.setValueCallback(lottieValueCallback);
-            return true;
-        } else if (t == LottieProperty.TRANSFORM_END_OPACITY && (baseKeyframeAnimation = this.endOpacity) != null) {
-            if (baseKeyframeAnimation == null) {
+        } else if (t != LottieProperty.TRANSFORM_START_OPACITY || (baseKeyframeAnimation2 = this.startOpacity) == null) {
+            if (t != LottieProperty.TRANSFORM_END_OPACITY || (baseKeyframeAnimation = this.endOpacity) == null) {
+                if (t == LottieProperty.TRANSFORM_SKEW && (floatKeyframeAnimation2 = this.skew) != null) {
+                    if (floatKeyframeAnimation2 == null) {
+                        this.skew = new FloatKeyframeAnimation(Collections.singletonList(new Keyframe(Float.valueOf(0.0f))));
+                    }
+                    this.skew.setValueCallback(lottieValueCallback);
+                    return true;
+                } else if (t != LottieProperty.TRANSFORM_SKEW_ANGLE || (floatKeyframeAnimation = this.skewAngle) == null) {
+                    return false;
+                } else {
+                    if (floatKeyframeAnimation == null) {
+                        this.skewAngle = new FloatKeyframeAnimation(Collections.singletonList(new Keyframe(Float.valueOf(0.0f))));
+                    }
+                    this.skewAngle.setValueCallback(lottieValueCallback);
+                    return true;
+                }
+            } else if (baseKeyframeAnimation == null) {
                 this.endOpacity = new ValueCallbackKeyframeAnimation(lottieValueCallback, 100);
                 return true;
+            } else {
+                baseKeyframeAnimation.setValueCallback(lottieValueCallback);
+                return true;
             }
-            baseKeyframeAnimation.setValueCallback(lottieValueCallback);
+        } else if (baseKeyframeAnimation2 == null) {
+            this.startOpacity = new ValueCallbackKeyframeAnimation(lottieValueCallback, 100);
             return true;
-        } else if (t == LottieProperty.TRANSFORM_SKEW && (floatKeyframeAnimation2 = this.skew) != null) {
-            if (floatKeyframeAnimation2 == null) {
-                this.skew = new FloatKeyframeAnimation(Collections.singletonList(new Keyframe(Float.valueOf(0.0f))));
-            }
-            this.skew.setValueCallback(lottieValueCallback);
-            return true;
-        } else if (t != LottieProperty.TRANSFORM_SKEW_ANGLE || (floatKeyframeAnimation = this.skewAngle) == null) {
-            return false;
         } else {
-            if (floatKeyframeAnimation == null) {
-                this.skewAngle = new FloatKeyframeAnimation(Collections.singletonList(new Keyframe(Float.valueOf(0.0f))));
-            }
-            this.skewAngle.setValueCallback(lottieValueCallback);
+            baseKeyframeAnimation2.setValueCallback(lottieValueCallback);
             return true;
         }
     }

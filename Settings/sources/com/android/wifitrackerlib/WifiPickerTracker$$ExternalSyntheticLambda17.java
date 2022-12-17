@@ -1,18 +1,18 @@
 package com.android.wifitrackerlib;
 
 import android.net.wifi.ScanResult;
+import com.android.wifitrackerlib.StandardWifiEntry;
 import java.util.function.Predicate;
-/* loaded from: classes.dex */
-public final /* synthetic */ class WifiPickerTracker$$ExternalSyntheticLambda17 implements Predicate {
-    public static final /* synthetic */ WifiPickerTracker$$ExternalSyntheticLambda17 INSTANCE = new WifiPickerTracker$$ExternalSyntheticLambda17();
 
-    private /* synthetic */ WifiPickerTracker$$ExternalSyntheticLambda17() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class WifiPickerTracker$$ExternalSyntheticLambda17 implements Predicate {
+    public final /* synthetic */ StandardWifiEntry.ScanResultKey f$0;
+
+    public /* synthetic */ WifiPickerTracker$$ExternalSyntheticLambda17(StandardWifiEntry.ScanResultKey scanResultKey) {
+        this.f$0 = scanResultKey;
     }
 
-    @Override // java.util.function.Predicate
     public final boolean test(Object obj) {
-        boolean lambda$updateStandardWifiEntryScans$9;
-        lambda$updateStandardWifiEntryScans$9 = WifiPickerTracker.lambda$updateStandardWifiEntryScans$9((ScanResult) obj);
-        return lambda$updateStandardWifiEntryScans$9;
+        return this.f$0.equals(new StandardWifiEntry.ScanResultKey((ScanResult) obj));
     }
 }

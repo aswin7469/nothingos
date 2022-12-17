@@ -15,13 +15,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-/* loaded from: classes.dex */
+
 public class InputMethodAndSubtypeUtil {
     private static final TextUtils.SimpleStringSplitter sStringInputMethodSplitter = new TextUtils.SimpleStringSplitter(':');
     private static final TextUtils.SimpleStringSplitter sStringInputMethodSubtypeSplitter = new TextUtils.SimpleStringSplitter(';');
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static HashMap<String, HashSet<String>> getEnabledInputMethodsAndSubtypeList(ContentResolver contentResolver) {
+    static HashMap<String, HashSet<String>> getEnabledInputMethodsAndSubtypeList(ContentResolver contentResolver) {
         return parseInputMethodsAndSubtypesString(Settings.Secure.getString(contentResolver, "enabled_input_methods"));
     }
 
@@ -40,7 +39,7 @@ public class InputMethodAndSubtypeUtil {
             TextUtils.SimpleStringSplitter simpleStringSplitter2 = sStringInputMethodSubtypeSplitter;
             simpleStringSplitter2.setString(next);
             if (simpleStringSplitter2.hasNext()) {
-                HashSet<String> hashSet = new HashSet<>();
+                HashSet hashSet = new HashSet();
                 String next2 = simpleStringSplitter2.next();
                 while (true) {
                     TextUtils.SimpleStringSplitter simpleStringSplitter3 = sStringInputMethodSubtypeSplitter;
@@ -57,10 +56,9 @@ public class InputMethodAndSubtypeUtil {
     public static void removeUnnecessaryNonPersistentPreference(Preference preference) {
         SharedPreferences sharedPreferences;
         String key = preference.getKey();
-        if (preference.isPersistent() || key == null || (sharedPreferences = preference.getSharedPreferences()) == null || !sharedPreferences.contains(key)) {
-            return;
+        if (!preference.isPersistent() && key != null && (sharedPreferences = preference.getSharedPreferences()) != null && sharedPreferences.contains(key)) {
+            sharedPreferences.edit().remove(key).apply();
         }
-        sharedPreferences.edit().remove(key).apply();
     }
 
     public static String getSubtypeLocaleNameAsSentence(InputMethodSubtype inputMethodSubtype, Context context, InputMethodInfo inputMethodInfo) {

@@ -9,15 +9,11 @@ import androidx.annotation.Keep;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
-import com.android.settings.network.ProxySubscriptionManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-/* loaded from: classes.dex */
+
 public class ProxySubscriptionManager implements LifecycleObserver {
     private static ProxySubscriptionManager sSingleton;
     private List<OnActiveSubscriptionChangedListener> mActiveSubscriptionsListeners;
@@ -26,9 +22,8 @@ public class ProxySubscriptionManager implements LifecycleObserver {
     private List<OnActiveSubscriptionChangedListener> mPendingNotifyListeners;
     private ActiveSubscriptionsListener mSubscriptionMonitor;
 
-    /* loaded from: classes.dex */
     public interface OnActiveSubscriptionChangedListener {
-        default Lifecycle getLifecycle() {
+        Lifecycle getLifecycle() {
             return null;
         }
 
@@ -47,23 +42,23 @@ public class ProxySubscriptionManager implements LifecycleObserver {
 
     private ProxySubscriptionManager(Context context) {
         Looper mainLooper = context.getMainLooper();
-        final ActiveSubscriptionsListener activeSubscriptionsListener = new ActiveSubscriptionsListener(mainLooper, context) { // from class: com.android.settings.network.ProxySubscriptionManager.1
-            @Override // com.android.settings.network.ActiveSubscriptionsListener
+        C10761 r6 = new ActiveSubscriptionsListener(mainLooper, context) {
             public void onChanged() {
                 ProxySubscriptionManager.this.notifySubscriptionInfoMightChanged();
             }
         };
-        init(context, activeSubscriptionsListener, new GlobalSettingsChangeListener(mainLooper, context, "airplane_mode_on") { // from class: com.android.settings.network.ProxySubscriptionManager.2
-            @Override // com.android.settings.network.GlobalSettingsChangeListener
+        final C10761 r5 = r6;
+        init(context, r6, new GlobalSettingsChangeListener(mainLooper, context, "airplane_mode_on") {
             public void onChanged(String str) {
-                activeSubscriptionsListener.clearCache();
+                r5.clearCache();
                 ProxySubscriptionManager.this.notifySubscriptionInfoMightChanged();
             }
         });
     }
 
+    /* access modifiers changed from: protected */
     @Keep
-    protected void init(Context context, ActiveSubscriptionsListener activeSubscriptionsListener, GlobalSettingsChangeListener globalSettingsChangeListener) {
+    public void init(Context context, ActiveSubscriptionsListener activeSubscriptionsListener, GlobalSettingsChangeListener globalSettingsChangeListener) {
         this.mActiveSubscriptionsListeners = new ArrayList();
         this.mPendingNotifyListeners = new ArrayList();
         this.mSubscriptionMonitor = activeSubscriptionsListener;
@@ -71,8 +66,9 @@ public class ProxySubscriptionManager implements LifecycleObserver {
         activeSubscriptionsListener.start();
     }
 
+    /* access modifiers changed from: protected */
     @Keep
-    protected void notifySubscriptionInfoMightChanged() {
+    public void notifySubscriptionInfoMightChanged() {
         ArrayList arrayList = new ArrayList(this.mPendingNotifyListeners);
         arrayList.addAll(this.mActiveSubscriptionsListeners);
         this.mActiveSubscriptionsListeners.clear();
@@ -82,34 +78,36 @@ public class ProxySubscriptionManager implements LifecycleObserver {
 
     public void setLifecycle(Lifecycle lifecycle) {
         Lifecycle lifecycle2 = this.mLifecycle;
-        if (lifecycle2 == lifecycle) {
-            return;
+        if (lifecycle2 != lifecycle) {
+            if (lifecycle2 != null) {
+                lifecycle2.removeObserver(this);
+            }
+            if (lifecycle != null) {
+                lifecycle.addObserver(this);
+            }
+            this.mLifecycle = lifecycle;
+            this.mAirplaneModeMonitor.notifyChangeBasedOn(lifecycle);
         }
-        if (lifecycle2 != null) {
-            lifecycle2.removeObserver(this);
-        }
-        if (lifecycle != null) {
-            lifecycle.addObserver(this);
-        }
-        this.mLifecycle = lifecycle;
-        this.mAirplaneModeMonitor.notifyChangeBasedOn(lifecycle);
     }
 
+    /* access modifiers changed from: package-private */
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    void onStart() {
+    public void onStart() {
         this.mSubscriptionMonitor.start();
         List<OnActiveSubscriptionChangedListener> list = this.mPendingNotifyListeners;
         this.mPendingNotifyListeners = new ArrayList();
         processStatusChangeOnListeners(list);
     }
 
+    /* access modifiers changed from: package-private */
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    void onStop() {
+    public void onStop() {
         this.mSubscriptionMonitor.stop();
     }
 
+    /* access modifiers changed from: package-private */
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    void onDestroy() {
+    public void onDestroy() {
         this.mSubscriptionMonitor.close();
         this.mAirplaneModeMonitor.close();
         Lifecycle lifecycle = this.mLifecycle;
@@ -148,10 +146,9 @@ public class ProxySubscriptionManager implements LifecycleObserver {
     public void addActiveSubscriptionsListener(OnActiveSubscriptionChangedListener onActiveSubscriptionChangedListener) {
         removeSpecificListenerAndCleanList(onActiveSubscriptionChangedListener, this.mPendingNotifyListeners);
         removeSpecificListenerAndCleanList(onActiveSubscriptionChangedListener, this.mActiveSubscriptionsListeners);
-        if (onActiveSubscriptionChangedListener == null || getListenerState(onActiveSubscriptionChangedListener) == -1) {
-            return;
+        if (onActiveSubscriptionChangedListener != null && getListenerState(onActiveSubscriptionChangedListener) != -1) {
+            this.mActiveSubscriptionsListeners.add(onActiveSubscriptionChangedListener);
         }
-        this.mActiveSubscriptionsListeners.add(onActiveSubscriptionChangedListener);
     }
 
     @Keep
@@ -173,64 +170,36 @@ public class ProxySubscriptionManager implements LifecycleObserver {
         return -1;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ boolean lambda$removeSpecificListenerAndCleanList$0(OnActiveSubscriptionChangedListener onActiveSubscriptionChangedListener, OnActiveSubscriptionChangedListener onActiveSubscriptionChangedListener2) {
         return onActiveSubscriptionChangedListener2 == onActiveSubscriptionChangedListener || getListenerState(onActiveSubscriptionChangedListener2) == -1;
     }
 
-    private void removeSpecificListenerAndCleanList(final OnActiveSubscriptionChangedListener onActiveSubscriptionChangedListener, List<OnActiveSubscriptionChangedListener> list) {
-        list.removeIf(new Predicate() { // from class: com.android.settings.network.ProxySubscriptionManager$$ExternalSyntheticLambda4
-            @Override // java.util.function.Predicate
-            public final boolean test(Object obj) {
-                boolean lambda$removeSpecificListenerAndCleanList$0;
-                lambda$removeSpecificListenerAndCleanList$0 = ProxySubscriptionManager.this.lambda$removeSpecificListenerAndCleanList$0(onActiveSubscriptionChangedListener, (ProxySubscriptionManager.OnActiveSubscriptionChangedListener) obj);
-                return lambda$removeSpecificListenerAndCleanList$0;
-            }
-        });
+    private void removeSpecificListenerAndCleanList(OnActiveSubscriptionChangedListener onActiveSubscriptionChangedListener, List<OnActiveSubscriptionChangedListener> list) {
+        list.removeIf(new ProxySubscriptionManager$$ExternalSyntheticLambda3(this, onActiveSubscriptionChangedListener));
     }
 
     private void processStatusChangeOnListeners(List<OnActiveSubscriptionChangedListener> list) {
-        Map map = (Map) list.stream().collect(Collectors.groupingBy(new Function() { // from class: com.android.settings.network.ProxySubscriptionManager$$ExternalSyntheticLambda3
-            @Override // java.util.function.Function
-            public final Object apply(Object obj) {
-                Integer lambda$processStatusChangeOnListeners$1;
-                lambda$processStatusChangeOnListeners$1 = ProxySubscriptionManager.this.lambda$processStatusChangeOnListeners$1((ProxySubscriptionManager.OnActiveSubscriptionChangedListener) obj);
-                return lambda$processStatusChangeOnListeners$1;
-            }
-        }));
-        map.computeIfPresent(0, new BiFunction() { // from class: com.android.settings.network.ProxySubscriptionManager$$ExternalSyntheticLambda1
-            @Override // java.util.function.BiFunction
-            public final Object apply(Object obj, Object obj2) {
-                List lambda$processStatusChangeOnListeners$2;
-                lambda$processStatusChangeOnListeners$2 = ProxySubscriptionManager.this.lambda$processStatusChangeOnListeners$2((Integer) obj, (List) obj2);
-                return lambda$processStatusChangeOnListeners$2;
-            }
-        });
-        map.computeIfPresent(1, new BiFunction() { // from class: com.android.settings.network.ProxySubscriptionManager$$ExternalSyntheticLambda0
-            @Override // java.util.function.BiFunction
-            public final Object apply(Object obj, Object obj2) {
-                List lambda$processStatusChangeOnListeners$4;
-                lambda$processStatusChangeOnListeners$4 = ProxySubscriptionManager.this.lambda$processStatusChangeOnListeners$4((Integer) obj, (List) obj2);
-                return lambda$processStatusChangeOnListeners$4;
-            }
-        });
+        Map map = (Map) list.stream().collect(Collectors.groupingBy(new ProxySubscriptionManager$$ExternalSyntheticLambda0(this)));
+        map.computeIfPresent(0, new ProxySubscriptionManager$$ExternalSyntheticLambda1(this));
+        map.computeIfPresent(1, new ProxySubscriptionManager$$ExternalSyntheticLambda2(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ Integer lambda$processStatusChangeOnListeners$1(OnActiveSubscriptionChangedListener onActiveSubscriptionChangedListener) {
         return Integer.valueOf(getListenerState(onActiveSubscriptionChangedListener));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ List lambda$processStatusChangeOnListeners$2(Integer num, List list) {
         this.mPendingNotifyListeners.addAll(list);
         return list;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ List lambda$processStatusChangeOnListeners$4(Integer num, List list) {
         this.mActiveSubscriptionsListeners.addAll(list);
-        list.stream().forEach(ProxySubscriptionManager$$ExternalSyntheticLambda2.INSTANCE);
+        list.stream().forEach(new ProxySubscriptionManager$$ExternalSyntheticLambda4());
         return list;
     }
 }

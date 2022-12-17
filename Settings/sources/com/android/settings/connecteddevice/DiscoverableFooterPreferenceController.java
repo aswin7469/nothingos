@@ -8,61 +8,49 @@ import android.content.IntentFilter;
 import android.text.BidiFormatter;
 import android.text.TextUtils;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.bluetooth.AlwaysDiscoverable;
 import com.android.settings.bluetooth.Utils;
 import com.android.settings.core.BasePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.bluetooth.LocalBluetoothManager;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnStart;
 import com.android.settingslib.core.lifecycle.events.OnStop;
 import com.android.settingslib.widget.FooterPreference;
-/* loaded from: classes.dex */
+
 public class DiscoverableFooterPreferenceController extends BasePreferenceController implements LifecycleObserver, OnStart, OnStop {
     private static final String KEY = "discoverable_footer_preference";
     private AlwaysDiscoverable mAlwaysDiscoverable;
     private BluetoothAdapter mBluetoothAdapter;
     BroadcastReceiver mBluetoothChangedReceiver;
+    private boolean mIsAlwaysDiscoverable;
     LocalBluetoothManager mLocalManager;
     private FooterPreference mPreference;
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -71,50 +59,51 @@ public class DiscoverableFooterPreferenceController extends BasePreferenceContro
         super(context, str);
         LocalBluetoothManager localBtManager = Utils.getLocalBtManager(context);
         this.mLocalManager = localBtManager;
-        if (localBtManager == null) {
-            return;
+        if (localBtManager != null) {
+            this.mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            this.mAlwaysDiscoverable = new AlwaysDiscoverable(context);
+            initReceiver();
         }
-        this.mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        this.mAlwaysDiscoverable = new AlwaysDiscoverable(context);
-        initReceiver();
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = (FooterPreference) preferenceScreen.findPreference(getPreferenceKey());
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return this.mContext.getPackageManager().hasSystemFeature("android.hardware.bluetooth") ? 1 : 3;
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStart
     public void onStart() {
-        if (this.mLocalManager == null) {
-            return;
+        if (this.mLocalManager != null) {
+            this.mContext.registerReceiver(this.mBluetoothChangedReceiver, new IntentFilter("android.bluetooth.adapter.action.STATE_CHANGED"));
+            if (this.mIsAlwaysDiscoverable) {
+                this.mAlwaysDiscoverable.start();
+            }
+            updateFooterPreferenceTitle(this.mBluetoothAdapter.getState());
         }
-        this.mContext.registerReceiver(this.mBluetoothChangedReceiver, new IntentFilter("android.bluetooth.adapter.action.STATE_CHANGED"));
-        this.mAlwaysDiscoverable.start();
-        updateFooterPreferenceTitle(this.mBluetoothAdapter.getState());
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStop
     public void onStop() {
-        if (this.mLocalManager == null) {
-            return;
+        if (this.mLocalManager != null) {
+            this.mContext.unregisterReceiver(this.mBluetoothChangedReceiver);
+            if (this.mIsAlwaysDiscoverable) {
+                this.mAlwaysDiscoverable.stop();
+            }
         }
-        this.mContext.unregisterReceiver(this.mBluetoothChangedReceiver);
-        this.mAlwaysDiscoverable.stop();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    public void setAlwaysDiscoverable(boolean z) {
+        this.mIsAlwaysDiscoverable = z;
+    }
+
+    /* access modifiers changed from: private */
     public void updateFooterPreferenceTitle(int i) {
         if (i == 12) {
             this.mPreference.setTitle(getPreferenceTitle());
         } else {
-            this.mPreference.setTitle(R.string.bluetooth_off_footer);
+            this.mPreference.setTitle(R$string.bluetooth_off_footer);
         }
     }
 
@@ -123,12 +112,11 @@ public class DiscoverableFooterPreferenceController extends BasePreferenceContro
         if (TextUtils.isEmpty(name)) {
             return null;
         }
-        return TextUtils.expandTemplate(this.mContext.getText(R.string.bluetooth_device_name_summary), BidiFormatter.getInstance().unicodeWrap(name));
+        return TextUtils.expandTemplate(this.mContext.getText(R$string.bluetooth_device_name_summary), new CharSequence[]{BidiFormatter.getInstance().unicodeWrap(name)});
     }
 
     private void initReceiver() {
-        this.mBluetoothChangedReceiver = new BroadcastReceiver() { // from class: com.android.settings.connecteddevice.DiscoverableFooterPreferenceController.1
-            @Override // android.content.BroadcastReceiver
+        this.mBluetoothChangedReceiver = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 if (intent.getAction().equals("android.bluetooth.adapter.action.STATE_CHANGED")) {
                     DiscoverableFooterPreferenceController.this.updateFooterPreferenceTitle(intent.getIntExtra("android.bluetooth.adapter.extra.STATE", Integer.MIN_VALUE));

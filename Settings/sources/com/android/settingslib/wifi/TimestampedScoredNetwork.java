@@ -3,34 +3,25 @@ package com.android.settingslib.wifi;
 import android.net.ScoredNetwork;
 import android.os.Parcel;
 import android.os.Parcelable;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class TimestampedScoredNetwork implements Parcelable {
-    public static final Parcelable.Creator<TimestampedScoredNetwork> CREATOR = new Parcelable.Creator<TimestampedScoredNetwork>() { // from class: com.android.settingslib.wifi.TimestampedScoredNetwork.1
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: createFromParcel */
-        public TimestampedScoredNetwork mo623createFromParcel(Parcel parcel) {
+
+class TimestampedScoredNetwork implements Parcelable {
+    public static final Parcelable.Creator<TimestampedScoredNetwork> CREATOR = new Parcelable.Creator<TimestampedScoredNetwork>() {
+        public TimestampedScoredNetwork createFromParcel(Parcel parcel) {
             return new TimestampedScoredNetwork(parcel);
         }
 
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: newArray */
-        public TimestampedScoredNetwork[] mo624newArray(int i) {
+        public TimestampedScoredNetwork[] newArray(int i) {
             return new TimestampedScoredNetwork[i];
         }
     };
     private ScoredNetwork mScore;
     private long mUpdatedTimestampMillis;
 
-    @Override // android.os.Parcelable
     public int describeContents() {
         return 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public TimestampedScoredNetwork(ScoredNetwork scoredNetwork, long j) {
+    TimestampedScoredNetwork(ScoredNetwork scoredNetwork, long j) {
         this.mScore = scoredNetwork;
         this.mUpdatedTimestampMillis = j;
     }
@@ -53,7 +44,6 @@ public class TimestampedScoredNetwork implements Parcelable {
         return this.mUpdatedTimestampMillis;
     }
 
-    @Override // android.os.Parcelable
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeParcelable(this.mScore, i);
         parcel.writeLong(this.mUpdatedTimestampMillis);

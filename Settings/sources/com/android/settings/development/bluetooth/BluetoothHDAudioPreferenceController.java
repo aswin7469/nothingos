@@ -9,11 +9,10 @@ import androidx.preference.SwitchPreference;
 import com.android.settings.development.BluetoothA2dpConfigStore;
 import com.android.settings.development.bluetooth.AbstractBluetoothPreferenceController;
 import com.android.settingslib.core.lifecycle.Lifecycle;
-/* loaded from: classes.dex */
+
 public class BluetoothHDAudioPreferenceController extends AbstractBluetoothPreferenceController implements Preference.OnPreferenceChangeListener {
     private final AbstractBluetoothPreferenceController.Callback mCallback;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "bluetooth_hd_audio_settings";
     }
@@ -23,7 +22,6 @@ public class BluetoothHDAudioPreferenceController extends AbstractBluetoothPrefe
         this.mCallback = callback;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         BluetoothA2dp bluetoothA2dp = this.mBluetoothA2dp;
         boolean z = false;
@@ -31,24 +29,22 @@ public class BluetoothHDAudioPreferenceController extends AbstractBluetoothPrefe
             this.mPreference.setEnabled(false);
             return;
         }
-        BluetoothDevice activeDevice = bluetoothA2dp.getActiveDevice();
-        if (activeDevice == null) {
+        BluetoothDevice a2dpActiveDevice = getA2dpActiveDevice();
+        if (a2dpActiveDevice == null) {
             Log.e("BtHDAudioCtr", "Active device is null. To disable HD audio button");
             this.mPreference.setEnabled(false);
             return;
         }
-        boolean z2 = bluetoothA2dp.isOptionalCodecsSupported(activeDevice) == 1;
+        boolean z2 = bluetoothA2dp.isOptionalCodecsSupported(a2dpActiveDevice) == 1;
         this.mPreference.setEnabled(z2);
-        if (!z2) {
-            return;
+        if (z2) {
+            if (bluetoothA2dp.isOptionalCodecsEnabled(a2dpActiveDevice) == 1) {
+                z = true;
+            }
+            ((SwitchPreference) this.mPreference).setChecked(z);
         }
-        if (bluetoothA2dp.isOptionalCodecsEnabled(activeDevice) == 1) {
-            z = true;
-        }
-        ((SwitchPreference) this.mPreference).setChecked(z);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         BluetoothA2dp bluetoothA2dp = this.mBluetoothA2dp;
         if (bluetoothA2dp == null) {
@@ -57,16 +53,16 @@ public class BluetoothHDAudioPreferenceController extends AbstractBluetoothPrefe
         }
         boolean booleanValue = ((Boolean) obj).booleanValue();
         Log.e("BtHDAudioCtr", "onPreferenceChange: " + booleanValue);
-        BluetoothDevice activeDevice = bluetoothA2dp.getActiveDevice();
-        if (activeDevice == null) {
+        BluetoothDevice a2dpActiveDevice = getA2dpActiveDevice();
+        if (a2dpActiveDevice == null) {
             this.mPreference.setEnabled(false);
             return true;
         }
-        bluetoothA2dp.setOptionalCodecsEnabled(activeDevice, booleanValue ? 1 : 0);
+        bluetoothA2dp.setOptionalCodecsEnabled(a2dpActiveDevice, booleanValue ? 1 : 0);
         if (booleanValue) {
-            bluetoothA2dp.enableOptionalCodecs(activeDevice);
+            bluetoothA2dp.enableOptionalCodecs(a2dpActiveDevice);
         } else {
-            bluetoothA2dp.disableOptionalCodecs(activeDevice);
+            bluetoothA2dp.disableOptionalCodecs(a2dpActiveDevice);
         }
         this.mCallback.onBluetoothHDAudioEnabled(booleanValue);
         return true;

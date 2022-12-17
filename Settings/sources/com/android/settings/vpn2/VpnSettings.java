@@ -28,9 +28,11 @@ import com.android.internal.annotations.GuardedBy;
 import com.android.internal.net.LegacyVpnInfo;
 import com.android.internal.net.VpnConfig;
 import com.android.internal.net.VpnProfile;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$menu;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.RestrictedSettingsFragment;
-import com.android.settings.Utils;
 import com.android.settings.widget.GearPreference;
 import com.android.settingslib.RestrictedLockUtilsInternal;
 import com.google.android.collect.Lists;
@@ -41,47 +43,43 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public class VpnSettings extends RestrictedSettingsFragment implements Handler.Callback, Preference.OnPreferenceClickListener {
     private static final NetworkRequest VPN_REQUEST = new NetworkRequest.Builder().removeCapability(15).removeCapability(13).removeCapability(14).build();
+    private Map<AppVpnInfo, AppPreference> mAppPreferences = new ArrayMap();
     private LegacyVpnInfo mConnectedLegacyVpn;
     private ConnectivityManager mConnectivityManager;
-    private boolean mUnavailable;
-    @GuardedBy({"this"})
-    private Handler mUpdater;
-    private HandlerThread mUpdaterThread;
-    private UserManager mUserManager;
-    private VpnManager mVpnManager;
-    private Map<String, LegacyVpnPreference> mLegacyVpnPreferences = new ArrayMap();
-    private Map<AppVpnInfo, AppPreference> mAppPreferences = new ArrayMap();
-    private GearPreference.OnGearClickListener mGearListener = new GearPreference.OnGearClickListener() { // from class: com.android.settings.vpn2.VpnSettings.1
-        @Override // com.android.settings.widget.GearPreference.OnGearClickListener
+    private GearPreference.OnGearClickListener mGearListener = new GearPreference.OnGearClickListener() {
         public void onGearClick(GearPreference gearPreference) {
             if (gearPreference instanceof LegacyVpnPreference) {
                 ConfigDialogFragment.show(VpnSettings.this, ((LegacyVpnPreference) gearPreference).getProfile(), true, true);
-            } else if (!(gearPreference instanceof AppPreference)) {
-            } else {
+            } else if (gearPreference instanceof AppPreference) {
                 AppManagementFragment.show(VpnSettings.this.getPrefContext(), (AppPreference) gearPreference, VpnSettings.this.getMetricsCategory());
             }
         }
     };
-    private ConnectivityManager.NetworkCallback mNetworkCallback = new ConnectivityManager.NetworkCallback() { // from class: com.android.settings.vpn2.VpnSettings.2
-        @Override // android.net.ConnectivityManager.NetworkCallback
+    private Map<String, LegacyVpnPreference> mLegacyVpnPreferences = new ArrayMap();
+    private ConnectivityManager.NetworkCallback mNetworkCallback = new ConnectivityManager.NetworkCallback() {
         public void onAvailable(Network network) {
             if (VpnSettings.this.mUpdater != null) {
                 VpnSettings.this.mUpdater.sendEmptyMessage(0);
             }
         }
 
-        @Override // android.net.ConnectivityManager.NetworkCallback
         public void onLost(Network network) {
             if (VpnSettings.this.mUpdater != null) {
                 VpnSettings.this.mUpdater.sendEmptyMessage(0);
             }
         }
     };
+    private boolean mUnavailable;
+    /* access modifiers changed from: private */
+    @GuardedBy({"this"})
+    public Handler mUpdater;
+    private HandlerThread mUpdaterThread;
+    private UserManager mUserManager;
+    private VpnManager mVpnManager;
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 100;
     }
@@ -90,7 +88,6 @@ public class VpnSettings extends RestrictedSettingsFragment implements Handler.C
         super("no_config_vpn");
     }
 
-    @Override // com.android.settings.RestrictedSettingsFragment, com.android.settings.SettingsPreferenceFragment, androidx.fragment.app.Fragment
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
         this.mUserManager = (UserManager) getSystemService("user");
@@ -99,20 +96,18 @@ public class VpnSettings extends RestrictedSettingsFragment implements Handler.C
         boolean isUiRestricted = isUiRestricted();
         this.mUnavailable = isUiRestricted;
         setHasOptionsMenu(!isUiRestricted);
-        addPreferencesFromResource(R.xml.vpn_settings2);
+        addPreferencesFromResource(R$xml.vpn_settings2);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater);
-        if (Utils.isProviderModelEnabled(getContext()) && !getContext().getPackageManager().hasSystemFeature("android.software.ipsec_tunnels")) {
-            Log.w("VpnSettings", "FEATURE_IPSEC_TUNNELS missing from system, cannot create new VPNs");
+        if (!getContext().getPackageManager().hasSystemFeature("android.software.ipsec_tunnels")) {
+            Log.wtf("VpnSettings", "FEATURE_IPSEC_TUNNELS missing from system, cannot create new VPNs");
         } else {
-            menuInflater.inflate(R.menu.vpn, menu);
+            menuInflater.inflate(R$menu.vpn, menu);
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         for (int i = 0; i < menu.size(); i++) {
@@ -124,33 +119,31 @@ public class VpnSettings extends RestrictedSettingsFragment implements Handler.C
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public boolean onOptionsItemSelected(MenuItem menuItem) {
-        if (menuItem.getItemId() == R.id.vpn_create) {
-            long currentTimeMillis = System.currentTimeMillis();
-            while (this.mLegacyVpnPreferences.containsKey(Long.toHexString(currentTimeMillis))) {
-                currentTimeMillis++;
-            }
-            ConfigDialogFragment.show(this, new VpnProfile(Long.toHexString(currentTimeMillis)), true, false);
-            return true;
+        if (menuItem.getItemId() != R$id.vpn_create) {
+            return super.onOptionsItemSelected(menuItem);
         }
-        return super.onOptionsItemSelected(menuItem);
+        long currentTimeMillis = System.currentTimeMillis();
+        while (this.mLegacyVpnPreferences.containsKey(Long.toHexString(currentTimeMillis))) {
+            currentTimeMillis++;
+        }
+        ConfigDialogFragment.show(this, new VpnProfile(Long.toHexString(currentTimeMillis)), true, false);
+        return true;
     }
 
-    @Override // com.android.settings.RestrictedSettingsFragment, com.android.settings.SettingsPreferenceFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
         boolean hasUserRestriction = this.mUserManager.hasUserRestriction("no_config_vpn");
         this.mUnavailable = hasUserRestriction;
         if (hasUserRestriction) {
             if (!isUiRestrictedByOnlyAdmin()) {
-                getEmptyTextView().setText(R.string.vpn_settings_not_available);
+                getEmptyTextView().setText(R$string.vpn_settings_not_available);
             }
             getPreferenceScreen().removeAll();
             return;
         }
         setEmptyView(getEmptyTextView());
-        getEmptyTextView().setText(R.string.vpn_no_vpns_added);
+        getEmptyTextView().setText(R$string.vpn_no_vpns_added);
         this.mConnectivityManager.registerNetworkCallback(VPN_REQUEST, this.mNetworkCallback);
         HandlerThread handlerThread = new HandlerThread("Refresh VPN list in background");
         this.mUpdaterThread = handlerThread;
@@ -160,7 +153,6 @@ public class VpnSettings extends RestrictedSettingsFragment implements Handler.C
         handler.sendEmptyMessage(0);
     }
 
-    @Override // com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onPause() {
         if (this.mUnavailable) {
             super.onPause();
@@ -168,7 +160,7 @@ public class VpnSettings extends RestrictedSettingsFragment implements Handler.C
         }
         this.mConnectivityManager.unregisterNetworkCallback(this.mNetworkCallback);
         synchronized (this) {
-            this.mUpdater.removeCallbacksAndMessages(null);
+            this.mUpdater.removeCallbacksAndMessages((Object) null);
             this.mUpdater = null;
             this.mUpdaterThread.quit();
             this.mUpdaterThread = null;
@@ -176,7 +168,6 @@ public class VpnSettings extends RestrictedSettingsFragment implements Handler.C
         super.onPause();
     }
 
-    @Override // android.os.Handler.Callback
     public boolean handleMessage(Message message) {
         FragmentActivity activity = getActivity();
         if (activity == null) {
@@ -191,21 +182,20 @@ public class VpnSettings extends RestrictedSettingsFragment implements Handler.C
             Handler handler = this.mUpdater;
             if (handler != null) {
                 handler.removeMessages(0);
-                this.mUpdater.sendEmptyMessageDelayed(0, 1000L);
+                this.mUpdater.sendEmptyMessageDelayed(0, 1000);
             }
         }
         return true;
     }
 
-    /* loaded from: classes.dex */
     static class UpdatePreferences implements Runnable {
-        private final VpnSettings mSettings;
-        private List<VpnProfile> vpnProfiles = Collections.emptyList();
-        private List<AppVpnInfo> vpnApps = Collections.emptyList();
-        private Map<String, LegacyVpnInfo> connectedLegacyVpns = Collections.emptyMap();
-        private Set<AppVpnInfo> connectedAppVpns = Collections.emptySet();
         private Set<AppVpnInfo> alwaysOnAppVpnInfos = Collections.emptySet();
+        private Set<AppVpnInfo> connectedAppVpns = Collections.emptySet();
+        private Map<String, LegacyVpnInfo> connectedLegacyVpns = Collections.emptyMap();
         private String lockdownVpnKey = null;
+        private final VpnSettings mSettings;
+        private List<AppVpnInfo> vpnApps = Collections.emptyList();
+        private List<VpnProfile> vpnProfiles = Collections.emptyList();
 
         public UpdatePreferences(VpnSettings vpnSettings) {
             this.mSettings = vpnSettings;
@@ -225,51 +215,49 @@ public class VpnSettings extends RestrictedSettingsFragment implements Handler.C
             return this;
         }
 
-        @Override // java.lang.Runnable
         public void run() {
-            if (!this.mSettings.canAddPreferences()) {
-                return;
-            }
-            ArraySet arraySet = new ArraySet();
-            Iterator<VpnProfile> it = this.vpnProfiles.iterator();
-            while (true) {
-                boolean z = false;
-                if (!it.hasNext()) {
-                    break;
+            if (this.mSettings.canAddPreferences()) {
+                ArraySet arraySet = new ArraySet();
+                Iterator<VpnProfile> it = this.vpnProfiles.iterator();
+                while (true) {
+                    boolean z = false;
+                    if (!it.hasNext()) {
+                        break;
+                    }
+                    VpnProfile next = it.next();
+                    LegacyVpnPreference findOrCreatePreference = this.mSettings.findOrCreatePreference(next, true);
+                    if (this.connectedLegacyVpns.containsKey(next.key)) {
+                        findOrCreatePreference.setState(this.connectedLegacyVpns.get(next.key).state);
+                    } else {
+                        findOrCreatePreference.setState(ManageablePreference.STATE_NONE);
+                    }
+                    String str = this.lockdownVpnKey;
+                    if (str != null && str.equals(next.key)) {
+                        z = true;
+                    }
+                    findOrCreatePreference.setAlwaysOn(z);
+                    findOrCreatePreference.setInsecureVpn(VpnProfile.isLegacyType(next.type));
+                    arraySet.add(findOrCreatePreference);
                 }
-                VpnProfile next = it.next();
-                LegacyVpnPreference findOrCreatePreference = this.mSettings.findOrCreatePreference(next, true);
-                if (this.connectedLegacyVpns.containsKey(next.key)) {
-                    findOrCreatePreference.setState(this.connectedLegacyVpns.get(next.key).state);
-                } else {
-                    findOrCreatePreference.setState(ManageablePreference.STATE_NONE);
+                for (LegacyVpnInfo next2 : this.connectedLegacyVpns.values()) {
+                    LegacyVpnPreference findOrCreatePreference2 = this.mSettings.findOrCreatePreference(new VpnProfile(next2.key), false);
+                    findOrCreatePreference2.setState(next2.state);
+                    String str2 = this.lockdownVpnKey;
+                    findOrCreatePreference2.setAlwaysOn(str2 != null && str2.equals(next2.key));
+                    arraySet.add(findOrCreatePreference2);
                 }
-                String str = this.lockdownVpnKey;
-                if (str != null && str.equals(next.key)) {
-                    z = true;
+                for (AppVpnInfo next3 : this.vpnApps) {
+                    AppPreference findOrCreatePreference3 = this.mSettings.findOrCreatePreference(next3);
+                    if (this.connectedAppVpns.contains(next3)) {
+                        findOrCreatePreference3.setState(3);
+                    } else {
+                        findOrCreatePreference3.setState(AppPreference.STATE_DISCONNECTED);
+                    }
+                    findOrCreatePreference3.setAlwaysOn(this.alwaysOnAppVpnInfos.contains(next3));
+                    arraySet.add(findOrCreatePreference3);
                 }
-                findOrCreatePreference.setAlwaysOn(z);
-                findOrCreatePreference.setInsecureVpn(VpnProfile.isLegacyType(next.type));
-                arraySet.add(findOrCreatePreference);
+                this.mSettings.setShownPreferences(arraySet);
             }
-            for (LegacyVpnInfo legacyVpnInfo : this.connectedLegacyVpns.values()) {
-                LegacyVpnPreference findOrCreatePreference2 = this.mSettings.findOrCreatePreference(new VpnProfile(legacyVpnInfo.key), false);
-                findOrCreatePreference2.setState(legacyVpnInfo.state);
-                String str2 = this.lockdownVpnKey;
-                findOrCreatePreference2.setAlwaysOn(str2 != null && str2.equals(legacyVpnInfo.key));
-                arraySet.add(findOrCreatePreference2);
-            }
-            for (AppVpnInfo appVpnInfo : this.vpnApps) {
-                AppPreference findOrCreatePreference3 = this.mSettings.findOrCreatePreference(appVpnInfo);
-                if (this.connectedAppVpns.contains(appVpnInfo)) {
-                    findOrCreatePreference3.setState(3);
-                } else {
-                    findOrCreatePreference3.setState(AppPreference.STATE_DISCONNECTED);
-                }
-                findOrCreatePreference3.setAlwaysOn(this.alwaysOnAppVpnInfos.contains(appVpnInfo));
-                arraySet.add(findOrCreatePreference3);
-            }
-            this.mSettings.setShownPreferences(arraySet);
         }
     }
 
@@ -289,12 +277,11 @@ public class VpnSettings extends RestrictedSettingsFragment implements Handler.C
                 preferenceScreen.removePreference(preference);
             }
         }
-        for (Preference preference2 : collection) {
-            preferenceScreen.addPreference(preference2);
+        for (Preference addPreference : collection) {
+            preferenceScreen.addPreference(addPreference);
         }
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceClickListener
     public boolean onPreferenceClick(Preference preference) {
         if (preference instanceof LegacyVpnPreference) {
             VpnProfile profile = ((LegacyVpnPreference) preference).getProfile();
@@ -335,9 +322,8 @@ public class VpnSettings extends RestrictedSettingsFragment implements Handler.C
         }
     }
 
-    @Override // com.android.settings.support.actionbar.HelpResourceProvider
     public int getHelpResource() {
-        return R.string.help_url_vpn;
+        return R$string.help_url_vpn;
     }
 
     public LegacyVpnPreference findOrCreatePreference(VpnProfile vpnProfile, boolean z) {
@@ -360,14 +346,14 @@ public class VpnSettings extends RestrictedSettingsFragment implements Handler.C
 
     public AppPreference findOrCreatePreference(AppVpnInfo appVpnInfo) {
         AppPreference appPreference = this.mAppPreferences.get(appVpnInfo);
-        if (appPreference == null) {
-            AppPreference appPreference2 = new AppPreference(getPrefContext(), appVpnInfo.userId, appVpnInfo.packageName);
-            appPreference2.setOnGearClickListener(this.mGearListener);
-            appPreference2.setOnPreferenceClickListener(this);
-            this.mAppPreferences.put(appVpnInfo, appPreference2);
-            return appPreference2;
+        if (appPreference != null) {
+            return appPreference;
         }
-        return appPreference;
+        AppPreference appPreference2 = new AppPreference(getPrefContext(), appVpnInfo.userId, appVpnInfo.packageName);
+        appPreference2.setOnGearClickListener(this.mGearListener);
+        appPreference2.setOnPreferenceClickListener(this);
+        this.mAppPreferences.put(appVpnInfo, appPreference2);
+        return appPreference2;
     }
 
     private Map<String, LegacyVpnInfo> getConnectedLegacyVpns() {
@@ -381,10 +367,10 @@ public class VpnSettings extends RestrictedSettingsFragment implements Handler.C
 
     private Set<AppVpnInfo> getConnectedAppVpns() {
         ArraySet arraySet = new ArraySet();
-        for (UserHandle userHandle : this.mUserManager.getUserProfiles()) {
-            VpnConfig vpnConfig = this.mVpnManager.getVpnConfig(userHandle.getIdentifier());
+        for (UserHandle next : this.mUserManager.getUserProfiles()) {
+            VpnConfig vpnConfig = this.mVpnManager.getVpnConfig(next.getIdentifier());
             if (vpnConfig != null && !vpnConfig.legacy) {
-                arraySet.add(new AppVpnInfo(userHandle.getIdentifier(), vpnConfig.user));
+                arraySet.add(new AppVpnInfo(next.getIdentifier(), vpnConfig.user));
             }
         }
         return arraySet;
@@ -392,38 +378,36 @@ public class VpnSettings extends RestrictedSettingsFragment implements Handler.C
 
     private Set<AppVpnInfo> getAlwaysOnAppVpnInfos() {
         ArraySet arraySet = new ArraySet();
-        for (UserHandle userHandle : this.mUserManager.getUserProfiles()) {
-            int identifier = userHandle.getIdentifier();
-            String alwaysOnVpnPackageForUser = this.mVpnManager.getAlwaysOnVpnPackageForUser(identifier);
+        for (UserHandle identifier : this.mUserManager.getUserProfiles()) {
+            int identifier2 = identifier.getIdentifier();
+            String alwaysOnVpnPackageForUser = this.mVpnManager.getAlwaysOnVpnPackageForUser(identifier2);
             if (alwaysOnVpnPackageForUser != null) {
-                arraySet.add(new AppVpnInfo(identifier, alwaysOnVpnPackageForUser));
+                arraySet.add(new AppVpnInfo(identifier2, alwaysOnVpnPackageForUser));
             }
         }
         return arraySet;
     }
 
     static List<AppVpnInfo> getVpnApps(Context context, boolean z) {
-        Set singleton;
+        Set set;
         ArrayList newArrayList = Lists.newArrayList();
         if (z) {
-            singleton = new ArraySet();
-            for (UserHandle userHandle : UserManager.get(context).getUserProfiles()) {
-                singleton.add(Integer.valueOf(userHandle.getIdentifier()));
+            set = new ArraySet();
+            for (UserHandle identifier : UserManager.get(context).getUserProfiles()) {
+                set.add(Integer.valueOf(identifier.getIdentifier()));
             }
         } else {
-            singleton = Collections.singleton(Integer.valueOf(UserHandle.myUserId()));
+            set = Collections.singleton(Integer.valueOf(UserHandle.myUserId()));
         }
         List<AppOpsManager.PackageOps> packagesForOps = ((AppOpsManager) context.getSystemService("appops")).getPackagesForOps(new int[]{47, 94});
         if (packagesForOps != null) {
             for (AppOpsManager.PackageOps packageOps : packagesForOps) {
                 int userId = UserHandle.getUserId(packageOps.getUid());
-                if (singleton.contains(Integer.valueOf(userId))) {
+                if (set.contains(Integer.valueOf(userId))) {
                     boolean z2 = false;
                     for (AppOpsManager.OpEntry opEntry : packageOps.getOps()) {
-                        if (opEntry.getOp() == 47 || opEntry.getOp() == 94) {
-                            if (opEntry.getMode() == 0) {
-                                z2 = true;
-                            }
+                        if ((opEntry.getOp() == 47 || opEntry.getOp() == 94) && opEntry.getMode() == 0) {
+                            z2 = true;
                         }
                     }
                     if (z2) {
@@ -437,7 +421,6 @@ public class VpnSettings extends RestrictedSettingsFragment implements Handler.C
     }
 
     private static List<VpnProfile> loadVpnProfiles() {
-        String[] list;
         ArrayList newArrayList = Lists.newArrayList();
         for (String str : LegacyVpnProfileStore.list("VPN_")) {
             VpnProfile decode = VpnProfile.decode(str, LegacyVpnProfileStore.get("VPN_" + str));

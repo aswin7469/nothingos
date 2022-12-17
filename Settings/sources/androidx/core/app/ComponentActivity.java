@@ -11,45 +11,44 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
 import androidx.lifecycle.ReportFragment;
-/* loaded from: classes.dex */
+
 public class ComponentActivity extends Activity implements LifecycleOwner, KeyEventDispatcher.Component {
-    private SimpleArrayMap<Class<?>, ?> mExtraDataMap = new SimpleArrayMap<>();
+    private SimpleArrayMap<Class<Object>, Object> mExtraDataMap = new SimpleArrayMap<>();
     private LifecycleRegistry mLifecycleRegistry = new LifecycleRegistry(this);
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.app.Activity
+    /* access modifiers changed from: protected */
     @SuppressLint({"RestrictedApi"})
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
         ReportFragment.injectIfNeededIn(this);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.app.Activity
-    public void onSaveInstanceState(Bundle outState) {
+    /* access modifiers changed from: protected */
+    public void onSaveInstanceState(Bundle bundle) {
         this.mLifecycleRegistry.markState(Lifecycle.State.CREATED);
-        super.onSaveInstanceState(outState);
+        super.onSaveInstanceState(bundle);
     }
 
-    @Override // androidx.core.view.KeyEventDispatcher.Component
-    public boolean superDispatchKeyEvent(KeyEvent event) {
-        return super.dispatchKeyEvent(event);
+    public Lifecycle getLifecycle() {
+        return this.mLifecycleRegistry;
     }
 
-    @Override // android.app.Activity, android.view.Window.Callback
-    public boolean dispatchKeyShortcutEvent(KeyEvent event) {
+    public boolean superDispatchKeyEvent(KeyEvent keyEvent) {
+        return super.dispatchKeyEvent(keyEvent);
+    }
+
+    public boolean dispatchKeyShortcutEvent(KeyEvent keyEvent) {
         View decorView = getWindow().getDecorView();
-        if (decorView == null || !KeyEventDispatcher.dispatchBeforeHierarchy(decorView, event)) {
-            return super.dispatchKeyShortcutEvent(event);
+        if (decorView == null || !KeyEventDispatcher.dispatchBeforeHierarchy(decorView, keyEvent)) {
+            return super.dispatchKeyShortcutEvent(keyEvent);
         }
         return true;
     }
 
-    @Override // android.app.Activity, android.view.Window.Callback
-    public boolean dispatchKeyEvent(KeyEvent event) {
+    public boolean dispatchKeyEvent(KeyEvent keyEvent) {
         View decorView = getWindow().getDecorView();
-        if (decorView == null || !KeyEventDispatcher.dispatchBeforeHierarchy(decorView, event)) {
-            return KeyEventDispatcher.dispatchKeyEvent(this, decorView, this, event);
+        if (decorView == null || !KeyEventDispatcher.dispatchBeforeHierarchy(decorView, keyEvent)) {
+            return KeyEventDispatcher.dispatchKeyEvent(this, decorView, this, keyEvent);
         }
         return true;
     }

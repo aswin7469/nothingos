@@ -6,12 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.widget.Toast;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.widget.SwitchWidgetController;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.WirelessUtils;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
-/* loaded from: classes.dex */
+
 public final class BluetoothEnabler implements SwitchWidgetController.OnSwitchChangeListener {
     private final BluetoothAdapter mBluetoothAdapter;
     private SwitchWidgetController.OnSwitchChangeListener mCallback;
@@ -19,22 +19,22 @@ public final class BluetoothEnabler implements SwitchWidgetController.OnSwitchCh
     private final IntentFilter mIntentFilter;
     private final int mMetricsEvent;
     private final MetricsFeatureProvider mMetricsFeatureProvider;
-    private final RestrictionUtils mRestrictionUtils;
-    private final SwitchWidgetController mSwitchController;
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() { // from class: com.android.settings.bluetooth.BluetoothEnabler.1
-        @Override // android.content.BroadcastReceiver
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             BluetoothEnabler.this.handleStateChanged(intent.getIntExtra("android.bluetooth.adapter.extra.STATE", Integer.MIN_VALUE));
         }
     };
-    private boolean mValidListener = false;
+    private final RestrictionUtils mRestrictionUtils;
+    private final SwitchWidgetController mSwitchController;
+    private boolean mValidListener;
 
     public BluetoothEnabler(Context context, SwitchWidgetController switchWidgetController, MetricsFeatureProvider metricsFeatureProvider, int i, RestrictionUtils restrictionUtils) {
         this.mContext = context;
         this.mMetricsFeatureProvider = metricsFeatureProvider;
         this.mSwitchController = switchWidgetController;
         switchWidgetController.setListener(this);
-        switchWidgetController.setTitle(context.getString(R.string.bluetooth_main_switch_title));
+        switchWidgetController.setTitle(context.getString(R$string.bluetooth_main_switch_title));
+        this.mValidListener = false;
         this.mMetricsEvent = i;
         BluetoothAdapter defaultAdapter = BluetoothAdapter.getDefaultAdapter();
         this.mBluetoothAdapter = defaultAdapter;
@@ -59,7 +59,7 @@ public final class BluetoothEnabler implements SwitchWidgetController.OnSwitchCh
             handleStateChanged(bluetoothAdapter.getState());
         }
         this.mSwitchController.startListening();
-        this.mContext.registerReceiver(this.mReceiver, this.mIntentFilter);
+        this.mContext.registerReceiver(this.mReceiver, this.mIntentFilter, 2);
         this.mValidListener = true;
     }
 
@@ -71,7 +71,8 @@ public final class BluetoothEnabler implements SwitchWidgetController.OnSwitchCh
         }
     }
 
-    void handleStateChanged(int i) {
+    /* access modifiers changed from: package-private */
+    public void handleStateChanged(int i) {
         switch (i) {
             case 10:
                 this.mSwitchController.setEnabled(true);
@@ -100,24 +101,17 @@ public final class BluetoothEnabler implements SwitchWidgetController.OnSwitchCh
                 this.mSwitchController.stopListening();
             }
             this.mSwitchController.setChecked(z);
-            if (!this.mValidListener) {
-                return;
+            if (this.mValidListener) {
+                this.mSwitchController.startListening();
             }
-            this.mSwitchController.startListening();
         }
     }
 
-    @Override // com.android.settings.widget.SwitchWidgetController.OnSwitchChangeListener
     public boolean onSwitchToggled(boolean z) {
         if (maybeEnforceRestrictions()) {
             triggerParentPreferenceCallback(z);
             return true;
-        } else if (z && !WirelessUtils.isRadioAllowed(this.mContext, "bluetooth")) {
-            Toast.makeText(this.mContext, R.string.wifi_in_airplane_mode, 0).show();
-            this.mSwitchController.setChecked(false);
-            triggerParentPreferenceCallback(false);
-            return false;
-        } else {
+        } else if (!z || WirelessUtils.isRadioAllowed(this.mContext, "bluetooth")) {
             this.mMetricsFeatureProvider.action(this.mContext, this.mMetricsEvent, z);
             if (this.mBluetoothAdapter != null) {
                 boolean bluetoothEnabled = setBluetoothEnabled(z);
@@ -131,6 +125,11 @@ public final class BluetoothEnabler implements SwitchWidgetController.OnSwitchCh
             this.mSwitchController.setEnabled(false);
             triggerParentPreferenceCallback(z);
             return true;
+        } else {
+            Toast.makeText(this.mContext, R$string.wifi_in_airplane_mode, 0).show();
+            this.mSwitchController.setChecked(false);
+            triggerParentPreferenceCallback(false);
+            return false;
         }
     }
 
@@ -138,14 +137,18 @@ public final class BluetoothEnabler implements SwitchWidgetController.OnSwitchCh
         this.mCallback = onSwitchChangeListener;
     }
 
-    boolean maybeEnforceRestrictions() {
+    /* access modifiers changed from: package-private */
+    public boolean maybeEnforceRestrictions() {
         RestrictedLockUtils.EnforcedAdmin enforcedAdmin = getEnforcedAdmin(this.mRestrictionUtils, this.mContext);
         this.mSwitchController.setDisabledByAdmin(enforcedAdmin);
         if (enforcedAdmin != null) {
             this.mSwitchController.setChecked(false);
             this.mSwitchController.setEnabled(false);
         }
-        return enforcedAdmin != null;
+        if (enforcedAdmin != null) {
+            return true;
+        }
+        return false;
     }
 
     public static RestrictedLockUtils.EnforcedAdmin getEnforcedAdmin(RestrictionUtils restrictionUtils, Context context) {

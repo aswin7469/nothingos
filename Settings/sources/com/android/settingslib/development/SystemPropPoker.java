@@ -6,7 +6,7 @@ import android.os.Parcel;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.util.Log;
-/* loaded from: classes.dex */
+
 public class SystemPropPoker {
     private static final SystemPropPoker sInstance = new SystemPropPoker();
     private boolean mBlockPokes = false;
@@ -32,22 +32,23 @@ public class SystemPropPoker {
         }
     }
 
-    PokerTask createPokerTask() {
+    /* access modifiers changed from: package-private */
+    public PokerTask createPokerTask() {
         return new PokerTask();
     }
 
-    /* loaded from: classes.dex */
     public static class PokerTask extends AsyncTask<Void, Void, Void> {
-        String[] listServices() {
+        /* access modifiers changed from: package-private */
+        public String[] listServices() {
             return ServiceManager.listServices();
         }
 
-        IBinder checkService(String str) {
+        /* access modifiers changed from: package-private */
+        public IBinder checkService(String str) {
             return ServiceManager.checkService(str);
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // android.os.AsyncTask
+        /* access modifiers changed from: protected */
         public Void doInBackground(Void... voidArr) {
             String[] listServices = listServices();
             if (listServices == null) {
@@ -59,7 +60,7 @@ public class SystemPropPoker {
                 if (checkService != null) {
                     Parcel obtain = Parcel.obtain();
                     try {
-                        checkService.transact(1599295570, obtain, null, 0);
+                        checkService.transact(1599295570, obtain, (Parcel) null, 0);
                     } catch (RemoteException unused) {
                     } catch (Exception e) {
                         Log.i("SystemPropPoker", "Someone wrote a bad service '" + str + "' that doesn't like to be poked", e);

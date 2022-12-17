@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="abc_slice_duration_days">
-        <item quantity="one">for %d dag siden</item>
-        <item quantity="other">for %d dage siden</item>
+        <item quantity="one">For %d dag siden</item>
+        <item quantity="other">For %d dage siden</item>
     </plurals>
     <plurals name="abc_slice_duration_min">
-        <item quantity="one">%d min. siden</item>
-        <item quantity="other">%d min. siden</item>
+        <item quantity="one">For %d min. siden</item>
+        <item quantity="other">For %d min. siden</item>
     </plurals>
     <plurals name="abc_slice_duration_years">
-        <item quantity="one">for %d år siden</item>
-        <item quantity="other">for %d år siden</item>
+        <item quantity="one">For %d år siden</item>
+        <item quantity="other">For %d år siden</item>
     </plurals>
     <plurals name="accessibility_usage_summary">
         <item quantity="one">%1$d app har fuld adgang til din enhed</item>
@@ -233,12 +233,12 @@
         <item quantity="other">%d kategorier er deaktiveret</item>
     </plurals>
     <plurals name="notifications_sent_daily">
-        <item quantity="one">~%d notifikation om dagen</item>
-        <item quantity="other">~%d notifikationer om dagen</item>
+        <item quantity="one">~%,d notifikation om dagen</item>
+        <item quantity="other">~%,d notifikationer om dagen</item>
     </plurals>
     <plurals name="notifications_sent_weekly">
-        <item quantity="one">~%d notifikation om ugen</item>
-        <item quantity="other">~%d notifikationer om ugen</item>
+        <item quantity="one">~%,d notifikation om ugen</item>
+        <item quantity="other">~%,d notifikationer om ugen</item>
     </plurals>
     <plurals name="number_of_device_admins">
         <item quantity="one">%d aktiv app</item>
@@ -320,14 +320,6 @@
         <item quantity="one">Tillad eller fjern certifikat</item>
         <item quantity="other">Tillad eller fjern certifikater</item>
     </plurals>
-    <plurals name="ssl_ca_cert_info_message">
-        <item quantity="one">%s har installeret en certifikatmyndighed for din arbejdsprofil, hvilket giver dem mulighed for at overvåge aktivitet på dit arbejdsnetværk, herunder e-mails, apps og sikre websites.\n\nKontakt din administrator for at få flere oplysninger om dette certifikat.</item>
-        <item quantity="other">%s har installeret certifikatmyndigheder for din arbejdsprofil, hvilket giver dem mulighed for at overvåge aktivitet på dit arbejdsnetværk, herunder e-mails, apps og sikre websites.\n\nKontakt din administrator for at få flere oplysninger om disse certifikater.</item>
-    </plurals>
-    <plurals name="ssl_ca_cert_info_message_device_owner">
-        <item quantity="one">%s har installeret en certifikatmyndighed på din enhed, hvilket giver dem mulighed for at overvåge netværksaktivitet på din enhed, herunder e-mails, apps og sikre websites.\n\nKontakt din administrator for at få flere oplysninger om dette certifikat.</item>
-        <item quantity="other">%s har installeret certifikatmyndigheder på din enhed, hvilket giver dem mulighed for at overvåge netværksaktivitet på din enhed, herunder e-mails, apps og sikre websites.\n\nKontakt din administrator for at få flere oplysninger om disse certifikater.</item>
-    </plurals>
     <plurals name="ssl_ca_cert_settings_button">
         <item quantity="one">Tjek certifikat</item>
         <item quantity="other">Tjek certifikater</item>
@@ -359,10 +351,6 @@
     <plurals name="wifi_saved_passpoint_access_points_summary">
         <item quantity="one">%d abonnement</item>
         <item quantity="other">%d abonnementer</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d enhed er tilsluttet</item>
-        <item quantity="other">%1$d enheder er tilsluttet</item>
     </plurals>
     <plurals name="wrong_pin_code">
         <item quantity="one">Forkert pinkode til SIM-kort. Du har %d forsøg tilbage.</item>

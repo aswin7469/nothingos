@@ -6,82 +6,70 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import com.google.android.setupdesign.items.ItemHierarchy;
-/* loaded from: classes2.dex */
+
 public class ItemAdapter extends BaseAdapter implements ItemHierarchy.Observer {
     private final ItemHierarchy itemHierarchy;
     private final ViewTypes viewTypes = new ViewTypes();
 
-    @Override // android.widget.Adapter
     public long getItemId(int i) {
-        return i;
+        return (long) i;
     }
 
-    public ItemAdapter(ItemHierarchy itemHierarchy) {
-        this.itemHierarchy = itemHierarchy;
-        itemHierarchy.registerObserver(this);
+    public ItemAdapter(ItemHierarchy itemHierarchy2) {
+        this.itemHierarchy = itemHierarchy2;
+        itemHierarchy2.registerObserver(this);
         refreshViewTypes();
     }
 
-    @Override // android.widget.Adapter
     public int getCount() {
         return this.itemHierarchy.getCount();
     }
 
-    @Override // android.widget.Adapter
-    /* renamed from: getItem */
-    public IItem mo738getItem(int i) {
+    public IItem getItem(int i) {
         return this.itemHierarchy.getItemAt(i);
     }
 
-    @Override // android.widget.BaseAdapter, android.widget.Adapter
     public int getItemViewType(int i) {
-        return this.viewTypes.get(mo738getItem(i).getLayoutResource());
+        return this.viewTypes.get(getItem(i).getLayoutResource());
     }
 
-    @Override // android.widget.BaseAdapter, android.widget.Adapter
     public int getViewTypeCount() {
         return this.viewTypes.size();
     }
 
     private void refreshViewTypes() {
         for (int i = 0; i < getCount(); i++) {
-            this.viewTypes.add(mo738getItem(i).getLayoutResource());
+            this.viewTypes.add(getItem(i).getLayoutResource());
         }
     }
 
-    @Override // android.widget.Adapter
     public View getView(int i, View view, ViewGroup viewGroup) {
-        IItem mo738getItem = mo738getItem(i);
+        IItem item = getItem(i);
         if (view == null) {
-            view = LayoutInflater.from(viewGroup.getContext()).inflate(mo738getItem.getLayoutResource(), viewGroup, false);
+            view = LayoutInflater.from(viewGroup.getContext()).inflate(item.getLayoutResource(), viewGroup, false);
         }
-        mo738getItem.onBindView(view);
+        item.onBindView(view);
         return view;
     }
 
-    public void onChanged(ItemHierarchy itemHierarchy) {
+    public void onChanged(ItemHierarchy itemHierarchy2) {
         refreshViewTypes();
         notifyDataSetChanged();
     }
 
-    @Override // com.google.android.setupdesign.items.ItemHierarchy.Observer
-    public void onItemRangeChanged(ItemHierarchy itemHierarchy, int i, int i2) {
-        onChanged(itemHierarchy);
+    public void onItemRangeChanged(ItemHierarchy itemHierarchy2, int i, int i2) {
+        onChanged(itemHierarchy2);
     }
 
-    @Override // com.google.android.setupdesign.items.ItemHierarchy.Observer
-    public void onItemRangeInserted(ItemHierarchy itemHierarchy, int i, int i2) {
-        onChanged(itemHierarchy);
+    public void onItemRangeInserted(ItemHierarchy itemHierarchy2, int i, int i2) {
+        onChanged(itemHierarchy2);
     }
 
-    @Override // android.widget.BaseAdapter, android.widget.ListAdapter
     public boolean isEnabled(int i) {
-        return mo738getItem(i).isEnabled();
+        return getItem(i).isEnabled();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static class ViewTypes {
+    private static class ViewTypes {
         private int nextPosition;
         private final SparseIntArray positionMap;
 

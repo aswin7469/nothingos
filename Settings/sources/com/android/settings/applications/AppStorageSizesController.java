@@ -5,7 +5,7 @@ import android.text.format.Formatter;
 import androidx.preference.Preference;
 import com.android.internal.util.Preconditions;
 import com.android.settingslib.applications.StorageStatsSource;
-/* loaded from: classes.dex */
+
 public class AppStorageSizesController {
     private final Preference mAppSize;
     private final Preference mCacheSize;
@@ -23,10 +23,10 @@ public class AppStorageSizesController {
     private final Preference mTotalSize;
 
     private AppStorageSizesController(Preference preference, Preference preference2, Preference preference3, Preference preference4, int i, int i2) {
-        this.mLastCodeSize = -1L;
-        this.mLastDataSize = -1L;
-        this.mLastCacheSize = -1L;
-        this.mLastTotalSize = -1L;
+        this.mLastCodeSize = -1;
+        this.mLastDataSize = -1;
+        this.mLastCacheSize = -1;
+        this.mLastTotalSize = -1;
         this.mTotalSize = preference;
         this.mAppSize = preference2;
         this.mDataSize = preference3;
@@ -47,28 +47,27 @@ public class AppStorageSizesController {
         }
         long codeBytes = appStorageStats.getCodeBytes();
         long j = 0;
-        long dataBytes = this.mDataCleared ? 0L : this.mLastResult.getDataBytes() - this.mLastResult.getCacheBytes();
+        long dataBytes = this.mDataCleared ? 0 : this.mLastResult.getDataBytes() - this.mLastResult.getCacheBytes();
         if (this.mLastCodeSize != codeBytes) {
             this.mLastCodeSize = codeBytes;
-            this.mAppSize.setSummary(getSizeStr(context, codeBytes));
+            this.mAppSize.setSummary((CharSequence) getSizeStr(context, codeBytes));
         }
         if (this.mLastDataSize != dataBytes) {
             this.mLastDataSize = dataBytes;
-            this.mDataSize.setSummary(getSizeStr(context, dataBytes));
+            this.mDataSize.setSummary((CharSequence) getSizeStr(context, dataBytes));
         }
         if (!this.mDataCleared && !this.mCachedCleared) {
             j = this.mLastResult.getCacheBytes();
         }
         if (this.mLastCacheSize != j) {
             this.mLastCacheSize = j;
-            this.mCacheSize.setSummary(getSizeStr(context, j));
+            this.mCacheSize.setSummary((CharSequence) getSizeStr(context, j));
         }
         long j2 = codeBytes + dataBytes + j;
-        if (this.mLastTotalSize == j2) {
-            return;
+        if (this.mLastTotalSize != j2) {
+            this.mLastTotalSize = j2;
+            this.mTotalSize.setSummary((CharSequence) getSizeStr(context, j2));
         }
-        this.mLastTotalSize = j2;
-        this.mTotalSize.setSummary(getSizeStr(context, j2));
     }
 
     public void setResult(StorageStatsSource.AppStorageStats appStorageStats) {
@@ -92,7 +91,6 @@ public class AppStorageSizesController {
         return Formatter.formatFileSize(context, j);
     }
 
-    /* loaded from: classes.dex */
     public static class Builder {
         private Preference mAppSize;
         private Preference mCacheSize;

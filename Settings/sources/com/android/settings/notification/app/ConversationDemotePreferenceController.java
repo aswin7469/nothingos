@@ -7,11 +7,10 @@ import androidx.preference.Preference;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settings.notification.NotificationBackend;
-/* loaded from: classes.dex */
+
 public class ConversationDemotePreferenceController extends NotificationPreferenceController implements PreferenceControllerMixin {
     SettingsPreferenceFragment mHostFragment;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "demote";
     }
@@ -21,30 +20,30 @@ public class ConversationDemotePreferenceController extends NotificationPreferen
         this.mHostFragment = settingsPreferenceFragment;
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         NotificationChannel notificationChannel;
-        return super.isAvailable() && this.mAppRow != null && (notificationChannel = this.mChannel) != null && !TextUtils.isEmpty(notificationChannel.getConversationId()) && !this.mChannel.isDemoted();
+        if (super.isAvailable() && this.mAppRow != null && (notificationChannel = this.mChannel) != null && !TextUtils.isEmpty(notificationChannel.getConversationId()) && !this.mChannel.isDemoted()) {
+            return true;
+        }
+        return false;
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController
-    boolean isIncludedInFilter() {
+    /* access modifiers changed from: package-private */
+    public boolean isIncludedInFilter() {
         return this.mPreferenceFilter.contains("conversation");
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         preference.setEnabled(this.mAdmin == null);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
-        if ("demote".equals(preference.getKey())) {
-            this.mChannel.setDemoted(true);
-            saveChannel();
-            this.mHostFragment.getActivity().finish();
-            return true;
+        if (!"demote".equals(preference.getKey())) {
+            return false;
         }
-        return false;
+        this.mChannel.setDemoted(true);
+        saveChannel();
+        this.mHostFragment.getActivity().finish();
+        return true;
     }
 }

@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.InsetDrawable;
-import android.os.Build;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +15,7 @@ import com.google.android.setupcompat.partnerconfig.PartnerConfigHelper;
 import com.google.android.setupcompat.template.Mixin;
 import com.google.android.setupdesign.DividerItemDecoration;
 import com.google.android.setupdesign.GlifLayout;
+import com.google.android.setupdesign.R$attr;
 import com.google.android.setupdesign.R$styleable;
 import com.google.android.setupdesign.items.ItemHierarchy;
 import com.google.android.setupdesign.items.ItemInflater;
@@ -22,7 +23,7 @@ import com.google.android.setupdesign.items.RecyclerItemAdapter;
 import com.google.android.setupdesign.util.DrawableLayoutDirectionHelper;
 import com.google.android.setupdesign.util.PartnerStyleHelper;
 import com.google.android.setupdesign.view.HeaderRecyclerView;
-/* loaded from: classes2.dex */
+
 public class RecyclerMixin implements Mixin {
     private Drawable defaultDivider;
     private Drawable divider;
@@ -30,35 +31,40 @@ public class RecyclerMixin implements Mixin {
     private int dividerInsetEnd;
     private int dividerInsetStart;
     private View header;
-    private boolean isDividerDisplay;
+    private boolean isDividerDisplay = true;
     private final RecyclerView recyclerView;
     private final TemplateLayout templateLayout;
 
-    public RecyclerMixin(TemplateLayout templateLayout, RecyclerView recyclerView) {
-        this.isDividerDisplay = true;
-        this.templateLayout = templateLayout;
-        this.dividerDecoration = new DividerItemDecoration(templateLayout.getContext());
-        this.recyclerView = recyclerView;
-        recyclerView.setLayoutManager(new LinearLayoutManager(templateLayout.getContext()));
-        if (recyclerView instanceof HeaderRecyclerView) {
-            this.header = ((HeaderRecyclerView) recyclerView).getHeader();
+    public RecyclerMixin(TemplateLayout templateLayout2, RecyclerView recyclerView2) {
+        this.templateLayout = templateLayout2;
+        this.dividerDecoration = new DividerItemDecoration(templateLayout2.getContext());
+        this.recyclerView = recyclerView2;
+        recyclerView2.setLayoutManager(new LinearLayoutManager(templateLayout2.getContext()));
+        if (recyclerView2 instanceof HeaderRecyclerView) {
+            this.header = ((HeaderRecyclerView) recyclerView2).getHeader();
         }
-        boolean isShowItemsDivider = isShowItemsDivider();
+        boolean isShowItemsDivider = isShowItemsDivider(templateLayout2.getContext());
         this.isDividerDisplay = isShowItemsDivider;
         if (isShowItemsDivider) {
-            recyclerView.addItemDecoration(this.dividerDecoration);
+            recyclerView2.addItemDecoration(this.dividerDecoration);
         }
     }
 
-    private boolean isShowItemsDivider() {
-        if (PartnerStyleHelper.shouldApplyPartnerResource(this.templateLayout)) {
+    private boolean isShowItemsDivider(Context context) {
+        TypedValue typedValue = new TypedValue();
+        boolean z = true;
+        context.getTheme().resolveAttribute(R$attr.sudDividerShown, typedValue, true);
+        if (typedValue.data == 0) {
+            z = false;
+        }
+        if (PartnerStyleHelper.shouldApplyPartnerResource((View) this.templateLayout)) {
             PartnerConfigHelper partnerConfigHelper = PartnerConfigHelper.get(this.recyclerView.getContext());
             PartnerConfig partnerConfig = PartnerConfig.CONFIG_ITEMS_DIVIDER_SHOWN;
             if (partnerConfigHelper.isPartnerConfigAvailable(partnerConfig)) {
-                return PartnerConfigHelper.get(this.recyclerView.getContext()).getBoolean(this.recyclerView.getContext(), partnerConfig, true);
+                return PartnerConfigHelper.get(this.recyclerView.getContext()).getBoolean(this.recyclerView.getContext(), partnerConfig, z);
             }
         }
-        return true;
+        return z;
     }
 
     public void parseAttributes(AttributeSet attributeSet, int i) {
@@ -68,16 +74,16 @@ public class RecyclerMixin implements Mixin {
         TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.SudRecyclerMixin, i, 0);
         int resourceId = obtainStyledAttributes.getResourceId(R$styleable.SudRecyclerMixin_android_entries, 0);
         if (resourceId != 0) {
-            ItemHierarchy inflate = new ItemInflater(context).inflate(resourceId);
-            TemplateLayout templateLayout = this.templateLayout;
-            if (templateLayout instanceof GlifLayout) {
-                z = ((GlifLayout) templateLayout).shouldApplyPartnerHeavyThemeResource();
-                z2 = ((GlifLayout) this.templateLayout).useFullDynamicColor();
+            ItemHierarchy itemHierarchy = (ItemHierarchy) new ItemInflater(context).inflate(resourceId);
+            TemplateLayout templateLayout2 = this.templateLayout;
+            if (templateLayout2 instanceof GlifLayout) {
+                z2 = ((GlifLayout) templateLayout2).shouldApplyPartnerHeavyThemeResource();
+                z = ((GlifLayout) this.templateLayout).useFullDynamicColor();
             } else {
-                z = false;
                 z2 = false;
+                z = false;
             }
-            RecyclerItemAdapter recyclerItemAdapter = new RecyclerItemAdapter(inflate, z, z2);
+            RecyclerItemAdapter recyclerItemAdapter = new RecyclerItemAdapter(itemHierarchy, z2, z);
             recyclerItemAdapter.setHasStableIds(obtainStyledAttributes.getBoolean(R$styleable.SudRecyclerMixin_sudHasStableIds, false));
             setAdapter(recyclerItemAdapter);
         }
@@ -91,7 +97,7 @@ public class RecyclerMixin implements Mixin {
         } else {
             int dimensionPixelSize2 = obtainStyledAttributes.getDimensionPixelSize(R$styleable.SudRecyclerMixin_sudDividerInsetStart, 0);
             int dimensionPixelSize3 = obtainStyledAttributes.getDimensionPixelSize(R$styleable.SudRecyclerMixin_sudDividerInsetEnd, 0);
-            if (PartnerStyleHelper.shouldApplyPartnerHeavyThemeResource(this.templateLayout)) {
+            if (PartnerStyleHelper.shouldApplyPartnerResource((View) this.templateLayout)) {
                 PartnerConfigHelper partnerConfigHelper = PartnerConfigHelper.get(context);
                 PartnerConfig partnerConfig = PartnerConfig.CONFIG_LAYOUT_MARGIN_START;
                 if (partnerConfigHelper.isPartnerConfigAvailable(partnerConfig)) {
@@ -156,11 +162,11 @@ public class RecyclerMixin implements Mixin {
     }
 
     private void updateDivider() {
-        if (Build.VERSION.SDK_INT >= 19 ? this.templateLayout.isLayoutDirectionResolved() : true) {
+        if (this.templateLayout.isLayoutDirectionResolved()) {
             if (this.defaultDivider == null) {
                 this.defaultDivider = this.dividerDecoration.getDivider();
             }
-            InsetDrawable createRelativeInsetDrawable = DrawableLayoutDirectionHelper.createRelativeInsetDrawable(this.defaultDivider, this.dividerInsetStart, 0, this.dividerInsetEnd, 0, this.templateLayout);
+            InsetDrawable createRelativeInsetDrawable = DrawableLayoutDirectionHelper.createRelativeInsetDrawable(this.defaultDivider, this.dividerInsetStart, 0, this.dividerInsetEnd, 0, (View) this.templateLayout);
             this.divider = createRelativeInsetDrawable;
             this.dividerDecoration.setDivider(createRelativeInsetDrawable);
         }

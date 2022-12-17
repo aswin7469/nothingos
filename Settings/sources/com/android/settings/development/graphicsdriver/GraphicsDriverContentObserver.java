@@ -4,11 +4,10 @@ import android.content.ContentResolver;
 import android.database.ContentObserver;
 import android.os.Handler;
 import android.provider.Settings;
-/* loaded from: classes.dex */
+
 public class GraphicsDriverContentObserver extends ContentObserver {
     OnGraphicsDriverContentChangedListener mListener;
 
-    /* loaded from: classes.dex */
     interface OnGraphicsDriverContentChangedListener {
         void onGraphicsDriverContentChanged();
     }
@@ -18,7 +17,6 @@ public class GraphicsDriverContentObserver extends ContentObserver {
         this.mListener = onGraphicsDriverContentChangedListener;
     }
 
-    @Override // android.database.ContentObserver
     public void onChange(boolean z) {
         super.onChange(z);
         this.mListener.onGraphicsDriverContentChanged();

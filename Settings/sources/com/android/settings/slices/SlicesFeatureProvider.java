@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import com.android.settings.network.telephony.Enhanced4gLteSliceHelper;
 import com.android.settings.wifi.calling.WifiCallingSliceHelper;
-/* loaded from: classes.dex */
+
 public interface SlicesFeatureProvider {
     Enhanced4gLteSliceHelper getNewEnhanced4gLteSliceHelper(Context context);
 

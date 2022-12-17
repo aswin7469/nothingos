@@ -7,61 +7,48 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.BasePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnStart;
 import com.android.settingslib.core.lifecycle.events.OnStop;
-/* loaded from: classes.dex */
+
 public class AddDevicePreferenceController extends BasePreferenceController implements LifecycleObserver, OnStart, OnStop {
-    private Preference mPreference;
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() { // from class: com.android.settings.connecteddevice.AddDevicePreferenceController.1
-        @Override // android.content.BroadcastReceiver
+    private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    private IntentFilter mIntentFilter = new IntentFilter("android.bluetooth.adapter.action.STATE_CHANGED");
+    /* access modifiers changed from: private */
+    public Preference mPreference;
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             AddDevicePreferenceController addDevicePreferenceController = AddDevicePreferenceController.this;
             addDevicePreferenceController.updateState(addDevicePreferenceController.mPreference);
         }
     };
-    private IntentFilter mIntentFilter = new IntentFilter("android.bluetooth.adapter.action.STATE_CHANGED");
-    private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -70,17 +57,14 @@ public class AddDevicePreferenceController extends BasePreferenceController impl
         super(context, str);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStart
     public void onStart() {
-        this.mContext.registerReceiver(this.mReceiver, this.mIntentFilter);
+        this.mContext.registerReceiver(this.mReceiver, this.mIntentFilter, 2);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStop
     public void onStop() {
         this.mContext.unregisterReceiver(this.mReceiver);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         if (isAvailable()) {
@@ -90,18 +74,19 @@ public class AddDevicePreferenceController extends BasePreferenceController impl
         }
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return this.mContext.getPackageManager().hasSystemFeature("android.hardware.bluetooth") ? 0 : 3;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    /* renamed from: getSummary */
-    public CharSequence mo485getSummary() {
-        return isBluetoothEnabled() ? "" : this.mContext.getString(R.string.connected_device_add_device_summary);
+    public CharSequence getSummary() {
+        if (isBluetoothEnabled()) {
+            return "";
+        }
+        return this.mContext.getString(R$string.connected_device_add_device_summary);
     }
 
-    protected boolean isBluetoothEnabled() {
+    /* access modifiers changed from: protected */
+    public boolean isBluetoothEnabled() {
         BluetoothAdapter bluetoothAdapter = this.mBluetoothAdapter;
         return bluetoothAdapter != null && bluetoothAdapter.isEnabled();
     }

@@ -1,7 +1,6 @@
 package com.android.settings.homepage.contextualcards;
 
 import android.util.Log;
-import com.android.settings.homepage.contextualcards.ContextualCardLookupTable;
 import com.android.settings.homepage.contextualcards.conditional.ConditionContextualCardController;
 import com.android.settings.homepage.contextualcards.conditional.ConditionContextualCardRenderer;
 import com.android.settings.homepage.contextualcards.conditional.ConditionFooterContextualCardRenderer;
@@ -14,30 +13,33 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-/* loaded from: classes.dex */
+
 public class ContextualCardLookupTable {
-    static final Set<ControllerRendererMapping> LOOKUP_TABLE = new TreeSet<ControllerRendererMapping>() { // from class: com.android.settings.homepage.contextualcards.ContextualCardLookupTable.1
+    static final Set<ControllerRendererMapping> LOOKUP_TABLE = new TreeSet<ControllerRendererMapping>() {
         {
-            add(new ControllerRendererMapping(3, ConditionContextualCardRenderer.VIEW_TYPE_HALF_WIDTH, ConditionContextualCardController.class, ConditionContextualCardRenderer.class));
-            add(new ControllerRendererMapping(3, ConditionContextualCardRenderer.VIEW_TYPE_FULL_WIDTH, ConditionContextualCardController.class, ConditionContextualCardRenderer.class));
+            Class<ConditionContextualCardRenderer> cls = ConditionContextualCardRenderer.class;
+            Class<SliceContextualCardRenderer> cls2 = SliceContextualCardRenderer.class;
+            Class<SliceContextualCardController> cls3 = SliceContextualCardController.class;
+            Class<ConditionContextualCardController> cls4 = ConditionContextualCardController.class;
+            add(new ControllerRendererMapping(3, ConditionContextualCardRenderer.VIEW_TYPE_HALF_WIDTH, cls4, cls));
+            add(new ControllerRendererMapping(3, ConditionContextualCardRenderer.VIEW_TYPE_FULL_WIDTH, cls4, cls));
             add(new ControllerRendererMapping(2, LegacySuggestionContextualCardRenderer.VIEW_TYPE, LegacySuggestionContextualCardController.class, LegacySuggestionContextualCardRenderer.class));
-            add(new ControllerRendererMapping(1, SliceContextualCardRenderer.VIEW_TYPE_FULL_WIDTH, SliceContextualCardController.class, SliceContextualCardRenderer.class));
-            add(new ControllerRendererMapping(1, SliceContextualCardRenderer.VIEW_TYPE_HALF_WIDTH, SliceContextualCardController.class, SliceContextualCardRenderer.class));
-            add(new ControllerRendererMapping(1, SliceContextualCardRenderer.VIEW_TYPE_STICKY, SliceContextualCardController.class, SliceContextualCardRenderer.class));
-            add(new ControllerRendererMapping(5, ConditionFooterContextualCardRenderer.VIEW_TYPE, ConditionContextualCardController.class, ConditionFooterContextualCardRenderer.class));
-            add(new ControllerRendererMapping(4, ConditionHeaderContextualCardRenderer.VIEW_TYPE, ConditionContextualCardController.class, ConditionHeaderContextualCardRenderer.class));
+            add(new ControllerRendererMapping(1, SliceContextualCardRenderer.VIEW_TYPE_FULL_WIDTH, cls3, cls2));
+            add(new ControllerRendererMapping(1, SliceContextualCardRenderer.VIEW_TYPE_HALF_WIDTH, cls3, cls2));
+            add(new ControllerRendererMapping(1, SliceContextualCardRenderer.VIEW_TYPE_STICKY, cls3, cls2));
+            add(new ControllerRendererMapping(5, ConditionFooterContextualCardRenderer.VIEW_TYPE, cls4, ConditionFooterContextualCardRenderer.class));
+            add(new ControllerRendererMapping(4, ConditionHeaderContextualCardRenderer.VIEW_TYPE, cls4, ConditionHeaderContextualCardRenderer.class));
         }
     };
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class ControllerRendererMapping implements Comparable<ControllerRendererMapping> {
-        final int mCardType;
+    static class ControllerRendererMapping implements Comparable<ControllerRendererMapping> {
+        /* access modifiers changed from: package-private */
+        public final int mCardType;
         final Class<? extends ContextualCardController> mControllerClass;
         final Class<? extends ContextualCardRenderer> mRendererClass;
-        final int mViewType;
+        /* access modifiers changed from: package-private */
+        public final int mViewType;
 
         ControllerRendererMapping(int i, int i2, Class<? extends ContextualCardController> cls, Class<? extends ContextualCardRenderer> cls2) {
             this.mCardType = i;
@@ -46,41 +48,33 @@ public class ContextualCardLookupTable {
             this.mRendererClass = cls2;
         }
 
-        @Override // java.lang.Comparable
         public int compareTo(ControllerRendererMapping controllerRendererMapping) {
-            return Comparator.comparingInt(ContextualCardLookupTable$ControllerRendererMapping$$ExternalSyntheticLambda0.INSTANCE).thenComparingInt(ContextualCardLookupTable$ControllerRendererMapping$$ExternalSyntheticLambda1.INSTANCE).compare(this, controllerRendererMapping);
+            return Comparator.comparingInt(new C1002xd5f016ad()).thenComparingInt(new C1003xd5f016ae()).compare(this, controllerRendererMapping);
         }
     }
 
     public static Class<? extends ContextualCardController> getCardControllerClass(int i) {
-        for (ControllerRendererMapping controllerRendererMapping : LOOKUP_TABLE) {
-            if (controllerRendererMapping.mCardType == i) {
-                return controllerRendererMapping.mControllerClass;
+        for (ControllerRendererMapping next : LOOKUP_TABLE) {
+            if (next.mCardType == i) {
+                return next.mControllerClass;
             }
         }
         return null;
     }
 
-    public static Class<? extends ContextualCardRenderer> getCardRendererClassByViewType(final int i) throws IllegalStateException {
-        List list = (List) LOOKUP_TABLE.stream().filter(new Predicate() { // from class: com.android.settings.homepage.contextualcards.ContextualCardLookupTable$$ExternalSyntheticLambda0
-            @Override // java.util.function.Predicate
-            public final boolean test(Object obj) {
-                boolean lambda$getCardRendererClassByViewType$0;
-                lambda$getCardRendererClassByViewType$0 = ContextualCardLookupTable.lambda$getCardRendererClassByViewType$0(i, (ContextualCardLookupTable.ControllerRendererMapping) obj);
-                return lambda$getCardRendererClassByViewType$0;
-            }
-        }).collect(Collectors.toList());
+    public static Class<? extends ContextualCardRenderer> getCardRendererClassByViewType(int i) throws IllegalStateException {
+        List list = (List) LOOKUP_TABLE.stream().filter(new ContextualCardLookupTable$$ExternalSyntheticLambda0(i)).collect(Collectors.toList());
         if (list == null || list.isEmpty()) {
             Log.w("ContextualCardLookup", "No matching mapping");
             return null;
-        } else if (list.size() != 1) {
-            throw new IllegalStateException("Have duplicate VIEW_TYPE in lookup table.");
-        } else {
+        } else if (list.size() == 1) {
             return ((ControllerRendererMapping) list.get(0)).mRendererClass;
+        } else {
+            throw new IllegalStateException("Have duplicate VIEW_TYPE in lookup table.");
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ boolean lambda$getCardRendererClassByViewType$0(int i, ControllerRendererMapping controllerRendererMapping) {
         return controllerRendererMapping.mViewType == i;
     }

@@ -14,44 +14,40 @@ import com.airbnb.lottie.animation.keyframe.BaseKeyframeAnimation;
 import com.airbnb.lottie.animation.keyframe.ValueCallbackKeyframeAnimation;
 import com.airbnb.lottie.utils.Utils;
 import com.airbnb.lottie.value.LottieValueCallback;
-/* loaded from: classes.dex */
+
 public class ImageLayer extends BaseLayer {
     private BaseKeyframeAnimation<ColorFilter, ColorFilter> colorFilterAnimation;
+    private final Rect dst = new Rect();
     private final Paint paint = new LPaint(3);
     private final Rect src = new Rect();
-    private final Rect dst = new Rect();
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public ImageLayer(LottieDrawable lottieDrawable, Layer layer) {
+    ImageLayer(LottieDrawable lottieDrawable, Layer layer) {
         super(lottieDrawable, layer);
     }
 
-    @Override // com.airbnb.lottie.model.layer.BaseLayer
     public void drawLayer(Canvas canvas, Matrix matrix, int i) {
         Bitmap bitmap = getBitmap();
-        if (bitmap == null || bitmap.isRecycled()) {
-            return;
+        if (bitmap != null && !bitmap.isRecycled()) {
+            float dpScale = Utils.dpScale();
+            this.paint.setAlpha(i);
+            BaseKeyframeAnimation<ColorFilter, ColorFilter> baseKeyframeAnimation = this.colorFilterAnimation;
+            if (baseKeyframeAnimation != null) {
+                this.paint.setColorFilter(baseKeyframeAnimation.getValue());
+            }
+            canvas.save();
+            canvas.concat(matrix);
+            this.src.set(0, 0, bitmap.getWidth(), bitmap.getHeight());
+            this.dst.set(0, 0, (int) (((float) bitmap.getWidth()) * dpScale), (int) (((float) bitmap.getHeight()) * dpScale));
+            canvas.drawBitmap(bitmap, this.src, this.dst, this.paint);
+            canvas.restore();
         }
-        float dpScale = Utils.dpScale();
-        this.paint.setAlpha(i);
-        BaseKeyframeAnimation<ColorFilter, ColorFilter> baseKeyframeAnimation = this.colorFilterAnimation;
-        if (baseKeyframeAnimation != null) {
-            this.paint.setColorFilter(baseKeyframeAnimation.mo177getValue());
-        }
-        canvas.save();
-        canvas.concat(matrix);
-        this.src.set(0, 0, bitmap.getWidth(), bitmap.getHeight());
-        this.dst.set(0, 0, (int) (bitmap.getWidth() * dpScale), (int) (bitmap.getHeight() * dpScale));
-        canvas.drawBitmap(bitmap, this.src, this.dst, this.paint);
-        canvas.restore();
     }
 
-    @Override // com.airbnb.lottie.model.layer.BaseLayer, com.airbnb.lottie.animation.content.DrawingContent
     public void getBounds(RectF rectF, Matrix matrix, boolean z) {
         super.getBounds(rectF, matrix, z);
         Bitmap bitmap = getBitmap();
         if (bitmap != null) {
-            rectF.set(0.0f, 0.0f, bitmap.getWidth() * Utils.dpScale(), bitmap.getHeight() * Utils.dpScale());
+            rectF.set(0.0f, 0.0f, ((float) bitmap.getWidth()) * Utils.dpScale(), ((float) bitmap.getHeight()) * Utils.dpScale());
             this.boundsMatrix.mapRect(rectF);
         }
     }
@@ -60,15 +56,15 @@ public class ImageLayer extends BaseLayer {
         return this.lottieDrawable.getImageAsset(this.layerModel.getRefId());
     }
 
-    @Override // com.airbnb.lottie.model.layer.BaseLayer, com.airbnb.lottie.model.KeyPathElement
     public <T> void addValueCallback(T t, LottieValueCallback<T> lottieValueCallback) {
         super.addValueCallback(t, lottieValueCallback);
-        if (t == LottieProperty.COLOR_FILTER) {
-            if (lottieValueCallback == null) {
-                this.colorFilterAnimation = null;
-            } else {
-                this.colorFilterAnimation = new ValueCallbackKeyframeAnimation(lottieValueCallback);
-            }
+        if (t != LottieProperty.COLOR_FILTER) {
+            return;
+        }
+        if (lottieValueCallback == null) {
+            this.colorFilterAnimation = null;
+        } else {
+            this.colorFilterAnimation = new ValueCallbackKeyframeAnimation(lottieValueCallback);
         }
     }
 }

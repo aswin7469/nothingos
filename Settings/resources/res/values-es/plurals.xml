@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="abc_slice_duration_days">
-        <item quantity="one">hace %d día</item>
-        <item quantity="other">hace %d días</item>
+        <item quantity="one">Hace %d día</item>
+        <item quantity="other">Hace %d días</item>
     </plurals>
     <plurals name="abc_slice_duration_min">
-        <item quantity="one">hace %d minuto</item>
-        <item quantity="other">hace %d minutos</item>
+        <item quantity="one">Hace %d min</item>
+        <item quantity="other">Hace %d min</item>
     </plurals>
     <plurals name="abc_slice_duration_years">
-        <item quantity="one">hace %d año</item>
-        <item quantity="other">hace %d años</item>
+        <item quantity="one">Hace %d año</item>
+        <item quantity="other">Hace %d años</item>
     </plurals>
     <plurals name="accessibility_usage_summary">
         <item quantity="one">1 aplicación tiene acceso completo a tu dispositivo</item>
@@ -85,8 +85,8 @@
         <item quantity="other">Quedan %d días</item>
     </plurals>
     <plurals name="data_saver_unrestricted_summary">
-        <item quantity="one">1 aplicación puede usar datos sin restricción cuando el ahorro de datos está activado</item>
-        <item quantity="other">%1$d aplicaciones pueden usar datos sin restricción cuando el ahorro de datos está activado</item>
+        <item quantity="one">1 aplicación puede usar datos sin restricción cuando Ahorro de datos está activado</item>
+        <item quantity="other">%1$d aplicaciones pueden usar datos sin restricción cuando Ahorro de datos está activado</item>
     </plurals>
     <plurals name="default_camera_app_title">
         <item quantity="one">Aplicación de cámara</item>
@@ -234,11 +234,11 @@
     </plurals>
     <plurals name="notifications_sent_daily">
         <item quantity="one">Aproximadamente %d notificación al día</item>
-        <item quantity="other">Aproximadamente %d notificaciones al día</item>
+        <item quantity="other">Aproximadamente %,d notificaciones al día</item>
     </plurals>
     <plurals name="notifications_sent_weekly">
         <item quantity="one">Aproximadamente %d notificación a la semana</item>
-        <item quantity="other">Aproximadamente %d notificaciones a la semana</item>
+        <item quantity="other">Aproximadamente %,d notificaciones a la semana</item>
     </plurals>
     <plurals name="number_of_device_admins">
         <item quantity="one">%d aplicación activa</item>
@@ -320,14 +320,6 @@
         <item quantity="one">Confiar en el certificado o eliminarlo</item>
         <item quantity="other">Confiar en los certificados o eliminarlos</item>
     </plurals>
-    <plurals name="ssl_ca_cert_info_message">
-        <item quantity="one">%s ha instalado una entidad de certificación para tu perfil de trabajo que puede permitir la monitorización de tu actividad de red, como los correos electrónicos, las aplicaciones y los sitios web seguros.\n\nPonte en contacto con el administrador para obtener más información sobre este certificado.</item>
-        <item quantity="other">%s ha instalado entidades de certificación para tu perfil de trabajo que pueden permitir la monitorización de tu actividad de red, como los correos electrónicos, las aplicaciones y los sitios web seguros.\n\nPonte en contacto con el administrador para obtener más información sobre estos certificados.</item>
-    </plurals>
-    <plurals name="ssl_ca_cert_info_message_device_owner">
-        <item quantity="one">%s ha instalado una entidad de certificación en tu dispositivo que puede permitir la monitorización de su actividad de red, como los correos electrónicos, las aplicaciones y los sitios web seguros.\n\nPonte en contacto con el administrador para obtener más información sobre este certificado.</item>
-        <item quantity="other">%s ha instalado entidades de certificación en tu dispositivo que pueden permitir la monitorización de su actividad de red, como los correos electrónicos, las aplicaciones y los sitios web seguros.\n\nPonte en contacto con el administrador para obtener más información sobre estos certificados.</item>
-    </plurals>
     <plurals name="ssl_ca_cert_settings_button">
         <item quantity="one">Comprobar certificado</item>
         <item quantity="other">Comprobar certificados</item>
@@ -359,10 +351,6 @@
     <plurals name="wifi_saved_passpoint_access_points_summary">
         <item quantity="one">1 suscripción</item>
         <item quantity="other">%d suscripciones</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d dispositivo conectado</item>
-        <item quantity="other">%1$d dispositivos conectados</item>
     </plurals>
     <plurals name="wrong_pin_code">
         <item quantity="one">Código PIN de la tarjeta SIM incorrecto. Te queda %d intento para tener que ponerte en contacto con tu operador para desbloquear el dispositivo.</item>

@@ -6,26 +6,25 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.util.Log;
-import com.android.settings.homepage.contextualcards.slices.BluetoothUpdateWorker;
 import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.bluetooth.BluetoothCallback;
 import com.android.settingslib.bluetooth.CachedBluetoothDevice;
 import com.android.settingslib.bluetooth.LocalBluetoothManager;
-/* loaded from: classes.dex */
+
 public class BluetoothUpdateWorker extends SliceBackgroundWorker implements BluetoothCallback {
-    private static LocalBluetoothManager sLocalBluetoothManager;
+    /* access modifiers changed from: private */
+    public static LocalBluetoothManager sLocalBluetoothManager;
     private LoadBtManagerHandler mLoadBtManagerHandler;
 
-    @Override // java.io.Closeable, java.lang.AutoCloseable
     public void close() {
     }
 
     public BluetoothUpdateWorker(Context context, Uri uri) {
         super(context, uri);
-        LoadBtManagerHandler loadBtManagerHandler = LoadBtManagerHandler.getInstance(context);
-        this.mLoadBtManagerHandler = loadBtManagerHandler;
+        LoadBtManagerHandler r1 = LoadBtManagerHandler.getInstance(context);
+        this.mLoadBtManagerHandler = r1;
         if (sLocalBluetoothManager == null) {
-            loadBtManagerHandler.startLoadingBtManager(this);
+            r1.startLoadingBtManager(this);
         }
     }
 
@@ -35,68 +34,53 @@ public class BluetoothUpdateWorker extends SliceBackgroundWorker implements Blue
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static LocalBluetoothManager getLocalBtManager() {
+    static LocalBluetoothManager getLocalBtManager() {
         return sLocalBluetoothManager;
     }
 
-    @Override // com.android.settings.slices.SliceBackgroundWorker
-    protected void onSlicePinned() {
-        LocalBluetoothManager localBtManager = this.mLoadBtManagerHandler.getLocalBtManager();
-        if (localBtManager == null) {
-            return;
+    /* access modifiers changed from: protected */
+    public void onSlicePinned() {
+        LocalBluetoothManager r0 = this.mLoadBtManagerHandler.getLocalBtManager();
+        if (r0 != null) {
+            r0.getEventManager().registerCallback(this);
         }
-        localBtManager.getEventManager().registerCallback(this);
     }
 
-    @Override // com.android.settings.slices.SliceBackgroundWorker
-    protected void onSliceUnpinned() {
-        LocalBluetoothManager localBtManager = this.mLoadBtManagerHandler.getLocalBtManager();
-        if (localBtManager == null) {
-            return;
+    /* access modifiers changed from: protected */
+    public void onSliceUnpinned() {
+        LocalBluetoothManager r0 = this.mLoadBtManagerHandler.getLocalBtManager();
+        if (r0 != null) {
+            r0.getEventManager().unregisterCallback(this);
         }
-        localBtManager.getEventManager().unregisterCallback(this);
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public void onAclConnectionStateChanged(CachedBluetoothDevice cachedBluetoothDevice, int i) {
         notifySliceChange();
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public void onActiveDeviceChanged(CachedBluetoothDevice cachedBluetoothDevice, int i) {
         notifySliceChange();
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public void onBluetoothStateChanged(int i) {
         notifySliceChange();
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public void onConnectionStateChanged(CachedBluetoothDevice cachedBluetoothDevice, int i) {
         notifySliceChange();
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public void onProfileConnectionStateChanged(CachedBluetoothDevice cachedBluetoothDevice, int i, int i2) {
         notifySliceChange();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class LoadBtManagerHandler extends Handler {
+    private static class LoadBtManagerHandler extends Handler {
         private static LoadBtManagerHandler sHandler;
         private final Context mContext;
-        private final Runnable mLoadBtManagerTask = new Runnable() { // from class: com.android.settings.homepage.contextualcards.slices.BluetoothUpdateWorker$LoadBtManagerHandler$$ExternalSyntheticLambda1
-            @Override // java.lang.Runnable
-            public final void run() {
-                BluetoothUpdateWorker.LoadBtManagerHandler.this.lambda$new$0();
-            }
-        };
+        private final Runnable mLoadBtManagerTask = new C1011x7052c6b3(this);
         private BluetoothUpdateWorker mWorker;
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public static LoadBtManagerHandler getInstance(Context context) {
             if (sHandler == null) {
                 HandlerThread handlerThread = new HandlerThread("BluetoothUpdateWorker", 10);
@@ -111,28 +95,23 @@ public class BluetoothUpdateWorker extends SliceBackgroundWorker implements Blue
             this.mContext = context;
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public /* synthetic */ void lambda$new$0() {
             Log.d("BluetoothUpdateWorker", "LoadBtManagerHandler: start loading...");
             long currentTimeMillis = System.currentTimeMillis();
-            LocalBluetoothManager unused = BluetoothUpdateWorker.sLocalBluetoothManager = getLocalBtManager();
+            BluetoothUpdateWorker.sLocalBluetoothManager = getLocalBtManager();
             Log.d("BluetoothUpdateWorker", "LoadBtManagerHandler took " + (System.currentTimeMillis() - currentTimeMillis) + " ms");
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public LocalBluetoothManager getLocalBtManager() {
             if (BluetoothUpdateWorker.sLocalBluetoothManager != null) {
                 return BluetoothUpdateWorker.sLocalBluetoothManager;
             }
-            return LocalBluetoothManager.getInstance(this.mContext, new LocalBluetoothManager.BluetoothManagerCallback() { // from class: com.android.settings.homepage.contextualcards.slices.BluetoothUpdateWorker$LoadBtManagerHandler$$ExternalSyntheticLambda0
-                @Override // com.android.settingslib.bluetooth.LocalBluetoothManager.BluetoothManagerCallback
-                public final void onBluetoothManagerInitialized(Context context, LocalBluetoothManager localBluetoothManager) {
-                    BluetoothUpdateWorker.LoadBtManagerHandler.this.lambda$getLocalBtManager$1(context, localBluetoothManager);
-                }
-            });
+            return LocalBluetoothManager.getInstance(this.mContext, new C1012x7052c6b4(this));
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public /* synthetic */ void lambda$getLocalBtManager$1(Context context, LocalBluetoothManager localBluetoothManager) {
             BluetoothUpdateWorker bluetoothUpdateWorker = this.mWorker;
             if (bluetoothUpdateWorker != null) {
@@ -140,14 +119,14 @@ public class BluetoothUpdateWorker extends SliceBackgroundWorker implements Blue
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public void startLoadingBtManager() {
             if (!hasCallbacks(this.mLoadBtManagerTask)) {
                 post(this.mLoadBtManagerTask);
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public void startLoadingBtManager(BluetoothUpdateWorker bluetoothUpdateWorker) {
             this.mWorker = bluetoothUpdateWorker;
             startLoadingBtManager();

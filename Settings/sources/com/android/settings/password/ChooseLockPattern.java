@@ -1,10 +1,12 @@
 package com.android.settings.password;
 
+import android.annotation.SuppressLint;
+import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.os.UserManager;
 import android.util.Log;
 import android.util.Pair;
@@ -20,13 +22,18 @@ import com.android.internal.widget.LockPatternUtils;
 import com.android.internal.widget.LockPatternView;
 import com.android.internal.widget.LockscreenCredential;
 import com.android.internal.widget.VerifyCredentialResponse;
-import com.android.settings.R;
+import com.android.settings.R$attr;
+import com.android.settings.R$bool;
+import com.android.settings.R$drawable;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
+import com.android.settings.R$style;
 import com.android.settings.SettingsActivity;
 import com.android.settings.SetupWizardUtils;
 import com.android.settings.Utils;
 import com.android.settings.core.InstrumentedFragment;
 import com.android.settings.notification.RedactionInterstitial;
-import com.android.settings.password.ChooseLockPattern;
 import com.android.settings.password.ChooseLockSettingsHelper;
 import com.android.settings.password.SaveChosenLockWorkerBase;
 import com.google.android.collect.Lists;
@@ -37,21 +44,19 @@ import com.google.android.setupdesign.template.IconMixin;
 import com.google.android.setupdesign.util.ThemeHelper;
 import java.util.Collections;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class ChooseLockPattern extends SettingsActivity {
-    @Override // com.android.settings.core.SettingsBaseActivity
-    protected boolean isToolbarEnabled() {
+    /* access modifiers changed from: protected */
+    public boolean isToolbarEnabled() {
         return false;
     }
 
-    @Override // com.android.settings.SettingsActivity, android.app.Activity
     public Intent getIntent() {
         Intent intent = new Intent(super.getIntent());
         intent.putExtra(":settings:show_fragment", getFragmentClass().getName());
         return intent;
     }
 
-    /* loaded from: classes.dex */
     public static class IntentBuilder {
         private final Intent mIntent;
 
@@ -73,7 +78,7 @@ public class ChooseLockPattern extends SettingsActivity {
         }
 
         public IntentBuilder setPattern(LockscreenCredential lockscreenCredential) {
-            this.mIntent.putExtra("password", (Parcelable) lockscreenCredential);
+            this.mIntent.putExtra("password", lockscreenCredential);
             return this;
         }
 
@@ -94,7 +99,7 @@ public class ChooseLockPattern extends SettingsActivity {
 
         public IntentBuilder setProfileToUnify(int i, LockscreenCredential lockscreenCredential) {
             this.mIntent.putExtra("unification_profile_id", i);
-            this.mIntent.putExtra("unification_profile_credential", (Parcelable) lockscreenCredential);
+            this.mIntent.putExtra("unification_profile_credential", lockscreenCredential);
             return this;
         }
 
@@ -103,53 +108,32 @@ public class ChooseLockPattern extends SettingsActivity {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.SettingsActivity
+    /* access modifiers changed from: protected */
     public boolean isValidFragment(String str) {
         return ChooseLockPatternFragment.class.getName().equals(str);
     }
 
-    Class<? extends Fragment> getFragmentClass() {
+    /* access modifiers changed from: package-private */
+    public Class<? extends Fragment> getFragmentClass() {
         return ChooseLockPatternFragment.class;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.SettingsActivity, com.android.settings.core.SettingsBaseActivity, androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         setTheme(SetupWizardUtils.getTheme(this, getIntent()));
         ThemeHelper.trySetDynamicColor(this);
         super.onCreate(bundle);
-        findViewById(R.id.content_parent).setFitsSystemWindows(false);
+        findViewById(R$id.content_parent).setFitsSystemWindows(false);
+        getWindow().addFlags(8192);
     }
 
-    @Override // android.app.Activity, android.view.KeyEvent.Callback
     public boolean onKeyDown(int i, KeyEvent keyEvent) {
         return super.onKeyDown(i, keyEvent);
     }
 
-    /* loaded from: classes.dex */
     public static class ChooseLockPatternFragment extends InstrumentedFragment implements SaveChosenLockWorkerBase.Listener {
-        @VisibleForTesting
-        protected LockscreenCredential mChosenPattern;
-        private LockscreenCredential mCurrentCredential;
-        private ColorStateList mDefaultHeaderColorList;
-        protected TextView mFooterText;
-        protected boolean mForBiometrics;
-        protected boolean mForFace;
-        protected boolean mForFingerprint;
-        protected TextView mHeaderText;
-        protected boolean mIsManagedProfile;
-        private LockPatternUtils mLockPatternUtils;
-        protected LockPatternView mLockPatternView;
-        private FooterButton mNextButton;
-        private TextView mNothingSummary;
-        private TextView mNothingTitle;
-        private boolean mRequestGatekeeperPassword;
-        private SaveAndFinishWorker mSaveAndFinishWorker;
-        protected FooterButton mSkipOrClearButton;
-        protected int mUserId;
         private final List<LockPatternView.Cell> mAnimatePattern = Collections.unmodifiableList(Lists.newArrayList(new LockPatternView.Cell[]{LockPatternView.Cell.of(0, 0), LockPatternView.Cell.of(0, 1), LockPatternView.Cell.of(1, 1), LockPatternView.Cell.of(2, 1)}));
-        protected LockPatternView.OnPatternListener mChooseNewLockPatternListener = new LockPatternView.OnPatternListener() { // from class: com.android.settings.password.ChooseLockPattern.ChooseLockPatternFragment.1
+        protected LockPatternView.OnPatternListener mChooseNewLockPatternListener = new LockPatternView.OnPatternListener() {
             public void onPatternCellAdded(List<LockPatternView.Cell> list) {
             }
 
@@ -165,44 +149,41 @@ public class ChooseLockPattern extends SettingsActivity {
             }
 
             public void onPatternDetected(List<LockPatternView.Cell> list) {
-                if (ChooseLockPatternFragment.this.mUiStage != Stage.NeedToConfirm && ChooseLockPatternFragment.this.mUiStage != Stage.ConfirmWrong) {
-                    if (ChooseLockPatternFragment.this.mUiStage != Stage.Introduction && ChooseLockPatternFragment.this.mUiStage != Stage.ChoiceTooShort) {
-                        throw new IllegalStateException("Unexpected stage " + ChooseLockPatternFragment.this.mUiStage + " when entering the pattern.");
-                    } else if (list.size() < 4) {
-                        ChooseLockPatternFragment.this.updateStage(Stage.ChoiceTooShort);
-                    } else {
-                        ChooseLockPatternFragment.this.mChosenPattern = LockscreenCredential.createPattern(list);
-                        ChooseLockPatternFragment.this.updateStage(Stage.FirstChoiceValid);
-                    }
-                } else if (ChooseLockPatternFragment.this.mChosenPattern == null) {
-                    throw new IllegalStateException("null chosen pattern in stage 'need to confirm");
-                } else {
-                    LockscreenCredential createPattern = LockscreenCredential.createPattern(list);
-                    try {
-                        if (ChooseLockPatternFragment.this.mChosenPattern.equals(createPattern)) {
-                            ChooseLockPatternFragment.this.updateStage(Stage.ChoiceConfirmed);
-                        } else {
-                            ChooseLockPatternFragment.this.updateStage(Stage.ConfirmWrong);
-                        }
-                        if (createPattern == null) {
-                            return;
-                        }
-                        createPattern.close();
-                    } catch (Throwable th) {
-                        if (createPattern != null) {
-                            try {
-                                createPattern.close();
-                            } catch (Throwable th2) {
-                                th.addSuppressed(th2);
+                if (ChooseLockPatternFragment.this.mUiStage == Stage.NeedToConfirm || ChooseLockPatternFragment.this.mUiStage == Stage.ConfirmWrong) {
+                    if (ChooseLockPatternFragment.this.mChosenPattern != null) {
+                        LockscreenCredential createPattern = LockscreenCredential.createPattern(list);
+                        try {
+                            if (ChooseLockPatternFragment.this.mChosenPattern.equals(createPattern)) {
+                                ChooseLockPatternFragment.this.updateStage(Stage.ChoiceConfirmed);
+                            } else {
+                                ChooseLockPatternFragment.this.updateStage(Stage.ConfirmWrong);
                             }
+                            if (createPattern != null) {
+                                createPattern.close();
+                                return;
+                            }
+                            return;
+                        } catch (Throwable th) {
+                            th.addSuppressed(th);
                         }
-                        throw th;
+                    } else {
+                        throw new IllegalStateException("null chosen pattern in stage 'need to confirm");
                     }
+                } else if (ChooseLockPatternFragment.this.mUiStage != Stage.Introduction && ChooseLockPatternFragment.this.mUiStage != Stage.ChoiceTooShort) {
+                    throw new IllegalStateException("Unexpected stage " + ChooseLockPatternFragment.this.mUiStage + " when entering the pattern.");
+                } else if (list.size() < 4) {
+                    ChooseLockPatternFragment.this.updateStage(Stage.ChoiceTooShort);
+                    return;
+                } else {
+                    ChooseLockPatternFragment.this.mChosenPattern = LockscreenCredential.createPattern(list);
+                    ChooseLockPatternFragment.this.updateStage(Stage.FirstChoiceValid);
+                    return;
                 }
+                throw th;
             }
 
             private void patternInProgress() {
-                ChooseLockPatternFragment.this.mHeaderText.setText(R.string.lockpattern_recording_inprogress);
+                ChooseLockPatternFragment.this.mHeaderText.setText(R$string.lockpattern_recording_inprogress);
                 if (ChooseLockPatternFragment.this.mDefaultHeaderColorList != null) {
                     ChooseLockPatternFragment chooseLockPatternFragment = ChooseLockPatternFragment.this;
                     chooseLockPatternFragment.mHeaderText.setTextColor(chooseLockPatternFragment.mDefaultHeaderColorList);
@@ -211,47 +192,64 @@ public class ChooseLockPattern extends SettingsActivity {
                 ChooseLockPatternFragment.this.mNextButton.setEnabled(false);
             }
         };
-        private Stage mUiStage = Stage.Introduction;
-        private Runnable mClearPatternRunnable = new Runnable() { // from class: com.android.settings.password.ChooseLockPattern.ChooseLockPatternFragment.2
-            @Override // java.lang.Runnable
+        @VisibleForTesting
+        protected LockscreenCredential mChosenPattern;
+        /* access modifiers changed from: private */
+        public Runnable mClearPatternRunnable = new Runnable() {
             public void run() {
                 ChooseLockPatternFragment.this.mLockPatternView.clearPattern();
             }
         };
+        private LockscreenCredential mCurrentCredential;
+        /* access modifiers changed from: private */
+        public ColorStateList mDefaultHeaderColorList;
+        protected TextView mFooterText;
+        protected boolean mForBiometrics;
+        protected boolean mForFace;
+        protected boolean mForFingerprint;
+        protected TextView mHeaderText;
+        protected boolean mIsManagedProfile;
+        private LockPatternUtils mLockPatternUtils;
+        protected LockPatternView mLockPatternView;
+        /* access modifiers changed from: private */
+        public FooterButton mNextButton;
+        private TextView mNothingSummary;
+        private TextView mNothingTitle;
+        private boolean mRequestGatekeeperPassword;
+        private SaveAndFinishWorker mSaveAndFinishWorker;
+        protected FooterButton mSkipOrClearButton;
+        /* access modifiers changed from: private */
+        public Stage mUiStage = Stage.Introduction;
+        protected int mUserId;
 
-        @Override // com.android.settingslib.core.instrumentation.Instrumentable
         public int getMetricsCategory() {
             return 29;
         }
 
-        @Override // androidx.fragment.app.Fragment
         public void onActivityResult(int i, int i2, Intent intent) {
             super.onActivityResult(i, i2, intent);
-            if (i != 55) {
-                return;
+            if (i == 55) {
+                if (i2 != -1) {
+                    getActivity().setResult(1);
+                    getActivity().finish();
+                } else {
+                    this.mCurrentCredential = intent.getParcelableExtra("password");
+                }
+                updateStage(Stage.Introduction);
             }
-            if (i2 != -1) {
-                getActivity().setResult(1);
-                getActivity().finish();
-            } else {
-                this.mCurrentCredential = intent.getParcelableExtra("password");
-            }
-            updateStage(Stage.Introduction);
         }
 
-        protected void setRightButtonEnabled(boolean z) {
+        /* access modifiers changed from: protected */
+        public void setRightButtonEnabled(boolean z) {
             this.mNextButton.setEnabled(z);
         }
 
-        protected void setRightButtonText(int i) {
+        /* access modifiers changed from: protected */
+        public void setRightButtonText(int i) {
             this.mNextButton.setText(getActivity(), i);
         }
 
-        /* JADX INFO: Access modifiers changed from: package-private */
-        /* JADX WARN: Init of enum Retry can be incorrect */
-        /* JADX WARN: Init of enum RetryDisabled can be incorrect */
-        /* loaded from: classes.dex */
-        public enum LeftButtonMode {
+        enum LeftButtonMode {
             Retry(r1, true),
             RetryDisabled(r1, false),
             Gone(-1, false);
@@ -259,23 +257,13 @@ public class ChooseLockPattern extends SettingsActivity {
             final boolean enabled;
             final int text;
 
-            static {
-                int i = R.string.lockpattern_retry_button_text;
-            }
-
-            LeftButtonMode(int i, boolean z) {
+            private LeftButtonMode(int i, boolean z) {
                 this.text = i;
                 this.enabled = z;
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: package-private */
-        /* JADX WARN: Init of enum Confirm can be incorrect */
-        /* JADX WARN: Init of enum ConfirmDisabled can be incorrect */
-        /* JADX WARN: Init of enum Continue can be incorrect */
-        /* JADX WARN: Init of enum ContinueDisabled can be incorrect */
-        /* loaded from: classes.dex */
-        public enum RightButtonMode {
+        enum RightButtonMode {
             Continue(r1, true),
             ContinueDisabled(r1, false),
             Confirm(r5, true),
@@ -285,34 +273,20 @@ public class ChooseLockPattern extends SettingsActivity {
             final boolean enabled;
             final int text;
 
-            static {
-                int i = R.string.next_label;
-                int i2 = R.string.lockpattern_confirm_button_text;
-            }
-
-            RightButtonMode(int i, boolean z) {
+            private RightButtonMode(int i, boolean z) {
                 this.text = i;
                 this.enabled = z;
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        /* JADX WARN: Init of enum ChoiceConfirmed can be incorrect */
-        /* JADX WARN: Init of enum ChoiceTooShort can be incorrect */
-        /* JADX WARN: Init of enum ConfirmWrong can be incorrect */
-        /* JADX WARN: Init of enum FirstChoiceValid can be incorrect */
-        /* JADX WARN: Init of enum HelpScreen can be incorrect */
-        /* JADX WARN: Init of enum Introduction can be incorrect */
-        /* JADX WARN: Init of enum NeedToConfirm can be incorrect */
-        /* loaded from: classes.dex */
-        public enum Stage {
-            Introduction(r11, r12, r5, r23, r24, -1, true),
-            HelpScreen(-1, -1, R.string.lockpattern_settings_help_how_to_record, r23, RightButtonMode.Ok, -1, false),
-            ChoiceTooShort(r11, r12, r5, r13, r24, -1, true),
-            FirstChoiceValid(r11, r12, R.string.lockpattern_pattern_entered_header, r13, RightButtonMode.Continue, -1, false),
-            NeedToConfirm(-1, -1, r18, r23, r1, -1, true),
-            ConfirmWrong(-1, -1, R.string.lockpattern_need_to_unlock_wrong, r23, r1, -1, true),
-            ChoiceConfirmed(-1, -1, R.string.lockpattern_pattern_confirmed_header, r23, RightButtonMode.Confirm, -1, false);
+        protected enum Stage {
+            Introduction(r3, r4, r5, r23, r7, -1, true),
+            HelpScreen(-1, -1, R$string.lockpattern_settings_help_how_to_record, r19, RightButtonMode.Ok, -1, false),
+            ChoiceTooShort(r3, r4, r5, r6, r7, -1, true),
+            FirstChoiceValid(r3, r4, R$string.lockpattern_pattern_entered_header, r6, RightButtonMode.Continue, -1, false),
+            NeedToConfirm(-1, -1, r18, r19, r20, -1, true),
+            ConfirmWrong(-1, -1, R$string.lockpattern_need_to_unlock_wrong, r19, r20, -1, true),
+            ChoiceConfirmed(-1, -1, R$string.lockpattern_pattern_confirmed_header, r19, RightButtonMode.Confirm, -1, false);
             
             final int footerMessage;
             final int headerMessage;
@@ -322,22 +296,10 @@ public class ChooseLockPattern extends SettingsActivity {
             final boolean patternEnabled;
             final RightButtonMode rightMode;
 
-            static {
-                int i = R.string.lock_settings_picker_biometrics_added_security_message;
-                int i2 = R.string.lockpattern_choose_pattern_description;
-                int i3 = R.string.lockpattern_recording_intro_header;
-                LeftButtonMode leftButtonMode = LeftButtonMode.Gone;
-                RightButtonMode rightButtonMode = RightButtonMode.ContinueDisabled;
-                int i4 = R.string.lockpattern_recording_incorrect_too_short;
-                LeftButtonMode leftButtonMode2 = LeftButtonMode.Retry;
-                int i5 = R.string.lockpattern_need_to_confirm;
-                RightButtonMode rightButtonMode2 = RightButtonMode.ConfirmDisabled;
-            }
-
-            Stage(int i, int i2, int i3, LeftButtonMode leftButtonMode, RightButtonMode rightButtonMode, int i4, boolean z) {
+            private Stage(int i, int i2, int i3, LeftButtonMode leftButtonMode, RightButtonMode rightButtonMode, int i4, boolean z) {
                 this.headerMessage = i3;
-                this.messageForBiometrics = i;
                 this.message = i2;
+                this.messageForBiometrics = i;
                 this.leftMode = leftButtonMode;
                 this.rightMode = rightButtonMode;
                 this.footerMessage = i4;
@@ -345,49 +307,55 @@ public class ChooseLockPattern extends SettingsActivity {
             }
         }
 
-        @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
         public void onCreate(Bundle bundle) {
             super.onCreate(bundle);
-            if (!(getActivity() instanceof ChooseLockPattern)) {
-                throw new SecurityException("Fragment contained in wrong activity");
+            if (getActivity() instanceof ChooseLockPattern) {
+                Intent intent = getActivity().getIntent();
+                this.mUserId = Utils.getUserIdFromBundle(getActivity(), intent.getExtras());
+                this.mIsManagedProfile = UserManager.get(getActivity()).isManagedProfile(this.mUserId);
+                this.mLockPatternUtils = new LockPatternUtils(getActivity());
+                if (intent.getBooleanExtra("for_cred_req_boot", false)) {
+                    SaveAndFinishWorker saveAndFinishWorker = new SaveAndFinishWorker();
+                    boolean booleanExtra = getActivity().getIntent().getBooleanExtra("extra_require_password", true);
+                    LockscreenCredential parcelableExtra = intent.getParcelableExtra("password");
+                    saveAndFinishWorker.setBlocking(true);
+                    saveAndFinishWorker.setListener(this);
+                    saveAndFinishWorker.start(this.mLockPatternUtils, booleanExtra, false, parcelableExtra, parcelableExtra, this.mUserId);
+                }
+                this.mForFingerprint = intent.getBooleanExtra("for_fingerprint", false);
+                this.mForFace = intent.getBooleanExtra("for_face", false);
+                this.mForBiometrics = intent.getBooleanExtra("for_biometrics", false);
+                return;
             }
-            Intent intent = getActivity().getIntent();
-            this.mUserId = Utils.getUserIdFromBundle(getActivity(), intent.getExtras());
-            this.mIsManagedProfile = UserManager.get(getActivity()).isManagedProfile(this.mUserId);
-            this.mLockPatternUtils = new LockPatternUtils(getActivity());
-            if (intent.getBooleanExtra("for_cred_req_boot", false)) {
-                SaveAndFinishWorker saveAndFinishWorker = new SaveAndFinishWorker();
-                boolean booleanExtra = getActivity().getIntent().getBooleanExtra("extra_require_password", true);
-                LockscreenCredential lockscreenCredential = (LockscreenCredential) intent.getParcelableExtra("password");
-                saveAndFinishWorker.setBlocking(true);
-                saveAndFinishWorker.setListener(this);
-                saveAndFinishWorker.start(this.mLockPatternUtils, booleanExtra, false, lockscreenCredential, lockscreenCredential, this.mUserId);
-            }
-            this.mForFingerprint = intent.getBooleanExtra("for_fingerprint", false);
-            this.mForFace = intent.getBooleanExtra("for_face", false);
-            this.mForBiometrics = intent.getBooleanExtra("for_biometrics", false);
+            throw new SecurityException("Fragment contained in wrong activity");
         }
 
         private void updateActivityTitle() {
-            int i;
+            String str;
             if (this.mForFingerprint) {
-                i = R.string.lockpassword_choose_your_pattern_header_for_fingerprint;
+                str = getString(R$string.lockpassword_choose_your_pattern_header_for_fingerprint);
             } else if (this.mForFace) {
-                i = R.string.lockpassword_choose_your_pattern_header_for_face;
+                str = getString(R$string.lockpassword_choose_your_pattern_header_for_face);
             } else if (this.mIsManagedProfile) {
-                i = R.string.lockpassword_choose_your_profile_pattern_header;
+                str = ((DevicePolicyManager) getContext().getSystemService(DevicePolicyManager.class)).getResources().getString("Settings.SET_WORK_PROFILE_PATTERN_HEADER", new C1276xec9f3c79(this));
             } else {
-                i = R.string.lockpassword_choose_your_pattern_header;
+                str = getString(R$string.lockpassword_choose_your_pattern_header);
             }
-            getActivity().setTitle(i);
+            getActivity().setTitle(str);
         }
 
-        @Override // androidx.fragment.app.Fragment
+        /* access modifiers changed from: private */
+        public /* synthetic */ String lambda$updateActivityTitle$0() {
+            return getString(R$string.lockpassword_choose_your_profile_pattern_header);
+        }
+
+        @SuppressLint({"ClickableViewAccessibility"})
         public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
-            GlifLayout glifLayout = (GlifLayout) layoutInflater.inflate(R.layout.choose_lock_pattern, viewGroup, false);
-            glifLayout.findViewById(R.id.sud_layout_header).setVisibility(8);
-            this.mNothingTitle = (TextView) glifLayout.findViewById(R.id.title);
-            this.mNothingSummary = (TextView) glifLayout.findViewById(R.id.summary);
+            GlifLayout glifLayout = (GlifLayout) layoutInflater.inflate(R$layout.choose_lock_pattern, viewGroup, false);
+            glifLayout.findViewById(R$id.sud_layout_header).setVisibility(8);
+            this.mNothingTitle = (TextView) glifLayout.findViewById(R$id.title);
+            this.mNothingSummary = (TextView) glifLayout.findViewById(R$id.summary);
+            this.mNothingTitle.setTypeface(Typeface.create("NDot57", 0));
             updateActivityTitle();
             glifLayout.setHeaderText(getActivity().getTitle());
             TextView textView = this.mNothingTitle;
@@ -395,44 +363,30 @@ public class ChooseLockPattern extends SettingsActivity {
                 textView.setText(getActivity().getTitle());
             }
             glifLayout.getHeaderTextView().setAccessibilityLiveRegion(1);
-            if (getResources().getBoolean(R.bool.config_lock_pattern_minimal_ui)) {
-                if (glifLayout.findViewById(R.id.sud_layout_icon) != null) {
-                    ((IconMixin) glifLayout.getMixin(IconMixin.class)).setVisibility(8);
-                }
-            } else {
-                glifLayout.setIcon(getActivity().getDrawable(R.drawable.ic_lock));
+            if (!getResources().getBoolean(R$bool.config_lock_pattern_minimal_ui)) {
+                glifLayout.setIcon(getActivity().getDrawable(R$drawable.ic_lock));
+            } else if (glifLayout.findViewById(R$id.sud_layout_icon) != null) {
+                ((IconMixin) glifLayout.getMixin(IconMixin.class)).setVisibility(8);
             }
             FooterBarMixin footerBarMixin = (FooterBarMixin) glifLayout.getMixin(FooterBarMixin.class);
-            footerBarMixin.setSecondaryButton(new FooterButton.Builder(getActivity()).setText(R.string.lockpattern_tutorial_cancel_label).setListener(new View.OnClickListener() { // from class: com.android.settings.password.ChooseLockPattern$ChooseLockPatternFragment$$ExternalSyntheticLambda1
-                @Override // android.view.View.OnClickListener
-                public final void onClick(View view) {
-                    ChooseLockPattern.ChooseLockPatternFragment.this.onSkipOrClearButtonClick(view);
-                }
-            }).setButtonType(0).setTheme(R.style.SudGlifButton_Secondary).build());
-            footerBarMixin.setPrimaryButton(new FooterButton.Builder(getActivity()).setText(R.string.lockpattern_tutorial_continue_label).setListener(new View.OnClickListener() { // from class: com.android.settings.password.ChooseLockPattern$ChooseLockPatternFragment$$ExternalSyntheticLambda0
-                @Override // android.view.View.OnClickListener
-                public final void onClick(View view) {
-                    ChooseLockPattern.ChooseLockPatternFragment.this.onNextButtonClick(view);
-                }
-            }).setButtonType(5).setTheme(R.style.SudGlifButton_Primary).build());
+            footerBarMixin.setSecondaryButton(new FooterButton.Builder(getActivity()).setText(R$string.lockpattern_tutorial_cancel_label).setListener(new C1274xec9f3c77(this)).setButtonType(0).setTheme(R$style.SudGlifButton_Secondary).build());
+            footerBarMixin.setPrimaryButton(new FooterButton.Builder(getActivity()).setText(R$string.lockpattern_tutorial_continue_label).setListener(new C1275xec9f3c78(this)).setButtonType(5).setTheme(R$style.SudGlifButton_Primary).build());
             this.mSkipOrClearButton = footerBarMixin.getSecondaryButton();
             this.mNextButton = footerBarMixin.getPrimaryButton();
             return glifLayout;
         }
 
-        @Override // androidx.fragment.app.Fragment
         public void onViewCreated(View view, Bundle bundle) {
             super.onViewCreated(view, bundle);
-            TextView textView = (TextView) view.findViewById(R.id.headerText);
+            TextView textView = (TextView) view.findViewById(R$id.headerText);
             this.mHeaderText = textView;
             this.mDefaultHeaderColorList = textView.getTextColors();
-            LockPatternView findViewById = view.findViewById(R.id.lockPattern);
+            LockPatternView findViewById = view.findViewById(R$id.lockPattern);
             this.mLockPatternView = findViewById;
             findViewById.setOnPatternListener(this.mChooseNewLockPatternListener);
-            this.mLockPatternView.setTactileFeedbackEnabled(this.mLockPatternUtils.isTactileFeedbackEnabled());
             this.mLockPatternView.setFadePattern(false);
-            this.mFooterText = (TextView) view.findViewById(R.id.footerText);
-            view.findViewById(R.id.topLayout).setDefaultTouchRecepient(this.mLockPatternView);
+            this.mFooterText = (TextView) view.findViewById(R$id.footerText);
+            view.findViewById(R$id.topLayout).setDefaultTouchRecepient(this.mLockPatternView);
             boolean booleanExtra = getActivity().getIntent().getBooleanExtra("confirm_credentials", true);
             Intent intent = getActivity().getIntent();
             this.mCurrentCredential = intent.getParcelableExtra("password");
@@ -444,16 +398,14 @@ public class ChooseLockPattern extends SettingsActivity {
                 this.mSaveAndFinishWorker = (SaveAndFinishWorker) getFragmentManager().findFragmentByTag("save_and_finish_worker");
             } else if (booleanExtra) {
                 updateStage(Stage.NeedToConfirm);
-                if (new ChooseLockSettingsHelper.Builder(getActivity()).setRequestCode(55).setTitle(getString(R.string.unlock_set_unlock_launch_picker_title)).setReturnCredentials(true).setRequestGatekeeperPasswordHandle(this.mRequestGatekeeperPassword).setUserId(this.mUserId).show()) {
-                    return;
+                if (!new ChooseLockSettingsHelper.Builder(getActivity()).setRequestCode(55).setTitle(getString(R$string.unlock_set_unlock_launch_picker_title)).setReturnCredentials(true).setRequestGatekeeperPasswordHandle(this.mRequestGatekeeperPassword).setUserId(this.mUserId).show()) {
+                    updateStage(Stage.Introduction);
                 }
-                updateStage(Stage.Introduction);
             } else {
                 updateStage(Stage.Introduction);
             }
         }
 
-        @Override // com.android.settings.core.InstrumentedFragment, com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
         public void onResume() {
             super.onResume();
             updateStage(this.mUiStage);
@@ -463,16 +415,14 @@ public class ChooseLockPattern extends SettingsActivity {
             }
         }
 
-        @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
         public void onPause() {
             super.onPause();
             SaveAndFinishWorker saveAndFinishWorker = this.mSaveAndFinishWorker;
             if (saveAndFinishWorker != null) {
-                saveAndFinishWorker.setListener(null);
+                saveAndFinishWorker.setListener((SaveChosenLockWorkerBase.Listener) null);
             }
         }
 
-        @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
         public void onDestroy() {
             super.onDestroy();
             LockscreenCredential lockscreenCredential = this.mCurrentCredential;
@@ -484,7 +434,8 @@ public class ChooseLockPattern extends SettingsActivity {
             System.gc();
         }
 
-        protected Intent getRedactionInterstitialIntent(Context context) {
+        /* access modifiers changed from: protected */
+        public Intent getRedactionInterstitialIntent(Context context) {
             return RedactionInterstitial.createStartIntent(context, this.mUserId);
         }
 
@@ -508,41 +459,42 @@ public class ChooseLockPattern extends SettingsActivity {
             RightButtonMode rightButtonMode2 = RightButtonMode.Continue;
             if (rightButtonMode == rightButtonMode2) {
                 Stage stage2 = Stage.FirstChoiceValid;
-                if (stage != stage2) {
-                    throw new IllegalStateException("expected ui stage " + stage2 + " when button is " + rightButtonMode2);
+                if (stage == stage2) {
+                    updateStage(Stage.NeedToConfirm);
+                    return;
                 }
-                updateStage(Stage.NeedToConfirm);
-                return;
+                throw new IllegalStateException("expected ui stage " + stage2 + " when button is " + rightButtonMode2);
             }
             RightButtonMode rightButtonMode3 = RightButtonMode.Confirm;
             if (rightButtonMode == rightButtonMode3) {
                 Stage stage3 = Stage.ChoiceConfirmed;
-                if (stage != stage3) {
-                    throw new IllegalStateException("expected ui stage " + stage3 + " when button is " + rightButtonMode3);
+                if (stage == stage3) {
+                    startSaveAndFinish();
+                    return;
                 }
-                startSaveAndFinish();
+                throw new IllegalStateException("expected ui stage " + stage3 + " when button is " + rightButtonMode3);
             } else if (rightButtonMode != RightButtonMode.Ok) {
             } else {
-                if (stage != Stage.HelpScreen) {
-                    throw new IllegalStateException("Help screen is only mode with ok button, but stage is " + this.mUiStage);
+                if (stage == Stage.HelpScreen) {
+                    this.mLockPatternView.clearPattern();
+                    this.mLockPatternView.setDisplayMode(LockPatternView.DisplayMode.Correct);
+                    updateStage(Stage.Introduction);
+                    return;
                 }
-                this.mLockPatternView.clearPattern();
-                this.mLockPatternView.setDisplayMode(LockPatternView.DisplayMode.Correct);
-                updateStage(Stage.Introduction);
+                throw new IllegalStateException("Help screen is only mode with ok button, but stage is " + this.mUiStage);
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
+        /* access modifiers changed from: protected */
         public void onSkipOrClearButtonClick(View view) {
             handleLeftButton();
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
+        /* access modifiers changed from: protected */
         public void onNextButtonClick(View view) {
             handleRightButton();
         }
 
-        @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
         public void onSaveInstanceState(Bundle bundle) {
             super.onSaveInstanceState(bundle);
             bundle.putInt("uiStage", this.mUiStage.ordinal());
@@ -556,22 +508,22 @@ public class ChooseLockPattern extends SettingsActivity {
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
+        /* access modifiers changed from: protected */
         public void updateStage(Stage stage) {
             Stage stage2 = this.mUiStage;
             this.mUiStage = stage;
             Stage stage3 = Stage.ChoiceTooShort;
             boolean z = false;
             if (stage == stage3) {
-                this.mHeaderText.setText(getResources().getString(stage.headerMessage, 4));
+                this.mHeaderText.setText(getResources().getString(stage.headerMessage, new Object[]{4}));
             } else {
                 this.mHeaderText.setText(stage.headerMessage);
             }
-            GlifLayout glifLayout = (GlifLayout) getActivity().findViewById(R.id.setup_wizard_layout);
+            GlifLayout glifLayout = (GlifLayout) getActivity().findViewById(R$id.setup_wizard_layout);
             boolean z2 = this.mForFingerprint || this.mForFace || this.mForBiometrics;
             int i = z2 ? stage.messageForBiometrics : stage.message;
             if (i == -1) {
-                glifLayout.setDescriptionText("");
+                glifLayout.setDescriptionText((CharSequence) "");
                 TextView textView = this.mNothingSummary;
                 if (textView != null) {
                     textView.setText("");
@@ -591,7 +543,7 @@ public class ChooseLockPattern extends SettingsActivity {
             }
             if (stage == Stage.ConfirmWrong || stage == stage3) {
                 TypedValue typedValue = new TypedValue();
-                getActivity().getTheme().resolveAttribute(R.attr.colorError, typedValue, true);
+                getActivity().getTheme().resolveAttribute(R$attr.colorError, typedValue, true);
                 this.mHeaderText.setTextColor(typedValue.data);
             } else {
                 ColorStateList colorStateList = this.mDefaultHeaderColorList;
@@ -600,7 +552,7 @@ public class ChooseLockPattern extends SettingsActivity {
                 }
                 if (stage == Stage.NeedToConfirm && z2) {
                     this.mHeaderText.setText("");
-                    int i3 = R.string.lockpassword_draw_your_pattern_again_header;
+                    int i3 = R$string.lockpassword_draw_your_pattern_again_header;
                     glifLayout.setHeaderText(i3);
                     TextView textView3 = this.mNothingTitle;
                     if (textView3 != null) {
@@ -617,7 +569,7 @@ public class ChooseLockPattern extends SettingsActivity {
                 this.mLockPatternView.disableInput();
             }
             this.mLockPatternView.setDisplayMode(LockPatternView.DisplayMode.Correct);
-            int i4 = AnonymousClass1.$SwitchMap$com$android$settings$password$ChooseLockPattern$ChooseLockPatternFragment$Stage[this.mUiStage.ordinal()];
+            int i4 = C12711.f216x4f217302[this.mUiStage.ordinal()];
             if (i4 == 1) {
                 this.mLockPatternView.clearPattern();
             } else if (i4 != 2) {
@@ -640,7 +592,8 @@ public class ChooseLockPattern extends SettingsActivity {
             }
         }
 
-        protected void updateFooterLeftButton(Stage stage) {
+        /* access modifiers changed from: protected */
+        public void updateFooterLeftButton(Stage stage) {
             if (stage.leftMode == LeftButtonMode.Gone) {
                 this.mSkipOrClearButton.setVisibility(8);
                 return;
@@ -652,7 +605,7 @@ public class ChooseLockPattern extends SettingsActivity {
 
         private void postClearPatternRunnable() {
             this.mLockPatternView.removeCallbacks(this.mClearPatternRunnable);
-            this.mLockPatternView.postDelayed(this.mClearPatternRunnable, 2000L);
+            this.mLockPatternView.postDelayed(this.mClearPatternRunnable, 2000);
         }
 
         private void startSaveAndFinish() {
@@ -664,7 +617,7 @@ public class ChooseLockPattern extends SettingsActivity {
             SaveAndFinishWorker saveAndFinishWorker = new SaveAndFinishWorker();
             this.mSaveAndFinishWorker = saveAndFinishWorker;
             saveAndFinishWorker.setListener(this);
-            getFragmentManager().beginTransaction().add(this.mSaveAndFinishWorker, "save_and_finish_worker").commit();
+            getFragmentManager().beginTransaction().add((Fragment) this.mSaveAndFinishWorker, "save_and_finish_worker").commit();
             getFragmentManager().executePendingTransactions();
             Intent intent = getActivity().getIntent();
             boolean booleanExtra = intent.getBooleanExtra("extra_require_password", true);
@@ -676,20 +629,14 @@ public class ChooseLockPattern extends SettingsActivity {
                         parcelableExtra.close();
                     }
                 } catch (Throwable th) {
-                    if (parcelableExtra != null) {
-                        try {
-                            parcelableExtra.close();
-                        } catch (Throwable th2) {
-                            th.addSuppressed(th2);
-                        }
-                    }
-                    throw th;
+                    th.addSuppressed(th);
                 }
             }
             this.mSaveAndFinishWorker.start(this.mLockPatternUtils, booleanExtra, this.mRequestGatekeeperPassword, this.mChosenPattern, this.mCurrentCredential, this.mUserId);
+            return;
+            throw th;
         }
 
-        @Override // com.android.settings.password.SaveChosenLockWorkerBase.Listener
         public void onChosenLockSaveFinished(boolean z, Intent intent) {
             Intent redactionInterstitialIntent;
             getActivity().setResult(1, intent);
@@ -708,68 +655,91 @@ public class ChooseLockPattern extends SettingsActivity {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.android.settings.password.ChooseLockPattern$1  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public static /* synthetic */ class AnonymousClass1 {
-        static final /* synthetic */ int[] $SwitchMap$com$android$settings$password$ChooseLockPattern$ChooseLockPatternFragment$Stage;
+    /* renamed from: com.android.settings.password.ChooseLockPattern$1 */
+    static /* synthetic */ class C12711 {
 
+        /* renamed from: $SwitchMap$com$android$settings$password$ChooseLockPattern$ChooseLockPatternFragment$Stage */
+        static final /* synthetic */ int[] f216x4f217302;
+
+        /* JADX WARNING: Can't wrap try/catch for region: R(14:0|1|2|3|4|5|6|7|8|9|10|11|12|(3:13|14|16)) */
+        /* JADX WARNING: Can't wrap try/catch for region: R(16:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|16) */
+        /* JADX WARNING: Failed to process nested try/catch */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:11:0x003e */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:13:0x0049 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0012 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001d */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:7:0x0028 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:9:0x0033 */
         static {
-            int[] iArr = new int[ChooseLockPatternFragment.Stage.values().length];
-            $SwitchMap$com$android$settings$password$ChooseLockPattern$ChooseLockPatternFragment$Stage = iArr;
-            try {
-                iArr[ChooseLockPatternFragment.Stage.Introduction.ordinal()] = 1;
-            } catch (NoSuchFieldError unused) {
-            }
-            try {
-                $SwitchMap$com$android$settings$password$ChooseLockPattern$ChooseLockPatternFragment$Stage[ChooseLockPatternFragment.Stage.HelpScreen.ordinal()] = 2;
-            } catch (NoSuchFieldError unused2) {
-            }
-            try {
-                $SwitchMap$com$android$settings$password$ChooseLockPattern$ChooseLockPatternFragment$Stage[ChooseLockPatternFragment.Stage.ChoiceTooShort.ordinal()] = 3;
-            } catch (NoSuchFieldError unused3) {
-            }
-            try {
-                $SwitchMap$com$android$settings$password$ChooseLockPattern$ChooseLockPatternFragment$Stage[ChooseLockPatternFragment.Stage.FirstChoiceValid.ordinal()] = 4;
-            } catch (NoSuchFieldError unused4) {
-            }
-            try {
-                $SwitchMap$com$android$settings$password$ChooseLockPattern$ChooseLockPatternFragment$Stage[ChooseLockPatternFragment.Stage.NeedToConfirm.ordinal()] = 5;
-            } catch (NoSuchFieldError unused5) {
-            }
-            try {
-                $SwitchMap$com$android$settings$password$ChooseLockPattern$ChooseLockPatternFragment$Stage[ChooseLockPatternFragment.Stage.ConfirmWrong.ordinal()] = 6;
-            } catch (NoSuchFieldError unused6) {
-            }
-            try {
-                $SwitchMap$com$android$settings$password$ChooseLockPattern$ChooseLockPatternFragment$Stage[ChooseLockPatternFragment.Stage.ChoiceConfirmed.ordinal()] = 7;
-            } catch (NoSuchFieldError unused7) {
-            }
+            /*
+                com.android.settings.password.ChooseLockPattern$ChooseLockPatternFragment$Stage[] r0 = com.android.settings.password.ChooseLockPattern.ChooseLockPatternFragment.Stage.values()
+                int r0 = r0.length
+                int[] r0 = new int[r0]
+                f216x4f217302 = r0
+                com.android.settings.password.ChooseLockPattern$ChooseLockPatternFragment$Stage r1 = com.android.settings.password.ChooseLockPattern.ChooseLockPatternFragment.Stage.Introduction     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
+                r2 = 1
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                int[] r0 = f216x4f217302     // Catch:{ NoSuchFieldError -> 0x001d }
+                com.android.settings.password.ChooseLockPattern$ChooseLockPatternFragment$Stage r1 = com.android.settings.password.ChooseLockPattern.ChooseLockPatternFragment.Stage.HelpScreen     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
+                r2 = 2
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                int[] r0 = f216x4f217302     // Catch:{ NoSuchFieldError -> 0x0028 }
+                com.android.settings.password.ChooseLockPattern$ChooseLockPatternFragment$Stage r1 = com.android.settings.password.ChooseLockPattern.ChooseLockPatternFragment.Stage.ChoiceTooShort     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
+                r2 = 3
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
+            L_0x0028:
+                int[] r0 = f216x4f217302     // Catch:{ NoSuchFieldError -> 0x0033 }
+                com.android.settings.password.ChooseLockPattern$ChooseLockPatternFragment$Stage r1 = com.android.settings.password.ChooseLockPattern.ChooseLockPatternFragment.Stage.FirstChoiceValid     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
+                r2 = 4
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0033 }
+            L_0x0033:
+                int[] r0 = f216x4f217302     // Catch:{ NoSuchFieldError -> 0x003e }
+                com.android.settings.password.ChooseLockPattern$ChooseLockPatternFragment$Stage r1 = com.android.settings.password.ChooseLockPattern.ChooseLockPatternFragment.Stage.NeedToConfirm     // Catch:{ NoSuchFieldError -> 0x003e }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x003e }
+                r2 = 5
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x003e }
+            L_0x003e:
+                int[] r0 = f216x4f217302     // Catch:{ NoSuchFieldError -> 0x0049 }
+                com.android.settings.password.ChooseLockPattern$ChooseLockPatternFragment$Stage r1 = com.android.settings.password.ChooseLockPattern.ChooseLockPatternFragment.Stage.ConfirmWrong     // Catch:{ NoSuchFieldError -> 0x0049 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0049 }
+                r2 = 6
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0049 }
+            L_0x0049:
+                int[] r0 = f216x4f217302     // Catch:{ NoSuchFieldError -> 0x0054 }
+                com.android.settings.password.ChooseLockPattern$ChooseLockPatternFragment$Stage r1 = com.android.settings.password.ChooseLockPattern.ChooseLockPatternFragment.Stage.ChoiceConfirmed     // Catch:{ NoSuchFieldError -> 0x0054 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0054 }
+                r2 = 7
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0054 }
+            L_0x0054:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.android.settings.password.ChooseLockPattern.C12711.<clinit>():void");
         }
     }
 
-    /* loaded from: classes.dex */
     public static class SaveAndFinishWorker extends SaveChosenLockWorkerBase {
         private LockscreenCredential mChosenPattern;
         private LockscreenCredential mCurrentCredential;
         private boolean mLockVirgin;
 
-        @Override // com.android.settings.password.SaveChosenLockWorkerBase, androidx.fragment.app.Fragment
         public /* bridge */ /* synthetic */ void onCreate(Bundle bundle) {
             super.onCreate(bundle);
         }
 
-        @Override // com.android.settings.password.SaveChosenLockWorkerBase
         public /* bridge */ /* synthetic */ void setBlocking(boolean z) {
             super.setBlocking(z);
         }
 
-        @Override // com.android.settings.password.SaveChosenLockWorkerBase
         public /* bridge */ /* synthetic */ void setListener(SaveChosenLockWorkerBase.Listener listener) {
             super.setListener(listener);
         }
 
-        @Override // com.android.settings.password.SaveChosenLockWorkerBase
         public /* bridge */ /* synthetic */ void setProfileToUnify(int i, LockscreenCredential lockscreenCredential) {
             super.setProfileToUnify(i, lockscreenCredential);
         }
@@ -786,8 +756,8 @@ public class ChooseLockPattern extends SettingsActivity {
             start();
         }
 
-        @Override // com.android.settings.password.SaveChosenLockWorkerBase
-        protected Pair<Boolean, Intent> saveAndVerifyInBackground() {
+        /* access modifiers changed from: protected */
+        public Pair<Boolean, Intent> saveAndVerifyInBackground() {
             int i = this.mUserId;
             boolean lockCredential = this.mUtils.setLockCredential(this.mChosenPattern, this.mCurrentCredential, i);
             if (lockCredential) {
@@ -805,8 +775,7 @@ public class ChooseLockPattern extends SettingsActivity {
             return Pair.create(Boolean.valueOf(lockCredential), intent);
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // com.android.settings.password.SaveChosenLockWorkerBase
+        /* access modifiers changed from: protected */
         public void finish(Intent intent) {
             if (this.mLockVirgin) {
                 this.mUtils.setVisiblePatternEnabled(true, this.mUserId);

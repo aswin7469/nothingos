@@ -1,5 +1,5 @@
 package com.google.common.base;
-/* loaded from: classes2.dex */
+
 public final class Ascii {
     public static boolean isUpperCase(char c) {
         return c >= 'A' && c <= 'Z';

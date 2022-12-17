@@ -2,11 +2,16 @@ package com.android.settings.dashboard.profileselector;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+import com.android.settings.R$xml;
 import com.android.settings.location.LocationServices;
 import com.android.settings.location.LocationServicesForWork;
-/* loaded from: classes.dex */
+
 public class ProfileSelectLocationServicesFragment extends ProfileSelectFragment {
-    @Override // com.android.settings.dashboard.profileselector.ProfileSelectFragment
+    /* access modifiers changed from: protected */
+    public boolean forceUpdateHeight() {
+        return true;
+    }
+
     public Fragment[] getFragments() {
         Bundle bundle = new Bundle();
         bundle.putInt("profile", 2);
@@ -17,5 +22,10 @@ public class ProfileSelectLocationServicesFragment extends ProfileSelectFragment
         LocationServices locationServices = new LocationServices();
         locationServices.setArguments(bundle2);
         return new Fragment[]{locationServices, locationServicesForWork};
+    }
+
+    /* access modifiers changed from: protected */
+    public int getPreferenceScreenResId() {
+        return R$xml.location_services_header;
     }
 }

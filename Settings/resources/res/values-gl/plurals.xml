@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="abc_slice_duration_days">
-        <item quantity="one">hai %d día</item>
-        <item quantity="other">hai %d días</item>
+        <item quantity="one">Hai %d día</item>
+        <item quantity="other">Hai %d días</item>
     </plurals>
     <plurals name="abc_slice_duration_min">
-        <item quantity="one">hai %d min</item>
-        <item quantity="other">hai %d min</item>
+        <item quantity="one">Hai %d min</item>
+        <item quantity="other">Hai %d min</item>
     </plurals>
     <plurals name="abc_slice_duration_years">
-        <item quantity="one">hai %d ano</item>
-        <item quantity="other">hai %d anos</item>
+        <item quantity="one">Hai %d ano</item>
+        <item quantity="other">Hai %d anos</item>
     </plurals>
     <plurals name="accessibility_usage_summary">
         <item quantity="one">1 aplicación ten acceso total ao teu dispositivo</item>
@@ -234,11 +234,11 @@
     </plurals>
     <plurals name="notifications_sent_daily">
         <item quantity="one">~%d notificación ao día</item>
-        <item quantity="other">~%d notificacións ao día</item>
+        <item quantity="other">~%,d notificacións ao día</item>
     </plurals>
     <plurals name="notifications_sent_weekly">
         <item quantity="one">%d notificación á semana aproximadamente</item>
-        <item quantity="other">%d notificacións á semana aproximadamente</item>
+        <item quantity="other">%,d notificacións á semana aproximadamente</item>
     </plurals>
     <plurals name="number_of_device_admins">
         <item quantity="one">%d aplicación activa</item>
@@ -320,14 +320,6 @@
         <item quantity="one">Confiar no certificado ou quitalo</item>
         <item quantity="other">Confiar nos certificados ou quitalos</item>
     </plurals>
-    <plurals name="ssl_ca_cert_info_message">
-        <item quantity="one">%s instalou unha autoridade de certificación para o teu perfil de traballo que pode permitirlle supervisar a actividade da rede do traballo, incluídos os correos electrónicos, as aplicacións e os sitios web seguros.\n\nPara obter máis información sobre este certificado, ponte en contacto co teu administrador.</item>
-        <item quantity="other">%s instalou autoridades de certificación para o teu perfil de traballo que poden permitirlle supervisar a actividade da rede de traballo, incluídos os correos electrónicos, as aplicacións e os sitios web seguros.\n\nPara obter máis información sobre estes certificados, ponte en contacto co teu administrador.</item>
-    </plurals>
-    <plurals name="ssl_ca_cert_info_message_device_owner">
-        <item quantity="one">%s instalou unha autoridade de certificación no teu dispositivo que pode permitirlle supervisar a actividade de rede deste, incluídos os correos electrónicos, as aplicacións e os sitios web seguros.\n\nPara obter máis información sobre este certificado, ponte en contacto co teu administrador.</item>
-        <item quantity="other">%s instalou autoridades de certificación no teu dispositivo que poden permitirlle supervisar a actividade de rede deste, incluídos os correos electrónicos, as aplicacións e os sitios web seguros.\n\nPara obter máis información sobre estes certificados, ponte en contacto co teu administrador.</item>
-    </plurals>
     <plurals name="ssl_ca_cert_settings_button">
         <item quantity="one">Comprobar certificado</item>
         <item quantity="other">Comprobar certificados</item>
@@ -359,10 +351,6 @@
     <plurals name="wifi_saved_passpoint_access_points_summary">
         <item quantity="one">1 subscrición</item>
         <item quantity="other">%d subscricións</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d dispositivo conectado</item>
-        <item quantity="other">%1$d dispositivos conectados</item>
     </plurals>
     <plurals name="wrong_pin_code">
         <item quantity="one">O código PIN da SIM é incorrecto. Quédache %d intento antes de que teñas que contactar co operador para desbloquear o dispositivo.</item>

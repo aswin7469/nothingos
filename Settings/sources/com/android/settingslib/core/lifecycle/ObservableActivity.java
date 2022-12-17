@@ -3,10 +3,11 @@ package com.android.settingslib.core.lifecycle;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
-/* loaded from: classes.dex */
+
 public class ObservableActivity extends FragmentActivity {
     private final Lifecycle mLifecycle = new Lifecycle(this);
 
@@ -14,8 +15,7 @@ public class ObservableActivity extends FragmentActivity {
         return this.mLifecycle;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         this.mLifecycle.onAttach(this);
         this.mLifecycle.onCreate(bundle);
@@ -23,7 +23,6 @@ public class ObservableActivity extends FragmentActivity {
         super.onCreate(bundle);
     }
 
-    @Override // android.app.Activity
     public void onCreate(Bundle bundle, PersistableBundle persistableBundle) {
         this.mLifecycle.onAttach(this);
         this.mLifecycle.onCreate(bundle);
@@ -31,60 +30,52 @@ public class ObservableActivity extends FragmentActivity {
         super.onCreate(bundle, persistableBundle);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.fragment.app.FragmentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onStart() {
         this.mLifecycle.handleLifecycleEvent(Lifecycle.Event.ON_START);
         super.onStart();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.fragment.app.FragmentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onResume() {
         this.mLifecycle.handleLifecycleEvent(Lifecycle.Event.ON_RESUME);
         super.onResume();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.fragment.app.FragmentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onPause() {
         this.mLifecycle.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE);
         super.onPause();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.fragment.app.FragmentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onStop() {
         this.mLifecycle.handleLifecycleEvent(Lifecycle.Event.ON_STOP);
         super.onStop();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.fragment.app.FragmentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onDestroy() {
         this.mLifecycle.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY);
         super.onDestroy();
     }
 
-    @Override // android.app.Activity
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (super.onCreateOptionsMenu(menu)) {
-            this.mLifecycle.onCreateOptionsMenu(menu, null);
-            return true;
+        if (!super.onCreateOptionsMenu(menu)) {
+            return false;
         }
-        return false;
+        this.mLifecycle.onCreateOptionsMenu(menu, (MenuInflater) null);
+        return true;
     }
 
-    @Override // android.app.Activity
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (super.onPrepareOptionsMenu(menu)) {
-            this.mLifecycle.onPrepareOptionsMenu(menu);
-            return true;
+        if (!super.onPrepareOptionsMenu(menu)) {
+            return false;
         }
-        return false;
+        this.mLifecycle.onPrepareOptionsMenu(menu);
+        return true;
     }
 
-    @Override // android.app.Activity
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         boolean onOptionsItemSelected = this.mLifecycle.onOptionsItemSelected(menuItem);
         return !onOptionsItemSelected ? super.onOptionsItemSelected(menuItem) : onOptionsItemSelected;

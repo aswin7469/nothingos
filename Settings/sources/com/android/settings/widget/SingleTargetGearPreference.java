@@ -5,9 +5,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
-import com.android.settings.R;
+import com.android.settings.R$layout;
 import com.android.settingslib.R$id;
-/* loaded from: classes.dex */
+
 public class SingleTargetGearPreference extends Preference {
     public SingleTargetGearPreference(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
@@ -25,11 +25,10 @@ public class SingleTargetGearPreference extends Preference {
     }
 
     private void init() {
-        setLayoutResource(R.layout.preference_single_target);
-        setWidgetLayoutResource(R.layout.preference_widget_gear_optional_background);
+        setLayoutResource(R$layout.preference_single_target);
+        setWidgetLayoutResource(R$layout.preference_widget_gear_optional_background);
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         View findViewById = preferenceViewHolder.findViewById(R$id.two_target_divider);

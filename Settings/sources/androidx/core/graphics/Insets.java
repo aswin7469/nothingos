@@ -1,7 +1,7 @@
 package androidx.core.graphics;
 
 import android.graphics.Rect;
-/* loaded from: classes.dex */
+
 public final class Insets {
     public static final Insets NONE = new Insets(0, 0, 0, 0);
     public final int bottom;
@@ -9,36 +9,38 @@ public final class Insets {
     public final int right;
     public final int top;
 
-    private Insets(int left, int top, int right, int bottom) {
-        this.left = left;
-        this.top = top;
-        this.right = right;
-        this.bottom = bottom;
+    private Insets(int i, int i2, int i3, int i4) {
+        this.left = i;
+        this.top = i2;
+        this.right = i3;
+        this.bottom = i4;
     }
 
-    public static Insets of(int left, int top, int right, int bottom) {
-        if (left == 0 && top == 0 && right == 0 && bottom == 0) {
+    /* renamed from: of */
+    public static Insets m2of(int i, int i2, int i3, int i4) {
+        if (i == 0 && i2 == 0 && i3 == 0 && i4 == 0) {
             return NONE;
         }
-        return new Insets(left, top, right, bottom);
+        return new Insets(i, i2, i3, i4);
     }
 
-    public static Insets of(Rect r) {
-        return of(r.left, r.top, r.right, r.bottom);
+    /* renamed from: of */
+    public static Insets m3of(Rect rect) {
+        return m2of(rect.left, rect.top, rect.right, rect.bottom);
     }
 
-    public static Insets max(Insets a, Insets b) {
-        return of(Math.max(a.left, b.left), Math.max(a.top, b.top), Math.max(a.right, b.right), Math.max(a.bottom, b.bottom));
+    public static Insets max(Insets insets, Insets insets2) {
+        return m2of(Math.max(insets.left, insets2.left), Math.max(insets.top, insets2.top), Math.max(insets.right, insets2.right), Math.max(insets.bottom, insets2.bottom));
     }
 
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
             return true;
         }
-        if (o == null || Insets.class != o.getClass()) {
+        if (obj == null || Insets.class != obj.getClass()) {
             return false;
         }
-        Insets insets = (Insets) o;
+        Insets insets = (Insets) obj;
         return this.bottom == insets.bottom && this.left == insets.left && this.right == insets.right && this.top == insets.top;
     }
 
@@ -51,10 +53,17 @@ public final class Insets {
     }
 
     public static Insets toCompatInsets(android.graphics.Insets insets) {
-        return of(insets.left, insets.top, insets.right, insets.bottom);
+        return m2of(insets.left, insets.top, insets.right, insets.bottom);
     }
 
     public android.graphics.Insets toPlatformInsets() {
-        return android.graphics.Insets.of(this.left, this.top, this.right, this.bottom);
+        return Api29Impl.m4of(this.left, this.top, this.right, this.bottom);
+    }
+
+    static class Api29Impl {
+        /* renamed from: of */
+        static android.graphics.Insets m4of(int i, int i2, int i3, int i4) {
+            return android.graphics.Insets.of(i, i2, i3, i4);
+        }
     }
 }

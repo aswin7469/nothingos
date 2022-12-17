@@ -6,9 +6,8 @@ import androidx.preference.Preference;
 import androidx.preference.SwitchPreference;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.core.AbstractPreferenceController;
-/* loaded from: classes.dex */
+
 public class TapToWakePreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin, Preference.OnPreferenceChangeListener {
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "tap_to_wake";
     }
@@ -17,12 +16,10 @@ public class TapToWakePreferenceController extends AbstractPreferenceController 
         super(context);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
-        return this.mContext.getResources().getBoolean(17891652);
+        return this.mContext.getResources().getBoolean(17891772);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         boolean z = false;
         SwitchPreference switchPreference = (SwitchPreference) preference;
@@ -32,7 +29,6 @@ public class TapToWakePreferenceController extends AbstractPreferenceController 
         switchPreference.setChecked(z);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         Settings.Secure.putInt(this.mContext.getContentResolver(), "double_tap_to_wake", ((Boolean) obj).booleanValue() ? 1 : 0);
         return true;

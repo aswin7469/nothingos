@@ -1,6 +1,5 @@
 package com.google.zxing.oned.rss;
 
-import androidx.appcompat.R$styleable;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.NotFoundException;
@@ -14,19 +13,18 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-/* loaded from: classes2.dex */
+
 public final class RSS14Reader extends AbstractRSSReader {
+    private static final int[][] FINDER_PATTERNS = {new int[]{3, 8, 2, 1}, new int[]{3, 5, 5, 1}, new int[]{3, 3, 7, 1}, new int[]{3, 1, 9, 1}, new int[]{2, 7, 4, 1}, new int[]{2, 5, 6, 1}, new int[]{2, 3, 8, 1}, new int[]{1, 5, 7, 1}, new int[]{1, 3, 9, 1}};
+    private static final int[] INSIDE_GSUM = {0, 336, 1036, 1516};
+    private static final int[] INSIDE_ODD_TOTAL_SUBSET = {4, 20, 48, 81};
+    private static final int[] INSIDE_ODD_WIDEST = {2, 4, 6, 8};
+    private static final int[] OUTSIDE_EVEN_TOTAL_SUBSET = {1, 10, 34, 70, 126};
+    private static final int[] OUTSIDE_GSUM = {0, 161, 961, 2015, 2715};
+    private static final int[] OUTSIDE_ODD_WIDEST = {8, 6, 4, 3, 1};
     private final List<Pair> possibleLeftPairs = new ArrayList();
     private final List<Pair> possibleRightPairs = new ArrayList();
-    private static final int[] OUTSIDE_EVEN_TOTAL_SUBSET = {1, 10, 34, 70, R$styleable.AppCompatTheme_windowNoTitle};
-    private static final int[] INSIDE_ODD_TOTAL_SUBSET = {4, 20, 48, 81};
-    private static final int[] OUTSIDE_GSUM = {0, 161, 961, 2015, 2715};
-    private static final int[] INSIDE_GSUM = {0, 336, 1036, 1516};
-    private static final int[] OUTSIDE_ODD_WIDEST = {8, 6, 4, 3, 1};
-    private static final int[] INSIDE_ODD_WIDEST = {2, 4, 6, 8};
-    private static final int[][] FINDER_PATTERNS = {new int[]{3, 8, 2, 1}, new int[]{3, 5, 5, 1}, new int[]{3, 3, 7, 1}, new int[]{3, 1, 9, 1}, new int[]{2, 7, 4, 1}, new int[]{2, 5, 6, 1}, new int[]{2, 3, 8, 1}, new int[]{1, 5, 7, 1}, new int[]{1, 3, 9, 1}};
 
-    @Override // com.google.zxing.oned.OneDReader
     public Result decodeRow(int i, BitArray bitArray, Map<DecodeHintType, ?> map) throws NotFoundException {
         addOrTally(this.possibleLeftPairs, decodePair(bitArray, false, i, map));
         bitArray.reverse();
@@ -50,36 +48,33 @@ public final class RSS14Reader extends AbstractRSSReader {
     }
 
     private static void addOrTally(Collection<Pair> collection, Pair pair) {
-        if (pair == null) {
-            return;
-        }
-        boolean z = false;
-        Iterator<Pair> it = collection.iterator();
-        while (true) {
-            if (!it.hasNext()) {
-                break;
+        if (pair != null) {
+            boolean z = false;
+            Iterator<Pair> it = collection.iterator();
+            while (true) {
+                if (!it.hasNext()) {
+                    break;
+                }
+                Pair next = it.next();
+                if (next.getValue() == pair.getValue()) {
+                    next.incrementCount();
+                    z = true;
+                    break;
+                }
             }
-            Pair next = it.next();
-            if (next.getValue() == pair.getValue()) {
-                next.incrementCount();
-                z = true;
-                break;
+            if (!z) {
+                collection.add(pair);
             }
         }
-        if (z) {
-            return;
-        }
-        collection.add(pair);
     }
 
-    @Override // com.google.zxing.oned.OneDReader, com.google.zxing.Reader
     public void reset() {
         this.possibleLeftPairs.clear();
         this.possibleRightPairs.clear();
     }
 
     private static Result constructResult(Pair pair, Pair pair2) {
-        String valueOf = String.valueOf((pair.getValue() * 4537077) + pair2.getValue());
+        String valueOf = String.valueOf((((long) pair.getValue()) * 4537077) + ((long) pair2.getValue()));
         StringBuilder sb = new StringBuilder(14);
         for (int length = 13 - valueOf.length(); length > 0; length--) {
             sb.append('0');
@@ -100,7 +95,7 @@ public final class RSS14Reader extends AbstractRSSReader {
         sb.append(i3);
         ResultPoint[] resultPoints = pair.getFinderPattern().getResultPoints();
         ResultPoint[] resultPoints2 = pair2.getFinderPattern().getResultPoints();
-        return new Result(String.valueOf(sb.toString()), null, new ResultPoint[]{resultPoints[0], resultPoints[1], resultPoints2[0], resultPoints2[1]}, BarcodeFormat.RSS_14);
+        return new Result(String.valueOf(sb.toString()), (byte[]) null, new ResultPoint[]{resultPoints[0], resultPoints[1], resultPoints2[0], resultPoints2[1]}, BarcodeFormat.RSS_14);
     }
 
     private static boolean checkChecksum(Pair pair, Pair pair2) {
@@ -116,16 +111,21 @@ public final class RSS14Reader extends AbstractRSSReader {
     }
 
     private Pair decodePair(BitArray bitArray, boolean z, int i, Map<DecodeHintType, ?> map) {
+        ResultPointCallback resultPointCallback;
         try {
             int[] findFinderPattern = findFinderPattern(bitArray, 0, z);
             FinderPattern parseFoundFinderPattern = parseFoundFinderPattern(bitArray, i, z, findFinderPattern);
-            ResultPointCallback resultPointCallback = map == null ? null : (ResultPointCallback) map.get(DecodeHintType.NEED_RESULT_POINT_CALLBACK);
+            if (map == null) {
+                resultPointCallback = null;
+            } else {
+                resultPointCallback = (ResultPointCallback) map.get(DecodeHintType.NEED_RESULT_POINT_CALLBACK);
+            }
             if (resultPointCallback != null) {
-                float f = (findFinderPattern[0] + findFinderPattern[1]) / 2.0f;
+                float f = ((float) (findFinderPattern[0] + findFinderPattern[1])) / 2.0f;
                 if (z) {
-                    f = (bitArray.getSize() - 1) - f;
+                    f = ((float) (bitArray.getSize() - 1)) - f;
                 }
-                resultPointCallback.foundPossibleResultPoint(new ResultPoint(f, i));
+                resultPointCallback.foundPossibleResultPoint(new ResultPoint(f, (float) i));
             }
             DataCharacter decodeDataCharacter = decodeDataCharacter(bitArray, parseFoundFinderPattern, true);
             DataCharacter decodeDataCharacter2 = decodeDataCharacter(bitArray, parseFoundFinderPattern, false);
@@ -136,6 +136,8 @@ public final class RSS14Reader extends AbstractRSSReader {
     }
 
     private DataCharacter decodeDataCharacter(BitArray bitArray, FinderPattern finderPattern, boolean z) throws NotFoundException {
+        BitArray bitArray2 = bitArray;
+        boolean z2 = z;
         int[] dataCharacterCounters = getDataCharacterCounters();
         dataCharacterCounters[0] = 0;
         dataCharacterCounters[1] = 0;
@@ -145,10 +147,10 @@ public final class RSS14Reader extends AbstractRSSReader {
         dataCharacterCounters[5] = 0;
         dataCharacterCounters[6] = 0;
         dataCharacterCounters[7] = 0;
-        if (z) {
-            OneDReader.recordPatternInReverse(bitArray, finderPattern.getStartEnd()[0], dataCharacterCounters);
+        if (z2) {
+            OneDReader.recordPatternInReverse(bitArray2, finderPattern.getStartEnd()[0], dataCharacterCounters);
         } else {
-            OneDReader.recordPattern(bitArray, finderPattern.getStartEnd()[1] + 1, dataCharacterCounters);
+            OneDReader.recordPattern(bitArray2, finderPattern.getStartEnd()[1] + 1, dataCharacterCounters);
             int i = 0;
             for (int length = dataCharacterCounters.length - 1; i < length; length--) {
                 int i2 = dataCharacterCounters[i];
@@ -157,14 +159,14 @@ public final class RSS14Reader extends AbstractRSSReader {
                 i++;
             }
         }
-        int i3 = z ? 16 : 15;
-        float count = AbstractRSSReader.count(dataCharacterCounters) / i3;
+        int i3 = z2 ? 16 : 15;
+        float count = ((float) AbstractRSSReader.count(dataCharacterCounters)) / ((float) i3);
         int[] oddCounts = getOddCounts();
         int[] evenCounts = getEvenCounts();
         float[] oddRoundingErrors = getOddRoundingErrors();
         float[] evenRoundingErrors = getEvenRoundingErrors();
         for (int i4 = 0; i4 < dataCharacterCounters.length; i4++) {
-            float f = dataCharacterCounters[i4] / count;
+            float f = ((float) dataCharacterCounters[i4]) / count;
             int i5 = (int) (0.5f + f);
             if (i5 < 1) {
                 i5 = 1;
@@ -174,39 +176,41 @@ public final class RSS14Reader extends AbstractRSSReader {
             int i6 = i4 >> 1;
             if ((i4 & 1) == 0) {
                 oddCounts[i6] = i5;
-                oddRoundingErrors[i6] = f - i5;
+                oddRoundingErrors[i6] = f - ((float) i5);
             } else {
                 evenCounts[i6] = i5;
-                evenRoundingErrors[i6] = f - i5;
+                evenRoundingErrors[i6] = f - ((float) i5);
             }
         }
-        adjustOddEvenCounts(z, i3);
+        adjustOddEvenCounts(z2, i3);
         int i7 = 0;
         int i8 = 0;
         for (int length2 = oddCounts.length - 1; length2 >= 0; length2--) {
-            i7 = (i7 * 9) + oddCounts[length2];
-            i8 += oddCounts[length2];
+            int i9 = oddCounts[length2];
+            i7 = (i7 * 9) + i9;
+            i8 += i9;
         }
-        int i9 = 0;
         int i10 = 0;
+        int i11 = 0;
         for (int length3 = evenCounts.length - 1; length3 >= 0; length3--) {
-            i9 = (i9 * 9) + evenCounts[length3];
-            i10 += evenCounts[length3];
+            int i12 = evenCounts[length3];
+            i10 = (i10 * 9) + i12;
+            i11 += i12;
         }
-        int i11 = i7 + (i9 * 3);
-        if (!z) {
-            if ((i10 & 1) != 0 || i10 > 10 || i10 < 4) {
+        int i13 = i7 + (i10 * 3);
+        if (z2) {
+            if ((i8 & 1) != 0 || i8 > 12 || i8 < 4) {
                 throw NotFoundException.getNotFoundInstance();
             }
-            int i12 = (10 - i10) / 2;
-            int i13 = INSIDE_ODD_WIDEST[i12];
-            return new DataCharacter((RSSUtils.getRSSvalue(evenCounts, 9 - i13, false) * INSIDE_ODD_TOTAL_SUBSET[i12]) + RSSUtils.getRSSvalue(oddCounts, i13, true) + INSIDE_GSUM[i12], i11);
-        } else if ((i8 & 1) != 0 || i8 > 12 || i8 < 4) {
-            throw NotFoundException.getNotFoundInstance();
-        } else {
             int i14 = (12 - i8) / 2;
             int i15 = OUTSIDE_ODD_WIDEST[i14];
-            return new DataCharacter((RSSUtils.getRSSvalue(oddCounts, i15, false) * OUTSIDE_EVEN_TOTAL_SUBSET[i14]) + RSSUtils.getRSSvalue(evenCounts, 9 - i15, true) + OUTSIDE_GSUM[i14], i11);
+            return new DataCharacter((RSSUtils.getRSSvalue(oddCounts, i15, false) * OUTSIDE_EVEN_TOTAL_SUBSET[i14]) + RSSUtils.getRSSvalue(evenCounts, 9 - i15, true) + OUTSIDE_GSUM[i14], i13);
+        } else if ((i11 & 1) != 0 || i11 > 10 || i11 < 4) {
+            throw NotFoundException.getNotFoundInstance();
+        } else {
+            int i16 = (10 - i11) / 2;
+            int i17 = INSIDE_ODD_WIDEST[i16];
+            return new DataCharacter((RSSUtils.getRSSvalue(evenCounts, 9 - i17, false) * INSIDE_ODD_TOTAL_SUBSET[i16]) + RSSUtils.getRSSvalue(oddCounts, i17, true) + INSIDE_GSUM[i16], i13);
         }
     }
 
@@ -275,141 +279,190 @@ public final class RSS14Reader extends AbstractRSSReader {
         return new FinderPattern(parseFinderValue, new int[]{i5, iArr[1]}, i3, i2, i);
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:13:0x0037, code lost:
-        if (r1 < 4) goto L66;
+    /* JADX WARNING: Code restructure failed: missing block: B:17:0x0037, code lost:
+        if (r1 < 4) goto L_0x0051;
      */
-    /* JADX WARN: Code restructure failed: missing block: B:14:0x0054, code lost:
-        r10 = false;
+    /* JADX WARNING: Code restructure failed: missing block: B:28:0x004f, code lost:
+        if (r1 < 4) goto L_0x0051;
      */
-    /* JADX WARN: Code restructure failed: missing block: B:66:0x0051, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:29:0x0051, code lost:
         r10 = false;
         r3 = true;
      */
-    /* JADX WARN: Code restructure failed: missing block: B:76:0x004f, code lost:
-        if (r1 < 4) goto L66;
+    /* JADX WARNING: Code restructure failed: missing block: B:30:0x0054, code lost:
+        r10 = false;
      */
-    /* JADX WARN: Removed duplicated region for block: B:21:0x0099  */
-    /* JADX WARN: Removed duplicated region for block: B:27:0x00ae  */
-    /* JADX WARN: Removed duplicated region for block: B:29:0x00bb  */
-    /* JADX WARN: Removed duplicated region for block: B:34:0x00d0  */
-    /* JADX WARN: Removed duplicated region for block: B:36:? A[RETURN, SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private void adjustOddEvenCounts(boolean z, int i) throws NotFoundException {
-        boolean z2;
-        boolean z3;
-        boolean z4;
-        int count = AbstractRSSReader.count(getOddCounts());
-        int count2 = AbstractRSSReader.count(getEvenCounts());
-        int i2 = (count + count2) - i;
-        boolean z5 = false;
-        boolean z6 = true;
-        boolean z7 = (count & 1) == z;
-        boolean z8 = (count2 & 1) == 1;
-        if (z) {
-            if (count > 12) {
-                z2 = false;
-                z3 = true;
-            } else if (count < 4) {
-                z3 = false;
-                z2 = true;
-            } else {
-                z2 = false;
-                z3 = false;
-            }
-            if (count2 <= 12) {
-            }
-            z4 = true;
-        } else {
-            if (count > 11) {
-                z2 = false;
-                z3 = true;
-            } else if (count < 5) {
-                z3 = false;
-                z2 = true;
-            } else {
-                z2 = false;
-                z3 = false;
-            }
-            if (count2 <= 10) {
-            }
-            z4 = true;
-        }
-        if (i2 == 1) {
-            if (z7) {
-                if (z8) {
-                    throw NotFoundException.getNotFoundInstance();
-                }
-                z3 = true;
-            } else if (!z8) {
-                throw NotFoundException.getNotFoundInstance();
-            } else {
-                z4 = true;
-            }
-        } else if (i2 == -1) {
-            if (z7) {
-                if (z8) {
-                    throw NotFoundException.getNotFoundInstance();
-                }
-                if (z6) {
-                    if (z3) {
-                        throw NotFoundException.getNotFoundInstance();
-                    }
-                    AbstractRSSReader.increment(getOddCounts(), getOddRoundingErrors());
-                }
-                if (z3) {
-                    AbstractRSSReader.decrement(getOddCounts(), getOddRoundingErrors());
-                }
-                if (z5) {
-                    if (z4) {
-                        throw NotFoundException.getNotFoundInstance();
-                    }
-                    AbstractRSSReader.increment(getEvenCounts(), getOddRoundingErrors());
-                }
-                if (!z4) {
-                    return;
-                }
-                AbstractRSSReader.decrement(getEvenCounts(), getEvenRoundingErrors());
-                return;
-            } else if (!z8) {
-                throw NotFoundException.getNotFoundInstance();
-            } else {
-                z5 = true;
-            }
-        } else if (i2 != 0) {
-            throw NotFoundException.getNotFoundInstance();
-        } else {
-            if (z7) {
-                if (!z8) {
-                    throw NotFoundException.getNotFoundInstance();
-                }
-                if (count < count2) {
-                    z4 = true;
-                    if (z6) {
-                    }
-                    if (z3) {
-                    }
-                    if (z5) {
-                    }
-                    if (!z4) {
-                    }
-                } else {
-                    z5 = true;
-                    z3 = true;
-                }
-            } else if (z8) {
-                throw NotFoundException.getNotFoundInstance();
-            }
-        }
-        z6 = z2;
-        if (z6) {
-        }
-        if (z3) {
-        }
-        if (z5) {
-        }
-        if (!z4) {
-        }
+    /* JADX WARNING: Removed duplicated region for block: B:62:0x0099  */
+    /* JADX WARNING: Removed duplicated region for block: B:67:0x00ae  */
+    /* JADX WARNING: Removed duplicated region for block: B:69:0x00bb  */
+    /* JADX WARNING: Removed duplicated region for block: B:74:0x00d0  */
+    /* JADX WARNING: Removed duplicated region for block: B:80:? A[RETURN, SYNTHETIC] */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private void adjustOddEvenCounts(boolean r10, int r11) throws com.google.zxing.NotFoundException {
+        /*
+            r9 = this;
+            int[] r0 = r9.getOddCounts()
+            int r0 = com.google.zxing.oned.rss.AbstractRSSReader.count(r0)
+            int[] r1 = r9.getEvenCounts()
+            int r1 = com.google.zxing.oned.rss.AbstractRSSReader.count(r1)
+            int r2 = r0 + r1
+            int r2 = r2 - r11
+            r11 = r0 & 1
+            r3 = 0
+            r4 = 1
+            if (r11 != r10) goto L_0x001b
+            r11 = r4
+            goto L_0x001c
+        L_0x001b:
+            r11 = r3
+        L_0x001c:
+            r5 = r1 & 1
+            if (r5 != r4) goto L_0x0022
+            r5 = r4
+            goto L_0x0023
+        L_0x0022:
+            r5 = r3
+        L_0x0023:
+            r6 = 4
+            if (r10 == 0) goto L_0x003a
+            r10 = 12
+            if (r0 <= r10) goto L_0x002d
+            r7 = r3
+            r8 = r4
+            goto L_0x0034
+        L_0x002d:
+            if (r0 >= r6) goto L_0x0032
+            r8 = r3
+            r7 = r4
+            goto L_0x0034
+        L_0x0032:
+            r7 = r3
+            r8 = r7
+        L_0x0034:
+            if (r1 <= r10) goto L_0x0037
+            goto L_0x004d
+        L_0x0037:
+            if (r1 >= r6) goto L_0x0054
+            goto L_0x0051
+        L_0x003a:
+            r10 = 11
+            if (r0 <= r10) goto L_0x0041
+            r7 = r3
+            r8 = r4
+            goto L_0x0049
+        L_0x0041:
+            r10 = 5
+            if (r0 >= r10) goto L_0x0047
+            r8 = r3
+            r7 = r4
+            goto L_0x0049
+        L_0x0047:
+            r7 = r3
+            r8 = r7
+        L_0x0049:
+            r10 = 10
+            if (r1 <= r10) goto L_0x004f
+        L_0x004d:
+            r10 = r4
+            goto L_0x0055
+        L_0x004f:
+            if (r1 >= r6) goto L_0x0054
+        L_0x0051:
+            r10 = r3
+            r3 = r4
+            goto L_0x0055
+        L_0x0054:
+            r10 = r3
+        L_0x0055:
+            if (r2 != r4) goto L_0x006c
+            if (r11 == 0) goto L_0x0062
+            if (r5 != 0) goto L_0x005d
+            r8 = r4
+            goto L_0x0065
+        L_0x005d:
+            com.google.zxing.NotFoundException r9 = com.google.zxing.NotFoundException.getNotFoundInstance()
+            throw r9
+        L_0x0062:
+            if (r5 == 0) goto L_0x0067
+            r10 = r4
+        L_0x0065:
+            r4 = r7
+            goto L_0x0097
+        L_0x0067:
+            com.google.zxing.NotFoundException r9 = com.google.zxing.NotFoundException.getNotFoundInstance()
+            throw r9
+        L_0x006c:
+            r6 = -1
+            if (r2 != r6) goto L_0x0082
+            if (r11 == 0) goto L_0x0079
+            if (r5 != 0) goto L_0x0074
+            goto L_0x0097
+        L_0x0074:
+            com.google.zxing.NotFoundException r9 = com.google.zxing.NotFoundException.getNotFoundInstance()
+            throw r9
+        L_0x0079:
+            if (r5 == 0) goto L_0x007d
+            r3 = r4
+            goto L_0x0065
+        L_0x007d:
+            com.google.zxing.NotFoundException r9 = com.google.zxing.NotFoundException.getNotFoundInstance()
+            throw r9
+        L_0x0082:
+            if (r2 != 0) goto L_0x00e1
+            if (r11 == 0) goto L_0x0094
+            if (r5 == 0) goto L_0x008f
+            if (r0 >= r1) goto L_0x008c
+            r10 = r4
+            goto L_0x0097
+        L_0x008c:
+            r3 = r4
+            r8 = r3
+            goto L_0x0065
+        L_0x008f:
+            com.google.zxing.NotFoundException r9 = com.google.zxing.NotFoundException.getNotFoundInstance()
+            throw r9
+        L_0x0094:
+            if (r5 != 0) goto L_0x00dc
+            goto L_0x0065
+        L_0x0097:
+            if (r4 == 0) goto L_0x00ac
+            if (r8 != 0) goto L_0x00a7
+            int[] r11 = r9.getOddCounts()
+            float[] r0 = r9.getOddRoundingErrors()
+            com.google.zxing.oned.rss.AbstractRSSReader.increment(r11, r0)
+            goto L_0x00ac
+        L_0x00a7:
+            com.google.zxing.NotFoundException r9 = com.google.zxing.NotFoundException.getNotFoundInstance()
+            throw r9
+        L_0x00ac:
+            if (r8 == 0) goto L_0x00b9
+            int[] r11 = r9.getOddCounts()
+            float[] r0 = r9.getOddRoundingErrors()
+            com.google.zxing.oned.rss.AbstractRSSReader.decrement(r11, r0)
+        L_0x00b9:
+            if (r3 == 0) goto L_0x00ce
+            if (r10 != 0) goto L_0x00c9
+            int[] r11 = r9.getEvenCounts()
+            float[] r0 = r9.getOddRoundingErrors()
+            com.google.zxing.oned.rss.AbstractRSSReader.increment(r11, r0)
+            goto L_0x00ce
+        L_0x00c9:
+            com.google.zxing.NotFoundException r9 = com.google.zxing.NotFoundException.getNotFoundInstance()
+            throw r9
+        L_0x00ce:
+            if (r10 == 0) goto L_0x00db
+            int[] r10 = r9.getEvenCounts()
+            float[] r9 = r9.getEvenRoundingErrors()
+            com.google.zxing.oned.rss.AbstractRSSReader.decrement(r10, r9)
+        L_0x00db:
+            return
+        L_0x00dc:
+            com.google.zxing.NotFoundException r9 = com.google.zxing.NotFoundException.getNotFoundInstance()
+            throw r9
+        L_0x00e1:
+            com.google.zxing.NotFoundException r9 = com.google.zxing.NotFoundException.getNotFoundInstance()
+            throw r9
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.oned.rss.RSS14Reader.adjustOddEvenCounts(boolean, int):void");
     }
 }

@@ -6,7 +6,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-/* loaded from: classes.dex */
+
 public class ThreadUtils {
     private static volatile Thread sMainThread;
     private static volatile Handler sMainThreadHandler;
@@ -27,10 +27,9 @@ public class ThreadUtils {
     }
 
     public static void ensureMainThread() {
-        if (isMainThread()) {
-            return;
+        if (!isMainThread()) {
+            throw new RuntimeException("Must be called on the UI thread");
         }
-        throw new RuntimeException("Must be called on the UI thread");
     }
 
     public static Future postOnBackgroundThread(Runnable runnable) {
@@ -43,6 +42,10 @@ public class ThreadUtils {
 
     public static void postOnMainThread(Runnable runnable) {
         getUiThreadHandler().post(runnable);
+    }
+
+    public static void postOnMainThreadDelayed(Runnable runnable, long j) {
+        getUiThreadHandler().postDelayed(runnable, j);
     }
 
     private static synchronized ExecutorService getThreadExecutor() {

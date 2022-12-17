@@ -3,78 +3,96 @@ package com.android.settings.wifi.slice;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
+import android.os.Binder;
 import android.os.Bundle;
 import android.text.TextUtils;
-import androidx.constraintlayout.widget.R$styleable;
+import android.util.Log;
 import androidx.core.graphics.drawable.IconCompat;
 import androidx.slice.Slice;
 import androidx.slice.builders.ListBuilder;
 import androidx.slice.builders.SliceAction;
-import com.android.settings.R;
+import com.android.settings.R$drawable;
+import com.android.settings.R$string;
 import com.android.settings.SubSettings;
+import com.android.settings.Utils;
+import com.android.settings.applications.AppStateBaseBridge;
 import com.android.settings.core.SubSettingLauncher;
-import com.android.settings.network.ProviderModelSliceHelper$$ExternalSyntheticLambda1;
+import com.android.settings.network.NetworkProviderSettings;
+import com.android.settings.network.ProviderModelSliceHelper$$ExternalSyntheticLambda2;
 import com.android.settings.slices.CustomSliceRegistry;
 import com.android.settings.slices.CustomSliceable;
 import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settings.slices.SliceBuilderUtils;
+import com.android.settings.wifi.AppStateChangeWifiStateBridge;
 import com.android.settings.wifi.WifiDialogActivity;
-import com.android.settings.wifi.WifiSettings;
 import com.android.settings.wifi.details.WifiNetworkDetailsFragment;
-import com.android.settingslib.Utils;
+import com.android.settingslib.applications.ApplicationsState;
+import com.android.settingslib.wifi.WifiEnterpriseRestrictionUtils;
 import com.android.settingslib.wifi.WifiUtils;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-/* loaded from: classes.dex */
+
 public class WifiSlice implements CustomSliceable {
     static final int DEFAULT_EXPANDED_ROW_COUNT = 3;
     protected final Context mContext;
     protected final WifiManager mWifiManager;
+    protected final WifiRestriction mWifiRestriction;
 
-    protected boolean isApRowCollapsed() {
+    /* access modifiers changed from: protected */
+    public boolean isApRowCollapsed() {
         return false;
     }
 
     public WifiSlice(Context context) {
-        this.mContext = context;
-        this.mWifiManager = (WifiManager) context.getSystemService(WifiManager.class);
+        this(context, new WifiRestriction());
     }
 
-    @Override // com.android.settings.slices.CustomSliceable
+    WifiSlice(Context context, WifiRestriction wifiRestriction) {
+        this.mContext = context;
+        this.mWifiManager = (WifiManager) context.getSystemService(WifiManager.class);
+        this.mWifiRestriction = wifiRestriction;
+    }
+
     public Uri getUri() {
         return CustomSliceRegistry.WIFI_SLICE_URI;
     }
 
-    @Override // com.android.settings.slices.CustomSliceable
     public Slice getSlice() {
+        int i;
+        boolean z = Utils.isSettingsIntelligence(this.mContext) || isPermissionGranted(this.mContext);
         boolean isWifiEnabled = isWifiEnabled();
-        List<WifiSliceItem> list = null;
-        ListBuilder listBuilder = getListBuilder(isWifiEnabled, null);
-        if (!isWifiEnabled) {
+        List list = null;
+        ListBuilder listBuilder = getListBuilder(isWifiEnabled, (WifiSliceItem) null, z);
+        if (!isWifiEnabled || !z) {
             return listBuilder.build();
         }
         WifiScanWorker wifiScanWorker = (WifiScanWorker) SliceBackgroundWorker.getInstance(getUri());
         if (wifiScanWorker != null) {
             list = wifiScanWorker.getResults();
         }
-        int size = list == null ? 0 : list.size();
-        if (size > 0 && list.get(0).getConnectedState() != 0) {
-            listBuilder = getListBuilder(true, list.get(0));
+        if (list == null) {
+            i = 0;
+        } else {
+            i = list.size();
+        }
+        if (i > 0 && ((WifiSliceItem) list.get(0)).getConnectedState() != 0) {
+            listBuilder = getListBuilder(true, (WifiSliceItem) list.get(0), true);
         }
         if (isApRowCollapsed()) {
             return listBuilder.build();
         }
-        CharSequence text = this.mContext.getText(R.string.summary_placeholder);
-        for (int i = 0; i < 3; i++) {
-            if (i < size) {
-                listBuilder.addRow(getWifiSliceItemRow(list.get(i)));
-            } else if (i == size) {
+        CharSequence text = this.mContext.getText(R$string.summary_placeholder);
+        for (int i2 = 0; i2 < 3; i2++) {
+            if (i2 < i) {
+                listBuilder.addRow(getWifiSliceItemRow((WifiSliceItem) list.get(i2)));
+            } else if (i2 == i) {
                 listBuilder.addRow(getLoadingRow(text));
             } else {
                 listBuilder.addRow(new ListBuilder.RowBuilder().setTitle(text).setSubtitle(text));
@@ -83,18 +101,42 @@ public class WifiSlice implements CustomSliceable {
         return listBuilder.build();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    private static boolean isPermissionGranted(Context context) {
+        int callingUid = Binder.getCallingUid();
+        String str = context.getPackageManager().getPackagesForUid(callingUid)[0];
+        try {
+            boolean z = context.createPackageContext(str, 0).checkPermission("android.permission.CHANGE_WIFI_STATE", Binder.getCallingPid(), callingUid) == 0;
+            AppStateChangeWifiStateBridge.WifiSettingsState wifiSettingsInfo = new AppStateChangeWifiStateBridge(context, (ApplicationsState) null, (AppStateBaseBridge.Callback) null).getWifiSettingsInfo(str, callingUid);
+            if (!z || !wifiSettingsInfo.isPermissible()) {
+                return false;
+            }
+            return true;
+        } catch (PackageManager.NameNotFoundException unused) {
+            Log.e("WifiSlice", "Cannot create Context for package: " + str);
+            return false;
+        }
+    }
+
+    /* access modifiers changed from: protected */
     public ListBuilder.RowBuilder getHeaderRow(boolean z, WifiSliceItem wifiSliceItem) {
-        IconCompat createWithResource = IconCompat.createWithResource(this.mContext, R.drawable.ic_settings_wireless);
-        String string = this.mContext.getString(R.string.wifi_settings);
-        return new ListBuilder.RowBuilder().setTitle(string).setPrimaryAction(SliceAction.createDeeplink(getPrimaryAction(), createWithResource, 0, string));
+        IconCompat createWithResource = IconCompat.createWithResource(this.mContext, R$drawable.ic_settings_wireless);
+        String string = this.mContext.getString(R$string.wifi_settings);
+        ListBuilder.RowBuilder primaryAction = new ListBuilder.RowBuilder().setTitle(string).setPrimaryAction(SliceAction.createDeeplink(getPrimaryAction(), createWithResource, 0, string));
+        if (!this.mWifiRestriction.isChangeWifiStateAllowed(this.mContext)) {
+            primaryAction.setSubtitle(this.mContext.getString(R$string.not_allowed_by_ent));
+        }
+        return primaryAction;
     }
 
-    private ListBuilder getListBuilder(boolean z, WifiSliceItem wifiSliceItem) {
-        return new ListBuilder(this.mContext, getUri(), -1L).setAccentColor(-1).setKeywords(getKeywords()).addRow(getHeaderRow(z, wifiSliceItem)).addAction(SliceAction.createToggle(getBroadcastIntent(this.mContext), null, z));
+    private ListBuilder getListBuilder(boolean z, WifiSliceItem wifiSliceItem, boolean z2) {
+        ListBuilder addRow = new ListBuilder(this.mContext, getUri(), -1).setAccentColor(-1).setKeywords(getKeywords()).addRow(getHeaderRow(z, wifiSliceItem));
+        if (z2 && this.mWifiRestriction.isChangeWifiStateAllowed(this.mContext)) {
+            addRow.addAction(SliceAction.createToggle(getBroadcastIntent(this.mContext), (CharSequence) null, z));
+        }
+        return addRow;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public ListBuilder.RowBuilder getWifiSliceItemRow(WifiSliceItem wifiSliceItem) {
         String title = wifiSliceItem.getTitle();
         IconCompat wifiSliceItemLevelIcon = getWifiSliceItemLevelIcon(wifiSliceItem);
@@ -106,38 +148,40 @@ public class WifiSlice implements CustomSliceable {
         return primaryAction;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public IconCompat getWifiSliceItemLevelIcon(WifiSliceItem wifiSliceItem) {
-        int disabled;
+        int i;
         if (wifiSliceItem.getConnectedState() == 2) {
-            disabled = Utils.getColorAccentDefaultColor(this.mContext);
+            i = com.android.settingslib.Utils.getColorAccentDefaultColor(this.mContext);
         } else if (wifiSliceItem.getConnectedState() == 0) {
-            disabled = Utils.getColorAttrDefaultColor(this.mContext, 16843817);
+            i = com.android.settingslib.Utils.getColorAttrDefaultColor(this.mContext, 16843817);
         } else {
             Context context = this.mContext;
-            disabled = Utils.getDisabled(context, Utils.getColorAttrDefaultColor(context, 16843817));
+            i = com.android.settingslib.Utils.getDisabled(context, com.android.settingslib.Utils.getColorAttrDefaultColor(context, 16843817));
         }
         Drawable drawable = this.mContext.getDrawable(WifiUtils.getInternetIconResource(wifiSliceItem.getLevel(), wifiSliceItem.shouldShowXLevelIcon()));
-        drawable.setTint(disabled);
-        return com.android.settings.Utils.createIconWithDrawable(drawable);
+        drawable.setTint(i);
+        return Utils.createIconWithDrawable(drawable);
     }
 
-    protected IconCompat getEndIcon(WifiSliceItem wifiSliceItem) {
+    /* access modifiers changed from: protected */
+    public IconCompat getEndIcon(WifiSliceItem wifiSliceItem) {
         if (wifiSliceItem.getConnectedState() != 0) {
-            return IconCompat.createWithResource(this.mContext, R.drawable.ic_settings_24dp);
+            return IconCompat.createWithResource(this.mContext, R$drawable.ic_settings_24dp);
         }
-        if (wifiSliceItem.getSecurity() == 0) {
-            return null;
+        if (wifiSliceItem.getSecurity() != 0) {
+            return IconCompat.createWithResource(this.mContext, R$drawable.ic_friction_lock_closed);
         }
-        return IconCompat.createWithResource(this.mContext, R.drawable.ic_friction_lock_closed);
+        return null;
     }
 
-    protected SliceAction getWifiEntryAction(WifiSliceItem wifiSliceItem, IconCompat iconCompat, CharSequence charSequence) {
+    /* access modifiers changed from: protected */
+    public SliceAction getWifiEntryAction(WifiSliceItem wifiSliceItem, IconCompat iconCompat, CharSequence charSequence) {
         int hashCode = wifiSliceItem.getKey().hashCode();
         if (wifiSliceItem.getConnectedState() != 0) {
             Bundle bundle = new Bundle();
             bundle.putString("key_chosen_wifientry_key", wifiSliceItem.getKey());
-            return getActivityAction(hashCode, new SubSettingLauncher(this.mContext).setTitleRes(R.string.pref_title_network_details).setDestination(WifiNetworkDetailsFragment.class.getName()).setArguments(bundle).setSourceMetricsCategory(R$styleable.Constraint_layout_goneMarginTop).toIntent(), iconCompat, charSequence);
+            return getActivityAction(hashCode, new SubSettingLauncher(this.mContext).setTitleRes(R$string.pref_title_network_details).setDestination(WifiNetworkDetailsFragment.class.getName()).setArguments(bundle).setSourceMetricsCategory(103).toIntent(), iconCompat, charSequence);
         } else if (wifiSliceItem.shouldEditBeforeConnect()) {
             return getActivityAction(hashCode, new Intent(this.mContext, WifiDialogActivity.class).putExtra("key_chosen_wifientry_key", wifiSliceItem.getKey()), iconCompat, charSequence);
         } else {
@@ -155,18 +199,20 @@ public class WifiSlice implements CustomSliceable {
     }
 
     private ListBuilder.RowBuilder getLoadingRow(CharSequence charSequence) {
-        return new ListBuilder.RowBuilder().setTitleItem(com.android.settings.Utils.createIconWithDrawable(new ColorDrawable(0)), 0).setTitle(charSequence).setSubtitle(this.mContext.getText(R.string.wifi_empty_list_wifi_on));
+        return new ListBuilder.RowBuilder().setTitleItem(Utils.createIconWithDrawable(new ColorDrawable(0)), 0).setTitle(charSequence).setSubtitle(this.mContext.getText(R$string.wifi_empty_list_wifi_on));
     }
 
-    @Override // com.android.settings.slices.CustomSliceable
     public void onNotifyChange(Intent intent) {
         this.mWifiManager.setWifiEnabled(intent.getBooleanExtra("android.app.slice.extra.TOGGLE_STATE", this.mWifiManager.isWifiEnabled()));
     }
 
-    @Override // com.android.settings.slices.CustomSliceable
     public Intent getIntent() {
-        String charSequence = this.mContext.getText(R.string.wifi_settings).toString();
-        return SliceBuilderUtils.buildSearchResultPageIntent(this.mContext, WifiSettings.class.getName(), "wifi", charSequence, 603).setClassName(this.mContext.getPackageName(), SubSettings.class.getName()).setData(new Uri.Builder().appendPath("wifi").build());
+        String charSequence = this.mContext.getText(R$string.wifi_settings).toString();
+        return SliceBuilderUtils.buildSearchResultPageIntent(this.mContext, NetworkProviderSettings.class.getName(), "main_toggle_wifi", charSequence, 603, (CustomSliceable) this).setClassName(this.mContext.getPackageName(), SubSettings.class.getName()).setData(new Uri.Builder().appendPath("wifi").build());
+    }
+
+    public int getSliceHighlightMenuRes() {
+        return R$string.menu_key_network;
     }
 
     private boolean isWifiEnabled() {
@@ -179,11 +225,22 @@ public class WifiSlice implements CustomSliceable {
     }
 
     private Set<String> getKeywords() {
-        return (Set) Arrays.asList(TextUtils.split(this.mContext.getString(R.string.keywords_wifi), ",")).stream().map(ProviderModelSliceHelper$$ExternalSyntheticLambda1.INSTANCE).collect(Collectors.toSet());
+        return (Set) Arrays.asList(TextUtils.split(this.mContext.getString(R$string.keywords_wifi), ",")).stream().map(new ProviderModelSliceHelper$$ExternalSyntheticLambda2()).collect(Collectors.toSet());
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public Class getBackgroundWorkerClass() {
         return WifiScanWorker.class;
+    }
+
+    static class WifiRestriction {
+        WifiRestriction() {
+        }
+
+        public boolean isChangeWifiStateAllowed(Context context) {
+            if (context == null) {
+                return true;
+            }
+            return WifiEnterpriseRestrictionUtils.isChangeWifiStateAllowed(context);
+        }
     }
 }

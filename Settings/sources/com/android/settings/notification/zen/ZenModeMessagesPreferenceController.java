@@ -4,12 +4,11 @@ import android.content.Context;
 import androidx.preference.Preference;
 import com.android.settings.notification.zen.ZenModeSettings;
 import com.android.settingslib.core.lifecycle.Lifecycle;
-/* loaded from: classes.dex */
+
 public class ZenModeMessagesPreferenceController extends AbstractZenModePreferenceController {
     private final String KEY;
     private final ZenModeSettings.SummaryBuilder mSummaryBuilder;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return true;
     }
@@ -20,12 +19,10 @@ public class ZenModeMessagesPreferenceController extends AbstractZenModePreferen
         this.mSummaryBuilder = new ZenModeSettings.SummaryBuilder(context);
     }
 
-    @Override // com.android.settings.notification.zen.AbstractZenModePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return this.KEY;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         int zenMode = getZenMode();
@@ -35,6 +32,6 @@ public class ZenModeMessagesPreferenceController extends AbstractZenModePreferen
             return;
         }
         preference.setEnabled(true);
-        preference.setSummary(this.mSummaryBuilder.getMessagesSettingSummary(getPolicy()));
+        preference.setSummary((CharSequence) this.mSummaryBuilder.getMessagesSettingSummary(getPolicy()));
     }
 }

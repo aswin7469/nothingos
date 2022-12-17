@@ -14,60 +14,59 @@ import androidx.slice.builders.impl.TemplateBuilderImpl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public class ListBuilder extends TemplateSliceBuilder {
     private androidx.slice.builders.impl.ListBuilder mImpl;
 
-    /* loaded from: classes.dex */
     public static class RangeBuilder {
     }
 
-    public ListBuilder(Context context, Uri uri, long ttl) {
+    public ListBuilder(Context context, Uri uri, long j) {
         super(context, uri);
-        this.mImpl.setTtl(ttl);
+        this.mImpl.setTtl(j);
     }
 
     public Slice build() {
         return ((TemplateBuilderImpl) this.mImpl).build();
     }
 
-    @Override // androidx.slice.builders.TemplateSliceBuilder
-    void setImpl(TemplateBuilderImpl impl) {
-        this.mImpl = (androidx.slice.builders.impl.ListBuilder) impl;
+    /* access modifiers changed from: package-private */
+    public void setImpl(TemplateBuilderImpl templateBuilderImpl) {
+        this.mImpl = (androidx.slice.builders.impl.ListBuilder) templateBuilderImpl;
     }
 
-    public ListBuilder addRow(RowBuilder builder) {
-        this.mImpl.addRow(builder);
+    public ListBuilder addRow(RowBuilder rowBuilder) {
+        this.mImpl.addRow(rowBuilder);
         return this;
     }
 
-    public ListBuilder setHeader(HeaderBuilder builder) {
-        this.mImpl.setHeader(builder);
+    public ListBuilder setHeader(HeaderBuilder headerBuilder) {
+        this.mImpl.setHeader(headerBuilder);
         return this;
     }
 
-    public ListBuilder addAction(SliceAction action) {
-        this.mImpl.addAction(action);
+    public ListBuilder addAction(SliceAction sliceAction) {
+        this.mImpl.addAction(sliceAction);
         return this;
     }
 
-    public ListBuilder setAccentColor(int color) {
-        this.mImpl.setColor(color);
+    public ListBuilder setAccentColor(int i) {
+        this.mImpl.setColor(i);
         return this;
     }
 
-    public ListBuilder setKeywords(final Set<String> keywords) {
-        this.mImpl.setKeywords(keywords);
+    public ListBuilder setKeywords(Set<String> set) {
+        this.mImpl.setKeywords(set);
         return this;
     }
 
-    public ListBuilder setIsError(boolean isError) {
-        this.mImpl.setIsError(isError);
+    public ListBuilder setIsError(boolean z) {
+        this.mImpl.setIsError(z);
         return this;
     }
 
-    @Override // androidx.slice.builders.TemplateSliceBuilder
-    protected TemplateBuilderImpl selectImpl() {
+    /* access modifiers changed from: protected */
+    public TemplateBuilderImpl selectImpl() {
         SliceSpec sliceSpec = SliceSpecs.LIST_V2;
         if (checkCompatible(sliceSpec)) {
             return new ListBuilderImpl(getBuilder(), sliceSpec, getClock());
@@ -77,21 +76,27 @@ public class ListBuilder extends TemplateSliceBuilder {
             return new ListBuilderImpl(getBuilder(), sliceSpec2, getClock());
         }
         SliceSpec sliceSpec3 = SliceSpecs.BASIC;
-        if (!checkCompatible(sliceSpec3)) {
-            return null;
+        if (checkCompatible(sliceSpec3)) {
+            return new ListBuilderBasicImpl(getBuilder(), sliceSpec3);
         }
-        return new ListBuilderBasicImpl(getBuilder(), sliceSpec3);
+        return null;
     }
 
-    public ListBuilder addInputRange(InputRangeBuilder b) {
-        this.mImpl.addInputRange(b);
+    public ListBuilder addInputRange(InputRangeBuilder inputRangeBuilder) {
+        this.mImpl.addInputRange(inputRangeBuilder);
         return this;
     }
 
-    /* loaded from: classes.dex */
     public static class InputRangeBuilder {
         private CharSequence mContentDescription;
+        private final List<Object> mEndItems = new ArrayList();
+        private final List<Boolean> mEndLoads = new ArrayList();
+        private final List<Integer> mEndTypes = new ArrayList();
+        private boolean mHasDefaultToggle;
         private PendingIntent mInputAction;
+        private int mLayoutDirection = -1;
+        private int mMax = 100;
+        private int mMin = 0;
         private SliceAction mPrimaryAction;
         private CharSequence mSubtitle;
         private IconCompat mThumb;
@@ -99,59 +104,68 @@ public class ListBuilder extends TemplateSliceBuilder {
         private IconCompat mTitleIcon;
         private int mTitleImageMode;
         private boolean mTitleItemLoading;
-        private int mMin = 0;
-        private int mMax = 100;
         private int mValue = 0;
         private boolean mValueSet = false;
-        private int mLayoutDirection = -1;
-        private final List<Object> mEndItems = new ArrayList();
-        private final List<Integer> mEndTypes = new ArrayList();
-        private final List<Boolean> mEndLoads = new ArrayList();
 
-        public InputRangeBuilder setTitleItem(IconCompat icon, int imageMode) {
-            return setTitleItem(icon, imageMode, false);
+        public InputRangeBuilder setTitleItem(IconCompat iconCompat, int i) {
+            return setTitleItem(iconCompat, i, false);
         }
 
-        public InputRangeBuilder setTitleItem(IconCompat icon, int imageMode, boolean isLoading) {
-            this.mTitleIcon = icon;
-            this.mTitleImageMode = imageMode;
-            this.mTitleItemLoading = isLoading;
+        public InputRangeBuilder addEndItem(SliceAction sliceAction) {
+            return addEndItem(sliceAction, false);
+        }
+
+        public InputRangeBuilder addEndItem(SliceAction sliceAction, boolean z) {
+            if (!this.mHasDefaultToggle) {
+                this.mEndItems.add(sliceAction);
+                this.mEndTypes.add(2);
+                this.mEndLoads.add(Boolean.valueOf(z));
+                this.mHasDefaultToggle = sliceAction.getImpl().isDefaultToggle();
+                return this;
+            }
+            throw new IllegalStateException("Only one non-custom toggle can be added in a single row. If you would like to include multiple toggles in a row, set a custom icon for each toggle.");
+        }
+
+        public InputRangeBuilder setTitleItem(IconCompat iconCompat, int i, boolean z) {
+            this.mTitleIcon = iconCompat;
+            this.mTitleImageMode = i;
+            this.mTitleItemLoading = z;
             return this;
         }
 
-        public InputRangeBuilder setMin(int min) {
-            this.mMin = min;
+        public InputRangeBuilder setMin(int i) {
+            this.mMin = i;
             return this;
         }
 
-        public InputRangeBuilder setMax(int max) {
-            this.mMax = max;
+        public InputRangeBuilder setMax(int i) {
+            this.mMax = i;
             return this;
         }
 
-        public InputRangeBuilder setValue(int value) {
+        public InputRangeBuilder setValue(int i) {
             this.mValueSet = true;
-            this.mValue = value;
+            this.mValue = i;
             return this;
         }
 
-        public InputRangeBuilder setTitle(CharSequence title) {
-            this.mTitle = title;
+        public InputRangeBuilder setTitle(CharSequence charSequence) {
+            this.mTitle = charSequence;
             return this;
         }
 
-        public InputRangeBuilder setSubtitle(CharSequence title) {
-            this.mSubtitle = title;
+        public InputRangeBuilder setSubtitle(CharSequence charSequence) {
+            this.mSubtitle = charSequence;
             return this;
         }
 
-        public InputRangeBuilder setInputAction(PendingIntent action) {
-            this.mInputAction = action;
+        public InputRangeBuilder setInputAction(PendingIntent pendingIntent) {
+            this.mInputAction = pendingIntent;
             return this;
         }
 
-        public InputRangeBuilder setPrimaryAction(SliceAction action) {
-            this.mPrimaryAction = action;
+        public InputRangeBuilder setPrimaryAction(SliceAction sliceAction) {
+            this.mPrimaryAction = sliceAction;
             return this;
         }
 
@@ -224,16 +238,20 @@ public class ListBuilder extends TemplateSliceBuilder {
         }
     }
 
-    /* loaded from: classes.dex */
     public static class RowBuilder {
         private CharSequence mContentDescription;
+        private final List<Object> mEndItems = new ArrayList();
+        private final List<Boolean> mEndLoads = new ArrayList();
+        private final List<Integer> mEndTypes = new ArrayList();
         private boolean mHasDefaultToggle;
         private boolean mHasEndActionOrToggle;
         private boolean mHasEndImage;
         private boolean mIsEndOfSection;
+        private int mLayoutDirection = -1;
         private SliceAction mPrimaryAction;
         private CharSequence mSubtitle;
         private boolean mSubtitleLoading;
+        private long mTimeStamp = -1;
         private CharSequence mTitle;
         private SliceAction mTitleAction;
         private boolean mTitleActionLoading;
@@ -241,98 +259,93 @@ public class ListBuilder extends TemplateSliceBuilder {
         private int mTitleImageMode;
         private boolean mTitleItemLoading;
         private boolean mTitleLoading;
-        private long mTimeStamp = -1;
-        private int mLayoutDirection = -1;
-        private final List<Object> mEndItems = new ArrayList();
-        private final List<Integer> mEndTypes = new ArrayList();
-        private final List<Boolean> mEndLoads = new ArrayList();
         private final Uri mUri = null;
 
-        public RowBuilder setTitleItem(IconCompat icon, int imageMode) {
-            return setTitleItem(icon, imageMode, false);
+        public RowBuilder setTitleItem(IconCompat iconCompat, int i) {
+            return setTitleItem(iconCompat, i, false);
         }
 
-        public RowBuilder setTitleItem(IconCompat icon, int imageMode, boolean isLoading) {
+        public RowBuilder setTitleItem(IconCompat iconCompat, int i, boolean z) {
             this.mTitleAction = null;
-            this.mTitleIcon = icon;
-            this.mTitleImageMode = imageMode;
-            this.mTitleItemLoading = isLoading;
+            this.mTitleIcon = iconCompat;
+            this.mTitleImageMode = i;
+            this.mTitleItemLoading = z;
             return this;
         }
 
-        public RowBuilder setTitleItem(SliceAction action) {
-            return setTitleItem(action, false);
+        public RowBuilder setTitleItem(SliceAction sliceAction) {
+            return setTitleItem(sliceAction, false);
         }
 
-        public RowBuilder setTitleItem(SliceAction action, boolean isLoading) {
-            this.mTitleAction = action;
+        public RowBuilder setTitleItem(SliceAction sliceAction, boolean z) {
+            this.mTitleAction = sliceAction;
             this.mTitleIcon = null;
             this.mTitleImageMode = 0;
-            this.mTitleActionLoading = isLoading;
+            this.mTitleActionLoading = z;
             return this;
         }
 
-        public RowBuilder setPrimaryAction(SliceAction action) {
-            this.mPrimaryAction = action;
+        public RowBuilder setPrimaryAction(SliceAction sliceAction) {
+            this.mPrimaryAction = sliceAction;
             return this;
         }
 
-        public RowBuilder setTitle(CharSequence title) {
-            return setTitle(title, false);
+        public RowBuilder setTitle(CharSequence charSequence) {
+            return setTitle(charSequence, false);
         }
 
-        public RowBuilder setTitle(CharSequence title, boolean isLoading) {
-            this.mTitle = title;
-            this.mTitleLoading = isLoading;
+        public RowBuilder setTitle(CharSequence charSequence, boolean z) {
+            this.mTitle = charSequence;
+            this.mTitleLoading = z;
             return this;
         }
 
-        public RowBuilder setSubtitle(CharSequence subtitle) {
-            return setSubtitle(subtitle, false);
+        public RowBuilder setSubtitle(CharSequence charSequence) {
+            return setSubtitle(charSequence, false);
         }
 
-        public RowBuilder setSubtitle(CharSequence subtitle, boolean isLoading) {
-            this.mSubtitle = subtitle;
-            this.mSubtitleLoading = isLoading;
+        public RowBuilder setSubtitle(CharSequence charSequence, boolean z) {
+            this.mSubtitle = charSequence;
+            this.mSubtitleLoading = z;
             return this;
         }
 
-        public RowBuilder addEndItem(IconCompat icon, int imageMode) {
-            return addEndItem(icon, imageMode, false);
+        public RowBuilder addEndItem(IconCompat iconCompat, int i) {
+            return addEndItem(iconCompat, i, false);
         }
 
-        public RowBuilder addEndItem(IconCompat icon, int imageMode, boolean isLoading) {
-            if (this.mHasEndActionOrToggle) {
-                throw new IllegalArgumentException("Trying to add an icon to end items when anaction has already been added. End items cannot have a mixture of actions and icons.");
+        public RowBuilder addEndItem(IconCompat iconCompat, int i, boolean z) {
+            if (!this.mHasEndActionOrToggle) {
+                this.mEndItems.add(new Pair(iconCompat, Integer.valueOf(i)));
+                this.mEndTypes.add(1);
+                this.mEndLoads.add(Boolean.valueOf(z));
+                this.mHasEndImage = true;
+                return this;
             }
-            this.mEndItems.add(new Pair(icon, Integer.valueOf(imageMode)));
-            this.mEndTypes.add(1);
-            this.mEndLoads.add(Boolean.valueOf(isLoading));
-            this.mHasEndImage = true;
-            return this;
+            throw new IllegalArgumentException("Trying to add an icon to end items when anaction has already been added. End items cannot have a mixture of actions and icons.");
         }
 
-        public RowBuilder addEndItem(SliceAction action) {
-            return addEndItem(action, false);
+        public RowBuilder addEndItem(SliceAction sliceAction) {
+            return addEndItem(sliceAction, false);
         }
 
-        public RowBuilder addEndItem(SliceAction action, boolean isLoading) {
+        public RowBuilder addEndItem(SliceAction sliceAction, boolean z) {
             if (this.mHasEndImage) {
                 throw new IllegalArgumentException("Trying to add an action to end items when anicon has already been added. End items cannot have a mixture of actions and icons.");
-            }
-            if (this.mHasDefaultToggle) {
+            } else if (!this.mHasDefaultToggle) {
+                this.mEndItems.add(sliceAction);
+                this.mEndTypes.add(2);
+                this.mEndLoads.add(Boolean.valueOf(z));
+                this.mHasDefaultToggle = sliceAction.getImpl().isDefaultToggle();
+                this.mHasEndActionOrToggle = true;
+                return this;
+            } else {
                 throw new IllegalStateException("Only one non-custom toggle can be added in a single row. If you would like to include multiple toggles in a row, set a custom icon for each toggle.");
             }
-            this.mEndItems.add(action);
-            this.mEndTypes.add(2);
-            this.mEndLoads.add(Boolean.valueOf(isLoading));
-            this.mHasDefaultToggle = action.getImpl().isDefaultToggle();
-            this.mHasEndActionOrToggle = true;
-            return this;
         }
 
-        public RowBuilder setContentDescription(CharSequence description) {
-            this.mContentDescription = description;
+        public RowBuilder setContentDescription(CharSequence charSequence) {
+            this.mContentDescription = charSequence;
             return this;
         }
 
@@ -409,7 +422,6 @@ public class ListBuilder extends TemplateSliceBuilder {
         }
     }
 
-    /* loaded from: classes.dex */
     public static class HeaderBuilder {
         private CharSequence mContentDescription;
         private int mLayoutDirection;
@@ -422,28 +434,28 @@ public class ListBuilder extends TemplateSliceBuilder {
         private boolean mTitleLoading;
         private final Uri mUri = null;
 
-        public HeaderBuilder setTitle(CharSequence title) {
-            return setTitle(title, false);
+        public HeaderBuilder setTitle(CharSequence charSequence) {
+            return setTitle(charSequence, false);
         }
 
-        public HeaderBuilder setTitle(CharSequence title, boolean isLoading) {
-            this.mTitle = title;
-            this.mTitleLoading = isLoading;
+        public HeaderBuilder setTitle(CharSequence charSequence, boolean z) {
+            this.mTitle = charSequence;
+            this.mTitleLoading = z;
             return this;
         }
 
-        public HeaderBuilder setSubtitle(CharSequence subtitle) {
-            return setSubtitle(subtitle, false);
+        public HeaderBuilder setSubtitle(CharSequence charSequence) {
+            return setSubtitle(charSequence, false);
         }
 
-        public HeaderBuilder setSubtitle(CharSequence subtitle, boolean isLoading) {
-            this.mSubtitle = subtitle;
-            this.mSubtitleLoading = isLoading;
+        public HeaderBuilder setSubtitle(CharSequence charSequence, boolean z) {
+            this.mSubtitle = charSequence;
+            this.mSubtitleLoading = z;
             return this;
         }
 
-        public HeaderBuilder setPrimaryAction(SliceAction action) {
-            this.mPrimaryAction = action;
+        public HeaderBuilder setPrimaryAction(SliceAction sliceAction) {
+            this.mPrimaryAction = sliceAction;
             return this;
         }
 

@@ -10,7 +10,7 @@ import android.util.AttributeSet;
 import androidx.core.content.res.TypedArrayUtils;
 import androidx.core.graphics.PathParser;
 import org.xmlpull.v1.XmlPullParser;
-/* loaded from: classes.dex */
+
 public class PatternPathMotion extends PathMotion {
     private Path mOriginalPatternPath;
     private final Path mPatternPath;
@@ -31,10 +31,11 @@ public class PatternPathMotion extends PathMotion {
         TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, Styleable.PATTERN_PATH_MOTION);
         try {
             String namedString = TypedArrayUtils.getNamedString(obtainStyledAttributes, (XmlPullParser) attributeSet, "patternPathData", 0);
-            if (namedString == null) {
-                throw new RuntimeException("pathData must be supplied for patternPathMotion");
+            if (namedString != null) {
+                setPatternPath(PathParser.createPathFromPathData(namedString));
+                return;
             }
-            setPatternPath(PathParser.createPathFromPathData(namedString));
+            throw new RuntimeException("pathData must be supplied for patternPathMotion");
         } finally {
             obtainStyledAttributes.recycle();
         }
@@ -43,10 +44,10 @@ public class PatternPathMotion extends PathMotion {
     public void setPatternPath(Path path) {
         PathMeasure pathMeasure = new PathMeasure(path, false);
         float[] fArr = new float[2];
-        pathMeasure.getPosTan(pathMeasure.getLength(), fArr, null);
+        pathMeasure.getPosTan(pathMeasure.getLength(), fArr, (float[]) null);
         float f = fArr[0];
         float f2 = fArr[1];
-        pathMeasure.getPosTan(0.0f, fArr, null);
+        pathMeasure.getPosTan(0.0f, fArr, (float[]) null);
         float f3 = fArr[0];
         float f4 = fArr[1];
         if (f3 == f && f4 == f2) {
@@ -57,17 +58,16 @@ public class PatternPathMotion extends PathMotion {
         float f6 = f2 - f4;
         float distance = 1.0f / distance(f5, f6);
         this.mTempMatrix.postScale(distance, distance);
-        this.mTempMatrix.postRotate((float) Math.toDegrees(-Math.atan2(f6, f5)));
+        this.mTempMatrix.postRotate((float) Math.toDegrees(-Math.atan2((double) f6, (double) f5)));
         path.transform(this.mTempMatrix, this.mPatternPath);
         this.mOriginalPatternPath = path;
     }
 
-    @Override // androidx.transition.PathMotion
     public Path getPath(float f, float f2, float f3, float f4) {
         float f5 = f3 - f;
         float f6 = f4 - f2;
         float distance = distance(f5, f6);
-        double atan2 = Math.atan2(f6, f5);
+        double atan2 = Math.atan2((double) f6, (double) f5);
         this.mTempMatrix.setScale(distance, distance);
         this.mTempMatrix.postRotate((float) Math.toDegrees(atan2));
         this.mTempMatrix.postTranslate(f, f2);
@@ -77,6 +77,6 @@ public class PatternPathMotion extends PathMotion {
     }
 
     private static float distance(float f, float f2) {
-        return (float) Math.sqrt((f * f) + (f2 * f2));
+        return (float) Math.sqrt((double) ((f * f) + (f2 * f2)));
     }
 }

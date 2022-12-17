@@ -1,11 +1,10 @@
 package androidx.transition;
 
 import android.view.View;
-/* loaded from: classes.dex */
+
 public abstract class VisibilityPropagation extends TransitionPropagation {
     private static final String[] VISIBILITY_PROPAGATION_VALUES = {"android:visibilityPropagation:visibility", "android:visibilityPropagation:center"};
 
-    @Override // androidx.transition.TransitionPropagation
     public void captureValues(TransitionValues transitionValues) {
         View view = transitionValues.view;
         Integer num = (Integer) transitionValues.values.get("android:visibility:visibility");
@@ -13,15 +12,17 @@ public abstract class VisibilityPropagation extends TransitionPropagation {
             num = Integer.valueOf(view.getVisibility());
         }
         transitionValues.values.put("android:visibilityPropagation:visibility", num);
-        view.getLocationOnScreen(r1);
-        int[] iArr = {iArr[0] + Math.round(view.getTranslationX())};
-        iArr[0] = iArr[0] + (view.getWidth() / 2);
-        iArr[1] = iArr[1] + Math.round(view.getTranslationY());
-        iArr[1] = iArr[1] + (view.getHeight() / 2);
+        int[] iArr = new int[2];
+        view.getLocationOnScreen(iArr);
+        int round = iArr[0] + Math.round(view.getTranslationX());
+        iArr[0] = round;
+        iArr[0] = round + (view.getWidth() / 2);
+        int round2 = iArr[1] + Math.round(view.getTranslationY());
+        iArr[1] = round2;
+        iArr[1] = round2 + (view.getHeight() / 2);
         transitionValues.values.put("android:visibilityPropagation:center", iArr);
     }
 
-    @Override // androidx.transition.TransitionPropagation
     public String[] getPropagationProperties() {
         return VISIBILITY_PROPAGATION_VALUES;
     }

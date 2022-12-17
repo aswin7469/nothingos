@@ -6,8 +6,8 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$id;
+
 class LocaleDragCell extends RelativeLayout {
     private CheckBox mCheckbox;
     private ImageView mDragHandle;
@@ -19,14 +19,14 @@ class LocaleDragCell extends RelativeLayout {
         super(context, attributeSet);
     }
 
-    @Override // android.view.View
-    protected void onFinishInflate() {
+    /* access modifiers changed from: protected */
+    public void onFinishInflate() {
         super.onFinishInflate();
-        this.mLabel = (TextView) findViewById(R.id.label);
-        this.mLocalized = (TextView) findViewById(R.id.l10nWarn);
-        this.mMiniLabel = (TextView) findViewById(R.id.miniLabel);
-        this.mCheckbox = (CheckBox) findViewById(R.id.checkbox);
-        this.mDragHandle = (ImageView) findViewById(R.id.dragHandle);
+        this.mLabel = (TextView) findViewById(R$id.label);
+        this.mLocalized = (TextView) findViewById(R$id.l10nWarn);
+        this.mMiniLabel = (TextView) findViewById(R$id.miniLabel);
+        this.mCheckbox = (CheckBox) findViewById(R$id.checkbox);
+        this.mDragHandle = (ImageView) findViewById(R$id.dragHandle);
     }
 
     public void setShowHandle(boolean z) {

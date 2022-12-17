@@ -6,16 +6,14 @@ import androidx.preference.Preference;
 import androidx.preference.SwitchPreference;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.core.AbstractPreferenceController;
-/* loaded from: classes.dex */
+
 public class WifiScanningPreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin {
     private final WifiManager mWifiManager;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "wifi_always_scanning";
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return true;
     }
@@ -25,17 +23,15 @@ public class WifiScanningPreferenceController extends AbstractPreferenceControll
         this.mWifiManager = (WifiManager) context.getSystemService(WifiManager.class);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         ((SwitchPreference) preference).setChecked(this.mWifiManager.isScanAlwaysAvailable());
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
-        if ("wifi_always_scanning".equals(preference.getKey())) {
-            this.mWifiManager.setScanAlwaysAvailable(((SwitchPreference) preference).isChecked());
-            return true;
+        if (!"wifi_always_scanning".equals(preference.getKey())) {
+            return false;
         }
-        return false;
+        this.mWifiManager.setScanAlwaysAvailable(((SwitchPreference) preference).isChecked());
+        return true;
     }
 }

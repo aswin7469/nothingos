@@ -1,18 +1,11 @@
 package com.android.settings.deviceinfo.storage;
 
-import android.os.storage.VolumeRecord;
-import java.util.function.Function;
-/* loaded from: classes.dex */
-public final /* synthetic */ class StorageUtils$$ExternalSyntheticLambda2 implements Function {
-    public static final /* synthetic */ StorageUtils$$ExternalSyntheticLambda2 INSTANCE = new StorageUtils$$ExternalSyntheticLambda2();
+import android.os.storage.DiskInfo;
+import java.util.function.Predicate;
 
-    private /* synthetic */ StorageUtils$$ExternalSyntheticLambda2() {
-    }
-
-    @Override // java.util.function.Function
-    public final Object apply(Object obj) {
-        StorageEntry lambda$getAllStorageEntries$5;
-        lambda$getAllStorageEntries$5 = StorageUtils.lambda$getAllStorageEntries$5((VolumeRecord) obj);
-        return lambda$getAllStorageEntries$5;
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class StorageUtils$$ExternalSyntheticLambda2 implements Predicate {
+    public final boolean test(Object obj) {
+        return StorageUtils.isDiskUnsupported((DiskInfo) obj);
     }
 }

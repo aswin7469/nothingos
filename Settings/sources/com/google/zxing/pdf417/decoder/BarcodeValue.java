@@ -4,11 +4,14 @@ import com.google.zxing.pdf417.PDF417Common;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-/* loaded from: classes2.dex */
+
 final class BarcodeValue {
     private final Map<Integer, Integer> values = new HashMap();
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    BarcodeValue() {
+    }
+
+    /* access modifiers changed from: package-private */
     public void setValue(int i) {
         Integer num = this.values.get(Integer.valueOf(i));
         if (num == null) {
@@ -17,17 +20,17 @@ final class BarcodeValue {
         this.values.put(Integer.valueOf(i), Integer.valueOf(num.intValue() + 1));
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int[] getValue() {
         ArrayList arrayList = new ArrayList();
         int i = -1;
-        for (Map.Entry<Integer, Integer> entry : this.values.entrySet()) {
-            if (entry.getValue().intValue() > i) {
-                i = entry.getValue().intValue();
+        for (Map.Entry next : this.values.entrySet()) {
+            if (((Integer) next.getValue()).intValue() > i) {
+                i = ((Integer) next.getValue()).intValue();
                 arrayList.clear();
-                arrayList.add(entry.getKey());
-            } else if (entry.getValue().intValue() == i) {
-                arrayList.add(entry.getKey());
+                arrayList.add(next.getKey());
+            } else if (((Integer) next.getValue()).intValue() == i) {
+                arrayList.add(next.getKey());
             }
         }
         return PDF417Common.toIntArray(arrayList);

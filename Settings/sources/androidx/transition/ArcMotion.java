@@ -7,15 +7,15 @@ import android.graphics.Path;
 import android.util.AttributeSet;
 import androidx.core.content.res.TypedArrayUtils;
 import org.xmlpull.v1.XmlPullParser;
-/* loaded from: classes.dex */
+
 public class ArcMotion extends PathMotion {
-    private static final float DEFAULT_MAX_TANGENT = (float) Math.tan(Math.toRadians(35.0d));
-    private float mMinimumHorizontalAngle = 0.0f;
-    private float mMinimumVerticalAngle = 0.0f;
+    private static final float DEFAULT_MAX_TANGENT = ((float) Math.tan(Math.toRadians(35.0d)));
     private float mMaximumAngle = 70.0f;
-    private float mMinimumHorizontalTangent = 0.0f;
-    private float mMinimumVerticalTangent = 0.0f;
     private float mMaximumTangent = DEFAULT_MAX_TANGENT;
+    private float mMinimumHorizontalAngle = 0.0f;
+    private float mMinimumHorizontalTangent = 0.0f;
+    private float mMinimumVerticalAngle = 0.0f;
+    private float mMinimumVerticalTangent = 0.0f;
 
     public ArcMotion() {
     }
@@ -47,62 +47,63 @@ public class ArcMotion extends PathMotion {
     }
 
     private static float toTangent(float f) {
-        if (f < 0.0f || f > 90.0f) {
-            throw new IllegalArgumentException("Arc must be between 0 and 90 degrees");
+        if (f >= 0.0f && f <= 90.0f) {
+            return (float) Math.tan(Math.toRadians((double) (f / 2.0f)));
         }
-        return (float) Math.tan(Math.toRadians(f / 2.0f));
+        throw new IllegalArgumentException("Arc must be between 0 and 90 degrees");
     }
 
-    @Override // androidx.transition.PathMotion
     public Path getPath(float f, float f2, float f3, float f4) {
         float f5;
         float f6;
         float f7;
+        float f8;
+        float f9;
         Path path = new Path();
         path.moveTo(f, f2);
-        float f8 = f3 - f;
-        float f9 = f4 - f2;
-        float f10 = (f8 * f8) + (f9 * f9);
-        float f11 = (f + f3) / 2.0f;
-        float f12 = (f2 + f4) / 2.0f;
-        float f13 = 0.25f * f10;
+        float f10 = f3 - f;
+        float f11 = f4 - f2;
+        float f12 = (f10 * f10) + (f11 * f11);
+        float f13 = (f + f3) / 2.0f;
+        float f14 = (f2 + f4) / 2.0f;
+        float f15 = 0.25f * f12;
         boolean z = f2 > f4;
-        if (Math.abs(f8) < Math.abs(f9)) {
-            float abs = Math.abs(f10 / (f9 * 2.0f));
+        if (Math.abs(f10) < Math.abs(f11)) {
+            float abs = Math.abs(f12 / (f11 * 2.0f));
             if (z) {
-                f6 = abs + f4;
-                f5 = f3;
+                f7 = abs + f4;
+                f6 = f3;
             } else {
-                f6 = abs + f2;
-                f5 = f;
+                f7 = abs + f2;
+                f6 = f;
             }
-            f7 = this.mMinimumVerticalTangent;
+            f5 = this.mMinimumVerticalTangent;
         } else {
-            float f14 = f10 / (f8 * 2.0f);
+            float f16 = f12 / (f10 * 2.0f);
             if (z) {
-                f6 = f2;
-                f5 = f14 + f;
+                f9 = f2;
+                f8 = f16 + f;
             } else {
-                f5 = f3 - f14;
-                f6 = f4;
+                f8 = f3 - f16;
+                f9 = f4;
             }
-            f7 = this.mMinimumHorizontalTangent;
+            f5 = this.mMinimumHorizontalTangent;
         }
-        float f15 = f13 * f7 * f7;
-        float f16 = f11 - f5;
-        float f17 = f12 - f6;
-        float f18 = (f16 * f16) + (f17 * f17);
-        float f19 = this.mMaximumTangent;
-        float f20 = f13 * f19 * f19;
-        if (f18 >= f15) {
-            f15 = f18 > f20 ? f20 : 0.0f;
+        float f17 = f15 * f5 * f5;
+        float f18 = f13 - f6;
+        float f19 = f14 - f7;
+        float f20 = (f18 * f18) + (f19 * f19);
+        float f21 = this.mMaximumTangent;
+        float f22 = f15 * f21 * f21;
+        if (f20 >= f17) {
+            f17 = f20 > f22 ? f22 : 0.0f;
         }
-        if (f15 != 0.0f) {
-            float sqrt = (float) Math.sqrt(f15 / f18);
-            f5 = ((f5 - f11) * sqrt) + f11;
-            f6 = f12 + (sqrt * (f6 - f12));
+        if (f17 != 0.0f) {
+            float sqrt = (float) Math.sqrt((double) (f17 / f20));
+            f6 = ((f6 - f13) * sqrt) + f13;
+            f7 = f14 + (sqrt * (f7 - f14));
         }
-        path.cubicTo((f + f5) / 2.0f, (f2 + f6) / 2.0f, (f5 + f3) / 2.0f, (f6 + f4) / 2.0f, f3, f4);
+        path.cubicTo((f + f6) / 2.0f, (f2 + f7) / 2.0f, (f6 + f3) / 2.0f, (f7 + f4) / 2.0f, f3, f4);
         return path;
     }
 }

@@ -9,7 +9,7 @@
         <item quantity="other">%d ນທ ກ່ອນ</item>
     </plurals>
     <plurals name="abc_slice_duration_years">
-        <item quantity="one">%d ປີກ່ອນ</item>
+        <item quantity="one">%d ປິກ່ອນ</item>
         <item quantity="other">%d ປີກ່ອນ</item>
     </plurals>
     <plurals name="accessibility_usage_summary">
@@ -234,11 +234,11 @@
     </plurals>
     <plurals name="notifications_sent_daily">
         <item quantity="one">~%d ການແຈ້ງເຕືອນຕໍ່ມື້</item>
-        <item quantity="other">~%d ການແຈ້ງເຕືອນຕໍ່ມື້</item>
+        <item quantity="other">~%,d ການແຈ້ງເຕືອນຕໍ່ມື້</item>
     </plurals>
     <plurals name="notifications_sent_weekly">
         <item quantity="one">~%d ການແຈ້ງເຕືອນຕໍ່ອາທິດ</item>
-        <item quantity="other">~%d ການແຈ້ງເຕືອນຕໍ່ອາທິດ</item>
+        <item quantity="other">~%,d ການແຈ້ງເຕືອນຕໍ່ອາທິດ</item>
     </plurals>
     <plurals name="number_of_device_admins">
         <item quantity="one">%d ແອັບທີ່ເຮັດວຽກຢູ່</item>
@@ -320,14 +320,6 @@
         <item quantity="one">ເຊື່ອຖື ຫຼື ລຶບໃບຮັບຮອງອອກ</item>
         <item quantity="other">ເຊື່ອຖື ຫຼື ລຶບໃບຮັບຮອງອອກ</item>
     </plurals>
-    <plurals name="ssl_ca_cert_info_message">
-        <item quantity="one">%s ໄດ້ຕິດຕັ້ງຜູ້ມີອຳນາດໃບຮັບຮອງໃຫ້ກັບໂປຣໄຟລ໌ບ່ອນເຮັດວຽກຂອງທ່ານແລ້ວ ເຊິ່ງອາດອະນຸຍາດໃຫ້ພວກເຂົາຕິດຕາມການເຄື່ອນໄຫວເຄືອຂ່າຍໄດ້ ຮວມເຖິງອີເມວ, ແອັບ ແລະ ເວັບໄຊທີ່ເຂົ້າລະຫັດນຳ.\n\nສຳລັບຂໍ້ມູນເພີ່ມເຕີມກ່ຽວກັບໃບຮັບຮອງນີ້, ໃຫ້ຕິດຕໍ່ຜູ້ເບິ່ງແຍງລະບົບຂອງທ່ານ.</item>
-        <item quantity="other">%s ໄດ້ຕິດຕັ້ງຜູ້ມີອຳນາດໃບຮັບຮອງໃຫ້ກັບໂປຣໄຟລ໌ບ່ອນເຮັດວຽກຂອງທ່ານແລ້ວ ເຊິ່ງອາດອະນຸຍາດໃຫ້ພວກເຂົາຕິດຕາມການເຄື່ອນໄຫວເຄືອຂ່າຍໄດ້ ຮວມເຖິງອີເມວ, ແອັບ ແລະ ເວັບໄຊທີ່ເຂົ້າລະຫັດນຳ.\n\nສຳລັບຂໍ້ມູນເພີ່ມເຕີມກ່ຽວກັບໃບຮັບຮອງເຫຼົ່ານີ້, ໃຫ້ຕິດຕໍ່ຜູ້ເບິ່ງແຍງລະບົບຂອງທ່ານ.</item>
-    </plurals>
-    <plurals name="ssl_ca_cert_info_message_device_owner">
-        <item quantity="one">%s ໄດ້ຕິດຕັ້ງໃບຮັບຮອງໃນອຸປະກອນຂອງທ່ານແລ້ວ, ເຊິ່ງອາດຈະອະນຸຍາດໃຫ້ເຂົາເຈົ້າຕິດຕາມການເຄື່ອນໄຫວເຄືອຂ່າຍອຸປະກອນຂອງທ່ານ ຮວມທັງອີເມວ, ແອັບ ແລະ ເວັບໄຊທີ່ເຂົ້າລະຫັດໄດ້.\n\nສຳລັບຂໍ້ມູນເພີ່ມເຕີມກ່ຽວກັບໃບຮັບຮອງນີ້, ໃຫ້ຕິດຕໍ່ຜູ້ເບິ່ງແຍງລະບົບຂອງທ່ານ.</item>
-        <item quantity="other">%s ໄດ້ຕິດຕັ້ງໃບຮັບຮອງໃນອຸປະກອນຂອງທ່ານແລ້ວ, ເຊິ່ງອາດຈະອະນຸຍາດໃຫ້ເຂົາເຈົ້າຕິດຕາມການເຄື່ອນໄຫວເຄືອຂ່າຍອຸປະກອນຂອງທ່ານ ຮວມທັງອີເມວ, ແອັບ ແລະ ເວັບໄຊທີ່ເຂົ້າລະຫັດໄດ້.\n\nສຳລັບຂໍ້ມູນເພີ່ມເຕີມກ່ຽວກັບໃບຮັບຮອງເຫຼົ່ານີ້, ໃຫ້ຕິດຕໍ່ຜູ້ເບິ່ງແຍງລະບົບຂອງທ່ານ.</item>
-    </plurals>
     <plurals name="ssl_ca_cert_settings_button">
         <item quantity="one">ກວດສອບໃບຮັບຮອງ</item>
         <item quantity="other">ກວດສອບໃບຮັບຮອງ</item>
@@ -359,10 +351,6 @@
     <plurals name="wifi_saved_passpoint_access_points_summary">
         <item quantity="one">1 ການຕິດຕາມ</item>
         <item quantity="other">%d ການຕິດຕາມ</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">ເຊື່ອມຕໍ່ %1$d ອຸປະກອນແລ້ວ</item>
-        <item quantity="other">ເຊື່ອມຕໍ່ %1$d ອຸປະກອນແລ້ວ</item>
     </plurals>
     <plurals name="wrong_pin_code">
         <item quantity="one">ລະຫັດ PIN ຂອງ SIM ບໍ່ຖືກຕ້ອງ, ທ່ານສາມາດລອງໄດ້ອີກ %d ເທື່ອກ່ອນທີ່ທ່ານຈະຕ້ອງຕິດຕໍ່ຫາຜູ່ໃຫ້ບໍລິການຂອງທ່ານ ເພື່ອປົດລັອກອຸປະກອນຂອງທ່ານ.</item>

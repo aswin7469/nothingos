@@ -13,28 +13,27 @@ import com.google.android.material.animation.AnimatorSetCompat;
 import com.google.android.material.transition.platform.VisibilityAnimatorProvider;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes2.dex */
+
 abstract class MaterialVisibility<P extends VisibilityAnimatorProvider> extends Visibility {
     private final List<VisibilityAnimatorProvider> additionalAnimatorProviders = new ArrayList();
     private final P primaryAnimatorProvider;
     private VisibilityAnimatorProvider secondaryAnimatorProvider;
 
-    abstract int getDurationThemeAttrResId(boolean z);
+    /* access modifiers changed from: package-private */
+    public abstract int getDurationThemeAttrResId(boolean z);
 
-    abstract int getEasingThemeAttrResId(boolean z);
+    /* access modifiers changed from: package-private */
+    public abstract int getEasingThemeAttrResId(boolean z);
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public MaterialVisibility(P p, VisibilityAnimatorProvider visibilityAnimatorProvider) {
+    protected MaterialVisibility(P p, VisibilityAnimatorProvider visibilityAnimatorProvider) {
         this.primaryAnimatorProvider = p;
         this.secondaryAnimatorProvider = visibilityAnimatorProvider;
     }
 
-    @Override // android.transition.Visibility
     public Animator onAppear(ViewGroup viewGroup, View view, TransitionValues transitionValues, TransitionValues transitionValues2) {
         return createAnimator(viewGroup, view, true);
     }
 
-    @Override // android.transition.Visibility
     public Animator onDisappear(ViewGroup viewGroup, View view, TransitionValues transitionValues, TransitionValues transitionValues2) {
         return createAnimator(viewGroup, view, false);
     }
@@ -44,8 +43,8 @@ abstract class MaterialVisibility<P extends VisibilityAnimatorProvider> extends 
         ArrayList arrayList = new ArrayList();
         addAnimatorIfNeeded(arrayList, this.primaryAnimatorProvider, viewGroup, view, z);
         addAnimatorIfNeeded(arrayList, this.secondaryAnimatorProvider, viewGroup, view, z);
-        for (VisibilityAnimatorProvider visibilityAnimatorProvider : this.additionalAnimatorProviders) {
-            addAnimatorIfNeeded(arrayList, visibilityAnimatorProvider, viewGroup, view, z);
+        for (VisibilityAnimatorProvider addAnimatorIfNeeded : this.additionalAnimatorProviders) {
+            addAnimatorIfNeeded(arrayList, addAnimatorIfNeeded, viewGroup, view, z);
         }
         maybeApplyThemeValues(viewGroup.getContext(), z);
         AnimatorSetCompat.playTogether(animatorSet, arrayList);
@@ -53,19 +52,17 @@ abstract class MaterialVisibility<P extends VisibilityAnimatorProvider> extends 
     }
 
     private static void addAnimatorIfNeeded(List<Animator> list, VisibilityAnimatorProvider visibilityAnimatorProvider, ViewGroup viewGroup, View view, boolean z) {
-        Animator createDisappear;
-        if (visibilityAnimatorProvider == null) {
-            return;
+        Animator animator;
+        if (visibilityAnimatorProvider != null) {
+            if (z) {
+                animator = visibilityAnimatorProvider.createAppear(viewGroup, view);
+            } else {
+                animator = visibilityAnimatorProvider.createDisappear(viewGroup, view);
+            }
+            if (animator != null) {
+                list.add(animator);
+            }
         }
-        if (z) {
-            createDisappear = visibilityAnimatorProvider.createAppear(viewGroup, view);
-        } else {
-            createDisappear = visibilityAnimatorProvider.createDisappear(viewGroup, view);
-        }
-        if (createDisappear == null) {
-            return;
-        }
-        list.add(createDisappear);
     }
 
     private void maybeApplyThemeValues(Context context, boolean z) {
@@ -73,7 +70,8 @@ abstract class MaterialVisibility<P extends VisibilityAnimatorProvider> extends 
         TransitionUtils.maybeApplyThemeInterpolator(this, context, getEasingThemeAttrResId(z), getDefaultEasingInterpolator(z));
     }
 
-    TimeInterpolator getDefaultEasingInterpolator(boolean z) {
+    /* access modifiers changed from: package-private */
+    public TimeInterpolator getDefaultEasingInterpolator(boolean z) {
         return AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR;
     }
 }

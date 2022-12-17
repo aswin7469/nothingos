@@ -7,20 +7,20 @@ import android.os.Bundle;
 import android.util.Log;
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$string;
+
 public class ContextualCardFeedbackDialog extends AlertActivity implements DialogInterface.OnClickListener {
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
-        AlertController.AlertParams alertParams = ((AlertActivity) this).mAlertParams;
-        alertParams.mMessage = getText(R.string.contextual_card_feedback_confirm_message);
-        alertParams.mPositiveButtonText = getText(R.string.contextual_card_feedback_send);
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
+        ContextualCardFeedbackDialog.super.onCreate(bundle);
+        AlertController.AlertParams alertParams = this.mAlertParams;
+        alertParams.mMessage = getText(R$string.contextual_card_feedback_confirm_message);
+        alertParams.mPositiveButtonText = getText(R$string.contextual_card_feedback_send);
         alertParams.mPositiveButtonListener = this;
-        alertParams.mNegativeButtonText = getText(R.string.skip_label);
+        alertParams.mNegativeButtonText = getText(R$string.skip_label);
         setupAlert();
     }
 
-    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialogInterface, int i) {
         String stringExtra = getIntent().getStringExtra("card_name");
         String stringExtra2 = getIntent().getStringExtra("feedback_email");

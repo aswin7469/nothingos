@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="abc_slice_duration_days">
-        <item quantity="one">%d дн. назад</item>
-        <item quantity="few">%d дн. назад</item>
-        <item quantity="many">%d дн. назад</item>
-        <item quantity="other">%d дн. назад</item>
+        <item quantity="one">%d день назад</item>
+        <item quantity="few">%d дня назад</item>
+        <item quantity="many">%d дней назад</item>
+        <item quantity="other">%d дня назад</item>
     </plurals>
     <plurals name="abc_slice_duration_min">
-        <item quantity="one">%d мин. назад</item>
-        <item quantity="few">%d мин. назад</item>
-        <item quantity="many">%d мин. назад</item>
-        <item quantity="other">%d мин. назад</item>
+        <item quantity="one">%d минуту назад</item>
+        <item quantity="few">%d минуты назад</item>
+        <item quantity="many">%d минут назад</item>
+        <item quantity="other">%d минуты назад</item>
     </plurals>
     <plurals name="abc_slice_duration_years">
-        <item quantity="one">%d г. назад</item>
-        <item quantity="few">%d г. назад</item>
-        <item quantity="many">%d лет назад</item>
-        <item quantity="other">%d г. назад</item>
+        <item quantity="one">%d год назад</item>
+        <item quantity="few">%d года назад</item>
+        <item quantity="many">%d лет назад</item>
+        <item quantity="other">%d года назад</item>
     </plurals>
     <plurals name="accessibility_usage_summary">
         <item quantity="one">У %1$d приложения есть полный доступ к вашему устройству.</item>
@@ -349,16 +349,16 @@
         <item quantity="other">%d категории отключено.</item>
     </plurals>
     <plurals name="notifications_sent_daily">
-        <item quantity="one">~ %d уведомление в день</item>
-        <item quantity="few">~ %d уведомления в день</item>
-        <item quantity="many">~ %d уведомлений в день</item>
-        <item quantity="other">~ %d уведомления в день</item>
+        <item quantity="one">~ %,d уведомление в день</item>
+        <item quantity="few">~ %,d уведомления в день</item>
+        <item quantity="many">~ %,d уведомлений в день</item>
+        <item quantity="other">~ %,d уведомления в день</item>
     </plurals>
     <plurals name="notifications_sent_weekly">
-        <item quantity="one">~%d уведомление в неделю</item>
-        <item quantity="few">~%d уведомления в неделю</item>
-        <item quantity="many">~%d уведомлений в неделю</item>
-        <item quantity="other">~%d уведомления в неделю</item>
+        <item quantity="one">~%,d уведомление в неделю</item>
+        <item quantity="few">~%,d уведомления в неделю</item>
+        <item quantity="many">~%,d уведомлений в неделю</item>
+        <item quantity="other">~%,d уведомления в неделю</item>
     </plurals>
     <plurals name="number_of_device_admins">
         <item quantity="one">%d активное приложение</item>
@@ -480,18 +480,6 @@
         <item quantity="many">Одобрите или удалите сертификаты</item>
         <item quantity="other">Одобрите или удалите сертификаты</item>
     </plurals>
-    <plurals name="ssl_ca_cert_info_message">
-        <item quantity="one">Администратор домена %s установил сертификаты ЦС для рабочего профиля. Это позволяет ему отслеживать ваши действия в рабочей сети, включая использование электронной почты и приложений, а также просмотр веб-сайтов.\n\nЗа дополнительной информацией обращайтесь к администратору.</item>
-        <item quantity="few">Администратор домена %s установил сертификаты ЦС для рабочего профиля. Это позволяет ему отслеживать ваши действия в рабочей сети, включая использование электронной почты и приложений, а также просмотр веб-сайтов.\n\nЗа дополнительной информацией обращайтесь к администратору.</item>
-        <item quantity="many">Администратор домена %s установил сертификаты ЦС для рабочего профиля. Это позволяет ему отслеживать ваши действия в рабочей сети, включая использование электронной почты и приложений, а также просмотр веб-сайтов.\n\nЗа дополнительной информацией обращайтесь к администратору.</item>
-        <item quantity="other">Администратор домена %s установил сертификаты ЦС для рабочего профиля. Это позволяет ему отслеживать ваши действия в рабочей сети, включая использование электронной почты и приложений, а также просмотр веб-сайтов.\n\nЗа дополнительной информацией обращайтесь к администратору.</item>
-    </plurals>
-    <plurals name="ssl_ca_cert_info_message_device_owner">
-        <item quantity="one">Администратор домена %s установил сертификаты ЦС на вашем устройстве. Это позволяет ему отслеживать ваши действия в сети, включая использование электронной почты и приложений, а также просмотр веб-сайтов.\n\nЗа дополнительной информацией обращайтесь к администратору.</item>
-        <item quantity="few">Администратор домена %s установил сертификаты ЦС на вашем устройстве. Это позволяет ему отслеживать ваши действия в сети, включая использование электронной почты и приложений, а также просмотр веб-сайтов.\n\nЗа дополнительной информацией обращайтесь к администратору.</item>
-        <item quantity="many">Администратор домена %s установил сертификаты ЦС на вашем устройстве. Это позволяет ему отслеживать ваши действия в сети, включая использование электронной почты и приложений, а также просмотр веб-сайтов.\n\nЗа дополнительной информацией обращайтесь к администратору.</item>
-        <item quantity="other">Администратор домена %s установил сертификаты ЦС на вашем устройстве. Это позволяет ему отслеживать ваши действия в сети, включая использование электронной почты и приложений, а также просмотр веб-сайтов.\n\nЗа дополнительной информацией обращайтесь к администратору.</item>
-    </plurals>
     <plurals name="ssl_ca_cert_settings_button">
         <item quantity="one">Проверить сертификаты</item>
         <item quantity="few">Проверить сертификаты</item>
@@ -539,12 +527,6 @@
         <item quantity="few">%d подписки</item>
         <item quantity="many">%d подписок</item>
         <item quantity="other">%d подписки</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">Подключено %1$d устройство</item>
-        <item quantity="few">Подключено %1$d устройства</item>
-        <item quantity="many">Подключено %1$d устройств</item>
-        <item quantity="other">Подключено %1$d устройства</item>
     </plurals>
     <plurals name="wrong_pin_code">
         <item quantity="one">Неверный PIN-код. Осталась %d попытка. После этого SIM-карта будет заблокирована и вам придется обратиться к оператору связи.</item>

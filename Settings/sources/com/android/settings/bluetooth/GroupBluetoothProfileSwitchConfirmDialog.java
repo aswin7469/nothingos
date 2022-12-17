@@ -5,15 +5,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.instrumentation.InstrumentedDialogFragment;
-/* loaded from: classes.dex */
+
 public class GroupBluetoothProfileSwitchConfirmDialog extends InstrumentedDialogFragment {
     private int mGroupId = -1;
     private GroupUtils mGroupUtils;
     private BluetoothDetailsProfilesController mProfileController;
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 0;
     }
@@ -26,55 +25,47 @@ public class GroupBluetoothProfileSwitchConfirmDialog extends InstrumentedDialog
         return groupBluetoothProfileSwitchConfirmDialog;
     }
 
-    String getGroupTitle() {
+    /* access modifiers changed from: package-private */
+    public String getGroupTitle() {
         int i = getArguments().getInt("group_id");
         this.mGroupId = i;
         return this.mGroupUtils.getGroupTitle(i);
     }
 
-    @Override // androidx.fragment.app.DialogFragment
     public Dialog onCreateDialog(Bundle bundle) {
-        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() { // from class: com.android.settings.bluetooth.GroupBluetoothProfileSwitchConfirmDialog$$ExternalSyntheticLambda0
-            @Override // android.content.DialogInterface.OnClickListener
-            public final void onClick(DialogInterface dialogInterface, int i) {
-                GroupBluetoothProfileSwitchConfirmDialog.this.lambda$onCreateDialog$0(dialogInterface, i);
-            }
-        };
-        DialogInterface.OnClickListener onClickListener2 = new DialogInterface.OnClickListener() { // from class: com.android.settings.bluetooth.GroupBluetoothProfileSwitchConfirmDialog$$ExternalSyntheticLambda1
-            @Override // android.content.DialogInterface.OnClickListener
-            public final void onClick(DialogInterface dialogInterface, int i) {
-                GroupBluetoothProfileSwitchConfirmDialog.this.lambda$onCreateDialog$1(dialogInterface, i);
-            }
-        };
+        C0803x87ceaba9 groupBluetoothProfileSwitchConfirmDialog$$ExternalSyntheticLambda0 = new C0803x87ceaba9(this);
+        C0804x87ceabaa groupBluetoothProfileSwitchConfirmDialog$$ExternalSyntheticLambda1 = new C0804x87ceabaa(this);
         Context context = getContext();
         this.mGroupUtils = new GroupUtils(context);
-        AlertDialog create = new AlertDialog.Builder(context).setPositiveButton(R.string.group_confirm_dialog_apply_button, onClickListener).setNegativeButton(17039360, onClickListener2).create();
-        create.setTitle(R.string.group_apply_changes_dialog_title);
-        create.setMessage(context.getString(R.string.group_confirm_dialog_body, getGroupTitle()));
+        AlertDialog create = new AlertDialog.Builder(context).setPositiveButton(R$string.group_confirm_dialog_apply_button, (DialogInterface.OnClickListener) groupBluetoothProfileSwitchConfirmDialog$$ExternalSyntheticLambda0).setNegativeButton(17039360, (DialogInterface.OnClickListener) groupBluetoothProfileSwitchConfirmDialog$$ExternalSyntheticLambda1).create();
+        create.setTitle(R$string.group_apply_changes_dialog_title);
+        create.setMessage(context.getString(R$string.group_confirm_dialog_body, new Object[]{getGroupTitle()}));
         return create;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onCreateDialog$0(DialogInterface dialogInterface, int i) {
         onPositiveButtonClicked();
         dialogInterface.dismiss();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onCreateDialog$1(DialogInterface dialogInterface, int i) {
         onNegativeButtonClicked();
         dialogInterface.dismiss();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setPairingController(BluetoothDetailsProfilesController bluetoothDetailsProfilesController) {
-        if (isPairingControllerSet()) {
-            throw new IllegalStateException("The controller can only be set once. Forcibly replacing it will lead to undefined behavior");
+        if (!isPairingControllerSet()) {
+            this.mProfileController = bluetoothDetailsProfilesController;
+            return;
         }
-        this.mProfileController = bluetoothDetailsProfilesController;
+        throw new IllegalStateException("The controller can only be set once. Forcibly replacing it will lead to undefined behavior");
     }
 
-    boolean isPairingControllerSet() {
+    /* access modifiers changed from: package-private */
+    public boolean isPairingControllerSet() {
         return this.mProfileController != null;
     }
 

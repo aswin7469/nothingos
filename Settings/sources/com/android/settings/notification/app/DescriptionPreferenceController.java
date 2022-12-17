@@ -5,23 +5,22 @@ import android.content.Context;
 import android.text.TextUtils;
 import androidx.preference.Preference;
 import com.android.settings.core.PreferenceControllerMixin;
-/* loaded from: classes.dex */
+import com.android.settings.notification.NotificationBackend;
+
 public class DescriptionPreferenceController extends NotificationPreferenceController implements PreferenceControllerMixin {
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "desc";
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController
-    boolean isIncludedInFilter() {
+    /* access modifiers changed from: package-private */
+    public boolean isIncludedInFilter() {
         return false;
     }
 
     public DescriptionPreferenceController(Context context) {
-        super(context, null);
+        super(context, (NotificationBackend) null);
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         if (!super.isAvailable()) {
             return false;
@@ -33,17 +32,19 @@ public class DescriptionPreferenceController extends NotificationPreferenceContr
         if (notificationChannel != null && !TextUtils.isEmpty(notificationChannel.getDescription())) {
             return true;
         }
-        return hasValidGroup() && !TextUtils.isEmpty(this.mChannelGroup.getDescription());
+        if (!hasValidGroup() || TextUtils.isEmpty(this.mChannelGroup.getDescription())) {
+            return false;
+        }
+        return true;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         if (this.mAppRow != null) {
             NotificationChannel notificationChannel = this.mChannel;
             if (notificationChannel != null) {
-                preference.setTitle(notificationChannel.getDescription());
+                preference.setTitle((CharSequence) notificationChannel.getDescription());
             } else if (hasValidGroup()) {
-                preference.setTitle(this.mChannelGroup.getDescription());
+                preference.setTitle((CharSequence) this.mChannelGroup.getDescription());
             }
         }
         preference.setEnabled(false);

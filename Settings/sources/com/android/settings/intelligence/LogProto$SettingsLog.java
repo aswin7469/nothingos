@@ -3,14 +3,14 @@ package com.android.settings.intelligence;
 import com.google.protobuf.GeneratedMessageLite;
 import com.google.protobuf.MessageLiteOrBuilder;
 import com.google.protobuf.Parser;
-import java.util.Objects;
-/* loaded from: classes.dex */
+
 public final class LogProto$SettingsLog extends GeneratedMessageLite<LogProto$SettingsLog, Builder> implements MessageLiteOrBuilder {
     public static final int ACTION_FIELD_NUMBER = 2;
     public static final int ATTRIBUTION_FIELD_NUMBER = 1;
     public static final int CHANGED_PREFERENCE_INT_VALUE_FIELD_NUMBER = 5;
     public static final int CHANGED_PREFERENCE_KEY_FIELD_NUMBER = 4;
-    private static final LogProto$SettingsLog DEFAULT_INSTANCE;
+    /* access modifiers changed from: private */
+    public static final LogProto$SettingsLog DEFAULT_INSTANCE;
     public static final int PAGE_ID_FIELD_NUMBER = 3;
     private static volatile Parser<LogProto$SettingsLog> PARSER = null;
     public static final int TIMESTAMP_FIELD_NUMBER = 6;
@@ -18,61 +18,56 @@ public final class LogProto$SettingsLog extends GeneratedMessageLite<LogProto$Se
     private int attribution_;
     private int bitField0_;
     private int changedPreferenceIntValue_;
-    private int pageId_;
     private String changedPreferenceKey_ = "";
+    private int pageId_;
     private String timestamp_ = "";
 
     private LogProto$SettingsLog() {
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setAttribution(int i) {
         this.bitField0_ |= 1;
         this.attribution_ = i;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setAction(int i) {
         this.bitField0_ |= 2;
         this.action_ = i;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setPageId(int i) {
         this.bitField0_ |= 4;
         this.pageId_ = i;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setChangedPreferenceKey(String str) {
-        Objects.requireNonNull(str);
+        str.getClass();
         this.bitField0_ |= 8;
         this.changedPreferenceKey_ = str;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setChangedPreferenceIntValue(int i) {
         this.bitField0_ |= 16;
         this.changedPreferenceIntValue_ = i;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setTimestamp(String str) {
-        Objects.requireNonNull(str);
+        str.getClass();
         this.bitField0_ |= 32;
         this.timestamp_ = str;
     }
 
     public static Builder newBuilder() {
-        return DEFAULT_INSTANCE.createBuilder();
+        return (Builder) DEFAULT_INSTANCE.createBuilder();
     }
 
-    /* loaded from: classes.dex */
     public static final class Builder extends GeneratedMessageLite.Builder<LogProto$SettingsLog, Builder> implements MessageLiteOrBuilder {
-        /* synthetic */ Builder(LogProto$1 logProto$1) {
-            this();
-        }
-
         private Builder() {
             super(LogProto$SettingsLog.DEFAULT_INSTANCE);
         }
@@ -114,13 +109,13 @@ public final class LogProto$SettingsLog extends GeneratedMessageLite<LogProto$Se
         }
     }
 
-    @Override // com.google.protobuf.GeneratedMessageLite
-    protected final Object dynamicMethod(GeneratedMessageLite.MethodToInvoke methodToInvoke, Object obj, Object obj2) {
-        switch (LogProto$1.$SwitchMap$com$google$protobuf$GeneratedMessageLite$MethodToInvoke[methodToInvoke.ordinal()]) {
+    /* access modifiers changed from: protected */
+    public final Object dynamicMethod(GeneratedMessageLite.MethodToInvoke methodToInvoke, Object obj, Object obj2) {
+        switch (LogProto$1.f202xa1df5c61[methodToInvoke.ordinal()]) {
             case 1:
                 return new LogProto$SettingsLog();
             case 2:
-                return new Builder(null);
+                return new Builder();
             case 3:
                 return GeneratedMessageLite.newMessageInfo(DEFAULT_INSTANCE, "\u0001\u0006\u0000\u0001\u0001\u0006\u0006\u0000\u0000\u0000\u0001\u0004\u0000\u0002\u0004\u0001\u0003\u0004\u0002\u0004\b\u0003\u0005\u0004\u0004\u0006\b\u0005", new Object[]{"bitField0_", "attribution_", "action_", "pageId_", "changedPreferenceKey_", "changedPreferenceIntValue_", "timestamp_"});
             case 4:

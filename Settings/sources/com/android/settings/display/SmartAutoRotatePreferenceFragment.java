@@ -2,91 +2,100 @@ package com.android.settings.display;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.preference.Preference;
-import com.android.internal.view.RotationPolicy;
-import com.android.settings.R;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.SettingsActivity;
 import com.android.settings.dashboard.DashboardFragment;
 import com.android.settings.search.BaseSearchIndexProvider;
-import com.android.settings.widget.SettingsMainSwitchBar;
+import com.android.settingslib.HelpUtils;
+import com.android.settingslib.core.AbstractPreferenceController;
 import com.android.settingslib.search.Indexable$SearchIndexProvider;
-/* loaded from: classes.dex */
-public class SmartAutoRotatePreferenceFragment extends DashboardFragment {
-    static final String AUTO_ROTATE_SWITCH_PREFERENCE_ID = "auto_rotate_switch";
-    public static final Indexable$SearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R.xml.auto_rotate_settings);
-    private RotationPolicy.RotationPolicyListener mRotationPolicyListener;
-    private AutoRotateSwitchBarController mSwitchBarController;
+import com.android.settingslib.search.SearchIndexableRaw;
+import com.android.settingslib.widget.FooterPreference;
+import java.util.List;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+public class SmartAutoRotatePreferenceFragment extends DashboardFragment {
+    static final String AUTO_ROTATE_MAIN_SWITCH_PREFERENCE_KEY = "auto_rotate_main_switch";
+    static final String AUTO_ROTATE_SWITCH_PREFERENCE_KEY = "auto_rotate_switch";
+    public static final Indexable$SearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R$xml.auto_rotate_settings) {
+        public List<SearchIndexableRaw> getRawDataToIndex(Context context, boolean z) {
+            return DeviceStateAutoRotationHelper.getRawDataToIndex(context, z);
+        }
+    };
+
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "SmartAutoRotatePreferenceFragment";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1867;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.auto_rotate_settings;
+        return R$xml.auto_rotate_settings;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
-        ((SmartAutoRotateController) use(SmartAutoRotateController.class)).init(mo959getLifecycle());
+        DeviceStateAutoRotationHelper.initControllers(getLifecycle(), useAll(DeviceStateAutoRotateSettingController.class));
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
+    /* access modifiers changed from: protected */
+    public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+        return DeviceStateAutoRotationHelper.createPreferenceControllers(context);
+    }
+
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
         View onCreateView = super.onCreateView(layoutInflater, viewGroup, bundle);
         SettingsActivity settingsActivity = (SettingsActivity) getActivity();
         createHeader(settingsActivity);
-        Preference findPreference = findPreference("footer_preference");
+        Preference findPreference = findPreference("auto_rotate_footer_preference");
         if (findPreference != null) {
-            findPreference.setTitle(Html.fromHtml(getString(R.string.smart_rotate_text_headline), 63));
             findPreference.setVisible(SmartAutoRotateController.isRotationResolverServiceAvailable(settingsActivity));
+            setupFooter();
         }
         return onCreateView;
     }
 
-    void createHeader(SettingsActivity settingsActivity) {
-        if (SmartAutoRotateController.isRotationResolverServiceAvailable(settingsActivity)) {
-            SettingsMainSwitchBar switchBar = settingsActivity.getSwitchBar();
-            switchBar.setTitle(getContext().getString(R.string.auto_rotate_settings_primary_switch_title));
-            switchBar.show();
-            this.mSwitchBarController = new AutoRotateSwitchBarController(settingsActivity, switchBar, getSettingsLifecycle());
-            findPreference(AUTO_ROTATE_SWITCH_PREFERENCE_ID).setVisible(false);
+    /* access modifiers changed from: package-private */
+    public void createHeader(SettingsActivity settingsActivity) {
+        boolean isDeviceStateRotationEnabled = DeviceStateAutoRotationHelper.isDeviceStateRotationEnabled(settingsActivity);
+        if (!SmartAutoRotateController.isRotationResolverServiceAvailable(settingsActivity) || isDeviceStateRotationEnabled) {
+            findPreference(AUTO_ROTATE_MAIN_SWITCH_PREFERENCE_KEY).setVisible(false);
+        } else {
+            findPreference(AUTO_ROTATE_SWITCH_PREFERENCE_KEY).setVisible(false);
         }
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
-    public void onResume() {
-        super.onResume();
-        if (this.mRotationPolicyListener == null) {
-            this.mRotationPolicyListener = new RotationPolicy.RotationPolicyListener() { // from class: com.android.settings.display.SmartAutoRotatePreferenceFragment.1
-                public void onChange() {
-                    if (SmartAutoRotatePreferenceFragment.this.mSwitchBarController != null) {
-                        SmartAutoRotatePreferenceFragment.this.mSwitchBarController.onChange();
-                    }
-                }
-            };
-        }
-        RotationPolicy.registerRotationPolicyListener(getPrefContext(), this.mRotationPolicyListener);
+    public int getHelpResource() {
+        return R$string.help_url_auto_rotate_settings;
     }
 
-    @Override // com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
-    public void onPause() {
-        super.onPause();
-        if (this.mRotationPolicyListener != null) {
-            RotationPolicy.unregisterRotationPolicyListener(getPrefContext(), this.mRotationPolicyListener);
+    /* access modifiers changed from: package-private */
+    public void setupFooter() {
+        if (!TextUtils.isEmpty(getString(getHelpResource()))) {
+            addHelpLink();
         }
+    }
+
+    /* access modifiers changed from: package-private */
+    public void addHelpLink() {
+        FooterPreference footerPreference = (FooterPreference) findPreference("auto_rotate_footer_preference");
+        if (footerPreference != null) {
+            footerPreference.setLearnMoreAction(new SmartAutoRotatePreferenceFragment$$ExternalSyntheticLambda0(this));
+            footerPreference.setLearnMoreText(getString(R$string.auto_rotate_link_a11y));
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$addHelpLink$0(View view) {
+        startActivityForResult(HelpUtils.getHelpIntent(getContext(), getString(getHelpResource()), ""), 0);
     }
 }

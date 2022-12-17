@@ -6,11 +6,10 @@ import androidx.preference.Preference;
 import androidx.preference.SwitchPreference;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.development.DeveloperOptionsPreferenceController;
-/* loaded from: classes.dex */
+
 public class WifiScanThrottlingPreferenceController extends DeveloperOptionsPreferenceController implements Preference.OnPreferenceChangeListener, PreferenceControllerMixin {
     private final WifiManager mWifiManager;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "wifi_scan_throttling";
     }
@@ -20,19 +19,16 @@ public class WifiScanThrottlingPreferenceController extends DeveloperOptionsPref
         this.mWifiManager = (WifiManager) context.getSystemService(WifiManager.class);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         this.mWifiManager.setScanThrottleEnabled(((Boolean) obj).booleanValue());
         return true;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         ((SwitchPreference) this.mPreference).setChecked(this.mWifiManager.isScanThrottleEnabled());
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController
+    /* access modifiers changed from: protected */
     public void onDeveloperOptionsSwitchDisabled() {
         super.onDeveloperOptionsSwitchDisabled();
         this.mWifiManager.setScanThrottleEnabled(true);

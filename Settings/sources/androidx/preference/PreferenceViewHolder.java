@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
-/* loaded from: classes.dex */
+
 public class PreferenceViewHolder extends RecyclerView.ViewHolder {
     private Drawable mBackground;
     private final SparseArray<View> mCachedViews;
@@ -15,8 +15,7 @@ public class PreferenceViewHolder extends RecyclerView.ViewHolder {
     private boolean mDividerAllowedBelow;
     private ColorStateList mTitleTextColors;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public PreferenceViewHolder(View view) {
+    PreferenceViewHolder(View view) {
         super(view);
         SparseArray<View> sparseArray = new SparseArray<>(4);
         this.mCachedViews = sparseArray;
@@ -61,7 +60,7 @@ public class PreferenceViewHolder extends RecyclerView.ViewHolder {
         this.mDividerAllowedBelow = z;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void resetState() {
         Drawable background = this.itemView.getBackground();
         Drawable drawable = this.mBackground;
@@ -69,9 +68,8 @@ public class PreferenceViewHolder extends RecyclerView.ViewHolder {
             ViewCompat.setBackground(this.itemView, drawable);
         }
         TextView textView = (TextView) findViewById(16908310);
-        if (textView == null || this.mTitleTextColors == null || textView.getTextColors().equals(this.mTitleTextColors)) {
-            return;
+        if (textView != null && this.mTitleTextColors != null && !textView.getTextColors().equals(this.mTitleTextColors)) {
+            textView.setTextColor(this.mTitleTextColors);
         }
-        textView.setTextColor(this.mTitleTextColors);
     }
 }

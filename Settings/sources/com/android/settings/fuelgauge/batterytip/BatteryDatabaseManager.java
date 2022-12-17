@@ -8,7 +8,7 @@ import android.text.TextUtils;
 import android.util.SparseLongArray;
 import java.util.Collections;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class BatteryDatabaseManager {
     private static BatteryDatabaseManager sSingleton;
     private AnomalyDatabaseHelper mDatabaseHelper;
@@ -42,7 +42,7 @@ public class BatteryDatabaseManager {
         contentValues.put("anomaly_type", Integer.valueOf(i2));
         contentValues.put("anomaly_state", Integer.valueOf(i3));
         contentValues.put("time_stamp_ms", Long.valueOf(j));
-        return writableDatabase.insertWithOnConflict("anomaly", null, contentValues, 4) != -1;
+        return writableDatabase.insertWithOnConflict("anomaly", (String) null, contentValues, 4) != -1;
     }
 
     public synchronized void deleteAllAnomaliesBeforeTimeStamp(long j) {
@@ -66,14 +66,19 @@ public class BatteryDatabaseManager {
     public synchronized SparseLongArray queryActionTime(int i) {
         SparseLongArray sparseLongArray;
         sparseLongArray = new SparseLongArray();
-        Cursor query = this.mDatabaseHelper.getReadableDatabase().query("action", new String[]{"uid", "time_stamp_ms"}, "action_type = ? ", new String[]{String.valueOf(i)}, null, null, null);
-        int columnIndex = query.getColumnIndex("uid");
-        int columnIndex2 = query.getColumnIndex("time_stamp_ms");
-        while (query.moveToNext()) {
-            sparseLongArray.append(query.getInt(columnIndex), query.getLong(columnIndex2));
+        Cursor query = this.mDatabaseHelper.getReadableDatabase().query("action", new String[]{"uid", "time_stamp_ms"}, "action_type = ? ", new String[]{String.valueOf(i)}, (String) null, (String) null, (String) null);
+        try {
+            int columnIndex = query.getColumnIndex("uid");
+            int columnIndex2 = query.getColumnIndex("time_stamp_ms");
+            while (query.moveToNext()) {
+                sparseLongArray.append(query.getInt(columnIndex), query.getLong(columnIndex2));
+            }
+            query.close();
+        } catch (Throwable th) {
+            th.addSuppressed(th);
         }
-        query.close();
         return sparseLongArray;
+        throw th;
     }
 
     public synchronized boolean insertAction(int i, int i2, String str, long j) {
@@ -85,7 +90,7 @@ public class BatteryDatabaseManager {
         contentValues.put("package_name", str);
         contentValues.put("action_type", Integer.valueOf(i));
         contentValues.put("time_stamp_ms", Long.valueOf(j));
-        return writableDatabase.insertWithOnConflict("action", null, contentValues, 5) != -1;
+        return writableDatabase.insertWithOnConflict("action", (String) null, contentValues, 5) != -1;
     }
 
     public synchronized boolean deleteAction(int i, int i2, String str) {

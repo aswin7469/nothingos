@@ -30,28 +30,28 @@ import com.android.settings.AppWidgetLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class ActivityPicker extends AlertActivity implements DialogInterface.OnClickListener, DialogInterface.OnCancelListener {
     private PickAdapter mAdapter;
     private Intent mBaseIntent;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    /* JADX WARN: Multi-variable type inference failed */
+    /* JADX WARNING: type inference failed for: r3v0, types: [android.content.DialogInterface$OnClickListener, android.content.Context, com.android.internal.app.AlertActivity, android.content.DialogInterface$OnCancelListener, com.android.settings.ActivityPicker] */
+    /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+        ActivityPicker.super.onCreate(bundle);
         getWindow().addPrivateFlags(524288);
         Intent intent = getIntent();
         Parcelable parcelableExtra = intent.getParcelableExtra("android.intent.extra.INTENT");
         if (parcelableExtra instanceof Intent) {
             Intent intent2 = (Intent) parcelableExtra;
             this.mBaseIntent = intent2;
-            intent2.setFlags(intent2.getFlags() & (-196));
+            intent2.setFlags(intent2.getFlags() & -196);
         } else {
             Intent intent3 = new Intent("android.intent.action.MAIN", (Uri) null);
             this.mBaseIntent = intent3;
             intent3.addCategory("android.intent.category.DEFAULT");
         }
-        AlertController.AlertParams alertParams = ((AlertActivity) this).mAlertParams;
+        AlertController.AlertParams alertParams = this.mAlertParams;
         alertParams.mOnClickListener = this;
         alertParams.mOnCancelListener = this;
         if (intent.hasExtra("android.intent.extra.TITLE")) {
@@ -65,38 +65,37 @@ public class ActivityPicker extends AlertActivity implements DialogInterface.OnC
         setupAlert();
     }
 
-    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialogInterface, int i) {
         setResult(-1, getIntentForPosition(i));
         finish();
     }
 
-    @Override // android.content.DialogInterface.OnCancelListener
     public void onCancel(DialogInterface dialogInterface) {
         setResult(0);
         finish();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public Intent getIntentForPosition(int i) {
         return ((PickAdapter.Item) this.mAdapter.getItem(i)).getIntent(this.mBaseIntent);
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    protected List<PickAdapter.Item> getItems() {
+    /* JADX WARNING: type inference failed for: r9v0, types: [android.content.Context, com.android.internal.app.AlertActivity, com.android.settings.ActivityPicker] */
+    /* access modifiers changed from: protected */
+    public List<PickAdapter.Item> getItems() {
         PackageManager packageManager = getPackageManager();
         ArrayList arrayList = new ArrayList();
         Intent intent = getIntent();
         ArrayList<String> stringArrayListExtra = intent.getStringArrayListExtra("android.intent.extra.shortcut.NAME");
         ArrayList parcelableArrayListExtra = intent.getParcelableArrayListExtra("android.intent.extra.shortcut.ICON_RESOURCE");
-        if (stringArrayListExtra != null && parcelableArrayListExtra != null && stringArrayListExtra.size() == parcelableArrayListExtra.size()) {
+        if (!(stringArrayListExtra == null || parcelableArrayListExtra == null || stringArrayListExtra.size() != parcelableArrayListExtra.size())) {
             for (int i = 0; i < stringArrayListExtra.size(); i++) {
                 String str = stringArrayListExtra.get(i);
                 Drawable drawable = null;
                 try {
                     Intent.ShortcutIconResource shortcutIconResource = (Intent.ShortcutIconResource) parcelableArrayListExtra.get(i);
                     Resources resourcesForApplication = packageManager.getResourcesForApplication(shortcutIconResource.packageName);
-                    drawable = resourcesForApplication.getDrawable(resourcesForApplication.getIdentifier(shortcutIconResource.resourceName, null, null), null);
+                    drawable = resourcesForApplication.getDrawable(resourcesForApplication.getIdentifier(shortcutIconResource.resourceName, (String) null, (String) null), (Resources.Theme) null);
                 } catch (PackageManager.NameNotFoundException unused) {
                 }
                 arrayList.add(new PickAdapter.Item((Context) this, (CharSequence) str, drawable));
@@ -109,8 +108,9 @@ public class ActivityPicker extends AlertActivity implements DialogInterface.OnC
         return arrayList;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    protected void putIntentItems(Intent intent, List<PickAdapter.Item> list) {
+    /* JADX WARNING: type inference failed for: r5v0, types: [android.content.Context, com.android.internal.app.AlertActivity, com.android.settings.ActivityPicker] */
+    /* access modifiers changed from: protected */
+    public void putIntentItems(Intent intent, List<PickAdapter.Item> list) {
         PackageManager packageManager = getPackageManager();
         List<ResolveInfo> queryIntentActivities = packageManager.queryIntentActivities(intent, 0);
         Collections.sort(queryIntentActivities, new ResolveInfo.DisplayNameComparator(packageManager));
@@ -120,18 +120,14 @@ public class ActivityPicker extends AlertActivity implements DialogInterface.OnC
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    /* loaded from: classes.dex */
-    public static class PickAdapter extends BaseAdapter {
+    protected static class PickAdapter extends BaseAdapter {
         private final LayoutInflater mInflater;
         private final List<Item> mItems;
 
-        @Override // android.widget.Adapter
         public long getItemId(int i) {
-            return i;
+            return (long) i;
         }
 
-        /* loaded from: classes.dex */
         public static class Item implements AppWidgetLoader.LabelledItem {
             protected static IconResizer sResizer;
             String className;
@@ -140,7 +136,8 @@ public class ActivityPicker extends AlertActivity implements DialogInterface.OnC
             CharSequence label;
             String packageName;
 
-            protected IconResizer getResizer(Context context) {
+            /* access modifiers changed from: protected */
+            public IconResizer getResizer(Context context) {
                 if (sResizer == null) {
                     Resources resources = context.getResources();
                     int dimension = (int) resources.getDimension(17104896);
@@ -149,8 +146,7 @@ public class ActivityPicker extends AlertActivity implements DialogInterface.OnC
                 return sResizer;
             }
 
-            /* JADX INFO: Access modifiers changed from: package-private */
-            public Item(Context context, CharSequence charSequence, Drawable drawable) {
+            Item(Context context, CharSequence charSequence, Drawable drawable) {
                 this.label = charSequence;
                 this.icon = getResizer(context).createIconThumbnail(drawable);
             }
@@ -168,24 +164,24 @@ public class ActivityPicker extends AlertActivity implements DialogInterface.OnC
                 this.className = activityInfo2.name;
             }
 
-            Intent getIntent(Intent intent) {
+            /* access modifiers changed from: package-private */
+            public Intent getIntent(Intent intent) {
                 String str;
                 Intent intent2 = new Intent(intent);
                 String str2 = this.packageName;
-                if (str2 != null && (str = this.className) != null) {
+                if (str2 == null || (str = this.className) == null) {
+                    intent2.setAction("android.intent.action.CREATE_SHORTCUT");
+                    intent2.putExtra("android.intent.extra.shortcut.NAME", this.label);
+                } else {
                     intent2.setClassName(str2, str);
                     Bundle bundle = this.extras;
                     if (bundle != null) {
                         intent2.putExtras(bundle);
                     }
-                } else {
-                    intent2.setAction("android.intent.action.CREATE_SHORTCUT");
-                    intent2.putExtra("android.intent.extra.shortcut.NAME", this.label);
                 }
                 return intent2;
             }
 
-            @Override // com.android.settings.AppWidgetLoader.LabelledItem
             public CharSequence getLabel() {
                 return this.label;
             }
@@ -196,20 +192,17 @@ public class ActivityPicker extends AlertActivity implements DialogInterface.OnC
             this.mItems = list;
         }
 
-        @Override // android.widget.Adapter
         public int getCount() {
             return this.mItems.size();
         }
 
-        @Override // android.widget.Adapter
         public Object getItem(int i) {
             return this.mItems.get(i);
         }
 
-        @Override // android.widget.Adapter
         public View getView(int i, View view, ViewGroup viewGroup) {
             if (view == null) {
-                view = this.mInflater.inflate(R.layout.pick_item, viewGroup, false);
+                view = this.mInflater.inflate(R$layout.pick_item, viewGroup, false);
             }
             Item item = (Item) getItem(i);
             TextView textView = (TextView) view;
@@ -219,9 +212,7 @@ public class ActivityPicker extends AlertActivity implements DialogInterface.OnC
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class IconResizer {
+    private static class IconResizer {
         private final Canvas mCanvas;
         private final int mIconHeight;
         private final int mIconWidth;
@@ -259,29 +250,31 @@ public class ActivityPicker extends AlertActivity implements DialogInterface.OnC
                 if (intrinsicWidth <= 0 || intrinsicHeight <= 0) {
                     return drawable;
                 }
-                if (i >= intrinsicWidth && i2 >= intrinsicHeight) {
-                    if (intrinsicWidth >= i || intrinsicHeight >= i2) {
-                        return drawable;
+                if (i >= intrinsicWidth) {
+                    if (i2 >= intrinsicHeight) {
+                        if (intrinsicWidth >= i || intrinsicHeight >= i2) {
+                            return drawable;
+                        }
+                        Bitmap createBitmap = Bitmap.createBitmap(this.mIconWidth, this.mIconHeight, Bitmap.Config.ARGB_8888);
+                        Canvas canvas = this.mCanvas;
+                        canvas.setBitmap(createBitmap);
+                        this.mOldBounds.set(drawable.getBounds());
+                        int i3 = (i - intrinsicWidth) / 2;
+                        int i4 = (i2 - intrinsicHeight) / 2;
+                        drawable.setBounds(i3, i4, intrinsicWidth + i3, intrinsicHeight + i4);
+                        drawable.draw(canvas);
+                        drawable.setBounds(this.mOldBounds);
+                        BitmapDrawable bitmapDrawable2 = new BitmapDrawable(createBitmap);
+                        bitmapDrawable2.setTargetDensity(this.mMetrics);
+                        canvas.setBitmap((Bitmap) null);
+                        return bitmapDrawable2;
                     }
-                    Bitmap createBitmap = Bitmap.createBitmap(this.mIconWidth, this.mIconHeight, Bitmap.Config.ARGB_8888);
-                    Canvas canvas = this.mCanvas;
-                    canvas.setBitmap(createBitmap);
-                    this.mOldBounds.set(drawable.getBounds());
-                    int i3 = (i - intrinsicWidth) / 2;
-                    int i4 = (i2 - intrinsicHeight) / 2;
-                    drawable.setBounds(i3, i4, intrinsicWidth + i3, intrinsicHeight + i4);
-                    drawable.draw(canvas);
-                    drawable.setBounds(this.mOldBounds);
-                    BitmapDrawable bitmapDrawable2 = new BitmapDrawable(createBitmap);
-                    bitmapDrawable2.setTargetDensity(this.mMetrics);
-                    canvas.setBitmap(null);
-                    return bitmapDrawable2;
                 }
-                float f = intrinsicWidth / intrinsicHeight;
+                float f = ((float) intrinsicWidth) / ((float) intrinsicHeight);
                 if (intrinsicWidth > intrinsicHeight) {
-                    i2 = (int) (i / f);
+                    i2 = (int) (((float) i) / f);
                 } else if (intrinsicHeight > intrinsicWidth) {
-                    i = (int) (i2 * f);
+                    i = (int) (((float) i2) * f);
                 }
                 Bitmap createBitmap2 = Bitmap.createBitmap(this.mIconWidth, this.mIconHeight, drawable.getOpacity() != -1 ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565);
                 Canvas canvas2 = this.mCanvas;
@@ -294,7 +287,7 @@ public class ActivityPicker extends AlertActivity implements DialogInterface.OnC
                 drawable.setBounds(this.mOldBounds);
                 BitmapDrawable bitmapDrawable3 = new BitmapDrawable(createBitmap2);
                 bitmapDrawable3.setTargetDensity(this.mMetrics);
-                canvas2.setBitmap(null);
+                canvas2.setBitmap((Bitmap) null);
                 return bitmapDrawable3;
             } catch (Throwable unused) {
                 return new EmptyDrawable(i, i2);
@@ -302,26 +295,20 @@ public class ActivityPicker extends AlertActivity implements DialogInterface.OnC
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class EmptyDrawable extends Drawable {
+    private static class EmptyDrawable extends Drawable {
         private final int mHeight;
         private final int mWidth;
 
-        @Override // android.graphics.drawable.Drawable
         public void draw(Canvas canvas) {
         }
 
-        @Override // android.graphics.drawable.Drawable
         public int getOpacity() {
             return -3;
         }
 
-        @Override // android.graphics.drawable.Drawable
         public void setAlpha(int i) {
         }
 
-        @Override // android.graphics.drawable.Drawable
         public void setColorFilter(ColorFilter colorFilter) {
         }
 
@@ -330,22 +317,18 @@ public class ActivityPicker extends AlertActivity implements DialogInterface.OnC
             this.mHeight = i2;
         }
 
-        @Override // android.graphics.drawable.Drawable
         public int getIntrinsicWidth() {
             return this.mWidth;
         }
 
-        @Override // android.graphics.drawable.Drawable
         public int getIntrinsicHeight() {
             return this.mHeight;
         }
 
-        @Override // android.graphics.drawable.Drawable
         public int getMinimumWidth() {
             return this.mWidth;
         }
 
-        @Override // android.graphics.drawable.Drawable
         public int getMinimumHeight() {
             return this.mHeight;
         }

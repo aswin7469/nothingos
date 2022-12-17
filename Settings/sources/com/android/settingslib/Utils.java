@@ -1,6 +1,6 @@
 package com.android.settingslib;
 
-import android.content.ContentResolver;
+import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -16,7 +16,6 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.media.AudioManager;
@@ -33,23 +32,28 @@ import android.telephony.ServiceState;
 import android.telephony.TelephonyManager;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.util.UserIcons;
-import com.android.launcher3.icons.IconFactory;
+import com.android.settingslib.applications.RecentAppOpsAccess;
 import com.android.settingslib.drawable.UserIconDrawable;
 import com.android.settingslib.fuelgauge.BatteryStatus;
+import com.android.settingslib.utils.BuildCompatUtils;
 import java.text.NumberFormat;
-/* loaded from: classes.dex */
+
 public class Utils {
+    static final int[] SHOW_X_WIFI_PIE = {R$drawable.ic_show_x_wifi_signal_0, R$drawable.ic_show_x_wifi_signal_1, R$drawable.ic_show_x_wifi_signal_2, R$drawable.ic_show_x_wifi_signal_3, R$drawable.ic_show_x_wifi_signal_4};
     @VisibleForTesting
     static final String STORAGE_MANAGER_ENABLED_PROPERTY = "ro.storage_manager.enabled";
+    static final int[] WIFI_4_PIE = {17302898, 17302899, 17302900, 17302901, 17302902};
+    static final int[] WIFI_5_PIE = {17302903, 17302904, 17302905, 17302906, 17302907};
+    static final int[] WIFI_6_PIE = {17302908, 17302909, 17302910, 17302911, 17302912};
+    static final int[] WIFI_PIE = {17302913, 17302914, 17302915, 17302916, 17302917};
     private static String sPermissionControllerPackageName;
     private static String sServicesSystemSharedLibPackageName;
     private static String sSharedSystemSharedLibPackageName;
     private static Signature[] sSystemSignature;
-    static final int[] WIFI_PIE = {17302902, 17302903, 17302904, 17302905, 17302906};
-    static final int[] SHOW_X_WIFI_PIE = {R$drawable.ic_show_x_wifi_signal_0, R$drawable.ic_show_x_wifi_signal_1, R$drawable.ic_show_x_wifi_signal_2, R$drawable.ic_show_x_wifi_signal_3, R$drawable.ic_show_x_wifi_signal_4};
-    static final int[] WIFI_4_PIE = {17302887, 17302888, 17302889, 17302890, 17302891};
-    static final int[] WIFI_5_PIE = {17302892, 17302893, 17302894, 17302895, 17302896};
-    static final int[] WIFI_6_PIE = {17302897, 17302898, 17302899, 17302900, 17302901};
+
+    public static Drawable getBadgedIcon(Context context, Drawable drawable, UserHandle userHandle) {
+        return drawable;
+    }
 
     public static void updateLocationEnabled(Context context, boolean z, int i, int i2) {
         Settings.Secure.putIntForUser(context.getContentResolver(), "location_changer", i2, i);
@@ -66,52 +70,59 @@ public class Utils {
         if (tetherableBluetoothRegexs.length == 0) {
             z = false;
         }
-        if (!z3 || !z2 || !z) {
-            if (z3 && z2) {
-                return R$string.tether_settings_title_all;
-            }
-            if (z3 && z) {
-                return R$string.tether_settings_title_all;
-            }
-            if (z3) {
-                return R$string.tether_settings_title_wifi;
-            }
-            if (z2 && z) {
-                return R$string.tether_settings_title_usb_bluetooth;
-            }
-            if (z2) {
-                return R$string.tether_settings_title_usb;
-            }
-            return R$string.tether_settings_title_bluetooth;
+        if (z3 && z2 && z) {
+            return R$string.tether_settings_title_all;
         }
-        return R$string.tether_settings_title_all;
+        if (z3 && z2) {
+            return R$string.tether_settings_title_all;
+        }
+        if (z3 && z) {
+            return R$string.tether_settings_title_all;
+        }
+        if (z3) {
+            return R$string.tether_settings_title_wifi;
+        }
+        if (z2 && z) {
+            return R$string.tether_settings_title_usb_bluetooth;
+        }
+        if (z2) {
+            return R$string.tether_settings_title_usb;
+        }
+        return R$string.tether_settings_title_bluetooth;
     }
 
     public static String getUserLabel(Context context, UserInfo userInfo) {
         String str = userInfo != null ? userInfo.name : null;
-        if (userInfo.isManagedProfile()) {
+        if (!userInfo.isManagedProfile()) {
+            if (userInfo.isGuest()) {
+                str = context.getString(17040431);
+            }
+            if (str == null) {
+                str = Integer.toString(userInfo.id);
+            }
+            return context.getResources().getString(R$string.running_process_item_user_label, new Object[]{str});
+        } else if (BuildCompatUtils.isAtLeastT()) {
+            return getUpdatableManagedUserTitle(context);
+        } else {
             return context.getString(R$string.managed_user_title);
         }
-        if (userInfo.isGuest()) {
-            str = context.getString(R$string.user_guest);
-        }
-        if (str == null) {
-            str = Integer.toString(userInfo.id);
-        }
-        return context.getResources().getString(R$string.running_process_item_user_label, str);
+    }
+
+    private static String getUpdatableManagedUserTitle(Context context) {
+        return ((DevicePolicyManager) context.getSystemService(DevicePolicyManager.class)).getResources().getString("Settings.WORK_PROFILE_USER_LABEL", new Utils$$ExternalSyntheticLambda0(context));
     }
 
     public static Drawable getUserIcon(Context context, UserManager userManager, UserInfo userInfo) {
         Bitmap userIcon;
-        int sizeForList = UserIconDrawable.getSizeForList(context);
+        int defaultSize = UserIconDrawable.getDefaultSize(context);
         if (userInfo.isManagedProfile()) {
             Drawable managedUserDrawable = UserIconDrawable.getManagedUserDrawable(context);
-            managedUserDrawable.setBounds(0, 0, sizeForList, sizeForList);
+            managedUserDrawable.setBounds(0, 0, defaultSize, defaultSize);
             return managedUserDrawable;
-        } else if (userInfo.iconPath != null && (userIcon = userManager.getUserIcon(userInfo.id)) != null) {
-            return new UserIconDrawable(sizeForList).setIcon(userIcon).bake();
+        } else if (userInfo.iconPath == null || (userIcon = userManager.getUserIcon(userInfo.id)) == null) {
+            return new UserIconDrawable(defaultSize).setIconDrawable(UserIcons.getDefaultUserIcon(context.getResources(), userInfo.id, false)).bake();
         } else {
-            return new UserIconDrawable(sizeForList).setIconDrawable(UserIcons.getDefaultUserIcon(context.getResources(), userInfo.id, false)).bake();
+            return new UserIconDrawable(defaultSize).setIcon(userIcon).bake();
         }
     }
 
@@ -120,11 +131,11 @@ public class Utils {
     }
 
     public static String formatPercentage(long j, long j2) {
-        return formatPercentage(j / j2);
+        return formatPercentage(((double) j) / ((double) j2));
     }
 
     public static String formatPercentage(int i) {
-        return formatPercentage(i / 100.0d);
+        return formatPercentage(((double) i) / 100.0d);
     }
 
     public static String formatPercentage(double d) {
@@ -135,30 +146,35 @@ public class Utils {
         return (intent.getIntExtra("level", 0) * 100) / intent.getIntExtra("scale", 100);
     }
 
-    public static String getBatteryStatus(Context context, Intent intent) {
+    public static String getBatteryStatus(Context context, Intent intent, boolean z) {
+        int i;
         int intExtra = intent.getIntExtra("status", 1);
         Resources resources = context.getResources();
         String string = resources.getString(R$string.battery_info_status_unknown);
         BatteryStatus batteryStatus = new BatteryStatus(intent);
         if (batteryStatus.isCharged()) {
-            return resources.getString(R$string.battery_info_status_full);
-        }
-        if (intExtra != 2) {
-            if (intExtra == 3) {
-                return resources.getString(R$string.battery_info_status_discharging);
+            if (z) {
+                i = R$string.battery_info_status_full_charged;
+            } else {
+                i = R$string.battery_info_status_full;
             }
-            return intExtra == 4 ? resources.getString(R$string.battery_info_status_not_charging) : string;
-        } else if (batteryStatus.isPluggedInWired()) {
+            return resources.getString(i);
+        } else if (intExtra == 2) {
+            if (z) {
+                return resources.getString(R$string.battery_info_status_charging);
+            }
+            if (!batteryStatus.isPluggedInWired()) {
+                return resources.getString(R$string.battery_info_status_charging_wireless);
+            }
             int chargingSpeed = batteryStatus.getChargingSpeed(context);
-            if (chargingSpeed == 0) {
-                return resources.getString(R$string.battery_info_status_charging_slow);
+            if (chargingSpeed != 0) {
+                return chargingSpeed != 2 ? resources.getString(R$string.battery_info_status_charging) : resources.getString(R$string.battery_info_status_charging_fast);
             }
-            if (chargingSpeed == 2) {
-                return resources.getString(R$string.battery_info_status_charging_fast);
-            }
-            return resources.getString(R$string.battery_info_status_charging);
+            return resources.getString(R$string.battery_info_status_charging_slow);
+        } else if (intExtra == 3) {
+            return resources.getString(R$string.battery_info_status_discharging);
         } else {
-            return resources.getString(R$string.battery_info_status_charging_wireless);
+            return intExtra == 4 ? resources.getString(R$string.battery_info_status_not_charging) : string;
         }
     }
 
@@ -190,7 +206,7 @@ public class Utils {
     }
 
     public static int applyAlpha(float f, int i) {
-        return Color.argb((int) (f * Color.alpha(i)), Color.red(i), Color.green(i), Color.blue(i));
+        return Color.argb((int) (f * ((float) Color.alpha(i))), Color.red(i), Color.green(i), Color.blue(i));
     }
 
     public static int getColorAttrDefaultColor(Context context, int i) {
@@ -210,7 +226,7 @@ public class Utils {
     }
 
     public static ColorMatrix getAlphaInvariantColorMatrixForColor(int i) {
-        return new ColorMatrix(new float[]{0.0f, 0.0f, 0.0f, 0.0f, Color.red(i), 0.0f, 0.0f, 0.0f, 0.0f, Color.green(i), 0.0f, 0.0f, 0.0f, 0.0f, Color.blue(i), 0.0f, 0.0f, 0.0f, 1.0f, 0.0f});
+        return new ColorMatrix(new float[]{0.0f, 0.0f, 0.0f, 0.0f, (float) Color.red(i), 0.0f, 0.0f, 0.0f, 0.0f, (float) Color.green(i), 0.0f, 0.0f, 0.0f, 0.0f, (float) Color.blue(i), 0.0f, 0.0f, 0.0f, 1.0f, 0.0f});
     }
 
     public static ColorFilter getAlphaInvariantColorFilterForColor(int i) {
@@ -230,8 +246,11 @@ public class Utils {
         if (sSharedSystemSharedLibPackageName == null) {
             sSharedSystemSharedLibPackageName = packageManager.getSharedSystemSharedLibraryPackageName();
         }
-        Signature[] signatureArr = sSystemSignature;
-        return (signatureArr[0] != null && signatureArr[0].equals(getFirstSignature(packageInfo))) || packageInfo.packageName.equals(sPermissionControllerPackageName) || packageInfo.packageName.equals(sServicesSystemSharedLibPackageName) || packageInfo.packageName.equals(sSharedSystemSharedLibPackageName) || packageInfo.packageName.equals("com.android.printspooler") || isDeviceProvisioningPackage(resources, packageInfo.packageName);
+        Signature signature = sSystemSignature[0];
+        if ((signature == null || !signature.equals(getFirstSignature(packageInfo))) && !packageInfo.packageName.equals(sPermissionControllerPackageName) && !packageInfo.packageName.equals(sServicesSystemSharedLibPackageName) && !packageInfo.packageName.equals(sSharedSystemSharedLibPackageName) && !packageInfo.packageName.equals("com.android.printspooler") && !isDeviceProvisioningPackage(resources, packageInfo.packageName)) {
+            return false;
+        }
+        return true;
     }
 
     private static Signature getFirstSignature(PackageInfo packageInfo) {
@@ -244,26 +263,26 @@ public class Utils {
 
     private static Signature getSystemSignature(PackageManager packageManager) {
         try {
-            return getFirstSignature(packageManager.getPackageInfo("android", 64));
+            return getFirstSignature(packageManager.getPackageInfo(RecentAppOpsAccess.ANDROID_SYSTEM_PACKAGE_NAME, 64));
         } catch (PackageManager.NameNotFoundException unused) {
             return null;
         }
     }
 
     public static boolean isDeviceProvisioningPackage(Resources resources, String str) {
-        String string = resources.getString(17039923);
+        String string = resources.getString(17039955);
         return string != null && string.equals(str);
     }
 
     public static int getWifiIconResource(int i) {
-        return getWifiIconResource(false, i, 0, false);
+        return getWifiIconResource(false, i, 0);
     }
 
-    public static int getWifiIconResource(int i, int i2, boolean z) {
-        return getWifiIconResource(false, i, i2, z);
+    public static int getWifiIconResource(int i, int i2) {
+        return getWifiIconResource(false, i, i2);
     }
 
-    public static int getWifiIconResource(boolean z, int i, int i2, boolean z2) {
+    public static int getWifiIconResource(boolean z, int i, int i2) {
         if (i >= 0) {
             int[] iArr = WIFI_PIE;
             if (i < iArr.length) {
@@ -273,16 +292,13 @@ public class Utils {
                 if (i2 == 4) {
                     return WIFI_4_PIE[i];
                 }
-                if (i2 != 5) {
-                    if (i2 == 6) {
-                        return WIFI_6_PIE[i];
-                    }
-                    return iArr[i];
-                } else if (z2) {
-                    return WIFI_6_PIE[i];
-                } else {
+                if (i2 == 5) {
                     return WIFI_5_PIE[i];
                 }
+                if (i2 != 6) {
+                    return iArr[i];
+                }
+                return WIFI_6_PIE[i];
             }
         }
         throw new IllegalArgumentException("No Wifi icon found for level: " + i);
@@ -290,7 +306,7 @@ public class Utils {
 
     public static int getDefaultStorageManagerDaysToRetain(Resources resources) {
         try {
-            return resources.getInteger(17694932);
+            return resources.getInteger(17694948);
         } catch (Resources.NotFoundException unused) {
             return 90;
         }
@@ -307,10 +323,10 @@ public class Utils {
         } catch (Resources.NotFoundException unused) {
             z = false;
         }
-        ContentResolver contentResolver = context.getContentResolver();
-        int i = z ? 1 : 0;
-        int i2 = z ? 1 : 0;
-        return Settings.Secure.getInt(contentResolver, "automatic_storage_manager_enabled", i) != 0;
+        if (Settings.Secure.getInt(context.getContentResolver(), "automatic_storage_manager_enabled", z ? 1 : 0) != 0) {
+            return true;
+        }
+        return false;
     }
 
     public static boolean isAudioModeOngoingCall(Context context) {
@@ -318,9 +334,30 @@ public class Utils {
         return mode == 1 || mode == 2 || mode == 3;
     }
 
-    public static boolean isInService(ServiceState serviceState) {
-        int combinedServiceState;
-        return (serviceState == null || (combinedServiceState = getCombinedServiceState(serviceState)) == 3 || combinedServiceState == 1 || combinedServiceState == 2) ? false : true;
+    /* JADX WARNING: Code restructure failed: missing block: B:3:0x0004, code lost:
+        r3 = getCombinedServiceState(r3);
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public static boolean isInService(android.telephony.ServiceState r3) {
+        /*
+            r0 = 0
+            if (r3 != 0) goto L_0x0004
+            return r0
+        L_0x0004:
+            int r3 = getCombinedServiceState(r3)
+            r1 = 3
+            if (r3 == r1) goto L_0x0013
+            r1 = 1
+            if (r3 == r1) goto L_0x0013
+            r2 = 2
+            if (r3 != r2) goto L_0x0012
+            goto L_0x0013
+        L_0x0012:
+            return r1
+        L_0x0013:
+            return r0
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settingslib.Utils.isInService(android.telephony.ServiceState):boolean");
     }
 
     public static int getCombinedServiceState(ServiceState serviceState) {
@@ -329,28 +366,10 @@ public class Utils {
         }
         int state = serviceState.getState();
         int dataRegistrationState = serviceState.getDataRegistrationState();
-        if ((state != 1 && state != 2) || dataRegistrationState != 0 || !isNotInIwlan(serviceState)) {
-            return state;
+        if ((state == 1 || state == 2) && dataRegistrationState == 0 && isNotInIwlan(serviceState)) {
+            return 0;
         }
-        return 0;
-    }
-
-    public static Drawable getBadgedIcon(Context context, Drawable drawable, UserHandle userHandle) {
-        IconFactory obtain = IconFactory.obtain(context);
-        try {
-            BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), obtain.createBadgedIconBitmap(drawable, userHandle, true).icon);
-            obtain.close();
-            return bitmapDrawable;
-        } catch (Throwable th) {
-            if (obtain != null) {
-                try {
-                    obtain.close();
-                } catch (Throwable th2) {
-                    th.addSuppressed(th2);
-                }
-            }
-            throw th;
-        }
+        return state;
     }
 
     public static Drawable getBadgedIcon(Context context, ApplicationInfo applicationInfo) {

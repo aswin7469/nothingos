@@ -12,7 +12,7 @@ import androidx.preference.PreferenceViewHolder;
 import com.android.settings.LinkifyUtils;
 import com.android.settingslib.R$attr;
 import com.android.settingslib.R$drawable;
-/* loaded from: classes.dex */
+
 public class LinkablePreference extends Preference {
     private LinkifyUtils.OnClickListener mClickListener;
     private CharSequence mContentDescription;
@@ -29,33 +29,29 @@ public class LinkablePreference extends Preference {
     }
 
     public LinkablePreference(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         TextView textView = (TextView) preferenceViewHolder.findViewById(16908310);
-        if (textView == null) {
-            return;
+        if (textView != null) {
+            textView.setSingleLine(false);
+            if (this.mContentTitle != null && this.mClickListener != null) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(this.mContentTitle);
+                if (this.mContentDescription != null) {
+                    sb.append("\n\n");
+                    sb.append(this.mContentDescription);
+                }
+                if (LinkifyUtils.linkify(textView, sb, this.mClickListener) && this.mContentTitle != null) {
+                    Spannable spannable = (Spannable) textView.getText();
+                    spannable.setSpan(new TextAppearanceSpan(getContext(), 16973894), 0, this.mContentTitle.length(), 17);
+                    textView.setText(spannable);
+                    textView.setMovementMethod(new LinkMovementMethod());
+                }
+            }
         }
-        textView.setSingleLine(false);
-        if (this.mContentTitle == null || this.mClickListener == null) {
-            return;
-        }
-        StringBuilder sb = new StringBuilder();
-        sb.append(this.mContentTitle);
-        if (this.mContentDescription != null) {
-            sb.append("\n\n");
-            sb.append(this.mContentDescription);
-        }
-        if (!LinkifyUtils.linkify(textView, sb, this.mClickListener) || this.mContentTitle == null) {
-            return;
-        }
-        Spannable spannable = (Spannable) textView.getText();
-        spannable.setSpan(new TextAppearanceSpan(getContext(), 16973894), 0, this.mContentTitle.length(), 17);
-        textView.setText(spannable);
-        textView.setMovementMethod(new LinkMovementMethod());
     }
 
     public void setText(CharSequence charSequence, CharSequence charSequence2, LinkifyUtils.OnClickListener onClickListener) {
@@ -65,14 +61,12 @@ public class LinkablePreference extends Preference {
         super.setTitle(charSequence);
     }
 
-    @Override // androidx.preference.Preference
     public void setTitle(int i) {
         this.mContentTitle = null;
         this.mContentDescription = null;
         super.setTitle(i);
     }
 
-    @Override // androidx.preference.Preference
     public void setTitle(CharSequence charSequence) {
         this.mContentTitle = null;
         this.mContentDescription = null;

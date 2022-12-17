@@ -1,5 +1,5 @@
 package com.google.zxing.qrcode.decoder;
-/* loaded from: classes2.dex */
+
 public enum Mode {
     TERMINATOR(new int[]{0, 0, 0}, 0),
     NUMERIC(new int[]{10, 12, 14}, 1),
@@ -15,48 +15,48 @@ public enum Mode {
     private final int bits;
     private final int[] characterCountBitsForVersions;
 
-    Mode(int[] iArr, int i) {
+    private Mode(int[] iArr, int i) {
         this.characterCountBitsForVersions = iArr;
         this.bits = i;
     }
 
     public static Mode forBits(int i) {
-        if (i != 0) {
-            if (i == 1) {
-                return NUMERIC;
-            }
-            if (i == 2) {
-                return ALPHANUMERIC;
-            }
-            if (i == 3) {
-                return STRUCTURED_APPEND;
-            }
-            if (i == 4) {
-                return BYTE;
-            }
-            if (i == 5) {
-                return FNC1_FIRST_POSITION;
-            }
-            if (i == 7) {
-                return ECI;
-            }
-            if (i == 8) {
-                return KANJI;
-            }
-            if (i == 9) {
-                return FNC1_SECOND_POSITION;
-            }
-            if (i == 13) {
-                return HANZI;
-            }
-            throw new IllegalArgumentException();
+        if (i == 0) {
+            return TERMINATOR;
         }
-        return TERMINATOR;
+        if (i == 1) {
+            return NUMERIC;
+        }
+        if (i == 2) {
+            return ALPHANUMERIC;
+        }
+        if (i == 3) {
+            return STRUCTURED_APPEND;
+        }
+        if (i == 4) {
+            return BYTE;
+        }
+        if (i == 5) {
+            return FNC1_FIRST_POSITION;
+        }
+        if (i == 7) {
+            return ECI;
+        }
+        if (i == 8) {
+            return KANJI;
+        }
+        if (i == 9) {
+            return FNC1_SECOND_POSITION;
+        }
+        if (i == 13) {
+            return HANZI;
+        }
+        throw new IllegalArgumentException();
     }
 
     public int getCharacterCountBits(Version version) {
         int versionNumber = version.getVersionNumber();
-        return this.characterCountBitsForVersions[versionNumber <= 9 ? (char) 0 : versionNumber <= 26 ? (char) 1 : (char) 2];
+        return this.characterCountBitsForVersions[versionNumber <= 9 ? 0 : versionNumber <= 26 ? (char) 1 : 2];
     }
 
     public int getBits() {

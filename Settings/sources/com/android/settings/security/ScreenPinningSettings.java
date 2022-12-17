@@ -14,7 +14,8 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.SwitchPreference;
 import com.android.internal.widget.LockPatternUtils;
-import com.android.settings.R;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.SettingsActivity;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.search.BaseSearchIndexProvider;
@@ -23,14 +24,13 @@ import com.android.settingslib.widget.FooterPreference;
 import com.android.settingslib.widget.OnMainSwitchChangeListener;
 import java.util.Arrays;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class ScreenPinningSettings extends SettingsPreferenceFragment implements OnMainSwitchChangeListener, DialogInterface.OnClickListener {
-    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider() { // from class: com.android.settings.security.ScreenPinningSettings.2
-        @Override // com.android.settings.search.BaseSearchIndexProvider, com.android.settingslib.search.Indexable$SearchIndexProvider
+    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider() {
         public List<SearchIndexableResource> getXmlResourcesToIndex(Context context, boolean z) {
             SearchIndexableResource searchIndexableResource = new SearchIndexableResource(context);
-            searchIndexableResource.xmlResId = R.xml.screen_pinning_settings;
-            return Arrays.asList(searchIndexableResource);
+            searchIndexableResource.xmlResId = R$xml.screen_pinning_settings;
+            return Arrays.asList(new SearchIndexableResource[]{searchIndexableResource});
         }
     };
     private FooterPreference mFooterPreference;
@@ -39,37 +39,33 @@ public class ScreenPinningSettings extends SettingsPreferenceFragment implements
     private SwitchPreference mUseScreenLock;
     private UserManager mUserManager;
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 86;
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, androidx.fragment.app.Fragment
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
         SettingsActivity settingsActivity = (SettingsActivity) getActivity();
-        settingsActivity.setTitle(R.string.screen_pinning_title);
+        settingsActivity.setTitle(R$string.screen_pinning_title);
         this.mLockPatternUtils = new LockPatternUtils(settingsActivity);
         this.mUserManager = (UserManager) settingsActivity.getSystemService(UserManager.class);
-        addPreferencesFromResource(R.xml.screen_pinning_settings);
+        addPreferencesFromResource(R$xml.screen_pinning_settings);
         PreferenceScreen preferenceScreen = getPreferenceScreen();
         this.mUseScreenLock = (SwitchPreference) preferenceScreen.findPreference("use_screen_lock");
         this.mFooterPreference = (FooterPreference) preferenceScreen.findPreference("screen_pinning_settings_screen_footer");
         SettingsMainSwitchBar switchBar = settingsActivity.getSwitchBar();
         this.mSwitchBar = switchBar;
-        switchBar.setTitle(getContext().getString(R.string.app_pinning_main_switch_title));
+        switchBar.setTitle(getContext().getString(R$string.app_pinning_main_switch_title));
         this.mSwitchBar.show();
         this.mSwitchBar.setChecked(isLockToAppEnabled(getActivity()));
         this.mSwitchBar.addOnSwitchChangeListener(this);
         updateDisplay();
     }
 
-    @Override // com.android.settings.support.actionbar.HelpResourceProvider
     public int getHelpResource() {
-        return R.string.help_url_screen_pinning;
+        return R$string.help_url_screen_pinning;
     }
 
-    @Override // androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onDestroyView() {
         super.onDestroyView();
         this.mSwitchBar.removeOnSwitchChangeListener(this);
@@ -91,23 +87,22 @@ public class ScreenPinningSettings extends SettingsPreferenceFragment implements
         return Settings.Secure.getInt(getContentResolver(), "lock_to_app_exit_locked", this.mLockPatternUtils.isSecure(UserHandle.myUserId()) ? 1 : 0) != 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public boolean setScreenLockUsed(boolean z) {
-        if (z && new LockPatternUtils(getActivity()).getKeyguardStoredPasswordQuality(UserHandle.myUserId()) == 0) {
-            Intent intent = new Intent("android.app.action.SET_NEW_PASSWORD");
-            intent.putExtra("hide_insecure_options", true);
-            startActivityForResult(intent, 43);
-            return false;
+        if (!z || new LockPatternUtils(getActivity()).getKeyguardStoredPasswordQuality(UserHandle.myUserId()) != 0) {
+            setScreenLockUsedSetting(z);
+            return true;
         }
-        setScreenLockUsedSetting(z);
-        return true;
+        Intent intent = new Intent("android.app.action.SET_NEW_PASSWORD");
+        intent.putExtra("hide_insecure_options", true);
+        startActivityForResult(intent, 43);
+        return false;
     }
 
     private void setScreenLockUsedSetting(boolean z) {
         Settings.Secure.putInt(getContentResolver(), "lock_to_app_exit_locked", z ? 1 : 0);
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onActivityResult(int i, int i2, Intent intent) {
         super.onActivityResult(i, i2, intent);
         if (i == 43) {
@@ -121,28 +116,26 @@ public class ScreenPinningSettings extends SettingsPreferenceFragment implements
         int keyguardStoredPasswordQuality = this.mLockPatternUtils.getKeyguardStoredPasswordQuality(UserHandle.myUserId());
         if (keyguardStoredPasswordQuality != 65536) {
             if (keyguardStoredPasswordQuality == 131072 || keyguardStoredPasswordQuality == 196608) {
-                return R.string.screen_pinning_unlock_pin;
+                return R$string.screen_pinning_unlock_pin;
             }
             if (keyguardStoredPasswordQuality == 262144 || keyguardStoredPasswordQuality == 327680 || keyguardStoredPasswordQuality == 393216 || keyguardStoredPasswordQuality == 524288) {
-                return R.string.screen_pinning_unlock_password;
+                return R$string.screen_pinning_unlock_password;
             }
         } else if (this.mLockPatternUtils.isLockPatternEnabled(UserHandle.myUserId())) {
-            return R.string.screen_pinning_unlock_pattern;
+            return R$string.screen_pinning_unlock_pattern;
         }
-        return R.string.screen_pinning_unlock_none;
+        return R$string.screen_pinning_unlock_none;
     }
 
-    @Override // com.android.settingslib.widget.OnMainSwitchChangeListener
-    public void onSwitchChanged(Switch r2, boolean z) {
+    public void onSwitchChanged(Switch switchR, boolean z) {
         if (z) {
-            new AlertDialog.Builder(getContext()).setMessage(R.string.screen_pinning_dialog_message).setPositiveButton(R.string.dlg_ok, this).setNegativeButton(R.string.dlg_cancel, this).setCancelable(false).show();
+            new AlertDialog.Builder(getContext()).setMessage(R$string.screen_pinning_dialog_message).setPositiveButton(R$string.dlg_ok, (DialogInterface.OnClickListener) this).setNegativeButton(R$string.dlg_cancel, (DialogInterface.OnClickListener) this).setCancelable(false).show();
             return;
         }
         setLockToAppEnabled(false);
         updateDisplay();
     }
 
-    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialogInterface, int i) {
         if (i == -1) {
             setLockToAppEnabled(true);
@@ -155,8 +148,7 @@ public class ScreenPinningSettings extends SettingsPreferenceFragment implements
     private void updateDisplay() {
         if (isLockToAppEnabled(getActivity())) {
             this.mUseScreenLock.setEnabled(true);
-            this.mUseScreenLock.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() { // from class: com.android.settings.security.ScreenPinningSettings.1
-                @Override // androidx.preference.Preference.OnPreferenceChangeListener
+            this.mUseScreenLock.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 public boolean onPreferenceChange(Preference preference, Object obj) {
                     return ScreenPinningSettings.this.setScreenLockUsed(((Boolean) obj).booleanValue());
                 }
@@ -175,8 +167,8 @@ public class ScreenPinningSettings extends SettingsPreferenceFragment implements
 
     private CharSequence getAppPinningContent() {
         if (isGuestModeSupported()) {
-            return getActivity().getText(R.string.screen_pinning_guest_user_description);
+            return getActivity().getText(R$string.screen_pinning_guest_user_description);
         }
-        return getActivity().getText(R.string.screen_pinning_description);
+        return getActivity().getText(R$string.screen_pinning_description);
     }
 }

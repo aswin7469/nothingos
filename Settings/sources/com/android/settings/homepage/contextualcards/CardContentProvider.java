@@ -3,6 +3,7 @@ package com.android.settings.homepage.contextualcards;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
@@ -11,14 +12,14 @@ import android.os.Build;
 import android.os.StrictMode;
 import android.util.ArrayMap;
 import android.util.Log;
-import com.android.settings.R;
+import com.android.settings.R$bool;
 import com.android.settingslib.utils.ThreadUtils;
-/* loaded from: classes.dex */
+
 public class CardContentProvider extends ContentProvider {
+    public static final Uri DELETE_CARD_URI = new Uri.Builder().scheme("content").authority("com.android.settings.homepage.CardContentProvider").appendPath("dismissed_timestamp").build();
+    public static final Uri REFRESH_CARD_URI = new Uri.Builder().scheme("content").authority("com.android.settings.homepage.CardContentProvider").appendPath("cards").build();
     private static final UriMatcher URI_MATCHER;
     private CardDatabaseHelper mDBHelper;
-    public static final Uri REFRESH_CARD_URI = new Uri.Builder().scheme("content").authority("com.android.settings.homepage.CardContentProvider").appendPath("cards").build();
-    public static final Uri DELETE_CARD_URI = new Uri.Builder().scheme("content").authority("com.android.settings.homepage.CardContentProvider").appendPath("dismissed_timestamp").build();
 
     static {
         UriMatcher uriMatcher = new UriMatcher(-1);
@@ -26,24 +27,24 @@ public class CardContentProvider extends ContentProvider {
         uriMatcher.addURI("com.android.settings.homepage.CardContentProvider", "cards", 100);
     }
 
-    @Override // android.content.ContentProvider
     public boolean onCreate() {
         this.mDBHelper = CardDatabaseHelper.getInstance(getContext());
         return true;
     }
 
-    @Override // android.content.ContentProvider
     public Uri insert(Uri uri, ContentValues contentValues) {
         bulkInsert(uri, new ContentValues[]{contentValues});
         return uri;
     }
 
-    @Override // android.content.ContentProvider
     public int bulkInsert(Uri uri, ContentValues[] contentValuesArr) {
         String str;
+        Cursor query;
+        Throwable th;
+        ContentValues[] contentValuesArr2 = contentValuesArr;
         StrictMode.ThreadPolicy threadPolicy = StrictMode.getThreadPolicy();
         SQLiteDatabase writableDatabase = this.mDBHelper.getWritableDatabase();
-        boolean z = getContext().getResources().getBoolean(R.bool.config_keep_contextual_card_dismissal_timestamp);
+        boolean z = getContext().getResources().getBoolean(R$bool.config_keep_contextual_card_dismissal_timestamp);
         ArrayMap arrayMap = new ArrayMap();
         try {
             maybeEnableStrictMode();
@@ -51,7 +52,7 @@ public class CardContentProvider extends ContentProvider {
             writableDatabase.beginTransaction();
             if (z) {
                 str = "name";
-                Cursor query = writableDatabase.query(tableFromMatch, new String[]{"name", "dismissed_timestamp"}, "dismissed_timestamp IS NOT NULL", null, null, null, null);
+                query = writableDatabase.query(tableFromMatch, new String[]{"name", "dismissed_timestamp"}, "dismissed_timestamp IS NOT NULL", (String[]) null, (String) null, (String) null, (String) null);
                 query.moveToFirst();
                 while (!query.isAfterLast()) {
                     arrayMap.put(query.getString(query.getColumnIndex(str)), Long.valueOf(query.getLong(query.getColumnIndex("dismissed_timestamp"))));
@@ -62,12 +63,12 @@ public class CardContentProvider extends ContentProvider {
                 str = "name";
             }
             String str2 = null;
-            writableDatabase.delete(tableFromMatch, null, null);
-            int length = contentValuesArr.length;
+            writableDatabase.delete(tableFromMatch, (String) null, (String[]) null);
+            int length = contentValuesArr2.length;
             int i = 0;
             int i2 = 0;
             while (i < length) {
-                ContentValues contentValues = contentValuesArr[i];
+                ContentValues contentValues = contentValuesArr2[i];
                 if (z) {
                     String obj = contentValues.get(str).toString();
                     if (arrayMap.containsKey(obj)) {
@@ -85,32 +86,33 @@ public class CardContentProvider extends ContentProvider {
                 str2 = null;
             }
             writableDatabase.setTransactionSuccessful();
-            getContext().getContentResolver().notifyChange(uri, null);
-            return i2;
-        } finally {
+            getContext().getContentResolver().notifyChange(uri, (ContentObserver) null);
             writableDatabase.endTransaction();
             StrictMode.setThreadPolicy(threadPolicy);
+            return i2;
+        } catch (Throwable th2) {
+            writableDatabase.endTransaction();
+            StrictMode.setThreadPolicy(threadPolicy);
+            throw th2;
         }
+        throw th;
     }
 
-    @Override // android.content.ContentProvider
     public int delete(Uri uri, String str, String[] strArr) {
         throw new UnsupportedOperationException("delete operation not supported currently.");
     }
 
-    @Override // android.content.ContentProvider
     public String getType(Uri uri) {
         throw new UnsupportedOperationException("getType operation not supported currently.");
     }
 
-    @Override // android.content.ContentProvider
     public Cursor query(Uri uri, String[] strArr, String str, String[] strArr2, String str2) {
         StrictMode.ThreadPolicy threadPolicy = StrictMode.getThreadPolicy();
         try {
             maybeEnableStrictMode();
             SQLiteQueryBuilder sQLiteQueryBuilder = new SQLiteQueryBuilder();
             sQLiteQueryBuilder.setTables(getTableFromMatch(uri));
-            Cursor query = sQLiteQueryBuilder.query(this.mDBHelper.getReadableDatabase(), strArr, str, strArr2, null, null, str2);
+            Cursor query = sQLiteQueryBuilder.query(this.mDBHelper.getReadableDatabase(), strArr, str, strArr2, (String) null, (String) null, str2);
             query.setNotificationUri(getContext().getContentResolver(), uri);
             return query;
         } finally {
@@ -118,23 +120,24 @@ public class CardContentProvider extends ContentProvider {
         }
     }
 
-    @Override // android.content.ContentProvider
     public int update(Uri uri, ContentValues contentValues, String str, String[] strArr) {
         throw new UnsupportedOperationException("update operation not supported currently.");
     }
 
-    void maybeEnableStrictMode() {
-        if (!Build.IS_DEBUGGABLE || !ThreadUtils.isMainThread()) {
-            return;
+    /* access modifiers changed from: package-private */
+    public void maybeEnableStrictMode() {
+        if (Build.IS_DEBUGGABLE && ThreadUtils.isMainThread()) {
+            enableStrictMode();
         }
-        enableStrictMode();
     }
 
-    void enableStrictMode() {
+    /* access modifiers changed from: package-private */
+    public void enableStrictMode() {
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().build());
     }
 
-    String getTableFromMatch(Uri uri) {
+    /* access modifiers changed from: package-private */
+    public String getTableFromMatch(Uri uri) {
         if (URI_MATCHER.match(uri) == 100) {
             return "cards";
         }

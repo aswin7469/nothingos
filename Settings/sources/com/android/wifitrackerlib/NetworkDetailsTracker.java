@@ -6,47 +6,50 @@ import android.net.ConnectivityManager;
 import android.net.LinkProperties;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
-import android.net.NetworkScoreManager;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import androidx.core.util.Preconditions;
 import androidx.lifecycle.Lifecycle;
+import com.android.wifitrackerlib.BaseWifiTracker;
 import java.time.Clock;
-/* loaded from: classes.dex */
+
 public abstract class NetworkDetailsTracker extends BaseWifiTracker {
     protected NetworkInfo mCurrentNetworkInfo;
 
     public abstract WifiEntry getWifiEntry();
 
-    public static NetworkDetailsTracker createNetworkDetailsTracker(Lifecycle lifecycle, Context context, WifiManager wifiManager, ConnectivityManager connectivityManager, NetworkScoreManager networkScoreManager, Handler handler, Handler handler2, Clock clock, long j, long j2, String str) {
-        if (str.startsWith("StandardWifiEntry:")) {
-            return new StandardNetworkDetailsTracker(lifecycle, context, wifiManager, connectivityManager, networkScoreManager, handler, handler2, clock, j, j2, str);
+    public static NetworkDetailsTracker createNetworkDetailsTracker(Lifecycle lifecycle, Context context, WifiManager wifiManager, ConnectivityManager connectivityManager, Handler handler, Handler handler2, Clock clock, long j, long j2, String str) {
+        return createNetworkDetailsTracker(new WifiTrackerInjector(context), lifecycle, context, wifiManager, connectivityManager, handler, handler2, clock, j, j2, str);
+    }
+
+    static NetworkDetailsTracker createNetworkDetailsTracker(WifiTrackerInjector wifiTrackerInjector, Lifecycle lifecycle, Context context, WifiManager wifiManager, ConnectivityManager connectivityManager, Handler handler, Handler handler2, Clock clock, long j, long j2, String str) {
+        String str2 = str;
+        if (str2.startsWith("StandardWifiEntry:")) {
+            return new StandardNetworkDetailsTracker(wifiTrackerInjector, lifecycle, context, wifiManager, connectivityManager, handler, handler2, clock, j, j2, str);
         }
-        if (str.startsWith("PasspointWifiEntry:")) {
-            return new PasspointNetworkDetailsTracker(lifecycle, context, wifiManager, connectivityManager, networkScoreManager, handler, handler2, clock, j, j2, str);
+        if (str2.startsWith("PasspointWifiEntry:")) {
+            return new PasspointNetworkDetailsTracker(wifiTrackerInjector, lifecycle, context, wifiManager, connectivityManager, handler, handler2, clock, j, j2, str);
         }
         throw new IllegalArgumentException("Key does not contain valid key prefix!");
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public NetworkDetailsTracker(Lifecycle lifecycle, Context context, WifiManager wifiManager, ConnectivityManager connectivityManager, NetworkScoreManager networkScoreManager, Handler handler, Handler handler2, Clock clock, long j, long j2, String str) {
-        super(lifecycle, context, wifiManager, connectivityManager, networkScoreManager, handler, handler2, clock, j, j2, null, str);
+    NetworkDetailsTracker(WifiTrackerInjector wifiTrackerInjector, Lifecycle lifecycle, Context context, WifiManager wifiManager, ConnectivityManager connectivityManager, Handler handler, Handler handler2, Clock clock, long j, long j2, String str) {
+        super(wifiTrackerInjector, lifecycle, context, wifiManager, connectivityManager, handler, handler2, clock, j, j2, (BaseWifiTracker.BaseWifiTrackerCallback) null, str);
     }
 
-    @Override // com.android.wifitrackerlib.BaseWifiTracker
-    protected void handleNetworkStateChangedAction(Intent intent) {
+    /* access modifiers changed from: protected */
+    public void handleNetworkStateChangedAction(Intent intent) {
         Preconditions.checkNotNull(intent, "Intent cannot be null!");
         this.mCurrentNetworkInfo = (NetworkInfo) intent.getParcelableExtra("networkInfo");
         getWifiEntry().updateConnectionInfo(this.mWifiManager.getConnectionInfo(), this.mCurrentNetworkInfo);
     }
 
-    @Override // com.android.wifitrackerlib.BaseWifiTracker
-    protected void handleRssiChangedAction() {
+    /* access modifiers changed from: protected */
+    public void handleRssiChangedAction() {
         getWifiEntry().updateConnectionInfo(this.mWifiManager.getConnectionInfo(), this.mCurrentNetworkInfo);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.wifitrackerlib.BaseWifiTracker
+    /* access modifiers changed from: protected */
     public void handleLinkPropertiesChanged(LinkProperties linkProperties) {
         WifiEntry wifiEntry = getWifiEntry();
         if (wifiEntry.getConnectedState() == 2) {
@@ -54,8 +57,7 @@ public abstract class NetworkDetailsTracker extends BaseWifiTracker {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.wifitrackerlib.BaseWifiTracker
+    /* access modifiers changed from: protected */
     public void handleNetworkCapabilitiesChanged(NetworkCapabilities networkCapabilities) {
         WifiEntry wifiEntry = getWifiEntry();
         if (wifiEntry.getConnectedState() == 2) {
@@ -64,8 +66,8 @@ public abstract class NetworkDetailsTracker extends BaseWifiTracker {
         }
     }
 
-    @Override // com.android.wifitrackerlib.BaseWifiTracker
-    protected void handleDefaultRouteChanged() {
+    /* access modifiers changed from: protected */
+    public void handleDefaultRouteChanged() {
         WifiEntry wifiEntry = getWifiEntry();
         if (wifiEntry.getConnectedState() == 2) {
             wifiEntry.setIsDefaultNetwork(this.mIsWifiDefaultRoute);

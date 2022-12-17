@@ -6,19 +6,18 @@ import android.view.View;
 import android.widget.ImageView;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
-/* loaded from: classes.dex */
+
 public class CancellablePreference extends Preference implements View.OnClickListener {
     private boolean mCancellable;
     private OnCancelListener mListener;
 
-    /* loaded from: classes.dex */
     public interface OnCancelListener {
         void onCancel(CancellablePreference cancellablePreference);
     }
 
     public CancellablePreference(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        setWidgetLayoutResource(R.layout.cancel_pref_widget);
+        setWidgetLayoutResource(R$layout.cancel_pref_widget);
     }
 
     public void setCancellable(boolean z) {
@@ -30,15 +29,13 @@ public class CancellablePreference extends Preference implements View.OnClickLis
         this.mListener = onCancelListener;
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
-        ImageView imageView = (ImageView) preferenceViewHolder.findViewById(R.id.cancel);
+        ImageView imageView = (ImageView) preferenceViewHolder.findViewById(R$id.cancel);
         imageView.setVisibility(this.mCancellable ? 0 : 4);
         imageView.setOnClickListener(this);
     }
 
-    @Override // android.view.View.OnClickListener
     public void onClick(View view) {
         OnCancelListener onCancelListener = this.mListener;
         if (onCancelListener != null) {

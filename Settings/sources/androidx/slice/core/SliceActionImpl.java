@@ -1,11 +1,10 @@
 package androidx.slice.core;
 
-import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import androidx.core.graphics.drawable.IconCompat;
 import androidx.slice.Slice;
 import androidx.slice.SliceItem;
-/* loaded from: classes.dex */
+
 public class SliceActionImpl implements SliceAction {
     private PendingIntent mAction;
     private SliceItem mActionItem;
@@ -21,141 +20,190 @@ public class SliceActionImpl implements SliceAction {
     private SliceItem mSliceItem;
     private CharSequence mTitle;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public enum ActionType {
+    enum ActionType {
         DEFAULT,
         TOGGLE,
         DATE_PICKER,
         TIME_PICKER
     }
 
-    public SliceActionImpl(PendingIntent action, IconCompat actionIcon, int imageMode, CharSequence actionTitle) {
+    public SliceActionImpl(PendingIntent pendingIntent, IconCompat iconCompat, int i, CharSequence charSequence) {
         this.mImageMode = 5;
         this.mActionType = ActionType.DEFAULT;
         this.mPriority = -1;
-        this.mDateTimeMillis = -1L;
-        this.mAction = action;
-        this.mIcon = actionIcon;
-        this.mTitle = actionTitle;
-        this.mImageMode = imageMode;
+        this.mDateTimeMillis = -1;
+        this.mAction = pendingIntent;
+        this.mIcon = iconCompat;
+        this.mTitle = charSequence;
+        this.mImageMode = i;
     }
 
-    public SliceActionImpl(PendingIntent action, IconCompat actionIcon, CharSequence actionTitle, boolean isChecked) {
-        this(action, actionIcon, 0, actionTitle);
-        this.mIsChecked = isChecked;
+    public SliceActionImpl(PendingIntent pendingIntent, IconCompat iconCompat, CharSequence charSequence, boolean z) {
+        this(pendingIntent, iconCompat, 0, charSequence);
+        this.mIsChecked = z;
         this.mActionType = ActionType.TOGGLE;
     }
 
-    public SliceActionImpl(PendingIntent action, CharSequence actionTitle, boolean isChecked) {
+    public SliceActionImpl(PendingIntent pendingIntent, CharSequence charSequence, boolean z) {
         this.mImageMode = 5;
         this.mActionType = ActionType.DEFAULT;
         this.mPriority = -1;
-        this.mDateTimeMillis = -1L;
-        this.mAction = action;
-        this.mTitle = actionTitle;
+        this.mDateTimeMillis = -1;
+        this.mAction = pendingIntent;
+        this.mTitle = charSequence;
         this.mActionType = ActionType.TOGGLE;
-        this.mIsChecked = isChecked;
+        this.mIsChecked = z;
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    @SuppressLint({"InlinedApi"})
-    public SliceActionImpl(SliceItem slice) {
-        char c;
-        this.mImageMode = 5;
-        ActionType actionType = ActionType.DEFAULT;
-        this.mActionType = actionType;
-        int i = -1;
-        this.mPriority = -1;
-        this.mDateTimeMillis = -1L;
-        this.mSliceItem = slice;
-        SliceItem find = SliceQuery.find(slice, "action");
-        if (find == null) {
-            return;
-        }
-        this.mActionItem = find;
-        this.mAction = find.getAction();
-        SliceItem find2 = SliceQuery.find(find.getSlice(), "image");
-        if (find2 != null) {
-            this.mIcon = find2.getIcon();
-            this.mImageMode = parseImageMode(find2);
-        }
-        SliceItem find3 = SliceQuery.find(find.getSlice(), "text", "title", (String) null);
-        if (find3 != null) {
-            this.mTitle = find3.getSanitizedText();
-        }
-        SliceItem findSubtype = SliceQuery.findSubtype(find.getSlice(), "text", "content_description");
-        if (findSubtype != null) {
-            this.mContentDescription = findSubtype.getText();
-        }
-        if (find.getSubType() == null) {
-            this.mActionType = actionType;
-        } else {
-            String subType = find.getSubType();
-            subType.hashCode();
-            switch (subType.hashCode()) {
-                case -868304044:
-                    if (subType.equals("toggle")) {
-                        c = 0;
-                        break;
-                    }
-                    c = 65535;
-                    break;
-                case 759128640:
-                    if (subType.equals("time_picker")) {
-                        c = 1;
-                        break;
-                    }
-                    c = 65535;
-                    break;
-                case 1250407999:
-                    if (subType.equals("date_picker")) {
-                        c = 2;
-                        break;
-                    }
-                    c = 65535;
-                    break;
-                default:
-                    c = 65535;
-                    break;
+    /* JADX WARNING: Can't fix incorrect switch cases order */
+    @android.annotation.SuppressLint({"InlinedApi"})
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public SliceActionImpl(androidx.slice.SliceItem r7) {
+        /*
+            r6 = this;
+            r6.<init>()
+            r0 = 5
+            r6.mImageMode = r0
+            androidx.slice.core.SliceActionImpl$ActionType r0 = androidx.slice.core.SliceActionImpl.ActionType.DEFAULT
+            r6.mActionType = r0
+            r1 = -1
+            r6.mPriority = r1
+            r2 = -1
+            r6.mDateTimeMillis = r2
+            r6.mSliceItem = r7
+            java.lang.String r2 = "action"
+            androidx.slice.SliceItem r7 = androidx.slice.core.SliceQuery.find((androidx.slice.SliceItem) r7, (java.lang.String) r2)
+            if (r7 != 0) goto L_0x001c
+            return
+        L_0x001c:
+            r6.mActionItem = r7
+            android.app.PendingIntent r2 = r7.getAction()
+            r6.mAction = r2
+            androidx.slice.Slice r2 = r7.getSlice()
+            java.lang.String r3 = "image"
+            androidx.slice.SliceItem r2 = androidx.slice.core.SliceQuery.find((androidx.slice.Slice) r2, (java.lang.String) r3)
+            if (r2 == 0) goto L_0x003c
+            androidx.core.graphics.drawable.IconCompat r3 = r2.getIcon()
+            r6.mIcon = r3
+            int r2 = parseImageMode(r2)
+            r6.mImageMode = r2
+        L_0x003c:
+            androidx.slice.Slice r2 = r7.getSlice()
+            r3 = 0
+            java.lang.String r4 = "text"
+            java.lang.String r5 = "title"
+            androidx.slice.SliceItem r2 = androidx.slice.core.SliceQuery.find((androidx.slice.Slice) r2, (java.lang.String) r4, (java.lang.String) r5, (java.lang.String) r3)
+            if (r2 == 0) goto L_0x0053
+            java.lang.CharSequence r2 = r2.getSanitizedText()
+            r6.mTitle = r2
+        L_0x0053:
+            androidx.slice.Slice r2 = r7.getSlice()
+            java.lang.String r3 = "content_description"
+            androidx.slice.SliceItem r2 = androidx.slice.core.SliceQuery.findSubtype((androidx.slice.Slice) r2, (java.lang.String) r4, (java.lang.String) r3)
+            if (r2 == 0) goto L_0x0065
+            java.lang.CharSequence r2 = r2.getText()
+            r6.mContentDescription = r2
+        L_0x0065:
+            java.lang.String r2 = r7.getSubType()
+            if (r2 != 0) goto L_0x006f
+            r6.mActionType = r0
+            goto L_0x00da
+        L_0x006f:
+            java.lang.String r2 = r7.getSubType()
+            r2.hashCode()
+            int r3 = r2.hashCode()
+            switch(r3) {
+                case -868304044: goto L_0x0096;
+                case 759128640: goto L_0x008a;
+                case 1250407999: goto L_0x007f;
+                default: goto L_0x007d;
             }
-            switch (c) {
-                case 0:
-                    this.mActionType = ActionType.TOGGLE;
-                    this.mIsChecked = find.hasHint("selected");
-                    break;
-                case 1:
-                    this.mActionType = ActionType.TIME_PICKER;
-                    SliceItem findSubtype2 = SliceQuery.findSubtype(find, "long", "millis");
-                    if (findSubtype2 != null) {
-                        this.mDateTimeMillis = findSubtype2.getLong();
-                        break;
-                    }
-                    break;
-                case 2:
-                    this.mActionType = ActionType.DATE_PICKER;
-                    SliceItem findSubtype3 = SliceQuery.findSubtype(find, "long", "millis");
-                    if (findSubtype3 != null) {
-                        this.mDateTimeMillis = findSubtype3.getLong();
-                        break;
-                    }
-                    break;
-                default:
-                    this.mActionType = actionType;
-                    break;
+        L_0x007d:
+            r2 = r1
+            goto L_0x00a1
+        L_0x007f:
+            java.lang.String r3 = "date_picker"
+            boolean r2 = r2.equals(r3)
+            if (r2 != 0) goto L_0x0088
+            goto L_0x007d
+        L_0x0088:
+            r2 = 2
+            goto L_0x00a1
+        L_0x008a:
+            java.lang.String r3 = "time_picker"
+            boolean r2 = r2.equals(r3)
+            if (r2 != 0) goto L_0x0094
+            goto L_0x007d
+        L_0x0094:
+            r2 = 1
+            goto L_0x00a1
+        L_0x0096:
+            java.lang.String r3 = "toggle"
+            boolean r2 = r2.equals(r3)
+            if (r2 != 0) goto L_0x00a0
+            goto L_0x007d
+        L_0x00a0:
+            r2 = 0
+        L_0x00a1:
+            java.lang.String r3 = "millis"
+            java.lang.String r5 = "long"
+            switch(r2) {
+                case 0: goto L_0x00cd;
+                case 1: goto L_0x00bc;
+                case 2: goto L_0x00ab;
+                default: goto L_0x00a8;
             }
-        }
-        this.mIsActivity = this.mSliceItem.hasHint("activity");
-        SliceItem findSubtype4 = SliceQuery.findSubtype(find.getSlice(), "int", "priority");
-        this.mPriority = findSubtype4 != null ? findSubtype4.getInt() : i;
-        SliceItem findSubtype5 = SliceQuery.findSubtype(find.getSlice(), "text", "action_key");
-        if (findSubtype5 == null) {
-            return;
-        }
-        this.mActionKey = findSubtype5.getText().toString();
+        L_0x00a8:
+            r6.mActionType = r0
+            goto L_0x00da
+        L_0x00ab:
+            androidx.slice.core.SliceActionImpl$ActionType r0 = androidx.slice.core.SliceActionImpl.ActionType.DATE_PICKER
+            r6.mActionType = r0
+            androidx.slice.SliceItem r0 = androidx.slice.core.SliceQuery.findSubtype((androidx.slice.SliceItem) r7, (java.lang.String) r5, (java.lang.String) r3)
+            if (r0 == 0) goto L_0x00da
+            long r2 = r0.getLong()
+            r6.mDateTimeMillis = r2
+            goto L_0x00da
+        L_0x00bc:
+            androidx.slice.core.SliceActionImpl$ActionType r0 = androidx.slice.core.SliceActionImpl.ActionType.TIME_PICKER
+            r6.mActionType = r0
+            androidx.slice.SliceItem r0 = androidx.slice.core.SliceQuery.findSubtype((androidx.slice.SliceItem) r7, (java.lang.String) r5, (java.lang.String) r3)
+            if (r0 == 0) goto L_0x00da
+            long r2 = r0.getLong()
+            r6.mDateTimeMillis = r2
+            goto L_0x00da
+        L_0x00cd:
+            androidx.slice.core.SliceActionImpl$ActionType r0 = androidx.slice.core.SliceActionImpl.ActionType.TOGGLE
+            r6.mActionType = r0
+            java.lang.String r0 = "selected"
+            boolean r0 = r7.hasHint(r0)
+            r6.mIsChecked = r0
+        L_0x00da:
+            androidx.slice.SliceItem r0 = r6.mSliceItem
+            java.lang.String r2 = "activity"
+            boolean r0 = r0.hasHint(r2)
+            r6.mIsActivity = r0
+            androidx.slice.Slice r0 = r7.getSlice()
+            java.lang.String r2 = "int"
+            java.lang.String r3 = "priority"
+            androidx.slice.SliceItem r0 = androidx.slice.core.SliceQuery.findSubtype((androidx.slice.Slice) r0, (java.lang.String) r2, (java.lang.String) r3)
+            if (r0 == 0) goto L_0x00f7
+            int r1 = r0.getInt()
+        L_0x00f7:
+            r6.mPriority = r1
+            androidx.slice.Slice r7 = r7.getSlice()
+            java.lang.String r0 = "action_key"
+            androidx.slice.SliceItem r7 = androidx.slice.core.SliceQuery.findSubtype((androidx.slice.Slice) r7, (java.lang.String) r4, (java.lang.String) r0)
+            if (r7 == 0) goto L_0x010f
+            java.lang.CharSequence r7 = r7.getText()
+            java.lang.String r7 = r7.toString()
+            r6.mActionKey = r7
+        L_0x010f:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.slice.core.SliceActionImpl.<init>(androidx.slice.SliceItem):void");
     }
 
-    @Override // androidx.slice.core.SliceAction
     public PendingIntent getAction() {
         PendingIntent pendingIntent = this.mAction;
         return pendingIntent != null ? pendingIntent : this.mActionItem.getAction();
@@ -165,12 +213,10 @@ public class SliceActionImpl implements SliceAction {
         return this.mActionItem;
     }
 
-    @Override // androidx.slice.core.SliceAction
     public IconCompat getIcon() {
         return this.mIcon;
     }
 
-    @Override // androidx.slice.core.SliceAction
     public CharSequence getTitle() {
         return this.mTitle;
     }
@@ -179,7 +225,6 @@ public class SliceActionImpl implements SliceAction {
         return this.mContentDescription;
     }
 
-    @Override // androidx.slice.core.SliceAction
     public int getPriority() {
         return this.mPriority;
     }
@@ -188,7 +233,6 @@ public class SliceActionImpl implements SliceAction {
         return this.mActionKey;
     }
 
-    @Override // androidx.slice.core.SliceAction
     public boolean isToggle() {
         return this.mActionType == ActionType.TOGGLE;
     }
@@ -197,7 +241,6 @@ public class SliceActionImpl implements SliceAction {
         return this.mIsChecked;
     }
 
-    @Override // androidx.slice.core.SliceAction
     public int getImageMode() {
         return this.mImageMode;
     }
@@ -219,17 +262,11 @@ public class SliceActionImpl implements SliceAction {
     }
 
     private Slice.Builder buildSliceContent(Slice.Builder builder) {
-        String[] strArr;
         Slice.Builder builder2 = new Slice.Builder(builder);
         IconCompat iconCompat = this.mIcon;
         if (iconCompat != null) {
             int i = this.mImageMode;
-            if (i == 6) {
-                strArr = new String[]{"show_label"};
-            } else {
-                strArr = i == 0 ? new String[0] : new String[]{"no_tint"};
-            }
-            builder2.addIcon(iconCompat, (String) null, strArr);
+            builder2.addIcon(iconCompat, (String) null, i == 6 ? new String[]{"show_label"} : i == 0 ? new String[0] : new String[]{"no_tint"});
         }
         CharSequence charSequence = this.mTitle;
         if (charSequence != null) {
@@ -252,7 +289,7 @@ public class SliceActionImpl implements SliceAction {
         }
         String str = this.mActionKey;
         if (str != null) {
-            builder2.addText(str, "action_key", new String[0]);
+            builder2.addText((CharSequence) str, "action_key", new String[0]);
         }
         if (this.mIsActivity) {
             builder.addHints("activity");
@@ -260,55 +297,68 @@ public class SliceActionImpl implements SliceAction {
         return builder2;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: androidx.slice.core.SliceActionImpl$1  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public static /* synthetic */ class AnonymousClass1 {
+    /* renamed from: androidx.slice.core.SliceActionImpl$1 */
+    static /* synthetic */ class C03421 {
         static final /* synthetic */ int[] $SwitchMap$androidx$slice$core$SliceActionImpl$ActionType;
 
+        /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|(3:5|6|8)) */
+        /* JADX WARNING: Failed to process nested try/catch */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0012 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001d */
         static {
-            int[] iArr = new int[ActionType.values().length];
-            $SwitchMap$androidx$slice$core$SliceActionImpl$ActionType = iArr;
-            try {
-                iArr[ActionType.TOGGLE.ordinal()] = 1;
-            } catch (NoSuchFieldError unused) {
-            }
-            try {
-                $SwitchMap$androidx$slice$core$SliceActionImpl$ActionType[ActionType.DATE_PICKER.ordinal()] = 2;
-            } catch (NoSuchFieldError unused2) {
-            }
-            try {
-                $SwitchMap$androidx$slice$core$SliceActionImpl$ActionType[ActionType.TIME_PICKER.ordinal()] = 3;
-            } catch (NoSuchFieldError unused3) {
-            }
+            /*
+                androidx.slice.core.SliceActionImpl$ActionType[] r0 = androidx.slice.core.SliceActionImpl.ActionType.values()
+                int r0 = r0.length
+                int[] r0 = new int[r0]
+                $SwitchMap$androidx$slice$core$SliceActionImpl$ActionType = r0
+                androidx.slice.core.SliceActionImpl$ActionType r1 = androidx.slice.core.SliceActionImpl.ActionType.TOGGLE     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
+                r2 = 1
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                int[] r0 = $SwitchMap$androidx$slice$core$SliceActionImpl$ActionType     // Catch:{ NoSuchFieldError -> 0x001d }
+                androidx.slice.core.SliceActionImpl$ActionType r1 = androidx.slice.core.SliceActionImpl.ActionType.DATE_PICKER     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
+                r2 = 2
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                int[] r0 = $SwitchMap$androidx$slice$core$SliceActionImpl$ActionType     // Catch:{ NoSuchFieldError -> 0x0028 }
+                androidx.slice.core.SliceActionImpl$ActionType r1 = androidx.slice.core.SliceActionImpl.ActionType.TIME_PICKER     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
+                r2 = 3
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
+            L_0x0028:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: androidx.slice.core.SliceActionImpl.C03421.<clinit>():void");
         }
     }
 
     public String getSubtype() {
-        int i = AnonymousClass1.$SwitchMap$androidx$slice$core$SliceActionImpl$ActionType[this.mActionType.ordinal()];
-        if (i != 1) {
-            if (i == 2) {
-                return "date_picker";
-            }
-            if (i == 3) {
-                return "time_picker";
-            }
+        int i = C03421.$SwitchMap$androidx$slice$core$SliceActionImpl$ActionType[this.mActionType.ordinal()];
+        if (i == 1) {
+            return "toggle";
+        }
+        if (i == 2) {
+            return "date_picker";
+        }
+        if (i != 3) {
             return null;
         }
-        return "toggle";
+        return "time_picker";
     }
 
-    public void setActivity(boolean isActivity) {
-        this.mIsActivity = isActivity;
+    public void setActivity(boolean z) {
+        this.mIsActivity = z;
     }
 
-    public static int parseImageMode(SliceItem iconItem) {
-        if (iconItem.hasHint("show_label")) {
+    public static int parseImageMode(SliceItem sliceItem) {
+        if (sliceItem.hasHint("show_label")) {
             return 6;
         }
-        if (!iconItem.hasHint("no_tint")) {
+        if (!sliceItem.hasHint("no_tint")) {
             return 0;
         }
-        return iconItem.hasHint("raw") ? iconItem.hasHint("large") ? 4 : 3 : iconItem.hasHint("large") ? 2 : 1;
+        return sliceItem.hasHint("raw") ? sliceItem.hasHint("large") ? 4 : 3 : sliceItem.hasHint("large") ? 2 : 1;
     }
 }

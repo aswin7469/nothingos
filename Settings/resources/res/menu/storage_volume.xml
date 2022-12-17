@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt">
     <item android:id="@+id/storage_rename" android:title="@string/storage_menu_rename"/>
     <item android:id="@+id/storage_mount" android:title="@string/storage_menu_mount"/>
     <item android:id="@+id/storage_unmount" android:title="@string/storage_menu_unmount"/>

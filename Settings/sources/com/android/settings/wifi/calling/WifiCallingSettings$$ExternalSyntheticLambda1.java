@@ -1,18 +1,16 @@
 package com.android.settings.wifi.calling;
 
-import android.telephony.SubscriptionInfo;
-import java.util.function.ToIntFunction;
-/* loaded from: classes.dex */
-public final /* synthetic */ class WifiCallingSettings$$ExternalSyntheticLambda1 implements ToIntFunction {
-    public static final /* synthetic */ WifiCallingSettings$$ExternalSyntheticLambda1 INSTANCE = new WifiCallingSettings$$ExternalSyntheticLambda1();
+import java.util.function.IntPredicate;
 
-    private /* synthetic */ WifiCallingSettings$$ExternalSyntheticLambda1() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class WifiCallingSettings$$ExternalSyntheticLambda1 implements IntPredicate {
+    public final /* synthetic */ int f$0;
+
+    public /* synthetic */ WifiCallingSettings$$ExternalSyntheticLambda1(int i) {
+        this.f$0 = i;
     }
 
-    @Override // java.util.function.ToIntFunction
-    public final int applyAsInt(Object obj) {
-        int lambda$subscriptionIdList$0;
-        lambda$subscriptionIdList$0 = WifiCallingSettings.lambda$subscriptionIdList$0((SubscriptionInfo) obj);
-        return lambda$subscriptionIdList$0;
+    public final boolean test(int i) {
+        return WifiCallingSettings.lambda$containsSubId$1(this.f$0, i);
     }
 }

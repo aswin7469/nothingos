@@ -1,46 +1,33 @@
 package com.android.settings.slices;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.IntentFilter;
-import android.widget.Toast;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+
 public interface Sliceable {
-    default void copy() {
-    }
-
-    default Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
         return null;
     }
 
-    default IntentFilter getIntentFilter() {
+    IntentFilter getIntentFilter() {
         return null;
     }
 
-    default boolean hasAsyncUpdate() {
+    int getSliceHighlightMenuRes() {
+        return 0;
+    }
+
+    boolean hasAsyncUpdate() {
         return false;
     }
 
-    default boolean isCopyableSlice() {
+    boolean isPublicSlice() {
         return false;
     }
 
-    default boolean isPublicSlice() {
+    boolean isSliceable() {
         return false;
     }
 
-    default boolean isSliceable() {
+    boolean useDynamicSliceSummary() {
         return false;
-    }
-
-    default boolean useDynamicSliceSummary() {
-        return false;
-    }
-
-    static void setCopyContent(Context context, CharSequence charSequence, CharSequence charSequence2) {
-        ((ClipboardManager) context.getSystemService("clipboard")).setPrimaryClip(ClipData.newPlainText("text", charSequence));
-        Toast.makeText(context, context.getString(R.string.copyable_slice_toast, charSequence2), 0).show();
     }
 }

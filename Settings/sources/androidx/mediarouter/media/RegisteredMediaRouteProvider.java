@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.DeadObjectException;
 import android.os.Handler;
@@ -20,9 +19,8 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public final class RegisteredMediaRouteProvider extends MediaRouteProvider implements ServiceConnection {
+
+final class RegisteredMediaRouteProvider extends MediaRouteProvider implements ServiceConnection {
     static final boolean DEBUG = Log.isLoggable("MediaRouteProviderProxy", 3);
     private Connection mActiveConnection;
     private boolean mBound;
@@ -30,18 +28,14 @@ public final class RegisteredMediaRouteProvider extends MediaRouteProvider imple
     private boolean mConnectionReady;
     private ControllerCallback mControllerCallback;
     private final ArrayList<ControllerConnection> mControllerConnections = new ArrayList<>();
-    final PrivateHandler mPrivateHandler = new PrivateHandler();
+    final PrivateHandler mPrivateHandler;
     private boolean mStarted;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public interface ControllerCallback {
-        void onControllerReleasedByProvider(MediaRouteProvider.RouteController controller);
+    interface ControllerCallback {
+        void onControllerReleasedByProvider(MediaRouteProvider.RouteController routeController);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public interface ControllerConnection {
+    interface ControllerConnection {
         void attachConnection(Connection connection);
 
         void detachConnection();
@@ -52,70 +46,62 @@ public final class RegisteredMediaRouteProvider extends MediaRouteProvider imple
     public RegisteredMediaRouteProvider(Context context, ComponentName componentName) {
         super(context, new MediaRouteProvider.ProviderMetadata(componentName));
         this.mComponentName = componentName;
+        this.mPrivateHandler = new PrivateHandler();
     }
 
-    @Override // androidx.mediarouter.media.MediaRouteProvider
-    public MediaRouteProvider.RouteController onCreateRouteController(String routeId) {
-        if (routeId == null) {
-            throw new IllegalArgumentException("routeId cannot be null");
-        }
-        return createRouteController(routeId, null);
-    }
-
-    @Override // androidx.mediarouter.media.MediaRouteProvider
-    public MediaRouteProvider.RouteController onCreateRouteController(String routeId, String routeGroupId) {
-        if (routeId != null) {
-            if (routeGroupId == null) {
-                throw new IllegalArgumentException("routeGroupId cannot be null");
-            }
-            return createRouteController(routeId, routeGroupId);
+    public MediaRouteProvider.RouteController onCreateRouteController(String str) {
+        if (str != null) {
+            return createRouteController(str, (String) null);
         }
         throw new IllegalArgumentException("routeId cannot be null");
     }
 
-    @Override // androidx.mediarouter.media.MediaRouteProvider
-    public MediaRouteProvider.DynamicGroupRouteController onCreateDynamicGroupRouteController(String initialMemberRouteId) {
-        if (initialMemberRouteId == null) {
-            throw new IllegalArgumentException("initialMemberRouteId cannot be null.");
+    public MediaRouteProvider.RouteController onCreateRouteController(String str, String str2) {
+        if (str == null) {
+            throw new IllegalArgumentException("routeId cannot be null");
+        } else if (str2 != null) {
+            return createRouteController(str, str2);
+        } else {
+            throw new IllegalArgumentException("routeGroupId cannot be null");
         }
-        return createDynamicGroupRouteController(initialMemberRouteId);
     }
 
-    @Override // androidx.mediarouter.media.MediaRouteProvider
-    public void onDiscoveryRequestChanged(MediaRouteDiscoveryRequest request) {
+    public MediaRouteProvider.DynamicGroupRouteController onCreateDynamicGroupRouteController(String str) {
+        if (str != null) {
+            return createDynamicGroupRouteController(str);
+        }
+        throw new IllegalArgumentException("initialMemberRouteId cannot be null.");
+    }
+
+    public void onDiscoveryRequestChanged(MediaRouteDiscoveryRequest mediaRouteDiscoveryRequest) {
         if (this.mConnectionReady) {
-            this.mActiveConnection.setDiscoveryRequest(request);
+            this.mActiveConnection.setDiscoveryRequest(mediaRouteDiscoveryRequest);
         }
         updateBinding();
     }
 
-    @Override // android.content.ServiceConnection
-    public void onServiceConnected(ComponentName name, IBinder service) {
+    public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
         boolean z = DEBUG;
         if (z) {
             Log.d("MediaRouteProviderProxy", this + ": Connected");
         }
         if (this.mBound) {
             disconnect();
-            Messenger messenger = service != null ? new Messenger(service) : null;
+            Messenger messenger = iBinder != null ? new Messenger(iBinder) : null;
             if (MediaRouteProviderProtocol.isValidRemoteMessenger(messenger)) {
                 Connection connection = new Connection(messenger);
                 if (connection.register()) {
                     this.mActiveConnection = connection;
-                    return;
-                } else if (!z) {
-                    return;
-                } else {
+                } else if (z) {
                     Log.d("MediaRouteProviderProxy", this + ": Registration failed");
-                    return;
                 }
+            } else {
+                Log.e("MediaRouteProviderProxy", this + ": Service returned invalid messenger binder");
             }
-            Log.e("MediaRouteProviderProxy", this + ": Service returned invalid messenger binder");
         }
     }
 
-    @Override // android.content.ServiceConnection
-    public void onServiceDisconnected(ComponentName name) {
+    public void onServiceDisconnected(ComponentName componentName) {
         if (DEBUG) {
             Log.d("MediaRouteProviderProxy", this + ": Service disconnected");
         }
@@ -126,8 +112,8 @@ public final class RegisteredMediaRouteProvider extends MediaRouteProvider imple
         return "Service connection " + this.mComponentName.flattenToShortString();
     }
 
-    public boolean hasComponentName(String packageName, String className) {
-        return this.mComponentName.getPackageName().equals(packageName) && this.mComponentName.getClassName().equals(className);
+    public boolean hasComponentName(String str, String str2) {
+        return this.mComponentName.getPackageName().equals(str) && this.mComponentName.getClassName().equals(str2);
     }
 
     public void start() {
@@ -151,11 +137,10 @@ public final class RegisteredMediaRouteProvider extends MediaRouteProvider imple
     }
 
     public void rebindIfDisconnected() {
-        if (this.mActiveConnection != null || !shouldBind()) {
-            return;
+        if (this.mActiveConnection == null && shouldBind()) {
+            unbind();
+            bind();
         }
-        unbind();
-        bind();
     }
 
     public void setControllerCallback(ControllerCallback controllerCallback) {
@@ -171,10 +156,13 @@ public final class RegisteredMediaRouteProvider extends MediaRouteProvider imple
     }
 
     private boolean shouldBind() {
-        if (this.mStarted) {
-            return getDiscoveryRequest() != null || !this.mControllerConnections.isEmpty();
+        if (!this.mStarted) {
+            return false;
         }
-        return false;
+        if (getDiscoveryRequest() == null && this.mControllerConnections.isEmpty()) {
+            return false;
+        }
+        return true;
     }
 
     private void bind() {
@@ -185,22 +173,16 @@ public final class RegisteredMediaRouteProvider extends MediaRouteProvider imple
             }
             Intent intent = new Intent("android.media.MediaRouteProviderService");
             intent.setComponent(this.mComponentName);
-            int i = 1;
             try {
-                if (Build.VERSION.SDK_INT >= 29) {
-                    i = 4097;
-                }
-                boolean bindService = getContext().bindService(intent, this, i);
+                boolean bindService = getContext().bindService(intent, this, 4097);
                 this.mBound = bindService;
-                if (bindService || !z) {
-                    return;
+                if (!bindService && z) {
+                    Log.d("MediaRouteProviderProxy", this + ": Bind failed");
                 }
-                Log.d("MediaRouteProviderProxy", this + ": Bind failed");
             } catch (SecurityException e) {
-                if (!DEBUG) {
-                    return;
+                if (DEBUG) {
+                    Log.d("MediaRouteProviderProxy", this + ": Bind failed", e);
                 }
-                Log.d("MediaRouteProviderProxy", this + ": Bind failed", e);
             }
         }
     }
@@ -220,61 +202,62 @@ public final class RegisteredMediaRouteProvider extends MediaRouteProvider imple
         }
     }
 
-    private MediaRouteProvider.RouteController createRouteController(String routeId, String routeGroupId) {
+    private MediaRouteProvider.RouteController createRouteController(String str, String str2) {
         MediaRouteProviderDescriptor descriptor = getDescriptor();
-        if (descriptor != null) {
-            List<MediaRouteDescriptor> routes = descriptor.getRoutes();
-            int size = routes.size();
-            for (int i = 0; i < size; i++) {
-                if (routes.get(i).getId().equals(routeId)) {
-                    RegisteredRouteController registeredRouteController = new RegisteredRouteController(routeId, routeGroupId);
-                    this.mControllerConnections.add(registeredRouteController);
-                    if (this.mConnectionReady) {
-                        registeredRouteController.attachConnection(this.mActiveConnection);
-                    }
-                    updateBinding();
-                    return registeredRouteController;
-                }
-            }
+        if (descriptor == null) {
             return null;
+        }
+        List<MediaRouteDescriptor> routes = descriptor.getRoutes();
+        int size = routes.size();
+        for (int i = 0; i < size; i++) {
+            if (routes.get(i).getId().equals(str)) {
+                RegisteredRouteController registeredRouteController = new RegisteredRouteController(str, str2);
+                this.mControllerConnections.add(registeredRouteController);
+                if (this.mConnectionReady) {
+                    registeredRouteController.attachConnection(this.mActiveConnection);
+                }
+                updateBinding();
+                return registeredRouteController;
+            }
         }
         return null;
     }
 
-    private MediaRouteProvider.DynamicGroupRouteController createDynamicGroupRouteController(String initialMemberRouteId) {
+    private MediaRouteProvider.DynamicGroupRouteController createDynamicGroupRouteController(String str) {
         MediaRouteProviderDescriptor descriptor = getDescriptor();
-        if (descriptor != null) {
-            List<MediaRouteDescriptor> routes = descriptor.getRoutes();
-            int size = routes.size();
-            for (int i = 0; i < size; i++) {
-                if (routes.get(i).getId().equals(initialMemberRouteId)) {
-                    RegisteredDynamicController registeredDynamicController = new RegisteredDynamicController(initialMemberRouteId);
-                    this.mControllerConnections.add(registeredDynamicController);
-                    if (this.mConnectionReady) {
-                        registeredDynamicController.attachConnection(this.mActiveConnection);
-                    }
-                    updateBinding();
-                    return registeredDynamicController;
-                }
-            }
+        if (descriptor == null) {
             return null;
+        }
+        List<MediaRouteDescriptor> routes = descriptor.getRoutes();
+        int size = routes.size();
+        for (int i = 0; i < size; i++) {
+            if (routes.get(i).getId().equals(str)) {
+                RegisteredDynamicController registeredDynamicController = new RegisteredDynamicController(str);
+                this.mControllerConnections.add(registeredDynamicController);
+                if (this.mConnectionReady) {
+                    registeredDynamicController.attachConnection(this.mActiveConnection);
+                }
+                updateBinding();
+                return registeredDynamicController;
+            }
         }
         return null;
     }
 
-    void onConnectionReady(Connection connection) {
+    /* access modifiers changed from: package-private */
+    public void onConnectionReady(Connection connection) {
         if (this.mActiveConnection == connection) {
             this.mConnectionReady = true;
             attachControllersToConnection();
             MediaRouteDiscoveryRequest discoveryRequest = getDiscoveryRequest();
-            if (discoveryRequest == null) {
-                return;
+            if (discoveryRequest != null) {
+                this.mActiveConnection.setDiscoveryRequest(discoveryRequest);
             }
-            this.mActiveConnection.setDiscoveryRequest(discoveryRequest);
         }
     }
 
-    void onConnectionDied(Connection connection) {
+    /* access modifiers changed from: package-private */
+    public void onConnectionDied(Connection connection) {
         if (this.mActiveConnection == connection) {
             if (DEBUG) {
                 Log.d("MediaRouteProviderProxy", this + ": Service connection died");
@@ -283,40 +266,43 @@ public final class RegisteredMediaRouteProvider extends MediaRouteProvider imple
         }
     }
 
-    void onConnectionError(Connection connection, String error) {
+    /* access modifiers changed from: package-private */
+    public void onConnectionError(Connection connection, String str) {
         if (this.mActiveConnection == connection) {
             if (DEBUG) {
-                Log.d("MediaRouteProviderProxy", this + ": Service connection error - " + error);
+                Log.d("MediaRouteProviderProxy", this + ": Service connection error - " + str);
             }
             unbind();
         }
     }
 
-    void onConnectionDescriptorChanged(Connection connection, MediaRouteProviderDescriptor descriptor) {
+    /* access modifiers changed from: package-private */
+    public void onConnectionDescriptorChanged(Connection connection, MediaRouteProviderDescriptor mediaRouteProviderDescriptor) {
         if (this.mActiveConnection == connection) {
             if (DEBUG) {
-                Log.d("MediaRouteProviderProxy", this + ": Descriptor changed, descriptor=" + descriptor);
+                Log.d("MediaRouteProviderProxy", this + ": Descriptor changed, descriptor=" + mediaRouteProviderDescriptor);
             }
-            setDescriptor(descriptor);
+            setDescriptor(mediaRouteProviderDescriptor);
         }
     }
 
-    void onDynamicRouteDescriptorChanged(Connection connection, int controllerId, MediaRouteDescriptor groupRouteDescriptor, List<MediaRouteProvider.DynamicGroupRouteController.DynamicRouteDescriptor> descriptors) {
+    /* access modifiers changed from: package-private */
+    public void onDynamicRouteDescriptorChanged(Connection connection, int i, MediaRouteDescriptor mediaRouteDescriptor, List<MediaRouteProvider.DynamicGroupRouteController.DynamicRouteDescriptor> list) {
         if (this.mActiveConnection == connection) {
             if (DEBUG) {
-                Log.d("MediaRouteProviderProxy", this + ": DynamicRouteDescriptors changed, descriptors=" + descriptors);
+                Log.d("MediaRouteProviderProxy", this + ": DynamicRouteDescriptors changed, descriptors=" + list);
             }
-            ControllerConnection findControllerById = findControllerById(controllerId);
-            if (!(findControllerById instanceof RegisteredDynamicController)) {
-                return;
+            ControllerConnection findControllerById = findControllerById(i);
+            if (findControllerById instanceof RegisteredDynamicController) {
+                ((RegisteredDynamicController) findControllerById).onDynamicRoutesChanged(mediaRouteDescriptor, list);
             }
-            ((RegisteredDynamicController) findControllerById).onDynamicRoutesChanged(groupRouteDescriptor, descriptors);
         }
     }
 
-    void onConnectionControllerReleasedByProvider(Connection connection, int controllerId) {
+    /* access modifiers changed from: package-private */
+    public void onConnectionControllerReleasedByProvider(Connection connection, int i) {
         if (this.mActiveConnection == connection) {
-            ControllerConnection findControllerById = findControllerById(controllerId);
+            ControllerConnection findControllerById = findControllerById(i);
             ControllerCallback controllerCallback = this.mControllerCallback;
             if (controllerCallback != null && (findControllerById instanceof MediaRouteProvider.RouteController)) {
                 controllerCallback.onControllerReleasedByProvider((MediaRouteProvider.RouteController) findControllerById);
@@ -325,11 +311,11 @@ public final class RegisteredMediaRouteProvider extends MediaRouteProvider imple
         }
     }
 
-    private ControllerConnection findControllerById(int id) {
+    private ControllerConnection findControllerById(int i) {
         Iterator<ControllerConnection> it = this.mControllerConnections.iterator();
         while (it.hasNext()) {
             ControllerConnection next = it.next();
-            if (next.getControllerId() == id) {
+            if (next.getControllerId() == i) {
                 return next;
             }
         }
@@ -338,7 +324,7 @@ public final class RegisteredMediaRouteProvider extends MediaRouteProvider imple
 
     private void disconnect() {
         if (this.mActiveConnection != null) {
-            setDescriptor(null);
+            setDescriptor((MediaRouteProviderDescriptor) null);
             this.mConnectionReady = false;
             detachControllersFromConnection();
             this.mActiveConnection.dispose();
@@ -346,7 +332,8 @@ public final class RegisteredMediaRouteProvider extends MediaRouteProvider imple
         }
     }
 
-    void onControllerReleased(ControllerConnection controllerConnection) {
+    /* access modifiers changed from: package-private */
+    public void onControllerReleased(ControllerConnection controllerConnection) {
         this.mControllerConnections.remove(controllerConnection);
         controllerConnection.detachConnection();
         updateBinding();
@@ -366,43 +353,37 @@ public final class RegisteredMediaRouteProvider extends MediaRouteProvider imple
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public final class RegisteredDynamicController extends MediaRouteProvider.DynamicGroupRouteController implements ControllerConnection {
+    private final class RegisteredDynamicController extends MediaRouteProvider.DynamicGroupRouteController implements ControllerConnection {
         private Connection mConnection;
+        private int mControllerId = -1;
         String mGroupableSectionTitle;
         private final String mInitialMemberRouteId;
+        private int mPendingSetVolume = -1;
         private int mPendingUpdateVolumeDelta;
         private boolean mSelected;
         String mTransferableSectionTitle;
-        private int mPendingSetVolume = -1;
-        private int mControllerId = -1;
 
-        RegisteredDynamicController(String initialMemberRouteId) {
-            this.mInitialMemberRouteId = initialMemberRouteId;
+        RegisteredDynamicController(String str) {
+            this.mInitialMemberRouteId = str;
         }
 
-        @Override // androidx.mediarouter.media.RegisteredMediaRouteProvider.ControllerConnection
         public int getControllerId() {
             return this.mControllerId;
         }
 
-        @Override // androidx.mediarouter.media.RegisteredMediaRouteProvider.ControllerConnection
         public void attachConnection(Connection connection) {
-            MediaRouter.ControlRequestCallback controlRequestCallback = new MediaRouter.ControlRequestCallback() { // from class: androidx.mediarouter.media.RegisteredMediaRouteProvider.RegisteredDynamicController.1
-                @Override // androidx.mediarouter.media.MediaRouter.ControlRequestCallback
-                public void onResult(Bundle data) {
-                    RegisteredDynamicController.this.mGroupableSectionTitle = data.getString("groupableTitle");
-                    RegisteredDynamicController.this.mTransferableSectionTitle = data.getString("transferableTitle");
+            C02751 r0 = new MediaRouter.ControlRequestCallback() {
+                public void onResult(Bundle bundle) {
+                    RegisteredDynamicController.this.mGroupableSectionTitle = bundle.getString("groupableTitle");
+                    RegisteredDynamicController.this.mTransferableSectionTitle = bundle.getString("transferableTitle");
                 }
 
-                @Override // androidx.mediarouter.media.MediaRouter.ControlRequestCallback
-                public void onError(String error, Bundle data) {
-                    Log.d("MediaRouteProviderProxy", "Error: " + error + ", data: " + data);
+                public void onError(String str, Bundle bundle) {
+                    Log.d("MediaRouteProviderProxy", "Error: " + str + ", data: " + bundle);
                 }
             };
             this.mConnection = connection;
-            int createDynamicGroupRouteController = connection.createDynamicGroupRouteController(this.mInitialMemberRouteId, controlRequestCallback);
+            int createDynamicGroupRouteController = connection.createDynamicGroupRouteController(this.mInitialMemberRouteId, r0);
             this.mControllerId = createDynamicGroupRouteController;
             if (this.mSelected) {
                 connection.selectRoute(createDynamicGroupRouteController);
@@ -412,15 +393,13 @@ public final class RegisteredMediaRouteProvider extends MediaRouteProvider imple
                     this.mPendingSetVolume = -1;
                 }
                 int i2 = this.mPendingUpdateVolumeDelta;
-                if (i2 == 0) {
-                    return;
+                if (i2 != 0) {
+                    connection.updateVolume(this.mControllerId, i2);
+                    this.mPendingUpdateVolumeDelta = 0;
                 }
-                connection.updateVolume(this.mControllerId, i2);
-                this.mPendingUpdateVolumeDelta = 0;
             }
         }
 
-        @Override // androidx.mediarouter.media.RegisteredMediaRouteProvider.ControllerConnection
         public void detachConnection() {
             Connection connection = this.mConnection;
             if (connection != null) {
@@ -430,12 +409,10 @@ public final class RegisteredMediaRouteProvider extends MediaRouteProvider imple
             }
         }
 
-        @Override // androidx.mediarouter.media.MediaRouteProvider.RouteController
         public void onRelease() {
             RegisteredMediaRouteProvider.this.onControllerReleased(this);
         }
 
-        @Override // androidx.mediarouter.media.MediaRouteProvider.RouteController
         public void onSelect() {
             this.mSelected = true;
             Connection connection = this.mConnection;
@@ -444,83 +421,73 @@ public final class RegisteredMediaRouteProvider extends MediaRouteProvider imple
             }
         }
 
-        @Override // androidx.mediarouter.media.MediaRouteProvider.RouteController
         public void onUnselect() {
             onUnselect(0);
         }
 
-        @Override // androidx.mediarouter.media.MediaRouteProvider.RouteController
-        public void onUnselect(int reason) {
+        public void onUnselect(int i) {
             this.mSelected = false;
             Connection connection = this.mConnection;
             if (connection != null) {
-                connection.unselectRoute(this.mControllerId, reason);
+                connection.unselectRoute(this.mControllerId, i);
             }
         }
 
-        @Override // androidx.mediarouter.media.MediaRouteProvider.RouteController
-        public void onSetVolume(int volume) {
+        public void onSetVolume(int i) {
             Connection connection = this.mConnection;
             if (connection != null) {
-                connection.setVolume(this.mControllerId, volume);
+                connection.setVolume(this.mControllerId, i);
                 return;
             }
-            this.mPendingSetVolume = volume;
+            this.mPendingSetVolume = i;
             this.mPendingUpdateVolumeDelta = 0;
         }
 
-        @Override // androidx.mediarouter.media.MediaRouteProvider.RouteController
-        public void onUpdateVolume(int delta) {
+        public void onUpdateVolume(int i) {
             Connection connection = this.mConnection;
             if (connection != null) {
-                connection.updateVolume(this.mControllerId, delta);
+                connection.updateVolume(this.mControllerId, i);
             } else {
-                this.mPendingUpdateVolumeDelta += delta;
+                this.mPendingUpdateVolumeDelta += i;
             }
         }
 
-        @Override // androidx.mediarouter.media.MediaRouteProvider.DynamicGroupRouteController
         public String getGroupableSelectionTitle() {
             return this.mGroupableSectionTitle;
         }
 
-        @Override // androidx.mediarouter.media.MediaRouteProvider.DynamicGroupRouteController
         public String getTransferableSectionTitle() {
             return this.mTransferableSectionTitle;
         }
 
-        @Override // androidx.mediarouter.media.MediaRouteProvider.DynamicGroupRouteController
-        public void onUpdateMemberRoutes(List<String> routeIds) {
+        public void onUpdateMemberRoutes(List<String> list) {
             Connection connection = this.mConnection;
             if (connection != null) {
-                connection.updateMemberRoutes(this.mControllerId, routeIds);
+                connection.updateMemberRoutes(this.mControllerId, list);
             }
         }
 
-        @Override // androidx.mediarouter.media.MediaRouteProvider.DynamicGroupRouteController
-        public void onAddMemberRoute(String routeId) {
+        public void onAddMemberRoute(String str) {
             Connection connection = this.mConnection;
             if (connection != null) {
-                connection.addMemberRoute(this.mControllerId, routeId);
+                connection.addMemberRoute(this.mControllerId, str);
             }
         }
 
-        @Override // androidx.mediarouter.media.MediaRouteProvider.DynamicGroupRouteController
-        public void onRemoveMemberRoute(String routeId) {
+        public void onRemoveMemberRoute(String str) {
             Connection connection = this.mConnection;
             if (connection != null) {
-                connection.removeMemberRoute(this.mControllerId, routeId);
+                connection.removeMemberRoute(this.mControllerId, str);
             }
         }
 
-        void onDynamicRoutesChanged(MediaRouteDescriptor groupRouteDescriptor, final List<MediaRouteProvider.DynamicGroupRouteController.DynamicRouteDescriptor> routes) {
-            notifyDynamicRoutesChanged(groupRouteDescriptor, routes);
+        /* access modifiers changed from: package-private */
+        public void onDynamicRoutesChanged(MediaRouteDescriptor mediaRouteDescriptor, List<MediaRouteProvider.DynamicGroupRouteController.DynamicRouteDescriptor> list) {
+            notifyDynamicRoutesChanged(mediaRouteDescriptor, list);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public final class RegisteredRouteController extends MediaRouteProvider.RouteController implements ControllerConnection {
+    private final class RegisteredRouteController extends MediaRouteProvider.RouteController implements ControllerConnection {
         private Connection mConnection;
         private int mControllerId;
         private int mPendingSetVolume = -1;
@@ -529,17 +496,15 @@ public final class RegisteredMediaRouteProvider extends MediaRouteProvider imple
         private final String mRouteId;
         private boolean mSelected;
 
-        RegisteredRouteController(String routeId, String routeGroupId) {
-            this.mRouteId = routeId;
-            this.mRouteGroupId = routeGroupId;
+        RegisteredRouteController(String str, String str2) {
+            this.mRouteId = str;
+            this.mRouteGroupId = str2;
         }
 
-        @Override // androidx.mediarouter.media.RegisteredMediaRouteProvider.ControllerConnection
         public int getControllerId() {
             return this.mControllerId;
         }
 
-        @Override // androidx.mediarouter.media.RegisteredMediaRouteProvider.ControllerConnection
         public void attachConnection(Connection connection) {
             this.mConnection = connection;
             int createRouteController = connection.createRouteController(this.mRouteId, this.mRouteGroupId);
@@ -552,15 +517,13 @@ public final class RegisteredMediaRouteProvider extends MediaRouteProvider imple
                     this.mPendingSetVolume = -1;
                 }
                 int i2 = this.mPendingUpdateVolumeDelta;
-                if (i2 == 0) {
-                    return;
+                if (i2 != 0) {
+                    connection.updateVolume(this.mControllerId, i2);
+                    this.mPendingUpdateVolumeDelta = 0;
                 }
-                connection.updateVolume(this.mControllerId, i2);
-                this.mPendingUpdateVolumeDelta = 0;
             }
         }
 
-        @Override // androidx.mediarouter.media.RegisteredMediaRouteProvider.ControllerConnection
         public void detachConnection() {
             Connection connection = this.mConnection;
             if (connection != null) {
@@ -570,12 +533,10 @@ public final class RegisteredMediaRouteProvider extends MediaRouteProvider imple
             }
         }
 
-        @Override // androidx.mediarouter.media.MediaRouteProvider.RouteController
         public void onRelease() {
             RegisteredMediaRouteProvider.this.onControllerReleased(this);
         }
 
-        @Override // androidx.mediarouter.media.MediaRouteProvider.RouteController
         public void onSelect() {
             this.mSelected = true;
             Connection connection = this.mConnection;
@@ -584,60 +545,54 @@ public final class RegisteredMediaRouteProvider extends MediaRouteProvider imple
             }
         }
 
-        @Override // androidx.mediarouter.media.MediaRouteProvider.RouteController
         public void onUnselect() {
             onUnselect(0);
         }
 
-        @Override // androidx.mediarouter.media.MediaRouteProvider.RouteController
-        public void onUnselect(int reason) {
+        public void onUnselect(int i) {
             this.mSelected = false;
             Connection connection = this.mConnection;
             if (connection != null) {
-                connection.unselectRoute(this.mControllerId, reason);
+                connection.unselectRoute(this.mControllerId, i);
             }
         }
 
-        @Override // androidx.mediarouter.media.MediaRouteProvider.RouteController
-        public void onSetVolume(int volume) {
+        public void onSetVolume(int i) {
             Connection connection = this.mConnection;
             if (connection != null) {
-                connection.setVolume(this.mControllerId, volume);
+                connection.setVolume(this.mControllerId, i);
                 return;
             }
-            this.mPendingSetVolume = volume;
+            this.mPendingSetVolume = i;
             this.mPendingUpdateVolumeDelta = 0;
         }
 
-        @Override // androidx.mediarouter.media.MediaRouteProvider.RouteController
-        public void onUpdateVolume(int delta) {
+        public void onUpdateVolume(int i) {
             Connection connection = this.mConnection;
             if (connection != null) {
-                connection.updateVolume(this.mControllerId, delta);
+                connection.updateVolume(this.mControllerId, i);
             } else {
-                this.mPendingUpdateVolumeDelta += delta;
+                this.mPendingUpdateVolumeDelta += i;
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public final class Connection implements IBinder.DeathRecipient {
+    private final class Connection implements IBinder.DeathRecipient {
+        private int mNextControllerId = 1;
+        private int mNextRequestId = 1;
+        private final SparseArray<MediaRouter.ControlRequestCallback> mPendingCallbacks = new SparseArray<>();
         private int mPendingRegisterRequestId;
         private final ReceiveHandler mReceiveHandler;
         private final Messenger mReceiveMessenger;
         private final Messenger mServiceMessenger;
         private int mServiceVersion;
-        private int mNextRequestId = 1;
-        private int mNextControllerId = 1;
-        private final SparseArray<MediaRouter.ControlRequestCallback> mPendingCallbacks = new SparseArray<>();
 
-        public boolean onGenericSuccess(int requestId) {
+        public boolean onGenericSuccess(int i) {
             return true;
         }
 
-        public Connection(Messenger serviceMessenger) {
-            this.mServiceMessenger = serviceMessenger;
+        public Connection(Messenger messenger) {
+            this.mServiceMessenger = messenger;
             ReceiveHandler receiveHandler = new ReceiveHandler(this);
             this.mReceiveHandler = receiveHandler;
             this.mReceiveMessenger = new Messenger(receiveHandler);
@@ -647,7 +602,7 @@ public final class RegisteredMediaRouteProvider extends MediaRouteProvider imple
             int i = this.mNextRequestId;
             this.mNextRequestId = i + 1;
             this.mPendingRegisterRequestId = i;
-            if (!sendRequest(1, i, 4, null, null)) {
+            if (!sendRequest(1, i, 4, (Object) null, (Bundle) null)) {
                 return false;
             }
             try {
@@ -660,115 +615,113 @@ public final class RegisteredMediaRouteProvider extends MediaRouteProvider imple
         }
 
         public void dispose() {
-            sendRequest(2, 0, 0, null, null);
+            sendRequest(2, 0, 0, (Object) null, (Bundle) null);
             this.mReceiveHandler.dispose();
             this.mServiceMessenger.getBinder().unlinkToDeath(this, 0);
-            RegisteredMediaRouteProvider.this.mPrivateHandler.post(new Runnable() { // from class: androidx.mediarouter.media.RegisteredMediaRouteProvider.Connection.1
-                @Override // java.lang.Runnable
+            RegisteredMediaRouteProvider.this.mPrivateHandler.post(new Runnable() {
                 public void run() {
                     Connection.this.failPendingCallbacks();
                 }
             });
         }
 
-        void failPendingCallbacks() {
+        /* access modifiers changed from: package-private */
+        public void failPendingCallbacks() {
             int size = this.mPendingCallbacks.size();
             for (int i = 0; i < size; i++) {
-                this.mPendingCallbacks.valueAt(i).onError(null, null);
+                this.mPendingCallbacks.valueAt(i).onError((String) null, (Bundle) null);
             }
             this.mPendingCallbacks.clear();
         }
 
-        public boolean onGenericFailure(int requestId) {
-            if (requestId == this.mPendingRegisterRequestId) {
+        public boolean onGenericFailure(int i) {
+            if (i == this.mPendingRegisterRequestId) {
                 this.mPendingRegisterRequestId = 0;
                 RegisteredMediaRouteProvider.this.onConnectionError(this, "Registration failed");
             }
-            MediaRouter.ControlRequestCallback controlRequestCallback = this.mPendingCallbacks.get(requestId);
-            if (controlRequestCallback != null) {
-                this.mPendingCallbacks.remove(requestId);
-                controlRequestCallback.onError(null, null);
+            MediaRouter.ControlRequestCallback controlRequestCallback = this.mPendingCallbacks.get(i);
+            if (controlRequestCallback == null) {
                 return true;
             }
+            this.mPendingCallbacks.remove(i);
+            controlRequestCallback.onError((String) null, (Bundle) null);
             return true;
         }
 
-        public boolean onRegistered(int requestId, int serviceVersion, Bundle descriptorBundle) {
-            if (this.mServiceVersion == 0 && requestId == this.mPendingRegisterRequestId && serviceVersion >= 1) {
-                this.mPendingRegisterRequestId = 0;
-                this.mServiceVersion = serviceVersion;
-                RegisteredMediaRouteProvider.this.onConnectionDescriptorChanged(this, MediaRouteProviderDescriptor.fromBundle(descriptorBundle));
-                RegisteredMediaRouteProvider.this.onConnectionReady(this);
-                return true;
+        public boolean onRegistered(int i, int i2, Bundle bundle) {
+            if (this.mServiceVersion != 0 || i != this.mPendingRegisterRequestId || i2 < 1) {
+                return false;
             }
-            return false;
+            this.mPendingRegisterRequestId = 0;
+            this.mServiceVersion = i2;
+            RegisteredMediaRouteProvider.this.onConnectionDescriptorChanged(this, MediaRouteProviderDescriptor.fromBundle(bundle));
+            RegisteredMediaRouteProvider.this.onConnectionReady(this);
+            return true;
         }
 
-        public boolean onDescriptorChanged(Bundle descriptorBundle) {
-            if (this.mServiceVersion != 0) {
-                RegisteredMediaRouteProvider.this.onConnectionDescriptorChanged(this, MediaRouteProviderDescriptor.fromBundle(descriptorBundle));
-                return true;
+        public boolean onDescriptorChanged(Bundle bundle) {
+            if (this.mServiceVersion == 0) {
+                return false;
             }
-            return false;
+            RegisteredMediaRouteProvider.this.onConnectionDescriptorChanged(this, MediaRouteProviderDescriptor.fromBundle(bundle));
+            return true;
         }
 
-        public boolean onDynamicRouteDescriptorsChanged(int controllerId, Bundle descriptorsBundle) {
-            if (this.mServiceVersion != 0) {
-                MediaRouteDescriptor mediaRouteDescriptor = null;
-                Bundle bundle = (Bundle) descriptorsBundle.getParcelable("groupRoute");
-                if (bundle != null) {
-                    mediaRouteDescriptor = MediaRouteDescriptor.fromBundle(bundle);
-                }
-                ArrayList parcelableArrayList = descriptorsBundle.getParcelableArrayList("dynamicRoutes");
-                ArrayList arrayList = new ArrayList();
-                Iterator it = parcelableArrayList.iterator();
-                while (it.hasNext()) {
-                    arrayList.add(MediaRouteProvider.DynamicGroupRouteController.DynamicRouteDescriptor.fromBundle((Bundle) it.next()));
-                }
-                RegisteredMediaRouteProvider.this.onDynamicRouteDescriptorChanged(this, controllerId, mediaRouteDescriptor, arrayList);
-                return true;
+        public boolean onDynamicRouteDescriptorsChanged(int i, Bundle bundle) {
+            if (this.mServiceVersion == 0) {
+                return false;
             }
-            return false;
+            MediaRouteDescriptor mediaRouteDescriptor = null;
+            Bundle bundle2 = (Bundle) bundle.getParcelable("groupRoute");
+            if (bundle2 != null) {
+                mediaRouteDescriptor = MediaRouteDescriptor.fromBundle(bundle2);
+            }
+            ArrayList parcelableArrayList = bundle.getParcelableArrayList("dynamicRoutes");
+            ArrayList arrayList = new ArrayList();
+            Iterator it = parcelableArrayList.iterator();
+            while (it.hasNext()) {
+                arrayList.add(MediaRouteProvider.DynamicGroupRouteController.DynamicRouteDescriptor.fromBundle((Bundle) it.next()));
+            }
+            RegisteredMediaRouteProvider.this.onDynamicRouteDescriptorChanged(this, i, mediaRouteDescriptor, arrayList);
+            return true;
         }
 
-        public boolean onControlRequestSucceeded(int requestId, Bundle data) {
-            MediaRouter.ControlRequestCallback controlRequestCallback = this.mPendingCallbacks.get(requestId);
-            if (controlRequestCallback != null) {
-                this.mPendingCallbacks.remove(requestId);
-                controlRequestCallback.onResult(data);
-                return true;
+        public boolean onControlRequestSucceeded(int i, Bundle bundle) {
+            MediaRouter.ControlRequestCallback controlRequestCallback = this.mPendingCallbacks.get(i);
+            if (controlRequestCallback == null) {
+                return false;
             }
-            return false;
+            this.mPendingCallbacks.remove(i);
+            controlRequestCallback.onResult(bundle);
+            return true;
         }
 
-        public boolean onControlRequestFailed(int requestId, String error, Bundle data) {
-            MediaRouter.ControlRequestCallback controlRequestCallback = this.mPendingCallbacks.get(requestId);
-            if (controlRequestCallback != null) {
-                this.mPendingCallbacks.remove(requestId);
-                controlRequestCallback.onError(error, data);
-                return true;
+        public boolean onControlRequestFailed(int i, String str, Bundle bundle) {
+            MediaRouter.ControlRequestCallback controlRequestCallback = this.mPendingCallbacks.get(i);
+            if (controlRequestCallback == null) {
+                return false;
             }
-            return false;
+            this.mPendingCallbacks.remove(i);
+            controlRequestCallback.onError(str, bundle);
+            return true;
         }
 
-        public void onDynamicGroupRouteControllerCreated(int requestId, Bundle data) {
-            MediaRouter.ControlRequestCallback controlRequestCallback = this.mPendingCallbacks.get(requestId);
-            if (data != null && data.containsKey("routeId")) {
-                this.mPendingCallbacks.remove(requestId);
-                controlRequestCallback.onResult(data);
+        public void onDynamicGroupRouteControllerCreated(int i, Bundle bundle) {
+            MediaRouter.ControlRequestCallback controlRequestCallback = this.mPendingCallbacks.get(i);
+            if (bundle == null || !bundle.containsKey("routeId")) {
+                controlRequestCallback.onError("DynamicGroupRouteController is created without valid route id.", bundle);
                 return;
             }
-            controlRequestCallback.onError("DynamicGroupRouteController is created without valid route id.", data);
+            this.mPendingCallbacks.remove(i);
+            controlRequestCallback.onResult(bundle);
         }
 
-        public void onControllerReleasedByProvider(int controllerId) {
-            RegisteredMediaRouteProvider.this.onConnectionControllerReleasedByProvider(this, controllerId);
+        public void onControllerReleasedByProvider(int i) {
+            RegisteredMediaRouteProvider.this.onConnectionControllerReleasedByProvider(this, i);
         }
 
-        @Override // android.os.IBinder.DeathRecipient
         public void binderDied() {
-            RegisteredMediaRouteProvider.this.mPrivateHandler.post(new Runnable() { // from class: androidx.mediarouter.media.RegisteredMediaRouteProvider.Connection.2
-                @Override // java.lang.Runnable
+            RegisteredMediaRouteProvider.this.mPrivateHandler.post(new Runnable() {
                 public void run() {
                     Connection connection = Connection.this;
                     RegisteredMediaRouteProvider.this.onConnectionDied(connection);
@@ -776,103 +729,103 @@ public final class RegisteredMediaRouteProvider extends MediaRouteProvider imple
             });
         }
 
-        public int createRouteController(String routeId, String routeGroupId) {
+        public int createRouteController(String str, String str2) {
             int i = this.mNextControllerId;
             this.mNextControllerId = i + 1;
             Bundle bundle = new Bundle();
-            bundle.putString("routeId", routeId);
-            bundle.putString("routeGroupId", routeGroupId);
+            bundle.putString("routeId", str);
+            bundle.putString("routeGroupId", str2);
             int i2 = this.mNextRequestId;
             this.mNextRequestId = i2 + 1;
-            sendRequest(3, i2, i, null, bundle);
+            sendRequest(3, i2, i, (Object) null, bundle);
             return i;
         }
 
-        public int createDynamicGroupRouteController(String initialMemberRouteId, MediaRouter.ControlRequestCallback callback) {
+        public int createDynamicGroupRouteController(String str, MediaRouter.ControlRequestCallback controlRequestCallback) {
             int i = this.mNextControllerId;
             this.mNextControllerId = i + 1;
             int i2 = this.mNextRequestId;
             this.mNextRequestId = i2 + 1;
             Bundle bundle = new Bundle();
-            bundle.putString("memberRouteId", initialMemberRouteId);
-            sendRequest(11, i2, i, null, bundle);
-            this.mPendingCallbacks.put(i2, callback);
+            bundle.putString("memberRouteId", str);
+            sendRequest(11, i2, i, (Object) null, bundle);
+            this.mPendingCallbacks.put(i2, controlRequestCallback);
             return i;
         }
 
-        public void releaseRouteController(int controllerId) {
-            int i = this.mNextRequestId;
-            this.mNextRequestId = i + 1;
-            sendRequest(4, i, controllerId, null, null);
+        public void releaseRouteController(int i) {
+            int i2 = this.mNextRequestId;
+            this.mNextRequestId = i2 + 1;
+            sendRequest(4, i2, i, (Object) null, (Bundle) null);
         }
 
-        public void selectRoute(int controllerId) {
-            int i = this.mNextRequestId;
-            this.mNextRequestId = i + 1;
-            sendRequest(5, i, controllerId, null, null);
+        public void selectRoute(int i) {
+            int i2 = this.mNextRequestId;
+            this.mNextRequestId = i2 + 1;
+            sendRequest(5, i2, i, (Object) null, (Bundle) null);
         }
 
-        public void unselectRoute(int controllerId, int reason) {
+        public void unselectRoute(int i, int i2) {
             Bundle bundle = new Bundle();
-            bundle.putInt("unselectReason", reason);
-            int i = this.mNextRequestId;
-            this.mNextRequestId = i + 1;
-            sendRequest(6, i, controllerId, null, bundle);
+            bundle.putInt("unselectReason", i2);
+            int i3 = this.mNextRequestId;
+            this.mNextRequestId = i3 + 1;
+            sendRequest(6, i3, i, (Object) null, bundle);
         }
 
-        public void setVolume(int controllerId, int volume) {
+        public void setVolume(int i, int i2) {
             Bundle bundle = new Bundle();
-            bundle.putInt("volume", volume);
-            int i = this.mNextRequestId;
-            this.mNextRequestId = i + 1;
-            sendRequest(7, i, controllerId, null, bundle);
+            bundle.putInt("volume", i2);
+            int i3 = this.mNextRequestId;
+            this.mNextRequestId = i3 + 1;
+            sendRequest(7, i3, i, (Object) null, bundle);
         }
 
-        public void updateVolume(int controllerId, int delta) {
+        public void updateVolume(int i, int i2) {
             Bundle bundle = new Bundle();
-            bundle.putInt("volume", delta);
-            int i = this.mNextRequestId;
-            this.mNextRequestId = i + 1;
-            sendRequest(8, i, controllerId, null, bundle);
+            bundle.putInt("volume", i2);
+            int i3 = this.mNextRequestId;
+            this.mNextRequestId = i3 + 1;
+            sendRequest(8, i3, i, (Object) null, bundle);
         }
 
-        public void updateMemberRoutes(int controllerId, List<String> memberRouteIds) {
+        public void updateMemberRoutes(int i, List<String> list) {
             Bundle bundle = new Bundle();
-            bundle.putStringArrayList("memberRouteIds", new ArrayList<>(memberRouteIds));
-            int i = this.mNextRequestId;
-            this.mNextRequestId = i + 1;
-            sendRequest(14, i, controllerId, null, bundle);
+            bundle.putStringArrayList("memberRouteIds", new ArrayList(list));
+            int i2 = this.mNextRequestId;
+            this.mNextRequestId = i2 + 1;
+            sendRequest(14, i2, i, (Object) null, bundle);
         }
 
-        public void addMemberRoute(int controllerId, String memberRouteId) {
+        public void addMemberRoute(int i, String str) {
             Bundle bundle = new Bundle();
-            bundle.putString("memberRouteId", memberRouteId);
-            int i = this.mNextRequestId;
-            this.mNextRequestId = i + 1;
-            sendRequest(12, i, controllerId, null, bundle);
+            bundle.putString("memberRouteId", str);
+            int i2 = this.mNextRequestId;
+            this.mNextRequestId = i2 + 1;
+            sendRequest(12, i2, i, (Object) null, bundle);
         }
 
-        public void removeMemberRoute(int controllerId, String memberRouteId) {
+        public void removeMemberRoute(int i, String str) {
             Bundle bundle = new Bundle();
-            bundle.putString("memberRouteId", memberRouteId);
-            int i = this.mNextRequestId;
-            this.mNextRequestId = i + 1;
-            sendRequest(13, i, controllerId, null, bundle);
+            bundle.putString("memberRouteId", str);
+            int i2 = this.mNextRequestId;
+            this.mNextRequestId = i2 + 1;
+            sendRequest(13, i2, i, (Object) null, bundle);
         }
 
-        public void setDiscoveryRequest(MediaRouteDiscoveryRequest request) {
+        public void setDiscoveryRequest(MediaRouteDiscoveryRequest mediaRouteDiscoveryRequest) {
             int i = this.mNextRequestId;
             this.mNextRequestId = i + 1;
-            sendRequest(10, i, 0, request != null ? request.asBundle() : null, null);
+            sendRequest(10, i, 0, mediaRouteDiscoveryRequest != null ? mediaRouteDiscoveryRequest.asBundle() : null, (Bundle) null);
         }
 
-        private boolean sendRequest(int what, int requestId, int arg, Object obj, Bundle data) {
+        private boolean sendRequest(int i, int i2, int i3, Object obj, Bundle bundle) {
             Message obtain = Message.obtain();
-            obtain.what = what;
-            obtain.arg1 = requestId;
-            obtain.arg2 = arg;
+            obtain.what = i;
+            obtain.arg1 = i2;
+            obtain.arg2 = i3;
             obtain.obj = obj;
-            obtain.setData(data);
+            obtain.setData(bundle);
             obtain.replyTo = this.mReceiveMessenger;
             try {
                 this.mServiceMessenger.send(obtain);
@@ -880,7 +833,7 @@ public final class RegisteredMediaRouteProvider extends MediaRouteProvider imple
             } catch (DeadObjectException unused) {
                 return false;
             } catch (RemoteException e) {
-                if (what == 2) {
+                if (i == 2) {
                     return false;
                 }
                 Log.e("MediaRouteProviderProxy", "Could not send message to service.", e);
@@ -889,16 +842,12 @@ public final class RegisteredMediaRouteProvider extends MediaRouteProvider imple
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static final class PrivateHandler extends Handler {
+    private static final class PrivateHandler extends Handler {
         PrivateHandler() {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static final class ReceiveHandler extends Handler {
+    private static final class ReceiveHandler extends Handler {
         private final WeakReference<Connection> mConnectionRef;
 
         public ReceiveHandler(Connection connection) {
@@ -909,57 +858,63 @@ public final class RegisteredMediaRouteProvider extends MediaRouteProvider imple
             this.mConnectionRef.clear();
         }
 
-        @Override // android.os.Handler
-        public void handleMessage(Message msg) {
-            Connection connection = this.mConnectionRef.get();
-            if (connection == null || processMessage(connection, msg.what, msg.arg1, msg.arg2, msg.obj, msg.peekData()) || !RegisteredMediaRouteProvider.DEBUG) {
-                return;
+        public void handleMessage(Message message) {
+            Connection connection = (Connection) this.mConnectionRef.get();
+            if (connection != null) {
+                if (!processMessage(connection, message.what, message.arg1, message.arg2, message.obj, message.peekData()) && RegisteredMediaRouteProvider.DEBUG) {
+                    Log.d("MediaRouteProviderProxy", "Unhandled message from server: " + message);
+                }
             }
-            Log.d("MediaRouteProviderProxy", "Unhandled message from server: " + msg);
         }
 
-        private boolean processMessage(Connection connection, int what, int requestId, int arg, Object obj, Bundle data) {
-            switch (what) {
+        private boolean processMessage(Connection connection, int i, int i2, int i3, Object obj, Bundle bundle) {
+            String str;
+            switch (i) {
                 case 0:
-                    connection.onGenericFailure(requestId);
+                    connection.onGenericFailure(i2);
                     return true;
                 case 1:
-                    connection.onGenericSuccess(requestId);
+                    connection.onGenericSuccess(i2);
                     return true;
                 case 2:
-                    if (obj != null && !(obj instanceof Bundle)) {
-                        return false;
+                    if (obj == null || (obj instanceof Bundle)) {
+                        return connection.onRegistered(i2, i3, (Bundle) obj);
                     }
-                    return connection.onRegistered(requestId, arg, (Bundle) obj);
+                    return false;
                 case 3:
-                    if (obj != null && !(obj instanceof Bundle)) {
-                        return false;
+                    if (obj == null || (obj instanceof Bundle)) {
+                        return connection.onControlRequestSucceeded(i2, (Bundle) obj);
                     }
-                    return connection.onControlRequestSucceeded(requestId, (Bundle) obj);
+                    return false;
                 case 4:
                     if (obj != null && !(obj instanceof Bundle)) {
                         return false;
                     }
-                    return connection.onControlRequestFailed(requestId, data == null ? null : data.getString("error"), (Bundle) obj);
-                case 5:
-                    if (obj != null && !(obj instanceof Bundle)) {
-                        return false;
+                    if (bundle == null) {
+                        str = null;
+                    } else {
+                        str = bundle.getString("error");
                     }
-                    return connection.onDescriptorChanged((Bundle) obj);
+                    return connection.onControlRequestFailed(i2, str, (Bundle) obj);
+                case 5:
+                    if (obj == null || (obj instanceof Bundle)) {
+                        return connection.onDescriptorChanged((Bundle) obj);
+                    }
+                    return false;
                 case 6:
                     if (obj instanceof Bundle) {
-                        connection.onDynamicGroupRouteControllerCreated(requestId, (Bundle) obj);
+                        connection.onDynamicGroupRouteControllerCreated(i2, (Bundle) obj);
                         return false;
                     }
                     Log.w("MediaRouteProviderProxy", "No further information on the dynamic group controller");
                     return false;
                 case 7:
-                    if (obj != null && !(obj instanceof Bundle)) {
-                        return false;
+                    if (obj == null || (obj instanceof Bundle)) {
+                        return connection.onDynamicRouteDescriptorsChanged(i3, (Bundle) obj);
                     }
-                    return connection.onDynamicRouteDescriptorsChanged(arg, (Bundle) obj);
+                    return false;
                 case 8:
-                    connection.onControllerReleasedByProvider(arg);
+                    connection.onControllerReleasedByProvider(i3);
                     return false;
                 default:
                     return false;

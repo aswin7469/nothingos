@@ -1,6 +1,5 @@
 package androidx.mediarouter.media;
 
-import android.annotation.SuppressLint;
 import android.media.MediaRoute2Info;
 import android.media.RouteDiscoveryPreference;
 import android.net.Uri;
@@ -8,23 +7,22 @@ import android.os.Bundle;
 import androidx.mediarouter.media.MediaRouteDescriptor;
 import java.util.ArrayList;
 import java.util.List;
-@SuppressLint({"NewApi"})
-/* loaded from: classes.dex */
+
 class MediaRouter2Utils {
-    public static MediaRouteDescriptor toMediaRouteDescriptor(MediaRoute2Info fwkMediaRoute2Info) {
-        if (fwkMediaRoute2Info == null) {
+    public static MediaRouteDescriptor toMediaRouteDescriptor(MediaRoute2Info mediaRoute2Info) {
+        if (mediaRoute2Info == null) {
             return null;
         }
-        MediaRouteDescriptor.Builder canDisconnect = new MediaRouteDescriptor.Builder(fwkMediaRoute2Info.getId(), fwkMediaRoute2Info.getName().toString()).setConnectionState(fwkMediaRoute2Info.getConnectionState()).setVolumeHandling(fwkMediaRoute2Info.getVolumeHandling()).setVolumeMax(fwkMediaRoute2Info.getVolumeMax()).setVolume(fwkMediaRoute2Info.getVolume()).setExtras(fwkMediaRoute2Info.getExtras()).setEnabled(true).setCanDisconnect(false);
-        CharSequence description = fwkMediaRoute2Info.getDescription();
+        MediaRouteDescriptor.Builder canDisconnect = new MediaRouteDescriptor.Builder(mediaRoute2Info.getId(), mediaRoute2Info.getName().toString()).setConnectionState(mediaRoute2Info.getConnectionState()).setVolumeHandling(mediaRoute2Info.getVolumeHandling()).setVolumeMax(mediaRoute2Info.getVolumeMax()).setVolume(mediaRoute2Info.getVolume()).setExtras(mediaRoute2Info.getExtras()).setEnabled(true).setCanDisconnect(false);
+        CharSequence description = mediaRoute2Info.getDescription();
         if (description != null) {
             canDisconnect.setDescription(description.toString());
         }
-        Uri iconUri = fwkMediaRoute2Info.getIconUri();
+        Uri iconUri = mediaRoute2Info.getIconUri();
         if (iconUri != null) {
             canDisconnect.setIconUri(iconUri);
         }
-        Bundle extras = fwkMediaRoute2Info.getExtras();
+        Bundle extras = mediaRoute2Info.getExtras();
         if (extras == null || !extras.containsKey("androidx.mediarouter.media.KEY_EXTRAS") || !extras.containsKey("androidx.mediarouter.media.KEY_DEVICE_TYPE") || !extras.containsKey("androidx.mediarouter.media.KEY_CONTROL_FILTERS")) {
             return null;
         }
@@ -38,51 +36,49 @@ class MediaRouter2Utils {
         return canDisconnect.build();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static List<String> getRouteIds(List<MediaRoute2Info> routes) {
-        if (routes == null) {
+    static List<String> getRouteIds(List<MediaRoute2Info> list) {
+        if (list == null) {
             return new ArrayList();
         }
         ArrayList arrayList = new ArrayList();
-        for (MediaRoute2Info mediaRoute2Info : routes) {
-            if (mediaRoute2Info != null) {
-                arrayList.add(mediaRoute2Info.getId());
+        for (MediaRoute2Info next : list) {
+            if (next != null) {
+                arrayList.add(next.getId());
             }
         }
         return arrayList;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static RouteDiscoveryPreference toDiscoveryPreference(MediaRouteDiscoveryRequest discoveryRequest) {
-        if (discoveryRequest == null || !discoveryRequest.isValid()) {
+    static RouteDiscoveryPreference toDiscoveryPreference(MediaRouteDiscoveryRequest mediaRouteDiscoveryRequest) {
+        if (mediaRouteDiscoveryRequest == null || !mediaRouteDiscoveryRequest.isValid()) {
             return new RouteDiscoveryPreference.Builder(new ArrayList(), false).build();
         }
-        boolean isActiveScan = discoveryRequest.isActiveScan();
+        boolean isActiveScan = mediaRouteDiscoveryRequest.isActiveScan();
         ArrayList arrayList = new ArrayList();
-        for (String str : discoveryRequest.getSelector().getControlCategories()) {
-            arrayList.add(toRouteFeature(str));
+        for (String routeFeature : mediaRouteDiscoveryRequest.getSelector().getControlCategories()) {
+            arrayList.add(toRouteFeature(routeFeature));
         }
         return new RouteDiscoveryPreference.Builder(arrayList, isActiveScan).build();
     }
 
-    static String toRouteFeature(String controlCategory) {
-        controlCategory.hashCode();
+    static String toRouteFeature(String str) {
+        str.hashCode();
         char c = 65535;
-        switch (controlCategory.hashCode()) {
+        switch (str.hashCode()) {
             case -2065577523:
-                if (controlCategory.equals("android.media.intent.category.REMOTE_PLAYBACK")) {
+                if (str.equals("android.media.intent.category.REMOTE_PLAYBACK")) {
                     c = 0;
                     break;
                 }
                 break;
             case 956939050:
-                if (controlCategory.equals("android.media.intent.category.LIVE_AUDIO")) {
+                if (str.equals("android.media.intent.category.LIVE_AUDIO")) {
                     c = 1;
                     break;
                 }
                 break;
             case 975975375:
-                if (controlCategory.equals("android.media.intent.category.LIVE_VIDEO")) {
+                if (str.equals("android.media.intent.category.LIVE_VIDEO")) {
                     c = 2;
                     break;
                 }
@@ -96,7 +92,7 @@ class MediaRouter2Utils {
             case 2:
                 return "android.media.route.feature.LIVE_VIDEO";
             default:
-                return controlCategory;
+                return str;
         }
     }
 }

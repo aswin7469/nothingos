@@ -3,40 +3,23 @@ package com.google.android.material.ripple;
 import android.annotation.TargetApi;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.os.Build;
-import android.util.Log;
 import android.util.StateSet;
 import androidx.core.graphics.ColorUtils;
-/* loaded from: classes2.dex */
-public class RippleUtils {
-    private static final int[] ENABLED_PRESSED_STATE_SET;
-    private static final int[] FOCUSED_STATE_SET;
-    private static final int[] HOVERED_FOCUSED_STATE_SET;
-    private static final int[] HOVERED_STATE_SET;
-    static final String LOG_TAG;
-    private static final int[] PRESSED_STATE_SET;
-    private static final int[] SELECTED_FOCUSED_STATE_SET;
-    private static final int[] SELECTED_HOVERED_FOCUSED_STATE_SET;
-    private static final int[] SELECTED_HOVERED_STATE_SET;
-    private static final int[] SELECTED_PRESSED_STATE_SET;
-    private static final int[] SELECTED_STATE_SET;
-    static final String TRANSPARENT_DEFAULT_COLOR_WARNING = "Use a non-transparent color for the default color as it will be used to finish ripple animations.";
-    public static final boolean USE_FRAMEWORK_RIPPLE;
 
-    static {
-        USE_FRAMEWORK_RIPPLE = Build.VERSION.SDK_INT >= 21;
-        PRESSED_STATE_SET = new int[]{16842919};
-        HOVERED_FOCUSED_STATE_SET = new int[]{16843623, 16842908};
-        FOCUSED_STATE_SET = new int[]{16842908};
-        HOVERED_STATE_SET = new int[]{16843623};
-        SELECTED_PRESSED_STATE_SET = new int[]{16842913, 16842919};
-        SELECTED_HOVERED_FOCUSED_STATE_SET = new int[]{16842913, 16843623, 16842908};
-        SELECTED_FOCUSED_STATE_SET = new int[]{16842913, 16842908};
-        SELECTED_HOVERED_STATE_SET = new int[]{16842913, 16843623};
-        SELECTED_STATE_SET = new int[]{16842913};
-        ENABLED_PRESSED_STATE_SET = new int[]{16842910, 16842919};
-        LOG_TAG = RippleUtils.class.getSimpleName();
-    }
+public class RippleUtils {
+    private static final int[] ENABLED_PRESSED_STATE_SET = {16842910, 16842919};
+    private static final int[] FOCUSED_STATE_SET = {16842908};
+    private static final int[] HOVERED_FOCUSED_STATE_SET = {16843623, 16842908};
+    private static final int[] HOVERED_STATE_SET = {16843623};
+    static final String LOG_TAG = RippleUtils.class.getSimpleName();
+    private static final int[] PRESSED_STATE_SET = {16842919};
+    private static final int[] SELECTED_FOCUSED_STATE_SET = {16842913, 16842908};
+    private static final int[] SELECTED_HOVERED_FOCUSED_STATE_SET = {16842913, 16843623, 16842908};
+    private static final int[] SELECTED_HOVERED_STATE_SET = {16842913, 16843623};
+    private static final int[] SELECTED_PRESSED_STATE_SET = {16842913, 16842919};
+    private static final int[] SELECTED_STATE_SET = {16842913};
+    static final String TRANSPARENT_DEFAULT_COLOR_WARNING = "Use a non-transparent color for the default color as it will be used to finish ripple animations.";
+    public static final boolean USE_FRAMEWORK_RIPPLE = true;
 
     private RippleUtils() {
     }
@@ -57,14 +40,7 @@ public class RippleUtils {
     }
 
     public static ColorStateList sanitizeRippleDrawableColor(ColorStateList colorStateList) {
-        if (colorStateList != null) {
-            int i = Build.VERSION.SDK_INT;
-            if (i >= 22 && i <= 27 && Color.alpha(colorStateList.getDefaultColor()) == 0 && Color.alpha(colorStateList.getColorForState(ENABLED_PRESSED_STATE_SET, 0)) != 0) {
-                Log.w(LOG_TAG, TRANSPARENT_DEFAULT_COLOR_WARNING);
-            }
-            return colorStateList;
-        }
-        return ColorStateList.valueOf(0);
+        return colorStateList != null ? colorStateList : ColorStateList.valueOf(0);
     }
 
     public static boolean shouldDrawRippleCompat(int[] iArr) {

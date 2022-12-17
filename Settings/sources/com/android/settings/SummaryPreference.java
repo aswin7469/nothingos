@@ -7,7 +7,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
-/* loaded from: classes.dex */
+
 public class SummaryPreference extends Preference {
     private String mAmount;
     private boolean mChartEnabled = true;
@@ -20,23 +20,21 @@ public class SummaryPreference extends Preference {
 
     public SummaryPreference(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        setLayoutResource(R.layout.settings_summary_preference);
+        setLayoutResource(R$layout.settings_summary_preference);
     }
 
     public void setAmount(String str) {
         this.mAmount = str;
-        if (str == null || this.mUnits == null) {
-            return;
+        if (str != null && this.mUnits != null) {
+            setTitle(TextUtils.expandTemplate(getContext().getText(R$string.storage_size_large), new CharSequence[]{this.mAmount, this.mUnits}));
         }
-        setTitle(TextUtils.expandTemplate(getContext().getText(R.string.storage_size_large), this.mAmount, this.mUnits));
     }
 
     public void setUnits(String str) {
         this.mUnits = str;
-        if (this.mAmount == null || str == null) {
-            return;
+        if (this.mAmount != null && str != null) {
+            setTitle(TextUtils.expandTemplate(getContext().getText(R$string.storage_size_large), new CharSequence[]{this.mAmount, this.mUnits}));
         }
-        setTitle(TextUtils.expandTemplate(getContext().getText(R.string.storage_size_large), this.mAmount, this.mUnits));
     }
 
     public void setRatios(float f, float f2, float f3) {
@@ -46,10 +44,9 @@ public class SummaryPreference extends Preference {
         notifyChanged();
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
-        ProgressBar progressBar = (ProgressBar) preferenceViewHolder.itemView.findViewById(R.id.color_bar);
+        ProgressBar progressBar = (ProgressBar) preferenceViewHolder.itemView.findViewById(R$id.color_bar);
         if (this.mChartEnabled) {
             progressBar.setVisibility(0);
             int i = (int) (this.mLeftRatio * 100.0f);
@@ -58,12 +55,12 @@ public class SummaryPreference extends Preference {
         } else {
             progressBar.setVisibility(8);
         }
-        if (this.mChartEnabled && (!TextUtils.isEmpty(this.mStartLabel) || !TextUtils.isEmpty(this.mEndLabel))) {
-            preferenceViewHolder.findViewById(R.id.label_bar).setVisibility(0);
-            ((TextView) preferenceViewHolder.findViewById(16908308)).setText(this.mStartLabel);
-            ((TextView) preferenceViewHolder.findViewById(16908309)).setText(this.mEndLabel);
+        if (!this.mChartEnabled || (TextUtils.isEmpty(this.mStartLabel) && TextUtils.isEmpty(this.mEndLabel))) {
+            preferenceViewHolder.findViewById(R$id.label_bar).setVisibility(8);
             return;
         }
-        preferenceViewHolder.findViewById(R.id.label_bar).setVisibility(8);
+        preferenceViewHolder.findViewById(R$id.label_bar).setVisibility(0);
+        ((TextView) preferenceViewHolder.findViewById(16908308)).setText(this.mStartLabel);
+        ((TextView) preferenceViewHolder.findViewById(16908309)).setText(this.mEndLabel);
     }
 }

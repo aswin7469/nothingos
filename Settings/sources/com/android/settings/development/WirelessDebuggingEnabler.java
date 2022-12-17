@@ -9,13 +9,13 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.widget.SwitchWidgetController;
 import com.android.settingslib.core.lifecycle.Lifecycle;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnPause;
 import com.android.settingslib.core.lifecycle.events.OnResume;
-/* loaded from: classes.dex */
+
 public class WirelessDebuggingEnabler implements SwitchWidgetController.OnSwitchChangeListener, LifecycleObserver, OnResume, OnPause {
     private final ContentResolver mContentResolver;
     private Context mContext;
@@ -25,7 +25,6 @@ public class WirelessDebuggingEnabler implements SwitchWidgetController.OnSwitch
     private final ContentObserver mSettingsObserver;
     private final SwitchWidgetController mSwitchWidget;
 
-    /* loaded from: classes.dex */
     public interface OnEnabledListener {
         void onEnabled(boolean z);
     }
@@ -42,8 +41,7 @@ public class WirelessDebuggingEnabler implements SwitchWidgetController.OnSwitch
             lifecycle.addObserver(this);
         }
         this.mContentResolver = context.getContentResolver();
-        this.mSettingsObserver = new ContentObserver(handler) { // from class: com.android.settings.development.WirelessDebuggingEnabler.1
-            @Override // android.database.ContentObserver
+        this.mSettingsObserver = new ContentObserver(handler) {
             public void onChange(boolean z, Uri uri) {
                 Log.i("WirelessDebuggingEnabler", "ADB_WIFI_ENABLED=" + WirelessDebuggingEnabler.this.isAdbWifiEnabled());
                 WirelessDebuggingEnabler wirelessDebuggingEnabler = WirelessDebuggingEnabler.this;
@@ -52,7 +50,7 @@ public class WirelessDebuggingEnabler implements SwitchWidgetController.OnSwitch
         };
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public boolean isAdbWifiEnabled() {
         return Settings.Global.getInt(this.mContentResolver, "adb_wifi_enabled", 0) != 0;
     }
@@ -65,7 +63,6 @@ public class WirelessDebuggingEnabler implements SwitchWidgetController.OnSwitch
         this.mSwitchWidget.teardownView();
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnResume
     public void onResume() {
         if (!this.mListeningToOnSwitchChange) {
             this.mSwitchWidget.startListening();
@@ -75,7 +72,6 @@ public class WirelessDebuggingEnabler implements SwitchWidgetController.OnSwitch
         this.mContentResolver.registerContentObserver(Settings.Global.getUriFor("adb_wifi_enabled"), false, this.mSettingsObserver);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnPause
     public void onPause() {
         if (this.mListeningToOnSwitchChange) {
             this.mSwitchWidget.stopListening();
@@ -84,7 +80,7 @@ public class WirelessDebuggingEnabler implements SwitchWidgetController.OnSwitch
         this.mContentResolver.unregisterContentObserver(this.mSettingsObserver);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void onWirelessDebuggingEnabled(boolean z) {
         this.mSwitchWidget.setChecked(z);
         OnEnabledListener onEnabledListener = this.mListener;
@@ -93,18 +89,18 @@ public class WirelessDebuggingEnabler implements SwitchWidgetController.OnSwitch
         }
     }
 
-    protected void writeAdbWifiSetting(boolean z) {
+    /* access modifiers changed from: protected */
+    public void writeAdbWifiSetting(boolean z) {
         Settings.Global.putInt(this.mContext.getContentResolver(), "adb_wifi_enabled", z ? 1 : 0);
     }
 
-    @Override // com.android.settings.widget.SwitchWidgetController.OnSwitchChangeListener
     public boolean onSwitchToggled(boolean z) {
-        if (z && !WirelessDebuggingPreferenceController.isWifiConnected(this.mContext)) {
-            Toast.makeText(this.mContext, R.string.adb_wireless_no_network_msg, 1).show();
-            this.mSwitchWidget.setChecked(false);
-            return false;
+        if (!z || WirelessDebuggingPreferenceController.isWifiConnected(this.mContext)) {
+            writeAdbWifiSetting(z);
+            return true;
         }
-        writeAdbWifiSetting(z);
-        return true;
+        Toast.makeText(this.mContext, R$string.adb_wireless_no_network_msg, 1).show();
+        this.mSwitchWidget.setChecked(false);
+        return false;
     }
 }

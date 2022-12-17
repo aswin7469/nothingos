@@ -1,15 +1,15 @@
 package androidx.core.view;
 
 import android.view.View;
-/* loaded from: classes.dex */
-public interface NestedScrollingParent2 extends NestedScrollingParent {
-    void onNestedPreScroll(View target, int dx, int dy, int[] consumed, int type);
 
-    void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type);
+public interface NestedScrollingParent2 {
+    void onNestedPreScroll(View view, int i, int i2, int[] iArr, int i3);
 
-    void onNestedScrollAccepted(View child, View target, int axes, int type);
+    void onNestedScroll(View view, int i, int i2, int i3, int i4, int i5);
 
-    boolean onStartNestedScroll(View child, View target, int axes, int type);
+    void onNestedScrollAccepted(View view, View view2, int i, int i2);
 
-    void onStopNestedScroll(View target, int type);
+    boolean onStartNestedScroll(View view, View view2, int i, int i2);
+
+    void onStopNestedScroll(View view, int i);
 }

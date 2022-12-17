@@ -17,6 +17,7 @@ import android.os.Message;
 import android.os.SimpleClock;
 import android.os.SystemClock;
 import android.text.TextUtils;
+import android.util.EventLog;
 import android.util.Log;
 import android.util.Size;
 import android.view.LayoutInflater;
@@ -26,35 +27,31 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import com.android.settings.R;
-import com.android.settings.core.InstrumentedFragment;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settings.wifi.dpp.WifiNetworkConfig;
-import com.android.settings.wifi.qrcode.QrCamera;
-import com.android.settings.wifi.qrcode.QrDecorateView;
+import com.android.settingslib.qrcode.QrCamera;
+import com.android.settingslib.qrcode.QrDecorateView;
+import com.android.settingslib.wifi.WifiPermissionChecker;
 import com.android.wifitrackerlib.WifiEntry;
 import com.android.wifitrackerlib.WifiPickerTracker;
-import java.time.Clock;
 import java.time.ZoneOffset;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class WifiDppQrCodeScannerFragment extends WifiDppQrCodeBaseFragment implements TextureView.SurfaceTextureListener, QrCamera.ScannerCallback, WifiManager.ActionListener {
     private QrCamera mCamera;
-    private QrDecorateView mDecorateView;
-    private WifiConfiguration mEnrolleeWifiConfiguration;
-    private TextView mErrorMessage;
-    private OnScanWifiDppSuccessListener mScanWifiDppSuccessListener;
-    private String mSsid;
-    private TextureView mTextureView;
-    private WifiPickerTracker mWifiPickerTracker;
-    private WifiQrCode mWifiQrCode;
-    private HandlerThread mWorkerThread;
-    private int mLatestStatusCode = 0;
-    private final Handler mHandler = new Handler() { // from class: com.android.settings.wifi.dpp.WifiDppQrCodeScannerFragment.1
-        @Override // android.os.Handler
+    /* access modifiers changed from: private */
+    public QrDecorateView mDecorateView;
+    /* access modifiers changed from: private */
+    public WifiConfiguration mEnrolleeWifiConfiguration;
+    /* access modifiers changed from: private */
+    public TextView mErrorMessage;
+    private final Handler mHandler = new Handler() {
         public void handleMessage(Message message) {
             int i = message.what;
             if (i == 1) {
@@ -64,17 +61,44 @@ public class WifiDppQrCodeScannerFragment extends WifiDppQrCodeBaseFragment impl
                 WifiDppQrCodeScannerFragment.this.mErrorMessage.setText((String) message.obj);
                 WifiDppQrCodeScannerFragment.this.mErrorMessage.sendAccessibilityEvent(32);
                 removeMessages(1);
-                sendEmptyMessageDelayed(1, 10000L);
-                if (message.arg1 != 1) {
-                    return;
+                sendEmptyMessageDelayed(1, 10000);
+                if (message.arg1 == 1) {
+                    WifiDppQrCodeScannerFragment.this.setProgressBarShown(false);
+                    WifiDppQrCodeScannerFragment.this.mDecorateView.setFocused(false);
+                    WifiDppQrCodeScannerFragment.this.restartCamera();
                 }
-                WifiDppQrCodeScannerFragment.this.setProgressBarShown(false);
-                WifiDppQrCodeScannerFragment.this.mDecorateView.setFocused(false);
-                WifiDppQrCodeScannerFragment.this.restartCamera();
-            } else if (i == 3) {
-                if (WifiDppQrCodeScannerFragment.this.mScanWifiDppSuccessListener == null) {
-                    return;
+            } else if (i != 3) {
+                if (i == 4) {
+                    Context context = WifiDppQrCodeScannerFragment.this.getContext();
+                    if (context == null) {
+                        Log.d("WifiDppQrCodeScanner", "Scan success but context is null");
+                        return;
+                    }
+                    WifiManager wifiManager = (WifiManager) context.getSystemService(WifiManager.class);
+                    boolean z = false;
+                    for (WifiConfiguration next : ((WifiNetworkConfig) message.obj).getWifiConfigurations()) {
+                        int addNetwork = wifiManager.addNetwork(next);
+                        if (addNetwork != -1) {
+                            if (WifiDppQrCodeScannerFragment.this.canConnectWifi(next.SSID)) {
+                                wifiManager.enableNetwork(addNetwork, false);
+                                if (next.hiddenSSID || WifiDppQrCodeScannerFragment.this.isReachableWifiNetwork(next)) {
+                                    WifiDppQrCodeScannerFragment.this.mEnrolleeWifiConfiguration = next;
+                                    wifiManager.connect(addNetwork, WifiDppQrCodeScannerFragment.this);
+                                    z = true;
+                                }
+                            } else {
+                                return;
+                            }
+                        }
+                    }
+                    if (!z) {
+                        WifiDppQrCodeScannerFragment.this.showErrorMessageAndRestartCamera(R$string.wifi_dpp_check_connection_try_again);
+                        return;
+                    }
+                    WifiDppQrCodeScannerFragment.this.mMetricsFeatureProvider.action(WifiDppQrCodeScannerFragment.this.mMetricsFeatureProvider.getAttribution(WifiDppQrCodeScannerFragment.this.getActivity()), 1711, 1596, (String) null, Integer.MIN_VALUE);
+                    WifiDppQrCodeScannerFragment.this.notifyUserForQrCodeRecognition();
                 }
+            } else if (WifiDppQrCodeScannerFragment.this.mScanWifiDppSuccessListener != null) {
                 WifiDppQrCodeScannerFragment.this.mScanWifiDppSuccessListener.onScanWifiDppSuccess((WifiQrCode) message.obj);
                 if (!WifiDppQrCodeScannerFragment.this.mIsConfiguratorMode) {
                     WifiDppQrCodeScannerFragment.this.setProgressBarShown(true);
@@ -83,50 +107,39 @@ public class WifiDppQrCodeScannerFragment extends WifiDppQrCodeBaseFragment impl
                     WifiDppQrCodeScannerFragment.this.mSummary.sendAccessibilityEvent(32);
                 }
                 WifiDppQrCodeScannerFragment.this.notifyUserForQrCodeRecognition();
-            } else if (i == 4) {
-                WifiManager wifiManager = (WifiManager) WifiDppQrCodeScannerFragment.this.getContext().getSystemService(WifiManager.class);
-                boolean z = false;
-                for (WifiConfiguration wifiConfiguration : ((WifiNetworkConfig) message.obj).getWifiConfigurations()) {
-                    int addNetwork = wifiManager.addNetwork(wifiConfiguration);
-                    if (addNetwork != -1) {
-                        wifiManager.enableNetwork(addNetwork, false);
-                        if (wifiConfiguration.hiddenSSID || WifiDppQrCodeScannerFragment.this.isReachableWifiNetwork(wifiConfiguration)) {
-                            WifiDppQrCodeScannerFragment.this.mEnrolleeWifiConfiguration = wifiConfiguration;
-                            wifiManager.connect(addNetwork, WifiDppQrCodeScannerFragment.this);
-                            z = true;
-                        }
-                    }
-                }
-                if (!z) {
-                    WifiDppQrCodeScannerFragment.this.showErrorMessageAndRestartCamera(R.string.wifi_dpp_check_connection_try_again);
-                    return;
-                }
-                ((InstrumentedFragment) WifiDppQrCodeScannerFragment.this).mMetricsFeatureProvider.action(((InstrumentedFragment) WifiDppQrCodeScannerFragment.this).mMetricsFeatureProvider.getAttribution(WifiDppQrCodeScannerFragment.this.getActivity()), 1711, 1596, null, Integer.MIN_VALUE);
-                WifiDppQrCodeScannerFragment.this.notifyUserForQrCodeRecognition();
             }
         }
     };
-    private boolean mIsConfiguratorMode = true;
+    /* access modifiers changed from: private */
+    public boolean mIsConfiguratorMode = true;
+    /* access modifiers changed from: private */
+    public int mLatestStatusCode = 0;
+    /* access modifiers changed from: private */
+    public OnScanWifiDppSuccessListener mScanWifiDppSuccessListener;
+    private String mSsid;
+    private TextureView mTextureView;
+    private WifiPermissionChecker mWifiPermissionChecker;
+    private WifiPickerTracker mWifiPickerTracker;
+    /* access modifiers changed from: private */
+    public WifiQrCode mWifiQrCode;
+    private HandlerThread mWorkerThread;
 
-    /* loaded from: classes.dex */
     public interface OnScanWifiDppSuccessListener {
         void onScanWifiDppSuccess(WifiQrCode wifiQrCode);
     }
 
-    @Override // com.android.settings.wifi.dpp.WifiDppQrCodeBaseFragment
-    protected boolean isFooterAvailable() {
+    /* access modifiers changed from: protected */
+    public boolean isFooterAvailable() {
         return false;
     }
 
-    @Override // android.view.TextureView.SurfaceTextureListener
     public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i2) {
     }
 
-    @Override // android.view.TextureView.SurfaceTextureListener
     public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void notifyUserForQrCodeRecognition() {
         QrCamera qrCamera = this.mCamera;
         if (qrCamera != null) {
@@ -137,20 +150,20 @@ public class WifiDppQrCodeScannerFragment extends WifiDppQrCodeBaseFragment impl
         WifiDppUtils.triggerVibrationForQrCodeRecognition(getContext());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public boolean isReachableWifiNetwork(WifiConfiguration wifiConfiguration) {
         List<WifiEntry> wifiEntries = this.mWifiPickerTracker.getWifiEntries();
         WifiEntry connectedWifiEntry = this.mWifiPickerTracker.getConnectedWifiEntry();
         if (connectedWifiEntry != null) {
             wifiEntries.add(connectedWifiEntry);
         }
-        for (WifiEntry wifiEntry : wifiEntries) {
-            if (TextUtils.equals(wifiEntry.getSsid(), WifiInfo.sanitizeSsid(wifiConfiguration.SSID))) {
+        for (WifiEntry next : wifiEntries) {
+            if (TextUtils.equals(WifiInfo.sanitizeSsid(next.getSsid()), WifiInfo.sanitizeSsid(wifiConfiguration.SSID))) {
                 int securityTypeFromWifiConfiguration = WifiDppUtils.getSecurityTypeFromWifiConfiguration(wifiConfiguration);
-                if (securityTypeFromWifiConfiguration == wifiEntry.getSecurity()) {
+                if (securityTypeFromWifiConfiguration == next.getSecurity()) {
                     return true;
                 }
-                if (securityTypeFromWifiConfiguration == 5 && wifiEntry.getSecurity() == 2) {
+                if (securityTypeFromWifiConfiguration == 5 && next.getSecurity() == 2) {
                     return true;
                 }
             }
@@ -158,7 +171,18 @@ public class WifiDppQrCodeScannerFragment extends WifiDppQrCodeBaseFragment impl
         return false;
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
+    /* access modifiers changed from: package-private */
+    public boolean canConnectWifi(String str) {
+        for (WifiEntry next : this.mWifiPickerTracker.getWifiEntries()) {
+            if (TextUtils.equals(WifiInfo.sanitizeSsid(next.getSsid()), WifiInfo.sanitizeSsid(str)) && !next.canConnect()) {
+                Log.w("WifiDppQrCodeScanner", "Wi-Fi is not allowed to connect by your organization. SSID:" + str);
+                showErrorMessageAndRestartCamera(R$string.not_allowed_by_ent);
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         if (bundle != null) {
@@ -166,40 +190,27 @@ public class WifiDppQrCodeScannerFragment extends WifiDppQrCodeBaseFragment impl
             this.mLatestStatusCode = bundle.getInt("key_latest_error_code");
             this.mEnrolleeWifiConfiguration = (WifiConfiguration) bundle.getParcelable("key_wifi_configuration");
         }
-        final WifiDppInitiatorViewModel wifiDppInitiatorViewModel = (WifiDppInitiatorViewModel) ViewModelProviders.of(this).get(WifiDppInitiatorViewModel.class);
-        wifiDppInitiatorViewModel.getEnrolleeSuccessNetworkId().observe(this, new Observer() { // from class: com.android.settings.wifi.dpp.WifiDppQrCodeScannerFragment$$ExternalSyntheticLambda1
-            @Override // androidx.lifecycle.Observer
-            public final void onChanged(Object obj) {
-                WifiDppQrCodeScannerFragment.this.lambda$onCreate$0(wifiDppInitiatorViewModel, (Integer) obj);
-            }
-        });
-        wifiDppInitiatorViewModel.getStatusCode().observe(this, new Observer() { // from class: com.android.settings.wifi.dpp.WifiDppQrCodeScannerFragment$$ExternalSyntheticLambda0
-            @Override // androidx.lifecycle.Observer
-            public final void onChanged(Object obj) {
-                WifiDppQrCodeScannerFragment.this.lambda$onCreate$1(wifiDppInitiatorViewModel, (Integer) obj);
-            }
-        });
+        WifiDppInitiatorViewModel wifiDppInitiatorViewModel = (WifiDppInitiatorViewModel) ViewModelProviders.m6of((Fragment) this).get(WifiDppInitiatorViewModel.class);
+        wifiDppInitiatorViewModel.getEnrolleeSuccessNetworkId().observe(this, new WifiDppQrCodeScannerFragment$$ExternalSyntheticLambda0(this, wifiDppInitiatorViewModel));
+        wifiDppInitiatorViewModel.getStatusCode().observe(this, new WifiDppQrCodeScannerFragment$$ExternalSyntheticLambda1(this, wifiDppInitiatorViewModel));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onCreate$0(WifiDppInitiatorViewModel wifiDppInitiatorViewModel, Integer num) {
-        if (wifiDppInitiatorViewModel.isWifiDppHandshaking()) {
-            return;
+        if (!wifiDppInitiatorViewModel.isWifiDppHandshaking()) {
+            new EasyConnectEnrolleeStatusCallback().onEnrolleeSuccess(num.intValue());
         }
-        new EasyConnectEnrolleeStatusCallback().onEnrolleeSuccess(num.intValue());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onCreate$1(WifiDppInitiatorViewModel wifiDppInitiatorViewModel, Integer num) {
-        if (wifiDppInitiatorViewModel.isWifiDppHandshaking()) {
-            return;
+        if (!wifiDppInitiatorViewModel.isWifiDppHandshaking()) {
+            int intValue = num.intValue();
+            Log.d("WifiDppQrCodeScanner", "Easy connect enrollee callback onFailure " + intValue);
+            new EasyConnectEnrolleeStatusCallback().onFailure(intValue);
         }
-        int intValue = num.intValue();
-        Log.d("WifiDppQrCodeScanner", "Easy connect enrollee callback onFailure " + intValue);
-        new EasyConnectEnrolleeStatusCallback().onFailure(intValue);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onPause() {
         QrCamera qrCamera = this.mCamera;
         if (qrCamera != null) {
@@ -208,7 +219,6 @@ public class WifiDppQrCodeScannerFragment extends WifiDppQrCodeBaseFragment impl
         super.onPause();
     }
 
-    @Override // com.android.settings.core.InstrumentedFragment, com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
         if (!isWifiDppHandshaking()) {
@@ -216,7 +226,6 @@ public class WifiDppQrCodeScannerFragment extends WifiDppQrCodeBaseFragment impl
         }
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return this.mIsConfiguratorMode ? 1595 : 1596;
     }
@@ -224,110 +233,98 @@ public class WifiDppQrCodeScannerFragment extends WifiDppQrCodeBaseFragment impl
     public WifiDppQrCodeScannerFragment() {
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public WifiDppQrCodeScannerFragment(String str) {
+    WifiDppQrCodeScannerFragment(String str) {
         this.mSsid = str;
     }
 
-    @Override // androidx.fragment.app.Fragment
+    /* JADX WARNING: type inference failed for: r7v0, types: [com.android.settings.wifi.dpp.WifiDppQrCodeScannerFragment$2, java.time.Clock] */
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
         HandlerThread handlerThread = new HandlerThread("WifiDppQrCodeScanner{" + Integer.toHexString(System.identityHashCode(this)) + "}", 10);
         this.mWorkerThread = handlerThread;
         handlerThread.start();
-        Clock clock = new SimpleClock(ZoneOffset.UTC) { // from class: com.android.settings.wifi.dpp.WifiDppQrCodeScannerFragment.2
+        ? r7 = new SimpleClock(ZoneOffset.UTC) {
             public long millis() {
                 return SystemClock.elapsedRealtime();
             }
         };
         Context context = getContext();
-        this.mWifiPickerTracker = FeatureFactory.getFactory(context).getWifiTrackerLibProvider().createWifiPickerTracker(getSettingsLifecycle(), context, new Handler(Looper.getMainLooper()), this.mWorkerThread.getThreadHandler(), clock, 15000L, 10000L, null);
+        this.mWifiPickerTracker = FeatureFactory.getFactory(context).getWifiTrackerLibProvider().createWifiPickerTracker(getSettingsLifecycle(), context, new Handler(Looper.getMainLooper()), this.mWorkerThread.getThreadHandler(), r7, 15000, 10000, (WifiPickerTracker.WifiPickerTrackerCallback) null);
         if (this.mIsConfiguratorMode) {
-            getActivity().setTitle(R.string.wifi_dpp_add_device_to_network);
+            getActivity().setTitle(R$string.wifi_dpp_add_device_to_network);
         } else {
-            getActivity().setTitle(R.string.wifi_dpp_scan_qr_code);
+            getActivity().setTitle(R$string.wifi_dpp_scan_qr_code);
         }
     }
 
-    @Override // com.android.settings.core.InstrumentedFragment, com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         this.mScanWifiDppSuccessListener = (OnScanWifiDppSuccessListener) context;
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onDetach() {
         this.mScanWifiDppSuccessListener = null;
         super.onDetach();
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onDestroyView() {
         this.mWorkerThread.quit();
         super.onDestroyView();
     }
 
-    @Override // androidx.fragment.app.Fragment
     public final View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
-        return layoutInflater.inflate(R.layout.wifi_dpp_qrcode_scanner_fragment, viewGroup, false);
+        return layoutInflater.inflate(R$layout.wifi_dpp_qrcode_scanner_fragment, viewGroup, false);
     }
 
-    @Override // com.android.settings.wifi.dpp.WifiDppQrCodeBaseFragment, androidx.fragment.app.Fragment
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
-        this.mSummary = (TextView) view.findViewById(R.id.sud_layout_subtitle);
-        TextureView textureView = (TextureView) view.findViewById(R.id.preview_view);
+        this.mSummary = (TextView) view.findViewById(R$id.sud_layout_subtitle);
+        TextureView textureView = (TextureView) view.findViewById(R$id.preview_view);
         this.mTextureView = textureView;
         textureView.setSurfaceTextureListener(this);
-        this.mDecorateView = (QrDecorateView) view.findViewById(R.id.decorate_view);
+        this.mDecorateView = (QrDecorateView) view.findViewById(R$id.decorate_view);
         setProgressBarShown(isWifiDppHandshaking());
         if (this.mIsConfiguratorMode) {
-            setHeaderTitle(R.string.wifi_dpp_add_device_to_network, new Object[0]);
+            setHeaderTitle(R$string.wifi_dpp_add_device_to_network, new Object[0]);
             WifiNetworkConfig wifiNetworkConfig = ((WifiNetworkConfig.Retriever) getActivity()).getWifiNetworkConfig();
-            if (!WifiNetworkConfig.isValidConfig(wifiNetworkConfig)) {
+            if (WifiNetworkConfig.isValidConfig(wifiNetworkConfig)) {
+                this.mSummary.setText(getString(R$string.wifi_dpp_center_qr_code, wifiNetworkConfig.getSsid()));
+            } else {
                 throw new IllegalStateException("Invalid Wi-Fi network for configuring");
             }
-            this.mSummary.setText(getString(R.string.wifi_dpp_center_qr_code, wifiNetworkConfig.getSsid()));
         } else {
-            setHeaderTitle(R.string.wifi_dpp_scan_qr_code, new Object[0]);
+            setHeaderTitle(R$string.wifi_dpp_scan_qr_code, new Object[0]);
             updateEnrolleeSummary();
         }
-        this.mErrorMessage = (TextView) view.findViewById(R.id.error_message);
+        this.mErrorMessage = (TextView) view.findViewById(R$id.error_message);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         menu.removeItem(1);
         super.onCreateOptionsMenu(menu, menuInflater);
     }
 
-    @Override // android.view.TextureView.SurfaceTextureListener
     public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i2) {
         initCamera(surfaceTexture);
     }
 
-    @Override // android.view.TextureView.SurfaceTextureListener
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
         destroyCamera();
         return true;
     }
 
-    @Override // com.android.settings.wifi.qrcode.QrCamera.ScannerCallback
     public Size getViewSize() {
         return new Size(this.mTextureView.getWidth(), this.mTextureView.getHeight());
     }
 
-    @Override // com.android.settings.wifi.qrcode.QrCamera.ScannerCallback
     public Rect getFramePosition(Size size, int i) {
         return new Rect(0, 0, size.getHeight(), size.getHeight());
     }
 
-    @Override // com.android.settings.wifi.qrcode.QrCamera.ScannerCallback
     public void setTransform(Matrix matrix) {
         this.mTextureView.setTransform(matrix);
     }
 
-    @Override // com.android.settings.wifi.qrcode.QrCamera.ScannerCallback
     public boolean isValid(String str) {
         try {
             WifiQrCode wifiQrCode = new WifiQrCode(str);
@@ -336,22 +333,20 @@ public class WifiDppQrCodeScannerFragment extends WifiDppQrCodeBaseFragment impl
             if (!this.mIsConfiguratorMode || !"WIFI".equals(scheme)) {
                 return true;
             }
-            showErrorMessage(R.string.wifi_dpp_qr_code_is_not_valid_format);
+            showErrorMessage(R$string.wifi_dpp_qr_code_is_not_valid_format);
             return false;
         } catch (IllegalArgumentException unused) {
-            showErrorMessage(R.string.wifi_dpp_qr_code_is_not_valid_format);
+            showErrorMessage(R$string.wifi_dpp_qr_code_is_not_valid_format);
             return false;
         }
     }
 
-    @Override // com.android.settings.wifi.qrcode.QrCamera.ScannerCallback
     public void handleSuccessfulResult(String str) {
         String scheme = this.mWifiQrCode.getScheme();
         scheme.hashCode();
         if (scheme.equals("DPP")) {
             handleWifiDpp();
-        } else if (!scheme.equals("WIFI")) {
-        } else {
+        } else if (scheme.equals("WIFI")) {
             handleZxingWifiFormat();
         }
     }
@@ -359,16 +354,15 @@ public class WifiDppQrCodeScannerFragment extends WifiDppQrCodeBaseFragment impl
     private void handleWifiDpp() {
         Message obtainMessage = this.mHandler.obtainMessage(3);
         obtainMessage.obj = new WifiQrCode(this.mWifiQrCode.getQrCode());
-        this.mHandler.sendMessageDelayed(obtainMessage, 1000L);
+        this.mHandler.sendMessageDelayed(obtainMessage, 1000);
     }
 
     private void handleZxingWifiFormat() {
         Message obtainMessage = this.mHandler.obtainMessage(4);
         obtainMessage.obj = new WifiQrCode(this.mWifiQrCode.getQrCode()).getWifiNetworkConfig();
-        this.mHandler.sendMessageDelayed(obtainMessage, 1000L);
+        this.mHandler.sendMessageDelayed(obtainMessage, 1000);
     }
 
-    @Override // com.android.settings.wifi.qrcode.QrCamera.ScannerCallback
     public void handleCameraFailure() {
         destroyCamera();
     }
@@ -378,10 +372,10 @@ public class WifiDppQrCodeScannerFragment extends WifiDppQrCodeBaseFragment impl
             this.mCamera = new QrCamera(getContext(), this);
             if (isWifiDppHandshaking()) {
                 QrDecorateView qrDecorateView = this.mDecorateView;
-                if (qrDecorateView == null) {
+                if (qrDecorateView != null) {
+                    qrDecorateView.setFocused(true);
                     return;
                 }
-                qrDecorateView.setFocused(true);
                 return;
             }
             this.mCamera.start(surfaceTexture);
@@ -400,14 +394,13 @@ public class WifiDppQrCodeScannerFragment extends WifiDppQrCodeBaseFragment impl
         this.mHandler.obtainMessage(2, getString(i)).sendToTarget();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: package-private */
     public void showErrorMessageAndRestartCamera(int i) {
         Message obtainMessage = this.mHandler.obtainMessage(2, getString(i));
         obtainMessage.arg1 = 1;
         obtainMessage.sendToTarget();
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onSaveInstanceState(Bundle bundle) {
         bundle.putBoolean("key_is_configurator_mode", this.mIsConfiguratorMode);
         bundle.putInt("key_latest_error_code", this.mLatestStatusCode);
@@ -415,9 +408,7 @@ public class WifiDppQrCodeScannerFragment extends WifiDppQrCodeBaseFragment impl
         super.onSaveInstanceState(bundle);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class EasyConnectEnrolleeStatusCallback extends EasyConnectStatusCallback {
+    private class EasyConnectEnrolleeStatusCallback extends EasyConnectStatusCallback {
         public void onConfiguratorSuccess(int i) {
         }
 
@@ -433,14 +424,17 @@ public class WifiDppQrCodeScannerFragment extends WifiDppQrCodeBaseFragment impl
                 if (wifiConfiguration.networkId == i) {
                     WifiDppQrCodeScannerFragment.this.mLatestStatusCode = 1;
                     WifiDppQrCodeScannerFragment.this.mEnrolleeWifiConfiguration = wifiConfiguration;
-                    wifiManager.connect(wifiConfiguration, WifiDppQrCodeScannerFragment.this);
+                    if (WifiDppQrCodeScannerFragment.this.canConnectWifi(wifiConfiguration.SSID)) {
+                        wifiManager.connect(wifiConfiguration, WifiDppQrCodeScannerFragment.this);
+                        return;
+                    }
                     return;
                 }
             }
             Log.e("WifiDppQrCodeScanner", "Invalid networkId " + i);
             WifiDppQrCodeScannerFragment.this.mLatestStatusCode = -7;
             WifiDppQrCodeScannerFragment.this.updateEnrolleeSummary();
-            WifiDppQrCodeScannerFragment.this.showErrorMessageAndRestartCamera(R.string.wifi_dpp_check_connection_try_again);
+            WifiDppQrCodeScannerFragment.this.showErrorMessageAndRestartCamera(R$string.wifi_dpp_check_connection_try_again);
         }
 
         public void onFailure(int i) {
@@ -452,10 +446,10 @@ public class WifiDppQrCodeScannerFragment extends WifiDppQrCodeBaseFragment impl
                 case -8:
                     throw new IllegalStateException("EASY_CONNECT_EVENT_FAILURE_NOT_SUPPORTED should be a configurator only error");
                 case -7:
-                    i2 = R.string.wifi_dpp_failure_generic;
+                    i2 = R$string.wifi_dpp_failure_generic;
                     break;
                 case -6:
-                    i2 = R.string.wifi_dpp_failure_timeout;
+                    i2 = R$string.wifi_dpp_failure_timeout;
                     break;
                 case -5:
                     if (i != WifiDppQrCodeScannerFragment.this.mLatestStatusCode) {
@@ -467,16 +461,16 @@ public class WifiDppQrCodeScannerFragment extends WifiDppQrCodeBaseFragment impl
                     }
                     throw new IllegalStateException("stopEasyConnectSession and try again forEASY_CONNECT_EVENT_FAILURE_BUSY but still failed");
                 case -4:
-                    i2 = R.string.wifi_dpp_failure_authentication_or_configuration;
+                    i2 = R$string.wifi_dpp_failure_authentication_or_configuration;
                     break;
                 case -3:
-                    i2 = R.string.wifi_dpp_failure_not_compatible;
+                    i2 = R$string.wifi_dpp_failure_not_compatible;
                     break;
                 case -2:
-                    i2 = R.string.wifi_dpp_failure_authentication_or_configuration;
+                    i2 = R$string.wifi_dpp_failure_authentication_or_configuration;
                     break;
                 case -1:
-                    i2 = R.string.wifi_dpp_qr_code_is_not_valid_format;
+                    i2 = R$string.wifi_dpp_qr_code_is_not_valid_format;
                     break;
                 default:
                     throw new IllegalStateException("Unexpected Wi-Fi DPP error");
@@ -487,29 +481,44 @@ public class WifiDppQrCodeScannerFragment extends WifiDppQrCodeBaseFragment impl
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void startWifiDppEnrolleeInitiator(WifiQrCode wifiQrCode) {
-        ((WifiDppInitiatorViewModel) ViewModelProviders.of(this).get(WifiDppInitiatorViewModel.class)).startEasyConnectAsEnrolleeInitiator(wifiQrCode.getQrCode());
+        ((WifiDppInitiatorViewModel) ViewModelProviders.m6of((Fragment) this).get(WifiDppInitiatorViewModel.class)).startEasyConnectAsEnrolleeInitiator(wifiQrCode.getQrCode());
     }
 
     public void onSuccess() {
         Intent intent = new Intent();
         intent.putExtra("key_wifi_configuration", this.mEnrolleeWifiConfiguration);
         FragmentActivity activity = getActivity();
-        activity.setResult(-1, intent);
-        activity.finish();
+        if (activity != null) {
+            if (this.mWifiPermissionChecker == null) {
+                this.mWifiPermissionChecker = new WifiPermissionChecker(activity);
+            }
+            if (!this.mWifiPermissionChecker.canAccessWifiState()) {
+                Log.w("WifiDppQrCodeScanner", "Calling package does not have ACCESS_WIFI_STATE permission for result.");
+                EventLog.writeEvent(1397638484, new Object[]{"187176859", this.mWifiPermissionChecker.getLaunchedPackage(), "no ACCESS_WIFI_STATE permission"});
+                activity.finish();
+            } else if (!this.mWifiPermissionChecker.canAccessFineLocation()) {
+                Log.w("WifiDppQrCodeScanner", "Calling package does not have ACCESS_FINE_LOCATION permission for result.");
+                EventLog.writeEvent(1397638484, new Object[]{"187176859", this.mWifiPermissionChecker.getLaunchedPackage(), "no ACCESS_FINE_LOCATION permission"});
+                activity.finish();
+            } else {
+                activity.setResult(-1, intent);
+                activity.finish();
+            }
+        }
     }
 
     public void onFailure(int i) {
         Log.d("WifiDppQrCodeScanner", "Wi-Fi connect onFailure reason - " + i);
-        showErrorMessageAndRestartCamera(R.string.wifi_dpp_check_connection_try_again);
+        showErrorMessageAndRestartCamera(R$string.wifi_dpp_check_connection_try_again);
     }
 
     private boolean isWifiDppHandshaking() {
-        return ((WifiDppInitiatorViewModel) ViewModelProviders.of(this).get(WifiDppInitiatorViewModel.class)).isWifiDppHandshaking();
+        return ((WifiDppInitiatorViewModel) ViewModelProviders.m6of((Fragment) this).get(WifiDppInitiatorViewModel.class)).isWifiDppHandshaking();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void restartCamera() {
         QrCamera qrCamera = this.mCamera;
         if (qrCamera == null) {
@@ -520,28 +529,30 @@ public class WifiDppQrCodeScannerFragment extends WifiDppQrCodeBaseFragment impl
             this.mCamera.stop();
         }
         SurfaceTexture surfaceTexture = this.mTextureView.getSurfaceTexture();
-        if (surfaceTexture == null) {
-            throw new IllegalStateException("SurfaceTexture is not ready for restarting camera");
+        if (surfaceTexture != null) {
+            this.mCamera.start(surfaceTexture);
+            return;
         }
-        this.mCamera.start(surfaceTexture);
+        throw new IllegalStateException("SurfaceTexture is not ready for restarting camera");
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateEnrolleeSummary() {
-        String string;
+        String str;
         if (isWifiDppHandshaking()) {
-            this.mSummary.setText(R.string.wifi_dpp_connecting);
+            this.mSummary.setText(R$string.wifi_dpp_connecting);
             return;
         }
         if (TextUtils.isEmpty(this.mSsid)) {
-            string = getString(R.string.wifi_dpp_scan_qr_code_join_unknown_network, this.mSsid);
+            str = getString(R$string.wifi_dpp_scan_qr_code_join_unknown_network, this.mSsid);
         } else {
-            string = getString(R.string.wifi_dpp_scan_qr_code_join_network, this.mSsid);
+            str = getString(R$string.wifi_dpp_scan_qr_code_join_network, this.mSsid);
         }
-        this.mSummary.setText(string);
+        this.mSummary.setText(str);
     }
 
-    protected boolean isDecodeTaskAlive() {
+    /* access modifiers changed from: protected */
+    public boolean isDecodeTaskAlive() {
         QrCamera qrCamera = this.mCamera;
         return qrCamera != null && qrCamera.isDecodeTaskAlive();
     }

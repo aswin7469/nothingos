@@ -1,6 +1,5 @@
 package com.android.settings.bluetooth;
 
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.DeviceGroup;
 import android.content.Context;
@@ -8,7 +7,7 @@ import android.os.Bundle;
 import android.os.SystemProperties;
 import android.util.Log;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.connecteddevice.ConnectedDeviceDashboardFragment;
 import com.android.settings.core.SubSettingLauncher;
 import com.android.settings.widget.GearPreference;
@@ -22,12 +21,15 @@ import com.android.settingslib.bluetooth.LocalBluetoothProfileManager;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
-/* loaded from: classes.dex */
+
 public class GroupUtils {
-    private static final boolean D = ConnectedDeviceDashboardFragment.DBG_GROUP;
-    private static final boolean V = Log.isLoggable("GroupUtilss", 2);
-    private LocalBluetoothProfile mBCProfile;
+
+    /* renamed from: D */
+    private static final boolean f177D = ConnectedDeviceDashboardFragment.DBG_GROUP;
+
+    /* renamed from: V */
+    private static final boolean f178V = Log.isLoggable("GroupUtilss", 2);
+    private LocalBluetoothProfile mBCProfile = null;
     private CachedBluetoothDeviceManager mCacheDeviceNamanger;
     private Context mCtx;
     private DeviceGroup mDeviceGroup;
@@ -36,39 +38,39 @@ public class GroupUtils {
     private LocalBluetoothManager mLocalBluetoothManager;
     protected LocalBluetoothProfileManager mProfileManager;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isGroupDevice(CachedBluetoothDevice cachedBluetoothDevice) {
-        if (!this.mIsGroupEnabled) {
-            if (!D) {
-                return false;
+        if (this.mIsGroupEnabled) {
+            if (!cachedBluetoothDevice.isGroupDevice() && cachedBluetoothDevice.isTypeUnKnown()) {
+                updateGroupStatus(cachedBluetoothDevice, cachedBluetoothDevice.getDevice().getDeviceType());
             }
+            if (f177D) {
+                Log.d("GroupUtilss", "isGroupDevice " + cachedBluetoothDevice.isGroupDevice() + cachedBluetoothDevice + " name " + cachedBluetoothDevice.getName() + " type " + cachedBluetoothDevice.getmType());
+            }
+            return cachedBluetoothDevice.isGroupDevice();
+        } else if (!f177D) {
+            return false;
+        } else {
             loge(" GroupProfile not enabled");
             return false;
         }
-        if (!cachedBluetoothDevice.isGroupDevice() && cachedBluetoothDevice.isTypeUnKnown()) {
-            updateGroupStatus(cachedBluetoothDevice, cachedBluetoothDevice.getDevice().getDeviceType());
-        }
-        if (D) {
-            Log.d("GroupUtilss", "isGroupDevice " + cachedBluetoothDevice.isGroupDevice() + cachedBluetoothDevice + " name " + cachedBluetoothDevice.getName() + " type " + cachedBluetoothDevice.getmType());
-        }
-        return cachedBluetoothDevice.isGroupDevice();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public String getGroupTitle(int i) {
         return " " + (i + 1);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getGroupId(CachedBluetoothDevice cachedBluetoothDevice) {
-        int groupId = cachedBluetoothDevice.getGroupId();
-        if (groupId == -1) {
-            loge(" groupId is -1");
+        int qGroupId = cachedBluetoothDevice.getQGroupId();
+        if (qGroupId == -1) {
+            loge(" qgroupId is -1");
         }
-        if (D) {
-            Log.d("GroupUtilss", "getgroupId " + groupId + " device " + cachedBluetoothDevice);
+        if (f177D) {
+            Log.d("GroupUtilss", "qgroupId " + qGroupId + " device " + cachedBluetoothDevice);
         }
-        return groupId;
+        return qGroupId;
     }
 
     private void updateGroupStatus(CachedBluetoothDevice cachedBluetoothDevice, int i) {
@@ -76,17 +78,16 @@ public class GroupUtils {
         CachedBluetoothDevice findDevice = this.mCacheDeviceNamanger.findDevice(cachedBluetoothDevice.getDevice());
         if (findDevice != null) {
             findDevice.setDeviceType(i);
-            if (!D) {
+            if (f177D) {
+                Log.d("GroupUtilss", "updateGroupStatus updated " + cachedBluetoothDevice + " " + i);
                 return;
             }
-            Log.d("GroupUtilss", "updateGroupStatus updated " + cachedBluetoothDevice + " " + i);
             return;
         }
         loge("updateGroupStatus failed  " + cachedBluetoothDevice + " groupId " + i);
     }
 
     public GroupUtils(Context context) {
-        this.mBCProfile = null;
         this.mCtx = context;
         this.mCacheDeviceNamanger = Utils.getLocalBtManager(context).getCachedDeviceManager();
         isGroupEnabled();
@@ -131,7 +132,7 @@ public class GroupUtils {
                 return false;
             }
             int groupId = groupPreferenceCategory.getGroupId();
-            if (D) {
+            if (f177D) {
                 Log.d("GroupUtilss", "isNewGroup val " + groupId + " key " + groupPreferenceCategory.getKey());
             }
             if (i == groupId) {
@@ -139,20 +140,23 @@ public class GroupUtils {
             }
             i2++;
         }
-        if (D) {
+        if (f177D) {
             Log.d("GroupUtilss", "isNewGroup id  " + i + "  val " + z);
         }
         return z;
     }
 
     private boolean isAllFilled(int i, ArrayList<GroupPreferenceCategory> arrayList) {
-        for (int i2 = 0; i2 < arrayList.size() - 1; i2++) {
+        int i2 = 0;
+        while (i2 < arrayList.size() - 1) {
             GroupPreferenceCategory groupPreferenceCategory = arrayList.get(i2);
             if (groupPreferenceCategory == null) {
                 loge("isAllFilled");
                 return false;
             } else if (i == groupPreferenceCategory.getGroupId()) {
                 return false;
+            } else {
+                i2++;
             }
         }
         return true;
@@ -186,44 +190,41 @@ public class GroupUtils {
         return groupBluetoothSettingsPreference;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Type inference failed for: r1v3, types: [androidx.preference.Preference] */
     public void addPreference(ArrayList<GroupPreferenceCategory> arrayList, Preference preference, GearPreference.OnGearClickListener onGearClickListener) {
-        GroupPreferenceCategory existingGroup;
+        GroupPreferenceCategory groupPreferenceCategory;
         int groupId = getGroupId(preference);
         if (groupId == -1) {
             loge("addPreference groupId is not valid " + groupId);
             return;
         }
         boolean isNewGroup = isNewGroup(groupId, arrayList);
-        boolean z = D;
+        boolean z = f177D;
         if (z) {
             Log.d("GroupUtilss", "addPreference  " + preference + " isNewGroup " + isNewGroup);
         }
         if (isNewGroup) {
             GroupBluetoothSettingsPreference hedaer = getHedaer(groupId, onGearClickListener);
-            existingGroup = getParentGroup(arrayList, preference);
-            if (existingGroup == null) {
+            groupPreferenceCategory = getParentGroup(arrayList, preference);
+            if (groupPreferenceCategory == null) {
                 loge("getParentGroup not found for groupId " + groupId);
                 isAllGroupsFilled(arrayList, hedaer);
                 return;
             }
-            existingGroup.setGroupId(groupId);
-            existingGroup.addPreference(hedaer);
-            existingGroup.addPreference(preference);
-            existingGroup.setVisible(true);
+            groupPreferenceCategory.setGroupId(groupId);
+            groupPreferenceCategory.addPreference(hedaer);
+            groupPreferenceCategory.addPreference(preference);
+            groupPreferenceCategory.setVisible(true);
         } else {
-            existingGroup = getExistingGroup(arrayList, preference);
-            if (existingGroup == null) {
+            groupPreferenceCategory = getExistingGroup(arrayList, preference);
+            if (groupPreferenceCategory == null) {
                 loge("getExistingGroup not found for groupId " + groupId);
                 return;
             }
-            existingGroup.addPreference(preference);
+            groupPreferenceCategory.addPreference(preference);
         }
-        if (!z) {
-            return;
+        if (z) {
+            Log.d("GroupUtilss", "addPreference  key " + groupPreferenceCategory.getKey());
         }
-        Log.d("GroupUtilss", "addPreference  key " + existingGroup.getKey());
     }
 
     public void removePreference(ArrayList<GroupPreferenceCategory> arrayList, Preference preference) {
@@ -234,12 +235,11 @@ public class GroupUtils {
             return;
         }
         existingGroup.removePreference(preference);
-        if (existingGroup.getPreferenceCount() != 1) {
-            return;
+        if (existingGroup.getPreferenceCount() == 1) {
+            existingGroup.setGroupId(-1);
+            existingGroup.removeAll();
+            existingGroup.setVisible(false);
         }
-        existingGroup.setGroupId(-1);
-        existingGroup.removeAll();
-        existingGroup.setVisible(false);
     }
 
     private void removePreference(GroupPreferenceCategory groupPreferenceCategory, Preference preference) {
@@ -255,7 +255,7 @@ public class GroupUtils {
         }
         for (int i = 0; i < preferenceCount; i++) {
             GroupBluetoothSettingsPreference groupBluetoothSettingsPreference = (GroupBluetoothSettingsPreference) groupPreferenceCategory.getPreference(i);
-            boolean z = D;
+            boolean z = f177D;
             if (z) {
                 Log.d("GroupUtilss", "removePreference Header headerPreference " + groupBluetoothSettingsPreference + " header id " + groupBluetoothSettingsPreference.getGroupId() + " groupId " + groupId);
             }
@@ -275,56 +275,55 @@ public class GroupUtils {
         boolean isAllFilled = isAllFilled(-1, arrayList);
         boolean z = true;
         GroupPreferenceCategory groupPreferenceCategory = arrayList.get(arrayList.size() - 1);
-        if (isAllFilled) {
-            if (groupPreferenceCategory == null) {
-                loge("isAllGroupsFilled received invalid group");
-            } else if (!groupPreferenceCategory.getKey().contains("remaining")) {
-                loge("isAllGroupsFilled not last group");
-            } else {
-                int preferenceCount = groupPreferenceCategory.getPreferenceCount();
-                if (D) {
-                    Log.d("GroupUtilss", "isAllGroupsFilled size " + preferenceCount);
+        if (!isAllFilled) {
+            return;
+        }
+        if (groupPreferenceCategory == null) {
+            loge("isAllGroupsFilled received invalid group");
+        } else if (!groupPreferenceCategory.getKey().contains("remaining")) {
+            loge("isAllGroupsFilled not last group");
+        } else {
+            int preferenceCount = groupPreferenceCategory.getPreferenceCount();
+            if (f177D) {
+                Log.d("GroupUtilss", "isAllGroupsFilled size " + preferenceCount);
+            }
+            int i = 0;
+            while (true) {
+                if (i >= preferenceCount) {
+                    z = false;
+                    break;
                 }
-                int i = 0;
-                while (true) {
-                    if (i >= preferenceCount) {
-                        z = false;
-                        break;
-                    }
-                    if (groupPreferenceCategory.getPreference(i) instanceof GroupBluetoothSettingsPreference) {
-                        GroupBluetoothSettingsPreference groupBluetoothSettingsPreference2 = (GroupBluetoothSettingsPreference) groupPreferenceCategory.getPreference(i);
-                        if (groupBluetoothSettingsPreference.getGroupId() == groupBluetoothSettingsPreference2.getGroupId()) {
-                            int incrementChildCound = groupBluetoothSettingsPreference2.incrementChildCound();
-                            if (D) {
-                                Log.d("GroupUtilss", "isAllGroupsFilled updated chCount " + incrementChildCound);
-                            }
+                if (groupPreferenceCategory.getPreference(i) instanceof GroupBluetoothSettingsPreference) {
+                    GroupBluetoothSettingsPreference groupBluetoothSettingsPreference2 = (GroupBluetoothSettingsPreference) groupPreferenceCategory.getPreference(i);
+                    if (groupBluetoothSettingsPreference.getGroupId() == groupBluetoothSettingsPreference2.getGroupId()) {
+                        int incrementChildCound = groupBluetoothSettingsPreference2.incrementChildCound();
+                        if (f177D) {
+                            Log.d("GroupUtilss", "isAllGroupsFilled updated chCount " + incrementChildCound);
                         }
                     }
-                    i++;
                 }
-                if (z) {
-                    return;
-                }
+                i++;
+            }
+            if (!z) {
                 int incrementChildCound2 = groupBluetoothSettingsPreference.incrementChildCound();
                 groupPreferenceCategory.addPreference(groupBluetoothSettingsPreference);
-                if (!D) {
-                    return;
+                if (f177D) {
+                    Log.d("GroupUtilss", "isAllGroupsFilled added chCount " + incrementChildCound2);
                 }
-                Log.d("GroupUtilss", "isAllGroupsFilled added chCount " + incrementChildCound2);
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public ArrayList<CachedBluetoothDevice> getCahcedDevice(int i) {
         Collection<CachedBluetoothDevice> cachedDevicesCopy = this.mCacheDeviceNamanger.getCachedDevicesCopy();
         ArrayList<CachedBluetoothDevice> arrayList = new ArrayList<>();
-        for (CachedBluetoothDevice cachedBluetoothDevice : cachedDevicesCopy) {
-            if (cachedBluetoothDevice != null && isGroupDeviceBonded(cachedBluetoothDevice) && getGroupId(cachedBluetoothDevice) == i) {
-                arrayList.add(cachedBluetoothDevice);
+        for (CachedBluetoothDevice next : cachedDevicesCopy) {
+            if (next != null && isGroupDeviceBonded(next) && getGroupId(next) == i) {
+                arrayList.add(next);
             }
         }
-        if (D) {
+        if (f177D) {
             Log.d("GroupUtilss", "getCahcedDevice " + i + " list " + arrayList + " " + arrayList.size());
         }
         return arrayList;
@@ -349,7 +348,7 @@ public class GroupUtils {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void launchAddSourceGroup(int i) {
         Class<?> cls;
         try {
@@ -361,16 +360,15 @@ public class GroupUtils {
         if (cls != null) {
             BluetoothDevice anyBCConnectedDevice = getAnyBCConnectedDevice(i);
             Bundle bundle = new Bundle();
-            if (anyBCConnectedDevice == null) {
-                return;
+            if (anyBCConnectedDevice != null) {
+                bundle.putString("device_address", anyBCConnectedDevice.getAddress());
+                bundle.putShort("group_op", 1);
+                new SubSettingLauncher(this.mCtx).setDestination("com.android.settings.bluetooth.BluetoothSADetail").setArguments(bundle).setTitleRes(R$string.bluetooth_search_broadcasters).setSourceMetricsCategory(25).launch();
             }
-            bundle.putString("device_address", anyBCConnectedDevice.getAddress());
-            bundle.putShort("group_op", (short) 1);
-            new SubSettingLauncher(this.mCtx).setDestination("com.android.settings.bluetooth.BluetoothSADetail").setArguments(bundle).setTitleRes(R.string.bluetooth_search_broadcasters).setSourceMetricsCategory(25).launch();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean connectGroup(int i) {
         if (isValid()) {
             return this.mGroupClientProfile.connectGroup(i);
@@ -378,7 +376,7 @@ public class GroupUtils {
         return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean disconnectGroup(int i) {
         if (isValid()) {
             return this.mGroupClientProfile.disconnectGroup(i);
@@ -386,7 +384,7 @@ public class GroupUtils {
         return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean forgetGroup(int i) {
         if (isValid()) {
             return this.mGroupClientProfile.forgetGroup(i);
@@ -394,7 +392,7 @@ public class GroupUtils {
         return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isGroupDiscoveryInProgress(int i) {
         if (!isValid()) {
             return false;
@@ -402,13 +400,13 @@ public class GroupUtils {
         return this.mGroupClientProfile.isGroupDiscoveryInProgress(i);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean startGroupDiscovery(int i) {
         if (!isValid()) {
             return false;
         }
         boolean isGroupDiscoveryInProgress = this.mGroupClientProfile.isGroupDiscoveryInProgress(i);
-        if (D) {
+        if (f177D) {
             Log.d("GroupUtilss", "startGroupDiscovery " + i + "isDiscovering " + isGroupDiscoveryInProgress);
         }
         if (isGroupDiscoveryInProgress) {
@@ -418,13 +416,13 @@ public class GroupUtils {
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean stopGroupDiscovery(int i) {
         if (!isValid()) {
             return false;
         }
         boolean isGroupDiscoveryInProgress = this.mGroupClientProfile.isGroupDiscoveryInProgress(i);
-        if (D) {
+        if (f177D) {
             Log.d("GroupUtilss", "stopGroupDiscovery " + i + "isDiscovering " + isGroupDiscoveryInProgress);
         }
         if (!isGroupDiscoveryInProgress) {
@@ -434,66 +432,122 @@ public class GroupUtils {
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* JADX WARN: Removed duplicated region for block: B:8:0x001a  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public int getGroupSize(int i) {
-        int i2;
-        if (isValid()) {
-            DeviceGroup group = this.mGroupClientProfile.getGroup(i);
-            this.mDeviceGroup = group;
-            if (group != null) {
-                i2 = group.getDeviceGroupSize();
-                if (D) {
-                    Log.d("GroupUtilss", "getDeviceGroupSize size " + i2);
-                }
-                return i2;
-            }
-        }
-        i2 = 0;
-        if (D) {
-        }
-        return i2;
+    /* access modifiers changed from: package-private */
+    /* JADX WARNING: Removed duplicated region for block: B:8:0x001a  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public int getGroupSize(int r2) {
+        /*
+            r1 = this;
+            boolean r0 = r1.isValid()
+            if (r0 == 0) goto L_0x0015
+            com.android.settingslib.bluetooth.DeviceGroupClientProfile r0 = r1.mGroupClientProfile
+            android.bluetooth.DeviceGroup r2 = r0.getGroup(r2)
+            r1.mDeviceGroup = r2
+            if (r2 == 0) goto L_0x0015
+            int r1 = r2.getDeviceGroupSize()
+            goto L_0x0016
+        L_0x0015:
+            r1 = 0
+        L_0x0016:
+            boolean r2 = f177D
+            if (r2 == 0) goto L_0x0030
+            java.lang.StringBuilder r2 = new java.lang.StringBuilder
+            r2.<init>()
+            java.lang.String r0 = "getDeviceGroupSize size "
+            r2.append(r0)
+            r2.append(r1)
+            java.lang.String r2 = r2.toString()
+            java.lang.String r0 = "GroupUtilss"
+            android.util.Log.d(r0, r2)
+        L_0x0030:
+            return r1
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.bluetooth.GroupUtils.getGroupSize(int):int");
     }
 
+    /* JADX WARNING: Removed duplicated region for block: B:15:0x0035  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
     public boolean isHidePCGGroups() {
-        boolean z;
-        List<BluetoothDevice> mostRecentlyConnectedDevices = BluetoothAdapter.getDefaultAdapter().getMostRecentlyConnectedDevices();
-        if (mostRecentlyConnectedDevices != null && mostRecentlyConnectedDevices.size() > 0) {
-            for (BluetoothDevice bluetoothDevice : mostRecentlyConnectedDevices) {
-                CachedBluetoothDevice findDevice = this.mCacheDeviceNamanger.findDevice(bluetoothDevice);
-                if (findDevice != null && isGroupDeviceBondedOnly(findDevice)) {
-                    z = false;
-                    break;
-                }
-            }
-        }
-        z = true;
-        if (D) {
-            Log.d("GroupUtilss", "isHidePCGGroups " + z);
-        }
-        return z;
+        /*
+            r3 = this;
+            android.bluetooth.BluetoothAdapter r0 = android.bluetooth.BluetoothAdapter.getDefaultAdapter()
+            java.util.List r0 = r0.getMostRecentlyConnectedDevices()
+            if (r0 == 0) goto L_0x0030
+            int r1 = r0.size()
+            if (r1 <= 0) goto L_0x0030
+            java.util.Iterator r0 = r0.iterator()
+        L_0x0014:
+            boolean r1 = r0.hasNext()
+            if (r1 == 0) goto L_0x0030
+            java.lang.Object r1 = r0.next()
+            android.bluetooth.BluetoothDevice r1 = (android.bluetooth.BluetoothDevice) r1
+            com.android.settingslib.bluetooth.CachedBluetoothDeviceManager r2 = r3.mCacheDeviceNamanger
+            com.android.settingslib.bluetooth.CachedBluetoothDevice r1 = r2.findDevice(r1)
+            if (r1 == 0) goto L_0x0014
+            boolean r1 = r3.isGroupDeviceBondedOnly(r1)
+            if (r1 == 0) goto L_0x0014
+            r3 = 0
+            goto L_0x0031
+        L_0x0030:
+            r3 = 1
+        L_0x0031:
+            boolean r0 = f177D
+            if (r0 == 0) goto L_0x004b
+            java.lang.StringBuilder r0 = new java.lang.StringBuilder
+            r0.<init>()
+            java.lang.String r1 = "isHidePCGGroups "
+            r0.append(r1)
+            r0.append(r3)
+            java.lang.String r0 = r0.toString()
+            java.lang.String r1 = "GroupUtilss"
+            android.util.Log.d(r1, r0)
+        L_0x004b:
+            return r3
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.bluetooth.GroupUtils.isHidePCGGroups():boolean");
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public boolean isHideGroupOptions(int i) {
-        boolean z;
-        Collection<CachedBluetoothDevice> cachedDevicesCopy = this.mCacheDeviceNamanger.getCachedDevicesCopy();
-        if (cachedDevicesCopy != null && cachedDevicesCopy.size() > 0) {
-            for (CachedBluetoothDevice cachedBluetoothDevice : cachedDevicesCopy) {
-                if (cachedBluetoothDevice != null && isGroupDeviceBonded(cachedBluetoothDevice) && isGroupIdMatch(cachedBluetoothDevice, i)) {
-                    z = false;
-                    break;
-                }
-            }
-        }
-        z = true;
-        if (D) {
-            Log.d("GroupUtilss", "isHideGroupOptions " + z);
-        }
-        return z;
+    /* access modifiers changed from: package-private */
+    /* JADX WARNING: Removed duplicated region for block: B:17:0x0033  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public boolean isHideGroupOptions(int r4) {
+        /*
+            r3 = this;
+            com.android.settingslib.bluetooth.CachedBluetoothDeviceManager r0 = r3.mCacheDeviceNamanger
+            java.util.Collection r0 = r0.getCachedDevicesCopy()
+            if (r0 == 0) goto L_0x002e
+            int r1 = r0.size()
+            if (r1 <= 0) goto L_0x002e
+            java.util.Iterator r0 = r0.iterator()
+        L_0x0012:
+            boolean r1 = r0.hasNext()
+            if (r1 == 0) goto L_0x002e
+            java.lang.Object r1 = r0.next()
+            com.android.settingslib.bluetooth.CachedBluetoothDevice r1 = (com.android.settingslib.bluetooth.CachedBluetoothDevice) r1
+            if (r1 == 0) goto L_0x0012
+            boolean r2 = r3.isGroupDeviceBonded(r1)
+            if (r2 == 0) goto L_0x0012
+            boolean r1 = r3.isGroupIdMatch(r1, r4)
+            if (r1 == 0) goto L_0x0012
+            r3 = 0
+            goto L_0x002f
+        L_0x002e:
+            r3 = 1
+        L_0x002f:
+            boolean r4 = f177D
+            if (r4 == 0) goto L_0x0049
+            java.lang.StringBuilder r4 = new java.lang.StringBuilder
+            r4.<init>()
+            java.lang.String r0 = "isHideGroupOptions "
+            r4.append(r0)
+            r4.append(r3)
+            java.lang.String r4 = r4.toString()
+            java.lang.String r0 = "GroupUtilss"
+            android.util.Log.d(r0, r4)
+        L_0x0049:
+            return r3
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.bluetooth.GroupUtils.isHideGroupOptions(int):boolean");
     }
 
     private boolean isGroupDeviceBondedOnly(CachedBluetoothDevice cachedBluetoothDevice) {
@@ -522,25 +576,24 @@ public class GroupUtils {
     private void isGroupEnabled() {
         try {
             int i = SystemProperties.getInt("persist.vendor.service.bt.adv_audio_mask", 0);
-            if (D) {
+            if (f177D) {
                 Log.d("GroupUtilss", "isGroupEnabled advAudioFeatureMask " + i);
             }
-            if (i == 0) {
-                return;
+            if (i != 0) {
+                this.mIsGroupEnabled = true;
             }
-            this.mIsGroupEnabled = true;
         } catch (Exception e) {
             this.mIsGroupEnabled = false;
             Log.e("GroupUtilss", "isGroupEnabled " + e);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isUpdate(int i, CachedBluetoothDevice cachedBluetoothDevice) {
         return isGroupDevice(cachedBluetoothDevice) && i == getGroupId(cachedBluetoothDevice);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean addDevice(ArrayList<CachedBluetoothDevice> arrayList, int i, CachedBluetoothDevice cachedBluetoothDevice) {
         boolean isUpdate = isUpdate(i, cachedBluetoothDevice);
         boolean z = false;
@@ -561,13 +614,13 @@ public class GroupUtils {
                 z = arrayList.add(cachedBluetoothDevice);
             }
         }
-        if (D) {
+        if (f177D) {
             Log.d("GroupUtilss", "addDevice cachedDevice " + cachedBluetoothDevice + " name " + cachedBluetoothDevice.getName() + " is added " + z);
         }
         return z2;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean removeDevice(ArrayList<CachedBluetoothDevice> arrayList, int i, CachedBluetoothDevice cachedBluetoothDevice) {
         boolean z;
         CachedBluetoothDevice cachedBluetoothDevice2;
@@ -593,7 +646,7 @@ public class GroupUtils {
         } else {
             z = false;
         }
-        if (D) {
+        if (f177D) {
             Log.d("GroupUtilss", "removeDevice cachedDevice " + cachedBluetoothDevice + " name " + cachedBluetoothDevice.getName() + " isremoved " + z2);
         }
         return z;

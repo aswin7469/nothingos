@@ -1,11 +1,13 @@
 package com.google.zxing.datamatrix.encoder;
-/* loaded from: classes2.dex */
+
 class C40Encoder implements Encoder {
     public int getEncodingMode() {
         return 1;
     }
 
-    @Override // com.google.zxing.datamatrix.encoder.Encoder
+    C40Encoder() {
+    }
+
     public void encode(EncoderContext encoderContext) {
         int lookAheadTest;
         StringBuilder sb = new StringBuilder();
@@ -19,7 +21,12 @@ class C40Encoder implements Encoder {
             int codewordCount = encoderContext.getCodewordCount() + ((sb.length() / 3) * 2);
             encoderContext.updateSymbolInfo(codewordCount);
             int dataCapacity = encoderContext.getSymbolInfo().getDataCapacity() - codewordCount;
-            if (!encoderContext.hasMoreCharacters()) {
+            if (encoderContext.hasMoreCharacters()) {
+                if (sb.length() % 3 == 0 && (lookAheadTest = HighLevelEncoder.lookAheadTest(encoderContext.getMessage(), encoderContext.pos, getEncodingMode())) != getEncodingMode()) {
+                    encoderContext.signalEncoderChange(lookAheadTest);
+                    break;
+                }
+            } else {
                 StringBuilder sb2 = new StringBuilder();
                 if (sb.length() % 3 == 2 && (dataCapacity < 2 || dataCapacity > 2)) {
                     encodeChar = backtrackOneCharacter(encoderContext, sb, sb2, encodeChar);
@@ -27,9 +34,6 @@ class C40Encoder implements Encoder {
                 while (sb.length() % 3 == 1 && ((encodeChar <= 3 && dataCapacity != 1) || encodeChar > 3)) {
                     encodeChar = backtrackOneCharacter(encoderContext, sb, sb2, encodeChar);
                 }
-            } else if (sb.length() % 3 == 0 && (lookAheadTest = HighLevelEncoder.lookAheadTest(encoderContext.getMessage(), encoderContext.pos, getEncodingMode())) != getEncodingMode()) {
-                encoderContext.signalEncoderChange(lookAheadTest);
-                break;
             }
         }
         handleEOD(encoderContext, sb);
@@ -44,31 +48,31 @@ class C40Encoder implements Encoder {
         return encodeChar;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static void writeNextTriplet(EncoderContext encoderContext, StringBuilder sb) {
+    static void writeNextTriplet(EncoderContext encoderContext, StringBuilder sb) {
         encoderContext.writeCodewords(encodeToCodewords(sb, 0));
         sb.delete(0, 3);
     }
 
-    void handleEOD(EncoderContext encoderContext, StringBuilder sb) {
+    /* access modifiers changed from: package-private */
+    public void handleEOD(EncoderContext encoderContext, StringBuilder sb) {
         int length = sb.length() % 3;
         int codewordCount = encoderContext.getCodewordCount() + ((sb.length() / 3) * 2);
         encoderContext.updateSymbolInfo(codewordCount);
         int dataCapacity = encoderContext.getSymbolInfo().getDataCapacity() - codewordCount;
         if (length == 2) {
-            sb.append((char) 0);
+            sb.append(0);
             while (sb.length() >= 3) {
                 writeNextTriplet(encoderContext, sb);
             }
             if (encoderContext.hasMoreCharacters()) {
-                encoderContext.writeCodeword((char) 254);
+                encoderContext.writeCodeword(254);
             }
         } else if (dataCapacity == 1 && length == 1) {
             while (sb.length() >= 3) {
                 writeNextTriplet(encoderContext, sb);
             }
             if (encoderContext.hasMoreCharacters()) {
-                encoderContext.writeCodeword((char) 254);
+                encoderContext.writeCodeword(254);
             }
             encoderContext.pos--;
         } else if (length == 0) {
@@ -76,7 +80,7 @@ class C40Encoder implements Encoder {
                 writeNextTriplet(encoderContext, sb);
             }
             if (dataCapacity > 0 || encoderContext.hasMoreCharacters()) {
-                encoderContext.writeCodeword((char) 254);
+                encoderContext.writeCodeword(254);
             }
         } else {
             throw new IllegalStateException("Unexpected case. Please report!");
@@ -84,9 +88,10 @@ class C40Encoder implements Encoder {
         encoderContext.signalEncoderChange(0);
     }
 
-    int encodeChar(char c, StringBuilder sb) {
+    /* access modifiers changed from: package-private */
+    public int encodeChar(char c, StringBuilder sb) {
         if (c == ' ') {
-            sb.append((char) 3);
+            sb.append(3);
             return 1;
         } else if (c >= '0' && c <= '9') {
             sb.append((char) ((c - '0') + 4));
@@ -95,23 +100,23 @@ class C40Encoder implements Encoder {
             sb.append((char) ((c - 'A') + 14));
             return 1;
         } else if (c >= 0 && c <= 31) {
-            sb.append((char) 0);
+            sb.append(0);
             sb.append(c);
             return 2;
         } else if (c >= '!' && c <= '/') {
-            sb.append((char) 1);
+            sb.append(1);
             sb.append((char) (c - '!'));
             return 2;
         } else if (c >= ':' && c <= '@') {
-            sb.append((char) 1);
+            sb.append(1);
             sb.append((char) ((c - ':') + 15));
             return 2;
         } else if (c >= '[' && c <= '_') {
-            sb.append((char) 1);
+            sb.append(1);
             sb.append((char) ((c - '[') + 22));
             return 2;
         } else if (c >= '`' && c <= 127) {
-            sb.append((char) 2);
+            sb.append(2);
             sb.append((char) (c - '`'));
             return 2;
         } else if (c >= 128) {

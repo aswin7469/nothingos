@@ -4,31 +4,35 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
 import android.widget.Switch;
 import androidx.core.content.res.TypedArrayUtils;
 import androidx.preference.PreferenceViewHolder;
 import androidx.preference.R$styleable;
 import androidx.preference.TwoStatePreference;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
 import com.android.settings.widget.SettingsMainSwitchBar;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.RestrictedPreferenceHelper;
+import com.android.settingslib.core.instrumentation.SettingsJankMonitor;
 import com.android.settingslib.widget.OnMainSwitchChangeListener;
+import com.google.android.setupdesign.util.LayoutStyler;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class SettingsMainSwitchPreference extends TwoStatePreference implements OnMainSwitchChangeListener {
+    private boolean mApplyPartnerCustomizationPaddingStyle;
+    private final List<SettingsMainSwitchBar.OnBeforeCheckedChangeListener> mBeforeCheckedChangeListeners = new ArrayList();
     private RestrictedLockUtils.EnforcedAdmin mEnforcedAdmin;
     private SettingsMainSwitchBar mMainSwitchBar;
     private RestrictedPreferenceHelper mRestrictedHelper;
-    private CharSequence mTitle;
-    private final List<SettingsMainSwitchBar.OnBeforeCheckedChangeListener> mBeforeCheckedChangeListeners = new ArrayList();
     private final List<OnMainSwitchChangeListener> mSwitchChangeListeners = new ArrayList();
-    private boolean mSwitchBarEnable = true;
+    private CharSequence mTitle;
 
     public SettingsMainSwitchPreference(Context context) {
         super(context);
-        init(context, null);
+        init(context, (AttributeSet) null);
     }
 
     public SettingsMainSwitchPreference(Context context, AttributeSet attributeSet) {
@@ -46,7 +50,6 @@ public class SettingsMainSwitchPreference extends TwoStatePreference implements 
         init(context, attributeSet);
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         preferenceViewHolder.setDividerAllowedAbove(false);
@@ -55,7 +58,7 @@ public class SettingsMainSwitchPreference extends TwoStatePreference implements 
         if (restrictedPreferenceHelper != null) {
             this.mEnforcedAdmin = restrictedPreferenceHelper.checkRestrictionEnforced();
         }
-        this.mMainSwitchBar = (SettingsMainSwitchBar) preferenceViewHolder.findViewById(R.id.main_switch_bar);
+        this.mMainSwitchBar = (SettingsMainSwitchBar) preferenceViewHolder.findViewById(R$id.main_switch_bar);
         initMainSwitchBar();
         if (isVisible()) {
             this.mMainSwitchBar.show();
@@ -66,11 +69,13 @@ public class SettingsMainSwitchPreference extends TwoStatePreference implements 
         } else {
             this.mMainSwitchBar.hide();
         }
-        this.mMainSwitchBar.setEnabled(this.mSwitchBarEnable);
+        if (this.mApplyPartnerCustomizationPaddingStyle) {
+            LayoutStyler.applyPartnerCustomizationLayoutPaddingStyle((ViewGroup) this.mMainSwitchBar.getParent());
+        }
     }
 
     private void init(Context context, AttributeSet attributeSet) {
-        setLayoutResource(R.layout.preference_widget_main_switch);
+        setLayoutResource(R$layout.preference_widget_main_switch);
         this.mSwitchChangeListeners.add(this);
         if (attributeSet != null) {
             TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.Preference, 0, 0);
@@ -83,7 +88,6 @@ public class SettingsMainSwitchPreference extends TwoStatePreference implements 
         }
     }
 
-    @Override // androidx.preference.TwoStatePreference
     public void setChecked(boolean z) {
         super.setChecked(z);
         SettingsMainSwitchBar settingsMainSwitchBar = this.mMainSwitchBar;
@@ -92,7 +96,6 @@ public class SettingsMainSwitchPreference extends TwoStatePreference implements 
         }
     }
 
-    @Override // androidx.preference.Preference
     public void setTitle(CharSequence charSequence) {
         this.mTitle = charSequence;
         SettingsMainSwitchBar settingsMainSwitchBar = this.mMainSwitchBar;
@@ -101,9 +104,9 @@ public class SettingsMainSwitchPreference extends TwoStatePreference implements 
         }
     }
 
-    @Override // com.android.settingslib.widget.OnMainSwitchChangeListener
-    public void onSwitchChanged(Switch r1, boolean z) {
+    public void onSwitchChanged(Switch switchR, boolean z) {
         super.setChecked(z);
+        SettingsJankMonitor.detectToggleJank(getKey(), switchR);
     }
 
     public void show() {
@@ -131,7 +134,6 @@ public class SettingsMainSwitchPreference extends TwoStatePreference implements 
     }
 
     public void setSwitchBarEnabled(boolean z) {
-        this.mSwitchBarEnable = z;
         setEnabled(z);
         SettingsMainSwitchBar settingsMainSwitchBar = this.mMainSwitchBar;
         if (settingsMainSwitchBar != null) {
@@ -140,20 +142,30 @@ public class SettingsMainSwitchPreference extends TwoStatePreference implements 
     }
 
     public void setOnBeforeCheckedChangeListener(SettingsMainSwitchBar.OnBeforeCheckedChangeListener onBeforeCheckedChangeListener) {
-        SettingsMainSwitchBar settingsMainSwitchBar = this.mMainSwitchBar;
-        if (settingsMainSwitchBar == null) {
+        if (!this.mBeforeCheckedChangeListeners.contains(onBeforeCheckedChangeListener)) {
             this.mBeforeCheckedChangeListeners.add(onBeforeCheckedChangeListener);
-        } else {
+        }
+        SettingsMainSwitchBar settingsMainSwitchBar = this.mMainSwitchBar;
+        if (settingsMainSwitchBar != null) {
             settingsMainSwitchBar.setOnBeforeCheckedChangeListener(onBeforeCheckedChangeListener);
         }
     }
 
     public void addOnSwitchChangeListener(OnMainSwitchChangeListener onMainSwitchChangeListener) {
-        SettingsMainSwitchBar settingsMainSwitchBar = this.mMainSwitchBar;
-        if (settingsMainSwitchBar == null) {
+        if (!this.mSwitchChangeListeners.contains(onMainSwitchChangeListener)) {
             this.mSwitchChangeListeners.add(onMainSwitchChangeListener);
-        } else {
+        }
+        SettingsMainSwitchBar settingsMainSwitchBar = this.mMainSwitchBar;
+        if (settingsMainSwitchBar != null) {
             settingsMainSwitchBar.addOnSwitchChangeListener(onMainSwitchChangeListener);
+        }
+    }
+
+    public void removeOnSwitchChangeListener(OnMainSwitchChangeListener onMainSwitchChangeListener) {
+        this.mSwitchChangeListeners.remove(onMainSwitchChangeListener);
+        SettingsMainSwitchBar settingsMainSwitchBar = this.mMainSwitchBar;
+        if (settingsMainSwitchBar != null) {
+            settingsMainSwitchBar.removeOnSwitchChangeListener(onMainSwitchChangeListener);
         }
     }
 
@@ -163,6 +175,11 @@ public class SettingsMainSwitchPreference extends TwoStatePreference implements 
         if (settingsMainSwitchBar != null) {
             settingsMainSwitchBar.setDisabledByAdmin(enforcedAdmin);
         }
+    }
+
+    public void applyPartnerCustomizationPaddingStyle() {
+        this.mApplyPartnerCustomizationPaddingStyle = true;
+        notifyChanged();
     }
 
     private void initMainSwitchBar() {
@@ -177,10 +194,8 @@ public class SettingsMainSwitchPreference extends TwoStatePreference implements 
         for (SettingsMainSwitchBar.OnBeforeCheckedChangeListener onBeforeCheckedChangeListener : this.mBeforeCheckedChangeListeners) {
             this.mMainSwitchBar.setOnBeforeCheckedChangeListener(onBeforeCheckedChangeListener);
         }
-        for (OnMainSwitchChangeListener onMainSwitchChangeListener : this.mSwitchChangeListeners) {
-            this.mMainSwitchBar.addOnSwitchChangeListener(onMainSwitchChangeListener);
+        for (OnMainSwitchChangeListener addOnSwitchChangeListener : this.mSwitchChangeListeners) {
+            this.mMainSwitchBar.addOnSwitchChangeListener(addOnSwitchChangeListener);
         }
-        this.mBeforeCheckedChangeListeners.clear();
-        this.mSwitchChangeListeners.clear();
     }
 }

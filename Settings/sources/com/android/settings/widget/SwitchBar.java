@@ -17,23 +17,31 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-import com.android.settings.R;
+import com.android.settings.R$attr;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
+import com.android.settings.R$style;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class SwitchBar extends LinearLayout implements CompoundButton.OnCheckedChangeListener {
-    private static final int[] XML_ATTRIBUTES = {R.attr.switchBarMarginStart, R.attr.switchBarMarginEnd, R.attr.switchBarBackgroundColor, R.attr.switchBarBackgroundActivatedColor, R.attr.switchBarRestrictionIcon};
+    private static final int[] XML_ATTRIBUTES = {R$attr.switchBarMarginStart, R$attr.switchBarMarginEnd, R$attr.switchBarBackgroundColor, R$attr.switchBarBackgroundActivatedColor, R$attr.switchBarRestrictionIcon};
     private int mBackgroundActivatedColor;
     private int mBackgroundColor;
-    private boolean mDisabledByAdmin;
-    private RestrictedLockUtils.EnforcedAdmin mEnforcedAdmin;
+    /* access modifiers changed from: private */
+    public boolean mDisabledByAdmin;
+    /* access modifiers changed from: private */
+    public RestrictedLockUtils.EnforcedAdmin mEnforcedAdmin;
     private String mLabel;
     private boolean mLoggingIntialized;
-    private final MetricsFeatureProvider mMetricsFeatureProvider;
-    private String mMetricsTag;
+    /* access modifiers changed from: private */
+    public final MetricsFeatureProvider mMetricsFeatureProvider;
+    /* access modifiers changed from: private */
+    public String mMetricsTag;
     private String mOffText;
     private String mOnText;
     private ImageView mRestrictedIcon;
@@ -43,13 +51,12 @@ public class SwitchBar extends LinearLayout implements CompoundButton.OnCheckedC
     private final List<OnSwitchChangeListener> mSwitchChangeListeners;
     private TextView mTextView;
 
-    /* loaded from: classes.dex */
     public interface OnSwitchChangeListener {
-        void onSwitchChanged(Switch r1, boolean z);
+        void onSwitchChanged(Switch switchR, boolean z);
     }
 
     public SwitchBar(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public SwitchBar(Context context, AttributeSet attributeSet) {
@@ -64,7 +71,7 @@ public class SwitchBar extends LinearLayout implements CompoundButton.OnCheckedC
         super(context, attributeSet, i, i2);
         this.mSwitchChangeListeners = new ArrayList();
         this.mEnforcedAdmin = null;
-        LayoutInflater.from(context).inflate(R.layout.switch_bar, this);
+        LayoutInflater.from(context).inflate(R$layout.switch_bar, this);
         setFocusable(true);
         setClickable(true);
         TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, XML_ATTRIBUTES);
@@ -72,32 +79,26 @@ public class SwitchBar extends LinearLayout implements CompoundButton.OnCheckedC
         this.mBackgroundActivatedColor = obtainStyledAttributes.getColor(3, 0);
         Drawable drawable = obtainStyledAttributes.getDrawable(4);
         obtainStyledAttributes.recycle();
-        this.mTextView = (TextView) findViewById(R.id.switch_text);
-        this.mSummarySpan = new TextAppearanceSpan(((LinearLayout) this).mContext, R.style.TextAppearance_Small_SwitchBar);
+        this.mTextView = (TextView) findViewById(R$id.switch_text);
+        this.mSummarySpan = new TextAppearanceSpan(this.mContext, R$style.TextAppearance_Small_SwitchBar);
         ((ViewGroup.MarginLayoutParams) this.mTextView.getLayoutParams()).setMarginStart((int) obtainStyledAttributes.getDimension(0, 0.0f));
-        ToggleSwitch toggleSwitch = (ToggleSwitch) findViewById(R.id.switch_widget);
+        ToggleSwitch toggleSwitch = (ToggleSwitch) findViewById(R$id.switch_widget);
         this.mSwitch = toggleSwitch;
         toggleSwitch.setSaveEnabled(false);
         this.mSwitch.setFocusable(false);
         this.mSwitch.setClickable(false);
         ((ViewGroup.MarginLayoutParams) this.mSwitch.getLayoutParams()).setMarginEnd((int) obtainStyledAttributes.getDimension(1, 0.0f));
         setBackgroundColor(this.mBackgroundColor);
-        setSwitchBarText(R.string.switch_on_text, R.string.switch_off_text);
-        addOnSwitchChangeListener(new OnSwitchChangeListener() { // from class: com.android.settings.widget.SwitchBar$$ExternalSyntheticLambda0
-            @Override // com.android.settings.widget.SwitchBar.OnSwitchChangeListener
-            public final void onSwitchChanged(Switch r1, boolean z) {
-                SwitchBar.this.lambda$new$0(r1, z);
-            }
-        });
-        ImageView imageView = (ImageView) findViewById(R.id.restricted_icon);
+        setSwitchBarText(R$string.switch_on_text, R$string.switch_off_text);
+        addOnSwitchChangeListener(new SwitchBar$$ExternalSyntheticLambda0(this));
+        ImageView imageView = (ImageView) findViewById(R$id.restricted_icon);
         this.mRestrictedIcon = imageView;
         imageView.setImageDrawable(drawable);
-        this.mRestrictedIcon.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.widget.SwitchBar.1
-            @Override // android.view.View.OnClickListener
+        this.mRestrictedIcon.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 if (SwitchBar.this.mDisabledByAdmin) {
-                    MetricsFeatureProvider metricsFeatureProvider = SwitchBar.this.mMetricsFeatureProvider;
-                    metricsFeatureProvider.action(0, 853, 0, SwitchBar.this.mMetricsTag + "/switch_bar|restricted", 1);
+                    MetricsFeatureProvider r0 = SwitchBar.this.mMetricsFeatureProvider;
+                    r0.action(0, 853, 0, SwitchBar.this.mMetricsTag + "/switch_bar|restricted", 1);
                     RestrictedLockUtils.sendShowAdminSupportDetailsIntent(context, SwitchBar.this.mEnforcedAdmin);
                 }
             }
@@ -106,12 +107,11 @@ public class SwitchBar extends LinearLayout implements CompoundButton.OnCheckedC
         this.mMetricsFeatureProvider = FeatureFactory.getFactory(context).getMetricsFeatureProvider();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$0(Switch r1, boolean z) {
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$new$0(Switch switchR, boolean z) {
         setTextViewLabelAndBackground(z);
     }
 
-    @Override // android.view.View
     public boolean performClick() {
         return getDelegatingView().performClick();
     }
@@ -142,9 +142,9 @@ public class SwitchBar extends LinearLayout implements CompoundButton.OnCheckedC
             this.mTextView.setText(this.mLabel);
             return;
         }
-        SpannableStringBuilder append = new SpannableStringBuilder(this.mLabel).append('\n');
+        SpannableStringBuilder append = new SpannableStringBuilder(this.mLabel).append(10);
         int length = append.length();
-        append.append((CharSequence) this.mSummary);
+        append.append(this.mSummary);
         append.setSpan(this.mSummarySpan, length, append.length(), 0);
         this.mTextView.setText(append);
     }
@@ -163,18 +163,18 @@ public class SwitchBar extends LinearLayout implements CompoundButton.OnCheckedC
         return this.mSwitch.isChecked();
     }
 
-    @Override // android.view.View
     public void setEnabled(boolean z) {
-        if (z && this.mDisabledByAdmin) {
-            setDisabledByAdmin(null);
+        if (!z || !this.mDisabledByAdmin) {
+            super.setEnabled(z);
+            this.mTextView.setEnabled(z);
+            this.mSwitch.setEnabled(z);
             return;
         }
-        super.setEnabled(z);
-        this.mTextView.setEnabled(z);
-        this.mSwitch.setEnabled(z);
+        setDisabledByAdmin((RestrictedLockUtils.EnforcedAdmin) null);
     }
 
-    View getDelegatingView() {
+    /* access modifiers changed from: package-private */
+    public View getDelegatingView() {
         return this.mDisabledByAdmin ? this.mRestrictedIcon : this.mSwitch;
     }
 
@@ -210,7 +210,6 @@ public class SwitchBar extends LinearLayout implements CompoundButton.OnCheckedC
         }
     }
 
-    @Override // android.widget.CompoundButton.OnCheckedChangeListener
     public void onCheckedChanged(CompoundButton compoundButton, boolean z) {
         if (this.mLoggingIntialized) {
             MetricsFeatureProvider metricsFeatureProvider = this.mMetricsFeatureProvider;
@@ -221,27 +220,20 @@ public class SwitchBar extends LinearLayout implements CompoundButton.OnCheckedC
     }
 
     public void addOnSwitchChangeListener(OnSwitchChangeListener onSwitchChangeListener) {
-        if (this.mSwitchChangeListeners.contains(onSwitchChangeListener)) {
-            throw new IllegalStateException("Cannot add twice the same OnSwitchChangeListener");
+        if (!this.mSwitchChangeListeners.contains(onSwitchChangeListener)) {
+            this.mSwitchChangeListeners.add(onSwitchChangeListener);
+            return;
         }
-        this.mSwitchChangeListeners.add(onSwitchChangeListener);
+        throw new IllegalStateException("Cannot add twice the same OnSwitchChangeListener");
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class SavedState extends View.BaseSavedState {
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() { // from class: com.android.settings.widget.SwitchBar.SavedState.1
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: createFromParcel */
-            public SavedState mo552createFromParcel(Parcel parcel) {
+    static class SavedState extends View.BaseSavedState {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel parcel) {
                 return new SavedState(parcel);
             }
 
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: newArray */
-            public SavedState[] mo553newArray(int i) {
+            public SavedState[] newArray(int i) {
                 return new SavedState[i];
             }
         };
@@ -254,11 +246,10 @@ public class SwitchBar extends LinearLayout implements CompoundButton.OnCheckedC
 
         private SavedState(Parcel parcel) {
             super(parcel);
-            this.checked = ((Boolean) parcel.readValue(null)).booleanValue();
-            this.visible = ((Boolean) parcel.readValue(null)).booleanValue();
+            this.checked = ((Boolean) parcel.readValue((ClassLoader) null)).booleanValue();
+            this.visible = ((Boolean) parcel.readValue((ClassLoader) null)).booleanValue();
         }
 
-        @Override // android.view.View.BaseSavedState, android.view.AbsSavedState, android.os.Parcelable
         public void writeToParcel(Parcel parcel, int i) {
             super.writeToParcel(parcel, i);
             parcel.writeValue(Boolean.valueOf(this.checked));
@@ -270,7 +261,6 @@ public class SwitchBar extends LinearLayout implements CompoundButton.OnCheckedC
         }
     }
 
-    @Override // android.view.View
     public Parcelable onSaveInstanceState() {
         SavedState savedState = new SavedState(super.onSaveInstanceState());
         savedState.checked = this.mSwitch.isChecked();
@@ -278,7 +268,6 @@ public class SwitchBar extends LinearLayout implements CompoundButton.OnCheckedC
         return savedState;
     }
 
-    @Override // android.view.View
     public void onRestoreInstanceState(Parcelable parcelable) {
         SavedState savedState = (SavedState) parcelable;
         super.onRestoreInstanceState(savedState.getSuperState());

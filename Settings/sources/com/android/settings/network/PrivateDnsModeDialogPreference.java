@@ -10,6 +10,7 @@ import android.os.UserHandle;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -20,7 +21,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.PreferenceViewHolder;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$string;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settings.utils.AnnotationSpan;
 import com.android.settingslib.CustomDialogPreferenceCompat;
@@ -30,7 +32,7 @@ import com.android.settingslib.RestrictedLockUtilsInternal;
 import com.google.common.net.InternetDomainName;
 import java.util.HashMap;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public class PrivateDnsModeDialogPreference extends CustomDialogPreferenceCompat implements DialogInterface.OnClickListener, RadioGroup.OnCheckedChangeListener, TextWatcher {
     static final String HOSTNAME_KEY = "private_dns_specifier";
     static final String MODE_KEY = "private_dns_mode";
@@ -38,22 +40,20 @@ public class PrivateDnsModeDialogPreference extends CustomDialogPreferenceCompat
     EditText mEditText;
     int mMode;
     RadioGroup mRadioGroup;
-    private final AnnotationSpan.LinkInfo mUrlLinkInfo = new AnnotationSpan.LinkInfo("url", PrivateDnsModeDialogPreference$$ExternalSyntheticLambda0.INSTANCE);
+    private final AnnotationSpan.LinkInfo mUrlLinkInfo = new AnnotationSpan.LinkInfo("url", new PrivateDnsModeDialogPreference$$ExternalSyntheticLambda0());
 
-    @Override // android.text.TextWatcher
-    public void afterTextChanged(Editable editable) {
+    public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
     }
 
-    @Override // android.text.TextWatcher
-    public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+    public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
     }
 
     static {
         HashMap hashMap = new HashMap();
         PRIVATE_DNS_MAP = hashMap;
-        hashMap.put(1, Integer.valueOf(R.id.private_dns_mode_off));
-        hashMap.put(2, Integer.valueOf(R.id.private_dns_mode_opportunistic));
-        hashMap.put(3, Integer.valueOf(R.id.private_dns_mode_provider));
+        hashMap.put(1, Integer.valueOf(R$id.private_dns_mode_off));
+        hashMap.put(2, Integer.valueOf(R$id.private_dns_mode_opportunistic));
+        hashMap.put(3, Integer.valueOf(R$id.private_dns_mode_provider));
     }
 
     public static String getHostnameFromSettings(ContentResolver contentResolver) {
@@ -62,28 +62,24 @@ public class PrivateDnsModeDialogPreference extends CustomDialogPreferenceCompat
 
     public PrivateDnsModeDialogPreference(Context context) {
         super(context);
-        initialize();
     }
 
     public PrivateDnsModeDialogPreference(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        initialize();
     }
 
     public PrivateDnsModeDialogPreference(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
-        initialize();
     }
 
     public PrivateDnsModeDialogPreference(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
-        initialize();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ void lambda$new$0(View view) {
         Context context = view.getContext();
-        Intent helpIntent = HelpUtils.getHelpIntent(context, context.getString(R.string.help_uri_private_dns), context.getClass().getName());
+        Intent helpIntent = HelpUtils.getHelpIntent(context, context.getString(R$string.help_uri_private_dns), context.getClass().getName());
         if (helpIntent != null) {
             try {
                 view.startActivityForResult(helpIntent, 0);
@@ -93,47 +89,43 @@ public class PrivateDnsModeDialogPreference extends CustomDialogPreferenceCompat
         }
     }
 
-    private void initialize() {
-        setWidgetLayoutResource(R.layout.restricted_icon);
-    }
-
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         if (isDisabledByAdmin()) {
             preferenceViewHolder.itemView.setEnabled(true);
         }
-        View findViewById = preferenceViewHolder.findViewById(R.id.restricted_icon);
-        if (findViewById != null) {
-            findViewById.setVisibility(isDisabledByAdmin() ? 0 : 8);
-        }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.CustomDialogPreferenceCompat
+    /* access modifiers changed from: protected */
     public void onBindDialogView(View view) {
         Context context = getContext();
         ContentResolver contentResolver = context.getContentResolver();
         this.mMode = ConnectivitySettingsManager.getPrivateDnsMode(context);
-        EditText editText = (EditText) view.findViewById(R.id.private_dns_mode_provider_hostname);
+        EditText editText = (EditText) view.findViewById(R$id.private_dns_mode_provider_hostname);
         this.mEditText = editText;
         editText.addTextChangedListener(this);
         this.mEditText.setText(getHostnameFromSettings(contentResolver));
-        RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.private_dns_radio_group);
+        RadioGroup radioGroup = (RadioGroup) view.findViewById(R$id.private_dns_radio_group);
         this.mRadioGroup = radioGroup;
         radioGroup.setOnCheckedChangeListener(this);
         RadioGroup radioGroup2 = this.mRadioGroup;
         Map<Integer, Integer> map = PRIVATE_DNS_MAP;
         Integer valueOf = Integer.valueOf(this.mMode);
-        int i = R.id.private_dns_mode_opportunistic;
+        int i = R$id.private_dns_mode_opportunistic;
         radioGroup2.check(map.getOrDefault(valueOf, Integer.valueOf(i)).intValue());
-        ((RadioButton) view.findViewById(R.id.private_dns_mode_off)).setText(R.string.private_dns_mode_off);
-        ((RadioButton) view.findViewById(i)).setText(R.string.private_dns_mode_opportunistic);
-        ((RadioButton) view.findViewById(R.id.private_dns_mode_provider)).setText(R.string.private_dns_mode_provider);
-        ((TextView) view.findViewById(R.id.private_dns_help_info)).setVisibility(8);
+        ((RadioButton) view.findViewById(R$id.private_dns_mode_off)).setText(R$string.private_dns_mode_off);
+        ((RadioButton) view.findViewById(i)).setText(R$string.private_dns_mode_opportunistic);
+        ((RadioButton) view.findViewById(R$id.private_dns_mode_provider)).setText(R$string.private_dns_mode_provider);
+        TextView textView = (TextView) view.findViewById(R$id.private_dns_help_info);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        AnnotationSpan.LinkInfo linkInfo = new AnnotationSpan.LinkInfo(context, "url", HelpUtils.getHelpIntent(context, context.getString(R$string.help_uri_private_dns), context.getClass().getName()));
+        if (linkInfo.isActionable()) {
+            textView.setText(AnnotationSpan.linkify(context.getText(R$string.private_dns_help_message), linkInfo));
+            return;
+        }
+        textView.setText("");
     }
 
-    @Override // com.android.settingslib.CustomDialogPreferenceCompat
     public void onClick(DialogInterface dialogInterface, int i) {
         if (i == -1) {
             Context context = getContext();
@@ -145,24 +137,21 @@ public class PrivateDnsModeDialogPreference extends CustomDialogPreferenceCompat
         }
     }
 
-    @Override // android.widget.RadioGroup.OnCheckedChangeListener
     public void onCheckedChanged(RadioGroup radioGroup, int i) {
-        if (i == R.id.private_dns_mode_off) {
+        if (i == R$id.private_dns_mode_off) {
             this.mMode = 1;
-        } else if (i == R.id.private_dns_mode_opportunistic) {
+        } else if (i == R$id.private_dns_mode_opportunistic) {
             this.mMode = 2;
-        } else if (i == R.id.private_dns_mode_provider) {
+        } else if (i == R$id.private_dns_mode_provider) {
             this.mMode = 3;
         }
         updateDialogInfo();
     }
 
-    @Override // android.text.TextWatcher
-    public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+    public void afterTextChanged(Editable editable) {
         updateDialogInfo();
     }
 
-    @Override // androidx.preference.Preference
     public void performClick() {
         RestrictedLockUtils.EnforcedAdmin enforcedAdmin = getEnforcedAdmin();
         if (enforcedAdmin == null) {

@@ -10,13 +10,14 @@ import androidx.core.graphics.drawable.IconCompat;
 import androidx.slice.Slice;
 import androidx.slice.builders.ListBuilder;
 import androidx.slice.builders.SliceAction;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.SubSettings;
 import com.android.settings.connecteddevice.BluetoothDashboardFragment;
 import com.android.settings.slices.CustomSliceRegistry;
 import com.android.settings.slices.SliceBroadcastReceiver;
 import com.android.settings.slices.SliceBuilderUtils;
-/* loaded from: classes.dex */
+import com.android.settingslib.Utils;
+
 public class BluetoothSliceBuilder {
     public static final IntentFilter INTENT_FILTER;
 
@@ -29,16 +30,16 @@ public class BluetoothSliceBuilder {
 
     public static Slice getSlice(Context context) {
         boolean isBluetoothEnabled = isBluetoothEnabled();
-        CharSequence text = context.getText(R.string.bluetooth_settings);
-        IconCompat createWithResource = IconCompat.createWithResource(context, 17302837);
-        int defaultColor = com.android.settingslib.Utils.getColorAccent(context).getDefaultColor();
+        CharSequence text = context.getText(R$string.bluetooth_settings);
+        IconCompat createWithResource = IconCompat.createWithResource(context, 17302848);
+        int defaultColor = Utils.getColorAccent(context).getDefaultColor();
         PendingIntent broadcastIntent = getBroadcastIntent(context);
-        return new ListBuilder(context, CustomSliceRegistry.BLUETOOTH_URI, -1L).setAccentColor(defaultColor).addRow(new ListBuilder.RowBuilder().setTitle(text).addEndItem(SliceAction.createToggle(broadcastIntent, null, isBluetoothEnabled)).setPrimaryAction(SliceAction.createDeeplink(getPrimaryAction(context), createWithResource, 0, text))).build();
+        return new ListBuilder(context, CustomSliceRegistry.BLUETOOTH_URI, -1).setAccentColor(defaultColor).addRow(new ListBuilder.RowBuilder().setTitle(text).addEndItem(SliceAction.createToggle(broadcastIntent, (CharSequence) null, isBluetoothEnabled)).setPrimaryAction(SliceAction.createDeeplink(getPrimaryAction(context), createWithResource, 0, text))).build();
     }
 
     public static Intent getIntent(Context context) {
-        String charSequence = context.getText(R.string.bluetooth_settings_title).toString();
-        return SliceBuilderUtils.buildSearchResultPageIntent(context, BluetoothDashboardFragment.class.getName(), null, charSequence, 747).setClassName(context.getPackageName(), SubSettings.class.getName()).setData(new Uri.Builder().appendPath("bluetooth").build());
+        String charSequence = context.getText(R$string.bluetooth_settings_title).toString();
+        return SliceBuilderUtils.buildSearchResultPageIntent(context, BluetoothDashboardFragment.class.getName(), (String) null, charSequence, 747, R$string.menu_key_connected_devices).setClassName(context.getPackageName(), SubSettings.class.getName()).setData(new Uri.Builder().appendPath("bluetooth").build());
     }
 
     public static void handleUriChange(Context context, Intent intent) {

@@ -8,28 +8,27 @@ import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.Display;
 import androidx.preference.SwitchPreference;
-import com.android.settings.R;
+import com.android.settings.R$array;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class ColorModePreference extends SwitchPreference implements DisplayManager.DisplayListener {
     private int mCurrentIndex;
     private List<ColorModeDescription> mDescriptions;
     private Display mDisplay;
-    private DisplayManager mDisplayManager = (DisplayManager) getContext().getSystemService(DisplayManager.class);
+    private DisplayManager mDisplayManager = ((DisplayManager) getContext().getSystemService(DisplayManager.class));
 
-    @Override // android.hardware.display.DisplayManager.DisplayListener
     public void onDisplayRemoved(int i) {
     }
 
     public static List<ColorModeDescription> getColorModeDescriptions(Context context) {
         ArrayList arrayList = new ArrayList();
         Resources resources = context.getResources();
-        int[] intArray = resources.getIntArray(R.array.color_mode_ids);
-        String[] stringArray = resources.getStringArray(R.array.color_mode_names);
-        String[] stringArray2 = resources.getStringArray(R.array.color_mode_descriptions);
+        int[] intArray = resources.getIntArray(R$array.color_mode_ids);
+        String[] stringArray = resources.getStringArray(R$array.color_mode_names);
+        String[] stringArray2 = resources.getStringArray(R$array.color_mode_descriptions);
         for (int i = 0; i < intArray.length; i++) {
-            if (intArray[i] != -1 && i != 1) {
+            if (!(intArray[i] == -1 || i == 1)) {
                 ColorModeDescription colorModeDescription = new ColorModeDescription();
                 colorModeDescription.colorMode = intArray[i];
                 colorModeDescription.title = stringArray[i];
@@ -52,14 +51,12 @@ public class ColorModePreference extends SwitchPreference implements DisplayMana
         this.mDisplayManager.unregisterDisplayListener(this);
     }
 
-    @Override // android.hardware.display.DisplayManager.DisplayListener
     public void onDisplayAdded(int i) {
         if (i == 0) {
             updateCurrentAndSupported();
         }
     }
 
-    @Override // android.hardware.display.DisplayManager.DisplayListener
     public void onDisplayChanged(int i) {
         if (i == 0) {
             updateCurrentAndSupported();
@@ -89,24 +86,24 @@ public class ColorModePreference extends SwitchPreference implements DisplayMana
         setChecked(z);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public boolean persistBoolean(boolean z) {
-        if (this.mDescriptions.size() == 2) {
-            ColorModeDescription colorModeDescription = this.mDescriptions.get(z ? 1 : 0);
-            this.mDisplay.requestColorMode(colorModeDescription.colorMode);
-            this.mCurrentIndex = this.mDescriptions.indexOf(colorModeDescription);
+        if (this.mDescriptions.size() != 2) {
             return true;
         }
+        ColorModeDescription colorModeDescription = this.mDescriptions.get(z ? 1 : 0);
+        this.mDisplay.requestColorMode(colorModeDescription.colorMode);
+        this.mCurrentIndex = this.mDescriptions.indexOf(colorModeDescription);
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class ColorModeDescription {
-        private int colorMode;
-        private String summary;
-        private String title;
+    private static class ColorModeDescription {
+        /* access modifiers changed from: private */
+        public int colorMode;
+        /* access modifiers changed from: private */
+        public String summary;
+        /* access modifiers changed from: private */
+        public String title;
 
         private ColorModeDescription() {
         }

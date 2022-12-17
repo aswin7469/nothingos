@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:settings="http://schemas.android.com/apk/res-auto" android:persistent="false" android:title="@string/nt_glyphs_select_ringtone_title">
-    <Preference android:selectable="false" android:key="glyphs_select_ringtone_summary" settings:controller="com.nt.settings.glyphs.pick.GlyphsSelectRingtoneDesController" settings:searchable="false"/>
-    <com.nt.settings.glyphs.widget.GlyphsBackgroundPreference android:icon="@drawable/ic_default_ringtone" android:title="@string/summary_placeholder" android:key="glyphs_current_ringtone" android:summary="@string/nt_glyphs_current_selected_summary" settings:searchable="false"/>
-    <PreferenceCategory android:title="@string/nt_glyphs_library_sound_title" android:key="glyphs_ringtones_list">
-        <com.nt.settings.glyphs.widget.GlyphsBackgroundPreference android:title="@string/nt_glyphs_nt_ringtones_title" android:key="glyphs_nt_sound" settings:searchable="false"/>
-        <com.nt.settings.glyphs.widget.GlyphsBackgroundPreference android:title="@string/nt_glyphs_my_sound_title" android:key="glyphs_my_sound" settings:searchable="false"/>
-    </PreferenceCategory>
-</PreferenceScreen>

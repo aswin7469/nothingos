@@ -8,7 +8,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 import androidx.preference.PreferenceViewHolder;
 import com.android.settingslib.RestrictedLockUtils;
-/* loaded from: classes.dex */
+
 public class RestrictedTopLevelPreference extends Preference {
     private RestrictedPreferenceHelper mHelper;
 
@@ -25,25 +25,18 @@ public class RestrictedTopLevelPreference extends Preference {
         this(context, attributeSet, TypedArrayUtils.getAttr(context, R$attr.preferenceStyle, 16842894));
     }
 
-    public RestrictedTopLevelPreference(Context context) {
-        this(context, null);
-    }
-
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         this.mHelper.onBindViewHolder(preferenceViewHolder);
     }
 
-    @Override // androidx.preference.Preference
     public void performClick() {
         if (!this.mHelper.performClick()) {
             super.performClick();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public void onAttachedToHierarchy(PreferenceManager preferenceManager) {
         this.mHelper.onAttachedToHierarchy();
         super.onAttachedToHierarchy(preferenceManager);
@@ -53,12 +46,11 @@ public class RestrictedTopLevelPreference extends Preference {
         this.mHelper.checkRestrictionAndSetDisabled(str, UserHandle.myUserId());
     }
 
-    @Override // androidx.preference.Preference
     public void setEnabled(boolean z) {
-        if (z && isDisabledByAdmin()) {
-            this.mHelper.setDisabledByAdmin(null);
-        } else {
+        if (!z || !isDisabledByAdmin()) {
             super.setEnabled(z);
+        } else {
+            this.mHelper.setDisabledByAdmin((RestrictedLockUtils.EnforcedAdmin) null);
         }
     }
 

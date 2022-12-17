@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.InsetDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.RippleDrawable;
-import android.os.Build;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.ViewCompat;
 import com.google.android.material.R$attr;
@@ -20,14 +19,16 @@ import com.google.android.material.ripple.RippleUtils;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.ShapeAppearanceModel;
 import com.google.android.material.shape.Shapeable;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class MaterialButtonHelper {
-    private static final boolean IS_LOLLIPOP;
+
+class MaterialButtonHelper {
+    private static final boolean IS_LOLLIPOP = false;
+    private static final boolean IS_MIN_LOLLIPOP = true;
+    private boolean backgroundOverwritten = false;
     private ColorStateList backgroundTint;
     private PorterDuff.Mode backgroundTintMode;
     private boolean checkable;
     private int cornerRadius;
+    private boolean cornerRadiusSet = false;
     private int elevation;
     private int insetBottom;
     private int insetLeft;
@@ -38,23 +39,16 @@ public class MaterialButtonHelper {
     private ColorStateList rippleColor;
     private LayerDrawable rippleDrawable;
     private ShapeAppearanceModel shapeAppearanceModel;
+    private boolean shouldDrawSurfaceColorStroke = false;
     private ColorStateList strokeColor;
     private int strokeWidth;
-    private boolean shouldDrawSurfaceColorStroke = false;
-    private boolean backgroundOverwritten = false;
-    private boolean cornerRadiusSet = false;
 
-    static {
-        IS_LOLLIPOP = Build.VERSION.SDK_INT >= 21;
+    MaterialButtonHelper(MaterialButton materialButton2, ShapeAppearanceModel shapeAppearanceModel2) {
+        this.materialButton = materialButton2;
+        this.shapeAppearanceModel = shapeAppearanceModel2;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public MaterialButtonHelper(MaterialButton materialButton, ShapeAppearanceModel shapeAppearanceModel) {
-        this.materialButton = materialButton;
-        this.shapeAppearanceModel = shapeAppearanceModel;
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void loadFromAttributes(TypedArray typedArray) {
         this.insetLeft = typedArray.getDimensionPixelOffset(R$styleable.MaterialButton_android_insetLeft, 0);
         this.insetRight = typedArray.getDimensionPixelOffset(R$styleable.MaterialButton_android_insetRight, 0);
@@ -64,7 +58,7 @@ public class MaterialButtonHelper {
         if (typedArray.hasValue(i)) {
             int dimensionPixelSize = typedArray.getDimensionPixelSize(i, -1);
             this.cornerRadius = dimensionPixelSize;
-            setShapeAppearanceModel(this.shapeAppearanceModel.withCornerSize(dimensionPixelSize));
+            setShapeAppearanceModel(this.shapeAppearanceModel.withCornerSize((float) dimensionPixelSize));
             this.cornerRadiusSet = true;
         }
         this.strokeWidth = typedArray.getDimensionPixelSize(R$styleable.MaterialButton_strokeWidth, 0);
@@ -90,18 +84,18 @@ public class MaterialButtonHelper {
         this.materialButton.setInternalBackground(createBackground());
         MaterialShapeDrawable materialShapeDrawable = getMaterialShapeDrawable();
         if (materialShapeDrawable != null) {
-            materialShapeDrawable.setElevation(this.elevation);
+            materialShapeDrawable.setElevation((float) this.elevation);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setBackgroundOverwritten() {
         this.backgroundOverwritten = true;
         this.materialButton.setSupportBackgroundTintList(this.backgroundTint);
         this.materialButton.setSupportBackgroundTintMode(this.backgroundTintMode);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isBackgroundOverwritten() {
         return this.backgroundOverwritten;
     }
@@ -110,39 +104,37 @@ public class MaterialButtonHelper {
         return new InsetDrawable(drawable, this.insetLeft, this.insetTop, this.insetRight, this.insetBottom);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setSupportBackgroundTintList(ColorStateList colorStateList) {
         if (this.backgroundTint != colorStateList) {
             this.backgroundTint = colorStateList;
-            if (getMaterialShapeDrawable() == null) {
-                return;
+            if (getMaterialShapeDrawable() != null) {
+                DrawableCompat.setTintList(getMaterialShapeDrawable(), this.backgroundTint);
             }
-            DrawableCompat.setTintList(getMaterialShapeDrawable(), this.backgroundTint);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public ColorStateList getSupportBackgroundTintList() {
         return this.backgroundTint;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setSupportBackgroundTintMode(PorterDuff.Mode mode) {
         if (this.backgroundTintMode != mode) {
             this.backgroundTintMode = mode;
-            if (getMaterialShapeDrawable() == null || this.backgroundTintMode == null) {
-                return;
+            if (getMaterialShapeDrawable() != null && this.backgroundTintMode != null) {
+                DrawableCompat.setTintMode(getMaterialShapeDrawable(), this.backgroundTintMode);
             }
-            DrawableCompat.setTintMode(getMaterialShapeDrawable(), this.backgroundTintMode);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public PorterDuff.Mode getSupportBackgroundTintMode() {
         return this.backgroundTintMode;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setShouldDrawSurfaceColorStroke(boolean z) {
         this.shouldDrawSurfaceColorStroke = z;
         updateStroke();
@@ -156,17 +148,17 @@ public class MaterialButtonHelper {
         if (mode != null) {
             DrawableCompat.setTintMode(materialShapeDrawable, mode);
         }
-        materialShapeDrawable.setStroke(this.strokeWidth, this.strokeColor);
+        materialShapeDrawable.setStroke((float) this.strokeWidth, this.strokeColor);
         MaterialShapeDrawable materialShapeDrawable2 = new MaterialShapeDrawable(this.shapeAppearanceModel);
         materialShapeDrawable2.setTint(0);
-        materialShapeDrawable2.setStroke(this.strokeWidth, this.shouldDrawSurfaceColorStroke ? MaterialColors.getColor(this.materialButton, R$attr.colorSurface) : 0);
-        if (IS_LOLLIPOP) {
+        materialShapeDrawable2.setStroke((float) this.strokeWidth, this.shouldDrawSurfaceColorStroke ? MaterialColors.getColor(this.materialButton, R$attr.colorSurface) : 0);
+        if (IS_MIN_LOLLIPOP) {
             MaterialShapeDrawable materialShapeDrawable3 = new MaterialShapeDrawable(this.shapeAppearanceModel);
             this.maskDrawable = materialShapeDrawable3;
             DrawableCompat.setTint(materialShapeDrawable3, -1);
-            RippleDrawable rippleDrawable = new RippleDrawable(RippleUtils.sanitizeRippleDrawableColor(this.rippleColor), wrapDrawableWithInset(new LayerDrawable(new Drawable[]{materialShapeDrawable2, materialShapeDrawable})), this.maskDrawable);
-            this.rippleDrawable = rippleDrawable;
-            return rippleDrawable;
+            RippleDrawable rippleDrawable2 = new RippleDrawable(RippleUtils.sanitizeRippleDrawableColor(this.rippleColor), wrapDrawableWithInset(new LayerDrawable(new Drawable[]{materialShapeDrawable2, materialShapeDrawable})), this.maskDrawable);
+            this.rippleDrawable = rippleDrawable2;
+            return rippleDrawable2;
         }
         RippleDrawableCompat rippleDrawableCompat = new RippleDrawableCompat(this.shapeAppearanceModel);
         this.maskDrawable = rippleDrawableCompat;
@@ -176,41 +168,32 @@ public class MaterialButtonHelper {
         return wrapDrawableWithInset(layerDrawable);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void updateMaskBounds(int i, int i2) {
-        Drawable drawable = this.maskDrawable;
-        if (drawable != null) {
-            drawable.setBounds(this.insetLeft, this.insetTop, i2 - this.insetRight, i - this.insetBottom);
-        }
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setBackgroundColor(int i) {
         if (getMaterialShapeDrawable() != null) {
             getMaterialShapeDrawable().setTint(i);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setRippleColor(ColorStateList colorStateList) {
         if (this.rippleColor != colorStateList) {
             this.rippleColor = colorStateList;
-            boolean z = IS_LOLLIPOP;
+            boolean z = IS_MIN_LOLLIPOP;
             if (z && (this.materialButton.getBackground() instanceof RippleDrawable)) {
                 ((RippleDrawable) this.materialButton.getBackground()).setColor(RippleUtils.sanitizeRippleDrawableColor(colorStateList));
-            } else if (z || !(this.materialButton.getBackground() instanceof RippleDrawableCompat)) {
-            } else {
+            } else if (!z && (this.materialButton.getBackground() instanceof RippleDrawableCompat)) {
                 ((RippleDrawableCompat) this.materialButton.getBackground()).setTintList(RippleUtils.sanitizeRippleDrawableColor(colorStateList));
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public ColorStateList getRippleColor() {
         return this.rippleColor;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setStrokeColor(ColorStateList colorStateList) {
         if (this.strokeColor != colorStateList) {
             this.strokeColor = colorStateList;
@@ -218,12 +201,12 @@ public class MaterialButtonHelper {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public ColorStateList getStrokeColor() {
         return this.strokeColor;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setStrokeWidth(int i) {
         if (this.strokeWidth != i) {
             this.strokeWidth = i;
@@ -231,7 +214,7 @@ public class MaterialButtonHelper {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getStrokeWidth() {
         return this.strokeWidth;
     }
@@ -240,51 +223,49 @@ public class MaterialButtonHelper {
         MaterialShapeDrawable materialShapeDrawable = getMaterialShapeDrawable();
         MaterialShapeDrawable surfaceColorStrokeDrawable = getSurfaceColorStrokeDrawable();
         if (materialShapeDrawable != null) {
-            materialShapeDrawable.setStroke(this.strokeWidth, this.strokeColor);
-            if (surfaceColorStrokeDrawable == null) {
-                return;
+            materialShapeDrawable.setStroke((float) this.strokeWidth, this.strokeColor);
+            if (surfaceColorStrokeDrawable != null) {
+                surfaceColorStrokeDrawable.setStroke((float) this.strokeWidth, this.shouldDrawSurfaceColorStroke ? MaterialColors.getColor(this.materialButton, R$attr.colorSurface) : 0);
             }
-            surfaceColorStrokeDrawable.setStroke(this.strokeWidth, this.shouldDrawSurfaceColorStroke ? MaterialColors.getColor(this.materialButton, R$attr.colorSurface) : 0);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setCornerRadius(int i) {
         if (!this.cornerRadiusSet || this.cornerRadius != i) {
             this.cornerRadius = i;
             this.cornerRadiusSet = true;
-            setShapeAppearanceModel(this.shapeAppearanceModel.withCornerSize(i));
+            setShapeAppearanceModel(this.shapeAppearanceModel.withCornerSize((float) i));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getCornerRadius() {
         return this.cornerRadius;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
     private MaterialShapeDrawable getMaterialShapeDrawable(boolean z) {
         LayerDrawable layerDrawable = this.rippleDrawable;
         if (layerDrawable == null || layerDrawable.getNumberOfLayers() <= 0) {
             return null;
         }
-        if (IS_LOLLIPOP) {
-            return (MaterialShapeDrawable) ((LayerDrawable) ((InsetDrawable) this.rippleDrawable.getDrawable(0)).getDrawable()).getDrawable(!z);
+        if (IS_MIN_LOLLIPOP) {
+            return (MaterialShapeDrawable) ((LayerDrawable) ((InsetDrawable) this.rippleDrawable.getDrawable(0)).getDrawable()).getDrawable(z ^ true ? 1 : 0);
         }
-        return (MaterialShapeDrawable) this.rippleDrawable.getDrawable(!z ? 1 : 0);
+        return (MaterialShapeDrawable) this.rippleDrawable.getDrawable(z ^ true ? 1 : 0);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public MaterialShapeDrawable getMaterialShapeDrawable() {
         return getMaterialShapeDrawable(false);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setCheckable(boolean z) {
         this.checkable = z;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isCheckable() {
         return this.checkable;
     }
@@ -293,16 +274,26 @@ public class MaterialButtonHelper {
         return getMaterialShapeDrawable(true);
     }
 
-    private void updateButtonShape(ShapeAppearanceModel shapeAppearanceModel) {
-        if (getMaterialShapeDrawable() != null) {
-            getMaterialShapeDrawable().setShapeAppearanceModel(shapeAppearanceModel);
+    private void updateButtonShape(ShapeAppearanceModel shapeAppearanceModel2) {
+        if (!IS_LOLLIPOP || this.backgroundOverwritten) {
+            if (getMaterialShapeDrawable() != null) {
+                getMaterialShapeDrawable().setShapeAppearanceModel(shapeAppearanceModel2);
+            }
+            if (getSurfaceColorStrokeDrawable() != null) {
+                getSurfaceColorStrokeDrawable().setShapeAppearanceModel(shapeAppearanceModel2);
+            }
+            if (getMaskDrawable() != null) {
+                getMaskDrawable().setShapeAppearanceModel(shapeAppearanceModel2);
+                return;
+            }
+            return;
         }
-        if (getSurfaceColorStrokeDrawable() != null) {
-            getSurfaceColorStrokeDrawable().setShapeAppearanceModel(shapeAppearanceModel);
-        }
-        if (getMaskDrawable() != null) {
-            getMaskDrawable().setShapeAppearanceModel(shapeAppearanceModel);
-        }
+        int paddingStart = ViewCompat.getPaddingStart(this.materialButton);
+        int paddingTop = this.materialButton.getPaddingTop();
+        int paddingEnd = ViewCompat.getPaddingEnd(this.materialButton);
+        int paddingBottom = this.materialButton.getPaddingBottom();
+        updateBackground();
+        ViewCompat.setPaddingRelative(this.materialButton, paddingStart, paddingTop, paddingEnd, paddingBottom);
     }
 
     public Shapeable getMaskDrawable() {
@@ -316,13 +307,13 @@ public class MaterialButtonHelper {
         return (Shapeable) this.rippleDrawable.getDrawable(1);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void setShapeAppearanceModel(ShapeAppearanceModel shapeAppearanceModel) {
-        this.shapeAppearanceModel = shapeAppearanceModel;
-        updateButtonShape(shapeAppearanceModel);
+    /* access modifiers changed from: package-private */
+    public void setShapeAppearanceModel(ShapeAppearanceModel shapeAppearanceModel2) {
+        this.shapeAppearanceModel = shapeAppearanceModel2;
+        updateButtonShape(shapeAppearanceModel2);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public ShapeAppearanceModel getShapeAppearanceModel() {
         return this.shapeAppearanceModel;
     }

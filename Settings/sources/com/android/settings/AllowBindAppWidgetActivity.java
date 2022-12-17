@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
-/* loaded from: classes.dex */
+
 public class AllowBindAppWidgetActivity extends AlertActivity implements DialogInterface.OnClickListener {
     private CheckBox mAlwaysUse;
     private int mAppWidgetId;
@@ -27,12 +27,11 @@ public class AllowBindAppWidgetActivity extends AlertActivity implements DialogI
     private ComponentName mComponentName;
     private UserHandle mProfile;
 
-    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialogInterface, int i) {
         int i2;
         ComponentName componentName;
         this.mClicked = true;
-        if (i == -1 && (i2 = this.mAppWidgetId) != -1 && (componentName = this.mComponentName) != null && this.mCallingPackage != null) {
+        if (!(i != -1 || (i2 = this.mAppWidgetId) == -1 || (componentName = this.mComponentName) == null || this.mCallingPackage == null)) {
             try {
                 if (this.mAppWidgetManager.bindAppWidgetIdIfAllowed(i2, this.mProfile, componentName, this.mBindOptions)) {
                     Intent intent = new Intent();
@@ -50,17 +49,19 @@ public class AllowBindAppWidgetActivity extends AlertActivity implements DialogI
         finish();
     }
 
-    protected void onPause() {
+    /* access modifiers changed from: protected */
+    public void onPause() {
         if (!this.mClicked) {
             finish();
         }
-        super.onPause();
+        AllowBindAppWidgetActivity.super.onPause();
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    protected void onCreate(Bundle bundle) {
-        CharSequence charSequence;
-        super.onCreate(bundle);
+    /* JADX WARNING: type inference failed for: r7v0, types: [android.content.Context, android.content.DialogInterface$OnClickListener, com.android.internal.app.AlertActivity, com.android.settings.AllowBindAppWidgetActivity] */
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
+        Object obj;
+        AllowBindAppWidgetActivity.super.onCreate(bundle);
         getWindow().addPrivateFlags(524288);
         setResult(0);
         Intent intent = getIntent();
@@ -76,7 +77,7 @@ public class AllowBindAppWidgetActivity extends AlertActivity implements DialogI
                 this.mBindOptions = (Bundle) intent.getParcelableExtra("appWidgetOptions");
                 this.mCallingPackage = getCallingPackage();
                 PackageManager packageManager = getPackageManager();
-                charSequence = packageManager.getApplicationLabel(packageManager.getApplicationInfo(this.mCallingPackage, 0));
+                obj = packageManager.getApplicationLabel(packageManager.getApplicationInfo(this.mCallingPackage, 0));
             } catch (Exception unused) {
                 this.mAppWidgetId = -1;
                 this.mComponentName = null;
@@ -86,32 +87,32 @@ public class AllowBindAppWidgetActivity extends AlertActivity implements DialogI
                 return;
             }
         } else {
-            charSequence = "";
+            obj = "";
         }
         this.mAppWidgetManager = AppWidgetManager.getInstance(this);
         String widgetLabel = getWidgetLabel();
-        AlertController.AlertParams alertParams = ((AlertActivity) this).mAlertParams;
-        alertParams.mTitle = getString(R.string.allow_bind_app_widget_activity_allow_bind_title);
-        alertParams.mMessage = getString(R.string.allow_bind_app_widget_activity_allow_bind, new Object[]{charSequence, widgetLabel});
-        alertParams.mPositiveButtonText = getString(R.string.create);
+        AlertController.AlertParams alertParams = this.mAlertParams;
+        alertParams.mTitle = getString(R$string.allow_bind_app_widget_activity_allow_bind_title);
+        alertParams.mMessage = getString(R$string.allow_bind_app_widget_activity_allow_bind, new Object[]{obj, widgetLabel});
+        alertParams.mPositiveButtonText = getString(R$string.create);
         alertParams.mNegativeButtonText = getString(17039360);
         alertParams.mPositiveButtonListener = this;
         alertParams.mNegativeButtonListener = this;
         View inflate = ((LayoutInflater) getSystemService("layout_inflater")).inflate(17367093, (ViewGroup) null);
         alertParams.mView = inflate;
-        CheckBox checkBox = (CheckBox) inflate.findViewById(16908753);
+        CheckBox checkBox = (CheckBox) inflate.findViewById(16908774);
         this.mAlwaysUse = checkBox;
-        checkBox.setText(getString(R.string.allow_bind_app_widget_activity_always_allow_bind, new Object[]{charSequence}));
+        checkBox.setText(getString(R$string.allow_bind_app_widget_activity_always_allow_bind, new Object[]{obj}));
         CheckBox checkBox2 = this.mAlwaysUse;
-        checkBox2.setPadding(checkBox2.getPaddingLeft(), this.mAlwaysUse.getPaddingTop(), this.mAlwaysUse.getPaddingRight(), (int) (this.mAlwaysUse.getPaddingBottom() + getResources().getDimension(R.dimen.bind_app_widget_dialog_checkbox_bottom_padding)));
+        checkBox2.setPadding(checkBox2.getPaddingLeft(), this.mAlwaysUse.getPaddingTop(), this.mAlwaysUse.getPaddingRight(), (int) (((float) this.mAlwaysUse.getPaddingBottom()) + getResources().getDimension(R$dimen.bind_app_widget_dialog_checkbox_bottom_padding)));
         this.mAlwaysUse.setChecked(this.mAppWidgetManager.hasBindAppWidgetPermission(this.mCallingPackage, this.mProfile.getIdentifier()));
         setupAlert();
     }
 
     private String getWidgetLabel() {
-        for (AppWidgetProviderInfo appWidgetProviderInfo : this.mAppWidgetManager.getInstalledProviders()) {
-            if (appWidgetProviderInfo.provider.equals(this.mComponentName)) {
-                return appWidgetProviderInfo.loadLabel(getPackageManager());
+        for (AppWidgetProviderInfo next : this.mAppWidgetManager.getInstalledProviders()) {
+            if (next.provider.equals(this.mComponentName)) {
+                return next.loadLabel(getPackageManager());
             }
         }
         return "";

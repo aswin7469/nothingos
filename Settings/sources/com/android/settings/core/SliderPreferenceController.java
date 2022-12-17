@@ -3,15 +3,11 @@ package com.android.settings.core;
 import android.content.Context;
 import android.content.IntentFilter;
 import androidx.preference.Preference;
-import com.android.settings.slices.SliceBackgroundWorker;
+import androidx.slice.builders.SliceAction;
 import com.android.settings.widget.SeekBarPreference;
-/* loaded from: classes.dex */
-public abstract class SliderPreferenceController extends BasePreferenceController implements Preference.OnPreferenceChangeListener {
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
 
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+public abstract class SliderPreferenceController extends BasePreferenceController implements Preference.OnPreferenceChangeListener {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
@@ -23,7 +19,14 @@ public abstract class SliderPreferenceController extends BasePreferenceControlle
 
     public abstract int getMin();
 
-    @Override // com.android.settings.core.BasePreferenceController
+    public SliceAction getSliceEndItem(Context context) {
+        return null;
+    }
+
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public int getSliceType() {
         return 2;
     }
@@ -32,10 +35,6 @@ public abstract class SliderPreferenceController extends BasePreferenceControlle
 
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
-    }
-
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
     }
 
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
@@ -56,17 +55,14 @@ public abstract class SliderPreferenceController extends BasePreferenceControlle
         super(context, str);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         return setSliderPosition(((Integer) obj).intValue());
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         if (preference instanceof SeekBarPreference) {
             ((SeekBarPreference) preference).setProgress(getSliderPosition());
-        } else if (!(preference instanceof androidx.preference.SeekBarPreference)) {
-        } else {
+        } else if (preference instanceof androidx.preference.SeekBarPreference) {
             ((androidx.preference.SeekBarPreference) preference).setValue(getSliderPosition());
         }
     }

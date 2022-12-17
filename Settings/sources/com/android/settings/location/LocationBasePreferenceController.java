@@ -6,25 +6,19 @@ import android.os.UserManager;
 import com.android.settings.core.BasePreferenceController;
 import com.android.settings.dashboard.DashboardFragment;
 import com.android.settings.location.LocationEnabler;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.core.lifecycle.Lifecycle;
-/* loaded from: classes.dex */
+
 public abstract class LocationBasePreferenceController extends BasePreferenceController implements LocationEnabler.LocationModeChangeListener {
     protected DashboardFragment mFragment;
     protected Lifecycle mLifecycle;
     protected LocationEnabler mLocationEnabler;
-    protected UserManager mUserManager = (UserManager) this.mContext.getSystemService("user");
+    protected UserManager mUserManager = ((UserManager) this.mContext.getSystemService("user"));
 
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return 0;
     }
 
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
@@ -32,12 +26,12 @@ public abstract class LocationBasePreferenceController extends BasePreferenceCon
         return super.getIntentFilter();
     }
 
-    public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
-        return super.hasAsyncUpdate();
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
     }
 
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
+    public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
+        return super.hasAsyncUpdate();
     }
 
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {

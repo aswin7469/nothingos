@@ -3,46 +3,52 @@ package com.android.settingslib.dream;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.pm.ServiceInfo;
 import android.content.res.Resources;
-import android.content.res.TypedArray;
-import android.content.res.XmlResourceParser;
 import android.graphics.drawable.Drawable;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.provider.Settings;
+import android.service.dreams.DreamService;
 import android.service.dreams.IDreamManager;
-import android.util.AttributeSet;
+import android.text.TextUtils;
 import android.util.Log;
-import android.util.Xml;
-import com.android.internal.R;
-import java.io.IOException;
+import com.android.settings.network.telephony.C1099x7d702dd2;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
-import org.xmlpull.v1.XmlPullParserException;
-/* loaded from: classes.dex */
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public class DreamBackend {
     private static DreamBackend sInstance;
+    private final DreamInfoComparator mComparator = new DreamInfoComparator(getDefaultDream());
     private final Context mContext;
+    private final Set<Integer> mDefaultEnabledComplications;
+    private final Set<ComponentName> mDisabledDreams;
+    private final IDreamManager mDreamManager = IDreamManager.Stub.asInterface(ServiceManager.getService("dreams"));
     private final boolean mDreamsActivatedOnDockByDefault;
     private final boolean mDreamsActivatedOnSleepByDefault;
     private final boolean mDreamsEnabledByDefault;
-    private final IDreamManager mDreamManager = IDreamManager.Stub.asInterface(ServiceManager.getService("dreams"));
-    private final DreamInfoComparator mComparator = new DreamInfoComparator(getDefaultDream());
+    private final Set<Integer> mSupportedComplications;
 
     private static void logd(String str, Object... objArr) {
     }
 
-    /* loaded from: classes.dex */
     public static class DreamInfo {
         public CharSequence caption;
         public ComponentName componentName;
+        public CharSequence description;
         public Drawable icon;
         public boolean isActive;
+        public Drawable previewImage;
         public ComponentName settingsComponentName;
 
         public String toString() {
@@ -73,9 +79,16 @@ public class DreamBackend {
     public DreamBackend(Context context) {
         Context applicationContext = context.getApplicationContext();
         this.mContext = applicationContext;
-        this.mDreamsEnabledByDefault = applicationContext.getResources().getBoolean(17891519);
-        this.mDreamsActivatedOnSleepByDefault = applicationContext.getResources().getBoolean(17891518);
-        this.mDreamsActivatedOnDockByDefault = applicationContext.getResources().getBoolean(17891517);
+        Resources resources = applicationContext.getResources();
+        this.mDreamsEnabledByDefault = resources.getBoolean(17891617);
+        this.mDreamsActivatedOnSleepByDefault = resources.getBoolean(17891616);
+        this.mDreamsActivatedOnDockByDefault = resources.getBoolean(17891615);
+        this.mDisabledDreams = (Set) Arrays.stream(resources.getStringArray(17236032)).map(new DreamBackend$$ExternalSyntheticLambda1()).collect(Collectors.toSet());
+        Set<Integer> set = (Set) Arrays.stream(resources.getIntArray(17236132)).boxed().collect(Collectors.toSet());
+        this.mSupportedComplications = set;
+        Stream<Integer> boxed = Arrays.stream(resources.getIntArray(17236056)).boxed();
+        Objects.requireNonNull(set);
+        this.mDefaultEnabledComplications = (Set) boxed.filter(new DreamBackend$$ExternalSyntheticLambda2(set)).collect(Collectors.toSet());
     }
 
     public List<DreamInfo> getDreamInfos() {
@@ -84,20 +97,43 @@ public class DreamBackend {
         PackageManager packageManager = this.mContext.getPackageManager();
         List<ResolveInfo> queryIntentServices = packageManager.queryIntentServices(new Intent("android.service.dreams.DreamService"), 128);
         ArrayList arrayList = new ArrayList(queryIntentServices.size());
-        for (ResolveInfo resolveInfo : queryIntentServices) {
-            if (resolveInfo.serviceInfo != null) {
+        for (ResolveInfo next : queryIntentServices) {
+            ComponentName dreamComponentName = getDreamComponentName(next);
+            if (dreamComponentName != null && !this.mDisabledDreams.contains(dreamComponentName)) {
                 DreamInfo dreamInfo = new DreamInfo();
-                dreamInfo.caption = resolveInfo.loadLabel(packageManager);
-                dreamInfo.icon = resolveInfo.loadIcon(packageManager);
-                ComponentName dreamComponentName = getDreamComponentName(resolveInfo);
+                dreamInfo.caption = next.loadLabel(packageManager);
+                dreamInfo.icon = next.loadIcon(packageManager);
+                dreamInfo.description = getDescription(next, packageManager);
                 dreamInfo.componentName = dreamComponentName;
                 dreamInfo.isActive = dreamComponentName.equals(activeDream);
-                dreamInfo.settingsComponentName = getSettingsComponentName(packageManager, resolveInfo);
+                DreamService.DreamMetadata dreamMetadata = DreamService.getDreamMetadata(this.mContext, next.serviceInfo);
+                if (dreamMetadata != null) {
+                    dreamInfo.settingsComponentName = dreamMetadata.settingsActivity;
+                    dreamInfo.previewImage = dreamMetadata.previewImage;
+                }
                 arrayList.add(dreamInfo);
             }
         }
-        Collections.sort(arrayList, this.mComparator);
+        arrayList.sort(this.mComparator);
         return arrayList;
+    }
+
+    private static CharSequence getDescription(ResolveInfo resolveInfo, PackageManager packageManager) {
+        ApplicationInfo applicationInfo;
+        String str = resolveInfo.resolvePackageName;
+        if (str == null) {
+            ServiceInfo serviceInfo = resolveInfo.serviceInfo;
+            String str2 = serviceInfo.packageName;
+            applicationInfo = serviceInfo.applicationInfo;
+            str = str2;
+        } else {
+            applicationInfo = null;
+        }
+        int i = resolveInfo.serviceInfo.descriptionRes;
+        if (i != 0) {
+            return packageManager.getText(str, i, applicationInfo);
+        }
+        return null;
     }
 
     public ComponentName getDefaultDream() {
@@ -128,25 +164,7 @@ public class DreamBackend {
         return null;
     }
 
-    public Drawable getActiveIcon() {
-        ComponentName activeDream = getActiveDream();
-        if (activeDream != null) {
-            PackageManager packageManager = this.mContext.getPackageManager();
-            try {
-                ServiceInfo serviceInfo = packageManager.getServiceInfo(activeDream, 0);
-                if (serviceInfo != null) {
-                    return serviceInfo.loadIcon(packageManager);
-                }
-            } catch (PackageManager.NameNotFoundException unused) {
-            }
-        }
-        return null;
-    }
-
     public int getWhenToDreamSetting() {
-        if (!isEnabled()) {
-            return 3;
-        }
         if (isActivatedOnDock() && isActivatedOnSleep()) {
             return 2;
         }
@@ -164,11 +182,45 @@ public class DreamBackend {
         } else if (i == 1) {
             setActivatedOnDock(true);
             setActivatedOnSleep(false);
-        } else if (i != 2) {
-        } else {
+        } else if (i == 2) {
             setActivatedOnDock(true);
             setActivatedOnSleep(true);
         }
+    }
+
+    public Set<Integer> getEnabledComplications() {
+        String string = Settings.Secure.getString(this.mContext.getContentResolver(), "screensaver_enabled_complications");
+        if (string == null) {
+            return this.mDefaultEnabledComplications;
+        }
+        return parseFromString(string);
+    }
+
+    public Set<Integer> getSupportedComplications() {
+        return this.mSupportedComplications;
+    }
+
+    public void setComplicationEnabled(int i, boolean z) {
+        if (this.mSupportedComplications.contains(Integer.valueOf(i))) {
+            Set<Integer> enabledComplications = getEnabledComplications();
+            if (z) {
+                enabledComplications.add(Integer.valueOf(i));
+            } else {
+                enabledComplications.remove(Integer.valueOf(i));
+            }
+            Settings.Secure.putString(this.mContext.getContentResolver(), "screensaver_enabled_complications", convertToString(enabledComplications));
+        }
+    }
+
+    private static String convertToString(Set<Integer> set) {
+        return (String) set.stream().map(new C1099x7d702dd2()).collect(Collectors.joining(","));
+    }
+
+    private static Set<Integer> parseFromString(String str) {
+        if (TextUtils.isEmpty(str)) {
+            return new HashSet();
+        }
+        return (Set) Arrays.stream(str.split(",")).map(new DreamBackend$$ExternalSyntheticLambda0()).collect(Collectors.toSet());
     }
 
     public boolean isEnabled() {
@@ -209,17 +261,16 @@ public class DreamBackend {
     public void setActiveDream(ComponentName componentName) {
         logd("setActiveDream(%s)", componentName);
         IDreamManager iDreamManager = this.mDreamManager;
-        if (iDreamManager == null) {
-            return;
-        }
-        try {
-            ComponentName[] componentNameArr = {componentName};
-            if (componentName == null) {
-                componentNameArr = null;
+        if (iDreamManager != null) {
+            try {
+                ComponentName[] componentNameArr = {componentName};
+                if (componentName == null) {
+                    componentNameArr = null;
+                }
+                iDreamManager.setDreamComponents(componentNameArr);
+            } catch (RemoteException e) {
+                Log.w("DreamBackend", "Failed to set active dream to " + componentName, e);
             }
-            iDreamManager.setDreamComponents(componentNameArr);
-        } catch (RemoteException e) {
-            Log.w("DreamBackend", "Failed to set active dream to " + componentName, e);
         }
     }
 
@@ -230,10 +281,10 @@ public class DreamBackend {
         }
         try {
             ComponentName[] dreamComponents = iDreamManager.getDreamComponents();
-            if (dreamComponents != null && dreamComponents.length > 0) {
-                return dreamComponents[0];
+            if (dreamComponents == null || dreamComponents.length <= 0) {
+                return null;
             }
-            return null;
+            return dreamComponents[0];
         } catch (RemoteException e) {
             Log.w("DreamBackend", "Failed to get active dream", e);
             return null;
@@ -242,22 +293,20 @@ public class DreamBackend {
 
     public void launchSettings(Context context, DreamInfo dreamInfo) {
         logd("launchSettings(%s)", dreamInfo);
-        if (dreamInfo == null || dreamInfo.settingsComponentName == null) {
-            return;
+        if (dreamInfo != null && dreamInfo.settingsComponentName != null) {
+            context.startActivity(new Intent().setComponent(dreamInfo.settingsComponentName).addFlags(276824064));
         }
-        context.startActivity(new Intent().setComponent(dreamInfo.settingsComponentName));
     }
 
-    public void startDreaming() {
-        logd("startDreaming()", new Object[0]);
+    public void preview(ComponentName componentName) {
+        logd("preview(%s)", componentName);
         IDreamManager iDreamManager = this.mDreamManager;
-        if (iDreamManager == null) {
-            return;
-        }
-        try {
-            iDreamManager.dream();
-        } catch (RemoteException e) {
-            Log.w("DreamBackend", "Failed to dream", e);
+        if (iDreamManager != null && componentName != null) {
+            try {
+                iDreamManager.testDream(this.mContext.getUserId(), componentName);
+            } catch (RemoteException e) {
+                Log.w("DreamBackend", "Failed to preview " + componentName, e);
+            }
         }
     }
 
@@ -269,90 +318,6 @@ public class DreamBackend {
         return new ComponentName(serviceInfo.packageName, serviceInfo.name);
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:33:0x007a  */
-    /* JADX WARN: Removed duplicated region for block: B:35:0x0093  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private static ComponentName getSettingsComponentName(PackageManager packageManager, ResolveInfo resolveInfo) {
-        ServiceInfo serviceInfo;
-        XmlResourceParser xmlResourceParser;
-        String str;
-        XmlResourceParser xmlResourceParser2 = null;
-        if (resolveInfo == null || (serviceInfo = resolveInfo.serviceInfo) == null || serviceInfo.metaData == null) {
-            return null;
-        }
-        try {
-            xmlResourceParser = serviceInfo.loadXmlMetaData(packageManager, "android.service.dream");
-            try {
-                try {
-                } catch (PackageManager.NameNotFoundException | IOException | XmlPullParserException e) {
-                    e = e;
-                    str = null;
-                }
-            } catch (Throwable th) {
-                th = th;
-                xmlResourceParser2 = xmlResourceParser;
-                if (xmlResourceParser2 != null) {
-                    xmlResourceParser2.close();
-                }
-                throw th;
-            }
-        } catch (PackageManager.NameNotFoundException | IOException | XmlPullParserException e2) {
-            e = e2;
-            xmlResourceParser = null;
-            str = null;
-        } catch (Throwable th2) {
-            th = th2;
-        }
-        if (xmlResourceParser == null) {
-            Log.w("DreamBackend", "No android.service.dream meta-data");
-            if (xmlResourceParser != null) {
-                xmlResourceParser.close();
-            }
-            return null;
-        }
-        Resources resourcesForApplication = packageManager.getResourcesForApplication(resolveInfo.serviceInfo.applicationInfo);
-        AttributeSet asAttributeSet = Xml.asAttributeSet(xmlResourceParser);
-        while (true) {
-            int next = xmlResourceParser.next();
-            if (next == 1 || next == 2) {
-                break;
-            }
-        }
-        if (!"dream".equals(xmlResourceParser.getName())) {
-            Log.w("DreamBackend", "Meta-data does not start with dream tag");
-            xmlResourceParser.close();
-            return null;
-        }
-        TypedArray obtainAttributes = resourcesForApplication.obtainAttributes(asAttributeSet, R.styleable.Dream);
-        str = obtainAttributes.getString(0);
-        try {
-            obtainAttributes.recycle();
-            xmlResourceParser.close();
-            e = null;
-        } catch (PackageManager.NameNotFoundException | IOException | XmlPullParserException e3) {
-            e = e3;
-            if (xmlResourceParser != null) {
-                xmlResourceParser.close();
-            }
-            if (e == null) {
-            }
-        }
-        if (e == null) {
-            Log.w("DreamBackend", "Error parsing : " + resolveInfo.serviceInfo.packageName, e);
-            return null;
-        }
-        if (str != null && str.indexOf(47) < 0) {
-            str = resolveInfo.serviceInfo.packageName + "/" + str;
-        }
-        if (str != null) {
-            return ComponentName.unflattenFromString(str);
-        }
-        return null;
-    }
-
-    /* loaded from: classes.dex */
     private static class DreamInfoComparator implements Comparator<DreamInfo> {
         private final ComponentName mDefaultDream;
 
@@ -360,7 +325,6 @@ public class DreamBackend {
             this.mDefaultDream = componentName;
         }
 
-        @Override // java.util.Comparator
         public int compare(DreamInfo dreamInfo, DreamInfo dreamInfo2) {
             return sortKey(dreamInfo).compareTo(sortKey(dreamInfo2));
         }

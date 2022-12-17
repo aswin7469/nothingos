@@ -5,130 +5,98 @@ import android.util.Log;
 import android.view.View;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.connecteddevice.ConnectedDeviceDashboardFragment;
 import com.android.settings.widget.GroupOptionsPreference;
 import com.android.settingslib.bluetooth.CachedBluetoothDevice;
 import com.android.settingslib.core.lifecycle.Lifecycle;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
+
 public class GroupBluetoothDetailsButtonsController extends GroupBluetoothDetailsController {
     private static final boolean DBG = ConnectedDeviceDashboardFragment.DBG_GROUP;
     private static String TAG = "GroupBluetoothDetailsButtonsController";
-    private int mGroupId;
-    private GroupOptionsPreference mGroupOptions;
-    private int mGroupSize;
-    private GroupUtils mGroupUtils;
-    private boolean mIsUpdate = false;
-    private int mDiscoveredSize = 0;
     private boolean isRefreshClicked = false;
     private ArrayList<CachedBluetoothDevice> mDevicesList = new ArrayList<>();
+    private int mDiscoveredSize = 0;
+    private int mGroupId;
+    private GroupOptionsPreference mGroupOptions;
+    private int mGroupSize = -1;
+    private GroupUtils mGroupUtils;
+    private boolean mIsUpdate = false;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "group_options";
     }
 
     public GroupBluetoothDetailsButtonsController(Context context, PreferenceFragmentCompat preferenceFragmentCompat, int i, Lifecycle lifecycle) {
         super(context, preferenceFragmentCompat, i, lifecycle);
-        this.mGroupSize = -1;
         this.mGroupId = i;
         GroupUtils groupUtils = new GroupUtils(context);
         this.mGroupUtils = groupUtils;
         this.mGroupSize = groupUtils.getGroupSize(this.mGroupId);
     }
 
-    @Override // com.android.settings.bluetooth.GroupBluetoothDetailsController
-    protected void init(PreferenceScreen preferenceScreen) {
+    /* access modifiers changed from: protected */
+    public void init(PreferenceScreen preferenceScreen) {
         if (DBG) {
             Log.d(TAG, "init ");
         }
         GroupOptionsPreference groupOptionsPreference = (GroupOptionsPreference) preferenceScreen.findPreference(getPreferenceKey());
         this.mGroupOptions = groupOptionsPreference;
-        groupOptionsPreference.setTextViewText(((GroupBluetoothDetailsController) this).mContext.getString(R.string.group_id) + this.mGroupUtils.getGroupTitle(this.mGroupId));
-        this.mGroupOptions.setForgetButtonText(R.string.forget_group);
-        this.mGroupOptions.setForgetButtonOnClickListener(new View.OnClickListener() { // from class: com.android.settings.bluetooth.GroupBluetoothDetailsButtonsController$$ExternalSyntheticLambda4
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                GroupBluetoothDetailsButtonsController.this.lambda$init$0(view);
-            }
-        });
+        groupOptionsPreference.setTextViewText(this.mContext.getString(R$string.group_id) + this.mGroupUtils.getGroupTitle(this.mGroupId));
+        this.mGroupOptions.setForgetButtonText(R$string.forget_group);
+        this.mGroupOptions.setForgetButtonOnClickListener(new GroupBluetoothDetailsButtonsController$$ExternalSyntheticLambda0(this));
         boolean z = true;
         this.mGroupOptions.setForgetButtonEnabled(true);
-        this.mGroupOptions.setTexStatusText(R.string.active);
-        this.mGroupOptions.setConnectButtonText(R.string.connect_group);
-        this.mGroupOptions.setConnectButtonOnClickListener(new View.OnClickListener() { // from class: com.android.settings.bluetooth.GroupBluetoothDetailsButtonsController$$ExternalSyntheticLambda1
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                GroupBluetoothDetailsButtonsController.this.lambda$init$1(view);
-            }
-        });
-        this.mGroupOptions.setDisconnectButtonText(R.string.disconnect_group);
-        this.mGroupOptions.setDisconnectButtonOnClickListener(new View.OnClickListener() { // from class: com.android.settings.bluetooth.GroupBluetoothDetailsButtonsController$$ExternalSyntheticLambda2
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                GroupBluetoothDetailsButtonsController.this.lambda$init$2(view);
-            }
-        });
-        this.mGroupOptions.setCancelRefreshButtonText(R.string.cancel_refresh_group);
-        this.mGroupOptions.setCancelRefreshButtonOnClickListener(new View.OnClickListener() { // from class: com.android.settings.bluetooth.GroupBluetoothDetailsButtonsController$$ExternalSyntheticLambda5
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                GroupBluetoothDetailsButtonsController.this.lambda$init$3(view);
-            }
-        });
+        this.mGroupOptions.setTexStatusText(R$string.active);
+        this.mGroupOptions.setConnectButtonText(R$string.connect_group);
+        this.mGroupOptions.setConnectButtonOnClickListener(new GroupBluetoothDetailsButtonsController$$ExternalSyntheticLambda1(this));
+        this.mGroupOptions.setDisconnectButtonText(R$string.disconnect_group);
+        this.mGroupOptions.setDisconnectButtonOnClickListener(new GroupBluetoothDetailsButtonsController$$ExternalSyntheticLambda2(this));
+        this.mGroupOptions.setCancelRefreshButtonText(R$string.cancel_refresh_group);
+        this.mGroupOptions.setCancelRefreshButtonOnClickListener(new GroupBluetoothDetailsButtonsController$$ExternalSyntheticLambda3(this));
         this.mGroupOptions.setCancelRefreshButtonVisible(false);
-        this.mGroupOptions.setRefreshButtonText(R.string.refresh_group);
-        this.mGroupOptions.setRefreshButtonOnClickListener(new View.OnClickListener() { // from class: com.android.settings.bluetooth.GroupBluetoothDetailsButtonsController$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                GroupBluetoothDetailsButtonsController.this.lambda$init$4(view);
-            }
-        });
+        this.mGroupOptions.setRefreshButtonText(R$string.refresh_group);
+        this.mGroupOptions.setRefreshButtonOnClickListener(new GroupBluetoothDetailsButtonsController$$ExternalSyntheticLambda4(this));
         this.mGroupOptions.setRefreshButtonVisible(false);
         this.mIsUpdate = true;
         if (this.mGroupUtils.getAnyBCConnectedDevice(this.mGroupId) == null) {
             z = false;
         }
-        this.mGroupOptions.setAddSourceGroupButtonText(R.string.add_source_group);
+        this.mGroupOptions.setAddSourceGroupButtonText(R$string.add_source_group);
         this.mGroupOptions.setAddSourceGroupButtonEnabled(z);
         this.mGroupOptions.setAddSourceGroupButtonVisible(z);
         if (z) {
-            this.mGroupOptions.setAddSourceGroupButtonOnClickListener(new View.OnClickListener() { // from class: com.android.settings.bluetooth.GroupBluetoothDetailsButtonsController$$ExternalSyntheticLambda3
-                @Override // android.view.View.OnClickListener
-                public final void onClick(View view) {
-                    GroupBluetoothDetailsButtonsController.this.lambda$init$5(view);
-                }
-            });
+            this.mGroupOptions.setAddSourceGroupButtonOnClickListener(new GroupBluetoothDetailsButtonsController$$ExternalSyntheticLambda5(this));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$init$0(View view) {
         onForgetButtonPressed();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$init$1(View view) {
         onConnectButtonPressed();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$init$2(View view) {
         onDisConnectButtonPressed();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$init$3(View view) {
         onCacelRefreshButtonPressed();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$init$4(View view) {
         onRefreshButtonPressed();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$init$5(View view) {
         onAddSourceGroupButtonPressed();
     }
@@ -137,7 +105,6 @@ public class GroupBluetoothDetailsButtonsController extends GroupBluetoothDetail
         this.mGroupUtils.launchAddSourceGroup(this.mGroupId);
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public void onConnectionStateChanged(CachedBluetoothDevice cachedBluetoothDevice, int i) {
         if (DBG) {
             String str = TAG;
@@ -148,7 +115,6 @@ public class GroupBluetoothDetailsButtonsController extends GroupBluetoothDetail
         }
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public void onProfileConnectionStateChanged(CachedBluetoothDevice cachedBluetoothDevice, int i, int i2) {
         if (DBG) {
             String str = TAG;
@@ -159,28 +125,26 @@ public class GroupBluetoothDetailsButtonsController extends GroupBluetoothDetail
         }
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public void onDeviceBondStateChanged(CachedBluetoothDevice cachedBluetoothDevice, int i) {
-        boolean removeDevice;
+        boolean z;
         if (i == 12) {
-            removeDevice = this.mGroupUtils.addDevice(this.mDevicesList, this.mGroupId, cachedBluetoothDevice);
+            z = this.mGroupUtils.addDevice(this.mDevicesList, this.mGroupId, cachedBluetoothDevice);
         } else {
-            removeDevice = i == 10 ? this.mGroupUtils.removeDevice(this.mDevicesList, this.mGroupId, cachedBluetoothDevice) : false;
+            z = i == 10 ? this.mGroupUtils.removeDevice(this.mDevicesList, this.mGroupId, cachedBluetoothDevice) : false;
         }
-        if (removeDevice) {
+        if (z) {
             this.mDiscoveredSize = this.mDevicesList.size();
         }
         if (DBG) {
             String str = TAG;
-            Log.d(str, "onDeviceBondStateChanged cachedDevice " + cachedBluetoothDevice + " name " + cachedBluetoothDevice.getName() + " bondState " + i + " isUpdated " + removeDevice + " mDiscoveredSize " + this.mDiscoveredSize);
+            Log.d(str, "onDeviceBondStateChanged cachedDevice " + cachedBluetoothDevice + " name " + cachedBluetoothDevice.getName() + " bondState " + i + " isUpdated " + z + " mDiscoveredSize " + this.mDiscoveredSize);
         }
-        if (removeDevice) {
+        if (z) {
             updateProgressScan();
             refresh();
         }
     }
 
-    @Override // com.android.settings.bluetooth.GroupBluetoothDetailsController, com.android.settingslib.core.lifecycle.events.OnStop
     public void onStop() {
         if (DBG) {
             Log.d(TAG, "onStop ");
@@ -189,7 +153,6 @@ public class GroupBluetoothDetailsButtonsController extends GroupBluetoothDetail
         disableScanning();
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public void onGroupDiscoveryStatusChanged(int i, int i2, int i3) {
         if (DBG) {
             String str = TAG;
@@ -203,8 +166,8 @@ public class GroupBluetoothDetailsButtonsController extends GroupBluetoothDetail
         }
     }
 
-    @Override // com.android.settings.bluetooth.GroupBluetoothDetailsController
-    protected void loadDevices() {
+    /* access modifiers changed from: protected */
+    public void loadDevices() {
         ArrayList<CachedBluetoothDevice> cahcedDevice = this.mGroupUtils.getCahcedDevice(this.mGroupId);
         this.mDevicesList = cahcedDevice;
         this.mDiscoveredSize = cahcedDevice.size();
@@ -215,9 +178,9 @@ public class GroupBluetoothDetailsButtonsController extends GroupBluetoothDetail
         updateProgressScan();
     }
 
-    @Override // com.android.settings.bluetooth.GroupBluetoothDetailsController
-    protected void refresh() {
-        ArrayList<CachedBluetoothDevice> arrayList = new ArrayList(this.mDevicesList);
+    /* access modifiers changed from: protected */
+    public void refresh() {
+        ArrayList<CachedBluetoothDevice> arrayList = new ArrayList<>(this.mDevicesList);
         if (DBG) {
             Log.d(TAG, "updateFlags list " + arrayList + " size " + arrayList.size());
         }
@@ -240,26 +203,27 @@ public class GroupBluetoothDetailsButtonsController extends GroupBluetoothDetail
                 this.mIsUpdate = true;
                 z2 = true;
             }
-            if (!z4 && cachedBluetoothDevice.isConnected() && (cachedBluetoothDevice.isActiveDevice(2) || cachedBluetoothDevice.isActiveDevice(1) || cachedBluetoothDevice.isActiveDevice(21))) {
-                z4 = true;
+            if (!z4 && cachedBluetoothDevice.isConnected()) {
+                if (cachedBluetoothDevice.isActiveDevice(2) || cachedBluetoothDevice.isActiveDevice(1) || cachedBluetoothDevice.isActiveDevice(21)) {
+                    z4 = true;
+                }
             }
         }
         if (DBG) {
             Log.d(TAG, "refresh isBusy " + z + " showConnect " + z2 + " showDisconnect :" + z3 + " isActive " + z4 + " mIsUpdate " + this.mIsUpdate);
         }
-        if (!this.mIsUpdate) {
-            return;
+        if (this.mIsUpdate) {
+            this.mGroupOptions.setConnectButtonEnabled(!z);
+            this.mGroupOptions.setDisconnectButtonEnabled(!z);
+            this.mGroupOptions.setRefreshButtonEnabled(!z);
+            this.mGroupOptions.setCancelRefreshButtonEnabled(!z);
+            this.mGroupOptions.setDisconnectButtonEnabled(z3);
+            this.mGroupOptions.setDisconnectButtonVisible(z3);
+            this.mGroupOptions.setConnectButtonEnabled(z2);
+            this.mGroupOptions.setConnectButtonVisible(z2);
+            this.mGroupOptions.setTvStatusVisible(z4);
+            this.mIsUpdate = false;
         }
-        this.mGroupOptions.setConnectButtonEnabled(!z);
-        this.mGroupOptions.setDisconnectButtonEnabled(!z);
-        this.mGroupOptions.setRefreshButtonEnabled(!z);
-        this.mGroupOptions.setCancelRefreshButtonEnabled(!z);
-        this.mGroupOptions.setDisconnectButtonEnabled(z3);
-        this.mGroupOptions.setDisconnectButtonVisible(z3);
-        this.mGroupOptions.setConnectButtonEnabled(z2);
-        this.mGroupOptions.setConnectButtonVisible(z2);
-        this.mGroupOptions.setTvStatusVisible(z4);
-        this.mIsUpdate = false;
     }
 
     private void onForgetButtonPressed() {

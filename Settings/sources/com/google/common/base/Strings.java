@@ -2,14 +2,17 @@ package com.google.common.base;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-/* loaded from: classes2.dex */
+
 public final class Strings {
     public static String emptyToNull(String str) {
         return Platform.emptyToNull(str);
     }
 
     static boolean validSurrogatePairAt(CharSequence charSequence, int i) {
-        return i >= 0 && i <= charSequence.length() + (-2) && Character.isHighSurrogate(charSequence.charAt(i)) && Character.isLowSurrogate(charSequence.charAt(i + 1));
+        if (i < 0 || i > charSequence.length() - 2 || !Character.isHighSurrogate(charSequence.charAt(i)) || !Character.isLowSurrogate(charSequence.charAt(i + 1))) {
+            return false;
+        }
+        return true;
     }
 
     public static String lenientFormat(String str, Object... objArr) {
@@ -26,12 +29,12 @@ public final class Strings {
         StringBuilder sb = new StringBuilder(valueOf.length() + (objArr.length * 16));
         int i3 = 0;
         while (i < objArr.length && (indexOf = valueOf.indexOf("%s", i3)) != -1) {
-            sb.append((CharSequence) valueOf, i3, indexOf);
+            sb.append(valueOf, i3, indexOf);
             sb.append(objArr[i]);
             i3 = indexOf + 2;
             i++;
         }
-        sb.append((CharSequence) valueOf, i3, valueOf.length());
+        sb.append(valueOf, i3, valueOf.length());
         if (i < objArr.length) {
             sb.append(" [");
             sb.append(objArr[i]);
@@ -52,7 +55,7 @@ public final class Strings {
             return obj.toString();
         } catch (Exception e) {
             String str = obj.getClass().getName() + '@' + Integer.toHexString(System.identityHashCode(obj));
-            Logger.getLogger("com.google.common.base.Strings").log(Level.WARNING, "Exception during lenientFormat for " + str, (Throwable) e);
+            Logger.getLogger("com.google.common.base.Strings").log(Level.WARNING, "Exception during lenientFormat for " + str, e);
             return "<" + str + " threw " + e.getClass().getName() + ">";
         }
     }

@@ -1,7 +1,7 @@
 package com.google.android.material.shadow;
 
 import android.graphics.drawable.Drawable;
-/* loaded from: classes2.dex */
+
 public interface ShadowViewDelegate {
     boolean isCompatPaddingEnabled();
 

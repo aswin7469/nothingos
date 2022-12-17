@@ -2,7 +2,7 @@ package com.google.android.material.shape;
 
 import android.graphics.RectF;
 import java.util.Arrays;
-/* loaded from: classes2.dex */
+
 public final class AdjustedCornerSize implements CornerSize {
     private final float adjustment;
     private final CornerSize other;
@@ -16,7 +16,6 @@ public final class AdjustedCornerSize implements CornerSize {
         this.adjustment = f;
     }
 
-    @Override // com.google.android.material.shape.CornerSize
     public float getCornerSize(RectF rectF) {
         return Math.max(0.0f, this.other.getCornerSize(rectF) + this.adjustment);
     }
@@ -29,7 +28,10 @@ public final class AdjustedCornerSize implements CornerSize {
             return false;
         }
         AdjustedCornerSize adjustedCornerSize = (AdjustedCornerSize) obj;
-        return this.other.equals(adjustedCornerSize.other) && this.adjustment == adjustedCornerSize.adjustment;
+        if (!this.other.equals(adjustedCornerSize.other) || this.adjustment != adjustedCornerSize.adjustment) {
+            return false;
+        }
+        return true;
     }
 
     public int hashCode() {

@@ -8,12 +8,12 @@ import android.os.Bundle;
 import android.os.UserHandle;
 import android.util.Log;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.Utils;
 import com.android.settings.biometrics.BiometricUtils;
 import com.android.settings.dashboard.DashboardFragment;
 import com.android.settings.password.ChooseLockSettingsHelper;
-/* loaded from: classes.dex */
+
 public abstract class BiometricsSettingsBase extends DashboardFragment {
     private boolean mConfirmCredential;
     private boolean mDoNotFinishActivity;
@@ -26,13 +26,15 @@ public abstract class BiometricsSettingsBase extends DashboardFragment {
 
     public abstract String getFingerprintPreferenceKey();
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
+    public abstract String getUnlockPhonePreferenceKey();
+
+    public abstract String getUseInAppsPreferenceKey();
+
     public void onAttach(Context context) {
         super.onAttach(context);
         this.mUserId = getActivity().getIntent().getIntExtra("android.intent.extra.USER_ID", UserHandle.myUserId());
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         this.mFaceManager = Utils.getFaceManagerOrNull(getActivity());
@@ -47,14 +49,20 @@ public abstract class BiometricsSettingsBase extends DashboardFragment {
                 this.mGkPwHandle = bundle.getLong("request_gk_pw_handle");
             }
         }
-        if (this.mGkPwHandle != 0 || this.mConfirmCredential) {
-            return;
+        if (this.mGkPwHandle == 0 && !this.mConfirmCredential) {
+            this.mConfirmCredential = true;
+            launchChooseOrConfirmLock();
         }
-        this.mConfirmCredential = true;
-        launchChooseOrConfirmLock();
+        Preference findPreference = findPreference(getUnlockPhonePreferenceKey());
+        if (findPreference != null) {
+            findPreference.setSummary((CharSequence) getUseAnyBiometricSummary());
+        }
+        Preference findPreference2 = findPreference(getUseInAppsPreferenceKey());
+        if (findPreference2 != null) {
+            findPreference2.setSummary((CharSequence) getUseClass2BiometricSummary());
+        }
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
         if (!this.mConfirmCredential) {
@@ -62,43 +70,32 @@ public abstract class BiometricsSettingsBase extends DashboardFragment {
         }
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onStop() {
         super.onStop();
-        if (getActivity().isChangingConfigurations() || this.mDoNotFinishActivity) {
-            return;
+        if (!getActivity().isChangingConfigurations() && !this.mDoNotFinishActivity) {
+            BiometricUtils.removeGatekeeperPasswordHandle((Context) getActivity(), this.mGkPwHandle);
+            getActivity().finish();
         }
-        BiometricUtils.removeGatekeeperPasswordHandle(getActivity(), this.mGkPwHandle);
-        getActivity().finish();
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.preference.PreferenceManager.OnPreferenceTreeClickListener
-    public boolean onPreferenceTreeClick(final Preference preference) {
+    public boolean onPreferenceTreeClick(Preference preference) {
         String key = preference.getKey();
         if (getFacePreferenceKey().equals(key)) {
             this.mDoNotFinishActivity = true;
-            this.mFaceManager.generateChallenge(this.mUserId, new FaceManager.GenerateChallengeCallback() { // from class: com.android.settings.biometrics.combination.BiometricsSettingsBase$$ExternalSyntheticLambda0
-                public final void onGenerateChallengeResult(int i, int i2, long j) {
-                    BiometricsSettingsBase.this.lambda$onPreferenceTreeClick$0(preference, i, i2, j);
-                }
-            });
+            this.mFaceManager.generateChallenge(this.mUserId, new BiometricsSettingsBase$$ExternalSyntheticLambda0(this, preference));
             return true;
-        } else if (getFingerprintPreferenceKey().equals(key)) {
-            this.mDoNotFinishActivity = true;
-            this.mFingerprintManager.generateChallenge(this.mUserId, new FingerprintManager.GenerateChallengeCallback() { // from class: com.android.settings.biometrics.combination.BiometricsSettingsBase$$ExternalSyntheticLambda1
-                public final void onChallengeGenerated(int i, int i2, long j) {
-                    BiometricsSettingsBase.this.lambda$onPreferenceTreeClick$1(preference, i, i2, j);
-                }
-            });
-            return true;
-        } else {
+        } else if (!getFingerprintPreferenceKey().equals(key)) {
             return super.onPreferenceTreeClick(preference);
+        } else {
+            this.mDoNotFinishActivity = true;
+            this.mFingerprintManager.generateChallenge(this.mUserId, new BiometricsSettingsBase$$ExternalSyntheticLambda1(this, preference));
+            return true;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onPreferenceTreeClick$0(Preference preference, int i, int i2, long j) {
-        byte[] requestGatekeeperHat = BiometricUtils.requestGatekeeperHat(getActivity(), this.mGkPwHandle, this.mUserId, j);
+        byte[] requestGatekeeperHat = BiometricUtils.requestGatekeeperHat((Context) getActivity(), this.mGkPwHandle, this.mUserId, j);
         Bundle extras = preference.getExtras();
         extras.putByteArray("hw_auth_token", requestGatekeeperHat);
         extras.putInt("sensor_id", i);
@@ -106,16 +103,15 @@ public abstract class BiometricsSettingsBase extends DashboardFragment {
         super.onPreferenceTreeClick(preference);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onPreferenceTreeClick$1(Preference preference, int i, int i2, long j) {
-        byte[] requestGatekeeperHat = BiometricUtils.requestGatekeeperHat(getActivity(), this.mGkPwHandle, this.mUserId, j);
+        byte[] requestGatekeeperHat = BiometricUtils.requestGatekeeperHat((Context) getActivity(), this.mGkPwHandle, this.mUserId, j);
         Bundle extras = preference.getExtras();
         extras.putByteArray("hw_auth_token", requestGatekeeperHat);
         extras.putLong("challenge", j);
         super.onPreferenceTreeClick(preference);
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         bundle.putBoolean("confirm_credential", this.mConfirmCredential);
@@ -126,28 +122,25 @@ public abstract class BiometricsSettingsBase extends DashboardFragment {
         }
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onActivityResult(int i, int i2, Intent intent) {
         super.onActivityResult(i, i2, intent);
         if (i == 2001 || i == 2002) {
             this.mConfirmCredential = false;
             this.mDoNotFinishActivity = false;
-            if (i2 == 1 || i2 == -1) {
-                if (BiometricUtils.containsGatekeeperPasswordHandle(intent)) {
-                    this.mGkPwHandle = BiometricUtils.getGatekeeperPasswordHandle(intent);
-                    return;
-                }
+            if (i2 != 1 && i2 != -1) {
+                Log.d(getLogTag(), "Password not confirmed.");
+                finish();
+            } else if (BiometricUtils.containsGatekeeperPasswordHandle(intent)) {
+                this.mGkPwHandle = BiometricUtils.getGatekeeperPasswordHandle(intent);
+            } else {
                 Log.d(getLogTag(), "Data null or GK PW missing.");
                 finish();
-                return;
             }
-            Log.d(getLogTag(), "Password not confirmed.");
-            finish();
         }
     }
 
     private void launchChooseOrConfirmLock() {
-        ChooseLockSettingsHelper.Builder returnCredentials = new ChooseLockSettingsHelper.Builder(getActivity(), this).setRequestCode(2001).setTitle(getString(R.string.security_settings_biometric_preference_title)).setRequestGatekeeperPasswordHandle(true).setForegroundOnly(true).setReturnCredentials(true);
+        ChooseLockSettingsHelper.Builder returnCredentials = new ChooseLockSettingsHelper.Builder(getActivity(), this).setRequestCode(2001).setTitle(getString(R$string.security_settings_biometric_preference_title)).setRequestGatekeeperPasswordHandle(true).setForegroundOnly(true).setReturnCredentials(true);
         int i = this.mUserId;
         if (i != -10000) {
             returnCredentials.setUserId(i);
@@ -165,5 +158,88 @@ public abstract class BiometricsSettingsBase extends DashboardFragment {
             }
             startActivityForResult(chooseLockIntent, 2002);
         }
+    }
+
+    private String getUseAnyBiometricSummary() {
+        FaceManager faceManager = this.mFaceManager;
+        boolean z = true;
+        boolean z2 = faceManager != null && faceManager.isHardwareDetected();
+        FingerprintManager fingerprintManager = this.mFingerprintManager;
+        if (fingerprintManager == null || !fingerprintManager.isHardwareDetected()) {
+            z = false;
+        }
+        int useBiometricSummaryRes = getUseBiometricSummaryRes(z2, z);
+        if (useBiometricSummaryRes == 0) {
+            return "";
+        }
+        return getString(useBiometricSummaryRes);
+    }
+
+    /* JADX WARNING: Removed duplicated region for block: B:12:0x0028  */
+    /* JADX WARNING: Removed duplicated region for block: B:21:0x0049 A[RETURN, SYNTHETIC] */
+    /* JADX WARNING: Removed duplicated region for block: B:22:0x004c  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private java.lang.String getUseClass2BiometricSummary() {
+        /*
+            r6 = this;
+            android.hardware.face.FaceManager r0 = r6.mFaceManager
+            r1 = 2
+            r2 = 0
+            r3 = 1
+            if (r0 == 0) goto L_0x0023
+            java.util.List r0 = r0.getSensorPropertiesInternal()
+            java.util.Iterator r0 = r0.iterator()
+        L_0x000f:
+            boolean r4 = r0.hasNext()
+            if (r4 == 0) goto L_0x0023
+            java.lang.Object r4 = r0.next()
+            android.hardware.face.FaceSensorPropertiesInternal r4 = (android.hardware.face.FaceSensorPropertiesInternal) r4
+            int r4 = r4.sensorStrength
+            if (r4 == r3) goto L_0x0021
+            if (r4 != r1) goto L_0x000f
+        L_0x0021:
+            r0 = r3
+            goto L_0x0024
+        L_0x0023:
+            r0 = r2
+        L_0x0024:
+            android.hardware.fingerprint.FingerprintManager r4 = r6.mFingerprintManager
+            if (r4 == 0) goto L_0x0043
+            java.util.List r4 = r4.getSensorPropertiesInternal()
+            java.util.Iterator r4 = r4.iterator()
+        L_0x0030:
+            boolean r5 = r4.hasNext()
+            if (r5 == 0) goto L_0x0043
+            java.lang.Object r5 = r4.next()
+            android.hardware.fingerprint.FingerprintSensorPropertiesInternal r5 = (android.hardware.fingerprint.FingerprintSensorPropertiesInternal) r5
+            int r5 = r5.sensorStrength
+            if (r5 == r3) goto L_0x0042
+            if (r5 != r1) goto L_0x0030
+        L_0x0042:
+            r2 = r3
+        L_0x0043:
+            int r0 = getUseBiometricSummaryRes(r0, r2)
+            if (r0 != 0) goto L_0x004c
+            java.lang.String r6 = ""
+            goto L_0x0050
+        L_0x004c:
+            java.lang.String r6 = r6.getString(r0)
+        L_0x0050:
+            return r6
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.biometrics.combination.BiometricsSettingsBase.getUseClass2BiometricSummary():java.lang.String");
+    }
+
+    private static int getUseBiometricSummaryRes(boolean z, boolean z2) {
+        if (z && z2) {
+            return R$string.biometric_settings_use_face_or_fingerprint_preference_summary;
+        }
+        if (z) {
+            return R$string.biometric_settings_use_face_preference_summary;
+        }
+        if (z2) {
+            return R$string.biometric_settings_use_fingerprint_preference_summary;
+        }
+        return 0;
     }
 }

@@ -3,10 +3,9 @@ package com.android.settings;
 import android.content.Context;
 import android.content.Intent;
 import com.android.settings.EncryptionInterstitial;
-/* loaded from: classes.dex */
+
 public class SetupEncryptionInterstitial extends EncryptionInterstitial {
 
-    /* loaded from: classes.dex */
     public static class SetupEncryptionInterstitialFragment extends EncryptionInterstitial.EncryptionInterstitialFragment {
     }
 
@@ -17,15 +16,14 @@ public class SetupEncryptionInterstitial extends EncryptionInterstitial {
         return createStartIntent;
     }
 
-    @Override // com.android.settings.EncryptionInterstitial, com.android.settings.SettingsActivity, android.app.Activity
     public Intent getIntent() {
         Intent intent = new Intent(super.getIntent());
         intent.putExtra(":settings:show_fragment", SetupEncryptionInterstitialFragment.class.getName());
         return intent;
     }
 
-    @Override // com.android.settings.EncryptionInterstitial, com.android.settings.SettingsActivity
-    protected boolean isValidFragment(String str) {
+    /* access modifiers changed from: protected */
+    public boolean isValidFragment(String str) {
         return SetupEncryptionInterstitialFragment.class.getName().equals(str);
     }
 }

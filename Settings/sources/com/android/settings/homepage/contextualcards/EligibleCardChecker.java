@@ -2,7 +2,6 @@ package com.android.settings.homepage.contextualcards;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.util.Log;
 import androidx.slice.Slice;
 import androidx.slice.SliceMetadata;
@@ -11,25 +10,21 @@ import com.android.settings.overlay.FeatureFactory;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
 import com.android.settingslib.utils.ThreadUtils;
 import java.util.concurrent.Callable;
-/* loaded from: classes.dex */
+
 public class EligibleCardChecker implements Callable<ContextualCard> {
     ContextualCard mCard;
     private final Context mContext;
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ void lambda$bindSlice$0(Slice slice) {
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public EligibleCardChecker(Context context, ContextualCard contextualCard) {
+    EligibleCardChecker(Context context, ContextualCard contextualCard) {
         this.mContext = context;
         this.mCard = contextualCard;
     }
 
-    /* JADX WARN: Can't rename method to resolve collision */
-    @Override // java.util.concurrent.Callable
-    /* renamed from: call */
-    public ContextualCard mo379call() {
+    public ContextualCard call() {
         ContextualCard contextualCard;
         long currentTimeMillis = System.currentTimeMillis();
         MetricsFeatureProvider metricsFeatureProvider = FeatureFactory.getFactory(this.mContext).getMetricsFeatureProvider();
@@ -45,7 +40,8 @@ public class EligibleCardChecker implements Callable<ContextualCard> {
         return contextualCard2;
     }
 
-    boolean isCardEligibleToDisplay(ContextualCard contextualCard) {
+    /* access modifiers changed from: package-private */
+    public boolean isCardEligibleToDisplay(ContextualCard contextualCard) {
         if (contextualCard.getRankingScore() < 0.0d) {
             return false;
         }
@@ -58,38 +54,24 @@ public class EligibleCardChecker implements Callable<ContextualCard> {
             Log.w("EligibleCardChecker", "Failed to bind slice, not eligible for display " + sliceUri);
             return false;
         }
-        this.mCard = contextualCard.mutate().setSlice(bindSlice).mo389build();
+        this.mCard = contextualCard.mutate().setSlice(bindSlice).build();
         if (isSliceToggleable(bindSlice)) {
-            this.mCard = contextualCard.mutate().setHasInlineAction(true).mo389build();
+            this.mCard = contextualCard.mutate().setHasInlineAction(true).build();
         }
         return true;
     }
 
-    Slice bindSlice(final Uri uri) {
-        final SliceViewManager sliceViewManager = SliceViewManager.getInstance(this.mContext);
-        final EligibleCardChecker$$ExternalSyntheticLambda0 eligibleCardChecker$$ExternalSyntheticLambda0 = EligibleCardChecker$$ExternalSyntheticLambda0.INSTANCE;
-        sliceViewManager.registerSliceCallback(uri, eligibleCardChecker$$ExternalSyntheticLambda0);
-        Slice bindSlice = sliceViewManager.bindSlice(uri);
-        ThreadUtils.postOnMainThread(new Runnable() { // from class: com.android.settings.homepage.contextualcards.EligibleCardChecker$$ExternalSyntheticLambda2
-            @Override // java.lang.Runnable
-            public final void run() {
-                EligibleCardChecker.lambda$bindSlice$2(SliceViewManager.this, uri, eligibleCardChecker$$ExternalSyntheticLambda0);
-            }
-        });
+    /* access modifiers changed from: package-private */
+    public Slice bindSlice(Uri uri) {
+        SliceViewManager instance = SliceViewManager.getInstance(this.mContext);
+        EligibleCardChecker$$ExternalSyntheticLambda0 eligibleCardChecker$$ExternalSyntheticLambda0 = new EligibleCardChecker$$ExternalSyntheticLambda0();
+        instance.registerSliceCallback(uri, eligibleCardChecker$$ExternalSyntheticLambda0);
+        Slice bindSlice = instance.bindSlice(uri);
+        ThreadUtils.postOnMainThread(new EligibleCardChecker$$ExternalSyntheticLambda1(instance, uri, eligibleCardChecker$$ExternalSyntheticLambda0));
         return bindSlice;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ void lambda$bindSlice$2(final SliceViewManager sliceViewManager, final Uri uri, final SliceViewManager.SliceCallback sliceCallback) {
-        AsyncTask.execute(new Runnable() { // from class: com.android.settings.homepage.contextualcards.EligibleCardChecker$$ExternalSyntheticLambda1
-            @Override // java.lang.Runnable
-            public final void run() {
-                EligibleCardChecker.lambda$bindSlice$1(SliceViewManager.this, uri, sliceCallback);
-            }
-        });
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ void lambda$bindSlice$1(SliceViewManager sliceViewManager, Uri uri, SliceViewManager.SliceCallback sliceCallback) {
         try {
             sliceViewManager.unregisterSliceCallback(uri, sliceCallback);
@@ -98,7 +80,8 @@ public class EligibleCardChecker implements Callable<ContextualCard> {
         }
     }
 
-    boolean isSliceToggleable(Slice slice) {
+    /* access modifiers changed from: package-private */
+    public boolean isSliceToggleable(Slice slice) {
         return !SliceMetadata.from(this.mContext, slice).getToggles().isEmpty();
     }
 }

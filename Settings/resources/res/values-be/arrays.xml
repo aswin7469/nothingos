@@ -196,6 +196,8 @@
         <item>Старэйшыя за 60 дзён</item>
         <item>Старэйшыя за 90 дзён</item>
     </array>
+    <array name="avatar_image_descriptions">
+    </array>
     <array name="battery_labels">
         <item>0 %</item>
         <item>50 %</item>
@@ -260,6 +262,8 @@
         <item>48,0 кГц</item>
         <item>88,2 кГц</item>
         <item>96,0 кГц</item>
+        <item>176,4 кГц</item>
+        <item>192,0 кГц</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
         <item>Выбар сістэмы (стандартны)</item>
@@ -267,6 +271,8 @@
         <item>48,0 кГц</item>
         <item>88,2 кГц</item>
         <item>96,0 кГц</item>
+        <item>176,4 кГц</item>
+        <item>192,0 кГц</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
         <item>Выбар сістэмы (стандартны)</item>
@@ -277,6 +283,10 @@
         <item>LDAC</item>
         <item>Аўдыя Qualcomm® aptX™ Adaptive</item>
         <item>Аўдыя Qualcomm® aptX™ TWS+</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
         <item>Выбар сістэмы (стандартны)</item>
@@ -287,6 +297,10 @@
         <item>LDAC</item>
         <item>Аўдыя Qualcomm® aptX™ Adaptive</item>
         <item>Аўдыя Qualcomm® aptX™ TWS+</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -343,17 +357,10 @@
         <item>Прыўзняты</item>
         <item>Уціснуты</item>
     </array>
-    <array name="captioning_font_size_selector_summaries">
-        <item>Вельмі малы памер шрыфту</item>
-        <item>Малы памер шрыфту</item>
-        <item>Стандартны памер шрыфту</item>
-        <item>Вялікі памер шрыфту</item>
-        <item>Вельмі вялікі памер шрыфту</item>
-    </array>
     <array name="captioning_font_size_selector_titles">
         <item>Вельмі дробны</item>
         <item>Дробны</item>
-        <item>Стандартны</item>
+        <item>Сярэдні</item>
         <item>Вялікі</item>
         <item>Вельмі вялікі</item>
     </array>
@@ -486,15 +493,13 @@
         <item>GID</item>
         <item>ICCID</item>
     </array>
-    <array name="res_0x7f0300b1_nt_preferred_network_mode_choices">
-        <item>3G</item>
-        <item>4G</item>
-        <item>5G</item>
+    <array name="nfc_payment_favor">
+        <item>Заўсёды</item>
+        <item>Калі не адкрыта іншая плацежная праграма</item>
     </array>
-    <array name="res_0x7f0300b2_nt_preferred_network_mode_values">
-        <item>21</item>
-        <item>22</item>
-        <item>33</item>
+    <array name="nfc_payment_favor_values">
+        <item>@null</item>
+        <item>1</item>
     </array>
     <array name="overlay_display_devices_entries">
         <item>Няма</item>
@@ -628,17 +633,20 @@
         <item>Намаляваць непрамавугольную вобласць кліпа сінім колерам</item>
         <item>Вылучыце выпрабаваныя каманды малявання зялёным колерам</item>
     </array>
-    <array name="sim_color_light">
-        <item>@color/SIM_color_cyan</item>
-        <item>@color/SIM_color_blue800</item>
-        <item>@color/SIM_color_green800</item>
-        <item>@color/SIM_color_purple800</item>
-        <item>@color/SIM_color_pink800</item>
-        <item>@color/SIM_color_orange</item>
-    </array>
     <array name="swipe_direction_values">
         <item>1</item>
         <item>@null</item>
+    </array>
+    <array name="switch_to_user_zero_when_docked_timeout_entries">
+        <item>Ніколі</item>
+        <item>Праз 1 хвіліну</item>
+        <item>Праз 5 хвілін</item>
+    </array>
+    <array name="tare_modifiers_subfactors">
+        <item>Зарадка</item>
+        <item>Дрымота</item>
+        <item>Рэжым эканоміі зараду</item>
+        <item>Стан працэсу</item>
     </array>
     <array name="timezone_filters">
         <item>Амерыка</item>

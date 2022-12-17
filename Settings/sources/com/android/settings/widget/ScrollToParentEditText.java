@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewParent;
 import android.widget.ImeAwareEditText;
-/* loaded from: classes.dex */
+
 public class ScrollToParentEditText extends ImeAwareEditText {
     private Rect mRect = new Rect();
 
@@ -16,11 +16,11 @@ public class ScrollToParentEditText extends ImeAwareEditText {
 
     public boolean requestRectangleOnScreen(Rect rect, boolean z) {
         ViewParent parent = getParent();
-        if (parent instanceof View) {
-            View view = (View) parent;
-            view.getDrawingRect(this.mRect);
-            return view.requestRectangleOnScreen(this.mRect, z);
+        if (!(parent instanceof View)) {
+            return ScrollToParentEditText.super.requestRectangleOnScreen(rect, z);
         }
-        return super.requestRectangleOnScreen(rect, z);
+        View view = (View) parent;
+        view.getDrawingRect(this.mRect);
+        return view.requestRectangleOnScreen(this.mRect, z);
     }
 }

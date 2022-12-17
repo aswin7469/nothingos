@@ -11,66 +11,60 @@ import com.android.internal.widget.LockPatternUtils;
 import com.android.settings.Utils;
 import com.android.settings.core.BasePreferenceController;
 import com.android.settings.overlay.FeatureFactory;
-import com.android.settings.slices.SliceBackgroundWorker;
-/* loaded from: classes.dex */
+
 public abstract class BiometricStatusPreferenceController extends BasePreferenceController {
     protected final LockPatternUtils mLockPatternUtils;
     protected final int mProfileChallengeUserId;
     protected final UserManager mUm;
     private final int mUserId;
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    protected abstract String getEnrollClassName();
+    /* access modifiers changed from: protected */
+    public abstract String getEnrollClassName();
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    protected abstract String getSettingsClassName();
+    /* access modifiers changed from: protected */
+    public abstract String getSettingsClassName();
 
-    protected abstract String getSummaryTextEnrolled();
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
 
-    protected abstract String getSummaryTextNoneEnrolled();
+    /* access modifiers changed from: protected */
+    public abstract String getSummaryTextEnrolled();
 
-    @Override // com.android.settings.slices.Sliceable
+    /* access modifiers changed from: protected */
+    public abstract String getSummaryTextNoneEnrolled();
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    protected abstract boolean hasEnrolledBiometrics();
+    /* access modifiers changed from: protected */
+    public abstract boolean hasEnrolledBiometrics();
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
+    /* access modifiers changed from: protected */
+    public abstract boolean isDeviceSupported();
 
-    protected abstract boolean isDeviceSupported();
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    protected boolean isUserSupported() {
+    /* access modifiers changed from: protected */
+    public boolean isUserSupported() {
         return true;
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -85,7 +79,6 @@ public abstract class BiometricStatusPreferenceController extends BasePreference
         this.mProfileChallengeUserId = Utils.getManagedProfileId(userManager, myUserId);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         if (!isDeviceSupported()) {
             return 3;
@@ -93,18 +86,15 @@ public abstract class BiometricStatusPreferenceController extends BasePreference
         return isUserSupported() ? 0 : 4;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         if (isAvailable()) {
             preference.setVisible(true);
-            preference.setSummary(hasEnrolledBiometrics() ? getSummaryTextEnrolled() : getSummaryTextNoneEnrolled());
-        } else if (preference == null) {
-        } else {
+            preference.setSummary((CharSequence) hasEnrolledBiometrics() ? getSummaryTextEnrolled() : getSummaryTextNoneEnrolled());
+        } else if (preference != null) {
             preference.setVisible(false);
         }
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
         if (!TextUtils.equals(preference.getKey(), getPreferenceKey())) {
             return super.handlePreferenceTreeClick(preference);
@@ -127,7 +117,7 @@ public abstract class BiometricStatusPreferenceController extends BasePreference
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public int getUserId() {
         return this.mUserId;
     }

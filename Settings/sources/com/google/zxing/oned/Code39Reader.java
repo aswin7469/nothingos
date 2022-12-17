@@ -1,5 +1,6 @@
 package com.google.zxing.oned;
 
+import androidx.window.C0447R;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.ChecksumException;
 import com.google.zxing.DecodeHintType;
@@ -10,7 +11,7 @@ import com.google.zxing.ResultPoint;
 import com.google.zxing.common.BitArray;
 import java.util.Arrays;
 import java.util.Map;
-/* loaded from: classes2.dex */
+
 public final class Code39Reader extends OneDReader {
     private static final char[] ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. *$/+%".toCharArray();
     private static final int ASTERISK_ENCODING;
@@ -21,7 +22,7 @@ public final class Code39Reader extends OneDReader {
     private final boolean usingCheckDigit;
 
     static {
-        int[] iArr = {52, 289, 97, 352, 49, 304, 112, 37, 292, 100, 265, 73, 328, 25, 280, 88, 13, 268, 76, 28, 259, 67, 322, 19, 274, 82, 7, 262, 70, 22, 385, 193, 448, 145, 400, 208, 133, 388, 196, 148, 168, 162, 138, 42};
+        int[] iArr = {52, 289, 97, 352, 49, 304, C0447R.styleable.AppCompatTheme_toolbarNavigationButtonStyle, 37, 292, 100, 265, 73, 328, 25, 280, 88, 13, 268, 76, 28, 259, 67, 322, 19, 274, 82, 7, 262, 70, 22, 385, 193, 448, 145, 400, 208, 133, 388, 196, 148, 168, 162, 138, 42};
         CHARACTER_ENCODINGS = iArr;
         ASTERISK_ENCODING = iArr[39];
     }
@@ -41,62 +42,63 @@ public final class Code39Reader extends OneDReader {
         this.counters = new int[9];
     }
 
-    @Override // com.google.zxing.oned.OneDReader
     public Result decodeRow(int i, BitArray bitArray, Map<DecodeHintType, ?> map) throws NotFoundException, ChecksumException, FormatException {
-        int[] findAsteriskPattern;
-        String sb;
+        String str;
         int[] iArr = this.counters;
         Arrays.fill(iArr, 0);
-        StringBuilder sb2 = this.decodeRowResult;
-        sb2.setLength(0);
-        int nextSet = bitArray.getNextSet(findAsteriskPattern(bitArray, iArr)[1]);
+        StringBuilder sb = this.decodeRowResult;
+        sb.setLength(0);
+        int[] findAsteriskPattern = findAsteriskPattern(bitArray, iArr);
+        int nextSet = bitArray.getNextSet(findAsteriskPattern[1]);
         int size = bitArray.getSize();
         while (true) {
             OneDReader.recordPattern(bitArray, nextSet, iArr);
             int narrowWidePattern = toNarrowWidePattern(iArr);
-            if (narrowWidePattern < 0) {
+            if (narrowWidePattern >= 0) {
+                char patternToChar = patternToChar(narrowWidePattern);
+                sb.append(patternToChar);
+                int i2 = nextSet;
+                for (int i3 : iArr) {
+                    i2 += i3;
+                }
+                int nextSet2 = bitArray.getNextSet(i2);
+                if (patternToChar == '*') {
+                    sb.setLength(sb.length() - 1);
+                    int i4 = 0;
+                    for (int i5 : iArr) {
+                        i4 += i5;
+                    }
+                    int i6 = (nextSet2 - nextSet) - i4;
+                    if (nextSet2 == size || (i6 >> 1) >= i4) {
+                        if (this.usingCheckDigit) {
+                            int length = sb.length() - 1;
+                            int i7 = 0;
+                            for (int i8 = 0; i8 < length; i8++) {
+                                i7 += "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. *$/+%".indexOf(this.decodeRowResult.charAt(i8));
+                            }
+                            if (sb.charAt(length) == ALPHABET[i7 % 43]) {
+                                sb.setLength(length);
+                            } else {
+                                throw ChecksumException.getChecksumInstance();
+                            }
+                        }
+                        if (sb.length() != 0) {
+                            if (this.extendedMode) {
+                                str = decodeExtended(sb);
+                            } else {
+                                str = sb.toString();
+                            }
+                            float f = (float) i;
+                            return new Result(str, (byte[]) null, new ResultPoint[]{new ResultPoint(((float) (findAsteriskPattern[1] + findAsteriskPattern[0])) / 2.0f, f), new ResultPoint(((float) (nextSet2 + nextSet)) / 2.0f, f)}, BarcodeFormat.CODE_39);
+                        }
+                        throw NotFoundException.getNotFoundInstance();
+                    }
+                    throw NotFoundException.getNotFoundInstance();
+                }
+                nextSet = nextSet2;
+            } else {
                 throw NotFoundException.getNotFoundInstance();
             }
-            char patternToChar = patternToChar(narrowWidePattern);
-            sb2.append(patternToChar);
-            int i2 = nextSet;
-            for (int i3 : iArr) {
-                i2 += i3;
-            }
-            int nextSet2 = bitArray.getNextSet(i2);
-            if (patternToChar == '*') {
-                sb2.setLength(sb2.length() - 1);
-                int i4 = 0;
-                for (int i5 : iArr) {
-                    i4 += i5;
-                }
-                int i6 = (nextSet2 - nextSet) - i4;
-                if (nextSet2 != size && (i6 >> 1) < i4) {
-                    throw NotFoundException.getNotFoundInstance();
-                }
-                if (this.usingCheckDigit) {
-                    int length = sb2.length() - 1;
-                    int i7 = 0;
-                    for (int i8 = 0; i8 < length; i8++) {
-                        i7 += "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. *$/+%".indexOf(this.decodeRowResult.charAt(i8));
-                    }
-                    if (sb2.charAt(length) != ALPHABET[i7 % 43]) {
-                        throw ChecksumException.getChecksumInstance();
-                    }
-                    sb2.setLength(length);
-                }
-                if (sb2.length() == 0) {
-                    throw NotFoundException.getNotFoundInstance();
-                }
-                if (this.extendedMode) {
-                    sb = decodeExtended(sb2);
-                } else {
-                    sb = sb2.toString();
-                }
-                float f = i;
-                return new Result(sb, null, new ResultPoint[]{new ResultPoint((findAsteriskPattern[1] + findAsteriskPattern[0]) / 2.0f, f), new ResultPoint((nextSet2 + nextSet) / 2.0f, f)}, BarcodeFormat.CODE_39);
-            }
-            nextSet = nextSet2;
         }
     }
 
@@ -114,15 +116,15 @@ public final class Code39Reader extends OneDReader {
                 int i3 = length - 1;
                 if (i != i3) {
                     i++;
-                } else if (toNarrowWidePattern(iArr) == ASTERISK_ENCODING && bitArray.isRange(Math.max(0, i2 - ((nextSet - i2) >> 1)), i2, false)) {
-                    return new int[]{i2, nextSet};
-                } else {
+                } else if (toNarrowWidePattern(iArr) != ASTERISK_ENCODING || !bitArray.isRange(Math.max(0, i2 - ((nextSet - i2) >> 1)), i2, false)) {
                     i2 += iArr[0] + iArr[1];
                     int i4 = length - 2;
                     System.arraycopy(iArr, 2, iArr, 0, i4);
                     iArr[i4] = 0;
                     iArr[i3] = 0;
                     i--;
+                } else {
+                    return new int[]{i2, nextSet};
                 }
                 iArr[i] = 1;
                 z = !z;
@@ -132,64 +134,42 @@ public final class Code39Reader extends OneDReader {
         throw NotFoundException.getNotFoundInstance();
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:30:0x002f, code lost:
-        if (r1 >= r0) goto L43;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:31:0x0031, code lost:
-        if (r4 <= 0) goto L41;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:32:0x0033, code lost:
-        r2 = r10[r1];
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:33:0x0035, code lost:
-        if (r2 <= r3) goto L40;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:34:0x0037, code lost:
-        r4 = r4 - 1;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:35:0x003b, code lost:
-        if ((r2 << 1) < r6) goto L38;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:37:0x003d, code lost:
-        return -1;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:39:0x003e, code lost:
-        r1 = r1 + 1;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:42:0x0041, code lost:
-        return r5;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     private static int toNarrowWidePattern(int[] iArr) {
         int length = iArr.length;
         int i = 0;
-        int i2 = 0;
         while (true) {
-            int i3 = Integer.MAX_VALUE;
-            for (int i4 : iArr) {
-                if (i4 < i3 && i4 > i2) {
-                    i3 = i4;
+            int i2 = Integer.MAX_VALUE;
+            for (int i3 : iArr) {
+                if (i3 < i2 && i3 > i) {
+                    i2 = i3;
                 }
             }
+            int i4 = 0;
             int i5 = 0;
             int i6 = 0;
-            int i7 = 0;
-            for (int i8 = 0; i8 < length; i8++) {
-                int i9 = iArr[i8];
-                if (i9 > i3) {
-                    i6 |= 1 << ((length - 1) - i8);
-                    i5++;
-                    i7 += i9;
+            for (int i7 = 0; i7 < length; i7++) {
+                int i8 = iArr[i7];
+                if (i8 > i2) {
+                    i5 |= 1 << ((length - 1) - i7);
+                    i4++;
+                    i6 += i8;
                 }
             }
-            if (i5 == 3) {
-                break;
-            } else if (i5 <= 3) {
+            if (i4 == 3) {
+                for (int i9 = 0; i9 < length && i4 > 0; i9++) {
+                    int i10 = iArr[i9];
+                    if (i10 > i2) {
+                        i4--;
+                        if ((i10 << 1) >= i6) {
+                            return -1;
+                        }
+                    }
+                }
+                return i5;
+            } else if (i4 <= 3) {
                 return -1;
             } else {
-                i2 = i3;
+                i = i2;
             }
         }
     }
@@ -198,20 +178,19 @@ public final class Code39Reader extends OneDReader {
         int i2 = 0;
         while (true) {
             int[] iArr = CHARACTER_ENCODINGS;
-            if (i2 < iArr.length) {
-                if (iArr[i2] == i) {
-                    return ALPHABET[i2];
-                }
-                i2++;
-            } else {
+            if (i2 >= iArr.length) {
                 throw NotFoundException.getNotFoundInstance();
+            } else if (iArr[i2] == i) {
+                return ALPHABET[i2];
+            } else {
+                i2++;
             }
         }
     }
 
     private static String decodeExtended(CharSequence charSequence) throws FormatException {
-        int i;
         char c;
+        int i;
         int length = charSequence.length();
         StringBuilder sb = new StringBuilder(length);
         int i2 = 0;
@@ -227,10 +206,10 @@ public final class Code39Reader extends OneDReader {
                                 c = 0;
                             } else if (charAt2 >= 'A' && charAt2 <= 'O') {
                                 i = charAt2 - ' ';
-                            } else if (charAt2 != 'Z') {
-                                throw FormatException.getFormatInstance();
-                            } else {
+                            } else if (charAt2 == 'Z') {
                                 c = ':';
+                            } else {
+                                throw FormatException.getFormatInstance();
                             }
                             sb.append(c);
                         } else if (charAt2 < 'A' || charAt2 > 'Z') {

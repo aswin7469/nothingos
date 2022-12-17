@@ -10,9 +10,11 @@ import android.view.View;
 import android.widget.TextView;
 import androidx.preference.PreferenceViewHolder;
 import androidx.preference.SwitchPreference;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$string;
+import com.android.settings.R$style;
 import com.android.settingslib.widget.AnimatedImageView;
-/* loaded from: classes.dex */
+
 public class SyncStateSwitchPreference extends SwitchPreference {
     private Account mAccount;
     private String mAuthority;
@@ -24,7 +26,7 @@ public class SyncStateSwitchPreference extends SwitchPreference {
     private int mUid;
 
     public SyncStateSwitchPreference(Context context, AttributeSet attributeSet) {
-        super(context, attributeSet, 0, R.style.SyncSwitchPreference);
+        super(context, attributeSet, 0, R$style.SyncSwitchPreference);
         this.mIsActive = false;
         this.mIsPending = false;
         this.mFailed = false;
@@ -36,7 +38,7 @@ public class SyncStateSwitchPreference extends SwitchPreference {
     }
 
     public SyncStateSwitchPreference(Context context, Account account, String str, String str2, int i) {
-        super(context, null, 0, R.style.SyncSwitchPreference);
+        super(context, (AttributeSet) null, 0, R$style.SyncSwitchPreference);
         this.mIsActive = false;
         this.mIsPending = false;
         this.mFailed = false;
@@ -53,11 +55,10 @@ public class SyncStateSwitchPreference extends SwitchPreference {
         notifyChanged();
     }
 
-    @Override // androidx.preference.SwitchPreference, androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
-        AnimatedImageView animatedImageView = (AnimatedImageView) preferenceViewHolder.findViewById(R.id.sync_active);
-        View findViewById = preferenceViewHolder.findViewById(R.id.sync_failed);
+        AnimatedImageView animatedImageView = (AnimatedImageView) preferenceViewHolder.findViewById(R$id.sync_active);
+        View findViewById = preferenceViewHolder.findViewById(R$id.sync_failed);
         boolean z = this.mIsActive || this.mIsPending;
         animatedImageView.setVisibility(z ? 0 : 8);
         animatedImageView.setAnimating(this.mIsActive);
@@ -65,7 +66,7 @@ public class SyncStateSwitchPreference extends SwitchPreference {
         View findViewById2 = preferenceViewHolder.findViewById(16908352);
         if (this.mOneTimeSyncMode) {
             findViewById2.setVisibility(8);
-            ((TextView) preferenceViewHolder.findViewById(16908304)).setText(getContext().getString(R.string.sync_one_time_sync, getSummary()));
+            ((TextView) preferenceViewHolder.findViewById(16908304)).setText(getContext().getString(R$string.sync_one_time_sync, new Object[]{getSummary()}));
             return;
         }
         findViewById2.setVisibility(0);
@@ -95,15 +96,15 @@ public class SyncStateSwitchPreference extends SwitchPreference {
         return this.mOneTimeSyncMode;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.TwoStatePreference, androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public void onClick() {
-        if (!this.mOneTimeSyncMode) {
-            if (ActivityManager.isUserAMonkey()) {
-                Log.d("SyncState", "ignoring monkey's attempt to flip sync state");
-            } else {
-                super.onClick();
-            }
+        if (this.mOneTimeSyncMode) {
+            return;
+        }
+        if (ActivityManager.isUserAMonkey()) {
+            Log.d("SyncState", "ignoring monkey's attempt to flip sync state");
+        } else {
+            super.onClick();
         }
     }
 

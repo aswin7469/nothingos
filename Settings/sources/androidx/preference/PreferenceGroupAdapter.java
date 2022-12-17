@@ -17,23 +17,26 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewHolder> implements Preference.OnPreferenceChangeInternalListener, PreferenceGroup.PreferencePositionCallback {
+    private Handler mHandler;
     private PreferenceGroup mPreferenceGroup;
-    private Runnable mSyncRunnable = new Runnable() { // from class: androidx.preference.PreferenceGroupAdapter.1
-        @Override // java.lang.Runnable
+    private List<PreferenceResourceDescriptor> mPreferenceResourceDescriptors;
+    private List<Preference> mPreferences;
+    private Runnable mSyncRunnable = new Runnable() {
         public void run() {
             PreferenceGroupAdapter.this.updatePreferences();
         }
     };
-    private Handler mHandler = new Handler();
-    private List<Preference> mPreferences = new ArrayList();
-    private List<Preference> mVisiblePreferences = new ArrayList();
-    private List<PreferenceResourceDescriptor> mPreferenceResourceDescriptors = new ArrayList();
+    private List<Preference> mVisiblePreferences;
 
     public PreferenceGroupAdapter(PreferenceGroup preferenceGroup) {
         this.mPreferenceGroup = preferenceGroup;
+        this.mHandler = new Handler();
         this.mPreferenceGroup.setOnPreferenceChangeInternalListener(this);
+        this.mPreferences = new ArrayList();
+        this.mVisiblePreferences = new ArrayList();
+        this.mPreferenceResourceDescriptors = new ArrayList();
         PreferenceGroup preferenceGroup2 = this.mPreferenceGroup;
         if (preferenceGroup2 instanceof PreferenceScreen) {
             setHasStableIds(((PreferenceScreen) preferenceGroup2).shouldUseGeneratedIds());
@@ -43,9 +46,10 @@ public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewH
         updatePreferences();
     }
 
-    void updatePreferences() {
-        for (Preference preference : this.mPreferences) {
-            preference.setOnPreferenceChangeInternalListener(null);
+    /* access modifiers changed from: package-private */
+    public void updatePreferences() {
+        for (Preference onPreferenceChangeInternalListener : this.mPreferences) {
+            onPreferenceChangeInternalListener.setOnPreferenceChangeInternalListener((Preference.OnPreferenceChangeInternalListener) null);
         }
         ArrayList arrayList = new ArrayList(this.mPreferences.size());
         this.mPreferences = arrayList;
@@ -54,34 +58,30 @@ public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewH
         final List<Preference> createVisiblePreferencesList = createVisiblePreferencesList(this.mPreferenceGroup);
         this.mVisiblePreferences = createVisiblePreferencesList;
         PreferenceManager preferenceManager = this.mPreferenceGroup.getPreferenceManager();
-        if (preferenceManager != null && preferenceManager.getPreferenceComparisonCallback() != null) {
+        if (preferenceManager == null || preferenceManager.getPreferenceComparisonCallback() == null) {
+            notifyDataSetChanged();
+        } else {
             final PreferenceManager.PreferenceComparisonCallback preferenceComparisonCallback = preferenceManager.getPreferenceComparisonCallback();
-            DiffUtil.calculateDiff(new DiffUtil.Callback() { // from class: androidx.preference.PreferenceGroupAdapter.2
-                @Override // androidx.recyclerview.widget.DiffUtil.Callback
+            DiffUtil.calculateDiff(new DiffUtil.Callback() {
                 public int getOldListSize() {
                     return list.size();
                 }
 
-                @Override // androidx.recyclerview.widget.DiffUtil.Callback
                 public int getNewListSize() {
                     return createVisiblePreferencesList.size();
                 }
 
-                @Override // androidx.recyclerview.widget.DiffUtil.Callback
                 public boolean areItemsTheSame(int i, int i2) {
                     return preferenceComparisonCallback.arePreferenceItemsTheSame((Preference) list.get(i), (Preference) createVisiblePreferencesList.get(i2));
                 }
 
-                @Override // androidx.recyclerview.widget.DiffUtil.Callback
                 public boolean areContentsTheSame(int i, int i2) {
                     return preferenceComparisonCallback.arePreferenceContentsTheSame((Preference) list.get(i), (Preference) createVisiblePreferencesList.get(i2));
                 }
-            }).dispatchUpdatesTo(this);
-        } else {
-            notifyDataSetChanged();
+            }).dispatchUpdatesTo((RecyclerView.Adapter) this);
         }
-        for (Preference preference2 : this.mPreferences) {
-            preference2.clearWasDetached();
+        for (Preference clearWasDetached : this.mPreferences) {
+            clearWasDetached.clearWasDetached();
         }
     }
 
@@ -124,17 +124,17 @@ public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewH
                     PreferenceGroup preferenceGroup2 = (PreferenceGroup) preference;
                     if (!preferenceGroup2.isOnSameScreenAsChildren()) {
                         continue;
-                    } else if (isGroupExpandable(preferenceGroup) && isGroupExpandable(preferenceGroup2)) {
-                        throw new IllegalStateException("Nesting an expandable group inside of another expandable group is not supported!");
-                    } else {
-                        for (Preference preference2 : createVisiblePreferencesList(preferenceGroup2)) {
+                    } else if (!isGroupExpandable(preferenceGroup) || !isGroupExpandable(preferenceGroup2)) {
+                        for (Preference next : createVisiblePreferencesList(preferenceGroup2)) {
                             if (!isGroupExpandable(preferenceGroup) || i < preferenceGroup.getInitialExpandedChildrenCount()) {
-                                arrayList.add(preference2);
+                                arrayList.add(next);
                             } else {
-                                arrayList2.add(preference2);
+                                arrayList2.add(next);
                             }
                             i++;
                         }
+                    } else {
+                        throw new IllegalStateException("Nesting an expandable group inside of another expandable group is not supported!");
                     }
                 }
             }
@@ -147,16 +147,15 @@ public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewH
 
     private ExpandButton createExpandButton(final PreferenceGroup preferenceGroup, List<Preference> list) {
         ExpandButton expandButton = new ExpandButton(preferenceGroup.getContext(), list, preferenceGroup.getId());
-        expandButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() { // from class: androidx.preference.PreferenceGroupAdapter.3
-            @Override // androidx.preference.Preference.OnPreferenceClickListener
+        expandButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 preferenceGroup.setInitialExpandedChildrenCount(Integer.MAX_VALUE);
                 PreferenceGroupAdapter.this.onPreferenceHierarchyChange(preference);
                 PreferenceGroup.OnExpandButtonClickListener onExpandButtonClickListener = preferenceGroup.getOnExpandButtonClickListener();
-                if (onExpandButtonClickListener != null) {
-                    onExpandButtonClickListener.onExpandButtonClick();
+                if (onExpandButtonClickListener == null) {
                     return true;
                 }
+                onExpandButtonClickListener.onExpandButtonClick();
                 return true;
             }
         });
@@ -174,20 +173,17 @@ public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewH
         return this.mVisiblePreferences.get(i);
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public int getItemCount() {
         return this.mVisiblePreferences.size();
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public long getItemId(int i) {
         if (!hasStableIds()) {
-            return -1L;
+            return -1;
         }
         return getItem(i).getId();
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeInternalListener
     public void onPreferenceChange(Preference preference) {
         int indexOf = this.mVisiblePreferences.indexOf(preference);
         if (indexOf != -1) {
@@ -195,18 +191,15 @@ public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewH
         }
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeInternalListener
     public void onPreferenceHierarchyChange(Preference preference) {
         this.mHandler.removeCallbacks(this.mSyncRunnable);
         this.mHandler.post(this.mSyncRunnable);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeInternalListener
     public void onPreferenceVisibilityChange(Preference preference) {
         onPreferenceHierarchyChange(preference);
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public int getItemViewType(int i) {
         PreferenceResourceDescriptor preferenceResourceDescriptor = new PreferenceResourceDescriptor(getItem(i));
         int indexOf = this.mPreferenceResourceDescriptors.indexOf(preferenceResourceDescriptor);
@@ -218,10 +211,7 @@ public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewH
         return size;
     }
 
-    /* JADX WARN: Can't rename method to resolve collision */
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
-    /* renamed from: onCreateViewHolder */
-    public PreferenceViewHolder mo960onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public PreferenceViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         PreferenceResourceDescriptor preferenceResourceDescriptor = this.mPreferenceResourceDescriptors.get(i);
         LayoutInflater from = LayoutInflater.from(viewGroup.getContext());
         TypedArray obtainStyledAttributes = viewGroup.getContext().obtainStyledAttributes((AttributeSet) null, R$styleable.BackgroundStyle);
@@ -246,14 +236,12 @@ public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewH
         return new PreferenceViewHolder(inflate);
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder, int i) {
         Preference item = getItem(i);
         preferenceViewHolder.resetState();
         item.onBindViewHolder(preferenceViewHolder);
     }
 
-    @Override // androidx.preference.PreferenceGroup.PreferencePositionCallback
     public int getPreferenceAdapterPosition(String str) {
         int size = this.mVisiblePreferences.size();
         for (int i = 0; i < size; i++) {
@@ -264,7 +252,6 @@ public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewH
         return -1;
     }
 
-    @Override // androidx.preference.PreferenceGroup.PreferencePositionCallback
     public int getPreferenceAdapterPosition(Preference preference) {
         int size = this.mVisiblePreferences.size();
         for (int i = 0; i < size; i++) {
@@ -276,9 +263,7 @@ public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewH
         return -1;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class PreferenceResourceDescriptor {
+    private static class PreferenceResourceDescriptor {
         String mClassName;
         int mLayoutResId;
         int mWidgetLayoutResId;
@@ -294,7 +279,10 @@ public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewH
                 return false;
             }
             PreferenceResourceDescriptor preferenceResourceDescriptor = (PreferenceResourceDescriptor) obj;
-            return this.mLayoutResId == preferenceResourceDescriptor.mLayoutResId && this.mWidgetLayoutResId == preferenceResourceDescriptor.mWidgetLayoutResId && TextUtils.equals(this.mClassName, preferenceResourceDescriptor.mClassName);
+            if (this.mLayoutResId == preferenceResourceDescriptor.mLayoutResId && this.mWidgetLayoutResId == preferenceResourceDescriptor.mWidgetLayoutResId && TextUtils.equals(this.mClassName, preferenceResourceDescriptor.mClassName)) {
+                return true;
+            }
+            return false;
         }
 
         public int hashCode() {

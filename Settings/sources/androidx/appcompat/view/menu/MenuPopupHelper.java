@@ -1,18 +1,13 @@
 package androidx.appcompat.view.menu;
 
 import android.content.Context;
-import android.graphics.Point;
 import android.graphics.Rect;
-import android.os.Build;
-import android.view.Display;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.PopupWindow;
-import androidx.appcompat.R$dimen;
 import androidx.appcompat.view.menu.MenuPresenter;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
-/* loaded from: classes.dex */
+
 public class MenuPopupHelper {
     private View mAnchorView;
     private final Context mContext;
@@ -33,8 +28,7 @@ public class MenuPopupHelper {
 
     public MenuPopupHelper(Context context, MenuBuilder menuBuilder, View view, boolean z, int i, int i2) {
         this.mDropDownGravity = 8388611;
-        this.mInternalOnDismissListener = new PopupWindow.OnDismissListener() { // from class: androidx.appcompat.view.menu.MenuPopupHelper.1
-            @Override // android.widget.PopupWindow.OnDismissListener
+        this.mInternalOnDismissListener = new PopupWindow.OnDismissListener() {
             public void onDismiss() {
                 MenuPopupHelper.this.onDismiss();
             }
@@ -68,10 +62,9 @@ public class MenuPopupHelper {
     }
 
     public void show() {
-        if (tryShow()) {
-            return;
+        if (!tryShow()) {
+            throw new IllegalStateException("MenuPopupHelper cannot be used without an anchor");
         }
-        throw new IllegalStateException("MenuPopupHelper cannot be used without an anchor");
     }
 
     public MenuPopup getPopup() {
@@ -103,27 +96,71 @@ public class MenuPopupHelper {
         return true;
     }
 
-    private MenuPopup createPopup() {
-        MenuPopup standardMenuPopup;
-        Display defaultDisplay = ((WindowManager) this.mContext.getSystemService("window")).getDefaultDisplay();
-        Point point = new Point();
-        if (Build.VERSION.SDK_INT >= 17) {
-            defaultDisplay.getRealSize(point);
-        } else {
-            defaultDisplay.getSize(point);
-        }
-        if (Math.min(point.x, point.y) >= this.mContext.getResources().getDimensionPixelSize(R$dimen.abc_cascading_menus_min_smallest_width)) {
-            standardMenuPopup = new CascadingMenuPopup(this.mContext, this.mAnchorView, this.mPopupStyleAttr, this.mPopupStyleRes, this.mOverflowOnly);
-        } else {
-            standardMenuPopup = new StandardMenuPopup(this.mContext, this.mMenu, this.mAnchorView, this.mPopupStyleAttr, this.mPopupStyleRes, this.mOverflowOnly);
-        }
-        standardMenuPopup.addMenu(this.mMenu);
-        standardMenuPopup.setOnDismissListener(this.mInternalOnDismissListener);
-        standardMenuPopup.setAnchorView(this.mAnchorView);
-        standardMenuPopup.setCallback(this.mPresenterCallback);
-        standardMenuPopup.setForceShowIcon(this.mForceShowIcon);
-        standardMenuPopup.setGravity(this.mDropDownGravity);
-        return standardMenuPopup;
+    /* JADX WARNING: type inference failed for: r0v7, types: [androidx.appcompat.view.menu.MenuPopup, androidx.appcompat.view.menu.MenuPresenter] */
+    /* JADX WARNING: type inference failed for: r7v1, types: [androidx.appcompat.view.menu.StandardMenuPopup] */
+    /* JADX WARNING: type inference failed for: r1v12, types: [androidx.appcompat.view.menu.CascadingMenuPopup] */
+    /* JADX WARNING: Multi-variable type inference failed */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private androidx.appcompat.view.menu.MenuPopup createPopup() {
+        /*
+            r14 = this;
+            android.content.Context r0 = r14.mContext
+            java.lang.String r1 = "window"
+            java.lang.Object r0 = r0.getSystemService(r1)
+            android.view.WindowManager r0 = (android.view.WindowManager) r0
+            android.view.Display r0 = r0.getDefaultDisplay()
+            android.graphics.Point r1 = new android.graphics.Point
+            r1.<init>()
+            r0.getRealSize(r1)
+            int r0 = r1.x
+            int r1 = r1.y
+            int r0 = java.lang.Math.min(r0, r1)
+            android.content.Context r1 = r14.mContext
+            android.content.res.Resources r1 = r1.getResources()
+            int r2 = androidx.appcompat.R$dimen.abc_cascading_menus_min_smallest_width
+            int r1 = r1.getDimensionPixelSize(r2)
+            if (r0 < r1) goto L_0x002f
+            r0 = 1
+            goto L_0x0030
+        L_0x002f:
+            r0 = 0
+        L_0x0030:
+            if (r0 == 0) goto L_0x0043
+            androidx.appcompat.view.menu.CascadingMenuPopup r0 = new androidx.appcompat.view.menu.CascadingMenuPopup
+            android.content.Context r2 = r14.mContext
+            android.view.View r3 = r14.mAnchorView
+            int r4 = r14.mPopupStyleAttr
+            int r5 = r14.mPopupStyleRes
+            boolean r6 = r14.mOverflowOnly
+            r1 = r0
+            r1.<init>(r2, r3, r4, r5, r6)
+            goto L_0x0055
+        L_0x0043:
+            androidx.appcompat.view.menu.StandardMenuPopup r0 = new androidx.appcompat.view.menu.StandardMenuPopup
+            android.content.Context r8 = r14.mContext
+            androidx.appcompat.view.menu.MenuBuilder r9 = r14.mMenu
+            android.view.View r10 = r14.mAnchorView
+            int r11 = r14.mPopupStyleAttr
+            int r12 = r14.mPopupStyleRes
+            boolean r13 = r14.mOverflowOnly
+            r7 = r0
+            r7.<init>(r8, r9, r10, r11, r12, r13)
+        L_0x0055:
+            androidx.appcompat.view.menu.MenuBuilder r1 = r14.mMenu
+            r0.addMenu(r1)
+            android.widget.PopupWindow$OnDismissListener r1 = r14.mInternalOnDismissListener
+            r0.setOnDismissListener(r1)
+            android.view.View r1 = r14.mAnchorView
+            r0.setAnchorView(r1)
+            androidx.appcompat.view.menu.MenuPresenter$Callback r1 = r14.mPresenterCallback
+            r0.setCallback(r1)
+            boolean r1 = r14.mForceShowIcon
+            r0.setForceShowIcon(r1)
+            int r14 = r14.mDropDownGravity
+            r0.setGravity(r14)
+            return r0
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.appcompat.view.menu.MenuPopupHelper.createPopup():androidx.appcompat.view.menu.MenuPopup");
     }
 
     private void showPopup(int i, int i2, boolean z, boolean z2) {
@@ -147,7 +184,7 @@ public class MenuPopupHelper {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onDismiss() {
         this.mPopup = null;
         PopupWindow.OnDismissListener onDismissListener = this.mOnDismissListener;

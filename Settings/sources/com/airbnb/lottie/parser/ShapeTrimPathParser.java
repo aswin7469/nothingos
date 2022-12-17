@@ -5,12 +5,11 @@ import com.airbnb.lottie.model.animatable.AnimatableFloatValue;
 import com.airbnb.lottie.model.content.ShapeTrimPath;
 import com.airbnb.lottie.parser.moshi.JsonReader;
 import java.io.IOException;
-/* loaded from: classes.dex */
-class ShapeTrimPathParser {
-    private static JsonReader.Options NAMES = JsonReader.Options.of("s", "e", "o", "nm", "m", "hd");
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static ShapeTrimPath parse(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
+class ShapeTrimPathParser {
+    private static JsonReader.Options NAMES = JsonReader.Options.m9of("s", "e", "o", "nm", "m", "hd");
+
+    static ShapeTrimPath parse(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
         boolean z = false;
         String str = null;
         ShapeTrimPath.Type type = null;
@@ -29,10 +28,10 @@ class ShapeTrimPathParser {
                 str = jsonReader.nextString();
             } else if (selectName == 4) {
                 type = ShapeTrimPath.Type.forId(jsonReader.nextInt());
-            } else if (selectName == 5) {
-                z = jsonReader.nextBoolean();
-            } else {
+            } else if (selectName != 5) {
                 jsonReader.skipValue();
+            } else {
+                z = jsonReader.nextBoolean();
             }
         }
         return new ShapeTrimPath(str, type, animatableFloatValue, animatableFloatValue2, animatableFloatValue3, z);

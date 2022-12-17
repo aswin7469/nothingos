@@ -4,13 +4,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.instrumentation.InstrumentedDialogFragment;
-/* loaded from: classes.dex */
+
 public class FaceEnrollAccessibilityDialog extends InstrumentedDialogFragment {
     private DialogInterface.OnClickListener mPositiveButtonListener;
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1506;
     }
@@ -23,21 +22,15 @@ public class FaceEnrollAccessibilityDialog extends InstrumentedDialogFragment {
         this.mPositiveButtonListener = onClickListener;
     }
 
-    @Override // androidx.fragment.app.DialogFragment
     public Dialog onCreateDialog(Bundle bundle) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        int i = R.string.security_settings_face_enroll_education_accessibility_dialog_message;
-        int i2 = R.string.security_settings_face_enroll_education_accessibility_dialog_negative;
-        builder.setMessage(i).setNegativeButton(i2, FaceEnrollAccessibilityDialog$$ExternalSyntheticLambda1.INSTANCE).setPositiveButton(R.string.security_settings_face_enroll_education_accessibility_dialog_positive, new DialogInterface.OnClickListener() { // from class: com.android.settings.biometrics.face.FaceEnrollAccessibilityDialog$$ExternalSyntheticLambda0
-            @Override // android.content.DialogInterface.OnClickListener
-            public final void onClick(DialogInterface dialogInterface, int i3) {
-                FaceEnrollAccessibilityDialog.this.lambda$onCreateDialog$1(dialogInterface, i3);
-            }
-        });
+        int i = R$string.f145x89cc8ccc;
+        int i2 = R$string.f146x2371810;
+        builder.setMessage(i).setNegativeButton(i2, new FaceEnrollAccessibilityDialog$$ExternalSyntheticLambda0()).setPositiveButton(R$string.f147xf7e2a5d4, new FaceEnrollAccessibilityDialog$$ExternalSyntheticLambda1(this));
         return builder.create();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onCreateDialog$1(DialogInterface dialogInterface, int i) {
         this.mPositiveButtonListener.onClick(dialogInterface, i);
     }

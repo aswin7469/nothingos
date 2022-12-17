@@ -24,7 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-/* loaded from: classes.dex */
+
 public class DeviceInfoUtils {
     private static String readLine(String str) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(str), 256);
@@ -66,11 +66,11 @@ public class DeviceInfoUtils {
         }
         Intent intent = new Intent("android.intent.action.BUG_REPORT");
         PackageManager packageManager = context.getPackageManager();
-        for (ResolveInfo resolveInfo : packageManager.queryIntentActivities(intent, 64)) {
-            ActivityInfo activityInfo = resolveInfo.activityInfo;
+        for (ResolveInfo next : packageManager.queryIntentActivities(intent, 64)) {
+            ActivityInfo activityInfo = next.activityInfo;
             if (activityInfo != null && !TextUtils.isEmpty(activityInfo.packageName)) {
                 try {
-                    if ((packageManager.getApplicationInfo(resolveInfo.activityInfo.packageName, 0).flags & 1) != 0 && TextUtils.equals(resolveInfo.activityInfo.packageName, string)) {
+                    if ((packageManager.getApplicationInfo(next.activityInfo.packageName, 0).flags & 1) != 0 && TextUtils.equals(next.activityInfo.packageName, string)) {
                         return string;
                     }
                 } catch (PackageManager.NameNotFoundException unused) {
@@ -83,14 +83,14 @@ public class DeviceInfoUtils {
 
     public static String getSecurityPatch() {
         String str = Build.VERSION.SECURITY_PATCH;
-        if (!"".equals(str)) {
-            try {
-                return DateFormat.format(DateFormat.getBestDateTimePattern(Locale.getDefault(), "dMMMMyyyy"), new SimpleDateFormat("yyyy-MM-dd").parse(str)).toString();
-            } catch (ParseException unused) {
-                return str;
-            }
+        if ("".equals(str)) {
+            return null;
         }
-        return null;
+        try {
+            return DateFormat.format(DateFormat.getBestDateTimePattern(Locale.getDefault(), "dMMMMyyyy"), new SimpleDateFormat("yyyy-MM-dd").parse(str)).toString();
+        } catch (ParseException unused) {
+            return str;
+        }
     }
 
     public static String getFormattedPhoneNumber(Context context, SubscriptionInfo subscriptionInfo) {

@@ -7,7 +7,7 @@ import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import com.android.settings.sim.smartForwarding.EnableSmartForwardingTask;
-/* loaded from: classes.dex */
+
 public class SmartForwardingUtils {
     public static boolean getBackupCallWaitingStatus(Context context, int i) {
         return context.getSharedPreferences("smart_forwarding_pref_" + i, 0).getBoolean("call_waiting_key", false);
@@ -64,14 +64,16 @@ public class SmartForwardingUtils {
 
     public static void backupPrevStatus(Context context, EnableSmartForwardingTask.SlotUTData[] slotUTDataArr) {
         for (int i = 0; i < slotUTDataArr.length; i++) {
-            int i2 = slotUTDataArr[i].mQueryCallWaiting.result;
-            int i3 = slotUTDataArr[i].subId;
+            EnableSmartForwardingTask.SlotUTData slotUTData = slotUTDataArr[i];
+            int i2 = slotUTData.mQueryCallWaiting.result;
+            int i3 = slotUTData.subId;
             boolean z = true;
             if (i2 != 1) {
                 z = false;
             }
             saveCallWaitingStatus(context, i3, z);
-            saveCallForwardingStatus(context, slotUTDataArr[i].subId, slotUTDataArr[i].mQueryCallForwarding.result);
+            EnableSmartForwardingTask.SlotUTData slotUTData2 = slotUTDataArr[i];
+            saveCallForwardingStatus(context, slotUTData2.subId, slotUTData2.mQueryCallForwarding.result);
         }
     }
 
@@ -79,6 +81,9 @@ public class SmartForwardingUtils {
         SubscriptionInfo activeSubscriptionInfo;
         SubscriptionManager subscriptionManager = (SubscriptionManager) context.getSystemService(SubscriptionManager.class);
         int[] subscriptionIds = subscriptionManager.getSubscriptionIds(i);
-        return (subscriptionIds == null || (activeSubscriptionInfo = subscriptionManager.getActiveSubscriptionInfo(subscriptionIds[0])) == null) ? "" : activeSubscriptionInfo.getNumber();
+        if (subscriptionIds == null || (activeSubscriptionInfo = subscriptionManager.getActiveSubscriptionInfo(subscriptionIds[0])) == null) {
+            return "";
+        }
+        return activeSubscriptionInfo.getNumber();
     }
 }

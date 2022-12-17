@@ -2,17 +2,16 @@ package androidx.constraintlayout.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewGroup;
 import androidx.constraintlayout.widget.ConstraintLayout;
-/* loaded from: classes.dex */
+
 public class Constraints extends ViewGroup {
     ConstraintSet myConstraintSet;
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
     }
 
     public Constraints(Context context) {
@@ -32,12 +31,10 @@ public class Constraints extends ViewGroup {
         super.setVisibility(8);
     }
 
-    @Override // android.view.ViewGroup
     public LayoutParams generateLayoutParams(AttributeSet attributeSet) {
         return new LayoutParams(getContext(), attributeSet);
     }
 
-    /* loaded from: classes.dex */
     public static class LayoutParams extends ConstraintLayout.LayoutParams {
         public float alpha;
         public boolean applyElevation;
@@ -92,10 +89,8 @@ public class Constraints extends ViewGroup {
                 if (index == R$styleable.ConstraintSet_android_alpha) {
                     this.alpha = obtainStyledAttributes.getFloat(index, this.alpha);
                 } else if (index == R$styleable.ConstraintSet_android_elevation) {
-                    if (Build.VERSION.SDK_INT >= 21) {
-                        this.elevation = obtainStyledAttributes.getFloat(index, this.elevation);
-                        this.applyElevation = true;
-                    }
+                    this.elevation = obtainStyledAttributes.getFloat(index, this.elevation);
+                    this.applyElevation = true;
                 } else if (index == R$styleable.ConstraintSet_android_rotationX) {
                     this.rotationX = obtainStyledAttributes.getFloat(index, this.rotationX);
                 } else if (index == R$styleable.ConstraintSet_android_rotationY) {
@@ -114,15 +109,14 @@ public class Constraints extends ViewGroup {
                     this.translationX = obtainStyledAttributes.getFloat(index, this.translationX);
                 } else if (index == R$styleable.ConstraintSet_android_translationY) {
                     this.translationY = obtainStyledAttributes.getFloat(index, this.translationY);
-                } else if (index == R$styleable.ConstraintSet_android_translationZ && Build.VERSION.SDK_INT >= 21) {
+                } else if (index == R$styleable.ConstraintSet_android_translationZ) {
                     this.translationZ = obtainStyledAttributes.getFloat(index, this.translationZ);
                 }
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.view.ViewGroup
+    /* access modifiers changed from: protected */
     public LayoutParams generateDefaultLayoutParams() {
         return new LayoutParams(-2, -2);
     }
@@ -131,8 +125,8 @@ public class Constraints extends ViewGroup {
         Log.v("Constraints", " ################# init");
     }
 
-    @Override // android.view.ViewGroup
-    protected ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams layoutParams) {
+    /* access modifiers changed from: protected */
+    public ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams layoutParams) {
         return new ConstraintLayout.LayoutParams(layoutParams);
     }
 

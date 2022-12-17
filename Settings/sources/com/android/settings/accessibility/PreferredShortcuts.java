@@ -4,46 +4,33 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Predicate;
-/* loaded from: classes.dex */
+
 public final class PreferredShortcuts {
-    public static int retrieveUserShortcutType(Context context, final String str, int i) {
+    public static int retrieveUserShortcutType(Context context, String str, int i) {
         if (str == null) {
             return i;
         }
         HashSet hashSet = new HashSet(getFromSharedPreferences(context));
-        hashSet.removeIf(new Predicate() { // from class: com.android.settings.accessibility.PreferredShortcuts$$ExternalSyntheticLambda0
-            @Override // java.util.function.Predicate
-            public final boolean test(Object obj) {
-                boolean lambda$retrieveUserShortcutType$0;
-                lambda$retrieveUserShortcutType$0 = PreferredShortcuts.lambda$retrieveUserShortcutType$0(str, (String) obj);
-                return lambda$retrieveUserShortcutType$0;
-            }
-        });
-        return hashSet.isEmpty() ? i : PreferredShortcut.fromString((String) hashSet.stream().findFirst().get()).getType();
+        hashSet.removeIf(new PreferredShortcuts$$ExternalSyntheticLambda1(str));
+        if (hashSet.isEmpty()) {
+            return i;
+        }
+        return PreferredShortcut.fromString((String) hashSet.stream().findFirst().get()).getType();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ boolean lambda$retrieveUserShortcutType$0(String str, String str2) {
         return !str2.contains(str);
     }
 
     public static void saveUserShortcutType(Context context, PreferredShortcut preferredShortcut) {
-        final String componentName = preferredShortcut.getComponentName();
-        if (componentName == null) {
-            return;
+        String componentName = preferredShortcut.getComponentName();
+        if (componentName != null) {
+            HashSet hashSet = new HashSet(getFromSharedPreferences(context));
+            hashSet.removeIf(new PreferredShortcuts$$ExternalSyntheticLambda0(componentName));
+            hashSet.add(preferredShortcut.toString());
+            saveToSharedPreferences(context, hashSet);
         }
-        HashSet hashSet = new HashSet(getFromSharedPreferences(context));
-        hashSet.removeIf(new Predicate() { // from class: com.android.settings.accessibility.PreferredShortcuts$$ExternalSyntheticLambda1
-            @Override // java.util.function.Predicate
-            public final boolean test(Object obj) {
-                boolean contains;
-                contains = ((String) obj).contains(componentName);
-                return contains;
-            }
-        });
-        hashSet.add(preferredShortcut.toString());
-        saveToSharedPreferences(context, hashSet);
     }
 
     private static Set<String> getFromSharedPreferences(Context context) {

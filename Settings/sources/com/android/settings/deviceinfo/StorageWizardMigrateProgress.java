@@ -6,19 +6,20 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$drawable;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
+
 public class StorageWizardMigrateProgress extends StorageWizardBase {
-    private final PackageManager.MoveCallback mCallback = new PackageManager.MoveCallback() { // from class: com.android.settings.deviceinfo.StorageWizardMigrateProgress.1
+    private final PackageManager.MoveCallback mCallback = new PackageManager.MoveCallback() {
         public void onStatusChanged(int i, int i2, long j) {
-            if (StorageWizardMigrateProgress.this.mMoveId != i) {
-                return;
-            }
-            StorageWizardMigrateProgress storageWizardMigrateProgress = StorageWizardMigrateProgress.this;
-            if (PackageManager.isMoveStatusFinished(i2)) {
-                Log.d("StorageWizardMigrateProgress", "Finished with status " + i2);
-                if (i2 == -100) {
-                    if (StorageWizardMigrateProgress.this.mDisk != null) {
+            if (StorageWizardMigrateProgress.this.mMoveId == i) {
+                StorageWizardMigrateProgress storageWizardMigrateProgress = StorageWizardMigrateProgress.this;
+                if (PackageManager.isMoveStatusFinished(i2)) {
+                    Log.d("StorageWizardMigrateProgress", "Finished with status " + i2);
+                    if (i2 != -100) {
+                        Toast.makeText(storageWizardMigrateProgress, StorageWizardMigrateProgress.this.getString(R$string.insufficient_storage), 1).show();
+                    } else if (StorageWizardMigrateProgress.this.mDisk != null) {
                         Intent intent = new Intent("com.android.systemui.action.FINISH_WIZARD");
                         intent.addFlags(1073741824);
                         StorageWizardMigrateProgress.this.sendBroadcast(intent);
@@ -28,33 +29,31 @@ public class StorageWizardMigrateProgress extends StorageWizardBase {
                             StorageWizardMigrateProgress.this.startActivity(intent2);
                         }
                     }
-                } else {
-                    Toast.makeText(storageWizardMigrateProgress, StorageWizardMigrateProgress.this.getString(R.string.insufficient_storage), 1).show();
+                    StorageWizardMigrateProgress.this.finishAffinity();
+                    return;
                 }
-                StorageWizardMigrateProgress.this.finishAffinity();
-                return;
+                StorageWizardMigrateProgress.this.setCurrentProgress(i2);
             }
-            StorageWizardMigrateProgress.this.setCurrentProgress(i2);
         }
     };
-    private int mMoveId;
+    /* access modifiers changed from: private */
+    public int mMoveId;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.deviceinfo.StorageWizardBase, androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         if (this.mVolume == null) {
             finish();
             return;
         }
-        setContentView(R.layout.storage_wizard_progress);
+        setContentView(R$layout.storage_wizard_progress);
         this.mMoveId = getIntent().getIntExtra("android.content.pm.extra.MOVE_ID", -1);
-        setIcon(R.drawable.ic_swap_horiz);
-        setHeaderText(R.string.storage_wizard_migrate_progress_v2_title, new CharSequence[0]);
+        setIcon(R$drawable.ic_swap_horiz);
+        setHeaderText(R$string.storage_wizard_migrate_progress_v2_title, new CharSequence[0]);
         setAuxChecklist();
         setBackButtonVisibility(4);
         setNextButtonVisibility(4);
         getPackageManager().registerMoveCallback(this.mCallback, new Handler());
-        this.mCallback.onStatusChanged(this.mMoveId, getPackageManager().getMoveStatus(this.mMoveId), -1L);
+        this.mCallback.onStatusChanged(this.mMoveId, getPackageManager().getMoveStatus(this.mMoveId), -1);
     }
 }

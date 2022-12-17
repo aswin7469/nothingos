@@ -8,22 +8,21 @@ import android.util.SparseIntArray;
 import androidx.constraintlayout.motion.utils.Easing;
 import androidx.constraintlayout.widget.R$styleable;
 import java.util.HashMap;
-/* loaded from: classes.dex */
+
 public class KeyPosition extends KeyPositionBase {
-    String mTransitionEasing = null;
-    int mPathMotionArc = Key.UNSET;
-    int mDrawPath = 0;
-    float mPercentWidth = Float.NaN;
-    float mPercentHeight = Float.NaN;
-    float mPercentX = Float.NaN;
-    float mPercentY = Float.NaN;
     float mAltPercentX = Float.NaN;
     float mAltPercentY = Float.NaN;
-    int mPositionType = 0;
     private float mCalculatedPositionX = Float.NaN;
     private float mCalculatedPositionY = Float.NaN;
+    int mDrawPath = 0;
+    int mPathMotionArc = Key.UNSET;
+    float mPercentHeight = Float.NaN;
+    float mPercentWidth = Float.NaN;
+    float mPercentX = Float.NaN;
+    float mPercentY = Float.NaN;
+    int mPositionType = 0;
+    String mTransitionEasing = null;
 
-    @Override // androidx.constraintlayout.motion.widget.Key
     public void addValues(HashMap<String, SplineSet> hashMap) {
     }
 
@@ -31,12 +30,10 @@ public class KeyPosition extends KeyPositionBase {
         this.mType = 2;
     }
 
-    @Override // androidx.constraintlayout.motion.widget.Key
     public void load(Context context, AttributeSet attributeSet) {
         Loader.read(this, context.obtainStyledAttributes(attributeSet, R$styleable.KeyPosition));
     }
 
-    /* loaded from: classes.dex */
     private static class Loader {
         private static SparseIntArray mAttrMap;
 
@@ -57,38 +54,40 @@ public class KeyPosition extends KeyPositionBase {
             mAttrMap.append(R$styleable.KeyPosition_pathMotionArc, 10);
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public static void read(KeyPosition keyPosition, TypedArray typedArray) {
             int indexCount = typedArray.getIndexCount();
             for (int i = 0; i < indexCount; i++) {
                 int index = typedArray.getIndex(i);
                 switch (mAttrMap.get(index)) {
                     case 1:
-                        if (MotionLayout.IS_IN_EDIT_MODE) {
-                            int resourceId = typedArray.getResourceId(index, keyPosition.mTargetId);
-                            keyPosition.mTargetId = resourceId;
-                            if (resourceId == -1) {
-                                keyPosition.mTargetString = typedArray.getString(index);
+                        if (!MotionLayout.IS_IN_EDIT_MODE) {
+                            if (typedArray.peekValue(index).type != 3) {
+                                keyPosition.mTargetId = typedArray.getResourceId(index, keyPosition.mTargetId);
                                 break;
                             } else {
+                                keyPosition.mTargetString = typedArray.getString(index);
                                 break;
                             }
-                        } else if (typedArray.peekValue(index).type == 3) {
-                            keyPosition.mTargetString = typedArray.getString(index);
-                            break;
                         } else {
-                            keyPosition.mTargetId = typedArray.getResourceId(index, keyPosition.mTargetId);
-                            break;
+                            int resourceId = typedArray.getResourceId(index, keyPosition.mTargetId);
+                            keyPosition.mTargetId = resourceId;
+                            if (resourceId != -1) {
+                                break;
+                            } else {
+                                keyPosition.mTargetString = typedArray.getString(index);
+                                break;
+                            }
                         }
                     case 2:
                         keyPosition.mFramePosition = typedArray.getInt(index, keyPosition.mFramePosition);
                         break;
                     case 3:
-                        if (typedArray.peekValue(index).type == 3) {
-                            keyPosition.mTransitionEasing = typedArray.getString(index);
+                        if (typedArray.peekValue(index).type != 3) {
+                            keyPosition.mTransitionEasing = Easing.NAMED_EASING[typedArray.getInteger(index, 0)];
                             break;
                         } else {
-                            keyPosition.mTransitionEasing = Easing.NAMED_EASING[typedArray.getInteger(index, 0)];
+                            keyPosition.mTransitionEasing = typedArray.getString(index);
                             break;
                         }
                     case 4:

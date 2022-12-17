@@ -6,14 +6,14 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.UserHandle;
 import android.os.UserManager;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import java.util.ArrayList;
 import java.util.Iterator;
-/* loaded from: classes.dex */
+
 public class RestrictionUtils {
+    public static final int[] sRestrictionDescriptions = {R$string.restriction_location_enable_summary};
     public static final String[] sRestrictionKeys = {"no_share_location"};
-    public static final int[] sRestrictionTitles = {R.string.restriction_location_enable_title};
-    public static final int[] sRestrictionDescriptions = {R.string.restriction_location_enable_summary};
+    public static final int[] sRestrictionTitles = {R$string.restriction_location_enable_title};
 
     public static ArrayList<RestrictionEntry> getRestrictions(Context context, UserHandle userHandle) {
         Resources resources = context.getResources();
@@ -22,16 +22,16 @@ public class RestrictionUtils {
         int i = 0;
         while (true) {
             String[] strArr = sRestrictionKeys;
-            if (i < strArr.length) {
-                RestrictionEntry restrictionEntry = new RestrictionEntry(strArr[i], !userRestrictions.getBoolean(strArr[i], false));
-                restrictionEntry.setTitle(resources.getString(sRestrictionTitles[i]));
-                restrictionEntry.setDescription(resources.getString(sRestrictionDescriptions[i]));
-                restrictionEntry.setType(1);
-                arrayList.add(restrictionEntry);
-                i++;
-            } else {
+            if (i >= strArr.length) {
                 return arrayList;
             }
+            String str = strArr[i];
+            RestrictionEntry restrictionEntry = new RestrictionEntry(str, !userRestrictions.getBoolean(str, false));
+            restrictionEntry.setTitle(resources.getString(sRestrictionTitles[i]));
+            restrictionEntry.setDescription(resources.getString(sRestrictionDescriptions[i]));
+            restrictionEntry.setType(1);
+            arrayList.add(restrictionEntry);
+            i++;
         }
     }
 

@@ -12,77 +12,73 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
 import androidx.preference.SwitchPreference;
-import com.android.settings.R;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.Utils;
-import com.android.settings.applications.AppInfoBase;
 import com.android.settings.applications.AppInfoWithHeader;
 import com.android.settings.applications.AppStateAppOpsBridge;
+import com.android.settings.applications.AppStateBaseBridge;
 import com.android.settings.applications.AppStateOverlayBridge;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settingslib.applications.ApplicationsState;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
-/* loaded from: classes.dex */
+
 public class DrawOverlayDetails extends AppInfoWithHeader implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
     private AppOpsManager mAppOpsManager;
     private AppStateOverlayBridge mOverlayBridge;
     private AppStateOverlayBridge.OverlayState mOverlayState;
     private SwitchPreference mSwitchPref;
 
-    @Override // com.android.settings.applications.AppInfoBase
-    protected AlertDialog createDialog(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public AlertDialog createDialog(int i, int i2) {
         return null;
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 221;
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceClickListener
     public boolean onPreferenceClick(Preference preference) {
         return false;
     }
 
-    @Override // com.android.settings.applications.AppInfoBase, com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         FragmentActivity activity = getActivity();
-        this.mOverlayBridge = new AppStateOverlayBridge(activity, ((AppInfoBase) this).mState, null);
+        this.mOverlayBridge = new AppStateOverlayBridge(activity, this.mState, (AppStateBaseBridge.Callback) null);
         this.mAppOpsManager = (AppOpsManager) activity.getSystemService("appops");
         if (!Utils.isSystemAlertWindowEnabled(activity)) {
             this.mPackageInfo = null;
             return;
         }
-        addPreferencesFromResource(R.xml.draw_overlay_permissions_details);
+        addPreferencesFromResource(R$xml.draw_overlay_permissions_details);
         SwitchPreference switchPreference = (SwitchPreference) findPreference("app_ops_settings_switch");
         this.mSwitchPref = switchPreference;
         switchPreference.setOnPreferenceChangeListener(this);
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
         if (this.mPackageInfo == null) {
-            return layoutInflater.inflate(R.layout.manage_applications_apps_unsupported, (ViewGroup) null);
+            return layoutInflater.inflate(R$layout.manage_applications_apps_unsupported, (ViewGroup) null);
         }
         return super.onCreateView(layoutInflater, viewGroup, bundle);
     }
 
-    @Override // com.android.settings.applications.AppInfoBase, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onDestroy() {
         super.onDestroy();
         this.mOverlayBridge.release();
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
-        if (preference == this.mSwitchPref) {
-            if (this.mOverlayState != null && ((Boolean) obj).booleanValue() != this.mOverlayState.isPermissible()) {
-                setCanDrawOverlay(!this.mOverlayState.isPermissible());
-                refreshUi();
-            }
-            return true;
+        if (preference != this.mSwitchPref) {
+            return false;
         }
-        return false;
+        if (!(this.mOverlayState == null || ((Boolean) obj).booleanValue() == this.mOverlayState.isPermissible())) {
+            setCanDrawOverlay(!this.mOverlayState.isPermissible());
+            refreshUi();
+        }
+        return true;
     }
 
     private void setCanDrawOverlay(boolean z) {
@@ -90,14 +86,15 @@ public class DrawOverlayDetails extends AppInfoWithHeader implements Preference.
         this.mAppOpsManager.setMode(24, this.mPackageInfo.applicationInfo.uid, this.mPackageName, z ? 0 : 2);
     }
 
-    void logSpecialPermissionChange(boolean z, String str) {
+    /* access modifiers changed from: package-private */
+    public void logSpecialPermissionChange(boolean z, String str) {
         int i = z ? 770 : 771;
         MetricsFeatureProvider metricsFeatureProvider = FeatureFactory.getFactory(getContext()).getMetricsFeatureProvider();
         metricsFeatureProvider.action(metricsFeatureProvider.getAttribution(getActivity()), i, getMetricsCategory(), str, 0);
     }
 
-    @Override // com.android.settings.applications.AppInfoBase
-    protected boolean refreshUi() {
+    /* access modifiers changed from: protected */
+    public boolean refreshUi() {
         PackageInfo packageInfo = this.mPackageInfo;
         if (packageInfo == null) {
             return true;
@@ -112,29 +109,29 @@ public class DrawOverlayDetails extends AppInfoWithHeader implements Preference.
     }
 
     public static CharSequence getSummary(Context context, ApplicationsState.AppEntry appEntry) {
-        AppStateOverlayBridge.OverlayState overlayInfo;
+        AppStateOverlayBridge.OverlayState overlayState;
         if (appEntry == null) {
             return "";
         }
         Object obj = appEntry.extraInfo;
         if (obj instanceof AppStateOverlayBridge.OverlayState) {
-            overlayInfo = (AppStateOverlayBridge.OverlayState) obj;
+            overlayState = (AppStateOverlayBridge.OverlayState) obj;
         } else if (obj instanceof AppStateAppOpsBridge.PermissionState) {
-            overlayInfo = new AppStateOverlayBridge.OverlayState((AppStateAppOpsBridge.PermissionState) appEntry.extraInfo);
+            overlayState = new AppStateOverlayBridge.OverlayState((AppStateAppOpsBridge.PermissionState) appEntry.extraInfo);
         } else {
-            AppStateOverlayBridge appStateOverlayBridge = new AppStateOverlayBridge(context, null, null);
+            AppStateOverlayBridge appStateOverlayBridge = new AppStateOverlayBridge(context, (ApplicationsState) null, (AppStateBaseBridge.Callback) null);
             ApplicationInfo applicationInfo = appEntry.info;
-            overlayInfo = appStateOverlayBridge.getOverlayInfo(applicationInfo.packageName, applicationInfo.uid);
+            overlayState = appStateOverlayBridge.getOverlayInfo(applicationInfo.packageName, applicationInfo.uid);
         }
-        return getSummary(context, overlayInfo);
+        return getSummary(context, overlayState);
     }
 
     public static CharSequence getSummary(Context context, AppStateOverlayBridge.OverlayState overlayState) {
         int i;
         if (overlayState.isPermissible()) {
-            i = R.string.app_permission_summary_allowed;
+            i = R$string.app_permission_summary_allowed;
         } else {
-            i = R.string.app_permission_summary_not_allowed;
+            i = R$string.app_permission_summary_not_allowed;
         }
         return context.getString(i);
     }

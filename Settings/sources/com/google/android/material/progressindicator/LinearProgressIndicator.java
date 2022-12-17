@@ -5,12 +5,12 @@ import android.util.AttributeSet;
 import androidx.core.view.ViewCompat;
 import com.google.android.material.R$attr;
 import com.google.android.material.R$style;
-/* loaded from: classes2.dex */
+
 public final class LinearProgressIndicator extends BaseProgressIndicator<LinearProgressIndicatorSpec> {
     public static final int DEF_STYLE_RES = R$style.Widget_MaterialComponents_LinearProgressIndicator;
 
     public LinearProgressIndicator(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public LinearProgressIndicator(Context context, AttributeSet attributeSet) {
@@ -22,33 +22,32 @@ public final class LinearProgressIndicator extends BaseProgressIndicator<LinearP
         initializeDrawables();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // com.google.android.material.progressindicator.BaseProgressIndicator
+    /* access modifiers changed from: package-private */
     public LinearProgressIndicatorSpec createSpec(Context context, AttributeSet attributeSet) {
         return new LinearProgressIndicatorSpec(context, attributeSet);
     }
 
-    @Override // android.view.View
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
         S s = this.spec;
         LinearProgressIndicatorSpec linearProgressIndicatorSpec = (LinearProgressIndicatorSpec) s;
         boolean z2 = true;
-        if (((LinearProgressIndicatorSpec) s).indicatorDirection != 1 && ((ViewCompat.getLayoutDirection(this) != 1 || ((LinearProgressIndicatorSpec) this.spec).indicatorDirection != 2) && (ViewCompat.getLayoutDirection(this) != 0 || ((LinearProgressIndicatorSpec) this.spec).indicatorDirection != 3))) {
+        if (!(((LinearProgressIndicatorSpec) s).indicatorDirection == 1 || ((ViewCompat.getLayoutDirection(this) == 1 && ((LinearProgressIndicatorSpec) this.spec).indicatorDirection == 2) || (ViewCompat.getLayoutDirection(this) == 0 && ((LinearProgressIndicatorSpec) this.spec).indicatorDirection == 3)))) {
             z2 = false;
         }
         linearProgressIndicatorSpec.drawHorizontallyInverse = z2;
     }
 
-    @Override // android.widget.ProgressBar, android.view.View
-    protected void onSizeChanged(int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: protected */
+    public void onSizeChanged(int i, int i2, int i3, int i4) {
         int paddingLeft = i - (getPaddingLeft() + getPaddingRight());
         int paddingTop = i2 - (getPaddingTop() + getPaddingBottom());
-        IndeterminateDrawable<LinearProgressIndicatorSpec> indeterminateDrawable = getIndeterminateDrawable();
+        IndeterminateDrawable indeterminateDrawable = getIndeterminateDrawable();
         if (indeterminateDrawable != null) {
             indeterminateDrawable.setBounds(0, 0, paddingLeft, paddingTop);
         }
-        DeterminateDrawable<LinearProgressIndicatorSpec> progressDrawable = getProgressDrawable();
+        DeterminateDrawable progressDrawable = getProgressDrawable();
         if (progressDrawable != null) {
             progressDrawable.setBounds(0, 0, paddingLeft, paddingTop);
         }
@@ -59,13 +58,11 @@ public final class LinearProgressIndicator extends BaseProgressIndicator<LinearP
         setProgressDrawable(DeterminateDrawable.createLinearDrawable(getContext(), (LinearProgressIndicatorSpec) this.spec));
     }
 
-    @Override // com.google.android.material.progressindicator.BaseProgressIndicator
     public void setIndicatorColor(int... iArr) {
         super.setIndicatorColor(iArr);
         ((LinearProgressIndicatorSpec) this.spec).validateSpec();
     }
 
-    @Override // com.google.android.material.progressindicator.BaseProgressIndicator
     public void setTrackCornerRadius(int i) {
         super.setTrackCornerRadius(i);
         ((LinearProgressIndicatorSpec) this.spec).validateSpec();
@@ -77,21 +74,21 @@ public final class LinearProgressIndicator extends BaseProgressIndicator<LinearP
     }
 
     public void setIndeterminateAnimationType(int i) {
-        if (((LinearProgressIndicatorSpec) this.spec).indeterminateAnimationType == i) {
-            return;
-        }
-        if (visibleToUser() && isIndeterminate()) {
+        if (((LinearProgressIndicatorSpec) this.spec).indeterminateAnimationType != i) {
+            if (!visibleToUser() || !isIndeterminate()) {
+                S s = this.spec;
+                ((LinearProgressIndicatorSpec) s).indeterminateAnimationType = i;
+                ((LinearProgressIndicatorSpec) s).validateSpec();
+                if (i == 0) {
+                    getIndeterminateDrawable().setAnimatorDelegate(new LinearIndeterminateContiguousAnimatorDelegate((LinearProgressIndicatorSpec) this.spec));
+                } else {
+                    getIndeterminateDrawable().setAnimatorDelegate(new LinearIndeterminateDisjointAnimatorDelegate(getContext(), (LinearProgressIndicatorSpec) this.spec));
+                }
+                invalidate();
+                return;
+            }
             throw new IllegalStateException("Cannot change indeterminate animation type while the progress indicator is show in indeterminate mode.");
         }
-        S s = this.spec;
-        ((LinearProgressIndicatorSpec) s).indeterminateAnimationType = i;
-        ((LinearProgressIndicatorSpec) s).validateSpec();
-        if (i == 0) {
-            getIndeterminateDrawable().setAnimatorDelegate(new LinearIndeterminateContiguousAnimatorDelegate((LinearProgressIndicatorSpec) this.spec));
-        } else {
-            getIndeterminateDrawable().setAnimatorDelegate(new LinearIndeterminateDisjointAnimatorDelegate(getContext(), (LinearProgressIndicatorSpec) this.spec));
-        }
-        invalidate();
     }
 
     public int getIndicatorDirection() {
@@ -103,17 +100,16 @@ public final class LinearProgressIndicator extends BaseProgressIndicator<LinearP
         ((LinearProgressIndicatorSpec) s).indicatorDirection = i;
         LinearProgressIndicatorSpec linearProgressIndicatorSpec = (LinearProgressIndicatorSpec) s;
         boolean z = true;
-        if (i != 1 && ((ViewCompat.getLayoutDirection(this) != 1 || ((LinearProgressIndicatorSpec) this.spec).indicatorDirection != 2) && (ViewCompat.getLayoutDirection(this) != 0 || i != 3))) {
+        if (!(i == 1 || ((ViewCompat.getLayoutDirection(this) == 1 && ((LinearProgressIndicatorSpec) this.spec).indicatorDirection == 2) || (ViewCompat.getLayoutDirection(this) == 0 && i == 3)))) {
             z = false;
         }
         linearProgressIndicatorSpec.drawHorizontallyInverse = z;
         invalidate();
     }
 
-    @Override // com.google.android.material.progressindicator.BaseProgressIndicator
     public void setProgressCompat(int i, boolean z) {
         S s = this.spec;
-        if (s == 0 || ((LinearProgressIndicatorSpec) s).indeterminateAnimationType != 0 || !isIndeterminate()) {
+        if (s == null || ((LinearProgressIndicatorSpec) s).indeterminateAnimationType != 0 || !isIndeterminate()) {
             super.setProgressCompat(i, z);
         }
     }

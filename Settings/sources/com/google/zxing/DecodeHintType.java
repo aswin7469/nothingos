@@ -1,7 +1,7 @@
 package com.google.zxing;
 
 import java.util.List;
-/* loaded from: classes2.dex */
+
 public enum DecodeHintType {
     OTHER(Object.class),
     PURE_BARCODE(Void.class),
@@ -16,7 +16,7 @@ public enum DecodeHintType {
     
     private final Class<?> valueType;
 
-    DecodeHintType(Class cls) {
+    private DecodeHintType(Class<?> cls) {
         this.valueType = cls;
     }
 }

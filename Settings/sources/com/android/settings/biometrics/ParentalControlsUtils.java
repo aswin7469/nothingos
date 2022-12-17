@@ -1,21 +1,24 @@
 package com.android.settings.biometrics;
 
 import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.hardware.biometrics.ParentalControlsUtilsInternal;
 import android.os.UserHandle;
 import android.util.Log;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.settingslib.RestrictedLockUtils;
-/* loaded from: classes.dex */
+
 public class ParentalControlsUtils {
     public static RestrictedLockUtils.EnforcedAdmin parentConsentRequired(Context context, int i) {
-        UserHandle userHandle = new UserHandle(UserHandle.myUserId());
-        if (ParentalControlsUtilsInternal.isTestModeEnabled(context)) {
-            Log.d("ParentalControlsUtils", "Requiring consent for test flow");
-            return new RestrictedLockUtils.EnforcedAdmin(null, "disallow_biometric", userHandle);
+        int myUserId = UserHandle.myUserId();
+        UserHandle userHandle = new UserHandle(myUserId);
+        ComponentName testComponentName = ParentalControlsUtilsInternal.getTestComponentName(context, myUserId);
+        if (testComponentName == null) {
+            return parentConsentRequiredInternal((DevicePolicyManager) context.getSystemService(DevicePolicyManager.class), i, userHandle);
         }
-        return parentConsentRequiredInternal((DevicePolicyManager) context.getSystemService(DevicePolicyManager.class), i, userHandle);
+        Log.d("ParentalControlsUtils", "Requiring consent for test flow");
+        return new RestrictedLockUtils.EnforcedAdmin(testComponentName, "disallow_biometric", userHandle);
     }
 
     @VisibleForTesting

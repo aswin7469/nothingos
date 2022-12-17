@@ -8,10 +8,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.os.PersistableBundle;
 import android.util.Log;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$integer;
+
 public class SimNotificationService extends JobService {
-    @Override // android.app.job.JobService
     public boolean onStopJob(JobParameters jobParameters) {
         return false;
     }
@@ -20,10 +19,9 @@ public class SimNotificationService extends JobService {
         ComponentName componentName = new ComponentName(context.getApplicationContext(), SimNotificationService.class);
         PersistableBundle persistableBundle = new PersistableBundle();
         persistableBundle.putInt("notification_type", i);
-        ((JobScheduler) context.getApplicationContext().getSystemService(JobScheduler.class)).schedule(new JobInfo.Builder(R.integer.sim_notification_send, componentName).setExtras(persistableBundle).build());
+        ((JobScheduler) context.getApplicationContext().getSystemService(JobScheduler.class)).schedule(new JobInfo.Builder(R$integer.sim_notification_send, componentName).setExtras(persistableBundle).build());
     }
 
-    @Override // android.app.job.JobService
     public boolean onStartJob(JobParameters jobParameters) {
         PersistableBundle extras = jobParameters.getExtras();
         if (extras == null) {
@@ -37,10 +35,10 @@ public class SimNotificationService extends JobService {
             new SimActivationNotifier(this).sendNetworkConfigNotification();
         } else if (i == 2) {
             new SimActivationNotifier(this).sendSwitchedToRemovableSlotNotification();
-        } else if (i == 3) {
-            new SimActivationNotifier(this).sendEnableDsdsNotification();
-        } else {
+        } else if (i != 3) {
             Log.e("SimNotificationService", "Invalid notification type: " + i);
+        } else {
+            new SimActivationNotifier(this).sendEnableDsdsNotification();
         }
         return false;
     }

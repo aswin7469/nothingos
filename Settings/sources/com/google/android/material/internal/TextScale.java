@@ -8,14 +8,12 @@ import android.widget.TextView;
 import androidx.transition.Transition;
 import androidx.transition.TransitionValues;
 import java.util.Map;
-/* loaded from: classes2.dex */
+
 public class TextScale extends Transition {
-    @Override // androidx.transition.Transition
     public void captureStartValues(TransitionValues transitionValues) {
         captureValues(transitionValues);
     }
 
-    @Override // androidx.transition.Transition
     public void captureEndValues(TransitionValues transitionValues) {
         captureValues(transitionValues);
     }
@@ -27,7 +25,6 @@ public class TextScale extends Transition {
         }
     }
 
-    @Override // androidx.transition.Transition
     public Animator createAnimator(ViewGroup viewGroup, TransitionValues transitionValues, TransitionValues transitionValues2) {
         if (transitionValues == null || transitionValues2 == null || !(transitionValues.view instanceof TextView)) {
             return null;
@@ -47,13 +44,12 @@ public class TextScale extends Transition {
         if (floatValue == f) {
             return null;
         }
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(floatValue, f);
-        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.google.android.material.internal.TextScale.1
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{floatValue, f});
+        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float floatValue2 = ((Float) valueAnimator.getAnimatedValue()).floatValue();
-                textView.setScaleX(floatValue2);
-                textView.setScaleY(floatValue2);
+                float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+                textView.setScaleX(floatValue);
+                textView.setScaleY(floatValue);
             }
         });
         return ofFloat;

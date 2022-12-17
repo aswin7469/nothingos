@@ -3,7 +3,7 @@ package com.android.settingslib.search;
 import android.content.Context;
 import android.provider.SearchIndexableResource;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public interface Indexable$SearchIndexProvider {
     List<SearchIndexableRaw> getDynamicRawDataToIndex(Context context, boolean z);
 

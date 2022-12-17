@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import com.google.android.material.R$attr;
 import com.google.android.material.R$styleable;
 import com.google.android.material.internal.ThemeEnforcement;
-/* loaded from: classes2.dex */
+
 public final class LinearProgressIndicatorSpec extends BaseProgressIndicatorSpec {
     boolean drawHorizontallyInverse;
     public int indeterminateAnimationType;
@@ -31,16 +31,15 @@ public final class LinearProgressIndicatorSpec extends BaseProgressIndicatorSpec
         this.drawHorizontallyInverse = this.indicatorDirection == 1 ? true : z;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // com.google.android.material.progressindicator.BaseProgressIndicatorSpec
+    /* access modifiers changed from: package-private */
     public void validateSpec() {
-        if (this.indeterminateAnimationType == 0) {
-            if (this.trackCornerRadius > 0) {
-                throw new IllegalArgumentException("Rounded corners are not supported in contiguous indeterminate animation.");
-            }
-            if (this.indicatorColors.length < 3) {
-                throw new IllegalArgumentException("Contiguous indeterminate animation must be used with 3 or more indicator colors.");
-            }
+        if (this.indeterminateAnimationType != 0) {
+            return;
+        }
+        if (this.trackCornerRadius > 0) {
+            throw new IllegalArgumentException("Rounded corners are not supported in contiguous indeterminate animation.");
+        } else if (this.indicatorColors.length < 3) {
+            throw new IllegalArgumentException("Contiguous indeterminate animation must be used with 3 or more indicator colors.");
         }
     }
 }

@@ -15,16 +15,17 @@ import androidx.core.view.ViewCompat;
 import com.google.android.material.R$id;
 import com.google.android.material.R$layout;
 import com.google.android.material.R$styleable;
+import com.google.android.material.shape.CornerSize;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.RelativeCornerSize;
-/* loaded from: classes2.dex */
+
 class RadialViewGroup extends ConstraintLayout {
     private MaterialShapeDrawable background;
     private int radius;
     private final Runnable updateLayoutParametersRunnable;
 
     public RadialViewGroup(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public RadialViewGroup(Context context, AttributeSet attributeSet) {
@@ -37,8 +38,7 @@ class RadialViewGroup extends ConstraintLayout {
         ViewCompat.setBackground(this, createBackground());
         TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.RadialViewGroup, i, 0);
         this.radius = obtainStyledAttributes.getDimensionPixelSize(R$styleable.RadialViewGroup_materialCircleRadius, 0);
-        this.updateLayoutParametersRunnable = new Runnable() { // from class: com.google.android.material.timepicker.RadialViewGroup.1
-            @Override // java.lang.Runnable
+        this.updateLayoutParametersRunnable = new Runnable() {
             public void run() {
                 RadialViewGroup.this.updateLayoutParams();
             }
@@ -49,17 +49,15 @@ class RadialViewGroup extends ConstraintLayout {
     private Drawable createBackground() {
         MaterialShapeDrawable materialShapeDrawable = new MaterialShapeDrawable();
         this.background = materialShapeDrawable;
-        materialShapeDrawable.setCornerSize(new RelativeCornerSize(0.5f));
+        materialShapeDrawable.setCornerSize((CornerSize) new RelativeCornerSize(0.5f));
         this.background.setFillColor(ColorStateList.valueOf(-1));
         return this.background;
     }
 
-    @Override // android.view.View
     public void setBackgroundColor(int i) {
         this.background.setFillColor(ColorStateList.valueOf(i));
     }
 
-    @Override // androidx.constraintlayout.widget.ConstraintLayout, android.view.ViewGroup
     public void addView(View view, int i, ViewGroup.LayoutParams layoutParams) {
         super.addView(view, i, layoutParams);
         if (view.getId() == -1) {
@@ -68,7 +66,6 @@ class RadialViewGroup extends ConstraintLayout {
         updateLayoutParamsAsync();
     }
 
-    @Override // androidx.constraintlayout.widget.ConstraintLayout, android.view.ViewGroup
     public void onViewRemoved(View view) {
         super.onViewRemoved(view);
         updateLayoutParamsAsync();
@@ -82,13 +79,14 @@ class RadialViewGroup extends ConstraintLayout {
         }
     }
 
-    @Override // android.view.View
-    protected void onFinishInflate() {
+    /* access modifiers changed from: protected */
+    public void onFinishInflate() {
         super.onFinishInflate();
         updateLayoutParams();
     }
 
-    protected void updateLayoutParams() {
+    /* access modifiers changed from: protected */
+    public void updateLayoutParams() {
         int childCount = getChildCount();
         int i = 1;
         for (int i2 = 0; i2 < childCount; i2++) {
@@ -97,7 +95,7 @@ class RadialViewGroup extends ConstraintLayout {
             }
         }
         ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(this);
+        constraintSet.clone((ConstraintLayout) this);
         float f = 0.0f;
         for (int i3 = 0; i3 < childCount; i3++) {
             View childAt = getChildAt(i3);
@@ -105,7 +103,7 @@ class RadialViewGroup extends ConstraintLayout {
             int i4 = R$id.circle_center;
             if (id != i4 && !shouldSkipView(childAt)) {
                 constraintSet.constrainCircle(childAt.getId(), i4, this.radius, f);
-                f += 360.0f / (childCount - i);
+                f += 360.0f / ((float) (childCount - i));
             }
         }
         constraintSet.applyTo(this);

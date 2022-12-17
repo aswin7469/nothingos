@@ -6,10 +6,10 @@ import android.util.FeatureFlagUtils;
 import android.util.Log;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.wifi.tether.WifiTetherBasePreferenceController;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
+
 public class WifiTetherApBandPreferenceController extends WifiTetherBasePreferenceController {
     private boolean m5GHzSupported;
     private boolean m6GHzSupported;
@@ -26,7 +26,6 @@ public class WifiTetherApBandPreferenceController extends WifiTetherBasePreferen
         updatePreferenceEntries();
     }
 
-    @Override // com.android.settings.wifi.tether.WifiTetherBasePreferenceController
     public void updateDisplay() {
         SoftApConfiguration softApConfiguration = this.mWifiManager.getSoftApConfiguration();
         syncBandSupportAndCountryCode();
@@ -34,16 +33,14 @@ public class WifiTetherApBandPreferenceController extends WifiTetherBasePreferen
             this.mBandIndex = 1;
             Log.d("WifiTetherApBandPref", "Updating band index to BAND_2GHZ because no config");
         } else if (is5GhzBandSupported() || is6GhzBandSupported()) {
-            if (softApConfiguration.getBands().length == 2) {
-                if (softApConfiguration.getSecurityType() == 4) {
-                    this.mWifiManager.setSoftApConfiguration(new SoftApConfiguration.Builder(softApConfiguration).setBand(1).build());
-                    this.mBandIndex = 1;
-                    Log.d("WifiTetherApBandPref", "Dual band not supported with OWE, updating band index to 2GHz");
-                } else {
-                    this.mBandIndex = 16;
-                }
-            } else {
+            if (softApConfiguration.getBands().length != 2) {
                 this.mBandIndex = validateSelection(softApConfiguration.getBand());
+            } else if (softApConfiguration.getSecurityType() == 4) {
+                this.mWifiManager.setSoftApConfiguration(new SoftApConfiguration.Builder(softApConfiguration).setBand(1).build());
+                this.mBandIndex = 1;
+                Log.d("WifiTetherApBandPref", "Dual band not supported with OWE, updating band index to 2GHz");
+            } else {
+                this.mBandIndex = 16;
             }
             Log.d("WifiTetherApBandPref", "Updating band index to " + this.mBandIndex);
         } else {
@@ -52,39 +49,38 @@ public class WifiTetherApBandPreferenceController extends WifiTetherBasePreferen
             Log.d("WifiTetherApBandPref", "5Ghz/6Ghz not supported, updating band index to 2GHz");
         }
         ListPreference listPreference = (ListPreference) this.mPreference;
-        listPreference.setEntries(this.mBandSummaries);
+        listPreference.setEntries((CharSequence[]) this.mBandSummaries);
         listPreference.setEntryValues(this.mBandEntries);
-        if (!is5GhzBandSupported() && !is6GhzBandSupported()) {
-            listPreference.setEnabled(false);
-            listPreference.setSummary(R.string.wifi_ap_choose_2G);
+        if (is5GhzBandSupported() || is6GhzBandSupported()) {
+            listPreference.setValue(Integer.toString(this.mBandIndex));
+            listPreference.setSummary(getConfigSummary());
             return;
         }
-        listPreference.setValue(Integer.toString(this.mBandIndex));
-        listPreference.setSummary(getConfigSummary());
+        listPreference.setEnabled(false);
+        listPreference.setSummary(R$string.wifi_ap_choose_2G);
     }
 
-    String getConfigSummary() {
+    /* access modifiers changed from: package-private */
+    public String getConfigSummary() {
         int i = this.mBandIndex;
-        if (i != 1) {
-            if (i == 3 || i == 5 || i == 16) {
-                return this.mBandSummaries[((ListPreference) this.mPreference).findIndexOfValue(String.valueOf(i))];
-            }
-            return this.mContext.getString(R.string.wifi_ap_prefer_5G);
+        if (i == 1) {
+            return this.mBandSummaries[0];
         }
-        return this.mBandSummaries[0];
+        if (i == 3 || i == 5 || i == 16) {
+            return this.mBandSummaries[((ListPreference) this.mPreference).findIndexOfValue(String.valueOf(i))];
+        }
+        return this.mContext.getString(R$string.wifi_ap_prefer_5G);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return FeatureFlagUtils.isEnabled(this.mContext, "settings_tether_all_in_one") ? "wifi_tether_network_ap_band_2" : "wifi_tether_network_ap_band";
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         syncBandSupportAndCountryCode();
         this.mBandIndex = validateSelection(Integer.parseInt((String) obj));
         Log.d("WifiTetherApBandPref", "Band preference changed, updating band index to " + this.mBandIndex);
-        preference.setSummary(getConfigSummary());
+        preference.setSummary((CharSequence) getConfigSummary());
         this.mListener.onTetherConfigUpdated(this);
         return true;
     }
@@ -94,31 +90,34 @@ public class WifiTetherApBandPreferenceController extends WifiTetherBasePreferen
             if (!is5GhzBandSupported()) {
                 return 1;
             }
-        } else if (i == 5 && !is6GhzBandSupported()) {
-            return 1;
+        } else if ((i & 4) != 0) {
+            if (!is6GhzBandSupported()) {
+                return 1;
+            }
+            return 5;
         }
         return i;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void updatePreferenceEntries() {
         SoftApConfiguration softApConfiguration = this.mWifiManager.getSoftApConfiguration();
         this.mContext.getResources();
         ArrayList arrayList = new ArrayList();
         ArrayList arrayList2 = new ArrayList();
         arrayList.add(String.valueOf(1));
-        arrayList2.add(this.mContext.getString(R.string.wifi_ap_choose_2G));
+        arrayList2.add(this.mContext.getString(R$string.wifi_ap_choose_2G));
         if (is5GhzBandSupported()) {
             arrayList.add(String.valueOf(3));
-            arrayList2.add(this.mContext.getString(R.string.wifi_ap_prefer_5G));
+            arrayList2.add(this.mContext.getString(R$string.wifi_ap_prefer_5G));
         }
         if (is6GhzBandSupported()) {
             arrayList.add(String.valueOf(5));
-            arrayList2.add(this.mContext.getString(R.string.wifi_ap_prefer_6G));
+            arrayList2.add(this.mContext.getString(R$string.wifi_ap_prefer_6G));
         }
         if (is5GhzBandSupported() && ((this.mWifiManager.isBridgedApConcurrencySupported() || isVendorLegacyDualBandSupported()) && softApConfiguration != null && softApConfiguration.getSecurityType() != 4 && this.mWifiManager.isConcurrentBandSupported())) {
             arrayList.add(String.valueOf(16));
-            arrayList2.add(this.mContext.getString(R.string.wifi_ap_choose_vendor_dual_band));
+            arrayList2.add(this.mContext.getString(R$string.wifi_ap_choose_vendor_dual_band));
         }
         this.mBandEntries = (String[]) arrayList.toArray(new String[arrayList.size()]);
         this.mBandSummaries = (String[]) arrayList2.toArray(new String[arrayList2.size()]);
@@ -144,6 +143,6 @@ public class WifiTetherApBandPreferenceController extends WifiTetherBasePreferen
     }
 
     private boolean isVendorLegacyDualBandSupported() {
-        return this.mContext.getResources().getBoolean(17891709);
+        return this.mContext.getResources().getBoolean(17891835);
     }
 }

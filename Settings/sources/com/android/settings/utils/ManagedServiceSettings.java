@@ -20,25 +20,26 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.Utils;
 import com.android.settings.core.instrumentation.InstrumentedDialogFragment;
 import com.android.settings.widget.EmptyTextSettings;
 import com.android.settingslib.applications.ServiceListing;
 import com.android.settingslib.widget.AppSwitchPreference;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public abstract class ManagedServiceSettings extends EmptyTextSettings {
-    private final Config mConfig = getConfig();
+    /* access modifiers changed from: private */
+    public final Config mConfig = getConfig();
     protected Context mContext;
     private DevicePolicyManager mDpm;
     private IconDrawableFactory mIconDrawableFactory;
     private PackageManager mPm;
     private ServiceListing mServiceListing;
 
-    protected abstract Config getConfig();
+    /* access modifiers changed from: protected */
+    public abstract Config getConfig();
 
-    @Override // com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         FragmentActivity activity = getActivity();
@@ -48,93 +49,84 @@ public abstract class ManagedServiceSettings extends EmptyTextSettings {
         this.mIconDrawableFactory = IconDrawableFactory.newInstance(this.mContext);
         ServiceListing build = new ServiceListing.Builder(this.mContext).setPermission(this.mConfig.permission).setIntentAction(this.mConfig.intentAction).setNoun(this.mConfig.noun).setSetting(this.mConfig.setting).setTag(this.mConfig.tag).build();
         this.mServiceListing = build;
-        build.addCallback(new ServiceListing.Callback() { // from class: com.android.settings.utils.ManagedServiceSettings$$ExternalSyntheticLambda1
-            @Override // com.android.settingslib.applications.ServiceListing.Callback
-            public final void onServicesReloaded(List list) {
-                ManagedServiceSettings.this.updateList(list);
-            }
-        });
+        build.addCallback(new ManagedServiceSettings$$ExternalSyntheticLambda0(this));
         setPreferenceScreen(getPreferenceManager().createPreferenceScreen(this.mContext));
     }
 
-    @Override // com.android.settings.widget.EmptyTextSettings, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
         setEmptyText(this.mConfig.emptyText);
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
         this.mServiceListing.reload();
         this.mServiceListing.setListening(true);
     }
 
-    @Override // com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onPause() {
         super.onPause();
         this.mServiceListing.setListening(false);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateList(List<ServiceInfo> list) {
         int managedProfileId = Utils.getManagedProfileId((UserManager) this.mContext.getSystemService("user"), UserHandle.myUserId());
         PreferenceScreen preferenceScreen = getPreferenceScreen();
         preferenceScreen.removeAll();
         list.sort(new PackageItemInfo.DisplayNameComparator(this.mPm));
-        for (ServiceInfo serviceInfo : list) {
-            final ComponentName componentName = new ComponentName(serviceInfo.packageName, serviceInfo.name);
-            final CharSequence charSequence = null;
+        for (ServiceInfo next : list) {
+            ComponentName componentName = new ComponentName(next.packageName, next.name);
+            CharSequence charSequence = null;
             try {
-                charSequence = this.mPm.getApplicationInfoAsUser(serviceInfo.packageName, 0, UserHandle.myUserId()).loadLabel(this.mPm);
+                charSequence = this.mPm.getApplicationInfoAsUser(next.packageName, 0, UserHandle.myUserId()).loadLabel(this.mPm);
             } catch (PackageManager.NameNotFoundException e) {
                 Log.e("ManagedServiceSettings", "can't find package name", e);
             }
-            String charSequence2 = serviceInfo.loadLabel(this.mPm).toString();
+            String charSequence2 = next.loadLabel(this.mPm).toString();
             AppSwitchPreference appSwitchPreference = new AppSwitchPreference(getPrefContext());
             appSwitchPreference.setPersistent(false);
             IconDrawableFactory iconDrawableFactory = this.mIconDrawableFactory;
-            ApplicationInfo applicationInfo = serviceInfo.applicationInfo;
-            appSwitchPreference.setIcon(iconDrawableFactory.getBadgedIcon(serviceInfo, applicationInfo, UserHandle.getUserId(applicationInfo.uid)));
-            if (charSequence != null && !charSequence.equals(charSequence2)) {
-                appSwitchPreference.setTitle(charSequence);
-                appSwitchPreference.setSummary(charSequence2);
+            ApplicationInfo applicationInfo = next.applicationInfo;
+            appSwitchPreference.setIcon(iconDrawableFactory.getBadgedIcon(next, applicationInfo, UserHandle.getUserId(applicationInfo.uid)));
+            if (charSequence == null || charSequence.equals(charSequence2)) {
+                appSwitchPreference.setTitle((CharSequence) charSequence2);
             } else {
-                appSwitchPreference.setTitle(charSequence2);
+                appSwitchPreference.setTitle(charSequence);
+                appSwitchPreference.setSummary((CharSequence) charSequence2);
             }
             appSwitchPreference.setKey(componentName.flattenToString());
             appSwitchPreference.setChecked(isServiceEnabled(componentName));
-            if (managedProfileId != -10000 && !this.mDpm.isNotificationListenerServicePermitted(serviceInfo.packageName, managedProfileId)) {
-                appSwitchPreference.setSummary(R.string.work_profile_notification_access_blocked_summary);
+            if (managedProfileId != -10000 && !this.mDpm.isNotificationListenerServicePermitted(next.packageName, managedProfileId)) {
+                appSwitchPreference.setSummary((CharSequence) this.mDpm.getResources().getString("Settings.WORK_PROFILE_NOTIFICATION_LISTENER_BLOCKED", new ManagedServiceSettings$$ExternalSyntheticLambda1(this)));
             }
-            appSwitchPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() { // from class: com.android.settings.utils.ManagedServiceSettings$$ExternalSyntheticLambda0
-                @Override // androidx.preference.Preference.OnPreferenceChangeListener
-                public final boolean onPreferenceChange(Preference preference, Object obj) {
-                    boolean lambda$updateList$0;
-                    lambda$updateList$0 = ManagedServiceSettings.this.lambda$updateList$0(charSequence, componentName, preference, obj);
-                    return lambda$updateList$0;
-                }
-            });
+            appSwitchPreference.setOnPreferenceChangeListener(new ManagedServiceSettings$$ExternalSyntheticLambda2(this, charSequence, componentName));
             appSwitchPreference.setKey(componentName.flattenToString());
             preferenceScreen.addPreference(appSwitchPreference);
         }
         highlightPreferenceIfNeeded();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ boolean lambda$updateList$0(CharSequence charSequence, ComponentName componentName, Preference preference, Object obj) {
+    /* access modifiers changed from: private */
+    public /* synthetic */ String lambda$updateList$0() {
+        return getString(R$string.work_profile_notification_access_blocked_summary);
+    }
+
+    /* access modifiers changed from: private */
+    public /* synthetic */ boolean lambda$updateList$1(CharSequence charSequence, ComponentName componentName, Preference preference, Object obj) {
         boolean booleanValue = ((Boolean) obj).booleanValue();
         if (charSequence != null) {
             return setEnabled(componentName, charSequence.toString(), booleanValue);
         }
-        return setEnabled(componentName, null, booleanValue);
+        return setEnabled(componentName, (String) null, booleanValue);
     }
 
-    protected boolean isServiceEnabled(ComponentName componentName) {
+    /* access modifiers changed from: protected */
+    public boolean isServiceEnabled(ComponentName componentName) {
         return this.mServiceListing.isEnabled(componentName);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean setEnabled(ComponentName componentName, String str, boolean z) {
         if (!z) {
             this.mServiceListing.setEnabled(componentName, false);
@@ -147,18 +139,16 @@ public abstract class ManagedServiceSettings extends EmptyTextSettings {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void enable(ComponentName componentName) {
         this.mServiceListing.setEnabled(componentName, true);
     }
 
-    /* loaded from: classes.dex */
     public static class ScaryWarningDialogFragment extends InstrumentedDialogFragment {
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public static /* synthetic */ void lambda$onCreateDialog$1(DialogInterface dialogInterface, int i) {
         }
 
-        @Override // com.android.settingslib.core.instrumentation.Instrumentable
         public int getMetricsCategory() {
             return 557;
         }
@@ -172,22 +162,15 @@ public abstract class ManagedServiceSettings extends EmptyTextSettings {
             return this;
         }
 
-        @Override // androidx.fragment.app.DialogFragment
         public Dialog onCreateDialog(Bundle bundle) {
             Bundle arguments = getArguments();
             String string = arguments.getString("l");
-            final ComponentName unflattenFromString = ComponentName.unflattenFromString(arguments.getString("c"));
-            final ManagedServiceSettings managedServiceSettings = (ManagedServiceSettings) getTargetFragment();
-            return new AlertDialog.Builder(getContext()).setMessage(getResources().getString(managedServiceSettings.mConfig.warningDialogSummary, string)).setTitle(getResources().getString(managedServiceSettings.mConfig.warningDialogTitle, string)).setCancelable(true).setPositiveButton(R.string.allow, new DialogInterface.OnClickListener() { // from class: com.android.settings.utils.ManagedServiceSettings$ScaryWarningDialogFragment$$ExternalSyntheticLambda0
-                @Override // android.content.DialogInterface.OnClickListener
-                public final void onClick(DialogInterface dialogInterface, int i) {
-                    ManagedServiceSettings.this.enable(unflattenFromString);
-                }
-            }).setNegativeButton(R.string.deny, ManagedServiceSettings$ScaryWarningDialogFragment$$ExternalSyntheticLambda1.INSTANCE).create();
+            ComponentName unflattenFromString = ComponentName.unflattenFromString(arguments.getString("c"));
+            ManagedServiceSettings managedServiceSettings = (ManagedServiceSettings) getTargetFragment();
+            return new AlertDialog.Builder(getContext()).setMessage((CharSequence) getResources().getString(managedServiceSettings.mConfig.warningDialogSummary, new Object[]{string})).setTitle((CharSequence) getResources().getString(managedServiceSettings.mConfig.warningDialogTitle, new Object[]{string})).setCancelable(true).setPositiveButton(R$string.allow, (DialogInterface.OnClickListener) new C1387xc9287076(managedServiceSettings, unflattenFromString)).setNegativeButton(R$string.deny, (DialogInterface.OnClickListener) new C1388xc9287077()).create();
         }
     }
 
-    /* loaded from: classes.dex */
     public static class Config {
         public final String configIntentAction;
         public final int emptyText;
@@ -211,7 +194,6 @@ public abstract class ManagedServiceSettings extends EmptyTextSettings {
             this.configIntentAction = str4;
         }
 
-        /* loaded from: classes.dex */
         public static class Builder {
             private String mConfigIntentAction;
             private int mEmptyText;

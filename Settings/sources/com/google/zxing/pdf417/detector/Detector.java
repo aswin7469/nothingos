@@ -6,11 +6,10 @@ import com.google.zxing.NotFoundException;
 import com.google.zxing.ResultPoint;
 import com.google.zxing.common.BitArray;
 import com.google.zxing.common.BitMatrix;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-/* loaded from: classes2.dex */
+
 public final class Detector {
     private static final int[] INDEXES_START_PATTERN = {0, 4, 1, 5};
     private static final int[] INDEXES_STOP_PATTERN = {6, 2, 7, 3};
@@ -27,68 +26,109 @@ public final class Detector {
         return new PDF417DetectorResult(blackMatrix, detect);
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:10:0x001d, code lost:
-        if (r5 != 0) goto L11;
+    /* JADX WARNING: Code restructure failed: missing block: B:11:0x0028, code lost:
+        if (r4.hasNext() == false) goto L_0x004c;
      */
-    /* JADX WARN: Code restructure failed: missing block: B:11:0x0020, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:12:0x002a, code lost:
+        r5 = (com.google.zxing.ResultPoint[]) r4.next();
+        r7 = r5[1];
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:13:0x0032, code lost:
+        if (r7 == null) goto L_0x003e;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:14:0x0034, code lost:
+        r3 = (int) java.lang.Math.max((float) r3, r7.getY());
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:15:0x003e, code lost:
+        r5 = r5[3];
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:16:0x0040, code lost:
+        if (r5 == null) goto L_0x0024;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:17:0x0042, code lost:
+        r3 = java.lang.Math.max(r3, (int) r5.getY());
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:8:0x001d, code lost:
+        if (r5 != 0) goto L_0x0020;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:9:0x0020, code lost:
         r4 = r0.iterator();
      */
-    /* JADX WARN: Code restructure failed: missing block: B:13:0x0028, code lost:
-        if (r4.hasNext() == false) goto L24;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:14:0x002a, code lost:
-        r5 = (com.google.zxing.ResultPoint[]) r4.next();
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:15:0x0032, code lost:
-        if (r5[1] == null) goto L17;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:16:0x0034, code lost:
-        r3 = (int) java.lang.Math.max(r3, r5[1].getY());
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:18:0x0042, code lost:
-        if (r5[3] == null) goto L23;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:20:0x0044, code lost:
-        r3 = java.lang.Math.max(r3, (int) r5[3].getY());
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private static List<ResultPoint[]> detect(boolean z, BitMatrix bitMatrix) {
-        int x;
-        float y;
-        ArrayList arrayList = new ArrayList();
-        int i = 0;
-        int i2 = 0;
-        loop0: while (true) {
-            int i3 = i2;
-            while (true) {
-                if (i >= bitMatrix.getHeight()) {
-                    break loop0;
-                }
-                ResultPoint[] findVertices = findVertices(bitMatrix, i, i2);
-                if (findVertices[0] == null && findVertices[3] == null) {
-                    break;
-                }
-                arrayList.add(findVertices);
-                if (!z) {
-                    break loop0;
-                }
-                if (findVertices[2] != null) {
-                    x = (int) findVertices[2].getX();
-                    y = findVertices[2].getY();
-                } else {
-                    x = (int) findVertices[4].getX();
-                    y = findVertices[4].getY();
-                }
-                i = (int) y;
-                i2 = x;
-                i3 = 1;
-            }
-            i += 5;
-            i2 = 0;
-        }
-        return arrayList;
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private static java.util.List<com.google.zxing.ResultPoint[]> detect(boolean r8, com.google.zxing.common.BitMatrix r9) {
+        /*
+            java.util.ArrayList r0 = new java.util.ArrayList
+            r0.<init>()
+            r1 = 1
+            r2 = 0
+            r3 = r2
+            r4 = r3
+        L_0x0009:
+            r5 = r4
+        L_0x000a:
+            int r6 = r9.getHeight()
+            if (r3 >= r6) goto L_0x0079
+            com.google.zxing.ResultPoint[] r4 = findVertices(r9, r3, r4)
+            r6 = r4[r2]
+            if (r6 != 0) goto L_0x0050
+            r6 = 3
+            r7 = r4[r6]
+            if (r7 != 0) goto L_0x0050
+            if (r5 != 0) goto L_0x0020
+            goto L_0x0079
+        L_0x0020:
+            java.util.Iterator r4 = r0.iterator()
+        L_0x0024:
+            boolean r5 = r4.hasNext()
+            if (r5 == 0) goto L_0x004c
+            java.lang.Object r5 = r4.next()
+            com.google.zxing.ResultPoint[] r5 = (com.google.zxing.ResultPoint[]) r5
+            r7 = r5[r1]
+            if (r7 == 0) goto L_0x003e
+            float r3 = (float) r3
+            float r7 = r7.getY()
+            float r3 = java.lang.Math.max(r3, r7)
+            int r3 = (int) r3
+        L_0x003e:
+            r5 = r5[r6]
+            if (r5 == 0) goto L_0x0024
+            float r5 = r5.getY()
+            int r5 = (int) r5
+            int r3 = java.lang.Math.max(r3, r5)
+            goto L_0x0024
+        L_0x004c:
+            int r3 = r3 + 5
+            r4 = r2
+            goto L_0x0009
+        L_0x0050:
+            r0.add(r4)
+            if (r8 != 0) goto L_0x0056
+            goto L_0x0079
+        L_0x0056:
+            r3 = 2
+            r5 = r4[r3]
+            if (r5 == 0) goto L_0x0067
+            float r5 = r5.getX()
+            int r5 = (int) r5
+            r3 = r4[r3]
+            float r3 = r3.getY()
+            goto L_0x0075
+        L_0x0067:
+            r3 = 4
+            r5 = r4[r3]
+            float r5 = r5.getX()
+            int r5 = (int) r5
+            r3 = r4[r3]
+            float r3 = r3.getY()
+        L_0x0075:
+            int r3 = (int) r3
+            r4 = r5
+            r5 = r1
+            goto L_0x000a
+        L_0x0079:
+            return r0
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.pdf417.detector.Detector.detect(boolean, com.google.zxing.common.BitMatrix):java.util.List");
     }
 
     static void rotate180(BitMatrix bitMatrix) {
@@ -121,8 +161,9 @@ public final class Detector {
         int width = bitMatrix.getWidth();
         ResultPoint[] resultPointArr = new ResultPoint[8];
         copyToResult(resultPointArr, findRowsWithPattern(bitMatrix, height, width, i, i2, START_PATTERN), INDEXES_START_PATTERN);
-        if (resultPointArr[4] != null) {
-            i2 = (int) resultPointArr[4].getX();
+        ResultPoint resultPoint = resultPointArr[4];
+        if (resultPoint != null) {
+            i2 = (int) resultPoint.getX();
             i = (int) resultPointArr[4].getY();
         }
         copyToResult(resultPointArr, findRowsWithPattern(bitMatrix, height, width, i, i2, STOP_PATTERN), INDEXES_STOP_PATTERN);
@@ -141,72 +182,73 @@ public final class Detector {
         int i6;
         int i7;
         int i8;
+        int i9 = i;
         ResultPoint[] resultPointArr = new ResultPoint[4];
         int[] iArr2 = new int[iArr.length];
-        int i9 = i3;
+        int i10 = i3;
         while (true) {
-            if (i9 >= i) {
+            if (i10 >= i9) {
                 z = false;
                 break;
             }
-            int[] findGuardPattern = findGuardPattern(bitMatrix, i4, i9, i2, false, iArr, iArr2);
+            int[] findGuardPattern = findGuardPattern(bitMatrix, i4, i10, i2, false, iArr, iArr2);
             if (findGuardPattern != null) {
-                int i10 = i9;
-                int[] iArr3 = findGuardPattern;
                 int i11 = i10;
+                int[] iArr3 = findGuardPattern;
+                int i12 = i11;
                 while (true) {
-                    if (i11 <= 0) {
-                        i8 = i11;
+                    if (i12 <= 0) {
+                        i8 = i12;
                         break;
                     }
-                    int i12 = i11 - 1;
-                    int[] findGuardPattern2 = findGuardPattern(bitMatrix, i4, i12, i2, false, iArr, iArr2);
+                    int i13 = i12 - 1;
+                    int[] findGuardPattern2 = findGuardPattern(bitMatrix, i4, i13, i2, false, iArr, iArr2);
                     if (findGuardPattern2 == null) {
-                        i8 = i12 + 1;
+                        i8 = i13 + 1;
                         break;
                     }
                     iArr3 = findGuardPattern2;
-                    i11 = i12;
+                    i12 = i13;
                 }
-                float f = i8;
-                resultPointArr[0] = new ResultPoint(iArr3[0], f);
-                resultPointArr[1] = new ResultPoint(iArr3[1], f);
+                float f = (float) i8;
+                resultPointArr[0] = new ResultPoint((float) iArr3[0], f);
+                resultPointArr[1] = new ResultPoint((float) iArr3[1], f);
                 z = true;
-                i9 = i8;
+                i10 = i8;
             } else {
-                i9 += 5;
+                i10 += 5;
             }
         }
-        int i13 = i9 + 1;
+        int i14 = i10 + 1;
         if (z) {
             int[] iArr4 = {(int) resultPointArr[0].getX(), (int) resultPointArr[1].getX()};
-            int i14 = i13;
-            int i15 = 0;
+            int i15 = i14;
+            int i16 = 0;
             while (true) {
-                if (i14 >= i) {
-                    i6 = i15;
-                    i7 = i14;
+                if (i15 >= i9) {
+                    i6 = i16;
+                    i7 = i15;
                     break;
                 }
-                i6 = i15;
-                i7 = i14;
-                int[] findGuardPattern3 = findGuardPattern(bitMatrix, iArr4[0], i14, i2, false, iArr, iArr2);
+                i6 = i16;
+                i7 = i15;
+                int[] findGuardPattern3 = findGuardPattern(bitMatrix, iArr4[0], i15, i2, false, iArr, iArr2);
                 if (findGuardPattern3 != null && Math.abs(iArr4[0] - findGuardPattern3[0]) < 5 && Math.abs(iArr4[1] - findGuardPattern3[1]) < 5) {
                     iArr4 = findGuardPattern3;
-                    i15 = 0;
+                    i16 = 0;
                 } else if (i6 > 25) {
                     break;
                 } else {
-                    i15 = i6 + 1;
+                    i16 = i6 + 1;
                 }
-                i14 = i7 + 1;
+                i15 = i7 + 1;
             }
-            i13 = i7 - (i6 + 1);
-            float f2 = i13;
-            resultPointArr[2] = new ResultPoint(iArr4[0], f2);
-            resultPointArr[3] = new ResultPoint(iArr4[1], f2);
+            i14 = i7 - (i6 + 1);
+            float f2 = (float) i14;
+            resultPointArr[2] = new ResultPoint((float) iArr4[0], f2);
+            resultPointArr[3] = new ResultPoint((float) iArr4[1], f2);
         }
-        if (i13 - i9 < 10) {
+        if (i14 - i10 < 10) {
             for (i5 = 0; i5 < 4; i5++) {
                 resultPointArr[i5] = null;
             }

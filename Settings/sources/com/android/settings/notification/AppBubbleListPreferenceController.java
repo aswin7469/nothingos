@@ -11,17 +11,16 @@ import android.widget.ImageView;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceViewHolder;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
 import com.android.settings.notification.NotificationBackend;
 import com.android.settings.notification.app.AppConversationListPreferenceController;
-import com.android.settings.notification.app.NotificationPreferenceController;
 import com.android.settingslib.RestrictedLockUtils;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-/* loaded from: classes.dex */
+
 public class AppBubbleListPreferenceController extends AppConversationListPreferenceController {
-    @Override // com.android.settings.notification.app.AppConversationListPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "bubble_conversations";
     }
@@ -30,75 +29,64 @@ public class AppBubbleListPreferenceController extends AppConversationListPrefer
         super(context, notificationBackend);
     }
 
-    @Override // com.android.settings.notification.app.AppConversationListPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         preference.setVisible(false);
         super.updateState(preference);
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController
     public void onResume(NotificationBackend.AppRow appRow, NotificationChannel notificationChannel, NotificationChannelGroup notificationChannelGroup, Drawable drawable, ShortcutInfo shortcutInfo, RestrictedLockUtils.EnforcedAdmin enforcedAdmin, List<String> list) {
         super.onResume(appRow, notificationChannel, notificationChannelGroup, drawable, shortcutInfo, enforcedAdmin, list);
         loadConversationsAndPopulate();
     }
 
-    @Override // com.android.settings.notification.app.AppConversationListPreferenceController, com.android.settings.notification.app.NotificationPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         NotificationBackend.AppRow appRow = this.mAppRow;
-        if (appRow != null && !appRow.banned) {
-            return (this.mChannel == null || (!this.mBackend.onlyHasDefaultChannel(appRow.pkg, appRow.uid) && !"miscellaneous".equals(this.mChannel.getId()))) && this.mAppRow.bubblePreference != 0;
+        if (appRow == null || appRow.banned) {
+            return false;
+        }
+        if ((this.mChannel == null || (!this.mBackend.onlyHasDefaultChannel(appRow.pkg, appRow.uid) && !"miscellaneous".equals(this.mChannel.getId()))) && this.mAppRow.bubblePreference != 0) {
+            return true;
         }
         return false;
     }
 
-    @Override // com.android.settings.notification.app.AppConversationListPreferenceController
     public List<ConversationChannelWrapper> filterAndSortConversations(List<ConversationChannelWrapper> list) {
-        return (List) list.stream().sorted(this.mConversationComparator).filter(new Predicate() { // from class: com.android.settings.notification.AppBubbleListPreferenceController$$ExternalSyntheticLambda1
-            @Override // java.util.function.Predicate
-            public final boolean test(Object obj) {
-                boolean lambda$filterAndSortConversations$0;
-                lambda$filterAndSortConversations$0 = AppBubbleListPreferenceController.this.lambda$filterAndSortConversations$0((ConversationChannelWrapper) obj);
-                return lambda$filterAndSortConversations$0;
-            }
-        }).collect(Collectors.toList());
+        return (List) list.stream().sorted(this.mConversationComparator).filter(new AppBubbleListPreferenceController$$ExternalSyntheticLambda1(this)).collect(Collectors.toList());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ boolean lambda$filterAndSortConversations$0(ConversationChannelWrapper conversationChannelWrapper) {
         int i = this.mAppRow.bubblePreference;
         if (i == 2) {
             return conversationChannelWrapper.getNotificationChannel().canBubble();
         }
-        return i == 1 && conversationChannelWrapper.getNotificationChannel().getAllowBubbles() == 0;
-    }
-
-    @Override // com.android.settings.notification.app.AppConversationListPreferenceController
-    protected int getTitleResId() {
-        if (this.mAppRow.bubblePreference == 2) {
-            return R.string.bubble_app_setting_selected_conversation_title;
+        if (i == 1 && conversationChannelWrapper.getNotificationChannel().getAllowBubbles() == 0) {
+            return true;
         }
-        return R.string.bubble_app_setting_excluded_conversation_title;
+        return false;
     }
 
-    @Override // com.android.settings.notification.app.AppConversationListPreferenceController
-    public Preference createConversationPref(final ConversationChannelWrapper conversationChannelWrapper) {
-        final ConversationPreference conversationPreference = new ConversationPreference(((NotificationPreferenceController) this).mContext);
+    /* access modifiers changed from: protected */
+    public int getTitleResId() {
+        if (this.mAppRow.bubblePreference == 2) {
+            return R$string.bubble_app_setting_selected_conversation_title;
+        }
+        return R$string.bubble_app_setting_excluded_conversation_title;
+    }
+
+    public Preference createConversationPref(ConversationChannelWrapper conversationChannelWrapper) {
+        ConversationPreference conversationPreference = new ConversationPreference(this.mContext);
         populateConversationPreference(conversationChannelWrapper, conversationPreference);
         boolean z = true;
         if (this.mAppRow.bubblePreference != 1) {
             z = false;
         }
         conversationPreference.setOnClickBubblesConversation(z);
-        conversationPreference.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.notification.AppBubbleListPreferenceController$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                AppBubbleListPreferenceController.this.lambda$createConversationPref$1(conversationChannelWrapper, conversationPreference, view);
-            }
-        });
+        conversationPreference.setOnClickListener(new AppBubbleListPreferenceController$$ExternalSyntheticLambda0(this, conversationChannelWrapper, conversationPreference));
         return conversationPreference;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$createConversationPref$1(ConversationChannelWrapper conversationChannelWrapper, ConversationPreference conversationPreference, View view) {
         conversationChannelWrapper.getNotificationChannel().setAllowBubbles(-1);
         NotificationBackend notificationBackend = this.mBackend;
@@ -110,38 +98,34 @@ public class AppBubbleListPreferenceController extends AppConversationListPrefer
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.notification.app.AppConversationListPreferenceController
+    /* access modifiers changed from: protected */
     public void populateList() {
         super.populateList();
         PreferenceCategory preferenceCategory = this.mPreference;
-        if (preferenceCategory == null) {
-            return;
+        if (preferenceCategory != null) {
+            preferenceCategory.setVisible(preferenceCategory.getPreferenceCount() > 0);
         }
-        preferenceCategory.setVisible(preferenceCategory.getPreferenceCount() > 0);
     }
 
-    /* loaded from: classes.dex */
     public static class ConversationPreference extends Preference implements View.OnClickListener {
         boolean mOnClickBubbles;
         View.OnClickListener mOnClickListener;
 
         ConversationPreference(Context context) {
             super(context);
-            setWidgetLayoutResource(R.layout.bubble_conversation_remove_button);
+            setWidgetLayoutResource(R$layout.bubble_conversation_remove_button);
         }
 
-        @Override // androidx.preference.Preference
         public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
-            String string;
+            String str;
             super.onBindViewHolder(preferenceViewHolder);
-            ImageView imageView = (ImageView) preferenceViewHolder.itemView.findViewById(R.id.button);
+            ImageView imageView = (ImageView) preferenceViewHolder.itemView.findViewById(R$id.button);
             if (this.mOnClickBubbles) {
-                string = getContext().getString(R.string.bubble_app_setting_bubble_conversation);
+                str = getContext().getString(R$string.bubble_app_setting_bubble_conversation);
             } else {
-                string = getContext().getString(R.string.bubble_app_setting_unbubble_conversation);
+                str = getContext().getString(R$string.bubble_app_setting_unbubble_conversation);
             }
-            imageView.setContentDescription(string);
+            imageView.setContentDescription(str);
             imageView.setOnClickListener(this.mOnClickListener);
         }
 
@@ -153,7 +137,6 @@ public class AppBubbleListPreferenceController extends AppConversationListPrefer
             this.mOnClickListener = onClickListener;
         }
 
-        @Override // android.view.View.OnClickListener
         public void onClick(View view) {
             View.OnClickListener onClickListener = this.mOnClickListener;
             if (onClickListener != null) {

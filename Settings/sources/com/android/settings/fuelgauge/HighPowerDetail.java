@@ -3,6 +3,7 @@ package com.android.settings.fuelgauge;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
@@ -10,12 +11,14 @@ import android.widget.Checkable;
 import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
 import com.android.settings.core.instrumentation.InstrumentedDialogFragment;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settingslib.applications.ApplicationsState;
 import com.android.settingslib.fuelgauge.PowerAllowlistBackend;
-/* loaded from: classes.dex */
+
 public class HighPowerDetail extends InstrumentedDialogFragment implements DialogInterface.OnClickListener, View.OnClickListener {
     PowerAllowlistBackend mBackend;
     BatteryUtils mBatteryUtils;
@@ -27,12 +30,10 @@ public class HighPowerDetail extends InstrumentedDialogFragment implements Dialo
     String mPackageName;
     int mPackageUid;
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 540;
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableDialogFragment, androidx.fragment.app.DialogFragment, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         Context context = getContext();
@@ -56,8 +57,8 @@ public class HighPowerDetail extends InstrumentedDialogFragment implements Dialo
     }
 
     public Checkable setup(View view, boolean z) {
-        ((TextView) view.findViewById(16908310)).setText(z ? R.string.ignore_optimizations_on : R.string.ignore_optimizations_off);
-        ((TextView) view.findViewById(16908304)).setText(z ? R.string.ignore_optimizations_on_desc : R.string.ignore_optimizations_off_desc);
+        ((TextView) view.findViewById(16908310)).setText(z ? R$string.ignore_optimizations_on : R$string.ignore_optimizations_off);
+        ((TextView) view.findViewById(16908304)).setText(z ? R$string.ignore_optimizations_on_desc : R$string.ignore_optimizations_off_desc);
         view.setClickable(true);
         view.setOnClickListener(this);
         if (!z && this.mBackend.isSysAllowlisted(this.mPackageName)) {
@@ -66,20 +67,18 @@ public class HighPowerDetail extends InstrumentedDialogFragment implements Dialo
         return (Checkable) view;
     }
 
-    @Override // androidx.fragment.app.DialogFragment
     public Dialog onCreateDialog(Bundle bundle) {
-        AlertDialog.Builder view = new AlertDialog.Builder(getContext()).setTitle(this.mLabel).setNegativeButton(R.string.cancel, (DialogInterface.OnClickListener) null).setView(R.layout.ignore_optimizations_content);
+        AlertDialog.Builder view = new AlertDialog.Builder(getContext()).setTitle(this.mLabel).setNegativeButton(R$string.cancel, (DialogInterface.OnClickListener) null).setView(R$layout.ignore_optimizations_content);
         if (!this.mBackend.isSysAllowlisted(this.mPackageName)) {
-            view.setPositiveButton(R.string.done, this);
+            view.setPositiveButton(R$string.done, (DialogInterface.OnClickListener) this);
         }
         return view.create();
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableDialogFragment, androidx.fragment.app.DialogFragment, androidx.fragment.app.Fragment
     public void onStart() {
         super.onStart();
-        this.mOptionOn = setup(getDialog().findViewById(R.id.ignore_on), true);
-        this.mOptionOff = setup(getDialog().findViewById(R.id.ignore_off), false);
+        this.mOptionOn = setup(getDialog().findViewById(R$id.ignore_on), true);
+        this.mOptionOff = setup(getDialog().findViewById(R$id.ignore_off), false);
         updateViews();
     }
 
@@ -88,45 +87,39 @@ public class HighPowerDetail extends InstrumentedDialogFragment implements Dialo
         this.mOptionOff.setChecked(!this.mIsEnabled);
     }
 
-    @Override // android.view.View.OnClickListener
     public void onClick(View view) {
         if (view == this.mOptionOn) {
             this.mIsEnabled = true;
             updateViews();
-        } else if (view != this.mOptionOff) {
-        } else {
+        } else if (view == this.mOptionOff) {
             this.mIsEnabled = false;
             updateViews();
         }
     }
 
-    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialogInterface, int i) {
         boolean z;
-        if (i != -1 || (z = this.mIsEnabled) == this.mBackend.isAllowlisted(this.mPackageName)) {
-            return;
+        if (i == -1 && (z = this.mIsEnabled) != this.mBackend.isAllowlisted(this.mPackageName)) {
+            logSpecialPermissionChange(z, this.mPackageName, getContext());
+            if (z) {
+                this.mBatteryUtils.setForceAppStandby(this.mPackageUid, this.mPackageName, 0);
+                this.mBackend.addApp(this.mPackageName);
+                return;
+            }
+            this.mBackend.removeApp(this.mPackageName);
         }
-        logSpecialPermissionChange(z, this.mPackageName, getContext());
-        if (z) {
-            this.mBatteryUtils.setForceAppStandby(this.mPackageUid, this.mPackageName, 0);
-            this.mBackend.addApp(this.mPackageName);
-            return;
-        }
-        this.mBackend.removeApp(this.mPackageName);
     }
 
     static void logSpecialPermissionChange(boolean z, String str, Context context) {
         FeatureFactory.getFactory(context).getMetricsFeatureProvider().action(context, z ? 765 : 764, str);
     }
 
-    @Override // androidx.fragment.app.DialogFragment, android.content.DialogInterface.OnDismissListener
     public void onDismiss(DialogInterface dialogInterface) {
         super.onDismiss(dialogInterface);
         Fragment targetFragment = getTargetFragment();
-        if (targetFragment == null || targetFragment.getActivity() == null) {
-            return;
+        if (targetFragment != null && targetFragment.getActivity() != null) {
+            targetFragment.onActivityResult(getTargetRequestCode(), 0, (Intent) null);
         }
-        targetFragment.onActivityResult(getTargetRequestCode(), 0, null);
     }
 
     public static CharSequence getSummary(Context context, ApplicationsState.AppEntry appEntry) {
@@ -140,11 +133,11 @@ public class HighPowerDetail extends InstrumentedDialogFragment implements Dialo
     static CharSequence getSummary(Context context, PowerAllowlistBackend powerAllowlistBackend, String str) {
         int i;
         if (powerAllowlistBackend.isSysAllowlisted(str) || powerAllowlistBackend.isDefaultActiveApp(str)) {
-            i = R.string.high_power_system;
+            i = R$string.high_power_system;
         } else if (powerAllowlistBackend.isAllowlisted(str)) {
-            i = R.string.high_power_on;
+            i = R$string.high_power_on;
         } else {
-            i = R.string.high_power_off;
+            i = R$string.high_power_off;
         }
         return context.getString(i);
     }

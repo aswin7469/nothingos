@@ -10,73 +10,57 @@ import android.text.TextUtils;
 import android.util.Log;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.BasePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnStart;
 import com.android.settingslib.core.lifecycle.events.OnStop;
-/* loaded from: classes.dex */
+
 public class BluetoothDeviceNamePreferenceController extends BasePreferenceController implements LifecycleObserver, OnStart, OnStop {
     private static final String TAG = "BluetoothNamePrefCtrl";
     protected BluetoothAdapter mBluetoothAdapter;
     Preference mPreference;
-    final BroadcastReceiver mReceiver = new BroadcastReceiver() { // from class: com.android.settings.bluetooth.BluetoothDeviceNamePreferenceController.1
-        @Override // android.content.BroadcastReceiver
+    final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             BluetoothAdapter bluetoothAdapter;
             String action = intent.getAction();
             if (TextUtils.equals(action, "android.bluetooth.adapter.action.LOCAL_NAME_CHANGED")) {
                 BluetoothDeviceNamePreferenceController bluetoothDeviceNamePreferenceController = BluetoothDeviceNamePreferenceController.this;
-                if (bluetoothDeviceNamePreferenceController.mPreference == null || (bluetoothAdapter = bluetoothDeviceNamePreferenceController.mBluetoothAdapter) == null || !bluetoothAdapter.isEnabled()) {
-                    return;
+                if (bluetoothDeviceNamePreferenceController.mPreference != null && (bluetoothAdapter = bluetoothDeviceNamePreferenceController.mBluetoothAdapter) != null && bluetoothAdapter.isEnabled()) {
+                    BluetoothDeviceNamePreferenceController bluetoothDeviceNamePreferenceController2 = BluetoothDeviceNamePreferenceController.this;
+                    bluetoothDeviceNamePreferenceController2.updatePreferenceState(bluetoothDeviceNamePreferenceController2.mPreference);
                 }
-                BluetoothDeviceNamePreferenceController bluetoothDeviceNamePreferenceController2 = BluetoothDeviceNamePreferenceController.this;
-                bluetoothDeviceNamePreferenceController2.updatePreferenceState(bluetoothDeviceNamePreferenceController2.mPreference);
-            } else if (!TextUtils.equals(action, "android.bluetooth.adapter.action.STATE_CHANGED")) {
-            } else {
+            } else if (TextUtils.equals(action, "android.bluetooth.adapter.action.STATE_CHANGED")) {
                 BluetoothDeviceNamePreferenceController bluetoothDeviceNamePreferenceController3 = BluetoothDeviceNamePreferenceController.this;
                 bluetoothDeviceNamePreferenceController3.updatePreferenceState(bluetoothDeviceNamePreferenceController3.mPreference);
             }
         }
     };
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -90,13 +74,11 @@ public class BluetoothDeviceNamePreferenceController extends BasePreferenceContr
         }
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         this.mPreference = preferenceScreen.findPreference(getPreferenceKey());
         super.displayPreference(preferenceScreen);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStart
     public void onStart() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.bluetooth.adapter.action.LOCAL_NAME_CHANGED");
@@ -104,29 +86,24 @@ public class BluetoothDeviceNamePreferenceController extends BasePreferenceContr
         this.mContext.registerReceiver(this.mReceiver, intentFilter);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStop
     public void onStop() {
         this.mContext.unregisterReceiver(this.mReceiver);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return this.mBluetoothAdapter != null ? 0 : 3;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         updatePreferenceState(preference);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    /* renamed from: getSummary */
-    public CharSequence mo485getSummary() {
+    public CharSequence getSummary() {
         String deviceName = getDeviceName();
         if (TextUtils.isEmpty(deviceName)) {
-            return super.mo485getSummary();
+            return super.getSummary();
         }
-        return TextUtils.expandTemplate(this.mContext.getText(R.string.bluetooth_device_name_summary), BidiFormatter.getInstance().unicodeWrap(deviceName)).toString();
+        return TextUtils.expandTemplate(this.mContext.getText(R$string.bluetooth_device_name_summary), new CharSequence[]{BidiFormatter.getInstance().unicodeWrap(deviceName)}).toString();
     }
 
     public Preference createBluetoothDeviceNamePreference(PreferenceScreen preferenceScreen, int i) {
@@ -138,12 +115,13 @@ public class BluetoothDeviceNamePreferenceController extends BasePreferenceContr
         return this.mPreference;
     }
 
-    protected void updatePreferenceState(Preference preference) {
+    /* access modifiers changed from: protected */
+    public void updatePreferenceState(Preference preference) {
         preference.setSelectable(false);
-        preference.setSummary(mo485getSummary());
+        preference.setSummary(getSummary());
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public String getDeviceName() {
         return this.mBluetoothAdapter.getName();
     }

@@ -16,15 +16,14 @@ import com.android.settings.utils.ManagedServiceSettings;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public class ZenServiceListing {
+    private final Set<ComponentInfo> mApprovedComponents = new ArraySet();
     private final ManagedServiceSettings.Config mConfig;
     private final Context mContext;
     private final NotificationManager mNm;
-    private final Set<ComponentInfo> mApprovedComponents = new ArraySet();
     private final List<Callback> mZenCallbacks = new ArrayList();
 
-    /* loaded from: classes.dex */
     public interface Callback {
         void onComponentsReloaded(Set<ComponentInfo> set);
     }
@@ -39,9 +38,9 @@ public class ZenServiceListing {
         if (componentName == null) {
             return null;
         }
-        for (ComponentInfo componentInfo : this.mApprovedComponents) {
-            if (new ComponentName(componentInfo.packageName, componentInfo.name).equals(componentName)) {
-                return componentInfo;
+        for (ComponentInfo next : this.mApprovedComponents) {
+            if (new ComponentName(next.packageName, next.name).equals(componentName)) {
+                return next;
             }
         }
         return null;
@@ -58,7 +57,7 @@ public class ZenServiceListing {
     public void reloadApprovedServices() {
         this.mApprovedComponents.clear();
         List enabledNotificationListenerPackages = this.mNm.getEnabledNotificationListenerPackages();
-        ArrayList<ComponentInfo> arrayList = new ArrayList();
+        ArrayList<ComponentInfo> arrayList = new ArrayList<>();
         getServices(this.mConfig, arrayList, this.mContext.getPackageManager());
         getActivities(this.mConfig, arrayList, this.mContext.getPackageManager());
         for (ComponentInfo componentInfo : arrayList) {
@@ -68,8 +67,8 @@ public class ZenServiceListing {
             }
         }
         if (!this.mApprovedComponents.isEmpty()) {
-            for (Callback callback : this.mZenCallbacks) {
-                callback.onComponentsReloaded(this.mApprovedComponents);
+            for (Callback onComponentsReloaded : this.mZenCallbacks) {
+                onComponentsReloaded.onComponentsReloaded(this.mApprovedComponents);
             }
         }
     }

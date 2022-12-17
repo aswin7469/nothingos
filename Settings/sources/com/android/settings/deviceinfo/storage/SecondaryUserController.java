@@ -15,17 +15,17 @@ import com.android.settings.deviceinfo.storage.UserIconLoader;
 import com.android.settingslib.core.AbstractPreferenceController;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class SecondaryUserController extends AbstractPreferenceController implements PreferenceControllerMixin, StorageAsyncLoader.ResultHandler, UserIconLoader.UserIconHandler {
     private boolean mIsVisible;
     private PreferenceGroup mPreferenceGroup;
     private long mSize = -1;
+    private StorageCacheHelper mStorageCacheHelper;
     private StorageItemPreference mStoragePreference;
     private long mTotalSizeBytes;
     private UserInfo mUser;
     private Drawable mUserIcon;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return true;
     }
@@ -52,27 +52,23 @@ public class SecondaryUserController extends AbstractPreferenceController implem
     SecondaryUserController(Context context, UserInfo userInfo) {
         super(context);
         this.mUser = userInfo;
+        this.mStorageCacheHelper = new StorageCacheHelper(context, userInfo.id);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         if (this.mStoragePreference == null) {
             this.mStoragePreference = new StorageItemPreference(preferenceScreen.getContext());
             this.mPreferenceGroup = (PreferenceGroup) preferenceScreen.findPreference("pref_secondary_users");
-            this.mStoragePreference.setTitle(this.mUser.name);
+            this.mStoragePreference.setTitle((CharSequence) this.mUser.name);
             StorageItemPreference storageItemPreference = this.mStoragePreference;
             storageItemPreference.setKey("pref_user_" + this.mUser.id);
-            long j = this.mSize;
-            if (j != -1) {
-                this.mStoragePreference.setStorageSize(j, this.mTotalSizeBytes);
-            }
+            setSize(this.mStorageCacheHelper.retrieveUsedSize(), false);
             this.mPreferenceGroup.setVisible(this.mIsVisible);
             this.mPreferenceGroup.addPreference(this.mStoragePreference);
             maybeSetIcon();
         }
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         StorageItemPreference storageItemPreference = this.mStoragePreference;
         if (storageItemPreference != null) {
@@ -85,11 +81,11 @@ public class SecondaryUserController extends AbstractPreferenceController implem
         return this.mUser;
     }
 
-    public void setSize(long j) {
+    public void setSize(long j, boolean z) {
         this.mSize = j;
         StorageItemPreference storageItemPreference = this.mStoragePreference;
         if (storageItemPreference != null) {
-            storageItemPreference.setStorageSize(j, this.mTotalSizeBytes);
+            storageItemPreference.setStorageSize(j, this.mTotalSizeBytes, z);
         }
     }
 
@@ -105,15 +101,18 @@ public class SecondaryUserController extends AbstractPreferenceController implem
         }
     }
 
-    @Override // com.android.settings.deviceinfo.storage.StorageAsyncLoader.ResultHandler
     public void handleResult(SparseArray<StorageAsyncLoader.StorageResult> sparseArray) {
+        if (sparseArray == null) {
+            setSize(this.mStorageCacheHelper.retrieveUsedSize(), false);
+            return;
+        }
         StorageAsyncLoader.StorageResult storageResult = sparseArray.get(getUser().id);
         if (storageResult != null) {
-            setSize(storageResult.externalStats.totalBytes);
+            setSize(storageResult.externalStats.totalBytes, true);
+            this.mStorageCacheHelper.cacheUsedSize(storageResult.externalStats.totalBytes);
         }
     }
 
-    @Override // com.android.settings.deviceinfo.storage.UserIconLoader.UserIconHandler
     public void handleUserIcons(SparseArray<Drawable> sparseArray) {
         this.mUserIcon = sparseArray.get(this.mUser.id);
         maybeSetIcon();
@@ -122,21 +121,16 @@ public class SecondaryUserController extends AbstractPreferenceController implem
     private void maybeSetIcon() {
         StorageItemPreference storageItemPreference;
         Drawable drawable = this.mUserIcon;
-        if (drawable == null || (storageItemPreference = this.mStoragePreference) == null) {
-            return;
+        if (drawable != null && (storageItemPreference = this.mStoragePreference) != null) {
+            storageItemPreference.setIcon(drawable);
         }
-        storageItemPreference.setIcon(drawable);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class NoSecondaryUserController extends AbstractPreferenceController implements PreferenceControllerMixin {
-        @Override // com.android.settingslib.core.AbstractPreferenceController
+    static class NoSecondaryUserController extends AbstractPreferenceController implements PreferenceControllerMixin {
         public String getPreferenceKey() {
             return null;
         }
 
-        @Override // com.android.settingslib.core.AbstractPreferenceController
         public boolean isAvailable() {
             return true;
         }
@@ -145,13 +139,11 @@ public class SecondaryUserController extends AbstractPreferenceController implem
             super(context);
         }
 
-        @Override // com.android.settingslib.core.AbstractPreferenceController
         public void displayPreference(PreferenceScreen preferenceScreen) {
             PreferenceGroup preferenceGroup = (PreferenceGroup) preferenceScreen.findPreference("pref_secondary_users");
-            if (preferenceGroup == null) {
-                return;
+            if (preferenceGroup != null) {
+                preferenceScreen.removePreference(preferenceGroup);
             }
-            preferenceScreen.removePreference(preferenceGroup);
         }
     }
 }

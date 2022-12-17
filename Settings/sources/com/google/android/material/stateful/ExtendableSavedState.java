@@ -5,25 +5,18 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.collection.SimpleArrayMap;
 import androidx.customview.view.AbsSavedState;
-/* loaded from: classes2.dex */
+
 public class ExtendableSavedState extends AbsSavedState {
-    public static final Parcelable.Creator<ExtendableSavedState> CREATOR = new Parcelable.ClassLoaderCreator<ExtendableSavedState>() { // from class: com.google.android.material.stateful.ExtendableSavedState.1
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.ClassLoaderCreator
-        /* renamed from: createFromParcel */
-        public ExtendableSavedState mo718createFromParcel(Parcel parcel, ClassLoader classLoader) {
+    public static final Parcelable.Creator<ExtendableSavedState> CREATOR = new Parcelable.ClassLoaderCreator<ExtendableSavedState>() {
+        public ExtendableSavedState createFromParcel(Parcel parcel, ClassLoader classLoader) {
             return new ExtendableSavedState(parcel, classLoader);
         }
 
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: createFromParcel */
-        public ExtendableSavedState mo717createFromParcel(Parcel parcel) {
-            return new ExtendableSavedState(parcel, null);
+        public ExtendableSavedState createFromParcel(Parcel parcel) {
+            return new ExtendableSavedState(parcel, (ClassLoader) null);
         }
 
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: newArray */
-        public ExtendableSavedState[] mo719newArray(int i) {
+        public ExtendableSavedState[] newArray(int i) {
             return new ExtendableSavedState[i];
         }
     };
@@ -47,7 +40,6 @@ public class ExtendableSavedState extends AbsSavedState {
         }
     }
 
-    @Override // androidx.customview.view.AbsSavedState, android.os.Parcelable
     public void writeToParcel(Parcel parcel, int i) {
         super.writeToParcel(parcel, i);
         int size = this.extendableStates.size();

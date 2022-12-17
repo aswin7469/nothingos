@@ -9,9 +9,8 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.UserHandle;
 import android.util.Log;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class DeviceAdminListItem implements Comparable<DeviceAdminListItem> {
+
+class DeviceAdminListItem implements Comparable<DeviceAdminListItem> {
     private final DevicePolicyManager mDPM;
     private CharSequence mDescription;
     private final Drawable mIcon;
@@ -36,7 +35,6 @@ public class DeviceAdminListItem implements Comparable<DeviceAdminListItem> {
         this.mIcon = packageManager.getUserBadgedIcon(this.mInfo.loadIcon(packageManager), this.mUserHandle);
     }
 
-    @Override // java.lang.Comparable
     public int compareTo(DeviceAdminListItem deviceAdminListItem) {
         return this.mName.toString().compareTo(deviceAdminListItem.mName.toString());
     }

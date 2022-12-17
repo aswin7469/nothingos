@@ -4,27 +4,21 @@ import com.google.common.base.Preconditions;
 import com.google.common.primitives.Booleans;
 import java.io.Serializable;
 import java.lang.Comparable;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes2.dex */
-public abstract class Cut<C extends Comparable> implements Comparable<Cut<C>>, Serializable {
+
+abstract class Cut<C extends Comparable> implements Comparable<Cut<C>>, Serializable {
     private static final long serialVersionUID = 0;
     final C endpoint;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public abstract void describeAsLowerBound(StringBuilder sb);
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public abstract void describeAsUpperBound(StringBuilder sb);
 
     public abstract int hashCode();
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public abstract boolean isLessThan(C c);
-
-    @Override // java.lang.Comparable
-    public /* bridge */ /* synthetic */ int compareTo(Object obj) {
-        return compareTo((Cut) ((Cut) obj));
-    }
 
     Cut(C c) {
         this.endpoint = c;
@@ -38,43 +32,46 @@ public abstract class Cut<C extends Comparable> implements Comparable<Cut<C>>, S
             return -1;
         }
         int compareOrThrow = Range.compareOrThrow(this.endpoint, cut.endpoint);
-        return compareOrThrow != 0 ? compareOrThrow : Booleans.compare(this instanceof AboveValue, cut instanceof AboveValue);
+        if (compareOrThrow != 0) {
+            return compareOrThrow;
+        }
+        return Booleans.compare(this instanceof AboveValue, cut instanceof AboveValue);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public C endpoint() {
         return this.endpoint;
     }
 
     public boolean equals(Object obj) {
-        if (obj instanceof Cut) {
-            try {
-                return compareTo((Cut) ((Cut) obj)) == 0;
-            } catch (ClassCastException unused) {
-                return false;
-            }
+        if (!(obj instanceof Cut)) {
+            return false;
         }
-        return false;
+        try {
+            if (compareTo((Cut) obj) == 0) {
+                return true;
+            }
+            return false;
+        } catch (ClassCastException unused) {
+            return false;
+        }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static <C extends Comparable> Cut<C> belowAll() {
+    static <C extends Comparable> Cut<C> belowAll() {
         return BelowAll.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static final class BelowAll extends Cut<Comparable<?>> {
-        private static final BelowAll INSTANCE = new BelowAll();
+    private static final class BelowAll extends Cut<Comparable<?>> {
+        /* access modifiers changed from: private */
+        public static final BelowAll INSTANCE = new BelowAll();
         private static final long serialVersionUID = 0;
 
-        @Override // com.google.common.collect.Cut, java.lang.Comparable
         public int compareTo(Cut<Comparable<?>> cut) {
             return cut == this ? 0 : -1;
         }
 
-        @Override // com.google.common.collect.Cut
-        boolean isLessThan(Comparable<?> comparable) {
+        /* access modifiers changed from: package-private */
+        public boolean isLessThan(Comparable<?> comparable) {
             return true;
         }
 
@@ -83,25 +80,24 @@ public abstract class Cut<C extends Comparable> implements Comparable<Cut<C>>, S
         }
 
         private BelowAll() {
-            super(null);
+            super("");
         }
 
-        @Override // com.google.common.collect.Cut
-        Comparable<?> endpoint() {
+        /* access modifiers changed from: package-private */
+        public Comparable<?> endpoint() {
             throw new IllegalStateException("range unbounded on this side");
         }
 
-        @Override // com.google.common.collect.Cut
-        void describeAsLowerBound(StringBuilder sb) {
+        /* access modifiers changed from: package-private */
+        public void describeAsLowerBound(StringBuilder sb) {
             sb.append("(-∞");
         }
 
-        @Override // com.google.common.collect.Cut
-        void describeAsUpperBound(StringBuilder sb) {
+        /* access modifiers changed from: package-private */
+        public void describeAsUpperBound(StringBuilder sb) {
             throw new AssertionError();
         }
 
-        @Override // com.google.common.collect.Cut
         public int hashCode() {
             return System.identityHashCode(this);
         }
@@ -111,24 +107,21 @@ public abstract class Cut<C extends Comparable> implements Comparable<Cut<C>>, S
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static <C extends Comparable> Cut<C> aboveAll() {
+    static <C extends Comparable> Cut<C> aboveAll() {
         return AboveAll.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static final class AboveAll extends Cut<Comparable<?>> {
-        private static final AboveAll INSTANCE = new AboveAll();
+    private static final class AboveAll extends Cut<Comparable<?>> {
+        /* access modifiers changed from: private */
+        public static final AboveAll INSTANCE = new AboveAll();
         private static final long serialVersionUID = 0;
 
-        @Override // com.google.common.collect.Cut, java.lang.Comparable
         public int compareTo(Cut<Comparable<?>> cut) {
             return cut == this ? 0 : 1;
         }
 
-        @Override // com.google.common.collect.Cut
-        boolean isLessThan(Comparable<?> comparable) {
+        /* access modifiers changed from: package-private */
+        public boolean isLessThan(Comparable<?> comparable) {
             return false;
         }
 
@@ -137,25 +130,24 @@ public abstract class Cut<C extends Comparable> implements Comparable<Cut<C>>, S
         }
 
         private AboveAll() {
-            super(null);
+            super("");
         }
 
-        @Override // com.google.common.collect.Cut
-        Comparable<?> endpoint() {
+        /* access modifiers changed from: package-private */
+        public Comparable<?> endpoint() {
             throw new IllegalStateException("range unbounded on this side");
         }
 
-        @Override // com.google.common.collect.Cut
-        void describeAsLowerBound(StringBuilder sb) {
+        /* access modifiers changed from: package-private */
+        public void describeAsLowerBound(StringBuilder sb) {
             throw new AssertionError();
         }
 
-        @Override // com.google.common.collect.Cut
-        void describeAsUpperBound(StringBuilder sb) {
+        /* access modifiers changed from: package-private */
+        public void describeAsUpperBound(StringBuilder sb) {
             sb.append("+∞)");
         }
 
-        @Override // com.google.common.collect.Cut
         public int hashCode() {
             return System.identityHashCode(this);
         }
@@ -165,38 +157,34 @@ public abstract class Cut<C extends Comparable> implements Comparable<Cut<C>>, S
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static <C extends Comparable> Cut<C> belowValue(C c) {
+    static <C extends Comparable> Cut<C> belowValue(C c) {
         return new BelowValue(c);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static final class BelowValue<C extends Comparable> extends Cut<C> {
+    private static final class BelowValue<C extends Comparable> extends Cut<C> {
         private static final long serialVersionUID = 0;
 
         BelowValue(C c) {
             super((Comparable) Preconditions.checkNotNull(c));
         }
 
-        @Override // com.google.common.collect.Cut
-        boolean isLessThan(C c) {
+        /* access modifiers changed from: package-private */
+        public boolean isLessThan(C c) {
             return Range.compareOrThrow(this.endpoint, c) <= 0;
         }
 
-        @Override // com.google.common.collect.Cut
-        void describeAsLowerBound(StringBuilder sb) {
+        /* access modifiers changed from: package-private */
+        public void describeAsLowerBound(StringBuilder sb) {
             sb.append('[');
             sb.append(this.endpoint);
         }
 
-        @Override // com.google.common.collect.Cut
-        void describeAsUpperBound(StringBuilder sb) {
+        /* access modifiers changed from: package-private */
+        public void describeAsUpperBound(StringBuilder sb) {
             sb.append(this.endpoint);
             sb.append(')');
         }
 
-        @Override // com.google.common.collect.Cut
         public int hashCode() {
             return this.endpoint.hashCode();
         }
@@ -206,38 +194,34 @@ public abstract class Cut<C extends Comparable> implements Comparable<Cut<C>>, S
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static <C extends Comparable> Cut<C> aboveValue(C c) {
+    static <C extends Comparable> Cut<C> aboveValue(C c) {
         return new AboveValue(c);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static final class AboveValue<C extends Comparable> extends Cut<C> {
+    private static final class AboveValue<C extends Comparable> extends Cut<C> {
         private static final long serialVersionUID = 0;
 
         AboveValue(C c) {
             super((Comparable) Preconditions.checkNotNull(c));
         }
 
-        @Override // com.google.common.collect.Cut
-        boolean isLessThan(C c) {
+        /* access modifiers changed from: package-private */
+        public boolean isLessThan(C c) {
             return Range.compareOrThrow(this.endpoint, c) < 0;
         }
 
-        @Override // com.google.common.collect.Cut
-        void describeAsLowerBound(StringBuilder sb) {
+        /* access modifiers changed from: package-private */
+        public void describeAsLowerBound(StringBuilder sb) {
             sb.append('(');
             sb.append(this.endpoint);
         }
 
-        @Override // com.google.common.collect.Cut
-        void describeAsUpperBound(StringBuilder sb) {
+        /* access modifiers changed from: package-private */
+        public void describeAsUpperBound(StringBuilder sb) {
             sb.append(this.endpoint);
             sb.append(']');
         }
 
-        @Override // com.google.common.collect.Cut
         public int hashCode() {
             return ~this.endpoint.hashCode();
         }

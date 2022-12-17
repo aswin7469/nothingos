@@ -27,22 +27,10 @@ import com.android.settingslib.mobile.MobileMappings;
 import com.android.settingslib.mobile.TelephonyIcons;
 import java.util.Collections;
 import java.util.Objects;
-/* loaded from: classes.dex */
+
 public class NetworkProviderWorker extends WifiScanWorker implements SignalStrengthListener.Callback, MobileDataEnabledListener.Client, DataConnectivityListener.Client, InternetUpdater.InternetChangeListener, SubscriptionsChangeListener.SubscriptionsChangeListenerClient {
-    private MobileMappings.Config mConfig;
-    private DataConnectivityListener mConnectivityListener;
-    private final Context mContext;
-    private MobileDataEnabledListener mDataEnabledListener;
-    private int mDefaultDataSubId;
-    final Handler mHandler;
-    private int mInternetType;
-    private InternetUpdater mInternetUpdater;
-    private DataContentObserver mMobileDataObserver;
-    private SignalStrengthListener mSignalStrengthListener;
-    private SubscriptionsChangeListener mSubscriptionsListener;
-    private TelephonyManager mTelephonyManager;
-    private final BroadcastReceiver mConnectionChangeReceiver = new BroadcastReceiver() { // from class: com.android.settings.network.telephony.NetworkProviderWorker.1
-        @Override // android.content.BroadcastReceiver
+    private MobileMappings.Config mConfig = null;
+    private final BroadcastReceiver mConnectionChangeReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals("android.intent.action.ACTION_DEFAULT_DATA_SUBSCRIPTION_CHANGED")) {
                 Log.d("NetworkProviderWorker", "ACTION_DEFAULT_DATA_SUBSCRIPTION_CHANGED");
@@ -50,18 +38,27 @@ public class NetworkProviderWorker extends WifiScanWorker implements SignalStren
             }
         }
     };
-    private TelephonyDisplayInfo mTelephonyDisplayInfo = new TelephonyDisplayInfo(0, 0);
-    final NetworkProviderTelephonyCallback mTelephonyCallback = new NetworkProviderTelephonyCallback();
+    private DataConnectivityListener mConnectivityListener;
+    private final Context mContext;
+    private MobileDataEnabledListener mDataEnabledListener;
+    private int mDefaultDataSubId = -1;
+    final Handler mHandler;
+    private int mInternetType;
+    private InternetUpdater mInternetUpdater;
+    private DataContentObserver mMobileDataObserver;
+    private SignalStrengthListener mSignalStrengthListener;
+    private SubscriptionsChangeListener mSubscriptionsListener;
+    final NetworkProviderTelephonyCallback mTelephonyCallback;
+    /* access modifiers changed from: private */
+    public TelephonyDisplayInfo mTelephonyDisplayInfo = new TelephonyDisplayInfo(0, 0);
+    private TelephonyManager mTelephonyManager;
 
-    @Override // com.android.settings.wifi.slice.WifiScanWorker
     public int getApRowCount() {
         return 6;
     }
 
     public NetworkProviderWorker(Context context, Uri uri) {
         super(context, uri);
-        this.mDefaultDataSubId = -1;
-        this.mConfig = null;
         Handler handler = new Handler(Looper.getMainLooper());
         this.mHandler = handler;
         this.mMobileDataObserver = new DataContentObserver(handler, this);
@@ -69,18 +66,18 @@ public class NetworkProviderWorker extends WifiScanWorker implements SignalStren
         this.mDefaultDataSubId = getDefaultDataSubscriptionId();
         Log.d("NetworkProviderWorker", "Init, SubId: " + this.mDefaultDataSubId);
         this.mTelephonyManager = ((TelephonyManager) context.getSystemService(TelephonyManager.class)).createForSubscriptionId(this.mDefaultDataSubId);
+        this.mTelephonyCallback = new NetworkProviderTelephonyCallback();
         this.mSubscriptionsListener = new SubscriptionsChangeListener(context, this);
         this.mDataEnabledListener = new MobileDataEnabledListener(context, this);
         this.mConnectivityListener = new DataConnectivityListener(context, this);
         this.mSignalStrengthListener = new SignalStrengthListener(context, this);
         this.mConfig = getConfig(context);
-        InternetUpdater internetUpdater = new InternetUpdater(context, mo959getLifecycle(), this);
+        InternetUpdater internetUpdater = new InternetUpdater(context, getLifecycle(), this);
         this.mInternetUpdater = internetUpdater;
         this.mInternetType = internetUpdater.getInternetType();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.wifi.slice.WifiScanWorker, com.android.settings.slices.SliceBackgroundWorker
+    /* access modifiers changed from: protected */
     public void onSlicePinned() {
         Log.d("NetworkProviderWorker", "onSlicePinned");
         this.mMobileDataObserver.register(this.mContext, this.mDefaultDataSubId);
@@ -98,8 +95,7 @@ public class NetworkProviderWorker extends WifiScanWorker implements SignalStren
         super.onSlicePinned();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.wifi.slice.WifiScanWorker, com.android.settings.slices.SliceBackgroundWorker
+    /* access modifiers changed from: protected */
     public void onSliceUnpinned() {
         Log.d("NetworkProviderWorker", "onSliceUnpinned");
         this.mMobileDataObserver.unregister(this.mContext);
@@ -115,7 +111,6 @@ public class NetworkProviderWorker extends WifiScanWorker implements SignalStren
         super.onSliceUnpinned();
     }
 
-    @Override // com.android.settings.wifi.slice.WifiScanWorker, java.io.Closeable, java.lang.AutoCloseable
     public void close() {
         this.mMobileDataObserver = null;
         super.close();
@@ -125,7 +120,7 @@ public class NetworkProviderWorker extends WifiScanWorker implements SignalStren
         notifySliceChange();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateListener() {
         int defaultDataSubscriptionId = getDefaultDataSubscriptionId();
         if (this.mDefaultDataSubId == defaultDataSubscriptionId) {
@@ -151,37 +146,31 @@ public class NetworkProviderWorker extends WifiScanWorker implements SignalStren
         updateSlice();
     }
 
-    @Override // com.android.settings.network.SubscriptionsChangeListener.SubscriptionsChangeListenerClient
     public void onSubscriptionsChanged() {
         Log.d("NetworkProviderWorker", "onSubscriptionsChanged");
         updateListener();
     }
 
-    @Override // com.android.settings.network.telephony.SignalStrengthListener.Callback
     public void onSignalStrengthChanged() {
         Log.d("NetworkProviderWorker", "onSignalStrengthChanged");
         updateSlice();
     }
 
-    @Override // com.android.settings.network.InternetUpdater.InternetChangeListener
     public void onAirplaneModeChanged(boolean z) {
         Log.d("NetworkProviderWorker", "onAirplaneModeChanged");
         updateSlice();
     }
 
-    @Override // com.android.settings.network.MobileDataEnabledListener.Client
     public void onMobileDataEnabledChange() {
         Log.d("NetworkProviderWorker", "onMobileDataEnabledChange");
         updateSlice();
     }
 
-    @Override // com.android.settings.network.telephony.DataConnectivityListener.Client
     public void onDataConnectivityChange() {
         Log.d("NetworkProviderWorker", "onDataConnectivityChange");
         updateSlice();
     }
 
-    /* loaded from: classes.dex */
     public class DataContentObserver extends ContentObserver {
         private final NetworkProviderWorker mNetworkProviderWorker;
 
@@ -191,7 +180,6 @@ public class NetworkProviderWorker extends WifiScanWorker implements SignalStren
             this.mNetworkProviderWorker = networkProviderWorker;
         }
 
-        @Override // android.database.ContentObserver
         public void onChange(boolean z) {
             Log.d("NetworkProviderWorker", "DataContentObserver: onChange");
             this.mNetworkProviderWorker.updateSlice();
@@ -209,47 +197,50 @@ public class NetworkProviderWorker extends WifiScanWorker implements SignalStren
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public class NetworkProviderTelephonyCallback extends TelephonyCallback implements TelephonyCallback.DataConnectionStateListener, TelephonyCallback.DisplayInfoListener, TelephonyCallback.ServiceStateListener {
+    class NetworkProviderTelephonyCallback extends TelephonyCallback implements TelephonyCallback.DataConnectionStateListener, TelephonyCallback.DisplayInfoListener, TelephonyCallback.ServiceStateListener {
         NetworkProviderTelephonyCallback() {
         }
 
-        @Override // android.telephony.TelephonyCallback.ServiceStateListener
         public void onServiceStateChanged(ServiceState serviceState) {
             Log.d("NetworkProviderWorker", "onServiceStateChanged voiceState=" + serviceState.getState() + " dataState=" + serviceState.getDataRegistrationState());
             NetworkProviderWorker.this.updateSlice();
         }
 
-        @Override // android.telephony.TelephonyCallback.DisplayInfoListener
         public void onDisplayInfoChanged(TelephonyDisplayInfo telephonyDisplayInfo) {
             Log.d("NetworkProviderWorker", "onDisplayInfoChanged: telephonyDisplayInfo=" + telephonyDisplayInfo);
             NetworkProviderWorker.this.mTelephonyDisplayInfo = telephonyDisplayInfo;
             NetworkProviderWorker.this.updateSlice();
         }
 
-        @Override // android.telephony.TelephonyCallback.DataConnectionStateListener
         public void onDataConnectionStateChanged(int i, int i2) {
             Log.d("NetworkProviderWorker", "onDataConnectionStateChanged: networkType=" + i2 + " state=" + i);
             NetworkProviderWorker.this.updateSlice();
         }
     }
 
-    int getDefaultDataSubscriptionId() {
+    /* access modifiers changed from: package-private */
+    public int getDefaultDataSubscriptionId() {
         return SubscriptionManager.getDefaultDataSubscriptionId();
     }
 
     private String updateNetworkTypeName(Context context, MobileMappings.Config config, TelephonyDisplayInfo telephonyDisplayInfo, int i) {
         int i2 = MobileMappings.mapIconSets(config).get(MobileMappings.getIconKey(telephonyDisplayInfo)).dataContentDescription;
         WifiPickerTrackerHelper wifiPickerTrackerHelper = this.mWifiPickerTrackerHelper;
-        if (wifiPickerTrackerHelper == null || !wifiPickerTrackerHelper.isCarrierNetworkActive()) {
-            return i2 != 0 ? SubscriptionManager.getResourcesForSubId(context, i).getString(i2) : "";
+        if (wifiPickerTrackerHelper != null && wifiPickerTrackerHelper.isCarrierNetworkActive()) {
+            int i3 = TelephonyIcons.CARRIER_MERGED_WIFI.dataContentDescription;
+            if (i3 != 0) {
+                return SubscriptionManager.getResourcesForSubId(context, i).getString(i3);
+            }
+            return "";
+        } else if (i2 != 0) {
+            return SubscriptionManager.getResourcesForSubId(context, i).getString(i2);
+        } else {
+            return "";
         }
-        int i3 = TelephonyIcons.CARRIER_MERGED_WIFI.dataContentDescription;
-        return i3 != 0 ? SubscriptionManager.getResourcesForSubId(context, i).getString(i3) : "";
     }
 
-    MobileMappings.Config getConfig(Context context) {
+    /* access modifiers changed from: package-private */
+    public MobileMappings.Config getConfig(Context context) {
         return MobileMappings.Config.readConfig(context);
     }
 
@@ -257,18 +248,15 @@ public class NetworkProviderWorker extends WifiScanWorker implements SignalStren
         return updateNetworkTypeName(this.mContext, this.mConfig, this.mTelephonyDisplayInfo, this.mDefaultDataSubId);
     }
 
-    @Override // com.android.settings.network.InternetUpdater.InternetChangeListener
     public void onInternetTypeChanged(int i) {
         int i2 = this.mInternetType;
-        if (i2 == i) {
-            return;
+        if (i2 != i) {
+            boolean z = i2 == 4 || i == 4;
+            this.mInternetType = i;
+            if (z) {
+                updateSlice();
+            }
         }
-        boolean z = i2 == 4 || i == 4;
-        this.mInternetType = i;
-        if (!z) {
-            return;
-        }
-        updateSlice();
     }
 
     public int getInternetType() {

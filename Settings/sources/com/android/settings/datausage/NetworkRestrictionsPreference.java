@@ -5,9 +5,8 @@ import android.net.NetworkTemplate;
 import android.util.AttributeSet;
 import androidx.preference.Preference;
 import com.android.settings.datausage.TemplatePreference;
-/* loaded from: classes.dex */
+
 public class NetworkRestrictionsPreference extends Preference implements TemplatePreference {
-    @Override // com.android.settings.datausage.TemplatePreference
     public void setTemplate(NetworkTemplate networkTemplate, int i, TemplatePreference.NetworkServices networkServices) {
     }
 

@@ -9,7 +9,6 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -18,6 +17,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import com.google.android.setupcompat.internal.TemplateLayout;
@@ -30,16 +30,16 @@ import com.google.android.setupdesign.template.RequireScrollMixin;
 import com.google.android.setupdesign.template.ScrollViewScrollHandlingDelegate;
 import com.google.android.setupdesign.view.Illustration;
 import com.google.android.setupdesign.view.NavigationBar;
-/* loaded from: classes2.dex */
+
 public class SetupWizardLayout extends TemplateLayout {
     public SetupWizardLayout(Context context) {
         super(context, 0, 0);
-        init(null, R$attr.sudLayoutTheme);
+        init((AttributeSet) null, R$attr.sudLayoutTheme);
     }
 
     public SetupWizardLayout(Context context, int i, int i2) {
         super(context, i, i2);
-        init(null, R$attr.sudLayoutTheme);
+        init((AttributeSet) null, R$attr.sudLayoutTheme);
     }
 
     public SetupWizardLayout(Context context, AttributeSet attributeSet) {
@@ -54,64 +54,63 @@ public class SetupWizardLayout extends TemplateLayout {
     }
 
     private void init(AttributeSet attributeSet, int i) {
-        if (isInEditMode()) {
-            return;
-        }
-        registerMixin(SystemNavBarMixin.class, new SystemNavBarMixin(this, null));
-        registerMixin(HeaderMixin.class, new HeaderMixin(this, attributeSet, i));
-        registerMixin(DescriptionMixin.class, new DescriptionMixin(this, attributeSet, i));
-        registerMixin(ProgressBarMixin.class, new ProgressBarMixin(this));
-        registerMixin(NavigationBarMixin.class, new NavigationBarMixin(this));
-        RequireScrollMixin requireScrollMixin = new RequireScrollMixin(this);
-        registerMixin(RequireScrollMixin.class, requireScrollMixin);
-        ScrollView scrollView = getScrollView();
-        if (scrollView != null) {
-            requireScrollMixin.setScrollHandlingDelegate(new ScrollViewScrollHandlingDelegate(requireScrollMixin, scrollView));
-        }
-        TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(attributeSet, R$styleable.SudSetupWizardLayout, i, 0);
-        Drawable drawable = obtainStyledAttributes.getDrawable(R$styleable.SudSetupWizardLayout_sudBackground);
-        if (drawable != null) {
-            setLayoutBackground(drawable);
-        } else {
-            Drawable drawable2 = obtainStyledAttributes.getDrawable(R$styleable.SudSetupWizardLayout_sudBackgroundTile);
-            if (drawable2 != null) {
-                setBackgroundTile(drawable2);
+        if (!isInEditMode()) {
+            registerMixin(SystemNavBarMixin.class, new SystemNavBarMixin(this, (Window) null));
+            registerMixin(HeaderMixin.class, new HeaderMixin(this, attributeSet, i));
+            registerMixin(DescriptionMixin.class, new DescriptionMixin(this, attributeSet, i));
+            registerMixin(ProgressBarMixin.class, new ProgressBarMixin(this));
+            registerMixin(NavigationBarMixin.class, new NavigationBarMixin(this));
+            RequireScrollMixin requireScrollMixin = new RequireScrollMixin(this);
+            registerMixin(RequireScrollMixin.class, requireScrollMixin);
+            ScrollView scrollView = getScrollView();
+            if (scrollView != null) {
+                requireScrollMixin.setScrollHandlingDelegate(new ScrollViewScrollHandlingDelegate(requireScrollMixin, scrollView));
             }
-        }
-        Drawable drawable3 = obtainStyledAttributes.getDrawable(R$styleable.SudSetupWizardLayout_sudIllustration);
-        if (drawable3 != null) {
-            setIllustration(drawable3);
-        } else {
-            Drawable drawable4 = obtainStyledAttributes.getDrawable(R$styleable.SudSetupWizardLayout_sudIllustrationImage);
-            Drawable drawable5 = obtainStyledAttributes.getDrawable(R$styleable.SudSetupWizardLayout_sudIllustrationHorizontalTile);
-            if (drawable4 != null && drawable5 != null) {
-                setIllustration(drawable4, drawable5);
+            TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(attributeSet, R$styleable.SudSetupWizardLayout, i, 0);
+            Drawable drawable = obtainStyledAttributes.getDrawable(R$styleable.SudSetupWizardLayout_sudBackground);
+            if (drawable != null) {
+                setLayoutBackground(drawable);
+            } else {
+                Drawable drawable2 = obtainStyledAttributes.getDrawable(R$styleable.SudSetupWizardLayout_sudBackgroundTile);
+                if (drawable2 != null) {
+                    setBackgroundTile(drawable2);
+                }
             }
+            Drawable drawable3 = obtainStyledAttributes.getDrawable(R$styleable.SudSetupWizardLayout_sudIllustration);
+            if (drawable3 != null) {
+                setIllustration(drawable3);
+            } else {
+                Drawable drawable4 = obtainStyledAttributes.getDrawable(R$styleable.SudSetupWizardLayout_sudIllustrationImage);
+                Drawable drawable5 = obtainStyledAttributes.getDrawable(R$styleable.SudSetupWizardLayout_sudIllustrationHorizontalTile);
+                if (!(drawable4 == null || drawable5 == null)) {
+                    setIllustration(drawable4, drawable5);
+                }
+            }
+            int dimensionPixelSize = obtainStyledAttributes.getDimensionPixelSize(R$styleable.SudSetupWizardLayout_sudDecorPaddingTop, -1);
+            if (dimensionPixelSize == -1) {
+                dimensionPixelSize = getResources().getDimensionPixelSize(R$dimen.sud_decor_padding_top);
+            }
+            setDecorPaddingTop(dimensionPixelSize);
+            float f = obtainStyledAttributes.getFloat(R$styleable.SudSetupWizardLayout_sudIllustrationAspectRatio, -1.0f);
+            if (f == -1.0f) {
+                TypedValue typedValue = new TypedValue();
+                getResources().getValue(R$dimen.sud_illustration_aspect_ratio, typedValue, true);
+                f = typedValue.getFloat();
+            }
+            setIllustrationAspectRatio(f);
+            obtainStyledAttributes.recycle();
         }
-        int dimensionPixelSize = obtainStyledAttributes.getDimensionPixelSize(R$styleable.SudSetupWizardLayout_sudDecorPaddingTop, -1);
-        if (dimensionPixelSize == -1) {
-            dimensionPixelSize = getResources().getDimensionPixelSize(R$dimen.sud_decor_padding_top);
-        }
-        setDecorPaddingTop(dimensionPixelSize);
-        float f = obtainStyledAttributes.getFloat(R$styleable.SudSetupWizardLayout_sudIllustrationAspectRatio, -1.0f);
-        if (f == -1.0f) {
-            TypedValue typedValue = new TypedValue();
-            getResources().getValue(R$dimen.sud_illustration_aspect_ratio, typedValue, true);
-            f = typedValue.getFloat();
-        }
-        setIllustrationAspectRatio(f);
-        obtainStyledAttributes.recycle();
     }
 
-    @Override // android.view.View
-    protected Parcelable onSaveInstanceState() {
+    /* access modifiers changed from: protected */
+    public Parcelable onSaveInstanceState() {
         SavedState savedState = new SavedState(super.onSaveInstanceState());
         savedState.isProgressBarShown = isProgressBarShown();
         return savedState;
     }
 
-    @Override // android.view.View
-    protected void onRestoreInstanceState(Parcelable parcelable) {
+    /* access modifiers changed from: protected */
+    public void onRestoreInstanceState(Parcelable parcelable) {
         if (!(parcelable instanceof SavedState)) {
             Log.w("SetupWizardLayout", "Ignoring restore instance state " + parcelable);
             super.onRestoreInstanceState(parcelable);
@@ -122,8 +121,7 @@ public class SetupWizardLayout extends TemplateLayout {
         setProgressBarShown(savedState.isProgressBarShown);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.google.android.setupcompat.internal.TemplateLayout
+    /* access modifiers changed from: protected */
     public View onInflateTemplate(LayoutInflater layoutInflater, int i) {
         if (i == 0) {
             i = R$layout.sud_template;
@@ -131,8 +129,7 @@ public class SetupWizardLayout extends TemplateLayout {
         return inflateTemplate(layoutInflater, R$style.SudThemeMaterial_Light, i);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.google.android.setupcompat.internal.TemplateLayout
+    /* access modifiers changed from: protected */
     public ViewGroup findContainer(int i) {
         if (i == 0) {
             i = R$id.sud_layout_content;
@@ -227,14 +224,10 @@ public class SetupWizardLayout extends TemplateLayout {
                 ((BitmapDrawable) drawable).setGravity(51);
             }
             LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{drawable2, drawable});
-            if (Build.VERSION.SDK_INT >= 19) {
-                layerDrawable.setAutoMirrored(true);
-            }
+            layerDrawable.setAutoMirrored(true);
             return layerDrawable;
         }
-        if (Build.VERSION.SDK_INT >= 19) {
-            drawable.setAutoMirrored(true);
-        }
+        drawable.setAutoMirrored(true);
         return drawable;
     }
 
@@ -254,39 +247,28 @@ public class SetupWizardLayout extends TemplateLayout {
         return ((ProgressBarMixin) getMixin(ProgressBarMixin.class)).getColor();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    /* loaded from: classes2.dex */
-    public static class SavedState extends View.BaseSavedState {
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() { // from class: com.google.android.setupdesign.SetupWizardLayout.SavedState.1
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: createFromParcel */
-            public SavedState mo736createFromParcel(Parcel parcel) {
+    protected static class SavedState extends View.BaseSavedState {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel parcel) {
                 return new SavedState(parcel);
             }
 
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: newArray */
-            public SavedState[] mo737newArray(int i) {
+            public SavedState[] newArray(int i) {
                 return new SavedState[i];
             }
         };
-        boolean isProgressBarShown;
+        boolean isProgressBarShown = false;
 
         public SavedState(Parcelable parcelable) {
             super(parcelable);
-            this.isProgressBarShown = false;
         }
 
         public SavedState(Parcel parcel) {
             super(parcel);
             boolean z = false;
-            this.isProgressBarShown = false;
             this.isProgressBarShown = parcel.readInt() != 0 ? true : z;
         }
 
-        @Override // android.view.View.BaseSavedState, android.view.AbsSavedState, android.os.Parcelable
         public void writeToParcel(Parcel parcel, int i) {
             super.writeToParcel(parcel, i);
             parcel.writeInt(this.isProgressBarShown ? 1 : 0);

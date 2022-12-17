@@ -12,14 +12,13 @@ import com.android.settings.core.BasePreferenceController;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settings.dashboard.DashboardFragment;
 import com.android.settings.overlay.FeatureFactory;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settings.widget.GearPreference;
 import com.android.settings.widget.GroupPreferenceCategory;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnStart;
 import com.android.settingslib.core.lifecycle.events.OnStop;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
+
 public class GroupSavedDeviceController extends BasePreferenceController implements PreferenceControllerMixin, LifecycleObserver, OnStart, OnStop, DevicePreferenceCallback, GearPreference.OnGearClickListener {
     private static final String KEY = "group_saved_device_list";
     private static final String KEY_PCG_EIGHT = "pcg_eight";
@@ -40,47 +39,34 @@ public class GroupSavedDeviceController extends BasePreferenceController impleme
     private PreferenceGroup mPreferenceGroup;
     GroupPreferenceCategory mPreferenceGroupRemaining;
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return KEY;
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -90,17 +76,14 @@ public class GroupSavedDeviceController extends BasePreferenceController impleme
         FeatureFactory.getFactory(context).getDockUpdaterFeatureProvider();
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStart
     public void onStart() {
         this.mBluetoothDeviceUpdater.registerCallback();
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStop
     public void onStop() {
         this.mBluetoothDeviceUpdater.unregisterCallback();
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         PreferenceGroup preferenceGroup = (PreferenceGroup) preferenceScreen.findPreference(KEY);
         this.mPreferenceGroup = preferenceGroup;
@@ -126,17 +109,14 @@ public class GroupSavedDeviceController extends BasePreferenceController impleme
         }
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return this.mContext.getPackageManager().hasSystemFeature("android.hardware.bluetooth") ? 0 : 3;
     }
 
-    @Override // com.android.settings.connecteddevice.DevicePreferenceCallback
     public void onDeviceAdded(Preference preference) {
         this.mGroupUtils.addPreference(this.mListCategories, preference, this);
     }
 
-    @Override // com.android.settings.connecteddevice.DevicePreferenceCallback
     public void onDeviceRemoved(Preference preference) {
         this.mGroupUtils.removePreference(this.mListCategories, preference);
     }
@@ -145,7 +125,6 @@ public class GroupSavedDeviceController extends BasePreferenceController impleme
         this.mBluetoothDeviceUpdater = new GroupSavedBluetoothDeviceUpdater(dashboardFragment.getContext(), dashboardFragment, this);
     }
 
-    @Override // com.android.settings.widget.GearPreference.OnGearClickListener
     public void onGearClick(GearPreference gearPreference) {
         this.mBluetoothDeviceUpdater.launchgroupOptions((GroupBluetoothSettingsPreference) gearPreference);
     }

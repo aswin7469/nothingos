@@ -6,22 +6,20 @@ import android.os.UserManager;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.util.Log;
 import androidx.fragment.app.Fragment;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.Utils;
 import com.android.settings.core.BasePreferenceController;
+import com.android.settings.deviceinfo.PhoneNumberSummaryPreference;
 import com.android.settings.network.telephony.TelephonyUtils;
-import com.android.settings.slices.SliceBackgroundWorker;
-import com.android.settings.slices.Sliceable;
 import com.qti.extphone.QtiImeiInfo;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class ImeiInfoPreferenceController extends BasePreferenceController {
     private static final String KEY_PREFERENCE_CATEGORY = "device_detail_category";
     private static final String TAG = "ImeiInfoPreferenceController";
@@ -31,37 +29,30 @@ public class ImeiInfoPreferenceController extends BasePreferenceController {
     private QtiImeiInfo[] mQtiImeiInfo;
     private final TelephonyManager mTelephonyManager;
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public boolean useDynamicSliceSummary() {
         return true;
     }
@@ -81,7 +72,6 @@ public class ImeiInfoPreferenceController extends BasePreferenceController {
         this.mFragment = fragment;
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         Preference findPreference = preferenceScreen.findPreference(getPreferenceKey());
@@ -98,17 +88,16 @@ public class ImeiInfoPreferenceController extends BasePreferenceController {
             updatePreference(createNewPreference, i);
         }
         int phoneCount = this.mTelephonyManager.getPhoneCount();
-        if (!Utils.isSupportCTPA(this.mContext) || phoneCount < 2) {
-            return;
-        }
-        int currentPhoneTypeForSlot = this.mTelephonyManager.getCurrentPhoneTypeForSlot(0);
-        int currentPhoneTypeForSlot2 = this.mTelephonyManager.getCurrentPhoneTypeForSlot(1);
-        if (2 != currentPhoneTypeForSlot && 2 != currentPhoneTypeForSlot2) {
-            addPreferenceNotInList(preferenceScreen, 0, order + phoneCount, getPreferenceKey() + phoneCount, true);
-        } else if (2 == currentPhoneTypeForSlot) {
-            addPreferenceNotInList(preferenceScreen, 0, order + phoneCount, getPreferenceKey() + phoneCount, false);
-        } else if (2 == currentPhoneTypeForSlot2) {
-            addPreferenceNotInList(preferenceScreen, 1, order + phoneCount, getPreferenceKey() + phoneCount, false);
+        if (Utils.isSupportCTPA(this.mContext) && phoneCount >= 2) {
+            int currentPhoneTypeForSlot = this.mTelephonyManager.getCurrentPhoneTypeForSlot(0);
+            int currentPhoneTypeForSlot2 = this.mTelephonyManager.getCurrentPhoneTypeForSlot(1);
+            if (2 != currentPhoneTypeForSlot && 2 != currentPhoneTypeForSlot2) {
+                addPreferenceNotInList(preferenceScreen, 0, order + phoneCount, getPreferenceKey() + phoneCount, true);
+            } else if (2 == currentPhoneTypeForSlot) {
+                addPreferenceNotInList(preferenceScreen, 0, order + phoneCount, getPreferenceKey() + phoneCount, false);
+            } else if (2 == currentPhoneTypeForSlot2) {
+                addPreferenceNotInList(preferenceScreen, 1, order + phoneCount, getPreferenceKey() + phoneCount, false);
+            }
         }
     }
 
@@ -119,11 +108,11 @@ public class ImeiInfoPreferenceController extends BasePreferenceController {
         ((PreferenceCategory) preferenceScreen.findPreference(KEY_PREFERENCE_CATEGORY)).addPreference(createNewPreference);
         if (z) {
             createNewPreference.setTitle(getTitleForCdmaPhone(i));
-            createNewPreference.setSummary(this.mTelephonyManager.getMeid(i));
+            createNewPreference.setSummary((CharSequence) this.mTelephonyManager.getMeid(i));
             return;
         }
         createNewPreference.setTitle(getTitleForGsmPhone(i));
-        createNewPreference.setSummary(getImei(i));
+        createNewPreference.setSummary((CharSequence) getImei(i));
     }
 
     private void addPreference(PreferenceScreen preferenceScreen, int i, int i2, String str, boolean z) {
@@ -134,29 +123,25 @@ public class ImeiInfoPreferenceController extends BasePreferenceController {
         this.mPreferenceList.add(createNewPreference);
         if (z) {
             createNewPreference.setTitle(getTitleForCdmaPhone(i));
-            createNewPreference.setSummary(this.mTelephonyManager.getMeid(i));
+            createNewPreference.setSummary((CharSequence) this.mTelephonyManager.getMeid(i));
             return;
         }
         createNewPreference.setTitle(getTitleForGsmPhone(i));
-        createNewPreference.setSummary(getImei(i));
+        createNewPreference.setSummary((CharSequence) getImei(i));
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
-        if (preference == null) {
-            return;
-        }
-        Log.d(TAG, "updateState");
-        this.mQtiImeiInfo = TelephonyUtils.getImeiInfo();
-        int size = this.mPreferenceList.size();
-        for (int i = 0; i < size; i++) {
-            updatePreference(this.mPreferenceList.get(i), i);
+        if (preference != null) {
+            Log.d("ImeiInfoPreferenceController", "updateState");
+            this.mQtiImeiInfo = TelephonyUtils.getImeiInfo();
+            int size = this.mPreferenceList.size();
+            for (int i = 0; i < size; i++) {
+                updatePreference(this.mPreferenceList.get(i), i);
+            }
         }
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    /* renamed from: getSummary */
-    public CharSequence mo485getSummary() {
+    public CharSequence getSummary() {
         return getSummary(0);
     }
 
@@ -171,7 +156,6 @@ public class ImeiInfoPreferenceController extends BasePreferenceController {
         return getImei(i);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
         int indexOf = this.mPreferenceList.indexOf(preference);
         if (indexOf == -1) {
@@ -184,14 +168,8 @@ public class ImeiInfoPreferenceController extends BasePreferenceController {
         return true;
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return (!((UserManager) this.mContext.getSystemService(UserManager.class)).isAdminUser() || com.android.settingslib.Utils.isWifiOnly(this.mContext)) ? 3 : 0;
-    }
-
-    @Override // com.android.settings.slices.Sliceable
-    public void copy() {
-        Sliceable.setCopyContent(this.mContext, getSummary(0), getTitle(0));
     }
 
     private void updatePreference(Preference preference, int i) {
@@ -203,63 +181,83 @@ public class ImeiInfoPreferenceController extends BasePreferenceController {
         if (this.mQtiImeiInfo == null) {
             this.mQtiImeiInfo = TelephonyUtils.getImeiInfo();
         }
-        if (this.mQtiImeiInfo != null) {
-            int i2 = 0;
-            while (true) {
-                QtiImeiInfo[] qtiImeiInfoArr = this.mQtiImeiInfo;
-                if (i2 >= qtiImeiInfoArr.length) {
-                    return false;
-                }
-                if (qtiImeiInfoArr[i2] != null && qtiImeiInfoArr[i2].getSlotId() == i && this.mQtiImeiInfo[i2].getImeiType() == 1) {
-                    return true;
-                }
-                i2++;
-            }
-        } else {
+        if (this.mQtiImeiInfo == null) {
             return false;
+        }
+        int i2 = 0;
+        while (true) {
+            QtiImeiInfo[] qtiImeiInfoArr = this.mQtiImeiInfo;
+            if (i2 >= qtiImeiInfoArr.length) {
+                return false;
+            }
+            QtiImeiInfo qtiImeiInfo = qtiImeiInfoArr[i2];
+            if (qtiImeiInfo != null && qtiImeiInfo.getSlotId() == i && this.mQtiImeiInfo[i2].getImeiType() == 1) {
+                return true;
+            }
+            i2++;
         }
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:16:0x002f  */
-    /* JADX WARN: Removed duplicated region for block: B:19:? A[RETURN, SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private String getImei(int i) {
-        String str;
-        if (this.mQtiImeiInfo == null) {
-            this.mQtiImeiInfo = TelephonyUtils.getImeiInfo();
-        }
-        if (this.mQtiImeiInfo != null) {
-            int i2 = 0;
-            while (true) {
-                QtiImeiInfo[] qtiImeiInfoArr = this.mQtiImeiInfo;
-                if (i2 >= qtiImeiInfoArr.length) {
-                    break;
-                } else if (qtiImeiInfoArr[i2].getSlotId() == i) {
-                    str = this.mQtiImeiInfo[i2].getImei();
-                    break;
-                } else {
-                    i2++;
-                }
-            }
-            return !TextUtils.isEmpty(str) ? this.mTelephonyManager.getImei(i) : str;
-        }
-        str = null;
-        if (!TextUtils.isEmpty(str)) {
-        }
+    /* JADX WARNING: Removed duplicated region for block: B:17:0x0031  */
+    /* JADX WARNING: Removed duplicated region for block: B:23:? A[RETURN, SYNTHETIC] */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private java.lang.String getImei(int r4) {
+        /*
+            r3 = this;
+            com.qti.extphone.QtiImeiInfo[] r0 = r3.mQtiImeiInfo
+            if (r0 != 0) goto L_0x000a
+            com.qti.extphone.QtiImeiInfo[] r0 = com.android.settings.network.telephony.TelephonyUtils.getImeiInfo()
+            r3.mQtiImeiInfo = r0
+        L_0x000a:
+            com.qti.extphone.QtiImeiInfo[] r0 = r3.mQtiImeiInfo
+            if (r0 == 0) goto L_0x002a
+            r0 = 0
+        L_0x000f:
+            com.qti.extphone.QtiImeiInfo[] r1 = r3.mQtiImeiInfo
+            int r2 = r1.length
+            if (r0 >= r2) goto L_0x002a
+            r1 = r1[r0]
+            if (r1 == 0) goto L_0x0027
+            int r1 = r1.getSlotId()
+            if (r1 != r4) goto L_0x0027
+            com.qti.extphone.QtiImeiInfo[] r1 = r3.mQtiImeiInfo
+            r0 = r1[r0]
+            java.lang.String r0 = r0.getImei()
+            goto L_0x002b
+        L_0x0027:
+            int r0 = r0 + 1
+            goto L_0x000f
+        L_0x002a:
+            r0 = 0
+        L_0x002b:
+            boolean r1 = android.text.TextUtils.isEmpty(r0)
+            if (r1 == 0) goto L_0x0037
+            android.telephony.TelephonyManager r3 = r3.mTelephonyManager
+            java.lang.String r0 = r3.getImei(r4)
+        L_0x0037:
+            return r0
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.deviceinfo.imei.ImeiInfoPreferenceController.getImei(int):java.lang.String");
     }
 
     private CharSequence getTitleForGsmPhone(int i) {
-        String string = this.mIsMultiSim ? this.mContext.getString(R.string.imei_multi_sim, Integer.valueOf(i + 1)) : this.mContext.getString(R.string.status_imei);
-        if (!this.mIsMultiSim || !isPrimaryImeiSlot(i)) {
-            return string;
+        String str;
+        if (this.mIsMultiSim) {
+            str = this.mContext.getString(R$string.imei_multi_sim, new Object[]{Integer.valueOf(i + 1)});
+        } else {
+            str = this.mContext.getString(R$string.status_imei);
         }
-        return ((Object) string) + " (Primary)";
+        if (!this.mIsMultiSim || !isPrimaryImeiSlot(i)) {
+            return str;
+        }
+        return str + " (Primary)";
     }
 
     private CharSequence getTitleForCdmaPhone(int i) {
-        return this.mIsMultiSim ? this.mContext.getString(R.string.meid_multi_sim, Integer.valueOf(i + 1)) : this.mContext.getString(R.string.status_meid_number);
+        if (!this.mIsMultiSim) {
+            return this.mContext.getString(R$string.status_meid_number);
+        }
+        return this.mContext.getString(R$string.meid_multi_sim, new Object[]{Integer.valueOf(i + 1)});
     }
 
     private CharSequence getTitle(int i) {
@@ -277,7 +275,8 @@ public class ImeiInfoPreferenceController extends BasePreferenceController {
         return this.mTelephonyManager.getCurrentPhoneType(activeSubscriptionInfoForSimSlotIndex != null ? activeSubscriptionInfoForSimSlotIndex.getSubscriptionId() : Integer.MAX_VALUE);
     }
 
-    Preference createNewPreference(Context context) {
-        return new Preference(context);
+    /* access modifiers changed from: package-private */
+    public Preference createNewPreference(Context context) {
+        return new PhoneNumberSummaryPreference(context);
     }
 }

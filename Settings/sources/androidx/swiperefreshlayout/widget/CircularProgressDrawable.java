@@ -16,27 +16,26 @@ import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import androidx.core.util.Preconditions;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
-/* loaded from: classes.dex */
+
 public class CircularProgressDrawable extends Drawable implements Animatable {
+    private static final int[] COLORS = {-16777216};
+    private static final Interpolator LINEAR_INTERPOLATOR = new LinearInterpolator();
+    private static final Interpolator MATERIAL_INTERPOLATOR = new FastOutSlowInInterpolator();
     private Animator mAnimator;
     boolean mFinishing;
     private Resources mResources;
     private final Ring mRing;
     private float mRotation;
     float mRotationCount;
-    private static final Interpolator LINEAR_INTERPOLATOR = new LinearInterpolator();
-    private static final Interpolator MATERIAL_INTERPOLATOR = new FastOutSlowInInterpolator();
-    private static final int[] COLORS = {-16777216};
 
-    private int evaluateColorChange(float fraction, int startValue, int endValue) {
-        int i = (startValue >> 24) & 255;
-        int i2 = (startValue >> 16) & 255;
-        int i3 = (startValue >> 8) & 255;
-        int i4 = startValue & 255;
-        return ((i + ((int) ((((endValue >> 24) & 255) - i) * fraction))) << 24) | ((i2 + ((int) ((((endValue >> 16) & 255) - i2) * fraction))) << 16) | ((i3 + ((int) ((((endValue >> 8) & 255) - i3) * fraction))) << 8) | (i4 + ((int) (fraction * ((endValue & 255) - i4))));
+    private int evaluateColorChange(float f, int i, int i2) {
+        int i3 = (i >> 24) & 255;
+        int i4 = (i >> 16) & 255;
+        int i5 = (i >> 8) & 255;
+        int i6 = i & 255;
+        return ((i3 + ((int) (((float) (((i2 >> 24) & 255) - i3)) * f))) << 24) | ((i4 + ((int) (((float) (((i2 >> 16) & 255) - i4)) * f))) << 16) | ((i5 + ((int) (((float) (((i2 >> 8) & 255) - i5)) * f))) << 8) | (i6 + ((int) (f * ((float) ((i2 & 255) - i6)))));
     }
 
-    @Override // android.graphics.drawable.Drawable
     public int getOpacity() {
         return -3;
     }
@@ -50,17 +49,17 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
         setupAnimators();
     }
 
-    private void setSizeParameters(float centerRadius, float strokeWidth, float arrowWidth, float arrowHeight) {
+    private void setSizeParameters(float f, float f2, float f3, float f4) {
         Ring ring = this.mRing;
-        float f = this.mResources.getDisplayMetrics().density;
-        ring.setStrokeWidth(strokeWidth * f);
-        ring.setCenterRadius(centerRadius * f);
+        float f5 = this.mResources.getDisplayMetrics().density;
+        ring.setStrokeWidth(f2 * f5);
+        ring.setCenterRadius(f * f5);
         ring.setColorIndex(0);
-        ring.setArrowDimensions(arrowWidth * f, arrowHeight * f);
+        ring.setArrowDimensions(f3 * f5, f4 * f5);
     }
 
-    public void setStyle(int size) {
-        if (size == 0) {
+    public void setStyle(int i) {
+        if (i == 0) {
             setSizeParameters(11.0f, 3.0f, 12.0f, 6.0f);
         } else {
             setSizeParameters(7.5f, 2.5f, 10.0f, 5.0f);
@@ -68,39 +67,38 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
         invalidateSelf();
     }
 
-    public void setStrokeWidth(float strokeWidth) {
-        this.mRing.setStrokeWidth(strokeWidth);
+    public void setStrokeWidth(float f) {
+        this.mRing.setStrokeWidth(f);
         invalidateSelf();
     }
 
-    public void setArrowEnabled(boolean show) {
-        this.mRing.setShowArrow(show);
+    public void setArrowEnabled(boolean z) {
+        this.mRing.setShowArrow(z);
         invalidateSelf();
     }
 
-    public void setArrowScale(float scale) {
-        this.mRing.setArrowScale(scale);
+    public void setArrowScale(float f) {
+        this.mRing.setArrowScale(f);
         invalidateSelf();
     }
 
-    public void setStartEndTrim(float start, float end) {
-        this.mRing.setStartTrim(start);
-        this.mRing.setEndTrim(end);
+    public void setStartEndTrim(float f, float f2) {
+        this.mRing.setStartTrim(f);
+        this.mRing.setEndTrim(f2);
         invalidateSelf();
     }
 
-    public void setProgressRotation(float rotation) {
-        this.mRing.setRotation(rotation);
+    public void setProgressRotation(float f) {
+        this.mRing.setRotation(f);
         invalidateSelf();
     }
 
-    public void setColorSchemeColors(int... colors) {
-        this.mRing.setColors(colors);
+    public void setColorSchemeColors(int... iArr) {
+        this.mRing.setColors(iArr);
         this.mRing.setColorIndex(0);
         invalidateSelf();
     }
 
-    @Override // android.graphics.drawable.Drawable
     public void draw(Canvas canvas) {
         Rect bounds = getBounds();
         canvas.save();
@@ -109,49 +107,43 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
         canvas.restore();
     }
 
-    @Override // android.graphics.drawable.Drawable
-    public void setAlpha(int alpha) {
-        this.mRing.setAlpha(alpha);
+    public void setAlpha(int i) {
+        this.mRing.setAlpha(i);
         invalidateSelf();
     }
 
-    @Override // android.graphics.drawable.Drawable
     public int getAlpha() {
         return this.mRing.getAlpha();
     }
 
-    @Override // android.graphics.drawable.Drawable
     public void setColorFilter(ColorFilter colorFilter) {
         this.mRing.setColorFilter(colorFilter);
         invalidateSelf();
     }
 
-    private void setRotation(float rotation) {
-        this.mRotation = rotation;
+    private void setRotation(float f) {
+        this.mRotation = f;
     }
 
-    @Override // android.graphics.drawable.Animatable
     public boolean isRunning() {
         return this.mAnimator.isRunning();
     }
 
-    @Override // android.graphics.drawable.Animatable
     public void start() {
         this.mAnimator.cancel();
         this.mRing.storeOriginals();
         if (this.mRing.getEndTrim() != this.mRing.getStartTrim()) {
             this.mFinishing = true;
-            this.mAnimator.setDuration(666L);
+            this.mAnimator.setDuration(666);
             this.mAnimator.start();
             return;
         }
         this.mRing.setColorIndex(0);
         this.mRing.resetOriginals();
-        this.mAnimator.setDuration(1332L);
+        this.mAnimator.setDuration(1332);
         this.mAnimator.start();
     }
 
-    @Override // android.graphics.drawable.Animatable
     public void stop() {
         this.mAnimator.cancel();
         setRotation(0.0f);
@@ -161,52 +153,53 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
         invalidateSelf();
     }
 
-    void updateRingColor(float interpolatedTime, Ring ring) {
-        if (interpolatedTime > 0.75f) {
-            ring.setColor(evaluateColorChange((interpolatedTime - 0.75f) / 0.25f, ring.getStartingColor(), ring.getNextColor()));
+    /* access modifiers changed from: package-private */
+    public void updateRingColor(float f, Ring ring) {
+        if (f > 0.75f) {
+            ring.setColor(evaluateColorChange((f - 0.75f) / 0.25f, ring.getStartingColor(), ring.getNextColor()));
         } else {
             ring.setColor(ring.getStartingColor());
         }
     }
 
-    private void applyFinishTranslation(float interpolatedTime, Ring ring) {
-        updateRingColor(interpolatedTime, ring);
-        float floor = (float) (Math.floor(ring.getStartingRotation() / 0.8f) + 1.0d);
-        ring.setStartTrim(ring.getStartingStartTrim() + (((ring.getStartingEndTrim() - 0.01f) - ring.getStartingStartTrim()) * interpolatedTime));
+    private void applyFinishTranslation(float f, Ring ring) {
+        updateRingColor(f, ring);
+        float floor = (float) (Math.floor((double) (ring.getStartingRotation() / 0.8f)) + 1.0d);
+        ring.setStartTrim(ring.getStartingStartTrim() + (((ring.getStartingEndTrim() - 0.01f) - ring.getStartingStartTrim()) * f));
         ring.setEndTrim(ring.getStartingEndTrim());
-        ring.setRotation(ring.getStartingRotation() + ((floor - ring.getStartingRotation()) * interpolatedTime));
+        ring.setRotation(ring.getStartingRotation() + ((floor - ring.getStartingRotation()) * f));
     }
 
-    void applyTransformation(float interpolatedTime, Ring ring, boolean lastFrame) {
-        float interpolation;
-        float f;
+    /* access modifiers changed from: package-private */
+    public void applyTransformation(float f, Ring ring, boolean z) {
+        float f2;
+        float f3;
         if (this.mFinishing) {
-            applyFinishTranslation(interpolatedTime, ring);
-        } else if (interpolatedTime == 1.0f && !lastFrame) {
-        } else {
+            applyFinishTranslation(f, ring);
+        } else if (f != 1.0f || z) {
             float startingRotation = ring.getStartingRotation();
-            if (interpolatedTime < 0.5f) {
-                interpolation = ring.getStartingStartTrim();
-                f = (MATERIAL_INTERPOLATOR.getInterpolation(interpolatedTime / 0.5f) * 0.79f) + 0.01f + interpolation;
+            if (f < 0.5f) {
+                f2 = ring.getStartingStartTrim();
+                f3 = (MATERIAL_INTERPOLATOR.getInterpolation(f / 0.5f) * 0.79f) + 0.01f + f2;
             } else {
                 float startingStartTrim = ring.getStartingStartTrim() + 0.79f;
-                interpolation = startingStartTrim - (((1.0f - MATERIAL_INTERPOLATOR.getInterpolation((interpolatedTime - 0.5f) / 0.5f)) * 0.79f) + 0.01f);
-                f = startingStartTrim;
+                float f4 = startingStartTrim;
+                f2 = startingStartTrim - (((1.0f - MATERIAL_INTERPOLATOR.getInterpolation((f - 0.5f) / 0.5f)) * 0.79f) + 0.01f);
+                f3 = f4;
             }
-            ring.setStartTrim(interpolation);
-            ring.setEndTrim(f);
-            ring.setRotation(startingRotation + (0.20999998f * interpolatedTime));
-            setRotation((interpolatedTime + this.mRotationCount) * 216.0f);
+            ring.setStartTrim(f2);
+            ring.setEndTrim(f3);
+            ring.setRotation(startingRotation + (0.20999998f * f));
+            setRotation((f + this.mRotationCount) * 216.0f);
         }
     }
 
     private void setupAnimators() {
         final Ring ring = this.mRing;
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(0.0f, 1.0f);
-        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: androidx.swiperefreshlayout.widget.CircularProgressDrawable.1
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float floatValue = ((Float) animation.getAnimatedValue()).floatValue();
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                 CircularProgressDrawable.this.updateRingColor(floatValue, ring);
                 CircularProgressDrawable.this.applyTransformation(floatValue, ring, false);
                 CircularProgressDrawable.this.invalidateSelf();
@@ -215,21 +208,17 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
         ofFloat.setRepeatCount(-1);
         ofFloat.setRepeatMode(1);
         ofFloat.setInterpolator(LINEAR_INTERPOLATOR);
-        ofFloat.addListener(new Animator.AnimatorListener() { // from class: androidx.swiperefreshlayout.widget.CircularProgressDrawable.2
-            @Override // android.animation.Animator.AnimatorListener
-            public void onAnimationCancel(Animator animation) {
+        ofFloat.addListener(new Animator.AnimatorListener() {
+            public void onAnimationCancel(Animator animator) {
             }
 
-            @Override // android.animation.Animator.AnimatorListener
             public void onAnimationEnd(Animator animator) {
             }
 
-            @Override // android.animation.Animator.AnimatorListener
             public void onAnimationStart(Animator animator) {
                 CircularProgressDrawable.this.mRotationCount = 0.0f;
             }
 
-            @Override // android.animation.Animator.AnimatorListener
             public void onAnimationRepeat(Animator animator) {
                 CircularProgressDrawable.this.applyTransformation(1.0f, ring, true);
                 ring.storeOriginals();
@@ -238,7 +227,7 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
                 if (circularProgressDrawable.mFinishing) {
                     circularProgressDrawable.mFinishing = false;
                     animator.cancel();
-                    animator.setDuration(1332L);
+                    animator.setDuration(1332);
                     animator.start();
                     ring.setShowArrow(false);
                     return;
@@ -249,30 +238,28 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
         this.mAnimator = ofFloat;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class Ring {
+    private static class Ring {
+        int mAlpha;
         Path mArrow;
         int mArrowHeight;
         final Paint mArrowPaint;
+        float mArrowScale;
         int mArrowWidth;
         final Paint mCirclePaint;
         int mColorIndex;
         int[] mColors;
         int mCurrentColor;
+        float mEndTrim;
         final Paint mPaint;
         float mRingCenterRadius;
+        float mRotation;
         boolean mShowArrow;
+        float mStartTrim;
         float mStartingEndTrim;
         float mStartingRotation;
         float mStartingStartTrim;
+        float mStrokeWidth;
         final RectF mTempBounds = new RectF();
-        float mStartTrim = 0.0f;
-        float mEndTrim = 0.0f;
-        float mRotation = 0.0f;
-        float mStrokeWidth = 5.0f;
-        float mArrowScale = 1.0f;
-        int mAlpha = 255;
 
         Ring() {
             Paint paint = new Paint();
@@ -281,6 +268,12 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
             this.mArrowPaint = paint2;
             Paint paint3 = new Paint();
             this.mCirclePaint = paint3;
+            this.mStartTrim = 0.0f;
+            this.mEndTrim = 0.0f;
+            this.mRotation = 0.0f;
+            this.mStrokeWidth = 5.0f;
+            this.mArrowScale = 1.0f;
+            this.mAlpha = 255;
             paint.setStrokeCap(Paint.Cap.SQUARE);
             paint.setAntiAlias(true);
             paint.setStyle(Paint.Style.STROKE);
@@ -289,19 +282,21 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
             paint3.setColor(0);
         }
 
-        void setArrowDimensions(float width, float height) {
-            this.mArrowWidth = (int) width;
-            this.mArrowHeight = (int) height;
+        /* access modifiers changed from: package-private */
+        public void setArrowDimensions(float f, float f2) {
+            this.mArrowWidth = (int) f;
+            this.mArrowHeight = (int) f2;
         }
 
-        void draw(Canvas c, Rect bounds) {
+        /* access modifiers changed from: package-private */
+        public void draw(Canvas canvas, Rect rect) {
             RectF rectF = this.mTempBounds;
             float f = this.mRingCenterRadius;
             float f2 = (this.mStrokeWidth / 2.0f) + f;
             if (f <= 0.0f) {
-                f2 = (Math.min(bounds.width(), bounds.height()) / 2.0f) - Math.max((this.mArrowWidth * this.mArrowScale) / 2.0f, this.mStrokeWidth / 2.0f);
+                f2 = (((float) Math.min(rect.width(), rect.height())) / 2.0f) - Math.max((((float) this.mArrowWidth) * this.mArrowScale) / 2.0f, this.mStrokeWidth / 2.0f);
             }
-            rectF.set(bounds.centerX() - f2, bounds.centerY() - f2, bounds.centerX() + f2, bounds.centerY() + f2);
+            rectF.set(((float) rect.centerX()) - f2, ((float) rect.centerY()) - f2, ((float) rect.centerX()) + f2, ((float) rect.centerY()) + f2);
             float f3 = this.mStartTrim;
             float f4 = this.mRotation;
             float f5 = (f3 + f4) * 360.0f;
@@ -310,14 +305,15 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
             this.mPaint.setAlpha(this.mAlpha);
             float f7 = this.mStrokeWidth / 2.0f;
             rectF.inset(f7, f7);
-            c.drawCircle(rectF.centerX(), rectF.centerY(), rectF.width() / 2.0f, this.mCirclePaint);
+            canvas.drawCircle(rectF.centerX(), rectF.centerY(), rectF.width() / 2.0f, this.mCirclePaint);
             float f8 = -f7;
             rectF.inset(f8, f8);
-            c.drawArc(rectF, f5, f6, false, this.mPaint);
-            drawTriangle(c, f5, f6, rectF);
+            canvas.drawArc(rectF, f5, f6, false, this.mPaint);
+            drawTriangle(canvas, f5, f6, rectF);
         }
 
-        void drawTriangle(Canvas c, float startAngle, float sweepAngle, RectF bounds) {
+        /* access modifiers changed from: package-private */
+        public void drawTriangle(Canvas canvas, float f, float f2, RectF rectF) {
             if (this.mShowArrow) {
                 Path path = this.mArrow;
                 if (path == null) {
@@ -328,123 +324,147 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
                     path.reset();
                 }
                 this.mArrow.moveTo(0.0f, 0.0f);
-                this.mArrow.lineTo(this.mArrowWidth * this.mArrowScale, 0.0f);
+                this.mArrow.lineTo(((float) this.mArrowWidth) * this.mArrowScale, 0.0f);
                 Path path3 = this.mArrow;
-                float f = this.mArrowScale;
-                path3.lineTo((this.mArrowWidth * f) / 2.0f, this.mArrowHeight * f);
-                this.mArrow.offset(((Math.min(bounds.width(), bounds.height()) / 2.0f) + bounds.centerX()) - ((this.mArrowWidth * this.mArrowScale) / 2.0f), bounds.centerY() + (this.mStrokeWidth / 2.0f));
+                float f3 = this.mArrowScale;
+                path3.lineTo((((float) this.mArrowWidth) * f3) / 2.0f, ((float) this.mArrowHeight) * f3);
+                this.mArrow.offset(((Math.min(rectF.width(), rectF.height()) / 2.0f) + rectF.centerX()) - ((((float) this.mArrowWidth) * this.mArrowScale) / 2.0f), rectF.centerY() + (this.mStrokeWidth / 2.0f));
                 this.mArrow.close();
                 this.mArrowPaint.setColor(this.mCurrentColor);
                 this.mArrowPaint.setAlpha(this.mAlpha);
-                c.save();
-                c.rotate(startAngle + sweepAngle, bounds.centerX(), bounds.centerY());
-                c.drawPath(this.mArrow, this.mArrowPaint);
-                c.restore();
+                canvas.save();
+                canvas.rotate(f + f2, rectF.centerX(), rectF.centerY());
+                canvas.drawPath(this.mArrow, this.mArrowPaint);
+                canvas.restore();
             }
         }
 
-        void setColors(int[] colors) {
-            this.mColors = colors;
+        /* access modifiers changed from: package-private */
+        public void setColors(int[] iArr) {
+            this.mColors = iArr;
             setColorIndex(0);
         }
 
-        void setColor(int color) {
-            this.mCurrentColor = color;
+        /* access modifiers changed from: package-private */
+        public void setColor(int i) {
+            this.mCurrentColor = i;
         }
 
-        void setColorIndex(int index) {
-            this.mColorIndex = index;
-            this.mCurrentColor = this.mColors[index];
+        /* access modifiers changed from: package-private */
+        public void setColorIndex(int i) {
+            this.mColorIndex = i;
+            this.mCurrentColor = this.mColors[i];
         }
 
-        int getNextColor() {
+        /* access modifiers changed from: package-private */
+        public int getNextColor() {
             return this.mColors[getNextColorIndex()];
         }
 
-        int getNextColorIndex() {
+        /* access modifiers changed from: package-private */
+        public int getNextColorIndex() {
             return (this.mColorIndex + 1) % this.mColors.length;
         }
 
-        void goToNextColor() {
+        /* access modifiers changed from: package-private */
+        public void goToNextColor() {
             setColorIndex(getNextColorIndex());
         }
 
-        void setColorFilter(ColorFilter filter) {
-            this.mPaint.setColorFilter(filter);
+        /* access modifiers changed from: package-private */
+        public void setColorFilter(ColorFilter colorFilter) {
+            this.mPaint.setColorFilter(colorFilter);
         }
 
-        void setAlpha(int alpha) {
-            this.mAlpha = alpha;
+        /* access modifiers changed from: package-private */
+        public void setAlpha(int i) {
+            this.mAlpha = i;
         }
 
-        int getAlpha() {
+        /* access modifiers changed from: package-private */
+        public int getAlpha() {
             return this.mAlpha;
         }
 
-        void setStrokeWidth(float strokeWidth) {
-            this.mStrokeWidth = strokeWidth;
-            this.mPaint.setStrokeWidth(strokeWidth);
+        /* access modifiers changed from: package-private */
+        public void setStrokeWidth(float f) {
+            this.mStrokeWidth = f;
+            this.mPaint.setStrokeWidth(f);
         }
 
-        void setStartTrim(float startTrim) {
-            this.mStartTrim = startTrim;
+        /* access modifiers changed from: package-private */
+        public void setStartTrim(float f) {
+            this.mStartTrim = f;
         }
 
-        float getStartTrim() {
+        /* access modifiers changed from: package-private */
+        public float getStartTrim() {
             return this.mStartTrim;
         }
 
-        float getStartingStartTrim() {
+        /* access modifiers changed from: package-private */
+        public float getStartingStartTrim() {
             return this.mStartingStartTrim;
         }
 
-        float getStartingEndTrim() {
+        /* access modifiers changed from: package-private */
+        public float getStartingEndTrim() {
             return this.mStartingEndTrim;
         }
 
-        int getStartingColor() {
+        /* access modifiers changed from: package-private */
+        public int getStartingColor() {
             return this.mColors[this.mColorIndex];
         }
 
-        void setEndTrim(float endTrim) {
-            this.mEndTrim = endTrim;
+        /* access modifiers changed from: package-private */
+        public void setEndTrim(float f) {
+            this.mEndTrim = f;
         }
 
-        float getEndTrim() {
+        /* access modifiers changed from: package-private */
+        public float getEndTrim() {
             return this.mEndTrim;
         }
 
-        void setRotation(float rotation) {
-            this.mRotation = rotation;
+        /* access modifiers changed from: package-private */
+        public void setRotation(float f) {
+            this.mRotation = f;
         }
 
-        void setCenterRadius(float centerRadius) {
-            this.mRingCenterRadius = centerRadius;
+        /* access modifiers changed from: package-private */
+        public void setCenterRadius(float f) {
+            this.mRingCenterRadius = f;
         }
 
-        void setShowArrow(boolean show) {
-            if (this.mShowArrow != show) {
-                this.mShowArrow = show;
+        /* access modifiers changed from: package-private */
+        public void setShowArrow(boolean z) {
+            if (this.mShowArrow != z) {
+                this.mShowArrow = z;
             }
         }
 
-        void setArrowScale(float scale) {
-            if (scale != this.mArrowScale) {
-                this.mArrowScale = scale;
+        /* access modifiers changed from: package-private */
+        public void setArrowScale(float f) {
+            if (f != this.mArrowScale) {
+                this.mArrowScale = f;
             }
         }
 
-        float getStartingRotation() {
+        /* access modifiers changed from: package-private */
+        public float getStartingRotation() {
             return this.mStartingRotation;
         }
 
-        void storeOriginals() {
+        /* access modifiers changed from: package-private */
+        public void storeOriginals() {
             this.mStartingStartTrim = this.mStartTrim;
             this.mStartingEndTrim = this.mEndTrim;
             this.mStartingRotation = this.mRotation;
         }
 
-        void resetOriginals() {
+        /* access modifiers changed from: package-private */
+        public void resetOriginals() {
             this.mStartingStartTrim = 0.0f;
             this.mStartingEndTrim = 0.0f;
             this.mStartingRotation = 0.0f;

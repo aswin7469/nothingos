@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:paddingBottom="3dp" android:layout_width="match_parent" android:layout_height="match_parent" android:paddingStart="6dp" android:paddingEnd="6dp">
+<ScrollView xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:paddingBottom="3dp" android:layout_width="match_parent" android:layout_height="match_parent" android:paddingStart="6dp" android:paddingEnd="6dp">
     <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
         <TextView android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/intent_sender_action_label" android:maxLines="1"/>
         <EditText android:id="@+id/intent" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:scrollHorizontally="true" android:singleLine="true" android:capitalize="none" android:autoText="false"/>

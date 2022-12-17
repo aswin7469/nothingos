@@ -1,7 +1,6 @@
 package com.google.android.setupcompat.logging;
 
 import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -11,21 +10,15 @@ import com.google.android.setupcompat.internal.PersistableBundles;
 import com.google.android.setupcompat.internal.Preconditions;
 import com.google.android.setupcompat.internal.Validations;
 import com.google.android.setupcompat.util.ObjectUtils;
+
 @TargetApi(29)
-/* loaded from: classes2.dex */
 public final class CustomEvent implements Parcelable {
-    public static final Parcelable.Creator<CustomEvent> CREATOR = new Parcelable.Creator<CustomEvent>() { // from class: com.google.android.setupcompat.logging.CustomEvent.1
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: createFromParcel */
-        public CustomEvent mo727createFromParcel(Parcel parcel) {
+    public static final Parcelable.Creator<CustomEvent> CREATOR = new Parcelable.Creator<CustomEvent>() {
+        public CustomEvent createFromParcel(Parcel parcel) {
             return new CustomEvent(parcel.readLong(), (MetricKey) parcel.readParcelable(MetricKey.class.getClassLoader()), parcel.readPersistableBundle(MetricKey.class.getClassLoader()), parcel.readPersistableBundle(MetricKey.class.getClassLoader()));
         }
 
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: newArray */
-        public CustomEvent[] mo728newArray(int i) {
+        public CustomEvent[] newArray(int i) {
             return new CustomEvent[i];
         }
     };
@@ -36,19 +29,18 @@ public final class CustomEvent implements Parcelable {
     private final PersistableBundle piiValues;
     private final long timestampMillis;
 
-    @Override // android.os.Parcelable
     public int describeContents() {
         return 0;
     }
 
-    public static CustomEvent create(MetricKey metricKey, PersistableBundle persistableBundle, PersistableBundle persistableBundle2) {
-        Preconditions.checkArgument(Build.VERSION.SDK_INT >= 29, "The constructor only support on sdk Q or higher");
-        return new CustomEvent(ClockProvider.timeInMillis(), metricKey, PersistableBundles.assertIsValid(persistableBundle), PersistableBundles.assertIsValid(persistableBundle2));
+    public static CustomEvent create(MetricKey metricKey2, PersistableBundle persistableBundle2, PersistableBundle persistableBundle3) {
+        Preconditions.checkArgument(true, "The constructor only support on sdk Q or higher");
+        return new CustomEvent(ClockProvider.timeInMillis(), metricKey2, PersistableBundles.assertIsValid(persistableBundle2), PersistableBundles.assertIsValid(persistableBundle3));
     }
 
-    public static CustomEvent create(MetricKey metricKey, PersistableBundle persistableBundle) {
-        Preconditions.checkArgument(Build.VERSION.SDK_INT >= 29, "The constructor only support on sdk Q or higher.");
-        return create(metricKey, persistableBundle, PersistableBundle.EMPTY);
+    public static CustomEvent create(MetricKey metricKey2, PersistableBundle persistableBundle2) {
+        Preconditions.checkArgument(true, "The constructor only support on sdk Q or higher.");
+        return create(metricKey2, persistableBundle2, PersistableBundle.EMPTY);
     }
 
     public static Bundle toBundle(CustomEvent customEvent) {
@@ -78,7 +70,6 @@ public final class CustomEvent implements Parcelable {
         return this.piiValues;
     }
 
-    @Override // android.os.Parcelable
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeLong(this.timestampMillis);
         parcel.writeParcelable(this.metricKey, i);
@@ -94,37 +85,43 @@ public final class CustomEvent implements Parcelable {
             return false;
         }
         CustomEvent customEvent = (CustomEvent) obj;
-        return this.timestampMillis == customEvent.timestampMillis && ObjectUtils.equals(this.metricKey, customEvent.metricKey) && PersistableBundles.equals(this.persistableBundle, customEvent.persistableBundle) && PersistableBundles.equals(this.piiValues, customEvent.piiValues);
+        if (this.timestampMillis != customEvent.timestampMillis || !ObjectUtils.equals(this.metricKey, customEvent.metricKey) || !PersistableBundles.equals(this.persistableBundle, customEvent.persistableBundle) || !PersistableBundles.equals(this.piiValues, customEvent.piiValues)) {
+            return false;
+        }
+        return true;
     }
 
     public int hashCode() {
         return ObjectUtils.hashCode(Long.valueOf(this.timestampMillis), this.metricKey, this.persistableBundle, this.piiValues);
     }
 
-    private CustomEvent(long j, MetricKey metricKey, PersistableBundle persistableBundle, PersistableBundle persistableBundle2) {
+    private CustomEvent(long j, MetricKey metricKey2, PersistableBundle persistableBundle2, PersistableBundle persistableBundle3) {
         Preconditions.checkArgument(j >= 0, "Timestamp cannot be negative.");
-        Preconditions.checkNotNull(metricKey, "MetricKey cannot be null.");
-        Preconditions.checkNotNull(persistableBundle, "Bundle cannot be null.");
-        Preconditions.checkArgument(!persistableBundle.isEmpty(), "Bundle cannot be empty.");
-        Preconditions.checkNotNull(persistableBundle2, "piiValues cannot be null.");
-        assertPersistableBundleIsValid(persistableBundle);
+        Preconditions.checkNotNull(metricKey2, "MetricKey cannot be null.");
+        Preconditions.checkNotNull(persistableBundle2, "Bundle cannot be null.");
+        Preconditions.checkArgument(!persistableBundle2.isEmpty(), "Bundle cannot be empty.");
+        Preconditions.checkNotNull(persistableBundle3, "piiValues cannot be null.");
+        assertPersistableBundleIsValid(persistableBundle2);
         this.timestampMillis = j;
-        this.metricKey = metricKey;
-        this.persistableBundle = new PersistableBundle(persistableBundle);
-        this.piiValues = new PersistableBundle(persistableBundle2);
+        this.metricKey = metricKey2;
+        this.persistableBundle = new PersistableBundle(persistableBundle2);
+        this.piiValues = new PersistableBundle(persistableBundle3);
     }
 
-    private static void assertPersistableBundleIsValid(PersistableBundle persistableBundle) {
-        for (String str : persistableBundle.keySet()) {
+    private static void assertPersistableBundleIsValid(PersistableBundle persistableBundle2) {
+        for (String str : persistableBundle2.keySet()) {
             Validations.assertLengthInRange(str, "bundle key", 3, 50);
-            Object obj = persistableBundle.get(str);
+            Object obj = persistableBundle2.get(str);
             if (obj instanceof String) {
-                Preconditions.checkArgument(((String) obj).length() <= 50, String.format("Maximum length of string value for key='%s' cannot exceed %s.", str, 50));
+                Preconditions.checkArgument(((String) obj).length() <= 50, String.format("Maximum length of string value for key='%s' cannot exceed %s.", new Object[]{str, 50}));
             }
         }
     }
 
     public static String trimsStringOverMaxLength(String str) {
-        return str.length() <= 50 ? str : String.format("%s…", str.substring(0, 49));
+        if (str.length() <= 50) {
+            return str;
+        }
+        return String.format("%s…", new Object[]{str.substring(0, 49)});
     }
 }

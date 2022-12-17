@@ -196,6 +196,8 @@
         <item>超過 60 天</item>
         <item>超過 90 天</item>
     </array>
+    <array name="avatar_image_descriptions">
+    </array>
     <array name="battery_labels">
         <item>0%</item>
         <item>50%</item>
@@ -260,6 +262,8 @@
         <item>48.0 kHz</item>
         <item>88.2 kHz</item>
         <item>96.0 kHz</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
         <item>系統自動選擇 (預設)</item>
@@ -267,6 +271,8 @@
         <item>48.0 kHz</item>
         <item>88.2 kHz</item>
         <item>96.0 kHz</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
         <item>系統自動選擇 (預設)</item>
@@ -277,6 +283,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive 音訊</item>
         <item>Qualcomm® aptX™ TWS+ 音訊</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
         <item>系統自動選擇 (預設)</item>
@@ -287,6 +297,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive 音訊</item>
         <item>Qualcomm® aptX™ TWS+ 音訊</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -345,17 +359,10 @@
         <item>外凸</item>
         <item>內凹</item>
     </array>
-    <array name="captioning_font_size_selector_summaries">
-        <item>文字大小：極小</item>
-        <item>文字大小：小</item>
-        <item>文字大小：預設</item>
-        <item>文字大小：大</item>
-        <item>文字大小：極大</item>
-    </array>
     <array name="captioning_font_size_selector_titles">
         <item>最小</item>
         <item>小</item>
-        <item>預設</item>
+        <item>中</item>
         <item>大</item>
         <item>最大</item>
     </array>
@@ -488,12 +495,20 @@
         <item>GID</item>
         <item>ICCID</item>
     </array>
-    <array name="res_0x7f0300b1_nt_preferred_network_mode_choices">
+    <array name="nfc_payment_favor">
+        <item>一律使用</item>
+        <item>其他付款應用程式開啟時除外</item>
+    </array>
+    <array name="nfc_payment_favor_values">
+        <item>@null</item>
+        <item>1</item>
+    </array>
+    <array name="nt-preferred_network_mode_choices">
         <item>3G</item>
         <item>4G</item>
         <item>5G</item>
     </array>
-    <array name="res_0x7f0300b2_nt_preferred_network_mode_values">
+    <array name="nt-preferred_network_mode_values">
         <item>21</item>
         <item>22</item>
         <item>33</item>
@@ -630,17 +645,20 @@
         <item>將非矩形裁剪區域塗上藍色</item>
         <item>使用綠色標明測試繪圖指令</item>
     </array>
-    <array name="sim_color_light">
-        <item>@color/SIM_color_cyan</item>
-        <item>@color/SIM_color_blue800</item>
-        <item>@color/SIM_color_green800</item>
-        <item>@color/SIM_color_purple800</item>
-        <item>@color/SIM_color_pink800</item>
-        <item>@color/SIM_color_orange</item>
-    </array>
     <array name="swipe_direction_values">
         <item>1</item>
         <item>@null</item>
+    </array>
+    <array name="switch_to_user_zero_when_docked_timeout_entries">
+        <item>永不</item>
+        <item>1 分鐘後</item>
+        <item>5 分鐘後</item>
+    </array>
+    <array name="tare_modifiers_subfactors">
+        <item>充電</item>
+        <item>打盹</item>
+        <item>省電模式</item>
+        <item>處理狀態</item>
     </array>
     <array name="timezone_filters">
         <item>美國</item>

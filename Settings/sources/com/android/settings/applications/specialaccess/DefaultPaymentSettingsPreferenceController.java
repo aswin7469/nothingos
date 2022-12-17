@@ -7,53 +7,40 @@ import android.nfc.NfcAdapter;
 import android.os.UserManager;
 import androidx.preference.PreferenceScreen;
 import com.android.settings.core.BasePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnPause;
 import com.android.settingslib.core.lifecycle.events.OnResume;
-/* loaded from: classes.dex */
+
 public class DefaultPaymentSettingsPreferenceController extends BasePreferenceController implements LifecycleObserver, OnResume, OnPause {
     private final NfcAdapter mNfcAdapter = NfcAdapter.getDefaultAdapter(this.mContext);
     private final PackageManager mPackageManager;
     private PaymentSettingsEnabler mPaymentSettingsEnabler;
     private final UserManager mUserManager;
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -64,7 +51,6 @@ public class DefaultPaymentSettingsPreferenceController extends BasePreferenceCo
         this.mUserManager = (UserManager) context.getSystemService(UserManager.class);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         if (!isAvailable()) {
@@ -74,7 +60,6 @@ public class DefaultPaymentSettingsPreferenceController extends BasePreferenceCo
         this.mPaymentSettingsEnabler = new PaymentSettingsEnabler(this.mContext, preferenceScreen.findPreference(getPreferenceKey()));
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnResume
     public void onResume() {
         PaymentSettingsEnabler paymentSettingsEnabler = this.mPaymentSettingsEnabler;
         if (paymentSettingsEnabler != null) {
@@ -82,7 +67,6 @@ public class DefaultPaymentSettingsPreferenceController extends BasePreferenceCo
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnPause
     public void onPause() {
         PaymentSettingsEnabler paymentSettingsEnabler = this.mPaymentSettingsEnabler;
         if (paymentSettingsEnabler != null) {
@@ -90,12 +74,11 @@ public class DefaultPaymentSettingsPreferenceController extends BasePreferenceCo
         }
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         if (!this.mPackageManager.hasSystemFeature("android.hardware.nfc") || !this.mPackageManager.hasSystemFeature("android.hardware.nfc.hce")) {
             return 3;
         }
-        if (!this.mUserManager.isAdminUser()) {
+        if (this.mUserManager.isGuestUser()) {
             return 4;
         }
         NfcAdapter nfcAdapter = this.mNfcAdapter;

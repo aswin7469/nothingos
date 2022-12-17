@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ResolveInfo;
 import android.net.TetheringManager;
+import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.ResultReceiver;
 import android.telephony.SubscriptionManager;
@@ -17,63 +19,60 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-/* loaded from: classes.dex */
+
 public class TetherService extends Service {
-    private static final boolean DEBUG = Log.isLoggable("TetherService", 3);
+    /* access modifiers changed from: private */
+    public static final boolean DEBUG = Log.isLoggable("TetherService", 3);
     public static final String EXTRA_RESULT = "EntitlementResult";
     public static final String EXTRA_TETHER_PROVISIONING_RESPONSE = "android.net.extra.TETHER_PROVISIONING_RESPONSE";
     public static final String EXTRA_TETHER_SILENT_PROVISIONING_ACTION = "android.net.extra.TETHER_SILENT_PROVISIONING_ACTION";
     public static final String EXTRA_TETHER_SUBID = "android.net.extra.TETHER_SUBID";
-    private ArrayList<Integer> mCurrentTethers;
-    private int mCurrentTypeIndex;
-    private boolean mInProvisionCheck;
+    /* access modifiers changed from: private */
+    public ArrayList<Integer> mCurrentTethers;
+    /* access modifiers changed from: private */
+    public int mCurrentTypeIndex;
+    /* access modifiers changed from: private */
+    public String mExpectedProvisionResponseAction = null;
+    /* access modifiers changed from: private */
+    public boolean mInProvisionCheck;
     private ArrayMap<Integer, List<ResultReceiver>> mPendingCallbacks;
     private String mProvisionAction;
-    private TetherServiceWrapper mWrapper;
-    private String mExpectedProvisionResponseAction = null;
-    private int mSubId = -1;
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() { // from class: com.android.settings.wifi.tether.TetherService.1
-        @Override // android.content.BroadcastReceiver
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if (TetherService.DEBUG) {
                 Log.d("TetherService", "Got provision result " + intent);
             }
-            if (intent.getAction().equals(TetherService.this.mExpectedProvisionResponseAction)) {
-                if (TetherService.this.mInProvisionCheck) {
-                    int intValue = ((Integer) TetherService.this.mCurrentTethers.get(TetherService.this.mCurrentTypeIndex)).intValue();
-                    TetherService.this.mInProvisionCheck = false;
-                    int intExtra = intent.getIntExtra(TetherService.EXTRA_RESULT, 0);
-                    if (intExtra != -1) {
-                        TetherService.this.disableTethering(intValue);
-                    }
-                    TetherService.this.fireCallbacksForType(intValue, intExtra);
-                    if (TetherService.access$304(TetherService.this) >= TetherService.this.mCurrentTethers.size()) {
-                        TetherService.this.stopSelf();
-                        return;
-                    }
-                    TetherService tetherService = TetherService.this;
-                    tetherService.startProvisioning(tetherService.mCurrentTypeIndex);
+            if (!intent.getAction().equals(TetherService.this.mExpectedProvisionResponseAction)) {
+                Log.e("TetherService", "Received provisioning response for unexpected action=" + intent.getAction() + ", expected=" + TetherService.this.mExpectedProvisionResponseAction);
+            } else if (!TetherService.this.mInProvisionCheck) {
+                Log.e("TetherService", "Unexpected provisioning response when not in provisioning check" + intent);
+            } else {
+                int intValue = ((Integer) TetherService.this.mCurrentTethers.get(TetherService.this.mCurrentTypeIndex)).intValue();
+                TetherService.this.mInProvisionCheck = false;
+                int intExtra = intent.getIntExtra(TetherService.EXTRA_RESULT, 0);
+                if (intExtra != -1) {
+                    TetherService.this.disableTethering(intValue);
+                }
+                TetherService.this.fireCallbacksForType(intValue, intExtra);
+                TetherService tetherService = TetherService.this;
+                int r4 = tetherService.mCurrentTypeIndex + 1;
+                tetherService.mCurrentTypeIndex = r4;
+                if (r4 >= TetherService.this.mCurrentTethers.size()) {
+                    TetherService.this.stopSelf();
                     return;
                 }
-                Log.e("TetherService", "Unexpected provisioning response when not in provisioning check" + intent);
-                return;
+                TetherService tetherService2 = TetherService.this;
+                tetherService2.startProvisioning(tetherService2.mCurrentTypeIndex);
             }
-            Log.e("TetherService", "Received provisioning response for unexpected action=" + intent.getAction() + ", expected=" + TetherService.this.mExpectedProvisionResponseAction);
         }
     };
+    private int mSubId = -1;
+    private TetherServiceWrapper mWrapper;
 
-    @Override // android.app.Service
     public IBinder onBind(Intent intent) {
         return null;
     }
 
-    static /* synthetic */ int access$304(TetherService tetherService) {
-        int i = tetherService.mCurrentTypeIndex + 1;
-        tetherService.mCurrentTypeIndex = i;
-        return i;
-    }
-
-    @Override // android.app.Service
     public void onCreate() {
         super.onCreate();
         if (DEBUG) {
@@ -90,18 +89,16 @@ public class TetherService extends Service {
     }
 
     private void maybeRegisterReceiver(String str) {
-        if (Objects.equals(str, this.mExpectedProvisionResponseAction)) {
-            return;
+        if (!Objects.equals(str, this.mExpectedProvisionResponseAction)) {
+            if (this.mExpectedProvisionResponseAction != null) {
+                unregisterReceiver(this.mReceiver);
+            }
+            registerReceiver(this.mReceiver, new IntentFilter(str), "android.permission.TETHER_PRIVILEGED", (Handler) null, 2);
+            this.mExpectedProvisionResponseAction = str;
+            if (DEBUG) {
+                Log.d("TetherService", "registerReceiver " + str);
+            }
         }
-        if (this.mExpectedProvisionResponseAction != null) {
-            unregisterReceiver(this.mReceiver);
-        }
-        registerReceiver(this.mReceiver, new IntentFilter(str), "android.permission.TETHER_PRIVILEGED", null);
-        this.mExpectedProvisionResponseAction = str;
-        if (!DEBUG) {
-            return;
-        }
-        Log.d("TetherService", "registerReceiver " + str);
     }
 
     private int stopSelfAndStartNotSticky() {
@@ -109,7 +106,6 @@ public class TetherService extends Service {
         return 2;
     }
 
-    @Override // android.app.Service
     public int onStartCommand(Intent intent, int i, int i2) {
         if (intent.hasExtra(EXTRA_TETHER_SUBID)) {
             int intExtra = intent.getIntExtra(EXTRA_TETHER_SUBID, -1);
@@ -128,12 +124,12 @@ public class TetherService extends Service {
             int intExtra2 = intent.getIntExtra("extraAddTetherType", -1);
             ResultReceiver resultReceiver = (ResultReceiver) intent.getParcelableExtra("extraProvisionCallback");
             if (resultReceiver != null) {
-                List<ResultReceiver> list = this.mPendingCallbacks.get(Integer.valueOf(intExtra2));
+                List list = this.mPendingCallbacks.get(Integer.valueOf(intExtra2));
                 if (list != null) {
                     list.add(resultReceiver);
                 } else {
                     Log.e("TetherService", "Invalid tethering type " + intExtra2 + ", stopping");
-                    resultReceiver.send(1, null);
+                    resultReceiver.send(1, (Bundle) null);
                     return stopSelfAndStartNotSticky();
                 }
             }
@@ -183,7 +179,6 @@ public class TetherService extends Service {
         }
     }
 
-    @Override // android.app.Service
     public void onDestroy() {
         if (this.mInProvisionCheck) {
             Log.e("TetherService", "TetherService getting destroyed while mid-provisioning" + this.mCurrentTethers.get(this.mCurrentTypeIndex));
@@ -205,10 +200,9 @@ public class TetherService extends Service {
             Log.d("TetherService", "mCurrentTypeIndex: " + this.mCurrentTypeIndex);
         }
         int i2 = this.mCurrentTypeIndex;
-        if (i > i2 || i2 <= 0) {
-            return;
+        if (i <= i2 && i2 > 0) {
+            this.mCurrentTypeIndex = i2 - 1;
         }
-        this.mCurrentTypeIndex = i2 - 1;
     }
 
     private ArrayList<Integer> stringToTethers(String str) {
@@ -216,8 +210,9 @@ public class TetherService extends Service {
         if (TextUtils.isEmpty(str)) {
             return arrayList;
         }
-        for (String str2 : str.split(",")) {
-            arrayList.add(Integer.valueOf(Integer.parseInt(str2)));
+        String[] split = str.split(",");
+        for (String parseInt : split) {
+            arrayList.add(Integer.valueOf(Integer.parseInt(parseInt)));
         }
         return arrayList;
     }
@@ -234,23 +229,23 @@ public class TetherService extends Service {
         return stringBuffer.toString();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void disableTethering(int i) {
+        Log.w("TetherService", "Disable tethering, type:" + i);
         ((TetheringManager) getSystemService("tethering")).stopTethering(i);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void startProvisioning(int i) {
-        if (i >= this.mCurrentTethers.size()) {
-            return;
+        if (i < this.mCurrentTethers.size()) {
+            Intent provisionBroadcastIntent = getProvisionBroadcastIntent(i);
+            setEntitlementAppActive(i);
+            if (DEBUG) {
+                Log.d("TetherService", "Sending provisioning broadcast: " + provisionBroadcastIntent.getAction() + " type: " + this.mCurrentTethers.get(i));
+            }
+            sendBroadcast(provisionBroadcastIntent);
+            this.mInProvisionCheck = true;
         }
-        Intent provisionBroadcastIntent = getProvisionBroadcastIntent(i);
-        setEntitlementAppActive(i);
-        if (DEBUG) {
-            Log.d("TetherService", "Sending provisioning broadcast: " + provisionBroadcastIntent.getAction() + " type: " + this.mCurrentTethers.get(i));
-        }
-        sendBroadcast(provisionBroadcastIntent);
-        this.mInProvisionCheck = true;
     }
 
     private Intent getProvisionBroadcastIntent(int i) {
@@ -270,30 +265,30 @@ public class TetherService extends Service {
             Log.e("TetherService", "No found BroadcastReceivers for provision intent.");
             return;
         }
-        for (ResolveInfo resolveInfo : queryBroadcastReceivers) {
-            if (resolveInfo.activityInfo.applicationInfo.isSystemApp()) {
-                getTetherServiceWrapper().setAppInactive(resolveInfo.activityInfo.packageName, false);
+        for (ResolveInfo next : queryBroadcastReceivers) {
+            if (next.activityInfo.applicationInfo.isSystemApp()) {
+                getTetherServiceWrapper().setAppInactive(next.activityInfo.packageName, false);
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void fireCallbacksForType(int i, int i2) {
         List<ResultReceiver> list = this.mPendingCallbacks.get(Integer.valueOf(i));
-        if (list == null) {
-            return;
-        }
-        int i3 = i2 == -1 ? 0 : 11;
-        for (ResultReceiver resultReceiver : list) {
-            if (DEBUG) {
-                Log.d("TetherService", "Firing result: " + i3 + " to callback");
+        if (list != null) {
+            int i3 = i2 == -1 ? 0 : 11;
+            for (ResultReceiver resultReceiver : list) {
+                if (DEBUG) {
+                    Log.d("TetherService", "Firing result: " + i3 + " to callback");
+                }
+                resultReceiver.send(i3, (Bundle) null);
             }
-            resultReceiver.send(i3, null);
+            list.clear();
         }
-        list.clear();
     }
 
-    void setTetherServiceWrapper(TetherServiceWrapper tetherServiceWrapper) {
+    /* access modifiers changed from: package-private */
+    public void setTetherServiceWrapper(TetherServiceWrapper tetherServiceWrapper) {
         this.mWrapper = tetherServiceWrapper;
     }
 
@@ -304,7 +299,6 @@ public class TetherService extends Service {
         return this.mWrapper;
     }
 
-    /* loaded from: classes.dex */
     public static class TetherServiceWrapper {
         private final UsageStatsManager mUsageStatsManager;
 
@@ -312,11 +306,13 @@ public class TetherService extends Service {
             this.mUsageStatsManager = (UsageStatsManager) context.getSystemService("usagestats");
         }
 
-        void setAppInactive(String str, boolean z) {
+        /* access modifiers changed from: package-private */
+        public void setAppInactive(String str, boolean z) {
             this.mUsageStatsManager.setAppInactive(str, z);
         }
 
-        int getActiveDataSubscriptionId() {
+        /* access modifiers changed from: package-private */
+        public int getActiveDataSubscriptionId() {
             return SubscriptionManager.getActiveDataSubscriptionId();
         }
     }

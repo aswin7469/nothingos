@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="?android:attr/listPreferredItemHeight">
-    <ImageView android:layout_gravity="center" android:id="@android:id/icon" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-    <RelativeLayout android:id="@+id/rl_left" android:background="?android:attr/selectableItemBackground" android:paddingTop="6dp" android:paddingBottom="6dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1" android:paddingStart="20dp" android:paddingEnd="6dp">
-        <TextView android:textAppearance="?android:attr/textAppearanceLarge" android:ellipsize="marquee" android:id="@android:id/title" android:fadingEdge="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="true"/>
-        <TextView android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="?android:attr/textColorSecondary" android:id="@android:id/summary" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxLines="4" android:layout_below="@android:id/title" android:layout_alignStart="@android:id/title"/>
-    </RelativeLayout>
-    <LinearLayout android:gravity="center_vertical" android:orientation="vertical" android:id="@android:id/widget_frame" android:layout_width="wrap_content" android:layout_height="match_parent" android:paddingEnd="15dp"/>
-</LinearLayout>

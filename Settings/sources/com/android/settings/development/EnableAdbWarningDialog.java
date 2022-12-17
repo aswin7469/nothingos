@@ -6,11 +6,10 @@ import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.instrumentation.InstrumentedDialogFragment;
-/* loaded from: classes.dex */
+
 public class EnableAdbWarningDialog extends InstrumentedDialogFragment implements DialogInterface.OnClickListener {
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1222;
     }
@@ -24,31 +23,26 @@ public class EnableAdbWarningDialog extends InstrumentedDialogFragment implement
         }
     }
 
-    @Override // androidx.fragment.app.DialogFragment
     public Dialog onCreateDialog(Bundle bundle) {
-        return new AlertDialog.Builder(getActivity()).setTitle(R.string.adb_warning_title).setMessage(R.string.adb_warning_message).setPositiveButton(17039379, this).setNegativeButton(17039369, this).create();
+        return new AlertDialog.Builder(getActivity()).setTitle(R$string.adb_warning_title).setMessage(R$string.adb_warning_message).setPositiveButton(17039379, (DialogInterface.OnClickListener) this).setNegativeButton(17039369, (DialogInterface.OnClickListener) this).create();
     }
 
-    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialogInterface, int i) {
         AdbDialogHost adbDialogHost = (AdbDialogHost) getTargetFragment();
-        if (adbDialogHost == null) {
-            return;
-        }
-        if (i == -1) {
-            adbDialogHost.onEnableAdbDialogConfirmed();
-        } else {
-            adbDialogHost.onEnableAdbDialogDismissed();
+        if (adbDialogHost != null) {
+            if (i == -1) {
+                adbDialogHost.onEnableAdbDialogConfirmed();
+            } else {
+                adbDialogHost.onEnableAdbDialogDismissed();
+            }
         }
     }
 
-    @Override // androidx.fragment.app.DialogFragment, android.content.DialogInterface.OnDismissListener
     public void onDismiss(DialogInterface dialogInterface) {
         super.onDismiss(dialogInterface);
         AdbDialogHost adbDialogHost = (AdbDialogHost) getTargetFragment();
-        if (adbDialogHost == null) {
-            return;
+        if (adbDialogHost != null) {
+            adbDialogHost.onEnableAdbDialogDismissed();
         }
-        adbDialogHost.onEnableAdbDialogDismissed();
     }
 }

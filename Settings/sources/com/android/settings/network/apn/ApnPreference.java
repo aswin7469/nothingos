@@ -13,8 +13,10 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$attr;
+import com.android.settings.R$id;
+import com.android.settings.R$string;
+
 public class ApnPreference extends Preference implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
     private static CompoundButton sCurrentChecked;
     private static String sSelectedKey;
@@ -32,36 +34,34 @@ public class ApnPreference extends Preference implements CompoundButton.OnChecke
     }
 
     public ApnPreference(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, R.attr.apnPreferenceStyle);
+        this(context, attributeSet, R$attr.apnPreferenceStyle);
     }
 
     public ApnPreference(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
-        ((RelativeLayout) preferenceViewHolder.findViewById(R.id.text_layout)).setOnClickListener(this);
-        View findViewById = preferenceViewHolder.findViewById(R.id.apn_radiobutton);
-        if (findViewById == null || !(findViewById instanceof RadioButton)) {
-            return;
-        }
-        RadioButton radioButton = (RadioButton) findViewById;
-        if (this.mSelectable) {
-            radioButton.setOnCheckedChangeListener(this);
-            boolean equals = getKey().equals(sSelectedKey);
-            if (equals) {
-                sCurrentChecked = radioButton;
-                sSelectedKey = getKey();
+        ((RelativeLayout) preferenceViewHolder.findViewById(R$id.text_layout)).setOnClickListener(this);
+        View findViewById = preferenceViewHolder.findViewById(R$id.apn_radiobutton);
+        if (findViewById != null && (findViewById instanceof RadioButton)) {
+            RadioButton radioButton = (RadioButton) findViewById;
+            if (this.mSelectable) {
+                radioButton.setOnCheckedChangeListener(this);
+                boolean equals = getKey().equals(sSelectedKey);
+                if (equals) {
+                    sCurrentChecked = radioButton;
+                    sSelectedKey = getKey();
+                }
+                this.mProtectFromCheckedChange = true;
+                radioButton.setChecked(equals);
+                this.mProtectFromCheckedChange = false;
+                radioButton.setVisibility(0);
+                return;
             }
-            this.mProtectFromCheckedChange = true;
-            radioButton.setChecked(equals);
-            this.mProtectFromCheckedChange = false;
-            radioButton.setVisibility(0);
-            return;
+            radioButton.setVisibility(8);
         }
-        radioButton.setVisibility(8);
     }
 
     public void setChecked() {
@@ -72,28 +72,25 @@ public class ApnPreference extends Preference implements CompoundButton.OnChecke
         sSelectedKey = str;
     }
 
-    @Override // android.widget.CompoundButton.OnCheckedChangeListener
     public void onCheckedChanged(CompoundButton compoundButton, boolean z) {
         Log.i("ApnPreference", "ID: " + getKey() + " :" + z);
-        if (this.mProtectFromCheckedChange) {
-            return;
-        }
-        if (z) {
-            CompoundButton compoundButton2 = sCurrentChecked;
-            if (compoundButton2 != null) {
-                compoundButton2.setChecked(false);
+        if (!this.mProtectFromCheckedChange) {
+            if (z) {
+                CompoundButton compoundButton2 = sCurrentChecked;
+                if (compoundButton2 != null) {
+                    compoundButton2.setChecked(false);
+                }
+                sCurrentChecked = compoundButton;
+                String key = getKey();
+                sSelectedKey = key;
+                callChangeListener(key);
+                return;
             }
-            sCurrentChecked = compoundButton;
-            String key = getKey();
-            sSelectedKey = key;
-            callChangeListener(key);
-            return;
+            sCurrentChecked = null;
+            sSelectedKey = null;
         }
-        sCurrentChecked = null;
-        sSelectedKey = null;
     }
 
-    @Override // android.view.View.OnClickListener
     public void onClick(View view) {
         super.onClick();
         Context context = getContext();
@@ -101,16 +98,15 @@ public class ApnPreference extends Preference implements CompoundButton.OnChecke
         if (context == null) {
             Log.w("ApnPreference", "No context available for pos=" + parseInt);
         } else if (this.mHideDetails) {
-            Toast.makeText(context, context.getString(R.string.cannot_change_apn_toast), 1).show();
+            Toast.makeText(context, context.getString(R$string.cannot_change_apn_toast), 1).show();
         } else {
-            Intent intent = new Intent("android.intent.action.EDIT", ContentUris.withAppendedId(Telephony.Carriers.CONTENT_URI, parseInt));
+            Intent intent = new Intent("android.intent.action.EDIT", ContentUris.withAppendedId(Telephony.Carriers.CONTENT_URI, (long) parseInt));
             intent.putExtra("sub_id", this.mSubId);
             intent.addFlags(1);
             context.startActivity(intent);
         }
     }
 
-    @Override // androidx.preference.Preference
     public void setSelectable(boolean z) {
         this.mSelectable = z;
     }

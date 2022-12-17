@@ -21,7 +21,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settingslib.bluetooth.BCProfile;
 import com.android.settingslib.bluetooth.BluetoothDeviceFilter;
 import com.android.settingslib.bluetooth.CachedBluetoothDevice;
@@ -30,25 +33,20 @@ import com.android.settingslib.bluetooth.LocalBluetoothProfileManager;
 import com.android.settingslib.bluetooth.VendorCachedBluetoothDevice;
 import com.android.settingslib.widget.FooterPreference;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class BluetoothSADetail extends DeviceListPreferenceFragment {
+    CachedBluetoothDevice clickedDevice = null;
     BluetoothProgressCategory mAvailableDevicesCategory;
+    String mBroadcastPinCode = null;
     private CachedBluetoothDevice mCachedDevice;
+    AlertDialog mCommonMsgDialog = null;
     Context mContext;
     FooterPreference mFooterPreference;
+    boolean mGroupOperation = false;
     private boolean mInitialScanStarted;
     protected LocalBluetoothProfileManager mProfileManager;
-    private AlertDialog mScanAssistDetailsDialog;
-    BleBroadcastAudioScanAssistManager mScanAssistManager;
-    Preference mScanDelegatorName;
-    CachedBluetoothDevice clickedDevice = null;
-    String mBroadcastPinCode = null;
-    boolean mScanning = true;
-    boolean mGroupOperation = false;
-    AlertDialog mCommonMsgDialog = null;
-    BleBroadcastAudioScanAssistCallback mScanAssistCallback = new BleBroadcastAudioScanAssistCallback() { // from class: com.android.settings.bluetooth.BluetoothSADetail.1
-        DialogInterface.OnClickListener commonMessageListener = new DialogInterface.OnClickListener() { // from class: com.android.settings.bluetooth.BluetoothSADetail.1.1
-            @Override // android.content.DialogInterface.OnClickListener
+    BleBroadcastAudioScanAssistCallback mScanAssistCallback = new BleBroadcastAudioScanAssistCallback() {
+        DialogInterface.OnClickListener commonMessageListener = new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
                 BroadcastScanAssistanceUtils.debug("BluetoothSADetail", ">>OK clicked");
                 AlertDialog alertDialog = BluetoothSADetail.this.mCommonMsgDialog;
@@ -70,7 +68,7 @@ public class BluetoothSADetail extends DeviceListPreferenceFragment {
                     BroadcastScanAssistanceUtils.debug("BluetoothSADetail", "Self DEVICE:");
                 } else {
                     ScanRecord scanRecord = scanResult.getScanRecord();
-                    if (scanRecord != null && scanRecord.getDeviceName() != null) {
+                    if (!(scanRecord == null || scanRecord.getDeviceName() == null)) {
                         String deviceName = scanRecord.getDeviceName();
                         BroadcastScanAssistanceUtils.debug("BluetoothSADetail", "setting name as " + deviceName);
                         findDevice.setName(deviceName);
@@ -79,8 +77,7 @@ public class BluetoothSADetail extends DeviceListPreferenceFragment {
             }
             if (BluetoothSADetail.this.mDevicePreferenceMap.get(findDevice) != null) {
                 BroadcastScanAssistanceUtils.debug("BluetoothSADetail", "Preference is already present" + scanResult.getDevice());
-            } else if (BluetoothSADetail.this.mBluetoothAdapter.getState() != 12) {
-            } else {
+            } else if (BluetoothSADetail.this.mBluetoothAdapter.getState() == 12) {
                 BluetoothSADetail.this.createDevicePreference(findDevice);
                 VendorCachedBluetoothDevice.getVendorCachedBluetoothDevice(findDevice, BluetoothSADetail.this.mProfileManager).setScanResult(scanResult);
             }
@@ -88,90 +85,90 @@ public class BluetoothSADetail extends DeviceListPreferenceFragment {
 
         public void onBleBroadcastSourceSelected(BluetoothDevice bluetoothDevice, int i, List<BleBroadcastSourceChannel> list) {
             BroadcastScanAssistanceUtils.debug("BluetoothSADetail", "onBleBroadcastSourceSelected" + i + "sel indicies:" + list);
-            if (i != 0) {
-                BluetoothSADetail.this.getBluetoothName(bluetoothDevice);
-                BluetoothSADetail bluetoothSADetail = BluetoothSADetail.this;
-                bluetoothSADetail.mCommonMsgDialog = BroadcastScanAssistanceUtils.showScanAssistError(bluetoothSADetail.mContext, bluetoothDevice.getName(), BluetoothSADetail.this.getSourceSelectionErrMessage(i), this.commonMessageListener);
+            if (i == 0) {
+                BluetoothSADetail.this.launchSyncAndBroadcastIndexOptions(list);
                 return;
             }
-            BluetoothSADetail.this.launchSyncAndBroadcastIndexOptions(list);
+            String unused = BluetoothSADetail.this.getBluetoothName(bluetoothDevice);
+            BluetoothSADetail bluetoothSADetail = BluetoothSADetail.this;
+            bluetoothSADetail.mCommonMsgDialog = BroadcastScanAssistanceUtils.showScanAssistError(bluetoothSADetail.mContext, bluetoothDevice.getName(), BluetoothSADetail.this.getSourceSelectionErrMessage(i), this.commonMessageListener);
         }
 
         public void onBleBroadcastAudioSourceAdded(BluetoothDevice bluetoothDevice, byte b, int i) {
             BleBroadcastAudioScanAssistManager bleBroadcastAudioScanAssistManager;
-            BroadcastScanAssistanceUtils.debug("BluetoothSADetail", "onBleBroadcastAudioSourceAdded: rcvr:" + bluetoothDevice + "status:" + i + "srcId" + ((int) b));
-            if (i != 0) {
-                String bluetoothName = BluetoothSADetail.this.getBluetoothName(bluetoothDevice);
+            BroadcastScanAssistanceUtils.debug("BluetoothSADetail", "onBleBroadcastAudioSourceAdded: rcvr:" + bluetoothDevice + "status:" + i + "srcId" + b);
+            if (i == 0) {
                 BluetoothSADetail bluetoothSADetail = BluetoothSADetail.this;
-                bluetoothSADetail.mCommonMsgDialog = BroadcastScanAssistanceUtils.showScanAssistError(bluetoothSADetail.mContext, bluetoothName, bluetoothSADetail.getSourceAdditionErrMessage(i), this.commonMessageListener);
+                if (bluetoothSADetail.mGroupOperation) {
+                    String r5 = bluetoothSADetail.getBluetoothName(bluetoothDevice);
+                    BluetoothSADetail bluetoothSADetail2 = BluetoothSADetail.this;
+                    bluetoothSADetail2.mCommonMsgDialog = BroadcastScanAssistanceUtils.showScanAssistError(bluetoothSADetail2.mContext, r5, R$string.bluetooth_source_added_message, this.commonMessageListener);
+                }
+                BluetoothSADetail bluetoothSADetail3 = BluetoothSADetail.this;
+                String str = bluetoothSADetail3.mBroadcastPinCode;
+                if (str != null) {
+                    if (i == 0 && (bleBroadcastAudioScanAssistManager = bluetoothSADetail3.mScanAssistManager) != null) {
+                        bleBroadcastAudioScanAssistManager.setBroadcastCode(b, str, bluetoothSADetail3.mGroupOperation);
+                    }
+                    BluetoothSADetail.this.mBroadcastPinCode = null;
+                }
+                BluetoothSADetail.this.finish();
                 return;
             }
-            BluetoothSADetail bluetoothSADetail2 = BluetoothSADetail.this;
-            if (bluetoothSADetail2.mGroupOperation) {
-                String bluetoothName2 = bluetoothSADetail2.getBluetoothName(bluetoothDevice);
-                BluetoothSADetail bluetoothSADetail3 = BluetoothSADetail.this;
-                bluetoothSADetail3.mCommonMsgDialog = BroadcastScanAssistanceUtils.showScanAssistError(bluetoothSADetail3.mContext, bluetoothName2, R.string.bluetooth_source_added_message, this.commonMessageListener);
-            }
+            String r52 = BluetoothSADetail.this.getBluetoothName(bluetoothDevice);
             BluetoothSADetail bluetoothSADetail4 = BluetoothSADetail.this;
-            String str = bluetoothSADetail4.mBroadcastPinCode;
-            if (str != null) {
-                if (i == 0 && (bleBroadcastAudioScanAssistManager = bluetoothSADetail4.mScanAssistManager) != null) {
-                    bleBroadcastAudioScanAssistManager.setBroadcastCode(b, str, bluetoothSADetail4.mGroupOperation);
-                }
-                BluetoothSADetail.this.mBroadcastPinCode = null;
-            }
-            BluetoothSADetail.this.finish();
+            bluetoothSADetail4.mCommonMsgDialog = BroadcastScanAssistanceUtils.showScanAssistError(bluetoothSADetail4.mContext, r52, bluetoothSADetail4.getSourceAdditionErrMessage(i), this.commonMessageListener);
         }
 
         public void onBleBroadcastAudioSourceUpdated(BluetoothDevice bluetoothDevice, byte b, int i) {
-            BroadcastScanAssistanceUtils.debug("BluetoothSADetail", "onBleBroadcastAudioSourceUpdated: rcvr:" + bluetoothDevice + "status:" + i + "srcId" + ((int) b));
+            BroadcastScanAssistanceUtils.debug("BluetoothSADetail", "onBleBroadcastAudioSourceUpdated: rcvr:" + bluetoothDevice + "status:" + i + "srcId" + b);
             if (i != 0) {
-                String bluetoothName = BluetoothSADetail.this.getBluetoothName(bluetoothDevice);
+                String r3 = BluetoothSADetail.this.getBluetoothName(bluetoothDevice);
                 BluetoothSADetail bluetoothSADetail = BluetoothSADetail.this;
-                bluetoothSADetail.mCommonMsgDialog = BroadcastScanAssistanceUtils.showScanAssistError(bluetoothSADetail.mContext, bluetoothName, bluetoothSADetail.getSourceUpdateErrMessage(i), this.commonMessageListener);
+                bluetoothSADetail.mCommonMsgDialog = BroadcastScanAssistanceUtils.showScanAssistError(bluetoothSADetail.mContext, r3, bluetoothSADetail.getSourceUpdateErrMessage(i), this.commonMessageListener);
             }
         }
 
         public void onBleBroadcastPinUpdated(BluetoothDevice bluetoothDevice, byte b, int i) {
-            BroadcastScanAssistanceUtils.debug("BluetoothSADetail", "onBleBroadcastPinUpdated: rcvr:" + bluetoothDevice + "status:" + i + "srcId" + ((int) b));
+            BroadcastScanAssistanceUtils.debug("BluetoothSADetail", "onBleBroadcastPinUpdated: rcvr:" + bluetoothDevice + "status:" + i + "srcId" + b);
             if (i != 0) {
-                String bluetoothName = BluetoothSADetail.this.getBluetoothName(bluetoothDevice);
+                String r3 = BluetoothSADetail.this.getBluetoothName(bluetoothDevice);
                 BluetoothSADetail bluetoothSADetail = BluetoothSADetail.this;
-                bluetoothSADetail.mCommonMsgDialog = BroadcastScanAssistanceUtils.showScanAssistError(bluetoothSADetail.mContext, bluetoothName, R.string.bluetooth_source_setpin_error_message, this.commonMessageListener);
+                bluetoothSADetail.mCommonMsgDialog = BroadcastScanAssistanceUtils.showScanAssistError(bluetoothSADetail.mContext, r3, R$string.bluetooth_source_setpin_error_message, this.commonMessageListener);
             }
         }
 
         public void onBleBroadcastAudioSourceRemoved(BluetoothDevice bluetoothDevice, byte b, int i) {
-            BroadcastScanAssistanceUtils.debug("BluetoothSADetail", "onBleBroadcastAudioSourceRemoved: rcvr:" + bluetoothDevice + "status:" + i + "srcId" + ((int) b));
+            BroadcastScanAssistanceUtils.debug("BluetoothSADetail", "onBleBroadcastAudioSourceRemoved: rcvr:" + bluetoothDevice + "status:" + i + "srcId" + b);
             if (i != 0) {
-                String bluetoothName = BluetoothSADetail.this.getBluetoothName(bluetoothDevice);
+                String r3 = BluetoothSADetail.this.getBluetoothName(bluetoothDevice);
                 BluetoothSADetail bluetoothSADetail = BluetoothSADetail.this;
-                bluetoothSADetail.mCommonMsgDialog = BroadcastScanAssistanceUtils.showScanAssistError(bluetoothSADetail.mContext, bluetoothName, bluetoothSADetail.getSourceRemovalErrMessage(i), this.commonMessageListener);
+                bluetoothSADetail.mCommonMsgDialog = BroadcastScanAssistanceUtils.showScanAssistError(bluetoothSADetail.mContext, r3, bluetoothSADetail.getSourceRemovalErrMessage(i), this.commonMessageListener);
             }
         }
     };
+    private AlertDialog mScanAssistDetailsDialog;
+    BleBroadcastAudioScanAssistManager mScanAssistManager;
+    Preference mScanDelegatorName;
+    boolean mScanning = false;
 
-    @Override // com.android.settings.bluetooth.DeviceListPreferenceFragment
     public String getDeviceListKey() {
         return "available_audio_sources";
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "BluetoothSADetail";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1018;
     }
 
-    @Override // com.android.settings.bluetooth.DeviceListPreferenceFragment, com.android.settingslib.bluetooth.BluetoothCallback
     public void onDeviceAdded(CachedBluetoothDevice cachedBluetoothDevice) {
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public String getBluetoothName(BluetoothDevice bluetoothDevice) {
         String str = "Scan Delegator";
         if (bluetoothDevice != null) {
@@ -187,63 +184,70 @@ public class BluetoothSADetail extends DeviceListPreferenceFragment {
         return str;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public int getSourceSelectionErrMessage(int i) {
-        int i2 = R.string.bluetooth_source_selection_error_message;
+        int i2 = R$string.bluetooth_source_selection_error_message;
         switch (i) {
-            case 4:
-            case 6:
-            default:
-                return i2;
             case 5:
             case 7:
-                return R.string.bluetooth_source_selection_error_src_unavail_message;
+                return R$string.bluetooth_source_selection_error_src_unavail_message;
             case 8:
-                return R.string.bluetooth_source_dup_addition_error_message;
+                return R$string.bluetooth_source_dup_addition_error_message;
             case 9:
-                return R.string.bluetooth_source_no_empty_slot_error_message;
+                return R$string.bluetooth_source_no_empty_slot_error_message;
+            default:
+                return i2;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public int getSourceAdditionErrMessage(int i) {
-        int i2 = R.string.bluetooth_source_addition_error_message;
-        if (i != 8) {
-            return i != 9 ? i2 : R.string.bluetooth_source_no_empty_slot_error_message;
+        int i2 = R$string.bluetooth_source_addition_error_message;
+        if (i == 8) {
+            return R$string.bluetooth_source_dup_addition_error_message;
         }
-        return R.string.bluetooth_source_dup_addition_error_message;
+        if (i != 9) {
+            return i2;
+        }
+        return R$string.bluetooth_source_no_empty_slot_error_message;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public int getSourceRemovalErrMessage(int i) {
-        int i2 = R.string.bluetooth_source_removal_error_message;
-        if (i != 2) {
-            if (i == 4) {
-                return R.string.bluetooth_source_remove_invalid_src_id;
-            }
-            return i != 16 ? i2 : R.string.bluetooth_source_remove_invalid_group_op;
+        int i2 = R$string.bluetooth_source_removal_error_message;
+        if (i == 2) {
+            return i2;
         }
-        return i2;
+        if (i == 4) {
+            return R$string.bluetooth_source_remove_invalid_src_id;
+        }
+        if (i != 16) {
+            return i2;
+        }
+        return R$string.bluetooth_source_remove_invalid_group_op;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public int getSourceUpdateErrMessage(int i) {
-        int i2 = R.string.bluetooth_source_update_error_message;
-        if (i != 2) {
-            if (i == 4) {
-                return R.string.bluetooth_source_update_invalid_src_id;
-            }
-            return i != 16 ? i2 : R.string.bluetooth_source_update_invalid_group_op;
+        int i2 = R$string.bluetooth_source_update_error_message;
+        if (i == 2) {
+            return i2;
         }
-        return i2;
+        if (i == 4) {
+            return R$string.bluetooth_source_update_invalid_src_id;
+        }
+        if (i != 16) {
+            return i2;
+        }
+        return R$string.bluetooth_source_update_invalid_group_op;
     }
 
     public BluetoothSADetail() {
         super("no_config_bluetooth");
     }
 
-    @Override // com.android.settings.bluetooth.DeviceListPreferenceFragment
-    void createDevicePreference(CachedBluetoothDevice cachedBluetoothDevice) {
+    /* access modifiers changed from: package-private */
+    public void createDevicePreference(CachedBluetoothDevice cachedBluetoothDevice) {
         if (this.mDeviceListGroup == null) {
             Log.w("BluetoothSADetail", "Trying to create a device preference before the list group/category exists!");
             return;
@@ -258,39 +262,36 @@ public class BluetoothSADetail extends DeviceListPreferenceFragment {
         initDevicePreference(bluetoothDevicePreference);
         Log.w("BluetoothSADetail", "adding" + cachedBluetoothDevice + "to the Pref map");
         this.mDevicePreferenceMap.put(cachedBluetoothDevice, bluetoothDevicePreference);
+        this.mAvailableDevicesCategory.setProgress(this.mScanning);
     }
 
-    @Override // com.android.settings.dashboard.RestrictedDashboardFragment, com.android.settings.SettingsPreferenceFragment, androidx.fragment.app.Fragment
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
         this.mInitialScanStarted = false;
     }
 
-    @Override // com.android.settings.bluetooth.DeviceListPreferenceFragment, com.android.settings.dashboard.DashboardFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onStart() {
         BroadcastScanAssistanceUtils.debug("BluetoothSADetail", "OnStart Called");
         super.onStart();
-        if (this.mLocalManager == null) {
+        LocalBluetoothManager localBluetoothManager = this.mLocalManager;
+        if (localBluetoothManager == null) {
             Log.e("BluetoothSADetail", "Bluetooth is not supported on this device");
             return;
         }
+        if (this.mScanAssistManager == null) {
+            if (this.mProfileManager == null) {
+                this.mProfileManager = localBluetoothManager.getProfileManager();
+            }
+            BleBroadcastAudioScanAssistManager bSAManager = ((BCProfile) this.mProfileManager.getBCProfile()).getBSAManager(this.mCachedDevice.getDevice(), this.mScanAssistCallback);
+            this.mScanAssistManager = bSAManager;
+            if (bSAManager == null) {
+                Log.e("BluetoothSADetail", "On Start: not able to instantiate scanAssistManager");
+            }
+        }
         updateContent(this.mBluetoothAdapter.getState());
         this.mAvailableDevicesCategory.setProgress(this.mBluetoothAdapter.isDiscovering());
-        if (this.mScanAssistManager != null) {
-            return;
-        }
-        if (this.mProfileManager == null) {
-            this.mProfileManager = this.mLocalManager.getProfileManager();
-        }
-        BleBroadcastAudioScanAssistManager bSAManager = ((BCProfile) this.mProfileManager.getBCProfile()).getBSAManager(this.mCachedDevice.getDevice(), this.mScanAssistCallback);
-        this.mScanAssistManager = bSAManager;
-        if (bSAManager != null) {
-            return;
-        }
-        Log.e("BluetoothSADetail", "On Start: not able to instantiate scanAssistManager");
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
         BroadcastScanAssistanceUtils.debug("BluetoothSADetail", "OnAttach Called");
         super.onAttach(context);
@@ -313,20 +314,17 @@ public class BluetoothSADetail extends DeviceListPreferenceFragment {
         }
         CachedBluetoothDevice findDevice = this.mLocalManager.getCachedDeviceManager().findDevice(remoteDevice);
         this.mCachedDevice = findDevice;
-        if (findDevice == null) {
-            return;
+        if (findDevice != null) {
+            LocalBluetoothProfileManager profileManager = this.mLocalManager.getProfileManager();
+            this.mProfileManager = profileManager;
+            BleBroadcastAudioScanAssistManager bSAManager = ((BCProfile) profileManager.getBCProfile()).getBSAManager(this.mCachedDevice.getDevice(), this.mScanAssistCallback);
+            this.mScanAssistManager = bSAManager;
+            if (bSAManager == null) {
+                Log.e("BluetoothSADetail", "not able to instantiate scanAssistManager");
+            }
         }
-        LocalBluetoothProfileManager profileManager = this.mLocalManager.getProfileManager();
-        this.mProfileManager = profileManager;
-        BleBroadcastAudioScanAssistManager bSAManager = ((BCProfile) profileManager.getBCProfile()).getBSAManager(this.mCachedDevice.getDevice(), this.mScanAssistCallback);
-        this.mScanAssistManager = bSAManager;
-        if (bSAManager != null) {
-            return;
-        }
-        Log.e("BluetoothSADetail", "not able to instantiate scanAssistManager");
     }
 
-    @Override // com.android.settings.bluetooth.DeviceListPreferenceFragment, com.android.settings.dashboard.DashboardFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onStop() {
         super.onStop();
         if (this.mLocalManager == null) {
@@ -338,16 +336,16 @@ public class BluetoothSADetail extends DeviceListPreferenceFragment {
         this.mScanAssistManager = null;
     }
 
-    @Override // com.android.settings.bluetooth.DeviceListPreferenceFragment
-    void initPreferencesFromPreferenceScreen() {
+    /* access modifiers changed from: package-private */
+    public void initPreferencesFromPreferenceScreen() {
         Preference findPreference = findPreference("bt_bcast_rcvr_device");
         this.mScanDelegatorName = findPreference;
         findPreference.setSelectable(false);
         CachedBluetoothDevice cachedBluetoothDevice = this.mCachedDevice;
         if (cachedBluetoothDevice == null) {
-            this.mScanDelegatorName.setSummary("Scan Delegator");
+            this.mScanDelegatorName.setSummary((CharSequence) "Scan Delegator");
         } else {
-            this.mScanDelegatorName.setSummary(getBluetoothName(cachedBluetoothDevice.getDevice()));
+            this.mScanDelegatorName.setSummary((CharSequence) getBluetoothName(cachedBluetoothDevice.getDevice()));
         }
         this.mAvailableDevicesCategory = (BluetoothProgressCategory) findPreference("available_audio_sources");
         FooterPreference footerPreference = (FooterPreference) findPreference("footer_preference");
@@ -355,8 +353,7 @@ public class BluetoothSADetail extends DeviceListPreferenceFragment {
         footerPreference.setSelectable(false);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // com.android.settings.bluetooth.DeviceListPreferenceFragment
+    /* access modifiers changed from: package-private */
     public void enableScanning() {
         if (!this.mInitialScanStarted) {
             if (this.mAvailableDevicesCategory != null) {
@@ -365,92 +362,89 @@ public class BluetoothSADetail extends DeviceListPreferenceFragment {
             this.mLocalManager.getCachedDeviceManager().clearNonBondedDevices();
             this.mInitialScanStarted = true;
         }
-        if (this.mScanAssistManager != null) {
+        if (this.mScanAssistManager != null && !this.mScanning) {
             BroadcastScanAssistanceUtils.debug("BluetoothSADetail", "call searchforLeAudioBroadcasters");
             this.mScanAssistManager.searchforLeAudioBroadcasters();
+            this.mScanning = true;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // com.android.settings.bluetooth.DeviceListPreferenceFragment
+    /* access modifiers changed from: package-private */
     public void disableScanning() {
-        if (this.mScanAssistManager == null || !this.mScanning) {
-            return;
+        if (this.mScanAssistManager != null && this.mScanning) {
+            BroadcastScanAssistanceUtils.debug("BluetoothSADetail", "call stopSearchforLeAudioBroadcasters");
+            this.mScanAssistManager.stopSearchforLeAudioBroadcasters();
+            this.mScanning = false;
         }
-        BroadcastScanAssistanceUtils.debug("BluetoothSADetail", "call stopSearchforLeAudioBroadcasters");
-        this.mScanAssistManager.stopSearchforLeAudioBroadcasters();
-        this.mScanning = false;
     }
 
-    void launchSyncAndBroadcastIndexOptions(final List<BleBroadcastSourceChannel> list) {
-        String string;
+    /* access modifiers changed from: package-private */
+    public void launchSyncAndBroadcastIndexOptions(final List<BleBroadcastSourceChannel> list) {
+        String str;
         Context context = getContext();
         FragmentActivity activity = getActivity();
-        if (!isAdded() || activity == null) {
-            return;
-        }
-        final View inflate = getLayoutInflater().inflate(R.layout.select_source_prompt, (ViewGroup) null);
-        CachedBluetoothDevice cachedBluetoothDevice = this.clickedDevice;
-        String name = cachedBluetoothDevice != null ? cachedBluetoothDevice.getName() : null;
-        if (TextUtils.isEmpty(name)) {
-            name = context.getString(R.string.bluetooth_device);
-        }
-        if (this.mGroupOperation) {
-            string = context.getString(R.string.bluetooth_grp_source_selection_options_detail, name);
-        } else {
-            string = context.getString(R.string.bluetooth_source_selection_options_detail, name);
-        }
-        String string2 = context.getString(R.string.bluetooth_source_selection_options_detail_title);
-        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() { // from class: com.android.settings.bluetooth.BluetoothSADetail.2
-            @Override // android.content.DialogInterface.OnClickListener
-            public void onClick(DialogInterface dialogInterface, int i) {
-                BroadcastScanAssistanceUtils.debug("BluetoothSADetail", ">>Cancel clicked");
-                BluetoothSADetail.this.finish();
+        if (isAdded() && activity != null) {
+            final View inflate = getLayoutInflater().inflate(R$layout.select_source_prompt, (ViewGroup) null);
+            CachedBluetoothDevice cachedBluetoothDevice = this.clickedDevice;
+            String name = cachedBluetoothDevice != null ? cachedBluetoothDevice.getName() : null;
+            if (TextUtils.isEmpty(name)) {
+                name = context.getString(R$string.bluetooth_device);
             }
-        };
-        DialogInterface.OnClickListener onClickListener2 = new DialogInterface.OnClickListener() { // from class: com.android.settings.bluetooth.BluetoothSADetail.3
-            @Override // android.content.DialogInterface.OnClickListener
-            public void onClick(DialogInterface dialogInterface, int i) {
-                CachedBluetoothDevice cachedBluetoothDevice2;
-                if (BluetoothSADetail.this.clickedDevice == null) {
-                    Log.w("BluetoothSADetail", "Ignore as there is no clicked device");
+            if (this.mGroupOperation) {
+                str = context.getString(R$string.bluetooth_grp_source_selection_options_detail, new Object[]{name});
+            } else {
+                str = context.getString(R$string.bluetooth_source_selection_options_detail, new Object[]{name});
+            }
+            String string = context.getString(R$string.bluetooth_source_selection_options_detail_title);
+            C08002 r8 = new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    BroadcastScanAssistanceUtils.debug("BluetoothSADetail", ">>Cancel clicked");
+                    BluetoothSADetail.this.finish();
                 }
-                if (BluetoothSADetail.this.clickedDevice.getAddress().equals(BluetoothSADetail.this.mBluetoothAdapter.getAddress())) {
-                    BroadcastScanAssistanceUtils.debug("BluetoothSADetail", ">>Local Adapter");
-                    BluetoothSADetail.this.mBroadcastPinCode = null;
-                } else {
-                    BluetoothSADetail.this.mBroadcastPinCode = ((EditText) inflate.findViewById(R.id.broadcastPINcode)).getText().toString();
-                    BroadcastScanAssistanceUtils.debug("BluetoothSADetail", "broadcastPinCode: " + BluetoothSADetail.this.mBroadcastPinCode);
-                    if (TextUtils.isEmpty(BluetoothSADetail.this.mBroadcastPinCode)) {
-                        BroadcastScanAssistanceUtils.debug("BluetoothSADetail", "Empty broacast PinCode");
+            };
+            C08013 r9 = new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    CachedBluetoothDevice cachedBluetoothDevice;
+                    CachedBluetoothDevice cachedBluetoothDevice2 = BluetoothSADetail.this.clickedDevice;
+                    if (cachedBluetoothDevice2 == null) {
+                        Log.w("BluetoothSADetail", "Ignore as there is no clicked device");
+                        return;
+                    }
+                    if (cachedBluetoothDevice2.getAddress().equals(BluetoothSADetail.this.mBluetoothAdapter.getAddress())) {
+                        BroadcastScanAssistanceUtils.debug("BluetoothSADetail", ">>Local Adapter");
                         BluetoothSADetail.this.mBroadcastPinCode = null;
+                    } else {
+                        BluetoothSADetail.this.mBroadcastPinCode = ((EditText) inflate.findViewById(R$id.broadcastPINcode)).getText().toString();
+                        BroadcastScanAssistanceUtils.debug("BluetoothSADetail", "broadcastPinCode: " + BluetoothSADetail.this.mBroadcastPinCode);
+                        if (TextUtils.isEmpty(BluetoothSADetail.this.mBroadcastPinCode)) {
+                            BroadcastScanAssistanceUtils.debug("BluetoothSADetail", "Empty broacast PinCode");
+                            BluetoothSADetail.this.mBroadcastPinCode = null;
+                        }
+                    }
+                    BluetoothSADetail bluetoothSADetail = BluetoothSADetail.this;
+                    BleBroadcastAudioScanAssistManager bleBroadcastAudioScanAssistManager = bluetoothSADetail.mScanAssistManager;
+                    if (bleBroadcastAudioScanAssistManager != null && (cachedBluetoothDevice = bluetoothSADetail.clickedDevice) != null) {
+                        bleBroadcastAudioScanAssistManager.addBroadcastSource(cachedBluetoothDevice.getDevice(), 2, list, BluetoothSADetail.this.mGroupOperation);
                     }
                 }
-                BluetoothSADetail bluetoothSADetail = BluetoothSADetail.this;
-                BleBroadcastAudioScanAssistManager bleBroadcastAudioScanAssistManager = bluetoothSADetail.mScanAssistManager;
-                if (bleBroadcastAudioScanAssistManager == null || (cachedBluetoothDevice2 = bluetoothSADetail.clickedDevice) == null) {
-                    return;
+            };
+            EditText editText = (EditText) inflate.findViewById(R$id.broadcastPINcode);
+            CachedBluetoothDevice cachedBluetoothDevice2 = this.clickedDevice;
+            if (cachedBluetoothDevice2 != null && cachedBluetoothDevice2.getAddress().equals(this.mBluetoothAdapter.getAddress())) {
+                BroadcastScanAssistanceUtils.debug("BluetoothSADetail", "Local Adapter");
+                this.mBroadcastPinCode = null;
+                editText.setVisibility(4);
+                if (this.mGroupOperation) {
+                    str = context.getString(R$string.bluetooth_col_grp_source_selection_options_detail, new Object[]{name});
+                } else {
+                    str = context.getString(R$string.bluetooth_col_source_selection_options_detail, new Object[]{name});
                 }
-                bleBroadcastAudioScanAssistManager.addBroadcastSource(cachedBluetoothDevice2.getDevice(), 2, list, BluetoothSADetail.this.mGroupOperation);
             }
-        };
-        EditText editText = (EditText) inflate.findViewById(R.id.broadcastPINcode);
-        CachedBluetoothDevice cachedBluetoothDevice2 = this.clickedDevice;
-        if (cachedBluetoothDevice2 != null && cachedBluetoothDevice2.getAddress().equals(this.mBluetoothAdapter.getAddress())) {
-            BroadcastScanAssistanceUtils.debug("BluetoothSADetail", "Local Adapter");
-            this.mBroadcastPinCode = null;
-            editText.setVisibility(4);
-            if (this.mGroupOperation) {
-                string = context.getString(R.string.bluetooth_col_grp_source_selection_options_detail, name);
-            } else {
-                string = context.getString(R.string.bluetooth_col_source_selection_options_detail, name);
-            }
+            this.mScanAssistDetailsDialog = BroadcastScanAssistanceUtils.showScanAssistDetailsDialog(context, this.mScanAssistDetailsDialog, r9, r8, string, Html.fromHtml(str), inflate);
         }
-        this.mScanAssistDetailsDialog = BroadcastScanAssistanceUtils.showScanAssistDetailsDialog(context, this.mScanAssistDetailsDialog, onClickListener2, onClickListener, string2, Html.fromHtml(string), inflate);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // com.android.settings.bluetooth.DeviceListPreferenceFragment
+    /* access modifiers changed from: package-private */
     public void onDevicePreferenceClick(BluetoothDevicePreference bluetoothDevicePreference) {
         disableScanning();
         CachedBluetoothDevice bluetoothDevice = bluetoothDevicePreference.getBluetoothDevice();
@@ -462,25 +456,24 @@ public class BluetoothSADetail extends DeviceListPreferenceFragment {
         }
     }
 
-    void updateContent(int i) {
+    /* access modifiers changed from: package-private */
+    public void updateContent(int i) {
         if (i == 10) {
             finish();
-        } else if (i != 12) {
-        } else {
+        } else if (i == 12) {
             this.mDevicePreferenceMap.clear();
-            addDeviceCategory(this.mAvailableDevicesCategory, R.string.bluetooth_preference_found_media_devices, BluetoothDeviceFilter.ALL_FILTER, false);
+            addDeviceCategory(this.mAvailableDevicesCategory, R$string.bluetooth_preference_found_media_devices, BluetoothDeviceFilter.ALL_FILTER, false);
             updateFooterPreference(this.mFooterPreference);
             enableScanning();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // com.android.settings.bluetooth.DeviceListPreferenceFragment
+    /* access modifiers changed from: package-private */
     public void updateFooterPreference(Preference preference) {
-        preference.setTitle(getString(R.string.bluetooth_footer_mac_message, BidiFormatter.getInstance().unicodeWrap(this.mCachedDevice.getAddress())));
+        BidiFormatter instance = BidiFormatter.getInstance();
+        preference.setTitle((CharSequence) getString(R$string.bluetooth_footer_mac_message, instance.unicodeWrap(this.mCachedDevice.getAddress())));
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public void onBluetoothStateChanged(int i) {
         super.onBluetoothStateChanged(i);
         updateContent(i);
@@ -489,18 +482,17 @@ public class BluetoothSADetail extends DeviceListPreferenceFragment {
         }
     }
 
-    @Override // com.android.settings.support.actionbar.HelpResourceProvider
     public int getHelpResource() {
-        return R.string.help_url_bluetooth;
+        return R$string.help_url_bluetooth;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.bluetooth_search_bcast_sources;
+        return R$xml.bluetooth_search_bcast_sources;
     }
 
-    void showBluetoothTurnedOnToast() {
-        Toast.makeText(getContext(), R.string.connected_device_bluetooth_turned_on_toast, 0).show();
+    /* access modifiers changed from: package-private */
+    public void showBluetoothTurnedOnToast() {
+        Toast.makeText(getContext(), R$string.connected_device_bluetooth_turned_on_toast, 0).show();
     }
 }

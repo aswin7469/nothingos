@@ -17,16 +17,25 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
-import com.android.settings.R;
+import com.android.settings.R$dimen;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$plurals;
+import com.android.settings.R$string;
 import com.android.settings.core.SubSettingLauncher;
 import com.android.settingslib.Utils;
 import com.android.settingslib.net.DataUsageController;
 import com.android.settingslib.utils.StringUtil;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-/* loaded from: classes.dex */
+
 public class DataUsageSummaryPreference extends Preference {
+    private static final long MILLIS_IN_A_DAY = TimeUnit.DAYS.toMillis(1);
+    static final Typeface SANS_SERIF_MEDIUM = Typeface.create("sans-serif-medium", 0);
+    private static final long WARNING_AGE = TimeUnit.HOURS.toMillis(6);
+    private final long CYCLE_TIME_UNINITIAL_VALUE = 0;
     private CharSequence mCarrierName;
+    private boolean mChartEnabled = true;
     private long mCycleEndTimeMs;
     private long mDataplanSize;
     private long mDataplanUse;
@@ -41,15 +50,10 @@ public class DataUsageSummaryPreference extends Preference {
     private CharSequence mStartLabel;
     private String mUsagePeriod;
     private boolean mWifiMode;
-    private static final long MILLIS_IN_A_DAY = TimeUnit.DAYS.toMillis(1);
-    private static final long WARNING_AGE = TimeUnit.HOURS.toMillis(6);
-    static final Typeface SANS_SERIF_MEDIUM = Typeface.create("sans-serif-medium", 0);
-    private boolean mChartEnabled = true;
-    private final long CYCLE_TIME_UNINITIAL_VALUE = 0;
 
     public DataUsageSummaryPreference(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        setLayoutResource(R.layout.data_usage_summary_preference);
+        setLayoutResource(R$layout.data_usage_summary_preference);
     }
 
     public void setLimitInfo(CharSequence charSequence) {
@@ -86,7 +90,7 @@ public class DataUsageSummaryPreference extends Preference {
         notifyChanged();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setUsageNumbers(long j, long j2, boolean z) {
         this.mDataplanUse = j;
         this.mDataplanSize = j2;
@@ -94,7 +98,7 @@ public class DataUsageSummaryPreference extends Preference {
         notifyChanged();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setWifiMode(boolean z, String str, boolean z2) {
         this.mWifiMode = z;
         this.mUsagePeriod = str;
@@ -102,20 +106,19 @@ public class DataUsageSummaryPreference extends Preference {
         notifyChanged();
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         ProgressBar progressBar = getProgressBar(preferenceViewHolder);
         int i = 0;
-        if (this.mChartEnabled && (!TextUtils.isEmpty(this.mStartLabel) || !TextUtils.isEmpty(this.mEndLabel))) {
+        if (!this.mChartEnabled || (TextUtils.isEmpty(this.mStartLabel) && TextUtils.isEmpty(this.mEndLabel))) {
+            progressBar.setVisibility(8);
+            getLabelBar(preferenceViewHolder).setVisibility(8);
+        } else {
             progressBar.setVisibility(0);
             getLabelBar(preferenceViewHolder).setVisibility(0);
             progressBar.setProgress((int) (this.mProgress * 100.0f));
             getLabel1(preferenceViewHolder).setText(this.mStartLabel);
             getLabel2(preferenceViewHolder).setText(this.mEndLabel);
-        } else {
-            progressBar.setVisibility(8);
-            getLabelBar(preferenceViewHolder).setVisibility(8);
         }
         updateDataUsageLabels(preferenceViewHolder);
         TextView usageTitle = getUsageTitle(preferenceViewHolder);
@@ -134,34 +137,24 @@ public class DataUsageSummaryPreference extends Preference {
             dataLimits.setVisibility(i);
             dataLimits.setText(this.mLimitInfoText);
         } else if (z) {
-            usageTitle.setText(R.string.data_usage_wifi_title);
+            usageTitle.setText(R$string.data_usage_wifi_title);
             usageTitle.setVisibility(0);
             getCycleTime(preferenceViewHolder).setText(this.mUsagePeriod);
             carrierInfo.setVisibility(8);
             dataLimits.setVisibility(8);
             if (getHistoricalUsageLevel() > 0) {
-                launchButton.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.datausage.DataUsageSummaryPreference$$ExternalSyntheticLambda0
-                    @Override // android.view.View.OnClickListener
-                    public final void onClick(View view) {
-                        DataUsageSummaryPreference.this.lambda$onBindViewHolder$0(view);
-                    }
-                });
+                launchButton.setOnClickListener(new DataUsageSummaryPreference$$ExternalSyntheticLambda0(this));
             } else {
                 launchButton.setEnabled(false);
             }
-            launchButton.setText(R.string.launch_wifi_text);
+            launchButton.setText(R$string.launch_wifi_text);
             launchButton.setVisibility(0);
         } else {
             usageTitle.setVisibility(this.mNumPlans > 1 ? 0 : 8);
             updateCycleTimeText(preferenceViewHolder);
             updateCarrierInfo(carrierInfo);
             if (this.mLaunchIntent != null) {
-                launchButton.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.datausage.DataUsageSummaryPreference$$ExternalSyntheticLambda1
-                    @Override // android.view.View.OnClickListener
-                    public final void onClick(View view) {
-                        DataUsageSummaryPreference.this.lambda$onBindViewHolder$1(view);
-                    }
-                });
+                launchButton.setOnClickListener(new DataUsageSummaryPreference$$ExternalSyntheticLambda1(this));
                 launchButton.setVisibility(0);
             } else {
                 launchButton.setVisibility(8);
@@ -174,22 +167,22 @@ public class DataUsageSummaryPreference extends Preference {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onBindViewHolder$0(View view) {
         launchWifiDataUsage(getContext());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onBindViewHolder$1(View view) {
         getContext().startActivity(this.mLaunchIntent);
     }
 
     static void launchWifiDataUsage(Context context) {
         Bundle bundle = new Bundle(1);
-        bundle.putParcelable("network_template", NetworkTemplate.buildTemplateWifi(NetworkTemplate.WIFI_NETWORKID_ALL, (String) null));
+        bundle.putParcelable("network_template", new NetworkTemplate.Builder(4).build());
         bundle.putInt("network_type", 1);
         SubSettingLauncher sourceMetricsCategory = new SubSettingLauncher(context).setArguments(bundle).setDestination(DataUsageList.class.getName()).setSourceMetricsCategory(0);
-        sourceMetricsCategory.setTitleRes(R.string.wifi_data_usage);
+        sourceMetricsCategory.setTitleRes(R$string.wifi_data_usage);
         sourceMetricsCategory.launch();
     }
 
@@ -197,27 +190,27 @@ public class DataUsageSummaryPreference extends Preference {
         TextView dataUsed = getDataUsed(preferenceViewHolder);
         Formatter.BytesResult formatBytes = Formatter.formatBytes(getContext().getResources(), this.mDataplanUse, 10);
         SpannableString spannableString = new SpannableString(formatBytes.value);
-        spannableString.setSpan(new AbsoluteSizeSpan(getContext().getResources().getDimensionPixelSize(R.dimen.usage_number_text_size)), 0, spannableString.length(), 33);
-        dataUsed.setText(TextUtils.expandTemplate(getContext().getText(R.string.data_used_formatted), spannableString, formatBytes.units));
+        spannableString.setSpan(new AbsoluteSizeSpan(getContext().getResources().getDimensionPixelSize(R$dimen.usage_number_text_size)), 0, spannableString.length(), 33);
+        dataUsed.setText(TextUtils.expandTemplate(getContext().getText(R$string.data_used_formatted), new CharSequence[]{spannableString, formatBytes.units}));
         MeasurableLinearLayout layout = getLayout(preferenceViewHolder);
-        if (this.mHasMobileData && this.mNumPlans >= 0 && this.mDataplanSize > 0) {
-            TextView dataRemaining = getDataRemaining(preferenceViewHolder);
-            long j = this.mDataplanSize - this.mDataplanUse;
-            if (j >= 0) {
-                dataRemaining.setText(TextUtils.expandTemplate(getContext().getText(R.string.data_remaining), DataUsageUtils.formatDataUsage(getContext(), j)));
-                dataRemaining.setTextColor(Utils.getColorAttr(getContext(), 16843829));
-            } else {
-                dataRemaining.setText(TextUtils.expandTemplate(getContext().getText(R.string.data_overusage), DataUsageUtils.formatDataUsage(getContext(), -j)));
-                dataRemaining.setTextColor(Utils.getColorAttr(getContext(), 16844099));
-            }
-            layout.setChildren(dataUsed, dataRemaining);
+        if (!this.mHasMobileData || this.mNumPlans < 0 || this.mDataplanSize <= 0) {
+            layout.setChildren(dataUsed, (View) null);
             return;
         }
-        layout.setChildren(dataUsed, null);
+        TextView dataRemaining = getDataRemaining(preferenceViewHolder);
+        long j = this.mDataplanSize - this.mDataplanUse;
+        if (j >= 0) {
+            dataRemaining.setText(TextUtils.expandTemplate(getContext().getText(R$string.data_remaining), new CharSequence[]{DataUsageUtils.formatDataUsage(getContext(), j)}));
+            dataRemaining.setTextColor(Utils.getColorAttr(getContext(), 16843829));
+        } else {
+            dataRemaining.setText(TextUtils.expandTemplate(getContext().getText(R$string.data_overusage), new CharSequence[]{DataUsageUtils.formatDataUsage(getContext(), -j)}));
+            dataRemaining.setTextColor(Utils.getColorAttr(getContext(), 16844099));
+        }
+        layout.setChildren(dataUsed, dataRemaining);
     }
 
     private void updateCycleTimeText(PreferenceViewHolder preferenceViewHolder) {
-        String quantityString;
+        String str;
         TextView cycleTime = getCycleTime(preferenceViewHolder);
         if (this.mCycleEndTimeMs == 0) {
             cycleTime.setVisibility(8);
@@ -226,50 +219,47 @@ public class DataUsageSummaryPreference extends Preference {
         cycleTime.setVisibility(0);
         long currentTimeMillis = this.mCycleEndTimeMs - System.currentTimeMillis();
         if (currentTimeMillis <= 0) {
-            cycleTime.setText(getContext().getString(R.string.billing_cycle_none_left));
+            cycleTime.setText(getContext().getString(R$string.billing_cycle_none_left));
             return;
         }
         int i = (int) (currentTimeMillis / MILLIS_IN_A_DAY);
         if (i < 1) {
-            quantityString = getContext().getString(R.string.billing_cycle_less_than_one_day_left);
+            str = getContext().getString(R$string.billing_cycle_less_than_one_day_left);
         } else {
-            quantityString = getContext().getResources().getQuantityString(R.plurals.billing_cycle_days_left, i, Integer.valueOf(i));
+            str = getContext().getResources().getQuantityString(R$plurals.billing_cycle_days_left, i, new Object[]{Integer.valueOf(i)});
         }
-        cycleTime.setText(quantityString);
+        cycleTime.setText(str);
     }
 
     private void updateCarrierInfo(TextView textView) {
         int i;
         int i2;
-        if (this.mNumPlans > 0 && this.mSnapshotTimeMs >= 0) {
-            textView.setVisibility(0);
-            long calculateTruncatedUpdateAge = calculateTruncatedUpdateAge();
-            CharSequence charSequence = null;
-            if (calculateTruncatedUpdateAge == 0) {
-                if (this.mCarrierName != null) {
-                    i2 = R.string.carrier_and_update_now_text;
-                } else {
-                    i2 = R.string.no_carrier_update_now_text;
-                }
-            } else {
-                if (this.mCarrierName != null) {
-                    i = R.string.carrier_and_update_text;
-                } else {
-                    i = R.string.no_carrier_update_text;
-                }
-                i2 = i;
-                charSequence = StringUtil.formatElapsedTime(getContext(), calculateTruncatedUpdateAge, false, false);
-            }
-            textView.setText(TextUtils.expandTemplate(getContext().getText(i2), this.mCarrierName, charSequence));
-            if (calculateTruncatedUpdateAge <= WARNING_AGE) {
-                setCarrierInfoTextStyle(textView, 16842808, Typeface.SANS_SERIF);
-                return;
-            } else {
-                setCarrierInfoTextStyle(textView, 16844099, SANS_SERIF_MEDIUM);
-                return;
-            }
+        if (this.mNumPlans <= 0 || this.mSnapshotTimeMs < 0) {
+            textView.setVisibility(8);
+            return;
         }
-        textView.setVisibility(8);
+        textView.setVisibility(0);
+        long calculateTruncatedUpdateAge = calculateTruncatedUpdateAge();
+        CharSequence charSequence = null;
+        if (calculateTruncatedUpdateAge != 0) {
+            if (this.mCarrierName != null) {
+                i2 = R$string.carrier_and_update_text;
+            } else {
+                i2 = R$string.no_carrier_update_text;
+            }
+            i = i2;
+            charSequence = StringUtil.formatElapsedTime(getContext(), (double) calculateTruncatedUpdateAge, false, false);
+        } else if (this.mCarrierName != null) {
+            i = R$string.carrier_and_update_now_text;
+        } else {
+            i = R$string.no_carrier_update_now_text;
+        }
+        textView.setText(TextUtils.expandTemplate(getContext().getText(i), new CharSequence[]{this.mCarrierName, charSequence}));
+        if (calculateTruncatedUpdateAge <= WARNING_AGE) {
+            setCarrierInfoTextStyle(textView, 16842808, Typeface.SANS_SERIF);
+        } else {
+            setCarrierInfoTextStyle(textView, 16844099, SANS_SERIF_MEDIUM);
+        }
     }
 
     private long calculateTruncatedUpdateAge() {
@@ -277,21 +267,21 @@ public class DataUsageSummaryPreference extends Preference {
         long millis2;
         long currentTimeMillis = System.currentTimeMillis() - this.mSnapshotTimeMs;
         TimeUnit timeUnit = TimeUnit.DAYS;
-        if (currentTimeMillis >= timeUnit.toMillis(1L)) {
-            millis = currentTimeMillis / timeUnit.toMillis(1L);
-            millis2 = timeUnit.toMillis(1L);
+        if (currentTimeMillis >= timeUnit.toMillis(1)) {
+            millis = currentTimeMillis / timeUnit.toMillis(1);
+            millis2 = timeUnit.toMillis(1);
         } else {
             TimeUnit timeUnit2 = TimeUnit.HOURS;
-            if (currentTimeMillis >= timeUnit2.toMillis(1L)) {
-                millis = currentTimeMillis / timeUnit2.toMillis(1L);
-                millis2 = timeUnit2.toMillis(1L);
+            if (currentTimeMillis >= timeUnit2.toMillis(1)) {
+                millis = currentTimeMillis / timeUnit2.toMillis(1);
+                millis2 = timeUnit2.toMillis(1);
             } else {
                 TimeUnit timeUnit3 = TimeUnit.MINUTES;
-                if (currentTimeMillis < timeUnit3.toMillis(1L)) {
-                    return 0L;
+                if (currentTimeMillis < timeUnit3.toMillis(1)) {
+                    return 0;
                 }
-                millis = currentTimeMillis / timeUnit3.toMillis(1L);
-                millis2 = timeUnit3.toMillis(1L);
+                millis = currentTimeMillis / timeUnit3.toMillis(1);
+                millis2 = timeUnit3.toMillis(1);
             }
         }
         return millis * millis2;
@@ -302,55 +292,68 @@ public class DataUsageSummaryPreference extends Preference {
         textView.setTypeface(typeface);
     }
 
-    protected long getHistoricalUsageLevel() {
-        return new DataUsageController(getContext()).getHistoricalUsageLevel(NetworkTemplate.buildTemplateWifi(NetworkTemplate.WIFI_NETWORKID_ALL, (String) null));
+    /* access modifiers changed from: protected */
+    public long getHistoricalUsageLevel() {
+        return new DataUsageController(getContext()).getHistoricalUsageLevel(new NetworkTemplate.Builder(4).build());
     }
 
-    protected TextView getUsageTitle(PreferenceViewHolder preferenceViewHolder) {
-        return (TextView) preferenceViewHolder.findViewById(R.id.usage_title);
+    /* access modifiers changed from: protected */
+    public TextView getUsageTitle(PreferenceViewHolder preferenceViewHolder) {
+        return (TextView) preferenceViewHolder.findViewById(R$id.usage_title);
     }
 
-    protected TextView getCycleTime(PreferenceViewHolder preferenceViewHolder) {
-        return (TextView) preferenceViewHolder.findViewById(R.id.cycle_left_time);
+    /* access modifiers changed from: protected */
+    public TextView getCycleTime(PreferenceViewHolder preferenceViewHolder) {
+        return (TextView) preferenceViewHolder.findViewById(R$id.cycle_left_time);
     }
 
-    protected TextView getCarrierInfo(PreferenceViewHolder preferenceViewHolder) {
-        return (TextView) preferenceViewHolder.findViewById(R.id.carrier_and_update);
+    /* access modifiers changed from: protected */
+    public TextView getCarrierInfo(PreferenceViewHolder preferenceViewHolder) {
+        return (TextView) preferenceViewHolder.findViewById(R$id.carrier_and_update);
     }
 
-    protected TextView getDataLimits(PreferenceViewHolder preferenceViewHolder) {
-        return (TextView) preferenceViewHolder.findViewById(R.id.data_limits);
+    /* access modifiers changed from: protected */
+    public TextView getDataLimits(PreferenceViewHolder preferenceViewHolder) {
+        return (TextView) preferenceViewHolder.findViewById(R$id.data_limits);
     }
 
-    protected TextView getDataUsed(PreferenceViewHolder preferenceViewHolder) {
-        return (TextView) preferenceViewHolder.findViewById(R.id.data_usage_view);
+    /* access modifiers changed from: protected */
+    public TextView getDataUsed(PreferenceViewHolder preferenceViewHolder) {
+        return (TextView) preferenceViewHolder.findViewById(R$id.data_usage_view);
     }
 
-    protected TextView getDataRemaining(PreferenceViewHolder preferenceViewHolder) {
-        return (TextView) preferenceViewHolder.findViewById(R.id.data_remaining_view);
+    /* access modifiers changed from: protected */
+    public TextView getDataRemaining(PreferenceViewHolder preferenceViewHolder) {
+        return (TextView) preferenceViewHolder.findViewById(R$id.data_remaining_view);
     }
 
-    protected Button getLaunchButton(PreferenceViewHolder preferenceViewHolder) {
-        return (Button) preferenceViewHolder.findViewById(R.id.launch_mdp_app_button);
+    /* access modifiers changed from: protected */
+    public Button getLaunchButton(PreferenceViewHolder preferenceViewHolder) {
+        return (Button) preferenceViewHolder.findViewById(R$id.launch_mdp_app_button);
     }
 
-    protected LinearLayout getLabelBar(PreferenceViewHolder preferenceViewHolder) {
-        return (LinearLayout) preferenceViewHolder.findViewById(R.id.label_bar);
+    /* access modifiers changed from: protected */
+    public LinearLayout getLabelBar(PreferenceViewHolder preferenceViewHolder) {
+        return (LinearLayout) preferenceViewHolder.findViewById(R$id.label_bar);
     }
 
-    protected TextView getLabel1(PreferenceViewHolder preferenceViewHolder) {
+    /* access modifiers changed from: protected */
+    public TextView getLabel1(PreferenceViewHolder preferenceViewHolder) {
         return (TextView) preferenceViewHolder.findViewById(16908308);
     }
 
-    protected TextView getLabel2(PreferenceViewHolder preferenceViewHolder) {
+    /* access modifiers changed from: protected */
+    public TextView getLabel2(PreferenceViewHolder preferenceViewHolder) {
         return (TextView) preferenceViewHolder.findViewById(16908309);
     }
 
-    protected ProgressBar getProgressBar(PreferenceViewHolder preferenceViewHolder) {
-        return (ProgressBar) preferenceViewHolder.findViewById(R.id.determinateBar);
+    /* access modifiers changed from: protected */
+    public ProgressBar getProgressBar(PreferenceViewHolder preferenceViewHolder) {
+        return (ProgressBar) preferenceViewHolder.findViewById(R$id.determinateBar);
     }
 
-    protected MeasurableLinearLayout getLayout(PreferenceViewHolder preferenceViewHolder) {
-        return (MeasurableLinearLayout) preferenceViewHolder.findViewById(R.id.usage_layout);
+    /* access modifiers changed from: protected */
+    public MeasurableLinearLayout getLayout(PreferenceViewHolder preferenceViewHolder) {
+        return (MeasurableLinearLayout) preferenceViewHolder.findViewById(R$id.usage_layout);
     }
 }

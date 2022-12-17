@@ -16,27 +16,18 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.SwitchPreference;
 import com.android.settings.network.AllowedNetworkTypesListener;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnStart;
 import com.android.settingslib.core.lifecycle.events.OnStop;
-/* loaded from: classes.dex */
+
 public class Enabled5GPreferenceController extends TelephonyTogglePreferenceController implements LifecycleObserver, OnStart, OnStop {
     private static final int NETWORK_MODE_TYPE_INVALID = -1;
     private static final String TAG = "Enable5g";
     private static final String USER_SELECTED_NW_MODE_KEY = "user_selected_network_type_";
     private AllowedNetworkTypesListener mAllowedNetworkTypesListener;
     Integer mCallState;
-    private PhoneCallStateListener mPhoneStateListener;
-    Preference mPreference;
-    private SharedPreferences mSharedPreferences;
-    private ContentObserver mSubsidySettingsObserver;
-    private TelephonyManager mTelephonyManager;
-    private boolean mIsNrRadioSupported = false;
-    private boolean mIsDualNrSupported = false;
     private boolean mChangedBy5gToggle = false;
-    private final BroadcastReceiver mDefaultDataChangedReceiver = new BroadcastReceiver() { // from class: com.android.settings.network.telephony.Enabled5GPreferenceController.1
-        @Override // android.content.BroadcastReceiver
+    private final BroadcastReceiver mDefaultDataChangedReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if (Enabled5GPreferenceController.this.mPreference != null) {
                 Log.d(Enabled5GPreferenceController.TAG, "DDS is changed");
@@ -45,33 +36,24 @@ public class Enabled5GPreferenceController extends TelephonyTogglePreferenceCont
             }
         }
     };
+    private PhoneCallStateListener mPhoneStateListener;
+    Preference mPreference;
+    private SharedPreferences mSharedPreferences;
+    private ContentObserver mSubsidySettingsObserver;
+    private TelephonyManager mTelephonyManager;
 
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -84,30 +66,22 @@ public class Enabled5GPreferenceController extends TelephonyTogglePreferenceCont
         if (this.mPhoneStateListener == null) {
             this.mPhoneStateListener = new PhoneCallStateListener();
         }
-        if (!SubscriptionManager.isValidSubscriptionId(this.mSubId) || this.mSubId != i) {
-            this.mSubId = i;
-            TelephonyManager createForSubscriptionId = ((TelephonyManager) this.mContext.getSystemService(TelephonyManager.class)).createForSubscriptionId(this.mSubId);
-            this.mTelephonyManager = createForSubscriptionId;
-            this.mIsNrRadioSupported = checkSupportedRadioBitmask(createForSubscriptionId.getSupportedRadioAccessFamily(), 524288L);
-            this.mIsDualNrSupported = TelephonyUtils.isDual5gSupported(this.mTelephonyManager);
-            if (this.mAllowedNetworkTypesListener == null) {
-                AllowedNetworkTypesListener allowedNetworkTypesListener = new AllowedNetworkTypesListener(this.mContext.getMainExecutor());
-                this.mAllowedNetworkTypesListener = allowedNetworkTypesListener;
-                allowedNetworkTypesListener.setAllowedNetworkTypesListener(new AllowedNetworkTypesListener.OnAllowedNetworkTypesListener() { // from class: com.android.settings.network.telephony.Enabled5GPreferenceController$$ExternalSyntheticLambda0
-                    @Override // com.android.settings.network.AllowedNetworkTypesListener.OnAllowedNetworkTypesListener
-                    public final void onAllowedNetworkTypesChanged() {
-                        Enabled5GPreferenceController.this.lambda$init$0();
-                    }
-                });
-            }
-            Context context = this.mContext;
-            this.mSharedPreferences = context.getSharedPreferences(context.getPackageName(), 0);
+        if (SubscriptionManager.isValidSubscriptionId(this.mSubId) && this.mSubId == i) {
             return this;
         }
+        this.mSubId = i;
+        this.mTelephonyManager = ((TelephonyManager) this.mContext.getSystemService(TelephonyManager.class)).createForSubscriptionId(this.mSubId);
+        if (this.mAllowedNetworkTypesListener == null) {
+            AllowedNetworkTypesListener allowedNetworkTypesListener = new AllowedNetworkTypesListener(this.mContext.getMainExecutor());
+            this.mAllowedNetworkTypesListener = allowedNetworkTypesListener;
+            allowedNetworkTypesListener.setAllowedNetworkTypesListener(new Enabled5GPreferenceController$$ExternalSyntheticLambda0(this));
+        }
+        Context context = this.mContext;
+        this.mSharedPreferences = context.getSharedPreferences(context.getPackageName(), 0);
         return this;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     /* renamed from: update */
     public void lambda$init$0() {
         Log.d(TAG, "update.");
@@ -125,27 +99,31 @@ public class Enabled5GPreferenceController extends TelephonyTogglePreferenceCont
         }
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.network.telephony.TelephonyAvailabilityCallback
     public int getAvailabilityStatus(int i) {
         PersistableBundle carrierConfigForSubId = getCarrierConfigForSubId(i);
-        if (carrierConfigForSubId != null && this.mTelephonyManager != null) {
-            SubscriptionManager.getDefaultDataSubscriptionId();
-            boolean z = this.mIsDualNrSupported;
-            checkSupportedRadioBitmask(this.mTelephonyManager.getAllowedNetworkTypes(), 524288L);
-            if (SubscriptionManager.isValidSubscriptionId(i)) {
-                carrierConfigForSubId.getBoolean("hide_enabled_5g_bool");
-            }
+        if (carrierConfigForSubId == null || this.mTelephonyManager == null) {
+            return 2;
+        }
+        int defaultDataSubscriptionId = SubscriptionManager.getDefaultDataSubscriptionId();
+        boolean checkSupportedRadioBitmask = checkSupportedRadioBitmask(this.mTelephonyManager.getAllowedNetworkTypes(), 524288);
+        boolean isDual5gSupported = TelephonyUtils.isDual5gSupported(this.mTelephonyManager);
+        boolean checkSupportedRadioBitmask2 = checkSupportedRadioBitmask(this.mTelephonyManager.getSupportedRadioAccessFamily(), 524288);
+        boolean z = true;
+        boolean z2 = !isDual5gSupported && defaultDataSubscriptionId == i;
+        if (!SubscriptionManager.isValidSubscriptionId(i) || carrierConfigForSubId.getBoolean("hide_enabled_5g_bool") || !checkSupportedRadioBitmask2 || !checkSupportedRadioBitmask || (!isDual5gSupported && !z2)) {
+            z = false;
+        }
+        if (z) {
+            return 0;
         }
         return 2;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = preferenceScreen.findPreference(getPreferenceKey());
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStart
     public void onStart() {
         this.mContext.registerReceiver(this.mDefaultDataChangedReceiver, new IntentFilter("android.intent.action.ACTION_DEFAULT_DATA_SUBSCRIPTION_CHANGED"));
         PhoneCallStateListener phoneCallStateListener = this.mPhoneStateListener;
@@ -158,7 +136,6 @@ public class Enabled5GPreferenceController extends TelephonyTogglePreferenceCont
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStop
     public void onStop() {
         BroadcastReceiver broadcastReceiver = this.mDefaultDataChangedReceiver;
         if (broadcastReceiver != null) {
@@ -174,32 +151,32 @@ public class Enabled5GPreferenceController extends TelephonyTogglePreferenceCont
         }
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
-        super.updateState(preference);
-        SwitchPreference switchPreference = (SwitchPreference) preference;
-        switchPreference.setVisible(isAvailable());
-        switchPreference.setChecked(isNrNetworkModeType(MobileNetworkUtils.getRafFromNetworkType(getAllowedNetworkMode())));
-        switchPreference.setEnabled(isCallStateIdle());
+        if (this.mTelephonyManager != null) {
+            super.updateState(preference);
+            SwitchPreference switchPreference = (SwitchPreference) preference;
+            switchPreference.setVisible(isAvailable());
+            switchPreference.setChecked(isNrNetworkModeType(MobileNetworkUtils.getRafFromNetworkType(getAllowedNetworkMode())));
+            switchPreference.setEnabled(isCallStateIdle());
+        }
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean setChecked(boolean z) {
-        long rafFromNetworkType;
+        long j;
         if (!SubscriptionManager.isValidSubscriptionId(this.mSubId)) {
             return false;
         }
         int allowedNetworkMode = getAllowedNetworkMode();
         if (23 != allowedNetworkMode) {
-            long rafFromNetworkType2 = MobileNetworkUtils.getRafFromNetworkType(allowedNetworkMode);
+            long rafFromNetworkType = MobileNetworkUtils.getRafFromNetworkType(allowedNetworkMode);
             if (z) {
-                long j = 93108 & rafFromNetworkType2;
-                int i = ((397312 & rafFromNetworkType2) > 0L ? 1 : ((397312 & rafFromNetworkType2) == 0L ? 0 : -1));
-                if (i == 0 && j == 0) {
-                    rafFromNetworkType2 = MobileNetworkUtils.getRafFromNetworkType(22);
+                long j2 = 93108 & rafFromNetworkType;
+                int i = ((397312 & rafFromNetworkType) > 0 ? 1 : ((397312 & rafFromNetworkType) == 0 ? 0 : -1));
+                if (i == 0 && j2 == 0) {
+                    rafFromNetworkType = MobileNetworkUtils.getRafFromNetworkType(22);
                     cachePreviousSelectedNwType(allowedNetworkMode);
                 } else if (i == 0) {
-                    rafFromNetworkType2 = allowedNetworkMode == 6 ? MobileNetworkUtils.getRafFromNetworkType(8) : rafFromNetworkType2 | 4096;
+                    rafFromNetworkType = allowedNetworkMode == 6 ? MobileNetworkUtils.getRafFromNetworkType(8) : rafFromNetworkType | 4096;
                     cachePreviousSelectedNwType(allowedNetworkMode);
                 } else {
                     cachePreviousSelectedNwType(NETWORK_MODE_TYPE_INVALID);
@@ -207,16 +184,16 @@ public class Enabled5GPreferenceController extends TelephonyTogglePreferenceCont
             }
             int previousSelectedNwType = getPreviousSelectedNwType();
             if (previousSelectedNwType == NETWORK_MODE_TYPE_INVALID || z) {
-                rafFromNetworkType = z ? rafFromNetworkType2 | 524288 : rafFromNetworkType2 & (-524289);
+                j = z ? rafFromNetworkType | 524288 : rafFromNetworkType & -524289;
             } else {
                 Log.d(TAG, "userSelectedNwMode: " + previousSelectedNwType);
-                rafFromNetworkType = MobileNetworkUtils.getRafFromNetworkType(previousSelectedNwType);
+                j = MobileNetworkUtils.getRafFromNetworkType(previousSelectedNwType);
                 cachePreviousSelectedNwType(NETWORK_MODE_TYPE_INVALID);
             }
         } else {
-            rafFromNetworkType = MobileNetworkUtils.getRafFromNetworkType(11);
+            j = MobileNetworkUtils.getRafFromNetworkType(11);
         }
-        this.mTelephonyManager.setAllowedNetworkTypesForReason(0, rafFromNetworkType);
+        this.mTelephonyManager.setAllowedNetworkTypesForReason(0, j);
         this.mChangedBy5gToggle = true;
         return true;
     }
@@ -238,28 +215,28 @@ public class Enabled5GPreferenceController extends TelephonyTogglePreferenceCont
         return MobileNetworkUtils.getNetworkTypeFromRaf((int) this.mTelephonyManager.getAllowedNetworkTypesForReason(0));
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean isChecked() {
         return isNrNetworkModeType(MobileNetworkUtils.getRafFromNetworkType(getAllowedNetworkMode()));
     }
 
     private boolean isNrNetworkModeType(long j) {
-        return checkSupportedRadioBitmask(j, 524288L);
+        return checkSupportedRadioBitmask(j, 524288);
     }
 
-    boolean checkSupportedRadioBitmask(long j, long j2) {
+    /* access modifiers changed from: package-private */
+    public boolean checkSupportedRadioBitmask(long j, long j2) {
         Log.d(TAG, "supportedRadioBitmask: " + j);
         return (j2 & j) > 0;
     }
 
-    boolean isCallStateIdle() {
+    /* access modifiers changed from: package-private */
+    public boolean isCallStateIdle() {
         Integer num = this.mCallState;
         boolean z = num == null || num.intValue() == 0;
         Log.d(TAG, "isCallStateIdle:" + z);
         return z;
     }
 
-    /* loaded from: classes.dex */
     private class PhoneCallStateListener extends PhoneStateListener {
         private TelephonyManager mTelephonyManager;
 
@@ -267,7 +244,6 @@ public class Enabled5GPreferenceController extends TelephonyTogglePreferenceCont
             super(Looper.getMainLooper());
         }
 
-        @Override // android.telephony.PhoneStateListener
         public void onCallStateChanged(int i, String str) {
             Enabled5GPreferenceController.this.mCallState = Integer.valueOf(i);
             Enabled5GPreferenceController enabled5GPreferenceController = Enabled5GPreferenceController.this;

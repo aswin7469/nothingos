@@ -1,5 +1,5 @@
 package androidx.slice.view;
-/* loaded from: classes.dex */
+
 public final class R$dimen {
     public static final int abc_slice_action_row_height = 2131165243;
     public static final int abc_slice_big_pic_max_height = 2131165244;

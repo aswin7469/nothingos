@@ -13,13 +13,14 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import java.util.UUID;
-/* loaded from: classes.dex */
+
 public class DeviceGroupClientProfile implements LocalBluetoothProfile {
-    private final CachedBluetoothDeviceManager mDeviceManager;
-    private boolean mIsProfileReady;
-    private final LocalBluetoothProfileManager mProfileManager;
-    private BluetoothDeviceGroup mService;
-    private final BluetoothGroupCallback mGroupCallback = new BluetoothGroupCallback() { // from class: com.android.settingslib.bluetooth.DeviceGroupClientProfile.1
+    /* access modifiers changed from: private */
+    public String mCallingPackage;
+    /* access modifiers changed from: private */
+    public final CachedBluetoothDeviceManager mDeviceManager;
+    /* access modifiers changed from: private */
+    public final BluetoothGroupCallback mGroupCallback = new BluetoothGroupCallback() {
         public void onNewGroupFound(int i, BluetoothDevice bluetoothDevice, UUID uuid) {
             Log.d("DeviceGroupClientProfile", "onNewGroupFound()");
             CachedBluetoothDevice findDevice = DeviceGroupClientProfile.this.mDeviceManager.findDevice(bluetoothDevice);
@@ -36,39 +37,37 @@ public class DeviceGroupClientProfile implements LocalBluetoothProfile {
             DeviceGroupClientProfile.this.mProfileManager.mEventManager.dispatchGroupDiscoveryStatusChanged(i, i2, i3);
         }
     };
-    private String mCallingPackage = ActivityThread.currentOpPackageName();
+    /* access modifiers changed from: private */
+    public boolean mIsProfileReady;
+    /* access modifiers changed from: private */
+    public final LocalBluetoothProfileManager mProfileManager;
+    /* access modifiers changed from: private */
+    public BluetoothDeviceGroup mService;
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean accessProfileEnabled() {
         return false;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getConnectionStatus(BluetoothDevice bluetoothDevice) {
         return 0;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getDrawableResource(BluetoothClass bluetoothClass) {
         return 0;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getNameResource(BluetoothDevice bluetoothDevice) {
         return 0;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getOrdinal() {
         return 3;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getProfileId() {
-        return 24;
+        return 32;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean setEnabled(BluetoothDevice bluetoothDevice, boolean z) {
         return false;
     }
@@ -77,19 +76,17 @@ public class DeviceGroupClientProfile implements LocalBluetoothProfile {
         return "DeviceGroup Client";
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public DeviceGroupClientProfile(Context context, CachedBluetoothDeviceManager cachedBluetoothDeviceManager, LocalBluetoothProfileManager localBluetoothProfileManager) {
+    DeviceGroupClientProfile(Context context, CachedBluetoothDeviceManager cachedBluetoothDeviceManager, LocalBluetoothProfileManager localBluetoothProfileManager) {
         this.mDeviceManager = cachedBluetoothDeviceManager;
         this.mProfileManager = localBluetoothProfileManager;
-        BluetoothAdapter.getDefaultAdapter().getProfileProxy(context, new GroupClientServiceListener(), 24);
+        this.mCallingPackage = ActivityThread.currentOpPackageName();
+        BluetoothAdapter.getDefaultAdapter().getProfileProxy(context, new GroupClientServiceListener(), 32);
     }
 
-    /* loaded from: classes.dex */
     private final class GroupClientServiceListener implements BluetoothProfile.ServiceListener {
         private GroupClientServiceListener() {
         }
 
-        @Override // android.bluetooth.BluetoothProfile.ServiceListener
         public void onServiceConnected(int i, BluetoothProfile bluetoothProfile) {
             DeviceGroupClientProfile.this.mService = (BluetoothDeviceGroup) bluetoothProfile;
             DeviceGroupClientProfile.this.mIsProfileReady = true;
@@ -99,7 +96,6 @@ public class DeviceGroupClientProfile implements LocalBluetoothProfile {
             }
         }
 
-        @Override // android.bluetooth.BluetoothProfile.ServiceListener
         public void onServiceDisconnected(int i) {
             DeviceGroupClientProfile.this.mIsProfileReady = false;
         }
@@ -181,58 +177,57 @@ public class DeviceGroupClientProfile implements LocalBluetoothProfile {
     public boolean startGroupDiscovery(int i) {
         Log.d("DeviceGroupClientProfile", "startGroupDiscovery: groupId = " + i);
         BluetoothDeviceGroup bluetoothDeviceGroup = this.mService;
-        if (bluetoothDeviceGroup == null || !this.mIsProfileReady) {
-            Log.e("DeviceGroupClientProfile", "startGroupDiscovery:  mService = " + this.mService + " mIsProfileReady = " + this.mIsProfileReady);
-            return false;
+        if (bluetoothDeviceGroup != null && this.mIsProfileReady) {
+            return bluetoothDeviceGroup.startGroupDiscovery(i);
         }
-        return bluetoothDeviceGroup.startGroupDiscovery(i);
+        Log.e("DeviceGroupClientProfile", "startGroupDiscovery:  mService = " + this.mService + " mIsProfileReady = " + this.mIsProfileReady);
+        return false;
     }
 
     public boolean stopGroupDiscovery(int i) {
         Log.d("DeviceGroupClientProfile", "stopGroupDiscovery: groupId = " + i);
         BluetoothDeviceGroup bluetoothDeviceGroup = this.mService;
-        if (bluetoothDeviceGroup == null || !this.mIsProfileReady) {
-            Log.e("DeviceGroupClientProfile", "stopGroupDiscovery:  mService = " + this.mService + " mIsProfileReady = " + this.mIsProfileReady);
-            return false;
+        if (bluetoothDeviceGroup != null && this.mIsProfileReady) {
+            return bluetoothDeviceGroup.stopGroupDiscovery(i);
         }
-        return bluetoothDeviceGroup.stopGroupDiscovery(i);
+        Log.e("DeviceGroupClientProfile", "stopGroupDiscovery:  mService = " + this.mService + " mIsProfileReady = " + this.mIsProfileReady);
+        return false;
     }
 
     public DeviceGroup getGroup(int i) {
         Log.d("DeviceGroupClientProfile", "getGroup: groupId = " + i);
         BluetoothDeviceGroup bluetoothDeviceGroup = this.mService;
-        if (bluetoothDeviceGroup == null || !this.mIsProfileReady) {
-            Log.e("DeviceGroupClientProfile", "getGroup:  mService = " + this.mService + " mIsProfileReady = " + this.mIsProfileReady);
-            return null;
+        if (bluetoothDeviceGroup != null && this.mIsProfileReady) {
+            return bluetoothDeviceGroup.getGroup(i, true);
         }
-        return bluetoothDeviceGroup.getGroup(i, true);
+        Log.e("DeviceGroupClientProfile", "getGroup:  mService = " + this.mService + " mIsProfileReady = " + this.mIsProfileReady);
+        return null;
     }
 
     public boolean isGroupDiscoveryInProgress(int i) {
         Log.d("DeviceGroupClientProfile", "isGroupDiscoveryInProgress: groupId = " + i);
         BluetoothDeviceGroup bluetoothDeviceGroup = this.mService;
-        if (bluetoothDeviceGroup == null) {
-            Log.e("DeviceGroupClientProfile", "Not connected to Profile Service. Return.");
-            return false;
+        if (bluetoothDeviceGroup != null) {
+            return bluetoothDeviceGroup.isGroupDiscoveryInProgress(i);
         }
-        return bluetoothDeviceGroup.isGroupDiscoveryInProgress(i);
+        Log.e("DeviceGroupClientProfile", "Not connected to Profile Service. Return.");
+        return false;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean isProfileReady() {
         return this.mIsProfileReady;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean isEnabled(BluetoothDevice bluetoothDevice) {
         return this.mService != null;
     }
 
-    protected void finalize() {
+    /* access modifiers changed from: protected */
+    public void finalize() {
         Log.d("DeviceGroupClientProfile", "finalize()");
         if (this.mService != null) {
             try {
-                BluetoothAdapter.getDefaultAdapter().closeProfileProxy(24, this.mService);
+                BluetoothAdapter.getDefaultAdapter().closeProfileProxy(32, this.mService);
                 this.mService = null;
             } catch (Throwable th) {
                 Log.w("DeviceGroupClientProfile", "Error cleaning up BluetoothDeviceGroup proxy Object", th);

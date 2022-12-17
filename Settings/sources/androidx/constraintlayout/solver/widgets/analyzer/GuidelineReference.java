@@ -2,11 +2,9 @@ package androidx.constraintlayout.solver.widgets.analyzer;
 
 import androidx.constraintlayout.solver.widgets.ConstraintWidget;
 import androidx.constraintlayout.solver.widgets.Guideline;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class GuidelineReference extends WidgetRun {
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // androidx.constraintlayout.solver.widgets.analyzer.WidgetRun
+
+class GuidelineReference extends WidgetRun {
+    /* access modifiers changed from: package-private */
     public boolean supportsWrapComputation() {
         return false;
     }
@@ -18,8 +16,7 @@ public class GuidelineReference extends WidgetRun {
         this.orientation = ((Guideline) constraintWidget).getOrientation();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // androidx.constraintlayout.solver.widgets.analyzer.WidgetRun
+    /* access modifiers changed from: package-private */
     public void clear() {
         this.start.clear();
     }
@@ -29,16 +26,14 @@ public class GuidelineReference extends WidgetRun {
         dependencyNode.targets.add(this.start);
     }
 
-    @Override // androidx.constraintlayout.solver.widgets.analyzer.WidgetRun, androidx.constraintlayout.solver.widgets.analyzer.Dependency
     public void update(Dependency dependency) {
         DependencyNode dependencyNode = this.start;
         if (dependencyNode.readyToSolve && !dependencyNode.resolved) {
-            this.start.resolve((int) ((dependencyNode.targets.get(0).value * ((Guideline) this.widget).getRelativePercent()) + 0.5f));
+            this.start.resolve((int) ((((float) dependencyNode.targets.get(0).value) * ((Guideline) this.widget).getRelativePercent()) + 0.5f));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // androidx.constraintlayout.solver.widgets.analyzer.WidgetRun
+    /* access modifiers changed from: package-private */
     public void apply() {
         Guideline guideline = (Guideline) this.widget;
         int relativeBegin = guideline.getRelativeBegin();
@@ -81,7 +76,6 @@ public class GuidelineReference extends WidgetRun {
         addDependency(this.widget.verticalRun.end);
     }
 
-    @Override // androidx.constraintlayout.solver.widgets.analyzer.WidgetRun
     public void applyToWidget() {
         if (((Guideline) this.widget).getOrientation() == 1) {
             this.widget.setX(this.start.value);

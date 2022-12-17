@@ -4,11 +4,11 @@ import android.app.NotificationHistory;
 import android.graphics.drawable.Drawable;
 import java.util.Objects;
 import java.util.TreeSet;
-/* loaded from: classes.dex */
+
 public class NotificationHistoryPackage {
     Drawable icon;
     CharSequence label;
-    TreeSet<NotificationHistory.HistoricalNotification> notifications = new TreeSet<>(NotificationHistoryPackage$$ExternalSyntheticLambda0.INSTANCE);
+    TreeSet<NotificationHistory.HistoricalNotification> notifications = new TreeSet<>(new NotificationHistoryPackage$$ExternalSyntheticLambda0());
     String pkgName;
     int uid;
 
@@ -17,14 +17,9 @@ public class NotificationHistoryPackage {
         this.uid = i;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ int lambda$new$0(NotificationHistory.HistoricalNotification historicalNotification, NotificationHistory.HistoricalNotification historicalNotification2) {
-        return Long.compare(historicalNotification2.getPostedTimeMs(), historicalNotification.getPostedTimeMs());
-    }
-
     public long getMostRecent() {
         if (this.notifications.isEmpty()) {
-            return 0L;
+            return 0;
         }
         return this.notifications.first().getPostedTimeMs();
     }
@@ -33,14 +28,17 @@ public class NotificationHistoryPackage {
         if (this == obj) {
             return true;
         }
-        if (obj == null || NotificationHistoryPackage.class != obj.getClass()) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
         NotificationHistoryPackage notificationHistoryPackage = (NotificationHistoryPackage) obj;
-        return this.uid == notificationHistoryPackage.uid && Objects.equals(this.pkgName, notificationHistoryPackage.pkgName) && Objects.equals(this.notifications, notificationHistoryPackage.notifications) && Objects.equals(this.label, notificationHistoryPackage.label) && Objects.equals(this.icon, notificationHistoryPackage.icon);
+        if (this.uid != notificationHistoryPackage.uid || !Objects.equals(this.pkgName, notificationHistoryPackage.pkgName) || !Objects.equals(this.notifications, notificationHistoryPackage.notifications) || !Objects.equals(this.label, notificationHistoryPackage.label) || !Objects.equals(this.icon, notificationHistoryPackage.icon)) {
+            return false;
+        }
+        return true;
     }
 
     public int hashCode() {
-        return Objects.hash(this.pkgName, Integer.valueOf(this.uid), this.notifications, this.label, this.icon);
+        return Objects.hash(new Object[]{this.pkgName, Integer.valueOf(this.uid), this.notifications, this.label, this.icon});
     }
 }

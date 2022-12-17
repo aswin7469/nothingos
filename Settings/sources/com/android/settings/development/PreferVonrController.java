@@ -11,13 +11,12 @@ import com.android.settings.network.SubscriptionUtil;
 import com.android.settings.network.SubscriptionsChangeListener;
 import com.android.settingslib.Utils;
 import com.android.settingslib.development.DeveloperOptionsPreferenceController;
-/* loaded from: classes.dex */
+
 public class PreferVonrController extends DeveloperOptionsPreferenceController implements SubscriptionsChangeListener.SubscriptionsChangeListenerClient, LifecycleObserver {
     private SubscriptionsChangeListener mChangeListener;
     private Preference mPreference;
     private UserManager mUserManager;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "prefer_vonr_mode";
     }
@@ -42,7 +41,6 @@ public class PreferVonrController extends DeveloperOptionsPreferenceController i
         this.mChangeListener.stop();
     }
 
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = preferenceScreen.findPreference(getPreferenceKey());
@@ -50,27 +48,22 @@ public class PreferVonrController extends DeveloperOptionsPreferenceController i
 
     private void update() {
         Preference preference = this.mPreference;
-        if (preference == null) {
-            return;
+        if (preference != null) {
+            preference.setEnabled(!this.mChangeListener.isAirplaneModeOn());
+            if (SubscriptionUtil.getAvailableSubscriptions(this.mContext).isEmpty()) {
+                this.mPreference.setEnabled(false);
+            }
         }
-        preference.setEnabled(!this.mChangeListener.isAirplaneModeOn());
-        if (!SubscriptionUtil.getAvailableSubscriptions(this.mContext).isEmpty()) {
-            return;
-        }
-        this.mPreference.setEnabled(false);
     }
 
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return !Utils.isWifiOnly(this.mContext) && this.mUserManager.isAdminUser();
     }
 
-    @Override // com.android.settings.network.SubscriptionsChangeListener.SubscriptionsChangeListenerClient
     public void onAirplaneModeChanged(boolean z) {
         update();
     }
 
-    @Override // com.android.settings.network.SubscriptionsChangeListener.SubscriptionsChangeListenerClient
     public void onSubscriptionsChanged() {
         update();
     }

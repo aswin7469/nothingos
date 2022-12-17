@@ -14,87 +14,80 @@ import com.google.android.setupcompat.partnerconfig.PartnerConfig;
 import com.google.android.setupcompat.partnerconfig.PartnerConfigHelper;
 import com.google.android.setupdesign.R$styleable;
 import com.google.android.setupdesign.items.ItemHierarchy;
-/* loaded from: classes2.dex */
+
 public class RecyclerItemAdapter extends RecyclerView.Adapter<ItemViewHolder> implements ItemHierarchy.Observer {
     public final boolean applyPartnerHeavyThemeResource;
     private final ItemHierarchy itemHierarchy;
-    private OnItemSelectedListener listener;
+    /* access modifiers changed from: private */
+    public OnItemSelectedListener listener;
     public final boolean useFullDynamicColor;
 
-    /* loaded from: classes2.dex */
     public interface OnItemSelectedListener {
         void onItemSelected(IItem iItem);
     }
 
-    public RecyclerItemAdapter(ItemHierarchy itemHierarchy, boolean z, boolean z2) {
+    public RecyclerItemAdapter(ItemHierarchy itemHierarchy2, boolean z, boolean z2) {
         this.applyPartnerHeavyThemeResource = z;
         this.useFullDynamicColor = z2;
-        this.itemHierarchy = itemHierarchy;
-        itemHierarchy.registerObserver(this);
+        this.itemHierarchy = itemHierarchy2;
+        itemHierarchy2.registerObserver(this);
     }
 
     public IItem getItem(int i) {
         return this.itemHierarchy.getItemAt(i);
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public long getItemId(int i) {
         int id;
         IItem item = getItem(i);
         if (!(item instanceof AbstractItem) || (id = ((AbstractItem) item).getId()) <= 0) {
-            return -1L;
+            return -1;
         }
-        return id;
+        return (long) id;
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public int getItemCount() {
         return this.itemHierarchy.getCount();
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
-    /* renamed from: onCreateViewHolder  reason: collision with other method in class */
-    public ItemViewHolder mo960onCreateViewHolder(ViewGroup viewGroup, int i) {
-        Drawable background;
+    public ItemViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        Drawable drawable;
         View inflate = LayoutInflater.from(viewGroup.getContext()).inflate(i, viewGroup, false);
         final ItemViewHolder itemViewHolder = new ItemViewHolder(inflate);
         if (!"noBackground".equals(inflate.getTag())) {
             TypedArray obtainStyledAttributes = viewGroup.getContext().obtainStyledAttributes(R$styleable.SudRecyclerItemAdapter);
-            Drawable drawable = obtainStyledAttributes.getDrawable(R$styleable.SudRecyclerItemAdapter_android_selectableItemBackground);
-            if (drawable == null) {
-                drawable = obtainStyledAttributes.getDrawable(R$styleable.SudRecyclerItemAdapter_selectableItemBackground);
-                background = null;
+            Drawable drawable2 = obtainStyledAttributes.getDrawable(R$styleable.SudRecyclerItemAdapter_android_selectableItemBackground);
+            if (drawable2 == null) {
+                drawable2 = obtainStyledAttributes.getDrawable(R$styleable.SudRecyclerItemAdapter_selectableItemBackground);
+                drawable = null;
             } else {
-                background = inflate.getBackground();
-                if (background == null) {
-                    if (this.applyPartnerHeavyThemeResource && !this.useFullDynamicColor) {
-                        background = new ColorDrawable(PartnerConfigHelper.get(inflate.getContext()).getColor(inflate.getContext(), PartnerConfig.CONFIG_LAYOUT_BACKGROUND_COLOR));
+                drawable = inflate.getBackground();
+                if (drawable == null) {
+                    if (!this.applyPartnerHeavyThemeResource || this.useFullDynamicColor) {
+                        drawable = obtainStyledAttributes.getDrawable(R$styleable.SudRecyclerItemAdapter_android_colorBackground);
                     } else {
-                        background = obtainStyledAttributes.getDrawable(R$styleable.SudRecyclerItemAdapter_android_colorBackground);
+                        drawable = new ColorDrawable(PartnerConfigHelper.get(inflate.getContext()).getColor(inflate.getContext(), PartnerConfig.CONFIG_LAYOUT_BACKGROUND_COLOR));
                     }
                 }
             }
-            if (drawable == null || background == null) {
-                Log.e("RecyclerItemAdapter", "Cannot resolve required attributes. selectableItemBackground=" + drawable + " background=" + background);
+            if (drawable2 == null || drawable == null) {
+                Log.e("RecyclerItemAdapter", "Cannot resolve required attributes. selectableItemBackground=" + drawable2 + " background=" + drawable);
             } else {
-                inflate.setBackgroundDrawable(new PatchedLayerDrawable(new Drawable[]{background, drawable}));
+                inflate.setBackgroundDrawable(new PatchedLayerDrawable(new Drawable[]{drawable, drawable2}));
             }
             obtainStyledAttributes.recycle();
         }
-        inflate.setOnClickListener(new View.OnClickListener() { // from class: com.google.android.setupdesign.items.RecyclerItemAdapter.1
-            @Override // android.view.View.OnClickListener
+        inflate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 IItem item = itemViewHolder.getItem();
-                if (RecyclerItemAdapter.this.listener == null || item == null || !item.isEnabled()) {
-                    return;
+                if (RecyclerItemAdapter.this.listener != null && item != null && item.isEnabled()) {
+                    RecyclerItemAdapter.this.listener.onItemSelected(item);
                 }
-                RecyclerItemAdapter.this.listener.onItemSelected(item);
             }
         });
         return itemViewHolder;
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public void onBindViewHolder(ItemViewHolder itemViewHolder, int i) {
         IItem item = getItem(i);
         itemViewHolder.setEnabled(item.isEnabled());
@@ -102,18 +95,15 @@ public class RecyclerItemAdapter extends RecyclerView.Adapter<ItemViewHolder> im
         item.onBindView(itemViewHolder.itemView);
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public int getItemViewType(int i) {
         return getItem(i).getLayoutResource();
     }
 
-    @Override // com.google.android.setupdesign.items.ItemHierarchy.Observer
-    public void onItemRangeChanged(ItemHierarchy itemHierarchy, int i, int i2) {
+    public void onItemRangeChanged(ItemHierarchy itemHierarchy2, int i, int i2) {
         notifyItemRangeChanged(i, i2);
     }
 
-    @Override // com.google.android.setupdesign.items.ItemHierarchy.Observer
-    public void onItemRangeInserted(ItemHierarchy itemHierarchy, int i, int i2) {
+    public void onItemRangeInserted(ItemHierarchy itemHierarchy2, int i, int i2) {
         notifyItemRangeInserted(i, i2);
     }
 
@@ -125,14 +115,11 @@ public class RecyclerItemAdapter extends RecyclerView.Adapter<ItemViewHolder> im
         this.listener = onItemSelectedListener;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes2.dex */
-    public static class PatchedLayerDrawable extends LayerDrawable {
+    static class PatchedLayerDrawable extends LayerDrawable {
         PatchedLayerDrawable(Drawable[] drawableArr) {
             super(drawableArr);
         }
 
-        @Override // android.graphics.drawable.LayerDrawable, android.graphics.drawable.Drawable
         public boolean getPadding(Rect rect) {
             return super.getPadding(rect) && !(rect.left == 0 && rect.top == 0 && rect.right == 0 && rect.bottom == 0);
         }

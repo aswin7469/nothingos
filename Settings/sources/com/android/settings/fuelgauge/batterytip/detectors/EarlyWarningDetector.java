@@ -1,5 +1,6 @@
 package com.android.settings.fuelgauge.batterytip.detectors;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.os.PowerManager;
@@ -8,7 +9,7 @@ import com.android.settings.fuelgauge.batterytip.BatteryTipPolicy;
 import com.android.settings.fuelgauge.batterytip.tips.BatteryTip;
 import com.android.settings.fuelgauge.batterytip.tips.EarlyWarningTip;
 import com.android.settings.overlay.FeatureFactory;
-/* loaded from: classes.dex */
+
 public class EarlyWarningDetector {
     private Context mContext;
     private BatteryTipPolicy mPolicy;
@@ -25,7 +26,7 @@ public class EarlyWarningDetector {
     public BatteryTip detect() {
         boolean z = true;
         int i = 0;
-        boolean z2 = this.mContext.registerReceiver(null, new IntentFilter("android.intent.action.BATTERY_CHANGED")).getIntExtra("plugged", -1) == 0;
+        boolean z2 = this.mContext.registerReceiver((BroadcastReceiver) null, new IntentFilter("android.intent.action.BATTERY_CHANGED")).getIntExtra("plugged", -1) == 0;
         boolean isPowerSaveMode = this.mPowerManager.isPowerSaveMode();
         if (!this.mPowerUsageFeatureProvider.getEarlyWarningSignal(this.mContext, EarlyWarningDetector.class.getName()) && !this.mPolicy.testBatterySaverTip) {
             z = false;

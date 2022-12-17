@@ -17,17 +17,26 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
-/* loaded from: classes.dex */
+
 public class ZoneGetter {
     public static CharSequence getTimeZoneOffsetAndName(Context context, TimeZone timeZone, Date date) {
         Locale locale = context.getResources().getConfiguration().locale;
         CharSequence gmtOffsetText = getGmtOffsetText(TimeZoneFormat.getInstance(locale), locale, timeZone, date);
         String zoneLongName = getZoneLongName(TimeZoneNames.getInstance(locale), timeZone, date);
-        return zoneLongName == null ? gmtOffsetText : TextUtils.concat(gmtOffsetText, " ", zoneLongName);
+        if (zoneLongName == null) {
+            return gmtOffsetText;
+        }
+        return TextUtils.concat(new CharSequence[]{gmtOffsetText, " ", zoneLongName});
     }
 
     private static String getZoneLongName(TimeZoneNames timeZoneNames, TimeZone timeZone, Date date) {
-        return timeZoneNames.getDisplayName(getCanonicalZoneId(timeZone), timeZone.inDaylightTime(date) ? TimeZoneNames.NameType.LONG_DAYLIGHT : TimeZoneNames.NameType.LONG_STANDARD, date.getTime());
+        TimeZoneNames.NameType nameType;
+        if (timeZone.inDaylightTime(date)) {
+            nameType = TimeZoneNames.NameType.LONG_DAYLIGHT;
+        } else {
+            nameType = TimeZoneNames.NameType.LONG_STANDARD;
+        }
+        return timeZoneNames.getDisplayName(getCanonicalZoneId(timeZone), nameType, date.getTime());
     }
 
     private static String getCanonicalZoneId(TimeZone timeZone) {
@@ -54,26 +63,26 @@ public class ZoneGetter {
     }
 
     public static CharSequence getGmtOffsetText(TimeZoneFormat timeZoneFormat, Locale locale, TimeZone timeZone, Date date) {
-        String substring;
         String str;
+        String str2;
         TimeZoneFormat.GMTOffsetPatternType gMTOffsetPatternType;
         int i;
-        String str2;
         int i2;
+        String str3;
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
         String gMTPattern = timeZoneFormat.getGMTPattern();
         int indexOf = gMTPattern.indexOf("{0}");
         boolean z = false;
         if (indexOf == -1) {
-            str = "GMT";
-            substring = "";
+            str2 = "GMT";
+            str = "";
         } else {
-            String substring2 = gMTPattern.substring(0, indexOf);
-            substring = gMTPattern.substring(indexOf + 3);
-            str = substring2;
+            String substring = gMTPattern.substring(0, indexOf);
+            str = gMTPattern.substring(indexOf + 3);
+            str2 = substring;
         }
-        if (!str.isEmpty()) {
-            appendWithTtsSpan(spannableStringBuilder, str, new TtsSpan.TextBuilder(str).build());
+        if (!str2.isEmpty()) {
+            appendWithTtsSpan(spannableStringBuilder, str2, new TtsSpan.TextBuilder(str2).build());
         }
         int offset = timeZone.getOffset(date.getTime());
         if (offset < 0) {
@@ -84,7 +93,7 @@ public class ZoneGetter {
         }
         String gMTOffsetPattern = timeZoneFormat.getGMTOffsetPattern(gMTOffsetPatternType);
         String gMTOffsetDigits = timeZoneFormat.getGMTOffsetDigits();
-        long j = offset;
+        long j = (long) offset;
         int i3 = (int) (j / 3600000);
         int abs = Math.abs((int) (j / 60000)) % 60;
         int i4 = 0;
@@ -102,31 +111,30 @@ public class ZoneGetter {
                     i = 2;
                 }
                 if (charAt == 'H') {
-                    str2 = "hour";
+                    str3 = "hour";
                     i2 = i3;
                 } else {
-                    str2 = "minute";
+                    str3 = "minute";
                     i2 = abs;
                 }
-                appendWithTtsSpan(spannableStringBuilder, formatDigits(i2, i, gMTOffsetDigits), new TtsSpan.MeasureBuilder().setNumber(i2).setUnit(str2).build());
+                appendWithTtsSpan(spannableStringBuilder, formatDigits(i2, i, gMTOffsetDigits), new TtsSpan.MeasureBuilder().setNumber((long) i2).setUnit(str3).build());
                 i4 = i5;
             } else {
                 spannableStringBuilder.append(charAt);
             }
             i4++;
         }
-        if (!substring.isEmpty()) {
-            appendWithTtsSpan(spannableStringBuilder, substring, new TtsSpan.TextBuilder(substring).build());
+        if (!str.isEmpty()) {
+            appendWithTtsSpan(spannableStringBuilder, str, new TtsSpan.TextBuilder(str).build());
         }
         SpannableString spannableString = new SpannableString(spannableStringBuilder);
-        BidiFormatter bidiFormatter = BidiFormatter.getInstance();
+        BidiFormatter instance = BidiFormatter.getInstance();
         if (TextUtils.getLayoutDirectionFromLocale(locale) == 1) {
             z = true;
         }
-        return bidiFormatter.unicodeWrap(spannableString, z ? TextDirectionHeuristicsCompat.RTL : TextDirectionHeuristicsCompat.LTR);
+        return instance.unicodeWrap(spannableString, z ? TextDirectionHeuristicsCompat.RTL : TextDirectionHeuristicsCompat.LTR);
     }
 
-    /* loaded from: classes.dex */
     public static final class ZoneGetterData {
         public List<String> lookupTimeZoneIdsByCountry(String str) {
             CountryTimeZones lookupCountryTimeZones = TimeZoneFinder.getInstance().lookupCountryTimeZones(str);
@@ -138,8 +146,8 @@ public class ZoneGetter {
 
         private static List<String> extractTimeZoneIds(List<CountryTimeZones.TimeZoneMapping> list) {
             ArrayList arrayList = new ArrayList(list.size());
-            for (CountryTimeZones.TimeZoneMapping timeZoneMapping : list) {
-                arrayList.add(timeZoneMapping.getTimeZoneId());
+            for (CountryTimeZones.TimeZoneMapping timeZoneId : list) {
+                arrayList.add(timeZoneId.getTimeZoneId());
             }
             return Collections.unmodifiableList(arrayList);
         }

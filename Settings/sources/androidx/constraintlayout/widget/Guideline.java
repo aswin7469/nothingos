@@ -5,13 +5,11 @@ import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
 import androidx.constraintlayout.widget.ConstraintLayout;
-/* loaded from: classes.dex */
+
 public class Guideline extends View {
-    @Override // android.view.View
     public void draw(Canvas canvas) {
     }
 
-    @Override // android.view.View
     public void setVisibility(int i) {
     }
 
@@ -35,8 +33,8 @@ public class Guideline extends View {
         super.setVisibility(8);
     }
 
-    @Override // android.view.View
-    protected void onMeasure(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         setMeasuredDimension(0, 0);
     }
 

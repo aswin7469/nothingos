@@ -9,12 +9,11 @@ import com.google.zxing.qrcode.QRCodeReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
-/* loaded from: classes2.dex */
+
 public final class MultiFormatReader implements Reader {
     private Map<DecodeHintType, ?> hints;
     private Reader[] readers;
 
-    @Override // com.google.zxing.Reader
     public Result decode(BinaryBitmap binaryBitmap, Map<DecodeHintType, ?> map) throws NotFoundException {
         setHints(map);
         return decodeInternal(binaryBitmap);
@@ -22,16 +21,21 @@ public final class MultiFormatReader implements Reader {
 
     public Result decodeWithState(BinaryBitmap binaryBitmap) throws NotFoundException {
         if (this.readers == null) {
-            setHints(null);
+            setHints((Map<DecodeHintType, ?>) null);
         }
         return decodeInternal(binaryBitmap);
     }
 
     public void setHints(Map<DecodeHintType, ?> map) {
+        Collection collection;
         this.hints = map;
         boolean z = true;
         boolean z2 = map != null && map.containsKey(DecodeHintType.TRY_HARDER);
-        Collection collection = map == null ? null : (Collection) map.get(DecodeHintType.POSSIBLE_FORMATS);
+        if (map == null) {
+            collection = null;
+        } else {
+            collection = (Collection) map.get(DecodeHintType.POSSIBLE_FORMATS);
+        }
         ArrayList arrayList = new ArrayList();
         if (collection != null) {
             if (!collection.contains(BarcodeFormat.UPC_A) && !collection.contains(BarcodeFormat.UPC_E) && !collection.contains(BarcodeFormat.EAN_13) && !collection.contains(BarcodeFormat.EAN_8) && !collection.contains(BarcodeFormat.CODABAR) && !collection.contains(BarcodeFormat.CODE_39) && !collection.contains(BarcodeFormat.CODE_93) && !collection.contains(BarcodeFormat.CODE_128) && !collection.contains(BarcodeFormat.ITF) && !collection.contains(BarcodeFormat.RSS_14) && !collection.contains(BarcodeFormat.RSS_EXPANDED)) {
@@ -75,12 +79,11 @@ public final class MultiFormatReader implements Reader {
         this.readers = (Reader[]) arrayList.toArray(new Reader[arrayList.size()]);
     }
 
-    @Override // com.google.zxing.Reader
     public void reset() {
         Reader[] readerArr = this.readers;
         if (readerArr != null) {
-            for (Reader reader : readerArr) {
-                reader.reset();
+            for (Reader reset : readerArr) {
+                reset.reset();
             }
         }
     }
@@ -88,10 +91,13 @@ public final class MultiFormatReader implements Reader {
     private Result decodeInternal(BinaryBitmap binaryBitmap) throws NotFoundException {
         Reader[] readerArr = this.readers;
         if (readerArr != null) {
-            for (Reader reader : readerArr) {
+            int length = readerArr.length;
+            int i = 0;
+            while (i < length) {
                 try {
-                    return reader.decode(binaryBitmap, this.hints);
+                    return readerArr[i].decode(binaryBitmap, this.hints);
                 } catch (ReaderException unused) {
+                    i++;
                 }
             }
         }

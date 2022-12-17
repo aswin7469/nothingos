@@ -9,11 +9,10 @@ import android.util.Log;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import com.android.settings.core.BasePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnStart;
 import com.android.settingslib.core.lifecycle.events.OnStop;
-/* loaded from: classes.dex */
+
 public abstract class PrintJobPreferenceControllerBase extends BasePreferenceController implements LifecycleObserver, OnStart, OnStop, PrintManager.PrintJobStateChangeListener {
     private static final String EXTRA_PRINT_JOB_ID = "EXTRA_PRINT_JOB_ID";
     private static final String TAG = "PrintJobPrefCtrlBase";
@@ -22,16 +21,11 @@ public abstract class PrintJobPreferenceControllerBase extends BasePreferenceCon
     protected PrintJobId mPrintJobId;
     private final PrintManager mPrintManager = ((PrintManager) this.mContext.getSystemService("print")).getGlobalPrintManagerForUser(this.mContext.getUserId());
 
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return 0;
     }
 
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
@@ -39,12 +33,12 @@ public abstract class PrintJobPreferenceControllerBase extends BasePreferenceCon
         return super.getIntentFilter();
     }
 
-    public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
-        return super.hasAsyncUpdate();
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
     }
 
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
+    public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
+        return super.hasAsyncUpdate();
     }
 
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
@@ -55,7 +49,8 @@ public abstract class PrintJobPreferenceControllerBase extends BasePreferenceCon
         return super.isSliceable();
     }
 
-    protected abstract void updateUi();
+    /* access modifiers changed from: protected */
+    public abstract void updateUi();
 
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
@@ -65,13 +60,11 @@ public abstract class PrintJobPreferenceControllerBase extends BasePreferenceCon
         super(context, str);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStart
     public void onStart() {
         this.mPrintManager.addPrintJobStateChangeListener(this);
         updateUi();
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStop
     public void onStop() {
         this.mPrintManager.removePrintJobStateChangeListener(this);
     }
@@ -80,7 +73,6 @@ public abstract class PrintJobPreferenceControllerBase extends BasePreferenceCon
         updateUi();
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = preferenceScreen.findPreference(getPreferenceKey());
@@ -91,7 +83,7 @@ public abstract class PrintJobPreferenceControllerBase extends BasePreferenceCon
         processArguments();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public PrintJob getPrintJob() {
         return this.mPrintManager.getPrintJob(this.mPrintJobId);
     }

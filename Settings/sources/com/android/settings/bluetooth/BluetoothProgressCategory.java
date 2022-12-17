@@ -3,8 +3,8 @@ package com.android.settings.bluetooth;
 import android.content.Context;
 import android.util.AttributeSet;
 import com.android.settings.ProgressCategory;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$string;
+
 public class BluetoothProgressCategory extends ProgressCategory {
     public BluetoothProgressCategory(Context context) {
         super(context);
@@ -27,6 +27,6 @@ public class BluetoothProgressCategory extends ProgressCategory {
     }
 
     private void init() {
-        setEmptyTextRes(R.string.bluetooth_no_devices_found);
+        setEmptyTextRes(R$string.bluetooth_no_devices_found);
     }
 }

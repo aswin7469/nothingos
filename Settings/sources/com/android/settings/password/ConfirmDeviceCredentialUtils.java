@@ -4,11 +4,12 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityOptions;
 import android.app.admin.DevicePolicyManager;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.os.RemoteException;
 import android.os.UserManager;
 import com.android.internal.widget.LockPatternUtils;
-/* loaded from: classes.dex */
+
 public class ConfirmDeviceCredentialUtils {
     public static void checkForPendingIntent(Activity activity) {
         int intExtra = activity.getIntent().getIntExtra("android.intent.extra.TASK_ID", -1);
@@ -22,7 +23,7 @@ public class ConfirmDeviceCredentialUtils {
         IntentSender intentSender = (IntentSender) activity.getIntent().getParcelableExtra("android.intent.extra.INTENT");
         if (intentSender != null) {
             try {
-                activity.startIntentSenderForResult(intentSender, -1, null, 0, 0, 0);
+                activity.startIntentSenderForResult(intentSender, -1, (Intent) null, 0, 0, 0);
             } catch (IntentSender.SendIntentException unused2) {
             }
         }

@@ -5,7 +5,7 @@ import android.util.Log;
 import com.android.internal.annotations.VisibleForTesting;
 import java.util.HashSet;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class HearingAidDeviceManager {
     private final LocalBluetoothManager mBtManager;
     private final List<CachedBluetoothDevice> mCachedDevices;
@@ -14,13 +14,12 @@ public class HearingAidDeviceManager {
         return j != 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public HearingAidDeviceManager(LocalBluetoothManager localBluetoothManager, List<CachedBluetoothDevice> list) {
+    HearingAidDeviceManager(LocalBluetoothManager localBluetoothManager, List<CachedBluetoothDevice> list) {
         this.mBtManager = localBluetoothManager;
         this.mCachedDevices = list;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void initHearingAidDeviceIfNeeded(CachedBluetoothDevice cachedBluetoothDevice) {
         long hiSyncId = getHiSyncId(cachedBluetoothDevice.getDevice());
         if (isValidHiSyncId(hiSyncId)) {
@@ -33,10 +32,10 @@ public class HearingAidDeviceManager {
         if (hearingAidProfile != null) {
             return hearingAidProfile.getHiSyncId(bluetoothDevice);
         }
-        return 0L;
+        return 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean setSubDeviceIfNeeded(CachedBluetoothDevice cachedBluetoothDevice) {
         CachedBluetoothDevice cachedDevice;
         long hiSyncId = cachedBluetoothDevice.getHiSyncId();
@@ -57,38 +56,42 @@ public class HearingAidDeviceManager {
         return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void updateHearingAidsDevices() {
-        HashSet<Long> hashSet = new HashSet();
-        for (CachedBluetoothDevice cachedBluetoothDevice : this.mCachedDevices) {
-            if (!isValidHiSyncId(cachedBluetoothDevice.getHiSyncId())) {
-                long hiSyncId = getHiSyncId(cachedBluetoothDevice.getDevice());
+        HashSet<Long> hashSet = new HashSet<>();
+        for (CachedBluetoothDevice next : this.mCachedDevices) {
+            if (!isValidHiSyncId(next.getHiSyncId())) {
+                long hiSyncId = getHiSyncId(next.getDevice());
                 if (isValidHiSyncId(hiSyncId)) {
-                    cachedBluetoothDevice.setHiSyncId(hiSyncId);
+                    next.setHiSyncId(hiSyncId);
                     hashSet.add(Long.valueOf(hiSyncId));
                 }
             }
         }
-        for (Long l : hashSet) {
-            onHiSyncIdChanged(l.longValue());
+        for (Long longValue : hashSet) {
+            onHiSyncIdChanged(longValue.longValue());
         }
     }
 
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    void onHiSyncIdChanged(long j) {
+    public void onHiSyncIdChanged(long j) {
         CachedBluetoothDevice cachedBluetoothDevice;
         int size = this.mCachedDevices.size() - 1;
         int i = -1;
         while (size >= 0) {
             CachedBluetoothDevice cachedBluetoothDevice2 = this.mCachedDevices.get(size);
             if (cachedBluetoothDevice2.getHiSyncId() == j) {
-                if (i != -1) {
+                if (i == -1) {
+                    i = size;
+                } else {
                     if (cachedBluetoothDevice2.isConnected()) {
                         cachedBluetoothDevice = this.mCachedDevices.get(i);
                         size = i;
                     } else {
+                        CachedBluetoothDevice cachedBluetoothDevice3 = cachedBluetoothDevice2;
                         cachedBluetoothDevice2 = this.mCachedDevices.get(i);
-                        cachedBluetoothDevice = cachedBluetoothDevice2;
+                        cachedBluetoothDevice = cachedBluetoothDevice3;
                     }
                     cachedBluetoothDevice2.setSubDevice(cachedBluetoothDevice);
                     this.mCachedDevices.remove(size);
@@ -96,16 +99,18 @@ public class HearingAidDeviceManager {
                     this.mBtManager.getEventManager().dispatchDeviceRemoved(cachedBluetoothDevice);
                     return;
                 }
-                i = size;
             }
             size--;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean onProfileConnectionStateChangedIfProcessed(CachedBluetoothDevice cachedBluetoothDevice, int i) {
         if (i == 0) {
             CachedBluetoothDevice findMainDevice = findMainDevice(cachedBluetoothDevice);
+            if (cachedBluetoothDevice.getUnpairing()) {
+                return true;
+            }
             if (findMainDevice != null) {
                 findMainDevice.refresh();
                 return true;
@@ -139,12 +144,12 @@ public class HearingAidDeviceManager {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public CachedBluetoothDevice findMainDevice(CachedBluetoothDevice cachedBluetoothDevice) {
         CachedBluetoothDevice subDevice;
-        for (CachedBluetoothDevice cachedBluetoothDevice2 : this.mCachedDevices) {
-            if (isValidHiSyncId(cachedBluetoothDevice2.getHiSyncId()) && (subDevice = cachedBluetoothDevice2.getSubDevice()) != null && subDevice.equals(cachedBluetoothDevice)) {
-                return cachedBluetoothDevice2;
+        for (CachedBluetoothDevice next : this.mCachedDevices) {
+            if (isValidHiSyncId(next.getHiSyncId()) && (subDevice = next.getSubDevice()) != null && subDevice.equals(cachedBluetoothDevice)) {
+                return next;
             }
         }
         return null;

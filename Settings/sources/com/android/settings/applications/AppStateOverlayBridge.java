@@ -6,26 +6,24 @@ import com.android.settings.applications.AppStateBaseBridge;
 import com.android.settingslib.applications.ApplicationsState;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class AppStateOverlayBridge extends AppStateAppOpsBridge {
-    private static final String[] PM_PERMISSION = {"android.permission.SYSTEM_ALERT_WINDOW"};
-    public static final ApplicationsState.AppFilter FILTER_SYSTEM_ALERT_WINDOW = new ApplicationsState.AppFilter() { // from class: com.android.settings.applications.AppStateOverlayBridge.1
-        @Override // com.android.settingslib.applications.ApplicationsState.AppFilter
+    public static final ApplicationsState.AppFilter FILTER_SYSTEM_ALERT_WINDOW = new ApplicationsState.AppFilter() {
         public void init() {
         }
 
-        @Override // com.android.settingslib.applications.ApplicationsState.AppFilter
         public boolean filterApp(ApplicationsState.AppEntry appEntry) {
             return appEntry.extraInfo != null;
         }
     };
+    private static final String[] PM_PERMISSION = {"android.permission.SYSTEM_ALERT_WINDOW"};
 
     public AppStateOverlayBridge(Context context, ApplicationsState applicationsState, AppStateBaseBridge.Callback callback) {
         super(context, applicationsState, callback, 24, PM_PERMISSION);
     }
 
-    @Override // com.android.settings.applications.AppStateBaseBridge
-    protected void updateExtraInfo(ApplicationsState.AppEntry appEntry, String str, int i) {
+    /* access modifiers changed from: protected */
+    public void updateExtraInfo(ApplicationsState.AppEntry appEntry, String str, int i) {
         appEntry.extraInfo = getOverlayInfo(str, i);
     }
 
@@ -33,7 +31,6 @@ public class AppStateOverlayBridge extends AppStateAppOpsBridge {
         return new OverlayState(super.getPermissionInfo(str, i));
     }
 
-    /* loaded from: classes.dex */
     public static class OverlayState extends AppStateAppOpsBridge.PermissionState {
         private static final List<String> DISABLE_PACKAGE_LIST;
         public final boolean controlEnabled;

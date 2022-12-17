@@ -5,19 +5,17 @@ import android.transition.TransitionValues;
 import android.view.View;
 import android.view.ViewGroup;
 import com.google.android.material.R$attr;
-/* loaded from: classes2.dex */
+
 public final class MaterialSharedAxis extends MaterialVisibility<VisibilityAnimatorProvider> {
     private static final int DEFAULT_THEMED_DURATION_ATTR = R$attr.motionDurationLong1;
     private static final int DEFAULT_THEMED_EASING_ATTR = R$attr.motionEasingStandard;
     private final int axis;
     private final boolean forward;
 
-    @Override // com.google.android.material.transition.platform.MaterialVisibility, android.transition.Visibility
     public /* bridge */ /* synthetic */ Animator onAppear(ViewGroup viewGroup, View view, TransitionValues transitionValues, TransitionValues transitionValues2) {
         return super.onAppear(viewGroup, view, transitionValues, transitionValues2);
     }
 
-    @Override // com.google.android.material.transition.platform.MaterialVisibility, android.transition.Visibility
     public /* bridge */ /* synthetic */ Animator onDisappear(ViewGroup viewGroup, View view, TransitionValues transitionValues, TransitionValues transitionValues2) {
         return super.onDisappear(viewGroup, view, transitionValues, transitionValues2);
     }
@@ -44,13 +42,13 @@ public final class MaterialSharedAxis extends MaterialVisibility<VisibilityAnima
         return new FadeThroughProvider();
     }
 
-    @Override // com.google.android.material.transition.platform.MaterialVisibility
-    int getDurationThemeAttrResId(boolean z) {
+    /* access modifiers changed from: package-private */
+    public int getDurationThemeAttrResId(boolean z) {
         return DEFAULT_THEMED_DURATION_ATTR;
     }
 
-    @Override // com.google.android.material.transition.platform.MaterialVisibility
-    int getEasingThemeAttrResId(boolean z) {
+    /* access modifiers changed from: package-private */
+    public int getEasingThemeAttrResId(boolean z) {
         return DEFAULT_THEMED_EASING_ATTR;
     }
 }

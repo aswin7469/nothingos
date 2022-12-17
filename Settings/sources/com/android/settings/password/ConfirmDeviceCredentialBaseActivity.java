@@ -8,14 +8,16 @@ import android.os.UserManager;
 import android.util.Log;
 import android.view.MenuItem;
 import androidx.fragment.app.Fragment;
-import com.android.settings.R;
+import com.android.settings.R$anim;
+import com.android.settings.R$id;
+import com.android.settings.R$style;
 import com.android.settings.SettingsActivity;
 import com.android.settings.SetupWizardUtils;
 import com.android.settings.Utils;
 import com.android.settings.password.ConfirmLockPassword;
 import com.android.settings.password.ConfirmLockPattern;
 import com.google.android.setupdesign.util.ThemeHelper;
-/* loaded from: classes.dex */
+
 public abstract class ConfirmDeviceCredentialBaseActivity extends SettingsActivity {
     private ConfirmCredentialTheme mConfirmCredentialTheme;
     private boolean mEnterAnimationPending;
@@ -23,16 +25,14 @@ public abstract class ConfirmDeviceCredentialBaseActivity extends SettingsActivi
     private boolean mIsKeyguardLocked = false;
     private boolean mRestoring;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public enum ConfirmCredentialTheme {
+    enum ConfirmCredentialTheme {
         NORMAL,
         DARK,
         WORK
     }
 
-    @Override // com.android.settings.core.SettingsBaseActivity
-    protected boolean isToolbarEnabled() {
+    /* access modifiers changed from: protected */
+    public boolean isToolbarEnabled() {
         return false;
     }
 
@@ -40,8 +40,7 @@ public abstract class ConfirmDeviceCredentialBaseActivity extends SettingsActivi
         return (this instanceof ConfirmLockPassword.InternalActivity) || (this instanceof ConfirmLockPattern.InternalActivity);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.SettingsActivity, com.android.settings.core.SettingsBaseActivity, androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         boolean z;
         try {
@@ -50,7 +49,7 @@ public abstract class ConfirmDeviceCredentialBaseActivity extends SettingsActivi
                 setTheme(SetupWizardUtils.getTheme(this, getIntent()));
                 this.mConfirmCredentialTheme = ConfirmCredentialTheme.WORK;
             } else if (getIntent().getBooleanExtra("com.android.settings.ConfirmCredentials.darkTheme", false)) {
-                setTheme(R.style.Theme_ConfirmDeviceCredentialsDark);
+                setTheme(R$style.Theme_ConfirmDeviceCredentialsDark);
                 this.mConfirmCredentialTheme = ConfirmCredentialTheme.DARK;
             } else {
                 setTheme(SetupWizardUtils.getTheme(this, getIntent()));
@@ -59,7 +58,7 @@ public abstract class ConfirmDeviceCredentialBaseActivity extends SettingsActivi
             ThemeHelper.trySetDynamicColor(this);
             super.onCreate(bundle);
             if (this.mConfirmCredentialTheme == ConfirmCredentialTheme.NORMAL) {
-                findViewById(R.id.content_parent).setFitsSystemWindows(false);
+                findViewById(R$id.content_parent).setFitsSystemWindows(false);
             }
             getWindow().addFlags(8192);
             if (bundle == null) {
@@ -71,7 +70,7 @@ public abstract class ConfirmDeviceCredentialBaseActivity extends SettingsActivi
             if (z && getIntent().getBooleanExtra("com.android.settings.ConfirmCredentials.showWhenLocked", false)) {
                 getWindow().addFlags(524288);
             }
-            setTitle(getIntent().getStringExtra("com.android.settings.ConfirmCredentials.title"));
+            setTitle((CharSequence) getIntent().getStringExtra("com.android.settings.ConfirmCredentials.title"));
             if (getActionBar() != null) {
                 getActionBar().setDisplayHomeAsUpEnabled(true);
                 getActionBar().setHomeButtonEnabled(true);
@@ -86,41 +85,36 @@ public abstract class ConfirmDeviceCredentialBaseActivity extends SettingsActivi
         }
     }
 
-    @Override // com.android.settings.SettingsActivity, androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         bundle.putBoolean("STATE_IS_KEYGUARD_LOCKED", this.mIsKeyguardLocked);
     }
 
-    @Override // android.app.Activity
     public boolean onOptionsItemSelected(MenuItem menuItem) {
-        if (menuItem.getItemId() == 16908332) {
-            finish();
-            return true;
+        if (menuItem.getItemId() != 16908332) {
+            return super.onOptionsItemSelected(menuItem);
         }
-        return super.onOptionsItemSelected(menuItem);
+        finish();
+        return true;
     }
 
-    @Override // com.android.settings.SettingsActivity, androidx.fragment.app.FragmentActivity, android.app.Activity
     public void onResume() {
         super.onResume();
-        if (isChangingConfigurations() || this.mRestoring || this.mConfirmCredentialTheme != ConfirmCredentialTheme.DARK || !this.mFirstTimeVisible) {
-            return;
+        if (!isChangingConfigurations() && !this.mRestoring && this.mConfirmCredentialTheme == ConfirmCredentialTheme.DARK && this.mFirstTimeVisible) {
+            this.mFirstTimeVisible = false;
+            prepareEnterAnimation();
+            this.mEnterAnimationPending = true;
         }
-        this.mFirstTimeVisible = false;
-        prepareEnterAnimation();
-        this.mEnterAnimationPending = true;
     }
 
     private ConfirmDeviceCredentialBaseFragment getFragment() {
-        Fragment findFragmentById = getSupportFragmentManager().findFragmentById(R.id.main_content);
+        Fragment findFragmentById = getSupportFragmentManager().findFragmentById(R$id.main_content);
         if (findFragmentById == null || !(findFragmentById instanceof ConfirmDeviceCredentialBaseFragment)) {
             return null;
         }
         return (ConfirmDeviceCredentialBaseFragment) findFragmentById;
     }
 
-    @Override // android.app.Activity
     public void onEnterAnimationComplete() {
         super.onEnterAnimationComplete();
         if (this.mEnterAnimationPending) {
@@ -129,34 +123,30 @@ public abstract class ConfirmDeviceCredentialBaseActivity extends SettingsActivi
         }
     }
 
-    @Override // androidx.fragment.app.FragmentActivity, android.app.Activity
     public void onStop() {
         super.onStop();
         boolean booleanExtra = getIntent().getBooleanExtra("foreground_only", false);
-        if (isChangingConfigurations() || !booleanExtra) {
-            return;
+        if (!isChangingConfigurations() && booleanExtra) {
+            finish();
         }
-        finish();
     }
 
-    @Override // androidx.fragment.app.FragmentActivity, android.app.Activity
     public void onDestroy() {
         super.onDestroy();
-        new Handler(Looper.myLooper()).postDelayed(ConfirmDeviceCredentialBaseActivity$$ExternalSyntheticLambda0.INSTANCE, 5000L);
+        new Handler(Looper.myLooper()).postDelayed(new ConfirmDeviceCredentialBaseActivity$$ExternalSyntheticLambda0(), 5000);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ void lambda$onDestroy$0() {
         System.gc();
         System.runFinalization();
         System.gc();
     }
 
-    @Override // android.app.Activity
     public void finish() {
         super.finish();
         if (getIntent().getBooleanExtra("com.android.settings.ConfirmCredentials.useFadeAnimation", false)) {
-            overridePendingTransition(0, R.anim.confirm_credential_biometric_transition_exit);
+            overridePendingTransition(0, R$anim.confirm_credential_biometric_transition_exit);
         }
     }
 

@@ -1,63 +1,73 @@
 package com.android.settings.fuelgauge;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.database.ContentObserver;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.SearchIndexableResource;
+import android.util.Log;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
-import com.android.settings.R;
+import com.android.settings.R$xml;
 import com.android.settings.SettingsActivity;
+import com.android.settings.core.InstrumentedPreferenceFragment;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settings.search.BaseSearchIndexProvider;
 import com.android.settingslib.core.AbstractPreferenceController;
+import com.android.settingslib.core.lifecycle.Lifecycle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public class PowerUsageAdvanced extends PowerUsageBase {
-    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider() { // from class: com.android.settings.fuelgauge.PowerUsageAdvanced.1
-        @Override // com.android.settings.search.BaseSearchIndexProvider, com.android.settingslib.search.Indexable$SearchIndexProvider
+    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider() {
         public List<SearchIndexableResource> getXmlResourcesToIndex(Context context, boolean z) {
             SearchIndexableResource searchIndexableResource = new SearchIndexableResource(context);
-            searchIndexableResource.xmlResId = R.xml.power_usage_advanced;
-            return Arrays.asList(searchIndexableResource);
+            searchIndexableResource.xmlResId = R$xml.power_usage_advanced;
+            return Arrays.asList(new SearchIndexableResource[]{searchIndexableResource});
         }
 
-        @Override // com.android.settings.search.BaseSearchIndexProvider
         public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
             ArrayList arrayList = new ArrayList();
-            arrayList.add(new BatteryAppListPreferenceController(context, "app_list", null, null, null));
+            arrayList.add(new BatteryAppListPreferenceController(context, "app_list", (Lifecycle) null, (SettingsActivity) null, (InstrumentedPreferenceFragment) null));
             return arrayList;
         }
     };
     private BatteryAppListPreferenceController mBatteryAppListPreferenceController;
     private BatteryChartPreferenceController mBatteryChartPreferenceController;
-    Map<Long, Map<String, BatteryHistEntry>> mBatteryHistoryMap;
-    BatteryHistoryPreference mHistPref;
-    private PowerUsageFeatureProvider mPowerUsageFeatureProvider;
     final BatteryHistoryLoaderCallbacks mBatteryHistoryLoaderCallbacks = new BatteryHistoryLoaderCallbacks();
-    private boolean mIsChartDataLoaded = false;
+    Map<Long, Map<String, BatteryHistEntry>> mBatteryHistoryMap;
+    private final ContentObserver mBatteryObserver = new ContentObserver(new Handler()) {
+        public void onChange(boolean z) {
+            Log.d("AdvancedBatteryUsage", "onBatteryContentChange: " + z);
+            PowerUsageAdvanced.this.mIsChartDataLoaded = false;
+            PowerUsageAdvanced.this.restartBatteryStatsLoader(0);
+        }
+    };
+    BatteryHistoryPreference mHistPref;
+    /* access modifiers changed from: private */
+    public boolean mIsChartDataLoaded = false;
     private boolean mIsChartGraphEnabled = false;
+    private PowerUsageFeatureProvider mPowerUsageFeatureProvider;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "AdvancedBatteryUsage";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 51;
     }
 
-    @Override // com.android.settings.fuelgauge.PowerUsageBase
-    protected boolean isBatteryHistoryNeeded() {
+    /* access modifiers changed from: protected */
+    public boolean isBatteryHistoryNeeded() {
         return true;
     }
 
-    @Override // com.android.settings.fuelgauge.PowerUsageBase, com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         Context context = getContext();
@@ -70,7 +80,6 @@ public class PowerUsageAdvanced extends PowerUsageBase {
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onDestroy() {
         super.onDestroy();
         if (getActivity().isChangingConfigurations()) {
@@ -78,20 +87,29 @@ public class PowerUsageAdvanced extends PowerUsageBase {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.power_usage_advanced;
+        return R$xml.power_usage_advanced;
     }
 
-    @Override // com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onPause() {
         super.onPause();
         this.mIsChartDataLoaded = false;
+        if (this.mPowerUsageFeatureProvider.getBatteryHistoryUri() != null) {
+            getContext().getContentResolver().unregisterContentObserver(this.mBatteryObserver);
+        }
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment
-    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+    public void onResume() {
+        super.onResume();
+        Uri batteryHistoryUri = this.mPowerUsageFeatureProvider.getBatteryHistoryUri();
+        if (batteryHistoryUri != null) {
+            getContext().getContentResolver().registerContentObserver(batteryHistoryUri, true, this.mBatteryObserver);
+        }
+    }
+
+    /* access modifiers changed from: protected */
+    public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
         refreshFeatureFlag(context);
         ArrayList arrayList = new ArrayList();
         if (this.mIsChartGraphEnabled) {
@@ -107,27 +125,24 @@ public class PowerUsageAdvanced extends PowerUsageBase {
         return arrayList;
     }
 
-    @Override // com.android.settings.fuelgauge.PowerUsageBase
-    protected void refreshUi(int i) {
+    /* access modifiers changed from: protected */
+    public void refreshUi(int i) {
         Map<Long, Map<String, BatteryHistEntry>> map;
         Context context = getContext();
-        if (context == null) {
-            return;
+        if (context != null) {
+            updatePreference(this.mHistPref);
+            if (!(this.mBatteryAppListPreferenceController == null || this.mBatteryUsageStats == null)) {
+                updateHistPrefSummary(context);
+                this.mBatteryAppListPreferenceController.refreshAppListGroup(this.mBatteryUsageStats, true);
+            }
+            BatteryChartPreferenceController batteryChartPreferenceController = this.mBatteryChartPreferenceController;
+            if (batteryChartPreferenceController != null && (map = this.mBatteryHistoryMap) != null) {
+                batteryChartPreferenceController.setBatteryHistoryMap(map);
+            }
         }
-        updatePreference(this.mHistPref);
-        if (this.mBatteryAppListPreferenceController != null && this.mBatteryUsageStats != null) {
-            updateHistPrefSummary(context);
-            this.mBatteryAppListPreferenceController.refreshAppListGroup(this.mBatteryUsageStats, true);
-        }
-        BatteryChartPreferenceController batteryChartPreferenceController = this.mBatteryChartPreferenceController;
-        if (batteryChartPreferenceController == null || (map = this.mBatteryHistoryMap) == null) {
-            return;
-        }
-        batteryChartPreferenceController.setBatteryHistoryMap(map);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.fuelgauge.PowerUsageBase
+    /* access modifiers changed from: protected */
     public void restartBatteryStatsLoader(int i) {
         Bundle bundle = new Bundle();
         bundle.putInt("refresh_type", i);
@@ -135,18 +150,17 @@ public class PowerUsageAdvanced extends PowerUsageBase {
         if (z && !this.mIsChartDataLoaded) {
             this.mIsChartDataLoaded = true;
             getLoaderManager().restartLoader(2, bundle, this.mBatteryHistoryLoaderCallbacks);
-        } else if (z) {
-        } else {
+        } else if (!z) {
             super.restartBatteryStatsLoader(i);
         }
     }
 
     private void updateHistPrefSummary(Context context) {
-        boolean z = context.registerReceiver(null, new IntentFilter("android.intent.action.BATTERY_CHANGED")).getIntExtra("plugged", -1) != 0;
-        if (this.mPowerUsageFeatureProvider.isEnhancedBatteryPredictionEnabled(context) && !z) {
-            this.mHistPref.setBottomSummary(this.mPowerUsageFeatureProvider.getAdvancedUsageScreenInfoString());
-        } else {
+        boolean z = context.registerReceiver((BroadcastReceiver) null, new IntentFilter("android.intent.action.BATTERY_CHANGED")).getIntExtra("plugged", -1) != 0;
+        if (!this.mPowerUsageFeatureProvider.isEnhancedBatteryPredictionEnabled(context) || z) {
             this.mHistPref.hideBottomSummary();
+        } else {
+            this.mHistPref.setBottomSummary(this.mPowerUsageFeatureProvider.getAdvancedUsageScreenInfoString());
         }
     }
 
@@ -161,30 +175,25 @@ public class PowerUsageAdvanced extends PowerUsageBase {
     private void setBatteryChartPreferenceController() {
         BatteryChartPreferenceController batteryChartPreferenceController;
         BatteryHistoryPreference batteryHistoryPreference = this.mHistPref;
-        if (batteryHistoryPreference == null || (batteryChartPreferenceController = this.mBatteryChartPreferenceController) == null) {
-            return;
+        if (batteryHistoryPreference != null && (batteryChartPreferenceController = this.mBatteryChartPreferenceController) != null) {
+            batteryHistoryPreference.setChartPreferenceController(batteryChartPreferenceController);
         }
-        batteryHistoryPreference.setChartPreferenceController(batteryChartPreferenceController);
     }
 
-    /* loaded from: classes.dex */
     private class BatteryHistoryLoaderCallbacks implements LoaderManager.LoaderCallbacks<Map<Long, Map<String, BatteryHistEntry>>> {
         private int mRefreshType;
 
-        @Override // androidx.loader.app.LoaderManager.LoaderCallbacks
         public void onLoaderReset(Loader<Map<Long, Map<String, BatteryHistEntry>>> loader) {
         }
 
         private BatteryHistoryLoaderCallbacks() {
         }
 
-        @Override // androidx.loader.app.LoaderManager.LoaderCallbacks
         public Loader<Map<Long, Map<String, BatteryHistEntry>>> onCreateLoader(int i, Bundle bundle) {
             this.mRefreshType = bundle.getInt("refresh_type");
             return new BatteryHistoryLoader(PowerUsageAdvanced.this.getContext());
         }
 
-        @Override // androidx.loader.app.LoaderManager.LoaderCallbacks
         public void onLoadFinished(Loader<Map<Long, Map<String, BatteryHistEntry>>> loader, Map<Long, Map<String, BatteryHistEntry>> map) {
             PowerUsageAdvanced powerUsageAdvanced = PowerUsageAdvanced.this;
             powerUsageAdvanced.mBatteryHistoryMap = map;

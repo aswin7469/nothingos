@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:title="@string/gm_setting_notification_display">
+    <com.android.settingslib.widget.IllustrationPreference android:key="nt_notification_display_menu_video" app:lottie_imageAssetsFolder="button_nav_menu" app:searchable="false"/>
+    <com.nothing.settings.gestures.NtSelectorWithWidgetPreference android:persistent="false" android:title="@string/gm_setting_notification_display_default" android:key="nt_notifacation_display_default"/>
+    <com.nothing.settings.gestures.NtSelectorWithWidgetPreference android:persistent="false" android:title="@string/gm_setting_notification_display_minimal" android:key="nt_notifacation_display_minimal"/>
+</PreferenceScreen>

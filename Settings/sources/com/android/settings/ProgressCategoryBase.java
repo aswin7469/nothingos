@@ -3,7 +3,7 @@ package com.android.settings;
 import android.content.Context;
 import android.util.AttributeSet;
 import androidx.preference.PreferenceCategory;
-/* loaded from: classes.dex */
+
 public abstract class ProgressCategoryBase extends PreferenceCategory {
     public ProgressCategoryBase(Context context) {
         super(context);

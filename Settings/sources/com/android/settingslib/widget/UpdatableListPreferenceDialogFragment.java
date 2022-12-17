@@ -3,14 +3,16 @@ package com.android.settingslib.widget;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.ListPreference;
 import androidx.preference.PreferenceDialogFragmentCompat;
 import com.android.internal.R;
 import com.android.settingslib.core.instrumentation.Instrumentable;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
+
 public class UpdatableListPreferenceDialogFragment extends PreferenceDialogFragmentCompat implements Instrumentable {
     private ArrayAdapter mAdapter;
     private int mClickedDialogEntryIndex;
@@ -27,7 +29,6 @@ public class UpdatableListPreferenceDialogFragment extends PreferenceDialogFragm
         return updatableListPreferenceDialogFragment;
     }
 
-    @Override // androidx.preference.PreferenceDialogFragmentCompat, androidx.fragment.app.DialogFragment, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         this.mMetricsCategory = getArguments().getInt("metrics_category_key", 0);
@@ -41,7 +42,6 @@ public class UpdatableListPreferenceDialogFragment extends PreferenceDialogFragm
         this.mEntryValues = bundle.getCharSequenceArray("UpdatableListPreferenceDialogFragment.entryValues");
     }
 
-    @Override // androidx.preference.PreferenceDialogFragmentCompat, androidx.fragment.app.DialogFragment, androidx.fragment.app.Fragment
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         bundle.putInt("UpdatableListPreferenceDialogFragment.index", this.mClickedDialogEntryIndex);
@@ -49,73 +49,68 @@ public class UpdatableListPreferenceDialogFragment extends PreferenceDialogFragm
         bundle.putCharSequenceArray("UpdatableListPreferenceDialogFragment.entryValues", this.mEntryValues);
     }
 
-    @Override // androidx.preference.PreferenceDialogFragmentCompat
     public void onDialogClosed(boolean z) {
-        if (!z || this.mClickedDialogEntryIndex < 0) {
-            return;
+        if (z && this.mClickedDialogEntryIndex >= 0) {
+            ListPreference listPreference = getListPreference();
+            String charSequence = this.mEntryValues[this.mClickedDialogEntryIndex].toString();
+            if (listPreference.callChangeListener(charSequence)) {
+                listPreference.setValue(charSequence);
+            }
         }
-        ListPreference listPreference = getListPreference();
-        String charSequence = this.mEntryValues[this.mClickedDialogEntryIndex].toString();
-        if (!listPreference.callChangeListener(charSequence)) {
-            return;
-        }
-        listPreference.setValue(charSequence);
     }
 
-    void setAdapter(ArrayAdapter arrayAdapter) {
+    /* access modifiers changed from: package-private */
+    public void setAdapter(ArrayAdapter arrayAdapter) {
         this.mAdapter = arrayAdapter;
     }
 
-    void setEntries(ArrayList<CharSequence> arrayList) {
+    /* access modifiers changed from: package-private */
+    public void setEntries(ArrayList<CharSequence> arrayList) {
         this.mEntries = arrayList;
     }
 
-    ArrayAdapter getAdapter() {
+    /* access modifiers changed from: package-private */
+    public ArrayAdapter getAdapter() {
         return this.mAdapter;
     }
 
-    void setMetricsCategory(Bundle bundle) {
+    /* access modifiers changed from: package-private */
+    public void setMetricsCategory(Bundle bundle) {
         this.mMetricsCategory = bundle.getInt("metrics_category_key", 0);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.PreferenceDialogFragmentCompat
+    /* access modifiers changed from: protected */
     public void onPrepareDialogBuilder(AlertDialog.Builder builder) {
         super.onPrepareDialogBuilder(builder);
-        TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(null, R.styleable.AlertDialog, 16842845, 0);
+        TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes((AttributeSet) null, R.styleable.AlertDialog, 16842845, 0);
         ArrayAdapter arrayAdapter = new ArrayAdapter(getContext(), obtainStyledAttributes.getResourceId(21, 17367058), this.mEntries);
         this.mAdapter = arrayAdapter;
-        builder.setSingleChoiceItems(arrayAdapter, this.mClickedDialogEntryIndex, new DialogInterface.OnClickListener() { // from class: com.android.settingslib.widget.UpdatableListPreferenceDialogFragment$$ExternalSyntheticLambda0
-            @Override // android.content.DialogInterface.OnClickListener
-            public final void onClick(DialogInterface dialogInterface, int i) {
-                UpdatableListPreferenceDialogFragment.this.lambda$onPrepareDialogBuilder$0(dialogInterface, i);
-            }
-        });
+        builder.setSingleChoiceItems((ListAdapter) arrayAdapter, this.mClickedDialogEntryIndex, (DialogInterface.OnClickListener) new UpdatableListPreferenceDialogFragment$$ExternalSyntheticLambda0(this));
         builder.setPositiveButton((CharSequence) null, (DialogInterface.OnClickListener) null);
         obtainStyledAttributes.recycle();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onPrepareDialogBuilder$0(DialogInterface dialogInterface, int i) {
         this.mClickedDialogEntryIndex = i;
         onClick(dialogInterface, -1);
         dialogInterface.dismiss();
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return this.mMetricsCategory;
     }
 
-    ListPreference getListPreference() {
+    /* access modifiers changed from: package-private */
+    public ListPreference getListPreference() {
         return (ListPreference) getPreference();
     }
 
     private void setPreferenceData(ListPreference listPreference) {
         this.mEntries.clear();
         this.mClickedDialogEntryIndex = listPreference.findIndexOfValue(listPreference.getValue());
-        for (CharSequence charSequence : listPreference.getEntries()) {
-            this.mEntries.add(charSequence);
+        for (CharSequence add : listPreference.getEntries()) {
+            this.mEntries.add(add);
         }
         this.mEntryValues = listPreference.getEntryValues();
     }

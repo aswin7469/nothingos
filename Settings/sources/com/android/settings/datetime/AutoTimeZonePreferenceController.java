@@ -7,12 +7,11 @@ import androidx.preference.SwitchPreference;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.Utils;
 import com.android.settingslib.core.AbstractPreferenceController;
-/* loaded from: classes.dex */
+
 public class AutoTimeZonePreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin, Preference.OnPreferenceChangeListener {
     private final UpdateTimeAndDateCallback mCallback;
     private final boolean mIsFromSUW;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "auto_zone";
     }
@@ -23,20 +22,16 @@ public class AutoTimeZonePreferenceController extends AbstractPreferenceControll
         this.mIsFromSUW = z;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return !Utils.isWifiOnly(this.mContext) && !this.mIsFromSUW;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
-        if (!(preference instanceof SwitchPreference)) {
-            return;
+        if (preference instanceof SwitchPreference) {
+            ((SwitchPreference) preference).setChecked(isEnabled());
         }
-        ((SwitchPreference) preference).setChecked(isEnabled());
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         Settings.Global.putInt(this.mContext.getContentResolver(), "auto_time_zone", ((Boolean) obj).booleanValue() ? 1 : 0);
         this.mCallback.updateTimeAndDateDisplay(this.mContext);

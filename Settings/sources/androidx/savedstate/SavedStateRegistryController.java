@@ -2,7 +2,7 @@ package androidx.savedstate;
 
 import android.os.Bundle;
 import androidx.lifecycle.Lifecycle;
-/* loaded from: classes.dex */
+
 public final class SavedStateRegistryController {
     private final SavedStateRegistryOwner mOwner;
     private final SavedStateRegistry mRegistry = new SavedStateRegistry();
@@ -16,12 +16,13 @@ public final class SavedStateRegistryController {
     }
 
     public void performRestore(Bundle bundle) {
-        Lifecycle mo959getLifecycle = this.mOwner.mo959getLifecycle();
-        if (mo959getLifecycle.getCurrentState() != Lifecycle.State.INITIALIZED) {
-            throw new IllegalStateException("Restarter must be created only during owner's initialization stage");
+        Lifecycle lifecycle = this.mOwner.getLifecycle();
+        if (lifecycle.getCurrentState() == Lifecycle.State.INITIALIZED) {
+            lifecycle.addObserver(new Recreator(this.mOwner));
+            this.mRegistry.performRestore(lifecycle, bundle);
+            return;
         }
-        mo959getLifecycle.addObserver(new Recreator(this.mOwner));
-        this.mRegistry.performRestore(mo959getLifecycle, bundle);
+        throw new IllegalStateException("Restarter must be created only during owner's initialization stage");
     }
 
     public void performSave(Bundle bundle) {

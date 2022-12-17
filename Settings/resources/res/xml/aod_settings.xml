@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:title="@string/nt_aod_title">
+    <com.android.settingslib.RestrictedSwitchPreference android:title="@string/doze_always_on_title" android:key="ambient_display_always_on" android:summary="@string/doze_always_on_summary" app:controller="com.android.settings.display.AmbientDisplayAlwaysOnPreferenceController" app:userRestriction="no_ambient_display"/>
+    <Preference android:title="@string/nt_aod_when_to_show_title" android:key="nt_aod_when_to_show_key" app:fragment="com.nothing.settings.display.aod.AodDisplayModeFragment"/>
+    <PreferenceCategory android:title="@string/nt_aod_what_to_show_title" android:key="nt_aod_what_to_show_key" android:order="1000">
+        <com.nothing.p006ui.support.NtCustSwitchPreference android:title="@string/nt_aod_show_date_title" android:key="nt_aod_show_date_key" app:controller="com.nothing.settings.display.aod.AodDateController"/>
+        <com.nothing.p006ui.support.NtCustSwitchPreference android:title="@string/nt_aod_show_battery_title" android:key="nt_aod_show_battery_key" app:controller="com.nothing.settings.display.aod.AodBatteryController"/>
+        <com.nothing.p006ui.support.NtCustSwitchPreference android:title="@string/nt_aod_show_notification_title" android:key="nt_aod_show_notification_key" app:controller="com.nothing.settings.display.aod.AodNotificationController"/>
+        <com.nothing.p006ui.support.NtCustSwitchPreference android:title="@string/nt_aod_show_weather_title" android:key="nt_aod_show_weather_key" app:controller="com.nothing.settings.display.aod.AodWeatherController"/>
+        <com.nothing.p006ui.support.NtCustSwitchPreference android:title="@string/nt_aod_show_calendar_event_title" android:key="nt_aod_show_calendar_event_key" app:controller="com.nothing.settings.display.aod.AodUpcomingCalendarEventsController"/>
+        <com.nothing.p006ui.support.NtCustSwitchPreference android:title="@string/doze_title" android:key="ambient_display_notification" android:summary="@string/doze_summary" app:controller="com.android.settings.display.AmbientDisplayNotificationsPreferenceController"/>
+    </PreferenceCategory>
+</PreferenceScreen>

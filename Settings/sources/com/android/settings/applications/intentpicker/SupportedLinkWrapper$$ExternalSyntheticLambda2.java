@@ -1,18 +1,20 @@
 package com.android.settings.applications.intentpicker;
 
+import android.content.Context;
 import android.content.pm.verify.domain.DomainOwner;
-import java.util.function.Predicate;
-/* loaded from: classes.dex */
-public final /* synthetic */ class SupportedLinkWrapper$$ExternalSyntheticLambda2 implements Predicate {
-    public static final /* synthetic */ SupportedLinkWrapper$$ExternalSyntheticLambda2 INSTANCE = new SupportedLinkWrapper$$ExternalSyntheticLambda2();
+import java.util.function.Function;
 
-    private /* synthetic */ SupportedLinkWrapper$$ExternalSyntheticLambda2() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class SupportedLinkWrapper$$ExternalSyntheticLambda2 implements Function {
+    public final /* synthetic */ SupportedLinkWrapper f$0;
+    public final /* synthetic */ Context f$1;
+
+    public /* synthetic */ SupportedLinkWrapper$$ExternalSyntheticLambda2(SupportedLinkWrapper supportedLinkWrapper, Context context) {
+        this.f$0 = supportedLinkWrapper;
+        this.f$1 = context;
     }
 
-    @Override // java.util.function.Predicate
-    public final boolean test(Object obj) {
-        boolean lambda$init$0;
-        lambda$init$0 = SupportedLinkWrapper.lambda$init$0((DomainOwner) obj);
-        return lambda$init$0;
+    public final Object apply(Object obj) {
+        return this.f$0.lambda$getLastPackageLabel$2(this.f$1, (DomainOwner) obj);
     }
 }

@@ -2,14 +2,13 @@ package com.android.settingslib.net;
 
 import android.app.usage.NetworkStats;
 import android.content.Context;
-import android.os.RemoteException;
 import android.util.Log;
 import com.android.settingslib.net.NetworkCycleChartData;
 import com.android.settingslib.net.NetworkCycleData;
 import com.android.settingslib.net.NetworkCycleDataLoader;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class NetworkCycleChartDataLoader extends NetworkCycleDataLoader<List<NetworkCycleChartData>> {
     private final List<NetworkCycleChartData> mData;
 
@@ -18,33 +17,34 @@ public class NetworkCycleChartDataLoader extends NetworkCycleDataLoader<List<Net
         this.mData = new ArrayList();
     }
 
-    @Override // com.android.settingslib.net.NetworkCycleDataLoader
-    void recordUsage(long j, long j2) {
+    /* access modifiers changed from: package-private */
+    public void recordUsage(long j, long j2) {
+        long j3;
         try {
             NetworkStats.Bucket querySummaryForDevice = this.mNetworkStatsManager.querySummaryForDevice(this.mNetworkTemplate, j, j2);
-            long rxBytes = querySummaryForDevice == null ? 0L : querySummaryForDevice.getRxBytes() + querySummaryForDevice.getTxBytes();
-            if (rxBytes <= 0) {
-                return;
+            if (querySummaryForDevice == null) {
+                j3 = 0;
+            } else {
+                j3 = querySummaryForDevice.getRxBytes() + querySummaryForDevice.getTxBytes();
             }
-            NetworkCycleChartData.Builder builder = new NetworkCycleChartData.Builder();
-            builder.setUsageBuckets(getUsageBuckets(j, j2)).setStartTime(j).setEndTime(j2).setTotalUsage(rxBytes);
-            this.mData.add(builder.mo606build());
-        } catch (RemoteException e) {
+            if (j3 > 0) {
+                NetworkCycleChartData.Builder builder = new NetworkCycleChartData.Builder();
+                builder.setUsageBuckets(getUsageBuckets(j, j2)).setStartTime(j).setEndTime(j2).setTotalUsage(j3);
+                this.mData.add(builder.build());
+            }
+        } catch (RuntimeException e) {
             Log.e("NetworkCycleChartLoader", "Exception querying network detail.", e);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // com.android.settingslib.net.NetworkCycleDataLoader
+    /* access modifiers changed from: package-private */
     public List<NetworkCycleChartData> getCycleUsage() {
         return this.mData;
     }
 
     public static Builder<?> builder(Context context) {
-        return new Builder<NetworkCycleChartDataLoader>(context) { // from class: com.android.settingslib.net.NetworkCycleChartDataLoader.1
-            @Override // com.android.settingslib.net.NetworkCycleDataLoader.Builder
-            /* renamed from: build */
-            public NetworkCycleChartDataLoader mo608build() {
+        return new Builder<NetworkCycleChartDataLoader>(context) {
+            public NetworkCycleChartDataLoader build() {
                 return new NetworkCycleChartDataLoader(this);
             }
         };
@@ -60,16 +60,15 @@ public class NetworkCycleChartDataLoader extends NetworkCycleDataLoader<List<Net
                 if (querySummaryForDevice != null) {
                     j5 = querySummaryForDevice.getRxBytes() + querySummaryForDevice.getTxBytes();
                 }
-            } catch (RemoteException e) {
+            } catch (RuntimeException e) {
                 Log.e("NetworkCycleChartLoader", "Exception querying network detail.", e);
             }
-            arrayList.add(new NetworkCycleData.Builder().setStartTime(j3).setEndTime(j4).setTotalUsage(j5).mo606build());
+            arrayList.add(new NetworkCycleData.Builder().setStartTime(j3).setEndTime(j4).setTotalUsage(j5).build());
             j3 = j4;
         }
         return arrayList;
     }
 
-    /* loaded from: classes.dex */
     public static abstract class Builder<T extends NetworkCycleChartDataLoader> extends NetworkCycleDataLoader.Builder<T> {
         public Builder(Context context) {
             super(context);

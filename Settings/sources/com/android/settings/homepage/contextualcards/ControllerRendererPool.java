@@ -15,7 +15,7 @@ import com.android.settings.homepage.contextualcards.slices.SliceContextualCardC
 import com.android.settings.homepage.contextualcards.slices.SliceContextualCardRenderer;
 import java.util.Iterator;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public class ControllerRendererPool {
     private final Set<ContextualCardController> mControllers = new ArraySet();
     private final Set<ContextualCardRenderer> mRenderers = new ArraySet();
@@ -24,26 +24,28 @@ public class ControllerRendererPool {
         Class<? extends ContextualCardController> cardControllerClass = ContextualCardLookupTable.getCardControllerClass(i);
         Iterator<ContextualCardController> it = this.mControllers.iterator();
         while (it.hasNext()) {
-            T t = (T) it.next();
+            T t = (ContextualCardController) it.next();
             if (t.getClass().getName().equals(cardControllerClass.getName())) {
                 Log.d("ControllerRendererPool", "Controller is already there.");
                 return t;
             }
         }
-        T t2 = (T) createCardController(context, cardControllerClass);
-        if (t2 != null) {
-            this.mControllers.add(t2);
+        T createCardController = createCardController(context, cardControllerClass);
+        if (createCardController != null) {
+            this.mControllers.add(createCardController);
         }
-        return t2;
+        return createCardController;
     }
 
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    Set<ContextualCardController> getControllers() {
+    public Set<ContextualCardController> getControllers() {
         return this.mControllers;
     }
 
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    Set<ContextualCardRenderer> getRenderers() {
+    public Set<ContextualCardRenderer> getRenderers() {
         return this.mRenderers;
     }
 
@@ -52,10 +54,10 @@ public class ControllerRendererPool {
     }
 
     private ContextualCardRenderer getRenderer(Context context, LifecycleOwner lifecycleOwner, Class<? extends ContextualCardRenderer> cls) {
-        for (ContextualCardRenderer contextualCardRenderer : this.mRenderers) {
-            if (contextualCardRenderer.getClass() == cls) {
+        for (ContextualCardRenderer next : this.mRenderers) {
+            if (next.getClass() == cls) {
                 Log.d("ControllerRendererPool", "Renderer is already there.");
-                return contextualCardRenderer;
+                return next;
             }
         }
         ContextualCardRenderer createCardRenderer = createCardRenderer(context, lifecycleOwner, cls);
@@ -72,10 +74,10 @@ public class ControllerRendererPool {
         if (SliceContextualCardController.class == cls) {
             return new SliceContextualCardController(context);
         }
-        if (LegacySuggestionContextualCardController.class != cls) {
-            return null;
+        if (LegacySuggestionContextualCardController.class == cls) {
+            return new LegacySuggestionContextualCardController(context);
         }
-        return new LegacySuggestionContextualCardController(context);
+        return null;
     }
 
     private ContextualCardRenderer createCardRenderer(Context context, LifecycleOwner lifecycleOwner, Class<?> cls) {
@@ -91,9 +93,9 @@ public class ControllerRendererPool {
         if (ConditionFooterContextualCardRenderer.class == cls) {
             return new ConditionFooterContextualCardRenderer(context, this);
         }
-        if (ConditionHeaderContextualCardRenderer.class != cls) {
-            return null;
+        if (ConditionHeaderContextualCardRenderer.class == cls) {
+            return new ConditionHeaderContextualCardRenderer(context, this);
         }
-        return new ConditionHeaderContextualCardRenderer(context, this);
+        return null;
     }
 }

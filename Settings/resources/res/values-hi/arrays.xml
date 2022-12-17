@@ -2,7 +2,7 @@
 <resources>
     <array name="accessibility_button_gesture_selector_titles">
         <item>बटन</item>
-        <item>जेस्चर (हाव-भाव)</item>
+        <item>जेस्चर</item>
     </array>
     <array name="accessibility_button_location_selector_titles">
         <item>दूसरे ऐप्लिकेशन के ऊपर फ़्लोट कर रहा है</item>
@@ -196,6 +196,8 @@
         <item>60 दिन से ज़्यादा पुराने</item>
         <item>90 दिन से ज़्यादा पुराने</item>
     </array>
+    <array name="avatar_image_descriptions">
+    </array>
     <array name="battery_labels">
         <item>0%</item>
         <item>50%</item>
@@ -221,7 +223,7 @@
         <item>NR</item>
     </array>
     <array name="bluetooth_a2dp_codec_bits_per_sample_summaries">
-        <item>सिस्टम से चुने जाने का उपयोग करें (डिफ़ॉल्ट)</item>
+        <item>सिस्टम से चुने जाने का इस्तेमाल करें (डिफ़ॉल्ट)</item>
         <item>16 बिट/नमूना</item>
         <item>24 बिट/नमूना</item>
         <item>32 बिट/नमूना</item>
@@ -233,7 +235,7 @@
         <item>32 बिट/नमूना</item>
     </array>
     <array name="bluetooth_a2dp_codec_channel_mode_summaries">
-        <item>सिस्टम चुनाव का उपयोग करें (डिफ़ॉल्ट)</item>
+        <item>सिस्टम से चुने जाने का इस्तेमाल करें (डिफ़ॉल्ट)</item>
         <item>मोनो</item>
         <item>स्टीरियो</item>
     </array>
@@ -255,11 +257,13 @@
         <item>सबसे अच्छी क्वालिटी में चलाएं (अनुकूल बिट रेट)</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_summaries">
-        <item>सिस्टम से चुने जाने का उपयोग करें (डिफ़ॉल्ट)</item>
+        <item>सिस्टम से चुने जाने का इस्तेमाल करें (डिफ़ॉल्ट)</item>
         <item>44.1 kHz</item>
         <item>48.0 kHz</item>
         <item>88.2 kHz</item>
         <item>96.0 kHz</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
         <item>सिस्टम से चुने जाने का उपयोग करें (डिफ़ॉल्ट)</item>
@@ -267,9 +271,11 @@
         <item>48.0 kHz</item>
         <item>88.2 kHz</item>
         <item>96.0 kHz</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
-        <item>सिस्टम से चुने जाने का उपयोग करें (डिफ़ॉल्ट)</item>
+        <item>सिस्टम से चुने जाने का इस्तेमाल करें (डिफ़ॉल्ट)</item>
         <item>SBC</item>
         <item>AAC</item>
         <item>Qualcomm® aptX™ ऑडियो</item>
@@ -277,6 +283,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptiveऑडियो</item>
         <item>Qualcomm® aptX™ TWS+ ऑडियो</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
         <item>सिस्टम से चुने जाने का उपयोग करें (डिफ़ॉल्ट)</item>
@@ -287,6 +297,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptiveऑडियो</item>
         <item>Qualcomm® aptX™ TWS+ ऑडियो</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -301,7 +315,7 @@
         <item>avrcp16</item>
     </array>
     <array name="bluetooth_avrcp_versions">
-        <item>एवीआरसीपी 1.5 (डिफ़ॉल्ट)</item>
+        <item>AVRCP 1.5 (डिफ़ॉल्ट)</item>
         <item>AVRCP 1.3</item>
         <item>एवीआरसीपी 1.4</item>
         <item>AVRCP 1.6</item>
@@ -343,17 +357,10 @@
         <item>विस्तृत</item>
         <item>संक्षिप्त</item>
     </array>
-    <array name="captioning_font_size_selector_summaries">
-        <item>टेक्स्ट का साइज़ बहुत छोटा</item>
-        <item>टेक्स्ट का साइज़ छोटा</item>
-        <item>डिफ़ॉल्ट टेक्स्ट साइज़</item>
-        <item>टेक्स्ट का साइज़ बड़ा</item>
-        <item>टेक्स्ट का साइज़ बहुत बड़ा</item>
-    </array>
     <array name="captioning_font_size_selector_titles">
         <item>बहुत छोटा</item>
         <item>छोटा</item>
-        <item>डिफ़ॉल्ट</item>
+        <item>मीडियम</item>
         <item>बड़ा</item>
         <item>बहुत बड़ा</item>
     </array>
@@ -401,7 +408,7 @@
         <item>मानक</item>
     </array>
     <array name="color_picker">
-        <item>स्यान</item>
+        <item>नीला-हरा</item>
         <item>नीला</item>
         <item>हरा</item>
         <item>बैंगनी</item>
@@ -450,7 +457,7 @@
     </array>
     <array name="hdcp_checking_summaries">
         <item>कभी भी HDCP जाँच का उपयोग न करें</item>
-        <item>HDCP जांच का उपयोग सिर्फ़ डीआरएम कॉन्टेंट के लिए करें</item>
+        <item>HDCP जांच का इस्तेमाल सिर्फ़ डीआरएम कॉन्टेंट के लिए करें</item>
         <item>हमेशा HDCP जाँच का उपयोग करें</item>
     </array>
     <array name="hdcp_checking_titles">
@@ -486,15 +493,13 @@
         <item>GID</item>
         <item>ICCID</item>
     </array>
-    <array name="res_0x7f0300b1_nt_preferred_network_mode_choices">
-        <item>3G</item>
-        <item>4G</item>
-        <item>5G</item>
+    <array name="nfc_payment_favor">
+        <item>हमेशा</item>
+        <item>सिवाय तब, जब दूसरा पेमेंट ऐप्लिकेशन खुला हो</item>
     </array>
-    <array name="res_0x7f0300b2_nt_preferred_network_mode_values">
-        <item>21</item>
-        <item>22</item>
-        <item>33</item>
+    <array name="nfc_payment_favor_values">
+        <item>@null</item>
+        <item>1</item>
     </array>
     <array name="overlay_display_devices_entries">
         <item>कोई नहीं</item>
@@ -557,7 +562,7 @@
         <item>शीर्ष गतिविधि</item>
         <item>महत्वपूर्ण (अग्रभाग)</item>
         <item>महत्वपूर्ण (पृष्ठभूमि)</item>
-        <item>बैकअप</item>
+        <item>बैक अप</item>
         <item>अत्यधिक</item>
         <item>सेवा (चल रही है)</item>
         <item>सेवा (फिर से प्रारंभ हो रही है)</item>
@@ -599,7 +604,7 @@
         <item>बंद</item>
         <item>64K प्रति लॉग बफ़र</item>
         <item>256K प्रति लॉग बफ़र</item>
-        <item>1 एमबी प्रति लॉग बफ़र</item>
+        <item>1M प्रति लॉग बफ़र</item>
         <item>4M प्रति लॉग बफ़र</item>
         <item>8 एमबी प्रति लॉग बफ़र</item>
     </array>
@@ -628,17 +633,20 @@
         <item>गैर-आयताकार क्लिप क्षेत्र नीले रंग से बनाएं</item>
         <item>परीक्षित ड्रॉइंग आदेशों को हरे रंग से हाइलाइट करें</item>
     </array>
-    <array name="sim_color_light">
-        <item>@color/SIM_color_cyan</item>
-        <item>@color/SIM_color_blue800</item>
-        <item>@color/SIM_color_green800</item>
-        <item>@color/SIM_color_purple800</item>
-        <item>@color/SIM_color_pink800</item>
-        <item>@color/SIM_color_orange</item>
-    </array>
     <array name="swipe_direction_values">
         <item>1</item>
         <item>@null</item>
+    </array>
+    <array name="switch_to_user_zero_when_docked_timeout_entries">
+        <item>कभी नहीं</item>
+        <item>एक मिनट बाद</item>
+        <item>पांच मिनट बाद</item>
+    </array>
+    <array name="tare_modifiers_subfactors">
+        <item>बैटरी चार्ज हो रही है</item>
+        <item>बैटरी बचाएं (डोज़)</item>
+        <item>बैटरी सेव करने वाला मोड</item>
+        <item>ऐप्लिकेशन की प्रोसेसिंग की स्थिति</item>
     </array>
     <array name="timezone_filters">
         <item>अमेरिका</item>
@@ -685,7 +693,7 @@
         <item>PTP (पिक्चर ट्रांसफर प्रोटोकॉल)</item>
         <item>RNDIS (USB ईथरनेट)</item>
         <item>ऑडियो स्रोत</item>
-        <item>MIDI</item>
+        <item>एमआईडीआई</item>
     </array>
     <array name="vpn_proxy_settings">
         <item>कोई नहीं</item>

@@ -8,14 +8,13 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
-/* loaded from: classes2.dex */
+
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     private Drawable divider;
     private int dividerCondition;
     private int dividerHeight;
     private int dividerIntrinsicHeight;
 
-    /* loaded from: classes2.dex */
     public interface DividedViewHolder {
         boolean isDividerAllowedAbove();
 
@@ -33,28 +32,25 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         setDividerCondition(i);
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.ItemDecoration
     public void onDraw(Canvas canvas, RecyclerView recyclerView, RecyclerView.State state) {
-        if (this.divider == null) {
-            return;
-        }
-        int childCount = recyclerView.getChildCount();
-        int width = recyclerView.getWidth();
-        int i = this.dividerHeight;
-        if (i == 0) {
-            i = this.dividerIntrinsicHeight;
-        }
-        for (int i2 = 0; i2 < childCount; i2++) {
-            View childAt = recyclerView.getChildAt(i2);
-            if (shouldDrawDividerBelow(childAt, recyclerView)) {
-                int y = ((int) ViewCompat.getY(childAt)) + childAt.getHeight();
-                this.divider.setBounds(0, y, width, y + i);
-                this.divider.draw(canvas);
+        if (this.divider != null) {
+            int childCount = recyclerView.getChildCount();
+            int width = recyclerView.getWidth();
+            int i = this.dividerHeight;
+            if (i == 0) {
+                i = this.dividerIntrinsicHeight;
+            }
+            for (int i2 = 0; i2 < childCount; i2++) {
+                View childAt = recyclerView.getChildAt(i2);
+                if (shouldDrawDividerBelow(childAt, recyclerView)) {
+                    int y = ((int) ViewCompat.getY(childAt)) + childAt.getHeight();
+                    this.divider.setBounds(0, y, width, y + i);
+                    this.divider.draw(canvas);
+                }
             }
         }
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.ItemDecoration
     public void getItemOffsets(Rect rect, View view, RecyclerView recyclerView, RecyclerView.State state) {
         if (shouldDrawDividerBelow(view, recyclerView)) {
             int i = this.dividerHeight;
@@ -65,7 +61,8 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         }
     }
 
-    protected boolean shouldDrawDividerBelow(View view, RecyclerView recyclerView) {
+    /* access modifiers changed from: protected */
+    public boolean shouldDrawDividerBelow(View view, RecyclerView recyclerView) {
         RecyclerView.ViewHolder childViewHolder = recyclerView.getChildViewHolder(view);
         int layoutPosition = childViewHolder.getLayoutPosition();
         int itemCount = recyclerView.getAdapter().getItemCount() - 1;
@@ -76,15 +73,18 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         } else if (this.dividerCondition == 1 || layoutPosition == itemCount) {
             return false;
         }
-        return layoutPosition >= itemCount || isDividerAllowedAbove(recyclerView.findViewHolderForLayoutPosition(layoutPosition + 1));
+        if (layoutPosition >= itemCount || isDividerAllowedAbove(recyclerView.findViewHolderForLayoutPosition(layoutPosition + 1))) {
+            return true;
+        }
+        return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean isDividerAllowedAbove(RecyclerView.ViewHolder viewHolder) {
         return !(viewHolder instanceof DividedViewHolder) || ((DividedViewHolder) viewHolder).isDividerAllowedAbove();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean isDividerAllowedBelow(RecyclerView.ViewHolder viewHolder) {
         return !(viewHolder instanceof DividedViewHolder) || ((DividedViewHolder) viewHolder).isDividerAllowedBelow();
     }

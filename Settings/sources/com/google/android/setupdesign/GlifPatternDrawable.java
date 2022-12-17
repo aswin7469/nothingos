@@ -11,8 +11,9 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import androidx.window.C0447R;
 import java.lang.ref.SoftReference;
-/* loaded from: classes2.dex */
+
 public class GlifPatternDrawable extends Drawable {
     @SuppressLint({"InlinedApi"})
     private static final int[] ATTRS_PRIMARY_COLOR = {16843827};
@@ -22,16 +23,13 @@ public class GlifPatternDrawable extends Drawable {
     private int color;
     private final Paint tempPaint = new Paint(1);
 
-    @Override // android.graphics.drawable.Drawable
     public int getOpacity() {
         return 0;
     }
 
-    @Override // android.graphics.drawable.Drawable
     public void setAlpha(int i) {
     }
 
-    @Override // android.graphics.drawable.Drawable
     public void setColorFilter(ColorFilter colorFilter) {
     }
 
@@ -43,50 +41,78 @@ public class GlifPatternDrawable extends Drawable {
         setColor(i);
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:16:0x0035, code lost:
-        if (r6 < 1152.0f) goto L9;
+    /* JADX WARNING: Code restructure failed: missing block: B:11:0x0035, code lost:
+        if (((float) r6) < 1152.0f) goto L_0x0039;
      */
-    /* JADX WARN: Code restructure failed: missing block: B:8:0x002b, code lost:
-        if (r5 < 2049.0f) goto L9;
+    /* JADX WARNING: Code restructure failed: missing block: B:8:0x002b, code lost:
+        if (((float) r5) < 2049.0f) goto L_0x0039;
      */
-    @Override // android.graphics.drawable.Drawable
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public void draw(Canvas canvas) {
-        Rect bounds = getBounds();
-        int width = bounds.width();
-        int height = bounds.height();
-        SoftReference<Bitmap> softReference = bitmapCache;
-        Bitmap bitmap = null;
-        Bitmap bitmap2 = softReference != null ? softReference.get() : null;
-        if (bitmap2 != null) {
-            int width2 = bitmap2.getWidth();
-            int height2 = bitmap2.getHeight();
-            if (width > width2) {
-            }
-            if (height > height2) {
-            }
-        }
-        bitmap = bitmap2;
-        if (bitmap == null) {
-            this.tempPaint.reset();
-            bitmap = createBitmapCache(width, height);
-            bitmapCache = new SoftReference<>(bitmap);
-            this.tempPaint.reset();
-        }
-        canvas.save();
-        canvas.clipRect(bounds);
-        scaleCanvasToBounds(canvas, bitmap, bounds);
-        canvas.drawColor(-16777216);
-        this.tempPaint.setColor(-1);
-        canvas.drawBitmap(bitmap, 0.0f, 0.0f, this.tempPaint);
-        canvas.drawColor(this.color);
-        canvas.restore();
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void draw(android.graphics.Canvas r9) {
+        /*
+            r8 = this;
+            android.graphics.Rect r0 = r8.getBounds()
+            int r1 = r0.width()
+            int r2 = r0.height()
+            java.lang.ref.SoftReference<android.graphics.Bitmap> r3 = bitmapCache
+            r4 = 0
+            if (r3 == 0) goto L_0x0018
+            java.lang.Object r3 = r3.get()
+            android.graphics.Bitmap r3 = (android.graphics.Bitmap) r3
+            goto L_0x0019
+        L_0x0018:
+            r3 = r4
+        L_0x0019:
+            if (r3 == 0) goto L_0x0038
+            int r5 = r3.getWidth()
+            int r6 = r3.getHeight()
+            if (r1 <= r5) goto L_0x002e
+            float r5 = (float) r5
+            r7 = 1157632000(0x45001000, float:2049.0)
+            int r5 = (r5 > r7 ? 1 : (r5 == r7 ? 0 : -1))
+            if (r5 >= 0) goto L_0x002e
+            goto L_0x0039
+        L_0x002e:
+            if (r2 <= r6) goto L_0x0038
+            float r5 = (float) r6
+            r6 = 1150287872(0x44900000, float:1152.0)
+            int r5 = (r5 > r6 ? 1 : (r5 == r6 ? 0 : -1))
+            if (r5 >= 0) goto L_0x0038
+            goto L_0x0039
+        L_0x0038:
+            r4 = r3
+        L_0x0039:
+            if (r4 != 0) goto L_0x0050
+            android.graphics.Paint r3 = r8.tempPaint
+            r3.reset()
+            android.graphics.Bitmap r4 = r8.createBitmapCache(r1, r2)
+            java.lang.ref.SoftReference r1 = new java.lang.ref.SoftReference
+            r1.<init>(r4)
+            bitmapCache = r1
+            android.graphics.Paint r1 = r8.tempPaint
+            r1.reset()
+        L_0x0050:
+            r9.save()
+            r9.clipRect(r0)
+            r8.scaleCanvasToBounds(r9, r4, r0)
+            r0 = -16777216(0xffffffffff000000, float:-1.7014118E38)
+            r9.drawColor(r0)
+            android.graphics.Paint r0 = r8.tempPaint
+            r1 = -1
+            r0.setColor(r1)
+            android.graphics.Paint r0 = r8.tempPaint
+            r1 = 0
+            r9.drawBitmap(r4, r1, r1, r0)
+            int r8 = r8.color
+            r9.drawColor(r8)
+            r9.restore()
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.google.android.setupdesign.GlifPatternDrawable.draw(android.graphics.Canvas):void");
     }
 
     public Bitmap createBitmapCache(int i, int i2) {
-        float min = Math.min(1.5f, Math.max(i / 1366.0f, i2 / 768.0f));
+        float min = Math.min(1.5f, Math.max(((float) i) / 1366.0f, ((float) i2) / 768.0f));
         Bitmap createBitmap = Bitmap.createBitmap((int) (1366.0f * min), (int) (768.0f * min), Bitmap.Config.ALPHA_8);
         renderOnCanvas(new Canvas(createBitmap), min);
         return createBitmap;
@@ -99,7 +125,7 @@ public class GlifPatternDrawable extends Drawable {
         if (patternPaths == null) {
             Path[] pathArr = new Path[7];
             patternPaths = pathArr;
-            patternLightness = new int[]{10, 40, 51, 66, 91, 112, 130};
+            patternLightness = new int[]{10, 40, 51, 66, 91, C0447R.styleable.AppCompatTheme_toolbarNavigationButtonStyle, 130};
             Path path = new Path();
             pathArr[0] = path;
             path.moveTo(1029.4f, 357.5f);
@@ -169,16 +195,16 @@ public class GlifPatternDrawable extends Drawable {
 
     public void scaleCanvasToBounds(Canvas canvas, Bitmap bitmap, Rect rect) {
         int width = bitmap.getWidth();
-        float f = width;
-        float width2 = rect.width() / f;
-        float height = bitmap.getHeight();
-        float height2 = rect.height() / height;
+        int height = bitmap.getHeight();
+        float f = (float) width;
+        float width2 = ((float) rect.width()) / f;
+        float f2 = (float) height;
+        float height2 = ((float) rect.height()) / f2;
         canvas.scale(width2, height2);
         if (height2 > width2) {
             canvas.scale(height2 / width2, 1.0f, f * 0.146f, 0.0f);
-        } else if (width2 <= height2) {
-        } else {
-            canvas.scale(1.0f, width2 / height2, 0.0f, height * 0.228f);
+        } else if (width2 > height2) {
+            canvas.scale(1.0f, width2 / height2, 0.0f, f2 * 0.228f);
         }
     }
 

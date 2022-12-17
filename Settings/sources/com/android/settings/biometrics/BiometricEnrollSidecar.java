@@ -6,26 +6,24 @@ import android.os.CancellationSignal;
 import android.os.Handler;
 import com.android.settings.core.InstrumentedFragment;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
+
 public abstract class BiometricEnrollSidecar extends InstrumentedFragment {
     private boolean mDone;
     private boolean mEnrolling;
     protected CancellationSignal mEnrollmentCancel;
-    private Listener mListener;
-    protected byte[] mToken;
-    protected int mUserId;
-    private int mEnrollmentSteps = -1;
     private int mEnrollmentRemaining = 0;
+    private int mEnrollmentSteps = -1;
     private Handler mHandler = new Handler();
-    private final Runnable mTimeoutRunnable = new Runnable() { // from class: com.android.settings.biometrics.BiometricEnrollSidecar.1
-        @Override // java.lang.Runnable
+    private Listener mListener;
+    private ArrayList<QueuedEvent> mQueuedEvents = new ArrayList<>();
+    private final Runnable mTimeoutRunnable = new Runnable() {
         public void run() {
             BiometricEnrollSidecar.this.cancelEnrollment();
         }
     };
-    private ArrayList<QueuedEvent> mQueuedEvents = new ArrayList<>();
+    protected byte[] mToken;
+    protected int mUserId;
 
-    /* loaded from: classes.dex */
     public interface Listener {
         void onEnrollmentError(int i, CharSequence charSequence);
 
@@ -34,7 +32,6 @@ public abstract class BiometricEnrollSidecar extends InstrumentedFragment {
         void onEnrollmentProgressChange(int i, int i2);
     }
 
-    /* loaded from: classes.dex */
     private abstract class QueuedEvent {
         public abstract void send(Listener listener);
 
@@ -42,7 +39,6 @@ public abstract class BiometricEnrollSidecar extends InstrumentedFragment {
         }
     }
 
-    /* loaded from: classes.dex */
     private class QueuedEnrollmentProgress extends QueuedEvent {
         int enrollmentSteps;
         int remaining;
@@ -53,13 +49,11 @@ public abstract class BiometricEnrollSidecar extends InstrumentedFragment {
             this.remaining = i2;
         }
 
-        @Override // com.android.settings.biometrics.BiometricEnrollSidecar.QueuedEvent
         public void send(Listener listener) {
             listener.onEnrollmentProgressChange(this.enrollmentSteps, this.remaining);
         }
     }
 
-    /* loaded from: classes.dex */
     private class QueuedEnrollmentHelp extends QueuedEvent {
         int helpMsgId;
         CharSequence helpString;
@@ -70,13 +64,11 @@ public abstract class BiometricEnrollSidecar extends InstrumentedFragment {
             this.helpString = charSequence;
         }
 
-        @Override // com.android.settings.biometrics.BiometricEnrollSidecar.QueuedEvent
         public void send(Listener listener) {
             listener.onEnrollmentHelp(this.helpMsgId, this.helpString);
         }
     }
 
-    /* loaded from: classes.dex */
     private class QueuedEnrollmentError extends QueuedEvent {
         int errMsgId;
         CharSequence errString;
@@ -87,26 +79,22 @@ public abstract class BiometricEnrollSidecar extends InstrumentedFragment {
             this.errString = charSequence;
         }
 
-        @Override // com.android.settings.biometrics.BiometricEnrollSidecar.QueuedEvent
         public void send(Listener listener) {
             listener.onEnrollmentError(this.errMsgId, this.errString);
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setRetainInstance(true);
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.mToken = activity.getIntent().getByteArrayExtra("hw_auth_token");
         this.mUserId = activity.getIntent().getIntExtra("android.intent.extra.USER_ID", -10000);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onStart() {
         super.onStart();
         if (!this.mEnrolling) {
@@ -114,13 +102,12 @@ public abstract class BiometricEnrollSidecar extends InstrumentedFragment {
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onStop() {
         super.onStop();
         cancelEnrollment();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void startEnrollment() {
         this.mHandler.removeCallbacks(this.mTimeoutRunnable);
         this.mEnrollmentSteps = -1;
@@ -130,16 +117,16 @@ public abstract class BiometricEnrollSidecar extends InstrumentedFragment {
 
     public boolean cancelEnrollment() {
         this.mHandler.removeCallbacks(this.mTimeoutRunnable);
-        if (this.mEnrolling) {
-            this.mEnrollmentCancel.cancel();
-            this.mEnrolling = false;
-            this.mEnrollmentSteps = -1;
-            return true;
+        if (!this.mEnrolling) {
+            return false;
         }
-        return false;
+        this.mEnrollmentCancel.cancel();
+        this.mEnrolling = false;
+        this.mEnrollmentSteps = -1;
+        return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onEnrollmentProgress(int i) {
         if (this.mEnrollmentSteps == -1) {
             this.mEnrollmentSteps = i;
@@ -154,7 +141,7 @@ public abstract class BiometricEnrollSidecar extends InstrumentedFragment {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onEnrollmentHelp(int i, CharSequence charSequence) {
         Listener listener = this.mListener;
         if (listener != null) {
@@ -164,7 +151,7 @@ public abstract class BiometricEnrollSidecar extends InstrumentedFragment {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onEnrollmentError(int i, CharSequence charSequence) {
         Listener listener = this.mListener;
         if (listener != null) {

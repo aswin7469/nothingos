@@ -1,25 +1,22 @@
 package com.google.zxing.aztec.encoder;
 
-import androidx.appcompat.R$styleable;
-import com.google.zxing.common.BitArray;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-/* loaded from: classes2.dex */
+
 public final class HighLevelEncoder {
     private static final int[][] CHAR_MAP;
+    static final int[][] LATCH_TABLE = {new int[]{0, 327708, 327710, 327709, 656318}, new int[]{590318, 0, 327710, 327709, 656318}, new int[]{262158, 590300, 0, 590301, 932798}, new int[]{327709, 327708, 656318, 0, 327710}, new int[]{327711, 656380, 656382, 656381, 0}};
+    static final String[] MODE_NAMES = {"UPPER", "LOWER", "DIGIT", "MIXED", "PUNCT"};
     static final int[][] SHIFT_TABLE;
     private final byte[] text;
-    static final String[] MODE_NAMES = {"UPPER", "LOWER", "DIGIT", "MIXED", "PUNCT"};
-    static final int[][] LATCH_TABLE = {new int[]{0, 327708, 327710, 327709, 656318}, new int[]{590318, 0, 327710, 327709, 656318}, new int[]{262158, 590300, 0, 590301, 932798}, new int[]{327709, 327708, 656318, 0, 327710}, new int[]{327711, 656380, 656382, 656381, 0}};
 
     static {
-        int[][] iArr = (int[][]) Array.newInstance(int.class, 5, 256);
+        Class<int> cls = int.class;
+        int[][] iArr = (int[][]) Array.newInstance(cls, new int[]{5, 256});
         CHAR_MAP = iArr;
         iArr[0][32] = 1;
         for (int i = 65; i <= 90; i++) {
@@ -33,116 +30,117 @@ public final class HighLevelEncoder {
         for (int i3 = 48; i3 <= 57; i3++) {
             CHAR_MAP[2][i3] = (i3 - 48) + 2;
         }
-        int[][] iArr2 = CHAR_MAP;
-        iArr2[2][44] = 12;
-        iArr2[2][46] = 13;
-        int[] iArr3 = {0, 32, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 27, 28, 29, 30, 31, 64, 92, 94, 95, 96, R$styleable.AppCompatTheme_windowMinWidthMajor, R$styleable.AppCompatTheme_windowNoTitle, 127};
+        int[] iArr2 = CHAR_MAP[2];
+        iArr2[44] = 12;
+        iArr2[46] = 13;
+        int[] iArr3 = {0, 32, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 27, 28, 29, 30, 31, 64, 92, 94, 95, 96, 124, 126, 127};
         for (int i4 = 0; i4 < 28; i4++) {
             CHAR_MAP[3][iArr3[i4]] = i4;
         }
-        int[] iArr4 = {0, 13, 0, 0, 0, 0, 33, 39, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 58, 59, 60, 61, 62, 63, 91, 93, R$styleable.AppCompatTheme_windowFixedWidthMinor, R$styleable.AppCompatTheme_windowMinWidthMinor};
+        int[] iArr4 = {0, 13, 0, 0, 0, 0, 33, 39, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 58, 59, 60, 61, 62, 63, 91, 93, 123, 125};
         for (int i5 = 0; i5 < 31; i5++) {
-            if (iArr4[i5] > 0) {
-                CHAR_MAP[4][iArr4[i5]] = i5;
+            int i6 = iArr4[i5];
+            if (i6 > 0) {
+                CHAR_MAP[4][i6] = i5;
             }
         }
-        int[][] iArr5 = (int[][]) Array.newInstance(int.class, 6, 6);
+        int[][] iArr5 = (int[][]) Array.newInstance(cls, new int[]{6, 6});
         SHIFT_TABLE = iArr5;
-        for (int[] iArr6 : iArr5) {
-            Arrays.fill(iArr6, -1);
+        for (int[] fill : iArr5) {
+            Arrays.fill(fill, -1);
         }
-        int[][] iArr7 = SHIFT_TABLE;
-        iArr7[0][4] = 0;
-        iArr7[1][4] = 0;
-        iArr7[1][0] = 28;
-        iArr7[3][4] = 0;
-        iArr7[2][4] = 0;
-        iArr7[2][0] = 15;
+        int[][] iArr6 = SHIFT_TABLE;
+        iArr6[0][4] = 0;
+        int[] iArr7 = iArr6[1];
+        iArr7[4] = 0;
+        iArr7[0] = 28;
+        iArr6[3][4] = 0;
+        int[] iArr8 = iArr6[2];
+        iArr8[4] = 0;
+        iArr8[0] = 15;
     }
 
     public HighLevelEncoder(byte[] bArr) {
         this.text = bArr;
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:17:0x003f  */
-    /* JADX WARN: Removed duplicated region for block: B:20:0x0045  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public BitArray encode() {
-        int i;
-        List<State> singletonList = Collections.singletonList(State.INITIAL_STATE);
-        int i2 = 0;
-        while (true) {
-            byte[] bArr = this.text;
-            if (i2 < bArr.length) {
-                int i3 = i2 + 1;
-                byte b = i3 < bArr.length ? bArr[i3] : (byte) 0;
-                byte b2 = bArr[i2];
-                if (b2 == 13) {
-                    if (b == 10) {
-                        i = 2;
-                        if (i <= 0) {
-                        }
-                        i2++;
-                    }
-                    i = 0;
-                    if (i <= 0) {
-                    }
-                    i2++;
-                } else if (b2 == 44) {
-                    if (b == 32) {
-                        i = 4;
-                        if (i <= 0) {
-                        }
-                        i2++;
-                    }
-                    i = 0;
-                    if (i <= 0) {
-                    }
-                    i2++;
-                } else if (b2 != 46) {
-                    if (b2 == 58 && b == 32) {
-                        i = 5;
-                        if (i <= 0) {
-                            singletonList = updateStateListForPair(singletonList, i2, i);
-                            i2 = i3;
-                        } else {
-                            singletonList = updateStateListForChar(singletonList, i2);
-                        }
-                        i2++;
-                    }
-                    i = 0;
-                    if (i <= 0) {
-                    }
-                    i2++;
-                } else {
-                    if (b == 32) {
-                        i = 3;
-                        if (i <= 0) {
-                        }
-                        i2++;
-                    }
-                    i = 0;
-                    if (i <= 0) {
-                    }
-                    i2++;
-                }
-            } else {
-                return ((State) Collections.min(singletonList, new Comparator<State>() { // from class: com.google.zxing.aztec.encoder.HighLevelEncoder.1
-                    @Override // java.util.Comparator
-                    public int compare(State state, State state2) {
-                        return state.getBitCount() - state2.getBitCount();
-                    }
-                })).toBitArray(this.text);
-            }
-        }
+    /* JADX WARNING: Removed duplicated region for block: B:26:0x003f  */
+    /* JADX WARNING: Removed duplicated region for block: B:27:0x0045  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public com.google.zxing.common.BitArray encode() {
+        /*
+            r8 = this;
+            com.google.zxing.aztec.encoder.State r0 = com.google.zxing.aztec.encoder.State.INITIAL_STATE
+            java.util.List r0 = java.util.Collections.singletonList(r0)
+            r1 = 0
+            r2 = r1
+        L_0x0008:
+            byte[] r3 = r8.text
+            int r4 = r3.length
+            if (r2 >= r4) goto L_0x004c
+            int r4 = r2 + 1
+            int r5 = r3.length
+            if (r4 >= r5) goto L_0x0015
+            byte r5 = r3[r4]
+            goto L_0x0016
+        L_0x0015:
+            r5 = r1
+        L_0x0016:
+            byte r3 = r3[r2]
+            r6 = 13
+            if (r3 == r6) goto L_0x0038
+            r6 = 44
+            r7 = 32
+            if (r3 == r6) goto L_0x0034
+            r6 = 46
+            if (r3 == r6) goto L_0x0030
+            r6 = 58
+            if (r3 == r6) goto L_0x002c
+        L_0x002a:
+            r3 = r1
+            goto L_0x003d
+        L_0x002c:
+            if (r5 != r7) goto L_0x002a
+            r3 = 5
+            goto L_0x003d
+        L_0x0030:
+            if (r5 != r7) goto L_0x002a
+            r3 = 3
+            goto L_0x003d
+        L_0x0034:
+            if (r5 != r7) goto L_0x002a
+            r3 = 4
+            goto L_0x003d
+        L_0x0038:
+            r3 = 10
+            if (r5 != r3) goto L_0x002a
+            r3 = 2
+        L_0x003d:
+            if (r3 <= 0) goto L_0x0045
+            java.util.List r0 = updateStateListForPair(r0, r2, r3)
+            r2 = r4
+            goto L_0x0049
+        L_0x0045:
+            java.util.List r0 = r8.updateStateListForChar(r0, r2)
+        L_0x0049:
+            int r2 = r2 + 1
+            goto L_0x0008
+        L_0x004c:
+            com.google.zxing.aztec.encoder.HighLevelEncoder$1 r1 = new com.google.zxing.aztec.encoder.HighLevelEncoder$1
+            r1.<init>()
+            java.lang.Object r0 = java.util.Collections.min(r0, r1)
+            com.google.zxing.aztec.encoder.State r0 = (com.google.zxing.aztec.encoder.State) r0
+            byte[] r8 = r8.text
+            com.google.zxing.common.BitArray r8 = r0.toBitArray(r8)
+            return r8
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.aztec.encoder.HighLevelEncoder.encode():com.google.zxing.common.BitArray");
     }
 
     private List<State> updateStateListForChar(Iterable<State> iterable, int i) {
         LinkedList linkedList = new LinkedList();
-        for (State state : iterable) {
-            updateStateForChar(state, i, linkedList);
+        for (State updateStateForChar : iterable) {
+            updateStateForChar(updateStateForChar, i, linkedList);
         }
         return simplifyStates(linkedList);
     }
@@ -172,8 +170,8 @@ public final class HighLevelEncoder {
 
     private static List<State> updateStateListForPair(Iterable<State> iterable, int i, int i2) {
         LinkedList linkedList = new LinkedList();
-        for (State state : iterable) {
-            updateStateForPair(state, i, i2, linkedList);
+        for (State updateStateForPair : iterable) {
+            updateStateForPair(updateStateForPair, i, i2, linkedList);
         }
         return simplifyStates(linkedList);
     }
@@ -194,23 +192,23 @@ public final class HighLevelEncoder {
 
     private static List<State> simplifyStates(Iterable<State> iterable) {
         LinkedList linkedList = new LinkedList();
-        for (State state : iterable) {
+        for (State next : iterable) {
             boolean z = true;
             Iterator it = linkedList.iterator();
             while (true) {
                 if (!it.hasNext()) {
                     break;
                 }
-                State state2 = (State) it.next();
-                if (state2.isBetterThanOrEqualTo(state)) {
+                State state = (State) it.next();
+                if (state.isBetterThanOrEqualTo(next)) {
                     z = false;
                     break;
-                } else if (state.isBetterThanOrEqualTo(state2)) {
+                } else if (next.isBetterThanOrEqualTo(state)) {
                     it.remove();
                 }
             }
             if (z) {
-                linkedList.add(state);
+                linkedList.add(next);
             }
         }
         return linkedList;

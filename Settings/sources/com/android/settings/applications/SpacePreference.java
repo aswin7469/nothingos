@@ -8,8 +8,8 @@ import androidx.core.content.res.TypedArrayUtils;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
 import androidx.preference.R$attr;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$layout;
+
 public class SpacePreference extends Preference {
     private int mHeight;
 
@@ -23,13 +23,12 @@ public class SpacePreference extends Preference {
 
     public SpacePreference(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
-        setLayoutResource(R.layout.space_preference);
+        setLayoutResource(R$layout.space_preference);
         TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, new int[]{16842997}, i, i2);
         this.mHeight = obtainStyledAttributes.getDimensionPixelSize(0, 0);
         obtainStyledAttributes.recycle();
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         preferenceViewHolder.itemView.setLayoutParams(new ViewGroup.LayoutParams(-1, this.mHeight));

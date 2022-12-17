@@ -9,15 +9,20 @@ import android.content.Context;
 import android.util.Log;
 import androidx.annotation.Keep;
 import com.android.settingslib.R$string;
+
 @Keep
-/* loaded from: classes.dex */
 public final class BroadcastProfile implements LocalBluetoothProfile {
     static final String NAME = "Broadcast";
     private static final int ORDINAL = 0;
     private static final String TAG = "BroadcastProfile";
-    private static boolean V = true;
-    private boolean mIsProfileReady = false;
-    private BluetoothBroadcast mService;
+    /* access modifiers changed from: private */
+
+    /* renamed from: V */
+    public static boolean f227V = true;
+    /* access modifiers changed from: private */
+    public boolean mIsProfileReady = false;
+    /* access modifiers changed from: private */
+    public BluetoothBroadcast mService;
 
     public boolean connect(BluetoothDevice bluetoothDevice) {
         return false;
@@ -31,17 +36,14 @@ public final class BroadcastProfile implements LocalBluetoothProfile {
         return 0;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getConnectionStatus(BluetoothDevice bluetoothDevice) {
         return 0;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getDrawableResource(BluetoothClass bluetoothClass) {
         return 0;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getOrdinal() {
         return 0;
     }
@@ -58,7 +60,6 @@ public final class BroadcastProfile implements LocalBluetoothProfile {
         return false;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean isEnabled(BluetoothDevice bluetoothDevice) {
         return false;
     }
@@ -67,7 +68,6 @@ public final class BroadcastProfile implements LocalBluetoothProfile {
         return false;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean setEnabled(BluetoothDevice bluetoothDevice, boolean z) {
         return false;
     }
@@ -79,15 +79,13 @@ public final class BroadcastProfile implements LocalBluetoothProfile {
         return NAME;
     }
 
-    /* loaded from: classes.dex */
     private final class BroadcastListener implements BluetoothProfile.ServiceListener {
         private BroadcastListener() {
         }
 
-        @Override // android.bluetooth.BluetoothProfile.ServiceListener
         public void onServiceConnected(int i, BluetoothProfile bluetoothProfile) {
-            if (i == 25) {
-                if (BroadcastProfile.V) {
+            if (i == 33) {
+                if (BroadcastProfile.f227V) {
                     Log.d(BroadcastProfile.TAG, "Bluetooth Broadcast service connected");
                 }
                 BroadcastProfile.this.mService = (BluetoothBroadcast) bluetoothProfile;
@@ -95,10 +93,9 @@ public final class BroadcastProfile implements LocalBluetoothProfile {
             }
         }
 
-        @Override // android.bluetooth.BluetoothProfile.ServiceListener
         public void onServiceDisconnected(int i) {
-            if (i == 25) {
-                if (BroadcastProfile.V) {
+            if (i == 33) {
+                if (BroadcastProfile.f227V) {
                     Log.d(BroadcastProfile.TAG, "Bluetooth Broadcast service disconnected");
                 }
                 BroadcastProfile.this.mIsProfileReady = false;
@@ -106,30 +103,26 @@ public final class BroadcastProfile implements LocalBluetoothProfile {
         }
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean isProfileReady() {
         Log.d(TAG, "isProfileReady = " + this.mIsProfileReady);
         return this.mIsProfileReady;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getProfileId() {
         Log.d(TAG, "getProfileId");
-        return 25;
+        return 33;
     }
 
     BroadcastProfile(Context context) {
         Log.d(TAG, "BroadcastProfile constructor");
-        BluetoothAdapter.getDefaultAdapter().getProfileProxy(context, new BroadcastListener(), 25);
+        BluetoothAdapter.getDefaultAdapter().getProfileProxy(context, new BroadcastListener(), 33);
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean accessProfileEnabled() {
         Log.d(TAG, "accessProfileEnabled");
         return false;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getNameResource(BluetoothDevice bluetoothDevice) {
         return R$string.bluetooth_profile_broadcast;
     }
@@ -154,13 +147,14 @@ public final class BroadcastProfile implements LocalBluetoothProfile {
         return this.mService.SetBroadcastMode(z);
     }
 
-    protected void finalize() {
-        if (V) {
+    /* access modifiers changed from: protected */
+    public void finalize() {
+        if (f227V) {
             Log.d(TAG, "finalize()");
         }
         if (this.mService != null) {
             try {
-                BluetoothAdapter.getDefaultAdapter().closeProfileProxy(25, this.mService);
+                BluetoothAdapter.getDefaultAdapter().closeProfileProxy(33, this.mService);
                 this.mService = null;
             } catch (Throwable th) {
                 Log.w(TAG, "Error cleaning up Broadcast proxy", th);

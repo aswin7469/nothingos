@@ -1,15 +1,18 @@
 package com.android.settings.accessibility;
 
-import android.content.DialogInterface;
-/* loaded from: classes.dex */
-public final /* synthetic */ class AccessibilityDialogUtils$$ExternalSyntheticLambda0 implements DialogInterface.OnClickListener {
-    public static final /* synthetic */ AccessibilityDialogUtils$$ExternalSyntheticLambda0 INSTANCE = new AccessibilityDialogUtils$$ExternalSyntheticLambda0();
+import android.content.Context;
+import android.view.View;
+import com.android.settings.core.SubSettingLauncher;
 
-    private /* synthetic */ AccessibilityDialogUtils$$ExternalSyntheticLambda0() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class AccessibilityDialogUtils$$ExternalSyntheticLambda0 implements View.OnClickListener {
+    public final /* synthetic */ Context f$0;
+
+    public /* synthetic */ AccessibilityDialogUtils$$ExternalSyntheticLambda0(Context context) {
+        this.f$0 = context;
     }
 
-    @Override // android.content.DialogInterface.OnClickListener
-    public final void onClick(DialogInterface dialogInterface, int i) {
-        dialogInterface.dismiss();
+    public final void onClick(View view) {
+        new SubSettingLauncher(this.f$0).setDestination(AccessibilityButtonFragment.class.getName()).setSourceMetricsCategory(1873).launch();
     }
 }

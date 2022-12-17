@@ -2,15 +2,15 @@ package androidx.constraintlayout.motion.widget;
 
 import android.util.Pair;
 import java.util.HashMap;
-/* loaded from: classes.dex */
+
 public class DesignTool {
     static final HashMap<Pair<Integer, Integer>, String> allAttributes;
     static final HashMap<String, String> allMargins;
-    private final MotionLayout mMotionLayout;
-    private String mLastStartState = null;
     private String mLastEndState = null;
-    private int mLastStartStateId = -1;
     private int mLastEndStateId = -1;
+    private String mLastStartState = null;
+    private int mLastStartStateId = -1;
+    private final MotionLayout mMotionLayout;
 
     public DesignTool(MotionLayout motionLayout) {
         this.mMotionLayout = motionLayout;

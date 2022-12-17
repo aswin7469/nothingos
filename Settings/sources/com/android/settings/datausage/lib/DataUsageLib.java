@@ -8,7 +8,8 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import com.android.internal.util.ArrayUtils;
 import java.util.List;
-/* loaded from: classes.dex */
+import java.util.Set;
+
 public class DataUsageLib {
     public static NetworkTemplate getMobileTemplate(Context context, int i) {
         TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(TelephonyManager.class);
@@ -30,18 +31,25 @@ public class DataUsageLib {
     private static NetworkTemplate getNormalizedMobileTemplate(TelephonyManager telephonyManager, int i) {
         NetworkTemplate mobileTemplateForSubId = getMobileTemplateForSubId(telephonyManager, i);
         String[] mergedImsisFromGroup = telephonyManager.createForSubscriptionId(i).getMergedImsisFromGroup();
-        if (ArrayUtils.isEmpty(mergedImsisFromGroup)) {
-            Log.i("DataUsageLib", "mergedSubscriberIds is null.");
-            return mobileTemplateForSubId;
+        if (!ArrayUtils.isEmpty(mergedImsisFromGroup)) {
+            return normalizeMobileTemplate(mobileTemplateForSubId, mergedImsisFromGroup);
         }
-        return NetworkTemplate.normalize(mobileTemplateForSubId, mergedImsisFromGroup);
+        Log.i("DataUsageLib", "mergedSubscriberIds is null.");
+        return mobileTemplateForSubId;
     }
 
-    private static NetworkTemplate getMobileTemplateForSubId(TelephonyManager telephonyManager, int i) {
+    private static NetworkTemplate normalizeMobileTemplate(NetworkTemplate networkTemplate, String[] strArr) {
+        if (networkTemplate.getSubscriberIds().isEmpty()) {
+            return networkTemplate;
+        }
+        return Set.of(strArr).contains((String) networkTemplate.getSubscriberIds().iterator().next()) ? new NetworkTemplate.Builder(networkTemplate.getMatchRule()).setSubscriberIds(Set.of(strArr)).setMeteredness(networkTemplate.getMeteredness()).build() : networkTemplate;
+    }
+
+    public static NetworkTemplate getMobileTemplateForSubId(TelephonyManager telephonyManager, int i) {
         String subscriberId = telephonyManager.getSubscriberId(i);
         if (subscriberId != null) {
-            return NetworkTemplate.buildTemplateCarrierMetered(subscriberId);
+            return new NetworkTemplate.Builder(10).setSubscriberIds(Set.of(subscriberId)).setMeteredness(1).build();
         }
-        return NetworkTemplate.buildTemplateMobileAll(subscriberId);
+        return new NetworkTemplate.Builder(1).setMeteredness(1).build();
     }
 }

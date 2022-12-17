@@ -1,20 +1,23 @@
 package com.android.settingslib.core;
 
+import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
+import androidx.core.p002os.BuildCompat;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceScreen;
-/* loaded from: classes.dex */
+
 public abstract class AbstractPreferenceController {
     private static final String TAG = "AbstractPrefController";
-    protected final Context mContext;
+    /* access modifiers changed from: protected */
+    public final Context mContext;
+    private final DevicePolicyManager mDevicePolicyManager;
 
     public abstract String getPreferenceKey();
 
-    /* renamed from: getSummary */
-    public CharSequence mo485getSummary() {
+    public CharSequence getSummary() {
         return null;
     }
 
@@ -26,6 +29,7 @@ public abstract class AbstractPreferenceController {
 
     public AbstractPreferenceController(Context context) {
         this.mContext = context;
+        this.mDevicePolicyManager = (DevicePolicyManager) context.getSystemService("device_policy");
     }
 
     public void displayPreference(PreferenceScreen preferenceScreen) {
@@ -34,10 +38,9 @@ public abstract class AbstractPreferenceController {
             Log.w(TAG, "Skipping displayPreference because key is empty:" + getClass().getName());
         } else if (isAvailable()) {
             setVisible(preferenceScreen, preferenceKey, true);
-            if (!(this instanceof Preference.OnPreferenceChangeListener)) {
-                return;
+            if (this instanceof Preference.OnPreferenceChangeListener) {
+                preferenceScreen.findPreference(preferenceKey).setOnPreferenceChangeListener((Preference.OnPreferenceChangeListener) this);
             }
-            preferenceScreen.findPreference(preferenceKey).setOnPreferenceChangeListener((Preference.OnPreferenceChangeListener) this);
         } else {
             setVisible(preferenceScreen, preferenceKey, false);
         }
@@ -47,20 +50,53 @@ public abstract class AbstractPreferenceController {
         refreshSummary(preference);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void refreshSummary(Preference preference) {
-        CharSequence mo485getSummary;
-        if (preference == null || (mo485getSummary = mo485getSummary()) == null) {
-            return;
+        CharSequence summary;
+        if (preference != null && (summary = getSummary()) != null) {
+            preference.setSummary(summary);
         }
-        preference.setSummary(mo485getSummary);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public final void setVisible(PreferenceGroup preferenceGroup, String str, boolean z) {
         Preference findPreference = preferenceGroup.findPreference(str);
         if (findPreference != null) {
             findPreference.setVisible(z);
         }
+    }
+
+    /* access modifiers changed from: protected */
+    public void replaceEnterpriseStringTitle(PreferenceScreen preferenceScreen, String str, String str2, int i) {
+        if (BuildCompat.isAtLeastT() && this.mDevicePolicyManager != null) {
+            Preference findPreference = preferenceScreen.findPreference(str);
+            if (findPreference == null) {
+                Log.d(TAG, "Could not find enterprise preference " + str);
+                return;
+            }
+            findPreference.setTitle((CharSequence) this.mDevicePolicyManager.getResources().getString(str2, new AbstractPreferenceController$$ExternalSyntheticLambda1(this, i)));
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public /* synthetic */ String lambda$replaceEnterpriseStringTitle$0(int i) {
+        return this.mContext.getString(i);
+    }
+
+    /* access modifiers changed from: protected */
+    public void replaceEnterpriseStringSummary(PreferenceScreen preferenceScreen, String str, String str2, int i) {
+        if (BuildCompat.isAtLeastT() && this.mDevicePolicyManager != null) {
+            Preference findPreference = preferenceScreen.findPreference(str);
+            if (findPreference == null) {
+                Log.d(TAG, "Could not find enterprise preference " + str);
+                return;
+            }
+            findPreference.setSummary((CharSequence) this.mDevicePolicyManager.getResources().getString(str2, new AbstractPreferenceController$$ExternalSyntheticLambda0(this, i)));
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public /* synthetic */ String lambda$replaceEnterpriseStringSummary$1(int i) {
+        return this.mContext.getString(i);
     }
 }

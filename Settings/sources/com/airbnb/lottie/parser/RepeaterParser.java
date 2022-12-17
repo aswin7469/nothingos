@@ -6,13 +6,11 @@ import com.airbnb.lottie.model.animatable.AnimatableTransform;
 import com.airbnb.lottie.model.content.Repeater;
 import com.airbnb.lottie.parser.moshi.JsonReader;
 import java.io.IOException;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class RepeaterParser {
-    private static JsonReader.Options NAMES = JsonReader.Options.of("nm", "c", "o", "tr", "hd");
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static Repeater parse(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
+class RepeaterParser {
+    private static JsonReader.Options NAMES = JsonReader.Options.m9of("nm", "c", "o", "tr", "hd");
+
+    static Repeater parse(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
         boolean z = false;
         String str = null;
         AnimatableFloatValue animatableFloatValue = null;
@@ -28,10 +26,10 @@ public class RepeaterParser {
                 animatableFloatValue2 = AnimatableValueParser.parseFloat(jsonReader, lottieComposition, false);
             } else if (selectName == 3) {
                 animatableTransform = AnimatableTransformParser.parse(jsonReader, lottieComposition);
-            } else if (selectName == 4) {
-                z = jsonReader.nextBoolean();
-            } else {
+            } else if (selectName != 4) {
                 jsonReader.skipValue();
+            } else {
+                z = jsonReader.nextBoolean();
             }
         }
         return new Repeater(str, animatableFloatValue, animatableFloatValue2, animatableTransform, z);

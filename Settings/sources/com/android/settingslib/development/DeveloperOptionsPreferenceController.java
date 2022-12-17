@@ -4,11 +4,11 @@ import android.content.Context;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import com.android.settingslib.core.AbstractPreferenceController;
-/* loaded from: classes.dex */
-public abstract class DeveloperOptionsPreferenceController extends AbstractPreferenceController {
-    protected Preference mPreference;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
+public abstract class DeveloperOptionsPreferenceController extends AbstractPreferenceController {
+    /* access modifiers changed from: protected */
+    public Preference mPreference;
+
     public boolean isAvailable() {
         return true;
     }
@@ -17,7 +17,6 @@ public abstract class DeveloperOptionsPreferenceController extends AbstractPrefe
         super(context);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = preferenceScreen.findPreference(getPreferenceKey());
@@ -35,12 +34,12 @@ public abstract class DeveloperOptionsPreferenceController extends AbstractPrefe
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onDeveloperOptionsSwitchEnabled() {
         this.mPreference.setEnabled(true);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onDeveloperOptionsSwitchDisabled() {
         this.mPreference.setEnabled(false);
     }

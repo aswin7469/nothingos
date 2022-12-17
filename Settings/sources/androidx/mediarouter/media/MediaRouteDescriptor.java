@@ -10,8 +10,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-/* loaded from: classes.dex */
+
 public final class MediaRouteDescriptor {
     final Bundle mBundle;
     List<IntentFilter> mControlFilters;
@@ -30,14 +29,14 @@ public final class MediaRouteDescriptor {
         return this.mGroupMemberIds;
     }
 
-    void ensureGroupMemberIds() {
+    /* access modifiers changed from: package-private */
+    public void ensureGroupMemberIds() {
         if (this.mGroupMemberIds == null) {
             ArrayList<String> stringArrayList = this.mBundle.getStringArrayList("groupMemberIds");
             this.mGroupMemberIds = stringArrayList;
-            if (stringArrayList != null) {
-                return;
+            if (stringArrayList == null) {
+                this.mGroupMemberIds = Collections.emptyList();
             }
-            this.mGroupMemberIds = Collections.emptyList();
         }
     }
 
@@ -78,14 +77,14 @@ public final class MediaRouteDescriptor {
         return this.mControlFilters;
     }
 
-    void ensureControlFilters() {
+    /* access modifiers changed from: package-private */
+    public void ensureControlFilters() {
         if (this.mControlFilters == null) {
             ArrayList parcelableArrayList = this.mBundle.getParcelableArrayList("controlFilters");
             this.mControlFilters = parcelableArrayList;
-            if (parcelableArrayList != null) {
-                return;
+            if (parcelableArrayList == null) {
+                this.mControlFilters = Collections.emptyList();
             }
-            this.mControlFilters = Collections.emptyList();
         }
     }
 
@@ -131,11 +130,11 @@ public final class MediaRouteDescriptor {
 
     public boolean isValid() {
         ensureControlFilters();
-        return !TextUtils.isEmpty(getId()) && !TextUtils.isEmpty(getName()) && !this.mControlFilters.contains(null);
+        return !TextUtils.isEmpty(getId()) && !TextUtils.isEmpty(getName()) && !this.mControlFilters.contains((Object) null);
     }
 
     public String toString() {
-        return "MediaRouteDescriptor{ id=" + getId() + ", groupMemberIds=" + getGroupMemberIds() + ", name=" + getName() + ", description=" + getDescription() + ", iconUri=" + getIconUri() + ", isEnabled=" + isEnabled() + ", connectionState=" + getConnectionState() + ", controlFilters=" + Arrays.toString(getControlFilters().toArray()) + ", playbackType=" + getPlaybackType() + ", playbackStream=" + getPlaybackStream() + ", deviceType=" + getDeviceType() + ", volume=" + getVolume() + ", volumeMax=" + getVolumeMax() + ", volumeHandling=" + getVolumeHandling() + ", presentationDisplayId=" + getPresentationDisplayId() + ", extras=" + getExtras() + ", isValid=" + isValid() + ", minClientVersion=" + getMinClientVersion() + ", maxClientVersion=" + getMaxClientVersion() + " }";
+        return "MediaRouteDescriptor{ " + "id=" + getId() + ", groupMemberIds=" + getGroupMemberIds() + ", name=" + getName() + ", description=" + getDescription() + ", iconUri=" + getIconUri() + ", isEnabled=" + isEnabled() + ", connectionState=" + getConnectionState() + ", controlFilters=" + Arrays.toString(getControlFilters().toArray()) + ", playbackType=" + getPlaybackType() + ", playbackStream=" + getPlaybackStream() + ", deviceType=" + getDeviceType() + ", volume=" + getVolume() + ", volumeMax=" + getVolumeMax() + ", volumeHandling=" + getVolumeHandling() + ", presentationDisplayId=" + getPresentationDisplayId() + ", extras=" + getExtras() + ", isValid=" + isValid() + ", minClientVersion=" + getMinClientVersion() + ", maxClientVersion=" + getMaxClientVersion() + " }";
     }
 
     public static MediaRouteDescriptor fromBundle(Bundle bundle) {
@@ -145,164 +144,168 @@ public final class MediaRouteDescriptor {
         return null;
     }
 
-    /* loaded from: classes.dex */
     public static final class Builder {
         private final Bundle mBundle;
         private ArrayList<IntentFilter> mControlFilters;
         private ArrayList<String> mGroupMemberIds;
 
-        public Builder(String id, String name) {
+        public Builder(String str, String str2) {
             this.mBundle = new Bundle();
-            setId(id);
-            setName(name);
+            setId(str);
+            setName(str2);
         }
 
-        public Builder(MediaRouteDescriptor descriptor) {
-            if (descriptor == null) {
-                throw new IllegalArgumentException("descriptor must not be null");
-            }
-            this.mBundle = new Bundle(descriptor.mBundle);
-            if (!descriptor.getGroupMemberIds().isEmpty()) {
-                this.mGroupMemberIds = new ArrayList<>(descriptor.getGroupMemberIds());
-            }
-            if (descriptor.getControlFilters().isEmpty()) {
+        public Builder(MediaRouteDescriptor mediaRouteDescriptor) {
+            if (mediaRouteDescriptor != null) {
+                this.mBundle = new Bundle(mediaRouteDescriptor.mBundle);
+                if (!mediaRouteDescriptor.getGroupMemberIds().isEmpty()) {
+                    this.mGroupMemberIds = new ArrayList<>(mediaRouteDescriptor.getGroupMemberIds());
+                }
+                if (!mediaRouteDescriptor.getControlFilters().isEmpty()) {
+                    this.mControlFilters = new ArrayList<>(mediaRouteDescriptor.mControlFilters);
+                    return;
+                }
                 return;
             }
-            this.mControlFilters = new ArrayList<>(descriptor.mControlFilters);
+            throw new IllegalArgumentException("descriptor must not be null");
         }
 
-        public Builder setId(String id) {
-            Objects.requireNonNull(id, "id must not be null");
-            this.mBundle.putString("id", id);
-            return this;
+        public Builder setId(String str) {
+            if (str != null) {
+                this.mBundle.putString("id", str);
+                return this;
+            }
+            throw new NullPointerException("id must not be null");
         }
 
-        public Builder addGroupMemberId(String groupMemberId) {
-            if (TextUtils.isEmpty(groupMemberId)) {
-                throw new IllegalArgumentException("groupMemberId must not be empty");
-            }
-            if (this.mGroupMemberIds == null) {
-                this.mGroupMemberIds = new ArrayList<>();
-            }
-            if (!this.mGroupMemberIds.contains(groupMemberId)) {
-                this.mGroupMemberIds.add(groupMemberId);
-            }
-            return this;
-        }
-
-        public Builder addGroupMemberIds(Collection<String> groupMemberIds) {
-            if (groupMemberIds == null) {
-                throw new IllegalArgumentException("groupMemberIds must not be null");
-            }
-            if (!groupMemberIds.isEmpty()) {
-                for (String str : groupMemberIds) {
-                    addGroupMemberId(str);
+        public Builder addGroupMemberId(String str) {
+            if (!TextUtils.isEmpty(str)) {
+                if (this.mGroupMemberIds == null) {
+                    this.mGroupMemberIds = new ArrayList<>();
                 }
+                if (!this.mGroupMemberIds.contains(str)) {
+                    this.mGroupMemberIds.add(str);
+                }
+                return this;
             }
-            return this;
+            throw new IllegalArgumentException("groupMemberId must not be empty");
         }
 
-        public Builder setName(String name) {
-            Objects.requireNonNull(name, "name must not be null");
-            this.mBundle.putString("name", name);
-            return this;
-        }
-
-        public Builder setDescription(String description) {
-            this.mBundle.putString("status", description);
-            return this;
-        }
-
-        public Builder setIconUri(Uri iconUri) {
-            if (iconUri == null) {
-                throw new IllegalArgumentException("iconUri must not be null");
-            }
-            this.mBundle.putString("iconUri", iconUri.toString());
-            return this;
-        }
-
-        public Builder setEnabled(boolean enabled) {
-            this.mBundle.putBoolean("enabled", enabled);
-            return this;
-        }
-
-        public Builder setConnectionState(int connectionState) {
-            this.mBundle.putInt("connectionState", connectionState);
-            return this;
-        }
-
-        public Builder setCanDisconnect(boolean canDisconnect) {
-            this.mBundle.putBoolean("canDisconnect", canDisconnect);
-            return this;
-        }
-
-        public Builder addControlFilter(IntentFilter filter) {
-            if (filter == null) {
-                throw new IllegalArgumentException("filter must not be null");
-            }
-            if (this.mControlFilters == null) {
-                this.mControlFilters = new ArrayList<>();
-            }
-            if (!this.mControlFilters.contains(filter)) {
-                this.mControlFilters.add(filter);
-            }
-            return this;
-        }
-
-        public Builder addControlFilters(Collection<IntentFilter> filters) {
-            if (filters == null) {
-                throw new IllegalArgumentException("filters must not be null");
-            }
-            if (!filters.isEmpty()) {
-                for (IntentFilter intentFilter : filters) {
-                    if (intentFilter != null) {
-                        addControlFilter(intentFilter);
+        public Builder addGroupMemberIds(Collection<String> collection) {
+            if (collection != null) {
+                if (!collection.isEmpty()) {
+                    for (String addGroupMemberId : collection) {
+                        addGroupMemberId(addGroupMemberId);
                     }
                 }
+                return this;
             }
+            throw new IllegalArgumentException("groupMemberIds must not be null");
+        }
+
+        public Builder setName(String str) {
+            if (str != null) {
+                this.mBundle.putString("name", str);
+                return this;
+            }
+            throw new NullPointerException("name must not be null");
+        }
+
+        public Builder setDescription(String str) {
+            this.mBundle.putString("status", str);
             return this;
         }
 
-        public Builder setPlaybackType(int playbackType) {
-            this.mBundle.putInt("playbackType", playbackType);
+        public Builder setIconUri(Uri uri) {
+            if (uri != null) {
+                this.mBundle.putString("iconUri", uri.toString());
+                return this;
+            }
+            throw new IllegalArgumentException("iconUri must not be null");
+        }
+
+        public Builder setEnabled(boolean z) {
+            this.mBundle.putBoolean("enabled", z);
             return this;
         }
 
-        public Builder setPlaybackStream(int playbackStream) {
-            this.mBundle.putInt("playbackStream", playbackStream);
+        public Builder setConnectionState(int i) {
+            this.mBundle.putInt("connectionState", i);
             return this;
         }
 
-        public Builder setDeviceType(int deviceType) {
-            this.mBundle.putInt("deviceType", deviceType);
+        public Builder setCanDisconnect(boolean z) {
+            this.mBundle.putBoolean("canDisconnect", z);
             return this;
         }
 
-        public Builder setVolume(int volume) {
-            this.mBundle.putInt("volume", volume);
+        public Builder addControlFilter(IntentFilter intentFilter) {
+            if (intentFilter != null) {
+                if (this.mControlFilters == null) {
+                    this.mControlFilters = new ArrayList<>();
+                }
+                if (!this.mControlFilters.contains(intentFilter)) {
+                    this.mControlFilters.add(intentFilter);
+                }
+                return this;
+            }
+            throw new IllegalArgumentException("filter must not be null");
+        }
+
+        public Builder addControlFilters(Collection<IntentFilter> collection) {
+            if (collection != null) {
+                if (!collection.isEmpty()) {
+                    for (IntentFilter next : collection) {
+                        if (next != null) {
+                            addControlFilter(next);
+                        }
+                    }
+                }
+                return this;
+            }
+            throw new IllegalArgumentException("filters must not be null");
+        }
+
+        public Builder setPlaybackType(int i) {
+            this.mBundle.putInt("playbackType", i);
             return this;
         }
 
-        public Builder setVolumeMax(int volumeMax) {
-            this.mBundle.putInt("volumeMax", volumeMax);
+        public Builder setPlaybackStream(int i) {
+            this.mBundle.putInt("playbackStream", i);
             return this;
         }
 
-        public Builder setVolumeHandling(int volumeHandling) {
-            this.mBundle.putInt("volumeHandling", volumeHandling);
+        public Builder setDeviceType(int i) {
+            this.mBundle.putInt("deviceType", i);
             return this;
         }
 
-        public Builder setPresentationDisplayId(int presentationDisplayId) {
-            this.mBundle.putInt("presentationDisplayId", presentationDisplayId);
+        public Builder setVolume(int i) {
+            this.mBundle.putInt("volume", i);
             return this;
         }
 
-        public Builder setExtras(Bundle extras) {
-            if (extras == null) {
-                this.mBundle.putBundle("extras", null);
+        public Builder setVolumeMax(int i) {
+            this.mBundle.putInt("volumeMax", i);
+            return this;
+        }
+
+        public Builder setVolumeHandling(int i) {
+            this.mBundle.putInt("volumeHandling", i);
+            return this;
+        }
+
+        public Builder setPresentationDisplayId(int i) {
+            this.mBundle.putInt("presentationDisplayId", i);
+            return this;
+        }
+
+        public Builder setExtras(Bundle bundle) {
+            if (bundle == null) {
+                this.mBundle.putBundle("extras", (Bundle) null);
             } else {
-                this.mBundle.putBundle("extras", new Bundle(extras));
+                this.mBundle.putBundle("extras", new Bundle(bundle));
             }
             return this;
         }

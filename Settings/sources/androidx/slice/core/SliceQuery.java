@@ -8,182 +8,174 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class SliceQuery {
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public interface Filter<T> {
-        boolean filter(T input);
+    private interface Filter<T> {
+        boolean filter(T t);
     }
 
-    public static boolean hasAnyHints(SliceItem item, String... hints) {
-        if (hints == null) {
+    public static boolean hasAnyHints(SliceItem sliceItem, String... strArr) {
+        if (strArr == null) {
             return false;
         }
-        for (String str : hints) {
-            if (item.hasHint(str)) {
+        for (String hasHint : strArr) {
+            if (sliceItem.hasHint(hasHint)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean hasHints(SliceItem item, String... hints) {
-        if (hints == null) {
+    public static boolean hasHints(SliceItem sliceItem, String... strArr) {
+        if (strArr == null) {
             return true;
         }
-        for (String str : hints) {
-            if (!TextUtils.isEmpty(str) && !item.hasHint(str)) {
+        for (String str : strArr) {
+            if (!TextUtils.isEmpty(str) && !sliceItem.hasHint(str)) {
                 return false;
             }
         }
         return true;
     }
 
-    public static List<SliceItem> findAll(SliceItem s, String format) {
-        return findAll(s, format, (String[]) null, (String[]) null);
+    public static List<SliceItem> findAll(SliceItem sliceItem, String str) {
+        return findAll(sliceItem, str, (String[]) null, (String[]) null);
     }
 
-    public static List<SliceItem> findAll(SliceItem s, String format, String hints, String nonHints) {
-        return findAll(s, format, new String[]{hints}, new String[]{nonHints});
+    public static List<SliceItem> findAll(SliceItem sliceItem, String str, String str2, String str3) {
+        return findAll(sliceItem, str, new String[]{str2}, new String[]{str3});
     }
 
-    public static List<SliceItem> findAll(Slice s, final String format, final String[] hints, final String[] nonHints) {
+    public static List<SliceItem> findAll(Slice slice, final String str, final String[] strArr, final String[] strArr2) {
         ArrayList arrayList = new ArrayList();
-        findAll(toQueue(s), new Filter<SliceItem>() { // from class: androidx.slice.core.SliceQuery.2
-            @Override // androidx.slice.core.SliceQuery.Filter
-            public boolean filter(SliceItem item) {
-                return SliceQuery.checkFormat(item, format) && SliceQuery.hasHints(item, hints) && !SliceQuery.hasAnyHints(item, nonHints);
+        findAll(toQueue(slice), new Filter<SliceItem>() {
+            public boolean filter(SliceItem sliceItem) {
+                return SliceQuery.checkFormat(sliceItem, str) && SliceQuery.hasHints(sliceItem, strArr) && !SliceQuery.hasAnyHints(sliceItem, strArr2);
             }
         }, arrayList);
         return arrayList;
     }
 
-    public static List<SliceItem> findAll(SliceItem s, final String format, final String[] hints, final String[] nonHints) {
+    public static List<SliceItem> findAll(SliceItem sliceItem, final String str, final String[] strArr, final String[] strArr2) {
         ArrayList arrayList = new ArrayList();
-        findAll(toQueue(s), new Filter<SliceItem>() { // from class: androidx.slice.core.SliceQuery.3
-            @Override // androidx.slice.core.SliceQuery.Filter
-            public boolean filter(SliceItem item) {
-                return SliceQuery.checkFormat(item, format) && SliceQuery.hasHints(item, hints) && !SliceQuery.hasAnyHints(item, nonHints);
+        findAll(toQueue(sliceItem), new Filter<SliceItem>() {
+            public boolean filter(SliceItem sliceItem) {
+                return SliceQuery.checkFormat(sliceItem, str) && SliceQuery.hasHints(sliceItem, strArr) && !SliceQuery.hasAnyHints(sliceItem, strArr2);
             }
         }, arrayList);
         return arrayList;
     }
 
-    public static SliceItem find(Slice s, String format, String hints, String nonHints) {
-        return find(s, format, new String[]{hints}, new String[]{nonHints});
+    public static SliceItem find(Slice slice, String str, String str2, String str3) {
+        return find(slice, str, new String[]{str2}, new String[]{str3});
     }
 
-    public static SliceItem find(Slice s, String format) {
-        return find(s, format, (String[]) null, (String[]) null);
+    public static SliceItem find(Slice slice, String str) {
+        return find(slice, str, (String[]) null, (String[]) null);
     }
 
-    public static SliceItem find(SliceItem s, String format) {
-        return find(s, format, (String[]) null, (String[]) null);
+    public static SliceItem find(SliceItem sliceItem, String str) {
+        return find(sliceItem, str, (String[]) null, (String[]) null);
     }
 
-    public static SliceItem find(SliceItem s, String format, String hints, String nonHints) {
-        return find(s, format, new String[]{hints}, new String[]{nonHints});
+    public static SliceItem find(SliceItem sliceItem, String str, String str2, String str3) {
+        return find(sliceItem, str, new String[]{str2}, new String[]{str3});
     }
 
-    public static SliceItem find(Slice s, final String format, final String[] hints, final String[] nonHints) {
-        if (s == null) {
+    public static SliceItem find(Slice slice, final String str, final String[] strArr, final String[] strArr2) {
+        if (slice == null) {
             return null;
         }
-        return findSliceItem(toQueue(s), new Filter<SliceItem>() { // from class: androidx.slice.core.SliceQuery.4
-            @Override // androidx.slice.core.SliceQuery.Filter
-            public boolean filter(SliceItem item) {
-                return SliceQuery.checkFormat(item, format) && SliceQuery.hasHints(item, hints) && !SliceQuery.hasAnyHints(item, nonHints);
+        return findSliceItem(toQueue(slice), new Filter<SliceItem>() {
+            public boolean filter(SliceItem sliceItem) {
+                return SliceQuery.checkFormat(sliceItem, str) && SliceQuery.hasHints(sliceItem, strArr) && !SliceQuery.hasAnyHints(sliceItem, strArr2);
             }
         });
     }
 
-    public static SliceItem findSubtype(Slice s, final String format, final String subtype) {
-        if (s == null) {
+    public static SliceItem findSubtype(Slice slice, final String str, final String str2) {
+        if (slice == null) {
             return null;
         }
-        return findSliceItem(toQueue(s), new Filter<SliceItem>() { // from class: androidx.slice.core.SliceQuery.5
-            @Override // androidx.slice.core.SliceQuery.Filter
-            public boolean filter(SliceItem item) {
-                return SliceQuery.checkFormat(item, format) && SliceQuery.checkSubtype(item, subtype);
+        return findSliceItem(toQueue(slice), new Filter<SliceItem>() {
+            public boolean filter(SliceItem sliceItem) {
+                return SliceQuery.checkFormat(sliceItem, str) && SliceQuery.checkSubtype(sliceItem, str2);
             }
         });
     }
 
-    public static SliceItem findSubtype(SliceItem s, final String format, final String subtype) {
-        if (s == null) {
+    public static SliceItem findSubtype(SliceItem sliceItem, final String str, final String str2) {
+        if (sliceItem == null) {
             return null;
         }
-        return findSliceItem(toQueue(s), new Filter<SliceItem>() { // from class: androidx.slice.core.SliceQuery.6
-            @Override // androidx.slice.core.SliceQuery.Filter
-            public boolean filter(SliceItem item) {
-                return SliceQuery.checkFormat(item, format) && SliceQuery.checkSubtype(item, subtype);
+        return findSliceItem(toQueue(sliceItem), new Filter<SliceItem>() {
+            public boolean filter(SliceItem sliceItem) {
+                return SliceQuery.checkFormat(sliceItem, str) && SliceQuery.checkSubtype(sliceItem, str2);
             }
         });
     }
 
-    public static SliceItem find(SliceItem s, final String format, final String[] hints, final String[] nonHints) {
-        if (s == null) {
+    public static SliceItem find(SliceItem sliceItem, final String str, final String[] strArr, final String[] strArr2) {
+        if (sliceItem == null) {
             return null;
         }
-        return findSliceItem(toQueue(s), new Filter<SliceItem>() { // from class: androidx.slice.core.SliceQuery.7
-            @Override // androidx.slice.core.SliceQuery.Filter
-            public boolean filter(SliceItem item) {
-                return SliceQuery.checkFormat(item, format) && SliceQuery.hasHints(item, hints) && !SliceQuery.hasAnyHints(item, nonHints);
+        return findSliceItem(toQueue(sliceItem), new Filter<SliceItem>() {
+            public boolean filter(SliceItem sliceItem) {
+                return SliceQuery.checkFormat(sliceItem, str) && SliceQuery.hasHints(sliceItem, strArr) && !SliceQuery.hasAnyHints(sliceItem, strArr2);
             }
         });
     }
 
-    static boolean checkFormat(SliceItem item, String format) {
-        return format == null || format.equals(item.getFormat());
+    static boolean checkFormat(SliceItem sliceItem, String str) {
+        return str == null || str.equals(sliceItem.getFormat());
     }
 
-    static boolean checkSubtype(SliceItem item, String subtype) {
-        return subtype == null || subtype.equals(item.getSubType());
+    static boolean checkSubtype(SliceItem sliceItem, String str) {
+        return str == null || str.equals(sliceItem.getSubType());
     }
 
-    private static Deque<SliceItem> toQueue(Slice item) {
+    private static Deque<SliceItem> toQueue(Slice slice) {
         ArrayDeque arrayDeque = new ArrayDeque();
-        Collections.addAll(arrayDeque, item.getItemArray());
+        Collections.addAll(arrayDeque, slice.getItemArray());
         return arrayDeque;
     }
 
-    private static Deque<SliceItem> toQueue(SliceItem item) {
+    private static Deque<SliceItem> toQueue(SliceItem sliceItem) {
         ArrayDeque arrayDeque = new ArrayDeque();
-        arrayDeque.add(item);
+        arrayDeque.add(sliceItem);
         return arrayDeque;
     }
 
-    private static SliceItem findSliceItem(final Deque<SliceItem> items, Filter<SliceItem> f) {
-        while (!items.isEmpty()) {
-            SliceItem poll = items.poll();
-            if (f.filter(poll)) {
+    private static SliceItem findSliceItem(Deque<SliceItem> deque, Filter<SliceItem> filter) {
+        while (!deque.isEmpty()) {
+            SliceItem poll = deque.poll();
+            if (filter.filter(poll)) {
                 return poll;
             }
             if ("slice".equals(poll.getFormat()) || "action".equals(poll.getFormat())) {
-                Collections.addAll(items, poll.getSlice().getItemArray());
+                Collections.addAll(deque, poll.getSlice().getItemArray());
             }
         }
         return null;
     }
 
-    private static void findAll(final Deque<SliceItem> items, Filter<SliceItem> f, List<SliceItem> out) {
-        while (!items.isEmpty()) {
-            SliceItem poll = items.poll();
-            if (f.filter(poll)) {
-                out.add(poll);
+    private static void findAll(Deque<SliceItem> deque, Filter<SliceItem> filter, List<SliceItem> list) {
+        while (!deque.isEmpty()) {
+            SliceItem poll = deque.poll();
+            if (filter.filter(poll)) {
+                list.add(poll);
             }
             if ("slice".equals(poll.getFormat()) || "action".equals(poll.getFormat())) {
-                Collections.addAll(items, poll.getSlice().getItemArray());
+                Collections.addAll(deque, poll.getSlice().getItemArray());
             }
         }
     }
 
-    public static SliceItem findTopLevelItem(Slice s, final String format, final String subtype, final String[] hints, final String[] nonHints) {
-        SliceItem[] itemArray;
-        for (SliceItem sliceItem : s.getItemArray()) {
-            if (checkFormat(sliceItem, format) && checkSubtype(sliceItem, subtype) && hasHints(sliceItem, hints) && !hasAnyHints(sliceItem, nonHints)) {
+    public static SliceItem findTopLevelItem(Slice slice, String str, String str2, String[] strArr, String[] strArr2) {
+        SliceItem[] itemArray = slice.getItemArray();
+        for (SliceItem sliceItem : itemArray) {
+            if (checkFormat(sliceItem, str) && checkSubtype(sliceItem, str2) && hasHints(sliceItem, strArr) && !hasAnyHints(sliceItem, strArr2)) {
                 return sliceItem;
             }
         }

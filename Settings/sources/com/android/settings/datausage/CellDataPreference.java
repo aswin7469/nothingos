@@ -16,31 +16,29 @@ import androidx.core.content.res.TypedArrayUtils;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
 import androidx.preference.R$attr;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.datausage.TemplatePreference;
 import com.android.settings.network.MobileDataEnabledListener;
 import com.android.settings.network.ProxySubscriptionManager;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settingslib.CustomDialogPreferenceCompat;
-/* loaded from: classes.dex */
+
 public class CellDataPreference extends CustomDialogPreferenceCompat implements TemplatePreference, MobileDataEnabledListener.Client {
     public boolean mChecked;
     private MobileDataEnabledListener mDataStateListener;
-    public int mSubId = -1;
-    final ProxySubscriptionManager.OnActiveSubscriptionChangedListener mOnSubscriptionsChangeListener = new ProxySubscriptionManager.OnActiveSubscriptionChangedListener() { // from class: com.android.settings.datausage.CellDataPreference.1
-        @Override // com.android.settings.network.ProxySubscriptionManager.OnActiveSubscriptionChangedListener
+    final ProxySubscriptionManager.OnActiveSubscriptionChangedListener mOnSubscriptionsChangeListener = new ProxySubscriptionManager.OnActiveSubscriptionChangedListener() {
         public void onChanged() {
             CellDataPreference.this.updateEnabled();
         }
     };
+    public int mSubId = -1;
 
     public CellDataPreference(Context context, AttributeSet attributeSet) {
         super(context, attributeSet, TypedArrayUtils.getAttr(context, R$attr.switchPreferenceStyle, 16843629));
         this.mDataStateListener = new MobileDataEnabledListener(context, this);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public void onRestoreInstanceState(Parcelable parcelable) {
         CellDataState cellDataState = (CellDataState) parcelable;
         super.onRestoreInstanceState(cellDataState.getSuperState());
@@ -52,8 +50,7 @@ public class CellDataPreference extends CustomDialogPreferenceCompat implements 
         notifyChanged();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public Parcelable onSaveInstanceState() {
         CellDataState cellDataState = new CellDataState(super.onSaveInstanceState());
         cellDataState.mChecked = this.mChecked;
@@ -61,39 +58,39 @@ public class CellDataPreference extends CustomDialogPreferenceCompat implements 
         return cellDataState;
     }
 
-    @Override // androidx.preference.Preference
     public void onAttached() {
         super.onAttached();
         this.mDataStateListener.start(this.mSubId);
         getProxySubscriptionManager().addActiveSubscriptionsListener(this.mOnSubscriptionsChangeListener);
     }
 
-    @Override // androidx.preference.Preference
     public void onDetached() {
         this.mDataStateListener.stop();
         getProxySubscriptionManager().removeActiveSubscriptionsListener(this.mOnSubscriptionsChangeListener);
         super.onDetached();
     }
 
-    @Override // com.android.settings.datausage.TemplatePreference
     public void setTemplate(NetworkTemplate networkTemplate, int i, TemplatePreference.NetworkServices networkServices) {
-        if (i == -1) {
-            throw new IllegalArgumentException("CellDataPreference needs a SubscriptionInfo");
+        if (i != -1) {
+            getProxySubscriptionManager().addActiveSubscriptionsListener(this.mOnSubscriptionsChangeListener);
+            if (this.mSubId == -1) {
+                this.mSubId = i;
+                setKey(getKey() + i);
+            }
+            updateEnabled();
+            updateChecked();
+            return;
         }
-        getProxySubscriptionManager().addActiveSubscriptionsListener(this.mOnSubscriptionsChangeListener);
-        if (this.mSubId == -1) {
-            this.mSubId = i;
-            setKey(getKey() + i);
-        }
-        updateEnabled();
-        updateChecked();
+        throw new IllegalArgumentException("CellDataPreference needs a SubscriptionInfo");
     }
 
-    ProxySubscriptionManager getProxySubscriptionManager() {
+    /* access modifiers changed from: package-private */
+    public ProxySubscriptionManager getProxySubscriptionManager() {
         return ProxySubscriptionManager.getInstance(getContext());
     }
 
-    SubscriptionInfo getActiveSubscriptionInfo(int i) {
+    /* access modifiers changed from: package-private */
+    public SubscriptionInfo getActiveSubscriptionInfo(int i) {
         return getProxySubscriptionManager().getActiveSubscriptionInfo(i);
     }
 
@@ -101,13 +98,12 @@ public class CellDataPreference extends CustomDialogPreferenceCompat implements 
         setChecked(((TelephonyManager) getContext().getSystemService(TelephonyManager.class)).getDataEnabled(this.mSubId));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateEnabled() {
         setEnabled(getActiveSubscriptionInfo(this.mSubId) != null);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public void performClick(View view) {
         Context context = getContext();
         FeatureFactory.getFactory(context).getMetricsFeatureProvider().action(context, 178, !this.mChecked);
@@ -115,10 +111,10 @@ public class CellDataPreference extends CustomDialogPreferenceCompat implements 
         SubscriptionInfo activeSubscriptionInfo2 = getActiveSubscriptionInfo(SubscriptionManager.getDefaultDataSubscriptionId());
         if (this.mChecked) {
             setMobileDataEnabled(false);
-            if (activeSubscriptionInfo2 == null || activeSubscriptionInfo == null || activeSubscriptionInfo.getSubscriptionId() != activeSubscriptionInfo2.getSubscriptionId()) {
+            if (activeSubscriptionInfo2 != null && activeSubscriptionInfo != null && activeSubscriptionInfo.getSubscriptionId() == activeSubscriptionInfo2.getSubscriptionId()) {
+                disableDataForOtherSubscriptions(this.mSubId);
                 return;
             }
-            disableDataForOtherSubscriptions(this.mSubId);
             return;
         }
         setMobileDataEnabled(true);
@@ -130,14 +126,12 @@ public class CellDataPreference extends CustomDialogPreferenceCompat implements 
     }
 
     private void setChecked(boolean z) {
-        if (this.mChecked == z) {
-            return;
+        if (this.mChecked != z) {
+            this.mChecked = z;
+            notifyChanged();
         }
-        this.mChecked = z;
-        notifyChanged();
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         View findViewById = preferenceViewHolder.findViewById(16908352);
@@ -145,14 +139,13 @@ public class CellDataPreference extends CustomDialogPreferenceCompat implements 
         ((Checkable) findViewById).setChecked(this.mChecked);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.CustomDialogPreferenceCompat
+    /* access modifiers changed from: protected */
     public void onPrepareDialogBuilder(AlertDialog.Builder builder, DialogInterface.OnClickListener onClickListener) {
         showDisableDialog(builder, onClickListener);
     }
 
     private void showDisableDialog(AlertDialog.Builder builder, DialogInterface.OnClickListener onClickListener) {
-        builder.setTitle((CharSequence) null).setMessage(R.string.data_usage_disable_mobile).setPositiveButton(17039370, onClickListener).setNegativeButton(17039360, (DialogInterface.OnClickListener) null);
+        builder.setTitle((CharSequence) null).setMessage(R$string.data_usage_disable_mobile).setPositiveButton(17039370, onClickListener).setNegativeButton(17039360, (DialogInterface.OnClickListener) null);
     }
 
     private void disableDataForOtherSubscriptions(int i) {
@@ -161,33 +154,24 @@ public class CellDataPreference extends CustomDialogPreferenceCompat implements 
         }
     }
 
-    @Override // com.android.settingslib.CustomDialogPreferenceCompat
-    protected void onClick(DialogInterface dialogInterface, int i) {
-        if (i != -1) {
-            return;
+    /* access modifiers changed from: protected */
+    public void onClick(DialogInterface dialogInterface, int i) {
+        if (i == -1) {
+            setMobileDataEnabled(false);
         }
-        setMobileDataEnabled(false);
     }
 
-    @Override // com.android.settings.network.MobileDataEnabledListener.Client
     public void onMobileDataEnabledChange() {
         updateChecked();
     }
 
-    /* loaded from: classes.dex */
     public static class CellDataState extends Preference.BaseSavedState {
-        public static final Parcelable.Creator<CellDataState> CREATOR = new Parcelable.Creator<CellDataState>() { // from class: com.android.settings.datausage.CellDataPreference.CellDataState.1
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: createFromParcel */
-            public CellDataState mo298createFromParcel(Parcel parcel) {
+        public static final Parcelable.Creator<CellDataState> CREATOR = new Parcelable.Creator<CellDataState>() {
+            public CellDataState createFromParcel(Parcel parcel) {
                 return new CellDataState(parcel);
             }
 
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: newArray */
-            public CellDataState[] mo299newArray(int i) {
+            public CellDataState[] newArray(int i) {
                 return new CellDataState[i];
             }
         };
@@ -204,10 +188,9 @@ public class CellDataPreference extends CustomDialogPreferenceCompat implements 
             this.mSubId = parcel.readInt();
         }
 
-        @Override // android.view.AbsSavedState, android.os.Parcelable
         public void writeToParcel(Parcel parcel, int i) {
             super.writeToParcel(parcel, i);
-            parcel.writeByte(this.mChecked ? (byte) 1 : (byte) 0);
+            parcel.writeByte(this.mChecked ? (byte) 1 : 0);
             parcel.writeInt(this.mSubId);
         }
     }

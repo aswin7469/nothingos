@@ -5,37 +5,30 @@ import android.content.Context;
 import android.content.Intent;
 import android.telephony.TelephonyManager;
 import android.telephony.UiccCardInfo;
+import android.telephony.UiccPortInfo;
 import android.telephony.UiccSlotInfo;
 import android.telephony.euicc.EuiccManager;
 import android.text.TextUtils;
 import android.util.Log;
-import com.android.settings.R;
+import com.android.settings.R$bool;
 import com.android.settingslib.utils.ThreadUtils;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Predicate;
-/* loaded from: classes.dex */
-public class SimSlotChangeReceiver extends BroadcastReceiver {
-    private final SimSlotChangeHandler mSlotChangeHandler = SimSlotChangeHandler.get();
-    private final Object mLock = new Object();
 
-    @Override // android.content.BroadcastReceiver
-    public void onReceive(final Context context, Intent intent) {
+public class SimSlotChangeReceiver extends BroadcastReceiver {
+    private final Object mLock = new Object();
+    private final SimSlotChangeHandler mSlotChangeHandler = SimSlotChangeHandler.get();
+
+    public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         if (!"android.telephony.action.SIM_SLOT_STATUS_CHANGED".equals(action)) {
             Log.e("SlotChangeReceiver", "Ignore slot changes due to unexpected action: " + action);
             return;
         }
-        final BroadcastReceiver.PendingResult goAsync = goAsync();
-        ThreadUtils.postOnBackgroundThread(new Runnable() { // from class: com.android.settings.sim.receivers.SimSlotChangeReceiver$$ExternalSyntheticLambda1
-            @Override // java.lang.Runnable
-            public final void run() {
-                SimSlotChangeReceiver.this.lambda$onReceive$0(context, goAsync);
-            }
-        });
+        ThreadUtils.postOnBackgroundThread((Runnable) new SimSlotChangeReceiver$$ExternalSyntheticLambda0(this, context, goAsync()));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onReceive$0(Context context, BroadcastReceiver.PendingResult pendingResult) {
         synchronized (this.mLock) {
             if (shouldHandleSlotChange(context)) {
@@ -43,11 +36,11 @@ public class SimSlotChangeReceiver extends BroadcastReceiver {
             }
         }
         Objects.requireNonNull(pendingResult);
-        ThreadUtils.postOnMainThread(new SimSlotChangeReceiver$$ExternalSyntheticLambda0(pendingResult));
+        ThreadUtils.postOnMainThread(new SimSlotChangeReceiver$$ExternalSyntheticLambda1(pendingResult));
     }
 
     private boolean shouldHandleSlotChange(Context context) {
-        if (!context.getResources().getBoolean(R.bool.config_handle_sim_slot_change)) {
+        if (!context.getResources().getBoolean(R$bool.config_handle_sim_slot_change)) {
             Log.i("SlotChangeReceiver", "The flag is off. Ignore slot changes.");
             return false;
         }
@@ -84,8 +77,12 @@ public class SimSlotChangeReceiver extends BroadcastReceiver {
                 return false;
             }
             UiccCardInfo findUiccCardInfoBySlot = findUiccCardInfoBySlot(telephonyManager, i);
-            if (findUiccCardInfoBySlot != null && (!TextUtils.isEmpty(uiccSlotInfo.getCardId()) || !TextUtils.isEmpty(findUiccCardInfoBySlot.getIccId()))) {
-                z = false;
+            if (findUiccCardInfoBySlot != null) {
+                for (UiccPortInfo uiccPortInfo : findUiccCardInfoBySlot.getPorts()) {
+                    if (!TextUtils.isEmpty(uiccSlotInfo.getCardId()) || !TextUtils.isEmpty(uiccPortInfo.getIccId())) {
+                        z = false;
+                    }
+                }
             }
         }
         if (!z) {
@@ -95,23 +92,16 @@ public class SimSlotChangeReceiver extends BroadcastReceiver {
         return false;
     }
 
-    private UiccCardInfo findUiccCardInfoBySlot(TelephonyManager telephonyManager, final int i) {
+    private UiccCardInfo findUiccCardInfoBySlot(TelephonyManager telephonyManager, int i) {
         List<UiccCardInfo> uiccCardsInfo = telephonyManager.getUiccCardsInfo();
         if (uiccCardsInfo == null) {
             return null;
         }
-        return uiccCardsInfo.stream().filter(new Predicate() { // from class: com.android.settings.sim.receivers.SimSlotChangeReceiver$$ExternalSyntheticLambda2
-            @Override // java.util.function.Predicate
-            public final boolean test(Object obj) {
-                boolean lambda$findUiccCardInfoBySlot$1;
-                lambda$findUiccCardInfoBySlot$1 = SimSlotChangeReceiver.lambda$findUiccCardInfoBySlot$1(i, (UiccCardInfo) obj);
-                return lambda$findUiccCardInfoBySlot$1;
-            }
-        }).findFirst().orElse(null);
+        return (UiccCardInfo) uiccCardsInfo.stream().filter(new SimSlotChangeReceiver$$ExternalSyntheticLambda2(i)).findFirst().orElse((Object) null);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ boolean lambda$findUiccCardInfoBySlot$1(int i, UiccCardInfo uiccCardInfo) {
-        return uiccCardInfo.getSlotIndex() == i;
+        return uiccCardInfo.getPhysicalSlotIndex() == i;
     }
 }

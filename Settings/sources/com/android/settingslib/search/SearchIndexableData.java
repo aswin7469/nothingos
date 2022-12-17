@@ -1,5 +1,5 @@
 package com.android.settingslib.search;
-/* loaded from: classes.dex */
+
 public class SearchIndexableData {
     private final Indexable$SearchIndexProvider mSearchIndexProvider;
     private final Class mTargetClass;

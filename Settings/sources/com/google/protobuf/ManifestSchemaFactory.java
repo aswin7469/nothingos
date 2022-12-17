@@ -1,13 +1,11 @@
 package com.google.protobuf;
-/* loaded from: classes2.dex */
+
 final class ManifestSchemaFactory implements SchemaFactory {
-    private static final MessageInfoFactory EMPTY_FACTORY = new MessageInfoFactory() { // from class: com.google.protobuf.ManifestSchemaFactory.1
-        @Override // com.google.protobuf.MessageInfoFactory
+    private static final MessageInfoFactory EMPTY_FACTORY = new MessageInfoFactory() {
         public boolean isSupported(Class<?> cls) {
             return false;
         }
 
-        @Override // com.google.protobuf.MessageInfoFactory
         public MessageInfo messageInfoFor(Class<?> cls) {
             throw new IllegalStateException("This should never be called.");
         }
@@ -18,21 +16,20 @@ final class ManifestSchemaFactory implements SchemaFactory {
         this(getDefaultMessageInfoFactory());
     }
 
-    private ManifestSchemaFactory(MessageInfoFactory messageInfoFactory) {
-        this.messageInfoFactory = (MessageInfoFactory) Internal.checkNotNull(messageInfoFactory, "messageInfoFactory");
+    private ManifestSchemaFactory(MessageInfoFactory messageInfoFactory2) {
+        this.messageInfoFactory = (MessageInfoFactory) Internal.checkNotNull(messageInfoFactory2, "messageInfoFactory");
     }
 
-    @Override // com.google.protobuf.SchemaFactory
     public <T> Schema<T> createSchema(Class<T> cls) {
         SchemaUtil.requireGeneratedMessage(cls);
         MessageInfo messageInfoFor = this.messageInfoFactory.messageInfoFor(cls);
-        if (messageInfoFor.isMessageSetWireFormat()) {
-            if (GeneratedMessageLite.class.isAssignableFrom(cls)) {
-                return MessageSetSchema.newSchema(SchemaUtil.unknownFieldSetLiteSchema(), ExtensionSchemas.lite(), messageInfoFor.getDefaultInstance());
-            }
-            return MessageSetSchema.newSchema(SchemaUtil.proto2UnknownFieldSetSchema(), ExtensionSchemas.full(), messageInfoFor.getDefaultInstance());
+        if (!messageInfoFor.isMessageSetWireFormat()) {
+            return newSchema(cls, messageInfoFor);
         }
-        return newSchema(cls, messageInfoFor);
+        if (GeneratedMessageLite.class.isAssignableFrom(cls)) {
+            return MessageSetSchema.newSchema(SchemaUtil.unknownFieldSetLiteSchema(), ExtensionSchemas.lite(), messageInfoFor.getDefaultInstance());
+        }
+        return MessageSetSchema.newSchema(SchemaUtil.proto2UnknownFieldSetSchema(), ExtensionSchemas.full(), messageInfoFor.getDefaultInstance());
     }
 
     private static <T> Schema<T> newSchema(Class<T> cls, MessageInfo messageInfo) {
@@ -40,11 +37,11 @@ final class ManifestSchemaFactory implements SchemaFactory {
             if (isProto2(messageInfo)) {
                 return MessageSchema.newSchema(cls, messageInfo, NewInstanceSchemas.lite(), ListFieldSchema.lite(), SchemaUtil.unknownFieldSetLiteSchema(), ExtensionSchemas.lite(), MapFieldSchemas.lite());
             }
-            return MessageSchema.newSchema(cls, messageInfo, NewInstanceSchemas.lite(), ListFieldSchema.lite(), SchemaUtil.unknownFieldSetLiteSchema(), null, MapFieldSchemas.lite());
+            return MessageSchema.newSchema(cls, messageInfo, NewInstanceSchemas.lite(), ListFieldSchema.lite(), SchemaUtil.unknownFieldSetLiteSchema(), (ExtensionSchema<?>) null, MapFieldSchemas.lite());
         } else if (isProto2(messageInfo)) {
             return MessageSchema.newSchema(cls, messageInfo, NewInstanceSchemas.full(), ListFieldSchema.full(), SchemaUtil.proto2UnknownFieldSetSchema(), ExtensionSchemas.full(), MapFieldSchemas.full());
         } else {
-            return MessageSchema.newSchema(cls, messageInfo, NewInstanceSchemas.full(), ListFieldSchema.full(), SchemaUtil.proto3UnknownFieldSetSchema(), null, MapFieldSchemas.full());
+            return MessageSchema.newSchema(cls, messageInfo, NewInstanceSchemas.full(), ListFieldSchema.full(), SchemaUtil.proto3UnknownFieldSetSchema(), (ExtensionSchema<?>) null, MapFieldSchemas.full());
         }
     }
 
@@ -56,28 +53,23 @@ final class ManifestSchemaFactory implements SchemaFactory {
         return new CompositeMessageInfoFactory(GeneratedMessageInfoFactory.getInstance(), getDescriptorMessageInfoFactory());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static class CompositeMessageInfoFactory implements MessageInfoFactory {
+    private static class CompositeMessageInfoFactory implements MessageInfoFactory {
         private MessageInfoFactory[] factories;
 
         CompositeMessageInfoFactory(MessageInfoFactory... messageInfoFactoryArr) {
             this.factories = messageInfoFactoryArr;
         }
 
-        @Override // com.google.protobuf.MessageInfoFactory
         public boolean isSupported(Class<?> cls) {
-            for (MessageInfoFactory messageInfoFactory : this.factories) {
-                if (messageInfoFactory.isSupported(cls)) {
+            for (MessageInfoFactory isSupported : this.factories) {
+                if (isSupported.isSupported(cls)) {
                     return true;
                 }
             }
             return false;
         }
 
-        @Override // com.google.protobuf.MessageInfoFactory
         public MessageInfo messageInfoFor(Class<?> cls) {
-            MessageInfoFactory[] messageInfoFactoryArr;
             for (MessageInfoFactory messageInfoFactory : this.factories) {
                 if (messageInfoFactory.isSupported(cls)) {
                     return messageInfoFactory.messageInfoFor(cls);
@@ -89,7 +81,7 @@ final class ManifestSchemaFactory implements SchemaFactory {
 
     private static MessageInfoFactory getDescriptorMessageInfoFactory() {
         try {
-            return (MessageInfoFactory) Class.forName("com.google.protobuf.DescriptorMessageInfoFactory").getDeclaredMethod("getInstance", new Class[0]).invoke(null, new Object[0]);
+            return (MessageInfoFactory) Class.forName("com.google.protobuf.DescriptorMessageInfoFactory").getDeclaredMethod("getInstance", new Class[0]).invoke((Object) null, new Object[0]);
         } catch (Exception unused) {
             return EMPTY_FACTORY;
         }

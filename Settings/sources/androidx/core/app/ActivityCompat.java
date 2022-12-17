@@ -3,105 +3,90 @@ package androidx.core.app;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 import androidx.core.content.ContextCompat;
 import java.util.Arrays;
-/* loaded from: classes.dex */
+import java.util.HashSet;
+
 public class ActivityCompat extends ContextCompat {
-    private static PermissionCompatDelegate sDelegate;
 
-    /* loaded from: classes.dex */
-    public interface OnRequestPermissionsResultCallback {
-        void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults);
-    }
-
-    /* loaded from: classes.dex */
-    public interface PermissionCompatDelegate {
-        boolean requestPermissions(Activity activity, String[] permissions, int requestCode);
-    }
-
-    /* loaded from: classes.dex */
     public interface RequestPermissionsRequestCodeValidator {
-        void validateRequestPermissionsRequestCode(int requestCode);
+        void validateRequestPermissionsRequestCode(int i);
     }
 
-    public static void startActivityForResult(Activity activity, Intent intent, int requestCode, Bundle options) {
-        if (Build.VERSION.SDK_INT >= 16) {
-            activity.startActivityForResult(intent, requestCode, options);
-        } else {
-            activity.startActivityForResult(intent, requestCode);
-        }
+    public static void startActivityForResult(Activity activity, Intent intent, int i, Bundle bundle) {
+        Api16Impl.startActivityForResult(activity, intent, i, bundle);
     }
 
-    public static void startIntentSenderForResult(Activity activity, IntentSender intent, int requestCode, Intent fillInIntent, int flagsMask, int flagsValues, int extraFlags, Bundle options) throws IntentSender.SendIntentException {
-        if (Build.VERSION.SDK_INT >= 16) {
-            activity.startIntentSenderForResult(intent, requestCode, fillInIntent, flagsMask, flagsValues, extraFlags, options);
-        } else {
-            activity.startIntentSenderForResult(intent, requestCode, fillInIntent, flagsMask, flagsValues, extraFlags);
-        }
+    public static void startIntentSenderForResult(Activity activity, IntentSender intentSender, int i, Intent intent, int i2, int i3, int i4, Bundle bundle) throws IntentSender.SendIntentException {
+        Api16Impl.startIntentSenderForResult(activity, intentSender, i, intent, i2, i3, i4, bundle);
     }
 
     public static void finishAffinity(Activity activity) {
-        if (Build.VERSION.SDK_INT >= 16) {
+        Api16Impl.finishAffinity(activity);
+    }
+
+    public static void requestPermissions(Activity activity, String[] strArr, int i) {
+        HashSet hashSet = new HashSet();
+        int i2 = 0;
+        while (i2 < strArr.length) {
+            if (!TextUtils.isEmpty(strArr[i2])) {
+                i2++;
+            } else {
+                throw new IllegalArgumentException("Permission request for permissions " + Arrays.toString(strArr) + " must not contain null or empty values");
+            }
+        }
+        int size = hashSet.size();
+        String[] strArr2 = size > 0 ? new String[(strArr.length - size)] : strArr;
+        if (size > 0) {
+            if (size != strArr.length) {
+                int i3 = 0;
+                for (int i4 = 0; i4 < strArr.length; i4++) {
+                    if (!hashSet.contains(Integer.valueOf(i4))) {
+                        strArr2[i3] = strArr[i4];
+                        i3++;
+                    }
+                }
+            } else {
+                return;
+            }
+        }
+        if (activity instanceof RequestPermissionsRequestCodeValidator) {
+            ((RequestPermissionsRequestCodeValidator) activity).validateRequestPermissionsRequestCode(i);
+        }
+        Api23Impl.requestPermissions(activity, strArr, i);
+    }
+
+    public static boolean shouldShowRequestPermissionRationale(Activity activity, String str) {
+        return Api23Impl.shouldShowRequestPermissionRationale(activity, str);
+    }
+
+    public static void recreate(Activity activity) {
+        activity.recreate();
+    }
+
+    static class Api16Impl {
+        static void startActivityForResult(Activity activity, Intent intent, int i, Bundle bundle) {
+            activity.startActivityForResult(intent, i, bundle);
+        }
+
+        static void startIntentSenderForResult(Activity activity, IntentSender intentSender, int i, Intent intent, int i2, int i3, int i4, Bundle bundle) throws IntentSender.SendIntentException {
+            activity.startIntentSenderForResult(intentSender, i, intent, i2, i3, i4, bundle);
+        }
+
+        static void finishAffinity(Activity activity) {
             activity.finishAffinity();
-        } else {
-            activity.finish();
         }
     }
 
-    public static void requestPermissions(final Activity activity, final String[] permissions, final int requestCode) {
-        PermissionCompatDelegate permissionCompatDelegate = sDelegate;
-        if (permissionCompatDelegate == null || !permissionCompatDelegate.requestPermissions(activity, permissions, requestCode)) {
-            for (String str : permissions) {
-                if (TextUtils.isEmpty(str)) {
-                    throw new IllegalArgumentException("Permission request for permissions " + Arrays.toString(permissions) + " must not contain null or empty values");
-                }
-            }
-            if (Build.VERSION.SDK_INT >= 23) {
-                if (activity instanceof RequestPermissionsRequestCodeValidator) {
-                    ((RequestPermissionsRequestCodeValidator) activity).validateRequestPermissionsRequestCode(requestCode);
-                }
-                activity.requestPermissions(permissions, requestCode);
-            } else if (activity instanceof OnRequestPermissionsResultCallback) {
-                new Handler(Looper.getMainLooper()).post(new Runnable() { // from class: androidx.core.app.ActivityCompat.1
-                    @Override // java.lang.Runnable
-                    public void run() {
-                        int[] iArr = new int[permissions.length];
-                        PackageManager packageManager = activity.getPackageManager();
-                        String packageName = activity.getPackageName();
-                        int length = permissions.length;
-                        for (int i = 0; i < length; i++) {
-                            iArr[i] = packageManager.checkPermission(permissions[i], packageName);
-                        }
-                        ((OnRequestPermissionsResultCallback) activity).onRequestPermissionsResult(requestCode, permissions, iArr);
-                    }
-                });
-            }
+    static class Api23Impl {
+        static void requestPermissions(Activity activity, String[] strArr, int i) {
+            activity.requestPermissions(strArr, i);
         }
-    }
 
-    public static void recreate(final Activity activity) {
-        int i = Build.VERSION.SDK_INT;
-        if (i >= 28) {
-            activity.recreate();
-        } else if (i <= 23) {
-            new Handler(activity.getMainLooper()).post(new Runnable() { // from class: androidx.core.app.ActivityCompat.2
-                @Override // java.lang.Runnable
-                public void run() {
-                    if (activity.isFinishing() || ActivityRecreator.recreate(activity)) {
-                        return;
-                    }
-                    activity.recreate();
-                }
-            });
-        } else if (ActivityRecreator.recreate(activity)) {
-        } else {
-            activity.recreate();
+        static boolean shouldShowRequestPermissionRationale(Activity activity, String str) {
+            return activity.shouldShowRequestPermissionRationale(str);
         }
     }
 }

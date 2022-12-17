@@ -1,17 +1,18 @@
 package com.android.wifitrackerlib;
 
-import android.net.wifi.ScanResult;
-import com.android.wifitrackerlib.StandardWifiEntry;
-import java.util.function.Function;
-/* loaded from: classes.dex */
-public final /* synthetic */ class SavedNetworkTracker$$ExternalSyntheticLambda4 implements Function {
-    public static final /* synthetic */ SavedNetworkTracker$$ExternalSyntheticLambda4 INSTANCE = new SavedNetworkTracker$$ExternalSyntheticLambda4();
+import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
 
-    private /* synthetic */ SavedNetworkTracker$$ExternalSyntheticLambda4() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class SavedNetworkTracker$$ExternalSyntheticLambda4 implements Predicate {
+    public final /* synthetic */ Map f$0;
+
+    public /* synthetic */ SavedNetworkTracker$$ExternalSyntheticLambda4(Map map) {
+        this.f$0 = map;
     }
 
-    @Override // java.util.function.Function
-    public final Object apply(Object obj) {
-        return new StandardWifiEntry.ScanResultKey((ScanResult) obj);
+    public final boolean test(Object obj) {
+        return ((StandardWifiEntry) obj).updateConfig((List) this.f$0.remove(((StandardWifiEntry) obj).getStandardWifiEntryKey()));
     }
 }

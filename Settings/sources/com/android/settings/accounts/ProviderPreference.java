@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import com.android.settingslib.RestrictedLockUtilsInternal;
 import com.android.settingslib.RestrictedPreference;
-/* loaded from: classes.dex */
+
 public class ProviderPreference extends RestrictedPreference {
     private String mAccountType;
 

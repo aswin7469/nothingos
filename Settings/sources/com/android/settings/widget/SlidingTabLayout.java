@@ -4,21 +4,22 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$layout;
+
 public final class SlidingTabLayout extends FrameLayout implements View.OnClickListener {
     private final View mIndicatorView;
     private final LayoutInflater mLayoutInflater;
     private int mSelectedPosition;
     private float mSelectionOffset;
-    private final LinearLayout mTitleView;
-    private RtlCompatibleViewPager mViewPager;
+    /* access modifiers changed from: private */
+    public final LinearLayout mTitleView;
+    /* access modifiers changed from: private */
+    public RtlCompatibleViewPager mViewPager;
 
     public SlidingTabLayout(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -27,7 +28,7 @@ public final class SlidingTabLayout extends FrameLayout implements View.OnClickL
         LinearLayout linearLayout = new LinearLayout(context);
         this.mTitleView = linearLayout;
         linearLayout.setGravity(1);
-        View inflate = from.inflate(R.layout.sliding_tab_indicator_view, (ViewGroup) this, false);
+        View inflate = from.inflate(R$layout.sliding_tab_indicator_view, this, false);
         this.mIndicatorView = inflate;
         addView(linearLayout, -1, -2);
         addView(inflate, inflate.getLayoutParams());
@@ -42,8 +43,8 @@ public final class SlidingTabLayout extends FrameLayout implements View.OnClickL
         }
     }
 
-    @Override // android.widget.FrameLayout, android.view.View
-    protected void onMeasure(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         super.onMeasure(i, i2);
         int childCount = this.mTitleView.getChildCount();
         if (childCount > 0) {
@@ -51,8 +52,8 @@ public final class SlidingTabLayout extends FrameLayout implements View.OnClickL
         }
     }
 
-    @Override // android.widget.FrameLayout, android.view.ViewGroup, android.view.View
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         if (this.mTitleView.getChildCount() > 0) {
             int measuredHeight = getMeasuredHeight();
             int measuredHeight2 = this.mIndicatorView.getMeasuredHeight();
@@ -70,7 +71,6 @@ public final class SlidingTabLayout extends FrameLayout implements View.OnClickL
         }
     }
 
-    @Override // android.view.View.OnClickListener
     public void onClick(View view) {
         int childCount = this.mTitleView.getChildCount();
         for (int i = 0; i < childCount; i++) {
@@ -81,18 +81,18 @@ public final class SlidingTabLayout extends FrameLayout implements View.OnClickL
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void onViewPagerPageChanged(int i, float f) {
         this.mSelectedPosition = i;
         this.mSelectionOffset = f;
-        this.mIndicatorView.setTranslationX(isRtlMode() ? -getIndicatorLeft() : getIndicatorLeft());
+        this.mIndicatorView.setTranslationX((float) (isRtlMode() ? -getIndicatorLeft() : getIndicatorLeft()));
     }
 
     private void populateTabStrip() {
         PagerAdapter adapter = this.mViewPager.getAdapter();
         int i = 0;
         while (i < adapter.getCount()) {
-            TextView textView = (TextView) this.mLayoutInflater.inflate(R.layout.sliding_tab_title_view, (ViewGroup) this.mTitleView, false);
+            TextView textView = (TextView) this.mLayoutInflater.inflate(R$layout.sliding_tab_title_view, this.mTitleView, false);
             textView.setText(adapter.getPageTitle(i));
             textView.setOnClickListener(this);
             this.mTitleView.addView(textView);
@@ -106,36 +106,30 @@ public final class SlidingTabLayout extends FrameLayout implements View.OnClickL
         if (this.mSelectionOffset <= 0.0f || this.mSelectedPosition >= getChildCount() - 1) {
             return left;
         }
-        return (int) ((this.mSelectionOffset * this.mTitleView.getChildAt(this.mSelectedPosition + 1).getLeft()) + ((1.0f - this.mSelectionOffset) * left));
+        return (int) ((this.mSelectionOffset * ((float) this.mTitleView.getChildAt(this.mSelectedPosition + 1).getLeft())) + ((1.0f - this.mSelectionOffset) * ((float) left)));
     }
 
     private boolean isRtlMode() {
         return getLayoutDirection() == 1;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public final class InternalViewPagerListener implements ViewPager.OnPageChangeListener {
+    private final class InternalViewPagerListener implements ViewPager.OnPageChangeListener {
         private int mScrollState;
 
         private InternalViewPagerListener() {
         }
 
-        @Override // androidx.viewpager.widget.ViewPager.OnPageChangeListener
         public void onPageScrolled(int i, float f, int i2) {
             int childCount = SlidingTabLayout.this.mTitleView.getChildCount();
-            if (childCount == 0 || i < 0 || i >= childCount) {
-                return;
+            if (childCount != 0 && i >= 0 && i < childCount) {
+                SlidingTabLayout.this.onViewPagerPageChanged(i, f);
             }
-            SlidingTabLayout.this.onViewPagerPageChanged(i, f);
         }
 
-        @Override // androidx.viewpager.widget.ViewPager.OnPageChangeListener
         public void onPageScrollStateChanged(int i) {
             this.mScrollState = i;
         }
 
-        @Override // androidx.viewpager.widget.ViewPager.OnPageChangeListener
         public void onPageSelected(int i) {
             int rtlAwareIndex = SlidingTabLayout.this.mViewPager.getRtlAwareIndex(i);
             if (this.mScrollState == 0) {

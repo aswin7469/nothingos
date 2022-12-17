@@ -6,26 +6,11 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NavigableMap;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes2.dex */
-public final class TreeRangeSet$RangesByUpperBound<C extends Comparable<?>> extends AbstractNavigableMap<Cut<C>, Range<C>> {
+
+final class TreeRangeSet$RangesByUpperBound<C extends Comparable<?>> extends AbstractNavigableMap<Cut<C>, Range<C>> {
     private final NavigableMap<Cut<C>, Range<C>> rangesByLowerBound;
-    private final Range<Cut<C>> upperBoundWindow;
-
-    @Override // java.util.NavigableMap
-    public /* bridge */ /* synthetic */ NavigableMap headMap(Object obj, boolean z) {
-        return headMap((Cut) ((Cut) obj), z);
-    }
-
-    @Override // java.util.NavigableMap
-    public /* bridge */ /* synthetic */ NavigableMap subMap(Object obj, boolean z, Object obj2, boolean z2) {
-        return subMap((Cut) ((Cut) obj), z, (Cut) ((Cut) obj2), z2);
-    }
-
-    @Override // java.util.NavigableMap
-    public /* bridge */ /* synthetic */ NavigableMap tailMap(Object obj, boolean z) {
-        return tailMap((Cut) ((Cut) obj), z);
-    }
+    /* access modifiers changed from: private */
+    public final Range<Cut<C>> upperBoundWindow;
 
     private TreeRangeSet$RangesByUpperBound(NavigableMap<Cut<C>, Range<C>> navigableMap, Range<Cut<C>> range) {
         this.rangesByLowerBound = navigableMap;
@@ -36,7 +21,7 @@ public final class TreeRangeSet$RangesByUpperBound<C extends Comparable<?>> exte
         if (range.isConnected(this.upperBoundWindow)) {
             return new TreeRangeSet$RangesByUpperBound(this.rangesByLowerBound, range.intersection(this.upperBoundWindow));
         }
-        return ImmutableSortedMap.of();
+        return ImmutableSortedMap.m30of();
     }
 
     public NavigableMap<Cut<C>, Range<C>> subMap(Cut<C> cut, boolean z, Cut<C> cut2, boolean z2) {
@@ -51,23 +36,19 @@ public final class TreeRangeSet$RangesByUpperBound<C extends Comparable<?>> exte
         return subMap(Range.downTo(cut, BoundType.forBoolean(z)));
     }
 
-    @Override // java.util.SortedMap
     public Comparator<? super Cut<C>> comparator() {
         return Ordering.natural();
     }
 
-    @Override // java.util.AbstractMap, java.util.Map
     public boolean containsKey(Object obj) {
-        return mo840get(obj) != null;
+        return get(obj) != null;
     }
 
-    @Override // java.util.AbstractMap, java.util.Map
-    /* renamed from: get */
-    public Range<C> mo840get(Object obj) {
+    public Range<C> get(Object obj) {
         Map.Entry<Cut<C>, Range<C>> lowerEntry;
         if (obj instanceof Cut) {
             try {
-                Cut<C> cut = (Cut) obj;
+                Cut cut = (Cut) obj;
                 if (this.upperBoundWindow.contains(cut) && (lowerEntry = this.rangesByLowerBound.lowerEntry(cut)) != null && lowerEntry.getValue().upperBound.equals(cut)) {
                     return lowerEntry.getValue();
                 }
@@ -77,10 +58,9 @@ public final class TreeRangeSet$RangesByUpperBound<C extends Comparable<?>> exte
         return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // com.google.common.collect.Maps.IteratorBasedAbstractMap
+    /* access modifiers changed from: package-private */
     public Iterator<Map.Entry<Cut<C>, Range<C>>> entryIterator() {
-        final Iterator<Range<C>> it;
+        final Iterator it;
         if (!this.upperBoundWindow.hasLowerBound()) {
             it = this.rangesByLowerBound.values().iterator();
         } else {
@@ -93,11 +73,9 @@ public final class TreeRangeSet$RangesByUpperBound<C extends Comparable<?>> exte
                 it = this.rangesByLowerBound.tailMap(this.upperBoundWindow.lowerEndpoint(), true).values().iterator();
             }
         }
-        return new AbstractIterator<Map.Entry<Cut<C>, Range<C>>>() { // from class: com.google.common.collect.TreeRangeSet$RangesByUpperBound.1
-            /* JADX INFO: Access modifiers changed from: protected */
-            @Override // com.google.common.collect.AbstractIterator
-            /* renamed from: computeNext  reason: collision with other method in class */
-            public Map.Entry<Cut<C>, Range<C>> mo842computeNext() {
+        return new AbstractIterator<Map.Entry<Cut<C>, Range<C>>>() {
+            /* access modifiers changed from: protected */
+            public Map.Entry<Cut<C>, Range<C>> computeNext() {
                 if (!it.hasNext()) {
                     return (Map.Entry) endOfData();
                 }
@@ -110,23 +88,21 @@ public final class TreeRangeSet$RangesByUpperBound<C extends Comparable<?>> exte
         };
     }
 
-    @Override // com.google.common.collect.AbstractNavigableMap
-    Iterator<Map.Entry<Cut<C>, Range<C>>> descendingEntryIterator() {
-        Collection<Range<C>> values;
+    /* access modifiers changed from: package-private */
+    public Iterator<Map.Entry<Cut<C>, Range<C>>> descendingEntryIterator() {
+        Collection collection;
         if (this.upperBoundWindow.hasUpperBound()) {
-            values = this.rangesByLowerBound.headMap(this.upperBoundWindow.upperEndpoint(), false).descendingMap().values();
+            collection = this.rangesByLowerBound.headMap(this.upperBoundWindow.upperEndpoint(), false).descendingMap().values();
         } else {
-            values = this.rangesByLowerBound.descendingMap().values();
+            collection = this.rangesByLowerBound.descendingMap().values();
         }
-        final PeekingIterator peekingIterator = Iterators.peekingIterator(values.iterator());
+        final PeekingIterator peekingIterator = Iterators.peekingIterator(collection.iterator());
         if (peekingIterator.hasNext() && this.upperBoundWindow.upperBound.isLessThan(((Range) peekingIterator.peek()).upperBound)) {
             peekingIterator.next();
         }
-        return new AbstractIterator<Map.Entry<Cut<C>, Range<C>>>() { // from class: com.google.common.collect.TreeRangeSet$RangesByUpperBound.2
-            /* JADX INFO: Access modifiers changed from: protected */
-            @Override // com.google.common.collect.AbstractIterator
-            /* renamed from: computeNext  reason: collision with other method in class */
-            public Map.Entry<Cut<C>, Range<C>> mo842computeNext() {
+        return new AbstractIterator<Map.Entry<Cut<C>, Range<C>>>() {
+            /* access modifiers changed from: protected */
+            public Map.Entry<Cut<C>, Range<C>> computeNext() {
                 if (!peekingIterator.hasNext()) {
                     return (Map.Entry) endOfData();
                 }
@@ -139,7 +115,6 @@ public final class TreeRangeSet$RangesByUpperBound<C extends Comparable<?>> exte
         };
     }
 
-    @Override // java.util.AbstractMap, java.util.Map
     public int size() {
         if (this.upperBoundWindow.equals(Range.all())) {
             return this.rangesByLowerBound.size();
@@ -147,7 +122,6 @@ public final class TreeRangeSet$RangesByUpperBound<C extends Comparable<?>> exte
         return Iterators.size(entryIterator());
     }
 
-    @Override // java.util.AbstractMap, java.util.Map
     public boolean isEmpty() {
         if (this.upperBoundWindow.equals(Range.all())) {
             return this.rangesByLowerBound.isEmpty();

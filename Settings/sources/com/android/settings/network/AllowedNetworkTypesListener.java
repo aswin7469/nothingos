@@ -5,12 +5,11 @@ import android.telephony.TelephonyCallback;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import java.util.concurrent.Executor;
-/* loaded from: classes.dex */
+
 public class AllowedNetworkTypesListener extends TelephonyCallback implements TelephonyCallback.AllowedNetworkTypesListener {
     private Executor mExecutor;
     OnAllowedNetworkTypesListener mListener;
 
-    /* loaded from: classes.dex */
     public interface OnAllowedNetworkTypesListener {
         void onAllowedNetworkTypesChanged();
     }

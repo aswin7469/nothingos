@@ -13,7 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import org.xmlpull.v1.XmlPullParser;
-/* loaded from: classes.dex */
+
 public class ConstraintAttribute {
     boolean mBooleanValue;
     private int mColorValue;
@@ -23,7 +23,6 @@ public class ConstraintAttribute {
     private String mStringValue;
     private AttributeType mType;
 
-    /* loaded from: classes.dex */
     public enum AttributeType {
         INT_TYPE,
         FLOAT_TYPE,
@@ -43,58 +42,86 @@ public class ConstraintAttribute {
         return this.mType;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: androidx.constraintlayout.widget.ConstraintAttribute$1  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public static /* synthetic */ class AnonymousClass1 {
-        static final /* synthetic */ int[] $SwitchMap$androidx$constraintlayout$widget$ConstraintAttribute$AttributeType;
+    /* renamed from: androidx.constraintlayout.widget.ConstraintAttribute$1 */
+    static /* synthetic */ class C01141 {
 
+        /* renamed from: $SwitchMap$androidx$constraintlayout$widget$ConstraintAttribute$AttributeType */
+        static final /* synthetic */ int[] f27x66adad53;
+
+        /* JADX WARNING: Can't wrap try/catch for region: R(14:0|1|2|3|4|5|6|7|8|9|10|11|12|(3:13|14|16)) */
+        /* JADX WARNING: Can't wrap try/catch for region: R(16:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|16) */
+        /* JADX WARNING: Failed to process nested try/catch */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:11:0x003e */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:13:0x0049 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0012 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001d */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:7:0x0028 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:9:0x0033 */
         static {
-            int[] iArr = new int[AttributeType.values().length];
-            $SwitchMap$androidx$constraintlayout$widget$ConstraintAttribute$AttributeType = iArr;
-            try {
-                iArr[AttributeType.COLOR_TYPE.ordinal()] = 1;
-            } catch (NoSuchFieldError unused) {
-            }
-            try {
-                $SwitchMap$androidx$constraintlayout$widget$ConstraintAttribute$AttributeType[AttributeType.COLOR_DRAWABLE_TYPE.ordinal()] = 2;
-            } catch (NoSuchFieldError unused2) {
-            }
-            try {
-                $SwitchMap$androidx$constraintlayout$widget$ConstraintAttribute$AttributeType[AttributeType.INT_TYPE.ordinal()] = 3;
-            } catch (NoSuchFieldError unused3) {
-            }
-            try {
-                $SwitchMap$androidx$constraintlayout$widget$ConstraintAttribute$AttributeType[AttributeType.FLOAT_TYPE.ordinal()] = 4;
-            } catch (NoSuchFieldError unused4) {
-            }
-            try {
-                $SwitchMap$androidx$constraintlayout$widget$ConstraintAttribute$AttributeType[AttributeType.STRING_TYPE.ordinal()] = 5;
-            } catch (NoSuchFieldError unused5) {
-            }
-            try {
-                $SwitchMap$androidx$constraintlayout$widget$ConstraintAttribute$AttributeType[AttributeType.BOOLEAN_TYPE.ordinal()] = 6;
-            } catch (NoSuchFieldError unused6) {
-            }
-            try {
-                $SwitchMap$androidx$constraintlayout$widget$ConstraintAttribute$AttributeType[AttributeType.DIMENSION_TYPE.ordinal()] = 7;
-            } catch (NoSuchFieldError unused7) {
-            }
+            /*
+                androidx.constraintlayout.widget.ConstraintAttribute$AttributeType[] r0 = androidx.constraintlayout.widget.ConstraintAttribute.AttributeType.values()
+                int r0 = r0.length
+                int[] r0 = new int[r0]
+                f27x66adad53 = r0
+                androidx.constraintlayout.widget.ConstraintAttribute$AttributeType r1 = androidx.constraintlayout.widget.ConstraintAttribute.AttributeType.COLOR_TYPE     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
+                r2 = 1
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                int[] r0 = f27x66adad53     // Catch:{ NoSuchFieldError -> 0x001d }
+                androidx.constraintlayout.widget.ConstraintAttribute$AttributeType r1 = androidx.constraintlayout.widget.ConstraintAttribute.AttributeType.COLOR_DRAWABLE_TYPE     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
+                r2 = 2
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                int[] r0 = f27x66adad53     // Catch:{ NoSuchFieldError -> 0x0028 }
+                androidx.constraintlayout.widget.ConstraintAttribute$AttributeType r1 = androidx.constraintlayout.widget.ConstraintAttribute.AttributeType.INT_TYPE     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
+                r2 = 3
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
+            L_0x0028:
+                int[] r0 = f27x66adad53     // Catch:{ NoSuchFieldError -> 0x0033 }
+                androidx.constraintlayout.widget.ConstraintAttribute$AttributeType r1 = androidx.constraintlayout.widget.ConstraintAttribute.AttributeType.FLOAT_TYPE     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
+                r2 = 4
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0033 }
+            L_0x0033:
+                int[] r0 = f27x66adad53     // Catch:{ NoSuchFieldError -> 0x003e }
+                androidx.constraintlayout.widget.ConstraintAttribute$AttributeType r1 = androidx.constraintlayout.widget.ConstraintAttribute.AttributeType.STRING_TYPE     // Catch:{ NoSuchFieldError -> 0x003e }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x003e }
+                r2 = 5
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x003e }
+            L_0x003e:
+                int[] r0 = f27x66adad53     // Catch:{ NoSuchFieldError -> 0x0049 }
+                androidx.constraintlayout.widget.ConstraintAttribute$AttributeType r1 = androidx.constraintlayout.widget.ConstraintAttribute.AttributeType.BOOLEAN_TYPE     // Catch:{ NoSuchFieldError -> 0x0049 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0049 }
+                r2 = 6
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0049 }
+            L_0x0049:
+                int[] r0 = f27x66adad53     // Catch:{ NoSuchFieldError -> 0x0054 }
+                androidx.constraintlayout.widget.ConstraintAttribute$AttributeType r1 = androidx.constraintlayout.widget.ConstraintAttribute.AttributeType.DIMENSION_TYPE     // Catch:{ NoSuchFieldError -> 0x0054 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0054 }
+                r2 = 7
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0054 }
+            L_0x0054:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: androidx.constraintlayout.widget.ConstraintAttribute.C01141.<clinit>():void");
         }
     }
 
     public int noOfInterpValues() {
-        int i = AnonymousClass1.$SwitchMap$androidx$constraintlayout$widget$ConstraintAttribute$AttributeType[this.mType.ordinal()];
+        int i = C01141.f27x66adad53[this.mType.ordinal()];
         return (i == 1 || i == 2) ? 4 : 1;
     }
 
     public float getValueToInterpolate() {
-        switch (AnonymousClass1.$SwitchMap$androidx$constraintlayout$widget$ConstraintAttribute$AttributeType[this.mType.ordinal()]) {
+        switch (C01141.f27x66adad53[this.mType.ordinal()]) {
             case 1:
             case 2:
                 throw new RuntimeException("Color does not have a single color to interpolate");
             case 3:
-                return this.mIntegerValue;
+                return (float) this.mIntegerValue;
             case 4:
                 return this.mFloatValue;
             case 5:
@@ -109,19 +136,19 @@ public class ConstraintAttribute {
     }
 
     public void getValuesToInterpolate(float[] fArr) {
-        switch (AnonymousClass1.$SwitchMap$androidx$constraintlayout$widget$ConstraintAttribute$AttributeType[this.mType.ordinal()]) {
+        switch (C01141.f27x66adad53[this.mType.ordinal()]) {
             case 1:
             case 2:
                 int i = this.mColorValue;
-                float pow = (float) Math.pow(((i >> 16) & 255) / 255.0f, 2.2d);
-                float pow2 = (float) Math.pow(((i >> 8) & 255) / 255.0f, 2.2d);
+                float pow = (float) Math.pow((double) (((float) ((i >> 16) & 255)) / 255.0f), 2.2d);
+                float pow2 = (float) Math.pow((double) (((float) ((i >> 8) & 255)) / 255.0f), 2.2d);
                 fArr[0] = pow;
                 fArr[1] = pow2;
-                fArr[2] = (float) Math.pow((i & 255) / 255.0f, 2.2d);
-                fArr[3] = ((i >> 24) & 255) / 255.0f;
+                fArr[2] = (float) Math.pow((double) (((float) (i & 255)) / 255.0f), 2.2d);
+                fArr[3] = ((float) ((i >> 24) & 255)) / 255.0f;
                 return;
             case 3:
-                fArr[0] = this.mIntegerValue;
+                fArr[0] = (float) this.mIntegerValue;
                 return;
             case 4:
                 fArr[0] = this.mFloatValue;
@@ -152,7 +179,7 @@ public class ConstraintAttribute {
     }
 
     public void setValue(Object obj) {
-        switch (AnonymousClass1.$SwitchMap$androidx$constraintlayout$widget$ConstraintAttribute$AttributeType[this.mType.ordinal()]) {
+        switch (C01141.f27x66adad53[this.mType.ordinal()]) {
             case 1:
             case 2:
                 this.mColorValue = ((Integer) obj).intValue();
@@ -180,17 +207,17 @@ public class ConstraintAttribute {
     public static HashMap<String, ConstraintAttribute> extractAttributes(HashMap<String, ConstraintAttribute> hashMap, View view) {
         HashMap<String, ConstraintAttribute> hashMap2 = new HashMap<>();
         Class<?> cls = view.getClass();
-        for (String str : hashMap.keySet()) {
-            ConstraintAttribute constraintAttribute = hashMap.get(str);
+        for (String next : hashMap.keySet()) {
+            ConstraintAttribute constraintAttribute = hashMap.get(next);
             try {
-                if (str.equals("BackgroundColor")) {
-                    hashMap2.put(str, new ConstraintAttribute(constraintAttribute, Integer.valueOf(((ColorDrawable) view.getBackground()).getColor())));
+                if (next.equals("BackgroundColor")) {
+                    hashMap2.put(next, new ConstraintAttribute(constraintAttribute, Integer.valueOf(((ColorDrawable) view.getBackground()).getColor())));
                 } else {
-                    hashMap2.put(str, new ConstraintAttribute(constraintAttribute, cls.getMethod("getMap" + str, new Class[0]).invoke(view, new Object[0])));
+                    hashMap2.put(next, new ConstraintAttribute(constraintAttribute, cls.getMethod("getMap" + next, new Class[0]).invoke(view, new Object[0])));
                 }
-            } catch (IllegalAccessException e) {
+            } catch (NoSuchMethodException e) {
                 e.printStackTrace();
-            } catch (NoSuchMethodException e2) {
+            } catch (IllegalAccessException e2) {
                 e2.printStackTrace();
             } catch (InvocationTargetException e3) {
                 e3.printStackTrace();
@@ -201,99 +228,100 @@ public class ConstraintAttribute {
 
     public static void setAttributes(View view, HashMap<String, ConstraintAttribute> hashMap) {
         Class<?> cls = view.getClass();
-        for (String str : hashMap.keySet()) {
-            ConstraintAttribute constraintAttribute = hashMap.get(str);
-            String str2 = "set" + str;
+        for (String next : hashMap.keySet()) {
+            ConstraintAttribute constraintAttribute = hashMap.get(next);
+            String str = "set" + next;
             try {
-                switch (AnonymousClass1.$SwitchMap$androidx$constraintlayout$widget$ConstraintAttribute$AttributeType[constraintAttribute.mType.ordinal()]) {
+                switch (C01141.f27x66adad53[constraintAttribute.mType.ordinal()]) {
                     case 1:
-                        cls.getMethod(str2, Integer.TYPE).invoke(view, Integer.valueOf(constraintAttribute.mColorValue));
+                        cls.getMethod(str, new Class[]{Integer.TYPE}).invoke(view, new Object[]{Integer.valueOf(constraintAttribute.mColorValue)});
                         break;
                     case 2:
-                        Method method = cls.getMethod(str2, Drawable.class);
+                        Method method = cls.getMethod(str, new Class[]{Drawable.class});
                         ColorDrawable colorDrawable = new ColorDrawable();
                         colorDrawable.setColor(constraintAttribute.mColorValue);
-                        method.invoke(view, colorDrawable);
+                        method.invoke(view, new Object[]{colorDrawable});
                         break;
                     case 3:
-                        cls.getMethod(str2, Integer.TYPE).invoke(view, Integer.valueOf(constraintAttribute.mIntegerValue));
+                        cls.getMethod(str, new Class[]{Integer.TYPE}).invoke(view, new Object[]{Integer.valueOf(constraintAttribute.mIntegerValue)});
                         break;
                     case 4:
-                        cls.getMethod(str2, Float.TYPE).invoke(view, Float.valueOf(constraintAttribute.mFloatValue));
+                        cls.getMethod(str, new Class[]{Float.TYPE}).invoke(view, new Object[]{Float.valueOf(constraintAttribute.mFloatValue)});
                         break;
                     case 5:
-                        cls.getMethod(str2, CharSequence.class).invoke(view, constraintAttribute.mStringValue);
+                        cls.getMethod(str, new Class[]{CharSequence.class}).invoke(view, new Object[]{constraintAttribute.mStringValue});
                         break;
                     case 6:
-                        cls.getMethod(str2, Boolean.TYPE).invoke(view, Boolean.valueOf(constraintAttribute.mBooleanValue));
+                        cls.getMethod(str, new Class[]{Boolean.TYPE}).invoke(view, new Object[]{Boolean.valueOf(constraintAttribute.mBooleanValue)});
                         break;
                     case 7:
-                        cls.getMethod(str2, Float.TYPE).invoke(view, Float.valueOf(constraintAttribute.mFloatValue));
+                        cls.getMethod(str, new Class[]{Float.TYPE}).invoke(view, new Object[]{Float.valueOf(constraintAttribute.mFloatValue)});
                         break;
                 }
-            } catch (IllegalAccessException e) {
-                Log.e("TransitionLayout", " Custom Attribute \"" + str + "\" not found on " + cls.getName());
-                e.printStackTrace();
-            } catch (NoSuchMethodException e2) {
-                Log.e("TransitionLayout", e2.getMessage());
-                Log.e("TransitionLayout", " Custom Attribute \"" + str + "\" not found on " + cls.getName());
+            } catch (NoSuchMethodException e) {
+                Log.e("TransitionLayout", e.getMessage());
+                Log.e("TransitionLayout", " Custom Attribute \"" + next + "\" not found on " + cls.getName());
                 StringBuilder sb = new StringBuilder();
                 sb.append(cls.getName());
                 sb.append(" must have a method ");
-                sb.append(str2);
+                sb.append(str);
                 Log.e("TransitionLayout", sb.toString());
+            } catch (IllegalAccessException e2) {
+                Log.e("TransitionLayout", " Custom Attribute \"" + next + "\" not found on " + cls.getName());
+                e2.printStackTrace();
             } catch (InvocationTargetException e3) {
-                Log.e("TransitionLayout", " Custom Attribute \"" + str + "\" not found on " + cls.getName());
+                Log.e("TransitionLayout", " Custom Attribute \"" + next + "\" not found on " + cls.getName());
                 e3.printStackTrace();
             }
         }
     }
 
     public void setInterpolatedValue(View view, float[] fArr) {
+        View view2 = view;
         Class<?> cls = view.getClass();
         String str = "set" + this.mName;
         try {
             boolean z = true;
-            switch (AnonymousClass1.$SwitchMap$androidx$constraintlayout$widget$ConstraintAttribute$AttributeType[this.mType.ordinal()]) {
+            switch (C01141.f27x66adad53[this.mType.ordinal()]) {
                 case 1:
-                    cls.getMethod(str, Integer.TYPE).invoke(view, Integer.valueOf((clamp((int) (((float) Math.pow(fArr[0], 0.45454545454545453d)) * 255.0f)) << 16) | (clamp((int) (fArr[3] * 255.0f)) << 24) | (clamp((int) (((float) Math.pow(fArr[1], 0.45454545454545453d)) * 255.0f)) << 8) | clamp((int) (((float) Math.pow(fArr[2], 0.45454545454545453d)) * 255.0f))));
+                    cls.getMethod(str, new Class[]{Integer.TYPE}).invoke(view2, new Object[]{Integer.valueOf((clamp((int) (((float) Math.pow((double) fArr[0], 0.45454545454545453d)) * 255.0f)) << 16) | (clamp((int) (fArr[3] * 255.0f)) << 24) | (clamp((int) (((float) Math.pow((double) fArr[1], 0.45454545454545453d)) * 255.0f)) << 8) | clamp((int) (((float) Math.pow((double) fArr[2], 0.45454545454545453d)) * 255.0f)))});
                     return;
                 case 2:
-                    Method method = cls.getMethod(str, Drawable.class);
-                    int clamp = clamp((int) (((float) Math.pow(fArr[0], 0.45454545454545453d)) * 255.0f));
-                    int clamp2 = clamp((int) (((float) Math.pow(fArr[1], 0.45454545454545453d)) * 255.0f));
+                    Method method = cls.getMethod(str, new Class[]{Drawable.class});
+                    int clamp = clamp((int) (((float) Math.pow((double) fArr[0], 0.45454545454545453d)) * 255.0f));
+                    int clamp2 = clamp((int) (((float) Math.pow((double) fArr[1], 0.45454545454545453d)) * 255.0f));
                     ColorDrawable colorDrawable = new ColorDrawable();
-                    colorDrawable.setColor((clamp << 16) | (clamp((int) (fArr[3] * 255.0f)) << 24) | (clamp2 << 8) | clamp((int) (((float) Math.pow(fArr[2], 0.45454545454545453d)) * 255.0f)));
-                    method.invoke(view, colorDrawable);
+                    colorDrawable.setColor((clamp << 16) | (clamp((int) (fArr[3] * 255.0f)) << 24) | (clamp2 << 8) | clamp((int) (((float) Math.pow((double) fArr[2], 0.45454545454545453d)) * 255.0f)));
+                    method.invoke(view2, new Object[]{colorDrawable});
                     return;
                 case 3:
-                    cls.getMethod(str, Integer.TYPE).invoke(view, Integer.valueOf((int) fArr[0]));
+                    cls.getMethod(str, new Class[]{Integer.TYPE}).invoke(view2, new Object[]{Integer.valueOf((int) fArr[0])});
                     return;
                 case 4:
-                    cls.getMethod(str, Float.TYPE).invoke(view, Float.valueOf(fArr[0]));
+                    cls.getMethod(str, new Class[]{Float.TYPE}).invoke(view2, new Object[]{Float.valueOf(fArr[0])});
                     return;
                 case 5:
                     throw new RuntimeException("unable to interpolate strings " + this.mName);
                 case 6:
-                    Method method2 = cls.getMethod(str, Boolean.TYPE);
+                    Method method2 = cls.getMethod(str, new Class[]{Boolean.TYPE});
                     Object[] objArr = new Object[1];
                     if (fArr[0] <= 0.5f) {
                         z = false;
                     }
                     objArr[0] = Boolean.valueOf(z);
-                    method2.invoke(view, objArr);
+                    method2.invoke(view2, objArr);
                     return;
                 case 7:
-                    cls.getMethod(str, Float.TYPE).invoke(view, Float.valueOf(fArr[0]));
+                    cls.getMethod(str, new Class[]{Float.TYPE}).invoke(view2, new Object[]{Float.valueOf(fArr[0])});
                     return;
                 default:
                     return;
             }
-        } catch (IllegalAccessException e) {
-            Log.e("TransitionLayout", "cannot access method " + str + "on View \"" + Debug.getName(view) + "\"");
-            e.printStackTrace();
-        } catch (NoSuchMethodException e2) {
+        } catch (NoSuchMethodException e) {
             Log.e("TransitionLayout", "no method " + str + "on View \"" + Debug.getName(view) + "\"");
+            e.printStackTrace();
+        } catch (IllegalAccessException e2) {
+            Log.e("TransitionLayout", "cannot access method " + str + "on View \"" + Debug.getName(view) + "\"");
             e2.printStackTrace();
         } catch (InvocationTargetException e3) {
             e3.printStackTrace();
@@ -346,7 +374,7 @@ public class ConstraintAttribute {
                 obj = obj2;
             }
         }
-        if (str != null && obj != null) {
+        if (!(str == null || obj == null)) {
             hashMap.put(str, new ConstraintAttribute(str, attributeType2, obj));
         }
         obtainStyledAttributes.recycle();

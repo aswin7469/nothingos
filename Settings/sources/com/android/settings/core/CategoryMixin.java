@@ -12,43 +12,30 @@ import android.util.Log;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
-import com.android.settings.core.CategoryMixin;
 import com.android.settings.dashboard.CategoryManager;
 import com.android.settingslib.drawer.Tile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-/* loaded from: classes.dex */
-public class CategoryMixin implements LifecycleObserver {
-    private static final ArraySet<ComponentName> sTileDenylist = new ArraySet<>();
-    private int mCategoriesUpdateTaskCount;
-    private final Context mContext;
-    private final PackageReceiver mPackageReceiver = new PackageReceiver();
-    private final List<CategoryListener> mCategoryListeners = new ArrayList();
 
-    /* loaded from: classes.dex */
+public class CategoryMixin implements LifecycleObserver {
+    /* access modifiers changed from: private */
+    public static final ArraySet<ComponentName> sTileDenylist = new ArraySet<>();
+    /* access modifiers changed from: private */
+    public int mCategoriesUpdateTaskCount;
+    private final List<CategoryListener> mCategoryListeners = new ArrayList();
+    /* access modifiers changed from: private */
+    public final Context mContext;
+    private boolean mFirstOnResume = true;
+    private final PackageReceiver mPackageReceiver = new PackageReceiver();
+
     public interface CategoryHandler {
         CategoryMixin getCategoryMixin();
     }
 
-    /* loaded from: classes.dex */
     public interface CategoryListener {
         void onCategoriesChanged(Set<String> set);
-    }
-
-    static /* synthetic */ int access$108(CategoryMixin categoryMixin) {
-        int i = categoryMixin.mCategoriesUpdateTaskCount;
-        categoryMixin.mCategoriesUpdateTaskCount = i + 1;
-        return i;
-    }
-
-    static /* synthetic */ int access$110(CategoryMixin categoryMixin) {
-        int i = categoryMixin.mCategoriesUpdateTaskCount;
-        categoryMixin.mCategoriesUpdateTaskCount = i - 1;
-        return i;
     }
 
     public CategoryMixin(Context context) {
@@ -63,6 +50,11 @@ public class CategoryMixin implements LifecycleObserver {
         intentFilter.addAction("android.intent.action.PACKAGE_REPLACED");
         intentFilter.addDataScheme("package");
         this.mContext.registerReceiver(this.mPackageReceiver, intentFilter);
+        if (this.mFirstOnResume) {
+            Log.d("CategoryMixin", "Skip categories update");
+            this.mFirstOnResume = false;
+            return;
+        }
         updateCategories();
     }
 
@@ -83,45 +75,38 @@ public class CategoryMixin implements LifecycleObserver {
         updateCategories(false);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void addToDenylist(ComponentName componentName) {
         sTileDenylist.add(componentName);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void removeFromDenylist(ComponentName componentName) {
         sTileDenylist.remove(componentName);
     }
 
-    void onCategoriesChanged(final Set<String> set) {
-        this.mCategoryListeners.forEach(new Consumer() { // from class: com.android.settings.core.CategoryMixin$$ExternalSyntheticLambda0
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                ((CategoryMixin.CategoryListener) obj).onCategoriesChanged(set);
-            }
-        });
+    /* access modifiers changed from: package-private */
+    public void onCategoriesChanged(Set<String> set) {
+        this.mCategoryListeners.forEach(new CategoryMixin$$ExternalSyntheticLambda0(set));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateCategories(boolean z) {
         if (this.mCategoriesUpdateTaskCount < 2) {
-            new CategoriesUpdateTask().execute(Boolean.valueOf(z));
+            new CategoriesUpdateTask().execute(new Boolean[]{Boolean.valueOf(z)});
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class CategoriesUpdateTask extends AsyncTask<Boolean, Void, Set<String>> {
+    private class CategoriesUpdateTask extends AsyncTask<Boolean, Void, Set<String>> {
         private final CategoryManager mCategoryManager;
         private Map<ComponentName, Tile> mPreviousTileMap;
 
         CategoriesUpdateTask() {
-            CategoryMixin.access$108(CategoryMixin.this);
+            CategoryMixin.this.mCategoriesUpdateTaskCount = CategoryMixin.this.mCategoriesUpdateTaskCount + 1;
             this.mCategoryManager = CategoryManager.get(CategoryMixin.this.mContext);
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // android.os.AsyncTask
+        /* access modifiers changed from: protected */
         public Set<String> doInBackground(Boolean... boolArr) {
             this.mPreviousTileMap = this.mCategoryManager.getTileByComponentMap();
             this.mCategoryManager.reloadAllCategories(CategoryMixin.this.mContext);
@@ -129,64 +114,51 @@ public class CategoryMixin implements LifecycleObserver {
             return getChangedCategories(boolArr[0].booleanValue());
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // android.os.AsyncTask
+        /* access modifiers changed from: protected */
         public void onPostExecute(Set<String> set) {
             if (set == null || !set.isEmpty()) {
                 CategoryMixin.this.onCategoriesChanged(set);
             }
-            CategoryMixin.access$110(CategoryMixin.this);
+            CategoryMixin categoryMixin = CategoryMixin.this;
+            categoryMixin.mCategoriesUpdateTaskCount = categoryMixin.mCategoriesUpdateTaskCount - 1;
         }
 
         private Set<String> getChangedCategories(boolean z) {
             if (!z) {
                 return null;
             }
-            final ArraySet arraySet = new ArraySet();
+            ArraySet arraySet = new ArraySet();
             Map<ComponentName, Tile> tileByComponentMap = this.mCategoryManager.getTileByComponentMap();
-            tileByComponentMap.forEach(new BiConsumer() { // from class: com.android.settings.core.CategoryMixin$CategoriesUpdateTask$$ExternalSyntheticLambda0
-                @Override // java.util.function.BiConsumer
-                public final void accept(Object obj, Object obj2) {
-                    CategoryMixin.CategoriesUpdateTask.this.lambda$getChangedCategories$0(arraySet, (ComponentName) obj, (Tile) obj2);
-                }
-            });
+            tileByComponentMap.forEach(new CategoryMixin$CategoriesUpdateTask$$ExternalSyntheticLambda0(this, arraySet));
             ArraySet arraySet2 = new ArraySet(this.mPreviousTileMap.keySet());
             arraySet2.removeAll(tileByComponentMap.keySet());
-            arraySet2.forEach(new Consumer() { // from class: com.android.settings.core.CategoryMixin$CategoriesUpdateTask$$ExternalSyntheticLambda1
-                @Override // java.util.function.Consumer
-                public final void accept(Object obj) {
-                    CategoryMixin.CategoriesUpdateTask.this.lambda$getChangedCategories$1(arraySet, (ComponentName) obj);
-                }
-            });
+            arraySet2.forEach(new CategoryMixin$CategoriesUpdateTask$$ExternalSyntheticLambda1(this, arraySet));
             return arraySet;
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public /* synthetic */ void lambda$getChangedCategories$0(Set set, ComponentName componentName, Tile tile) {
             Tile tile2 = this.mPreviousTileMap.get(componentName);
             if (tile2 == null) {
                 Log.i("CategoryMixin", "Tile added: " + componentName.flattenToShortString());
                 set.add(tile.getCategory());
-            } else if (TextUtils.equals(tile.getTitle(CategoryMixin.this.mContext), tile2.getTitle(CategoryMixin.this.mContext)) && TextUtils.equals(tile.getSummary(CategoryMixin.this.mContext), tile2.getSummary(CategoryMixin.this.mContext))) {
-            } else {
+            } else if (!TextUtils.equals(tile.getTitle(CategoryMixin.this.mContext), tile2.getTitle(CategoryMixin.this.mContext)) || !TextUtils.equals(tile.getSummary(CategoryMixin.this.mContext), tile2.getSummary(CategoryMixin.this.mContext))) {
                 Log.i("CategoryMixin", "Tile changed: " + componentName.flattenToShortString());
                 set.add(tile.getCategory());
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public /* synthetic */ void lambda$getChangedCategories$1(Set set, ComponentName componentName) {
             Log.i("CategoryMixin", "Tile removed: " + componentName.flattenToShortString());
             set.add(this.mPreviousTileMap.get(componentName).getCategory());
         }
     }
 
-    /* loaded from: classes.dex */
     private class PackageReceiver extends BroadcastReceiver {
         private PackageReceiver() {
         }
 
-        @Override // android.content.BroadcastReceiver
         public void onReceive(Context context, Intent intent) {
             CategoryMixin.this.updateCategories(true);
         }

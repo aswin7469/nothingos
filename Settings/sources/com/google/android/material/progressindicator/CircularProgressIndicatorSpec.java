@@ -8,14 +8,13 @@ import com.google.android.material.R$dimen;
 import com.google.android.material.R$styleable;
 import com.google.android.material.internal.ThemeEnforcement;
 import com.google.android.material.resources.MaterialResources;
-/* loaded from: classes2.dex */
+
 public final class CircularProgressIndicatorSpec extends BaseProgressIndicatorSpec {
     public int indicatorDirection;
     public int indicatorInset;
     public int indicatorSize;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // com.google.android.material.progressindicator.BaseProgressIndicatorSpec
+    /* access modifiers changed from: package-private */
     public void validateSpec() {
     }
 

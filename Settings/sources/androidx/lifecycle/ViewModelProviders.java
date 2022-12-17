@@ -2,16 +2,18 @@ package androidx.lifecycle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+
 @Deprecated
-/* loaded from: classes.dex */
 public class ViewModelProviders {
     @Deprecated
-    public static ViewModelProvider of(Fragment fragment) {
+    /* renamed from: of */
+    public static ViewModelProvider m6of(Fragment fragment) {
         return new ViewModelProvider(fragment);
     }
 
     @Deprecated
-    public static ViewModelProvider of(FragmentActivity fragmentActivity) {
+    /* renamed from: of */
+    public static ViewModelProvider m7of(FragmentActivity fragmentActivity) {
         return new ViewModelProvider(fragmentActivity);
     }
 }

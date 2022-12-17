@@ -7,8 +7,9 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+
 public class BackGestureIndicatorView extends LinearLayout {
     private ViewGroup mLayout;
     private BackGestureIndicatorDrawable mLeftDrawable;
@@ -18,24 +19,23 @@ public class BackGestureIndicatorView extends LinearLayout {
 
     public BackGestureIndicatorView(Context context) {
         super(context);
-        ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.back_gesture_indicator_container, (ViewGroup) this, false);
+        ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(context).inflate(R$layout.back_gesture_indicator_container, this, false);
         this.mLayout = viewGroup;
-        if (viewGroup == null) {
-            return;
+        if (viewGroup != null) {
+            addView(viewGroup);
+            this.mLeftDrawable = new BackGestureIndicatorDrawable(context, false);
+            this.mRightDrawable = new BackGestureIndicatorDrawable(context, true);
+            this.mLeftIndicator = (ImageView) this.mLayout.findViewById(R$id.indicator_left);
+            this.mRightIndicator = (ImageView) this.mLayout.findViewById(R$id.indicator_right);
+            this.mLeftIndicator.setImageDrawable(this.mLeftDrawable);
+            this.mRightIndicator.setImageDrawable(this.mRightDrawable);
+            int systemUiVisibility = getSystemUiVisibility() | 2048 | 256 | 512 | 1024 | 2 | 4;
+            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(new int[]{16844140, 16844000});
+            systemUiVisibility = obtainStyledAttributes.getBoolean(0, false) ? systemUiVisibility | 16 : systemUiVisibility;
+            systemUiVisibility = obtainStyledAttributes.getBoolean(1, false) ? systemUiVisibility | 8192 : systemUiVisibility;
+            obtainStyledAttributes.recycle();
+            setSystemUiVisibility(systemUiVisibility);
         }
-        addView(viewGroup);
-        this.mLeftDrawable = new BackGestureIndicatorDrawable(context, false);
-        this.mRightDrawable = new BackGestureIndicatorDrawable(context, true);
-        this.mLeftIndicator = (ImageView) this.mLayout.findViewById(R.id.indicator_left);
-        this.mRightIndicator = (ImageView) this.mLayout.findViewById(R.id.indicator_right);
-        this.mLeftIndicator.setImageDrawable(this.mLeftDrawable);
-        this.mRightIndicator.setImageDrawable(this.mRightDrawable);
-        int systemUiVisibility = getSystemUiVisibility() | 2048 | 256 | 512 | 1024 | 2 | 4;
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(new int[]{16844140, 16844000});
-        systemUiVisibility = obtainStyledAttributes.getBoolean(0, false) ? systemUiVisibility | 16 : systemUiVisibility;
-        systemUiVisibility = obtainStyledAttributes.getBoolean(1, false) ? systemUiVisibility | 8192 : systemUiVisibility;
-        obtainStyledAttributes.recycle();
-        setSystemUiVisibility(systemUiVisibility);
     }
 
     public void setIndicatorWidth(int i, boolean z) {

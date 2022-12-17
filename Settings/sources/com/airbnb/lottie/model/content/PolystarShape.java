@@ -7,7 +7,7 @@ import com.airbnb.lottie.animation.content.PolystarContent;
 import com.airbnb.lottie.model.animatable.AnimatableFloatValue;
 import com.airbnb.lottie.model.animatable.AnimatableValue;
 import com.airbnb.lottie.model.layer.BaseLayer;
-/* loaded from: classes.dex */
+
 public class PolystarShape implements ContentModel {
     private final boolean hidden;
     private final AnimatableFloatValue innerRadius;
@@ -20,19 +20,17 @@ public class PolystarShape implements ContentModel {
     private final AnimatableFloatValue rotation;
     private final Type type;
 
-    /* loaded from: classes.dex */
     public enum Type {
         STAR(1),
         POLYGON(2);
         
         private final int value;
 
-        Type(int i) {
+        private Type(int i) {
             this.value = i;
         }
 
         public static Type forValue(int i) {
-            Type[] values;
             for (Type type : values()) {
                 if (type.value == i) {
                     return type;
@@ -42,9 +40,9 @@ public class PolystarShape implements ContentModel {
         }
     }
 
-    public PolystarShape(String str, Type type, AnimatableFloatValue animatableFloatValue, AnimatableValue<PointF, PointF> animatableValue, AnimatableFloatValue animatableFloatValue2, AnimatableFloatValue animatableFloatValue3, AnimatableFloatValue animatableFloatValue4, AnimatableFloatValue animatableFloatValue5, AnimatableFloatValue animatableFloatValue6, boolean z) {
+    public PolystarShape(String str, Type type2, AnimatableFloatValue animatableFloatValue, AnimatableValue<PointF, PointF> animatableValue, AnimatableFloatValue animatableFloatValue2, AnimatableFloatValue animatableFloatValue3, AnimatableFloatValue animatableFloatValue4, AnimatableFloatValue animatableFloatValue5, AnimatableFloatValue animatableFloatValue6, boolean z) {
         this.name = str;
-        this.type = type;
+        this.type = type2;
         this.points = animatableFloatValue;
         this.position = animatableValue;
         this.rotation = animatableFloatValue2;
@@ -95,7 +93,6 @@ public class PolystarShape implements ContentModel {
         return this.hidden;
     }
 
-    @Override // com.airbnb.lottie.model.content.ContentModel
     public Content toContent(LottieDrawable lottieDrawable, BaseLayer baseLayer) {
         return new PolystarContent(lottieDrawable, baseLayer, this);
     }

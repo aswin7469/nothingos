@@ -2,7 +2,7 @@
 <resources>
     <array name="accessibility_button_gesture_selector_titles">
         <item>Կոճակ</item>
-        <item>Ժեստեր</item>
+        <item>Ժեստ</item>
     </array>
     <array name="accessibility_button_location_selector_titles">
         <item>Ցուցադրվում է այլ հավելվածների վրայից</item>
@@ -196,6 +196,8 @@
         <item>60 օրից հին</item>
         <item>90 օրից հին</item>
     </array>
+    <array name="avatar_image_descriptions">
+    </array>
     <array name="battery_labels">
         <item>0%</item>
         <item>50%</item>
@@ -260,6 +262,8 @@
         <item>48,0 կՀց</item>
         <item>88,2 կՀց</item>
         <item>96,0 կՀց</item>
+        <item>176,4 կՀց</item>
+        <item>192,0 կՀց</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
         <item>Օգտագործել համակարգի կարգավորումը (կանխադրված)</item>
@@ -267,6 +271,8 @@
         <item>48,0 կՀց</item>
         <item>88,2 կՀց</item>
         <item>96,0 կՀց</item>
+        <item>176,4 կՀց</item>
+        <item>192,0 կՀց</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
         <item>Օգտագործել համակարգի կարգավորումը (կանխադրված)</item>
@@ -277,6 +283,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive աուդիո</item>
         <item>Qualcomm® aptX™ TWS+ աուդիո</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
         <item>Օգտագործել համակարգի կարգավորումը (կանխադրված)</item>
@@ -287,6 +297,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive աուդիո</item>
         <item>Qualcomm® aptX™ TWS+ աուդիո</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -343,17 +357,10 @@
         <item>Ուռուցիկ</item>
         <item>Ճնշված</item>
     </array>
-    <array name="captioning_font_size_selector_summaries">
-        <item>Տեքստի շատ փոքր չափ</item>
-        <item>Տեքստի փոքր չափ</item>
-        <item>Տեքստի կանխադրված չափսը</item>
-        <item>Տեքստի մեծ չափ</item>
-        <item>Տեքստի շատ մեծ չափ</item>
-    </array>
     <array name="captioning_font_size_selector_titles">
         <item>Շատ փոքր</item>
         <item>Փոքր</item>
-        <item>Կանխադրված</item>
+        <item>Միջին</item>
         <item>Մեծ</item>
         <item>Շատ մեծ</item>
     </array>
@@ -365,9 +372,9 @@
     </array>
     <array name="captioning_preset_selector_titles">
         <item>Կարգավորված է հավելվածով</item>
-        <item>Սպիտակը սևի վրա</item>
-        <item>Սևը սպիտակի վրա</item>
-        <item>Դեղինը սևի վրա</item>
+        <item>Սպիտակ՝ սևի վրա</item>
+        <item>Սև՝ սպիտակի վրա</item>
+        <item>Դեղին՝ սևի վրա</item>
         <item>Դեղինը կապույտի վրա</item>
         <item>Հատուկ</item>
     </array>
@@ -485,6 +492,14 @@
         <item>IMSI</item>
         <item>GID</item>
         <item>ICCID</item>
+    </array>
+    <array name="nfc_payment_favor">
+        <item>Միշտ</item>
+        <item>Եթե ուրիշ վճարային հավելված բացված չէ</item>
+    </array>
+    <array name="nfc_payment_favor_values">
+        <item>@null</item>
+        <item>1</item>
     </array>
     <array name="overlay_display_devices_entries">
         <item>Ոչ մեկը</item>
@@ -618,17 +633,20 @@
         <item>Ներկել ոչ ուղղանկյունային կտրվածքի տարածքը կապույտով</item>
         <item>Փորձարկված թեստի գունանշումը կանաչով</item>
     </array>
-    <array name="sim_color_light">
-        <item>@color/SIM_color_cyan</item>
-        <item>@color/SIM_color_blue800</item>
-        <item>@color/SIM_color_green800</item>
-        <item>@color/SIM_color_purple800</item>
-        <item>@color/SIM_color_pink800</item>
-        <item>@color/SIM_color_orange</item>
-    </array>
     <array name="swipe_direction_values">
         <item>1</item>
         <item>@null</item>
+    </array>
+    <array name="switch_to_user_zero_when_docked_timeout_entries">
+        <item>Երբեք</item>
+        <item>1 րոպեից</item>
+        <item>5 րոպեից</item>
+    </array>
+    <array name="tare_modifiers_subfactors">
+        <item>Լիցքավորում</item>
+        <item>Նինջ</item>
+        <item>Էներգախնայման ռեժիմ</item>
+        <item>Գործընթացի կարգավիճակը</item>
     </array>
     <array name="timezone_filters">
         <item>Ամերիկա</item>

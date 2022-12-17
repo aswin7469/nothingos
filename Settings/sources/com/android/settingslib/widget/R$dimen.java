@@ -1,12 +1,13 @@
 package com.android.settingslib.widget;
-/* loaded from: classes.dex */
+
 public final class R$dimen {
-    public static final int adaptive_outline_stroke = 2131165314;
-    public static final int advanced_dashboard_tile_foreground_image_inset = 2131165329;
-    public static final int dashboard_tile_foreground_image_inset = 2131165494;
-    public static final int settings_bar_view_max_height = 2131166089;
-    public static final int settingslib_preferred_minimum_touch_target = 2131166104;
-    public static final int spinner_padding_top_or_bottom = 2131166128;
-    public static final int two_target_pref_medium_icon_size = 2131166319;
-    public static final int two_target_pref_small_icon_size = 2131166320;
+    public static final int adaptive_outline_stroke = 2131165309;
+    public static final int advanced_dashboard_tile_foreground_image_inset = 2131165326;
+    public static final int dashboard_tile_foreground_image_inset = 2131165460;
+    public static final int settings_bar_view_max_height = 2131166129;
+    public static final int settingslib_illustration_height = 2131166140;
+    public static final int settingslib_illustration_width = 2131166142;
+    public static final int settingslib_preferred_minimum_touch_target = 2131166148;
+    public static final int two_target_pref_medium_icon_size = 2131166386;
+    public static final int two_target_pref_small_icon_size = 2131166387;
 }

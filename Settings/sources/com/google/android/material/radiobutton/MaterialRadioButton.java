@@ -2,18 +2,13 @@ package com.google.android.material.radiobutton;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.core.widget.CompoundButtonCompat;
 import com.google.android.material.R$attr;
 import com.google.android.material.R$style;
-import com.google.android.material.R$styleable;
 import com.google.android.material.color.MaterialColors;
-import com.google.android.material.internal.ThemeEnforcement;
-import com.google.android.material.resources.MaterialResources;
-import com.google.android.material.theme.overlay.MaterialThemeOverlay;
-/* loaded from: classes2.dex */
+
 public class MaterialRadioButton extends AppCompatRadioButton {
     private static final int DEF_STYLE_RES = R$style.Widget_MaterialComponents_CompoundButton_RadioButton;
     private static final int[][] ENABLED_CHECKED_STATES = {new int[]{16842910, 16842912}, new int[]{16842910, -16842912}, new int[]{-16842910, 16842912}, new int[]{-16842910, -16842912}};
@@ -21,37 +16,50 @@ public class MaterialRadioButton extends AppCompatRadioButton {
     private boolean useMaterialThemeColors;
 
     public MaterialRadioButton(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public MaterialRadioButton(Context context, AttributeSet attributeSet) {
         this(context, attributeSet, R$attr.radioButtonStyle);
     }
 
-    /* JADX WARN: Illegal instructions before constructor call */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public MaterialRadioButton(Context context, AttributeSet attributeSet, int i) {
-        super(MaterialThemeOverlay.wrap(context, attributeSet, i, r4), attributeSet, i);
-        int i2 = DEF_STYLE_RES;
-        Context context2 = getContext();
-        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context2, attributeSet, R$styleable.MaterialRadioButton, i, i2, new int[0]);
-        int i3 = R$styleable.MaterialRadioButton_buttonTint;
-        if (obtainStyledAttributes.hasValue(i3)) {
-            CompoundButtonCompat.setButtonTintList(this, MaterialResources.getColorStateList(context2, obtainStyledAttributes, i3));
-        }
-        this.useMaterialThemeColors = obtainStyledAttributes.getBoolean(R$styleable.MaterialRadioButton_useMaterialThemeColors, false);
-        obtainStyledAttributes.recycle();
+    /* JADX WARNING: Illegal instructions before constructor call */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public MaterialRadioButton(android.content.Context r8, android.util.AttributeSet r9, int r10) {
+        /*
+            r7 = this;
+            int r4 = DEF_STYLE_RES
+            android.content.Context r8 = com.google.android.material.theme.overlay.MaterialThemeOverlay.wrap(r8, r9, r10, r4)
+            r7.<init>(r8, r9, r10)
+            android.content.Context r8 = r7.getContext()
+            int[] r2 = com.google.android.material.R$styleable.MaterialRadioButton
+            r6 = 0
+            int[] r5 = new int[r6]
+            r0 = r8
+            r1 = r9
+            r3 = r10
+            android.content.res.TypedArray r9 = com.google.android.material.internal.ThemeEnforcement.obtainStyledAttributes(r0, r1, r2, r3, r4, r5)
+            int r10 = com.google.android.material.R$styleable.MaterialRadioButton_buttonTint
+            boolean r0 = r9.hasValue(r10)
+            if (r0 == 0) goto L_0x0028
+            android.content.res.ColorStateList r8 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r8, (android.content.res.TypedArray) r9, (int) r10)
+            androidx.core.widget.CompoundButtonCompat.setButtonTintList(r7, r8)
+        L_0x0028:
+            int r8 = com.google.android.material.R$styleable.MaterialRadioButton_useMaterialThemeColors
+            boolean r8 = r9.getBoolean(r8, r6)
+            r7.useMaterialThemeColors = r8
+            r9.recycle()
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.google.android.material.radiobutton.MaterialRadioButton.<init>(android.content.Context, android.util.AttributeSet, int):void");
     }
 
-    @Override // android.widget.TextView, android.view.View
-    protected void onAttachedToWindow() {
+    /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        if (!this.useMaterialThemeColors || CompoundButtonCompat.getButtonTintList(this) != null) {
-            return;
+        if (this.useMaterialThemeColors && CompoundButtonCompat.getButtonTintList(this) == null) {
+            setUseMaterialThemeColors(true);
         }
-        setUseMaterialThemeColors(true);
     }
 
     public void setUseMaterialThemeColors(boolean z) {
@@ -59,7 +67,7 @@ public class MaterialRadioButton extends AppCompatRadioButton {
         if (z) {
             CompoundButtonCompat.setButtonTintList(this, getMaterialThemeColorsTintList());
         } else {
-            CompoundButtonCompat.setButtonTintList(this, null);
+            CompoundButtonCompat.setButtonTintList(this, (ColorStateList) null);
         }
     }
 

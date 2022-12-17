@@ -7,12 +7,11 @@ import com.android.settingslib.core.instrumentation.Instrumentable;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
 import com.android.settingslib.core.instrumentation.VisibilityLoggerMixin;
 import com.android.settingslib.core.lifecycle.ObservableFragment;
-/* loaded from: classes.dex */
+
 public abstract class InstrumentedFragment extends ObservableFragment implements Instrumentable {
     protected MetricsFeatureProvider mMetricsFeatureProvider;
     private VisibilityLoggerMixin mVisibilityLoggerMixin;
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
         this.mMetricsFeatureProvider = FeatureFactory.getFactory(context).getMetricsFeatureProvider();
         this.mVisibilityLoggerMixin = new VisibilityLoggerMixin(getMetricsCategory(), this.mMetricsFeatureProvider);
@@ -21,7 +20,6 @@ public abstract class InstrumentedFragment extends ObservableFragment implements
         super.onAttach(context);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onResume() {
         this.mVisibilityLoggerMixin.setSourceMetricsCategory(getActivity());
         super.onResume();

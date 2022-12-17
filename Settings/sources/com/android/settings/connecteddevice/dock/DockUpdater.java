@@ -1,17 +1,17 @@
 package com.android.settings.connecteddevice.dock;
 
 import android.content.Context;
-/* loaded from: classes.dex */
+
 public interface DockUpdater {
-    default void forceUpdate() {
+    void forceUpdate() {
     }
 
-    default void registerCallback() {
+    void registerCallback() {
     }
 
-    default void setPreferenceContext(Context context) {
+    void setPreferenceContext(Context context) {
     }
 
-    default void unregisterCallback() {
+    void unregisterCallback() {
     }
 }

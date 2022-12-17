@@ -6,29 +6,30 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
-/* loaded from: classes2.dex */
-public final class Snackbar$SnackbarLayout extends BaseTransientBottomBar$SnackbarBaseLayout {
-    @Override // com.google.android.material.snackbar.BaseTransientBottomBar$SnackbarBaseLayout, android.view.View
+import android.view.ViewGroup;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+
+public final class Snackbar$SnackbarLayout extends BaseTransientBottomBar.SnackbarBaseLayout {
     public /* bridge */ /* synthetic */ void setBackground(Drawable drawable) {
         super.setBackground(drawable);
     }
 
-    @Override // com.google.android.material.snackbar.BaseTransientBottomBar$SnackbarBaseLayout, android.view.View
     public /* bridge */ /* synthetic */ void setBackgroundDrawable(Drawable drawable) {
         super.setBackgroundDrawable(drawable);
     }
 
-    @Override // com.google.android.material.snackbar.BaseTransientBottomBar$SnackbarBaseLayout, android.view.View
     public /* bridge */ /* synthetic */ void setBackgroundTintList(ColorStateList colorStateList) {
         super.setBackgroundTintList(colorStateList);
     }
 
-    @Override // com.google.android.material.snackbar.BaseTransientBottomBar$SnackbarBaseLayout, android.view.View
     public /* bridge */ /* synthetic */ void setBackgroundTintMode(PorterDuff.Mode mode) {
         super.setBackgroundTintMode(mode);
     }
 
-    @Override // com.google.android.material.snackbar.BaseTransientBottomBar$SnackbarBaseLayout, android.view.View
+    public /* bridge */ /* synthetic */ void setLayoutParams(ViewGroup.LayoutParams layoutParams) {
+        super.setLayoutParams(layoutParams);
+    }
+
     public /* bridge */ /* synthetic */ void setOnClickListener(View.OnClickListener onClickListener) {
         super.setOnClickListener(onClickListener);
     }
@@ -41,8 +42,8 @@ public final class Snackbar$SnackbarLayout extends BaseTransientBottomBar$Snackb
         super(context, attributeSet);
     }
 
-    @Override // android.widget.FrameLayout, android.view.View
-    protected void onMeasure(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         super.onMeasure(i, i2);
         int childCount = getChildCount();
         int measuredWidth = (getMeasuredWidth() - getPaddingLeft()) - getPaddingRight();

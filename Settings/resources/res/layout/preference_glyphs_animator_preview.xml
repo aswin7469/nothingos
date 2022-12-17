@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingHorizontal="@dimen/nt_settingslib_illustration_padding">
+    <com.airbnb.lottie.LottieAnimationView android:layout_gravity="center" android:id="@+id/lav_preview" android:background="@drawable/glyphs_preview_background" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_centerHorizontal="true" app:lottie_loop="true"/>
+</FrameLayout>

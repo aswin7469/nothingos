@@ -5,11 +5,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.RectF;
-import android.os.Build;
 import android.text.Layout;
 import android.text.StaticLayout;
-import android.text.TextDirectionHeuristic;
-import android.text.TextDirectionHeuristics;
 import android.text.TextPaint;
 import android.text.method.TransformationMethod;
 import android.util.AttributeSet;
@@ -25,82 +22,67 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class AppCompatTextViewAutoSizeHelper {
-    private final Context mContext;
-    private final Impl mImpl;
-    private TextPaint mTempTextPaint;
-    private final TextView mTextView;
+
+class AppCompatTextViewAutoSizeHelper {
     private static final RectF TEMP_RECTF = new RectF();
     @SuppressLint({"BanConcurrentHashMap"})
-    private static ConcurrentHashMap<String, Method> sTextViewMethodByNameCache = new ConcurrentHashMap<>();
-    @SuppressLint({"BanConcurrentHashMap"})
     private static ConcurrentHashMap<String, Field> sTextViewFieldByNameCache = new ConcurrentHashMap<>();
-    private int mAutoSizeTextType = 0;
-    private boolean mNeedsAutoSizeText = false;
-    private float mAutoSizeStepGranularityInPx = -1.0f;
-    private float mAutoSizeMinTextSizeInPx = -1.0f;
+    @SuppressLint({"BanConcurrentHashMap"})
+    private static ConcurrentHashMap<String, Method> sTextViewMethodByNameCache = new ConcurrentHashMap<>();
     private float mAutoSizeMaxTextSizeInPx = -1.0f;
+    private float mAutoSizeMinTextSizeInPx = -1.0f;
+    private float mAutoSizeStepGranularityInPx = -1.0f;
     private int[] mAutoSizeTextSizesInPx = new int[0];
+    private int mAutoSizeTextType = 0;
+    private final Context mContext;
     private boolean mHasPresetAutoSizeValues = false;
+    private final Impl mImpl;
+    private boolean mNeedsAutoSizeText = false;
+    private TextPaint mTempTextPaint;
+    private final TextView mTextView;
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class Impl {
-        void computeAndSetTextDirection(StaticLayout.Builder builder, TextView textView) {
+    private static class Impl {
+        /* access modifiers changed from: package-private */
+        public void computeAndSetTextDirection(StaticLayout.Builder builder, TextView textView) {
+            throw null;
+        }
+
+        /* access modifiers changed from: package-private */
+        public boolean isHorizontallyScrollable(TextView textView) {
+            throw null;
         }
 
         Impl() {
         }
-
-        boolean isHorizontallyScrollable(TextView textView) {
-            return ((Boolean) AppCompatTextViewAutoSizeHelper.invokeAndReturnWithDefault(textView, "getHorizontallyScrolling", Boolean.FALSE)).booleanValue();
-        }
     }
 
-    /* loaded from: classes.dex */
     private static class Impl23 extends Impl {
         Impl23() {
         }
-
-        @Override // androidx.appcompat.widget.AppCompatTextViewAutoSizeHelper.Impl
-        void computeAndSetTextDirection(StaticLayout.Builder builder, TextView textView) {
-            builder.setTextDirection((TextDirectionHeuristic) AppCompatTextViewAutoSizeHelper.invokeAndReturnWithDefault(textView, "getTextDirectionHeuristic", TextDirectionHeuristics.FIRSTSTRONG_LTR));
-        }
     }
 
-    /* loaded from: classes.dex */
     private static class Impl29 extends Impl23 {
         Impl29() {
         }
 
-        @Override // androidx.appcompat.widget.AppCompatTextViewAutoSizeHelper.Impl
-        boolean isHorizontallyScrollable(TextView textView) {
+        /* access modifiers changed from: package-private */
+        public boolean isHorizontallyScrollable(TextView textView) {
             return textView.isHorizontallyScrollable();
         }
 
-        @Override // androidx.appcompat.widget.AppCompatTextViewAutoSizeHelper.Impl23, androidx.appcompat.widget.AppCompatTextViewAutoSizeHelper.Impl
-        void computeAndSetTextDirection(StaticLayout.Builder builder, TextView textView) {
+        /* access modifiers changed from: package-private */
+        public void computeAndSetTextDirection(StaticLayout.Builder builder, TextView textView) {
             builder.setTextDirection(textView.getTextDirectionHeuristic());
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public AppCompatTextViewAutoSizeHelper(TextView textView) {
+    AppCompatTextViewAutoSizeHelper(TextView textView) {
         this.mTextView = textView;
         this.mContext = textView.getContext();
-        int i = Build.VERSION.SDK_INT;
-        if (i >= 29) {
-            this.mImpl = new Impl29();
-        } else if (i >= 23) {
-            this.mImpl = new Impl23();
-        } else {
-            this.mImpl = new Impl();
-        }
+        this.mImpl = new Impl29();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void loadFromAttributes(AttributeSet attributeSet, int i) {
         int resourceId;
         Context context = this.mContext;
@@ -125,10 +107,9 @@ public class AppCompatTextViewAutoSizeHelper {
             obtainTypedArray.recycle();
         }
         obtainStyledAttributes.recycle();
-        if (supportsAutoSizeText()) {
-            if (this.mAutoSizeTextType != 1) {
-                return;
-            }
+        if (!supportsAutoSizeText()) {
+            this.mAutoSizeTextType = 0;
+        } else if (this.mAutoSizeTextType == 1) {
             if (!this.mHasPresetAutoSizeValues) {
                 DisplayMetrics displayMetrics = this.mContext.getResources().getDisplayMetrics();
                 if (dimension2 == -1.0f) {
@@ -143,42 +124,39 @@ public class AppCompatTextViewAutoSizeHelper {
                 validateAndSetAutoSizeTextTypeUniformConfiguration(dimension2, dimension3, dimension);
             }
             setupAutoSizeText();
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public void setAutoSizeTextTypeWithDefaults(int i) {
+        if (!supportsAutoSizeText()) {
             return;
         }
-        this.mAutoSizeTextType = 0;
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void setAutoSizeTextTypeWithDefaults(int i) {
-        if (supportsAutoSizeText()) {
-            if (i == 0) {
-                clearAutoSizeConfiguration();
-            } else if (i == 1) {
-                DisplayMetrics displayMetrics = this.mContext.getResources().getDisplayMetrics();
-                validateAndSetAutoSizeTextTypeUniformConfiguration(TypedValue.applyDimension(2, 12.0f, displayMetrics), TypedValue.applyDimension(2, 112.0f, displayMetrics), 1.0f);
-                if (!setupAutoSizeText()) {
-                    return;
-                }
+        if (i == 0) {
+            clearAutoSizeConfiguration();
+        } else if (i == 1) {
+            DisplayMetrics displayMetrics = this.mContext.getResources().getDisplayMetrics();
+            validateAndSetAutoSizeTextTypeUniformConfiguration(TypedValue.applyDimension(2, 12.0f, displayMetrics), TypedValue.applyDimension(2, 112.0f, displayMetrics), 1.0f);
+            if (setupAutoSizeText()) {
                 autoSizeText();
-            } else {
-                throw new IllegalArgumentException("Unknown auto-size text type: " + i);
             }
+        } else {
+            throw new IllegalArgumentException("Unknown auto-size text type: " + i);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setAutoSizeTextTypeUniformWithConfiguration(int i, int i2, int i3, int i4) throws IllegalArgumentException {
         if (supportsAutoSizeText()) {
             DisplayMetrics displayMetrics = this.mContext.getResources().getDisplayMetrics();
-            validateAndSetAutoSizeTextTypeUniformConfiguration(TypedValue.applyDimension(i4, i, displayMetrics), TypedValue.applyDimension(i4, i2, displayMetrics), TypedValue.applyDimension(i4, i3, displayMetrics));
-            if (!setupAutoSizeText()) {
-                return;
+            validateAndSetAutoSizeTextTypeUniformConfiguration(TypedValue.applyDimension(i4, (float) i, displayMetrics), TypedValue.applyDimension(i4, (float) i2, displayMetrics), TypedValue.applyDimension(i4, (float) i3, displayMetrics));
+            if (setupAutoSizeText()) {
+                autoSizeText();
             }
-            autoSizeText();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setAutoSizeTextTypeUniformWithPresetSizes(int[] iArr, int i) throws IllegalArgumentException {
         if (supportsAutoSizeText()) {
             int length = iArr.length;
@@ -189,7 +167,7 @@ public class AppCompatTextViewAutoSizeHelper {
                 } else {
                     DisplayMetrics displayMetrics = this.mContext.getResources().getDisplayMetrics();
                     for (int i2 = 0; i2 < length; i2++) {
-                        iArr2[i2] = Math.round(TypedValue.applyDimension(i, iArr[i2], displayMetrics));
+                        iArr2[i2] = Math.round(TypedValue.applyDimension(i, (float) iArr[i2], displayMetrics));
                     }
                 }
                 this.mAutoSizeTextSizesInPx = cleanupAutoSizePresetSizes(iArr2);
@@ -199,34 +177,33 @@ public class AppCompatTextViewAutoSizeHelper {
             } else {
                 this.mHasPresetAutoSizeValues = false;
             }
-            if (!setupAutoSizeText()) {
-                return;
+            if (setupAutoSizeText()) {
+                autoSizeText();
             }
-            autoSizeText();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getAutoSizeTextType() {
         return this.mAutoSizeTextType;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getAutoSizeStepGranularity() {
         return Math.round(this.mAutoSizeStepGranularityInPx);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getAutoSizeMinTextSize() {
         return Math.round(this.mAutoSizeMinTextSizeInPx);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getAutoSizeMaxTextSize() {
         return Math.round(this.mAutoSizeMaxTextSizeInPx);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int[] getAutoSizeTextAvailableSizes() {
         return this.mAutoSizeTextSizesInPx;
     }
@@ -250,16 +227,15 @@ public class AppCompatTextViewAutoSizeHelper {
         this.mHasPresetAutoSizeValues = z;
         if (z) {
             this.mAutoSizeTextType = 1;
-            this.mAutoSizeMinTextSizeInPx = iArr[0];
-            this.mAutoSizeMaxTextSizeInPx = iArr[length - 1];
+            this.mAutoSizeMinTextSizeInPx = (float) iArr[0];
+            this.mAutoSizeMaxTextSizeInPx = (float) iArr[length - 1];
             this.mAutoSizeStepGranularityInPx = -1.0f;
         }
         return z;
     }
 
     private int[] cleanupAutoSizePresetSizes(int[] iArr) {
-        int length = iArr.length;
-        if (length == 0) {
+        if (r5 == 0) {
             return iArr;
         }
         Arrays.sort(iArr);
@@ -269,7 +245,7 @@ public class AppCompatTextViewAutoSizeHelper {
                 arrayList.add(Integer.valueOf(i));
             }
         }
-        if (length == arrayList.size()) {
+        if (r5 == arrayList.size()) {
             return iArr;
         }
         int size = arrayList.size();
@@ -285,60 +261,66 @@ public class AppCompatTextViewAutoSizeHelper {
             throw new IllegalArgumentException("Minimum auto-size text size (" + f + "px) is less or equal to (0px)");
         } else if (f2 <= f) {
             throw new IllegalArgumentException("Maximum auto-size text size (" + f2 + "px) is less or equal to minimum auto-size text size (" + f + "px)");
-        } else if (f3 <= 0.0f) {
-            throw new IllegalArgumentException("The auto-size step granularity (" + f3 + "px) is less or equal to (0px)");
-        } else {
+        } else if (f3 > 0.0f) {
             this.mAutoSizeTextType = 1;
             this.mAutoSizeMinTextSizeInPx = f;
             this.mAutoSizeMaxTextSizeInPx = f2;
             this.mAutoSizeStepGranularityInPx = f3;
             this.mHasPresetAutoSizeValues = false;
+        } else {
+            throw new IllegalArgumentException("The auto-size step granularity (" + f3 + "px) is less or equal to (0px)");
         }
     }
 
     private boolean setupAutoSizeText() {
-        if (supportsAutoSizeText() && this.mAutoSizeTextType == 1) {
+        if (!supportsAutoSizeText() || this.mAutoSizeTextType != 1) {
+            this.mNeedsAutoSizeText = false;
+        } else {
             if (!this.mHasPresetAutoSizeValues || this.mAutoSizeTextSizesInPx.length == 0) {
-                int floor = ((int) Math.floor((this.mAutoSizeMaxTextSizeInPx - this.mAutoSizeMinTextSizeInPx) / this.mAutoSizeStepGranularityInPx)) + 1;
+                int floor = ((int) Math.floor((double) ((this.mAutoSizeMaxTextSizeInPx - this.mAutoSizeMinTextSizeInPx) / this.mAutoSizeStepGranularityInPx))) + 1;
                 int[] iArr = new int[floor];
                 for (int i = 0; i < floor; i++) {
-                    iArr[i] = Math.round(this.mAutoSizeMinTextSizeInPx + (i * this.mAutoSizeStepGranularityInPx));
+                    iArr[i] = Math.round(this.mAutoSizeMinTextSizeInPx + (((float) i) * this.mAutoSizeStepGranularityInPx));
                 }
                 this.mAutoSizeTextSizesInPx = cleanupAutoSizePresetSizes(iArr);
             }
             this.mNeedsAutoSizeText = true;
-        } else {
-            this.mNeedsAutoSizeText = false;
         }
         return this.mNeedsAutoSizeText;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void autoSizeText() {
-        if (!isAutoSizeEnabled()) {
-            return;
-        }
-        if (this.mNeedsAutoSizeText) {
-            if (this.mTextView.getMeasuredHeight() <= 0 || this.mTextView.getMeasuredWidth() <= 0) {
-                return;
-            }
-            int measuredWidth = this.mImpl.isHorizontallyScrollable(this.mTextView) ? 1048576 : (this.mTextView.getMeasuredWidth() - this.mTextView.getTotalPaddingLeft()) - this.mTextView.getTotalPaddingRight();
-            int height = (this.mTextView.getHeight() - this.mTextView.getCompoundPaddingBottom()) - this.mTextView.getCompoundPaddingTop();
-            if (measuredWidth <= 0 || height <= 0) {
-                return;
-            }
-            RectF rectF = TEMP_RECTF;
-            synchronized (rectF) {
-                rectF.setEmpty();
-                rectF.right = measuredWidth;
-                rectF.bottom = height;
-                float findLargestTextSizeWhichFits = findLargestTextSizeWhichFits(rectF);
-                if (findLargestTextSizeWhichFits != this.mTextView.getTextSize()) {
-                    setTextSizeInternal(0, findLargestTextSizeWhichFits);
+        int i;
+        if (isAutoSizeEnabled()) {
+            if (this.mNeedsAutoSizeText) {
+                if (this.mTextView.getMeasuredHeight() > 0 && this.mTextView.getMeasuredWidth() > 0) {
+                    if (this.mImpl.isHorizontallyScrollable(this.mTextView)) {
+                        i = 1048576;
+                    } else {
+                        i = (this.mTextView.getMeasuredWidth() - this.mTextView.getTotalPaddingLeft()) - this.mTextView.getTotalPaddingRight();
+                    }
+                    int height = (this.mTextView.getHeight() - this.mTextView.getCompoundPaddingBottom()) - this.mTextView.getCompoundPaddingTop();
+                    if (i > 0 && height > 0) {
+                        RectF rectF = TEMP_RECTF;
+                        synchronized (rectF) {
+                            rectF.setEmpty();
+                            rectF.right = (float) i;
+                            rectF.bottom = (float) height;
+                            float findLargestTextSizeWhichFits = (float) findLargestTextSizeWhichFits(rectF);
+                            if (findLargestTextSizeWhichFits != this.mTextView.getTextSize()) {
+                                setTextSizeInternal(0, findLargestTextSizeWhichFits);
+                            }
+                        }
+                    } else {
+                        return;
+                    }
+                } else {
+                    return;
                 }
             }
+            this.mNeedsAutoSizeText = true;
         }
-        this.mNeedsAutoSizeText = true;
     }
 
     private void clearAutoSizeConfiguration() {
@@ -350,7 +332,7 @@ public class AppCompatTextViewAutoSizeHelper {
         this.mNeedsAutoSizeText = false;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setTextSizeInternal(int i, float f) {
         Resources resources;
         Context context = this.mContext;
@@ -365,56 +347,54 @@ public class AppCompatTextViewAutoSizeHelper {
     private void setRawTextSize(float f) {
         if (f != this.mTextView.getPaint().getTextSize()) {
             this.mTextView.getPaint().setTextSize(f);
-            boolean isInLayout = Build.VERSION.SDK_INT >= 18 ? this.mTextView.isInLayout() : false;
-            if (this.mTextView.getLayout() == null) {
-                return;
-            }
-            this.mNeedsAutoSizeText = false;
-            try {
-                Method textViewMethod = getTextViewMethod("nullLayouts");
-                if (textViewMethod != null) {
-                    textViewMethod.invoke(this.mTextView, new Object[0]);
+            boolean isInLayout = this.mTextView.isInLayout();
+            if (this.mTextView.getLayout() != null) {
+                this.mNeedsAutoSizeText = false;
+                try {
+                    Method textViewMethod = getTextViewMethod("nullLayouts");
+                    if (textViewMethod != null) {
+                        textViewMethod.invoke(this.mTextView, new Object[0]);
+                    }
+                } catch (Exception e) {
+                    Log.w("ACTVAutoSizeHelper", "Failed to invoke TextView#nullLayouts() method", e);
                 }
-            } catch (Exception e) {
-                Log.w("ACTVAutoSizeHelper", "Failed to invoke TextView#nullLayouts() method", e);
+                if (!isInLayout) {
+                    this.mTextView.requestLayout();
+                } else {
+                    this.mTextView.forceLayout();
+                }
+                this.mTextView.invalidate();
             }
-            if (!isInLayout) {
-                this.mTextView.requestLayout();
-            } else {
-                this.mTextView.forceLayout();
-            }
-            this.mTextView.invalidate();
         }
     }
 
     private int findLargestTextSizeWhichFits(RectF rectF) {
-        int i;
         int length = this.mAutoSizeTextSizesInPx.length;
         if (length != 0) {
-            int i2 = 0;
-            int i3 = 1;
-            int i4 = length - 1;
+            int i = 0;
+            int i2 = 1;
+            int i3 = length - 1;
             while (true) {
-                int i5 = i3;
-                int i6 = i2;
-                i2 = i5;
-                while (i2 <= i4) {
-                    i = (i2 + i4) / 2;
-                    if (suggestedSizeFitsInSpace(this.mAutoSizeTextSizesInPx[i], rectF)) {
-                        break;
+                int i4 = i2;
+                int i5 = i;
+                i = i4;
+                while (i <= i3) {
+                    int i6 = (i + i3) / 2;
+                    if (suggestedSizeFitsInSpace(this.mAutoSizeTextSizesInPx[i6], rectF)) {
+                        i2 = i6 + 1;
+                    } else {
+                        i5 = i6 - 1;
+                        i3 = i5;
                     }
-                    i6 = i - 1;
-                    i4 = i6;
                 }
-                return this.mAutoSizeTextSizesInPx[i6];
-                i3 = i + 1;
+                return this.mAutoSizeTextSizesInPx[i5];
             }
-        } else {
-            throw new IllegalStateException("No available text sizes to choose from.");
         }
+        throw new IllegalStateException("No available text sizes to choose from.");
     }
 
-    void initTempTextPaint(int i) {
+    /* access modifiers changed from: package-private */
+    public void initTempTextPaint(int i) {
         TextPaint textPaint = this.mTempTextPaint;
         if (textPaint == null) {
             this.mTempTextPaint = new TextPaint();
@@ -422,28 +402,22 @@ public class AppCompatTextViewAutoSizeHelper {
             textPaint.reset();
         }
         this.mTempTextPaint.set(this.mTextView.getPaint());
-        this.mTempTextPaint.setTextSize(i);
+        this.mTempTextPaint.setTextSize((float) i);
     }
 
-    StaticLayout createLayout(CharSequence charSequence, Layout.Alignment alignment, int i, int i2) {
-        int i3 = Build.VERSION.SDK_INT;
-        if (i3 >= 23) {
-            return createStaticLayoutForMeasuring(charSequence, alignment, i, i2);
-        }
-        if (i3 >= 16) {
-            return createStaticLayoutForMeasuringPre23(charSequence, alignment, i);
-        }
-        return createStaticLayoutForMeasuringPre16(charSequence, alignment, i);
+    /* access modifiers changed from: package-private */
+    public StaticLayout createLayout(CharSequence charSequence, Layout.Alignment alignment, int i, int i2) {
+        return createStaticLayoutForMeasuring(charSequence, alignment, i, i2);
     }
 
     private boolean suggestedSizeFitsInSpace(int i, RectF rectF) {
         CharSequence transformation;
         CharSequence text = this.mTextView.getText();
         TransformationMethod transformationMethod = this.mTextView.getTransformationMethod();
-        if (transformationMethod != null && (transformation = transformationMethod.getTransformation(text, this.mTextView)) != null) {
+        if (!(transformationMethod == null || (transformation = transformationMethod.getTransformation(text, this.mTextView)) == null)) {
             text = transformation;
         }
-        int maxLines = Build.VERSION.SDK_INT >= 16 ? this.mTextView.getMaxLines() : -1;
+        int maxLines = this.mTextView.getMaxLines();
         initTempTextPaint(i);
         StaticLayout createLayout = createLayout(text, (Layout.Alignment) invokeAndReturnWithDefault(this.mTextView, "getLayoutAlignment", Layout.Alignment.ALIGN_NORMAL), Math.round(rectF.right), maxLines);
         return (maxLines == -1 || (createLayout.getLineCount() <= maxLines && createLayout.getLineEnd(createLayout.getLineCount() - 1) == text.length())) && ((float) createLayout.getHeight()) <= rectF.bottom;
@@ -464,29 +438,11 @@ public class AppCompatTextViewAutoSizeHelper {
         return obtain.build();
     }
 
-    private StaticLayout createStaticLayoutForMeasuringPre23(CharSequence charSequence, Layout.Alignment alignment, int i) {
-        return new StaticLayout(charSequence, this.mTempTextPaint, i, alignment, this.mTextView.getLineSpacingMultiplier(), this.mTextView.getLineSpacingExtra(), this.mTextView.getIncludeFontPadding());
-    }
-
-    private StaticLayout createStaticLayoutForMeasuringPre16(CharSequence charSequence, Layout.Alignment alignment, int i) {
-        return new StaticLayout(charSequence, this.mTempTextPaint, i, alignment, ((Float) accessAndReturnWithDefault(this.mTextView, "mSpacingMult", Float.valueOf(1.0f))).floatValue(), ((Float) accessAndReturnWithDefault(this.mTextView, "mSpacingAdd", Float.valueOf(0.0f))).floatValue(), ((Boolean) accessAndReturnWithDefault(this.mTextView, "mIncludePad", Boolean.TRUE)).booleanValue());
-    }
-
     static <T> T invokeAndReturnWithDefault(Object obj, String str, T t) {
         try {
-            return (T) getTextViewMethod(str).invoke(obj, new Object[0]);
+            return getTextViewMethod(str).invoke(obj, new Object[0]);
         } catch (Exception e) {
             Log.w("ACTVAutoSizeHelper", "Failed to invoke TextView#" + str + "() method", e);
-            return t;
-        }
-    }
-
-    private static <T> T accessAndReturnWithDefault(Object obj, String str, T t) {
-        try {
-            Field textViewField = getTextViewField(str);
-            return textViewField == null ? t : (T) textViewField.get(obj);
-        } catch (IllegalAccessException e) {
-            Log.w("ACTVAutoSizeHelper", "Failed to access TextView#" + str + " member", e);
             return t;
         }
     }
@@ -505,21 +461,7 @@ public class AppCompatTextViewAutoSizeHelper {
         }
     }
 
-    private static Field getTextViewField(String str) {
-        try {
-            Field field = sTextViewFieldByNameCache.get(str);
-            if (field == null && (field = TextView.class.getDeclaredField(str)) != null) {
-                field.setAccessible(true);
-                sTextViewFieldByNameCache.put(str, field);
-            }
-            return field;
-        } catch (NoSuchFieldException e) {
-            Log.w("ACTVAutoSizeHelper", "Failed to access TextView#" + str + " member", e);
-            return null;
-        }
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isAutoSizeEnabled() {
         return supportsAutoSizeText() && this.mAutoSizeTextType != 0;
     }

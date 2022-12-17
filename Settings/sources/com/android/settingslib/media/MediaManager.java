@@ -6,14 +6,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-/* loaded from: classes.dex */
-public abstract class MediaManager {
-    protected Context mContext;
-    protected Notification mNotification;
-    protected final Collection<MediaDeviceCallback> mCallbacks = new CopyOnWriteArrayList();
-    protected final List<MediaDevice> mMediaDevices = new ArrayList();
 
-    /* loaded from: classes.dex */
+public abstract class MediaManager {
+    protected final Collection<MediaDeviceCallback> mCallbacks = new CopyOnWriteArrayList();
+    protected Context mContext;
+    protected final List<MediaDevice> mMediaDevices = new CopyOnWriteArrayList();
+    protected Notification mNotification;
+
     public interface MediaDeviceCallback {
         void onConnectedDeviceChanged(String str);
 
@@ -24,51 +23,50 @@ public abstract class MediaManager {
         void onRequestFailed(int i);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public MediaManager(Context context, Notification notification) {
+    MediaManager(Context context, Notification notification) {
         this.mContext = context;
         this.mNotification = notification;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void registerCallback(MediaDeviceCallback mediaDeviceCallback) {
         if (!this.mCallbacks.contains(mediaDeviceCallback)) {
             this.mCallbacks.add(mediaDeviceCallback);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void unregisterCallback(MediaDeviceCallback mediaDeviceCallback) {
         if (this.mCallbacks.contains(mediaDeviceCallback)) {
             this.mCallbacks.remove(mediaDeviceCallback);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void dispatchDeviceListAdded() {
-        for (MediaDeviceCallback mediaDeviceCallback : getCallbacks()) {
-            mediaDeviceCallback.onDeviceListAdded(new ArrayList(this.mMediaDevices));
+        for (MediaDeviceCallback onDeviceListAdded : getCallbacks()) {
+            onDeviceListAdded.onDeviceListAdded(new ArrayList(this.mMediaDevices));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void dispatchConnectedDeviceChanged(String str) {
-        for (MediaDeviceCallback mediaDeviceCallback : getCallbacks()) {
-            mediaDeviceCallback.onConnectedDeviceChanged(str);
+        for (MediaDeviceCallback onConnectedDeviceChanged : getCallbacks()) {
+            onConnectedDeviceChanged.onConnectedDeviceChanged(str);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void dispatchDataChanged() {
-        for (MediaDeviceCallback mediaDeviceCallback : getCallbacks()) {
-            mediaDeviceCallback.onDeviceAttributesChanged();
+        for (MediaDeviceCallback onDeviceAttributesChanged : getCallbacks()) {
+            onDeviceAttributesChanged.onDeviceAttributesChanged();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void dispatchOnRequestFailed(int i) {
-        for (MediaDeviceCallback mediaDeviceCallback : getCallbacks()) {
-            mediaDeviceCallback.onRequestFailed(i);
+        for (MediaDeviceCallback onRequestFailed : getCallbacks()) {
+            onRequestFailed.onRequestFailed(i);
         }
     }
 

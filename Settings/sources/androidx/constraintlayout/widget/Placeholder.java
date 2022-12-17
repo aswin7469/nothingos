@@ -9,15 +9,15 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 import androidx.constraintlayout.widget.ConstraintLayout;
-/* loaded from: classes.dex */
+
 public class Placeholder extends View {
-    private int mContentId = -1;
     private View mContent = null;
+    private int mContentId = -1;
     private int mEmptyVisibility = 4;
 
     public Placeholder(Context context) {
         super(context);
-        init(null);
+        init((AttributeSet) null);
     }
 
     public Placeholder(Context context, AttributeSet attributeSet) {
@@ -64,7 +64,6 @@ public class Placeholder extends View {
         return this.mContent;
     }
 
-    @Override // android.view.View
     public void onDraw(Canvas canvas) {
         if (isInEditMode()) {
             canvas.drawRGB(223, 223, 223);
@@ -74,12 +73,12 @@ public class Placeholder extends View {
             paint.setTypeface(Typeface.create(Typeface.DEFAULT, 0));
             Rect rect = new Rect();
             canvas.getClipBounds(rect);
-            paint.setTextSize(rect.height());
+            paint.setTextSize((float) rect.height());
             int height = rect.height();
             int width = rect.width();
             paint.setTextAlign(Paint.Align.LEFT);
             paint.getTextBounds("?", 0, 1, rect);
-            canvas.drawText("?", ((width / 2.0f) - (rect.width() / 2.0f)) - rect.left, ((height / 2.0f) + (rect.height() / 2.0f)) - rect.bottom, paint);
+            canvas.drawText("?", ((((float) width) / 2.0f) - (((float) rect.width()) / 2.0f)) - ((float) rect.left), ((((float) height) / 2.0f) + (((float) rect.height()) / 2.0f)) - ((float) rect.bottom), paint);
         }
     }
 
@@ -98,31 +97,28 @@ public class Placeholder extends View {
 
     public void setContentId(int i) {
         View findViewById;
-        if (this.mContentId == i) {
-            return;
+        if (this.mContentId != i) {
+            View view = this.mContent;
+            if (view != null) {
+                view.setVisibility(0);
+                ((ConstraintLayout.LayoutParams) this.mContent.getLayoutParams()).isInPlaceholder = false;
+                this.mContent = null;
+            }
+            this.mContentId = i;
+            if (i != -1 && (findViewById = ((View) getParent()).findViewById(i)) != null) {
+                findViewById.setVisibility(8);
+            }
         }
-        View view = this.mContent;
-        if (view != null) {
-            view.setVisibility(0);
-            ((ConstraintLayout.LayoutParams) this.mContent.getLayoutParams()).isInPlaceholder = false;
-            this.mContent = null;
-        }
-        this.mContentId = i;
-        if (i == -1 || (findViewById = ((View) getParent()).findViewById(i)) == null) {
-            return;
-        }
-        findViewById.setVisibility(8);
     }
 
     public void updatePostMeasure(ConstraintLayout constraintLayout) {
-        if (this.mContent == null) {
-            return;
+        if (this.mContent != null) {
+            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) getLayoutParams();
+            ConstraintLayout.LayoutParams layoutParams2 = (ConstraintLayout.LayoutParams) this.mContent.getLayoutParams();
+            layoutParams2.widget.setVisibility(0);
+            layoutParams.widget.setWidth(layoutParams2.widget.getWidth());
+            layoutParams.widget.setHeight(layoutParams2.widget.getHeight());
+            layoutParams2.widget.setVisibility(8);
         }
-        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) getLayoutParams();
-        ConstraintLayout.LayoutParams layoutParams2 = (ConstraintLayout.LayoutParams) this.mContent.getLayoutParams();
-        layoutParams2.widget.setVisibility(0);
-        layoutParams.widget.setWidth(layoutParams2.widget.getWidth());
-        layoutParams.widget.setHeight(layoutParams2.widget.getHeight());
-        layoutParams2.widget.setVisibility(8);
     }
 }

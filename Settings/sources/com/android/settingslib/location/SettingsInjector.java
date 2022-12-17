@@ -6,10 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.content.pm.ServiceInfo;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.content.res.XmlResourceParser;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -18,11 +16,11 @@ import android.os.Messenger;
 import android.os.SystemClock;
 import android.os.UserHandle;
 import android.os.UserManager;
+import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.ArraySet;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.Xml;
 import androidx.preference.Preference;
 import com.android.settingslib.R$string;
 import com.android.settingslib.location.InjectedSetting;
@@ -36,17 +34,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.xmlpull.v1.XmlPullParserException;
-/* loaded from: classes.dex */
+
 public class SettingsInjector {
     protected final Context mContext;
-    private final Handler mHandler;
+    /* access modifiers changed from: private */
+    public final Handler mHandler;
     protected final Set<Setting> mSettings;
 
-    protected Preference createPreference(Context context, InjectedSetting injectedSetting) {
+    /* access modifiers changed from: protected */
+    public Preference createPreference(Context context, InjectedSetting injectedSetting) {
         throw null;
     }
 
-    protected void logPreferenceClick(Intent intent) {
+    /* access modifiers changed from: protected */
+    public void logPreferenceClick(Intent intent) {
         throw null;
     }
 
@@ -57,7 +58,8 @@ public class SettingsInjector {
         this.mHandler = new StatusLoadingHandler(hashSet);
     }
 
-    protected List<InjectedSetting> getSettings(UserHandle userHandle) {
+    /* access modifiers changed from: protected */
+    public List<InjectedSetting> getSettings(UserHandle userHandle) {
         PackageManager packageManager = this.mContext.getPackageManager();
         Intent intent = new Intent("android.location.SettingInjectorService");
         int identifier = userHandle.getIdentifier();
@@ -75,9 +77,9 @@ public class SettingsInjector {
                 } else {
                     arrayList.add(parseServiceInfo);
                 }
-            } catch (IOException e) {
+            } catch (XmlPullParserException e) {
                 Log.w("SettingsInjector", "Unable to load service info " + resolveInfo, e);
-            } catch (XmlPullParserException e2) {
+            } catch (IOException e2) {
                 Log.w("SettingsInjector", "Unable to load service info " + resolveInfo, e2);
             }
         }
@@ -88,7 +90,7 @@ public class SettingsInjector {
     }
 
     private void populatePreference(Preference preference, InjectedSetting injectedSetting) {
-        preference.setTitle(injectedSetting.title);
+        preference.setTitle((CharSequence) injectedSetting.title);
         preference.setSummary(R$string.loading_injected_setting_summary);
         preference.setOnPreferenceClickListener(new ServiceSettingClickedListener(injectedSetting));
     }
@@ -97,17 +99,17 @@ public class SettingsInjector {
         List<UserHandle> userProfiles = ((UserManager) this.mContext.getSystemService("user")).getUserProfiles();
         ArrayMap arrayMap = new ArrayMap();
         this.mSettings.clear();
-        for (UserHandle userHandle : userProfiles) {
-            if (i == -2 || i == userHandle.getIdentifier()) {
+        for (UserHandle next : userProfiles) {
+            if (i == -2 || i == next.getIdentifier()) {
                 ArrayList arrayList = new ArrayList();
-                for (InjectedSetting injectedSetting : getSettings(userHandle)) {
+                for (InjectedSetting injectedSetting : getSettings(next)) {
                     Preference createPreference = createPreference(context, injectedSetting);
                     populatePreference(createPreference, injectedSetting);
                     arrayList.add(createPreference);
                     this.mSettings.add(new Setting(injectedSetting, createPreference));
                 }
                 if (!arrayList.isEmpty()) {
-                    arrayMap.put(Integer.valueOf(userHandle.getIdentifier()), arrayList);
+                    arrayMap.put(Integer.valueOf(next.getIdentifier()), arrayList);
                 }
             }
         }
@@ -115,42 +117,110 @@ public class SettingsInjector {
         return arrayMap;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public InjectedSetting parseServiceInfo(ResolveInfo resolveInfo, UserHandle userHandle, PackageManager packageManager) throws XmlPullParserException, IOException {
-        ServiceInfo serviceInfo = resolveInfo.serviceInfo;
-        XmlResourceParser xmlResourceParser = null;
-        if ((serviceInfo.applicationInfo.flags & 1) == 0 && Log.isLoggable("SettingsInjector", 5)) {
-            Log.w("SettingsInjector", "Ignoring attempt to inject setting from app not in system image: " + resolveInfo);
-            return null;
-        }
-        try {
-            try {
-                XmlResourceParser loadXmlMetaData = serviceInfo.loadXmlMetaData(packageManager, "android.location.SettingInjectorService");
-                if (loadXmlMetaData == null) {
-                    throw new XmlPullParserException("No android.location.SettingInjectorService meta-data for " + resolveInfo + ": " + serviceInfo);
-                }
-                AttributeSet asAttributeSet = Xml.asAttributeSet(loadXmlMetaData);
-                while (true) {
-                    int next = loadXmlMetaData.next();
-                    if (next == 1 || next == 2) {
-                        break;
-                    }
-                }
-                if (!"injected-location-setting".equals(loadXmlMetaData.getName())) {
-                    throw new XmlPullParserException("Meta-data does not start with injected-location-setting tag");
-                }
-                InjectedSetting parseAttributes = parseAttributes(serviceInfo.packageName, serviceInfo.name, userHandle, packageManager.getResourcesForApplication(serviceInfo.packageName), asAttributeSet);
-                loadXmlMetaData.close();
-                return parseAttributes;
-            } catch (PackageManager.NameNotFoundException unused) {
-                throw new XmlPullParserException("Unable to load resources for package " + serviceInfo.packageName);
-            }
-        } catch (Throwable th) {
-            if (0 != 0) {
-                xmlResourceParser.close();
-            }
-            throw th;
-        }
+    /* access modifiers changed from: protected */
+    /* JADX WARNING: Can't wrap try/catch for region: R(3:27|28|29) */
+    /* JADX WARNING: Code restructure failed: missing block: B:26:0x0084, code lost:
+        r4 = move-exception;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:29:0x009e, code lost:
+        throw new org.xmlpull.v1.XmlPullParserException("Unable to load resources for package " + r4.packageName);
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:30:0x009f, code lost:
+        if (r2 != null) goto L_0x00a1;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:31:0x00a1, code lost:
+        r2.close();
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:32:0x00a4, code lost:
+        throw r4;
+     */
+    /* JADX WARNING: Failed to process nested try/catch */
+    /* JADX WARNING: Missing exception handler attribute for start block: B:27:0x0086 */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public com.android.settingslib.location.InjectedSetting parseServiceInfo(android.content.pm.ResolveInfo r5, android.os.UserHandle r6, android.content.pm.PackageManager r7) throws org.xmlpull.v1.XmlPullParserException, java.io.IOException {
+        /*
+            r4 = this;
+            android.content.pm.ServiceInfo r4 = r5.serviceInfo
+            android.content.pm.ApplicationInfo r0 = r4.applicationInfo
+            int r0 = r0.flags
+            r1 = 1
+            r0 = r0 & r1
+            r2 = 0
+            if (r0 != 0) goto L_0x0029
+            r0 = 5
+            java.lang.String r3 = "SettingsInjector"
+            boolean r0 = android.util.Log.isLoggable(r3, r0)
+            if (r0 == 0) goto L_0x0029
+            java.lang.StringBuilder r4 = new java.lang.StringBuilder
+            r4.<init>()
+            java.lang.String r6 = "Ignoring attempt to inject setting from app not in system image: "
+            r4.append(r6)
+            r4.append(r5)
+            java.lang.String r4 = r4.toString()
+            android.util.Log.w(r3, r4)
+            return r2
+        L_0x0029:
+            java.lang.String r0 = "android.location.SettingInjectorService"
+            android.content.res.XmlResourceParser r2 = r4.loadXmlMetaData(r7, r0)     // Catch:{ NameNotFoundException -> 0x0086 }
+            if (r2 == 0) goto L_0x0065
+            android.util.AttributeSet r5 = android.util.Xml.asAttributeSet(r2)     // Catch:{ NameNotFoundException -> 0x0086 }
+        L_0x0035:
+            int r0 = r2.next()     // Catch:{ NameNotFoundException -> 0x0086 }
+            if (r0 == r1) goto L_0x003f
+            r3 = 2
+            if (r0 == r3) goto L_0x003f
+            goto L_0x0035
+        L_0x003f:
+            java.lang.String r0 = r2.getName()     // Catch:{ NameNotFoundException -> 0x0086 }
+            java.lang.String r1 = "injected-location-setting"
+            boolean r0 = r1.equals(r0)     // Catch:{ NameNotFoundException -> 0x0086 }
+            if (r0 == 0) goto L_0x005d
+            java.lang.String r0 = r4.packageName     // Catch:{ NameNotFoundException -> 0x0086 }
+            android.content.res.Resources r7 = r7.getResourcesForApplication(r0)     // Catch:{ NameNotFoundException -> 0x0086 }
+            java.lang.String r0 = r4.packageName     // Catch:{ NameNotFoundException -> 0x0086 }
+            java.lang.String r1 = r4.name     // Catch:{ NameNotFoundException -> 0x0086 }
+            com.android.settingslib.location.InjectedSetting r4 = parseAttributes(r0, r1, r6, r7, r5)     // Catch:{ NameNotFoundException -> 0x0086 }
+            r2.close()
+            return r4
+        L_0x005d:
+            org.xmlpull.v1.XmlPullParserException r5 = new org.xmlpull.v1.XmlPullParserException     // Catch:{ NameNotFoundException -> 0x0086 }
+            java.lang.String r6 = "Meta-data does not start with injected-location-setting tag"
+            r5.<init>(r6)     // Catch:{ NameNotFoundException -> 0x0086 }
+            throw r5     // Catch:{ NameNotFoundException -> 0x0086 }
+        L_0x0065:
+            org.xmlpull.v1.XmlPullParserException r6 = new org.xmlpull.v1.XmlPullParserException     // Catch:{ NameNotFoundException -> 0x0086 }
+            java.lang.StringBuilder r7 = new java.lang.StringBuilder     // Catch:{ NameNotFoundException -> 0x0086 }
+            r7.<init>()     // Catch:{ NameNotFoundException -> 0x0086 }
+            java.lang.String r0 = "No android.location.SettingInjectorService meta-data for "
+            r7.append(r0)     // Catch:{ NameNotFoundException -> 0x0086 }
+            r7.append(r5)     // Catch:{ NameNotFoundException -> 0x0086 }
+            java.lang.String r5 = ": "
+            r7.append(r5)     // Catch:{ NameNotFoundException -> 0x0086 }
+            r7.append(r4)     // Catch:{ NameNotFoundException -> 0x0086 }
+            java.lang.String r5 = r7.toString()     // Catch:{ NameNotFoundException -> 0x0086 }
+            r6.<init>(r5)     // Catch:{ NameNotFoundException -> 0x0086 }
+            throw r6     // Catch:{ NameNotFoundException -> 0x0086 }
+        L_0x0084:
+            r4 = move-exception
+            goto L_0x009f
+        L_0x0086:
+            org.xmlpull.v1.XmlPullParserException r5 = new org.xmlpull.v1.XmlPullParserException     // Catch:{ all -> 0x0084 }
+            java.lang.StringBuilder r6 = new java.lang.StringBuilder     // Catch:{ all -> 0x0084 }
+            r6.<init>()     // Catch:{ all -> 0x0084 }
+            java.lang.String r7 = "Unable to load resources for package "
+            r6.append(r7)     // Catch:{ all -> 0x0084 }
+            java.lang.String r4 = r4.packageName     // Catch:{ all -> 0x0084 }
+            r6.append(r4)     // Catch:{ all -> 0x0084 }
+            java.lang.String r4 = r6.toString()     // Catch:{ all -> 0x0084 }
+            r5.<init>(r4)     // Catch:{ all -> 0x0084 }
+            throw r5     // Catch:{ all -> 0x0084 }
+        L_0x009f:
+            if (r2 == 0) goto L_0x00a4
+            r2.close()
+        L_0x00a4:
+            throw r4
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settingslib.location.SettingsInjector.parseServiceInfo(android.content.pm.ResolveInfo, android.os.UserHandle, android.content.pm.PackageManager):com.android.settingslib.location.InjectedSetting");
     }
 
     private static InjectedSetting parseAttributes(String str, String str2, UserHandle userHandle, Resources resources, AttributeSet attributeSet) {
@@ -177,46 +247,40 @@ public class SettingsInjector {
         handler.sendMessage(handler.obtainMessage(1));
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    /* loaded from: classes.dex */
-    public class ServiceSettingClickedListener implements Preference.OnPreferenceClickListener {
+    protected class ServiceSettingClickedListener implements Preference.OnPreferenceClickListener {
         private InjectedSetting mInfo;
 
         public ServiceSettingClickedListener(InjectedSetting injectedSetting) {
             this.mInfo = injectedSetting;
         }
 
-        @Override // androidx.preference.Preference.OnPreferenceClickListener
         public boolean onPreferenceClick(Preference preference) {
             Intent intent = new Intent();
             InjectedSetting injectedSetting = this.mInfo;
             intent.setClassName(injectedSetting.packageName, injectedSetting.settingsActivity);
             SettingsInjector.this.logPreferenceClick(intent);
-            intent.setFlags(268468224);
             SettingsInjector.this.mContext.startActivityAsUser(intent, this.mInfo.mUserHandle);
             return true;
         }
     }
 
-    /* loaded from: classes.dex */
     private static final class StatusLoadingHandler extends Handler {
         WeakReference<Set<Setting>> mAllSettings;
-        private Deque<Setting> mSettingsToLoad = new ArrayDeque();
         private Set<Setting> mSettingsBeingLoaded = new ArraySet();
+        private Deque<Setting> mSettingsToLoad = new ArrayDeque();
 
         public StatusLoadingHandler(Set<Setting> set) {
             super(Looper.getMainLooper());
             this.mAllSettings = new WeakReference<>(set);
         }
 
-        @Override // android.os.Handler
         public void handleMessage(Message message) {
             if (Log.isLoggable("SettingsInjector", 3)) {
                 Log.d("SettingsInjector", "handleMessage start: " + message + ", " + this);
             }
             int i = message.what;
             if (i == 1) {
-                Set<Setting> set = this.mAllSettings.get();
+                Set set = (Set) this.mAllSettings.get();
                 if (set != null) {
                     this.mSettingsToLoad.clear();
                     this.mSettingsToLoad.addAll(set);
@@ -226,46 +290,38 @@ public class SettingsInjector {
                 setting.maybeLogElapsedTime();
                 this.mSettingsBeingLoaded.remove(setting);
                 removeMessages(3, setting);
-            } else if (i == 3) {
+            } else if (i != 3) {
+                Log.wtf("SettingsInjector", "Unexpected what: " + message);
+            } else {
                 Setting setting2 = (Setting) message.obj;
                 this.mSettingsBeingLoaded.remove(setting2);
                 if (Log.isLoggable("SettingsInjector", 5)) {
                     Log.w("SettingsInjector", "Timed out after " + setting2.getElapsedTime() + " millis trying to get status for: " + setting2);
                 }
-            } else {
-                Log.wtf("SettingsInjector", "Unexpected what: " + message);
             }
             if (this.mSettingsBeingLoaded.size() > 0) {
-                if (!Log.isLoggable("SettingsInjector", 2)) {
-                    return;
+                if (Log.isLoggable("SettingsInjector", 2)) {
+                    Log.v("SettingsInjector", "too many services already live for " + message + ", " + this);
                 }
-                Log.v("SettingsInjector", "too many services already live for " + message + ", " + this);
-            } else if (this.mSettingsToLoad.isEmpty()) {
-                if (!Log.isLoggable("SettingsInjector", 2)) {
-                    return;
-                }
-                Log.v("SettingsInjector", "nothing left to do for " + message + ", " + this);
-            } else {
+            } else if (!this.mSettingsToLoad.isEmpty()) {
                 Setting removeFirst = this.mSettingsToLoad.removeFirst();
                 removeFirst.startService();
                 this.mSettingsBeingLoaded.add(removeFirst);
-                sendMessageDelayed(obtainMessage(3, removeFirst), 1000L);
-                if (!Log.isLoggable("SettingsInjector", 3)) {
-                    return;
+                sendMessageDelayed(obtainMessage(3, removeFirst), 1000);
+                if (Log.isLoggable("SettingsInjector", 3)) {
+                    Log.d("SettingsInjector", "handleMessage end " + message + ", " + this + ", started loading " + removeFirst);
                 }
-                Log.d("SettingsInjector", "handleMessage end " + message + ", " + this + ", started loading " + removeFirst);
+            } else if (Log.isLoggable("SettingsInjector", 2)) {
+                Log.v("SettingsInjector", "nothing left to do for " + message + ", " + this);
             }
         }
 
-        @Override // android.os.Handler
         public String toString() {
             return "StatusLoadingHandler{mSettingsToLoad=" + this.mSettingsToLoad + ", mSettingsBeingLoaded=" + this.mSettingsBeingLoaded + '}';
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class MessengerHandler extends Handler {
+    private static class MessengerHandler extends Handler {
         private Handler mHandler;
         private WeakReference<Setting> mSettingRef;
 
@@ -274,36 +330,36 @@ public class SettingsInjector {
             this.mHandler = handler;
         }
 
-        @Override // android.os.Handler
         public void handleMessage(Message message) {
-            Setting setting = this.mSettingRef.get();
-            if (setting == null) {
-                return;
+            Setting setting = (Setting) this.mSettingRef.get();
+            if (setting != null) {
+                Bundle data = message.getData();
+                if (Log.isLoggable("SettingsInjector", 3)) {
+                    Log.d("SettingsInjector", setting + ": received " + message + ", bundle: " + data);
+                }
+                boolean z = data.getBoolean("enabled", true);
+                String string = data.getString("summary");
+                Preference preference = setting.preference;
+                if (TextUtils.isEmpty(string)) {
+                    preference.setSummary(R$string.summary_placeholder);
+                } else {
+                    preference.setSummary((CharSequence) string);
+                }
+                preference.setEnabled(z);
+                Handler handler = this.mHandler;
+                handler.sendMessage(handler.obtainMessage(2, setting));
             }
-            Preference preference = setting.preference;
-            Bundle data = message.getData();
-            boolean z = data.getBoolean("enabled", true);
-            String string = data.getString("summary", null);
-            if (Log.isLoggable("SettingsInjector", 3)) {
-                Log.d("SettingsInjector", setting + ": received " + message + ", bundle: " + data);
-            }
-            preference.setSummary(string);
-            preference.setEnabled(z);
-            Handler handler = this.mHandler;
-            handler.sendMessage(handler.obtainMessage(2, setting));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    /* loaded from: classes.dex */
-    public final class Setting {
+    protected final class Setting {
         public final Preference preference;
         public final InjectedSetting setting;
         public long startMillis;
 
-        public Setting(InjectedSetting injectedSetting, Preference preference) {
+        public Setting(InjectedSetting injectedSetting, Preference preference2) {
             this.setting = injectedSetting;
-            this.preference = preference;
+            this.preference = preference2;
         }
 
         public String toString() {
@@ -311,24 +367,21 @@ public class SettingsInjector {
         }
 
         public void startService() {
-            if (!((ActivityManager) SettingsInjector.this.mContext.getSystemService("activity")).isUserRunning(this.setting.mUserHandle.getIdentifier())) {
-                if (!Log.isLoggable("SettingsInjector", 2)) {
-                    return;
+            if (((ActivityManager) SettingsInjector.this.mContext.getSystemService("activity")).isUserRunning(this.setting.mUserHandle.getIdentifier())) {
+                MessengerHandler messengerHandler = new MessengerHandler(this, SettingsInjector.this.mHandler);
+                Messenger messenger = new Messenger(messengerHandler);
+                Intent serviceIntent = this.setting.getServiceIntent();
+                serviceIntent.putExtra("messenger", messenger);
+                if (Log.isLoggable("SettingsInjector", 3)) {
+                    Log.d("SettingsInjector", this.setting + ": sending update intent: " + serviceIntent + ", handler: " + messengerHandler);
+                    this.startMillis = SystemClock.elapsedRealtime();
+                } else {
+                    this.startMillis = 0;
                 }
+                SettingsInjector.this.mContext.startServiceAsUser(serviceIntent, this.setting.mUserHandle);
+            } else if (Log.isLoggable("SettingsInjector", 2)) {
                 Log.v("SettingsInjector", "Cannot start service as user " + this.setting.mUserHandle.getIdentifier() + " is not running");
-                return;
             }
-            MessengerHandler messengerHandler = new MessengerHandler(this, SettingsInjector.this.mHandler);
-            Messenger messenger = new Messenger(messengerHandler);
-            Intent serviceIntent = this.setting.getServiceIntent();
-            serviceIntent.putExtra("messenger", messenger);
-            if (Log.isLoggable("SettingsInjector", 3)) {
-                Log.d("SettingsInjector", this.setting + ": sending update intent: " + serviceIntent + ", handler: " + messengerHandler);
-                this.startMillis = SystemClock.elapsedRealtime();
-            } else {
-                this.startMillis = 0L;
-            }
-            SettingsInjector.this.mContext.startServiceAsUser(serviceIntent, this.setting.mUserHandle);
         }
 
         public long getElapsedTime() {
@@ -336,11 +389,10 @@ public class SettingsInjector {
         }
 
         public void maybeLogElapsedTime() {
-            if (!Log.isLoggable("SettingsInjector", 3) || this.startMillis == 0) {
-                return;
+            if (Log.isLoggable("SettingsInjector", 3) && this.startMillis != 0) {
+                long elapsedTime = getElapsedTime();
+                Log.d("SettingsInjector", this + " update took " + elapsedTime + " millis");
             }
-            long elapsedTime = getElapsedTime();
-            Log.d("SettingsInjector", this + " update took " + elapsedTime + " millis");
         }
     }
 }

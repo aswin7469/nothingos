@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="56dp" android:paddingStart="24dp">
+        <TextView android:id="@+id/nt_about_regulatory_phone_label" android:layout_marginTop="12dp" android:layout_marginBottom="28dp" android:text="@string/nt_regulatory_phone" style="@style/Regulatory.TextLabel"/>
+        <TextView android:textSize="16sp" android:id="@+id/nt_about_regulatory_model" android:layout_width="0dp" android:layout_marginTop="12dp" android:layout_marginBottom="28dp" android:text="@string/nt_regulatory_phone_model" android:layout_weight="0.7" android:textFontWeight="400" style="@style/Regulatory.TextDetails"/>
+    </LinearLayout>
+    <include layout="@layout/horizontal_divider"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="24dp">
+        <TextView android:text="@string/nt_regulatory_europe" android:textAlignment="viewStart" style="@style/Regulatory.TextLabel"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.7" android:paddingEnd="1px">
+            <ImageView android:layout_gravity="center_vertical" android:layout_width="0dp" android:src="@drawable/nt_regulatory_europe" android:layout_weight="0.47" style="@style/Regulatory.Image"/>
+            <TextView android:layout_gravity="center_vertical" android:layout_width="0dp" android:text="@string/nt_regulatory_europe_detail" android:layout_weight="0.53" android:layout_marginStart="39px" style="@style/Regulatory.TextDetails"/>
+        </LinearLayout>
+    </LinearLayout>
+    <include layout="@layout/horizontal_divider"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="24dp">
+        <TextView android:text="@string/nt_regulatory_uk" android:textAlignment="viewStart" style="@style/Regulatory.TextLabel"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.7" android:paddingEnd="149px">
+            <ImageView android:layout_gravity="center_vertical" android:layout_width="0dp" android:src="@drawable/nt_regulatory_uk" android:layout_weight="0.32" style="@style/Regulatory.Image"/>
+            <TextView android:layout_gravity="center_vertical" android:layout_width="0dp" android:text="@string/nt_regulatory_europe_detail" android:layout_weight="0.68" android:layout_marginStart="39px" style="@style/Regulatory.TextDetails"/>
+        </LinearLayout>
+    </LinearLayout>
+    <include layout="@layout/horizontal_divider"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="24dp">
+        <TextView android:text="@string/nt_regulatory_india" android:textAlignment="viewStart" style="@style/Regulatory.TextLabel"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.7" android:paddingEnd="149px">
+            <ImageView android:layout_gravity="center_vertical" android:layout_width="0dp" android:src="@drawable/nt_regulatory_india" android:layout_weight="0.32" style="@style/Regulatory.Image"/>
+            <TextView android:layout_gravity="center_vertical" android:layout_width="0dp" android:text="@string/nt_regulatory_india_detail" android:layout_weight="0.68" android:layout_marginStart="39px" style="@style/Regulatory.TextDetails"/>
+        </LinearLayout>
+    </LinearLayout>
+    <include layout="@layout/horizontal_divider"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="24dp">
+        <TextView android:text="@string/nt_regulatory_malaysia" android:textAlignment="viewStart" style="@style/Regulatory.TextLabel"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.7">
+            <ImageView android:src="@drawable/nt_regulatory_malaysia" style="@style/Regulatory.Image"/>
+        </LinearLayout>
+    </LinearLayout>
+    <include layout="@layout/horizontal_divider"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="24dp">
+        <TextView android:text="@string/nt_regulatory_australia" android:textAlignment="viewStart" style="@style/Regulatory.TextLabel"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.7">
+            <ImageView android:src="@drawable/nt_regulatory_australia" style="@style/Regulatory.Image"/>
+        </LinearLayout>
+    </LinearLayout>
+    <include layout="@layout/horizontal_divider"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="24dp">
+        <TextView android:text="@string/nt_regulatory_japan" android:textAlignment="viewStart" style="@style/Regulatory.TextLabel"/>
+        <LinearLayout android:orientation="vertical" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.7" android:paddingEnd="57px">
+            <TextView android:layout_marginBottom="42px" android:text="@string/nt_regulatory_japan_detail" style="@style/Regulatory.TextDetails"/>
+            <ImageView android:layout_marginTop="0dp" android:layout_marginBottom="42px" android:src="@drawable/nt_regulatory_japan1" style="@style/Regulatory.Image"/>
+            <ImageView android:layout_marginTop="0dp" android:src="@drawable/nt_regulatory_japan2" style="@style/Regulatory.Image"/>
+        </LinearLayout>
+    </LinearLayout>
+    <include layout="@layout/horizontal_divider"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="24dp">
+        <TextView android:id="@+id/nt_about_regulatory_taiwan_label" android:text="@string/nt_regulatory_taiwan" android:textAlignment="viewStart" style="@style/Regulatory.TextLabel"/>
+        <LinearLayout android:orientation="vertical" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.7">
+            <TextView android:id="@+id/nt_about_regulatory_taiwan_detail" android:layout_marginBottom="42px" android:text="@string/summary_placeholder" style="@style/Regulatory.TextDetails"/>
+            <LinearLayout android:paddingBottom="24dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:paddingEnd="260px">
+                <ImageView android:layout_gravity="center_vertical" android:layout_width="0dp" android:layout_height="wrap_content" android:src="@drawable/nt_regulatory_taiwan" android:layout_weight="0.36"/>
+                <TextView android:layout_gravity="center_vertical" android:layout_width="0dp" android:layout_marginTop="0dp" android:layout_marginBottom="0dp" android:text="@string/nt_regulatory_taiwan_detail_2" android:layout_weight="0.64" android:layout_marginStart="26px" style="@style/Regulatory.TextDetails"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <include layout="@layout/horizontal_divider"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="24dp">
+        <TextView android:id="@+id/nt_about_regulatory_singapore_label" android:text="@string/nt_regulatory_singapore" android:textAlignment="viewStart" style="@style/Regulatory.TextLabel"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.7">
+            <ImageView android:src="@drawable/nt_regulatory_singapore" style="@style/Regulatory.Image"/>
+        </LinearLayout>
+    </LinearLayout>
+    <include layout="@layout/horizontal_divider"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="24dp">
+        <TextView android:text="@string/nt_regulatory_philippines" android:textAlignment="viewStart" style="@style/Regulatory.TextLabel"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.7">
+            <ImageView android:src="@drawable/nt_regulatory_philippines" style="@style/Regulatory.Image"/>
+        </LinearLayout>
+    </LinearLayout>
+    <include layout="@layout/horizontal_divider"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="24dp">
+        <TextView android:text="@string/nt_regulatory_south_africa" android:textAlignment="viewStart" style="@style/Regulatory.TextLabel"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.7">
+            <ImageView android:src="@drawable/nt_regulatory_south_africa" style="@style/Regulatory.Image"/>
+        </LinearLayout>
+    </LinearLayout>
+    <include layout="@layout/horizontal_divider"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="24dp">
+        <TextView android:id="@+id/nt_about_regulatory_italy_label" android:text="@string/nt_regulatory_italy" android:textAlignment="viewStart" style="@style/Regulatory.TextLabel"/>
+        <LinearLayout android:orientation="vertical" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.7">
+            <TextView android:textColorLink="@color/nt_about_phone_regulatory_detail_color" android:autoLink="web" android:id="@+id/nt_about_regulatory_italy_detail" android:layout_marginBottom="42px" android:text="@string/nt_regulatory_italy_detail" style="@style/Regulatory.TextDetails"/>
+            <LinearLayout android:paddingBottom="12dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:paddingEnd="20dp">
+                <ImageView android:layout_gravity="center_vertical" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/nt_italy_first"/>
+                <TextView android:layout_gravity="center_vertical" android:layout_width="0dp" android:layout_marginTop="0dp" android:layout_marginBottom="0dp" android:text="@string/nt_regulatory_italy_detail_2" android:layout_weight="0.64" android:layout_marginStart="26px" style="@style/Regulatory.TextDetails"/>
+            </LinearLayout>
+            <LinearLayout android:paddingBottom="24dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:paddingEnd="20dp">
+                <ImageView android:layout_gravity="center_vertical" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/nt_italy_second"/>
+                <TextView android:layout_gravity="center_vertical" android:layout_width="0dp" android:layout_marginTop="0dp" android:layout_marginBottom="0dp" android:text="@string/nt_regulatory_italy_detail_3" android:layout_weight="0.6" android:layout_marginStart="26px" style="@style/Regulatory.TextDetails"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <include layout="@layout/horizontal_divider"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="24dp">
+        <TextView android:text="@string/nt_regulatory_france" android:textAlignment="viewStart" style="@style/Regulatory.TextLabel"/>
+        <LinearLayout android:orientation="vertical" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.7">
+            <ImageView android:layout_marginBottom="16dp" android:src="@drawable/nt_france" style="@style/Regulatory.Image"/>
+            <ImageView android:layout_marginTop="0dp" android:src="@drawable/nt_france_second" style="@style/Regulatory.Image"/>
+        </LinearLayout>
+    </LinearLayout>
+    <include layout="@layout/horizontal_divider"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="24dp">
+        <TextView android:text="@string/nt_regulatory_safety_instructions" android:textAlignment="viewStart" android:paddingEnd="13dp" style="@style/Regulatory.TextLabel"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.7">
+            <TextView android:layout_gravity="center_vertical" android:layout_width="0dp" android:layout_marginTop="21dp" android:layout_marginBottom="8dp" android:text="@string/nt_regulatory_safety_instructions_detail" android:layout_weight="0.68" style="@style/Regulatory.TextDetails"/>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="24dp">
+        <TextView android:text=" " style="@style/Regulatory.TextLabel"/>
+        <LinearLayout android:orientation="vertical" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.7">
+            <LinearLayout android:orientation="horizontal" android:id="@+id/nt_regulatory_safety_instructions_text_all_detail_layout" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp">
+                <ImageView android:layout_gravity="center_vertical" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/nt_regulatory_arrow"/>
+                <TextView android:layout_gravity="center_vertical" android:id="@+id/nt_regulatory_safety_instructions_text_see_all_detail" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/previous_connected_see_all" android:layout_marginStart="13dp"/>
+            </LinearLayout>
+            <TextView android:id="@+id/nt_regulatory_safety_instructions_text_all_detail" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:layout_marginBottom="0dp" android:text="@string/nt_regulatory_safety_instructions_all_detail" style="@style/Regulatory.TextDetails"/>
+            <LinearLayout android:orientation="horizontal" android:id="@+id/nt_regulatory_safety_instructions_text_all_detail2" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp">
+                <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/nt_regulatory_ear"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="0dp" android:layout_marginBottom="0dp" android:text="@string/nt_regulatory_safety_instructions_all_detail_2" android:layout_marginStart="6dp" style="@style/Regulatory.TextDetails"/>
+            </LinearLayout>
+            <LinearLayout android:orientation="horizontal" android:id="@+id/nt_regulatory_safety_instructions_text_all_detail3" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp">
+                <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/nt_regulatory_bin"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="0dp" android:layout_marginBottom="0dp" android:text="@string/nt_regulatory_safety_instructions_all_detail_3" android:layout_marginStart="6dp" style="@style/Regulatory.TextDetails"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

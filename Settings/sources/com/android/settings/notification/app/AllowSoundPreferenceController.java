@@ -8,11 +8,10 @@ import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settings.notification.NotificationBackend;
 import com.android.settings.notification.app.NotificationSettings;
 import com.android.settingslib.RestrictedSwitchPreference;
-/* loaded from: classes.dex */
+
 public class AllowSoundPreferenceController extends NotificationPreferenceController implements PreferenceControllerMixin, Preference.OnPreferenceChangeListener {
     private NotificationSettings.DependentFieldListener mDependentFieldListener;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "allow_sound";
     }
@@ -22,18 +21,19 @@ public class AllowSoundPreferenceController extends NotificationPreferenceContro
         this.mDependentFieldListener = dependentFieldListener;
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         NotificationChannel notificationChannel;
-        return super.isAvailable() && (notificationChannel = this.mChannel) != null && "miscellaneous".equals(notificationChannel.getId());
+        if (super.isAvailable() && (notificationChannel = this.mChannel) != null && "miscellaneous".equals(notificationChannel.getId())) {
+            return true;
+        }
+        return false;
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController
-    boolean isIncludedInFilter() {
+    /* access modifiers changed from: package-private */
+    public boolean isIncludedInFilter() {
         return this.mPreferenceFilter.contains("sound");
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         if (this.mChannel != null) {
             RestrictedSwitchPreference restrictedSwitchPreference = (RestrictedSwitchPreference) preference;
@@ -49,15 +49,14 @@ public class AllowSoundPreferenceController extends NotificationPreferenceContro
         Log.i("AllowSoundPrefContr", "tried to updatestate on a null channel?!");
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
-        if (this.mChannel != null) {
-            this.mChannel.setImportance(((Boolean) obj).booleanValue() ? -1000 : 2);
-            this.mChannel.lockFields(4);
-            saveChannel();
-            this.mDependentFieldListener.onFieldValueChanged();
+        if (this.mChannel == null) {
             return true;
         }
+        this.mChannel.setImportance(((Boolean) obj).booleanValue() ? -1000 : 2);
+        this.mChannel.lockFields(4);
+        saveChannel();
+        this.mDependentFieldListener.onFieldValueChanged();
         return true;
     }
 }

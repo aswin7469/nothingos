@@ -2,7 +2,7 @@
 <resources>
     <plurals name="abc_slice_duration_days">
         <item quantity="zero">قبل %d يوم</item>
-        <item quantity="one">قبل %d يوم</item>
+        <item quantity="one">قبل يوم واحد (%d)</item>
         <item quantity="two">قبل يومين (%d)</item>
         <item quantity="few">قبل %d أيام</item>
         <item quantity="many">قبل %d يومًا</item>
@@ -10,7 +10,7 @@
     </plurals>
     <plurals name="abc_slice_duration_min">
         <item quantity="zero">قبل %d دقيقة</item>
-        <item quantity="one">قبل %d دقيقة</item>
+        <item quantity="one">قبل دقيقة واحدة (%d)</item>
         <item quantity="two">قبل دقيقتين (%d)</item>
         <item quantity="few">قبل %d دقائق</item>
         <item quantity="many">قبل %d دقيقة</item>
@@ -169,12 +169,12 @@
         <item quantity="other">‏يتبقى %d يوم.</item>
     </plurals>
     <plurals name="data_saver_unrestricted_summary">
-        <item quantity="zero">هناك %1$d تطبيق مسموح له باستخدام البيانات بدون قيود عند تفعيل ميزة &quot;توفير البيانات&quot;</item>
-        <item quantity="one">هناك تطبيق واحد مسموح له باستخدام البيانات بدون قيود عند تفعيل ميزة &quot;توفير البيانات&quot;</item>
-        <item quantity="two">هناك تطبيقان (%1$d) مسموح لهما باستخدام البيانات بدون قيود عند تفعيل توفير البيانات</item>
-        <item quantity="few">هناك %1$d تطبيقات مسموح لها باستخدام البيانات بدون قيود عند تفعيل ميزة &quot;توفير البيانات&quot;</item>
-        <item quantity="many">هناك %1$d تطبيقًا مسموح لها باستخدام البيانات بدون قيود عند تفعيل ميزة &quot;توفير البيانات&quot;</item>
-        <item quantity="other">هناك %1$d تطبيق مسموح له باستخدام البيانات بدون قيود عند تفعيل ميزة &quot;توفير البيانات&quot;</item>
+        <item quantity="zero">هناك %1$d تطبيق مسموح له باستخدام البيانات بدون قيود عند تفعيل ميزة &quot;توفير البيانات&quot;.</item>
+        <item quantity="one">هناك تطبيق واحد مسموح له باستخدام البيانات بدون قيود عند تفعيل ميزة &quot;توفير البيانات&quot;.</item>
+        <item quantity="two">هناك تطبيقان (%1$d) مسموح لهما باستخدام البيانات بدون قيود عند تفعيل توفير البيانات.</item>
+        <item quantity="few">هناك %1$d تطبيقات مسموح لها باستخدام البيانات بدون قيود عند تفعيل ميزة &quot;توفير البيانات&quot;.</item>
+        <item quantity="many">هناك %1$d تطبيقًا مسموح لها باستخدام البيانات بدون قيود عند تفعيل ميزة &quot;توفير البيانات&quot;.</item>
+        <item quantity="other">هناك %1$d تطبيق مسموح له باستخدام البيانات بدون قيود عند تفعيل ميزة &quot;توفير البيانات&quot;.</item>
     </plurals>
     <plurals name="default_camera_app_title">
         <item quantity="zero">تطبيقات للكاميرا</item>
@@ -273,12 +273,12 @@
         <item quantity="other">تم ربط %d تطبيق.</item>
     </plurals>
     <plurals name="location_app_permission_summary_location_on">
-        <item quantity="zero">يمتلك %1$d تطبيق من إجمالي %2$d تطبيق حق الوصول إلى بيانات الموقع الجغرافي.</item>
-        <item quantity="one">يمتلك تطبيق واحد (%1$d) من إجمالي %2$d تطبيق حق الوصول إلى بيانات الموقع الجغرافي.</item>
-        <item quantity="two">يمتلك تطبيقان (%1$d) من إجمالي %2$d تطبيق حق الوصول إلى بيانات الموقع الجغرافي.</item>
-        <item quantity="few">تمتلك %1$d تطبيقات من إجمالي %2$d تطبيق حق الوصول إلى بيانات الموقع الجغرافي.</item>
-        <item quantity="many">يمتلك %1$d تطبيقًا من إجمالي %2$d تطبيق حق الوصول إلى بيانات الموقع الجغرافي.</item>
-        <item quantity="other">يمتلك %1$d تطبيق من إجمالي %2$d تطبيق حق الوصول إلى بيانات الموقع الجغرافي.</item>
+        <item quantity="zero">يملك %1$d تطبيق من إجمالي %2$d تطبيق الإذن بالوصول إلى بيانات الموقع الجغرافي.</item>
+        <item quantity="one">يملك تطبيق واحد (%1$d) من إجمالي %2$d تطبيق الإذن بالوصول إلى بيانات الموقع الجغرافي.</item>
+        <item quantity="two">يملك تطبيقان (%1$d) من إجمالي %2$d تطبيق الإذن بالوصول إلى بيانات الموقع الجغرافي.</item>
+        <item quantity="few">تملك %1$d تطبيقات من إجمالي %2$d تطبيق الإذن بالوصول إلى بيانات الموقع الجغرافي.</item>
+        <item quantity="many">يملك %1$d تطبيقًا من إجمالي %2$d تطبيق الإذن بالوصول إلى بيانات الموقع الجغرافي.</item>
+        <item quantity="other">يملك %1$d تطبيق من إجمالي %2$d تطبيق الإذن بالوصول إلى بيانات الموقع الجغرافي.</item>
     </plurals>
     <plurals name="location_settings_summary_location_on">
         <item quantity="zero">خدمة &quot;الموقع الجغرافي&quot; مفعَّلة - يمتلك %1$d تطبيق حق الوصول إلى بيانات الموقع الجغرافي.</item>
@@ -465,20 +465,20 @@
         <item quantity="other">تم إيقاف %d فئة</item>
     </plurals>
     <plurals name="notifications_sent_daily">
-        <item quantity="zero">%d إشعار تقريبًا في اليوم</item>
+        <item quantity="zero">%,d إشعار تقريبًا في اليوم</item>
         <item quantity="one">%d إشعار تقريبًا في اليوم</item>
-        <item quantity="two">إشعاران (%d) تقريبًا في اليوم</item>
-        <item quantity="few">%d إشعارات تقريبًا في اليوم</item>
-        <item quantity="many">%d إشعارًا تقريبًا في اليوم</item>
-        <item quantity="other">%d إشعار تقريبًا في اليوم</item>
+        <item quantity="two">إشعاران (%,d) تقريبًا في اليوم</item>
+        <item quantity="few">%,d إشعارات تقريبًا في اليوم</item>
+        <item quantity="many">%,d إشعارًا تقريبًا في اليوم</item>
+        <item quantity="other">%,d إشعار تقريبًا في اليوم</item>
     </plurals>
     <plurals name="notifications_sent_weekly">
-        <item quantity="zero">%d إشعار تقريبًا في الأسبوع</item>
+        <item quantity="zero">%,d إشعار تقريبًا في الأسبوع</item>
         <item quantity="one">%d إشعار تقريبًا في الأسبوع</item>
-        <item quantity="two">إشعاران (%d) تقريبًا في الأسبوع</item>
-        <item quantity="few">%d إشعارات تقريبًا في الأسبوع</item>
-        <item quantity="many">%d إشعارًا تقريبًا في الأسبوع</item>
-        <item quantity="other">%d إشعار تقريبًا في الأسبوع</item>
+        <item quantity="two">إشعاران (%,d) تقريبًا في الأسبوع</item>
+        <item quantity="few">%,d إشعارات تقريبًا في الأسبوع</item>
+        <item quantity="many">%,d إشعارًا تقريبًا في الأسبوع</item>
+        <item quantity="other">%,d إشعار تقريبًا في الأسبوع</item>
     </plurals>
     <plurals name="number_of_device_admins">
         <item quantity="zero">%d تطبيق نشط</item>
@@ -593,12 +593,12 @@
         <item quantity="other">تمت إضافة %1$d بصمة إصبع.</item>
     </plurals>
     <plurals name="see_all_apps_title">
-        <item quantity="zero">‏عرض كل الـ %1$d تطبيق</item>
+        <item quantity="zero">‏عرض كل التطبيقات البالغ عددها %1$d</item>
         <item quantity="one">عرض كل التطبيقات</item>
         <item quantity="two">‏عرض كلا التطبيقين (%1$d)</item>
-        <item quantity="few">‏عرض كل الـ %1$d تطبيقات</item>
-        <item quantity="many">‏عرض كل الـ %1$d تطبيقًا</item>
-        <item quantity="other">‏عرض كل الـ %1$d تطبيق</item>
+        <item quantity="few">‏عرض كل التطبيقات البالغ عددها %1$d</item>
+        <item quantity="many">‏عرض كل التطبيقات البالغ عددها %1$d</item>
+        <item quantity="other">‏عرض كل التطبيقات البالغ عددها %1$d</item>
     </plurals>
     <plurals name="settings_suggestion_header_summary_hidden_items">
         <item quantity="zero">‏عرض %d عنصر مخفي</item>
@@ -639,22 +639,6 @@
         <item quantity="few">الثقة أو إزالة الشهادات</item>
         <item quantity="many">الثقة أو إزالة الشهادات</item>
         <item quantity="other">الثقة أو إزالة الشهادات</item>
-    </plurals>
-    <plurals name="ssl_ca_cert_info_message">
-        <item quantity="zero">تم بواسطة %s تثبيت شهادات مرجعية لملفك الشخصي للعمل، وهذا قد يسمح بمراقبة أنشطة شبكة العمل، بما في ذلك الرسائل الإلكترونية والتطبيقات ومواقع الويب الآمنة.\n\nللحصول على مزيد من المعلومات حول هذه الشهادات، يمكنك الاتصال بالمشرف.</item>
-        <item quantity="one">تم بواسطة %s تثبيت شهادة مرجعية لملفك الشخصي للعمل، وهذا قد يسمح بمراقبة أنشطة شبكة العمل، بما في ذلك الرسائل الإلكترونية والتطبيقات ومواقع الويب الآمنة.\n\nللحصول على مزيد من المعلومات حول هذه الشهادة، يمكنك الاتصال بالمشرف.</item>
-        <item quantity="two">تم بواسطة %s تثبيت شهادتين مرجعيتين لملفك الشخصي للعمل، وهذا قد يسمح بمراقبة أنشطة شبكة العمل، بما في ذلك الرسائل الإلكترونية والتطبيقات ومواقع الويب الآمنة.\n\nللحصول على مزيد من المعلومات حول هذه الشهادات، يمكنك الاتصال بالمشرف.</item>
-        <item quantity="few">تم بواسطة %s تثبيت شهادات مرجعية لملفك الشخصي للعمل، وهذا قد يسمح بمراقبة أنشطة شبكة العمل، بما في ذلك الرسائل الإلكترونية والتطبيقات ومواقع الويب الآمنة.\n\nللحصول على مزيد من المعلومات حول هذه الشهادات، يمكنك الاتصال بالمشرف.</item>
-        <item quantity="many">تم بواسطة %s تثبيت شهادات مرجعية لملفك الشخصي للعمل، وهذا قد يسمح بمراقبة أنشطة شبكة العمل، بما في ذلك الرسائل الإلكترونية والتطبيقات ومواقع الويب الآمنة.\n\nللحصول على مزيد من المعلومات حول هذه الشهادات، يمكنك الاتصال بالمشرف.</item>
-        <item quantity="other">تم بواسطة %s تثبيت شهادات مرجعية لملفك الشخصي للعمل، وهذا قد يسمح بمراقبة أنشطة شبكة العمل، بما في ذلك الرسائل الإلكترونية والتطبيقات ومواقع الويب الآمنة.\n\nللحصول على مزيد من المعلومات حول هذه الشهادات، يمكنك الاتصال بالمشرف.</item>
-    </plurals>
-    <plurals name="ssl_ca_cert_info_message_device_owner">
-        <item quantity="zero">تم بواسطة %s تثبيت شهادات مرجعية على جهازك، مما يسمح بمراقبة أنشطة الشبكة على جهازك، بما في ذلك الرسائل الإلكترونية والتطبيقات ومواقع الويب الآمنة.\n\nللحصول على مزيد من المعلومات حول هذه الشهادات، يمكنك الاتصال بالمشرف.</item>
-        <item quantity="one">تم بواسطة %s تثبيت شهادة مرجعية على جهازك، مما يسمح بمراقبة أنشطة الشبكة على جهازك، بما في ذلك الرسائل الإلكترونية والتطبيقات ومواقع الويب الآمنة.\n\nللحصول على مزيد من المعلومات حول هذه الشهادة، يمكنك الاتصال بالمشرف.</item>
-        <item quantity="two">تم بواسطة %s تثبيت شهادتين مرجعيتين على جهازك، مما يسمح بمراقبة أنشطة الشبكة على جهازك، بما في ذلك الرسائل الإلكترونية والتطبيقات ومواقع الويب الآمنة.\n\nللحصول على مزيد من المعلومات حول هذه الشهادات، يمكنك الاتصال بالمشرف.</item>
-        <item quantity="few">تم بواسطة %s تثبيت شهادات مرجعية على جهازك، مما يسمح بمراقبة أنشطة الشبكة على جهازك، بما في ذلك الرسائل الإلكترونية والتطبيقات ومواقع الويب الآمنة.\n\nللحصول على مزيد من المعلومات حول هذه الشهادات، يمكنك الاتصال بالمشرف.</item>
-        <item quantity="many">تم بواسطة %s تثبيت شهادات مرجعية على جهازك، مما يسمح بمراقبة أنشطة الشبكة على جهازك، بما في ذلك الرسائل الإلكترونية والتطبيقات ومواقع الويب الآمنة.\n\nللحصول على مزيد من المعلومات حول هذه الشهادات، يمكنك الاتصال بالمشرف.</item>
-        <item quantity="other">تم بواسطة %s تثبيت شهادات مرجعية على جهازك، مما يسمح بمراقبة أنشطة الشبكة على جهازك، بما في ذلك الرسائل الإلكترونية والتطبيقات ومواقع الويب الآمنة.\n\nللحصول على مزيد من المعلومات حول هذه الشهادات، يمكنك الاتصال بالمشرف.</item>
     </plurals>
     <plurals name="ssl_ca_cert_settings_button">
         <item quantity="zero">الاطّلاع على الشهادات</item>
@@ -719,14 +703,6 @@
         <item quantity="few">‏%d اشتراكات</item>
         <item quantity="many">‏%d اشتراكًا</item>
         <item quantity="other">‏%d اشتراك</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="zero">‏عدد الأجهزة المتصلة ‎%1$d</item>
-        <item quantity="one">‏عدد الأجهزة المتصلة ‎%1$d</item>
-        <item quantity="two">‏عدد الأجهزة المتصلة ‎%1$d</item>
-        <item quantity="few">‏عدد الأجهزة المتصلة ‎%1$d</item>
-        <item quantity="many">‏عدد الأجهزة المتصلة ‎%1$d</item>
-        <item quantity="other">‏عدد الأجهزة المتصلة ‎%1$d</item>
     </plurals>
     <plurals name="wrong_pin_code">
         <item quantity="zero">‏رمز رقم التعريف الشخصي لبطاقة SIM غير صحيح، ولم يتبق لديك أي محاولات (%d).</item>

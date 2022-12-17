@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.os.UserHandle;
 import android.os.UserManager;
 import androidx.fragment.app.FragmentActivity;
+import androidx.preference.PreferenceManager;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.Utils;
 import com.android.settings.dashboard.DashboardFragment;
 import com.android.settingslib.accounts.AuthenticatorHelper;
@@ -17,7 +19,7 @@ import com.android.settingslib.core.AbstractPreferenceController;
 import com.android.settingslib.drawer.Tile;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class AccountDetailDashboardFragment extends DashboardFragment {
     Account mAccount;
     private String mAccountLabel;
@@ -26,21 +28,18 @@ public class AccountDetailDashboardFragment extends DashboardFragment {
     private RemoveAccountPreferenceController mRemoveAccountController;
     UserHandle mUserHandle;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "AccountDetailDashboard";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 8;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        getPreferenceManager().setPreferenceComparisonCallback(null);
+        getPreferenceManager().setPreferenceComparisonCallback((PreferenceManager.PreferenceComparisonCallback) null);
         Bundle arguments = getArguments();
         FragmentActivity activity = getActivity();
         this.mUserHandle = Utils.getSecureTargetUser(activity.getActivityToken(), (UserManager) getSystemService("user"), arguments, activity.getIntent().getExtras());
@@ -59,7 +58,6 @@ public class AccountDetailDashboardFragment extends DashboardFragment {
         this.mRemoveAccountController.init(this.mAccount, this.mUserHandle);
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, androidx.fragment.app.Fragment
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
         if (this.mAccountLabel != null) {
@@ -68,38 +66,43 @@ public class AccountDetailDashboardFragment extends DashboardFragment {
         updateUi();
     }
 
-    void finishIfAccountMissing() {
+    /* access modifiers changed from: package-private */
+    public void finishIfAccountMissing() {
         Context context = getContext();
         AccountManager accountManager = (AccountManager) context.getSystemService(AccountManager.class);
-        for (UserHandle userHandle : ((UserManager) context.getSystemService(UserManager.class)).getUserProfiles()) {
-            for (Account account : accountManager.getAccountsAsUser(userHandle.getIdentifier())) {
-                if (account.equals(this.mAccount)) {
-                    return;
+        for (UserHandle identifier : ((UserManager) context.getSystemService(UserManager.class)).getUserProfiles()) {
+            Account[] accountsAsUser = accountManager.getAccountsAsUser(identifier.getIdentifier());
+            int length = accountsAsUser.length;
+            int i = 0;
+            while (true) {
+                if (i < length) {
+                    if (!accountsAsUser[i].equals(this.mAccount)) {
+                        i++;
+                    } else {
+                        return;
+                    }
                 }
             }
         }
         finish();
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
         finishIfAccountMissing();
     }
 
-    @Override // com.android.settings.support.actionbar.HelpResourceProvider
     public int getHelpResource() {
-        return R.string.help_url_account_detail;
+        return R$string.help_url_account_detail;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.account_type_settings;
+        return R$xml.account_type_settings;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment
-    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+    /* access modifiers changed from: protected */
+    public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
         ArrayList arrayList = new ArrayList();
         AccountSyncPreferenceController accountSyncPreferenceController = new AccountSyncPreferenceController(context);
         this.mAccountSynController = accountSyncPreferenceController;
@@ -111,8 +114,7 @@ public class AccountDetailDashboardFragment extends DashboardFragment {
         return arrayList;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public boolean displayTile(Tile tile) {
         Bundle metaData;
         if (!super.displayTile(tile) || this.mAccountType == null || (metaData = tile.getMetaData()) == null) {
@@ -127,11 +129,12 @@ public class AccountDetailDashboardFragment extends DashboardFragment {
         return equals;
     }
 
-    void updateUi() {
+    /* access modifiers changed from: package-private */
+    public void updateUi() {
         Context context = getContext();
         Bundle arguments = getArguments();
         UserHandle userHandle = (arguments == null || !arguments.containsKey("user_handle")) ? null : (UserHandle) arguments.getParcelable("user_handle");
-        AccountTypePreferenceLoader accountTypePreferenceLoader = new AccountTypePreferenceLoader(this, new AuthenticatorHelper(context, userHandle, null), userHandle);
+        AccountTypePreferenceLoader accountTypePreferenceLoader = new AccountTypePreferenceLoader(this, new AuthenticatorHelper(context, userHandle, (AuthenticatorHelper.OnAccountsUpdateListener) null), userHandle);
         PreferenceScreen addPreferencesForType = accountTypePreferenceLoader.addPreferencesForType(this.mAccountType, getPreferenceScreen());
         if (addPreferencesForType != null) {
             accountTypePreferenceLoader.updatePreferenceIntents(addPreferencesForType, this.mAccountType, this.mAccount);

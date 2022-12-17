@@ -4,27 +4,25 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import androidx.appcompat.R$styleable;
 import androidx.core.view.ViewCompat;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class AppCompatBackgroundHelper {
+
+class AppCompatBackgroundHelper {
+    private int mBackgroundResId = -1;
     private TintInfo mBackgroundTint;
+    private final AppCompatDrawableManager mDrawableManager;
     private TintInfo mInternalBackgroundTint;
     private TintInfo mTmpInfo;
     private final View mView;
-    private int mBackgroundResId = -1;
-    private final AppCompatDrawableManager mDrawableManager = AppCompatDrawableManager.get();
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public AppCompatBackgroundHelper(View view) {
+    AppCompatBackgroundHelper(View view) {
         this.mView = view;
+        this.mDrawableManager = AppCompatDrawableManager.get();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void loadFromAttributes(AttributeSet attributeSet, int i) {
         Context context = this.mView.getContext();
         int[] iArr = R$styleable.ViewBackgroundHelper;
@@ -46,14 +44,14 @@ public class AppCompatBackgroundHelper {
             }
             int i4 = R$styleable.ViewBackgroundHelper_backgroundTintMode;
             if (obtainStyledAttributes.hasValue(i4)) {
-                ViewCompat.setBackgroundTintMode(this.mView, DrawableUtils.parseTintMode(obtainStyledAttributes.getInt(i4, -1), null));
+                ViewCompat.setBackgroundTintMode(this.mView, DrawableUtils.parseTintMode(obtainStyledAttributes.getInt(i4, -1), (PorterDuff.Mode) null));
             }
         } finally {
             obtainStyledAttributes.recycle();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void onSetBackgroundResource(int i) {
         this.mBackgroundResId = i;
         AppCompatDrawableManager appCompatDrawableManager = this.mDrawableManager;
@@ -61,14 +59,14 @@ public class AppCompatBackgroundHelper {
         applySupportBackgroundTint();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void onSetBackgroundDrawable(Drawable drawable) {
         this.mBackgroundResId = -1;
-        setInternalBackgroundTint(null);
+        setInternalBackgroundTint((ColorStateList) null);
         applySupportBackgroundTint();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setSupportBackgroundTintList(ColorStateList colorStateList) {
         if (this.mBackgroundTint == null) {
             this.mBackgroundTint = new TintInfo();
@@ -79,7 +77,7 @@ public class AppCompatBackgroundHelper {
         applySupportBackgroundTint();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public ColorStateList getSupportBackgroundTintList() {
         TintInfo tintInfo = this.mBackgroundTint;
         if (tintInfo != null) {
@@ -88,7 +86,7 @@ public class AppCompatBackgroundHelper {
         return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setSupportBackgroundTintMode(PorterDuff.Mode mode) {
         if (this.mBackgroundTint == null) {
             this.mBackgroundTint = new TintInfo();
@@ -99,7 +97,7 @@ public class AppCompatBackgroundHelper {
         applySupportBackgroundTint();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public PorterDuff.Mode getSupportBackgroundTintMode() {
         TintInfo tintInfo = this.mBackgroundTint;
         if (tintInfo != null) {
@@ -108,27 +106,27 @@ public class AppCompatBackgroundHelper {
         return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void applySupportBackgroundTint() {
         Drawable background = this.mView.getBackground();
-        if (background != null) {
-            if (shouldApplyFrameworkTintUsingColorFilter() && applyFrameworkTintUsingColorFilter(background)) {
-                return;
-            }
+        if (background == null) {
+            return;
+        }
+        if (!shouldApplyFrameworkTintUsingColorFilter() || !applyFrameworkTintUsingColorFilter(background)) {
             TintInfo tintInfo = this.mBackgroundTint;
             if (tintInfo != null) {
                 AppCompatDrawableManager.tintDrawable(background, tintInfo, this.mView.getDrawableState());
                 return;
             }
             TintInfo tintInfo2 = this.mInternalBackgroundTint;
-            if (tintInfo2 == null) {
-                return;
+            if (tintInfo2 != null) {
+                AppCompatDrawableManager.tintDrawable(background, tintInfo2, this.mView.getDrawableState());
             }
-            AppCompatDrawableManager.tintDrawable(background, tintInfo2, this.mView.getDrawableState());
         }
     }
 
-    void setInternalBackgroundTint(ColorStateList colorStateList) {
+    /* access modifiers changed from: package-private */
+    public void setInternalBackgroundTint(ColorStateList colorStateList) {
         if (colorStateList != null) {
             if (this.mInternalBackgroundTint == null) {
                 this.mInternalBackgroundTint = new TintInfo();
@@ -143,8 +141,7 @@ public class AppCompatBackgroundHelper {
     }
 
     private boolean shouldApplyFrameworkTintUsingColorFilter() {
-        int i = Build.VERSION.SDK_INT;
-        return i > 21 ? this.mInternalBackgroundTint != null : i == 21;
+        return this.mInternalBackgroundTint != null;
     }
 
     private boolean applyFrameworkTintUsingColorFilter(Drawable drawable) {
@@ -163,10 +160,10 @@ public class AppCompatBackgroundHelper {
             tintInfo.mHasTintMode = true;
             tintInfo.mTintMode = backgroundTintMode;
         }
-        if (tintInfo.mHasTintList || tintInfo.mHasTintMode) {
-            AppCompatDrawableManager.tintDrawable(drawable, tintInfo, this.mView.getDrawableState());
-            return true;
+        if (!tintInfo.mHasTintList && !tintInfo.mHasTintMode) {
+            return false;
         }
-        return false;
+        AppCompatDrawableManager.tintDrawable(drawable, tintInfo, this.mView.getDrawableState());
+        return true;
     }
 }

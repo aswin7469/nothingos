@@ -6,7 +6,7 @@ import com.android.settingslib.net.NetworkCycleDataForUid;
 import com.android.settingslib.net.NetworkCycleDataLoader;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class NetworkCycleDataForUidLoader extends NetworkCycleDataLoader<List<NetworkCycleDataForUid>> {
     private final List<NetworkCycleDataForUid> mData;
     private final boolean mRetrieveDetail;
@@ -19,51 +19,46 @@ public class NetworkCycleDataForUidLoader extends NetworkCycleDataLoader<List<Ne
         this.mData = new ArrayList();
     }
 
-    @Override // com.android.settingslib.net.NetworkCycleDataLoader
-    void recordUsage(long j, long j2) {
+    /* access modifiers changed from: package-private */
+    public void recordUsage(long j, long j2) {
         try {
             long j3 = 0;
             long j4 = 0;
-            for (Integer num : this.mUids) {
-                int intValue = num.intValue();
-                long totalUsage = getTotalUsage(this.mNetworkStatsManager.queryDetailsForUid(this.mNetworkTemplate, j, j2, intValue));
+            for (Integer intValue : this.mUids) {
+                int intValue2 = intValue.intValue();
+                long totalUsage = getTotalUsage(this.mNetworkStatsManager.queryDetailsForUidTagState(this.mNetworkTemplate, j, j2, intValue2, 0, -1));
                 if (totalUsage > 0) {
                     long j5 = j3 + totalUsage;
                     if (this.mRetrieveDetail) {
-                        j4 += getForegroundUsage(j, j2, intValue);
+                        j4 += getForegroundUsage(j, j2, intValue2);
                     }
                     j3 = j5;
                 }
             }
-            if (j3 <= 0) {
-                return;
+            if (j3 > 0) {
+                NetworkCycleDataForUid.Builder builder = new NetworkCycleDataForUid.Builder();
+                builder.setStartTime(j).setEndTime(j2).setTotalUsage(j3);
+                if (this.mRetrieveDetail) {
+                    builder.setBackgroundUsage(j3 - j4).setForegroundUsage(j4);
+                }
+                NetworkCycleDataForUid build = builder.build();
+                if (build.getBackgroudUsage() >= 0) {
+                    this.mData.add(build);
+                }
             }
-            NetworkCycleDataForUid.Builder builder = new NetworkCycleDataForUid.Builder();
-            builder.setStartTime(j).setEndTime(j2).setTotalUsage(j3);
-            if (this.mRetrieveDetail) {
-                builder.setBackgroundUsage(j3 - j4).setForegroundUsage(j4);
-            }
-            NetworkCycleDataForUid mo606build = builder.mo606build();
-            if (mo606build.getBackgroudUsage() < 0) {
-                return;
-            }
-            this.mData.add(mo606build);
         } catch (Exception e) {
             Log.e("NetworkDataForUidLoader", "Exception querying network detail.", e);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // com.android.settingslib.net.NetworkCycleDataLoader
+    /* access modifiers changed from: package-private */
     public List<NetworkCycleDataForUid> getCycleUsage() {
         return this.mData;
     }
 
     public static Builder<?> builder(Context context) {
-        return new Builder<NetworkCycleDataForUidLoader>(context) { // from class: com.android.settingslib.net.NetworkCycleDataForUidLoader.1
-            @Override // com.android.settingslib.net.NetworkCycleDataLoader.Builder
-            /* renamed from: build */
-            public NetworkCycleDataForUidLoader mo608build() {
+        return new Builder<NetworkCycleDataForUidLoader>(context) {
+            public NetworkCycleDataForUidLoader build() {
                 return new NetworkCycleDataForUidLoader(this);
             }
         };
@@ -77,10 +72,11 @@ public class NetworkCycleDataForUidLoader extends NetworkCycleDataLoader<List<Ne
         return getTotalUsage(this.mNetworkStatsManager.queryDetailsForUidTagState(this.mNetworkTemplate, j, j2, i, 0, 2));
     }
 
-    /* loaded from: classes.dex */
     public static abstract class Builder<T extends NetworkCycleDataForUidLoader> extends NetworkCycleDataLoader.Builder<T> {
-        private final List<Integer> mUids = new ArrayList();
-        private boolean mRetrieveDetail = true;
+        /* access modifiers changed from: private */
+        public boolean mRetrieveDetail = true;
+        /* access modifiers changed from: private */
+        public final List<Integer> mUids = new ArrayList();
 
         public Builder(Context context) {
             super(context);

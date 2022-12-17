@@ -4,19 +4,17 @@ import android.graphics.Canvas;
 import android.view.View;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
-import com.android.settings.R;
+import com.android.settings.R$id;
 import com.android.settings.homepage.contextualcards.slices.SliceFullCardRendererHelper;
 import com.android.settings.homepage.contextualcards.slices.SliceHalfCardRendererHelper;
-/* loaded from: classes.dex */
+
 public class SwipeDismissalDelegate extends ItemTouchHelper.Callback {
     private final Listener mListener;
 
-    /* loaded from: classes.dex */
     public interface Listener {
         void onSwiped(int i);
     }
 
-    @Override // androidx.recyclerview.widget.ItemTouchHelper.Callback
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder viewHolder2) {
         return false;
     }
@@ -25,29 +23,25 @@ public class SwipeDismissalDelegate extends ItemTouchHelper.Callback {
         this.mListener = listener;
     }
 
-    @Override // androidx.recyclerview.widget.ItemTouchHelper.Callback
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        if ((viewHolder.getItemViewType() == SliceContextualCardRenderer.VIEW_TYPE_FULL_WIDTH || viewHolder.getItemViewType() == SliceContextualCardRenderer.VIEW_TYPE_HALF_WIDTH) && viewHolder.itemView.findViewById(R.id.dismissal_view).getVisibility() != 0) {
+        if ((viewHolder.getItemViewType() == SliceContextualCardRenderer.VIEW_TYPE_FULL_WIDTH || viewHolder.getItemViewType() == SliceContextualCardRenderer.VIEW_TYPE_HALF_WIDTH) && viewHolder.itemView.findViewById(R$id.dismissal_view).getVisibility() != 0) {
             return ItemTouchHelper.Callback.makeMovementFlags(0, 12);
         }
         return 0;
     }
 
-    @Override // androidx.recyclerview.widget.ItemTouchHelper.Callback
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int i) {
         this.mListener.onSwiped(viewHolder.getAdapterPosition());
     }
 
-    @Override // androidx.recyclerview.widget.ItemTouchHelper.Callback
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         ItemTouchHelper.Callback.getDefaultUIUtil().clearView(getSwipeableView(viewHolder));
     }
 
-    @Override // androidx.recyclerview.widget.ItemTouchHelper.Callback
     public void onChildDraw(Canvas canvas, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float f, float f2, int i, boolean z) {
         View swipeableView = getSwipeableView(viewHolder);
-        View findViewById = viewHolder.itemView.findViewById(R.id.dismissal_icon_start);
-        View findViewById2 = viewHolder.itemView.findViewById(R.id.dismissal_icon_end);
+        View findViewById = viewHolder.itemView.findViewById(R$id.dismissal_icon_start);
+        View findViewById2 = viewHolder.itemView.findViewById(R$id.dismissal_icon_end);
         if (f > 0.0f) {
             findViewById.setVisibility(0);
             findViewById2.setVisibility(8);

@@ -5,8 +5,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+
 public class AppViewHolder {
     public ImageView appIcon;
     public TextView appName;
@@ -16,18 +17,18 @@ public class AppViewHolder {
     public View widget;
 
     public static AppViewHolder createOrRecycle(LayoutInflater layoutInflater, View view) {
-        if (view == null) {
-            View inflate = layoutInflater.inflate(R.layout.preference_app, (ViewGroup) null);
-            AppViewHolder appViewHolder = new AppViewHolder();
-            appViewHolder.rootView = inflate;
-            appViewHolder.appName = (TextView) inflate.findViewById(16908310);
-            appViewHolder.appIcon = (ImageView) inflate.findViewById(16908294);
-            appViewHolder.summary = (TextView) inflate.findViewById(16908304);
-            appViewHolder.disabled = (TextView) inflate.findViewById(R.id.appendix);
-            appViewHolder.widget = inflate.findViewById(16908312);
-            inflate.setTag(appViewHolder);
-            return appViewHolder;
+        if (view != null) {
+            return (AppViewHolder) view.getTag();
         }
-        return (AppViewHolder) view.getTag();
+        View inflate = layoutInflater.inflate(R$layout.preference_app, (ViewGroup) null);
+        AppViewHolder appViewHolder = new AppViewHolder();
+        appViewHolder.rootView = inflate;
+        appViewHolder.appName = (TextView) inflate.findViewById(16908310);
+        appViewHolder.appIcon = (ImageView) inflate.findViewById(16908294);
+        appViewHolder.summary = (TextView) inflate.findViewById(16908304);
+        appViewHolder.disabled = (TextView) inflate.findViewById(R$id.appendix);
+        appViewHolder.widget = inflate.findViewById(16908312);
+        inflate.setTag(appViewHolder);
+        return appViewHolder;
     }
 }

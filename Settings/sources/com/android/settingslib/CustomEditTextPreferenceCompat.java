@@ -10,18 +10,20 @@ import android.widget.EditText;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.EditTextPreference;
 import androidx.preference.EditTextPreferenceDialogFragmentCompat;
-/* loaded from: classes.dex */
+
 public class CustomEditTextPreferenceCompat extends EditTextPreference {
     private CustomPreferenceDialogFragment mFragment;
 
-    protected void onClick(DialogInterface dialogInterface, int i) {
+    /* access modifiers changed from: protected */
+    public void onClick(DialogInterface dialogInterface, int i) {
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onDialogClosed(boolean z) {
     }
 
-    protected void onPrepareDialogBuilder(AlertDialog.Builder builder, DialogInterface.OnClickListener onClickListener) {
+    /* access modifiers changed from: protected */
+    public void onPrepareDialogBuilder(AlertDialog.Builder builder, DialogInterface.OnClickListener onClickListener) {
     }
 
     public CustomEditTextPreferenceCompat(Context context, AttributeSet attributeSet, int i, int i2) {
@@ -57,7 +59,7 @@ public class CustomEditTextPreferenceCompat extends EditTextPreference {
         return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onBindDialogView(View view) {
         EditText editText = (EditText) view.findViewById(16908291);
         if (editText != null) {
@@ -66,12 +68,11 @@ public class CustomEditTextPreferenceCompat extends EditTextPreference {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setFragment(CustomPreferenceDialogFragment customPreferenceDialogFragment) {
         this.mFragment = customPreferenceDialogFragment;
     }
 
-    /* loaded from: classes.dex */
     public static class CustomPreferenceDialogFragment extends EditTextPreferenceDialogFragmentCompat {
         public static CustomPreferenceDialogFragment newInstance(String str) {
             CustomPreferenceDialogFragment customPreferenceDialogFragment = new CustomPreferenceDialogFragment();
@@ -85,26 +86,24 @@ public class CustomEditTextPreferenceCompat extends EditTextPreference {
             return (CustomEditTextPreferenceCompat) getPreference();
         }
 
-        @Override // androidx.preference.EditTextPreferenceDialogFragmentCompat, androidx.preference.PreferenceDialogFragmentCompat
-        protected void onBindDialogView(View view) {
+        /* access modifiers changed from: protected */
+        public void onBindDialogView(View view) {
             super.onBindDialogView(view);
             getCustomizablePreference().onBindDialogView(view);
         }
 
-        @Override // androidx.preference.PreferenceDialogFragmentCompat
-        protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {
+        /* access modifiers changed from: protected */
+        public void onPrepareDialogBuilder(AlertDialog.Builder builder) {
             super.onPrepareDialogBuilder(builder);
             getCustomizablePreference().setFragment(this);
             getCustomizablePreference().onPrepareDialogBuilder(builder, this);
         }
 
-        @Override // androidx.preference.EditTextPreferenceDialogFragmentCompat, androidx.preference.PreferenceDialogFragmentCompat
         public void onDialogClosed(boolean z) {
             super.onDialogClosed(z);
             getCustomizablePreference().onDialogClosed(z);
         }
 
-        @Override // androidx.preference.PreferenceDialogFragmentCompat, android.content.DialogInterface.OnClickListener
         public void onClick(DialogInterface dialogInterface, int i) {
             super.onClick(dialogInterface, i);
             getCustomizablePreference().onClick(dialogInterface, i);

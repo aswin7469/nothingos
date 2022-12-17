@@ -5,22 +5,15 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.lifecycle.Lifecycle;
-/* JADX INFO: Access modifiers changed from: package-private */
+
 @SuppressLint({"BanParcelableUsage"})
-/* loaded from: classes.dex */
-public final class FragmentState implements Parcelable {
-    public static final Parcelable.Creator<FragmentState> CREATOR = new Parcelable.Creator<FragmentState>() { // from class: androidx.fragment.app.FragmentState.1
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: createFromParcel */
-        public FragmentState mo106createFromParcel(Parcel parcel) {
+final class FragmentState implements Parcelable {
+    public static final Parcelable.Creator<FragmentState> CREATOR = new Parcelable.Creator<FragmentState>() {
+        public FragmentState createFromParcel(Parcel parcel) {
             return new FragmentState(parcel);
         }
 
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: newArray */
-        public FragmentState[] mo107newArray(int i) {
+        public FragmentState[] newArray(int i) {
             return new FragmentState[i];
         }
     };
@@ -38,13 +31,11 @@ public final class FragmentState implements Parcelable {
     final String mTag;
     final String mWho;
 
-    @Override // android.os.Parcelable
     public int describeContents() {
         return 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public FragmentState(Fragment fragment) {
+    FragmentState(Fragment fragment) {
         this.mClassName = fragment.getClass().getName();
         this.mWho = fragment.mWho;
         this.mFromLayout = fragment.mFromLayout;
@@ -76,7 +67,7 @@ public final class FragmentState implements Parcelable {
         this.mMaxLifecycleState = parcel.readInt();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public Fragment instantiate(FragmentFactory fragmentFactory, ClassLoader classLoader) {
         Fragment instantiate = fragmentFactory.instantiate(classLoader, this.mClassName);
         Bundle bundle = this.mArguments;
@@ -138,7 +129,6 @@ public final class FragmentState implements Parcelable {
         return sb.toString();
     }
 
-    @Override // android.os.Parcelable
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(this.mClassName);
         parcel.writeString(this.mWho);

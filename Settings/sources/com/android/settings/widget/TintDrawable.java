@@ -3,22 +3,22 @@ package com.android.settings.widget;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.DrawableWrapper;
 import android.util.AttributeSet;
 import com.android.settings.R$styleable;
 import java.io.IOException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
-/* loaded from: classes.dex */
+
 public class TintDrawable extends DrawableWrapper {
     private int[] mThemeAttrs;
     private ColorStateList mTint;
 
     public TintDrawable() {
-        super(null);
+        super((Drawable) null);
     }
 
-    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public void inflate(Resources resources, XmlPullParser xmlPullParser, AttributeSet attributeSet, Resources.Theme theme) throws XmlPullParserException, IOException {
         TypedArray obtainAttributes = DrawableWrapper.obtainAttributes(resources, theme, attributeSet, R$styleable.TintDrawable);
         super.inflate(resources, xmlPullParser, attributeSet, theme);
@@ -28,7 +28,6 @@ public class TintDrawable extends DrawableWrapper {
         applyTint();
     }
 
-    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public void applyTheme(Resources.Theme theme) {
         super.applyTheme(theme);
         int[] iArr = this.mThemeAttrs;
@@ -40,7 +39,6 @@ public class TintDrawable extends DrawableWrapper {
         applyTint();
     }
 
-    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public boolean canApplyTheme() {
         int[] iArr = this.mThemeAttrs;
         return (iArr != null && iArr.length > 0) || super.canApplyTheme();
@@ -58,9 +56,8 @@ public class TintDrawable extends DrawableWrapper {
     }
 
     private void applyTint() {
-        if (getDrawable() == null || this.mTint == null) {
-            return;
+        if (getDrawable() != null && this.mTint != null) {
+            getDrawable().mutate().setTintList(this.mTint);
         }
-        getDrawable().mutate().setTintList(this.mTint);
     }
 }

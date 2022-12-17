@@ -9,41 +9,26 @@ import android.provider.Settings;
 import androidx.preference.Preference;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.settings.Utils;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.RestrictedSwitchPreference;
-/* loaded from: classes.dex */
+
 public class FaceSettingsLockscreenBypassPreferenceController extends FaceSettingsPreferenceController {
     @VisibleForTesting
     protected FaceManager mFaceManager;
     private UserManager mUserManager;
 
-    @Override // com.android.settings.biometrics.face.FaceSettingsPreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.biometrics.face.FaceSettingsPreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.biometrics.face.FaceSettingsPreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.biometrics.face.FaceSettingsPreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.biometrics.face.FaceSettingsPreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.biometrics.face.FaceSettingsPreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -56,21 +41,22 @@ public class FaceSettingsLockscreenBypassPreferenceController extends FaceSettin
         this.mUserManager = (UserManager) context.getSystemService(UserManager.class);
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean isChecked() {
-        if (FaceSettings.isFaceHardwareDetected(this.mContext) && getRestrictingAdmin() == null) {
-            return Settings.Secure.getIntForUser(this.mContext.getContentResolver(), "face_unlock_dismisses_keyguard", this.mContext.getResources().getBoolean(17891556) ? 1 : 0, getUserHandle()) != 0;
+        if (!FaceSettings.isFaceHardwareDetected(this.mContext) || getRestrictingAdmin() != null) {
+            return false;
+        }
+        boolean z = this.mContext.getResources().getBoolean(17891660);
+        if (Settings.Secure.getIntForUser(this.mContext.getContentResolver(), "face_unlock_dismisses_keyguard", z ? 1 : 0, getUserHandle()) != 0) {
+            return true;
         }
         return false;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean setChecked(boolean z) {
         Settings.Secure.putIntForUser(this.mContext.getContentResolver(), "face_unlock_dismisses_keyguard", z ? 1 : 0, getUserHandle());
         return true;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         if (!FaceSettings.isFaceHardwareDetected(this.mContext)) {
@@ -87,7 +73,6 @@ public class FaceSettingsLockscreenBypassPreferenceController extends FaceSettin
         }
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         FaceManager faceManager;
         if (!Utils.isMultipleBiometricsSupported(this.mContext) && !this.mUserManager.isManagedProfile(getUserId()) && (faceManager = this.mFaceManager) != null && faceManager.isHardwareDetected()) {

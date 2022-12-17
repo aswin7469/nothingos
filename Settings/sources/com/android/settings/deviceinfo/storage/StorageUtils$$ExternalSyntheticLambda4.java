@@ -1,18 +1,18 @@
 package com.android.settings.deviceinfo.storage;
 
-import android.os.storage.DiskInfo;
+import android.os.storage.StorageManager;
+import android.os.storage.VolumeRecord;
 import java.util.function.Predicate;
-/* loaded from: classes.dex */
-public final /* synthetic */ class StorageUtils$$ExternalSyntheticLambda4 implements Predicate {
-    public static final /* synthetic */ StorageUtils$$ExternalSyntheticLambda4 INSTANCE = new StorageUtils$$ExternalSyntheticLambda4();
 
-    private /* synthetic */ StorageUtils$$ExternalSyntheticLambda4() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class StorageUtils$$ExternalSyntheticLambda4 implements Predicate {
+    public final /* synthetic */ StorageManager f$0;
+
+    public /* synthetic */ StorageUtils$$ExternalSyntheticLambda4(StorageManager storageManager) {
+        this.f$0 = storageManager;
     }
 
-    @Override // java.util.function.Predicate
     public final boolean test(Object obj) {
-        boolean isDiskUnsupported;
-        isDiskUnsupported = StorageUtils.isDiskUnsupported((DiskInfo) obj);
-        return isDiskUnsupported;
+        return StorageUtils.isVolumeRecordMissed(this.f$0, (VolumeRecord) obj);
     }
 }

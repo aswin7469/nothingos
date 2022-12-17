@@ -20,29 +20,42 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
 import com.android.settings.SetupWizardUtils;
 import com.android.settings.wifi.dpp.AdbQrCode;
 import com.android.settings.wifi.dpp.WifiDppQrCodeBaseFragment;
 import com.android.settings.wifi.dpp.WifiNetworkConfig;
-import com.android.settings.wifi.qrcode.QrCamera;
-import com.android.settings.wifi.qrcode.QrDecorateView;
+import com.android.settingslib.qrcode.QrCamera;
+import com.android.settingslib.qrcode.QrDecorateView;
 import com.google.android.setupdesign.util.ThemeHelper;
-/* loaded from: classes.dex */
+
 public class AdbQrcodeScannerFragment extends WifiDppQrCodeBaseFragment implements TextureView.SurfaceTextureListener, QrCamera.ScannerCallback {
     private WifiNetworkConfig mAdbConfig;
     private IAdbManager mAdbManager;
     private AdbQrCode mAdbQrCode;
     private QrCamera mCamera;
     private QrDecorateView mDecorateView;
-    private TextView mErrorMessage;
+    /* access modifiers changed from: private */
+    public TextView mErrorMessage;
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message message) {
+            int i = message.what;
+            if (i == 1) {
+                AdbQrcodeScannerFragment.this.mErrorMessage.setVisibility(4);
+            } else if (i == 2) {
+                AdbQrcodeScannerFragment.this.mErrorMessage.setVisibility(0);
+                AdbQrcodeScannerFragment.this.mErrorMessage.setText((String) message.obj);
+                AdbQrcodeScannerFragment.this.mErrorMessage.sendAccessibilityEvent(32);
+                removeMessages(1);
+                sendEmptyMessageDelayed(1, 10000);
+            }
+        }
+    };
     private IntentFilter mIntentFilter;
     private View mQrCameraView;
-    private TextureView mTextureView;
-    private TextView mVerifyingTextView;
-    private View mVerifyingView;
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() { // from class: com.android.settings.development.AdbQrcodeScannerFragment.1
-        @Override // android.content.BroadcastReceiver
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if ("com.android.server.adb.WIRELESS_DEBUG_PAIRING_RESULT".equals(intent.getAction())) {
                 Integer valueOf = Integer.valueOf(intent.getIntExtra("status", 0));
@@ -56,50 +69,32 @@ public class AdbQrcodeScannerFragment extends WifiDppQrCodeBaseFragment implemen
                     intent3.putExtra("request_type_pairing", 1);
                     AdbQrcodeScannerFragment.this.getActivity().setResult(-1, intent3);
                     AdbQrcodeScannerFragment.this.getActivity().finish();
-                } else if (!valueOf.equals(4)) {
-                } else {
+                } else if (valueOf.equals(4)) {
                     int intExtra = intent.getIntExtra("adb_port", 0);
                     Log.i("AdbQrcodeScannerFrag", "Got Qr pairing code port=" + intExtra);
                 }
             }
         }
     };
-    private final Handler mHandler = new Handler() { // from class: com.android.settings.development.AdbQrcodeScannerFragment.2
-        @Override // android.os.Handler
-        public void handleMessage(Message message) {
-            int i = message.what;
-            if (i == 1) {
-                AdbQrcodeScannerFragment.this.mErrorMessage.setVisibility(4);
-            } else if (i != 2) {
-            } else {
-                AdbQrcodeScannerFragment.this.mErrorMessage.setVisibility(0);
-                AdbQrcodeScannerFragment.this.mErrorMessage.setText((String) message.obj);
-                AdbQrcodeScannerFragment.this.mErrorMessage.sendAccessibilityEvent(32);
-                removeMessages(1);
-                sendEmptyMessageDelayed(1, 10000L);
-            }
-        }
-    };
+    private TextureView mTextureView;
+    private TextView mVerifyingTextView;
+    private View mVerifyingView;
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 0;
     }
 
-    @Override // com.android.settings.wifi.dpp.WifiDppQrCodeBaseFragment
-    protected boolean isFooterAvailable() {
+    /* access modifiers changed from: protected */
+    public boolean isFooterAvailable() {
         return false;
     }
 
-    @Override // android.view.TextureView.SurfaceTextureListener
     public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i2) {
     }
 
-    @Override // android.view.TextureView.SurfaceTextureListener
     public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         Context context = getContext();
         context.setTheme(SetupWizardUtils.getTheme(context, getActivity().getIntent()));
@@ -108,37 +103,33 @@ public class AdbQrcodeScannerFragment extends WifiDppQrCodeBaseFragment implemen
         this.mIntentFilter = new IntentFilter("com.android.server.adb.WIRELESS_DEBUG_PAIRING_RESULT");
     }
 
-    @Override // androidx.fragment.app.Fragment
     public final View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
-        return layoutInflater.inflate(R.layout.adb_qrcode_scanner_fragment, viewGroup, false);
+        return layoutInflater.inflate(R$layout.adb_qrcode_scanner_fragment, viewGroup, false);
     }
 
-    @Override // com.android.settings.wifi.dpp.WifiDppQrCodeBaseFragment, androidx.fragment.app.Fragment
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
-        this.mSummary = (TextView) view.findViewById(R.id.sud_layout_subtitle);
-        TextureView textureView = (TextureView) view.findViewById(R.id.preview_view);
+        this.mSummary = (TextView) view.findViewById(R$id.sud_layout_subtitle);
+        TextureView textureView = (TextureView) view.findViewById(R$id.preview_view);
         this.mTextureView = textureView;
         textureView.setSurfaceTextureListener(this);
-        this.mDecorateView = (QrDecorateView) view.findViewById(R.id.decorate_view);
+        this.mDecorateView = (QrDecorateView) view.findViewById(R$id.decorate_view);
         setProgressBarShown(false);
-        this.mQrCameraView = view.findViewById(R.id.camera_layout);
-        this.mVerifyingView = view.findViewById(R.id.verifying_layout);
-        this.mVerifyingTextView = (TextView) view.findViewById(R.id.verifying_textview);
-        setHeaderTitle(R.string.wifi_dpp_scan_qr_code, new Object[0]);
-        this.mSummary.setText(R.string.adb_wireless_qrcode_pairing_description);
-        this.mErrorMessage = (TextView) view.findViewById(R.id.error_message);
+        this.mQrCameraView = view.findViewById(R$id.camera_layout);
+        this.mVerifyingView = view.findViewById(R$id.verifying_layout);
+        this.mVerifyingTextView = (TextView) view.findViewById(R$id.verifying_textview);
+        setHeaderTitle(R$string.wifi_dpp_scan_qr_code, new Object[0]);
+        this.mSummary.setText(R$string.adb_wireless_qrcode_pairing_description);
+        this.mErrorMessage = (TextView) view.findViewById(R$id.error_message);
     }
 
-    @Override // com.android.settings.core.InstrumentedFragment, com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
         restartCamera();
         this.mAdbManager = IAdbManager.Stub.asInterface(ServiceManager.getService("adb"));
-        getActivity().registerReceiver(this.mReceiver, this.mIntentFilter);
+        getActivity().registerReceiver(this.mReceiver, this.mIntentFilter, 2);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onPause() {
         QrCamera qrCamera = this.mCamera;
         if (qrCamera != null) {
@@ -153,44 +144,36 @@ public class AdbQrcodeScannerFragment extends WifiDppQrCodeBaseFragment implemen
         }
     }
 
-    @Override // com.android.settings.core.InstrumentedFragment, com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-        getActivity().setTitle(R.string.wifi_dpp_scan_qr_code);
+        getActivity().setTitle(R$string.wifi_dpp_scan_qr_code);
     }
 
-    @Override // android.view.TextureView.SurfaceTextureListener
     public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i2) {
         initCamera(surfaceTexture);
     }
 
-    @Override // android.view.TextureView.SurfaceTextureListener
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
         destroyCamera();
         return true;
     }
 
-    @Override // com.android.settings.wifi.qrcode.QrCamera.ScannerCallback
     public Size getViewSize() {
         return new Size(this.mTextureView.getWidth(), this.mTextureView.getHeight());
     }
 
-    @Override // com.android.settings.wifi.qrcode.QrCamera.ScannerCallback
     public void setTransform(Matrix matrix) {
         this.mTextureView.setTransform(matrix);
     }
 
-    @Override // com.android.settings.wifi.qrcode.QrCamera.ScannerCallback
     public Rect getFramePosition(Size size, int i) {
         return new Rect(0, 0, size.getHeight(), size.getHeight());
     }
 
-    @Override // com.android.settings.wifi.qrcode.QrCamera.ScannerCallback
     public boolean isValid(String str) {
         try {
             AdbQrCode adbQrCode = new AdbQrCode(str);
@@ -198,12 +181,11 @@ public class AdbQrcodeScannerFragment extends WifiDppQrCodeBaseFragment implemen
             this.mAdbConfig = adbQrCode.getAdbNetworkConfig();
             return true;
         } catch (IllegalArgumentException unused) {
-            showErrorMessage(R.string.wifi_dpp_qr_code_is_not_valid_format);
+            showErrorMessage(R$string.wifi_dpp_qr_code_is_not_valid_format);
             return false;
         }
     }
 
-    @Override // com.android.settings.wifi.qrcode.QrCamera.ScannerCallback
     public void handleSuccessfulResult(String str) {
         destroyCamera();
         this.mDecorateView.setFocused(true);
@@ -220,7 +202,6 @@ public class AdbQrcodeScannerFragment extends WifiDppQrCodeBaseFragment implemen
         }
     }
 
-    @Override // com.android.settings.wifi.qrcode.QrCamera.ScannerCallback
     public void handleCameraFailure() {
         destroyCamera();
     }
@@ -243,10 +224,11 @@ public class AdbQrcodeScannerFragment extends WifiDppQrCodeBaseFragment implemen
             this.mCamera.stop();
         }
         SurfaceTexture surfaceTexture = this.mTextureView.getSurfaceTexture();
-        if (surfaceTexture == null) {
-            throw new IllegalStateException("SurfaceTexture is not ready for restarting camera");
+        if (surfaceTexture != null) {
+            this.mCamera.start(surfaceTexture);
+            return;
         }
-        this.mCamera.start(surfaceTexture);
+        throw new IllegalStateException("SurfaceTexture is not ready for restarting camera");
     }
 
     private void destroyCamera() {

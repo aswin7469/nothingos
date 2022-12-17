@@ -8,6 +8,7 @@ import android.app.IActivityManager;
 import android.app.KeyguardManager;
 import android.app.admin.DevicePolicyManager;
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -30,8 +31,8 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
 import android.hardware.face.FaceManager;
 import android.hardware.fingerprint.FingerprintManager;
+import android.net.Uri;
 import android.os.Binder;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.INetworkManagementService;
@@ -51,6 +52,7 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.text.style.TtsSpan;
 import android.util.ArraySet;
+import android.util.AttributeSet;
 import android.util.IconDrawableFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -73,14 +75,10 @@ import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public final class Utils extends com.android.settingslib.Utils {
     private static final StringBuilder sBuilder;
     private static final Formatter sFormatter;
-
-    public static boolean isProviderModelEnabled(Context context) {
-        return true;
-    }
 
     public static boolean updatePreferenceToSpecificActivityOrRemove(Context context, PreferenceGroup preferenceGroup, String str, int i) {
         Preference findPreference = preferenceGroup.findPreference(str);
@@ -137,7 +135,7 @@ public final class Utils extends com.android.settingslib.Utils {
     }
 
     public static boolean isBatteryPresent(Context context) {
-        return isBatteryPresent(context.registerReceiver(null, new IntentFilter("android.intent.action.BATTERY_CHANGED")));
+        return isBatteryPresent(context.registerReceiver((BroadcastReceiver) null, new IntentFilter("android.intent.action.BATTERY_CHANGED")));
     }
 
     public static String getBatteryPercentage(Intent intent) {
@@ -146,7 +144,7 @@ public final class Utils extends com.android.settingslib.Utils {
 
     public static void prepareCustomPreferencesList(ViewGroup viewGroup, View view, View view2, boolean z) {
         if (view2.getScrollBarStyle() == 33554432) {
-            int dimensionPixelSize = view2.getResources().getDimensionPixelSize(17105450);
+            int dimensionPixelSize = view2.getResources().getDimensionPixelSize(17105460);
             if (viewGroup instanceof PreferenceFrameLayout) {
                 view.getLayoutParams().removeBorders = true;
             }
@@ -155,7 +153,7 @@ public final class Utils extends com.android.settingslib.Utils {
     }
 
     public static void forceCustomPadding(View view, boolean z) {
-        view.setPaddingRelative(z ? view.getPaddingStart() : 0, 0, z ? view.getPaddingEnd() : 0, view.getResources().getDimensionPixelSize(17105450));
+        view.setPaddingRelative(z ? view.getPaddingStart() : 0, 0, z ? view.getPaddingEnd() : 0, view.getResources().getDimensionPixelSize(17105460));
     }
 
     public static String getMeProfileName(Context context, boolean z) {
@@ -172,7 +170,7 @@ public final class Utils extends com.android.settingslib.Utils {
 
     private static String getLocalProfileGivenName(Context context) {
         ContentResolver contentResolver = context.getContentResolver();
-        Cursor query = contentResolver.query(ContactsContract.Profile.CONTENT_RAW_CONTACTS_URI, new String[]{"_id"}, "account_type IS NULL AND account_name IS NULL", null, null);
+        Cursor query = contentResolver.query(ContactsContract.Profile.CONTENT_RAW_CONTACTS_URI, new String[]{"_id"}, "account_type IS NULL AND account_name IS NULL", (String[]) null, (String) null);
         if (query == null) {
             return null;
         }
@@ -182,35 +180,41 @@ public final class Utils extends com.android.settingslib.Utils {
             }
             long j = query.getLong(0);
             query.close();
-            query = contentResolver.query(ContactsContract.Profile.CONTENT_URI.buildUpon().appendPath("data").build(), new String[]{"data2", "data3"}, "raw_contact_id=" + j, null, null);
-            if (query == null) {
+            Uri build = ContactsContract.Profile.CONTENT_URI.buildUpon().appendPath("data").build();
+            Cursor query2 = contentResolver.query(build, new String[]{"data2", "data3"}, "raw_contact_id=" + j, (String[]) null, (String) null);
+            if (query2 == null) {
                 return null;
             }
             try {
-                if (!query.moveToFirst()) {
+                if (!query2.moveToFirst()) {
                     return null;
                 }
-                String string = query.getString(0);
+                String string = query2.getString(0);
                 if (TextUtils.isEmpty(string)) {
-                    string = query.getString(1);
+                    string = query2.getString(1);
                 }
+                query2.close();
                 return string;
             } finally {
+                query2.close();
             }
         } finally {
+            query.close();
         }
     }
 
     private static final String getProfileDisplayName(Context context) {
-        Cursor query = context.getContentResolver().query(ContactsContract.Profile.CONTENT_URI, new String[]{"display_name"}, null, null, null);
+        Cursor query = context.getContentResolver().query(ContactsContract.Profile.CONTENT_URI, new String[]{"display_name"}, (String) null, (String[]) null, (String) null);
         if (query == null) {
             return null;
         }
         try {
-            if (query.moveToFirst()) {
-                return query.getString(0);
+            if (!query.moveToFirst()) {
+                return null;
             }
-            return null;
+            String string = query.getString(0);
+            query.close();
+            return string;
         } finally {
             query.close();
         }
@@ -221,9 +225,9 @@ public final class Utils extends com.android.settingslib.Utils {
     }
 
     public static UserHandle getManagedProfile(UserManager userManager) {
-        for (UserHandle userHandle : userManager.getUserProfiles()) {
-            if (userHandle.getIdentifier() != userManager.getUserHandle() && userManager.getUserInfo(userHandle.getIdentifier()).isManagedProfile()) {
-                return userHandle;
+        for (UserHandle next : userManager.getUserProfiles()) {
+            if (next.getIdentifier() != userManager.getProcessUserId() && userManager.getUserInfo(next.getIdentifier()).isManagedProfile()) {
+                return next;
             }
         }
         return null;
@@ -243,7 +247,6 @@ public final class Utils extends com.android.settingslib.Utils {
     }
 
     public static int getManagedProfileId(UserManager userManager, int i) {
-        int[] profileIdsWithDisabled;
         for (int i2 : userManager.getProfileIdsWithDisabled(i)) {
             if (i2 != i) {
                 return i2;
@@ -253,41 +256,37 @@ public final class Utils extends com.android.settingslib.Utils {
     }
 
     public static int getCurrentUserId(UserManager userManager, boolean z) throws IllegalStateException {
-        if (z) {
-            UserHandle managedProfile = getManagedProfile(userManager);
-            if (managedProfile == null) {
-                throw new IllegalStateException("Work profile user ID is not available.");
-            }
+        if (!z) {
+            return UserHandle.myUserId();
+        }
+        UserHandle managedProfile = getManagedProfile(userManager);
+        if (managedProfile != null) {
             return managedProfile.getIdentifier();
         }
-        return UserHandle.myUserId();
+        throw new IllegalStateException("Work profile user ID is not available.");
     }
 
     public static UserHandle getSecureTargetUser(IBinder iBinder, UserManager userManager, Bundle bundle, Bundle bundle2) {
-        boolean equals;
-        UserHandle userHandle;
-        UserHandle userHandle2 = new UserHandle(UserHandle.myUserId());
+        UserHandle userHandle = new UserHandle(UserHandle.myUserId());
         IActivityManager service = ActivityManager.getService();
         try {
-            equals = "com.android.settings".equals(service.getLaunchedFromPackage(iBinder));
-            userHandle = new UserHandle(UserHandle.getUserId(service.getLaunchedFromUid(iBinder)));
-        } catch (RemoteException e) {
-            Log.v("Settings", "Could not talk to activity manager.", e);
-        }
-        if (userHandle.equals(userHandle2) || !isProfileOf(userManager, userHandle)) {
+            boolean equals = "com.android.settings".equals(service.getLaunchedFromPackage(iBinder));
+            UserHandle userHandle2 = new UserHandle(UserHandle.getUserId(service.getLaunchedFromUid(iBinder)));
+            if (!userHandle2.equals(userHandle) && isProfileOf(userManager, userHandle2)) {
+                return userHandle2;
+            }
             UserHandle userHandleFromBundle = getUserHandleFromBundle(bundle2);
-            if (userHandleFromBundle != null && !userHandleFromBundle.equals(userHandle2) && equals && isProfileOf(userManager, userHandleFromBundle)) {
+            if (userHandleFromBundle != null && !userHandleFromBundle.equals(userHandle) && equals && isProfileOf(userManager, userHandleFromBundle)) {
                 return userHandleFromBundle;
             }
             UserHandle userHandleFromBundle2 = getUserHandleFromBundle(bundle);
-            if (userHandleFromBundle2 != null && !userHandleFromBundle2.equals(userHandle2) && equals) {
-                if (isProfileOf(userManager, userHandleFromBundle2)) {
-                    return userHandleFromBundle2;
-                }
+            if (userHandleFromBundle2 == null || userHandleFromBundle2.equals(userHandle) || !equals || !isProfileOf(userManager, userHandleFromBundle2)) {
+                return userHandle;
             }
-            return userHandle2;
+            return userHandleFromBundle2;
+        } catch (RemoteException e) {
+            Log.v("Settings", "Could not talk to activity manager.", e);
         }
-        return userHandle;
     }
 
     private static UserHandle getUserHandleFromBundle(Bundle bundle) {
@@ -299,17 +298,20 @@ public final class Utils extends com.android.settingslib.Utils {
             return userHandle;
         }
         int i = bundle.getInt("android.intent.extra.USER_ID", -1);
-        if (i == -1) {
-            return null;
+        if (i != -1) {
+            return UserHandle.of(i);
         }
-        return UserHandle.of(i);
+        return null;
     }
 
     private static boolean isProfileOf(UserManager userManager, UserHandle userHandle) {
         if (userManager == null || userHandle == null) {
             return false;
         }
-        return UserHandle.myUserId() == userHandle.getIdentifier() || userManager.getUserProfiles().contains(userHandle);
+        if (UserHandle.myUserId() == userHandle.getIdentifier() || userManager.getUserProfiles().contains(userHandle)) {
+            return true;
+        }
+        return false;
     }
 
     public static UserInfo getExistingUser(UserManager userManager, UserHandle userHandle) {
@@ -324,7 +326,7 @@ public final class Utils extends com.android.settingslib.Utils {
     }
 
     public static View inflateCategoryHeader(LayoutInflater layoutInflater, ViewGroup viewGroup) {
-        TypedArray obtainStyledAttributes = layoutInflater.getContext().obtainStyledAttributes(null, R.styleable.Preference, 16842892, 0);
+        TypedArray obtainStyledAttributes = layoutInflater.getContext().obtainStyledAttributes((AttributeSet) null, R.styleable.Preference, 16842892, 0);
         int resourceId = obtainStyledAttributes.getResourceId(3, 0);
         obtainStyledAttributes.recycle();
         return layoutInflater.inflate(resourceId, viewGroup, false);
@@ -335,9 +337,9 @@ public final class Utils extends com.android.settingslib.Utils {
         List<IntentFilter> allIntentFilters = packageManager.getAllIntentFilters(str);
         ArraySet<String> arraySet = new ArraySet<>();
         if (intentFilterVerifications != null && intentFilterVerifications.size() > 0) {
-            for (IntentFilterVerificationInfo intentFilterVerificationInfo : intentFilterVerifications) {
-                for (String str2 : intentFilterVerificationInfo.getDomains()) {
-                    arraySet.add(str2);
+            for (IntentFilterVerificationInfo domains : intentFilterVerifications) {
+                for (String add : domains.getDomains()) {
+                    arraySet.add(add);
                 }
             }
         }
@@ -432,37 +434,37 @@ public final class Utils extends com.android.settingslib.Utils {
         StringBuilder sb = sBuilder;
         synchronized (sb) {
             sb.setLength(0);
-            formatter = DateUtils.formatDateRange(context, sFormatter, j, j2, 65552, null).toString();
+            formatter = DateUtils.formatDateRange(context, sFormatter, j, j2, 65552, (String) null).toString();
         }
         return formatter;
     }
 
     public static boolean startQuietModeDialogIfNecessary(Context context, UserManager userManager, int i) {
-        if (userManager.isQuietModeEnabled(UserHandle.of(i))) {
-            context.startActivity(UnlaunchableAppActivity.createInQuietModeDialogIntent(i));
-            return true;
+        if (!userManager.isQuietModeEnabled(UserHandle.of(i))) {
+            return false;
         }
-        return false;
+        context.startActivity(UnlaunchableAppActivity.createInQuietModeDialogIntent(i));
+        return true;
     }
 
     public static boolean unlockWorkProfileIfNecessary(Context context, int i) {
         try {
-            if (!ActivityManager.getService().isUserRunning(i, 2) || !new LockPatternUtils(context).isSecure(i)) {
-                return false;
+            if (ActivityManager.getService().isUserRunning(i, 2) && new LockPatternUtils(context).isSecure(i)) {
+                return confirmWorkProfileCredentials(context, i);
             }
-            return confirmWorkProfileCredentials(context, i);
+            return false;
         } catch (RemoteException unused) {
             return false;
         }
     }
 
     private static boolean confirmWorkProfileCredentials(Context context, int i) {
-        Intent createConfirmDeviceCredentialIntent = ((KeyguardManager) context.getSystemService("keyguard")).createConfirmDeviceCredentialIntent(null, null, i);
-        if (createConfirmDeviceCredentialIntent != null) {
-            context.startActivity(createConfirmDeviceCredentialIntent);
-            return true;
+        Intent createConfirmDeviceCredentialIntent = ((KeyguardManager) context.getSystemService("keyguard")).createConfirmDeviceCredentialIntent((CharSequence) null, (CharSequence) null, i);
+        if (createConfirmDeviceCredentialIntent == null) {
+            return false;
         }
-        return false;
+        context.startActivity(createConfirmDeviceCredentialIntent);
+        return true;
     }
 
     public static CharSequence getApplicationLabel(Context context, String str) {
@@ -496,10 +498,13 @@ public final class Utils extends com.android.settingslib.Utils {
     }
 
     public static FaceManager getFaceManagerOrNull(Context context) {
-        if (context.getPackageManager().hasSystemFeature("android.hardware.biometrics.face")) {
-            return (FaceManager) context.getSystemService("face");
-        }
-        return null;
+        Log.d("Security", "Utils::getFaceManagerOrNull has system feature");
+        FaceManager faceManager = (FaceManager) context.getSystemService("face");
+        StringBuilder sb = new StringBuilder();
+        sb.append("Utils::getFaceManagerOrNull get face service success:");
+        sb.append(faceManager != null);
+        Log.d("Security", sb.toString());
+        return faceManager;
     }
 
     public static boolean hasFaceHardware(Context context) {
@@ -532,9 +537,30 @@ public final class Utils extends com.android.settingslib.Utils {
         return ((DevicePolicyManager) context.getSystemService("device_policy")).getDeviceOwnerComponentOnAnyUser();
     }
 
-    public static boolean isProfileOf(UserInfo userInfo, UserInfo userInfo2) {
-        int i;
-        return userInfo.id == userInfo2.id || ((i = userInfo.profileGroupId) != -10000 && i == userInfo2.profileGroupId);
+    /* JADX WARNING: Code restructure failed: missing block: B:2:0x0006, code lost:
+        r2 = r2.profileGroupId;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public static boolean isProfileOf(android.content.pm.UserInfo r2, android.content.pm.UserInfo r3) {
+        /*
+            int r0 = r2.id
+            int r1 = r3.id
+            if (r0 == r1) goto L_0x0013
+            int r2 = r2.profileGroupId
+            r0 = -10000(0xffffffffffffd8f0, float:NaN)
+            if (r2 == r0) goto L_0x0011
+            int r3 = r3.profileGroupId
+            if (r2 != r3) goto L_0x0011
+            goto L_0x0013
+        L_0x0011:
+            r2 = 0
+            goto L_0x0014
+        L_0x0013:
+            r2 = 1
+        L_0x0014:
+            return r2
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.Utils.isProfileOf(android.content.pm.UserInfo, android.content.pm.UserInfo):boolean");
     }
 
     public static VolumeInfo maybeInitializeVolume(StorageManager storageManager, Bundle bundle) {
@@ -561,15 +587,21 @@ public final class Utils extends com.android.settingslib.Utils {
     }
 
     public static boolean isProfileOrDeviceOwner(DevicePolicyManager devicePolicyManager, String str, int i) {
-        if (devicePolicyManager.getDeviceOwnerUserId() != i || !devicePolicyManager.isDeviceOwnerApp(str)) {
-            ComponentName profileOwnerAsUser = devicePolicyManager.getProfileOwnerAsUser(i);
-            return profileOwnerAsUser != null && profileOwnerAsUser.getPackageName().equals(str);
+        if (devicePolicyManager.getDeviceOwnerUserId() == i && devicePolicyManager.isDeviceOwnerApp(str)) {
+            return true;
+        }
+        ComponentName profileOwnerAsUser = devicePolicyManager.getProfileOwnerAsUser(i);
+        if (profileOwnerAsUser == null || !profileOwnerAsUser.getPackageName().equals(str)) {
+            return false;
         }
         return true;
     }
 
     private static boolean isVolumeValid(VolumeInfo volumeInfo) {
-        return volumeInfo != null && volumeInfo.getType() == 1 && volumeInfo.isMountedReadable();
+        if (volumeInfo == null || volumeInfo.getType() != 1 || !volumeInfo.isMountedReadable()) {
+            return false;
+        }
+        return true;
     }
 
     public static void setEditTextCursorPosition(EditText editText) {
@@ -578,42 +610,42 @@ public final class Utils extends com.android.settingslib.Utils {
 
     public static Drawable getAdaptiveIcon(Context context, Drawable drawable, int i) {
         Drawable safeIcon = getSafeIcon(drawable);
-        if (!(safeIcon instanceof AdaptiveIconDrawable)) {
-            AdaptiveIcon adaptiveIcon = new AdaptiveIcon(context, safeIcon);
-            adaptiveIcon.setBackgroundColor(i);
-            return adaptiveIcon;
+        if (safeIcon instanceof AdaptiveIconDrawable) {
+            return safeIcon;
         }
-        return safeIcon;
+        AdaptiveIcon adaptiveIcon = new AdaptiveIcon(context, safeIcon);
+        adaptiveIcon.setBackgroundColor(i);
+        return adaptiveIcon;
     }
 
     public static Drawable getSafeIcon(Drawable drawable) {
-        return (drawable == null || (drawable instanceof VectorDrawable)) ? drawable : getSafeDrawable(drawable, 500, 500);
+        return (drawable == null || (drawable instanceof VectorDrawable)) ? drawable : getSafeDrawable(drawable, 600, 600);
     }
 
     private static Drawable getSafeDrawable(Drawable drawable, int i, int i2) {
-        Bitmap createBitmap;
+        Bitmap bitmap;
         int minimumWidth = drawable.getMinimumWidth();
         int minimumHeight = drawable.getMinimumHeight();
-        if (minimumWidth > i || minimumHeight > i2) {
-            float f = minimumWidth;
-            float f2 = minimumHeight;
-            float min = Math.min(i / f, i2 / f2);
-            int i3 = (int) (f * min);
-            int i4 = (int) (f2 * min);
-            if (drawable instanceof BitmapDrawable) {
-                createBitmap = Bitmap.createScaledBitmap(((BitmapDrawable) drawable).getBitmap(), i3, i4, false);
-            } else {
-                createBitmap = createBitmap(drawable, i3, i4);
-            }
-            return new BitmapDrawable((Resources) null, createBitmap);
+        if (minimumWidth <= i && minimumHeight <= i2) {
+            return drawable;
         }
-        return drawable;
+        float f = (float) minimumWidth;
+        float f2 = (float) minimumHeight;
+        float min = Math.min(((float) i) / f, ((float) i2) / f2);
+        int i3 = (int) (f * min);
+        int i4 = (int) (f2 * min);
+        if (drawable instanceof BitmapDrawable) {
+            bitmap = Bitmap.createScaledBitmap(((BitmapDrawable) drawable).getBitmap(), i3, i4, false);
+        } else {
+            bitmap = createBitmap(drawable, i3, i4);
+        }
+        return new BitmapDrawable((Resources) null, bitmap);
     }
 
     public static IconCompat createIconWithDrawable(Drawable drawable) {
-        Bitmap createBitmap;
+        Bitmap bitmap;
         if (drawable instanceof BitmapDrawable) {
-            createBitmap = ((BitmapDrawable) drawable).getBitmap();
+            bitmap = ((BitmapDrawable) drawable).getBitmap();
         } else {
             int intrinsicWidth = drawable.getIntrinsicWidth();
             int intrinsicHeight = drawable.getIntrinsicHeight();
@@ -623,9 +655,9 @@ public final class Utils extends com.android.settingslib.Utils {
             if (intrinsicHeight <= 0) {
                 intrinsicHeight = 1;
             }
-            createBitmap = createBitmap(drawable, intrinsicWidth, intrinsicHeight);
+            bitmap = createBitmap(drawable, intrinsicWidth, intrinsicHeight);
         }
-        return IconCompat.createWithBitmap(createBitmap);
+        return IconCompat.createWithBitmap(bitmap);
     }
 
     public static Bitmap createBitmap(Drawable drawable, int i, int i2) {
@@ -656,17 +688,17 @@ public final class Utils extends com.android.settingslib.Utils {
     public static String getLocalizedName(Context context, String str) {
         int identifier;
         String str2 = null;
-        if (context != null && str != null && !str.isEmpty() && (identifier = context.getResources().getIdentifier(str, "string", context.getPackageName())) > 0) {
-            try {
-                str2 = context.getResources().getString(identifier);
-                Log.d("Settings", "Replaced apn name with localized name");
-                return str2;
-            } catch (Resources.NotFoundException e) {
-                Log.e("Settings", "Got execption while getting the localized apn name.", e);
-                return str2;
-            }
+        if (context == null || str == null || str.isEmpty() || (identifier = context.getResources().getIdentifier(str, "string", context.getPackageName())) <= 0) {
+            return null;
         }
-        return null;
+        try {
+            str2 = context.getResources().getString(identifier);
+            Log.d("Settings", "Replaced apn name with localized name");
+            return str2;
+        } catch (Resources.NotFoundException e) {
+            Log.e("Settings", "Got execption while getting the localized apn name.", e);
+            return str2;
+        }
     }
 
     public static boolean carrierTableFieldValidate(String str) {
@@ -687,7 +719,7 @@ public final class Utils extends com.android.settingslib.Utils {
     }
 
     public static boolean isSupportCTPA(Context context) {
-        return context.getApplicationContext().getResources().getBoolean(R.bool.config_support_CT_PA);
+        return context.getApplicationContext().getResources().getBoolean(R$bool.config_support_CT_PA);
     }
 
     public static String getString(Context context, String str) {
@@ -695,7 +727,7 @@ public final class Utils extends com.android.settingslib.Utils {
     }
 
     public static boolean isSystemAlertWindowEnabled(Context context) {
-        return !((ActivityManager) context.getSystemService("activity")).isLowRamDevice() || Build.VERSION.SDK_INT < 29;
+        return !((ActivityManager) context.getSystemService("activity")).isLowRamDevice();
     }
 
     public static void setActionBarShadowAnimation(Activity activity, Lifecycle lifecycle, View view) {
@@ -709,10 +741,9 @@ public final class Utils extends com.android.settingslib.Utils {
             return;
         }
         actionBar.setElevation(0.0f);
-        if (lifecycle == null || view == null) {
-            return;
+        if (lifecycle != null && view != null) {
+            ActionBarShadowController.attachToView(activity, lifecycle, view);
         }
-        ActionBarShadowController.attachToView(activity, lifecycle, view);
     }
 
     public static Fragment getTargetFragment(Activity activity, String str, Bundle bundle) {
@@ -736,7 +767,7 @@ public final class Utils extends com.android.settingslib.Utils {
     }
 
     public static boolean isSettingsIntelligence(Context context) {
-        return TextUtils.equals(context.getPackageManager().getPackagesForUid(Binder.getCallingUid())[0], context.getString(R.string.config_settingsintelligence_package_name));
+        return TextUtils.equals(context.getPackageManager().getPackagesForUid(Binder.getCallingUid())[0], context.getString(R$string.config_settingsintelligence_package_name));
     }
 
     public static boolean isNightMode(Context context) {
@@ -744,30 +775,10 @@ public final class Utils extends com.android.settingslib.Utils {
     }
 
     public static int getHomepageIconColor(Context context) {
-        return com.android.settingslib.Utils.getColorAttrDefaultColor(context, 16842808);
+        return com.android.settingslib.Utils.getColorAttrDefaultColor(context, 16842806);
     }
 
-    public static void startWithFragment(Context context, String str, Bundle bundle, android.app.Fragment fragment, int i, int i2, CharSequence charSequence) {
-        startWithFragment(context, str, bundle, fragment, i, i2, charSequence, false, -1, UserHandle.myUserId());
-    }
-
-    public static void startWithFragment(Context context, String str, Bundle bundle, android.app.Fragment fragment, int i, int i2, CharSequence charSequence, boolean z, int i3, int i4) {
-        Intent onBuildStartFragmentIntent = onBuildStartFragmentIntent(context, str, bundle, null, i2, charSequence, z, i3);
-        if (fragment == null) {
-            context.startActivityAsUser(onBuildStartFragmentIntent, new UserHandle(i4));
-        } else {
-            fragment.startActivityForResultAsUser(onBuildStartFragmentIntent, i, null, new UserHandle(i4));
-        }
-    }
-
-    public static Intent onBuildStartFragmentIntent(Context context, String str, Bundle bundle, String str2, int i, CharSequence charSequence, boolean z, int i2) {
-        Intent intent = new Intent("android.intent.action.MAIN");
-        intent.setClass(context, SubSettings.class);
-        intent.putExtra(":settings:show_fragment", str);
-        intent.putExtra(":settings:show_fragment_args", bundle);
-        intent.putExtra(":settings:show_fragment_title_res_package_name", str2);
-        intent.putExtra(":settings:show_fragment_title_resid", i);
-        intent.putExtra(":settings:show_fragment_title", charSequence);
-        return intent;
+    public static int getHomepageIconColorHighlight(Context context) {
+        return context.getColor(R$color.accent_select_primary_text);
     }
 }

@@ -2,6 +2,7 @@ package androidx.slice.widget;
 
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -15,7 +16,7 @@ import androidx.slice.SliceItem;
 import androidx.slice.core.SliceActionImpl;
 import androidx.slice.view.R$dimen;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public class ShortcutView extends SliceChildView {
     private SliceItem mActionItem;
     private IconCompat mIcon;
@@ -24,7 +25,6 @@ public class ShortcutView extends SliceChildView {
     private Set<SliceItem> mLoadingActions;
     private int mSmallIconSize;
 
-    @Override // androidx.slice.widget.SliceChildView
     public int getMode() {
         return 3;
     }
@@ -36,40 +36,37 @@ public class ShortcutView extends SliceChildView {
         this.mLargeIconSize = resources.getDimensionPixelSize(R$dimen.abc_slice_shortcut_size);
     }
 
-    @Override // androidx.slice.widget.SliceChildView
-    public void setSliceContent(ListContent sliceContent) {
+    public void setSliceContent(ListContent listContent) {
         resetView();
-        this.mListContent = sliceContent;
-        if (sliceContent == null) {
-            return;
+        this.mListContent = listContent;
+        if (listContent != null) {
+            SliceActionImpl sliceActionImpl = (SliceActionImpl) listContent.getShortcut(getContext());
+            this.mActionItem = sliceActionImpl.getActionItem();
+            this.mIcon = sliceActionImpl.getIcon();
+            boolean z = sliceActionImpl.getImageMode() == 0;
+            int accentColor = this.mListContent.getAccentColor();
+            if (accentColor == -1) {
+                accentColor = SliceViewUtil.getColorAccent(getContext());
+            }
+            Drawable wrap = DrawableCompat.wrap(new ShapeDrawable(new OvalShape()));
+            DrawableCompat.setTint(wrap, accentColor);
+            ImageView imageView = new ImageView(getContext());
+            if (this.mIcon != null && z) {
+                imageView.setBackground(wrap);
+            }
+            addView(imageView);
+            if (this.mIcon != null) {
+                SliceViewUtil.createCircledIcon(getContext(), z ? this.mSmallIconSize : this.mLargeIconSize, this.mIcon, !z, this);
+                setClickable(true);
+            } else {
+                setClickable(false);
+            }
+            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) imageView.getLayoutParams();
+            layoutParams.gravity = 17;
+            setLayoutParams(layoutParams);
         }
-        SliceActionImpl sliceActionImpl = (SliceActionImpl) sliceContent.getShortcut(getContext());
-        this.mActionItem = sliceActionImpl.getActionItem();
-        this.mIcon = sliceActionImpl.getIcon();
-        boolean z = sliceActionImpl.getImageMode() == 0;
-        int accentColor = this.mListContent.getAccentColor();
-        if (accentColor == -1) {
-            accentColor = SliceViewUtil.getColorAccent(getContext());
-        }
-        Drawable wrap = DrawableCompat.wrap(new ShapeDrawable(new OvalShape()));
-        DrawableCompat.setTint(wrap, accentColor);
-        ImageView imageView = new ImageView(getContext());
-        if (this.mIcon != null && z) {
-            imageView.setBackground(wrap);
-        }
-        addView(imageView);
-        if (this.mIcon != null) {
-            SliceViewUtil.createCircledIcon(getContext(), z ? this.mSmallIconSize : this.mLargeIconSize, this.mIcon, !z, this);
-            setClickable(true);
-        } else {
-            setClickable(false);
-        }
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) imageView.getLayoutParams();
-        layoutParams.gravity = 17;
-        setLayoutParams(layoutParams);
     }
 
-    @Override // android.view.View
     public boolean performClick() {
         if (this.mListContent == null) {
             return false;
@@ -78,7 +75,7 @@ public class ShortcutView extends SliceChildView {
             try {
                 SliceItem sliceItem = this.mActionItem;
                 if (sliceItem != null) {
-                    sliceItem.fireAction(null, null);
+                    sliceItem.fireAction((Context) null, (Intent) null);
                     if (this.mObserver != null) {
                         EventInfo eventInfo = new EventInfo(3, 1, -1, 0);
                         SliceItem sliceItem2 = this.mActionItem;
@@ -95,22 +92,19 @@ public class ShortcutView extends SliceChildView {
         return true;
     }
 
-    @Override // androidx.slice.widget.SliceChildView
-    public void setLoadingActions(Set<SliceItem> actions) {
-        this.mLoadingActions = actions;
+    public void setLoadingActions(Set<SliceItem> set) {
+        this.mLoadingActions = set;
     }
 
-    @Override // androidx.slice.widget.SliceChildView
     public Set<SliceItem> getLoadingActions() {
         return this.mLoadingActions;
     }
 
-    @Override // androidx.slice.widget.SliceChildView
     public void resetView() {
         this.mListContent = null;
         this.mActionItem = null;
         this.mIcon = null;
-        setBackground(null);
+        setBackground((Drawable) null);
         removeAllViews();
     }
 }

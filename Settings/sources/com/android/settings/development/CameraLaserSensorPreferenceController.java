@@ -5,10 +5,10 @@ import android.os.SystemProperties;
 import android.text.TextUtils;
 import androidx.preference.Preference;
 import androidx.preference.SwitchPreference;
-import com.android.settings.R;
+import com.android.settings.R$bool;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.development.DeveloperOptionsPreferenceController;
-/* loaded from: classes.dex */
+
 public class CameraLaserSensorPreferenceController extends DeveloperOptionsPreferenceController implements Preference.OnPreferenceChangeListener, PreferenceControllerMixin {
     static final String BUILD_TYPE = "ro.build.type";
     static final int DISABLED = 2;
@@ -18,7 +18,6 @@ public class CameraLaserSensorPreferenceController extends DeveloperOptionsPrefe
     static final String USERDEBUG_BUILD = "userdebug";
     static final String USER_BUILD = "user";
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "camera_laser_sensor_switch";
     }
@@ -27,18 +26,15 @@ public class CameraLaserSensorPreferenceController extends DeveloperOptionsPrefe
         super(context);
     }
 
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
-        return this.mContext.getResources().getBoolean(R.bool.config_show_camera_laser_sensor);
+        return this.mContext.getResources().getBoolean(R$bool.config_show_camera_laser_sensor);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         SystemProperties.set(PROPERTY_CAMERA_LASER_SENSOR, Integer.toString(((Boolean) obj).booleanValue() ? 0 : 2));
         return true;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         ((SwitchPreference) this.mPreference).setChecked(isLaserSensorEnabled());
     }

@@ -1,19 +1,20 @@
 package com.google.protobuf;
 
 import com.google.protobuf.MapEntryLite;
-import com.google.protobuf.WireFormat;
 import com.google.protobuf.Writer;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes2.dex */
-public final class CodedOutputStreamWriter implements Writer {
+
+final class CodedOutputStreamWriter implements Writer {
     private final CodedOutputStream output;
 
     public static CodedOutputStreamWriter forCodedOutput(CodedOutputStream codedOutputStream) {
         CodedOutputStreamWriter codedOutputStreamWriter = codedOutputStream.wrapper;
-        return codedOutputStreamWriter != null ? codedOutputStreamWriter : new CodedOutputStreamWriter(codedOutputStream);
+        if (codedOutputStreamWriter != null) {
+            return codedOutputStreamWriter;
+        }
+        return new CodedOutputStreamWriter(codedOutputStream);
     }
 
     private CodedOutputStreamWriter(CodedOutputStream codedOutputStream) {
@@ -22,112 +23,90 @@ public final class CodedOutputStreamWriter implements Writer {
         codedOutputStream2.wrapper = this;
     }
 
-    @Override // com.google.protobuf.Writer
     public Writer.FieldOrder fieldOrder() {
         return Writer.FieldOrder.ASCENDING;
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeSFixed32(int i, int i2) throws IOException {
         this.output.writeSFixed32(i, i2);
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeInt64(int i, long j) throws IOException {
         this.output.writeInt64(i, j);
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeSFixed64(int i, long j) throws IOException {
         this.output.writeSFixed64(i, j);
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeFloat(int i, float f) throws IOException {
         this.output.writeFloat(i, f);
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeDouble(int i, double d) throws IOException {
         this.output.writeDouble(i, d);
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeEnum(int i, int i2) throws IOException {
         this.output.writeEnum(i, i2);
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeUInt64(int i, long j) throws IOException {
         this.output.writeUInt64(i, j);
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeInt32(int i, int i2) throws IOException {
         this.output.writeInt32(i, i2);
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeFixed64(int i, long j) throws IOException {
         this.output.writeFixed64(i, j);
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeFixed32(int i, int i2) throws IOException {
         this.output.writeFixed32(i, i2);
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeBool(int i, boolean z) throws IOException {
         this.output.writeBool(i, z);
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeString(int i, String str) throws IOException {
         this.output.writeString(i, str);
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeBytes(int i, ByteString byteString) throws IOException {
         this.output.writeBytes(i, byteString);
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeUInt32(int i, int i2) throws IOException {
         this.output.writeUInt32(i, i2);
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeSInt32(int i, int i2) throws IOException {
         this.output.writeSInt32(i, i2);
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeSInt64(int i, long j) throws IOException {
         this.output.writeSInt64(i, j);
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeMessage(int i, Object obj, Schema schema) throws IOException {
         this.output.writeMessage(i, (MessageLite) obj, schema);
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeGroup(int i, Object obj, Schema schema) throws IOException {
         this.output.writeGroup(i, (MessageLite) obj, schema);
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeStartGroup(int i) throws IOException {
         this.output.writeTag(i, 3);
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeEndGroup(int i) throws IOException {
         this.output.writeTag(i, 4);
     }
 
-    @Override // com.google.protobuf.Writer
     public final void writeMessageSetItem(int i, Object obj) throws IOException {
         if (obj instanceof ByteString) {
             this.output.writeRawMessageSetExtension(i, (ByteString) obj);
@@ -136,7 +115,6 @@ public final class CodedOutputStreamWriter implements Writer {
         }
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeInt32List(int i, List<Integer> list, boolean z) throws IOException {
         int i2 = 0;
         if (z) {
@@ -158,7 +136,6 @@ public final class CodedOutputStreamWriter implements Writer {
         }
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeFixed32List(int i, List<Integer> list, boolean z) throws IOException {
         int i2 = 0;
         if (z) {
@@ -180,7 +157,6 @@ public final class CodedOutputStreamWriter implements Writer {
         }
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeInt64List(int i, List<Long> list, boolean z) throws IOException {
         int i2 = 0;
         if (z) {
@@ -202,7 +178,6 @@ public final class CodedOutputStreamWriter implements Writer {
         }
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeUInt64List(int i, List<Long> list, boolean z) throws IOException {
         int i2 = 0;
         if (z) {
@@ -224,7 +199,6 @@ public final class CodedOutputStreamWriter implements Writer {
         }
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeFixed64List(int i, List<Long> list, boolean z) throws IOException {
         int i2 = 0;
         if (z) {
@@ -246,7 +220,6 @@ public final class CodedOutputStreamWriter implements Writer {
         }
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeFloatList(int i, List<Float> list, boolean z) throws IOException {
         int i2 = 0;
         if (z) {
@@ -268,7 +241,6 @@ public final class CodedOutputStreamWriter implements Writer {
         }
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeDoubleList(int i, List<Double> list, boolean z) throws IOException {
         int i2 = 0;
         if (z) {
@@ -290,7 +262,6 @@ public final class CodedOutputStreamWriter implements Writer {
         }
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeEnumList(int i, List<Integer> list, boolean z) throws IOException {
         int i2 = 0;
         if (z) {
@@ -312,7 +283,6 @@ public final class CodedOutputStreamWriter implements Writer {
         }
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeBoolList(int i, List<Boolean> list, boolean z) throws IOException {
         int i2 = 0;
         if (z) {
@@ -334,7 +304,6 @@ public final class CodedOutputStreamWriter implements Writer {
         }
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeStringList(int i, List<String> list) throws IOException {
         int i2 = 0;
         if (list instanceof LazyStringList) {
@@ -359,14 +328,12 @@ public final class CodedOutputStreamWriter implements Writer {
         }
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeBytesList(int i, List<ByteString> list) throws IOException {
         for (int i2 = 0; i2 < list.size(); i2++) {
             this.output.writeBytes(i, list.get(i2));
         }
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeUInt32List(int i, List<Integer> list, boolean z) throws IOException {
         int i2 = 0;
         if (z) {
@@ -388,7 +355,6 @@ public final class CodedOutputStreamWriter implements Writer {
         }
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeSFixed32List(int i, List<Integer> list, boolean z) throws IOException {
         int i2 = 0;
         if (z) {
@@ -410,7 +376,6 @@ public final class CodedOutputStreamWriter implements Writer {
         }
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeSFixed64List(int i, List<Long> list, boolean z) throws IOException {
         int i2 = 0;
         if (z) {
@@ -432,7 +397,6 @@ public final class CodedOutputStreamWriter implements Writer {
         }
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeSInt32List(int i, List<Integer> list, boolean z) throws IOException {
         int i2 = 0;
         if (z) {
@@ -454,7 +418,6 @@ public final class CodedOutputStreamWriter implements Writer {
         }
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeSInt64List(int i, List<Long> list, boolean z) throws IOException {
         int i2 = 0;
         if (z) {
@@ -476,95 +439,135 @@ public final class CodedOutputStreamWriter implements Writer {
         }
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeMessageList(int i, List<?> list, Schema schema) throws IOException {
         for (int i2 = 0; i2 < list.size(); i2++) {
             writeMessage(i, list.get(i2), schema);
         }
     }
 
-    @Override // com.google.protobuf.Writer
     public void writeGroupList(int i, List<?> list, Schema schema) throws IOException {
         for (int i2 = 0; i2 < list.size(); i2++) {
             writeGroup(i, list.get(i2), schema);
         }
     }
 
-    @Override // com.google.protobuf.Writer
     public <K, V> void writeMap(int i, MapEntryLite.Metadata<K, V> metadata, Map<K, V> map) throws IOException {
         if (this.output.isSerializationDeterministic()) {
             writeDeterministicMap(i, metadata, map);
             return;
         }
-        for (Map.Entry<K, V> entry : map.entrySet()) {
+        for (Map.Entry next : map.entrySet()) {
             this.output.writeTag(i, 2);
-            this.output.writeUInt32NoTag(MapEntryLite.computeSerializedSize(metadata, entry.getKey(), entry.getValue()));
-            MapEntryLite.writeTo(this.output, metadata, entry.getKey(), entry.getValue());
+            this.output.writeUInt32NoTag(MapEntryLite.computeSerializedSize(metadata, next.getKey(), next.getValue()));
+            MapEntryLite.writeTo(this.output, metadata, next.getKey(), next.getValue());
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.google.protobuf.CodedOutputStreamWriter$1  reason: invalid class name */
-    /* loaded from: classes2.dex */
-    public static /* synthetic */ class AnonymousClass1 {
+    /* renamed from: com.google.protobuf.CodedOutputStreamWriter$1 */
+    static /* synthetic */ class C18991 {
         static final /* synthetic */ int[] $SwitchMap$com$google$protobuf$WireFormat$FieldType;
 
+        /* JADX WARNING: Can't wrap try/catch for region: R(26:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|26) */
+        /* JADX WARNING: Code restructure failed: missing block: B:27:?, code lost:
+            return;
+         */
+        /* JADX WARNING: Failed to process nested try/catch */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:11:0x003e */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:13:0x0049 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:15:0x0054 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:17:0x0060 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:19:0x006c */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:21:0x0078 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:23:0x0084 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0012 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001d */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:7:0x0028 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:9:0x0033 */
         static {
-            int[] iArr = new int[WireFormat.FieldType.values().length];
-            $SwitchMap$com$google$protobuf$WireFormat$FieldType = iArr;
-            try {
-                iArr[WireFormat.FieldType.BOOL.ordinal()] = 1;
-            } catch (NoSuchFieldError unused) {
-            }
-            try {
-                $SwitchMap$com$google$protobuf$WireFormat$FieldType[WireFormat.FieldType.FIXED32.ordinal()] = 2;
-            } catch (NoSuchFieldError unused2) {
-            }
-            try {
-                $SwitchMap$com$google$protobuf$WireFormat$FieldType[WireFormat.FieldType.INT32.ordinal()] = 3;
-            } catch (NoSuchFieldError unused3) {
-            }
-            try {
-                $SwitchMap$com$google$protobuf$WireFormat$FieldType[WireFormat.FieldType.SFIXED32.ordinal()] = 4;
-            } catch (NoSuchFieldError unused4) {
-            }
-            try {
-                $SwitchMap$com$google$protobuf$WireFormat$FieldType[WireFormat.FieldType.SINT32.ordinal()] = 5;
-            } catch (NoSuchFieldError unused5) {
-            }
-            try {
-                $SwitchMap$com$google$protobuf$WireFormat$FieldType[WireFormat.FieldType.UINT32.ordinal()] = 6;
-            } catch (NoSuchFieldError unused6) {
-            }
-            try {
-                $SwitchMap$com$google$protobuf$WireFormat$FieldType[WireFormat.FieldType.FIXED64.ordinal()] = 7;
-            } catch (NoSuchFieldError unused7) {
-            }
-            try {
-                $SwitchMap$com$google$protobuf$WireFormat$FieldType[WireFormat.FieldType.INT64.ordinal()] = 8;
-            } catch (NoSuchFieldError unused8) {
-            }
-            try {
-                $SwitchMap$com$google$protobuf$WireFormat$FieldType[WireFormat.FieldType.SFIXED64.ordinal()] = 9;
-            } catch (NoSuchFieldError unused9) {
-            }
-            try {
-                $SwitchMap$com$google$protobuf$WireFormat$FieldType[WireFormat.FieldType.SINT64.ordinal()] = 10;
-            } catch (NoSuchFieldError unused10) {
-            }
-            try {
-                $SwitchMap$com$google$protobuf$WireFormat$FieldType[WireFormat.FieldType.UINT64.ordinal()] = 11;
-            } catch (NoSuchFieldError unused11) {
-            }
-            try {
-                $SwitchMap$com$google$protobuf$WireFormat$FieldType[WireFormat.FieldType.STRING.ordinal()] = 12;
-            } catch (NoSuchFieldError unused12) {
-            }
+            /*
+                com.google.protobuf.WireFormat$FieldType[] r0 = com.google.protobuf.WireFormat.FieldType.values()
+                int r0 = r0.length
+                int[] r0 = new int[r0]
+                $SwitchMap$com$google$protobuf$WireFormat$FieldType = r0
+                com.google.protobuf.WireFormat$FieldType r1 = com.google.protobuf.WireFormat.FieldType.BOOL     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
+                r2 = 1
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                int[] r0 = $SwitchMap$com$google$protobuf$WireFormat$FieldType     // Catch:{ NoSuchFieldError -> 0x001d }
+                com.google.protobuf.WireFormat$FieldType r1 = com.google.protobuf.WireFormat.FieldType.FIXED32     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
+                r2 = 2
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                int[] r0 = $SwitchMap$com$google$protobuf$WireFormat$FieldType     // Catch:{ NoSuchFieldError -> 0x0028 }
+                com.google.protobuf.WireFormat$FieldType r1 = com.google.protobuf.WireFormat.FieldType.INT32     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
+                r2 = 3
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
+            L_0x0028:
+                int[] r0 = $SwitchMap$com$google$protobuf$WireFormat$FieldType     // Catch:{ NoSuchFieldError -> 0x0033 }
+                com.google.protobuf.WireFormat$FieldType r1 = com.google.protobuf.WireFormat.FieldType.SFIXED32     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
+                r2 = 4
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0033 }
+            L_0x0033:
+                int[] r0 = $SwitchMap$com$google$protobuf$WireFormat$FieldType     // Catch:{ NoSuchFieldError -> 0x003e }
+                com.google.protobuf.WireFormat$FieldType r1 = com.google.protobuf.WireFormat.FieldType.SINT32     // Catch:{ NoSuchFieldError -> 0x003e }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x003e }
+                r2 = 5
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x003e }
+            L_0x003e:
+                int[] r0 = $SwitchMap$com$google$protobuf$WireFormat$FieldType     // Catch:{ NoSuchFieldError -> 0x0049 }
+                com.google.protobuf.WireFormat$FieldType r1 = com.google.protobuf.WireFormat.FieldType.UINT32     // Catch:{ NoSuchFieldError -> 0x0049 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0049 }
+                r2 = 6
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0049 }
+            L_0x0049:
+                int[] r0 = $SwitchMap$com$google$protobuf$WireFormat$FieldType     // Catch:{ NoSuchFieldError -> 0x0054 }
+                com.google.protobuf.WireFormat$FieldType r1 = com.google.protobuf.WireFormat.FieldType.FIXED64     // Catch:{ NoSuchFieldError -> 0x0054 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0054 }
+                r2 = 7
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0054 }
+            L_0x0054:
+                int[] r0 = $SwitchMap$com$google$protobuf$WireFormat$FieldType     // Catch:{ NoSuchFieldError -> 0x0060 }
+                com.google.protobuf.WireFormat$FieldType r1 = com.google.protobuf.WireFormat.FieldType.INT64     // Catch:{ NoSuchFieldError -> 0x0060 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0060 }
+                r2 = 8
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0060 }
+            L_0x0060:
+                int[] r0 = $SwitchMap$com$google$protobuf$WireFormat$FieldType     // Catch:{ NoSuchFieldError -> 0x006c }
+                com.google.protobuf.WireFormat$FieldType r1 = com.google.protobuf.WireFormat.FieldType.SFIXED64     // Catch:{ NoSuchFieldError -> 0x006c }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x006c }
+                r2 = 9
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x006c }
+            L_0x006c:
+                int[] r0 = $SwitchMap$com$google$protobuf$WireFormat$FieldType     // Catch:{ NoSuchFieldError -> 0x0078 }
+                com.google.protobuf.WireFormat$FieldType r1 = com.google.protobuf.WireFormat.FieldType.SINT64     // Catch:{ NoSuchFieldError -> 0x0078 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0078 }
+                r2 = 10
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0078 }
+            L_0x0078:
+                int[] r0 = $SwitchMap$com$google$protobuf$WireFormat$FieldType     // Catch:{ NoSuchFieldError -> 0x0084 }
+                com.google.protobuf.WireFormat$FieldType r1 = com.google.protobuf.WireFormat.FieldType.UINT64     // Catch:{ NoSuchFieldError -> 0x0084 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0084 }
+                r2 = 11
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0084 }
+            L_0x0084:
+                int[] r0 = $SwitchMap$com$google$protobuf$WireFormat$FieldType     // Catch:{ NoSuchFieldError -> 0x0090 }
+                com.google.protobuf.WireFormat$FieldType r1 = com.google.protobuf.WireFormat.FieldType.STRING     // Catch:{ NoSuchFieldError -> 0x0090 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0090 }
+                r2 = 12
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0090 }
+            L_0x0090:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.google.protobuf.CodedOutputStreamWriter.C18991.<clinit>():void");
         }
     }
 
     private <K, V> void writeDeterministicMap(int i, MapEntryLite.Metadata<K, V> metadata, Map<K, V> map) throws IOException {
-        int[] iArr = AnonymousClass1.$SwitchMap$com$google$protobuf$WireFormat$FieldType;
+        int[] iArr = C18991.$SwitchMap$com$google$protobuf$WireFormat$FieldType;
         throw null;
     }
 }

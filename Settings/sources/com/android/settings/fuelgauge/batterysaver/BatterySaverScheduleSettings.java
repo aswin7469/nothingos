@@ -5,45 +5,46 @@ import android.database.ContentObserver;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
+import com.android.settings.overlay.FeatureFactory;
 import com.android.settings.widget.RadioButtonPickerFragment;
 import com.android.settingslib.fuelgauge.BatterySaverUtils;
 import com.android.settingslib.widget.CandidateInfo;
-import com.android.settingslib.widget.RadioButtonPreference;
+import com.android.settingslib.widget.SelectorWithWidgetPreference;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class BatterySaverScheduleSettings extends RadioButtonPickerFragment {
     Context mContext;
     public BatterySaverScheduleRadioButtonsController mRadioButtonController;
+    private int mSaverPercentage;
+    private String mSaverScheduleKey;
     private BatterySaverScheduleSeekBarController mSeekBarController;
-    final ContentObserver mSettingsObserver = new ContentObserver(new Handler()) { // from class: com.android.settings.fuelgauge.batterysaver.BatterySaverScheduleSettings.1
-        @Override // android.database.ContentObserver
+    final ContentObserver mSettingsObserver = new ContentObserver(new Handler()) {
         public void onChange(boolean z, Uri uri) {
             BatterySaverScheduleSettings.this.getPreferenceScreen().removeAll();
             BatterySaverScheduleSettings.this.updateCandidates();
         }
     };
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.widget.RadioButtonPickerFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.battery_saver_schedule_settings;
+        return R$xml.battery_saver_schedule_settings;
     }
 
-    @Override // com.android.settings.widget.RadioButtonPickerFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         BatterySaverScheduleSeekBarController batterySaverScheduleSeekBarController = new BatterySaverScheduleSeekBarController(context);
@@ -52,77 +53,87 @@ public class BatterySaverScheduleSettings extends RadioButtonPickerFragment {
         this.mContext = context;
     }
 
-    @Override // com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
         this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("low_power_warning_acknowledged"), false, this.mSettingsObserver);
+        this.mSaverScheduleKey = this.mRadioButtonController.getDefaultKey();
+        this.mSaverPercentage = getSaverPercentage();
     }
 
-    @Override // androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
         setDivider(new ColorDrawable(0));
         setDividerHeight(0);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
     }
 
-    @Override // com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onPause() {
         this.mContext.getContentResolver().unregisterContentObserver(this.mSettingsObserver);
+        AsyncTask.execute(new BatterySaverScheduleSettings$$ExternalSyntheticLambda0(this));
         super.onPause();
     }
 
-    @Override // com.android.settings.widget.RadioButtonPickerFragment
-    protected List<? extends CandidateInfo> getCandidates() {
+    /* access modifiers changed from: protected */
+    public List<? extends CandidateInfo> getCandidates() {
         Context context = getContext();
         ArrayList newArrayList = Lists.newArrayList();
-        String string = getContext().getResources().getString(17039863);
-        newArrayList.add(new BatterySaverScheduleCandidateInfo(context.getText(R.string.battery_saver_auto_no_schedule), null, "key_battery_saver_no_schedule", true));
+        String string = getContext().getResources().getString(17039887);
+        newArrayList.add(new BatterySaverScheduleCandidateInfo(context.getText(R$string.battery_saver_auto_no_schedule), (CharSequence) null, "key_battery_saver_no_schedule", true));
         if (!TextUtils.isEmpty(string)) {
-            newArrayList.add(new BatterySaverScheduleCandidateInfo(context.getText(R.string.battery_saver_auto_routine), context.getText(R.string.battery_saver_auto_routine_summary), "key_battery_saver_routine", true));
+            newArrayList.add(new BatterySaverScheduleCandidateInfo(context.getText(R$string.battery_saver_auto_routine), context.getText(R$string.battery_saver_auto_routine_summary), "key_battery_saver_routine", true));
         } else {
             BatterySaverUtils.revertScheduleToNoneIfNeeded(context);
         }
-        newArrayList.add(new BatterySaverScheduleCandidateInfo(context.getText(R.string.battery_saver_auto_percentage), null, "key_battery_saver_percentage", true));
+        newArrayList.add(new BatterySaverScheduleCandidateInfo(context.getText(R$string.battery_saver_auto_percentage), (CharSequence) null, "key_battery_saver_percentage", true));
         return newArrayList;
     }
 
-    @Override // com.android.settings.widget.RadioButtonPickerFragment
-    public void bindPreferenceExtra(RadioButtonPreference radioButtonPreference, String str, CandidateInfo candidateInfo, String str2, String str3) {
+    public void bindPreferenceExtra(SelectorWithWidgetPreference selectorWithWidgetPreference, String str, CandidateInfo candidateInfo, String str2, String str3) {
         CharSequence summary = ((BatterySaverScheduleCandidateInfo) candidateInfo).getSummary();
         if (summary != null) {
-            radioButtonPreference.setSummary(summary);
-            radioButtonPreference.setAppendixVisibility(8);
+            selectorWithWidgetPreference.setSummary(summary);
+            selectorWithWidgetPreference.setAppendixVisibility(8);
         }
     }
 
-    @Override // com.android.settings.widget.RadioButtonPickerFragment
-    protected void addStaticPreferences(PreferenceScreen preferenceScreen) {
+    /* access modifiers changed from: protected */
+    public void addStaticPreferences(PreferenceScreen preferenceScreen) {
         this.mSeekBarController.updateSeekBar();
         this.mSeekBarController.addToScreen(preferenceScreen);
     }
 
-    @Override // com.android.settings.widget.RadioButtonPickerFragment
-    protected String getDefaultKey() {
+    /* access modifiers changed from: protected */
+    public String getDefaultKey() {
         return this.mRadioButtonController.getDefaultKey();
     }
 
-    @Override // com.android.settings.widget.RadioButtonPickerFragment
-    protected boolean setDefaultKey(String str) {
+    /* access modifiers changed from: protected */
+    public boolean setDefaultKey(String str) {
         return this.mRadioButtonController.setDefaultKey(str);
     }
 
-    /* loaded from: classes.dex */
+    /* access modifiers changed from: private */
+    /* renamed from: logPowerSaver */
+    public void lambda$onPause$0() {
+        int saverPercentage = getSaverPercentage();
+        String defaultKey = this.mRadioButtonController.getDefaultKey();
+        if (!this.mSaverScheduleKey.equals(defaultKey) || this.mSaverPercentage != saverPercentage) {
+            FeatureFactory.getFactory(this.mContext).getMetricsFeatureProvider().action(52, 1784, 1785, defaultKey, saverPercentage);
+        }
+    }
+
+    private int getSaverPercentage() {
+        return Settings.Global.getInt(this.mContext.getContentResolver(), "low_power_trigger_level", -1);
+    }
+
     static class BatterySaverScheduleCandidateInfo extends CandidateInfo {
         private final String mKey;
         private final CharSequence mLabel;
         private final CharSequence mSummary;
 
-        @Override // com.android.settingslib.widget.CandidateInfo
         public Drawable loadIcon() {
             return null;
         }
@@ -134,12 +145,10 @@ public class BatterySaverScheduleSettings extends RadioButtonPickerFragment {
             this.mSummary = charSequence2;
         }
 
-        @Override // com.android.settingslib.widget.CandidateInfo
         public CharSequence loadLabel() {
             return this.mLabel;
         }
 
-        @Override // com.android.settingslib.widget.CandidateInfo
         public String getKey() {
             return this.mKey;
         }

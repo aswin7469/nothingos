@@ -1,15 +1,15 @@
 package com.android.settings.network;
 
 import android.content.Context;
-/* loaded from: classes.dex */
+
 public class MobileDataEnabledListener {
-    private Client mClient;
+    /* access modifiers changed from: private */
+    public Client mClient;
     private Context mContext;
     private GlobalSettingsChangeListener mListener;
     private GlobalSettingsChangeListener mListenerForSubId;
     private int mSubId = -1;
 
-    /* loaded from: classes.dex */
     public interface Client {
         void onMobileDataEnabledChange();
     }
@@ -22,25 +22,22 @@ public class MobileDataEnabledListener {
     public void start(int i) {
         this.mSubId = i;
         if (this.mListener == null) {
-            this.mListener = new GlobalSettingsChangeListener(this.mContext, "mobile_data") { // from class: com.android.settings.network.MobileDataEnabledListener.1
-                @Override // com.android.settings.network.GlobalSettingsChangeListener
+            this.mListener = new GlobalSettingsChangeListener(this.mContext, "mobile_data") {
                 public void onChanged(String str) {
                     MobileDataEnabledListener.this.mClient.onMobileDataEnabledChange();
                 }
             };
         }
         stopMonitorSubIdSpecific();
-        if (this.mSubId == -1) {
-            return;
+        if (this.mSubId != -1) {
+            Context context = this.mContext;
+            this.mListenerForSubId = new GlobalSettingsChangeListener(context, "mobile_data" + this.mSubId) {
+                public void onChanged(String str) {
+                    MobileDataEnabledListener.this.stopMonitor();
+                    MobileDataEnabledListener.this.mClient.onMobileDataEnabledChange();
+                }
+            };
         }
-        Context context = this.mContext;
-        this.mListenerForSubId = new GlobalSettingsChangeListener(context, "mobile_data" + this.mSubId) { // from class: com.android.settings.network.MobileDataEnabledListener.2
-            @Override // com.android.settings.network.GlobalSettingsChangeListener
-            public void onChanged(String str) {
-                MobileDataEnabledListener.this.stopMonitor();
-                MobileDataEnabledListener.this.mClient.onMobileDataEnabledChange();
-            }
-        };
     }
 
     public int getSubId() {
@@ -52,7 +49,7 @@ public class MobileDataEnabledListener {
         stopMonitorSubIdSpecific();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void stopMonitor() {
         GlobalSettingsChangeListener globalSettingsChangeListener = this.mListener;
         if (globalSettingsChangeListener != null) {

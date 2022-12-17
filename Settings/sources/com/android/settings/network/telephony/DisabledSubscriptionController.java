@@ -9,58 +9,43 @@ import androidx.lifecycle.OnLifecycleEvent;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceScreen;
 import com.android.settings.network.SubscriptionsChangeListener;
-import com.android.settings.slices.SliceBackgroundWorker;
-/* loaded from: classes.dex */
+
 public class DisabledSubscriptionController extends TelephonyBasePreferenceController implements SubscriptionsChangeListener.SubscriptionsChangeListenerClient, LifecycleObserver {
     private PreferenceCategory mCategory;
     private SubscriptionsChangeListener mChangeListener;
-    private SubscriptionManager mSubscriptionManager = (SubscriptionManager) this.mContext.getSystemService(SubscriptionManager.class);
+    private SubscriptionManager mSubscriptionManager = ((SubscriptionManager) this.mContext.getSystemService(SubscriptionManager.class));
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.network.telephony.TelephonyAvailabilityCallback
     public int getAvailabilityStatus(int i) {
         return 1;
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.network.SubscriptionsChangeListener.SubscriptionsChangeListenerClient
     public void onAirplaneModeChanged(boolean z) {
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -71,8 +56,7 @@ public class DisabledSubscriptionController extends TelephonyBasePreferenceContr
         this.mChangeListener = new SubscriptionsChangeListener(context, this);
     }
 
-    public void init(Lifecycle lifecycle, int i) {
-        lifecycle.addObserver(this);
+    public void init(int i) {
         this.mSubId = i;
     }
 
@@ -87,7 +71,6 @@ public class DisabledSubscriptionController extends TelephonyBasePreferenceContr
         this.mChangeListener.stop();
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mCategory = (PreferenceCategory) preferenceScreen.findPreference(getPreferenceKey());
@@ -95,13 +78,11 @@ public class DisabledSubscriptionController extends TelephonyBasePreferenceContr
     }
 
     private void update() {
-        if (this.mCategory == null || !SubscriptionManager.isValidSubscriptionId(this.mSubId)) {
-            return;
+        if (this.mCategory != null && SubscriptionManager.isValidSubscriptionId(this.mSubId)) {
+            this.mCategory.setVisible(this.mSubscriptionManager.isActiveSubscriptionId(this.mSubId));
         }
-        this.mCategory.setVisible(this.mSubscriptionManager.isActiveSubscriptionId(this.mSubId));
     }
 
-    @Override // com.android.settings.network.SubscriptionsChangeListener.SubscriptionsChangeListenerClient
     public void onSubscriptionsChanged() {
         update();
     }

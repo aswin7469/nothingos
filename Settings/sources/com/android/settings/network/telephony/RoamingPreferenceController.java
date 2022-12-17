@@ -1,65 +1,58 @@
 package com.android.settings.network.telephony;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.os.PersistableBundle;
+import android.os.RemoteException;
 import android.telephony.CarrierConfigManager;
+import android.telephony.SubscriptionInfo;
+import android.telephony.SubscriptionManager;
+import android.telephony.TelephonyCallback;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.network.GlobalSettingsChangeListener;
-import com.android.settings.slices.SliceBackgroundWorker;
+import com.android.settings.network.SubscriptionUtil;
 import com.android.settingslib.RestrictedSwitchPreference;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnStart;
 import com.android.settingslib.core.lifecycle.events.OnStop;
-/* loaded from: classes.dex */
+import java.util.Map;
+import java.util.TreeMap;
+
 public class RoamingPreferenceController extends TelephonyTogglePreferenceController implements LifecycleObserver, OnStart, OnStop {
     private static final String DIALOG_TAG = "MobileDataDialog";
     private static final String TAG = "RoamingController";
     private CarrierConfigManager mCarrierConfigManager;
+    int mDialogType;
     FragmentManager mFragmentManager;
     private GlobalSettingsChangeListener mListener;
     private GlobalSettingsChangeListener mListenerForSubId;
-    private RestrictedSwitchPreference mSwitchPreference;
+    private NonDdsCallStateListener mNonDdsCallStateListener;
+    public SubscriptionManager mSubscriptionManager;
+    /* access modifiers changed from: private */
+    public RestrictedSwitchPreference mSwitchPreference;
     private TelephonyManager mTelephonyManager;
 
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.network.telephony.TelephonyAvailabilityCallback
     public int getAvailabilityStatus(int i) {
         return i != -1 ? 0 : 1;
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.network.telephony.TelephonyTogglePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -69,11 +62,9 @@ public class RoamingPreferenceController extends TelephonyTogglePreferenceContro
         this.mCarrierConfigManager = (CarrierConfigManager) context.getSystemService(CarrierConfigManager.class);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStart
     public void onStart() {
         if (this.mListener == null) {
-            this.mListener = new GlobalSettingsChangeListener(this.mContext, "data_roaming") { // from class: com.android.settings.network.telephony.RoamingPreferenceController.1
-                @Override // com.android.settings.network.GlobalSettingsChangeListener
+            this.mListener = new GlobalSettingsChangeListener(this.mContext, "data_roaming") {
                 public void onChanged(String str) {
                     RoamingPreferenceController roamingPreferenceController = RoamingPreferenceController.this;
                     roamingPreferenceController.updateState(roamingPreferenceController.mSwitchPreference);
@@ -81,123 +72,132 @@ public class RoamingPreferenceController extends TelephonyTogglePreferenceContro
             };
         }
         stopMonitorSubIdSpecific();
-        if (this.mSubId == -1) {
-            return;
-        }
-        Context context = this.mContext;
-        this.mListenerForSubId = new GlobalSettingsChangeListener(context, "data_roaming" + this.mSubId) { // from class: com.android.settings.network.telephony.RoamingPreferenceController.2
-            @Override // com.android.settings.network.GlobalSettingsChangeListener
-            public void onChanged(String str) {
-                RoamingPreferenceController.this.stopMonitor();
-                RoamingPreferenceController roamingPreferenceController = RoamingPreferenceController.this;
-                roamingPreferenceController.updateState(roamingPreferenceController.mSwitchPreference);
+        if (this.mSubId != -1) {
+            Context context = this.mContext;
+            this.mListenerForSubId = new GlobalSettingsChangeListener(context, "data_roaming" + this.mSubId) {
+                public void onChanged(String str) {
+                    RoamingPreferenceController.this.stopMonitor();
+                    RoamingPreferenceController roamingPreferenceController = RoamingPreferenceController.this;
+                    roamingPreferenceController.updateState(roamingPreferenceController.mSwitchPreference);
+                }
+            };
+            if (this.mSubId == SubscriptionManager.getDefaultDataSubscriptionId()) {
+                this.mNonDdsCallStateListener.register(this.mContext, this.mSubId);
             }
-        };
+        }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStop
     public void onStop() {
         stopMonitor();
         stopMonitorSubIdSpecific();
+        if (this.mSubId != -1) {
+            this.mNonDdsCallStateListener.unregister();
+        }
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mSwitchPreference = (RestrictedSwitchPreference) preferenceScreen.findPreference(getPreferenceKey());
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
-    public boolean setChecked(final boolean z) {
-        if (z) {
-            showRoamingDialog();
-            return true;
+    public boolean setChecked(boolean z) {
+        if (isDialogNeeded()) {
+            showDialog(this.mDialogType);
+            return false;
         }
-        new Thread(new Runnable() { // from class: com.android.settings.network.telephony.RoamingPreferenceController.3
-            @Override // java.lang.Runnable
-            public void run() {
-                RoamingPreferenceController.this.mTelephonyManager.setDataRoamingEnabled(z);
-            }
-        }).start();
+        this.mTelephonyManager.setDataRoamingEnabled(z);
         return true;
     }
 
-    private void showRoamingDialog() {
-        Log.d(TAG, "showRoamingDialog");
-        AlertDialog.Builder builder = new AlertDialog.Builder(this.mContext);
-        int i = R.string.roaming_alert_title;
-        int i2 = R.string.roaming_warning;
-        PersistableBundle configForSubId = this.mCarrierConfigManager.getConfigForSubId(this.mSubId);
-        if (configForSubId != null && configForSubId.getBoolean("check_pricing_with_carrier_data_roaming_bool")) {
-            i2 = R.string.roaming_check_price_warning;
-        }
-        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() { // from class: com.android.settings.network.telephony.RoamingPreferenceController.4
-            @Override // android.content.DialogInterface.OnClickListener
-            public void onClick(DialogInterface dialogInterface, int i3) {
-                if (i3 == -1) {
-                    RoamingPreferenceController.this.mTelephonyManager.setDataRoamingEnabled(true);
-                    RoamingPreferenceController.this.mSwitchPreference.setChecked(true);
-                    return;
-                }
-                RoamingPreferenceController roamingPreferenceController = RoamingPreferenceController.this;
-                roamingPreferenceController.updateState(roamingPreferenceController.mSwitchPreference);
-            }
-        };
-        builder.setMessage(this.mContext.getResources().getString(i2)).setTitle(i).setIconAttribute(16843605).setNeutralButton(this.mContext.getResources().getString(R.string.no), onClickListener).setPositiveButton(this.mContext.getResources().getString(R.string.yes), onClickListener).create().show();
-    }
-
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
-        super.updateState(preference);
-        RestrictedSwitchPreference restrictedSwitchPreference = (RestrictedSwitchPreference) preference;
-        if (!restrictedSwitchPreference.isDisabledByAdmin()) {
-            restrictedSwitchPreference.setEnabled(this.mSubId != -1);
-            if (isChecked()) {
-                Log.d(TAG, "updateState check");
-                restrictedSwitchPreference.setChecked(true);
-                return;
+        if (this.mTelephonyManager != null) {
+            super.updateState(preference);
+            RestrictedSwitchPreference restrictedSwitchPreference = (RestrictedSwitchPreference) preference;
+            if (!restrictedSwitchPreference.isDisabledByAdmin()) {
+                restrictedSwitchPreference.setEnabled(this.mSubId != -1);
+                restrictedSwitchPreference.setChecked(isChecked());
+                if (!this.mNonDdsCallStateListener.isIdle()) {
+                    Log.d(TAG, "nDDS voice call in ongoing");
+                    if (isChecked()) {
+                        Log.d(TAG, "Do not allow the user to turn off DDS data roaming");
+                        preference.setEnabled(false);
+                        preference.setSummary(R$string.mobile_data_settings_summary_dds_roaming_unavailable);
+                    }
+                }
             }
-            restrictedSwitchPreference.setChecked(false);
         }
     }
 
-    boolean isDialogNeeded() {
-        boolean isDataRoamingEnabled = this.mTelephonyManager.isDataRoamingEnabled();
+    /* access modifiers changed from: package-private */
+    public boolean isDialogNeeded() {
+        boolean z;
+        TelephonyManager telephonyManager = this.mTelephonyManager;
+        if (telephonyManager == null) {
+            return false;
+        }
+        boolean isDataRoamingEnabled = telephonyManager.isDataRoamingEnabled();
         PersistableBundle configForSubId = this.mCarrierConfigManager.getConfigForSubId(this.mSubId);
-        if (!isDataRoamingEnabled) {
-            return configForSubId == null || !configForSubId.getBoolean("disable_charge_indication_bool");
+        if (isDataRoamingEnabled || (configForSubId != null && configForSubId.getBoolean("disable_charge_indication_bool"))) {
+            boolean z2 = this.mTelephonyManager.getCallState() == 0;
+            try {
+                if (this.mTelephonyManager.getImsRegistration(SubscriptionManager.getSlotIndex(this.mSubId), 1).getRegistrationTechnology() == 2) {
+                    z = true;
+                    Log.d(TAG, "isDialogNeeded: isRoamingEnabled=" + isDataRoamingEnabled + ", isCallIdle=" + z2 + ", isImsRegisteredOverCiwlan=" + z);
+                    if (isDataRoamingEnabled || z2 || !z) {
+                        return false;
+                    }
+                    this.mDialogType = 1;
+                    return true;
+                }
+            } catch (RemoteException e) {
+                Log.e(TAG, "getRegistrationTechnology failed", e);
+            }
+            z = false;
+            Log.d(TAG, "isDialogNeeded: isRoamingEnabled=" + isDataRoamingEnabled + ", isCallIdle=" + z2 + ", isImsRegisteredOverCiwlan=" + z);
+            if (isDataRoamingEnabled) {
+            }
+            return false;
         }
-        return false;
+        this.mDialogType = 0;
+        return true;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean isChecked() {
-        return this.mTelephonyManager.isDataRoamingEnabled();
+        TelephonyManager telephonyManager = this.mTelephonyManager;
+        if (telephonyManager == null) {
+            return false;
+        }
+        return telephonyManager.isDataRoamingEnabled();
     }
 
     public void init(FragmentManager fragmentManager, int i) {
         this.mFragmentManager = fragmentManager;
         this.mSubId = i;
-        TelephonyManager telephonyManager = (TelephonyManager) this.mContext.getSystemService(TelephonyManager.class);
-        this.mTelephonyManager = telephonyManager;
+        this.mTelephonyManager = (TelephonyManager) this.mContext.getSystemService(TelephonyManager.class);
+        this.mSubscriptionManager = (SubscriptionManager) this.mContext.getSystemService(SubscriptionManager.class);
         int i2 = this.mSubId;
-        if (i2 == -1) {
-            return;
+        if (i2 != -1) {
+            TelephonyManager createForSubscriptionId = this.mTelephonyManager.createForSubscriptionId(i2);
+            if (createForSubscriptionId == null) {
+                Log.w(TAG, "fail to init in sub" + this.mSubId);
+                this.mSubId = -1;
+                return;
+            }
+            this.mTelephonyManager = createForSubscriptionId;
+            this.mNonDdsCallStateListener = new NonDdsCallStateListener(this.mTelephonyManager, this.mSubscriptionManager, new RoamingPreferenceController$$ExternalSyntheticLambda0(this));
         }
-        TelephonyManager createForSubscriptionId = telephonyManager.createForSubscriptionId(i2);
-        if (createForSubscriptionId == null) {
-            Log.w(TAG, "fail to init in sub" + this.mSubId);
-            this.mSubId = -1;
-            return;
-        }
-        this.mTelephonyManager = createForSubscriptionId;
     }
 
-    private void showDialog() {
-        RoamingDialogFragment.newInstance(this.mSubId).show(this.mFragmentManager, DIALOG_TAG);
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$init$0() {
+        updateState(this.mSwitchPreference);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    private void showDialog(int i) {
+        RoamingDialogFragment.newInstance(i, this.mSubId).show(this.mFragmentManager, DIALOG_TAG);
+    }
+
+    /* access modifiers changed from: private */
     public void stopMonitor() {
         GlobalSettingsChangeListener globalSettingsChangeListener = this.mListener;
         if (globalSettingsChangeListener != null) {
@@ -211,6 +211,50 @@ public class RoamingPreferenceController extends TelephonyTogglePreferenceContro
         if (globalSettingsChangeListener != null) {
             globalSettingsChangeListener.close();
             this.mListenerForSubId = null;
+        }
+    }
+
+    private static class NonDdsCallStateListener extends TelephonyCallback implements TelephonyCallback.CallStateListener {
+        private Map<Integer, NonDdsCallStateListener> mCallbacks;
+        private Runnable mRunnable;
+        private int mState = 0;
+        private SubscriptionManager mSubscriptionManager;
+        private TelephonyManager mTelephonyManager;
+
+        public NonDdsCallStateListener(TelephonyManager telephonyManager, SubscriptionManager subscriptionManager, Runnable runnable) {
+            this.mTelephonyManager = telephonyManager;
+            this.mSubscriptionManager = subscriptionManager;
+            this.mRunnable = runnable;
+            this.mCallbacks = new TreeMap();
+        }
+
+        public void register(Context context, int i) {
+            for (SubscriptionInfo next : SubscriptionUtil.getActiveSubscriptions(this.mSubscriptionManager)) {
+                if (next.getSubscriptionId() != i) {
+                    this.mTelephonyManager.createForSubscriptionId(next.getSubscriptionId()).registerTelephonyCallback(context.getMainExecutor(), this);
+                    this.mCallbacks.put(Integer.valueOf(next.getSubscriptionId()), this);
+                }
+            }
+        }
+
+        public void unregister() {
+            for (Integer intValue : this.mCallbacks.keySet()) {
+                int intValue2 = intValue.intValue();
+                this.mTelephonyManager.createForSubscriptionId(intValue2).unregisterTelephonyCallback(this.mCallbacks.get(Integer.valueOf(intValue2)));
+            }
+            this.mCallbacks.clear();
+        }
+
+        public boolean isIdle() {
+            return this.mState == 0;
+        }
+
+        public void onCallStateChanged(int i) {
+            this.mState = i;
+            Runnable runnable = this.mRunnable;
+            if (runnable != null) {
+                runnable.run();
+            }
         }
     }
 }

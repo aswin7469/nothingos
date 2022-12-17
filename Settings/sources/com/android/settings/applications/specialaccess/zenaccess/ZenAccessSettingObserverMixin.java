@@ -9,12 +9,11 @@ import android.provider.Settings;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnStart;
 import com.android.settingslib.core.lifecycle.events.OnStop;
-/* loaded from: classes.dex */
+
 public class ZenAccessSettingObserverMixin extends ContentObserver implements LifecycleObserver, OnStart, OnStop {
     private final Context mContext;
     private final Listener mListener;
 
-    /* loaded from: classes.dex */
     public interface Listener {
         void onZenAccessPolicyChanged();
     }
@@ -25,7 +24,6 @@ public class ZenAccessSettingObserverMixin extends ContentObserver implements Li
         this.mListener = listener;
     }
 
-    @Override // android.database.ContentObserver
     public void onChange(boolean z, Uri uri) {
         Listener listener = this.mListener;
         if (listener != null) {
@@ -33,12 +31,10 @@ public class ZenAccessSettingObserverMixin extends ContentObserver implements Li
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStart
     public void onStart() {
         this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("enabled_notification_listeners"), false, this);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStop
     public void onStop() {
         this.mContext.getContentResolver().unregisterContentObserver(this);
     }

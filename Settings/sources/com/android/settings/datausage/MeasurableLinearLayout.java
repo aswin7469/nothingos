@@ -4,13 +4,13 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
-/* loaded from: classes.dex */
+
 public class MeasurableLinearLayout extends LinearLayout {
     private View mDisposableView;
     private View mFixedView;
 
     public MeasurableLinearLayout(Context context) {
-        super(context, null);
+        super(context, (AttributeSet) null);
     }
 
     public MeasurableLinearLayout(Context context, AttributeSet attributeSet) {
@@ -25,19 +25,19 @@ public class MeasurableLinearLayout extends LinearLayout {
         super(context, attributeSet, i, i2);
     }
 
-    @Override // android.widget.LinearLayout, android.view.View
-    protected void onMeasure(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         super.onMeasure(i, i2);
-        if (this.mDisposableView != null && getMeasuredWidth() - this.mFixedView.getMeasuredWidth() < this.mDisposableView.getMeasuredWidth()) {
-            this.mDisposableView.setVisibility(8);
-            super.onMeasure(i, i2);
+        if (this.mDisposableView == null || getMeasuredWidth() - this.mFixedView.getMeasuredWidth() >= this.mDisposableView.getMeasuredWidth()) {
+            View view = this.mDisposableView;
+            if (view != null && view.getVisibility() != 0) {
+                this.mDisposableView.setVisibility(0);
+                super.onMeasure(i, i2);
+                return;
+            }
             return;
         }
-        View view = this.mDisposableView;
-        if (view == null || view.getVisibility() == 0) {
-            return;
-        }
-        this.mDisposableView.setVisibility(0);
+        this.mDisposableView.setVisibility(8);
         super.onMeasure(i, i2);
     }
 

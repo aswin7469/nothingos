@@ -3,46 +3,33 @@ package com.android.settings.accessibility;
 import android.content.Context;
 import android.content.IntentFilter;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
-import com.android.settings.slices.SliceBackgroundWorker;
-/* loaded from: classes.dex */
-public class AccessibilityButtonFooterPreferenceController extends AccessibilityFooterPreferenceController {
-    @Override // com.android.settings.accessibility.AccessibilityFooterPreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
+import com.android.settings.R$string;
 
-    @Override // com.android.settings.accessibility.AccessibilityFooterPreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+public class AccessibilityButtonFooterPreferenceController extends AccessibilityFooterPreferenceController {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.accessibility.AccessibilityFooterPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.accessibility.AccessibilityFooterPreferenceController, com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.accessibility.AccessibilityFooterPreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.accessibility.AccessibilityFooterPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.accessibility.AccessibilityFooterPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.accessibility.AccessibilityFooterPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -51,16 +38,24 @@ public class AccessibilityButtonFooterPreferenceController extends Accessibility
         super(context, str);
     }
 
-    @Override // com.android.settings.accessibility.AccessibilityFooterPreferenceController
-    protected String getLabelName() {
-        return this.mContext.getString(R.string.accessibility_button_title);
+    /* access modifiers changed from: protected */
+    public String getLearnMoreText() {
+        return this.mContext.getString(R$string.f136xe1bf3399);
     }
 
-    @Override // com.android.settings.accessibility.AccessibilityFooterPreferenceController, com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
+    /* access modifiers changed from: protected */
+    public String getIntroductionTitle() {
+        return this.mContext.getString(R$string.accessibility_button_about_title);
+    }
+
     public void displayPreference(PreferenceScreen preferenceScreen) {
+        int i;
         if (AccessibilityUtil.isGestureNavigateEnabled(this.mContext)) {
-            ((AccessibilityFooterPreference) preferenceScreen.findPreference(getPreferenceKey())).setTitle(this.mContext.getString(R.string.accessibility_button_gesture_description));
+            i = R$string.accessibility_button_gesture_description;
+        } else {
+            i = R$string.accessibility_button_description;
         }
+        ((AccessibilityFooterPreference) preferenceScreen.findPreference(getPreferenceKey())).setTitle(this.mContext.getText(i));
         super.displayPreference(preferenceScreen);
     }
 }

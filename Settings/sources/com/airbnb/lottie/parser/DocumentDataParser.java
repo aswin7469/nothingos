@@ -3,18 +3,15 @@ package com.airbnb.lottie.parser;
 import com.airbnb.lottie.model.DocumentData;
 import com.airbnb.lottie.parser.moshi.JsonReader;
 import java.io.IOException;
-/* loaded from: classes.dex */
+
 public class DocumentDataParser implements ValueParser<DocumentData> {
     public static final DocumentDataParser INSTANCE = new DocumentDataParser();
-    private static final JsonReader.Options NAMES = JsonReader.Options.of("t", "f", "s", "j", "tr", "lh", "ls", "fc", "sc", "sw", "of");
+    private static final JsonReader.Options NAMES = JsonReader.Options.m9of("t", "f", "s", "j", "tr", "lh", "ls", "fc", "sc", "sw", "of");
 
     private DocumentDataParser() {
     }
 
-    /* JADX WARN: Can't rename method to resolve collision */
-    @Override // com.airbnb.lottie.parser.ValueParser
-    /* renamed from: parse */
-    public DocumentData mo189parse(JsonReader jsonReader, float f) throws IOException {
+    public DocumentData parse(JsonReader jsonReader, float f) throws IOException {
         DocumentData.Justification justification = DocumentData.Justification.CENTER;
         jsonReader.beginObject();
         DocumentData.Justification justification2 = justification;
@@ -46,7 +43,6 @@ public class DocumentDataParser implements ValueParser<DocumentData> {
                         justification2 = DocumentData.Justification.values()[nextInt];
                         break;
                     }
-                    break;
                 case 4:
                     i = jsonReader.nextInt();
                     break;
@@ -74,6 +70,7 @@ public class DocumentDataParser implements ValueParser<DocumentData> {
                     break;
             }
         }
+        JsonReader jsonReader2 = jsonReader;
         jsonReader.endObject();
         return new DocumentData(str, str2, f2, justification2, i, f3, f4, i2, i3, f5, z);
     }

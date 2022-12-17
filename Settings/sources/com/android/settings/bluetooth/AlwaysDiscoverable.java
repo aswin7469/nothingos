@@ -5,7 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-/* loaded from: classes.dex */
+
 public class AlwaysDiscoverable extends BroadcastReceiver {
     private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     private Context mContext;
@@ -20,27 +20,23 @@ public class AlwaysDiscoverable extends BroadcastReceiver {
     }
 
     public void start() {
-        if (this.mStarted) {
-            return;
+        if (!this.mStarted) {
+            this.mContext.registerReceiver(this, this.mIntentFilter, 2);
+            this.mStarted = true;
+            if (this.mBluetoothAdapter.getScanMode() != 23) {
+                this.mBluetoothAdapter.setScanMode(23);
+            }
         }
-        this.mContext.registerReceiver(this, this.mIntentFilter);
-        this.mStarted = true;
-        if (this.mBluetoothAdapter.getScanMode() == 23) {
-            return;
-        }
-        this.mBluetoothAdapter.setScanMode(23);
     }
 
     public void stop() {
-        if (!this.mStarted) {
-            return;
+        if (this.mStarted) {
+            this.mContext.unregisterReceiver(this);
+            this.mStarted = false;
+            this.mBluetoothAdapter.setScanMode(21);
         }
-        this.mContext.unregisterReceiver(this);
-        this.mStarted = false;
-        this.mBluetoothAdapter.setScanMode(21);
     }
 
-    @Override // android.content.BroadcastReceiver
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction() == "android.bluetooth.adapter.action.SCAN_MODE_CHANGED" && this.mBluetoothAdapter.getScanMode() != 23) {
             this.mBluetoothAdapter.setScanMode(23);

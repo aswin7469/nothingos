@@ -15,22 +15,26 @@ import com.google.android.setupcompat.R$styleable;
 import com.google.android.setupcompat.template.Mixin;
 import java.util.HashMap;
 import java.util.Map;
-/* loaded from: classes2.dex */
+
 public class TemplateLayout extends FrameLayout {
     private ViewGroup container;
     private final Map<Class<? extends Mixin>, Mixin> mixins = new HashMap();
-    private ViewTreeObserver.OnPreDrawListener preDrawListener;
-    private float xFraction;
+    /* access modifiers changed from: private */
+    public ViewTreeObserver.OnPreDrawListener preDrawListener;
+    /* access modifiers changed from: private */
+    public float xFraction;
 
-    protected void onBeforeTemplateInflated(AttributeSet attributeSet, int i) {
+    /* access modifiers changed from: protected */
+    public void onBeforeTemplateInflated(AttributeSet attributeSet, int i) {
     }
 
-    protected void onTemplateInflated() {
+    /* access modifiers changed from: protected */
+    public void onTemplateInflated() {
     }
 
     public TemplateLayout(Context context, int i, int i2) {
         super(context);
-        init(i, i2, null, R$attr.sucLayoutTheme);
+        init(i, i2, (AttributeSet) null, R$attr.sucLayoutTheme);
     }
 
     public TemplateLayout(Context context, AttributeSet attributeSet) {
@@ -57,20 +61,19 @@ public class TemplateLayout extends FrameLayout {
         obtainStyledAttributes.recycle();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public <M extends Mixin> void registerMixin(Class<M> cls, M m) {
         this.mixins.put(cls, m);
     }
 
     public <T extends View> T findManagedViewById(int i) {
-        return (T) findViewById(i);
+        return findViewById(i);
     }
 
     public <M extends Mixin> M getMixin(Class<M> cls) {
-        return (M) this.mixins.get(cls);
+        return (Mixin) this.mixins.get(cls);
     }
 
-    @Override // android.view.ViewGroup
     public void addView(View view, int i, ViewGroup.LayoutParams layoutParams) {
         this.container.addView(view, i, layoutParams);
     }
@@ -83,43 +86,43 @@ public class TemplateLayout extends FrameLayout {
         addViewInternal(onInflateTemplate(LayoutInflater.from(getContext()), i));
         ViewGroup findContainer = findContainer(i2);
         this.container = findContainer;
-        if (findContainer == null) {
-            throw new IllegalArgumentException("Container cannot be null in TemplateLayout");
+        if (findContainer != null) {
+            onTemplateInflated();
+            return;
         }
-        onTemplateInflated();
+        throw new IllegalArgumentException("Container cannot be null in TemplateLayout");
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public final View inflateTemplate(LayoutInflater layoutInflater, int i, int i2) {
-        if (i2 == 0) {
-            throw new IllegalArgumentException("android:layout not specified for TemplateLayout");
+        if (i2 != 0) {
+            if (i != 0) {
+                layoutInflater = LayoutInflater.from(new FallbackThemeWrapper(layoutInflater.getContext(), i));
+            }
+            return layoutInflater.inflate(i2, this, false);
         }
-        if (i != 0) {
-            layoutInflater = LayoutInflater.from(new FallbackThemeWrapper(layoutInflater.getContext(), i));
-        }
-        return layoutInflater.inflate(i2, (ViewGroup) this, false);
+        throw new IllegalArgumentException("android:layout not specified for TemplateLayout");
     }
 
-    protected View onInflateTemplate(LayoutInflater layoutInflater, int i) {
+    /* access modifiers changed from: protected */
+    public View onInflateTemplate(LayoutInflater layoutInflater, int i) {
         return inflateTemplate(layoutInflater, 0, i);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public ViewGroup findContainer(int i) {
         return (ViewGroup) findViewById(i);
     }
 
-    @Keep
     @TargetApi(11)
+    @Keep
     public void setXFraction(float f) {
         this.xFraction = f;
         int width = getWidth();
         if (width != 0) {
-            setTranslationX(width * f);
-        } else if (this.preDrawListener != null) {
-        } else {
-            this.preDrawListener = new ViewTreeObserver.OnPreDrawListener() { // from class: com.google.android.setupcompat.internal.TemplateLayout.1
-                @Override // android.view.ViewTreeObserver.OnPreDrawListener
+            setTranslationX(((float) width) * f);
+        } else if (this.preDrawListener == null) {
+            this.preDrawListener = new ViewTreeObserver.OnPreDrawListener() {
                 public boolean onPreDraw() {
                     TemplateLayout.this.getViewTreeObserver().removeOnPreDrawListener(TemplateLayout.this.preDrawListener);
                     TemplateLayout templateLayout = TemplateLayout.this;
@@ -131,8 +134,8 @@ public class TemplateLayout extends FrameLayout {
         }
     }
 
-    @Keep
     @TargetApi(11)
+    @Keep
     public float getXFraction() {
         return this.xFraction;
     }

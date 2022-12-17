@@ -2,6 +2,7 @@ package com.android.settings.display;
 
 import android.app.admin.DevicePolicyManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -9,15 +10,15 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.hardware.SensorPrivacyManager;
 import android.os.UserHandle;
-import android.provider.SearchIndexableData;
 import android.provider.Settings;
-import android.text.SpannableString;
-import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.View;
-import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$array;
+import com.android.settings.R$drawable;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settings.search.BaseSearchIndexProvider;
 import com.android.settings.support.actionbar.HelpResourceProvider;
@@ -28,22 +29,21 @@ import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
 import com.android.settingslib.search.SearchIndexableRaw;
 import com.android.settingslib.widget.CandidateInfo;
 import com.android.settingslib.widget.FooterPreference;
-import com.android.settingslib.widget.RadioButtonPreference;
+import com.android.settingslib.widget.SelectorWithWidgetPreference;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class ScreenTimeoutSettings extends RadioButtonPickerFragment implements HelpResourceProvider {
-    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R.xml.screen_timeout_settings) { // from class: com.android.settings.display.ScreenTimeoutSettings.3
-        @Override // com.android.settings.search.BaseSearchIndexProvider, com.android.settingslib.search.Indexable$SearchIndexProvider
+    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R$xml.screen_timeout_settings) {
         public List<SearchIndexableRaw> getRawDataToIndex(Context context, boolean z) {
             if (!ScreenTimeoutSettings.isScreenAttentionAvailable(context)) {
                 return null;
             }
             Resources resources = context.getResources();
             SearchIndexableRaw searchIndexableRaw = new SearchIndexableRaw(context);
-            int i = R.string.adaptive_sleep_title;
+            int i = R$string.adaptive_sleep_title;
             searchIndexableRaw.title = resources.getString(i);
-            ((SearchIndexableData) searchIndexableRaw).key = "adaptive_sleep";
+            searchIndexableRaw.key = "adaptive_sleep";
             searchIndexableRaw.keywords = resources.getString(i);
             ArrayList arrayList = new ArrayList(1);
             arrayList.add(searchIndexableRaw);
@@ -56,57 +56,52 @@ public class ScreenTimeoutSettings extends RadioButtonPickerFragment implements 
     AdaptiveSleepPermissionPreferenceController mAdaptiveSleepPermissionController;
     RestrictedLockUtils.EnforcedAdmin mAdmin;
     Context mContext;
-    Preference mDisableOptionsPreference;
+    private DevicePolicyManager mDevicePolicyManager;
+    FooterPreference mDisableOptionsPreference;
     private CharSequence[] mInitialEntries;
     private CharSequence[] mInitialValues;
+    private final MetricsFeatureProvider mMetricsFeatureProvider = FeatureFactory.getFactory(getContext()).getMetricsFeatureProvider();
     private SensorPrivacyManager mPrivacyManager;
     private FooterPreference mPrivacyPreference;
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() { // from class: com.android.settings.display.ScreenTimeoutSettings.1
-        @Override // android.content.BroadcastReceiver
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             ScreenTimeoutSettings.this.mAdaptiveSleepBatterySaverPreferenceController.updateVisibility();
             ScreenTimeoutSettings.this.mAdaptiveSleepController.updatePreference();
         }
     };
-    private final MetricsFeatureProvider mMetricsFeatureProvider = FeatureFactory.getFactory(getContext()).getMetricsFeatureProvider();
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1852;
     }
 
-    @Override // com.android.settings.widget.RadioButtonPickerFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         this.mContext = context;
-        this.mInitialEntries = getResources().getStringArray(R.array.screen_timeout_entries);
-        this.mInitialValues = getResources().getStringArray(R.array.screen_timeout_values);
+        this.mDevicePolicyManager = (DevicePolicyManager) context.getSystemService(DevicePolicyManager.class);
+        this.mInitialEntries = getResources().getStringArray(R$array.screen_timeout_entries);
+        this.mInitialValues = getResources().getStringArray(R$array.screen_timeout_values);
         this.mAdaptiveSleepController = new AdaptiveSleepPreferenceController(context);
         this.mAdaptiveSleepPermissionController = new AdaptiveSleepPermissionPreferenceController(context);
         this.mAdaptiveSleepCameraStatePreferenceController = new AdaptiveSleepCameraStatePreferenceController(context);
         this.mAdaptiveSleepBatterySaverPreferenceController = new AdaptiveSleepBatterySaverPreferenceController(context);
         FooterPreference footerPreference = new FooterPreference(context);
         this.mPrivacyPreference = footerPreference;
-        footerPreference.setIcon(R.drawable.ic_privacy_shield_24dp);
-        this.mPrivacyPreference.setTitle(R.string.adaptive_sleep_privacy);
+        footerPreference.setIcon(R$drawable.ic_privacy_shield_24dp);
+        this.mPrivacyPreference.setTitle(R$string.adaptive_sleep_privacy);
         this.mPrivacyPreference.setSelectable(false);
-        this.mPrivacyPreference.setLayoutResource(R.layout.preference_footer);
-        SensorPrivacyManager sensorPrivacyManager = SensorPrivacyManager.getInstance(context);
-        this.mPrivacyManager = sensorPrivacyManager;
-        sensorPrivacyManager.addSensorPrivacyListener(2, new SensorPrivacyManager.OnSensorPrivacyChangedListener() { // from class: com.android.settings.display.ScreenTimeoutSettings$$ExternalSyntheticLambda0
-            public final void onSensorPrivacyChanged(int i, boolean z) {
-                ScreenTimeoutSettings.this.lambda$onAttach$0(i, z);
-            }
-        });
+        this.mPrivacyPreference.setLayoutResource(R$layout.preference_footer);
+        SensorPrivacyManager instance = SensorPrivacyManager.getInstance(context);
+        this.mPrivacyManager = instance;
+        instance.addSensorPrivacyListener(2, new ScreenTimeoutSettings$$ExternalSyntheticLambda2(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onAttach$0(int i, boolean z) {
         this.mAdaptiveSleepController.updatePreference();
     }
 
-    @Override // com.android.settings.widget.RadioButtonPickerFragment
-    protected List<? extends CandidateInfo> getCandidates() {
+    /* access modifiers changed from: protected */
+    public List<? extends CandidateInfo> getCandidates() {
         ArrayList arrayList = new ArrayList();
         long longValue = getMaxScreenTimeout(getContext()).longValue();
         if (this.mInitialValues != null) {
@@ -127,7 +122,6 @@ public class ScreenTimeoutSettings extends RadioButtonPickerFragment implements 
         return arrayList;
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onStart() {
         super.onStart();
         this.mAdaptiveSleepPermissionController.updateVisibility();
@@ -137,93 +131,90 @@ public class ScreenTimeoutSettings extends RadioButtonPickerFragment implements 
         this.mContext.registerReceiver(this.mReceiver, new IntentFilter("android.os.action.POWER_SAVE_MODE_CHANGED"));
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onStop() {
         super.onStop();
         this.mContext.unregisterReceiver(this.mReceiver);
     }
 
-    @Override // com.android.settings.widget.RadioButtonPickerFragment
     public void updateCandidates() {
         String defaultKey = getDefaultKey();
         PreferenceScreen preferenceScreen = getPreferenceScreen();
         preferenceScreen.removeAll();
         List<? extends CandidateInfo> candidates = getCandidates();
-        if (candidates == null) {
-            return;
+        if (candidates != null) {
+            for (CandidateInfo candidateInfo : candidates) {
+                SelectorWithWidgetPreference selectorWithWidgetPreference = new SelectorWithWidgetPreference(getPrefContext());
+                bindPreference(selectorWithWidgetPreference, candidateInfo.getKey(), candidateInfo, defaultKey);
+                preferenceScreen.addPreference(selectorWithWidgetPreference);
+            }
+            long parseLong = Long.parseLong(defaultKey);
+            long longValue = getMaxScreenTimeout(getContext()).longValue();
+            if (!candidates.isEmpty() && parseLong > longValue) {
+                ((SelectorWithWidgetPreference) preferenceScreen.getPreference(candidates.size() - 1)).setChecked(true);
+            }
+            FooterPreference footerPreference = new FooterPreference(this.mContext);
+            this.mPrivacyPreference = footerPreference;
+            footerPreference.setIcon(R$drawable.ic_privacy_shield_24dp);
+            this.mPrivacyPreference.setTitle(R$string.adaptive_sleep_privacy);
+            this.mPrivacyPreference.setSelectable(false);
+            this.mPrivacyPreference.setLayoutResource(R$layout.preference_footer);
+            if (isScreenAttentionAvailable(getContext())) {
+                this.mAdaptiveSleepPermissionController.addToScreen(preferenceScreen);
+                this.mAdaptiveSleepCameraStatePreferenceController.addToScreen(preferenceScreen);
+                this.mAdaptiveSleepController.addToScreen(preferenceScreen);
+                this.mAdaptiveSleepBatterySaverPreferenceController.addToScreen(preferenceScreen);
+                preferenceScreen.addPreference(this.mPrivacyPreference);
+            }
+            if (this.mAdmin != null) {
+                setupDisabledFooterPreference();
+                preferenceScreen.addPreference(this.mDisableOptionsPreference);
+            }
         }
-        for (CandidateInfo candidateInfo : candidates) {
-            RadioButtonPreference radioButtonPreference = new RadioButtonPreference(getPrefContext());
-            bindPreference(radioButtonPreference, candidateInfo.getKey(), candidateInfo, defaultKey);
-            preferenceScreen.addPreference(radioButtonPreference);
-        }
-        long parseLong = Long.parseLong(defaultKey);
-        long longValue = getMaxScreenTimeout(getContext()).longValue();
-        if (!candidates.isEmpty() && parseLong > longValue) {
-            ((RadioButtonPreference) preferenceScreen.getPreference(candidates.size() - 1)).setChecked(true);
-        }
-        FooterPreference footerPreference = new FooterPreference(this.mContext);
-        this.mPrivacyPreference = footerPreference;
-        footerPreference.setIcon(R.drawable.ic_privacy_shield_24dp);
-        this.mPrivacyPreference.setTitle(R.string.adaptive_sleep_privacy);
-        this.mPrivacyPreference.setSelectable(false);
-        this.mPrivacyPreference.setLayoutResource(R.layout.preference_footer);
-        if (isScreenAttentionAvailable(getContext())) {
-            this.mAdaptiveSleepPermissionController.addToScreen(preferenceScreen);
-            this.mAdaptiveSleepCameraStatePreferenceController.addToScreen(preferenceScreen);
-            this.mAdaptiveSleepBatterySaverPreferenceController.addToScreen(preferenceScreen);
-            this.mAdaptiveSleepController.addToScreen(preferenceScreen);
-            preferenceScreen.addPreference(this.mPrivacyPreference);
-        }
-        if (this.mAdmin == null) {
-            return;
-        }
-        setupDisabledFooterPreference();
-        preferenceScreen.addPreference(this.mDisableOptionsPreference);
     }
 
-    void setupDisabledFooterPreference() {
-        String string = getResources().getString(R.string.admin_disabled_other_options);
-        String string2 = getResources().getString(R.string.admin_more_details);
-        SpannableString spannableString = new SpannableString(string + System.lineSeparator() + System.lineSeparator() + string2);
-        ClickableSpan clickableSpan = new ClickableSpan() { // from class: com.android.settings.display.ScreenTimeoutSettings.2
-            @Override // android.text.style.ClickableSpan
-            public void onClick(View view) {
-                RestrictedLockUtils.sendShowAdminSupportDetailsIntent(ScreenTimeoutSettings.this.getContext(), ScreenTimeoutSettings.this.mAdmin);
-            }
-        };
-        if (string != null && string2 != null) {
-            spannableString.setSpan(clickableSpan, string.length() + 1, string.length() + string2.length() + 2, 33);
-        }
+    /* access modifiers changed from: package-private */
+    public void setupDisabledFooterPreference() {
+        String string = this.mDevicePolicyManager.getResources().getString("Settings.OTHER_OPTIONS_DISABLED_BY_ADMIN", new ScreenTimeoutSettings$$ExternalSyntheticLambda0(this));
+        String string2 = getResources().getString(R$string.admin_more_details);
         FooterPreference footerPreference = new FooterPreference(getContext());
         this.mDisableOptionsPreference = footerPreference;
-        footerPreference.setLayoutResource(R.layout.preference_footer);
-        this.mDisableOptionsPreference.setTitle(spannableString);
+        footerPreference.setTitle((CharSequence) string);
         this.mDisableOptionsPreference.setSelectable(false);
-        this.mDisableOptionsPreference.setIcon(R.drawable.ic_info_outline_24dp);
+        this.mDisableOptionsPreference.setLearnMoreText(string2);
+        this.mDisableOptionsPreference.setLearnMoreAction(new ScreenTimeoutSettings$$ExternalSyntheticLambda1(this));
+        this.mDisableOptionsPreference.setIcon(R$drawable.ic_info_outline_24dp);
         this.mDisableOptionsPreference.setOrder(2147483646);
         this.mPrivacyPreference.setOrder(2147483645);
     }
 
-    @Override // com.android.settings.widget.RadioButtonPickerFragment
-    protected String getDefaultKey() {
+    /* access modifiers changed from: private */
+    public /* synthetic */ String lambda$setupDisabledFooterPreference$1() {
+        return getResources().getString(R$string.admin_disabled_other_options);
+    }
+
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$setupDisabledFooterPreference$2(View view) {
+        RestrictedLockUtils.sendShowAdminSupportDetailsIntent(getContext(), this.mAdmin);
+    }
+
+    /* access modifiers changed from: protected */
+    public String getDefaultKey() {
         return getCurrentSystemScreenTimeout(getContext());
     }
 
-    @Override // com.android.settings.widget.RadioButtonPickerFragment
-    protected boolean setDefaultKey(String str) {
+    /* access modifiers changed from: protected */
+    public boolean setDefaultKey(String str) {
         setCurrentSystemScreenTimeout(getContext(), str);
         return true;
     }
 
-    @Override // com.android.settings.widget.RadioButtonPickerFragment, com.android.settings.core.InstrumentedPreferenceFragment
-    protected int getPreferenceScreenResId() {
-        return R.xml.screen_timeout_settings;
+    /* access modifiers changed from: protected */
+    public int getPreferenceScreenResId() {
+        return R$xml.screen_timeout_settings;
     }
 
-    @Override // com.android.settings.support.actionbar.HelpResourceProvider
     public int getHelpResource() {
-        return R.string.help_url_adaptive_sleep;
+        return R$string.help_url_adaptive_sleep;
     }
 
     private Long getMaxScreenTimeout(Context context) {
@@ -233,17 +224,17 @@ public class ScreenTimeoutSettings extends RadioButtonPickerFragment implements 
         }
         RestrictedLockUtils.EnforcedAdmin checkIfMaximumTimeToLockIsSet = RestrictedLockUtilsInternal.checkIfMaximumTimeToLockIsSet(context);
         this.mAdmin = checkIfMaximumTimeToLockIsSet;
-        if (checkIfMaximumTimeToLockIsSet == null) {
-            return Long.MAX_VALUE;
+        if (checkIfMaximumTimeToLockIsSet != null) {
+            return Long.valueOf(devicePolicyManager.getMaximumTimeToLock((ComponentName) null, UserHandle.myUserId()));
         }
-        return Long.valueOf(devicePolicyManager.getMaximumTimeToLock(null, UserHandle.myUserId()));
+        return Long.MAX_VALUE;
     }
 
     private String getCurrentSystemScreenTimeout(Context context) {
         if (context == null) {
-            return Long.toString(30000L);
+            return Long.toString(30000);
         }
-        return Long.toString(Settings.System.getLong(context.getContentResolver(), "screen_off_timeout", 30000L));
+        return Long.toString(Settings.System.getLong(context.getContentResolver(), "screen_off_timeout", 30000));
     }
 
     private void setCurrentSystemScreenTimeout(Context context, String str) {
@@ -258,18 +249,15 @@ public class ScreenTimeoutSettings extends RadioButtonPickerFragment implements 
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static boolean isScreenAttentionAvailable(Context context) {
         return AdaptiveSleepPreferenceController.isAdaptiveSleepSupported(context);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class TimeoutCandidateInfo extends CandidateInfo {
+    private static class TimeoutCandidateInfo extends CandidateInfo {
         private final String mKey;
         private final CharSequence mLabel;
 
-        @Override // com.android.settingslib.widget.CandidateInfo
         public Drawable loadIcon() {
             return null;
         }
@@ -280,12 +268,10 @@ public class ScreenTimeoutSettings extends RadioButtonPickerFragment implements 
             this.mKey = str;
         }
 
-        @Override // com.android.settingslib.widget.CandidateInfo
         public CharSequence loadLabel() {
             return this.mLabel;
         }
 
-        @Override // com.android.settingslib.widget.CandidateInfo
         public String getKey() {
             return this.mKey;
         }

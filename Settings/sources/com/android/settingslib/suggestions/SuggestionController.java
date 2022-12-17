@@ -11,15 +11,16 @@ import android.service.settings.suggestions.ISuggestionService;
 import android.service.settings.suggestions.Suggestion;
 import android.util.Log;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class SuggestionController {
-    private ServiceConnectionListener mConnectionListener;
+    /* access modifiers changed from: private */
+    public ServiceConnectionListener mConnectionListener;
     private final Context mContext;
-    private ISuggestionService mRemoteService;
+    /* access modifiers changed from: private */
+    public ISuggestionService mRemoteService;
     private ServiceConnection mServiceConnection = createServiceConnection();
     private final Intent mServiceIntent;
 
-    /* loaded from: classes.dex */
     public interface ServiceConnectionListener {
         void onServiceConnected();
 
@@ -49,11 +50,11 @@ public class SuggestionController {
         }
         try {
             return this.mRemoteService.getSuggestions();
-        } catch (RemoteException | RuntimeException e) {
-            Log.w("SuggestionController", "Error when calling getSuggestion()", e);
+        } catch (NullPointerException e) {
+            Log.w("SuggestionController", "mRemote service detached before able to query", e);
             return null;
-        } catch (NullPointerException e2) {
-            Log.w("SuggestionController", "mRemote service detached before able to query", e2);
+        } catch (RemoteException | RuntimeException e2) {
+            Log.w("SuggestionController", "Error when calling getSuggestion()", e2);
             return null;
         }
     }
@@ -75,8 +76,7 @@ public class SuggestionController {
     }
 
     private ServiceConnection createServiceConnection() {
-        return new ServiceConnection() { // from class: com.android.settingslib.suggestions.SuggestionController.1
-            @Override // android.content.ServiceConnection
+        return new ServiceConnection() {
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
                 SuggestionController.this.mRemoteService = ISuggestionService.Stub.asInterface(iBinder);
                 if (SuggestionController.this.mConnectionListener != null) {
@@ -84,7 +84,6 @@ public class SuggestionController {
                 }
             }
 
-            @Override // android.content.ServiceConnection
             public void onServiceDisconnected(ComponentName componentName) {
                 if (SuggestionController.this.mConnectionListener != null) {
                     SuggestionController.this.mRemoteService = null;

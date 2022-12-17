@@ -6,10 +6,10 @@ import android.os.ServiceManager;
 import android.view.IWindowManager;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$array;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.development.DeveloperOptionsPreferenceController;
-/* loaded from: classes.dex */
+
 public class TransitionAnimationScalePreferenceController extends DeveloperOptionsPreferenceController implements Preference.OnPreferenceChangeListener, PreferenceControllerMixin {
     static final float DEFAULT_VALUE = 1.0f;
     static final int TRANSITION_ANIMATION_SCALE_SELECTOR = 1;
@@ -17,47 +17,43 @@ public class TransitionAnimationScalePreferenceController extends DeveloperOptio
     private final String[] mListValues;
     private final IWindowManager mWindowManager = IWindowManager.Stub.asInterface(ServiceManager.getService("window"));
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "transition_animation_scale";
     }
 
     public TransitionAnimationScalePreferenceController(Context context) {
         super(context);
-        this.mListValues = context.getResources().getStringArray(R.array.transition_animation_scale_values);
-        this.mListSummaries = context.getResources().getStringArray(R.array.transition_animation_scale_entries);
+        this.mListValues = context.getResources().getStringArray(R$array.transition_animation_scale_values);
+        this.mListSummaries = context.getResources().getStringArray(R$array.transition_animation_scale_entries);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         writeAnimationScaleOption(obj);
         return true;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         updateAnimationScaleValue();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController
+    /* access modifiers changed from: protected */
     public void onDeveloperOptionsSwitchDisabled() {
         super.onDeveloperOptionsSwitchDisabled();
-        writeAnimationScaleOption(null);
+        writeAnimationScaleOption((Object) null);
     }
 
     private void writeAnimationScaleOption(Object obj) {
-        float parseFloat;
+        float f;
         if (obj != null) {
             try {
-                parseFloat = Float.parseFloat(obj.toString());
+                f = Float.parseFloat(obj.toString());
             } catch (RemoteException unused) {
                 return;
             }
         } else {
-            parseFloat = DEFAULT_VALUE;
+            f = DEFAULT_VALUE;
         }
-        this.mWindowManager.setAnimationScale(1, parseFloat);
+        this.mWindowManager.setAnimationScale(1, f);
         updateAnimationScaleValue();
     }
 

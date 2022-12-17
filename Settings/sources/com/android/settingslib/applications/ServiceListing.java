@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class ServiceListing {
     private final boolean mAddDeviceLockedFlags;
     private final List<Callback> mCallbacks;
@@ -35,7 +35,6 @@ public class ServiceListing {
     private final ContentObserver mSettingsObserver;
     private final String mTag;
 
-    /* loaded from: classes.dex */
     public interface Callback {
         void onServicesReloaded(List<ServiceInfo> list);
     }
@@ -44,15 +43,13 @@ public class ServiceListing {
         this.mEnabledServices = new HashSet<>();
         this.mServices = new ArrayList();
         this.mCallbacks = new ArrayList();
-        this.mSettingsObserver = new ContentObserver(new Handler()) { // from class: com.android.settingslib.applications.ServiceListing.1
-            @Override // android.database.ContentObserver
-            public void onChange(boolean z2, Uri uri) {
+        this.mSettingsObserver = new ContentObserver(new Handler()) {
+            public void onChange(boolean z, Uri uri) {
                 ServiceListing.this.reload();
             }
         };
-        this.mPackageReceiver = new BroadcastReceiver() { // from class: com.android.settingslib.applications.ServiceListing.2
-            @Override // android.content.BroadcastReceiver
-            public void onReceive(Context context2, Intent intent) {
+        this.mPackageReceiver = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
                 ServiceListing.this.reload();
             }
         };
@@ -75,23 +72,22 @@ public class ServiceListing {
     }
 
     public void setListening(boolean z) {
-        if (this.mListening == z) {
-            return;
+        if (this.mListening != z) {
+            this.mListening = z;
+            if (z) {
+                IntentFilter intentFilter = new IntentFilter();
+                intentFilter.addAction("android.intent.action.PACKAGE_ADDED");
+                intentFilter.addAction("android.intent.action.PACKAGE_CHANGED");
+                intentFilter.addAction("android.intent.action.PACKAGE_REMOVED");
+                intentFilter.addAction("android.intent.action.PACKAGE_REPLACED");
+                intentFilter.addDataScheme("package");
+                this.mContext.registerReceiver(this.mPackageReceiver, intentFilter);
+                this.mContentResolver.registerContentObserver(Settings.Secure.getUriFor(this.mSetting), false, this.mSettingsObserver);
+                return;
+            }
+            this.mContext.unregisterReceiver(this.mPackageReceiver);
+            this.mContentResolver.unregisterContentObserver(this.mSettingsObserver);
         }
-        this.mListening = z;
-        if (z) {
-            IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction("android.intent.action.PACKAGE_ADDED");
-            intentFilter.addAction("android.intent.action.PACKAGE_CHANGED");
-            intentFilter.addAction("android.intent.action.PACKAGE_REMOVED");
-            intentFilter.addAction("android.intent.action.PACKAGE_REPLACED");
-            intentFilter.addDataScheme("package");
-            this.mContext.registerReceiver(this.mPackageReceiver, intentFilter);
-            this.mContentResolver.registerContentObserver(Settings.Secure.getUriFor(this.mSetting), false, this.mSettingsObserver);
-            return;
-        }
-        this.mContext.unregisterReceiver(this.mPackageReceiver);
-        this.mContentResolver.unregisterContentObserver(this.mSettingsObserver);
     }
 
     private void saveEnabledServices() {
@@ -112,13 +108,12 @@ public class ServiceListing {
     private void loadEnabledServices() {
         this.mEnabledServices.clear();
         String string = Settings.Secure.getString(this.mContentResolver, this.mSetting);
-        if (string == null || "".equals(string)) {
-            return;
-        }
-        for (String str : string.split(":")) {
-            ComponentName unflattenFromString = ComponentName.unflattenFromString(str);
-            if (unflattenFromString != null) {
-                this.mEnabledServices.add(unflattenFromString);
+        if (string != null && !"".equals(string)) {
+            for (String unflattenFromString : string.split(":")) {
+                ComponentName unflattenFromString2 = ComponentName.unflattenFromString(unflattenFromString);
+                if (unflattenFromString2 != null) {
+                    this.mEnabledServices.add(unflattenFromString2);
+                }
             }
         }
     }
@@ -135,8 +130,8 @@ public class ServiceListing {
                 this.mServices.add(serviceInfo);
             }
         }
-        for (Callback callback : this.mCallbacks) {
-            callback.onServicesReloaded(this.mServices);
+        for (Callback onServicesReloaded : this.mCallbacks) {
+            onServicesReloaded.onServicesReloaded(this.mServices);
         }
     }
 
@@ -153,7 +148,6 @@ public class ServiceListing {
         saveEnabledServices();
     }
 
-    /* loaded from: classes.dex */
     public static class Builder {
         private boolean mAddDeviceLockedFlags = false;
         private final Context mContext;

@@ -1,5 +1,6 @@
 package com.android.settings.biometrics;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -14,30 +15,30 @@ import android.os.UserManager;
 import android.util.Log;
 import com.android.internal.util.FrameworkStatsLog;
 import com.android.internal.widget.LockPatternUtils;
-import com.android.settings.R;
+import com.android.settings.R$anim;
+import com.android.settings.R$style;
 import com.android.settings.SetupWizardUtils;
 import com.android.settings.core.InstrumentedActivity;
 import com.android.settings.password.ChooseLockGeneric;
 import com.android.settings.password.ChooseLockSettingsHelper;
 import com.google.android.setupcompat.util.WizardManagerHelper;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class BiometricEnrollActivity extends InstrumentedActivity {
     private boolean mConfirmingCredentials;
     private Long mGkPwHandle;
+    private boolean mHasFeatureFace = false;
+    private boolean mHasFeatureFingerprint = false;
     private boolean mIsEnrollActionLogged;
+    private boolean mIsFaceEnrollable = false;
+    private boolean mIsFingerprintEnrollable = false;
     private MultiBiometricEnrollHelper mMultiBiometricEnrollHelper;
     private ParentalConsentHelper mParentalConsentHelper;
     private Bundle mParentalOptions;
-    private int mUserId = UserHandle.myUserId();
-    private boolean mHasFeatureFace = false;
-    private boolean mHasFeatureFingerprint = false;
-    private boolean mIsFaceEnrollable = false;
-    private boolean mIsFingerprintEnrollable = false;
     private boolean mParentalOptionsRequired = false;
     private boolean mSkipReturnToParent = false;
+    private int mUserId = UserHandle.myUserId();
 
-    /* loaded from: classes.dex */
     public static final class InternalActivity extends BiometricEnrollActivity {
     }
 
@@ -45,15 +46,14 @@ public class BiometricEnrollActivity extends InstrumentedActivity {
         return (i == 1 && i2 == 1) || (i == 2 && i2 == -1);
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1586;
     }
 
-    @Override // com.android.settings.core.InstrumentedActivity, com.android.settingslib.core.lifecycle.ObservableActivity, androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
     public void onCreate(Bundle bundle) {
         int i;
         int i2;
+        int i3;
         super.onCreate(bundle);
         Intent intent = getIntent();
         if (this instanceof InternalActivity) {
@@ -69,21 +69,22 @@ public class BiometricEnrollActivity extends InstrumentedActivity {
             this.mParentalOptions = bundle.getBundle("enroll_preferences");
             if (bundle.containsKey("gk_pw_handle")) {
                 this.mGkPwHandle = Long.valueOf(bundle.getLong("gk_pw_handle"));
+                Log.d("Fingerprint", "BiometricEnrollActivity::onCreate mGkPwHandle:" + this.mGkPwHandle);
             }
         }
         if (!this.mIsEnrollActionLogged && "android.settings.BIOMETRIC_ENROLL".equals(intent.getAction())) {
             this.mIsEnrollActionLogged = true;
             BiometricManager biometricManager = (BiometricManager) getSystemService(BiometricManager.class);
-            int i3 = 12;
+            int i4 = 12;
             if (biometricManager != null) {
-                i3 = biometricManager.canAuthenticate(15);
-                i2 = biometricManager.canAuthenticate(255);
-                i = biometricManager.canAuthenticate(32768);
+                i4 = biometricManager.canAuthenticate(15);
+                i3 = biometricManager.canAuthenticate(255);
+                i2 = biometricManager.canAuthenticate(32768);
             } else {
-                i = 12;
                 i2 = 12;
+                i3 = 12;
             }
-            FrameworkStatsLog.write(355, i3 == 0, i2 == 0, i == 0, intent.hasExtra("android.provider.extra.BIOMETRIC_AUTHENTICATORS_ALLOWED"), intent.getIntExtra("android.provider.extra.BIOMETRIC_AUTHENTICATORS_ALLOWED", 0));
+            FrameworkStatsLog.write(355, i4 == 0, i3 == 0, i2 == 0, intent.hasExtra("android.provider.extra.BIOMETRIC_AUTHENTICATORS_ALLOWED"), intent.getIntExtra("android.provider.extra.BIOMETRIC_AUTHENTICATORS_ALLOWED", 0));
         }
         if (intent.getStringExtra("theme") == null) {
             intent.putExtra("theme", SetupWizardUtils.getThemeString(intent));
@@ -91,12 +92,21 @@ public class BiometricEnrollActivity extends InstrumentedActivity {
         PackageManager packageManager = getApplicationContext().getPackageManager();
         this.mHasFeatureFingerprint = packageManager.hasSystemFeature("android.hardware.fingerprint");
         this.mHasFeatureFace = packageManager.hasSystemFeature("android.hardware.biometrics.face");
+        this.mParentalOptionsRequired = intent.getBooleanExtra("require_consent", false);
+        this.mSkipReturnToParent = intent.getBooleanExtra("skip_return_to_parent", false);
         boolean isAnySetupWizard = WizardManagerHelper.isAnySetupWizard(getIntent());
+        Log.d("BiometricEnrollActivity", "parentalOptionsRequired: " + this.mParentalOptionsRequired + ", skipReturnToParent: " + this.mSkipReturnToParent + ", isSetupWizard: " + isAnySetupWizard + "mHasFeatureFingerprint: " + this.mHasFeatureFingerprint + ", mHasFeatureFace: " + this.mHasFeatureFace);
         if (this.mHasFeatureFace) {
             FaceManager faceManager = (FaceManager) getSystemService(FaceManager.class);
             List sensorPropertiesInternal = faceManager.getSensorPropertiesInternal();
             if (!sensorPropertiesInternal.isEmpty()) {
-                this.mIsFaceEnrollable = faceManager.getEnrolledFaces(this.mUserId).size() < (isAnySetupWizard ? 1 : ((FaceSensorPropertiesInternal) sensorPropertiesInternal.get(0)).maxEnrollmentsPerUser);
+                FaceSensorPropertiesInternal faceSensorPropertiesInternal = (FaceSensorPropertiesInternal) sensorPropertiesInternal.get(0);
+                if (isAnySetupWizard) {
+                    i = 1;
+                } else {
+                    i = faceSensorPropertiesInternal.maxEnrollmentsPerUser;
+                }
+                this.mIsFaceEnrollable = faceManager.getEnrolledFaces(this.mUserId).size() < i;
             }
         }
         if (this.mHasFeatureFingerprint) {
@@ -106,34 +116,31 @@ public class BiometricEnrollActivity extends InstrumentedActivity {
                 this.mIsFingerprintEnrollable = fingerprintManager.getEnrolledFingerprints(this.mUserId).size() < ((FingerprintSensorPropertiesInternal) sensorPropertiesInternal2.get(0)).maxEnrollmentsPerUser;
             }
         }
-        this.mParentalOptionsRequired = intent.getBooleanExtra("require_consent", false);
-        this.mSkipReturnToParent = intent.getBooleanExtra("skip_return_to_parent", false);
-        Log.d("BiometricEnrollActivity", "parentalOptionsRequired: " + this.mParentalOptionsRequired + ", skipReturnToParent: " + this.mSkipReturnToParent + ", isSetupWizard: " + isAnySetupWizard);
-        if (isAnySetupWizard && this.mParentalOptionsRequired) {
+        if (!isAnySetupWizard || !this.mParentalOptionsRequired) {
+            if (isAnySetupWizard && this.mParentalOptionsRequired) {
+                if (ParentalControlsUtils.parentConsentRequired(this, 10) != null) {
+                    z = true;
+                }
+                if (z) {
+                    Log.w("BiometricEnrollActivity", "Consent was already setup - skipping enrollment");
+                    setResult(2);
+                    finish();
+                    return;
+                }
+            }
+            if (this.mParentalOptionsRequired && this.mParentalOptions == null) {
+                this.mParentalConsentHelper = new ParentalConsentHelper(this.mIsFaceEnrollable, this.mIsFingerprintEnrollable, this.mGkPwHandle);
+                setOrConfirmCredentialsNow();
+            } else if (!isAnySetupWizard || this.mIsFingerprintEnrollable) {
+                startEnroll();
+            } else {
+                startActivity(WizardManagerHelper.getNextIntent(getIntent(), 1));
+                finish();
+            }
+        } else {
             Log.w("BiometricEnrollActivity", "Enrollment with parental consent is not supported when launched  directly from SuW - skipping enrollment");
             setResult(2);
             finish();
-            return;
-        }
-        if (isAnySetupWizard && this.mParentalOptionsRequired) {
-            if (ParentalControlsUtils.parentConsentRequired(this, 10) != null) {
-                z = true;
-            }
-            if (z) {
-                Log.w("BiometricEnrollActivity", "Consent was already setup - skipping enrollment");
-                setResult(2);
-                finish();
-                return;
-            }
-        }
-        if (this.mParentalOptionsRequired && this.mParentalOptions == null) {
-            this.mParentalConsentHelper = new ParentalConsentHelper(this.mIsFaceEnrollable, this.mIsFingerprintEnrollable, this.mGkPwHandle);
-            setOrConfirmCredentialsNow();
-        } else if (isAnySetupWizard && !this.mIsFingerprintEnrollable) {
-            startActivity(WizardManagerHelper.getNextIntent(getIntent(), 1));
-            finish();
-        } else {
-            startEnroll();
         }
     }
 
@@ -144,48 +151,54 @@ public class BiometricEnrollActivity extends InstrumentedActivity {
     }
 
     private void startEnrollWith(@BiometricManager.Authenticators.Types int i, boolean z) {
-        int canAuthenticate;
-        if (!z && (canAuthenticate = ((BiometricManager) getSystemService(BiometricManager.class)).canAuthenticate(i)) != 11) {
-            Log.e("BiometricEnrollActivity", "Unexpected result (has enrollments): " + canAuthenticate);
-            finish();
-            return;
+        if (!z) {
+            BiometricManager biometricManager = (BiometricManager) getSystemService(BiometricManager.class);
+            if (biometricManager == null) {
+                Log.e("BiometricEnrollActivity", " getSystemService(BiometricManager.class) return nul");
+            }
+            int canAuthenticate = biometricManager.canAuthenticate(i);
+            if (canAuthenticate != 11) {
+                Log.e("BiometricEnrollActivity", "Unexpected result (has enrollments): " + canAuthenticate);
+                finish();
+                return;
+            }
         }
         boolean z2 = this.mHasFeatureFace;
         boolean z3 = this.mHasFeatureFingerprint;
         if (this.mParentalOptionsRequired) {
             Bundle bundle = this.mParentalOptions;
-            if (bundle == null) {
+            if (bundle != null) {
+                z2 = z2 && ParentalConsentHelper.hasFaceConsent(bundle);
+                z3 = z3 && ParentalConsentHelper.hasFingerprintConsent(this.mParentalOptions);
+            } else {
                 throw new IllegalStateException("consent options required, but not set");
             }
-            z2 = z2 && ParentalConsentHelper.hasFaceConsent(bundle);
-            z3 = z3 && ParentalConsentHelper.hasFingerprintConsent(this.mParentalOptions);
         }
         if (!z && i == 32768) {
             launchCredentialOnlyEnroll();
             finish();
-        } else if (z2 && z3) {
-            if (this.mGkPwHandle != null) {
-                launchFaceAndFingerprintEnroll();
+        } else if (!z2 || !z3) {
+            if (z3) {
+                launchFingerprintOnlyEnroll();
+            } else if (z2) {
+                launchFaceOnlyEnroll();
             } else {
-                setOrConfirmCredentialsNow();
+                if (this.mParentalOptionsRequired) {
+                    Log.d("BiometricEnrollActivity", "No consent for any modality: skipping enrollment");
+                    setResult(-1, newResultIntent());
+                } else {
+                    Log.e("BiometricEnrollActivity", "Unknown state, finishing (was SUW: " + z + ")");
+                }
+                finish();
             }
-        } else if (z3) {
-            launchFingerprintOnlyEnroll();
-        } else if (z2) {
-            launchFaceOnlyEnroll();
+        } else if (this.mGkPwHandle != null) {
+            launchFaceAndFingerprintEnroll();
         } else {
-            if (this.mParentalOptionsRequired) {
-                Log.d("BiometricEnrollActivity", "No consent for any modality: skipping enrollment");
-                setResult(-1, newResultIntent());
-            } else {
-                Log.e("BiometricEnrollActivity", "Unknown state, finishing (was SUW: " + z + ")");
-            }
-            finish();
+            setOrConfirmCredentialsNow();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         bundle.putBoolean("confirming_credentials", this.mConfirmingCredentials);
@@ -200,28 +213,37 @@ public class BiometricEnrollActivity extends InstrumentedActivity {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onActivityResult(int i, int i2, Intent intent) {
         super.onActivityResult(i, i2, intent);
         if (this.mParentalConsentHelper != null) {
+            boolean z = true;
+            boolean z2 = ParentalControlsUtils.parentConsentRequired(this, 8) != null;
+            boolean z3 = ParentalControlsUtils.parentConsentRequired(this, 2) != null;
+            boolean z4 = z2 && this.mHasFeatureFace && this.mIsFaceEnrollable;
+            if (!z3 || !this.mHasFeatureFingerprint) {
+                z = false;
+            }
+            Log.d("BiometricEnrollActivity", "faceConsentRequired: " + z2 + ", fpConsentRequired: " + z3 + ", hasFeatureFace: " + this.mHasFeatureFace + ", hasFeatureFingerprint: " + this.mHasFeatureFingerprint + ", faceEnrollable: " + this.mIsFaceEnrollable + ", fpEnrollable: " + this.mIsFingerprintEnrollable);
+            this.mParentalConsentHelper.setConsentRequirement(z4, z);
             handleOnActivityResultWhileConsenting(i, i2, intent);
-        } else {
-            handleOnActivityResultWhileEnrolling(i, i2, intent);
+            return;
         }
+        handleOnActivityResultWhileEnrolling(i, i2, intent);
     }
 
     private void handleOnActivityResultWhileConsenting(int i, int i2, Intent intent) {
-        overridePendingTransition(R.anim.sud_slide_next_in, R.anim.sud_slide_next_out);
+        overridePendingTransition(R$anim.sud_slide_next_in, R$anim.sud_slide_next_out);
+        Log.d("Security", "BiometricEnrollActivity::handleOnActivityResultWhileConsenting");
         if (i == 1 || i == 2) {
             this.mConfirmingCredentials = false;
             if (isSuccessfulConfirmOrChooseCredential(i, i2)) {
                 updateGatekeeperPasswordHandle(intent);
-                if (this.mParentalConsentHelper.launchNext(this, 3)) {
+                if (!this.mParentalConsentHelper.launchNext(this, 3)) {
+                    Log.e("BiometricEnrollActivity", "Nothing to prompt for consent (no modalities enabled)!");
+                    finish();
                     return;
                 }
-                Log.e("BiometricEnrollActivity", "Nothing to prompt for consent (no modalities enabled)!");
-                finish();
                 return;
             }
             Log.d("BiometricEnrollActivity", "Unknown result for set/choose lock: " + i2);
@@ -230,65 +252,63 @@ public class BiometricEnrollActivity extends InstrumentedActivity {
         } else if (i != 3) {
             Log.w("BiometricEnrollActivity", "Unknown consenting requestCode: " + i + ", finishing");
             finish();
-        } else if (i2 == 4 || i2 == 5) {
-            if (this.mParentalConsentHelper.launchNext(this, 3, i2, intent)) {
-                return;
-            }
-            Log.d("BiometricEnrollActivity", "Enrollment consent options set, starting enrollment");
-            this.mParentalOptions = this.mParentalConsentHelper.getConsentResult();
-            this.mParentalConsentHelper = null;
-            startEnroll();
-        } else {
+        } else if (i2 != 4 && i2 != 5) {
             Log.d("BiometricEnrollActivity", "Unknown or cancelled parental consent");
             setResult(0);
             finish();
+        } else if (!this.mParentalConsentHelper.launchNext(this, 3, i2, intent)) {
+            this.mParentalOptions = this.mParentalConsentHelper.getConsentResult();
+            this.mParentalConsentHelper = null;
+            Log.d("BiometricEnrollActivity", "Enrollment consent options set, starting enrollment: " + this.mParentalOptions);
+            startEnroll();
         }
     }
 
     private void handleOnActivityResultWhileEnrolling(int i, int i2, Intent intent) {
+        Log.d("Security", "BiometricEnrollActivity::handleOnActivityResultWhileEnrolling requestCode: " + i);
         if (i == 4) {
-            Log.d("BiometricEnrollActivity", "Enrollment complete, requesting handoff, result: " + i2);
+            Log.d("Security", "BiometricEnrollActivity::handleOnActivityResultWhileEnrolling Enrollment complete, requesting handoff, result: " + i2);
             setResult(-1, newResultIntent());
             finish();
         } else if (this.mMultiBiometricEnrollHelper == null) {
-            overridePendingTransition(R.anim.sud_slide_next_in, R.anim.sud_slide_next_out);
-            if (i != 1 && i != 2) {
-                if (i == 5) {
-                    finishOrLaunchHandToParent(i2);
+            overridePendingTransition(R$anim.sud_slide_next_in, R$anim.sud_slide_next_out);
+            if (i == 1 || i == 2) {
+                this.mConfirmingCredentials = false;
+                if (!isSuccessfulConfirmOrChooseCredential(i, i2) || !this.mHasFeatureFace || !this.mHasFeatureFingerprint) {
+                    Log.d("Security", "BiometricEnrollActivity::handleOnActivityResultWhileEnrolling Unknown result for set/choose lock: " + i2);
+                    setResult(i2);
+                    finish();
                     return;
                 }
-                Log.w("BiometricEnrollActivity", "Unknown enrolling requestCode: " + i + ", finishing");
-                finish();
-                return;
-            }
-            this.mConfirmingCredentials = false;
-            if (isSuccessfulConfirmOrChooseCredential(i, i2) && this.mHasFeatureFace && this.mHasFeatureFingerprint) {
                 updateGatekeeperPasswordHandle(intent);
                 launchFaceAndFingerprintEnroll();
-                return;
+            } else if (i != 5) {
+                Log.w("Security", "BiometricEnrollActivity::handleOnActivityResultWhileEnrolling Unknown enrolling requestCode: " + i + ", finishing");
+                finish();
+            } else {
+                Log.w("Security", "BiometricEnrollActivity::handleOnActivityResultWhileEnrolling REQUEST_SINGLE_ENROLL requestCode: " + i + " resultCode:" + i2);
+                finishOrLaunchHandToParent(i2);
             }
-            Log.d("BiometricEnrollActivity", "Unknown result for set/choose lock: " + i2);
-            setResult(i2);
-            finish();
         } else {
-            Log.d("BiometricEnrollActivity", "RequestCode: " + i + " resultCode: " + i2);
-            BiometricUtils.removeGatekeeperPasswordHandle(this, this.mGkPwHandle.longValue());
+            Log.d("Security", "BiometricEnrollActivity::handleOnActivityResultWhileEnrolling RequestCode: " + i + " resultCode: " + i2);
+            BiometricUtils.removeGatekeeperPasswordHandle((Context) this, this.mGkPwHandle.longValue());
             finishOrLaunchHandToParent(i2);
         }
     }
 
     private void finishOrLaunchHandToParent(int i) {
-        if (this.mParentalOptionsRequired) {
-            if (!this.mSkipReturnToParent) {
-                launchHandoffToParent();
-                return;
-            }
+        if (!this.mParentalOptionsRequired) {
+            Log.d("Security", "BiometricEnrollActivity::finishOrLaunchHandToParent will setResult and finish  resultCode: " + i);
+            setResult(i);
+            finish();
+        } else if (!this.mSkipReturnToParent) {
+            Log.d("Security", "BiometricEnrollActivity::finishOrLaunchHandToParent will call launchHandoffToParent:  resultCode: " + i);
+            launchHandoffToParent();
+        } else {
+            Log.d("Security", "BiometricEnrollActivity::finishOrLaunchHandToParent will setResult RESULT_OK and finish  resultCode: " + i);
             setResult(-1, newResultIntent());
             finish();
-            return;
         }
-        setResult(i);
-        finish();
     }
 
     private Intent newResultIntent() {
@@ -299,10 +319,10 @@ public class BiometricEnrollActivity extends InstrumentedActivity {
         return intent;
     }
 
-    @Override // android.app.Activity, android.view.ContextThemeWrapper
-    protected void onApplyThemeResource(Resources.Theme theme, int i, boolean z) {
+    /* access modifiers changed from: protected */
+    public void onApplyThemeResource(Resources.Theme theme, int i, boolean z) {
         int theme2 = SetupWizardUtils.getTheme(this, getIntent());
-        theme.applyStyle(R.style.SetupWizardPartnerResource, true);
+        theme.applyStyle(R$style.SetupWizardPartnerResource, true);
         super.onApplyThemeResource(theme, theme2, z);
     }
 
@@ -343,7 +363,7 @@ public class BiometricEnrollActivity extends InstrumentedActivity {
     }
 
     private void launchConfirmLock() {
-        Log.d("BiometricEnrollActivity", "launchConfirmLock");
+        Log.d("Security", "BiometricEnrollActivity::launchConfirmLock");
         ChooseLockSettingsHelper.Builder builder = new ChooseLockSettingsHelper.Builder(this);
         builder.setRequestCode(2).setRequestGatekeeperPasswordHandle(true).setForegroundOnly(true).setReturnCredentials(true);
         int i = this.mUserId;
@@ -366,20 +386,25 @@ public class BiometricEnrollActivity extends InstrumentedActivity {
     }
 
     private void launchFingerprintOnlyEnroll() {
-        Intent fingerprintIntroIntent;
-        if (getIntent().getBooleanExtra("skip_intro", false) && (this instanceof InternalActivity)) {
-            fingerprintIntroIntent = BiometricUtils.getFingerprintFindSensorIntent(this, getIntent());
+        Intent intent;
+        Log.i("Security", "BiometricEnrollActivity::launchFingerprintOnlyEnroll()");
+        if (!getIntent().getBooleanExtra("skip_intro", false) || !(this instanceof InternalActivity)) {
+            Log.i("Security", "BiometricEnrollActivity::launchFingerprintOnlyEnroll() does not SKIP INTRO");
+            intent = BiometricUtils.getFingerprintIntroIntent(this, getIntent());
         } else {
-            fingerprintIntroIntent = BiometricUtils.getFingerprintIntroIntent(this, getIntent());
+            Log.i("Security", "BiometricEnrollActivity::launchFingerprintOnlyEnroll() SKIP INTRO skipped");
+            intent = BiometricUtils.getFingerprintFindSensorIntent(this, getIntent());
         }
-        launchSingleSensorEnrollActivity(fingerprintIntroIntent, 5);
+        launchSingleSensorEnrollActivity(intent, 5);
     }
 
     private void launchFaceOnlyEnroll() {
+        Log.i("Security", "BiometricEnrollActivity::launchFaceOnlyEnroll()");
         launchSingleSensorEnrollActivity(BiometricUtils.getFaceIntroIntent(this, getIntent()), 5);
     }
 
     private void launchFaceAndFingerprintEnroll() {
+        Log.i("Security", "BiometricEnrollActivity::launchFaceAndFingerprintEnroll()");
         MultiBiometricEnrollHelper multiBiometricEnrollHelper = new MultiBiometricEnrollHelper(this, this.mUserId, this.mIsFaceEnrollable, this.mIsFingerprintEnrollable, this.mGkPwHandle.longValue());
         this.mMultiBiometricEnrollHelper = multiBiometricEnrollHelper;
         multiBiometricEnrollHelper.startNextStep();

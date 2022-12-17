@@ -9,12 +9,11 @@ import androidx.preference.SwitchPreference;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.development.DeveloperOptionsPreferenceController;
 import java.util.NoSuchElementException;
-/* loaded from: classes.dex */
+
 public class EnableVerboseVendorLoggingPreferenceController extends DeveloperOptionsPreferenceController implements Preference.OnPreferenceChangeListener, PreferenceControllerMixin {
     private static final boolean DBG = Log.isLoggable("EnableVerboseVendorLoggingPreferenceController", 3);
     private int mDumpstateHalVersion = -1;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "enable_verbose_vendor_logging";
     }
@@ -23,58 +22,56 @@ public class EnableVerboseVendorLoggingPreferenceController extends DeveloperOpt
         super(context);
     }
 
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return isIDumpstateDeviceV1_1ServiceAvailable();
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         setVerboseLoggingEnabled(((Boolean) obj).booleanValue());
         return true;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         ((SwitchPreference) this.mPreference).setChecked(getVerboseLoggingEnabled());
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController
+    /* access modifiers changed from: protected */
     public void onDeveloperOptionsSwitchDisabled() {
         super.onDeveloperOptionsSwitchDisabled();
         setVerboseLoggingEnabled(false);
         ((SwitchPreference) this.mPreference).setChecked(false);
     }
 
-    boolean isIDumpstateDeviceV1_1ServiceAvailable() {
+    /* access modifiers changed from: package-private */
+    public boolean isIDumpstateDeviceV1_1ServiceAvailable() {
         IDumpstateDevice dumpstateDeviceService = getDumpstateDeviceService();
         if (dumpstateDeviceService == null && DBG) {
             Log.d("EnableVerboseVendorLoggingPreferenceController", "IDumpstateDevice service is not available.");
         }
-        return dumpstateDeviceService != null && this.mDumpstateHalVersion >= 1;
-    }
-
-    void setVerboseLoggingEnabled(boolean z) {
-        IDumpstateDevice dumpstateDeviceService = getDumpstateDeviceService();
         if (dumpstateDeviceService == null || this.mDumpstateHalVersion < 1) {
-            if (!DBG) {
-                return;
-            }
-            Log.d("EnableVerboseVendorLoggingPreferenceController", "setVerboseLoggingEnabled not supported.");
-            return;
+            return false;
         }
-        try {
-            ((android.hardware.dumpstate.V1_1.IDumpstateDevice) dumpstateDeviceService).setVerboseLoggingEnabled(z);
-        } catch (RemoteException | RuntimeException e) {
-            if (!DBG) {
-                return;
+        return true;
+    }
+
+    /* access modifiers changed from: package-private */
+    public void setVerboseLoggingEnabled(boolean z) {
+        IDumpstateDevice dumpstateDeviceService = getDumpstateDeviceService();
+        if (dumpstateDeviceService != null && this.mDumpstateHalVersion >= 1) {
+            try {
+                ((android.hardware.dumpstate.V1_1.IDumpstateDevice) dumpstateDeviceService).setVerboseLoggingEnabled(z);
+            } catch (RemoteException | RuntimeException e) {
+                if (DBG) {
+                    Log.e("EnableVerboseVendorLoggingPreferenceController", "setVerboseLoggingEnabled fail: " + e);
+                }
             }
-            Log.e("EnableVerboseVendorLoggingPreferenceController", "setVerboseLoggingEnabled fail: " + e);
+        } else if (DBG) {
+            Log.d("EnableVerboseVendorLoggingPreferenceController", "setVerboseLoggingEnabled not supported.");
         }
     }
 
-    boolean getVerboseLoggingEnabled() {
+    /* access modifiers changed from: package-private */
+    public boolean getVerboseLoggingEnabled() {
         IDumpstateDevice dumpstateDeviceService = getDumpstateDeviceService();
         if (dumpstateDeviceService == null || this.mDumpstateHalVersion < 1) {
             if (DBG) {
@@ -92,7 +89,8 @@ public class EnableVerboseVendorLoggingPreferenceController extends DeveloperOpt
         }
     }
 
-    IDumpstateDevice getDumpstateDeviceService() {
+    /* access modifiers changed from: package-private */
+    public IDumpstateDevice getDumpstateDeviceService() {
         IDumpstateDevice iDumpstateDevice = null;
         try {
             iDumpstateDevice = android.hardware.dumpstate.V1_1.IDumpstateDevice.getService(true);

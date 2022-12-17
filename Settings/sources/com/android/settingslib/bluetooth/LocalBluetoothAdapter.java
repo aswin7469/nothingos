@@ -3,8 +3,8 @@ package com.android.settingslib.bluetooth;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import java.util.Set;
+
 @Deprecated
-/* loaded from: classes.dex */
 public class LocalBluetoothAdapter {
     private static LocalBluetoothAdapter sInstance;
     private final BluetoothAdapter mAdapter;
@@ -15,13 +15,12 @@ public class LocalBluetoothAdapter {
         this.mAdapter = bluetoothAdapter;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setProfileManager(LocalBluetoothProfileManager localBluetoothProfileManager) {
         this.mProfileManager = localBluetoothProfileManager;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static synchronized LocalBluetoothAdapter getInstance() {
+    static synchronized LocalBluetoothAdapter getInstance() {
         LocalBluetoothAdapter localBluetoothAdapter;
         BluetoothAdapter defaultAdapter;
         synchronized (LocalBluetoothAdapter.class) {
@@ -50,27 +49,62 @@ public class LocalBluetoothAdapter {
         return this.mState;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void setBluetoothStateInt(int i) {
-        LocalBluetoothProfileManager localBluetoothProfileManager;
-        synchronized (this) {
-            if (this.mState == i) {
-                return;
-            }
-            this.mState = i;
-            if (i != 12 || (localBluetoothProfileManager = this.mProfileManager) == null) {
-                return;
-            }
-            localBluetoothProfileManager.setBluetoothStateOn();
-        }
+    /* access modifiers changed from: package-private */
+    /* JADX WARNING: Code restructure failed: missing block: B:10:0x000e, code lost:
+        r1 = r1.mProfileManager;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:11:0x0010, code lost:
+        if (r1 == null) goto L_?;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:12:0x0012, code lost:
+        r1.setBluetoothStateOn();
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:20:?, code lost:
+        return;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:21:?, code lost:
+        return;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:22:?, code lost:
+        return;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:9:0x000c, code lost:
+        if (r2 != 12) goto L_?;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void setBluetoothStateInt(int r2) {
+        /*
+            r1 = this;
+            monitor-enter(r1)
+            int r0 = r1.mState     // Catch:{ all -> 0x0016 }
+            if (r0 != r2) goto L_0x0007
+            monitor-exit(r1)     // Catch:{ all -> 0x0016 }
+            return
+        L_0x0007:
+            r1.mState = r2     // Catch:{ all -> 0x0016 }
+            monitor-exit(r1)     // Catch:{ all -> 0x0016 }
+            r0 = 12
+            if (r2 != r0) goto L_0x0015
+            com.android.settingslib.bluetooth.LocalBluetoothProfileManager r1 = r1.mProfileManager
+            if (r1 == 0) goto L_0x0015
+            r1.setBluetoothStateOn()
+        L_0x0015:
+            return
+        L_0x0016:
+            r2 = move-exception
+            monitor-exit(r1)     // Catch:{ all -> 0x0016 }
+            throw r2
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settingslib.bluetooth.LocalBluetoothAdapter.setBluetoothStateInt(int):void");
     }
 
-    boolean syncBluetoothState() {
-        if (this.mAdapter.getState() != this.mState) {
-            setBluetoothStateInt(this.mAdapter.getState());
-            return true;
+    /* access modifiers changed from: package-private */
+    public boolean syncBluetoothState() {
+        if (this.mAdapter.getState() == this.mState) {
+            return false;
         }
-        return false;
+        setBluetoothStateInt(this.mAdapter.getState());
+        return true;
     }
 
     public BluetoothDevice getRemoteDevice(String str) {

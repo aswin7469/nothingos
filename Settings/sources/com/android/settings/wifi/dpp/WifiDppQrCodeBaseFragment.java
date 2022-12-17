@@ -6,35 +6,36 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import com.android.settings.R;
+import com.android.settings.R$style;
 import com.android.settings.core.InstrumentedFragment;
 import com.google.android.setupcompat.template.FooterBarMixin;
 import com.google.android.setupcompat.template.FooterButton;
 import com.google.android.setupdesign.GlifLayout;
-/* loaded from: classes.dex */
+
 public abstract class WifiDppQrCodeBaseFragment extends InstrumentedFragment {
     private GlifLayout mGlifLayout;
     protected FooterButton mLeftButton;
     protected FooterButton mRightButton;
     protected TextView mSummary;
 
-    protected abstract boolean isFooterAvailable();
+    /* access modifiers changed from: protected */
+    public abstract boolean isFooterAvailable();
 
-    @Override // androidx.fragment.app.Fragment
     public void onViewCreated(View view, Bundle bundle) {
+        Class<FooterBarMixin> cls = FooterBarMixin.class;
         super.onViewCreated(view, bundle);
         this.mGlifLayout = (GlifLayout) view;
         this.mSummary = (TextView) view.findViewById(16908304);
         if (isFooterAvailable()) {
-            this.mLeftButton = new FooterButton.Builder(getContext()).setButtonType(2).setTheme(R.style.SudGlifButton_Secondary).build();
-            ((FooterBarMixin) this.mGlifLayout.getMixin(FooterBarMixin.class)).setSecondaryButton(this.mLeftButton);
-            this.mRightButton = new FooterButton.Builder(getContext()).setButtonType(5).setTheme(R.style.SudGlifButton_Primary).build();
-            ((FooterBarMixin) this.mGlifLayout.getMixin(FooterBarMixin.class)).setPrimaryButton(this.mRightButton);
+            this.mLeftButton = new FooterButton.Builder(getContext()).setButtonType(2).setTheme(R$style.SudGlifButton_Secondary).build();
+            ((FooterBarMixin) this.mGlifLayout.getMixin(cls)).setSecondaryButton(this.mLeftButton);
+            this.mRightButton = new FooterButton.Builder(getContext()).setButtonType(5).setTheme(R$style.SudGlifButton_Primary).build();
+            ((FooterBarMixin) this.mGlifLayout.getMixin(cls)).setPrimaryButton(this.mRightButton);
         }
         this.mGlifLayout.getHeaderTextView().setAccessibilityLiveRegion(1);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void setHeaderIconImageResource(int i) {
         this.mGlifLayout.setIcon(getDrawable(i));
     }
@@ -48,17 +49,17 @@ public abstract class WifiDppQrCodeBaseFragment extends InstrumentedFragment {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void setHeaderTitle(String str) {
-        this.mGlifLayout.setHeaderText(str);
+        this.mGlifLayout.setHeaderText((CharSequence) str);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void setHeaderTitle(int i, Object... objArr) {
-        this.mGlifLayout.setHeaderText(getString(i, objArr));
+        this.mGlifLayout.setHeaderText((CharSequence) getString(i, objArr));
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void setProgressBarShown(boolean z) {
         this.mGlifLayout.setProgressBarShown(z);
     }

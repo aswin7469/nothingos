@@ -3,7 +3,7 @@ package com.android.settings.datetime;
 import android.app.Dialog;
 import android.content.Context;
 import androidx.fragment.app.FragmentActivity;
-import com.android.settings.R;
+import com.android.settings.R$xml;
 import com.android.settings.dashboard.DashboardFragment;
 import com.android.settings.datetime.DatePreferenceController;
 import com.android.settings.datetime.TimePreferenceController;
@@ -11,11 +11,10 @@ import com.android.settings.search.BaseSearchIndexProvider;
 import com.android.settingslib.core.AbstractPreferenceController;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
-public class DateTimeSettings extends DashboardFragment implements TimePreferenceController.TimePreferenceHost, DatePreferenceController.DatePreferenceHost {
-    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R.xml.date_time_prefs);
 
-    @Override // com.android.settings.SettingsPreferenceFragment, com.android.settings.DialogCreatable
+public class DateTimeSettings extends DashboardFragment implements TimePreferenceController.TimePreferenceHost, DatePreferenceController.DatePreferenceHost {
+    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R$xml.date_time_prefs);
+
     public int getDialogMetricsCategory(int i) {
         if (i != 0) {
             return i != 1 ? 0 : 608;
@@ -23,32 +22,28 @@ public class DateTimeSettings extends DashboardFragment implements TimePreferenc
         return 607;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "DateTimeSettings";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 38;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.date_time_prefs;
+        return R$xml.date_time_prefs;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         getSettingsLifecycle().addObserver(new TimeChangeListenerMixin(context, this));
         ((LocationTimeZoneDetectionPreferenceController) use(LocationTimeZoneDetectionPreferenceController.class)).setFragment(this);
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment
-    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+    /* access modifiers changed from: protected */
+    public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
         ArrayList arrayList = new ArrayList();
         FragmentActivity activity = getActivity();
         boolean booleanExtra = activity.getIntent().getBooleanExtra("firstRun", false);
@@ -65,29 +60,25 @@ public class DateTimeSettings extends DashboardFragment implements TimePreferenc
         return arrayList;
     }
 
-    @Override // com.android.settings.datetime.UpdateTimeAndDateCallback
     public void updateTimeAndDateDisplay(Context context) {
         updatePreferenceStates();
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, com.android.settings.DialogCreatable
     public Dialog onCreateDialog(int i) {
-        if (i != 0) {
-            if (i == 1) {
-                return ((TimePreferenceController) use(TimePreferenceController.class)).buildTimePicker(getActivity());
-            }
-            throw new IllegalArgumentException();
+        if (i == 0) {
+            return ((DatePreferenceController) use(DatePreferenceController.class)).buildDatePicker(getActivity());
         }
-        return ((DatePreferenceController) use(DatePreferenceController.class)).buildDatePicker(getActivity());
+        if (i == 1) {
+            return ((TimePreferenceController) use(TimePreferenceController.class)).buildTimePicker(getActivity());
+        }
+        throw new IllegalArgumentException();
     }
 
-    @Override // com.android.settings.datetime.TimePreferenceController.TimePreferenceHost
     public void showTimePicker() {
         removeDialog(1);
         showDialog(1);
     }
 
-    @Override // com.android.settings.datetime.DatePreferenceController.DatePreferenceHost
     public void showDatePicker() {
         showDialog(0);
     }

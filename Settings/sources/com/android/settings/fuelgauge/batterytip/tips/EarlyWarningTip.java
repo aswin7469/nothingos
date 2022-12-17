@@ -3,20 +3,18 @@ package com.android.settings.fuelgauge.batterytip.tips;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-import com.android.settings.R;
+import com.android.settings.R$color;
+import com.android.settings.R$drawable;
+import com.android.settings.R$string;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
-/* loaded from: classes.dex */
+
 public class EarlyWarningTip extends BatteryTip {
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() { // from class: com.android.settings.fuelgauge.batterytip.tips.EarlyWarningTip.1
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: createFromParcel */
-        public BatteryTip mo355createFromParcel(Parcel parcel) {
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public BatteryTip createFromParcel(Parcel parcel) {
             return new EarlyWarningTip(parcel);
         }
 
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: newArray */
-        public BatteryTip[] mo356newArray(int i) {
+        public BatteryTip[] newArray(int i) {
             return new EarlyWarningTip[i];
         }
     };
@@ -32,35 +30,30 @@ public class EarlyWarningTip extends BatteryTip {
         this.mPowerSaveModeOn = parcel.readBoolean();
     }
 
-    @Override // com.android.settings.fuelgauge.batterytip.tips.BatteryTip
     public CharSequence getTitle(Context context) {
-        int i = R.string.battery_tip_early_heads_up_title;
+        int i = R$string.battery_tip_early_heads_up_title;
         this.mState = i;
         return context.getString(i);
     }
 
-    @Override // com.android.settings.fuelgauge.batterytip.tips.BatteryTip
     public CharSequence getSummary(Context context) {
-        int i = R.string.battery_tip_early_heads_up_summary;
+        int i = R$string.battery_tip_early_heads_up_summary;
         this.mState = i;
         return context.getString(i);
     }
 
-    @Override // com.android.settings.fuelgauge.batterytip.tips.BatteryTip
     public int getIconId() {
-        int i = R.drawable.ic_battery_status_bad_24dp;
+        int i = R$drawable.ic_battery_status_bad_24dp;
         this.mState = i;
         return i;
     }
 
-    @Override // com.android.settings.fuelgauge.batterytip.tips.BatteryTip
     public int getIconTintColorId() {
-        int i = R.color.battery_bad_color_light;
+        int i = R$color.battery_bad_color_light;
         this.mState = i;
         return i;
     }
 
-    @Override // com.android.settings.fuelgauge.batterytip.tips.BatteryTip
     public void updateState(BatteryTip batteryTip) {
         EarlyWarningTip earlyWarningTip = (EarlyWarningTip) batteryTip;
         if (earlyWarningTip.mState == 0) {
@@ -73,12 +66,10 @@ public class EarlyWarningTip extends BatteryTip {
         this.mPowerSaveModeOn = earlyWarningTip.mPowerSaveModeOn;
     }
 
-    @Override // com.android.settings.fuelgauge.batterytip.tips.BatteryTip
     public void log(Context context, MetricsFeatureProvider metricsFeatureProvider) {
         metricsFeatureProvider.action(context, 1351, this.mState);
     }
 
-    @Override // com.android.settings.fuelgauge.batterytip.tips.BatteryTip, android.os.Parcelable
     public void writeToParcel(Parcel parcel, int i) {
         super.writeToParcel(parcel, i);
         parcel.writeBoolean(this.mPowerSaveModeOn);

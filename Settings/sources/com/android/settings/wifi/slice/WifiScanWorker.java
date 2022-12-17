@@ -11,21 +11,21 @@ import com.android.settings.wifi.WifiPickerTrackerHelper;
 import com.android.wifitrackerlib.WifiEntry;
 import com.android.wifitrackerlib.WifiPickerTracker;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
+import java.util.List;
+
 public class WifiScanWorker extends SliceBackgroundWorker<WifiSliceItem> implements WifiPickerTracker.WifiPickerTrackerCallback, LifecycleOwner, WifiEntry.WifiEntryCallback {
     final LifecycleRegistry mLifecycleRegistry;
     protected WifiPickerTracker mWifiPickerTracker;
     protected WifiPickerTrackerHelper mWifiPickerTrackerHelper;
 
-    protected int getApRowCount() {
+    /* access modifiers changed from: protected */
+    public int getApRowCount() {
         return 3;
     }
 
-    @Override // com.android.wifitrackerlib.WifiPickerTracker.WifiPickerTrackerCallback
     public void onNumSavedNetworksChanged() {
     }
 
-    @Override // com.android.wifitrackerlib.WifiPickerTracker.WifiPickerTrackerCallback
     public void onNumSavedSubscriptionsChanged() {
     }
 
@@ -40,80 +40,73 @@ public class WifiScanWorker extends SliceBackgroundWorker<WifiSliceItem> impleme
         lifecycleRegistry.markState(Lifecycle.State.CREATED);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.slices.SliceBackgroundWorker
+    /* access modifiers changed from: protected */
     public void onSlicePinned() {
         this.mLifecycleRegistry.markState(Lifecycle.State.STARTED);
         this.mLifecycleRegistry.markState(Lifecycle.State.RESUMED);
         updateResults();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.slices.SliceBackgroundWorker
+    /* access modifiers changed from: protected */
     public void onSliceUnpinned() {
         this.mLifecycleRegistry.markState(Lifecycle.State.STARTED);
         this.mLifecycleRegistry.markState(Lifecycle.State.CREATED);
     }
 
-    @Override // java.io.Closeable, java.lang.AutoCloseable
     public void close() {
         this.mLifecycleRegistry.markState(Lifecycle.State.DESTROYED);
     }
 
-    @Override // androidx.lifecycle.LifecycleOwner
-    /* renamed from: getLifecycle */
-    public Lifecycle mo959getLifecycle() {
+    public Lifecycle getLifecycle() {
         return this.mLifecycleRegistry;
     }
 
-    @Override // com.android.wifitrackerlib.BaseWifiTracker.BaseWifiTrackerCallback
     public void onWifiStateChanged() {
         notifySliceChange();
     }
 
-    @Override // com.android.wifitrackerlib.WifiPickerTracker.WifiPickerTrackerCallback
     public void onWifiEntriesChanged() {
         updateResults();
     }
 
-    @Override // com.android.wifitrackerlib.WifiEntry.WifiEntryCallback
     public void onUpdated() {
         updateResults();
     }
 
     public WifiEntry getWifiEntry(String str) {
         WifiEntry connectedWifiEntry = this.mWifiPickerTracker.getConnectedWifiEntry();
-        if (connectedWifiEntry == null || !TextUtils.equals(str, connectedWifiEntry.getKey())) {
-            for (WifiEntry wifiEntry : this.mWifiPickerTracker.getWifiEntries()) {
-                if (TextUtils.equals(str, wifiEntry.getKey())) {
-                    return wifiEntry;
-                }
-            }
-            return null;
+        if (connectedWifiEntry != null && TextUtils.equals(str, connectedWifiEntry.getKey())) {
+            return connectedWifiEntry;
         }
-        return connectedWifiEntry;
+        for (WifiEntry next : this.mWifiPickerTracker.getWifiEntries()) {
+            if (TextUtils.equals(str, next.getKey())) {
+                return next;
+            }
+        }
+        return null;
     }
 
-    void updateResults() {
-        if (this.mWifiPickerTracker.getWifiState() != 3 || this.mLifecycleRegistry.getCurrentState() != Lifecycle.State.RESUMED) {
-            super.updateResults(null);
+    /* access modifiers changed from: package-private */
+    public void updateResults() {
+        if (this.mWifiPickerTracker.getWifiState() == 3 && this.mLifecycleRegistry.getCurrentState() == Lifecycle.State.RESUMED) {
+            ArrayList arrayList = new ArrayList();
+            WifiEntry connectedWifiEntry = this.mWifiPickerTracker.getConnectedWifiEntry();
+            if (connectedWifiEntry != null) {
+                connectedWifiEntry.setListener(this);
+                arrayList.add(new WifiSliceItem(getContext(), connectedWifiEntry));
+            }
+            for (WifiEntry next : this.mWifiPickerTracker.getWifiEntries()) {
+                if (arrayList.size() >= getApRowCount()) {
+                    break;
+                } else if (next.getLevel() != -1) {
+                    next.setListener(this);
+                    arrayList.add(new WifiSliceItem(getContext(), next));
+                }
+            }
+            super.updateResults(arrayList);
             return;
         }
-        ArrayList arrayList = new ArrayList();
-        WifiEntry connectedWifiEntry = this.mWifiPickerTracker.getConnectedWifiEntry();
-        if (connectedWifiEntry != null) {
-            connectedWifiEntry.setListener(this);
-            arrayList.add(new WifiSliceItem(getContext(), connectedWifiEntry));
-        }
-        for (WifiEntry wifiEntry : this.mWifiPickerTracker.getWifiEntries()) {
-            if (arrayList.size() >= getApRowCount()) {
-                break;
-            } else if (wifiEntry.getLevel() != -1) {
-                wifiEntry.setListener(this);
-                arrayList.add(new WifiSliceItem(getContext(), wifiEntry));
-            }
-        }
-        super.updateResults(arrayList);
+        super.updateResults((List) null);
     }
 
     public void setCarrierNetworkEnabledIfNeeded(boolean z, int i) {
@@ -123,6 +116,6 @@ public class WifiScanWorker extends SliceBackgroundWorker<WifiSliceItem> impleme
     }
 
     public void connectCarrierNetwork() {
-        this.mWifiPickerTrackerHelper.connectCarrierNetwork(null);
+        this.mWifiPickerTrackerHelper.connectCarrierNetwork((WifiEntry.ConnectCallback) null);
     }
 }

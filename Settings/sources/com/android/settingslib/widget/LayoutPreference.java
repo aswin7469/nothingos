@@ -10,37 +10,27 @@ import android.widget.FrameLayout;
 import androidx.core.content.res.TypedArrayUtils;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
-/* loaded from: classes.dex */
+
 public class LayoutPreference extends Preference {
     private boolean mAllowDividerAbove;
     private boolean mAllowDividerBelow;
     private final View.OnClickListener mClickListener;
     private View mRootView;
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$new$0(View view) {
         performClick(view);
     }
 
     public LayoutPreference(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.mClickListener = new View.OnClickListener() { // from class: com.android.settingslib.widget.LayoutPreference$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                LayoutPreference.this.lambda$new$0(view);
-            }
-        };
+        this.mClickListener = new LayoutPreference$$ExternalSyntheticLambda0(this);
         init(context, attributeSet, 0);
     }
 
     public LayoutPreference(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
-        this.mClickListener = new View.OnClickListener() { // from class: com.android.settingslib.widget.LayoutPreference$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                LayoutPreference.this.lambda$new$0(view);
-            }
-        };
+        this.mClickListener = new LayoutPreference$$ExternalSyntheticLambda0(this);
         init(context, attributeSet, i);
     }
 
@@ -50,12 +40,7 @@ public class LayoutPreference extends Preference {
 
     public LayoutPreference(Context context, View view) {
         super(context);
-        this.mClickListener = new View.OnClickListener() { // from class: com.android.settingslib.widget.LayoutPreference$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view2) {
-                LayoutPreference.this.lambda$new$0(view2);
-            }
-        };
+        this.mClickListener = new LayoutPreference$$ExternalSyntheticLambda0(this);
         setView(view);
     }
 
@@ -69,11 +54,12 @@ public class LayoutPreference extends Preference {
         obtainStyledAttributes.recycle();
         TypedArray obtainStyledAttributes2 = context.obtainStyledAttributes(attributeSet, iArr, i, 0);
         int resourceId = obtainStyledAttributes2.getResourceId(R$styleable.Preference_android_layout, 0);
-        if (resourceId == 0) {
-            throw new IllegalArgumentException("LayoutPreference requires a layout to be defined");
+        if (resourceId != 0) {
+            obtainStyledAttributes2.recycle();
+            setView(LayoutInflater.from(getContext()).inflate(resourceId, (ViewGroup) null, false));
+            return;
         }
-        obtainStyledAttributes2.recycle();
-        setView(LayoutInflater.from(getContext()).inflate(resourceId, (ViewGroup) null, false));
+        throw new IllegalArgumentException("LayoutPreference requires a layout to be defined");
     }
 
     private void setView(View view) {
@@ -82,7 +68,6 @@ public class LayoutPreference extends Preference {
         setShouldDisableView(false);
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         preferenceViewHolder.itemView.setOnClickListener(this.mClickListener);
         boolean isSelectable = isSelectable();
@@ -100,7 +85,7 @@ public class LayoutPreference extends Preference {
     }
 
     public <T extends View> T findViewById(int i) {
-        return (T) this.mRootView.findViewById(i);
+        return this.mRootView.findViewById(i);
     }
 
     public void setAllowDividerBelow(boolean z) {

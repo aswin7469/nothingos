@@ -9,61 +9,47 @@ import android.text.format.DateFormat;
 import android.util.Log;
 import androidx.preference.Preference;
 import com.android.settings.core.BasePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.TimeZone;
-/* loaded from: classes.dex */
+
 public class MainlineModuleVersionPreferenceController extends BasePreferenceController {
-    private static final String TAG = "MainlineModuleControl";
-    private String mModuleVersion;
-    private final PackageManager mPackageManager = this.mContext.getPackageManager();
-    private static final List<String> VERSION_NAME_DATE_PATTERNS = Arrays.asList("yyyy-MM-dd", "yyyy-MM");
     static final Intent MODULE_UPDATE_INTENT = new Intent("android.settings.MODULE_UPDATE_SETTINGS");
     static final Intent MODULE_UPDATE_V2_INTENT = new Intent("android.settings.MODULE_UPDATE_VERSIONS");
+    private static final String TAG = "MainlineModuleControl";
+    private static final List<String> VERSION_NAME_DATE_PATTERNS = Arrays.asList(new String[]{"yyyy-MM-dd", "yyyy-MM"});
+    private String mModuleVersion;
+    private final PackageManager mPackageManager = this.mContext.getPackageManager();
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -73,13 +59,12 @@ public class MainlineModuleVersionPreferenceController extends BasePreferenceCon
         initModules();
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return !TextUtils.isEmpty(this.mModuleVersion) ? 0 : 3;
     }
 
     private void initModules() {
-        String string = this.mContext.getString(17039902);
+        String string = this.mContext.getString(17039930);
         if (!TextUtils.isEmpty(string)) {
             try {
                 this.mModuleVersion = this.mPackageManager.getPackageInfo(string, 0).versionName;
@@ -90,7 +75,6 @@ public class MainlineModuleVersionPreferenceController extends BasePreferenceCon
         }
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         PackageManager packageManager = this.mPackageManager;
@@ -108,31 +92,28 @@ public class MainlineModuleVersionPreferenceController extends BasePreferenceCon
             return;
         }
         Log.d(TAG, "The ResolveInfo of the update intent is null.");
-        preference.setIntent(null);
+        preference.setIntent((Intent) null);
         preference.setSelectable(false);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    /* renamed from: getSummary */
-    public CharSequence mo485getSummary() {
+    public CharSequence getSummary() {
         if (TextUtils.isEmpty(this.mModuleVersion)) {
             return this.mModuleVersion;
         }
         Optional<Date> parseDateFromVersionName = parseDateFromVersionName(this.mModuleVersion);
-        if (!parseDateFromVersionName.isPresent()) {
-            Log.w("Could not parse mainline versionName (%s) as date.", this.mModuleVersion);
-            return this.mModuleVersion;
+        if (parseDateFromVersionName.isPresent()) {
+            return DateFormat.getLongDateFormat(this.mContext).format(parseDateFromVersionName.get());
         }
-        return DateFormat.getLongDateFormat(this.mContext).format(parseDateFromVersionName.get());
+        Log.w("Could not parse mainline versionName (%s) as date.", this.mModuleVersion);
+        return this.mModuleVersion;
     }
 
     private Optional<Date> parseDateFromVersionName(String str) {
-        Iterator<String> it = VERSION_NAME_DATE_PATTERNS.iterator();
-        while (it.hasNext()) {
+        for (String simpleDateFormat : VERSION_NAME_DATE_PATTERNS) {
             try {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(it.next(), Locale.getDefault());
-                simpleDateFormat.setTimeZone(TimeZone.getDefault());
-                return Optional.of(simpleDateFormat.parse(str));
+                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat(simpleDateFormat, Locale.getDefault());
+                simpleDateFormat2.setTimeZone(TimeZone.getDefault());
+                return Optional.of(simpleDateFormat2.parse(str));
             } catch (ParseException unused) {
             }
         }

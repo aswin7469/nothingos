@@ -17,18 +17,15 @@ import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.res.TypedArrayUtils;
-import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.preference.PreferenceManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public class Preference implements Comparable<Preference> {
     private boolean mAllowDividerAbove;
     private boolean mAllowDividerBelow;
@@ -73,9 +70,7 @@ public class Preference implements Comparable<Preference> {
     private boolean mWasDetached;
     private int mWidgetLayoutResId;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public interface OnPreferenceChangeInternalListener {
+    interface OnPreferenceChangeInternalListener {
         void onPreferenceChange(Preference preference);
 
         void onPreferenceHierarchyChange(Preference preference);
@@ -83,26 +78,24 @@ public class Preference implements Comparable<Preference> {
         void onPreferenceVisibilityChange(Preference preference);
     }
 
-    /* loaded from: classes.dex */
     public interface OnPreferenceChangeListener {
         boolean onPreferenceChange(Preference preference, Object obj);
     }
 
-    /* loaded from: classes.dex */
     public interface OnPreferenceClickListener {
         boolean onPreferenceClick(Preference preference);
     }
 
-    /* loaded from: classes.dex */
     public interface SummaryProvider<T extends Preference> {
         CharSequence provideSummary(T t);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onClick() {
     }
 
-    protected Object onGetDefaultValue(TypedArray typedArray, int i) {
+    /* access modifiers changed from: protected */
+    public Object onGetDefaultValue(TypedArray typedArray, int i) {
         return null;
     }
 
@@ -110,7 +103,8 @@ public class Preference implements Comparable<Preference> {
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
     }
 
-    protected void onSetInitialValue(Object obj) {
+    /* access modifiers changed from: protected */
+    public void onSetInitialValue(Object obj) {
     }
 
     public Preference(Context context, AttributeSet attributeSet, int i, int i2) {
@@ -128,8 +122,7 @@ public class Preference implements Comparable<Preference> {
         this.mShouldDisableView = true;
         int i3 = R$layout.preference;
         this.mLayoutResId = i3;
-        this.mClickListener = new View.OnClickListener() { // from class: androidx.preference.Preference.1
-            @Override // android.view.View.OnClickListener
+        this.mClickListener = new View.OnClickListener() {
             public void onClick(View view) {
                 Preference.this.performClick(view);
             }
@@ -185,7 +178,7 @@ public class Preference implements Comparable<Preference> {
     }
 
     public Preference(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public void setIntent(Intent intent) {
@@ -207,7 +200,7 @@ public class Preference implements Comparable<Preference> {
     public PreferenceDataStore getPreferenceDataStore() {
         PreferenceManager preferenceManager = this.mPreferenceManager;
         if (preferenceManager != null) {
-            return preferenceManager.getPreferenceDataStore();
+            preferenceManager.getPreferenceDataStore();
         }
         return null;
     }
@@ -235,132 +228,159 @@ public class Preference implements Comparable<Preference> {
         return this.mWidgetLayoutResId;
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:22:0x0081  */
-    /* JADX WARN: Removed duplicated region for block: B:42:0x00b6  */
-    /* JADX WARN: Removed duplicated region for block: B:44:0x00bf  */
-    /* JADX WARN: Removed duplicated region for block: B:53:0x00d3  */
-    /* JADX WARN: Removed duplicated region for block: B:60:0x0106  */
-    /* JADX WARN: Removed duplicated region for block: B:69:0x0109  */
-    /* JADX WARN: Removed duplicated region for block: B:70:0x00db  */
-    /* JADX WARN: Removed duplicated region for block: B:8:0x0043  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
-        Integer num;
-        TextView textView;
-        ImageView imageView;
-        View findViewById;
-        boolean isCopyingEnabled;
-        View view = preferenceViewHolder.itemView;
-        view.setOnClickListener(this.mClickListener);
-        view.setId(this.mViewId);
-        TextView textView2 = (TextView) preferenceViewHolder.findViewById(16908304);
-        int i = 8;
-        if (textView2 != null) {
-            CharSequence summary = getSummary();
-            if (!TextUtils.isEmpty(summary)) {
-                textView2.setText(summary);
-                textView2.setVisibility(0);
-                num = Integer.valueOf(textView2.getCurrentTextColor());
-                textView = (TextView) preferenceViewHolder.findViewById(16908310);
-                if (textView != null) {
-                    CharSequence title = getTitle();
-                    if (!TextUtils.isEmpty(title)) {
-                        textView.setText(title);
-                        textView.setVisibility(0);
-                        if (this.mHasSingleLineTitleAttr) {
-                            textView.setSingleLine(this.mSingleLineTitle);
-                        }
-                        if (!isSelectable() && isEnabled() && num != null) {
-                            textView.setTextColor(num.intValue());
-                        }
-                    } else {
-                        textView.setVisibility(8);
-                    }
-                }
-                imageView = (ImageView) preferenceViewHolder.findViewById(16908294);
-                if (imageView != null) {
-                    int i2 = this.mIconResId;
-                    if (i2 != 0 || this.mIcon != null) {
-                        if (this.mIcon == null) {
-                            this.mIcon = AppCompatResources.getDrawable(this.mContext, i2);
-                        }
-                        Drawable drawable = this.mIcon;
-                        if (drawable != null) {
-                            imageView.setImageDrawable(drawable);
-                        }
-                    }
-                    if (this.mIcon != null) {
-                        imageView.setVisibility(0);
-                    } else {
-                        imageView.setVisibility(this.mIconSpaceReserved ? 4 : 8);
-                    }
-                }
-                findViewById = preferenceViewHolder.findViewById(R$id.icon_frame);
-                if (findViewById == null) {
-                    findViewById = preferenceViewHolder.findViewById(16908350);
-                }
-                if (findViewById != null) {
-                    if (this.mIcon != null) {
-                        findViewById.setVisibility(0);
-                    } else {
-                        if (this.mIconSpaceReserved) {
-                            i = 4;
-                        }
-                        findViewById.setVisibility(i);
-                    }
-                }
-                if (!this.mShouldDisableView) {
-                    setEnabledStateOnViews(view, isEnabled());
-                } else {
-                    setEnabledStateOnViews(view, true);
-                }
-                boolean isSelectable = isSelectable();
-                view.setFocusable(isSelectable);
-                view.setClickable(isSelectable);
-                preferenceViewHolder.setDividerAllowedAbove(this.mAllowDividerAbove);
-                preferenceViewHolder.setDividerAllowedBelow(this.mAllowDividerBelow);
-                isCopyingEnabled = isCopyingEnabled();
-                if (isCopyingEnabled && this.mOnCopyListener == null) {
-                    this.mOnCopyListener = new OnPreferenceCopyListener(this);
-                }
-                view.setOnCreateContextMenuListener(!isCopyingEnabled ? this.mOnCopyListener : null);
-                view.setLongClickable(isCopyingEnabled);
-                if (isCopyingEnabled || isSelectable) {
-                }
-                ViewCompat.setBackground(view, null);
-                return;
-            }
-            textView2.setVisibility(8);
-        }
-        num = null;
-        textView = (TextView) preferenceViewHolder.findViewById(16908310);
-        if (textView != null) {
-        }
-        imageView = (ImageView) preferenceViewHolder.findViewById(16908294);
-        if (imageView != null) {
-        }
-        findViewById = preferenceViewHolder.findViewById(R$id.icon_frame);
-        if (findViewById == null) {
-        }
-        if (findViewById != null) {
-        }
-        if (!this.mShouldDisableView) {
-        }
-        boolean isSelectable2 = isSelectable();
-        view.setFocusable(isSelectable2);
-        view.setClickable(isSelectable2);
-        preferenceViewHolder.setDividerAllowedAbove(this.mAllowDividerAbove);
-        preferenceViewHolder.setDividerAllowedBelow(this.mAllowDividerBelow);
-        isCopyingEnabled = isCopyingEnabled();
-        if (isCopyingEnabled) {
-            this.mOnCopyListener = new OnPreferenceCopyListener(this);
-        }
-        view.setOnCreateContextMenuListener(!isCopyingEnabled ? this.mOnCopyListener : null);
-        view.setLongClickable(isCopyingEnabled);
-        if (isCopyingEnabled) {
-        }
+    /* JADX WARNING: Removed duplicated region for block: B:23:0x0081  */
+    /* JADX WARNING: Removed duplicated region for block: B:43:0x00b6  */
+    /* JADX WARNING: Removed duplicated region for block: B:45:0x00bf  */
+    /* JADX WARNING: Removed duplicated region for block: B:54:0x00d3  */
+    /* JADX WARNING: Removed duplicated region for block: B:55:0x00db  */
+    /* JADX WARNING: Removed duplicated region for block: B:62:0x0106  */
+    /* JADX WARNING: Removed duplicated region for block: B:63:0x0109  */
+    /* JADX WARNING: Removed duplicated region for block: B:9:0x0043  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void onBindViewHolder(androidx.preference.PreferenceViewHolder r9) {
+        /*
+            r8 = this;
+            android.view.View r0 = r9.itemView
+            android.view.View$OnClickListener r1 = r8.mClickListener
+            r0.setOnClickListener(r1)
+            int r1 = r8.mViewId
+            r0.setId(r1)
+            r1 = 16908304(0x1020010, float:2.3877274E-38)
+            android.view.View r1 = r9.findViewById(r1)
+            android.widget.TextView r1 = (android.widget.TextView) r1
+            r2 = 0
+            r3 = 0
+            r4 = 8
+            if (r1 == 0) goto L_0x0037
+            java.lang.CharSequence r5 = r8.getSummary()
+            boolean r6 = android.text.TextUtils.isEmpty(r5)
+            if (r6 != 0) goto L_0x0034
+            r1.setText(r5)
+            r1.setVisibility(r3)
+            int r1 = r1.getCurrentTextColor()
+            java.lang.Integer r1 = java.lang.Integer.valueOf(r1)
+            goto L_0x0038
+        L_0x0034:
+            r1.setVisibility(r4)
+        L_0x0037:
+            r1 = r2
+        L_0x0038:
+            r5 = 16908310(0x1020016, float:2.387729E-38)
+            android.view.View r5 = r9.findViewById(r5)
+            android.widget.TextView r5 = (android.widget.TextView) r5
+            if (r5 == 0) goto L_0x0075
+            java.lang.CharSequence r6 = r8.getTitle()
+            boolean r7 = android.text.TextUtils.isEmpty(r6)
+            if (r7 != 0) goto L_0x0072
+            r5.setText(r6)
+            r5.setVisibility(r3)
+            boolean r6 = r8.mHasSingleLineTitleAttr
+            if (r6 == 0) goto L_0x005c
+            boolean r6 = r8.mSingleLineTitle
+            r5.setSingleLine(r6)
+        L_0x005c:
+            boolean r6 = r8.isSelectable()
+            if (r6 != 0) goto L_0x0075
+            boolean r6 = r8.isEnabled()
+            if (r6 == 0) goto L_0x0075
+            if (r1 == 0) goto L_0x0075
+            int r1 = r1.intValue()
+            r5.setTextColor(r1)
+            goto L_0x0075
+        L_0x0072:
+            r5.setVisibility(r4)
+        L_0x0075:
+            r1 = 16908294(0x1020006, float:2.3877246E-38)
+            android.view.View r1 = r9.findViewById(r1)
+            android.widget.ImageView r1 = (android.widget.ImageView) r1
+            r5 = 4
+            if (r1 == 0) goto L_0x00ae
+            int r6 = r8.mIconResId
+            if (r6 != 0) goto L_0x0089
+            android.graphics.drawable.Drawable r7 = r8.mIcon
+            if (r7 == 0) goto L_0x009c
+        L_0x0089:
+            android.graphics.drawable.Drawable r7 = r8.mIcon
+            if (r7 != 0) goto L_0x0095
+            android.content.Context r7 = r8.mContext
+            android.graphics.drawable.Drawable r6 = androidx.appcompat.content.res.AppCompatResources.getDrawable(r7, r6)
+            r8.mIcon = r6
+        L_0x0095:
+            android.graphics.drawable.Drawable r6 = r8.mIcon
+            if (r6 == 0) goto L_0x009c
+            r1.setImageDrawable(r6)
+        L_0x009c:
+            android.graphics.drawable.Drawable r6 = r8.mIcon
+            if (r6 == 0) goto L_0x00a4
+            r1.setVisibility(r3)
+            goto L_0x00ae
+        L_0x00a4:
+            boolean r6 = r8.mIconSpaceReserved
+            if (r6 == 0) goto L_0x00aa
+            r6 = r5
+            goto L_0x00ab
+        L_0x00aa:
+            r6 = r4
+        L_0x00ab:
+            r1.setVisibility(r6)
+        L_0x00ae:
+            int r1 = androidx.preference.R$id.icon_frame
+            android.view.View r1 = r9.findViewById(r1)
+            if (r1 != 0) goto L_0x00bd
+            r1 = 16908350(0x102003e, float:2.3877403E-38)
+            android.view.View r1 = r9.findViewById(r1)
+        L_0x00bd:
+            if (r1 == 0) goto L_0x00cf
+            android.graphics.drawable.Drawable r6 = r8.mIcon
+            if (r6 == 0) goto L_0x00c7
+            r1.setVisibility(r3)
+            goto L_0x00cf
+        L_0x00c7:
+            boolean r3 = r8.mIconSpaceReserved
+            if (r3 == 0) goto L_0x00cc
+            r4 = r5
+        L_0x00cc:
+            r1.setVisibility(r4)
+        L_0x00cf:
+            boolean r1 = r8.mShouldDisableView
+            if (r1 == 0) goto L_0x00db
+            boolean r1 = r8.isEnabled()
+            r8.setEnabledStateOnViews(r0, r1)
+            goto L_0x00df
+        L_0x00db:
+            r1 = 1
+            r8.setEnabledStateOnViews(r0, r1)
+        L_0x00df:
+            boolean r1 = r8.isSelectable()
+            r0.setFocusable(r1)
+            r0.setClickable(r1)
+            boolean r3 = r8.mAllowDividerAbove
+            r9.setDividerAllowedAbove(r3)
+            boolean r3 = r8.mAllowDividerBelow
+            r9.setDividerAllowedBelow(r3)
+            boolean r9 = r8.isCopyingEnabled()
+            if (r9 == 0) goto L_0x0104
+            androidx.preference.Preference$OnPreferenceCopyListener r3 = r8.mOnCopyListener
+            if (r3 != 0) goto L_0x0104
+            androidx.preference.Preference$OnPreferenceCopyListener r3 = new androidx.preference.Preference$OnPreferenceCopyListener
+            r3.<init>(r8)
+            r8.mOnCopyListener = r3
+        L_0x0104:
+            if (r9 == 0) goto L_0x0109
+            androidx.preference.Preference$OnPreferenceCopyListener r8 = r8.mOnCopyListener
+            goto L_0x010a
+        L_0x0109:
+            r8 = r2
+        L_0x010a:
+            r0.setOnCreateContextMenuListener(r8)
+            r0.setLongClickable(r9)
+            if (r9 == 0) goto L_0x0117
+            if (r1 != 0) goto L_0x0117
+            androidx.core.view.ViewCompat.setBackground(r0, r2)
+        L_0x0117:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.preference.Preference.onBindViewHolder(androidx.preference.PreferenceViewHolder):void");
     }
 
     private void setEnabledStateOnViews(View view, boolean z) {
@@ -396,7 +416,7 @@ public class Preference implements Comparable<Preference> {
     }
 
     public void setTitle(int i) {
-        setTitle(this.mContext.getString(i));
+        setTitle((CharSequence) this.mContext.getString(i));
     }
 
     public CharSequence getTitle() {
@@ -434,16 +454,14 @@ public class Preference implements Comparable<Preference> {
     public void setSummary(CharSequence charSequence) {
         if (getSummaryProvider() != null) {
             throw new IllegalStateException("Preference already has a SummaryProvider set.");
+        } else if (!TextUtils.equals(this.mSummary, charSequence)) {
+            this.mSummary = charSequence;
+            notifyChanged();
         }
-        if (TextUtils.equals(this.mSummary, charSequence)) {
-            return;
-        }
-        this.mSummary = charSequence;
-        notifyChanged();
     }
 
     public void setSummary(int i) {
-        setSummary(this.mContext.getString(i));
+        setSummary((CharSequence) this.mContext.getString(i));
     }
 
     public void setEnabled(boolean z) {
@@ -480,10 +498,9 @@ public class Preference implements Comparable<Preference> {
         if (this.mVisible != z) {
             this.mVisible = z;
             OnPreferenceChangeInternalListener onPreferenceChangeInternalListener = this.mListener;
-            if (onPreferenceChangeInternalListener == null) {
-                return;
+            if (onPreferenceChangeInternalListener != null) {
+                onPreferenceChangeInternalListener.onPreferenceVisibilityChange(this);
             }
-            onPreferenceChangeInternalListener.onPreferenceVisibilityChange(this);
         }
     }
 
@@ -491,28 +508,29 @@ public class Preference implements Comparable<Preference> {
         return this.mVisible;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public long getId() {
         return this.mId;
     }
 
     public void setKey(String str) {
         this.mKey = str;
-        if (!this.mRequiresKey || hasKey()) {
-            return;
+        if (this.mRequiresKey && !hasKey()) {
+            requireKey();
         }
-        requireKey();
     }
 
     public String getKey() {
         return this.mKey;
     }
 
-    void requireKey() {
-        if (TextUtils.isEmpty(this.mKey)) {
-            throw new IllegalStateException("Preference does not have a key assigned.");
+    /* access modifiers changed from: package-private */
+    public void requireKey() {
+        if (!TextUtils.isEmpty(this.mKey)) {
+            this.mRequiresKey = true;
+            return;
         }
-        this.mRequiresKey = true;
+        throw new IllegalStateException("Preference does not have a key assigned.");
     }
 
     public boolean hasKey() {
@@ -523,7 +541,8 @@ public class Preference implements Comparable<Preference> {
         return this.mPersistent;
     }
 
-    protected boolean shouldPersist() {
+    /* access modifiers changed from: protected */
+    public boolean shouldPersist() {
         return this.mPreferenceManager != null && isPersistent() && hasKey();
     }
 
@@ -569,26 +588,27 @@ public class Preference implements Comparable<Preference> {
         this.mOnClickListener = onPreferenceClickListener;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    public OnPreferenceClickListener getOnPreferenceClickListener() {
+        return this.mOnClickListener;
+    }
+
+    /* access modifiers changed from: protected */
     public void performClick(View view) {
         performClick();
     }
 
     public void performClick() {
         PreferenceManager.OnPreferenceTreeClickListener onPreferenceTreeClickListener;
-        if (!isEnabled() || !isSelectable()) {
-            return;
+        if (isEnabled() && isSelectable()) {
+            onClick();
+            OnPreferenceClickListener onPreferenceClickListener = this.mOnClickListener;
+            if (onPreferenceClickListener == null || !onPreferenceClickListener.onPreferenceClick(this)) {
+                PreferenceManager preferenceManager = getPreferenceManager();
+                if ((preferenceManager == null || (onPreferenceTreeClickListener = preferenceManager.getOnPreferenceTreeClickListener()) == null || !onPreferenceTreeClickListener.onPreferenceTreeClick(this)) && this.mIntent != null) {
+                    getContext().startActivity(this.mIntent);
+                }
+            }
         }
-        onClick();
-        OnPreferenceClickListener onPreferenceClickListener = this.mOnClickListener;
-        if (onPreferenceClickListener != null && onPreferenceClickListener.onPreferenceClick(this)) {
-            return;
-        }
-        PreferenceManager preferenceManager = getPreferenceManager();
-        if ((preferenceManager != null && (onPreferenceTreeClickListener = preferenceManager.getOnPreferenceTreeClickListener()) != null && onPreferenceTreeClickListener.onPreferenceTreeClick(this)) || this.mIntent == null) {
-            return;
-        }
-        getContext().startActivity(this.mIntent);
     }
 
     public Context getContext() {
@@ -596,14 +616,13 @@ public class Preference implements Comparable<Preference> {
     }
 
     public SharedPreferences getSharedPreferences() {
-        if (this.mPreferenceManager != null) {
-            getPreferenceDataStore();
-            return this.mPreferenceManager.getSharedPreferences();
+        if (this.mPreferenceManager == null) {
+            return null;
         }
-        return null;
+        getPreferenceDataStore();
+        return this.mPreferenceManager.getSharedPreferences();
     }
 
-    @Override // java.lang.Comparable
     public int compareTo(Preference preference) {
         int i = this.mOrder;
         int i2 = preference.mOrder;
@@ -618,18 +637,18 @@ public class Preference implements Comparable<Preference> {
         if (charSequence == null) {
             return 1;
         }
-        if (charSequence2 != null) {
-            return charSequence.toString().compareToIgnoreCase(preference.mTitle.toString());
+        if (charSequence2 == null) {
+            return -1;
         }
-        return -1;
+        return charSequence.toString().compareToIgnoreCase(preference.mTitle.toString());
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public final void setOnPreferenceChangeInternalListener(OnPreferenceChangeInternalListener onPreferenceChangeInternalListener) {
         this.mListener = onPreferenceChangeInternalListener;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void notifyChanged() {
         OnPreferenceChangeInternalListener onPreferenceChangeInternalListener = this.mListener;
         if (onPreferenceChangeInternalListener != null) {
@@ -637,7 +656,7 @@ public class Preference implements Comparable<Preference> {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void notifyHierarchyChanged() {
         OnPreferenceChangeInternalListener onPreferenceChangeInternalListener = this.mListener;
         if (onPreferenceChangeInternalListener != null) {
@@ -649,7 +668,7 @@ public class Preference implements Comparable<Preference> {
         return this.mPreferenceManager;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onAttachedToHierarchy(PreferenceManager preferenceManager) {
         this.mPreferenceManager = preferenceManager;
         if (!this.mHasId) {
@@ -658,7 +677,7 @@ public class Preference implements Comparable<Preference> {
         dispatchSetInitialValue();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onAttachedToHierarchy(PreferenceManager preferenceManager, long j) {
         this.mId = j;
         this.mHasId = true;
@@ -669,12 +688,13 @@ public class Preference implements Comparable<Preference> {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void assignParent(PreferenceGroup preferenceGroup) {
-        if (preferenceGroup != null && this.mParentGroup != null) {
-            throw new IllegalStateException("This preference already has a parent. You must remove the existing parent before assigning a new one.");
+        if (preferenceGroup == null || this.mParentGroup == null) {
+            this.mParentGroup = preferenceGroup;
+            return;
         }
-        this.mParentGroup = preferenceGroup;
+        throw new IllegalStateException("This preference already has a parent. You must remove the existing parent before assigning a new one.");
     }
 
     public void onAttached() {
@@ -686,44 +706,42 @@ public class Preference implements Comparable<Preference> {
         this.mWasDetached = true;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public final boolean wasDetached() {
         return this.mWasDetached;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public final void clearWasDetached() {
         this.mWasDetached = false;
     }
 
     private void registerDependency() {
-        if (TextUtils.isEmpty(this.mDependencyKey)) {
-            return;
+        if (!TextUtils.isEmpty(this.mDependencyKey)) {
+            Preference findPreferenceInHierarchy = findPreferenceInHierarchy(this.mDependencyKey);
+            if (findPreferenceInHierarchy != null) {
+                findPreferenceInHierarchy.registerDependent(this);
+                return;
+            }
+            throw new IllegalStateException("Dependency \"" + this.mDependencyKey + "\" not found for preference \"" + this.mKey + "\" (title: \"" + this.mTitle + "\"");
         }
-        Preference findPreferenceInHierarchy = findPreferenceInHierarchy(this.mDependencyKey);
-        if (findPreferenceInHierarchy != null) {
-            findPreferenceInHierarchy.registerDependent(this);
-            return;
-        }
-        throw new IllegalStateException("Dependency \"" + this.mDependencyKey + "\" not found for preference \"" + this.mKey + "\" (title: \"" + ((Object) this.mTitle) + "\"");
     }
 
     private void unregisterDependency() {
         Preference findPreferenceInHierarchy;
         String str = this.mDependencyKey;
-        if (str == null || (findPreferenceInHierarchy = findPreferenceInHierarchy(str)) == null) {
-            return;
+        if (str != null && (findPreferenceInHierarchy = findPreferenceInHierarchy(str)) != null) {
+            findPreferenceInHierarchy.unregisterDependent(this);
         }
-        findPreferenceInHierarchy.unregisterDependent(this);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public <T extends Preference> T findPreferenceInHierarchy(String str) {
         PreferenceManager preferenceManager = this.mPreferenceManager;
         if (preferenceManager == null) {
             return null;
         }
-        return (T) preferenceManager.findPreference(str);
+        return preferenceManager.findPreference(str);
     }
 
     private void registerDependent(Preference preference) {
@@ -743,12 +761,11 @@ public class Preference implements Comparable<Preference> {
 
     public void notifyDependencyChange(boolean z) {
         List<Preference> list = this.mDependents;
-        if (list == null) {
-            return;
-        }
-        int size = list.size();
-        for (int i = 0; i < size; i++) {
-            list.get(i).onDependencyChanged(this, z);
+        if (list != null) {
+            int size = list.size();
+            for (int i = 0; i < size; i++) {
+                list.get(i).onDependencyChanged(this, z);
+            }
         }
     }
 
@@ -782,7 +799,7 @@ public class Preference implements Comparable<Preference> {
         return this.mParentGroup;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onPrepareForRemoval() {
         unregisterDependency();
     }
@@ -791,17 +808,18 @@ public class Preference implements Comparable<Preference> {
         getPreferenceDataStore();
         if (!shouldPersist() || !getSharedPreferences().contains(this.mKey)) {
             Object obj = this.mDefaultValue;
-            if (obj == null) {
+            if (obj != null) {
+                onSetInitialValue(false, obj);
                 return;
             }
-            onSetInitialValue(false, obj);
             return;
         }
-        onSetInitialValue(true, null);
+        onSetInitialValue(true, (Object) null);
     }
 
+    /* access modifiers changed from: protected */
     @Deprecated
-    protected void onSetInitialValue(boolean z, Object obj) {
+    public void onSetInitialValue(boolean z, Object obj) {
         onSetInitialValue(obj);
     }
 
@@ -811,12 +829,12 @@ public class Preference implements Comparable<Preference> {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean persistString(String str) {
         if (!shouldPersist()) {
             return false;
         }
-        if (TextUtils.equals(str, getPersistedString(null))) {
+        if (TextUtils.equals(str, getPersistedString((String) null))) {
             return true;
         }
         getPreferenceDataStore();
@@ -826,7 +844,7 @@ public class Preference implements Comparable<Preference> {
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public String getPersistedString(String str) {
         if (!shouldPersist()) {
             return str;
@@ -839,7 +857,7 @@ public class Preference implements Comparable<Preference> {
         if (!shouldPersist()) {
             return false;
         }
-        if (set.equals(getPersistedStringSet(null))) {
+        if (set.equals(getPersistedStringSet((Set<String>) null))) {
             return true;
         }
         getPreferenceDataStore();
@@ -857,7 +875,7 @@ public class Preference implements Comparable<Preference> {
         return this.mPreferenceManager.getSharedPreferences().getStringSet(this.mKey, set);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean persistInt(int i) {
         if (!shouldPersist()) {
             return false;
@@ -872,7 +890,7 @@ public class Preference implements Comparable<Preference> {
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public int getPersistedInt(int i) {
         if (!shouldPersist()) {
             return i;
@@ -881,7 +899,7 @@ public class Preference implements Comparable<Preference> {
         return this.mPreferenceManager.getSharedPreferences().getInt(this.mKey, i);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean persistBoolean(boolean z) {
         if (!shouldPersist()) {
             return false;
@@ -896,7 +914,7 @@ public class Preference implements Comparable<Preference> {
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean getPersistedBoolean(boolean z) {
         if (!shouldPersist()) {
             return z;
@@ -909,7 +927,8 @@ public class Preference implements Comparable<Preference> {
         return getFilterableStringBuilder().toString();
     }
 
-    StringBuilder getFilterableStringBuilder() {
+    /* access modifiers changed from: package-private */
+    public StringBuilder getFilterableStringBuilder() {
         StringBuilder sb = new StringBuilder();
         CharSequence title = getTitle();
         if (!TextUtils.isEmpty(title)) {
@@ -931,22 +950,20 @@ public class Preference implements Comparable<Preference> {
         dispatchSaveInstanceState(bundle);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void dispatchSaveInstanceState(Bundle bundle) {
         if (hasKey()) {
             this.mBaseMethodCalled = false;
             Parcelable onSaveInstanceState = onSaveInstanceState();
             if (!this.mBaseMethodCalled) {
                 throw new IllegalStateException("Derived class did not call super.onSaveInstanceState()");
+            } else if (onSaveInstanceState != null) {
+                bundle.putParcelable(this.mKey, onSaveInstanceState);
             }
-            if (onSaveInstanceState == null) {
-                return;
-            }
-            bundle.putParcelable(this.mKey, onSaveInstanceState);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public Parcelable onSaveInstanceState() {
         this.mBaseMethodCalled = true;
         return AbsSavedState.EMPTY_STATE;
@@ -956,42 +973,33 @@ public class Preference implements Comparable<Preference> {
         dispatchRestoreInstanceState(bundle);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void dispatchRestoreInstanceState(Bundle bundle) {
         Parcelable parcelable;
-        if (!hasKey() || (parcelable = bundle.getParcelable(this.mKey)) == null) {
-            return;
-        }
-        this.mBaseMethodCalled = false;
-        onRestoreInstanceState(parcelable);
-        if (!this.mBaseMethodCalled) {
-            throw new IllegalStateException("Derived class did not call super.onRestoreInstanceState()");
+        if (hasKey() && (parcelable = bundle.getParcelable(this.mKey)) != null) {
+            this.mBaseMethodCalled = false;
+            onRestoreInstanceState(parcelable);
+            if (!this.mBaseMethodCalled) {
+                throw new IllegalStateException("Derived class did not call super.onRestoreInstanceState()");
+            }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onRestoreInstanceState(Parcelable parcelable) {
         this.mBaseMethodCalled = true;
-        if (parcelable == AbsSavedState.EMPTY_STATE || parcelable == null) {
-            return;
+        if (parcelable != AbsSavedState.EMPTY_STATE && parcelable != null) {
+            throw new IllegalArgumentException("Wrong state class -- expecting Preference State");
         }
-        throw new IllegalArgumentException("Wrong state class -- expecting Preference State");
     }
 
-    /* loaded from: classes.dex */
     public static class BaseSavedState extends AbsSavedState {
-        public static final Parcelable.Creator<BaseSavedState> CREATOR = new Parcelable.Creator<BaseSavedState>() { // from class: androidx.preference.Preference.BaseSavedState.1
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: createFromParcel */
-            public BaseSavedState mo119createFromParcel(Parcel parcel) {
+        public static final Parcelable.Creator<BaseSavedState> CREATOR = new Parcelable.Creator<BaseSavedState>() {
+            public BaseSavedState createFromParcel(Parcel parcel) {
                 return new BaseSavedState(parcel);
             }
 
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: newArray */
-            public BaseSavedState[] mo120newArray(int i) {
+            public BaseSavedState[] newArray(int i) {
                 return new BaseSavedState[i];
             }
         };
@@ -1005,30 +1013,25 @@ public class Preference implements Comparable<Preference> {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class OnPreferenceCopyListener implements View.OnCreateContextMenuListener, MenuItem.OnMenuItemClickListener {
+    private static class OnPreferenceCopyListener implements View.OnCreateContextMenuListener, MenuItem.OnMenuItemClickListener {
         private final Preference mPreference;
 
         OnPreferenceCopyListener(Preference preference) {
             this.mPreference = preference;
         }
 
-        @Override // android.view.View.OnCreateContextMenuListener
         public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
             CharSequence summary = this.mPreference.getSummary();
-            if (!this.mPreference.isCopyingEnabled() || TextUtils.isEmpty(summary)) {
-                return;
+            if (this.mPreference.isCopyingEnabled() && !TextUtils.isEmpty(summary)) {
+                contextMenu.setHeaderTitle(summary);
+                contextMenu.add(0, 0, 0, R$string.copy).setOnMenuItemClickListener(this);
             }
-            contextMenu.setHeaderTitle(summary);
-            contextMenu.add(0, 0, 0, R$string.copy).setOnMenuItemClickListener(this);
         }
 
-        @Override // android.view.MenuItem.OnMenuItemClickListener
         public boolean onMenuItemClick(MenuItem menuItem) {
             CharSequence summary = this.mPreference.getSummary();
             ((ClipboardManager) this.mPreference.getContext().getSystemService("clipboard")).setPrimaryClip(ClipData.newPlainText("Preference", summary));
-            Toast.makeText(this.mPreference.getContext(), this.mPreference.getContext().getString(R$string.preference_copied, summary), 0).show();
+            Toast.makeText(this.mPreference.getContext(), this.mPreference.getContext().getString(R$string.preference_copied, new Object[]{summary}), 0).show();
             return true;
         }
     }

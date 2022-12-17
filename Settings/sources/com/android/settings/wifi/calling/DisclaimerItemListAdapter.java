@@ -6,9 +6,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class DisclaimerItemListAdapter extends RecyclerView.Adapter<DisclaimerItemViewHolder> {
     private List<DisclaimerItem> mDisclaimerItemList;
 
@@ -16,31 +17,26 @@ public class DisclaimerItemListAdapter extends RecyclerView.Adapter<DisclaimerIt
         this.mDisclaimerItemList = list;
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
-    /* renamed from: onCreateViewHolder  reason: collision with other method in class */
-    public DisclaimerItemViewHolder mo960onCreateViewHolder(ViewGroup viewGroup, int i) {
-        return new DisclaimerItemViewHolder(((LayoutInflater) viewGroup.getContext().getSystemService("layout_inflater")).inflate(R.layout.wfc_simple_disclaimer_item, (ViewGroup) null, false));
+    public DisclaimerItemViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        return new DisclaimerItemViewHolder(((LayoutInflater) viewGroup.getContext().getSystemService("layout_inflater")).inflate(R$layout.wfc_simple_disclaimer_item, (ViewGroup) null, false));
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public void onBindViewHolder(DisclaimerItemViewHolder disclaimerItemViewHolder, int i) {
         disclaimerItemViewHolder.titleView.setText(this.mDisclaimerItemList.get(i).getTitleId());
         disclaimerItemViewHolder.descriptionView.setText(this.mDisclaimerItemList.get(i).getMessageId());
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public int getItemCount() {
         return this.mDisclaimerItemList.size();
     }
 
-    /* loaded from: classes.dex */
     public static class DisclaimerItemViewHolder extends RecyclerView.ViewHolder {
+        @VisibleForTesting
+        static final int ID_DISCLAIMER_ITEM_DESCRIPTION = R$id.disclaimer_desc;
+        @VisibleForTesting
+        static final int ID_DISCLAIMER_ITEM_TITLE = R$id.disclaimer_title;
         public final TextView descriptionView;
         public final TextView titleView;
-        @VisibleForTesting
-        static final int ID_DISCLAIMER_ITEM_TITLE = R.id.disclaimer_title;
-        @VisibleForTesting
-        static final int ID_DISCLAIMER_ITEM_DESCRIPTION = R.id.disclaimer_desc;
 
         public DisclaimerItemViewHolder(View view) {
             super(view);

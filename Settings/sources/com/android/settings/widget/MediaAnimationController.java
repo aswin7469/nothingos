@@ -8,70 +8,58 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import com.android.settings.widget.VideoPreference;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class MediaAnimationController implements VideoPreference.AnimationController {
-    private MediaPlayer mMediaPlayer;
-    private Surface mSurface;
-    private boolean mVideoReady;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public MediaAnimationController(Context context, int i) {
+class MediaAnimationController implements VideoPreference.AnimationController {
+    /* access modifiers changed from: private */
+    public MediaPlayer mMediaPlayer;
+    /* access modifiers changed from: private */
+    public Surface mSurface;
+    /* access modifiers changed from: private */
+    public boolean mVideoReady;
+
+    MediaAnimationController(Context context, int i) {
         MediaPlayer create = MediaPlayer.create(context, new Uri.Builder().scheme("android.resource").authority(context.getPackageName()).appendPath(String.valueOf(i)).build());
         this.mMediaPlayer = create;
         if (create != null) {
             create.seekTo(0);
-            this.mMediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() { // from class: com.android.settings.widget.MediaAnimationController$$ExternalSyntheticLambda1
-                @Override // android.media.MediaPlayer.OnSeekCompleteListener
-                public final void onSeekComplete(MediaPlayer mediaPlayer) {
-                    MediaAnimationController.this.lambda$new$0(mediaPlayer);
-                }
-            });
-            this.mMediaPlayer.setOnPreparedListener(MediaAnimationController$$ExternalSyntheticLambda0.INSTANCE);
+            this.mMediaPlayer.setOnSeekCompleteListener(new MediaAnimationController$$ExternalSyntheticLambda1(this));
+            this.mMediaPlayer.setOnPreparedListener(new MediaAnimationController$$ExternalSyntheticLambda2());
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$new$0(MediaPlayer mediaPlayer) {
         this.mVideoReady = true;
     }
 
-    @Override // com.android.settings.widget.VideoPreference.AnimationController
     public int getVideoWidth() {
         return this.mMediaPlayer.getVideoWidth();
     }
 
-    @Override // com.android.settings.widget.VideoPreference.AnimationController
     public int getVideoHeight() {
         return this.mMediaPlayer.getVideoHeight();
     }
 
-    @Override // com.android.settings.widget.VideoPreference.AnimationController
     public int getDuration() {
         return this.mMediaPlayer.getDuration();
     }
 
-    @Override // com.android.settings.widget.VideoPreference.AnimationController
     public void attachView(TextureView textureView, final View view, final View view2) {
         updateViewStates(view, view2);
-        textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() { // from class: com.android.settings.widget.MediaAnimationController.1
-            @Override // android.view.TextureView.SurfaceTextureListener
+        textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i2) {
             }
 
-            @Override // android.view.TextureView.SurfaceTextureListener
             public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i2) {
                 MediaAnimationController.this.setSurface(surfaceTexture);
             }
 
-            @Override // android.view.TextureView.SurfaceTextureListener
             public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
                 view.setVisibility(0);
                 MediaAnimationController.this.mSurface = null;
                 return false;
             }
 
-            @Override // android.view.TextureView.SurfaceTextureListener
             public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
                 MediaAnimationController.this.setSurface(surfaceTexture);
                 if (MediaAnimationController.this.mVideoReady) {
@@ -83,26 +71,19 @@ public class MediaAnimationController implements VideoPreference.AnimationContro
                         view2.setVisibility(8);
                     }
                 }
-                if (MediaAnimationController.this.mMediaPlayer == null || MediaAnimationController.this.mMediaPlayer.isPlaying() || view2.getVisibility() == 0) {
-                    return;
+                if (MediaAnimationController.this.mMediaPlayer != null && !MediaAnimationController.this.mMediaPlayer.isPlaying() && view2.getVisibility() != 0) {
+                    view2.setVisibility(0);
                 }
-                view2.setVisibility(0);
             }
         });
-        textureView.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.widget.MediaAnimationController$$ExternalSyntheticLambda2
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view3) {
-                MediaAnimationController.this.lambda$attachView$2(view, view2, view3);
-            }
-        });
+        textureView.setOnClickListener(new MediaAnimationController$$ExternalSyntheticLambda0(this, view, view2));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$attachView$2(View view, View view2, View view3) {
         updateViewStates(view, view2);
     }
 
-    @Override // com.android.settings.widget.VideoPreference.AnimationController
     public void release() {
         MediaPlayer mediaPlayer = this.mMediaPlayer;
         if (mediaPlayer != null) {
@@ -126,13 +107,12 @@ public class MediaAnimationController implements VideoPreference.AnimationContro
         this.mMediaPlayer.start();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setSurface(SurfaceTexture surfaceTexture) {
-        if (this.mMediaPlayer == null || this.mSurface != null) {
-            return;
+        if (this.mMediaPlayer != null && this.mSurface == null) {
+            Surface surface = new Surface(surfaceTexture);
+            this.mSurface = surface;
+            this.mMediaPlayer.setSurface(surface);
         }
-        Surface surface = new Surface(surfaceTexture);
-        this.mSurface = surface;
-        this.mMediaPlayer.setSurface(surface);
     }
 }

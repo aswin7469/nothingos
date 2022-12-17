@@ -3,47 +3,43 @@ package com.android.settings.biometrics.fingerprint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import com.android.settings.R;
-/* loaded from: classes.dex */
-public class FingerprintEnrollParentalConsent extends FingerprintEnrollIntroduction {
-    public static final int[] CONSENT_STRING_RESOURCES = {R.string.security_settings_fingerprint_enroll_consent_introduction_title, R.string.security_settings_fingerprint_enroll_introduction_consent_message, R.string.security_settings_fingerprint_enroll_introduction_footer_title_consent_1, R.string.security_settings_fingerprint_v2_enroll_introduction_footer_message_consent_2, R.string.security_settings_fingerprint_v2_enroll_introduction_footer_message_consent_3, R.string.security_settings_fingerprint_v2_enroll_introduction_footer_message_consent_4, R.string.security_settings_fingerprint_v2_enroll_introduction_footer_message_consent_5};
+import com.android.settings.R$string;
 
-    @Override // com.android.settings.biometrics.fingerprint.FingerprintEnrollIntroduction, com.android.settingslib.core.instrumentation.Instrumentable
+public class FingerprintEnrollParentalConsent extends FingerprintEnrollIntroduction {
+    public static final int[] CONSENT_STRING_RESOURCES = {R$string.security_settings_fingerprint_enroll_consent_introduction_title, R$string.f155xb68b81de, R$string.f156x4f718905, R$string.f164x9550dc28, R$string.f165x9550dc29, R$string.f166x9550dc2a, R$string.f167x9550dc2b, R$string.f168x9550dc2c};
+
     public int getMetricsCategory() {
         return 1892;
     }
 
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction
-    protected boolean onSetOrConfirmCredentials(Intent intent) {
+    /* access modifiers changed from: protected */
+    public boolean onSetOrConfirmCredentials(Intent intent) {
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.biometrics.fingerprint.FingerprintEnrollIntroduction, com.android.settings.biometrics.BiometricEnrollIntroduction, com.android.settings.biometrics.BiometricEnrollBase, com.android.settings.core.InstrumentedActivity, com.android.settingslib.core.lifecycle.ObservableActivity, androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setDescriptionText(R.string.security_settings_fingerprint_enroll_introduction_consent_message);
+        setDescriptionText(R$string.f155xb68b81de);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction
+    /* access modifiers changed from: protected */
     public void onNextButtonClick(View view) {
         onConsentResult(true);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.biometrics.fingerprint.FingerprintEnrollIntroduction, com.android.settings.biometrics.BiometricEnrollIntroduction
+    /* access modifiers changed from: protected */
     public void onSkipButtonClick(View view) {
         onConsentResult(false);
     }
 
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction
-    protected void onEnrollmentSkipped(Intent intent) {
+    /* access modifiers changed from: protected */
+    public void onEnrollmentSkipped(Intent intent) {
         onConsentResult(false);
     }
 
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction
-    protected void onFinishedEnrolling(Intent intent) {
+    /* access modifiers changed from: protected */
+    public void onFinishedEnrolling(Intent intent) {
         onConsentResult(true);
     }
 
@@ -54,33 +50,38 @@ public class FingerprintEnrollParentalConsent extends FingerprintEnrollIntroduct
         finish();
     }
 
-    @Override // com.android.settings.biometrics.fingerprint.FingerprintEnrollIntroduction
-    protected int getFooterTitle1() {
-        return R.string.security_settings_fingerprint_enroll_introduction_footer_title_consent_1;
+    /* access modifiers changed from: protected */
+    public int getFooterTitle1() {
+        return R$string.f156x4f718905;
     }
 
-    @Override // com.android.settings.biometrics.fingerprint.FingerprintEnrollIntroduction
-    protected int getFooterMessage2() {
-        return R.string.security_settings_fingerprint_v2_enroll_introduction_footer_message_consent_2;
+    /* access modifiers changed from: protected */
+    public int getFooterMessage2() {
+        return R$string.f164x9550dc28;
     }
 
-    @Override // com.android.settings.biometrics.fingerprint.FingerprintEnrollIntroduction
-    protected int getFooterMessage3() {
-        return R.string.security_settings_fingerprint_v2_enroll_introduction_footer_message_consent_3;
+    /* access modifiers changed from: protected */
+    public int getFooterMessage3() {
+        return R$string.f165x9550dc29;
     }
 
-    @Override // com.android.settings.biometrics.fingerprint.FingerprintEnrollIntroduction
-    protected int getFooterMessage4() {
-        return R.string.security_settings_fingerprint_v2_enroll_introduction_footer_message_consent_4;
+    /* access modifiers changed from: protected */
+    public int getFooterMessage4() {
+        return R$string.f166x9550dc2a;
     }
 
-    @Override // com.android.settings.biometrics.fingerprint.FingerprintEnrollIntroduction
-    protected int getFooterMessage5() {
-        return R.string.security_settings_fingerprint_v2_enroll_introduction_footer_message_consent_5;
+    /* access modifiers changed from: protected */
+    public int getFooterMessage5() {
+        return R$string.f167x9550dc2b;
     }
 
-    @Override // com.android.settings.biometrics.fingerprint.FingerprintEnrollIntroduction, com.android.settings.biometrics.BiometricEnrollIntroduction
-    protected int getHeaderResDefault() {
-        return R.string.security_settings_fingerprint_enroll_consent_introduction_title;
+    /* access modifiers changed from: protected */
+    public int getFooterMessage6() {
+        return R$string.f168x9550dc2c;
+    }
+
+    /* access modifiers changed from: protected */
+    public int getHeaderResDefault() {
+        return R$string.security_settings_fingerprint_enroll_consent_introduction_title;
     }
 }

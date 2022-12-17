@@ -1,26 +1,25 @@
 package com.google.zxing.oned.rss;
-/* loaded from: classes2.dex */
+
 final class Pair extends DataCharacter {
     private int count;
     private final FinderPattern finderPattern;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public Pair(int i, int i2, FinderPattern finderPattern) {
+    Pair(int i, int i2, FinderPattern finderPattern2) {
         super(i, i2);
-        this.finderPattern = finderPattern;
+        this.finderPattern = finderPattern2;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public FinderPattern getFinderPattern() {
         return this.finderPattern;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getCount() {
         return this.count;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void incrementCount() {
         this.count++;
     }

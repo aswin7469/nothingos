@@ -7,6 +7,7 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.NetworkRequest;
+import android.net.wifi.WifiInfo;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -16,14 +17,16 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$drawable;
+import com.android.settings.R$string;
+
 public class WifiNoInternetDialog extends AlertActivity implements DialogInterface.OnClickListener {
     private String mAction;
     CheckBox mAlwaysAllow;
     private boolean mButtonClicked;
     private ConnectivityManager mCM;
-    private Network mNetwork;
+    /* access modifiers changed from: private */
+    public Network mNetwork;
     private ConnectivityManager.NetworkCallback mNetworkCallback;
     private String mNetworkName;
 
@@ -32,7 +35,7 @@ public class WifiNoInternetDialog extends AlertActivity implements DialogInterfa
     }
 
     public void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+        WifiNoInternetDialog.super.onCreate(bundle);
         Intent intent = getIntent();
         if (intent == null || !isKnownAction(intent)) {
             Log.e("WifiNoInternetDialog", "Unexpected intent " + intent + ", exiting");
@@ -48,22 +51,19 @@ public class WifiNoInternetDialog extends AlertActivity implements DialogInterfa
             return;
         }
         NetworkRequest build = new NetworkRequest.Builder().clearCapabilities().build();
-        this.mNetworkCallback = new ConnectivityManager.NetworkCallback() { // from class: com.android.settings.wifi.WifiNoInternetDialog.1
-            @Override // android.net.ConnectivityManager.NetworkCallback
-            public void onLost(Network network2) {
-                if (WifiNoInternetDialog.this.mNetwork.equals(network2)) {
+        this.mNetworkCallback = new ConnectivityManager.NetworkCallback() {
+            public void onLost(Network network) {
+                if (WifiNoInternetDialog.this.mNetwork.equals(network)) {
                     Log.d("WifiNoInternetDialog", "Network " + WifiNoInternetDialog.this.mNetwork + " disconnected");
                     WifiNoInternetDialog.this.finish();
                 }
             }
 
-            @Override // android.net.ConnectivityManager.NetworkCallback
-            public void onCapabilitiesChanged(Network network2, NetworkCapabilities networkCapabilities) {
-                if (!WifiNoInternetDialog.this.mNetwork.equals(network2) || !networkCapabilities.hasCapability(16)) {
-                    return;
+            public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities) {
+                if (WifiNoInternetDialog.this.mNetwork.equals(network) && networkCapabilities.hasCapability(16)) {
+                    Log.d("WifiNoInternetDialog", "Network " + WifiNoInternetDialog.this.mNetwork + " validated");
+                    WifiNoInternetDialog.this.finish();
                 }
-                Log.d("WifiNoInternetDialog", "Network " + WifiNoInternetDialog.this.mNetwork + " validated");
-                WifiNoInternetDialog.this.finish();
             }
         };
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService("connectivity");
@@ -79,44 +79,45 @@ public class WifiNoInternetDialog extends AlertActivity implements DialogInterfa
         String ssid = networkCapabilities.getSsid();
         this.mNetworkName = ssid;
         if (ssid != null) {
-            this.mNetworkName = android.net.wifi.WifiInfo.sanitizeSsid(ssid);
+            this.mNetworkName = WifiInfo.sanitizeSsid(ssid);
         }
         createDialog();
     }
 
     private void createDialog() {
-        ((AlertActivity) this).mAlert.setIcon(R.drawable.ic_settings_wireless);
-        AlertController.AlertParams alertParams = ((AlertActivity) this).mAlertParams;
+        this.mAlert.setIcon(R$drawable.ic_settings_wireless);
+        AlertController.AlertParams alertParams = this.mAlertParams;
         if ("android.net.action.PROMPT_UNVALIDATED".equals(this.mAction)) {
             alertParams.mTitle = this.mNetworkName;
-            alertParams.mMessage = getString(R.string.no_internet_access_text);
-            alertParams.mPositiveButtonText = getString(R.string.yes);
-            alertParams.mNegativeButtonText = getString(R.string.no);
+            alertParams.mMessage = getString(R$string.no_internet_access_text);
+            alertParams.mPositiveButtonText = getString(R$string.yes);
+            alertParams.mNegativeButtonText = getString(R$string.f142no);
         } else if ("android.net.action.PROMPT_PARTIAL_CONNECTIVITY".equals(this.mAction)) {
             alertParams.mTitle = this.mNetworkName;
-            alertParams.mMessage = getString(R.string.partial_connectivity_text);
-            alertParams.mPositiveButtonText = getString(R.string.yes);
-            alertParams.mNegativeButtonText = getString(R.string.no);
+            alertParams.mMessage = getString(R$string.partial_connectivity_text);
+            alertParams.mPositiveButtonText = getString(R$string.yes);
+            alertParams.mNegativeButtonText = getString(R$string.f142no);
         } else {
-            alertParams.mTitle = getString(R.string.lost_internet_access_title);
-            alertParams.mMessage = getString(R.string.lost_internet_access_text);
-            alertParams.mPositiveButtonText = getString(R.string.lost_internet_access_switch);
-            alertParams.mNegativeButtonText = getString(R.string.lost_internet_access_cancel);
+            alertParams.mTitle = getString(R$string.lost_internet_access_title);
+            alertParams.mMessage = getString(R$string.lost_internet_access_text);
+            alertParams.mPositiveButtonText = getString(R$string.lost_internet_access_switch);
+            alertParams.mNegativeButtonText = getString(R$string.lost_internet_access_cancel);
         }
         alertParams.mPositiveButtonListener = this;
         alertParams.mNegativeButtonListener = this;
         View inflate = LayoutInflater.from(alertParams.mContext).inflate(17367093, (ViewGroup) null);
         alertParams.mView = inflate;
-        this.mAlwaysAllow = (CheckBox) inflate.findViewById(16908753);
+        this.mAlwaysAllow = (CheckBox) inflate.findViewById(16908774);
         if ("android.net.action.PROMPT_UNVALIDATED".equals(this.mAction) || "android.net.action.PROMPT_PARTIAL_CONNECTIVITY".equals(this.mAction)) {
-            this.mAlwaysAllow.setText(getString(R.string.no_internet_access_remember));
+            this.mAlwaysAllow.setText(getString(R$string.no_internet_access_remember));
         } else {
-            this.mAlwaysAllow.setText(getString(R.string.lost_internet_access_persist));
+            this.mAlwaysAllow.setText(getString(R$string.lost_internet_access_persist));
         }
         setupAlert();
     }
 
-    protected void onDestroy() {
+    /* access modifiers changed from: protected */
+    public void onDestroy() {
         ConnectivityManager.NetworkCallback networkCallback = this.mNetworkCallback;
         if (networkCallback != null) {
             this.mCM.unregisterNetworkCallback(networkCallback);
@@ -129,10 +130,9 @@ public class WifiNoInternetDialog extends AlertActivity implements DialogInterfa
                 this.mCM.setAcceptUnvalidated(this.mNetwork, false, false);
             }
         }
-        super.onDestroy();
+        WifiNoInternetDialog.super.onDestroy();
     }
 
-    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialogInterface, int i) {
         String str;
         if (i == -2 || i == -1) {
@@ -164,7 +164,7 @@ public class WifiNoInternetDialog extends AlertActivity implements DialogInterfa
                 }
                 str2 = z ? "Switch away" : "Get stuck";
                 if (isChecked) {
-                    Settings.Global.putString(((AlertActivity) this).mAlertParams.mContext.getContentResolver(), "network_avoid_bad_wifi", z ? "1" : "0");
+                    Settings.Global.putString(this.mAlertParams.mContext.getContentResolver(), "network_avoid_bad_wifi", z ? "1" : "0");
                 } else if (z) {
                     this.mCM.setAvoidUnvalidated(this.mNetwork);
                 }

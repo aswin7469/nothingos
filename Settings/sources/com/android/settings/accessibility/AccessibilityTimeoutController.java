@@ -7,30 +7,28 @@ import android.provider.Settings;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$array;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.core.AbstractPreferenceController;
 import com.android.settingslib.core.lifecycle.Lifecycle;
-import com.android.settingslib.widget.RadioButtonPreference;
+import com.android.settingslib.widget.SelectorWithWidgetPreference;
 import com.google.common.primitives.Ints;
 import java.util.HashMap;
 import java.util.Map;
-/* loaded from: classes.dex */
-public class AccessibilityTimeoutController extends AbstractPreferenceController implements LifecycleObserver, RadioButtonPreference.OnClickListener, PreferenceControllerMixin {
+
+public class AccessibilityTimeoutController extends AbstractPreferenceController implements LifecycleObserver, SelectorWithWidgetPreference.OnClickListener, PreferenceControllerMixin {
     private final Map<String, Integer> mAccessibilityTimeoutKeyToValueMap = new HashMap();
     private int mAccessibilityUiTimeoutValue;
     private final ContentResolver mContentResolver;
     private OnChangeListener mOnChangeListener;
-    private RadioButtonPreference mPreference;
+    private SelectorWithWidgetPreference mPreference;
     private final String mPreferenceKey;
     private final Resources mResources;
 
-    /* loaded from: classes.dex */
     public interface OnChangeListener {
         void onCheckedChanged(Preference preference);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return true;
     }
@@ -45,8 +43,7 @@ public class AccessibilityTimeoutController extends AbstractPreferenceController
         this.mPreferenceKey = str;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public static int getSecureAccessibilityTimeoutValue(ContentResolver contentResolver, String str) {
+    protected static int getSecureAccessibilityTimeoutValue(ContentResolver contentResolver, String str) {
         Integer tryParse;
         String string = Settings.Secure.getString(contentResolver, str);
         if (string == null || (tryParse = Ints.tryParse(string)) == null) {
@@ -61,8 +58,8 @@ public class AccessibilityTimeoutController extends AbstractPreferenceController
 
     private Map<String, Integer> getTimeoutValueToKeyMap() {
         if (this.mAccessibilityTimeoutKeyToValueMap.size() == 0) {
-            String[] stringArray = this.mResources.getStringArray(R.array.accessibility_timeout_control_selector_keys);
-            int[] intArray = this.mResources.getIntArray(R.array.accessibility_timeout_selector_values);
+            String[] stringArray = this.mResources.getStringArray(R$array.accessibility_timeout_control_selector_keys);
+            int[] intArray = this.mResources.getIntArray(R$array.accessibility_timeout_selector_values);
             int length = intArray.length;
             for (int i = 0; i < length; i++) {
                 this.mAccessibilityTimeoutKeyToValueMap.put(stringArray[i], Integer.valueOf(intArray[i]));
@@ -80,21 +77,18 @@ public class AccessibilityTimeoutController extends AbstractPreferenceController
         putSecureString("accessibility_interactive_ui_timeout_ms", str);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return this.mPreferenceKey;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
-        RadioButtonPreference radioButtonPreference = (RadioButtonPreference) preferenceScreen.findPreference(getPreferenceKey());
-        this.mPreference = radioButtonPreference;
-        radioButtonPreference.setOnClickListener(this);
+        SelectorWithWidgetPreference selectorWithWidgetPreference = (SelectorWithWidgetPreference) preferenceScreen.findPreference(getPreferenceKey());
+        this.mPreference = selectorWithWidgetPreference;
+        selectorWithWidgetPreference.setOnClickListener(this);
     }
 
-    @Override // com.android.settingslib.widget.RadioButtonPreference.OnClickListener
-    public void onRadioButtonClicked(RadioButtonPreference radioButtonPreference) {
+    public void onRadioButtonClicked(SelectorWithWidgetPreference selectorWithWidgetPreference) {
         handlePreferenceChange(String.valueOf(getTimeoutValueToKeyMap().get(this.mPreferenceKey).intValue()));
         OnChangeListener onChangeListener = this.mOnChangeListener;
         if (onChangeListener != null) {
@@ -106,13 +100,13 @@ public class AccessibilityTimeoutController extends AbstractPreferenceController
         return getSecureAccessibilityTimeoutValue(this.mContentResolver, "accessibility_interactive_ui_timeout_ms");
     }
 
-    protected void updatePreferenceCheckedState(int i) {
+    /* access modifiers changed from: protected */
+    public void updatePreferenceCheckedState(int i) {
         if (this.mAccessibilityUiTimeoutValue == i) {
             this.mPreference.setChecked(true);
         }
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         this.mAccessibilityUiTimeoutValue = getAccessibilityTimeoutValue();

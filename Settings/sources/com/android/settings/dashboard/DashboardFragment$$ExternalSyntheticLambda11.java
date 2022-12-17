@@ -1,17 +1,17 @@
 package com.android.settings.dashboard;
 
 import androidx.preference.Preference;
-import java.util.Objects;
-import java.util.function.Predicate;
-/* loaded from: classes.dex */
-public final /* synthetic */ class DashboardFragment$$ExternalSyntheticLambda11 implements Predicate {
-    public static final /* synthetic */ DashboardFragment$$ExternalSyntheticLambda11 INSTANCE = new DashboardFragment$$ExternalSyntheticLambda11();
+import java.util.function.Consumer;
 
-    private /* synthetic */ DashboardFragment$$ExternalSyntheticLambda11() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class DashboardFragment$$ExternalSyntheticLambda11 implements Consumer {
+    public final /* synthetic */ DashboardFragment f$0;
+
+    public /* synthetic */ DashboardFragment$$ExternalSyntheticLambda11(DashboardFragment dashboardFragment) {
+        this.f$0 = dashboardFragment;
     }
 
-    @Override // java.util.function.Predicate
-    public final boolean test(Object obj) {
-        return Objects.nonNull((Preference) obj);
+    public final void accept(Object obj) {
+        this.f$0.lambda$onCreatePreferences$6((Preference) obj);
     }
 }

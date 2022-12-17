@@ -7,9 +7,8 @@ import androidx.preference.Preference;
 import androidx.preference.SwitchPreference;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.core.AbstractPreferenceController;
-/* loaded from: classes.dex */
+
 public class CameraGesturePreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin, Preference.OnPreferenceChangeListener {
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "camera_gesture";
     }
@@ -18,7 +17,6 @@ public class CameraGesturePreferenceController extends AbstractPreferenceControl
         super(context);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         boolean z = false;
         SwitchPreference switchPreference = (SwitchPreference) preference;
@@ -28,14 +26,15 @@ public class CameraGesturePreferenceController extends AbstractPreferenceControl
         switchPreference.setChecked(z);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
-        return (this.mContext.getResources().getInteger(17694763) != -1) && !SystemProperties.getBoolean("gesture.disable_camera_launch", false);
+        if (!(this.mContext.getResources().getInteger(17694764) != -1) || SystemProperties.getBoolean("gesture.disable_camera_launch", false)) {
+            return false;
+        }
+        return true;
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
-        Settings.Secure.putInt(this.mContext.getContentResolver(), "camera_gesture_disabled", !((Boolean) obj).booleanValue());
+        Settings.Secure.putInt(this.mContext.getContentResolver(), "camera_gesture_disabled", ((Boolean) obj).booleanValue() ^ true ? 1 : 0);
         return true;
     }
 }

@@ -4,13 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-/* loaded from: classes.dex */
+
 public class BatterySaverReceiver extends BroadcastReceiver {
     private BatterySaverListener mBatterySaverListener;
     private Context mContext;
     private boolean mRegistered;
 
-    /* loaded from: classes.dex */
     public interface BatterySaverListener {
         void onBatteryChanged(boolean z);
 
@@ -21,17 +20,14 @@ public class BatterySaverReceiver extends BroadcastReceiver {
         this.mContext = context;
     }
 
-    @Override // android.content.BroadcastReceiver
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         if ("android.os.action.POWER_SAVE_MODE_CHANGED".equals(action)) {
             BatterySaverListener batterySaverListener = this.mBatterySaverListener;
-            if (batterySaverListener == null) {
-                return;
+            if (batterySaverListener != null) {
+                batterySaverListener.onPowerSaveModeChanged();
             }
-            batterySaverListener.onPowerSaveModeChanged();
-        } else if (!"android.intent.action.BATTERY_CHANGED".equals(action) || this.mBatterySaverListener == null) {
-        } else {
+        } else if ("android.intent.action.BATTERY_CHANGED".equals(action) && this.mBatterySaverListener != null) {
             boolean z = false;
             if (intent.getIntExtra("plugged", 0) != 0) {
                 z = true;
@@ -47,8 +43,7 @@ public class BatterySaverReceiver extends BroadcastReceiver {
             intentFilter.addAction("android.intent.action.BATTERY_CHANGED");
             this.mContext.registerReceiver(this, intentFilter);
             this.mRegistered = true;
-        } else if (z || !this.mRegistered) {
-        } else {
+        } else if (!z && this.mRegistered) {
             this.mContext.unregisterReceiver(this);
             this.mRegistered = false;
         }

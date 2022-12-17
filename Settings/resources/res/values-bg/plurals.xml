@@ -5,12 +5,12 @@
         <item quantity="other">Преди %d дни</item>
     </plurals>
     <plurals name="abc_slice_duration_min">
-        <item quantity="one">Преди %d мин</item>
-        <item quantity="other">Преди %d мин</item>
+        <item quantity="one">Преди %d мин</item>
+        <item quantity="other">Преди %d мин</item>
     </plurals>
     <plurals name="abc_slice_duration_years">
-        <item quantity="one">Преди %d год</item>
-        <item quantity="other">Преди %d год</item>
+        <item quantity="one">Преди %d год.</item>
+        <item quantity="other">Преди %d год.</item>
     </plurals>
     <plurals name="accessibility_usage_summary">
         <item quantity="one">1 приложение има пълен достъп до устройството ви</item>
@@ -234,11 +234,11 @@
     </plurals>
     <plurals name="notifications_sent_daily">
         <item quantity="one">~%d известие на ден</item>
-        <item quantity="other">~%d известия на ден</item>
+        <item quantity="other">~%,d известия на ден</item>
     </plurals>
     <plurals name="notifications_sent_weekly">
         <item quantity="one">~%d известие на седмица</item>
-        <item quantity="other">~%d известия на седмица</item>
+        <item quantity="other">~%,d известия на седмица</item>
     </plurals>
     <plurals name="number_of_device_admins">
         <item quantity="one">%d активно приложение</item>
@@ -320,14 +320,6 @@
         <item quantity="one">Доверете се на този сертификат или го премахнете</item>
         <item quantity="other">Доверете се на тези сертификати или ги премахнете</item>
     </plurals>
-    <plurals name="ssl_ca_cert_info_message">
-        <item quantity="one">Домейнът %s е инсталирал сертифициращ орган за служебния ви потребителски профил. Това може да му позволи да следи служебната ви активност в мрежата, включително имейли, приложения и защитени уебсайтове.\n\nЗа повече информация относно този сертификат се свържете с администратора си.</item>
-        <item quantity="other">Домейнът %s е инсталирал сертифициращи органи за служебния ви потребителски профил. Това може да му позволи да следи служебната ви активност в мрежата, включително имейли, приложения и защитени уебсайтове.\n\nЗа повече информация относно тези сертификати се свържете с администратора си.</item>
-    </plurals>
-    <plurals name="ssl_ca_cert_info_message_device_owner">
-        <item quantity="one">Домейнът %s е инсталирал сертифициращ орган на устройството ви. Това може да му позволи да следи мрежовата активност на устройството, включително имейли, приложения и защитени уебсайтове.\n\nЗа повече информация относно този сертификат се свържете с администратора си.</item>
-        <item quantity="other">Домейнът %s е инсталирал сертифициращи органи на устройството ви. Това може да му позволи да следи мрежовата активност на устройството, включително имейли, приложения и защитени уебсайтове.\n\nЗа повече информация относно тези сертификати се свържете с администратора си.</item>
-    </plurals>
     <plurals name="ssl_ca_cert_settings_button">
         <item quantity="one">Проверка на сертификата</item>
         <item quantity="other">Проверка на сертификатите</item>
@@ -359,10 +351,6 @@
     <plurals name="wifi_saved_passpoint_access_points_summary">
         <item quantity="one">1 абонамент</item>
         <item quantity="other">%d абонамента</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d устройство е свързано</item>
-        <item quantity="other">%1$d устройства са свързани</item>
     </plurals>
     <plurals name="wrong_pin_code">
         <item quantity="one">Неправилен ПИН код за SIM картата – остава ви %d опит, преди да трябва да се свържете с оператора си, за да отключите устройството.</item>

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
-/* loaded from: classes.dex */
+
 public class DividerAllowedBelowPreference extends Preference {
     public DividerAllowedBelowPreference(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -14,7 +14,6 @@ public class DividerAllowedBelowPreference extends Preference {
         super(context, attributeSet, i);
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         preferenceViewHolder.setDividerAllowedBelow(true);

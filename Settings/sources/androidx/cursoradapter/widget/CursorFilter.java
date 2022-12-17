@@ -2,11 +2,10 @@ package androidx.cursoradapter.widget;
 
 import android.database.Cursor;
 import android.widget.Filter;
-/* loaded from: classes.dex */
+
 class CursorFilter extends Filter {
     CursorFilterClient mClient;
 
-    /* loaded from: classes.dex */
     interface CursorFilterClient {
         void changeCursor(Cursor cursor);
 
@@ -14,22 +13,20 @@ class CursorFilter extends Filter {
 
         Cursor getCursor();
 
-        Cursor runQueryOnBackgroundThread(CharSequence constraint);
+        Cursor runQueryOnBackgroundThread(CharSequence charSequence);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public CursorFilter(CursorFilterClient client) {
-        this.mClient = client;
+    CursorFilter(CursorFilterClient cursorFilterClient) {
+        this.mClient = cursorFilterClient;
     }
 
-    @Override // android.widget.Filter
-    public CharSequence convertResultToString(Object resultValue) {
-        return this.mClient.convertToString((Cursor) resultValue);
+    public CharSequence convertResultToString(Object obj) {
+        return this.mClient.convertToString((Cursor) obj);
     }
 
-    @Override // android.widget.Filter
-    protected Filter.FilterResults performFiltering(CharSequence constraint) {
-        Cursor runQueryOnBackgroundThread = this.mClient.runQueryOnBackgroundThread(constraint);
+    /* access modifiers changed from: protected */
+    public Filter.FilterResults performFiltering(CharSequence charSequence) {
+        Cursor runQueryOnBackgroundThread = this.mClient.runQueryOnBackgroundThread(charSequence);
         Filter.FilterResults filterResults = new Filter.FilterResults();
         if (runQueryOnBackgroundThread != null) {
             filterResults.count = runQueryOnBackgroundThread.getCount();
@@ -41,13 +38,12 @@ class CursorFilter extends Filter {
         return filterResults;
     }
 
-    @Override // android.widget.Filter
-    protected void publishResults(CharSequence constraint, Filter.FilterResults results) {
+    /* access modifiers changed from: protected */
+    public void publishResults(CharSequence charSequence, Filter.FilterResults filterResults) {
         Cursor cursor = this.mClient.getCursor();
-        Object obj = results.values;
-        if (obj == null || obj == cursor) {
-            return;
+        Object obj = filterResults.values;
+        if (obj != null && obj != cursor) {
+            this.mClient.changeCursor((Cursor) obj);
         }
-        this.mClient.changeCursor((Cursor) obj);
     }
 }

@@ -2,34 +2,33 @@ package com.android.settings.dream;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import com.android.settings.R;
+import com.android.settings.R$array;
+import com.android.settings.R$xml;
 import com.android.settings.widget.RadioButtonPickerFragment;
 import com.android.settingslib.dream.DreamBackend;
 import com.android.settingslib.widget.CandidateInfo;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class WhenToDreamPicker extends RadioButtonPickerFragment {
     private DreamBackend mBackend;
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 47;
     }
 
-    @Override // com.android.settings.widget.RadioButtonPickerFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         this.mBackend = DreamBackend.getInstance(context);
     }
 
-    @Override // com.android.settings.widget.RadioButtonPickerFragment, com.android.settings.core.InstrumentedPreferenceFragment
-    protected int getPreferenceScreenResId() {
-        return R.xml.when_to_dream_settings;
+    /* access modifiers changed from: protected */
+    public int getPreferenceScreenResId() {
+        return R$xml.when_to_dream_settings;
     }
 
-    @Override // com.android.settings.widget.RadioButtonPickerFragment
-    protected List<? extends CandidateInfo> getCandidates() {
+    /* access modifiers changed from: protected */
+    public List<? extends CandidateInfo> getCandidates() {
         String[] entries = entries();
         String[] keys = keys();
         ArrayList arrayList = new ArrayList();
@@ -46,37 +45,34 @@ public class WhenToDreamPicker extends RadioButtonPickerFragment {
     }
 
     private String[] entries() {
-        return getResources().getStringArray(R.array.when_to_start_screensaver_entries);
+        return getResources().getStringArray(R$array.when_to_start_screensaver_entries);
     }
 
     private String[] keys() {
-        return getResources().getStringArray(R.array.when_to_start_screensaver_values);
+        return getResources().getStringArray(R$array.when_to_start_screensaver_values);
     }
 
-    @Override // com.android.settings.widget.RadioButtonPickerFragment
-    protected String getDefaultKey() {
+    /* access modifiers changed from: protected */
+    public String getDefaultKey() {
         return DreamSettings.getKeyFromSetting(this.mBackend.getWhenToDreamSetting());
     }
 
-    @Override // com.android.settings.widget.RadioButtonPickerFragment
-    protected boolean setDefaultKey(String str) {
+    /* access modifiers changed from: protected */
+    public boolean setDefaultKey(String str) {
         this.mBackend.setWhenToDream(DreamSettings.getSettingFromPrefKey(str));
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.widget.RadioButtonPickerFragment
+    /* access modifiers changed from: protected */
     public void onSelectionPerformed(boolean z) {
         super.onSelectionPerformed(z);
         getActivity().finish();
     }
 
-    /* loaded from: classes.dex */
     private final class WhenToDreamCandidateInfo extends CandidateInfo {
         private final String key;
         private final String name;
 
-        @Override // com.android.settingslib.widget.CandidateInfo
         public Drawable loadIcon() {
             return null;
         }
@@ -87,12 +83,10 @@ public class WhenToDreamPicker extends RadioButtonPickerFragment {
             this.key = str2;
         }
 
-        @Override // com.android.settingslib.widget.CandidateInfo
         public CharSequence loadLabel() {
             return this.name;
         }
 
-        @Override // com.android.settingslib.widget.CandidateInfo
         public String getKey() {
             return this.key;
         }

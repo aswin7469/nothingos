@@ -21,12 +21,14 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.android.internal.util.MemInfoReader;
-import com.android.settings.R;
+import com.android.settings.R$color;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.applications.RunningState;
 import com.android.settings.core.SubSettingLauncher;
@@ -35,35 +37,34 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-/* loaded from: classes.dex */
+
 public class RunningProcessesView extends FrameLayout implements AdapterView.OnItemClickListener, AbsListView.RecyclerListener, RunningState.OnRefreshUiListener {
     long SECONDARY_SERVER_MEM;
+    final HashMap<View, ActiveItem> mActiveItems = new HashMap<>();
     ServiceListAdapter mAdapter;
     ActivityManager mAm;
     TextView mAppsProcessPrefix;
     TextView mAppsProcessText;
     TextView mBackgroundProcessPrefix;
     TextView mBackgroundProcessText;
+    StringBuilder mBuilder = new StringBuilder(128);
     ProgressBar mColorBar;
+    long mCurHighRam = -1;
+    long mCurLowRam = -1;
+    long mCurMedRam = -1;
     RunningState.BaseItem mCurSelected;
+    boolean mCurShowCached = false;
+    long mCurTotalRam = -1;
     Runnable mDataAvail;
     TextView mForegroundProcessPrefix;
     TextView mForegroundProcessText;
     View mHeader;
     ListView mListView;
-    SettingsPreferenceFragment mOwner;
-    RunningState mState;
-    final HashMap<View, ActiveItem> mActiveItems = new HashMap<>();
-    StringBuilder mBuilder = new StringBuilder(128);
-    long mCurTotalRam = -1;
-    long mCurHighRam = -1;
-    long mCurMedRam = -1;
-    long mCurLowRam = -1;
-    boolean mCurShowCached = false;
     MemInfoReader mMemInfoReader = new MemInfoReader();
     final int mMyUserId = UserHandle.myUserId();
+    SettingsPreferenceFragment mOwner;
+    RunningState mState;
 
-    /* loaded from: classes.dex */
     public static class ActiveItem {
         long mFirstRunTime;
         ViewHolder mHolder;
@@ -71,7 +72,7 @@ public class RunningProcessesView extends FrameLayout implements AdapterView.OnI
         View mRootView;
         boolean mSetBackground;
 
-        /* JADX INFO: Access modifiers changed from: package-private */
+        /* access modifiers changed from: package-private */
         public void updateTime(Context context, StringBuilder sb) {
             TextView textView;
             RunningState.BaseItem baseItem = this.mItem;
@@ -113,7 +114,7 @@ public class RunningProcessesView extends FrameLayout implements AdapterView.OnI
                     z2 = z;
                 }
                 if (z2) {
-                    textView.setText(context.getResources().getText(R.string.service_restarting));
+                    textView.setText(context.getResources().getText(R$string.service_restarting));
                 } else {
                     textView.setText("");
                 }
@@ -121,7 +122,6 @@ public class RunningProcessesView extends FrameLayout implements AdapterView.OnI
         }
     }
 
-    /* loaded from: classes.dex */
     public static class ViewHolder {
         public TextView description;
         public ImageView icon;
@@ -135,8 +135,8 @@ public class RunningProcessesView extends FrameLayout implements AdapterView.OnI
             this.icon = (ImageView) view.findViewById(16908294);
             this.name = (TextView) view.findViewById(16908310);
             this.description = (TextView) view.findViewById(16908304);
-            this.size = (TextView) view.findViewById(R.id.widget_summary1);
-            this.uptime = (TextView) view.findViewById(R.id.widget_summary2);
+            this.size = (TextView) view.findViewById(R$id.widget_summary1);
+            this.uptime = (TextView) view.findViewById(R$id.widget_summary2);
             view.setTag(this);
         }
 
@@ -157,7 +157,7 @@ public class RunningProcessesView extends FrameLayout implements AdapterView.OnI
                 activeItem.mHolder = this;
                 activeItem.mFirstRunTime = baseItem.mActiveSince;
                 if (baseItem.mBackground) {
-                    this.description.setText(view.getContext().getText(R.string.cached));
+                    this.description.setText(view.getContext().getText(R$string.cached));
                 } else {
                     this.description.setText(baseItem.mDescription);
                 }
@@ -170,21 +170,17 @@ public class RunningProcessesView extends FrameLayout implements AdapterView.OnI
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public class ServiceListAdapter extends BaseAdapter {
+    class ServiceListAdapter extends BaseAdapter {
         final LayoutInflater mInflater;
         final ArrayList<RunningState.MergedItem> mItems = new ArrayList<>();
         ArrayList<RunningState.MergedItem> mOrigItems;
         boolean mShowBackground;
         final RunningState mState;
 
-        @Override // android.widget.BaseAdapter, android.widget.ListAdapter
         public boolean areAllItemsEnabled() {
             return false;
         }
 
-        @Override // android.widget.BaseAdapter, android.widget.Adapter
         public boolean hasStableIds() {
             return true;
         }
@@ -195,7 +191,7 @@ public class RunningProcessesView extends FrameLayout implements AdapterView.OnI
             refreshItems();
         }
 
-        /* JADX INFO: Access modifiers changed from: package-private */
+        /* access modifiers changed from: package-private */
         public void setShowBackground(boolean z) {
             if (this.mShowBackground != z) {
                 this.mShowBackground = z;
@@ -205,54 +201,53 @@ public class RunningProcessesView extends FrameLayout implements AdapterView.OnI
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: package-private */
+        /* access modifiers changed from: package-private */
         public boolean getShowBackground() {
             return this.mShowBackground;
         }
 
-        void refreshItems() {
-            ArrayList<RunningState.MergedItem> currentBackgroundItems = this.mShowBackground ? this.mState.getCurrentBackgroundItems() : this.mState.getCurrentMergedItems();
-            if (this.mOrigItems != currentBackgroundItems) {
-                this.mOrigItems = currentBackgroundItems;
-                if (currentBackgroundItems == null) {
+        /* access modifiers changed from: package-private */
+        public void refreshItems() {
+            ArrayList<RunningState.MergedItem> arrayList;
+            if (this.mShowBackground) {
+                arrayList = this.mState.getCurrentBackgroundItems();
+            } else {
+                arrayList = this.mState.getCurrentMergedItems();
+            }
+            if (this.mOrigItems != arrayList) {
+                this.mOrigItems = arrayList;
+                if (arrayList == null) {
                     this.mItems.clear();
                     return;
                 }
                 this.mItems.clear();
-                this.mItems.addAll(currentBackgroundItems);
-                if (!this.mShowBackground) {
-                    return;
+                this.mItems.addAll(arrayList);
+                if (this.mShowBackground) {
+                    Collections.sort(this.mItems, this.mState.mBackgroundComparator);
                 }
-                Collections.sort(this.mItems, this.mState.mBackgroundComparator);
             }
         }
 
-        @Override // android.widget.Adapter
         public int getCount() {
             return this.mItems.size();
         }
 
-        @Override // android.widget.BaseAdapter, android.widget.Adapter
         public boolean isEmpty() {
             return this.mState.hasData() && this.mItems.size() == 0;
         }
 
-        @Override // android.widget.Adapter
         public Object getItem(int i) {
             return this.mItems.get(i);
         }
 
-        @Override // android.widget.Adapter
         public long getItemId(int i) {
-            return this.mItems.get(i).hashCode();
+            return (long) this.mItems.get(i).hashCode();
         }
 
-        @Override // android.widget.BaseAdapter, android.widget.ListAdapter
         public boolean isEnabled(int i) {
             return !this.mItems.get(i).mIsProcess;
         }
 
-        @Override // android.widget.Adapter
         public View getView(int i, View view, ViewGroup viewGroup) {
             if (view == null) {
                 view = newView(viewGroup);
@@ -262,22 +257,22 @@ public class RunningProcessesView extends FrameLayout implements AdapterView.OnI
         }
 
         public View newView(ViewGroup viewGroup) {
-            View inflate = this.mInflater.inflate(R.layout.running_processes_item, viewGroup, false);
+            View inflate = this.mInflater.inflate(R$layout.running_processes_item, viewGroup, false);
             new ViewHolder(inflate);
             return inflate;
         }
 
         public void bindView(View view, int i) {
             synchronized (this.mState.mLock) {
-                if (i >= this.mItems.size()) {
-                    return;
+                if (i < this.mItems.size()) {
+                    RunningProcessesView.this.mActiveItems.put(view, ((ViewHolder) view.getTag()).bind(this.mState, this.mItems.get(i), RunningProcessesView.this.mBuilder));
                 }
-                RunningProcessesView.this.mActiveItems.put(view, ((ViewHolder) view.getTag()).bind(this.mState, this.mItems.get(i), RunningProcessesView.this.mBuilder));
             }
         }
     }
 
-    void refreshUi(boolean z) {
+    /* access modifiers changed from: package-private */
+    public void refreshUi(boolean z) {
         long j;
         long j2;
         if (z) {
@@ -297,46 +292,47 @@ public class RunningProcessesView extends FrameLayout implements AdapterView.OnI
             if (z2 != z3) {
                 this.mCurShowCached = z3;
                 if (z3) {
-                    this.mForegroundProcessPrefix.setText(getResources().getText(R.string.running_processes_header_used_prefix));
-                    this.mAppsProcessPrefix.setText(getResources().getText(R.string.running_processes_header_cached_prefix));
+                    this.mForegroundProcessPrefix.setText(getResources().getText(R$string.running_processes_header_used_prefix));
+                    this.mAppsProcessPrefix.setText(getResources().getText(R$string.running_processes_header_cached_prefix));
                 } else {
-                    this.mForegroundProcessPrefix.setText(getResources().getText(R.string.running_processes_header_system_prefix));
-                    this.mAppsProcessPrefix.setText(getResources().getText(R.string.running_processes_header_apps_prefix));
+                    this.mForegroundProcessPrefix.setText(getResources().getText(R$string.running_processes_header_system_prefix));
+                    this.mAppsProcessPrefix.setText(getResources().getText(R$string.running_processes_header_apps_prefix));
                 }
             }
             long totalSize = this.mMemInfoReader.getTotalSize();
             if (this.mCurShowCached) {
-                j = this.mMemInfoReader.getFreeSize() + this.mMemInfoReader.getCachedSize();
-                j2 = this.mState.mBackgroundProcessMemory;
+                j2 = this.mMemInfoReader.getFreeSize() + this.mMemInfoReader.getCachedSize();
+                j = this.mState.mBackgroundProcessMemory;
             } else {
                 long freeSize = this.mMemInfoReader.getFreeSize() + this.mMemInfoReader.getCachedSize();
                 RunningState runningState = this.mState;
-                j = freeSize + runningState.mBackgroundProcessMemory;
-                j2 = runningState.mServiceProcessMemory;
+                j2 = freeSize + runningState.mBackgroundProcessMemory;
+                j = runningState.mServiceProcessMemory;
             }
-            long j3 = (totalSize - j2) - j;
-            if (this.mCurTotalRam != totalSize || this.mCurHighRam != j3 || this.mCurMedRam != j2 || this.mCurLowRam != j) {
+            long j3 = (totalSize - j) - j2;
+            if (!(this.mCurTotalRam == totalSize && this.mCurHighRam == j3 && this.mCurMedRam == j && this.mCurLowRam == j2)) {
                 this.mCurTotalRam = totalSize;
                 this.mCurHighRam = j3;
-                this.mCurMedRam = j2;
-                this.mCurLowRam = j;
-                BidiFormatter bidiFormatter = BidiFormatter.getInstance();
-                String unicodeWrap = bidiFormatter.unicodeWrap(Formatter.formatShortFileSize(getContext(), j));
+                this.mCurMedRam = j;
+                this.mCurLowRam = j2;
+                BidiFormatter instance = BidiFormatter.getInstance();
+                String unicodeWrap = instance.unicodeWrap(Formatter.formatShortFileSize(getContext(), j2));
                 TextView textView = this.mBackgroundProcessText;
                 Resources resources = getResources();
-                int i = R.string.running_processes_header_ram;
-                textView.setText(resources.getString(i, unicodeWrap));
-                this.mAppsProcessText.setText(getResources().getString(i, bidiFormatter.unicodeWrap(Formatter.formatShortFileSize(getContext(), j2))));
-                this.mForegroundProcessText.setText(getResources().getString(i, bidiFormatter.unicodeWrap(Formatter.formatShortFileSize(getContext(), j3))));
+                int i = R$string.running_processes_header_ram;
+                textView.setText(resources.getString(i, new Object[]{unicodeWrap}));
+                String unicodeWrap2 = instance.unicodeWrap(Formatter.formatShortFileSize(getContext(), j));
+                this.mAppsProcessText.setText(getResources().getString(i, new Object[]{unicodeWrap2}));
+                String unicodeWrap3 = instance.unicodeWrap(Formatter.formatShortFileSize(getContext(), j3));
+                this.mForegroundProcessText.setText(getResources().getString(i, new Object[]{unicodeWrap3}));
                 float f = (float) totalSize;
                 int i2 = (int) ((((float) j3) / f) * 100.0f);
                 this.mColorBar.setProgress(i2);
-                this.mColorBar.setSecondaryProgress(i2 + ((int) ((((float) j2) / f) * 100.0f)));
+                this.mColorBar.setSecondaryProgress(i2 + ((int) ((((float) j) / f) * 100.0f)));
             }
         }
     }
 
-    @Override // android.widget.AdapterView.OnItemClickListener
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long j) {
         RunningState.MergedItem mergedItem = (RunningState.MergedItem) ((ListView) adapterView).getAdapter().getItem(i);
         this.mCurSelected = mergedItem;
@@ -344,21 +340,19 @@ public class RunningProcessesView extends FrameLayout implements AdapterView.OnI
     }
 
     private void startServiceDetailsActivity(RunningState.MergedItem mergedItem) {
-        if (this.mOwner == null || mergedItem == null) {
-            return;
+        if (this.mOwner != null && mergedItem != null) {
+            Bundle bundle = new Bundle();
+            RunningState.ProcessItem processItem = mergedItem.mProcess;
+            if (processItem != null) {
+                bundle.putInt("uid", processItem.mUid);
+                bundle.putString("process", mergedItem.mProcess.mProcessName);
+            }
+            bundle.putInt("user_id", mergedItem.mUserId);
+            bundle.putBoolean("background", this.mAdapter.mShowBackground);
+            new SubSettingLauncher(getContext()).setDestination(RunningServiceDetails.class.getName()).setArguments(bundle).setTitleRes(R$string.runningservicedetails_settings_title).setSourceMetricsCategory(this.mOwner.getMetricsCategory()).launch();
         }
-        Bundle bundle = new Bundle();
-        RunningState.ProcessItem processItem = mergedItem.mProcess;
-        if (processItem != null) {
-            bundle.putInt("uid", processItem.mUid);
-            bundle.putString("process", mergedItem.mProcess.mProcessName);
-        }
-        bundle.putInt("user_id", mergedItem.mUserId);
-        bundle.putBoolean("background", this.mAdapter.mShowBackground);
-        new SubSettingLauncher(getContext()).setDestination(RunningServiceDetails.class.getName()).setArguments(bundle).setTitleRes(R.string.runningservicedetails_settings_title).setSourceMetricsCategory(this.mOwner.getMetricsCategory()).launch();
     }
 
-    @Override // android.widget.AbsListView.RecyclerListener
     public void onMovedToScrapHeap(View view) {
         this.mActiveItems.remove(view);
     }
@@ -371,7 +365,7 @@ public class RunningProcessesView extends FrameLayout implements AdapterView.OnI
         this.mAm = (ActivityManager) getContext().getSystemService("activity");
         this.mState = RunningState.getInstance(getContext());
         LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService("layout_inflater");
-        layoutInflater.inflate(R.layout.running_processes_view, this);
+        layoutInflater.inflate(R$layout.running_processes_view, this);
         this.mListView = (ListView) findViewById(16908298);
         View findViewById = findViewById(16908292);
         if (findViewById != null) {
@@ -381,23 +375,23 @@ public class RunningProcessesView extends FrameLayout implements AdapterView.OnI
         this.mListView.setRecyclerListener(this);
         ServiceListAdapter serviceListAdapter = new ServiceListAdapter(this.mState);
         this.mAdapter = serviceListAdapter;
-        this.mListView.setAdapter((ListAdapter) serviceListAdapter);
-        View inflate = layoutInflater.inflate(R.layout.running_processes_header, (ViewGroup) null);
+        this.mListView.setAdapter(serviceListAdapter);
+        View inflate = layoutInflater.inflate(R$layout.running_processes_header, (ViewGroup) null);
         this.mHeader = inflate;
-        this.mListView.addHeaderView(inflate, null, false);
-        this.mColorBar = (ProgressBar) this.mHeader.findViewById(R.id.color_bar);
+        this.mListView.addHeaderView(inflate, (Object) null, false);
+        this.mColorBar = (ProgressBar) this.mHeader.findViewById(R$id.color_bar);
         Context context = getContext();
-        this.mColorBar.setProgressTintList(ColorStateList.valueOf(context.getColor(R.color.running_processes_system_ram)));
+        this.mColorBar.setProgressTintList(ColorStateList.valueOf(context.getColor(R$color.running_processes_system_ram)));
         this.mColorBar.setSecondaryProgressTintList(Utils.getColorAccent(context));
         this.mColorBar.setSecondaryProgressTintMode(PorterDuff.Mode.SRC);
-        this.mColorBar.setProgressBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.running_processes_free_ram)));
+        this.mColorBar.setProgressBackgroundTintList(ColorStateList.valueOf(context.getColor(R$color.running_processes_free_ram)));
         this.mColorBar.setProgressBackgroundTintMode(PorterDuff.Mode.SRC);
-        this.mBackgroundProcessPrefix = (TextView) this.mHeader.findViewById(R.id.freeSizePrefix);
-        this.mAppsProcessPrefix = (TextView) this.mHeader.findViewById(R.id.appsSizePrefix);
-        this.mForegroundProcessPrefix = (TextView) this.mHeader.findViewById(R.id.systemSizePrefix);
-        this.mBackgroundProcessText = (TextView) this.mHeader.findViewById(R.id.freeSize);
-        this.mAppsProcessText = (TextView) this.mHeader.findViewById(R.id.appsSize);
-        this.mForegroundProcessText = (TextView) this.mHeader.findViewById(R.id.systemSize);
+        this.mBackgroundProcessPrefix = (TextView) this.mHeader.findViewById(R$id.freeSizePrefix);
+        this.mAppsProcessPrefix = (TextView) this.mHeader.findViewById(R$id.appsSizePrefix);
+        this.mForegroundProcessPrefix = (TextView) this.mHeader.findViewById(R$id.systemSizePrefix);
+        this.mBackgroundProcessText = (TextView) this.mHeader.findViewById(R$id.freeSize);
+        this.mAppsProcessText = (TextView) this.mHeader.findViewById(R$id.appsSize);
+        this.mForegroundProcessText = (TextView) this.mHeader.findViewById(R$id.systemSize);
         ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
         this.mAm.getMemoryInfo(memoryInfo);
         this.SECONDARY_SERVER_MEM = memoryInfo.secondaryServerThreshold;
@@ -420,7 +414,8 @@ public class RunningProcessesView extends FrameLayout implements AdapterView.OnI
         return false;
     }
 
-    void updateTimes() {
+    /* access modifiers changed from: package-private */
+    public void updateTimes() {
         Iterator<ActiveItem> it = this.mActiveItems.values().iterator();
         while (it.hasNext()) {
             ActiveItem next = it.next();
@@ -432,15 +427,13 @@ public class RunningProcessesView extends FrameLayout implements AdapterView.OnI
         }
     }
 
-    @Override // com.android.settings.applications.RunningState.OnRefreshUiListener
     public void onRefreshUi(int i) {
         if (i == 0) {
             updateTimes();
         } else if (i == 1) {
             refreshUi(false);
             updateTimes();
-        } else if (i != 2) {
-        } else {
+        } else if (i == 2) {
             refreshUi(true);
             updateTimes();
         }

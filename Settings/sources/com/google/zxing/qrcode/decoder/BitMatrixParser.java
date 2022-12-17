@@ -2,23 +2,22 @@ package com.google.zxing.qrcode.decoder;
 
 import com.google.zxing.FormatException;
 import com.google.zxing.common.BitMatrix;
-/* loaded from: classes2.dex */
+
 final class BitMatrixParser {
     private final BitMatrix bitMatrix;
     private boolean mirror;
     private FormatInformation parsedFormatInfo;
     private Version parsedVersion;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public BitMatrixParser(BitMatrix bitMatrix) throws FormatException {
-        int height = bitMatrix.getHeight();
+    BitMatrixParser(BitMatrix bitMatrix2) throws FormatException {
+        int height = bitMatrix2.getHeight();
         if (height < 21 || (height & 3) != 1) {
             throw FormatException.getFormatInstance();
         }
-        this.bitMatrix = bitMatrix;
+        this.bitMatrix = bitMatrix2;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public FormatInformation readFormatInformation() throws FormatException {
         FormatInformation formatInformation = this.parsedFormatInfo;
         if (formatInformation != null) {
@@ -43,13 +42,13 @@ final class BitMatrixParser {
         }
         FormatInformation decodeFormatInformation = FormatInformation.decodeFormatInformation(copyBit, i);
         this.parsedFormatInfo = decodeFormatInformation;
-        if (decodeFormatInformation == null) {
-            throw FormatException.getFormatInstance();
+        if (decodeFormatInformation != null) {
+            return decodeFormatInformation;
         }
-        return decodeFormatInformation;
+        throw FormatException.getFormatInstance();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public Version readVersion() throws FormatException {
         Version version = this.parsedVersion;
         if (version != null) {
@@ -69,30 +68,30 @@ final class BitMatrixParser {
             }
         }
         Version decodeVersionInformation = Version.decodeVersionInformation(i4);
-        if (decodeVersionInformation != null && decodeVersionInformation.getDimensionForVersion() == height) {
-            this.parsedVersion = decodeVersionInformation;
-            return decodeVersionInformation;
-        }
-        for (int i7 = 5; i7 >= 0; i7--) {
-            for (int i8 = height - 9; i8 >= i2; i8--) {
-                i3 = copyBit(i7, i8, i3);
+        if (decodeVersionInformation == null || decodeVersionInformation.getDimensionForVersion() != height) {
+            for (int i7 = 5; i7 >= 0; i7--) {
+                for (int i8 = height - 9; i8 >= i2; i8--) {
+                    i3 = copyBit(i7, i8, i3);
+                }
             }
-        }
-        Version decodeVersionInformation2 = Version.decodeVersionInformation(i3);
-        if (decodeVersionInformation2 != null && decodeVersionInformation2.getDimensionForVersion() == height) {
+            Version decodeVersionInformation2 = Version.decodeVersionInformation(i3);
+            if (decodeVersionInformation2 == null || decodeVersionInformation2.getDimensionForVersion() != height) {
+                throw FormatException.getFormatInstance();
+            }
             this.parsedVersion = decodeVersionInformation2;
             return decodeVersionInformation2;
         }
-        throw FormatException.getFormatInstance();
+        this.parsedVersion = decodeVersionInformation;
+        return decodeVersionInformation;
     }
 
     private int copyBit(int i, int i2, int i3) {
         boolean z = this.mirror;
-        BitMatrix bitMatrix = this.bitMatrix;
-        return z ? bitMatrix.get(i2, i) : bitMatrix.get(i, i2) ? (i3 << 1) | 1 : i3 << 1;
+        BitMatrix bitMatrix2 = this.bitMatrix;
+        return z ? bitMatrix2.get(i2, i) : bitMatrix2.get(i, i2) ? (i3 << 1) | 1 : i3 << 1;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public byte[] readCodewords() throws FormatException {
         FormatInformation readFormatInformation = readFormatInformation();
         Version readVersion = readVersion();
@@ -139,23 +138,22 @@ final class BitMatrixParser {
         throw FormatException.getFormatInstance();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void remask() {
         FormatInformation formatInformation = this.parsedFormatInfo;
-        if (formatInformation == null) {
-            return;
+        if (formatInformation != null) {
+            DataMask.forReference(formatInformation.getDataMask()).unmaskBitMatrix(this.bitMatrix, this.bitMatrix.getHeight());
         }
-        DataMask.forReference(formatInformation.getDataMask()).unmaskBitMatrix(this.bitMatrix, this.bitMatrix.getHeight());
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setMirror(boolean z) {
         this.parsedVersion = null;
         this.parsedFormatInfo = null;
         this.mirror = z;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void mirror() {
         int i = 0;
         while (i < this.bitMatrix.getWidth()) {

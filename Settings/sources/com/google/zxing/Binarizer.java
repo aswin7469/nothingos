@@ -2,7 +2,7 @@ package com.google.zxing;
 
 import com.google.zxing.common.BitArray;
 import com.google.zxing.common.BitMatrix;
-/* loaded from: classes2.dex */
+
 public abstract class Binarizer {
     private final LuminanceSource source;
 
@@ -12,8 +12,7 @@ public abstract class Binarizer {
 
     public abstract BitArray getBlackRow(int i, BitArray bitArray) throws NotFoundException;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public Binarizer(LuminanceSource luminanceSource) {
+    protected Binarizer(LuminanceSource luminanceSource) {
         this.source = luminanceSource;
     }
 

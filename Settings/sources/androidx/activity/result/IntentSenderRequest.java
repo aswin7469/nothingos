@@ -5,21 +5,15 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Parcel;
 import android.os.Parcelable;
+
 @SuppressLint({"BanParcelableUsage"})
-/* loaded from: classes.dex */
 public final class IntentSenderRequest implements Parcelable {
-    public static final Parcelable.Creator<IntentSenderRequest> CREATOR = new Parcelable.Creator<IntentSenderRequest>() { // from class: androidx.activity.result.IntentSenderRequest.1
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: createFromParcel */
-        public IntentSenderRequest mo24createFromParcel(Parcel parcel) {
+    public static final Parcelable.Creator<IntentSenderRequest> CREATOR = new Parcelable.Creator<IntentSenderRequest>() {
+        public IntentSenderRequest createFromParcel(Parcel parcel) {
             return new IntentSenderRequest(parcel);
         }
 
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: newArray */
-        public IntentSenderRequest[] mo25newArray(int i) {
+        public IntentSenderRequest[] newArray(int i) {
             return new IntentSenderRequest[i];
         }
     };
@@ -28,7 +22,6 @@ public final class IntentSenderRequest implements Parcelable {
     private final int mFlagsValues;
     private final IntentSender mIntentSender;
 
-    @Override // android.os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -63,7 +56,6 @@ public final class IntentSenderRequest implements Parcelable {
         this.mFlagsValues = parcel.readInt();
     }
 
-    @Override // android.os.Parcelable
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeParcelable(this.mIntentSender, i);
         parcel.writeParcelable(this.mFillInIntent, i);
@@ -71,7 +63,6 @@ public final class IntentSenderRequest implements Parcelable {
         parcel.writeInt(this.mFlagsValues);
     }
 
-    /* loaded from: classes.dex */
     public static final class Builder {
         private Intent mFillInIntent;
         private int mFlagsMask;

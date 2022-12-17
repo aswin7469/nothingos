@@ -6,14 +6,16 @@ import android.content.pm.ProviderInfo;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.CancellationSignal;
 import android.os.Handler;
+import androidx.core.graphics.TypefaceCompat;
 import androidx.core.util.Preconditions;
-/* loaded from: classes.dex */
+import java.util.concurrent.Executor;
+
 public class FontsContractCompat {
 
-    /* loaded from: classes.dex */
     public static class FontRequestCallback {
-        public void onTypefaceRequestFailed(int reason) {
+        public void onTypefaceRequestFailed(int i) {
             throw null;
         }
 
@@ -22,19 +24,26 @@ public class FontsContractCompat {
         }
     }
 
-    public static Typeface requestFont(final Context context, final FontRequest request, final int style, boolean isBlockingFetch, int timeout, final Handler handler, final FontRequestCallback callback) {
-        CallbackWithHandler callbackWithHandler = new CallbackWithHandler(callback, handler);
-        if (isBlockingFetch) {
-            return FontRequestWorker.requestFontSync(context, request, callbackWithHandler, style, timeout);
+    public static Typeface buildTypeface(Context context, CancellationSignal cancellationSignal, FontInfo[] fontInfoArr) {
+        return TypefaceCompat.createFromFontInfo(context, cancellationSignal, fontInfoArr, 0);
+    }
+
+    public static FontFamilyResult fetchFonts(Context context, CancellationSignal cancellationSignal, FontRequest fontRequest) throws PackageManager.NameNotFoundException {
+        return FontProvider.getFontFamilyResult(context, fontRequest, cancellationSignal);
+    }
+
+    public static Typeface requestFont(Context context, FontRequest fontRequest, int i, boolean z, int i2, Handler handler, FontRequestCallback fontRequestCallback) {
+        CallbackWithHandler callbackWithHandler = new CallbackWithHandler(fontRequestCallback, handler);
+        if (z) {
+            return FontRequestWorker.requestFontSync(context, fontRequest, callbackWithHandler, i, i2);
         }
-        return FontRequestWorker.requestFontAsync(context, request, style, null, callbackWithHandler);
+        return FontRequestWorker.requestFontAsync(context, fontRequest, i, (Executor) null, callbackWithHandler);
     }
 
     public static void resetTypefaceCache() {
         FontRequestWorker.resetTypefaceCache();
     }
 
-    /* loaded from: classes.dex */
     public static class FontInfo {
         private final boolean mItalic;
         private final int mResultCode;
@@ -43,17 +52,16 @@ public class FontsContractCompat {
         private final int mWeight;
 
         @Deprecated
-        public FontInfo(Uri uri, int ttcIndex, int weight, boolean italic, int resultCode) {
+        public FontInfo(Uri uri, int i, int i2, boolean z, int i3) {
             this.mUri = (Uri) Preconditions.checkNotNull(uri);
-            this.mTtcIndex = ttcIndex;
-            this.mWeight = weight;
-            this.mItalic = italic;
-            this.mResultCode = resultCode;
+            this.mTtcIndex = i;
+            this.mWeight = i2;
+            this.mItalic = z;
+            this.mResultCode = i3;
         }
 
-        /* JADX INFO: Access modifiers changed from: package-private */
-        public static FontInfo create(Uri uri, int ttcIndex, int weight, boolean italic, int resultCode) {
-            return new FontInfo(uri, ttcIndex, weight, italic, resultCode);
+        static FontInfo create(Uri uri, int i, int i2, boolean z, int i3) {
+            return new FontInfo(uri, i, i2, z, i3);
         }
 
         public Uri getUri() {
@@ -77,15 +85,14 @@ public class FontsContractCompat {
         }
     }
 
-    /* loaded from: classes.dex */
     public static class FontFamilyResult {
         private final FontInfo[] mFonts;
         private final int mStatusCode;
 
         @Deprecated
-        public FontFamilyResult(int statusCode, FontInfo[] fonts) {
-            this.mStatusCode = statusCode;
-            this.mFonts = fonts;
+        public FontFamilyResult(int i, FontInfo[] fontInfoArr) {
+            this.mStatusCode = i;
+            this.mFonts = fontInfoArr;
         }
 
         public int getStatusCode() {
@@ -96,14 +103,13 @@ public class FontsContractCompat {
             return this.mFonts;
         }
 
-        /* JADX INFO: Access modifiers changed from: package-private */
-        public static FontFamilyResult create(int statusCode, FontInfo[] fonts) {
-            return new FontFamilyResult(statusCode, fonts);
+        static FontFamilyResult create(int i, FontInfo[] fontInfoArr) {
+            return new FontFamilyResult(i, fontInfoArr);
         }
     }
 
     @Deprecated
-    public static ProviderInfo getProvider(PackageManager packageManager, FontRequest request, Resources resources) throws PackageManager.NameNotFoundException {
-        return FontProvider.getProvider(packageManager, request, resources);
+    public static ProviderInfo getProvider(PackageManager packageManager, FontRequest fontRequest, Resources resources) throws PackageManager.NameNotFoundException {
+        return FontProvider.getProvider(packageManager, fontRequest, resources);
     }
 }

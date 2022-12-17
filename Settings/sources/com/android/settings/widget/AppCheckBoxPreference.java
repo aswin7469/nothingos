@@ -6,23 +6,23 @@ import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.PreferenceViewHolder;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+
 public class AppCheckBoxPreference extends CheckBoxPreference {
     public AppCheckBoxPreference(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        setLayoutResource(R.layout.preference_app);
+        setLayoutResource(R$layout.preference_app);
     }
 
     public AppCheckBoxPreference(Context context) {
         super(context);
-        setLayoutResource(R.layout.preference_app);
+        setLayoutResource(R$layout.preference_app);
     }
 
-    @Override // androidx.preference.CheckBoxPreference, androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
-        LinearLayout linearLayout = (LinearLayout) preferenceViewHolder.findViewById(R.id.summary_container);
+        LinearLayout linearLayout = (LinearLayout) preferenceViewHolder.findViewById(R$id.summary_container);
         if (linearLayout != null) {
             linearLayout.setVisibility(TextUtils.isEmpty(getSummary()) ? 8 : 0);
         }

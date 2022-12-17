@@ -15,7 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
 import com.android.settings.applications.AppInfoBase;
 import com.android.settings.applications.appinfo.AppInfoDashboardFragment;
 import com.android.settings.overlay.FeatureFactory;
@@ -23,15 +25,17 @@ import com.android.settingslib.Utils;
 import com.android.settingslib.applications.ApplicationsState;
 import com.android.settingslib.core.lifecycle.Lifecycle;
 import com.android.settingslib.widget.LayoutPreference;
-/* loaded from: classes.dex */
+
 public class EntityHeaderController {
     private int mAction1;
     private int mAction2;
-    private final Activity mActivity;
+    /* access modifiers changed from: private */
+    public final Activity mActivity;
     private final Context mAppContext;
     private Intent mAppNotifPrefIntent;
     private View.OnClickListener mEditOnClickListener;
-    private final Fragment mFragment;
+    /* access modifiers changed from: private */
+    public final Fragment mFragment;
     private boolean mHasAppInfoLink;
     private final View mHeader;
     private Drawable mIcon;
@@ -39,12 +43,16 @@ public class EntityHeaderController {
     private boolean mIsInstantApp;
     private CharSequence mLabel;
     private Lifecycle mLifecycle;
-    private final int mMetricsCategory;
-    private String mPackageName;
+    /* access modifiers changed from: private */
+    public final int mMetricsCategory;
+    /* access modifiers changed from: private */
+    public String mPackageName;
+    private int mPrefOrder = -1000;
     private RecyclerView mRecyclerView;
     private CharSequence mSecondSummary;
     private CharSequence mSummary;
-    private int mUid = -10000;
+    /* access modifiers changed from: private */
+    public int mUid = -10000;
 
     public static EntityHeaderController newInstance(Activity activity, Fragment fragment, View view) {
         return new EntityHeaderController(activity, fragment, view);
@@ -59,7 +67,7 @@ public class EntityHeaderController {
         if (view != null) {
             this.mHeader = view;
         } else {
-            this.mHeader = LayoutInflater.from(fragment.getContext()).inflate(R.layout.settings_entity_header, (ViewGroup) null);
+            this.mHeader = LayoutInflater.from(fragment.getContext()).inflate(R$layout.settings_entity_header, (ViewGroup) null);
         }
     }
 
@@ -143,9 +151,14 @@ public class EntityHeaderController {
         return this;
     }
 
+    public EntityHeaderController setOrder(int i) {
+        this.mPrefOrder = i;
+        return this;
+    }
+
     public LayoutPreference done(Activity activity, Context context) {
         LayoutPreference layoutPreference = new LayoutPreference(context, done(activity));
-        layoutPreference.setOrder(-1000);
+        layoutPreference.setOrder(this.mPrefOrder);
         layoutPreference.setSelectable(false);
         layoutPreference.setKey("pref_app_header");
         layoutPreference.setAllowDividerBelow(true);
@@ -153,16 +166,16 @@ public class EntityHeaderController {
     }
 
     public View done(Activity activity, boolean z) {
-        ImageView imageView = (ImageView) this.mHeader.findViewById(R.id.entity_header_icon);
+        ImageView imageView = (ImageView) this.mHeader.findViewById(R$id.entity_header_icon);
         if (imageView != null) {
             imageView.setImageDrawable(this.mIcon);
             imageView.setContentDescription(this.mIconContentDescription);
         }
-        setText(R.id.entity_header_title, this.mLabel);
-        setText(R.id.entity_header_summary, this.mSummary);
-        setText(R.id.entity_header_second_summary, this.mSecondSummary);
+        setText(R$id.entity_header_title, this.mLabel);
+        setText(R$id.entity_header_summary, this.mSummary);
+        setText(R$id.entity_header_second_summary, this.mSecondSummary);
         if (this.mIsInstantApp) {
-            setText(R.id.install_type, this.mHeader.getResources().getString(R.string.install_type_instant));
+            setText(R$id.install_type, this.mHeader.getResources().getString(R$string.install_type_instant));
         }
         if (z) {
             bindHeaderButtons();
@@ -171,7 +184,7 @@ public class EntityHeaderController {
     }
 
     public EntityHeaderController bindHeaderButtons() {
-        bindAppInfoLink(this.mHeader.findViewById(R.id.entity_header_content));
+        bindAppInfoLink(this.mHeader.findViewById(R$id.entity_header_content));
         bindButton((ImageButton) this.mHeader.findViewById(16908313), this.mAction1);
         bindButton((ImageButton) this.mHeader.findViewById(16908314), this.mAction2);
         return this;
@@ -179,58 +192,50 @@ public class EntityHeaderController {
 
     private void bindAppInfoLink(View view) {
         String str;
-        if (!this.mHasAppInfoLink) {
-            return;
-        }
-        if (view == null || (str = this.mPackageName) == null || str.equals("os") || this.mUid == -10000) {
-            Log.w("AppDetailFeature", "Missing ingredients to build app info link, skip");
-        } else {
-            view.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.widget.EntityHeaderController.1
-                @Override // android.view.View.OnClickListener
-                public void onClick(View view2) {
-                    AppInfoBase.startAppInfoFragment(AppInfoDashboardFragment.class, R.string.application_info_label, EntityHeaderController.this.mPackageName, EntityHeaderController.this.mUid, EntityHeaderController.this.mFragment, 0, EntityHeaderController.this.mMetricsCategory);
-                }
-            });
+        if (this.mHasAppInfoLink) {
+            if (view == null || (str = this.mPackageName) == null || str.equals("os") || this.mUid == -10000) {
+                Log.w("AppDetailFeature", "Missing ingredients to build app info link, skip");
+            } else {
+                view.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View view) {
+                        AppInfoBase.startAppInfoFragment(AppInfoDashboardFragment.class, EntityHeaderController.this.mActivity.getString(R$string.application_info_label), EntityHeaderController.this.mPackageName, EntityHeaderController.this.mUid, EntityHeaderController.this.mFragment, 0, EntityHeaderController.this.mMetricsCategory);
+                    }
+                });
+            }
         }
     }
 
-    View done(Activity activity) {
+    /* access modifiers changed from: package-private */
+    public View done(Activity activity) {
         return done(activity, true);
     }
 
     private void bindButton(ImageButton imageButton, int i) {
-        if (imageButton == null) {
-            return;
-        }
-        if (i == 0) {
-            imageButton.setVisibility(8);
-        } else if (i == 1) {
-            if (this.mAppNotifPrefIntent == null) {
+        if (imageButton != null) {
+            if (i == 0) {
                 imageButton.setVisibility(8);
-                return;
-            }
-            imageButton.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.widget.EntityHeaderController$$ExternalSyntheticLambda0
-                @Override // android.view.View.OnClickListener
-                public final void onClick(View view) {
-                    EntityHeaderController.this.lambda$bindButton$0(view);
+            } else if (i != 1) {
+                if (i == 2) {
+                    if (this.mEditOnClickListener == null) {
+                        imageButton.setVisibility(8);
+                        return;
+                    }
+                    imageButton.setImageResource(17302779);
+                    imageButton.setVisibility(0);
+                    imageButton.setOnClickListener(this.mEditOnClickListener);
                 }
-            });
-            imageButton.setVisibility(0);
-        } else if (i != 2) {
-        } else {
-            if (this.mEditOnClickListener == null) {
+            } else if (this.mAppNotifPrefIntent == null) {
                 imageButton.setVisibility(8);
-                return;
+            } else {
+                imageButton.setOnClickListener(new EntityHeaderController$$ExternalSyntheticLambda0(this));
+                imageButton.setVisibility(0);
             }
-            imageButton.setImageResource(17302768);
-            imageButton.setVisibility(0);
-            imageButton.setOnClickListener(this.mEditOnClickListener);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$bindButton$0(View view) {
-        FeatureFactory.getFactory(this.mAppContext).getMetricsFeatureProvider().action(0, 1016, this.mMetricsCategory, null, 0);
+        FeatureFactory.getFactory(this.mAppContext).getMetricsFeatureProvider().action(0, 1016, this.mMetricsCategory, (String) null, 0);
         this.mFragment.startActivity(this.mAppNotifPrefIntent);
     }
 

@@ -18,7 +18,7 @@ import com.android.settings.security.screenlock.ScreenLockSettings;
 import com.android.settings.system.SystemDashboardFragment;
 import com.android.settings.wifi.WifiSettings;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public class CustomSiteMapRegistry {
     public static final Map<String, String> CUSTOM_SITE_MAP;
 

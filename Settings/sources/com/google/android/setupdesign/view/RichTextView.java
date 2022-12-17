@@ -1,8 +1,10 @@
 package com.google.android.setupdesign.view;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.text.Annotation;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -20,30 +22,39 @@ import com.google.android.setupdesign.accessibility.LinkAccessibilityHelper;
 import com.google.android.setupdesign.span.LinkSpan;
 import com.google.android.setupdesign.span.SpanHelper;
 import com.google.android.setupdesign.view.TouchableMovementMethod;
-/* loaded from: classes2.dex */
+
 public class RichTextView extends AppCompatTextView implements LinkSpan.OnLinkClickListener {
+    static Typeface spanTypeface;
     private LinkAccessibilityHelper accessibilityHelper;
     private LinkSpan.OnLinkClickListener onLinkClickListener;
 
+    @SuppressLint({"NewApi"})
+    @TargetApi(28)
     public static CharSequence getRichText(Context context, CharSequence charSequence) {
-        Annotation[] annotationArr;
-        if (charSequence instanceof Spanned) {
-            SpannableString spannableString = new SpannableString(charSequence);
-            for (Annotation annotation : (Annotation[]) spannableString.getSpans(0, spannableString.length(), Annotation.class)) {
-                String key = annotation.getKey();
-                if ("textAppearance".equals(key)) {
-                    int identifier = context.getResources().getIdentifier(annotation.getValue(), "style", context.getPackageName());
-                    if (identifier == 0) {
-                        Log.w("RichTextView", "Cannot find resource: " + identifier);
-                    }
-                    SpanHelper.replaceSpan(spannableString, annotation, new TextAppearanceSpan(context, identifier));
-                } else if ("link".equals(key)) {
-                    SpanHelper.replaceSpan(spannableString, annotation, new LinkSpan(annotation.getValue()), new TypefaceSpan("sans-serif-medium"));
-                }
-            }
-            return spannableString;
+        TypefaceSpan typefaceSpan;
+        if (!(charSequence instanceof Spanned)) {
+            return charSequence;
         }
-        return charSequence;
+        SpannableString spannableString = new SpannableString(charSequence);
+        for (Annotation annotation : (Annotation[]) spannableString.getSpans(0, spannableString.length(), Annotation.class)) {
+            String key = annotation.getKey();
+            if ("textAppearance".equals(key)) {
+                int identifier = context.getResources().getIdentifier(annotation.getValue(), "style", context.getPackageName());
+                if (identifier == 0) {
+                    Log.w("RichTextView", "Cannot find resource: " + identifier);
+                }
+                SpanHelper.replaceSpan(spannableString, annotation, new TextAppearanceSpan(context, identifier));
+            } else if ("link".equals(key)) {
+                LinkSpan linkSpan = new LinkSpan(annotation.getValue());
+                if (spanTypeface != null) {
+                    typefaceSpan = new TypefaceSpan(spanTypeface);
+                } else {
+                    typefaceSpan = new TypefaceSpan("sans-serif-medium");
+                }
+                SpanHelper.replaceSpan(spannableString, annotation, linkSpan, typefaceSpan);
+            }
+        }
+        return spannableString;
     }
 
     public RichTextView(Context context) {
@@ -57,15 +68,18 @@ public class RichTextView extends AppCompatTextView implements LinkSpan.OnLinkCl
     }
 
     private void init() {
-        if (isInEditMode()) {
-            return;
+        if (!isInEditMode()) {
+            LinkAccessibilityHelper linkAccessibilityHelper = new LinkAccessibilityHelper((TextView) this);
+            this.accessibilityHelper = linkAccessibilityHelper;
+            ViewCompat.setAccessibilityDelegate(this, linkAccessibilityHelper);
         }
-        LinkAccessibilityHelper linkAccessibilityHelper = new LinkAccessibilityHelper(this);
-        this.accessibilityHelper = linkAccessibilityHelper;
-        ViewCompat.setAccessibilityDelegate(this, linkAccessibilityHelper);
     }
 
-    @Override // android.widget.TextView
+    @TargetApi(28)
+    public void setSpanTypeface(Typeface typeface) {
+        spanTypeface = typeface;
+    }
+
     public void setText(CharSequence charSequence, TextView.BufferType bufferType) {
         CharSequence richText = getRichText(getContext(), charSequence);
         super.setText(richText, bufferType);
@@ -73,20 +87,20 @@ public class RichTextView extends AppCompatTextView implements LinkSpan.OnLinkCl
         if (hasLinks) {
             setMovementMethod(TouchableMovementMethod.TouchableLinkMovementMethod.getInstance());
         } else {
-            setMovementMethod(null);
+            setMovementMethod((MovementMethod) null);
         }
         setFocusable(hasLinks);
-        if (Build.VERSION.SDK_INT >= 25) {
-            setRevealOnFocusHint(false);
-            setFocusableInTouchMode(hasLinks);
-        }
+        setRevealOnFocusHint(false);
+        setFocusableInTouchMode(hasLinks);
     }
 
     private boolean hasLinks(CharSequence charSequence) {
-        return (charSequence instanceof Spanned) && ((ClickableSpan[]) ((Spanned) charSequence).getSpans(0, charSequence.length(), ClickableSpan.class)).length > 0;
+        if (!(charSequence instanceof Spanned) || ((ClickableSpan[]) ((Spanned) charSequence).getSpans(0, charSequence.length(), ClickableSpan.class)).length <= 0) {
+            return false;
+        }
+        return true;
     }
 
-    @Override // android.widget.TextView, android.view.View
     public boolean onTouchEvent(MotionEvent motionEvent) {
         boolean onTouchEvent = super.onTouchEvent(motionEvent);
         MovementMethod movementMethod = getMovementMethod();
@@ -99,8 +113,8 @@ public class RichTextView extends AppCompatTextView implements LinkSpan.OnLinkCl
         return onTouchEvent;
     }
 
-    @Override // android.view.View
-    protected boolean dispatchHoverEvent(MotionEvent motionEvent) {
+    /* access modifiers changed from: protected */
+    public boolean dispatchHoverEvent(MotionEvent motionEvent) {
         LinkAccessibilityHelper linkAccessibilityHelper = this.accessibilityHelper;
         if (linkAccessibilityHelper == null || !linkAccessibilityHelper.dispatchHoverEvent(motionEvent)) {
             return super.dispatchHoverEvent(motionEvent);
@@ -108,34 +122,29 @@ public class RichTextView extends AppCompatTextView implements LinkSpan.OnLinkCl
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.appcompat.widget.AppCompatTextView, android.widget.TextView, android.view.View
+    /* access modifiers changed from: protected */
     public void drawableStateChanged() {
-        Drawable[] compoundDrawablesRelative;
         super.drawableStateChanged();
-        if (Build.VERSION.SDK_INT >= 17) {
-            int[] drawableState = getDrawableState();
-            for (Drawable drawable : getCompoundDrawablesRelative()) {
-                if (drawable != null && drawable.setState(drawableState)) {
-                    invalidateDrawable(drawable);
-                }
+        int[] drawableState = getDrawableState();
+        for (Drawable drawable : getCompoundDrawablesRelative()) {
+            if (drawable != null && drawable.setState(drawableState)) {
+                invalidateDrawable(drawable);
             }
         }
     }
 
-    public void setOnLinkClickListener(LinkSpan.OnLinkClickListener onLinkClickListener) {
-        this.onLinkClickListener = onLinkClickListener;
+    public void setOnLinkClickListener(LinkSpan.OnLinkClickListener onLinkClickListener2) {
+        this.onLinkClickListener = onLinkClickListener2;
     }
 
     public LinkSpan.OnLinkClickListener getOnLinkClickListener() {
         return this.onLinkClickListener;
     }
 
-    @Override // com.google.android.setupdesign.span.LinkSpan.OnLinkClickListener
     public boolean onLinkClick(LinkSpan linkSpan) {
-        LinkSpan.OnLinkClickListener onLinkClickListener = this.onLinkClickListener;
-        if (onLinkClickListener != null) {
-            return onLinkClickListener.onLinkClick(linkSpan);
+        LinkSpan.OnLinkClickListener onLinkClickListener2 = this.onLinkClickListener;
+        if (onLinkClickListener2 != null) {
+            return onLinkClickListener2.onLinkClick(linkSpan);
         }
         return false;
     }

@@ -10,7 +10,7 @@ import androidx.slice.view.R$dimen;
 import androidx.slice.view.R$styleable;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class SliceStyle {
     private final Context mContext;
     private final int mDefaultRowStyleRes;
@@ -45,16 +45,16 @@ public class SliceStyle {
     private final int mRowTextWithSelectionHeight;
     private final int mSubtitleColor;
     private final int mSubtitleSize;
-    private int mTintColor;
+    private int mTintColor = -1;
     private final int mTitleColor;
     private final int mTitleSize;
     private final int mVerticalGridTextPadding;
     private final int mVerticalHeaderTextPadding;
     private final int mVerticalTextPadding;
 
-    public SliceStyle(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        this.mTintColor = -1;
-        TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(attrs, R$styleable.SliceView, defStyleAttr, defStyleRes);
+    /* JADX INFO: finally extract failed */
+    public SliceStyle(Context context, AttributeSet attributeSet, int i, int i2) {
+        TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(attributeSet, R$styleable.SliceView, i, i2);
         try {
             int color = obtainStyledAttributes.getColor(R$styleable.SliceView_tintColor, -1);
             if (color == -1) {
@@ -71,17 +71,17 @@ public class SliceStyle {
             this.mVerticalTextPadding = (int) obtainStyledAttributes.getDimension(R$styleable.SliceView_textVerticalPadding, 0.0f);
             this.mGridTitleSize = (int) obtainStyledAttributes.getDimension(R$styleable.SliceView_gridTitleSize, 0.0f);
             this.mGridSubtitleSize = (int) obtainStyledAttributes.getDimension(R$styleable.SliceView_gridSubtitleSize, 0.0f);
-            this.mVerticalGridTextPadding = (int) obtainStyledAttributes.getDimension(R$styleable.SliceView_gridTextVerticalPadding, context.getResources().getDimensionPixelSize(R$dimen.abc_slice_grid_text_inner_padding));
+            this.mVerticalGridTextPadding = (int) obtainStyledAttributes.getDimension(R$styleable.SliceView_gridTextVerticalPadding, (float) context.getResources().getDimensionPixelSize(R$dimen.abc_slice_grid_text_inner_padding));
             this.mGridTopPadding = (int) obtainStyledAttributes.getDimension(R$styleable.SliceView_gridTopPadding, 0.0f);
             this.mGridBottomPadding = (int) obtainStyledAttributes.getDimension(R$styleable.SliceView_gridBottomPadding, 0.0f);
             this.mDefaultRowStyleRes = obtainStyledAttributes.getResourceId(R$styleable.SliceView_rowStyle, 0);
             Resources resources = context.getResources();
-            int i = R$dimen.abc_slice_row_min_height;
-            this.mRowMinHeight = (int) obtainStyledAttributes.getDimension(R$styleable.SliceView_rowMinHeight, resources.getDimensionPixelSize(i));
-            this.mRowMaxHeight = (int) obtainStyledAttributes.getDimension(R$styleable.SliceView_rowMaxHeight, context.getResources().getDimensionPixelSize(R$dimen.abc_slice_row_max_height));
-            this.mRowRangeHeight = (int) obtainStyledAttributes.getDimension(R$styleable.SliceView_rowRangeHeight, context.getResources().getDimensionPixelSize(R$dimen.abc_slice_row_range_height));
-            this.mRowSingleTextWithRangeHeight = (int) obtainStyledAttributes.getDimension(R$styleable.SliceView_rowRangeSingleTextHeight, context.getResources().getDimensionPixelSize(R$dimen.abc_slice_row_range_single_text_height));
-            this.mRowInlineRangeHeight = (int) obtainStyledAttributes.getDimension(R$styleable.SliceView_rowInlineRangeHeight, context.getResources().getDimensionPixelSize(R$dimen.abc_slice_row_range_inline_height));
+            int i3 = R$dimen.abc_slice_row_min_height;
+            this.mRowMinHeight = (int) obtainStyledAttributes.getDimension(R$styleable.SliceView_rowMinHeight, (float) resources.getDimensionPixelSize(i3));
+            this.mRowMaxHeight = (int) obtainStyledAttributes.getDimension(R$styleable.SliceView_rowMaxHeight, (float) context.getResources().getDimensionPixelSize(R$dimen.abc_slice_row_max_height));
+            this.mRowRangeHeight = (int) obtainStyledAttributes.getDimension(R$styleable.SliceView_rowRangeHeight, (float) context.getResources().getDimensionPixelSize(R$dimen.abc_slice_row_range_height));
+            this.mRowSingleTextWithRangeHeight = (int) obtainStyledAttributes.getDimension(R$styleable.SliceView_rowRangeSingleTextHeight, (float) context.getResources().getDimensionPixelSize(R$dimen.abc_slice_row_range_single_text_height));
+            this.mRowInlineRangeHeight = (int) obtainStyledAttributes.getDimension(R$styleable.SliceView_rowInlineRangeHeight, (float) context.getResources().getDimensionPixelSize(R$dimen.abc_slice_row_range_inline_height));
             this.mExpandToAvailableHeight = obtainStyledAttributes.getBoolean(R$styleable.SliceView_expandToAvailableHeight, false);
             this.mHideHeaderRow = obtainStyledAttributes.getBoolean(R$styleable.SliceView_hideHeaderRow, false);
             this.mContext = context;
@@ -99,7 +99,7 @@ public class SliceStyle {
             this.mGridRawImageTextHeight = resources2.getDimensionPixelSize(R$dimen.abc_slice_grid_raw_image_text_offset);
             this.mGridMinHeight = resources2.getDimensionPixelSize(R$dimen.abc_slice_grid_min_height);
             this.mGridMaxHeight = resources2.getDimensionPixelSize(R$dimen.abc_slice_grid_max_height);
-            this.mListMinScrollHeight = resources2.getDimensionPixelSize(i);
+            this.mListMinScrollHeight = resources2.getDimensionPixelSize(i3);
             this.mListLargeHeight = resources2.getDimensionPixelSize(R$dimen.abc_slice_large_height);
         } catch (Throwable th) {
             obtainStyledAttributes.recycle();
@@ -111,8 +111,8 @@ public class SliceStyle {
         return this.mRowMaxHeight;
     }
 
-    public void setTintColor(int tint) {
-        this.mTintColor = tint;
+    public void setTintColor(int i) {
+        this.mTintColor = i;
     }
 
     public int getTintColor() {
@@ -175,7 +175,7 @@ public class SliceStyle {
         RowStyleFactory rowStyleFactory;
         int rowStyleRes;
         int i = this.mDefaultRowStyleRes;
-        if (sliceItem != null && (rowStyleFactory = this.mRowStyleFactory) != null && (rowStyleRes = rowStyleFactory.getRowStyleRes(sliceItem)) != 0) {
+        if (!(sliceItem == null || (rowStyleFactory = this.mRowStyleFactory) == null || (rowStyleRes = rowStyleFactory.getRowStyleRes(sliceItem)) == 0)) {
             i = rowStyleRes;
         }
         if (i == 0) {
@@ -218,64 +218,54 @@ public class SliceStyle {
         return this.mImageCornerRadius;
     }
 
-    public int getRowHeight(RowContent row, SliceViewPolicy policy) {
+    public int getRowHeight(RowContent rowContent, SliceViewPolicy sliceViewPolicy) {
         int i;
         int i2;
-        int maxSmallHeight = policy.getMaxSmallHeight() > 0 ? policy.getMaxSmallHeight() : this.mRowMaxHeight;
-        if (row.getRange() == null && row.getSelection() == null && policy.getMode() != 2) {
+        int i3;
+        int maxSmallHeight = sliceViewPolicy.getMaxSmallHeight() > 0 ? sliceViewPolicy.getMaxSmallHeight() : this.mRowMaxHeight;
+        if (rowContent.getRange() == null && rowContent.getSelection() == null && sliceViewPolicy.getMode() != 2) {
             return maxSmallHeight;
         }
-        if (row.getRange() != null) {
-            if (row.getStartItem() == null) {
-                if (row.getLineCount() == 0) {
-                    i = 0;
-                } else if (row.getLineCount() > 1) {
-                    i = this.mRowTextWithRangeHeight;
-                } else {
-                    i = this.mRowSingleTextWithRangeHeight;
-                }
-                i2 = this.mRowRangeHeight;
-            } else {
+        if (rowContent.getRange() != null) {
+            if (rowContent.getStartItem() != null) {
                 return this.mRowInlineRangeHeight;
             }
-        } else if (row.getSelection() == null) {
-            return (row.getLineCount() > 1 || row.getIsHeader()) ? maxSmallHeight : this.mRowMinHeight;
+            if (rowContent.getLineCount() == 0) {
+                i = 0;
+            } else if (rowContent.getLineCount() > 1) {
+                i = this.mRowTextWithRangeHeight;
+            } else {
+                i = this.mRowSingleTextWithRangeHeight;
+            }
+            i2 = this.mRowRangeHeight;
+        } else if (rowContent.getSelection() == null) {
+            return (rowContent.getLineCount() > 1 || rowContent.getIsHeader()) ? maxSmallHeight : this.mRowMinHeight;
         } else {
-            i = row.getLineCount() > 1 ? this.mRowTextWithSelectionHeight : this.mRowSingleTextWithSelectionHeight;
+            if (rowContent.getLineCount() > 1) {
+                i3 = this.mRowTextWithSelectionHeight;
+            } else {
+                i3 = this.mRowSingleTextWithSelectionHeight;
+            }
             i2 = this.mRowSelectionHeight;
         }
         return i + i2;
     }
 
-    public int getGridHeight(GridContent grid, SliceViewPolicy policy) {
+    public int getGridHeight(GridContent gridContent, SliceViewPolicy sliceViewPolicy) {
         int i;
         int i2 = 0;
         int i3 = 1;
-        boolean z = policy.getMode() == 1;
-        if (!grid.isValid()) {
+        boolean z = sliceViewPolicy.getMode() == 1;
+        if (!gridContent.isValid()) {
             return 0;
         }
-        int largestImageMode = grid.getLargestImageMode();
-        if (grid.isAllImages()) {
-            if (grid.getGridContent().size() == 1) {
-                if (z) {
-                    i = this.mGridBigPicMinHeight;
-                } else {
-                    i = this.mGridBigPicMaxHeight;
-                }
-            } else if (largestImageMode == 0) {
-                i = this.mGridMinHeight;
-            } else if (largestImageMode == 4) {
-                i = grid.getFirstImageSize(this.mContext).y;
-            } else {
-                i = this.mGridAllImagesHeight;
-            }
-        } else {
-            boolean z2 = grid.getMaxCellLineCount() > 1;
-            boolean hasImage = grid.hasImage();
+        int largestImageMode = gridContent.getLargestImageMode();
+        if (!gridContent.isAllImages()) {
+            boolean z2 = gridContent.getMaxCellLineCount() > 1;
+            boolean hasImage = gridContent.hasImage();
             boolean z3 = largestImageMode == 0 || largestImageMode == 5;
             if (largestImageMode == 4) {
-                int i4 = grid.getFirstImageSize(this.mContext).y;
+                int i4 = gridContent.getFirstImageSize(this.mContext).y;
                 if (z2) {
                     i3 = 2;
                 }
@@ -291,26 +281,43 @@ public class SliceStyle {
             } else {
                 i = this.mGridMinHeight;
             }
+        } else if (gridContent.getGridContent().size() == 1) {
+            if (z) {
+                i = this.mGridBigPicMinHeight;
+            } else {
+                i = this.mGridBigPicMaxHeight;
+            }
+        } else if (largestImageMode == 0) {
+            i = this.mGridMinHeight;
+        } else if (largestImageMode == 4) {
+            i = gridContent.getFirstImageSize(this.mContext).y;
+        } else {
+            i = this.mGridAllImagesHeight;
         }
-        int i5 = (!grid.isAllImages() || grid.getRowIndex() != 0) ? 0 : this.mGridTopPadding;
-        if (grid.isAllImages() && grid.getIsLastIndex()) {
+        int i5 = (!gridContent.isAllImages() || gridContent.getRowIndex() != 0) ? 0 : this.mGridTopPadding;
+        if (gridContent.isAllImages() && gridContent.getIsLastIndex()) {
             i2 = this.mGridBottomPadding;
         }
         return i + i5 + i2;
     }
 
-    public int getListHeight(ListContent list, SliceViewPolicy policy) {
+    public int getListHeight(ListContent listContent, SliceViewPolicy sliceViewPolicy) {
+        int i;
         boolean z = true;
-        if (policy.getMode() == 1) {
-            return list.getHeader().getHeight(this, policy);
+        if (sliceViewPolicy.getMode() == 1) {
+            return listContent.getHeader().getHeight(this, sliceViewPolicy);
         }
-        int maxHeight = policy.getMaxHeight();
-        boolean isScrollable = policy.isScrollable();
-        int listItemsHeight = getListItemsHeight(list.getRowItems(), policy);
+        int maxHeight = sliceViewPolicy.getMaxHeight();
+        boolean isScrollable = sliceViewPolicy.isScrollable();
+        int listItemsHeight = getListItemsHeight(listContent.getRowItems(), sliceViewPolicy);
         if (maxHeight > 0) {
-            maxHeight = Math.max(list.getHeader().getHeight(this, policy), maxHeight);
+            maxHeight = Math.max(listContent.getHeader().getHeight(this, sliceViewPolicy), maxHeight);
         }
-        int i = maxHeight > 0 ? maxHeight : this.mListLargeHeight;
+        if (maxHeight > 0) {
+            i = maxHeight;
+        } else {
+            i = this.mListLargeHeight;
+        }
         if (listItemsHeight - i < this.mListMinScrollHeight) {
             z = false;
         }
@@ -319,75 +326,78 @@ public class SliceStyle {
         } else if (maxHeight > 0) {
             listItemsHeight = Math.min(i, listItemsHeight);
         }
-        return !isScrollable ? getListItemsHeight(getListItemsForNonScrollingList(list, listItemsHeight, policy).getDisplayedItems(), policy) : listItemsHeight;
+        return !isScrollable ? getListItemsHeight(getListItemsForNonScrollingList(listContent, listItemsHeight, sliceViewPolicy).getDisplayedItems(), sliceViewPolicy) : listItemsHeight;
     }
 
-    public int getListItemsHeight(List<SliceContent> listItems, SliceViewPolicy policy) {
-        if (listItems == null) {
+    public int getListItemsHeight(List<SliceContent> list, SliceViewPolicy sliceViewPolicy) {
+        if (list == null) {
             return 0;
         }
         int i = 0;
-        for (int i2 = 0; i2 < listItems.size(); i2++) {
-            SliceContent sliceContent = listItems.get(i2);
-            if (i2 != 0 || !shouldSkipFirstListItem(listItems)) {
-                i += sliceContent.getHeight(this, policy);
+        for (int i2 = 0; i2 < list.size(); i2++) {
+            SliceContent sliceContent = list.get(i2);
+            if (i2 != 0 || !shouldSkipFirstListItem(list)) {
+                i += sliceContent.getHeight(this, sliceViewPolicy);
             }
         }
         return i;
     }
 
-    public DisplayedListItems getListItemsForNonScrollingList(ListContent list, int availableHeight, SliceViewPolicy policy) {
-        int i;
+    public DisplayedListItems getListItemsForNonScrollingList(ListContent listContent, int i, SliceViewPolicy sliceViewPolicy) {
+        int i2;
         ArrayList arrayList = new ArrayList();
-        if (list.getRowItems() == null || list.getRowItems().size() == 0) {
+        if (listContent.getRowItems() == null || listContent.getRowItems().size() == 0) {
             return new DisplayedListItems(arrayList, 0);
         }
-        boolean shouldSkipFirstListItem = shouldSkipFirstListItem(list.getRowItems());
-        int size = list.getRowItems().size();
-        int i2 = 0;
+        boolean shouldSkipFirstListItem = shouldSkipFirstListItem(listContent.getRowItems());
+        int size = listContent.getRowItems().size();
         int i3 = 0;
+        int i4 = 0;
         while (true) {
-            if (i2 >= size) {
-                i = 0;
+            if (i3 >= size) {
+                i2 = 0;
                 break;
             }
-            SliceContent sliceContent = list.getRowItems().get(i2);
-            if (i2 != 0 || !shouldSkipFirstListItem) {
-                int height = sliceContent.getHeight(this, policy);
-                if (availableHeight > 0 && i3 + height > availableHeight) {
-                    i = size - i2;
+            SliceContent sliceContent = listContent.getRowItems().get(i3);
+            if (i3 != 0 || !shouldSkipFirstListItem) {
+                int height = sliceContent.getHeight(this, sliceViewPolicy);
+                if (i > 0 && i4 + height > i) {
+                    i2 = size - i3;
                     break;
                 }
-                i3 += height;
+                i4 += height;
                 arrayList.add(sliceContent);
             }
-            i2++;
+            i3++;
         }
-        int i4 = shouldSkipFirstListItem ? 1 : 2;
-        if (list.getSeeMoreItem() != null && arrayList.size() >= i4 && i > 0) {
-            int height2 = i3 + list.getSeeMoreItem().getHeight(this, policy);
-            while (height2 > availableHeight && arrayList.size() >= i4) {
+        int i5 = shouldSkipFirstListItem ? 1 : 2;
+        if (listContent.getSeeMoreItem() != null && arrayList.size() >= i5 && i2 > 0) {
+            int height2 = i4 + listContent.getSeeMoreItem().getHeight(this, sliceViewPolicy);
+            while (height2 > i && arrayList.size() >= i5) {
                 int size2 = arrayList.size() - 1;
-                height2 -= ((SliceContent) arrayList.get(size2)).getHeight(this, policy);
+                height2 -= ((SliceContent) arrayList.get(size2)).getHeight(this, sliceViewPolicy);
                 arrayList.remove(size2);
-                i++;
+                i2++;
             }
-            if (arrayList.size() >= i4) {
-                arrayList.add(list.getSeeMoreItem());
+            if (arrayList.size() >= i5) {
+                arrayList.add(listContent.getSeeMoreItem());
             }
         }
         if (arrayList.size() == 0) {
-            arrayList.add(list.getRowItems().get(0));
+            arrayList.add(listContent.getRowItems().get(0));
         }
-        return new DisplayedListItems(arrayList, i);
+        return new DisplayedListItems(arrayList, i2);
     }
 
-    public List<SliceContent> getListItemsToDisplay(ListContent list) {
-        ArrayList<SliceContent> rowItems = list.getRowItems();
+    public List<SliceContent> getListItemsToDisplay(ListContent listContent) {
+        ArrayList<SliceContent> rowItems = listContent.getRowItems();
         return (rowItems.size() <= 0 || !shouldSkipFirstListItem(rowItems)) ? rowItems : rowItems.subList(1, rowItems.size());
     }
 
-    private boolean shouldSkipFirstListItem(List<SliceContent> rowItems) {
-        return getHideHeaderRow() && rowItems.size() > 1 && (rowItems.get(0) instanceof RowContent) && ((RowContent) rowItems.get(0)).getIsHeader();
+    private boolean shouldSkipFirstListItem(List<SliceContent> list) {
+        if (!getHideHeaderRow() || list.size() <= 1 || !(list.get(0) instanceof RowContent) || !((RowContent) list.get(0)).getIsHeader()) {
+            return false;
+        }
+        return true;
     }
 }

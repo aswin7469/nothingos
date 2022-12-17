@@ -10,16 +10,14 @@ import com.android.settingslib.core.lifecycle.Lifecycle;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnCreate;
 import com.android.settingslib.core.lifecycle.events.OnSaveInstanceState;
-/* loaded from: classes.dex */
+
 public class ResetAppPrefPreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin, LifecycleObserver, OnCreate, OnSaveInstanceState {
     private ResetAppsHelper mResetAppsHelper;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "reset_app_prefs";
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return true;
     }
@@ -32,7 +30,6 @@ public class ResetAppPrefPreferenceController extends AbstractPreferenceControll
         }
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
         if (!TextUtils.equals(preference.getKey(), getPreferenceKey())) {
             return false;
@@ -41,12 +38,10 @@ public class ResetAppPrefPreferenceController extends AbstractPreferenceControll
         return true;
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnCreate
     public void onCreate(Bundle bundle) {
         this.mResetAppsHelper.onRestoreInstanceState(bundle);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnSaveInstanceState
     public void onSaveInstanceState(Bundle bundle) {
         this.mResetAppsHelper.onSaveInstanceState(bundle);
     }

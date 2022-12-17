@@ -1,18 +1,11 @@
 package com.android.settings.deviceinfo.storage;
 
-import android.os.storage.VolumeInfo;
-import java.util.function.Predicate;
-/* loaded from: classes.dex */
-public final /* synthetic */ class StorageUtils$$ExternalSyntheticLambda5 implements Predicate {
-    public static final /* synthetic */ StorageUtils$$ExternalSyntheticLambda5 INSTANCE = new StorageUtils$$ExternalSyntheticLambda5();
+import android.os.storage.VolumeRecord;
+import java.util.function.Function;
 
-    private /* synthetic */ StorageUtils$$ExternalSyntheticLambda5() {
-    }
-
-    @Override // java.util.function.Predicate
-    public final boolean test(Object obj) {
-        boolean isStorageSettingsInterestedVolume;
-        isStorageSettingsInterestedVolume = StorageUtils.isStorageSettingsInterestedVolume((VolumeInfo) obj);
-        return isStorageSettingsInterestedVolume;
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class StorageUtils$$ExternalSyntheticLambda5 implements Function {
+    public final Object apply(Object obj) {
+        return StorageUtils.lambda$getAllStorageEntries$5((VolumeRecord) obj);
     }
 }

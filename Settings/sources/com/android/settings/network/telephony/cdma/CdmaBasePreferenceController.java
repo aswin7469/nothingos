@@ -9,53 +9,40 @@ import androidx.preference.PreferenceScreen;
 import com.android.settings.network.AllowedNetworkTypesListener;
 import com.android.settings.network.telephony.MobileNetworkUtils;
 import com.android.settings.network.telephony.TelephonyBasePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnStart;
 import com.android.settingslib.core.lifecycle.events.OnStop;
-/* loaded from: classes.dex */
+
 public abstract class CdmaBasePreferenceController extends TelephonyBasePreferenceController implements LifecycleObserver, OnStart, OnStop {
     private AllowedNetworkTypesListener mAllowedNetworkTypesListener;
     protected Preference mPreference;
     protected PreferenceManager mPreferenceManager;
     protected TelephonyManager mTelephonyManager;
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -65,7 +52,6 @@ public abstract class CdmaBasePreferenceController extends TelephonyBasePreferen
         this.mSubId = -1;
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStart
     public void onStart() {
         AllowedNetworkTypesListener allowedNetworkTypesListener = this.mAllowedNetworkTypesListener;
         if (allowedNetworkTypesListener != null) {
@@ -73,7 +59,6 @@ public abstract class CdmaBasePreferenceController extends TelephonyBasePreferen
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStop
     public void onStop() {
         AllowedNetworkTypesListener allowedNetworkTypesListener = this.mAllowedNetworkTypesListener;
         if (allowedNetworkTypesListener != null) {
@@ -81,7 +66,6 @@ public abstract class CdmaBasePreferenceController extends TelephonyBasePreferen
         }
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyBasePreferenceController, com.android.settings.network.telephony.TelephonyAvailabilityCallback
     public int getAvailabilityStatus(int i) {
         return MobileNetworkUtils.isCdmaOptions(this.mContext, i) ? 0 : 2;
     }
@@ -90,23 +74,18 @@ public abstract class CdmaBasePreferenceController extends TelephonyBasePreferen
         this.mPreferenceManager = preferenceManager;
         this.mSubId = i;
         this.mTelephonyManager = ((TelephonyManager) this.mContext.getSystemService(TelephonyManager.class)).createForSubscriptionId(this.mSubId);
-        if (this.mAllowedNetworkTypesListener == null) {
+        if (getAvailabilityStatus(this.mSubId) == 0 && this.mAllowedNetworkTypesListener == null) {
             AllowedNetworkTypesListener allowedNetworkTypesListener = new AllowedNetworkTypesListener(this.mContext.getMainExecutor());
             this.mAllowedNetworkTypesListener = allowedNetworkTypesListener;
-            allowedNetworkTypesListener.setAllowedNetworkTypesListener(new AllowedNetworkTypesListener.OnAllowedNetworkTypesListener() { // from class: com.android.settings.network.telephony.cdma.CdmaBasePreferenceController$$ExternalSyntheticLambda0
-                @Override // com.android.settings.network.AllowedNetworkTypesListener.OnAllowedNetworkTypesListener
-                public final void onAllowedNetworkTypesChanged() {
-                    CdmaBasePreferenceController.this.lambda$init$0();
-                }
-            });
+            allowedNetworkTypesListener.setAllowedNetworkTypesListener(new CdmaBasePreferenceController$$ExternalSyntheticLambda0(this));
         }
     }
 
     public void init(int i) {
-        init(null, i);
+        init((PreferenceManager) null, i);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     /* renamed from: updatePreference */
     public void lambda$init$0() {
         Preference preference = this.mPreference;
@@ -115,7 +94,6 @@ public abstract class CdmaBasePreferenceController extends TelephonyBasePreferen
         }
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         Preference findPreference = preferenceScreen.findPreference(getPreferenceKey());

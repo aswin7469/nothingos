@@ -4,44 +4,44 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.util.AttributeSet;
 import androidx.core.content.ContextCompat;
-/* loaded from: classes.dex */
+
 public class PreferenceManager {
     private Context mContext;
     private SharedPreferences.Editor mEditor;
+    private long mNextId = 0;
     private boolean mNoCommit;
     private OnDisplayPreferenceDialogListener mOnDisplayPreferenceDialogListener;
     private OnNavigateToScreenListener mOnNavigateToScreenListener;
     private OnPreferenceTreeClickListener mOnPreferenceTreeClickListener;
     private PreferenceComparisonCallback mPreferenceComparisonCallback;
-    private PreferenceDataStore mPreferenceDataStore;
     private PreferenceScreen mPreferenceScreen;
     private SharedPreferences mSharedPreferences;
     private int mSharedPreferencesMode;
     private String mSharedPreferencesName;
-    private long mNextId = 0;
     private int mStorage = 0;
 
-    /* loaded from: classes.dex */
     public interface OnDisplayPreferenceDialogListener {
         void onDisplayPreferenceDialog(Preference preference);
     }
 
-    /* loaded from: classes.dex */
     public interface OnNavigateToScreenListener {
         void onNavigateToScreen(PreferenceScreen preferenceScreen);
     }
 
-    /* loaded from: classes.dex */
     public interface OnPreferenceTreeClickListener {
         boolean onPreferenceTreeClick(Preference preference);
     }
 
-    /* loaded from: classes.dex */
     public static abstract class PreferenceComparisonCallback {
         public abstract boolean arePreferenceContentsTheSame(Preference preference, Preference preference2);
 
         public abstract boolean arePreferenceItemsTheSame(Preference preference, Preference preference2);
+    }
+
+    public PreferenceDataStore getPreferenceDataStore() {
+        return null;
     }
 
     public PreferenceManager(Context context) {
@@ -55,19 +55,19 @@ public class PreferenceManager {
 
     public PreferenceScreen inflateFromResource(Context context, int i, PreferenceScreen preferenceScreen) {
         setNoCommit(true);
-        PreferenceScreen preferenceScreen2 = (PreferenceScreen) new PreferenceInflater(context, this).inflate(i, preferenceScreen);
+        PreferenceScreen preferenceScreen2 = (PreferenceScreen) new PreferenceInflater(context, this).inflate(i, (PreferenceGroup) preferenceScreen);
         preferenceScreen2.onAttachedToHierarchy(this);
         setNoCommit(false);
         return preferenceScreen2;
     }
 
     public PreferenceScreen createPreferenceScreen(Context context) {
-        PreferenceScreen preferenceScreen = new PreferenceScreen(context, null);
+        PreferenceScreen preferenceScreen = new PreferenceScreen(context, (AttributeSet) null);
         preferenceScreen.onAttachedToHierarchy(this);
         return preferenceScreen;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public long getNextId() {
         long j;
         synchronized (this) {
@@ -82,20 +82,16 @@ public class PreferenceManager {
         this.mSharedPreferences = null;
     }
 
-    public PreferenceDataStore getPreferenceDataStore() {
-        return this.mPreferenceDataStore;
-    }
-
     public SharedPreferences getSharedPreferences() {
-        Context createDeviceProtectedStorageContext;
+        Context context;
         getPreferenceDataStore();
         if (this.mSharedPreferences == null) {
-            if (this.mStorage == 1) {
-                createDeviceProtectedStorageContext = ContextCompat.createDeviceProtectedStorageContext(this.mContext);
+            if (this.mStorage != 1) {
+                context = this.mContext;
             } else {
-                createDeviceProtectedStorageContext = this.mContext;
+                context = ContextCompat.createDeviceProtectedStorageContext(this.mContext);
             }
-            this.mSharedPreferences = createDeviceProtectedStorageContext.getSharedPreferences(this.mSharedPreferencesName, this.mSharedPreferencesMode);
+            this.mSharedPreferences = context.getSharedPreferences(this.mSharedPreferencesName, this.mSharedPreferencesMode);
         }
         return this.mSharedPreferences;
     }
@@ -106,14 +102,14 @@ public class PreferenceManager {
 
     public boolean setPreferences(PreferenceScreen preferenceScreen) {
         PreferenceScreen preferenceScreen2 = this.mPreferenceScreen;
-        if (preferenceScreen != preferenceScreen2) {
-            if (preferenceScreen2 != null) {
-                preferenceScreen2.onDetached();
-            }
-            this.mPreferenceScreen = preferenceScreen;
-            return true;
+        if (preferenceScreen == preferenceScreen2) {
+            return false;
         }
-        return false;
+        if (preferenceScreen2 != null) {
+            preferenceScreen2.onDetached();
+        }
+        this.mPreferenceScreen = preferenceScreen;
+        return true;
     }
 
     public <T extends Preference> T findPreference(CharSequence charSequence) {
@@ -121,21 +117,21 @@ public class PreferenceManager {
         if (preferenceScreen == null) {
             return null;
         }
-        return (T) preferenceScreen.findPreference(charSequence);
+        return preferenceScreen.findPreference(charSequence);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public SharedPreferences.Editor getEditor() {
-        if (this.mNoCommit) {
-            if (this.mEditor == null) {
-                this.mEditor = getSharedPreferences().edit();
-            }
-            return this.mEditor;
+        if (!this.mNoCommit) {
+            return getSharedPreferences().edit();
         }
-        return getSharedPreferences().edit();
+        if (this.mEditor == null) {
+            this.mEditor = getSharedPreferences().edit();
+        }
+        return this.mEditor;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean shouldCommit() {
         return !this.mNoCommit;
     }
@@ -187,14 +183,11 @@ public class PreferenceManager {
         return this.mOnNavigateToScreenListener;
     }
 
-    /* loaded from: classes.dex */
     public static class SimplePreferenceComparisonCallback extends PreferenceComparisonCallback {
-        @Override // androidx.preference.PreferenceManager.PreferenceComparisonCallback
         public boolean arePreferenceItemsTheSame(Preference preference, Preference preference2) {
             return preference.getId() == preference2.getId();
         }
 
-        @Override // androidx.preference.PreferenceManager.PreferenceComparisonCallback
         public boolean arePreferenceContentsTheSame(Preference preference, Preference preference2) {
             if (preference.getClass() != preference2.getClass()) {
                 return false;
@@ -210,7 +203,10 @@ public class PreferenceManager {
             if ((preference instanceof TwoStatePreference) && ((TwoStatePreference) preference).isChecked() != ((TwoStatePreference) preference2).isChecked()) {
                 return false;
             }
-            return !(preference instanceof DropDownPreference) || preference == preference2;
+            if (!(preference instanceof DropDownPreference) || preference == preference2) {
+                return true;
+            }
+            return false;
         }
     }
 }

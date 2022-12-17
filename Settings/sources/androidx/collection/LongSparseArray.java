@@ -1,5 +1,5 @@
 package androidx.collection;
-/* loaded from: classes.dex */
+
 public class LongSparseArray<E> implements Cloneable {
     private static final Object DELETED = new Object();
     private boolean mGarbage;
@@ -23,8 +23,7 @@ public class LongSparseArray<E> implements Cloneable {
         this.mValues = new Object[idealLongArraySize];
     }
 
-    /* renamed from: clone */
-    public LongSparseArray<E> m66clone() {
+    public LongSparseArray<E> clone() {
         try {
             LongSparseArray<E> longSparseArray = (LongSparseArray) super.clone();
             longSparseArray.mKeys = (long[]) this.mKeys.clone();
@@ -36,32 +35,55 @@ public class LongSparseArray<E> implements Cloneable {
     }
 
     public E get(long j) {
-        return get(j, null);
+        return get(j, (Object) null);
     }
 
-    public E get(long j, E e) {
-        int binarySearch = ContainerHelpers.binarySearch(this.mKeys, this.mSize, j);
-        if (binarySearch >= 0) {
-            Object[] objArr = this.mValues;
-            if (objArr[binarySearch] != DELETED) {
-                return (E) objArr[binarySearch];
-            }
-        }
-        return e;
+    /* JADX WARNING: Code restructure failed: missing block: B:2:0x000a, code lost:
+        r2 = r2.mValues[r3];
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public E get(long r3, E r5) {
+        /*
+            r2 = this;
+            long[] r0 = r2.mKeys
+            int r1 = r2.mSize
+            int r3 = androidx.collection.ContainerHelpers.binarySearch((long[]) r0, (int) r1, (long) r3)
+            if (r3 < 0) goto L_0x0014
+            java.lang.Object[] r2 = r2.mValues
+            r2 = r2[r3]
+            java.lang.Object r3 = DELETED
+            if (r2 != r3) goto L_0x0013
+            goto L_0x0014
+        L_0x0013:
+            return r2
+        L_0x0014:
+            return r5
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.collection.LongSparseArray.get(long, java.lang.Object):java.lang.Object");
     }
 
-    public void remove(long j) {
-        int binarySearch = ContainerHelpers.binarySearch(this.mKeys, this.mSize, j);
-        if (binarySearch >= 0) {
-            Object[] objArr = this.mValues;
-            Object obj = objArr[binarySearch];
-            Object obj2 = DELETED;
-            if (obj == obj2) {
-                return;
-            }
-            objArr[binarySearch] = obj2;
-            this.mGarbage = true;
-        }
+    /* JADX WARNING: Code restructure failed: missing block: B:2:0x000a, code lost:
+        r4 = r2.mValues;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void remove(long r3) {
+        /*
+            r2 = this;
+            long[] r0 = r2.mKeys
+            int r1 = r2.mSize
+            int r3 = androidx.collection.ContainerHelpers.binarySearch((long[]) r0, (int) r1, (long) r3)
+            if (r3 < 0) goto L_0x0017
+            java.lang.Object[] r4 = r2.mValues
+            r0 = r4[r3]
+            java.lang.Object r1 = DELETED
+            if (r0 == r1) goto L_0x0017
+            r4[r3] = r1
+            r3 = 1
+            r2.mGarbage = r3
+        L_0x0017:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.collection.LongSparseArray.remove(long):void");
     }
 
     public void removeAt(int i) {
@@ -74,7 +96,8 @@ public class LongSparseArray<E> implements Cloneable {
         }
     }
 
-    private void gc() {
+    /* renamed from: gc */
+    private void m0gc() {
         int i = this.mSize;
         long[] jArr = this.mKeys;
         Object[] objArr = this.mValues;
@@ -111,7 +134,7 @@ public class LongSparseArray<E> implements Cloneable {
             }
         }
         if (this.mGarbage && i2 >= this.mKeys.length) {
-            gc();
+            m0gc();
             i = ~ContainerHelpers.binarySearch(this.mKeys, this.mSize, j);
         }
         int i3 = this.mSize;
@@ -141,28 +164,32 @@ public class LongSparseArray<E> implements Cloneable {
 
     public int size() {
         if (this.mGarbage) {
-            gc();
+            m0gc();
         }
         return this.mSize;
     }
 
+    public boolean isEmpty() {
+        return size() == 0;
+    }
+
     public long keyAt(int i) {
         if (this.mGarbage) {
-            gc();
+            m0gc();
         }
         return this.mKeys[i];
     }
 
     public E valueAt(int i) {
         if (this.mGarbage) {
-            gc();
+            m0gc();
         }
-        return (E) this.mValues[i];
+        return this.mValues[i];
     }
 
     public int indexOfKey(long j) {
         if (this.mGarbage) {
-            gc();
+            m0gc();
         }
         return ContainerHelpers.binarySearch(this.mKeys, this.mSize, j);
     }
@@ -181,32 +208,6 @@ public class LongSparseArray<E> implements Cloneable {
         this.mGarbage = false;
     }
 
-    public void append(long j, E e) {
-        int i = this.mSize;
-        if (i != 0 && j <= this.mKeys[i - 1]) {
-            put(j, e);
-            return;
-        }
-        if (this.mGarbage && i >= this.mKeys.length) {
-            gc();
-        }
-        int i2 = this.mSize;
-        if (i2 >= this.mKeys.length) {
-            int idealLongArraySize = ContainerHelpers.idealLongArraySize(i2 + 1);
-            long[] jArr = new long[idealLongArraySize];
-            Object[] objArr = new Object[idealLongArraySize];
-            long[] jArr2 = this.mKeys;
-            System.arraycopy(jArr2, 0, jArr, 0, jArr2.length);
-            Object[] objArr2 = this.mValues;
-            System.arraycopy(objArr2, 0, objArr, 0, objArr2.length);
-            this.mKeys = jArr;
-            this.mValues = objArr;
-        }
-        this.mKeys[i2] = j;
-        this.mValues[i2] = e;
-        this.mSize = i2 + 1;
-    }
-
     public String toString() {
         if (size() <= 0) {
             return "{}";
@@ -219,7 +220,7 @@ public class LongSparseArray<E> implements Cloneable {
             }
             sb.append(keyAt(i));
             sb.append('=');
-            E valueAt = valueAt(i);
+            Object valueAt = valueAt(i);
             if (valueAt != this) {
                 sb.append(valueAt);
             } else {

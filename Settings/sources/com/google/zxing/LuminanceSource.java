@@ -1,5 +1,5 @@
 package com.google.zxing;
-/* loaded from: classes2.dex */
+
 public abstract class LuminanceSource {
     private final int height;
     private final int width;
@@ -12,8 +12,7 @@ public abstract class LuminanceSource {
         return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public LuminanceSource(int i, int i2) {
+    protected LuminanceSource(int i, int i2) {
         this.width = i;
         this.height = i2;
     }
@@ -37,10 +36,10 @@ public abstract class LuminanceSource {
         for (int i2 = 0; i2 < this.height; i2++) {
             bArr = getRow(i2, bArr);
             for (int i3 = 0; i3 < this.width; i3++) {
-                int i4 = bArr[i3] & 255;
-                sb.append(i4 < 64 ? '#' : i4 < 128 ? '+' : i4 < 192 ? '.' : ' ');
+                byte b = bArr[i3] & 255;
+                sb.append(b < 64 ? '#' : b < 128 ? '+' : b < 192 ? '.' : ' ');
             }
-            sb.append('\n');
+            sb.append(10);
         }
         return sb.toString();
     }

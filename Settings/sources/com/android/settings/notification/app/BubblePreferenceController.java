@@ -10,7 +10,7 @@ import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settings.notification.NotificationBackend;
 import com.android.settings.notification.app.NotificationSettings;
 import com.android.settingslib.RestrictedSwitchPreference;
-/* loaded from: classes.dex */
+
 public class BubblePreferenceController extends NotificationPreferenceController implements PreferenceControllerMixin, Preference.OnPreferenceChangeListener {
     static final int SYSTEM_WIDE_OFF = 0;
     static final int SYSTEM_WIDE_ON = 1;
@@ -20,7 +20,6 @@ public class BubblePreferenceController extends NotificationPreferenceController
     private NotificationSettings.DependentFieldListener mListener;
     private int mNumConversations;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "bubble_pref";
     }
@@ -32,7 +31,6 @@ public class BubblePreferenceController extends NotificationPreferenceController
         this.mListener = dependentFieldListener;
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         if (!super.isAvailable()) {
             return false;
@@ -44,15 +42,17 @@ public class BubblePreferenceController extends NotificationPreferenceController
             return true;
         }
         NotificationBackend.AppRow appRow = this.mAppRow;
-        return (appRow == null || appRow.bubblePreference == 0) ? false : true;
+        if (appRow == null || appRow.bubblePreference == 0) {
+            return false;
+        }
+        return true;
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController
-    boolean isIncludedInFilter() {
+    /* access modifiers changed from: package-private */
+    public boolean isIncludedInFilter() {
         return this.mPreferenceFilter.contains("conversation");
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         NotificationBackend.AppRow appRow;
         boolean z = true;
@@ -73,8 +73,7 @@ public class BubblePreferenceController extends NotificationPreferenceController
             } else {
                 bubblePreference.setSelectedPreference(i);
             }
-        } else if (this.mChannel == null) {
-        } else {
+        } else if (this.mChannel != null) {
             RestrictedSwitchPreference restrictedSwitchPreference = (RestrictedSwitchPreference) preference;
             restrictedSwitchPreference.setDisabledByAdmin(this.mAdmin);
             if (!this.mChannel.canBubble() || !isEnabled()) {
@@ -84,7 +83,6 @@ public class BubblePreferenceController extends NotificationPreferenceController
         }
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         NotificationChannel notificationChannel = this.mChannel;
         if (notificationChannel != null) {
@@ -95,17 +93,18 @@ public class BubblePreferenceController extends NotificationPreferenceController
             return true;
         } else {
             BubblePreference bubblePreference = (BubblePreference) preference;
-            if (this.mAppRow != null && this.mFragmentManager != null) {
+            if (!(this.mAppRow == null || this.mFragmentManager == null)) {
                 int intValue = ((Integer) obj).intValue();
-                if (!isEnabled() && bubblePreference.getSelectedPreference() == 0) {
-                    BubbleWarningDialogFragment bubbleWarningDialogFragment = new BubbleWarningDialogFragment();
+                if (isEnabled() || bubblePreference.getSelectedPreference() != 0) {
                     NotificationBackend.AppRow appRow = this.mAppRow;
-                    bubbleWarningDialogFragment.setPkgPrefInfo(appRow.pkg, appRow.uid, intValue).show(this.mFragmentManager, "dialog");
+                    appRow.bubblePreference = intValue;
+                    this.mBackend.setAllowBubbles(appRow.pkg, appRow.uid, intValue);
+                } else {
+                    BubbleWarningDialogFragment bubbleWarningDialogFragment = new BubbleWarningDialogFragment();
+                    NotificationBackend.AppRow appRow2 = this.mAppRow;
+                    bubbleWarningDialogFragment.setPkgPrefInfo(appRow2.pkg, appRow2.uid, intValue).show(this.mFragmentManager, "dialog");
                     return false;
                 }
-                NotificationBackend.AppRow appRow2 = this.mAppRow;
-                appRow2.bubblePreference = intValue;
-                this.mBackend.setAllowBubbles(appRow2.pkg, appRow2.uid, intValue);
             }
             NotificationSettings.DependentFieldListener dependentFieldListener = this.mListener;
             if (dependentFieldListener == null) {
@@ -117,7 +116,7 @@ public class BubblePreferenceController extends NotificationPreferenceController
     }
 
     private boolean isEnabled() {
-        return !((ActivityManager) ((NotificationPreferenceController) this).mContext.getSystemService(ActivityManager.class)).isLowRamDevice() && Settings.Secure.getInt(((NotificationPreferenceController) this).mContext.getContentResolver(), "notification_bubbles", 0) == 1;
+        return !((ActivityManager) this.mContext.getSystemService(ActivityManager.class)).isLowRamDevice() && Settings.Secure.getInt(this.mContext.getContentResolver(), "notification_bubbles", 0) == 1;
     }
 
     public static void revertBubblesApproval(Context context, String str, int i) {

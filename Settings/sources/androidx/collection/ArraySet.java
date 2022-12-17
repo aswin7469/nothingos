@@ -5,17 +5,17 @@ import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public final class ArraySet<E> implements Collection<E>, Set<E> {
     private static Object[] sBaseCache;
+    private static final Object sBaseCacheLock = new Object();
     private static int sBaseCacheSize;
     private static Object[] sTwiceBaseCache;
+    private static final Object sTwiceBaseCacheLock = new Object();
     private static int sTwiceBaseCacheSize;
     Object[] mArray;
     private int[] mHashes;
     int mSize;
-    private static final Object sBaseCacheLock = new Object();
-    private static final Object sTwiceBaseCacheLock = new Object();
 
     private int binarySearch(int i) {
         try {
@@ -41,10 +41,12 @@ public final class ArraySet<E> implements Collection<E>, Set<E> {
             }
             i3++;
         }
-        for (int i4 = binarySearch - 1; i4 >= 0 && this.mHashes[i4] == i; i4--) {
+        int i4 = binarySearch - 1;
+        while (i4 >= 0 && this.mHashes[i4] == i) {
             if (obj.equals(this.mArray[i4])) {
                 return i4;
             }
+            i4--;
         }
         return ~i3;
     }
@@ -65,10 +67,12 @@ public final class ArraySet<E> implements Collection<E>, Set<E> {
             }
             i2++;
         }
-        for (int i3 = binarySearch - 1; i3 >= 0 && this.mHashes[i3] == 0; i3--) {
+        int i3 = binarySearch - 1;
+        while (i3 >= 0 && this.mHashes[i3] == 0) {
             if (this.mArray[i3] == null) {
                 return i3;
             }
+            i3--;
         }
         return ~i2;
     }
@@ -165,15 +169,13 @@ public final class ArraySet<E> implements Collection<E>, Set<E> {
         this.mSize = 0;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
     public ArraySet(Collection<E> collection) {
         this();
-        if (collection != 0) {
+        if (collection != null) {
             addAll(collection);
         }
     }
 
-    @Override // java.util.Collection, java.util.Set
     public void clear() {
         int i = this.mSize;
         if (i != 0) {
@@ -184,10 +186,9 @@ public final class ArraySet<E> implements Collection<E>, Set<E> {
             this.mSize = 0;
             freeArrays(iArr, objArr, i);
         }
-        if (this.mSize == 0) {
-            return;
+        if (this.mSize != 0) {
+            throw new ConcurrentModificationException();
         }
-        throw new ConcurrentModificationException();
     }
 
     public void ensureCapacity(int i) {
@@ -203,13 +204,11 @@ public final class ArraySet<E> implements Collection<E>, Set<E> {
             }
             freeArrays(iArr, objArr, this.mSize);
         }
-        if (this.mSize == i2) {
-            return;
+        if (this.mSize != i2) {
+            throw new ConcurrentModificationException();
         }
-        throw new ConcurrentModificationException();
     }
 
-    @Override // java.util.Collection, java.util.Set
     public boolean contains(Object obj) {
         return indexOf(obj) >= 0;
     }
@@ -219,131 +218,128 @@ public final class ArraySet<E> implements Collection<E>, Set<E> {
     }
 
     public E valueAt(int i) {
-        return (E) this.mArray[i];
+        return this.mArray[i];
     }
 
-    @Override // java.util.Collection, java.util.Set
     public boolean isEmpty() {
         return this.mSize <= 0;
     }
 
-    @Override // java.util.Collection, java.util.Set
     public boolean add(E e) {
         int i;
-        int indexOf;
-        int i2 = this.mSize;
+        int i2;
+        int i3 = this.mSize;
         if (e == null) {
-            indexOf = indexOfNull();
+            i2 = indexOfNull();
             i = 0;
         } else {
             int hashCode = e.hashCode();
             i = hashCode;
-            indexOf = indexOf(e, hashCode);
+            i2 = indexOf(e, hashCode);
         }
-        if (indexOf >= 0) {
+        if (i2 >= 0) {
             return false;
         }
-        int i3 = ~indexOf;
+        int i4 = ~i2;
         int[] iArr = this.mHashes;
-        if (i2 >= iArr.length) {
-            int i4 = 4;
-            if (i2 >= 8) {
-                i4 = (i2 >> 1) + i2;
-            } else if (i2 >= 4) {
-                i4 = 8;
+        if (i3 >= iArr.length) {
+            int i5 = 4;
+            if (i3 >= 8) {
+                i5 = (i3 >> 1) + i3;
+            } else if (i3 >= 4) {
+                i5 = 8;
             }
             Object[] objArr = this.mArray;
-            allocArrays(i4);
-            if (i2 != this.mSize) {
+            allocArrays(i5);
+            if (i3 == this.mSize) {
+                int[] iArr2 = this.mHashes;
+                if (iArr2.length > 0) {
+                    System.arraycopy(iArr, 0, iArr2, 0, iArr.length);
+                    System.arraycopy(objArr, 0, this.mArray, 0, objArr.length);
+                }
+                freeArrays(iArr, objArr, i3);
+            } else {
                 throw new ConcurrentModificationException();
             }
-            int[] iArr2 = this.mHashes;
-            if (iArr2.length > 0) {
-                System.arraycopy(iArr, 0, iArr2, 0, iArr.length);
-                System.arraycopy(objArr, 0, this.mArray, 0, objArr.length);
-            }
-            freeArrays(iArr, objArr, i2);
         }
-        if (i3 < i2) {
+        if (i4 < i3) {
             int[] iArr3 = this.mHashes;
-            int i5 = i3 + 1;
-            int i6 = i2 - i3;
-            System.arraycopy(iArr3, i3, iArr3, i5, i6);
+            int i6 = i4 + 1;
+            int i7 = i3 - i4;
+            System.arraycopy(iArr3, i4, iArr3, i6, i7);
             Object[] objArr2 = this.mArray;
-            System.arraycopy(objArr2, i3, objArr2, i5, i6);
+            System.arraycopy(objArr2, i4, objArr2, i6, i7);
         }
-        int i7 = this.mSize;
-        if (i2 == i7) {
+        int i8 = this.mSize;
+        if (i3 == i8) {
             int[] iArr4 = this.mHashes;
-            if (i3 < iArr4.length) {
-                iArr4[i3] = i;
-                this.mArray[i3] = e;
-                this.mSize = i7 + 1;
+            if (i4 < iArr4.length) {
+                iArr4[i4] = i;
+                this.mArray[i4] = e;
+                this.mSize = i8 + 1;
                 return true;
             }
         }
         throw new ConcurrentModificationException();
     }
 
-    @Override // java.util.Collection, java.util.Set
     public boolean remove(Object obj) {
         int indexOf = indexOf(obj);
-        if (indexOf >= 0) {
-            removeAt(indexOf);
-            return true;
+        if (indexOf < 0) {
+            return false;
         }
-        return false;
+        removeAt(indexOf);
+        return true;
     }
 
     public E removeAt(int i) {
         int i2 = this.mSize;
-        Object[] objArr = this.mArray;
-        E e = (E) objArr[i];
+        E[] eArr = this.mArray;
+        E e = eArr[i];
         if (i2 <= 1) {
             clear();
         } else {
             int i3 = i2 - 1;
             int[] iArr = this.mHashes;
             int i4 = 8;
-            if (iArr.length > 8 && i2 < iArr.length / 3) {
+            if (iArr.length <= 8 || i2 >= iArr.length / 3) {
+                if (i < i3) {
+                    int i5 = i + 1;
+                    int i6 = i3 - i;
+                    System.arraycopy(iArr, i5, iArr, i, i6);
+                    Object[] objArr = this.mArray;
+                    System.arraycopy(objArr, i5, objArr, i, i6);
+                }
+                this.mArray[i3] = null;
+            } else {
                 if (i2 > 8) {
                     i4 = i2 + (i2 >> 1);
                 }
                 allocArrays(i4);
                 if (i > 0) {
                     System.arraycopy(iArr, 0, this.mHashes, 0, i);
-                    System.arraycopy(objArr, 0, this.mArray, 0, i);
+                    System.arraycopy(eArr, 0, this.mArray, 0, i);
                 }
-                if (i < i3) {
-                    int i5 = i + 1;
-                    int i6 = i3 - i;
-                    System.arraycopy(iArr, i5, this.mHashes, i, i6);
-                    System.arraycopy(objArr, i5, this.mArray, i, i6);
-                }
-            } else {
                 if (i < i3) {
                     int i7 = i + 1;
                     int i8 = i3 - i;
-                    System.arraycopy(iArr, i7, iArr, i, i8);
-                    Object[] objArr2 = this.mArray;
-                    System.arraycopy(objArr2, i7, objArr2, i, i8);
+                    System.arraycopy(iArr, i7, this.mHashes, i, i8);
+                    System.arraycopy(eArr, i7, this.mArray, i, i8);
                 }
-                this.mArray[i3] = null;
             }
-            if (i2 != this.mSize) {
+            if (i2 == this.mSize) {
+                this.mSize = i3;
+            } else {
                 throw new ConcurrentModificationException();
             }
-            this.mSize = i3;
         }
         return e;
     }
 
-    @Override // java.util.Collection, java.util.Set
     public int size() {
         return this.mSize;
     }
 
-    @Override // java.util.Collection, java.util.Set
     public Object[] toArray() {
         int i = this.mSize;
         Object[] objArr = new Object[i];
@@ -351,10 +347,9 @@ public final class ArraySet<E> implements Collection<E>, Set<E> {
         return objArr;
     }
 
-    @Override // java.util.Collection, java.util.Set
     public <T> T[] toArray(T[] tArr) {
         if (tArr.length < this.mSize) {
-            tArr = (T[]) ((Object[]) Array.newInstance(tArr.getClass().getComponentType(), this.mSize));
+            tArr = (Object[]) Array.newInstance(tArr.getClass().getComponentType(), this.mSize);
         }
         System.arraycopy(this.mArray, 0, tArr, 0, this.mSize);
         int length = tArr.length;
@@ -365,7 +360,6 @@ public final class ArraySet<E> implements Collection<E>, Set<E> {
         return tArr;
     }
 
-    @Override // java.util.Collection, java.util.Set
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
@@ -375,11 +369,13 @@ public final class ArraySet<E> implements Collection<E>, Set<E> {
             if (size() != set.size()) {
                 return false;
             }
-            for (int i = 0; i < this.mSize; i++) {
+            int i = 0;
+            while (i < this.mSize) {
                 try {
                     if (!set.contains(valueAt(i))) {
                         return false;
                     }
+                    i++;
                 } catch (ClassCastException | NullPointerException unused) {
                 }
             }
@@ -388,7 +384,6 @@ public final class ArraySet<E> implements Collection<E>, Set<E> {
         return false;
     }
 
-    @Override // java.util.Collection, java.util.Set
     public int hashCode() {
         int[] iArr = this.mHashes;
         int i = this.mSize;
@@ -409,7 +404,7 @@ public final class ArraySet<E> implements Collection<E>, Set<E> {
             if (i > 0) {
                 sb.append(", ");
             }
-            E valueAt = valueAt(i);
+            Object valueAt = valueAt(i);
             if (valueAt != this) {
                 sb.append(valueAt);
             } else {
@@ -420,60 +415,52 @@ public final class ArraySet<E> implements Collection<E>, Set<E> {
         return sb.toString();
     }
 
-    @Override // java.util.Collection, java.lang.Iterable, java.util.Set
     public Iterator<E> iterator() {
         return new ElementIterator();
     }
 
-    /* loaded from: classes.dex */
     private class ElementIterator extends IndexBasedArrayIterator<E> {
         ElementIterator() {
             super(ArraySet.this.mSize);
         }
 
-        @Override // androidx.collection.IndexBasedArrayIterator
-        protected E elementAt(int i) {
-            return (E) ArraySet.this.valueAt(i);
+        /* access modifiers changed from: protected */
+        public E elementAt(int i) {
+            return ArraySet.this.valueAt(i);
         }
 
-        @Override // androidx.collection.IndexBasedArrayIterator
-        protected void removeAt(int i) {
+        /* access modifiers changed from: protected */
+        public void removeAt(int i) {
             ArraySet.this.removeAt(i);
         }
     }
 
-    @Override // java.util.Collection, java.util.Set
     public boolean containsAll(Collection<?> collection) {
-        Iterator<?> it = collection.iterator();
-        while (it.hasNext()) {
-            if (!contains(it.next())) {
+        for (Object contains : collection) {
+            if (!contains(contains)) {
                 return false;
             }
         }
         return true;
     }
 
-    @Override // java.util.Collection, java.util.Set
     public boolean addAll(Collection<? extends E> collection) {
         ensureCapacity(this.mSize + collection.size());
         boolean z = false;
-        for (E e : collection) {
-            z |= add(e);
+        for (Object add : collection) {
+            z |= add(add);
         }
         return z;
     }
 
-    @Override // java.util.Collection, java.util.Set
     public boolean removeAll(Collection<?> collection) {
-        Iterator<?> it = collection.iterator();
         boolean z = false;
-        while (it.hasNext()) {
-            z |= remove(it.next());
+        for (Object remove : collection) {
+            z |= remove(remove);
         }
         return z;
     }
 
-    @Override // java.util.Collection, java.util.Set
     public boolean retainAll(Collection<?> collection) {
         boolean z = false;
         for (int i = this.mSize - 1; i >= 0; i--) {

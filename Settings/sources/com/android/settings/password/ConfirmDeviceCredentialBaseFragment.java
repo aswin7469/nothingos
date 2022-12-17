@@ -19,12 +19,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import com.android.internal.widget.LockPatternUtils;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$string;
 import com.android.settings.Utils;
 import com.android.settings.core.InstrumentedFragment;
 import com.android.settings.password.ConfirmLockPassword;
 import com.android.settings.password.ConfirmLockPattern;
-/* loaded from: classes.dex */
+
 public abstract class ConfirmDeviceCredentialBaseFragment extends InstrumentedFragment {
     public static final String TAG = ConfirmDeviceCredentialBaseFragment.class.getSimpleName();
     protected BiometricManager mBiometricManager;
@@ -32,26 +33,30 @@ public abstract class ConfirmDeviceCredentialBaseFragment extends InstrumentedFr
     protected DevicePolicyManager mDevicePolicyManager;
     protected int mEffectiveUserId;
     protected TextView mErrorTextView;
+    protected boolean mForceVerifyPath = false;
     protected Button mForgotButton;
     protected boolean mFrp;
     private CharSequence mFrpAlternateButtonText;
-    protected LockPatternUtils mLockPatternUtils;
-    protected int mUserId;
-    protected UserManager mUserManager;
-    protected boolean mReturnCredentials = false;
-    protected boolean mReturnGatekeeperPassword = false;
-    protected boolean mForceVerifyPath = false;
     protected final Handler mHandler = new Handler();
-    private final Runnable mResetErrorRunnable = new Runnable() { // from class: com.android.settings.password.ConfirmDeviceCredentialBaseFragment.1
-        @Override // java.lang.Runnable
+    protected LockPatternUtils mLockPatternUtils;
+    private final Runnable mResetErrorRunnable = new Runnable() {
         public void run() {
             ConfirmDeviceCredentialBaseFragment.this.mErrorTextView.setText("");
         }
     };
+    protected boolean mReturnCredentials = false;
+    protected boolean mReturnGatekeeperPassword = false;
+    protected int mUserId;
+    protected UserManager mUserManager;
 
-    protected abstract int getLastTryErrorMessage(int i);
+    /* access modifiers changed from: protected */
+    public abstract int getLastTryDefaultErrorMessage(int i);
 
-    protected abstract void onShowError();
+    /* access modifiers changed from: protected */
+    public abstract String getLastTryOverrideErrorMessageId(int i);
+
+    /* access modifiers changed from: protected */
+    public abstract void onShowError();
 
     public void prepareEnterAnimation() {
     }
@@ -63,7 +68,6 @@ public abstract class ConfirmDeviceCredentialBaseFragment extends InstrumentedFr
         return (getActivity() instanceof ConfirmLockPassword.InternalActivity) || (getActivity() instanceof ConfirmLockPattern.InternalActivity);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         Intent intent = getActivity().getIntent();
@@ -86,13 +90,12 @@ public abstract class ConfirmDeviceCredentialBaseFragment extends InstrumentedFr
         this.mBiometricManager = (BiometricManager) getActivity().getSystemService(BiometricManager.class);
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
-        this.mCancelButton = (Button) view.findViewById(R.id.cancelButton);
+        this.mCancelButton = (Button) view.findViewById(R$id.cancelButton);
         int i = 0;
         boolean booleanExtra = getActivity().getIntent().getBooleanExtra("com.android.settings.ConfirmCredentials.showCancelButton", false);
-        final boolean z = this.mFrp && !TextUtils.isEmpty(this.mFrpAlternateButtonText);
+        boolean z = this.mFrp && !TextUtils.isEmpty(this.mFrpAlternateButtonText);
         Button button = this.mCancelButton;
         if (!booleanExtra && !z) {
             i = 8;
@@ -101,16 +104,11 @@ public abstract class ConfirmDeviceCredentialBaseFragment extends InstrumentedFr
         if (z) {
             this.mCancelButton.setText(this.mFrpAlternateButtonText);
         }
-        this.mCancelButton.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.password.ConfirmDeviceCredentialBaseFragment$$ExternalSyntheticLambda1
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view2) {
-                ConfirmDeviceCredentialBaseFragment.this.lambda$onViewCreated$0(z, view2);
-            }
-        });
+        this.mCancelButton.setOnClickListener(new ConfirmDeviceCredentialBaseFragment$$ExternalSyntheticLambda1(this, z));
         setupForgotButtonIfManagedProfile(view);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onViewCreated$0(boolean z, View view) {
         if (z) {
             getActivity().setResult(1);
@@ -119,96 +117,91 @@ public abstract class ConfirmDeviceCredentialBaseFragment extends InstrumentedFr
     }
 
     private void setupForgotButtonIfManagedProfile(View view) {
-        if (!this.mUserManager.isManagedProfile(this.mUserId) || !this.mUserManager.isQuietModeEnabled(UserHandle.of(this.mUserId)) || !this.mDevicePolicyManager.canProfileOwnerResetPasswordWhenLocked(this.mUserId)) {
-            return;
-        }
-        Button button = (Button) view.findViewById(R.id.forgotButton);
-        this.mForgotButton = button;
-        if (button == null) {
-            Log.wtf(TAG, "Forgot button not found in managed profile credential dialog");
-            return;
-        }
-        button.setVisibility(0);
-        this.mForgotButton.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.password.ConfirmDeviceCredentialBaseFragment$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view2) {
-                ConfirmDeviceCredentialBaseFragment.this.lambda$setupForgotButtonIfManagedProfile$1(view2);
+        if (this.mUserManager.isManagedProfile(this.mUserId) && this.mUserManager.isQuietModeEnabled(UserHandle.of(this.mUserId)) && this.mDevicePolicyManager.canProfileOwnerResetPasswordWhenLocked(this.mUserId)) {
+            Button button = (Button) view.findViewById(R$id.forgotButton);
+            this.mForgotButton = button;
+            if (button == null) {
+                Log.wtf(TAG, "Forgot button not found in managed profile credential dialog");
+                return;
             }
-        });
+            button.setVisibility(0);
+            this.mForgotButton.setOnClickListener(new ConfirmDeviceCredentialBaseFragment$$ExternalSyntheticLambda2(this));
+        }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$setupForgotButtonIfManagedProfile$1(View view) {
         Intent intent = new Intent();
         intent.setClassName("com.android.settings", ForgotPasswordActivity.class.getName());
+        intent.setFlags(268435456);
         intent.putExtra("android.intent.extra.USER_ID", this.mUserId);
         getActivity().startActivity(intent);
         getActivity().finish();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean isStrongAuthRequired() {
         return this.mFrp || !this.mLockPatternUtils.isBiometricAllowedForUser(this.mEffectiveUserId) || !this.mUserManager.isUserUnlocked(this.mUserId);
     }
 
-    @Override // com.android.settings.core.InstrumentedFragment, com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
         refreshLockScreen();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void refreshLockScreen() {
         updateErrorMessage(this.mLockPatternUtils.getCurrentFailedPasswordAttempts(this.mEffectiveUserId));
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void setAccessibilityTitle(CharSequence charSequence) {
         Intent intent = getActivity().getIntent();
         if (intent != null) {
             CharSequence charSequenceExtra = intent.getCharSequenceExtra("com.android.settings.ConfirmCredentials.title");
-            if (charSequence == null) {
-                return;
+            if (charSequence != null) {
+                if (charSequenceExtra == null) {
+                    getActivity().setTitle(charSequence);
+                    return;
+                }
+                getActivity().setTitle(Utils.createAccessibleSequence(charSequenceExtra, charSequenceExtra + "," + charSequence));
             }
-            if (charSequenceExtra == null) {
-                getActivity().setTitle(charSequence);
-                return;
-            }
-            getActivity().setTitle(Utils.createAccessibleSequence(charSequenceExtra, charSequenceExtra + "," + charSequence));
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onPause() {
         super.onPause();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void reportFailedAttempt() {
         updateErrorMessage(this.mLockPatternUtils.getCurrentFailedPasswordAttempts(this.mEffectiveUserId) + 1);
         this.mLockPatternUtils.reportFailedPasswordAttempt(this.mEffectiveUserId);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void updateErrorMessage(int i) {
         int maximumFailedPasswordsForWipe = this.mLockPatternUtils.getMaximumFailedPasswordsForWipe(this.mEffectiveUserId);
-        if (maximumFailedPasswordsForWipe <= 0 || i <= 0) {
-            return;
+        if (maximumFailedPasswordsForWipe > 0 && i > 0) {
+            if (this.mErrorTextView != null) {
+                showError((CharSequence) getActivity().getString(R$string.lock_failed_attempts_before_wipe, new Object[]{Integer.valueOf(i), Integer.valueOf(maximumFailedPasswordsForWipe)}), 0);
+            }
+            int i2 = maximumFailedPasswordsForWipe - i;
+            if (i2 <= 1) {
+                FragmentManager childFragmentManager = getChildFragmentManager();
+                int userTypeForWipe = getUserTypeForWipe();
+                if (i2 == 1) {
+                    LastTryDialog.show(childFragmentManager, getActivity().getString(R$string.lock_last_attempt_before_wipe_warning_title), this.mDevicePolicyManager.getResources().getString(getLastTryOverrideErrorMessageId(userTypeForWipe), new ConfirmDeviceCredentialBaseFragment$$ExternalSyntheticLambda0(this, getLastTryDefaultErrorMessage(userTypeForWipe))), 17039370, false);
+                    return;
+                }
+                LastTryDialog.show(childFragmentManager, (String) null, getWipeMessage(userTypeForWipe), com.android.settingslib.R$string.failed_attempts_now_wiping_dialog_dismiss, true);
+            }
         }
-        if (this.mErrorTextView != null) {
-            showError(getActivity().getString(R.string.lock_failed_attempts_before_wipe, new Object[]{Integer.valueOf(i), Integer.valueOf(maximumFailedPasswordsForWipe)}), 0L);
-        }
-        int i2 = maximumFailedPasswordsForWipe - i;
-        if (i2 > 1) {
-            return;
-        }
-        FragmentManager childFragmentManager = getChildFragmentManager();
-        int userTypeForWipe = getUserTypeForWipe();
-        if (i2 == 1) {
-            LastTryDialog.show(childFragmentManager, getActivity().getString(R.string.lock_last_attempt_before_wipe_warning_title), getLastTryErrorMessage(userTypeForWipe), 17039370, false);
-        } else {
-            LastTryDialog.show(childFragmentManager, null, getWipeMessage(userTypeForWipe), R.string.lock_failed_attempts_now_wiping_dialog_dismiss, true);
-        }
+    }
+
+    /* access modifiers changed from: private */
+    public /* synthetic */ String lambda$updateErrorMessage$2(int i) {
+        return getString(i);
     }
 
     private int getUserTypeForWipe() {
@@ -219,20 +212,25 @@ public abstract class ConfirmDeviceCredentialBaseFragment extends InstrumentedFr
         return userInfo.isManagedProfile() ? 2 : 3;
     }
 
-    private int getWipeMessage(int i) {
-        if (i != 1) {
-            if (i == 2) {
-                return R.string.lock_failed_attempts_now_wiping_profile;
-            }
-            if (i == 3) {
-                return R.string.lock_failed_attempts_now_wiping_user;
-            }
-            throw new IllegalArgumentException("Unrecognized user type:" + i);
-        }
-        return R.string.lock_failed_attempts_now_wiping_device;
+    /* access modifiers changed from: private */
+    public /* synthetic */ String lambda$getWipeMessage$3() {
+        return getString(com.android.settingslib.R$string.failed_attempts_now_wiping_profile);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    private String getWipeMessage(int i) {
+        if (i == 1) {
+            return getString(com.android.settingslib.R$string.failed_attempts_now_wiping_device);
+        }
+        if (i == 2) {
+            return this.mDevicePolicyManager.getResources().getString("Settings.WORK_PROFILE_LOCK_ATTEMPTS_FAILED", new ConfirmDeviceCredentialBaseFragment$$ExternalSyntheticLambda3(this));
+        }
+        if (i == 3) {
+            return getString(com.android.settingslib.R$string.failed_attempts_now_wiping_user);
+        }
+        throw new IllegalArgumentException("Unrecognized user type:" + i);
+    }
+
+    /* access modifiers changed from: protected */
     public void showError(CharSequence charSequence, long j) {
         this.mErrorTextView.setText(charSequence);
         onShowError();
@@ -242,47 +240,43 @@ public abstract class ConfirmDeviceCredentialBaseFragment extends InstrumentedFr
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void showError(int i, long j) {
         showError(getText(i), j);
     }
 
-    /* loaded from: classes.dex */
     public static class LastTryDialog extends DialogFragment {
         private static final String TAG = LastTryDialog.class.getSimpleName();
 
-        static boolean show(FragmentManager fragmentManager, String str, int i, int i2, boolean z) {
-            String str2 = TAG;
-            LastTryDialog lastTryDialog = (LastTryDialog) fragmentManager.findFragmentByTag(str2);
-            if (lastTryDialog == null || lastTryDialog.isRemoving()) {
-                Bundle bundle = new Bundle();
-                bundle.putString("title", str);
-                bundle.putInt("message", i);
-                bundle.putInt("button", i2);
-                bundle.putBoolean("dismiss", z);
-                LastTryDialog lastTryDialog2 = new LastTryDialog();
-                lastTryDialog2.setArguments(bundle);
-                lastTryDialog2.show(fragmentManager, str2);
-                fragmentManager.executePendingTransactions();
-                return true;
+        static boolean show(FragmentManager fragmentManager, String str, String str2, int i, boolean z) {
+            String str3 = TAG;
+            LastTryDialog lastTryDialog = (LastTryDialog) fragmentManager.findFragmentByTag(str3);
+            if (lastTryDialog != null && !lastTryDialog.isRemoving()) {
+                return false;
             }
-            return false;
+            Bundle bundle = new Bundle();
+            bundle.putString("title", str);
+            bundle.putString("message", str2);
+            bundle.putInt("button", i);
+            bundle.putBoolean("dismiss", z);
+            LastTryDialog lastTryDialog2 = new LastTryDialog();
+            lastTryDialog2.setArguments(bundle);
+            lastTryDialog2.show(fragmentManager, str3);
+            fragmentManager.executePendingTransactions();
+            return true;
         }
 
-        @Override // androidx.fragment.app.DialogFragment
         public Dialog onCreateDialog(Bundle bundle) {
-            AlertDialog create = new AlertDialog.Builder(getActivity()).setTitle(getArguments().getString("title")).setMessage(getArguments().getInt("message")).setPositiveButton(getArguments().getInt("button"), (DialogInterface.OnClickListener) null).create();
+            AlertDialog create = new AlertDialog.Builder(getActivity()).setTitle((CharSequence) getArguments().getString("title")).setMessage((CharSequence) getArguments().getString("message")).setPositiveButton(getArguments().getInt("button"), (DialogInterface.OnClickListener) null).create();
             create.setCanceledOnTouchOutside(false);
             return create;
         }
 
-        @Override // androidx.fragment.app.DialogFragment, android.content.DialogInterface.OnDismissListener
         public void onDismiss(DialogInterface dialogInterface) {
             super.onDismiss(dialogInterface);
-            if (getActivity() == null || !getArguments().getBoolean("dismiss")) {
-                return;
+            if (getActivity() != null && getArguments().getBoolean("dismiss")) {
+                getActivity().finish();
             }
-            getActivity().finish();
         }
     }
 }

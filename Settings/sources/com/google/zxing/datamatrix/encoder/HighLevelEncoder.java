@@ -2,15 +2,13 @@ package com.google.zxing.datamatrix.encoder;
 
 import com.google.zxing.Dimension;
 import java.util.Arrays;
-/* loaded from: classes2.dex */
+
 public final class HighLevelEncoder {
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static boolean isDigit(char c) {
+    static boolean isDigit(char c) {
         return c >= '0' && c <= '9';
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static boolean isExtendedASCII(char c) {
+    static boolean isExtendedASCII(char c) {
         return c >= 128 && c <= 255;
     }
 
@@ -31,7 +29,7 @@ public final class HighLevelEncoder {
     }
 
     private static boolean isX12TermSep(char c) {
-        return c == '\r' || c == '*' || c == '>';
+        return c == 13 || c == '*' || c == '>';
     }
 
     private static char randomize253State(char c, int i) {
@@ -49,11 +47,11 @@ public final class HighLevelEncoder {
         encoderContext.setSymbolShape(symbolShapeHint);
         encoderContext.setSizeConstraints(dimension, dimension2);
         if (str.startsWith("[)>\u001e05\u001d") && str.endsWith("\u001e\u0004")) {
-            encoderContext.writeCodeword((char) 236);
+            encoderContext.writeCodeword(236);
             encoderContext.setSkipAtEnd(2);
             encoderContext.pos += 7;
         } else if (str.startsWith("[)>\u001e06\u001d") && str.endsWith("\u001e\u0004")) {
-            encoderContext.writeCodeword((char) 237);
+            encoderContext.writeCodeword(237);
             encoderContext.setSkipAtEnd(2);
             encoderContext.pos += 7;
         }
@@ -67,38 +65,40 @@ public final class HighLevelEncoder {
         int codewordCount = encoderContext.getCodewordCount();
         encoderContext.updateSymbolInfo();
         int dataCapacity = encoderContext.getSymbolInfo().getDataCapacity();
-        if (codewordCount < dataCapacity && i != 0 && i != 5) {
-            encoderContext.writeCodeword((char) 254);
+        if (!(codewordCount >= dataCapacity || i == 0 || i == 5)) {
+            encoderContext.writeCodeword(254);
         }
         StringBuilder codewords = encoderContext.getCodewords();
         if (codewords.length() < dataCapacity) {
-            codewords.append((char) 129);
+            codewords.append(129);
         }
         while (codewords.length() < dataCapacity) {
-            codewords.append(randomize253State((char) 129, codewords.length() + 1));
+            codewords.append(randomize253State(129, codewords.length() + 1));
         }
         return encoderContext.getCodewords().toString();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static int lookAheadTest(CharSequence charSequence, int i, int i2) {
+    static int lookAheadTest(CharSequence charSequence, int i, int i2) {
         float[] fArr;
         char c;
-        if (i >= charSequence.length()) {
+        CharSequence charSequence2 = charSequence;
+        int i3 = i;
+        if (i3 >= charSequence.length()) {
             return i2;
         }
+        int i4 = 6;
         if (i2 == 0) {
             fArr = new float[]{0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.25f};
         } else {
             fArr = new float[]{1.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.25f};
             fArr[i2] = 0.0f;
         }
-        int i3 = 0;
+        int i5 = 0;
         while (true) {
-            int i4 = i + i3;
-            if (i4 == charSequence.length()) {
-                byte[] bArr = new byte[6];
-                int[] iArr = new int[6];
+            int i6 = i3 + i5;
+            if (i6 == charSequence.length()) {
+                byte[] bArr = new byte[i4];
+                int[] iArr = new int[i4];
                 int findMinimums = findMinimums(fArr, iArr, Integer.MAX_VALUE, bArr);
                 int minimumCount = getMinimumCount(bArr);
                 if (iArr[0] == findMinimums) {
@@ -110,21 +110,23 @@ public final class HighLevelEncoder {
                 if (minimumCount == 1 && bArr[4] > 0) {
                     return 4;
                 }
-                if (minimumCount == 1 && bArr[2] > 0) {
-                    return 2;
+                if (minimumCount != 1 || bArr[2] <= 0) {
+                    return (minimumCount != 1 || bArr[3] <= 0) ? 1 : 3;
                 }
-                return (minimumCount != 1 || bArr[3] <= 0) ? 1 : 3;
+                return 2;
             }
-            char charAt = charSequence.charAt(i4);
-            i3++;
+            char charAt = charSequence2.charAt(i6);
+            i5++;
             if (isDigit(charAt)) {
-                fArr[0] = (float) (fArr[0] + 0.5d);
+                fArr[0] = (float) (((double) fArr[0]) + 0.5d);
             } else if (isExtendedASCII(charAt)) {
-                fArr[0] = (int) Math.ceil(fArr[0]);
-                fArr[0] = fArr[0] + 2.0f;
+                float ceil = (float) ((int) Math.ceil((double) fArr[0]));
+                fArr[0] = ceil;
+                fArr[0] = ceil + 2.0f;
             } else {
-                fArr[0] = (int) Math.ceil(fArr[0]);
-                fArr[0] = fArr[0] + 1.0f;
+                float ceil2 = (float) ((int) Math.ceil((double) fArr[0]));
+                fArr[0] = ceil2;
+                fArr[0] = ceil2 + 1.0f;
             }
             if (isNativeC40(charAt)) {
                 fArr[1] = fArr[1] + 0.6666667f;
@@ -161,33 +163,44 @@ public final class HighLevelEncoder {
                 c = 5;
                 fArr[5] = fArr[5] + 1.0f;
             }
-            if (i3 >= 4) {
-                int[] iArr2 = new int[6];
-                byte[] bArr2 = new byte[6];
+            if (i5 >= 4) {
+                int[] iArr2 = new int[i4];
+                byte[] bArr2 = new byte[i4];
                 findMinimums(fArr, iArr2, Integer.MAX_VALUE, bArr2);
                 int minimumCount2 = getMinimumCount(bArr2);
-                if (iArr2[0] < iArr2[c] && iArr2[0] < iArr2[1] && iArr2[0] < iArr2[2] && iArr2[0] < iArr2[3] && iArr2[0] < iArr2[4]) {
+                int i7 = iArr2[0];
+                int i8 = iArr2[c];
+                if (i7 < i8 && i7 < iArr2[1] && i7 < iArr2[2] && i7 < iArr2[3] && i7 < iArr2[4]) {
                     return 0;
                 }
-                if (iArr2[5] < iArr2[0] || bArr2[1] + bArr2[2] + bArr2[3] + bArr2[4] == 0) {
+                if (i8 < i7) {
                     return 5;
                 }
-                if (minimumCount2 == 1 && bArr2[4] > 0) {
+                byte b = bArr2[1];
+                byte b2 = bArr2[2];
+                byte b3 = bArr2[3];
+                byte b4 = bArr2[4];
+                if (b + b2 + b3 + b4 == 0) {
+                    return 5;
+                }
+                if (minimumCount2 == 1 && b4 > 0) {
                     return 4;
                 }
-                if (minimumCount2 == 1 && bArr2[2] > 0) {
+                if (minimumCount2 == 1 && b2 > 0) {
                     return 2;
                 }
-                if (minimumCount2 == 1 && bArr2[3] > 0) {
+                if (minimumCount2 == 1 && b3 > 0) {
                     return 3;
                 }
-                if (iArr2[1] + 1 < iArr2[0] && iArr2[1] + 1 < iArr2[5] && iArr2[1] + 1 < iArr2[4] && iArr2[1] + 1 < iArr2[2]) {
-                    if (iArr2[1] < iArr2[3]) {
+                int i9 = iArr2[1];
+                if (i9 + 1 < i7 && i9 + 1 < i8 && i9 + 1 < iArr2[4] && i9 + 1 < iArr2[2]) {
+                    int i10 = iArr2[3];
+                    if (i9 < i10) {
                         return 1;
                     }
-                    if (iArr2[1] == iArr2[3]) {
-                        for (int i5 = i + i3 + 1; i5 < charSequence.length(); i5++) {
-                            char charAt2 = charSequence.charAt(i5);
+                    if (i9 == i10) {
+                        for (int i11 = i3 + i5 + 1; i11 < charSequence.length(); i11++) {
+                            char charAt2 = charSequence2.charAt(i11);
                             if (isX12TermSep(charAt2)) {
                                 return 3;
                             }
@@ -199,19 +212,20 @@ public final class HighLevelEncoder {
                     }
                 }
             }
+            i4 = 6;
         }
     }
 
     private static int findMinimums(float[] fArr, int[] iArr, int i, byte[] bArr) {
         Arrays.fill(bArr, (byte) 0);
         for (int i2 = 0; i2 < 6; i2++) {
-            iArr[i2] = (int) Math.ceil(fArr[i2]);
-            int i3 = iArr[i2];
-            if (i > i3) {
+            int ceil = (int) Math.ceil((double) fArr[i2]);
+            iArr[i2] = ceil;
+            if (i > ceil) {
                 Arrays.fill(bArr, (byte) 0);
-                i = i3;
+                i = ceil;
             }
-            if (i == i3) {
+            if (i == ceil) {
                 bArr[i2] = (byte) (bArr[i2] + 1);
             }
         }
@@ -246,9 +260,8 @@ public final class HighLevelEncoder {
         return i2;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static void illegalCharacter(char c) {
-        String hexString;
-        throw new IllegalArgumentException("Illegal character: " + c + " (0x" + ("0000".substring(0, 4 - hexString.length()) + Integer.toHexString(c)) + ')');
+    static void illegalCharacter(char c) {
+        String hexString = Integer.toHexString(c);
+        throw new IllegalArgumentException("Illegal character: " + c + " (0x" + ("0000".substring(0, 4 - hexString.length()) + hexString) + ')');
     }
 }

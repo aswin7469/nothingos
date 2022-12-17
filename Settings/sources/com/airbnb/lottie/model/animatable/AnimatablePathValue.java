@@ -6,7 +6,7 @@ import com.airbnb.lottie.animation.keyframe.PathKeyframeAnimation;
 import com.airbnb.lottie.animation.keyframe.PointKeyframeAnimation;
 import com.airbnb.lottie.value.Keyframe;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class AnimatablePathValue implements AnimatableValue<PointF, PointF> {
     private final List<Keyframe<PointF>> keyframes;
 
@@ -14,19 +14,15 @@ public class AnimatablePathValue implements AnimatableValue<PointF, PointF> {
         this.keyframes = list;
     }
 
-    @Override // com.airbnb.lottie.model.animatable.AnimatableValue
     public List<Keyframe<PointF>> getKeyframes() {
         return this.keyframes;
     }
 
-    @Override // com.airbnb.lottie.model.animatable.AnimatableValue
     public boolean isStatic() {
         return this.keyframes.size() == 1 && this.keyframes.get(0).isStatic();
     }
 
-    @Override // com.airbnb.lottie.model.animatable.AnimatableValue
-    /* renamed from: createAnimation */
-    public BaseKeyframeAnimation<PointF, PointF> mo180createAnimation() {
+    public BaseKeyframeAnimation<PointF, PointF> createAnimation() {
         if (this.keyframes.get(0).isStatic()) {
             return new PointKeyframeAnimation(this.keyframes);
         }

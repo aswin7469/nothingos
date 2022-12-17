@@ -10,25 +10,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
 import com.android.settings.R$styleable;
-/* loaded from: classes.dex */
+
 public class VideoPreference extends Preference {
     boolean mAnimationAvailable;
     AnimationController mAnimationController;
     private int mAnimationId;
+    private float mAspectRatio = 1.0f;
     private final Context mContext;
+    private int mHeight = -2;
     private ImageView mPlayButton;
     private int mPreviewId;
     private ImageView mPreviewImage;
     private int mVectorAnimationId;
     private TextureView mVideo;
-    private float mAspectRatio = 1.0f;
-    private int mHeight = -2;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public interface AnimationController {
+    interface AnimationController {
         void attachView(TextureView textureView, View view, View view2);
 
         int getDuration();
@@ -43,7 +42,7 @@ public class VideoPreference extends Preference {
     public VideoPreference(Context context) {
         super(context);
         this.mContext = context;
-        initialize(context, null);
+        initialize(context, (AttributeSet) null);
     }
 
     public VideoPreference(Context context, AttributeSet attributeSet) {
@@ -53,68 +52,64 @@ public class VideoPreference extends Preference {
     }
 
     private void initialize(Context context, AttributeSet attributeSet) {
-        int resourceId;
         TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(attributeSet, R$styleable.VideoPreference, 0, 0);
         try {
-            try {
-                this.mAnimationAvailable = false;
-                int i = this.mAnimationId;
-                if (i == 0) {
-                    i = obtainStyledAttributes.getResourceId(R$styleable.VideoPreference_animation, 0);
-                }
-                this.mAnimationId = i;
-                int i2 = this.mPreviewId;
-                if (i2 == 0) {
-                    i2 = obtainStyledAttributes.getResourceId(R$styleable.VideoPreference_preview, 0);
-                }
-                this.mPreviewId = i2;
-                resourceId = obtainStyledAttributes.getResourceId(R$styleable.VideoPreference_vectorAnimation, 0);
-                this.mVectorAnimationId = resourceId;
-            } catch (Exception unused) {
-                Log.w("VideoPreference", "Animation resource not found. Will not show animation.");
+            this.mAnimationAvailable = false;
+            int i = this.mAnimationId;
+            if (i == 0) {
+                i = obtainStyledAttributes.getResourceId(R$styleable.VideoPreference_animation, 0);
             }
+            this.mAnimationId = i;
+            int i2 = this.mPreviewId;
+            if (i2 == 0) {
+                i2 = obtainStyledAttributes.getResourceId(R$styleable.VideoPreference_preview, 0);
+            }
+            this.mPreviewId = i2;
+            int resourceId = obtainStyledAttributes.getResourceId(R$styleable.VideoPreference_vectorAnimation, 0);
+            this.mVectorAnimationId = resourceId;
             if (this.mPreviewId == 0 && this.mAnimationId == 0 && resourceId == 0) {
                 setVisible(false);
+                obtainStyledAttributes.recycle();
                 return;
             }
             initAnimationController();
             AnimationController animationController = this.mAnimationController;
-            if (animationController != null && animationController.getDuration() > 0) {
+            if (animationController == null || animationController.getDuration() <= 0) {
+                setVisible(false);
+            } else {
                 setVisible(true);
-                setLayoutResource(R.layout.video_preference);
+                setLayoutResource(R$layout.video_preference);
                 this.mAnimationAvailable = true;
                 updateAspectRatio();
-            } else {
-                setVisible(false);
             }
-        } finally {
             obtainStyledAttributes.recycle();
+        } catch (Exception unused) {
+            Log.w("VideoPreference", "Animation resource not found. Will not show animation.");
+        } catch (Throwable th) {
+            obtainStyledAttributes.recycle();
+            throw th;
         }
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
-        if (!this.mAnimationAvailable) {
-            return;
+        if (this.mAnimationAvailable) {
+            this.mVideo = (TextureView) preferenceViewHolder.findViewById(R$id.video_texture_view);
+            this.mPreviewImage = (ImageView) preferenceViewHolder.findViewById(R$id.video_preview_image);
+            this.mPlayButton = (ImageView) preferenceViewHolder.findViewById(R$id.video_play_button);
+            AspectRatioFrameLayout aspectRatioFrameLayout = (AspectRatioFrameLayout) preferenceViewHolder.findViewById(R$id.video_container);
+            this.mPreviewImage.setImageResource(this.mPreviewId);
+            aspectRatioFrameLayout.setAspectRatio(this.mAspectRatio);
+            if (this.mHeight >= -1) {
+                aspectRatioFrameLayout.setLayoutParams(new LinearLayout.LayoutParams(-1, this.mHeight));
+            }
+            AnimationController animationController = this.mAnimationController;
+            if (animationController != null) {
+                animationController.attachView(this.mVideo, this.mPreviewImage, this.mPlayButton);
+            }
         }
-        this.mVideo = (TextureView) preferenceViewHolder.findViewById(R.id.video_texture_view);
-        this.mPreviewImage = (ImageView) preferenceViewHolder.findViewById(R.id.video_preview_image);
-        this.mPlayButton = (ImageView) preferenceViewHolder.findViewById(R.id.video_play_button);
-        AspectRatioFrameLayout aspectRatioFrameLayout = (AspectRatioFrameLayout) preferenceViewHolder.findViewById(R.id.video_container);
-        this.mPreviewImage.setImageResource(this.mPreviewId);
-        aspectRatioFrameLayout.setAspectRatio(this.mAspectRatio);
-        if (this.mHeight >= -1) {
-            aspectRatioFrameLayout.setLayoutParams(new LinearLayout.LayoutParams(-1, this.mHeight));
-        }
-        AnimationController animationController = this.mAnimationController;
-        if (animationController == null) {
-            return;
-        }
-        animationController.attachView(this.mVideo, this.mPreviewImage, this.mPlayButton);
     }
 
-    @Override // androidx.preference.Preference
     public void onDetached() {
         releaseAnimationController();
         super.onDetached();
@@ -132,7 +127,7 @@ public class VideoPreference extends Preference {
         this.mAnimationId = i;
         this.mPreviewId = i2;
         releaseAnimationController();
-        initialize(this.mContext, null);
+        initialize(this.mContext, (AttributeSet) null);
     }
 
     private void initAnimationController() {
@@ -142,16 +137,14 @@ public class VideoPreference extends Preference {
             return;
         }
         int i2 = this.mAnimationId;
-        if (i2 == 0) {
-            return;
+        if (i2 != 0) {
+            MediaAnimationController mediaAnimationController = new MediaAnimationController(this.mContext, i2);
+            this.mAnimationController = mediaAnimationController;
+            TextureView textureView = this.mVideo;
+            if (textureView != null) {
+                mediaAnimationController.attachView(textureView, this.mPreviewImage, this.mPlayButton);
+            }
         }
-        MediaAnimationController mediaAnimationController = new MediaAnimationController(this.mContext, i2);
-        this.mAnimationController = mediaAnimationController;
-        TextureView textureView = this.mVideo;
-        if (textureView == null) {
-            return;
-        }
-        mediaAnimationController.attachView(textureView, this.mPreviewImage, this.mPlayButton);
     }
 
     private void releaseAnimationController() {
@@ -166,7 +159,8 @@ public class VideoPreference extends Preference {
         return this.mAnimationAvailable;
     }
 
-    void updateAspectRatio() {
-        this.mAspectRatio = this.mAnimationController.getVideoWidth() / this.mAnimationController.getVideoHeight();
+    /* access modifiers changed from: package-private */
+    public void updateAspectRatio() {
+        this.mAspectRatio = ((float) this.mAnimationController.getVideoWidth()) / ((float) this.mAnimationController.getVideoHeight());
     }
 }

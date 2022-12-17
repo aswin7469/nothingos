@@ -8,7 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class WifiNetworkConfig {
     private boolean mHiddenSsid;
     private boolean mIsHotspot;
@@ -17,7 +17,6 @@ public class WifiNetworkConfig {
     private String mSecurity;
     private String mSsid;
 
-    /* loaded from: classes.dex */
     public interface Retriever {
         WifiNetworkConfig getWifiNetworkConfig();
     }
@@ -40,21 +39,18 @@ public class WifiNetworkConfig {
         this.mIsHotspot = wifiNetworkConfig.mIsHotspot;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static WifiNetworkConfig getValidConfigOrNull(Intent intent) {
+    static WifiNetworkConfig getValidConfigOrNull(Intent intent) {
         return getValidConfigOrNull(intent.getStringExtra("security"), intent.getStringExtra("ssid"), intent.getStringExtra("preSharedKey"), intent.getBooleanExtra("hiddenSsid", false), intent.getIntExtra("networkId", -1), intent.getBooleanExtra("isHotspot", false));
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static WifiNetworkConfig getValidConfigOrNull(String str, String str2, String str3, boolean z, int i, boolean z2) {
+    static WifiNetworkConfig getValidConfigOrNull(String str, String str2, String str3, boolean z, int i, boolean z2) {
         if (!isValidConfig(str, str2, str3, z)) {
             return null;
         }
         return new WifiNetworkConfig(str, str2, str3, z, i, z2);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static boolean isValidConfig(WifiNetworkConfig wifiNetworkConfig) {
+    static boolean isValidConfig(WifiNetworkConfig wifiNetworkConfig) {
         if (wifiNetworkConfig == null) {
             return false;
         }
@@ -62,8 +58,11 @@ public class WifiNetworkConfig {
     }
 
     static boolean isValidConfig(String str, String str2, String str3, boolean z) {
-        if (TextUtils.isEmpty(str) || "nopass".equals(str) || !TextUtils.isEmpty(str3)) {
-            return z || !TextUtils.isEmpty(str2);
+        if (!TextUtils.isEmpty(str) && !"nopass".equals(str) && TextUtils.isEmpty(str3)) {
+            return false;
+        }
+        if (z || !TextUtils.isEmpty(str2)) {
+            return true;
         }
         return false;
     }
@@ -83,7 +82,7 @@ public class WifiNetworkConfig {
         return sb.toString();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public String getQrCode() {
         StringBuilder sb = new StringBuilder("WIFI:");
         sb.append("S:");
@@ -130,23 +129,24 @@ public class WifiNetworkConfig {
     }
 
     public boolean isSupportWifiDpp(Context context) {
-        if (WifiDppUtils.isWifiDppEnabled(context) && !TextUtils.isEmpty(this.mSecurity)) {
-            WifiManager wifiManager = (WifiManager) context.getSystemService(WifiManager.class);
-            String str = this.mSecurity;
-            str.hashCode();
-            if (!str.equals("SAE")) {
-                if (str.equals("WPA")) {
-                    return true;
-                }
-            } else if (wifiManager.isWpa3SaeSupported()) {
-                return true;
-            }
+        if (!WifiDppUtils.isWifiDppEnabled(context) || TextUtils.isEmpty(this.mSecurity)) {
             return false;
+        }
+        WifiManager wifiManager = (WifiManager) context.getSystemService(WifiManager.class);
+        String str = this.mSecurity;
+        str.hashCode();
+        if (!str.equals("SAE")) {
+            if (!str.equals("WPA")) {
+                return false;
+            }
+            return true;
+        } else if (wifiManager.isWpa3SaeSupported()) {
+            return true;
         }
         return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public List<WifiConfiguration> getWifiConfigurations() {
         ArrayList arrayList = new ArrayList();
         if (!isValidConfig(this)) {

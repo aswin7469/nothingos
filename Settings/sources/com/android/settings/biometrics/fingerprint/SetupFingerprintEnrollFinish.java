@@ -1,17 +1,15 @@
 package com.android.settings.biometrics.fingerprint;
 
 import android.content.Intent;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.SetupWizardUtils;
-/* loaded from: classes.dex */
+
 public class SetupFingerprintEnrollFinish extends FingerprintEnrollFinish {
-    @Override // com.android.settings.biometrics.fingerprint.FingerprintEnrollFinish, com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 248;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.biometrics.BiometricEnrollBase
+    /* access modifiers changed from: protected */
     public Intent getFingerprintEnrollingIntent() {
         Intent intent = new Intent(this, SetupFingerprintEnrollEnrolling.class);
         intent.putExtra("hw_auth_token", this.mToken);
@@ -23,10 +21,9 @@ public class SetupFingerprintEnrollFinish extends FingerprintEnrollFinish {
         return intent;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.biometrics.BiometricEnrollBase
+    /* access modifiers changed from: protected */
     public void initViews() {
         super.initViews();
-        getNextButton().setText(this, R.string.next_label);
+        getNextButton().setText(this, R$string.next_label);
     }
 }

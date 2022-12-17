@@ -1,18 +1,20 @@
 package com.android.settings.network.telephony;
 
+import androidx.preference.PreferenceScreen;
 import com.android.settingslib.core.AbstractPreferenceController;
-import java.util.function.Predicate;
-/* loaded from: classes.dex */
-public final /* synthetic */ class AbstractMobileNetworkSettings$$ExternalSyntheticLambda4 implements Predicate {
-    public static final /* synthetic */ AbstractMobileNetworkSettings$$ExternalSyntheticLambda4 INSTANCE = new AbstractMobileNetworkSettings$$ExternalSyntheticLambda4();
+import java.util.function.Consumer;
 
-    private /* synthetic */ AbstractMobileNetworkSettings$$ExternalSyntheticLambda4() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class AbstractMobileNetworkSettings$$ExternalSyntheticLambda4 implements Consumer {
+    public final /* synthetic */ AbstractMobileNetworkSettings f$0;
+    public final /* synthetic */ PreferenceScreen f$1;
+
+    public /* synthetic */ AbstractMobileNetworkSettings$$ExternalSyntheticLambda4(AbstractMobileNetworkSettings abstractMobileNetworkSettings, PreferenceScreen preferenceScreen) {
+        this.f$0 = abstractMobileNetworkSettings;
+        this.f$1 = preferenceScreen;
     }
 
-    @Override // java.util.function.Predicate
-    public final boolean test(Object obj) {
-        boolean isAvailable;
-        isAvailable = ((AbstractPreferenceController) obj).isAvailable();
-        return isAvailable;
+    public final void accept(Object obj) {
+        this.f$0.lambda$redrawPreferenceControllers$4(this.f$1, (AbstractPreferenceController) obj);
     }
 }

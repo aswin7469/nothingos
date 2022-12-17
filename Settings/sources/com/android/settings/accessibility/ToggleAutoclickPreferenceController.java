@@ -10,16 +10,15 @@ import android.util.ArrayMap;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$array;
 import com.android.settings.core.BasePreferenceController;
 import com.android.settings.core.PreferenceControllerMixin;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.core.lifecycle.Lifecycle;
 import com.android.settingslib.widget.LayoutPreference;
-import com.android.settingslib.widget.RadioButtonPreference;
+import com.android.settingslib.widget.SelectorWithWidgetPreference;
 import java.util.Map;
-/* loaded from: classes.dex */
-public class ToggleAutoclickPreferenceController extends BasePreferenceController implements LifecycleObserver, RadioButtonPreference.OnClickListener, PreferenceControllerMixin {
+
+public class ToggleAutoclickPreferenceController extends BasePreferenceController implements LifecycleObserver, SelectorWithWidgetPreference.OnClickListener, PreferenceControllerMixin {
     static final int AUTOCLICK_CUSTOM_MODE = 2000;
     static final int AUTOCLICK_OFF_MODE = 0;
     static final String CONTROL_AUTOCLICK_DELAY_SECURE = "accessibility_autoclick_delay";
@@ -28,64 +27,50 @@ public class ToggleAutoclickPreferenceController extends BasePreferenceControlle
     Map<String, Integer> mAccessibilityAutoclickKeyToValueMap;
     private final ContentResolver mContentResolver;
     private int mCurrentUiAutoClickMode;
-    private RadioButtonPreference mDelayModePref;
+    private SelectorWithWidgetPreference mDelayModePref;
     private OnChangeListener mOnChangeListener;
     private final Resources mResources;
     private LayoutPreference mSeekBerPreference;
     private SharedPreferences mSharedPreferences;
 
-    /* loaded from: classes.dex */
     public interface OnChangeListener {
         void onCheckedChanged(Preference preference);
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return 0;
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
 
     public ToggleAutoclickPreferenceController(Context context, String str) {
-        this(context, null, str);
+        this(context, (Lifecycle) null, str);
     }
 
     public ToggleAutoclickPreferenceController(Context context, Lifecycle lifecycle, String str) {
@@ -104,18 +89,16 @@ public class ToggleAutoclickPreferenceController extends BasePreferenceControlle
         this.mOnChangeListener = onChangeListener;
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
-        RadioButtonPreference radioButtonPreference = (RadioButtonPreference) preferenceScreen.findPreference(getPreferenceKey());
-        this.mDelayModePref = radioButtonPreference;
-        radioButtonPreference.setOnClickListener(this);
+        SelectorWithWidgetPreference selectorWithWidgetPreference = (SelectorWithWidgetPreference) preferenceScreen.findPreference(getPreferenceKey());
+        this.mDelayModePref = selectorWithWidgetPreference;
+        selectorWithWidgetPreference.setOnClickListener(this);
         this.mSeekBerPreference = (LayoutPreference) preferenceScreen.findPreference(KEY_AUTOCLICK_CUSTOM_SEEKBAR);
         updateState(this.mDelayModePref);
     }
 
-    @Override // com.android.settingslib.widget.RadioButtonPreference.OnClickListener
-    public void onRadioButtonClicked(RadioButtonPreference radioButtonPreference) {
+    public void onRadioButtonClicked(SelectorWithWidgetPreference selectorWithWidgetPreference) {
         handleRadioButtonPreferenceChange(this.mAccessibilityAutoclickKeyToValueMap.get(this.mPreferenceKey).intValue());
         OnChangeListener onChangeListener = this.mOnChangeListener;
         if (onChangeListener != null) {
@@ -133,7 +116,6 @@ public class ToggleAutoclickPreferenceController extends BasePreferenceControlle
         this.mSeekBerPreference.setVisible(this.mCurrentUiAutoClickMode == i);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         boolean z = true;
@@ -148,8 +130,8 @@ public class ToggleAutoclickPreferenceController extends BasePreferenceControlle
     }
 
     private void setAutoclickModeToKeyMap() {
-        String[] stringArray = this.mResources.getStringArray(R.array.accessibility_autoclick_control_selector_keys);
-        int[] intArray = this.mResources.getIntArray(R.array.accessibility_autoclick_selector_values);
+        String[] stringArray = this.mResources.getStringArray(R$array.accessibility_autoclick_control_selector_keys);
+        int[] intArray = this.mResources.getIntArray(R$array.accessibility_autoclick_selector_values);
         int length = intArray.length;
         for (int i = 0; i < length; i++) {
             this.mAccessibilityAutoclickKeyToValueMap.put(stringArray[i], Integer.valueOf(intArray[i]));

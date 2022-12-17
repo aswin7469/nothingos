@@ -1,8 +1,10 @@
 package com.google.android.material.appbar;
 
+import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -10,7 +12,6 @@ import android.graphics.Region;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -22,7 +23,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.math.MathUtils;
 import androidx.core.util.ObjectsCompat;
-import androidx.core.view.OnApplyWindowInsetsListener;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.R$attr;
@@ -35,9 +35,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.google.android.material.internal.CollapsingTextHelper;
 import com.google.android.material.internal.DescendantOffsetUtils;
-import com.google.android.material.internal.ThemeEnforcement;
-import com.google.android.material.theme.overlay.MaterialThemeOverlay;
-/* loaded from: classes.dex */
+
 public class CollapsingToolbarLayout extends FrameLayout {
     private static final int DEF_STYLE_RES = R$style.Widget_Design_CollapsingToolbar;
     final CollapsingTextHelper collapsingTextHelper;
@@ -71,91 +69,170 @@ public class CollapsingToolbarLayout extends FrameLayout {
     private int topInsetApplied;
 
     public CollapsingToolbarLayout(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public CollapsingToolbarLayout(Context context, AttributeSet attributeSet) {
         this(context, attributeSet, R$attr.collapsingToolbarLayoutStyle);
     }
 
-    /* JADX WARN: Illegal instructions before constructor call */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public CollapsingToolbarLayout(Context context, AttributeSet attributeSet, int i) {
-        super(MaterialThemeOverlay.wrap(context, attributeSet, i, r4), attributeSet, i);
-        int i2 = DEF_STYLE_RES;
-        this.refreshToolbar = true;
-        this.tmpRect = new Rect();
-        this.scrimVisibleHeightTrigger = -1;
-        this.topInsetApplied = 0;
-        this.extraMultilineHeight = 0;
-        Context context2 = getContext();
-        CollapsingTextHelper collapsingTextHelper = new CollapsingTextHelper(this);
-        this.collapsingTextHelper = collapsingTextHelper;
-        collapsingTextHelper.setTextSizeInterpolator(AnimationUtils.DECELERATE_INTERPOLATOR);
-        collapsingTextHelper.setRtlTextDirectionHeuristicsEnabled(false);
-        this.elevationOverlayProvider = new ElevationOverlayProvider(context2);
-        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context2, attributeSet, R$styleable.CollapsingToolbarLayout, i, i2, new int[0]);
-        collapsingTextHelper.setExpandedTextGravity(obtainStyledAttributes.getInt(R$styleable.CollapsingToolbarLayout_expandedTitleGravity, 8388691));
-        collapsingTextHelper.setCollapsedTextGravity(obtainStyledAttributes.getInt(R$styleable.CollapsingToolbarLayout_collapsedTitleGravity, 8388627));
-        int dimensionPixelSize = obtainStyledAttributes.getDimensionPixelSize(R$styleable.CollapsingToolbarLayout_expandedTitleMargin, 0);
-        this.expandedMarginBottom = dimensionPixelSize;
-        this.expandedMarginEnd = dimensionPixelSize;
-        this.expandedMarginTop = dimensionPixelSize;
-        this.expandedMarginStart = dimensionPixelSize;
-        int i3 = R$styleable.CollapsingToolbarLayout_expandedTitleMarginStart;
-        if (obtainStyledAttributes.hasValue(i3)) {
-            this.expandedMarginStart = obtainStyledAttributes.getDimensionPixelSize(i3, 0);
-        }
-        int i4 = R$styleable.CollapsingToolbarLayout_expandedTitleMarginEnd;
-        if (obtainStyledAttributes.hasValue(i4)) {
-            this.expandedMarginEnd = obtainStyledAttributes.getDimensionPixelSize(i4, 0);
-        }
-        int i5 = R$styleable.CollapsingToolbarLayout_expandedTitleMarginTop;
-        if (obtainStyledAttributes.hasValue(i5)) {
-            this.expandedMarginTop = obtainStyledAttributes.getDimensionPixelSize(i5, 0);
-        }
-        int i6 = R$styleable.CollapsingToolbarLayout_expandedTitleMarginBottom;
-        if (obtainStyledAttributes.hasValue(i6)) {
-            this.expandedMarginBottom = obtainStyledAttributes.getDimensionPixelSize(i6, 0);
-        }
-        this.collapsingTitleEnabled = obtainStyledAttributes.getBoolean(R$styleable.CollapsingToolbarLayout_titleEnabled, true);
-        setTitle(obtainStyledAttributes.getText(R$styleable.CollapsingToolbarLayout_title));
-        collapsingTextHelper.setExpandedTextAppearance(R$style.TextAppearance_Design_CollapsingToolbar_Expanded);
-        collapsingTextHelper.setCollapsedTextAppearance(androidx.appcompat.R$style.TextAppearance_AppCompat_Widget_ActionBar_Title);
-        int i7 = R$styleable.CollapsingToolbarLayout_expandedTitleTextAppearance;
-        if (obtainStyledAttributes.hasValue(i7)) {
-            collapsingTextHelper.setExpandedTextAppearance(obtainStyledAttributes.getResourceId(i7, 0));
-        }
-        int i8 = R$styleable.CollapsingToolbarLayout_collapsedTitleTextAppearance;
-        if (obtainStyledAttributes.hasValue(i8)) {
-            collapsingTextHelper.setCollapsedTextAppearance(obtainStyledAttributes.getResourceId(i8, 0));
-        }
-        this.scrimVisibleHeightTrigger = obtainStyledAttributes.getDimensionPixelSize(R$styleable.CollapsingToolbarLayout_scrimVisibleHeightTrigger, -1);
-        int i9 = R$styleable.CollapsingToolbarLayout_maxLines;
-        if (obtainStyledAttributes.hasValue(i9)) {
-            collapsingTextHelper.setMaxLines(obtainStyledAttributes.getInt(i9, 1));
-        }
-        this.scrimAnimationDuration = obtainStyledAttributes.getInt(R$styleable.CollapsingToolbarLayout_scrimAnimationDuration, 600);
-        setContentScrim(obtainStyledAttributes.getDrawable(R$styleable.CollapsingToolbarLayout_contentScrim));
-        setStatusBarScrim(obtainStyledAttributes.getDrawable(R$styleable.CollapsingToolbarLayout_statusBarScrim));
-        setTitleCollapseMode(obtainStyledAttributes.getInt(R$styleable.CollapsingToolbarLayout_titleCollapseMode, 0));
-        this.toolbarId = obtainStyledAttributes.getResourceId(R$styleable.CollapsingToolbarLayout_toolbarId, -1);
-        this.forceApplySystemWindowInsetTop = obtainStyledAttributes.getBoolean(R$styleable.CollapsingToolbarLayout_forceApplySystemWindowInsetTop, false);
-        this.extraMultilineHeightEnabled = obtainStyledAttributes.getBoolean(R$styleable.CollapsingToolbarLayout_extraMultilineHeightEnabled, false);
-        obtainStyledAttributes.recycle();
-        setWillNotDraw(false);
-        ViewCompat.setOnApplyWindowInsetsListener(this, new OnApplyWindowInsetsListener() { // from class: com.google.android.material.appbar.CollapsingToolbarLayout.1
-            @Override // androidx.core.view.OnApplyWindowInsetsListener
-            public WindowInsetsCompat onApplyWindowInsets(View view, WindowInsetsCompat windowInsetsCompat) {
-                return CollapsingToolbarLayout.this.onWindowInsetChanged(windowInsetsCompat);
-            }
-        });
+    /* JADX WARNING: Illegal instructions before constructor call */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public CollapsingToolbarLayout(android.content.Context r11, android.util.AttributeSet r12, int r13) {
+        /*
+            r10 = this;
+            int r4 = DEF_STYLE_RES
+            android.content.Context r11 = com.google.android.material.theme.overlay.MaterialThemeOverlay.wrap(r11, r12, r13, r4)
+            r10.<init>(r11, r12, r13)
+            r11 = 1
+            r10.refreshToolbar = r11
+            android.graphics.Rect r0 = new android.graphics.Rect
+            r0.<init>()
+            r10.tmpRect = r0
+            r6 = -1
+            r10.scrimVisibleHeightTrigger = r6
+            r7 = 0
+            r10.topInsetApplied = r7
+            r10.extraMultilineHeight = r7
+            android.content.Context r8 = r10.getContext()
+            com.google.android.material.internal.CollapsingTextHelper r9 = new com.google.android.material.internal.CollapsingTextHelper
+            r9.<init>(r10)
+            r10.collapsingTextHelper = r9
+            android.animation.TimeInterpolator r0 = com.google.android.material.animation.AnimationUtils.DECELERATE_INTERPOLATOR
+            r9.setTextSizeInterpolator(r0)
+            r9.setRtlTextDirectionHeuristicsEnabled(r7)
+            com.google.android.material.elevation.ElevationOverlayProvider r0 = new com.google.android.material.elevation.ElevationOverlayProvider
+            r0.<init>(r8)
+            r10.elevationOverlayProvider = r0
+            int[] r2 = com.google.android.material.R$styleable.CollapsingToolbarLayout
+            int[] r5 = new int[r7]
+            r0 = r8
+            r1 = r12
+            r3 = r13
+            android.content.res.TypedArray r12 = com.google.android.material.internal.ThemeEnforcement.obtainStyledAttributes(r0, r1, r2, r3, r4, r5)
+            int r13 = com.google.android.material.R$styleable.CollapsingToolbarLayout_expandedTitleGravity
+            r0 = 8388691(0x800053, float:1.175506E-38)
+            int r13 = r12.getInt(r13, r0)
+            r9.setExpandedTextGravity(r13)
+            int r13 = com.google.android.material.R$styleable.CollapsingToolbarLayout_collapsedTitleGravity
+            r0 = 8388627(0x800013, float:1.175497E-38)
+            int r13 = r12.getInt(r13, r0)
+            r9.setCollapsedTextGravity(r13)
+            int r13 = com.google.android.material.R$styleable.CollapsingToolbarLayout_expandedTitleMargin
+            int r13 = r12.getDimensionPixelSize(r13, r7)
+            r10.expandedMarginBottom = r13
+            r10.expandedMarginEnd = r13
+            r10.expandedMarginTop = r13
+            r10.expandedMarginStart = r13
+            int r13 = com.google.android.material.R$styleable.CollapsingToolbarLayout_expandedTitleMarginStart
+            boolean r0 = r12.hasValue(r13)
+            if (r0 == 0) goto L_0x0074
+            int r13 = r12.getDimensionPixelSize(r13, r7)
+            r10.expandedMarginStart = r13
+        L_0x0074:
+            int r13 = com.google.android.material.R$styleable.CollapsingToolbarLayout_expandedTitleMarginEnd
+            boolean r0 = r12.hasValue(r13)
+            if (r0 == 0) goto L_0x0082
+            int r13 = r12.getDimensionPixelSize(r13, r7)
+            r10.expandedMarginEnd = r13
+        L_0x0082:
+            int r13 = com.google.android.material.R$styleable.CollapsingToolbarLayout_expandedTitleMarginTop
+            boolean r0 = r12.hasValue(r13)
+            if (r0 == 0) goto L_0x0090
+            int r13 = r12.getDimensionPixelSize(r13, r7)
+            r10.expandedMarginTop = r13
+        L_0x0090:
+            int r13 = com.google.android.material.R$styleable.CollapsingToolbarLayout_expandedTitleMarginBottom
+            boolean r0 = r12.hasValue(r13)
+            if (r0 == 0) goto L_0x009e
+            int r13 = r12.getDimensionPixelSize(r13, r7)
+            r10.expandedMarginBottom = r13
+        L_0x009e:
+            int r13 = com.google.android.material.R$styleable.CollapsingToolbarLayout_titleEnabled
+            boolean r13 = r12.getBoolean(r13, r11)
+            r10.collapsingTitleEnabled = r13
+            int r13 = com.google.android.material.R$styleable.CollapsingToolbarLayout_title
+            java.lang.CharSequence r13 = r12.getText(r13)
+            r10.setTitle(r13)
+            int r13 = com.google.android.material.R$style.TextAppearance_Design_CollapsingToolbar_Expanded
+            r9.setExpandedTextAppearance(r13)
+            int r13 = androidx.appcompat.R$style.TextAppearance_AppCompat_Widget_ActionBar_Title
+            r9.setCollapsedTextAppearance(r13)
+            int r13 = com.google.android.material.R$styleable.CollapsingToolbarLayout_expandedTitleTextAppearance
+            boolean r0 = r12.hasValue(r13)
+            if (r0 == 0) goto L_0x00c8
+            int r13 = r12.getResourceId(r13, r7)
+            r9.setExpandedTextAppearance(r13)
+        L_0x00c8:
+            int r13 = com.google.android.material.R$styleable.CollapsingToolbarLayout_collapsedTitleTextAppearance
+            boolean r0 = r12.hasValue(r13)
+            if (r0 == 0) goto L_0x00d7
+            int r13 = r12.getResourceId(r13, r7)
+            r9.setCollapsedTextAppearance(r13)
+        L_0x00d7:
+            int r13 = com.google.android.material.R$styleable.CollapsingToolbarLayout_expandedTitleTextColor
+            boolean r0 = r12.hasValue(r13)
+            if (r0 == 0) goto L_0x00e6
+            android.content.res.ColorStateList r13 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r8, (android.content.res.TypedArray) r12, (int) r13)
+            r9.setExpandedTextColor(r13)
+        L_0x00e6:
+            int r13 = com.google.android.material.R$styleable.CollapsingToolbarLayout_collapsedTitleTextColor
+            boolean r0 = r12.hasValue(r13)
+            if (r0 == 0) goto L_0x00f5
+            android.content.res.ColorStateList r13 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r8, (android.content.res.TypedArray) r12, (int) r13)
+            r9.setCollapsedTextColor(r13)
+        L_0x00f5:
+            int r13 = com.google.android.material.R$styleable.CollapsingToolbarLayout_scrimVisibleHeightTrigger
+            int r13 = r12.getDimensionPixelSize(r13, r6)
+            r10.scrimVisibleHeightTrigger = r13
+            int r13 = com.google.android.material.R$styleable.CollapsingToolbarLayout_maxLines
+            boolean r0 = r12.hasValue(r13)
+            if (r0 == 0) goto L_0x010c
+            int r11 = r12.getInt(r13, r11)
+            r9.setMaxLines(r11)
+        L_0x010c:
+            int r11 = com.google.android.material.R$styleable.CollapsingToolbarLayout_titlePositionInterpolator
+            boolean r13 = r12.hasValue(r11)
+            if (r13 == 0) goto L_0x011f
+            int r11 = r12.getResourceId(r11, r7)
+            android.view.animation.Interpolator r11 = android.view.animation.AnimationUtils.loadInterpolator(r8, r11)
+            r9.setPositionInterpolator(r11)
+        L_0x011f:
+            int r11 = com.google.android.material.R$styleable.CollapsingToolbarLayout_scrimAnimationDuration
+            r13 = 600(0x258, float:8.41E-43)
+            int r11 = r12.getInt(r11, r13)
+            long r0 = (long) r11
+            r10.scrimAnimationDuration = r0
+            int r11 = com.google.android.material.R$styleable.CollapsingToolbarLayout_contentScrim
+            android.graphics.drawable.Drawable r11 = r12.getDrawable(r11)
+            r10.setContentScrim(r11)
+            int r11 = com.google.android.material.R$styleable.CollapsingToolbarLayout_statusBarScrim
+            android.graphics.drawable.Drawable r11 = r12.getDrawable(r11)
+            r10.setStatusBarScrim(r11)
+            int r11 = com.google.android.material.R$styleable.CollapsingToolbarLayout_titleCollapseMode
+            int r11 = r12.getInt(r11, r7)
+            r10.setTitleCollapseMode(r11)
+            int r11 = com.google.android.material.R$styleable.CollapsingToolbarLayout_toolbarId
+            int r11 = r12.getResourceId(r11, r6)
+            r10.toolbarId = r11
+            int r11 = com.google.android.material.R$styleable.CollapsingToolbarLayout_forceApplySystemWindowInsetTop
+            boolean r11 = r12.getBoolean(r11, r7)
+            r10.forceApplySystemWindowInsetTop = r11
+            int r11 = com.google.android.material.R$styleable.CollapsingToolbarLayout_extraMultilineHeightEnabled
+            boolean r11 = r12.getBoolean(r11, r7)
+            r10.extraMultilineHeightEnabled = r11
+            r12.recycle()
+            r10.setWillNotDraw(r7)
+            com.google.android.material.appbar.CollapsingToolbarLayout$1 r11 = new com.google.android.material.appbar.CollapsingToolbarLayout$1
+            r11.<init>()
+            androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(r10, r11)
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.google.android.material.appbar.CollapsingToolbarLayout.<init>(android.content.Context, android.util.AttributeSet, int):void");
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onAttachedToWindow() {
+    /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
         super.onAttachedToWindow();
         ViewParent parent = getParent();
         if (parent instanceof AppBarLayout) {
@@ -170,17 +247,18 @@ public class CollapsingToolbarLayout extends FrameLayout {
         }
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onDetachedFromWindow() {
+    /* access modifiers changed from: protected */
+    public void onDetachedFromWindow() {
         ViewParent parent = getParent();
-        AppBarLayout.OnOffsetChangedListener onOffsetChangedListener = this.onOffsetChangedListener;
-        if (onOffsetChangedListener != null && (parent instanceof AppBarLayout)) {
-            ((AppBarLayout) parent).removeOnOffsetChangedListener(onOffsetChangedListener);
+        AppBarLayout.OnOffsetChangedListener onOffsetChangedListener2 = this.onOffsetChangedListener;
+        if (onOffsetChangedListener2 != null && (parent instanceof AppBarLayout)) {
+            ((AppBarLayout) parent).removeOnOffsetChangedListener(onOffsetChangedListener2);
         }
         super.onDetachedFromWindow();
     }
 
-    WindowInsetsCompat onWindowInsetChanged(WindowInsetsCompat windowInsetsCompat) {
+    /* access modifiers changed from: package-private */
+    public WindowInsetsCompat onWindowInsetChanged(WindowInsetsCompat windowInsetsCompat) {
         WindowInsetsCompat windowInsetsCompat2 = ViewCompat.getFitsSystemWindows(this) ? windowInsetsCompat : null;
         if (!ObjectsCompat.equals(this.lastInsets, windowInsetsCompat2)) {
             this.lastInsets = windowInsetsCompat2;
@@ -189,7 +267,6 @@ public class CollapsingToolbarLayout extends FrameLayout {
         return windowInsetsCompat.consumeSystemWindowInsets();
     }
 
-    @Override // android.view.View
     public void draw(Canvas canvas) {
         Drawable drawable;
         super.draw(canvas);
@@ -199,30 +276,34 @@ public class CollapsingToolbarLayout extends FrameLayout {
             this.contentScrim.draw(canvas);
         }
         if (this.collapsingTitleEnabled && this.drawCollapsingTitle) {
-            if (this.toolbar != null && this.contentScrim != null && this.scrimAlpha > 0 && isTitleCollapseFadeMode() && this.collapsingTextHelper.getExpansionFraction() < this.collapsingTextHelper.getFadeModeThresholdFraction()) {
+            if (this.toolbar == null || this.contentScrim == null || this.scrimAlpha <= 0 || !isTitleCollapseFadeMode() || this.collapsingTextHelper.getExpansionFraction() >= this.collapsingTextHelper.getFadeModeThresholdFraction()) {
+                this.collapsingTextHelper.draw(canvas);
+            } else {
                 int save = canvas.save();
                 canvas.clipRect(this.contentScrim.getBounds(), Region.Op.DIFFERENCE);
                 this.collapsingTextHelper.draw(canvas);
                 canvas.restoreToCount(save);
-            } else {
-                this.collapsingTextHelper.draw(canvas);
             }
         }
-        if (this.statusBarScrim == null || this.scrimAlpha <= 0) {
-            return;
+        if (this.statusBarScrim != null && this.scrimAlpha > 0) {
+            WindowInsetsCompat windowInsetsCompat = this.lastInsets;
+            int systemWindowInsetTop = windowInsetsCompat != null ? windowInsetsCompat.getSystemWindowInsetTop() : 0;
+            if (systemWindowInsetTop > 0) {
+                this.statusBarScrim.setBounds(0, -this.currentOffset, getWidth(), systemWindowInsetTop - this.currentOffset);
+                this.statusBarScrim.mutate().setAlpha(this.scrimAlpha);
+                this.statusBarScrim.draw(canvas);
+            }
         }
-        WindowInsetsCompat windowInsetsCompat = this.lastInsets;
-        int systemWindowInsetTop = windowInsetsCompat != null ? windowInsetsCompat.getSystemWindowInsetTop() : 0;
-        if (systemWindowInsetTop <= 0) {
-            return;
-        }
-        this.statusBarScrim.setBounds(0, -this.currentOffset, getWidth(), systemWindowInsetTop - this.currentOffset);
-        this.statusBarScrim.mutate().setAlpha(this.scrimAlpha);
-        this.statusBarScrim.draw(canvas);
     }
 
-    @Override // android.view.ViewGroup
-    protected boolean drawChild(Canvas canvas, View view, long j) {
+    /* access modifiers changed from: protected */
+    public void onConfigurationChanged(Configuration configuration) {
+        super.onConfigurationChanged(configuration);
+        this.collapsingTextHelper.maybeUpdateFontWeightAdjustment(configuration);
+    }
+
+    /* access modifiers changed from: protected */
+    public boolean drawChild(Canvas canvas, View view, long j) {
         boolean z;
         if (this.contentScrim == null || this.scrimAlpha <= 0 || !isToolbarChild(view)) {
             z = false;
@@ -232,11 +313,14 @@ public class CollapsingToolbarLayout extends FrameLayout {
             this.contentScrim.draw(canvas);
             z = true;
         }
-        return super.drawChild(canvas, view, j) || z;
+        if (super.drawChild(canvas, view, j) || z) {
+            return true;
+        }
+        return false;
     }
 
-    @Override // android.view.View
-    protected void onSizeChanged(int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: protected */
+    public void onSizeChanged(int i, int i2, int i3, int i4) {
         super.onSizeChanged(i, i2, i3, i4);
         Drawable drawable = this.contentScrim;
         if (drawable != null) {
@@ -265,43 +349,58 @@ public class CollapsingToolbarLayout extends FrameLayout {
         drawable.setBounds(0, 0, i, i2);
     }
 
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r4v0, resolved type: android.view.View} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v3, resolved type: android.view.ViewGroup} */
+    /* JADX WARNING: Multi-variable type inference failed */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
     private void ensureToolbar() {
-        if (!this.refreshToolbar) {
-            return;
-        }
-        ViewGroup viewGroup = null;
-        this.toolbar = null;
-        this.toolbarDirectChild = null;
-        int i = this.toolbarId;
-        if (i != -1) {
-            ViewGroup viewGroup2 = (ViewGroup) findViewById(i);
-            this.toolbar = viewGroup2;
-            if (viewGroup2 != null) {
-                this.toolbarDirectChild = findDirectChild(viewGroup2);
-            }
-        }
-        if (this.toolbar == null) {
-            int childCount = getChildCount();
-            int i2 = 0;
-            while (true) {
-                if (i2 >= childCount) {
-                    break;
-                }
-                View childAt = getChildAt(i2);
-                if (isToolbar(childAt)) {
-                    viewGroup = (ViewGroup) childAt;
-                    break;
-                }
-                i2++;
-            }
-            this.toolbar = viewGroup;
-        }
-        updateDummyView();
-        this.refreshToolbar = false;
+        /*
+            r6 = this;
+            boolean r0 = r6.refreshToolbar
+            if (r0 != 0) goto L_0x0005
+            return
+        L_0x0005:
+            r0 = 0
+            r6.toolbar = r0
+            r6.toolbarDirectChild = r0
+            int r1 = r6.toolbarId
+            r2 = -1
+            if (r1 == r2) goto L_0x001f
+            android.view.View r1 = r6.findViewById(r1)
+            android.view.ViewGroup r1 = (android.view.ViewGroup) r1
+            r6.toolbar = r1
+            if (r1 == 0) goto L_0x001f
+            android.view.View r1 = r6.findDirectChild(r1)
+            r6.toolbarDirectChild = r1
+        L_0x001f:
+            android.view.ViewGroup r1 = r6.toolbar
+            r2 = 0
+            if (r1 != 0) goto L_0x003e
+            int r1 = r6.getChildCount()
+            r3 = r2
+        L_0x0029:
+            if (r3 >= r1) goto L_0x003c
+            android.view.View r4 = r6.getChildAt(r3)
+            boolean r5 = isToolbar(r4)
+            if (r5 == 0) goto L_0x0039
+            r0 = r4
+            android.view.ViewGroup r0 = (android.view.ViewGroup) r0
+            goto L_0x003c
+        L_0x0039:
+            int r3 = r3 + 1
+            goto L_0x0029
+        L_0x003c:
+            r6.toolbar = r0
+        L_0x003e:
+            r6.updateDummyView()
+            r6.refreshToolbar = r2
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.google.android.material.appbar.CollapsingToolbarLayout.ensureToolbar():void");
     }
 
     private static boolean isToolbar(View view) {
-        return (view instanceof Toolbar) || (Build.VERSION.SDK_INT >= 21 && (view instanceof android.widget.Toolbar));
+        return (view instanceof Toolbar) || (view instanceof android.widget.Toolbar);
     }
 
     private boolean isToolbarChild(View view) {
@@ -317,10 +416,12 @@ public class CollapsingToolbarLayout extends FrameLayout {
     }
 
     private View findDirectChild(View view) {
-        for (ViewParent parent = view.getParent(); parent != this && parent != null; parent = parent.getParent()) {
+        ViewParent parent = view.getParent();
+        while (parent != this && parent != null) {
             if (parent instanceof View) {
                 view = (View) parent;
             }
+            parent = parent.getParent();
         }
         return view;
     }
@@ -333,20 +434,18 @@ public class CollapsingToolbarLayout extends FrameLayout {
                 ((ViewGroup) parent).removeView(this.dummyView);
             }
         }
-        if (!this.collapsingTitleEnabled || this.toolbar == null) {
-            return;
+        if (this.collapsingTitleEnabled && this.toolbar != null) {
+            if (this.dummyView == null) {
+                this.dummyView = new View(getContext());
+            }
+            if (this.dummyView.getParent() == null) {
+                this.toolbar.addView(this.dummyView, -1, -1);
+            }
         }
-        if (this.dummyView == null) {
-            this.dummyView = new View(getContext());
-        }
-        if (this.dummyView.getParent() != null) {
-            return;
-        }
-        this.toolbar.addView(this.dummyView, -1, -1);
     }
 
-    @Override // android.widget.FrameLayout, android.view.View
-    protected void onMeasure(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         ensureToolbar();
         super.onMeasure(i, i2);
         int mode = View.MeasureSpec.getMode(i2);
@@ -359,9 +458,9 @@ public class CollapsingToolbarLayout extends FrameLayout {
         if (this.extraMultilineHeightEnabled && this.collapsingTextHelper.getMaxLines() > 1) {
             updateTitleFromToolbarIfNeeded();
             updateTextBounds(0, 0, getMeasuredWidth(), getMeasuredHeight(), true);
-            int lineCount = this.collapsingTextHelper.getLineCount();
-            if (lineCount > 1) {
-                this.extraMultilineHeight = Math.round(this.collapsingTextHelper.getExpandedTextFullHeight()) * (lineCount - 1);
+            int expandedLineCount = this.collapsingTextHelper.getExpandedLineCount();
+            if (expandedLineCount > 1) {
+                this.extraMultilineHeight = Math.round(this.collapsingTextHelper.getExpandedTextFullHeight()) * (expandedLineCount - 1);
                 super.onMeasure(i, View.MeasureSpec.makeMeasureSpec(getMeasuredHeight() + this.extraMultilineHeight, 1073741824));
             }
         }
@@ -376,8 +475,8 @@ public class CollapsingToolbarLayout extends FrameLayout {
         }
     }
 
-    @Override // android.widget.FrameLayout, android.view.ViewGroup, android.view.View
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
         WindowInsetsCompat windowInsetsCompat = this.lastInsets;
         if (windowInsetsCompat != null) {
@@ -405,28 +504,25 @@ public class CollapsingToolbarLayout extends FrameLayout {
 
     private void updateTextBounds(int i, int i2, int i3, int i4, boolean z) {
         View view;
-        if (!this.collapsingTitleEnabled || (view = this.dummyView) == null) {
-            return;
+        if (this.collapsingTitleEnabled && (view = this.dummyView) != null) {
+            boolean z2 = false;
+            boolean z3 = ViewCompat.isAttachedToWindow(view) && this.dummyView.getVisibility() == 0;
+            this.drawCollapsingTitle = z3;
+            if (z3 || z) {
+                if (ViewCompat.getLayoutDirection(this) == 1) {
+                    z2 = true;
+                }
+                updateCollapsedBounds(z2);
+                this.collapsingTextHelper.setExpandedBounds(z2 ? this.expandedMarginEnd : this.expandedMarginStart, this.tmpRect.top + this.expandedMarginTop, (i3 - i) - (z2 ? this.expandedMarginStart : this.expandedMarginEnd), (i4 - i2) - this.expandedMarginBottom);
+                this.collapsingTextHelper.recalculate(z);
+            }
         }
-        boolean z2 = false;
-        boolean z3 = ViewCompat.isAttachedToWindow(view) && this.dummyView.getVisibility() == 0;
-        this.drawCollapsingTitle = z3;
-        if (!z3 && !z) {
-            return;
-        }
-        if (ViewCompat.getLayoutDirection(this) == 1) {
-            z2 = true;
-        }
-        updateCollapsedBounds(z2);
-        this.collapsingTextHelper.setExpandedBounds(z2 ? this.expandedMarginEnd : this.expandedMarginStart, this.tmpRect.top + this.expandedMarginTop, (i3 - i) - (z2 ? this.expandedMarginStart : this.expandedMarginEnd), (i4 - i2) - this.expandedMarginBottom);
-        this.collapsingTextHelper.recalculate(z);
     }
 
     private void updateTitleFromToolbarIfNeeded() {
-        if (this.toolbar == null || !this.collapsingTitleEnabled || !TextUtils.isEmpty(this.collapsingTextHelper.getText())) {
-            return;
+        if (this.toolbar != null && this.collapsingTitleEnabled && TextUtils.isEmpty(this.collapsingTextHelper.getText())) {
+            setTitle(getToolbarTitle(this.toolbar));
         }
-        setTitle(getToolbarTitle(this.toolbar));
     }
 
     private void updateCollapsedBounds(boolean z) {
@@ -442,38 +538,38 @@ public class CollapsingToolbarLayout extends FrameLayout {
         ViewGroup viewGroup = this.toolbar;
         int i4 = 0;
         if (viewGroup instanceof Toolbar) {
-            Toolbar toolbar = (Toolbar) viewGroup;
-            i4 = toolbar.getTitleMarginStart();
-            i2 = toolbar.getTitleMarginEnd();
-            i3 = toolbar.getTitleMarginTop();
-            i = toolbar.getTitleMarginBottom();
-        } else if (Build.VERSION.SDK_INT < 24 || !(viewGroup instanceof android.widget.Toolbar)) {
-            i = 0;
-            i2 = 0;
-            i3 = 0;
-        } else {
-            android.widget.Toolbar toolbar2 = (android.widget.Toolbar) viewGroup;
+            Toolbar toolbar2 = (Toolbar) viewGroup;
             i4 = toolbar2.getTitleMarginStart();
             i2 = toolbar2.getTitleMarginEnd();
-            i3 = toolbar2.getTitleMarginTop();
-            i = toolbar2.getTitleMarginBottom();
+            i = toolbar2.getTitleMarginTop();
+            i3 = toolbar2.getTitleMarginBottom();
+        } else if (viewGroup instanceof android.widget.Toolbar) {
+            android.widget.Toolbar toolbar3 = (android.widget.Toolbar) viewGroup;
+            i4 = toolbar3.getTitleMarginStart();
+            i2 = toolbar3.getTitleMarginEnd();
+            i = toolbar3.getTitleMarginTop();
+            i3 = toolbar3.getTitleMarginBottom();
+        } else {
+            i3 = 0;
+            i2 = 0;
+            i = 0;
         }
-        CollapsingTextHelper collapsingTextHelper = this.collapsingTextHelper;
+        CollapsingTextHelper collapsingTextHelper2 = this.collapsingTextHelper;
         Rect rect = this.tmpRect;
         int i5 = rect.left + (z ? i2 : i4);
-        int i6 = rect.top + maxOffsetForPinChild + i3;
+        int i6 = rect.top + maxOffsetForPinChild + i;
         int i7 = rect.right;
         if (!z) {
             i4 = i2;
         }
-        collapsingTextHelper.setCollapsedBounds(i5, i6, i7 - i4, (rect.bottom + maxOffsetForPinChild) - i);
+        collapsingTextHelper2.setCollapsedBounds(i5, i6, i7 - i4, (rect.bottom + maxOffsetForPinChild) - i3);
     }
 
     private static CharSequence getToolbarTitle(View view) {
         if (view instanceof Toolbar) {
             return ((Toolbar) view).getTitle();
         }
-        if (Build.VERSION.SDK_INT >= 21 && (view instanceof android.widget.Toolbar)) {
+        if (view instanceof android.widget.Toolbar) {
             return ((android.widget.Toolbar) view).getTitle();
         }
         return null;
@@ -481,22 +577,22 @@ public class CollapsingToolbarLayout extends FrameLayout {
 
     private static int getHeightWithMargins(View view) {
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-        if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
-            ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
-            return view.getMeasuredHeight() + marginLayoutParams.topMargin + marginLayoutParams.bottomMargin;
+        if (!(layoutParams instanceof ViewGroup.MarginLayoutParams)) {
+            return view.getMeasuredHeight();
         }
-        return view.getMeasuredHeight();
+        ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
+        return view.getMeasuredHeight() + marginLayoutParams.topMargin + marginLayoutParams.bottomMargin;
     }
 
     static ViewOffsetHelper getViewOffsetHelper(View view) {
         int i = R$id.view_offset_helper;
         ViewOffsetHelper viewOffsetHelper = (ViewOffsetHelper) view.getTag(i);
-        if (viewOffsetHelper == null) {
-            ViewOffsetHelper viewOffsetHelper2 = new ViewOffsetHelper(view);
-            view.setTag(i, viewOffsetHelper2);
-            return viewOffsetHelper2;
+        if (viewOffsetHelper != null) {
+            return viewOffsetHelper;
         }
-        return viewOffsetHelper;
+        ViewOffsetHelper viewOffsetHelper2 = new ViewOffsetHelper(view);
+        view.setTag(i, viewOffsetHelper2);
+        return viewOffsetHelper2;
     }
 
     public void setTitle(CharSequence charSequence) {
@@ -519,10 +615,9 @@ public class CollapsingToolbarLayout extends FrameLayout {
         if (parent instanceof AppBarLayout) {
             disableLiftOnScrollIfNeeded((AppBarLayout) parent);
         }
-        if (!isTitleCollapseFadeMode || this.contentScrim != null) {
-            return;
+        if (isTitleCollapseFadeMode && this.contentScrim == null) {
+            setContentScrimColor(this.elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(getResources().getDimension(R$dimen.design_appbar_elevation)));
         }
-        setContentScrimColor(this.elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(getResources().getDimension(R$dimen.design_appbar_elevation)));
     }
 
     public int getTitleCollapseMode() {
@@ -561,30 +656,36 @@ public class CollapsingToolbarLayout extends FrameLayout {
     }
 
     private void animateScrim(int i) {
+        TimeInterpolator timeInterpolator;
         ensureToolbar();
         ValueAnimator valueAnimator = this.scrimAnimator;
         if (valueAnimator == null) {
             ValueAnimator valueAnimator2 = new ValueAnimator();
             this.scrimAnimator = valueAnimator2;
-            valueAnimator2.setDuration(this.scrimAnimationDuration);
-            this.scrimAnimator.setInterpolator(i > this.scrimAlpha ? AnimationUtils.FAST_OUT_LINEAR_IN_INTERPOLATOR : AnimationUtils.LINEAR_OUT_SLOW_IN_INTERPOLATOR);
-            this.scrimAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.google.android.material.appbar.CollapsingToolbarLayout.2
-                @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-                public void onAnimationUpdate(ValueAnimator valueAnimator3) {
-                    CollapsingToolbarLayout.this.setScrimAlpha(((Integer) valueAnimator3.getAnimatedValue()).intValue());
+            if (i > this.scrimAlpha) {
+                timeInterpolator = AnimationUtils.FAST_OUT_LINEAR_IN_INTERPOLATOR;
+            } else {
+                timeInterpolator = AnimationUtils.LINEAR_OUT_SLOW_IN_INTERPOLATOR;
+            }
+            valueAnimator2.setInterpolator(timeInterpolator);
+            this.scrimAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    CollapsingToolbarLayout.this.setScrimAlpha(((Integer) valueAnimator.getAnimatedValue()).intValue());
                 }
             });
         } else if (valueAnimator.isRunning()) {
             this.scrimAnimator.cancel();
         }
-        this.scrimAnimator.setIntValues(this.scrimAlpha, i);
+        this.scrimAnimator.setDuration(this.scrimAnimationDuration);
+        this.scrimAnimator.setIntValues(new int[]{this.scrimAlpha, i});
         this.scrimAnimator.start();
     }
 
-    void setScrimAlpha(int i) {
+    /* access modifiers changed from: package-private */
+    public void setScrimAlpha(int i) {
         ViewGroup viewGroup;
         if (i != this.scrimAlpha) {
-            if (this.contentScrim != null && (viewGroup = this.toolbar) != null) {
+            if (!(this.contentScrim == null || (viewGroup = this.toolbar) == null)) {
                 ViewCompat.postInvalidateOnAnimation(viewGroup);
             }
             this.scrimAlpha = i;
@@ -592,7 +693,8 @@ public class CollapsingToolbarLayout extends FrameLayout {
         }
     }
 
-    int getScrimAlpha() {
+    /* access modifiers changed from: package-private */
+    public int getScrimAlpha() {
         return this.scrimAlpha;
     }
 
@@ -601,7 +703,7 @@ public class CollapsingToolbarLayout extends FrameLayout {
         if (drawable2 != drawable) {
             Drawable drawable3 = null;
             if (drawable2 != null) {
-                drawable2.setCallback(null);
+                drawable2.setCallback((Drawable.Callback) null);
             }
             if (drawable != null) {
                 drawable3 = drawable.mutate();
@@ -633,7 +735,7 @@ public class CollapsingToolbarLayout extends FrameLayout {
         if (drawable2 != drawable) {
             Drawable drawable3 = null;
             if (drawable2 != null) {
-                drawable2.setCallback(null);
+                drawable2.setCallback((Drawable.Callback) null);
             }
             if (drawable != null) {
                 drawable3 = drawable.mutate();
@@ -652,8 +754,8 @@ public class CollapsingToolbarLayout extends FrameLayout {
         }
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void drawableStateChanged() {
+    /* access modifiers changed from: protected */
+    public void drawableStateChanged() {
         super.drawableStateChanged();
         int[] drawableState = getDrawableState();
         Drawable drawable = this.statusBarScrim;
@@ -665,33 +767,31 @@ public class CollapsingToolbarLayout extends FrameLayout {
         if (drawable2 != null && drawable2.isStateful()) {
             z |= drawable2.setState(drawableState);
         }
-        CollapsingTextHelper collapsingTextHelper = this.collapsingTextHelper;
-        if (collapsingTextHelper != null) {
-            z |= collapsingTextHelper.setState(drawableState);
+        CollapsingTextHelper collapsingTextHelper2 = this.collapsingTextHelper;
+        if (collapsingTextHelper2 != null) {
+            z |= collapsingTextHelper2.setState(drawableState);
         }
         if (z) {
             invalidate();
         }
     }
 
-    @Override // android.view.View
-    protected boolean verifyDrawable(Drawable drawable) {
+    /* access modifiers changed from: protected */
+    public boolean verifyDrawable(Drawable drawable) {
         return super.verifyDrawable(drawable) || drawable == this.contentScrim || drawable == this.statusBarScrim;
     }
 
-    @Override // android.view.View
     public void setVisibility(int i) {
         super.setVisibility(i);
         boolean z = i == 0;
         Drawable drawable = this.statusBarScrim;
-        if (drawable != null && drawable.isVisible() != z) {
+        if (!(drawable == null || drawable.isVisible() == z)) {
             this.statusBarScrim.setVisible(z, false);
         }
         Drawable drawable2 = this.contentScrim;
-        if (drawable2 == null || drawable2.isVisible() == z) {
-            return;
+        if (drawable2 != null && drawable2.isVisible() != z) {
+            this.contentScrim.setVisible(z, false);
         }
-        this.contentScrim.setVisible(z, false);
     }
 
     public void setStatusBarScrimColor(int i) {
@@ -867,6 +967,14 @@ public class CollapsingToolbarLayout extends FrameLayout {
         return getHeight() / 3;
     }
 
+    public void setTitlePositionInterpolator(TimeInterpolator timeInterpolator) {
+        this.collapsingTextHelper.setPositionInterpolator(timeInterpolator);
+    }
+
+    public TimeInterpolator getTitlePositionInterpolator() {
+        return this.collapsingTextHelper.getPositionInterpolator();
+    }
+
     public void setScrimAnimationDuration(long j) {
         this.scrimAnimationDuration = j;
     }
@@ -875,38 +983,31 @@ public class CollapsingToolbarLayout extends FrameLayout {
         return this.scrimAnimationDuration;
     }
 
-    @Override // android.widget.FrameLayout, android.view.ViewGroup
-    protected boolean checkLayoutParams(ViewGroup.LayoutParams layoutParams) {
+    /* access modifiers changed from: protected */
+    public boolean checkLayoutParams(ViewGroup.LayoutParams layoutParams) {
         return layoutParams instanceof LayoutParams;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.widget.FrameLayout, android.view.ViewGroup
-    /* renamed from: generateDefaultLayoutParams  reason: collision with other method in class */
-    public LayoutParams mo651generateDefaultLayoutParams() {
+    /* access modifiers changed from: protected */
+    public LayoutParams generateDefaultLayoutParams() {
         return new LayoutParams(-1, -1);
     }
 
-    @Override // android.widget.FrameLayout, android.view.ViewGroup
     public FrameLayout.LayoutParams generateLayoutParams(AttributeSet attributeSet) {
         return new LayoutParams(getContext(), attributeSet);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.widget.FrameLayout, android.view.ViewGroup
+    /* access modifiers changed from: protected */
     public FrameLayout.LayoutParams generateLayoutParams(ViewGroup.LayoutParams layoutParams) {
         return new LayoutParams(layoutParams);
     }
 
-    /* loaded from: classes.dex */
     public static class LayoutParams extends FrameLayout.LayoutParams {
-        int collapseMode;
-        float parallaxMult;
+        int collapseMode = 0;
+        float parallaxMult = 0.5f;
 
         public LayoutParams(Context context, AttributeSet attributeSet) {
             super(context, attributeSet);
-            this.collapseMode = 0;
-            this.parallaxMult = 0.5f;
             TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.CollapsingToolbarLayout_Layout);
             this.collapseMode = obtainStyledAttributes.getInt(R$styleable.CollapsingToolbarLayout_Layout_layout_collapseMode, 0);
             setParallaxMultiplier(obtainStyledAttributes.getFloat(R$styleable.CollapsingToolbarLayout_Layout_layout_collapseParallaxMultiplier, 0.5f));
@@ -915,14 +1016,10 @@ public class CollapsingToolbarLayout extends FrameLayout {
 
         public LayoutParams(int i, int i2) {
             super(i, i2);
-            this.collapseMode = 0;
-            this.parallaxMult = 0.5f;
         }
 
         public LayoutParams(ViewGroup.LayoutParams layoutParams) {
             super(layoutParams);
-            this.collapseMode = 0;
-            this.parallaxMult = 0.5f;
         }
 
         public void setParallaxMultiplier(float f) {
@@ -930,29 +1027,27 @@ public class CollapsingToolbarLayout extends FrameLayout {
         }
     }
 
-    final void updateScrimVisibility() {
-        if (this.contentScrim == null && this.statusBarScrim == null) {
-            return;
+    /* access modifiers changed from: package-private */
+    public final void updateScrimVisibility() {
+        if (this.contentScrim != null || this.statusBarScrim != null) {
+            setScrimsShown(getHeight() + this.currentOffset < getScrimVisibleHeightTrigger());
         }
-        setScrimsShown(getHeight() + this.currentOffset < getScrimVisibleHeightTrigger());
     }
 
-    final int getMaxOffsetForPinChild(View view) {
-        return ((getHeight() - getViewOffsetHelper(view).getLayoutTop()) - view.getHeight()) - ((FrameLayout.LayoutParams) ((LayoutParams) view.getLayoutParams())).bottomMargin;
+    /* access modifiers changed from: package-private */
+    public final int getMaxOffsetForPinChild(View view) {
+        return ((getHeight() - getViewOffsetHelper(view).getLayoutTop()) - view.getHeight()) - ((LayoutParams) view.getLayoutParams()).bottomMargin;
     }
 
     private void updateContentDescriptionFromTitle() {
         setContentDescription(getTitle());
     }
 
-    /* loaded from: classes.dex */
     private class OffsetUpdateListener implements AppBarLayout.OnOffsetChangedListener {
         OffsetUpdateListener() {
         }
 
-        @Override // com.google.android.material.appbar.AppBarLayout.BaseOnOffsetChangedListener
         public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-            int height;
             CollapsingToolbarLayout collapsingToolbarLayout = CollapsingToolbarLayout.this;
             collapsingToolbarLayout.currentOffset = i;
             WindowInsetsCompat windowInsetsCompat = collapsingToolbarLayout.lastInsets;
@@ -966,7 +1061,7 @@ public class CollapsingToolbarLayout extends FrameLayout {
                 if (i3 == 1) {
                     viewOffsetHelper.setTopAndBottomOffset(MathUtils.clamp(-i, 0, CollapsingToolbarLayout.this.getMaxOffsetForPinChild(childAt)));
                 } else if (i3 == 2) {
-                    viewOffsetHelper.setTopAndBottomOffset(Math.round((-i) * layoutParams.parallaxMult));
+                    viewOffsetHelper.setTopAndBottomOffset(Math.round(((float) (-i)) * layoutParams.parallaxMult));
                 }
             }
             CollapsingToolbarLayout.this.updateScrimVisibility();
@@ -974,12 +1069,13 @@ public class CollapsingToolbarLayout extends FrameLayout {
             if (collapsingToolbarLayout2.statusBarScrim != null && systemWindowInsetTop > 0) {
                 ViewCompat.postInvalidateOnAnimation(collapsingToolbarLayout2);
             }
-            int height2 = (CollapsingToolbarLayout.this.getHeight() - ViewCompat.getMinimumHeight(CollapsingToolbarLayout.this)) - systemWindowInsetTop;
-            float f = height2;
-            CollapsingToolbarLayout.this.collapsingTextHelper.setFadeModeStartFraction(Math.min(1.0f, (height - CollapsingToolbarLayout.this.getScrimVisibleHeightTrigger()) / f));
+            int height = CollapsingToolbarLayout.this.getHeight();
+            int minimumHeight = (height - ViewCompat.getMinimumHeight(CollapsingToolbarLayout.this)) - systemWindowInsetTop;
+            float f = (float) minimumHeight;
+            CollapsingToolbarLayout.this.collapsingTextHelper.setFadeModeStartFraction(Math.min(1.0f, ((float) (height - CollapsingToolbarLayout.this.getScrimVisibleHeightTrigger())) / f));
             CollapsingToolbarLayout collapsingToolbarLayout3 = CollapsingToolbarLayout.this;
-            collapsingToolbarLayout3.collapsingTextHelper.setCurrentOffsetY(collapsingToolbarLayout3.currentOffset + height2);
-            CollapsingToolbarLayout.this.collapsingTextHelper.setExpansionFraction(Math.abs(i) / f);
+            collapsingToolbarLayout3.collapsingTextHelper.setCurrentOffsetY(collapsingToolbarLayout3.currentOffset + minimumHeight);
+            CollapsingToolbarLayout.this.collapsingTextHelper.setExpansionFraction(((float) Math.abs(i)) / f);
         }
     }
 }

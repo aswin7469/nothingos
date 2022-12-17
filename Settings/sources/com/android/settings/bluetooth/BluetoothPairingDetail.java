@@ -5,11 +5,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
-import com.android.settings.R;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settingslib.bluetooth.BluetoothDeviceFilter;
 import com.android.settingslib.bluetooth.CachedBluetoothDevice;
 import com.android.settingslib.widget.FooterPreference;
-/* loaded from: classes.dex */
+
 public class BluetoothPairingDetail extends DeviceListPreferenceFragment {
     static final String KEY_AVAIL_DEVICES = "available_devices";
     static final String KEY_FOOTER_PREF = "footer_preference";
@@ -18,18 +19,15 @@ public class BluetoothPairingDetail extends DeviceListPreferenceFragment {
     FooterPreference mFooterPreference;
     private boolean mInitialScanStarted;
 
-    @Override // com.android.settings.bluetooth.DeviceListPreferenceFragment
     public String getDeviceListKey() {
         return KEY_AVAIL_DEVICES;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "BluetoothPairingDetail";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1018;
     }
@@ -38,14 +36,12 @@ public class BluetoothPairingDetail extends DeviceListPreferenceFragment {
         super("no_config_bluetooth");
     }
 
-    @Override // com.android.settings.dashboard.RestrictedDashboardFragment, com.android.settings.SettingsPreferenceFragment, androidx.fragment.app.Fragment
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
         this.mInitialScanStarted = false;
         this.mAlwaysDiscoverable = new AlwaysDiscoverable(getContext());
     }
 
-    @Override // com.android.settings.bluetooth.DeviceListPreferenceFragment, com.android.settings.dashboard.DashboardFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onStart() {
         super.onStart();
         if (this.mLocalManager == null) {
@@ -56,13 +52,13 @@ public class BluetoothPairingDetail extends DeviceListPreferenceFragment {
         this.mAvailableDevicesCategory.setProgress(this.mBluetoothAdapter.isDiscovering());
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         ((BluetoothDeviceRenamePreferenceController) use(BluetoothDeviceRenamePreferenceController.class)).setFragment(this);
     }
 
-    void updateBluetooth() {
+    /* access modifiers changed from: package-private */
+    public void updateBluetooth() {
         if (this.mBluetoothAdapter.isEnabled()) {
             updateContent(this.mBluetoothAdapter.getState());
         } else {
@@ -70,7 +66,6 @@ public class BluetoothPairingDetail extends DeviceListPreferenceFragment {
         }
     }
 
-    @Override // com.android.settings.bluetooth.DeviceListPreferenceFragment, com.android.settings.dashboard.DashboardFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onStop() {
         super.onStop();
         if (this.mLocalManager == null) {
@@ -81,16 +76,16 @@ public class BluetoothPairingDetail extends DeviceListPreferenceFragment {
         disableScanning();
     }
 
-    @Override // com.android.settings.bluetooth.DeviceListPreferenceFragment
-    void initPreferencesFromPreferenceScreen() {
+    /* access modifiers changed from: package-private */
+    public void initPreferencesFromPreferenceScreen() {
         this.mAvailableDevicesCategory = (BluetoothProgressCategory) findPreference(KEY_AVAIL_DEVICES);
         FooterPreference footerPreference = (FooterPreference) findPreference(KEY_FOOTER_PREF);
         this.mFooterPreference = footerPreference;
         footerPreference.setSelectable(false);
     }
 
-    @Override // com.android.settings.bluetooth.DeviceListPreferenceFragment
-    void enableScanning() {
+    /* access modifiers changed from: package-private */
+    public void enableScanning() {
         if (!this.mInitialScanStarted) {
             if (this.mAvailableDevicesCategory != null) {
                 removeAllDevices();
@@ -101,33 +96,31 @@ public class BluetoothPairingDetail extends DeviceListPreferenceFragment {
         super.enableScanning();
     }
 
-    @Override // com.android.settings.bluetooth.DeviceListPreferenceFragment
-    void onDevicePreferenceClick(BluetoothDevicePreference bluetoothDevicePreference) {
+    /* access modifiers changed from: package-private */
+    public void onDevicePreferenceClick(BluetoothDevicePreference bluetoothDevicePreference) {
         disableScanning();
         super.onDevicePreferenceClick(bluetoothDevicePreference);
     }
 
-    @Override // com.android.settings.bluetooth.DeviceListPreferenceFragment, com.android.settingslib.bluetooth.BluetoothCallback
     public void onScanningStateChanged(boolean z) {
         super.onScanningStateChanged(z);
         this.mAvailableDevicesCategory.setProgress(z | this.mScanEnabled);
     }
 
-    void updateContent(int i) {
+    /* access modifiers changed from: package-private */
+    public void updateContent(int i) {
         if (i == 10) {
             finish();
-        } else if (i != 12) {
-        } else {
+        } else if (i == 12) {
             this.mDevicePreferenceMap.clear();
             this.mBluetoothAdapter.enable();
-            addDeviceCategory(this.mAvailableDevicesCategory, R.string.bluetooth_preference_found_media_devices, BluetoothDeviceFilter.ALL_FILTER, this.mInitialScanStarted);
+            addDeviceCategory(this.mAvailableDevicesCategory, R$string.bluetooth_preference_found_media_devices, BluetoothDeviceFilter.ALL_FILTER, this.mInitialScanStarted);
             updateFooterPreference(this.mFooterPreference);
             this.mAlwaysDiscoverable.start();
             enableScanning();
         }
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public void onBluetoothStateChanged(int i) {
         super.onBluetoothStateChanged(i);
         updateContent(i);
@@ -136,43 +129,37 @@ public class BluetoothPairingDetail extends DeviceListPreferenceFragment {
         }
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public void onDeviceBondStateChanged(CachedBluetoothDevice cachedBluetoothDevice, int i) {
         BluetoothDevice device;
         if (i == 12) {
             finish();
-        } else if (this.mSelectedDevice == null || cachedBluetoothDevice == null || (device = cachedBluetoothDevice.getDevice()) == null || !this.mSelectedDevice.equals(device) || i != 10) {
-        } else {
+        } else if (this.mSelectedDevice != null && cachedBluetoothDevice != null && (device = cachedBluetoothDevice.getDevice()) != null && this.mSelectedDevice.equals(device) && i == 10) {
             enableScanning();
         }
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public void onProfileConnectionStateChanged(CachedBluetoothDevice cachedBluetoothDevice, int i, int i2) {
-        if (cachedBluetoothDevice == null || !cachedBluetoothDevice.isConnected()) {
-            return;
-        }
-        BluetoothDevice device = cachedBluetoothDevice.getDevice();
-        if (device != null && this.mSelectedList.contains(device)) {
-            finish();
-        } else if (!this.mDevicePreferenceMap.containsKey(cachedBluetoothDevice)) {
-        } else {
-            onDeviceDeleted(cachedBluetoothDevice);
+        if (cachedBluetoothDevice != null && cachedBluetoothDevice.isConnected()) {
+            BluetoothDevice device = cachedBluetoothDevice.getDevice();
+            if (device != null && this.mSelectedList.contains(device)) {
+                finish();
+            } else if (this.mDevicePreferenceMap.containsKey(cachedBluetoothDevice)) {
+                onDeviceDeleted(cachedBluetoothDevice);
+            }
         }
     }
 
-    @Override // com.android.settings.support.actionbar.HelpResourceProvider
     public int getHelpResource() {
-        return R.string.help_url_bluetooth;
+        return R$string.help_url_bluetooth;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.bluetooth_pairing_detail;
+        return R$xml.bluetooth_pairing_detail;
     }
 
-    void showBluetoothTurnedOnToast() {
-        Toast.makeText(getContext(), R.string.connected_device_bluetooth_turned_on_toast, 0).show();
+    /* access modifiers changed from: package-private */
+    public void showBluetoothTurnedOnToast() {
+        Toast.makeText(getContext(), R$string.connected_device_bluetooth_turned_on_toast, 0).show();
     }
 }

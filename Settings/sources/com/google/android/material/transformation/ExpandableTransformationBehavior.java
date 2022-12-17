@@ -6,12 +6,14 @@ import android.animation.AnimatorSet;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-@Deprecated
-/* loaded from: classes2.dex */
-public abstract class ExpandableTransformationBehavior extends ExpandableBehavior {
-    private AnimatorSet currentAnimation;
 
-    protected abstract AnimatorSet onCreateExpandedStateChangeAnimation(View view, View view2, boolean z, boolean z2);
+@Deprecated
+public abstract class ExpandableTransformationBehavior extends ExpandableBehavior {
+    /* access modifiers changed from: private */
+    public AnimatorSet currentAnimation;
+
+    /* access modifiers changed from: protected */
+    public abstract AnimatorSet onCreateExpandedStateChangeAnimation(View view, View view2, boolean z, boolean z2);
 
     public ExpandableTransformationBehavior() {
     }
@@ -20,8 +22,7 @@ public abstract class ExpandableTransformationBehavior extends ExpandableBehavio
         super(context, attributeSet);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.google.android.material.transformation.ExpandableBehavior
+    /* access modifiers changed from: protected */
     public boolean onExpandedStateChange(View view, View view2, boolean z, boolean z2) {
         AnimatorSet animatorSet = this.currentAnimation;
         boolean z3 = animatorSet != null;
@@ -30,10 +31,9 @@ public abstract class ExpandableTransformationBehavior extends ExpandableBehavio
         }
         AnimatorSet onCreateExpandedStateChangeAnimation = onCreateExpandedStateChangeAnimation(view, view2, z, z3);
         this.currentAnimation = onCreateExpandedStateChangeAnimation;
-        onCreateExpandedStateChangeAnimation.addListener(new AnimatorListenerAdapter() { // from class: com.google.android.material.transformation.ExpandableTransformationBehavior.1
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
+        onCreateExpandedStateChangeAnimation.addListener(new AnimatorListenerAdapter() {
             public void onAnimationEnd(Animator animator) {
-                ExpandableTransformationBehavior.this.currentAnimation = null;
+                AnimatorSet unused = ExpandableTransformationBehavior.this.currentAnimation = null;
             }
         });
         this.currentAnimation.start();

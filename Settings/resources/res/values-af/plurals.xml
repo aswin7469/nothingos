@@ -5,8 +5,8 @@
         <item quantity="other">%d dae gelede</item>
     </plurals>
     <plurals name="abc_slice_duration_min">
-        <item quantity="one">%d m. gelede</item>
-        <item quantity="other">%d m. gelede</item>
+        <item quantity="one">%d min. gelede</item>
+        <item quantity="other">%d min. gelede</item>
     </plurals>
     <plurals name="abc_slice_duration_years">
         <item quantity="one">%d jaar gelede</item>
@@ -234,11 +234,11 @@
     </plurals>
     <plurals name="notifications_sent_daily">
         <item quantity="one">~%d kennisgewing per dag</item>
-        <item quantity="other">~%d kennisgewings per dag</item>
+        <item quantity="other">~%,d kennisgewings per dag</item>
     </plurals>
     <plurals name="notifications_sent_weekly">
         <item quantity="one">~%d kennisgewing per week</item>
-        <item quantity="other">~%d kennisgewings per week</item>
+        <item quantity="other">~%,d kennisgewings per week</item>
     </plurals>
     <plurals name="number_of_device_admins">
         <item quantity="one">%d aktiewe program</item>
@@ -320,14 +320,6 @@
         <item quantity="one">Vertrou of verwyder sertifikaat</item>
         <item quantity="other">Vertrou of verwyder sertifikate</item>
     </plurals>
-    <plurals name="ssl_ca_cert_info_message">
-        <item quantity="one">%s het &apos;n sertifikaatoutoriteit vir jou werkprofiel geïnstalleer wat dit vir hulle moontlik kan maak om werknetwerkaktiwiteit, insluitend e-posse, programme en beveiligde webwerwe, te monitor.\n\nKontak jou administrateur vir meer inligting oor hierdie sertifikaat.</item>
-        <item quantity="other">%s het sertifikaatoutoriteite vir jou werkprofiel geïnstalleer wat dit vir hulle moontlik kan maak om werknetwerkaktiwiteit, insluitend e-posse, programme en beveiligde webwerwe, te monitor.\n\nKontak jou administrateur vir meer inligting oor hierdie sertifikate.</item>
-    </plurals>
-    <plurals name="ssl_ca_cert_info_message_device_owner">
-        <item quantity="one">%s het &apos;n sertifikaatoutoriteit op jou toestel geïnstalleer wat dit vir hulle moontlik kan maak om jou toestel se netwerkaktiwiteit, insluitend e-posse, programme en beveiligde webwerwe, te monitor.\n\nKontak jou administrateur vir meer inligting oor hierdie sertifikaat.</item>
-        <item quantity="other">%s het sertifikaatoutoriteite op jou toestel geïnstalleer wat dit vir hulle moontlik kan maak om jou toestel se netwerkaktiwiteit, insluitend e-posse, programme en beveiligde webwerwe, te monitor.\n\nKontak jou administrateur vir meer inligting oor hierdie sertifikate.</item>
-    </plurals>
     <plurals name="ssl_ca_cert_settings_button">
         <item quantity="one">Kontroleer sertifikaat</item>
         <item quantity="other">Kontroleer sertifikate</item>
@@ -359,10 +351,6 @@
     <plurals name="wifi_saved_passpoint_access_points_summary">
         <item quantity="one">1 intekening</item>
         <item quantity="other">%d intekeninge</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d toestel is gekoppel</item>
-        <item quantity="other">%1$d toestelle is gekoppel</item>
     </plurals>
     <plurals name="wrong_pin_code">
         <item quantity="one">Verkeerde SIM-PIN. %d poging oor voor jy jou diensverskaffer moet kontak om jou toestel te ontsluit.</item>

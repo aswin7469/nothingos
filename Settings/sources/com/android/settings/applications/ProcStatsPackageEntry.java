@@ -6,23 +6,18 @@ import android.content.pm.PackageManager;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settingslib.Utils;
+import com.android.settingslib.applications.RecentAppOpsAccess;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
+
 public class ProcStatsPackageEntry implements Parcelable {
-    public static final Parcelable.Creator<ProcStatsPackageEntry> CREATOR = new Parcelable.Creator<ProcStatsPackageEntry>() { // from class: com.android.settings.applications.ProcStatsPackageEntry.1
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: createFromParcel */
-        public ProcStatsPackageEntry mo235createFromParcel(Parcel parcel) {
+    public static final Parcelable.Creator<ProcStatsPackageEntry> CREATOR = new Parcelable.Creator<ProcStatsPackageEntry>() {
+        public ProcStatsPackageEntry createFromParcel(Parcel parcel) {
             return new ProcStatsPackageEntry(parcel);
         }
 
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: newArray */
-        public ProcStatsPackageEntry[] mo236newArray(int i) {
+        public ProcStatsPackageEntry[] newArray(int i) {
             return new ProcStatsPackageEntry[i];
         }
     };
@@ -40,7 +35,6 @@ public class ProcStatsPackageEntry implements Parcelable {
     public ApplicationInfo mUiTargetApp;
     private long mWindowLength;
 
-    @Override // android.os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -71,13 +65,13 @@ public class ProcStatsPackageEntry implements Parcelable {
     }
 
     public void updateMetrics() {
-        this.mMaxBgMem = 0L;
-        this.mAvgBgMem = 0L;
-        this.mBgDuration = 0L;
+        this.mMaxBgMem = 0;
+        this.mAvgBgMem = 0;
+        this.mBgDuration = 0;
         this.mBgWeight = 0.0d;
-        this.mMaxRunMem = 0L;
-        this.mAvgRunMem = 0L;
-        this.mRunDuration = 0L;
+        this.mMaxRunMem = 0;
+        this.mAvgRunMem = 0;
+        this.mRunDuration = 0;
         this.mRunWeight = 0.0d;
         int size = this.mEntries.size();
         for (int i = 0; i < size; i++) {
@@ -91,7 +85,7 @@ public class ProcStatsPackageEntry implements Parcelable {
             this.mMaxBgMem += procStatsEntry.mMaxBgMem;
             this.mMaxRunMem += procStatsEntry.mMaxRunMem;
         }
-        long j = size;
+        long j = (long) size;
         this.mAvgBgMem /= j;
         this.mAvgRunMem /= j;
     }
@@ -102,19 +96,18 @@ public class ProcStatsPackageEntry implements Parcelable {
         this.mUiLabel = str;
         try {
             if ("os".equals(str)) {
-                this.mUiTargetApp = packageManager.getApplicationInfo("android", 4227584);
-                this.mUiLabel = context.getString(R.string.process_stats_os_label);
-            } else {
-                ApplicationInfo applicationInfo = packageManager.getApplicationInfo(this.mPackage, 4227584);
-                this.mUiTargetApp = applicationInfo;
-                this.mUiLabel = applicationInfo.loadLabel(packageManager).toString();
+                this.mUiTargetApp = packageManager.getApplicationInfo(RecentAppOpsAccess.ANDROID_SYSTEM_PACKAGE_NAME, 4227584);
+                this.mUiLabel = context.getString(R$string.process_stats_os_label);
+                return;
             }
+            ApplicationInfo applicationInfo = packageManager.getApplicationInfo(this.mPackage, 4227584);
+            this.mUiTargetApp = applicationInfo;
+            this.mUiLabel = applicationInfo.loadLabel(packageManager).toString();
         } catch (PackageManager.NameNotFoundException unused) {
             Log.d("ProcStatsEntry", "could not find package: " + this.mPackage);
         }
     }
 
-    @Override // android.os.Parcelable
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(this.mPackage);
         parcel.writeTypedList(this.mEntries);
@@ -130,12 +123,12 @@ public class ProcStatsPackageEntry implements Parcelable {
 
     public static CharSequence getFrequency(float f, Context context) {
         if (f > 0.95f) {
-            return context.getString(R.string.always_running, Utils.formatPercentage((int) (f * 100.0f)));
+            return context.getString(R$string.always_running, new Object[]{Utils.formatPercentage((int) (f * 100.0f))});
+        } else if (f > 0.25f) {
+            return context.getString(R$string.sometimes_running, new Object[]{Utils.formatPercentage((int) (f * 100.0f))});
+        } else {
+            return context.getString(R$string.rarely_running, new Object[]{Utils.formatPercentage((int) (f * 100.0f))});
         }
-        if (f > 0.25f) {
-            return context.getString(R.string.sometimes_running, Utils.formatPercentage((int) (f * 100.0f)));
-        }
-        return context.getString(R.string.rarely_running, Utils.formatPercentage((int) (f * 100.0f)));
     }
 
     public double getRunWeight() {

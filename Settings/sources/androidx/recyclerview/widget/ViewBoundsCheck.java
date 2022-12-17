@@ -1,14 +1,14 @@
 package androidx.recyclerview.widget;
 
 import android.view.View;
-/* loaded from: classes.dex */
+import androidx.window.C0447R;
+
 class ViewBoundsCheck {
     BoundFlags mBoundFlags = new BoundFlags();
     final Callback mCallback;
 
-    /* loaded from: classes.dex */
     interface Callback {
-        View getChildAt(int index);
+        View getChildAt(int i);
 
         int getChildEnd(View view);
 
@@ -19,12 +19,10 @@ class ViewBoundsCheck {
         int getParentStart();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public ViewBoundsCheck(Callback callback) {
+    ViewBoundsCheck(Callback callback) {
         this.mCallback = callback;
     }
 
-    /* loaded from: classes.dex */
     static class BoundFlags {
         int mBoundFlags = 0;
         int mChildEnd;
@@ -32,85 +30,93 @@ class ViewBoundsCheck {
         int mRvEnd;
         int mRvStart;
 
-        int compare(int x, int y) {
-            if (x > y) {
+        /* access modifiers changed from: package-private */
+        public int compare(int i, int i2) {
+            if (i > i2) {
                 return 1;
             }
-            return x == y ? 2 : 4;
+            return i == i2 ? 2 : 4;
         }
 
         BoundFlags() {
         }
 
-        void setBounds(int rvStart, int rvEnd, int childStart, int childEnd) {
-            this.mRvStart = rvStart;
-            this.mRvEnd = rvEnd;
-            this.mChildStart = childStart;
-            this.mChildEnd = childEnd;
+        /* access modifiers changed from: package-private */
+        public void setBounds(int i, int i2, int i3, int i4) {
+            this.mRvStart = i;
+            this.mRvEnd = i2;
+            this.mChildStart = i3;
+            this.mChildEnd = i4;
         }
 
-        void addFlags(int flags) {
-            this.mBoundFlags = flags | this.mBoundFlags;
+        /* access modifiers changed from: package-private */
+        public void addFlags(int i) {
+            this.mBoundFlags = i | this.mBoundFlags;
         }
 
-        void resetFlags() {
+        /* access modifiers changed from: package-private */
+        public void resetFlags() {
             this.mBoundFlags = 0;
         }
 
-        boolean boundsMatch() {
+        /* access modifiers changed from: package-private */
+        public boolean boundsMatch() {
             int i = this.mBoundFlags;
-            if ((i & 7) == 0 || (i & (compare(this.mChildStart, this.mRvStart) << 0)) != 0) {
-                int i2 = this.mBoundFlags;
-                if ((i2 & 112) != 0 && (i2 & (compare(this.mChildStart, this.mRvEnd) << 4)) == 0) {
-                    return false;
-                }
-                int i3 = this.mBoundFlags;
-                if ((i3 & 1792) != 0 && (i3 & (compare(this.mChildEnd, this.mRvStart) << 8)) == 0) {
-                    return false;
-                }
-                int i4 = this.mBoundFlags;
-                return (i4 & 28672) == 0 || ((compare(this.mChildEnd, this.mRvEnd) << 12) & i4) != 0;
+            if ((i & 7) != 0 && (i & (compare(this.mChildStart, this.mRvStart) << 0)) == 0) {
+                return false;
+            }
+            int i2 = this.mBoundFlags;
+            if ((i2 & C0447R.styleable.AppCompatTheme_toolbarNavigationButtonStyle) != 0 && (i2 & (compare(this.mChildStart, this.mRvEnd) << 4)) == 0) {
+                return false;
+            }
+            int i3 = this.mBoundFlags;
+            if ((i3 & 1792) != 0 && (i3 & (compare(this.mChildEnd, this.mRvStart) << 8)) == 0) {
+                return false;
+            }
+            int i4 = this.mBoundFlags;
+            if ((i4 & 28672) == 0 || ((compare(this.mChildEnd, this.mRvEnd) << 12) & i4) != 0) {
+                return true;
             }
             return false;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public View findOneViewWithinBoundFlags(int fromIndex, int toIndex, int preferredBoundFlags, int acceptableBoundFlags) {
+    /* access modifiers changed from: package-private */
+    public View findOneViewWithinBoundFlags(int i, int i2, int i3, int i4) {
         int parentStart = this.mCallback.getParentStart();
         int parentEnd = this.mCallback.getParentEnd();
-        int i = toIndex > fromIndex ? 1 : -1;
+        int i5 = i2 > i ? 1 : -1;
         View view = null;
-        while (fromIndex != toIndex) {
-            View childAt = this.mCallback.getChildAt(fromIndex);
+        while (i != i2) {
+            View childAt = this.mCallback.getChildAt(i);
             this.mBoundFlags.setBounds(parentStart, parentEnd, this.mCallback.getChildStart(childAt), this.mCallback.getChildEnd(childAt));
-            if (preferredBoundFlags != 0) {
+            if (i3 != 0) {
                 this.mBoundFlags.resetFlags();
-                this.mBoundFlags.addFlags(preferredBoundFlags);
+                this.mBoundFlags.addFlags(i3);
                 if (this.mBoundFlags.boundsMatch()) {
                     return childAt;
                 }
             }
-            if (acceptableBoundFlags != 0) {
+            if (i4 != 0) {
                 this.mBoundFlags.resetFlags();
-                this.mBoundFlags.addFlags(acceptableBoundFlags);
+                this.mBoundFlags.addFlags(i4);
                 if (this.mBoundFlags.boundsMatch()) {
                     view = childAt;
                 }
             }
-            fromIndex += i;
+            i += i5;
         }
         return view;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public boolean isViewWithinBoundFlags(View child, int boundsFlags) {
-        this.mBoundFlags.setBounds(this.mCallback.getParentStart(), this.mCallback.getParentEnd(), this.mCallback.getChildStart(child), this.mCallback.getChildEnd(child));
-        if (boundsFlags != 0) {
-            this.mBoundFlags.resetFlags();
-            this.mBoundFlags.addFlags(boundsFlags);
-            return this.mBoundFlags.boundsMatch();
+    /* access modifiers changed from: package-private */
+    public boolean isViewWithinBoundFlags(View view, int i) {
+        this.mBoundFlags.setBounds(this.mCallback.getParentStart(), this.mCallback.getParentEnd(), this.mCallback.getChildStart(view), this.mCallback.getChildEnd(view));
+        if (i == 0) {
+            return false;
         }
-        return false;
+        this.mBoundFlags.resetFlags();
+        this.mBoundFlags.addFlags(i);
+        return this.mBoundFlags.boundsMatch();
     }
 }

@@ -2,13 +2,14 @@ package com.android.settingslib.widget;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import com.android.settingslib.drawer.Tile;
-/* loaded from: classes.dex */
+
 public class AdaptiveIcon extends LayerDrawable {
     private AdaptiveConstantState mAdaptiveConstantState;
     int mBackgroundColor;
@@ -32,7 +33,7 @@ public class AdaptiveIcon extends LayerDrawable {
             try {
                 int i2 = metaData.getInt("com.android.settings.bg.argb", 0);
                 if (i2 == 0 && (i = metaData.getInt("com.android.settings.bg.hint", 0)) != 0) {
-                    i2 = context.getPackageManager().getResourcesForApplication(tile.getPackageName()).getColor(i, null);
+                    i2 = context.getPackageManager().getResourcesForApplication(tile.getPackageName()).getColor(i, (Resources.Theme) null);
                 }
                 if (i2 != 0) {
                     setBackgroundColor(i2);
@@ -52,19 +53,15 @@ public class AdaptiveIcon extends LayerDrawable {
         this.mAdaptiveConstantState.mColor = i;
     }
 
-    @Override // android.graphics.drawable.LayerDrawable, android.graphics.drawable.Drawable
     public Drawable.ConstantState getConstantState() {
         return this.mAdaptiveConstantState;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class AdaptiveConstantState extends Drawable.ConstantState {
+    static class AdaptiveConstantState extends Drawable.ConstantState {
         int mColor;
         Context mContext;
         Drawable mDrawable;
 
-        @Override // android.graphics.drawable.Drawable.ConstantState
         public int getChangingConfigurations() {
             return 0;
         }
@@ -74,7 +71,6 @@ public class AdaptiveIcon extends LayerDrawable {
             this.mDrawable = drawable;
         }
 
-        @Override // android.graphics.drawable.Drawable.ConstantState
         public Drawable newDrawable() {
             AdaptiveIcon adaptiveIcon = new AdaptiveIcon(this.mContext, this.mDrawable);
             adaptiveIcon.setBackgroundColor(this.mColor);

@@ -1,11 +1,8 @@
 package androidx.slice.widget;
 
-import android.app.PendingIntent;
 import android.app.RemoteInput;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.os.Build;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewParent;
@@ -16,19 +13,14 @@ import android.widget.TextView;
 import androidx.core.graphics.drawable.IconCompat;
 import androidx.core.widget.ImageViewCompat;
 import androidx.slice.SliceItem;
-import androidx.slice.core.SliceAction;
-import androidx.slice.core.SliceActionImpl;
-import androidx.slice.core.SliceQuery;
-import java.util.Iterator;
-import java.util.List;
-/* loaded from: classes.dex */
+
 public class ActionRow extends FrameLayout {
     private final LinearLayout mActionsGroup;
     private int mColor = -16777216;
     private final int mIconPadding;
     private final int mSize;
 
-    public ActionRow(Context context, boolean fullActions) {
+    public ActionRow(Context context, boolean z) {
         super(context);
         this.mSize = (int) TypedValue.applyDimension(1, 48.0f, context.getResources().getDisplayMetrics());
         this.mIconPadding = (int) TypedValue.applyDimension(1, 12.0f, context.getResources().getDisplayMetrics());
@@ -39,115 +31,136 @@ public class ActionRow extends FrameLayout {
         addView(linearLayout);
     }
 
-    private void setColor(int color) {
-        this.mColor = color;
-        for (int i = 0; i < this.mActionsGroup.getChildCount(); i++) {
-            View childAt = this.mActionsGroup.getChildAt(i);
+    private void setColor(int i) {
+        this.mColor = i;
+        for (int i2 = 0; i2 < this.mActionsGroup.getChildCount(); i2++) {
+            View childAt = this.mActionsGroup.getChildAt(i2);
             if (((Integer) childAt.getTag()).intValue() == 0) {
                 ImageViewCompat.setImageTintList((ImageView) childAt, ColorStateList.valueOf(this.mColor));
             }
         }
     }
 
-    private ImageView addAction(IconCompat icon, boolean allowTint) {
+    private ImageView addAction(IconCompat iconCompat, boolean z) {
         ImageView imageView = new ImageView(getContext());
         int i = this.mIconPadding;
         imageView.setPadding(i, i, i, i);
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        imageView.setImageDrawable(icon.loadDrawable(getContext()));
-        if (allowTint) {
+        imageView.setImageDrawable(iconCompat.loadDrawable(getContext()));
+        if (z) {
             ImageViewCompat.setImageTintList(imageView, ColorStateList.valueOf(this.mColor));
         }
         imageView.setBackground(SliceViewUtil.getDrawable(getContext(), 16843534));
-        imageView.setTag(Boolean.valueOf(allowTint));
+        imageView.setTag(Boolean.valueOf(z));
         addAction(imageView);
         return imageView;
     }
 
-    public void setActions(List<SliceAction> actions, int color) {
-        IconCompat icon;
-        removeAllViews();
-        this.mActionsGroup.removeAllViews();
-        addView(this.mActionsGroup);
-        if (color != -1) {
-            setColor(color);
-        }
-        Iterator<SliceAction> it = actions.iterator();
-        while (true) {
-            int i = 0;
-            boolean z = false;
-            if (it.hasNext()) {
-                SliceAction next = it.next();
-                if (this.mActionsGroup.getChildCount() >= 5) {
-                    return;
-                }
-                SliceActionImpl sliceActionImpl = (SliceActionImpl) next;
-                SliceItem sliceItem = sliceActionImpl.getSliceItem();
-                final SliceItem actionItem = sliceActionImpl.getActionItem();
-                SliceItem find = SliceQuery.find(sliceItem, "input");
-                SliceItem find2 = SliceQuery.find(sliceItem, "image");
-                if (find != null && find2 != null) {
-                    if (Build.VERSION.SDK_INT >= 21) {
-                        handleSetRemoteInputActions(find, find2, actionItem);
-                    } else {
-                        Log.w("ActionRow", "Received RemoteInput on API <20 " + find);
-                    }
-                } else if (next.getIcon() != null && (icon = next.getIcon()) != null && actionItem != null) {
-                    if (next.getImageMode() == 0) {
-                        z = true;
-                    }
-                    addAction(icon, z).setOnClickListener(new View.OnClickListener() { // from class: androidx.slice.widget.ActionRow.1
-                        @Override // android.view.View.OnClickListener
-                        public void onClick(View v) {
-                            try {
-                                actionItem.fireAction(null, null);
-                            } catch (PendingIntent.CanceledException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                }
-            } else {
-                if (getChildCount() == 0) {
-                    i = 8;
-                }
-                setVisibility(i);
-                return;
-            }
-        }
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v4, resolved type: int} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v6, resolved type: boolean} */
+    /* JADX WARNING: type inference failed for: r0v3 */
+    /* JADX WARNING: type inference failed for: r0v5 */
+    /* JADX WARNING: type inference failed for: r0v8 */
+    /* JADX WARNING: Multi-variable type inference failed */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void setActions(java.util.List<androidx.slice.core.SliceAction> r6, int r7) {
+        /*
+            r5 = this;
+            r5.removeAllViews()
+            android.widget.LinearLayout r0 = r5.mActionsGroup
+            r0.removeAllViews()
+            android.widget.LinearLayout r0 = r5.mActionsGroup
+            r5.addView(r0)
+            r0 = -1
+            if (r7 == r0) goto L_0x0013
+            r5.setColor(r7)
+        L_0x0013:
+            java.util.Iterator r6 = r6.iterator()
+        L_0x0017:
+            boolean r7 = r6.hasNext()
+            r0 = 0
+            if (r7 == 0) goto L_0x006f
+            java.lang.Object r7 = r6.next()
+            androidx.slice.core.SliceAction r7 = (androidx.slice.core.SliceAction) r7
+            android.widget.LinearLayout r1 = r5.mActionsGroup
+            int r1 = r1.getChildCount()
+            r2 = 5
+            if (r1 < r2) goto L_0x002e
+            return
+        L_0x002e:
+            r1 = r7
+            androidx.slice.core.SliceActionImpl r1 = (androidx.slice.core.SliceActionImpl) r1
+            androidx.slice.SliceItem r2 = r1.getSliceItem()
+            androidx.slice.SliceItem r1 = r1.getActionItem()
+            java.lang.String r3 = "input"
+            androidx.slice.SliceItem r3 = androidx.slice.core.SliceQuery.find((androidx.slice.SliceItem) r2, (java.lang.String) r3)
+            java.lang.String r4 = "image"
+            androidx.slice.SliceItem r2 = androidx.slice.core.SliceQuery.find((androidx.slice.SliceItem) r2, (java.lang.String) r4)
+            if (r3 == 0) goto L_0x004d
+            if (r2 == 0) goto L_0x004d
+            r5.handleSetRemoteInputActions(r3, r2, r1)
+            goto L_0x0017
+        L_0x004d:
+            androidx.core.graphics.drawable.IconCompat r2 = r7.getIcon()
+            if (r2 == 0) goto L_0x0017
+            androidx.core.graphics.drawable.IconCompat r2 = r7.getIcon()
+            if (r2 == 0) goto L_0x0017
+            if (r1 == 0) goto L_0x0017
+            int r7 = r7.getImageMode()
+            if (r7 != 0) goto L_0x0062
+            r0 = 1
+        L_0x0062:
+            android.widget.ImageView r7 = r5.addAction(r2, r0)
+            androidx.slice.widget.ActionRow$1 r0 = new androidx.slice.widget.ActionRow$1
+            r0.<init>(r1)
+            r7.setOnClickListener(r0)
+            goto L_0x0017
+        L_0x006f:
+            int r6 = r5.getChildCount()
+            if (r6 == 0) goto L_0x0076
+            goto L_0x0078
+        L_0x0076:
+            r0 = 8
+        L_0x0078:
+            r5.setVisibility(r0)
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.slice.widget.ActionRow.setActions(java.util.List, int):void");
     }
 
-    private void addAction(View child) {
+    private void addAction(View view) {
         LinearLayout linearLayout = this.mActionsGroup;
         int i = this.mSize;
-        linearLayout.addView(child, new LinearLayout.LayoutParams(i, i, 1.0f));
+        linearLayout.addView(view, new LinearLayout.LayoutParams(i, i, 1.0f));
     }
 
-    private void handleSetRemoteInputActions(final SliceItem input, SliceItem image, final SliceItem action) {
-        if (input.getRemoteInput().getAllowFreeFormInput()) {
-            addAction(image.getIcon(), !image.hasHint("no_tint")).setOnClickListener(new View.OnClickListener() { // from class: androidx.slice.widget.ActionRow.2
-                @Override // android.view.View.OnClickListener
-                public void onClick(View v) {
-                    ActionRow.this.handleRemoteInputClick(v, action, input.getRemoteInput());
+    private void handleSetRemoteInputActions(final SliceItem sliceItem, SliceItem sliceItem2, final SliceItem sliceItem3) {
+        if (sliceItem.getRemoteInput().getAllowFreeFormInput()) {
+            addAction(sliceItem2.getIcon(), !sliceItem2.hasHint("no_tint")).setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    ActionRow.this.handleRemoteInputClick(view, sliceItem3, sliceItem.getRemoteInput());
                 }
             });
             createRemoteInputView(this.mColor, getContext());
         }
     }
 
-    private void createRemoteInputView(int color, Context context) {
+    private void createRemoteInputView(int i, Context context) {
         RemoteInputView inflate = RemoteInputView.inflate(context, this);
         inflate.setVisibility(4);
         addView(inflate, new FrameLayout.LayoutParams(-1, -1));
-        inflate.setBackgroundColor(color);
+        inflate.setBackgroundColor(i);
     }
 
-    boolean handleRemoteInputClick(View view, SliceItem action, RemoteInput input) {
-        if (input == null) {
+    /* access modifiers changed from: package-private */
+    public boolean handleRemoteInputClick(View view, SliceItem sliceItem, RemoteInput remoteInput) {
+        if (remoteInput == null) {
             return false;
         }
+        ViewParent parent = view.getParent().getParent();
         RemoteInputView remoteInputView = null;
-        for (ViewParent parent = view.getParent().getParent(); parent != null && (!(parent instanceof View) || (remoteInputView = findRemoteInputView((View) parent)) == null); parent = parent.getParent()) {
+        while (parent != null && (!(parent instanceof View) || (remoteInputView = findRemoteInputView((View) parent)) == null)) {
+            parent = parent.getParent();
         }
         if (remoteInputView == null) {
             return false;
@@ -165,16 +178,16 @@ public class ActionRow extends FrameLayout {
         int height = remoteInputView.getHeight() - top;
         int i = width2 - left;
         remoteInputView.setRevealParameters(left, top, Math.max(Math.max(left + top, left + height), Math.max(i + top, i + height)));
-        remoteInputView.setAction(action);
-        remoteInputView.setRemoteInput(new RemoteInput[]{input}, input);
+        remoteInputView.setAction(sliceItem);
+        remoteInputView.setRemoteInput(new RemoteInput[]{remoteInput}, remoteInput);
         remoteInputView.focusAnimated();
         return true;
     }
 
-    private RemoteInputView findRemoteInputView(View v) {
-        if (v == null) {
+    private RemoteInputView findRemoteInputView(View view) {
+        if (view == null) {
             return null;
         }
-        return (RemoteInputView) v.findViewWithTag(RemoteInputView.VIEW_TAG);
+        return (RemoteInputView) view.findViewWithTag(RemoteInputView.VIEW_TAG);
     }
 }

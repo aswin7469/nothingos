@@ -1,14 +1,9 @@
 package com.android.settings.applications.intentpicker;
 
 import android.content.DialogInterface;
-/* loaded from: classes.dex */
+
+/* compiled from: R8$$SyntheticClass */
 public final /* synthetic */ class ProgressDialogFragment$$ExternalSyntheticLambda0 implements DialogInterface.OnClickListener {
-    public static final /* synthetic */ ProgressDialogFragment$$ExternalSyntheticLambda0 INSTANCE = new ProgressDialogFragment$$ExternalSyntheticLambda0();
-
-    private /* synthetic */ ProgressDialogFragment$$ExternalSyntheticLambda0() {
-    }
-
-    @Override // android.content.DialogInterface.OnClickListener
     public final void onClick(DialogInterface dialogInterface, int i) {
         ProgressDialogFragment.lambda$createProgressAlertDialog$0(dialogInterface, i);
     }

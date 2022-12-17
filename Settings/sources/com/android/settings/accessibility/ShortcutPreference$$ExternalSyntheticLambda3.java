@@ -1,18 +1,16 @@
 package com.android.settings.accessibility;
 
-import android.view.MotionEvent;
 import android.view.View;
-/* loaded from: classes.dex */
-public final /* synthetic */ class ShortcutPreference$$ExternalSyntheticLambda3 implements View.OnTouchListener {
-    public static final /* synthetic */ ShortcutPreference$$ExternalSyntheticLambda3 INSTANCE = new ShortcutPreference$$ExternalSyntheticLambda3();
 
-    private /* synthetic */ ShortcutPreference$$ExternalSyntheticLambda3() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class ShortcutPreference$$ExternalSyntheticLambda3 implements View.OnClickListener {
+    public final /* synthetic */ ShortcutPreference f$0;
+
+    public /* synthetic */ ShortcutPreference$$ExternalSyntheticLambda3(ShortcutPreference shortcutPreference) {
+        this.f$0 = shortcutPreference;
     }
 
-    @Override // android.view.View.OnTouchListener
-    public final boolean onTouch(View view, MotionEvent motionEvent) {
-        boolean lambda$onBindViewHolder$1;
-        lambda$onBindViewHolder$1 = ShortcutPreference.lambda$onBindViewHolder$1(view, motionEvent);
-        return lambda$onBindViewHolder$1;
+    public final void onClick(View view) {
+        this.f$0.lambda$onBindViewHolder$4(view);
     }
 }

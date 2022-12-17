@@ -5,41 +5,37 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$array;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.development.DeveloperOptionsPreferenceController;
-/* loaded from: classes.dex */
+
 public class SecondaryDisplayPreferenceController extends DeveloperOptionsPreferenceController implements Preference.OnPreferenceChangeListener, PreferenceControllerMixin {
     private final String[] mListSummaries;
     private final String[] mListValues;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "overlay_display_devices";
     }
 
     public SecondaryDisplayPreferenceController(Context context) {
         super(context);
-        this.mListValues = context.getResources().getStringArray(R.array.overlay_display_devices_values);
-        this.mListSummaries = context.getResources().getStringArray(R.array.overlay_display_devices_entries);
+        this.mListValues = context.getResources().getStringArray(R$array.overlay_display_devices_values);
+        this.mListSummaries = context.getResources().getStringArray(R$array.overlay_display_devices_entries);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         writeSecondaryDisplayDevicesOption(obj.toString());
         return true;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         updateSecondaryDisplayDevicesOptions();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController
+    /* access modifiers changed from: protected */
     public void onDeveloperOptionsSwitchDisabled() {
         super.onDeveloperOptionsSwitchDisabled();
-        writeSecondaryDisplayDevicesOption(null);
+        writeSecondaryDisplayDevicesOption((String) null);
     }
 
     private void updateSecondaryDisplayDevicesOptions() {

@@ -1,17 +1,17 @@
 package com.android.settings.development;
 
 import android.bluetooth.BluetoothCodecConfig;
-/* loaded from: classes.dex */
+
 public class BluetoothA2dpConfigStore {
+    private int mBitsPerSample = 0;
+    private int mChannelMode = 0;
+    private int mCodecPriority = 0;
     private long mCodecSpecific1Value;
     private long mCodecSpecific2Value;
     private long mCodecSpecific3Value;
     private long mCodecSpecific4Value;
     private int mCodecType = 1000000;
-    private int mCodecPriority = 0;
     private int mSampleRate = 0;
-    private int mBitsPerSample = 0;
-    private int mChannelMode = 0;
 
     public void setCodecType(int i) {
         this.mCodecType = i;
@@ -38,14 +38,14 @@ public class BluetoothA2dpConfigStore {
     }
 
     public void setCodecSpecific2Value(int i) {
-        this.mCodecSpecific2Value = i;
+        this.mCodecSpecific2Value = (long) i;
     }
 
     public void setCodecSpecific3Value(int i) {
-        this.mCodecSpecific3Value = i;
+        this.mCodecSpecific3Value = (long) i;
     }
 
     public BluetoothCodecConfig createCodecConfig() {
-        return new BluetoothCodecConfig(this.mCodecType, this.mCodecPriority, this.mSampleRate, this.mBitsPerSample, this.mChannelMode, this.mCodecSpecific1Value, this.mCodecSpecific2Value, this.mCodecSpecific3Value, this.mCodecSpecific4Value);
+        return new BluetoothCodecConfig.Builder().setCodecType(this.mCodecType).setCodecPriority(this.mCodecPriority).setSampleRate(this.mSampleRate).setBitsPerSample(this.mBitsPerSample).setChannelMode(this.mChannelMode).setCodecSpecific1(this.mCodecSpecific1Value).setCodecSpecific2(this.mCodecSpecific2Value).setCodecSpecific3(this.mCodecSpecific3Value).setCodecSpecific4(this.mCodecSpecific4Value).build();
     }
 }

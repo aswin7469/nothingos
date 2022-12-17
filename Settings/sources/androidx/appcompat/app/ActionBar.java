@@ -10,16 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.appcompat.R$styleable;
 import androidx.appcompat.view.ActionMode;
-/* loaded from: classes.dex */
+
 public abstract class ActionBar {
 
-    /* loaded from: classes.dex */
     public interface OnMenuVisibilityListener {
         void onMenuVisibilityChanged(boolean z);
     }
 
     @Deprecated
-    /* loaded from: classes.dex */
     public static abstract class Tab {
         public abstract CharSequence getContentDescription();
 
@@ -50,7 +48,7 @@ public abstract class ActionBar {
 
     public abstract void onConfigurationChanged(Configuration configuration);
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void onDestroy() {
     }
 
@@ -72,13 +70,11 @@ public abstract class ActionBar {
 
     public abstract ActionMode startActionMode(ActionMode.Callback callback);
 
-    /* loaded from: classes.dex */
     public static class LayoutParams extends ViewGroup.MarginLayoutParams {
-        public int gravity;
+        public int gravity = 8388627;
 
         public LayoutParams(Context context, AttributeSet attributeSet) {
             super(context, attributeSet);
-            this.gravity = 0;
             TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.ActionBarLayout);
             this.gravity = obtainStyledAttributes.getInt(R$styleable.ActionBarLayout_android_layout_gravity, 0);
             obtainStyledAttributes.recycle();
@@ -86,19 +82,15 @@ public abstract class ActionBar {
 
         public LayoutParams(int i, int i2) {
             super(i, i2);
-            this.gravity = 0;
-            this.gravity = 8388627;
         }
 
         public LayoutParams(LayoutParams layoutParams) {
-            super((ViewGroup.MarginLayoutParams) layoutParams);
-            this.gravity = 0;
+            super(layoutParams);
             this.gravity = layoutParams.gravity;
         }
 
         public LayoutParams(ViewGroup.LayoutParams layoutParams) {
             super(layoutParams);
-            this.gravity = 0;
         }
     }
 }

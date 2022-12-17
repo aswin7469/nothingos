@@ -6,38 +6,35 @@ import android.text.TextPaint;
 import com.google.android.material.resources.TextAppearance;
 import com.google.android.material.resources.TextAppearanceFontCallback;
 import java.lang.ref.WeakReference;
-/* loaded from: classes2.dex */
+
 public class TextDrawableHelper {
-    private TextAppearance textAppearance;
-    private float textWidth;
-    private final TextPaint textPaint = new TextPaint(1);
-    private final TextAppearanceFontCallback fontCallback = new TextAppearanceFontCallback() { // from class: com.google.android.material.internal.TextDrawableHelper.1
-        @Override // com.google.android.material.resources.TextAppearanceFontCallback
+    /* access modifiers changed from: private */
+    public WeakReference<TextDrawableDelegate> delegate = new WeakReference<>((Object) null);
+    private final TextAppearanceFontCallback fontCallback = new TextAppearanceFontCallback() {
         public void onFontRetrieved(Typeface typeface, boolean z) {
-            if (z) {
-                return;
+            if (!z) {
+                boolean unused = TextDrawableHelper.this.textWidthDirty = true;
+                TextDrawableDelegate textDrawableDelegate = (TextDrawableDelegate) TextDrawableHelper.this.delegate.get();
+                if (textDrawableDelegate != null) {
+                    textDrawableDelegate.onTextSizeChange();
+                }
             }
-            TextDrawableHelper.this.textWidthDirty = true;
-            TextDrawableDelegate textDrawableDelegate = (TextDrawableDelegate) TextDrawableHelper.this.delegate.get();
-            if (textDrawableDelegate == null) {
-                return;
-            }
-            textDrawableDelegate.onTextSizeChange();
         }
 
-        @Override // com.google.android.material.resources.TextAppearanceFontCallback
         public void onFontRetrievalFailed(int i) {
-            TextDrawableHelper.this.textWidthDirty = true;
+            boolean unused = TextDrawableHelper.this.textWidthDirty = true;
             TextDrawableDelegate textDrawableDelegate = (TextDrawableDelegate) TextDrawableHelper.this.delegate.get();
             if (textDrawableDelegate != null) {
                 textDrawableDelegate.onTextSizeChange();
             }
         }
     };
-    private boolean textWidthDirty = true;
-    private WeakReference<TextDrawableDelegate> delegate = new WeakReference<>(null);
+    private TextAppearance textAppearance;
+    private final TextPaint textPaint = new TextPaint(1);
+    private float textWidth;
+    /* access modifiers changed from: private */
+    public boolean textWidthDirty = true;
 
-    /* loaded from: classes2.dex */
     public interface TextDrawableDelegate {
         int[] getState();
 
@@ -83,24 +80,23 @@ public class TextDrawableHelper {
         return this.textAppearance;
     }
 
-    public void setTextAppearance(TextAppearance textAppearance, Context context) {
-        if (this.textAppearance != textAppearance) {
-            this.textAppearance = textAppearance;
-            if (textAppearance != null) {
-                textAppearance.updateMeasureState(context, this.textPaint, this.fontCallback);
-                TextDrawableDelegate textDrawableDelegate = this.delegate.get();
+    public void setTextAppearance(TextAppearance textAppearance2, Context context) {
+        if (this.textAppearance != textAppearance2) {
+            this.textAppearance = textAppearance2;
+            if (textAppearance2 != null) {
+                textAppearance2.updateMeasureState(context, this.textPaint, this.fontCallback);
+                TextDrawableDelegate textDrawableDelegate = (TextDrawableDelegate) this.delegate.get();
                 if (textDrawableDelegate != null) {
                     this.textPaint.drawableState = textDrawableDelegate.getState();
                 }
-                textAppearance.updateDrawState(context, this.textPaint, this.fontCallback);
+                textAppearance2.updateDrawState(context, this.textPaint, this.fontCallback);
                 this.textWidthDirty = true;
             }
-            TextDrawableDelegate textDrawableDelegate2 = this.delegate.get();
-            if (textDrawableDelegate2 == null) {
-                return;
+            TextDrawableDelegate textDrawableDelegate2 = (TextDrawableDelegate) this.delegate.get();
+            if (textDrawableDelegate2 != null) {
+                textDrawableDelegate2.onTextSizeChange();
+                textDrawableDelegate2.onStateChange(textDrawableDelegate2.getState());
             }
-            textDrawableDelegate2.onTextSizeChange();
-            textDrawableDelegate2.onStateChange(textDrawableDelegate2.getState());
         }
     }
 

@@ -5,12 +5,12 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.os.SystemProperties;
+import android.sysprop.BluetoothProperties;
 import android.text.TextUtils;
 import android.util.Log;
 import androidx.preference.PreferenceScreen;
 import com.android.settings.core.SliderPreferenceController;
 import com.android.settings.dashboard.DashboardFragment;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.bluetooth.CachedBluetoothDevice;
 import com.android.settingslib.bluetooth.HeadsetProfile;
 import com.android.settingslib.bluetooth.LocalBluetoothManager;
@@ -20,7 +20,8 @@ import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnPause;
 import com.android.settingslib.core.lifecycle.events.OnResume;
 import java.lang.reflect.InvocationTargetException;
-/* loaded from: classes.dex */
+import java.util.Optional;
+
 public class BADeviceVolumeController extends SliderPreferenceController implements CachedBluetoothDevice.Callback, LifecycleObserver, OnPause, OnResume {
     public static final String BLUETOOTH_ADV_AUDIO_MASK_PROP = "persist.vendor.service.bt.adv_audio_mask";
     public static final String BLUETOOTH_VCP_FOR_BROADCAST_PROP = "persist.vendor.service.bt.vcpForBroadcast";
@@ -31,77 +32,70 @@ public class BADeviceVolumeController extends SliderPreferenceController impleme
     AudioManager mAudioManager;
     private CachedBluetoothDevice mCachedDevice;
     private HeadsetProfile mHeadsetProfile;
-    private boolean mIsVcpForBroadcastSupported;
+    private boolean mIsVcpForBroadcastSupported = false;
     private LocalBluetoothManager mLocalBluetoothManager;
     protected BADeviceVolumePreference mPreference;
     protected LocalBluetoothProfileManager mProfileManager;
-    private VcpProfile mVcpProfile = null;
     private Class<?> mVCachedDeviceClass = null;
+    private VcpProfile mVcpProfile = null;
     private Object mVendorCachedDevice = null;
 
-    @Override // com.android.settings.core.SliderPreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.SliderPreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.core.SliderPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return KEY_BA_DEVICE_VOLUME;
     }
 
-    @Override // com.android.settings.core.SliderPreferenceController, com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.core.SliderPreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.core.SliderPreferenceController, com.android.settings.slices.Sliceable
     public boolean isPublicSlice() {
         return true;
     }
 
-    @Override // com.android.settings.core.SliderPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
 
     public BADeviceVolumeController(Context context) {
         super(context, KEY_BA_DEVICE_VOLUME);
-        boolean z = false;
-        this.mIsVcpForBroadcastSupported = false;
-        if ((SystemProperties.getInt("persist.vendor.service.bt.adv_audio_mask", 0) & 2) == 2 && SystemProperties.getBoolean(BLUETOOTH_VCP_FOR_BROADCAST_PROP, false)) {
+        boolean z;
+        Optional isProfileBapBroadcastSourceEnabled = BluetoothProperties.isProfileBapBroadcastSourceEnabled();
+        Boolean bool = Boolean.FALSE;
+        boolean z2 = true;
+        if (((Boolean) isProfileBapBroadcastSourceEnabled.orElse(bool)).booleanValue() || ((Boolean) BluetoothProperties.isProfileBapBroadcastAssistEnabled().orElse(bool)).booleanValue()) {
+            Log.d(TAG, "Broadcast is supported");
             z = true;
+        } else {
+            z = false;
         }
-        this.mIsVcpForBroadcastSupported = z;
+        this.mIsVcpForBroadcastSupported = ((SystemProperties.getInt("persist.vendor.service.bt.adv_audio_mask", 0) & 2) != 2 || !SystemProperties.getBoolean(BLUETOOTH_VCP_FOR_BROADCAST_PROP, false)) ? false : z2;
+        if (z) {
+            this.mIsVcpForBroadcastSupported = false;
+        }
         Log.d(TAG, "mIsVcpForBroadcastSupported: " + this.mIsVcpForBroadcastSupported);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         Log.d(TAG, "getAvailabilityStatus");
         return this.mIsVcpForBroadcastSupported ? 0 : 3;
     }
 
-    @Override // com.android.settings.core.SliderPreferenceController, com.android.settings.slices.Sliceable
     public boolean isSliceable() {
         return TextUtils.equals(getPreferenceKey(), KEY_BA_DEVICE_VOLUME);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         if (isAvailable()) {
@@ -118,7 +112,6 @@ public class BADeviceVolumeController extends SliderPreferenceController impleme
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnPause
     public void onPause() {
         Log.d(TAG, "onPause");
         CachedBluetoothDevice cachedBluetoothDevice = this.mCachedDevice;
@@ -127,7 +120,6 @@ public class BADeviceVolumeController extends SliderPreferenceController impleme
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnResume
     public void onResume() {
         Log.d(TAG, "onResume");
         CachedBluetoothDevice cachedBluetoothDevice = this.mCachedDevice;
@@ -149,7 +141,7 @@ public class BADeviceVolumeController extends SliderPreferenceController impleme
             try {
                 Class<?> cls = Class.forName(VCACHED_DEVICE_CLASS);
                 this.mVCachedDeviceClass = cls;
-                this.mVendorCachedDevice = cls.getDeclaredMethod("getVendorCachedBluetoothDevice", CachedBluetoothDevice.class, LocalBluetoothProfileManager.class).invoke(null, this.mCachedDevice, this.mProfileManager);
+                this.mVendorCachedDevice = cls.getDeclaredMethod("getVendorCachedBluetoothDevice", new Class[]{CachedBluetoothDevice.class, LocalBluetoothProfileManager.class}).invoke((Object) null, new Object[]{this.mCachedDevice, this.mProfileManager});
             } catch (ClassNotFoundException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                 e.printStackTrace();
             }
@@ -157,7 +149,8 @@ public class BADeviceVolumeController extends SliderPreferenceController impleme
         }
     }
 
-    protected void refresh() {
+    /* access modifiers changed from: protected */
+    public void refresh() {
         Log.d(TAG, "refresh");
         if (!this.mIsVcpForBroadcastSupported || this.mVcpProfile == null) {
             Log.d(TAG, "VCP for broadcast is not supported");
@@ -168,81 +161,75 @@ public class BADeviceVolumeController extends SliderPreferenceController impleme
         int audioState = this.mHeadsetProfile.getAudioState(device);
         boolean z = audioState == 11 || audioState == 12;
         Log.d(TAG, "VCP refresh showSlider: " + enableSlider + " inCall: " + z);
-        if (this.mVcpProfile.getConnectionStatus(device) == 2 && (this.mVcpProfile.getConnectionMode(device) & 2) != 0) {
-            Log.d(TAG, "VCP is connected for broadcast ");
-            this.mPreference.setVisible(true);
-            if (!enableSlider || z) {
-                this.mPreference.setProgress(0);
-                this.mPreference.setEnabled(false);
-                return;
-            }
-            this.mPreference.setEnabled(true);
-            int absoluteVolume = this.mVcpProfile.getAbsoluteVolume(device);
-            if (absoluteVolume == -1) {
-                return;
-            }
-            this.mPreference.setProgress(absoluteVolume);
+        if (this.mVcpProfile.getConnectionStatus(device) != 2 || (this.mVcpProfile.getConnectionMode(device) & 2) == 0) {
+            this.mPreference.setVisible(false);
             return;
         }
-        this.mPreference.setVisible(false);
+        Log.d(TAG, "VCP is connected for broadcast ");
+        this.mPreference.setVisible(true);
+        if (!enableSlider || z) {
+            this.mPreference.setProgress(0);
+            this.mPreference.setEnabled(false);
+            return;
+        }
+        this.mPreference.setEnabled(true);
+        int absoluteVolume = this.mVcpProfile.getAbsoluteVolume(device);
+        if (absoluteVolume != -1) {
+            this.mPreference.setProgress(absoluteVolume);
+        }
     }
 
-    @Override // com.android.settingslib.bluetooth.CachedBluetoothDevice.Callback
     public void onDeviceAttributesChanged() {
         refresh();
     }
 
-    @Override // com.android.settings.core.SliderPreferenceController
     public int getSliderPosition() {
         BADeviceVolumePreference bADeviceVolumePreference = this.mPreference;
         if (bADeviceVolumePreference != null) {
             return bADeviceVolumePreference.getProgress();
         }
         VcpProfile vcpProfile = this.mVcpProfile;
-        if (vcpProfile == null) {
-            return 0;
+        if (vcpProfile != null) {
+            return vcpProfile.getAbsoluteVolume(this.mCachedDevice.getDevice());
         }
-        return vcpProfile.getAbsoluteVolume(this.mCachedDevice.getDevice());
+        return 0;
     }
 
-    @Override // com.android.settings.core.SliderPreferenceController
     public boolean setSliderPosition(int i) {
         BADeviceVolumePreference bADeviceVolumePreference = this.mPreference;
         if (bADeviceVolumePreference != null) {
             bADeviceVolumePreference.setProgress(i);
         }
         VcpProfile vcpProfile = this.mVcpProfile;
-        if (vcpProfile != null) {
-            vcpProfile.setAbsoluteVolume(this.mCachedDevice.getDevice(), i);
-            return true;
+        if (vcpProfile == null) {
+            return false;
         }
-        return false;
+        vcpProfile.setAbsoluteVolume(this.mCachedDevice.getDevice(), i);
+        return true;
     }
 
-    @Override // com.android.settings.core.SliderPreferenceController
     public int getMax() {
         BADeviceVolumePreference bADeviceVolumePreference = this.mPreference;
         if (bADeviceVolumePreference != null) {
             return bADeviceVolumePreference.getMax();
         }
         AudioManager audioManager = this.mAudioManager;
-        if (audioManager == null) {
-            return 0;
+        if (audioManager != null) {
+            return audioManager.getStreamMaxVolume(3);
         }
-        return audioManager.getStreamMaxVolume(3);
+        return 0;
     }
 
-    @Override // com.android.settings.core.SliderPreferenceController
     public int getMin() {
         BADeviceVolumePreference bADeviceVolumePreference = this.mPreference;
         if (bADeviceVolumePreference != null) {
             return bADeviceVolumePreference.getMin();
         }
         AudioManager audioManager = this.mAudioManager;
-        if (audioManager == null) {
-            return 0;
+        if (audioManager != null) {
+            return audioManager.getStreamMinVolume(3);
         }
-        return audioManager.getStreamMinVolume(3);
+        return 0;
     }
 
     private boolean enableSlider() {

@@ -1,22 +1,29 @@
 package com.android.settings.bluetooth;
 
 import android.bluetooth.BluetoothDevice;
+import android.content.ComponentName;
 import android.content.Context;
 import android.net.Uri;
-/* loaded from: classes.dex */
-public class BluetoothFeatureProviderImpl implements BluetoothFeatureProvider {
-    private Context mContext;
+import com.android.settingslib.bluetooth.BluetoothUtils;
+import java.util.List;
 
-    public BluetoothFeatureProviderImpl(Context context) {
-        this.mContext = context;
+public class BluetoothFeatureProviderImpl implements BluetoothFeatureProvider {
+    public List<ComponentName> getRelatedTools() {
+        return null;
     }
 
-    @Override // com.android.settings.bluetooth.BluetoothFeatureProvider
+    public BluetoothFeatureProviderImpl(Context context) {
+    }
+
     public Uri getBluetoothDeviceSettingsUri(BluetoothDevice bluetoothDevice) {
         byte[] metadata = bluetoothDevice.getMetadata(16);
         if (metadata == null) {
             return null;
         }
         return Uri.parse(new String(metadata));
+    }
+
+    public String getBluetoothDeviceControlUri(BluetoothDevice bluetoothDevice) {
+        return BluetoothUtils.getControlUriMetaData(bluetoothDevice);
     }
 }

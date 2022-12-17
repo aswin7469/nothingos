@@ -1,16 +1,10 @@
 package com.android.wifitrackerlib;
 
-import com.android.wifitrackerlib.WifiEntry;
-import java.util.function.Consumer;
-/* loaded from: classes.dex */
-public final /* synthetic */ class WifiEntry$$ExternalSyntheticLambda3 implements Consumer {
-    public static final /* synthetic */ WifiEntry$$ExternalSyntheticLambda3 INSTANCE = new WifiEntry$$ExternalSyntheticLambda3();
+import java.util.function.Function;
 
-    private /* synthetic */ WifiEntry$$ExternalSyntheticLambda3() {
-    }
-
-    @Override // java.util.function.Consumer
-    public final void accept(Object obj) {
-        ((WifiEntry.ManageSubscriptionAction) obj).onExecute();
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class WifiEntry$$ExternalSyntheticLambda3 implements Function {
+    public final Object apply(Object obj) {
+        return Boolean.valueOf(!((WifiEntry) obj).isSubscription());
     }
 }

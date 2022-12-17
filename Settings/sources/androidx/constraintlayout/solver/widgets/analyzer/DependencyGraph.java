@@ -9,17 +9,17 @@ import androidx.constraintlayout.solver.widgets.analyzer.BasicMeasure;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-/* loaded from: classes.dex */
+
 public class DependencyGraph {
     private ConstraintWidgetContainer container;
     private ConstraintWidgetContainer mContainer;
+    ArrayList<RunGroup> mGroups = new ArrayList<>();
+    private BasicMeasure.Measure mMeasure = new BasicMeasure.Measure();
+    private BasicMeasure.Measurer mMeasurer = null;
     private boolean mNeedBuildGraph = true;
     private boolean mNeedRedoMeasures = true;
     private ArrayList<WidgetRun> mRuns = new ArrayList<>();
     private ArrayList<RunGroup> runGroups = new ArrayList<>();
-    private BasicMeasure.Measurer mMeasurer = null;
-    private BasicMeasure.Measure mMeasure = new BasicMeasure.Measure();
-    ArrayList<RunGroup> mGroups = new ArrayList<>();
 
     public DependencyGraph(ConstraintWidgetContainer constraintWidgetContainer) {
         this.container = constraintWidgetContainer;
@@ -103,17 +103,16 @@ public class DependencyGraph {
             }
         }
         ConstraintWidgetContainer constraintWidgetContainer6 = this.container;
-        ConstraintWidget.DimensionBehaviour[] dimensionBehaviourArr = constraintWidgetContainer6.mListDimensionBehaviors;
-        ConstraintWidget.DimensionBehaviour dimensionBehaviour4 = dimensionBehaviourArr[0];
+        ConstraintWidget.DimensionBehaviour dimensionBehaviour4 = constraintWidgetContainer6.mListDimensionBehaviors[0];
         ConstraintWidget.DimensionBehaviour dimensionBehaviour5 = ConstraintWidget.DimensionBehaviour.FIXED;
-        if (dimensionBehaviour4 == dimensionBehaviour5 || dimensionBehaviourArr[0] == ConstraintWidget.DimensionBehaviour.MATCH_PARENT) {
+        if (dimensionBehaviour4 == dimensionBehaviour5 || dimensionBehaviour4 == ConstraintWidget.DimensionBehaviour.MATCH_PARENT) {
             int width = constraintWidgetContainer6.getWidth() + x;
             this.container.horizontalRun.end.resolve(width);
             this.container.horizontalRun.dimension.resolve(width - x);
             measureWidgets();
             ConstraintWidgetContainer constraintWidgetContainer7 = this.container;
-            ConstraintWidget.DimensionBehaviour[] dimensionBehaviourArr2 = constraintWidgetContainer7.mListDimensionBehaviors;
-            if (dimensionBehaviourArr2[1] == dimensionBehaviour5 || dimensionBehaviourArr2[1] == ConstraintWidget.DimensionBehaviour.MATCH_PARENT) {
+            ConstraintWidget.DimensionBehaviour dimensionBehaviour6 = constraintWidgetContainer7.mListDimensionBehaviors[1];
+            if (dimensionBehaviour6 == dimensionBehaviour5 || dimensionBehaviour6 == ConstraintWidget.DimensionBehaviour.MATCH_PARENT) {
                 int height = constraintWidgetContainer7.getHeight() + y;
                 this.container.verticalRun.end.resolve(height);
                 this.container.verticalRun.dimension.resolve(height - y);
@@ -131,15 +130,16 @@ public class DependencyGraph {
             }
         }
         Iterator<WidgetRun> it4 = this.mRuns.iterator();
-        while (it4.hasNext()) {
+        while (true) {
+            if (!it4.hasNext()) {
+                break;
+            }
             WidgetRun next3 = it4.next();
-            if (z2 || next3.widget != this.container) {
-                if (!next3.start.resolved || ((!next3.end.resolved && !(next3 instanceof GuidelineReference)) || (!next3.dimension.resolved && !(next3 instanceof ChainRun) && !(next3 instanceof GuidelineReference)))) {
-                    z3 = false;
-                    break;
-                }
+            if ((z2 || next3.widget != this.container) && (!next3.start.resolved || ((!next3.end.resolved && !(next3 instanceof GuidelineReference)) || (!next3.dimension.resolved && !(next3 instanceof ChainRun) && !(next3 instanceof GuidelineReference))))) {
+                z3 = false;
             }
         }
+        z3 = false;
         this.container.setHorizontalDimensionBehaviour(dimensionBehaviour);
         this.container.setVerticalDimensionBehaviour(dimensionBehaviour2);
         return z3;
@@ -182,85 +182,187 @@ public class DependencyGraph {
         return true;
     }
 
-    public boolean directMeasureWithOrientation(boolean z, int i) {
-        boolean z2;
-        ConstraintWidget.DimensionBehaviour dimensionBehaviour;
-        boolean z3 = true;
-        boolean z4 = z & true;
-        ConstraintWidget.DimensionBehaviour dimensionBehaviour2 = this.container.getDimensionBehaviour(0);
-        ConstraintWidget.DimensionBehaviour dimensionBehaviour3 = this.container.getDimensionBehaviour(1);
-        int x = this.container.getX();
-        int y = this.container.getY();
-        if (z4 && (dimensionBehaviour2 == (dimensionBehaviour = ConstraintWidget.DimensionBehaviour.WRAP_CONTENT) || dimensionBehaviour3 == dimensionBehaviour)) {
-            Iterator<WidgetRun> it = this.mRuns.iterator();
-            while (true) {
-                if (!it.hasNext()) {
-                    break;
-                }
-                WidgetRun next = it.next();
-                if (next.orientation == i && !next.supportsWrapComputation()) {
-                    z4 = false;
-                    break;
-                }
-            }
-            if (i == 0) {
-                if (z4 && dimensionBehaviour2 == ConstraintWidget.DimensionBehaviour.WRAP_CONTENT) {
-                    this.container.setHorizontalDimensionBehaviour(ConstraintWidget.DimensionBehaviour.FIXED);
-                    ConstraintWidgetContainer constraintWidgetContainer = this.container;
-                    constraintWidgetContainer.setWidth(computeWrap(constraintWidgetContainer, 0));
-                    ConstraintWidgetContainer constraintWidgetContainer2 = this.container;
-                    constraintWidgetContainer2.horizontalRun.dimension.resolve(constraintWidgetContainer2.getWidth());
-                }
-            } else if (z4 && dimensionBehaviour3 == ConstraintWidget.DimensionBehaviour.WRAP_CONTENT) {
-                this.container.setVerticalDimensionBehaviour(ConstraintWidget.DimensionBehaviour.FIXED);
-                ConstraintWidgetContainer constraintWidgetContainer3 = this.container;
-                constraintWidgetContainer3.setHeight(computeWrap(constraintWidgetContainer3, 1));
-                ConstraintWidgetContainer constraintWidgetContainer4 = this.container;
-                constraintWidgetContainer4.verticalRun.dimension.resolve(constraintWidgetContainer4.getHeight());
-            }
-        }
-        if (i == 0) {
-            ConstraintWidgetContainer constraintWidgetContainer5 = this.container;
-            ConstraintWidget.DimensionBehaviour[] dimensionBehaviourArr = constraintWidgetContainer5.mListDimensionBehaviors;
-            if (dimensionBehaviourArr[0] == ConstraintWidget.DimensionBehaviour.FIXED || dimensionBehaviourArr[0] == ConstraintWidget.DimensionBehaviour.MATCH_PARENT) {
-                int width = constraintWidgetContainer5.getWidth() + x;
-                this.container.horizontalRun.end.resolve(width);
-                this.container.horizontalRun.dimension.resolve(width - x);
-                z2 = true;
-            }
-            z2 = false;
-        } else {
-            ConstraintWidgetContainer constraintWidgetContainer6 = this.container;
-            ConstraintWidget.DimensionBehaviour[] dimensionBehaviourArr2 = constraintWidgetContainer6.mListDimensionBehaviors;
-            if (dimensionBehaviourArr2[1] == ConstraintWidget.DimensionBehaviour.FIXED || dimensionBehaviourArr2[1] == ConstraintWidget.DimensionBehaviour.MATCH_PARENT) {
-                int height = constraintWidgetContainer6.getHeight() + y;
-                this.container.verticalRun.end.resolve(height);
-                this.container.verticalRun.dimension.resolve(height - y);
-                z2 = true;
-            }
-            z2 = false;
-        }
-        measureWidgets();
-        Iterator<WidgetRun> it2 = this.mRuns.iterator();
-        while (it2.hasNext()) {
-            WidgetRun next2 = it2.next();
-            if (next2.orientation == i && (next2.widget != this.container || next2.resolved)) {
-                next2.applyToWidget();
-            }
-        }
-        Iterator<WidgetRun> it3 = this.mRuns.iterator();
-        while (it3.hasNext()) {
-            WidgetRun next3 = it3.next();
-            if (next3.orientation == i && (z2 || next3.widget != this.container)) {
-                if (!next3.start.resolved || !next3.end.resolved || (!(next3 instanceof ChainRun) && !next3.dimension.resolved)) {
-                    z3 = false;
-                    break;
-                }
-            }
-        }
-        this.container.setHorizontalDimensionBehaviour(dimensionBehaviour2);
-        this.container.setVerticalDimensionBehaviour(dimensionBehaviour3);
-        return z3;
+    /* JADX WARNING: Removed duplicated region for block: B:38:0x00eb  */
+    /* JADX WARNING: Removed duplicated region for block: B:48:0x0111  */
+    /* JADX WARNING: Removed duplicated region for block: B:76:0x013f A[EDGE_INSN: B:76:0x013f->B:62:0x013f ?: BREAK  , SYNTHETIC] */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public boolean directMeasureWithOrientation(boolean r10, int r11) {
+        /*
+            r9 = this;
+            r0 = 1
+            r10 = r10 & r0
+            androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer r1 = r9.container
+            r2 = 0
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r1 = r1.getDimensionBehaviour(r2)
+            androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer r3 = r9.container
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r3 = r3.getDimensionBehaviour(r0)
+            androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer r4 = r9.container
+            int r4 = r4.getX()
+            androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer r5 = r9.container
+            int r5 = r5.getY()
+            if (r10 == 0) goto L_0x0089
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r6 = androidx.constraintlayout.solver.widgets.ConstraintWidget.DimensionBehaviour.WRAP_CONTENT
+            if (r1 == r6) goto L_0x0023
+            if (r3 != r6) goto L_0x0089
+        L_0x0023:
+            java.util.ArrayList<androidx.constraintlayout.solver.widgets.analyzer.WidgetRun> r6 = r9.mRuns
+            java.util.Iterator r6 = r6.iterator()
+        L_0x0029:
+            boolean r7 = r6.hasNext()
+            if (r7 == 0) goto L_0x0040
+            java.lang.Object r7 = r6.next()
+            androidx.constraintlayout.solver.widgets.analyzer.WidgetRun r7 = (androidx.constraintlayout.solver.widgets.analyzer.WidgetRun) r7
+            int r8 = r7.orientation
+            if (r8 != r11) goto L_0x0029
+            boolean r7 = r7.supportsWrapComputation()
+            if (r7 != 0) goto L_0x0029
+            r10 = r2
+        L_0x0040:
+            if (r11 != 0) goto L_0x0066
+            if (r10 == 0) goto L_0x0089
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r10 = androidx.constraintlayout.solver.widgets.ConstraintWidget.DimensionBehaviour.WRAP_CONTENT
+            if (r1 != r10) goto L_0x0089
+            androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer r10 = r9.container
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r6 = androidx.constraintlayout.solver.widgets.ConstraintWidget.DimensionBehaviour.FIXED
+            r10.setHorizontalDimensionBehaviour(r6)
+            androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer r10 = r9.container
+            int r6 = r9.computeWrap(r10, r2)
+            r10.setWidth(r6)
+            androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer r10 = r9.container
+            androidx.constraintlayout.solver.widgets.analyzer.HorizontalWidgetRun r6 = r10.horizontalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r6 = r6.dimension
+            int r10 = r10.getWidth()
+            r6.resolve(r10)
+            goto L_0x0089
+        L_0x0066:
+            if (r10 == 0) goto L_0x0089
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r10 = androidx.constraintlayout.solver.widgets.ConstraintWidget.DimensionBehaviour.WRAP_CONTENT
+            if (r3 != r10) goto L_0x0089
+            androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer r10 = r9.container
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r6 = androidx.constraintlayout.solver.widgets.ConstraintWidget.DimensionBehaviour.FIXED
+            r10.setVerticalDimensionBehaviour(r6)
+            androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer r10 = r9.container
+            int r6 = r9.computeWrap(r10, r0)
+            r10.setHeight(r6)
+            androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer r10 = r9.container
+            androidx.constraintlayout.solver.widgets.analyzer.VerticalWidgetRun r6 = r10.verticalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r6 = r6.dimension
+            int r10 = r10.getHeight()
+            r6.resolve(r10)
+        L_0x0089:
+            if (r11 != 0) goto L_0x00b2
+            androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer r10 = r9.container
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour[] r5 = r10.mListDimensionBehaviors
+            r5 = r5[r2]
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r6 = androidx.constraintlayout.solver.widgets.ConstraintWidget.DimensionBehaviour.FIXED
+            if (r5 == r6) goto L_0x0099
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r6 = androidx.constraintlayout.solver.widgets.ConstraintWidget.DimensionBehaviour.MATCH_PARENT
+            if (r5 != r6) goto L_0x00c1
+        L_0x0099:
+            int r10 = r10.getWidth()
+            int r10 = r10 + r4
+            androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer r5 = r9.container
+            androidx.constraintlayout.solver.widgets.analyzer.HorizontalWidgetRun r5 = r5.horizontalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r5 = r5.end
+            r5.resolve(r10)
+            androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer r5 = r9.container
+            androidx.constraintlayout.solver.widgets.analyzer.HorizontalWidgetRun r5 = r5.horizontalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r5 = r5.dimension
+            int r10 = r10 - r4
+            r5.resolve(r10)
+            goto L_0x00db
+        L_0x00b2:
+            androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer r10 = r9.container
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour[] r4 = r10.mListDimensionBehaviors
+            r4 = r4[r0]
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r6 = androidx.constraintlayout.solver.widgets.ConstraintWidget.DimensionBehaviour.FIXED
+            if (r4 == r6) goto L_0x00c3
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r6 = androidx.constraintlayout.solver.widgets.ConstraintWidget.DimensionBehaviour.MATCH_PARENT
+            if (r4 != r6) goto L_0x00c1
+            goto L_0x00c3
+        L_0x00c1:
+            r10 = r2
+            goto L_0x00dc
+        L_0x00c3:
+            int r10 = r10.getHeight()
+            int r10 = r10 + r5
+            androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer r4 = r9.container
+            androidx.constraintlayout.solver.widgets.analyzer.VerticalWidgetRun r4 = r4.verticalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r4 = r4.end
+            r4.resolve(r10)
+            androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer r4 = r9.container
+            androidx.constraintlayout.solver.widgets.analyzer.VerticalWidgetRun r4 = r4.verticalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r4 = r4.dimension
+            int r10 = r10 - r5
+            r4.resolve(r10)
+        L_0x00db:
+            r10 = r0
+        L_0x00dc:
+            r9.measureWidgets()
+            java.util.ArrayList<androidx.constraintlayout.solver.widgets.analyzer.WidgetRun> r4 = r9.mRuns
+            java.util.Iterator r4 = r4.iterator()
+        L_0x00e5:
+            boolean r5 = r4.hasNext()
+            if (r5 == 0) goto L_0x0105
+            java.lang.Object r5 = r4.next()
+            androidx.constraintlayout.solver.widgets.analyzer.WidgetRun r5 = (androidx.constraintlayout.solver.widgets.analyzer.WidgetRun) r5
+            int r6 = r5.orientation
+            if (r6 == r11) goto L_0x00f6
+            goto L_0x00e5
+        L_0x00f6:
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r6 = r5.widget
+            androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer r7 = r9.container
+            if (r6 != r7) goto L_0x0101
+            boolean r6 = r5.resolved
+            if (r6 != 0) goto L_0x0101
+            goto L_0x00e5
+        L_0x0101:
+            r5.applyToWidget()
+            goto L_0x00e5
+        L_0x0105:
+            java.util.ArrayList<androidx.constraintlayout.solver.widgets.analyzer.WidgetRun> r4 = r9.mRuns
+            java.util.Iterator r4 = r4.iterator()
+        L_0x010b:
+            boolean r5 = r4.hasNext()
+            if (r5 == 0) goto L_0x013f
+            java.lang.Object r5 = r4.next()
+            androidx.constraintlayout.solver.widgets.analyzer.WidgetRun r5 = (androidx.constraintlayout.solver.widgets.analyzer.WidgetRun) r5
+            int r6 = r5.orientation
+            if (r6 == r11) goto L_0x011c
+            goto L_0x010b
+        L_0x011c:
+            if (r10 != 0) goto L_0x0125
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r6 = r5.widget
+            androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer r7 = r9.container
+            if (r6 != r7) goto L_0x0125
+            goto L_0x010b
+        L_0x0125:
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r6 = r5.start
+            boolean r6 = r6.resolved
+            if (r6 != 0) goto L_0x012d
+        L_0x012b:
+            r0 = r2
+            goto L_0x013f
+        L_0x012d:
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r6 = r5.end
+            boolean r6 = r6.resolved
+            if (r6 != 0) goto L_0x0134
+            goto L_0x012b
+        L_0x0134:
+            boolean r6 = r5 instanceof androidx.constraintlayout.solver.widgets.analyzer.ChainRun
+            if (r6 != 0) goto L_0x010b
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r5 = r5.dimension
+            boolean r5 = r5.resolved
+            if (r5 != 0) goto L_0x010b
+            goto L_0x012b
+        L_0x013f:
+            androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer r10 = r9.container
+            r10.setHorizontalDimensionBehaviour(r1)
+            androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer r9 = r9.container
+            r9.setVerticalDimensionBehaviour(r3)
+            return r0
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.constraintlayout.solver.widgets.analyzer.DependencyGraph.directMeasureWithOrientation(boolean, int):boolean");
     }
 
     private void measure(ConstraintWidget constraintWidget, ConstraintWidget.DimensionBehaviour dimensionBehaviour, int i, ConstraintWidget.DimensionBehaviour dimensionBehaviour2, int i2) {
@@ -277,34 +379,36 @@ public class DependencyGraph {
     }
 
     private boolean basicMeasureWidgets(ConstraintWidgetContainer constraintWidgetContainer) {
-        int i;
         ConstraintWidget.DimensionBehaviour dimensionBehaviour;
-        int i2;
         ConstraintWidget.DimensionBehaviour dimensionBehaviour2;
         ConstraintWidget.DimensionBehaviour dimensionBehaviour3;
+        int i;
         ConstraintWidget.DimensionBehaviour dimensionBehaviour4;
-        Iterator<ConstraintWidget> it = constraintWidgetContainer.mChildren.iterator();
+        int i2;
+        ConstraintWidget.DimensionBehaviour dimensionBehaviour5;
+        ConstraintWidgetContainer constraintWidgetContainer2 = constraintWidgetContainer;
+        Iterator<ConstraintWidget> it = constraintWidgetContainer2.mChildren.iterator();
         while (it.hasNext()) {
             ConstraintWidget next = it.next();
             ConstraintWidget.DimensionBehaviour[] dimensionBehaviourArr = next.mListDimensionBehaviors;
-            ConstraintWidget.DimensionBehaviour dimensionBehaviour5 = dimensionBehaviourArr[0];
-            ConstraintWidget.DimensionBehaviour dimensionBehaviour6 = dimensionBehaviourArr[1];
+            ConstraintWidget.DimensionBehaviour dimensionBehaviour6 = dimensionBehaviourArr[0];
+            ConstraintWidget.DimensionBehaviour dimensionBehaviour7 = dimensionBehaviourArr[1];
             if (next.getVisibility() == 8) {
                 next.measured = true;
             } else {
-                if (next.mMatchConstraintPercentWidth < 1.0f && dimensionBehaviour5 == ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT) {
+                if (next.mMatchConstraintPercentWidth < 1.0f && dimensionBehaviour6 == ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT) {
                     next.mMatchConstraintDefaultWidth = 2;
                 }
-                if (next.mMatchConstraintPercentHeight < 1.0f && dimensionBehaviour6 == ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT) {
+                if (next.mMatchConstraintPercentHeight < 1.0f && dimensionBehaviour7 == ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT) {
                     next.mMatchConstraintDefaultHeight = 2;
                 }
                 if (next.getDimensionRatio() > 0.0f) {
-                    ConstraintWidget.DimensionBehaviour dimensionBehaviour7 = ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT;
-                    if (dimensionBehaviour5 == dimensionBehaviour7 && (dimensionBehaviour6 == ConstraintWidget.DimensionBehaviour.WRAP_CONTENT || dimensionBehaviour6 == ConstraintWidget.DimensionBehaviour.FIXED)) {
+                    ConstraintWidget.DimensionBehaviour dimensionBehaviour8 = ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT;
+                    if (dimensionBehaviour6 == dimensionBehaviour8 && (dimensionBehaviour7 == ConstraintWidget.DimensionBehaviour.WRAP_CONTENT || dimensionBehaviour7 == ConstraintWidget.DimensionBehaviour.FIXED)) {
                         next.mMatchConstraintDefaultWidth = 3;
-                    } else if (dimensionBehaviour6 == dimensionBehaviour7 && (dimensionBehaviour5 == ConstraintWidget.DimensionBehaviour.WRAP_CONTENT || dimensionBehaviour5 == ConstraintWidget.DimensionBehaviour.FIXED)) {
+                    } else if (dimensionBehaviour7 == dimensionBehaviour8 && (dimensionBehaviour6 == ConstraintWidget.DimensionBehaviour.WRAP_CONTENT || dimensionBehaviour6 == ConstraintWidget.DimensionBehaviour.FIXED)) {
                         next.mMatchConstraintDefaultHeight = 3;
-                    } else if (dimensionBehaviour5 == dimensionBehaviour7 && dimensionBehaviour6 == dimensionBehaviour7) {
+                    } else if (dimensionBehaviour6 == dimensionBehaviour8 && dimensionBehaviour7 == dimensionBehaviour8) {
                         if (next.mMatchConstraintDefaultWidth == 0) {
                             next.mMatchConstraintDefaultWidth = 3;
                         }
@@ -313,66 +417,65 @@ public class DependencyGraph {
                         }
                     }
                 }
-                ConstraintWidget.DimensionBehaviour dimensionBehaviour8 = ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT;
-                if (dimensionBehaviour5 == dimensionBehaviour8 && next.mMatchConstraintDefaultWidth == 1 && (next.mLeft.mTarget == null || next.mRight.mTarget == null)) {
-                    dimensionBehaviour5 = ConstraintWidget.DimensionBehaviour.WRAP_CONTENT;
-                }
-                ConstraintWidget.DimensionBehaviour dimensionBehaviour9 = dimensionBehaviour5;
-                if (dimensionBehaviour6 == dimensionBehaviour8 && next.mMatchConstraintDefaultHeight == 1 && (next.mTop.mTarget == null || next.mBottom.mTarget == null)) {
+                ConstraintWidget.DimensionBehaviour dimensionBehaviour9 = ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT;
+                if (dimensionBehaviour6 == dimensionBehaviour9 && next.mMatchConstraintDefaultWidth == 1 && (next.mLeft.mTarget == null || next.mRight.mTarget == null)) {
                     dimensionBehaviour6 = ConstraintWidget.DimensionBehaviour.WRAP_CONTENT;
                 }
                 ConstraintWidget.DimensionBehaviour dimensionBehaviour10 = dimensionBehaviour6;
+                if (dimensionBehaviour7 == dimensionBehaviour9 && next.mMatchConstraintDefaultHeight == 1 && (next.mTop.mTarget == null || next.mBottom.mTarget == null)) {
+                    dimensionBehaviour7 = ConstraintWidget.DimensionBehaviour.WRAP_CONTENT;
+                }
+                ConstraintWidget.DimensionBehaviour dimensionBehaviour11 = dimensionBehaviour7;
                 HorizontalWidgetRun horizontalWidgetRun = next.horizontalRun;
-                horizontalWidgetRun.dimensionBehavior = dimensionBehaviour9;
+                horizontalWidgetRun.dimensionBehavior = dimensionBehaviour10;
                 int i3 = next.mMatchConstraintDefaultWidth;
                 horizontalWidgetRun.matchConstraintsType = i3;
                 VerticalWidgetRun verticalWidgetRun = next.verticalRun;
-                verticalWidgetRun.dimensionBehavior = dimensionBehaviour10;
+                verticalWidgetRun.dimensionBehavior = dimensionBehaviour11;
                 int i4 = next.mMatchConstraintDefaultHeight;
                 verticalWidgetRun.matchConstraintsType = i4;
-                ConstraintWidget.DimensionBehaviour dimensionBehaviour11 = ConstraintWidget.DimensionBehaviour.MATCH_PARENT;
-                if ((dimensionBehaviour9 == dimensionBehaviour11 || dimensionBehaviour9 == ConstraintWidget.DimensionBehaviour.FIXED || dimensionBehaviour9 == ConstraintWidget.DimensionBehaviour.WRAP_CONTENT) && (dimensionBehaviour10 == dimensionBehaviour11 || dimensionBehaviour10 == ConstraintWidget.DimensionBehaviour.FIXED || dimensionBehaviour10 == ConstraintWidget.DimensionBehaviour.WRAP_CONTENT)) {
+                ConstraintWidget.DimensionBehaviour dimensionBehaviour12 = ConstraintWidget.DimensionBehaviour.MATCH_PARENT;
+                if ((dimensionBehaviour10 == dimensionBehaviour12 || dimensionBehaviour10 == ConstraintWidget.DimensionBehaviour.FIXED || dimensionBehaviour10 == ConstraintWidget.DimensionBehaviour.WRAP_CONTENT) && (dimensionBehaviour11 == dimensionBehaviour12 || dimensionBehaviour11 == ConstraintWidget.DimensionBehaviour.FIXED || dimensionBehaviour11 == ConstraintWidget.DimensionBehaviour.WRAP_CONTENT)) {
                     int width = next.getWidth();
-                    if (dimensionBehaviour9 == dimensionBehaviour11) {
+                    if (dimensionBehaviour10 == dimensionBehaviour12) {
                         i = (constraintWidgetContainer.getWidth() - next.mLeft.mMargin) - next.mRight.mMargin;
-                        dimensionBehaviour = ConstraintWidget.DimensionBehaviour.FIXED;
+                        dimensionBehaviour4 = ConstraintWidget.DimensionBehaviour.FIXED;
                     } else {
                         i = width;
-                        dimensionBehaviour = dimensionBehaviour9;
+                        dimensionBehaviour4 = dimensionBehaviour10;
                     }
                     int height = next.getHeight();
-                    if (dimensionBehaviour10 == dimensionBehaviour11) {
+                    if (dimensionBehaviour11 == dimensionBehaviour12) {
                         i2 = (constraintWidgetContainer.getHeight() - next.mTop.mMargin) - next.mBottom.mMargin;
-                        dimensionBehaviour2 = ConstraintWidget.DimensionBehaviour.FIXED;
+                        dimensionBehaviour5 = ConstraintWidget.DimensionBehaviour.FIXED;
                     } else {
                         i2 = height;
-                        dimensionBehaviour2 = dimensionBehaviour10;
+                        dimensionBehaviour5 = dimensionBehaviour11;
                     }
-                    measure(next, dimensionBehaviour, i, dimensionBehaviour2, i2);
+                    measure(next, dimensionBehaviour4, i, dimensionBehaviour5, i2);
                     next.horizontalRun.dimension.resolve(next.getWidth());
                     next.verticalRun.dimension.resolve(next.getHeight());
                     next.measured = true;
                 } else {
-                    if (dimensionBehaviour9 == dimensionBehaviour8 && (dimensionBehaviour10 == (dimensionBehaviour4 = ConstraintWidget.DimensionBehaviour.WRAP_CONTENT) || dimensionBehaviour10 == ConstraintWidget.DimensionBehaviour.FIXED)) {
+                    if (dimensionBehaviour10 == dimensionBehaviour9 && (dimensionBehaviour11 == (dimensionBehaviour3 = ConstraintWidget.DimensionBehaviour.WRAP_CONTENT) || dimensionBehaviour11 == ConstraintWidget.DimensionBehaviour.FIXED)) {
                         if (i3 == 3) {
-                            if (dimensionBehaviour10 == dimensionBehaviour4) {
-                                measure(next, dimensionBehaviour4, 0, dimensionBehaviour4, 0);
+                            if (dimensionBehaviour11 == dimensionBehaviour3) {
+                                measure(next, dimensionBehaviour3, 0, dimensionBehaviour3, 0);
                             }
                             int height2 = next.getHeight();
-                            ConstraintWidget.DimensionBehaviour dimensionBehaviour12 = ConstraintWidget.DimensionBehaviour.FIXED;
-                            measure(next, dimensionBehaviour12, (int) ((height2 * next.mDimensionRatio) + 0.5f), dimensionBehaviour12, height2);
+                            ConstraintWidget.DimensionBehaviour dimensionBehaviour13 = ConstraintWidget.DimensionBehaviour.FIXED;
+                            measure(next, dimensionBehaviour13, (int) ((((float) height2) * next.mDimensionRatio) + 0.5f), dimensionBehaviour13, height2);
                             next.horizontalRun.dimension.resolve(next.getWidth());
                             next.verticalRun.dimension.resolve(next.getHeight());
                             next.measured = true;
                         } else if (i3 == 1) {
-                            measure(next, dimensionBehaviour4, 0, dimensionBehaviour10, 0);
+                            measure(next, dimensionBehaviour3, 0, dimensionBehaviour11, 0);
                             next.horizontalRun.dimension.wrapValue = next.getWidth();
                         } else if (i3 == 2) {
-                            ConstraintWidget.DimensionBehaviour[] dimensionBehaviourArr2 = constraintWidgetContainer.mListDimensionBehaviors;
-                            ConstraintWidget.DimensionBehaviour dimensionBehaviour13 = dimensionBehaviourArr2[0];
-                            ConstraintWidget.DimensionBehaviour dimensionBehaviour14 = ConstraintWidget.DimensionBehaviour.FIXED;
-                            if (dimensionBehaviour13 == dimensionBehaviour14 || dimensionBehaviourArr2[0] == dimensionBehaviour11) {
-                                measure(next, dimensionBehaviour14, (int) ((next.mMatchConstraintPercentWidth * constraintWidgetContainer.getWidth()) + 0.5f), dimensionBehaviour10, next.getHeight());
+                            ConstraintWidget.DimensionBehaviour dimensionBehaviour14 = constraintWidgetContainer2.mListDimensionBehaviors[0];
+                            ConstraintWidget.DimensionBehaviour dimensionBehaviour15 = ConstraintWidget.DimensionBehaviour.FIXED;
+                            if (dimensionBehaviour14 == dimensionBehaviour15 || dimensionBehaviour14 == dimensionBehaviour12) {
+                                measure(next, dimensionBehaviour15, (int) ((next.mMatchConstraintPercentWidth * ((float) constraintWidgetContainer.getWidth())) + 0.5f), dimensionBehaviour11, next.getHeight());
                                 next.horizontalRun.dimension.resolve(next.getWidth());
                                 next.verticalRun.dimension.resolve(next.getHeight());
                                 next.measured = true;
@@ -380,37 +483,38 @@ public class DependencyGraph {
                         } else {
                             ConstraintAnchor[] constraintAnchorArr = next.mListAnchors;
                             if (constraintAnchorArr[0].mTarget == null || constraintAnchorArr[1].mTarget == null) {
-                                measure(next, dimensionBehaviour4, 0, dimensionBehaviour10, 0);
+                                measure(next, dimensionBehaviour3, 0, dimensionBehaviour11, 0);
                                 next.horizontalRun.dimension.resolve(next.getWidth());
                                 next.verticalRun.dimension.resolve(next.getHeight());
                                 next.measured = true;
                             }
                         }
                     }
-                    if (dimensionBehaviour10 == dimensionBehaviour8 && (dimensionBehaviour9 == (dimensionBehaviour3 = ConstraintWidget.DimensionBehaviour.WRAP_CONTENT) || dimensionBehaviour9 == ConstraintWidget.DimensionBehaviour.FIXED)) {
+                    if (dimensionBehaviour11 == dimensionBehaviour9 && (dimensionBehaviour10 == (dimensionBehaviour2 = ConstraintWidget.DimensionBehaviour.WRAP_CONTENT) || dimensionBehaviour10 == ConstraintWidget.DimensionBehaviour.FIXED)) {
                         if (i4 == 3) {
-                            if (dimensionBehaviour9 == dimensionBehaviour3) {
-                                measure(next, dimensionBehaviour3, 0, dimensionBehaviour3, 0);
+                            if (dimensionBehaviour10 == dimensionBehaviour2) {
+                                measure(next, dimensionBehaviour2, 0, dimensionBehaviour2, 0);
                             }
                             int width2 = next.getWidth();
                             float f = next.mDimensionRatio;
                             if (next.getDimensionRatioSide() == -1) {
                                 f = 1.0f / f;
                             }
-                            ConstraintWidget.DimensionBehaviour dimensionBehaviour15 = ConstraintWidget.DimensionBehaviour.FIXED;
-                            measure(next, dimensionBehaviour15, width2, dimensionBehaviour15, (int) ((width2 * f) + 0.5f));
+                            ConstraintWidget.DimensionBehaviour dimensionBehaviour16 = ConstraintWidget.DimensionBehaviour.FIXED;
+                            measure(next, dimensionBehaviour16, width2, dimensionBehaviour16, (int) ((((float) width2) * f) + 0.5f));
                             next.horizontalRun.dimension.resolve(next.getWidth());
                             next.verticalRun.dimension.resolve(next.getHeight());
                             next.measured = true;
                         } else if (i4 == 1) {
-                            measure(next, dimensionBehaviour9, 0, dimensionBehaviour3, 0);
+                            measure(next, dimensionBehaviour10, 0, dimensionBehaviour2, 0);
                             next.verticalRun.dimension.wrapValue = next.getHeight();
                         } else if (i4 == 2) {
-                            ConstraintWidget.DimensionBehaviour[] dimensionBehaviourArr3 = constraintWidgetContainer.mListDimensionBehaviors;
-                            ConstraintWidget.DimensionBehaviour dimensionBehaviour16 = dimensionBehaviourArr3[1];
-                            ConstraintWidget.DimensionBehaviour dimensionBehaviour17 = ConstraintWidget.DimensionBehaviour.FIXED;
-                            if (dimensionBehaviour16 == dimensionBehaviour17 || dimensionBehaviourArr3[1] == dimensionBehaviour11) {
-                                measure(next, dimensionBehaviour9, next.getWidth(), dimensionBehaviour17, (int) ((next.mMatchConstraintPercentHeight * constraintWidgetContainer.getHeight()) + 0.5f));
+                            ConstraintWidget.DimensionBehaviour dimensionBehaviour17 = constraintWidgetContainer2.mListDimensionBehaviors[1];
+                            ConstraintWidget.DimensionBehaviour dimensionBehaviour18 = ConstraintWidget.DimensionBehaviour.FIXED;
+                            if (dimensionBehaviour17 == dimensionBehaviour18 || dimensionBehaviour17 == dimensionBehaviour12) {
+                                ConstraintWidget constraintWidget = next;
+                                ConstraintWidget.DimensionBehaviour dimensionBehaviour19 = dimensionBehaviour10;
+                                measure(constraintWidget, dimensionBehaviour19, next.getWidth(), dimensionBehaviour18, (int) ((next.mMatchConstraintPercentHeight * ((float) constraintWidgetContainer.getHeight())) + 0.5f));
                                 next.horizontalRun.dimension.resolve(next.getWidth());
                                 next.verticalRun.dimension.resolve(next.getHeight());
                                 next.measured = true;
@@ -418,30 +522,30 @@ public class DependencyGraph {
                         } else {
                             ConstraintAnchor[] constraintAnchorArr2 = next.mListAnchors;
                             if (constraintAnchorArr2[2].mTarget == null || constraintAnchorArr2[3].mTarget == null) {
-                                measure(next, dimensionBehaviour3, 0, dimensionBehaviour10, 0);
+                                measure(next, dimensionBehaviour2, 0, dimensionBehaviour11, 0);
                                 next.horizontalRun.dimension.resolve(next.getWidth());
                                 next.verticalRun.dimension.resolve(next.getHeight());
                                 next.measured = true;
                             }
                         }
                     }
-                    if (dimensionBehaviour9 == dimensionBehaviour8 && dimensionBehaviour10 == dimensionBehaviour8) {
+                    if (dimensionBehaviour10 == dimensionBehaviour9 && dimensionBehaviour11 == dimensionBehaviour9) {
                         if (i3 == 1 || i4 == 1) {
-                            ConstraintWidget.DimensionBehaviour dimensionBehaviour18 = ConstraintWidget.DimensionBehaviour.WRAP_CONTENT;
-                            measure(next, dimensionBehaviour18, 0, dimensionBehaviour18, 0);
+                            ConstraintWidget.DimensionBehaviour dimensionBehaviour20 = ConstraintWidget.DimensionBehaviour.WRAP_CONTENT;
+                            measure(next, dimensionBehaviour20, 0, dimensionBehaviour20, 0);
                             next.horizontalRun.dimension.wrapValue = next.getWidth();
                             next.verticalRun.dimension.wrapValue = next.getHeight();
                         } else if (i4 == 2 && i3 == 2) {
-                            ConstraintWidget.DimensionBehaviour[] dimensionBehaviourArr4 = constraintWidgetContainer.mListDimensionBehaviors;
-                            ConstraintWidget.DimensionBehaviour dimensionBehaviour19 = dimensionBehaviourArr4[0];
-                            ConstraintWidget.DimensionBehaviour dimensionBehaviour20 = ConstraintWidget.DimensionBehaviour.FIXED;
-                            if (dimensionBehaviour19 == dimensionBehaviour20 || dimensionBehaviourArr4[0] == dimensionBehaviour20) {
-                                if (dimensionBehaviourArr4[1] == dimensionBehaviour20 || dimensionBehaviourArr4[1] == dimensionBehaviour20) {
-                                    measure(next, dimensionBehaviour20, (int) ((next.mMatchConstraintPercentWidth * constraintWidgetContainer.getWidth()) + 0.5f), dimensionBehaviour20, (int) ((next.mMatchConstraintPercentHeight * constraintWidgetContainer.getHeight()) + 0.5f));
-                                    next.horizontalRun.dimension.resolve(next.getWidth());
-                                    next.verticalRun.dimension.resolve(next.getHeight());
-                                    next.measured = true;
-                                }
+                            ConstraintWidget.DimensionBehaviour[] dimensionBehaviourArr2 = constraintWidgetContainer2.mListDimensionBehaviors;
+                            ConstraintWidget.DimensionBehaviour dimensionBehaviour21 = dimensionBehaviourArr2[0];
+                            ConstraintWidget.DimensionBehaviour dimensionBehaviour22 = ConstraintWidget.DimensionBehaviour.FIXED;
+                            if ((dimensionBehaviour21 == dimensionBehaviour22 || dimensionBehaviour21 == dimensionBehaviour22) && ((dimensionBehaviour = dimensionBehaviourArr2[1]) == dimensionBehaviour22 || dimensionBehaviour == dimensionBehaviour22)) {
+                                float f2 = next.mMatchConstraintPercentWidth;
+                                float f3 = next.mMatchConstraintPercentHeight;
+                                measure(next, dimensionBehaviour22, (int) ((f2 * ((float) constraintWidgetContainer.getWidth())) + 0.5f), dimensionBehaviour22, (int) ((f3 * ((float) constraintWidgetContainer.getHeight())) + 0.5f));
+                                next.horizontalRun.dimension.resolve(next.getWidth());
+                                next.verticalRun.dimension.resolve(next.getHeight());
+                                next.measured = true;
                             }
                         }
                     }
@@ -577,72 +681,70 @@ public class DependencyGraph {
         WidgetRun widgetRun = dependencyNode.run;
         if (widgetRun.runGroup == null) {
             ConstraintWidgetContainer constraintWidgetContainer = this.container;
-            if (widgetRun == constraintWidgetContainer.horizontalRun || widgetRun == constraintWidgetContainer.verticalRun) {
-                return;
-            }
-            if (runGroup == null) {
-                runGroup = new RunGroup(widgetRun, i2);
-                arrayList.add(runGroup);
-            }
-            widgetRun.runGroup = runGroup;
-            runGroup.add(widgetRun);
-            for (Dependency dependency : widgetRun.start.dependencies) {
-                if (dependency instanceof DependencyNode) {
-                    applyGroup((DependencyNode) dependency, i, 0, dependencyNode2, arrayList, runGroup);
+            if (widgetRun != constraintWidgetContainer.horizontalRun && widgetRun != constraintWidgetContainer.verticalRun) {
+                if (runGroup == null) {
+                    runGroup = new RunGroup(widgetRun, i2);
+                    arrayList.add(runGroup);
                 }
-            }
-            for (Dependency dependency2 : widgetRun.end.dependencies) {
-                if (dependency2 instanceof DependencyNode) {
-                    applyGroup((DependencyNode) dependency2, i, 1, dependencyNode2, arrayList, runGroup);
-                }
-            }
-            if (i == 1 && (widgetRun instanceof VerticalWidgetRun)) {
-                for (Dependency dependency3 : ((VerticalWidgetRun) widgetRun).baseline.dependencies) {
-                    if (dependency3 instanceof DependencyNode) {
-                        applyGroup((DependencyNode) dependency3, i, 2, dependencyNode2, arrayList, runGroup);
+                widgetRun.runGroup = runGroup;
+                runGroup.add(widgetRun);
+                for (Dependency next : widgetRun.start.dependencies) {
+                    if (next instanceof DependencyNode) {
+                        applyGroup((DependencyNode) next, i, 0, dependencyNode2, arrayList, runGroup);
                     }
                 }
-            }
-            for (DependencyNode dependencyNode3 : widgetRun.start.targets) {
-                if (dependencyNode3 == dependencyNode2) {
-                    runGroup.dual = true;
+                for (Dependency next2 : widgetRun.end.dependencies) {
+                    if (next2 instanceof DependencyNode) {
+                        applyGroup((DependencyNode) next2, i, 1, dependencyNode2, arrayList, runGroup);
+                    }
                 }
-                applyGroup(dependencyNode3, i, 0, dependencyNode2, arrayList, runGroup);
-            }
-            for (DependencyNode dependencyNode4 : widgetRun.end.targets) {
-                if (dependencyNode4 == dependencyNode2) {
-                    runGroup.dual = true;
+                if (i == 1 && (widgetRun instanceof VerticalWidgetRun)) {
+                    for (Dependency next3 : ((VerticalWidgetRun) widgetRun).baseline.dependencies) {
+                        if (next3 instanceof DependencyNode) {
+                            applyGroup((DependencyNode) next3, i, 2, dependencyNode2, arrayList, runGroup);
+                        }
+                    }
                 }
-                applyGroup(dependencyNode4, i, 1, dependencyNode2, arrayList, runGroup);
-            }
-            if (i != 1 || !(widgetRun instanceof VerticalWidgetRun)) {
-                return;
-            }
-            for (DependencyNode dependencyNode5 : ((VerticalWidgetRun) widgetRun).baseline.targets) {
-                applyGroup(dependencyNode5, i, 2, dependencyNode2, arrayList, runGroup);
+                for (DependencyNode next4 : widgetRun.start.targets) {
+                    if (next4 == dependencyNode2) {
+                        runGroup.dual = true;
+                    }
+                    applyGroup(next4, i, 0, dependencyNode2, arrayList, runGroup);
+                }
+                for (DependencyNode next5 : widgetRun.end.targets) {
+                    if (next5 == dependencyNode2) {
+                        runGroup.dual = true;
+                    }
+                    applyGroup(next5, i, 1, dependencyNode2, arrayList, runGroup);
+                }
+                if (i == 1 && (widgetRun instanceof VerticalWidgetRun)) {
+                    for (DependencyNode applyGroup : ((VerticalWidgetRun) widgetRun).baseline.targets) {
+                        applyGroup(applyGroup, i, 2, dependencyNode2, arrayList, runGroup);
+                    }
+                }
             }
         }
     }
 
     private void findGroup(WidgetRun widgetRun, int i, ArrayList<RunGroup> arrayList) {
-        for (Dependency dependency : widgetRun.start.dependencies) {
-            if (dependency instanceof DependencyNode) {
-                applyGroup((DependencyNode) dependency, i, 0, widgetRun.end, arrayList, null);
-            } else if (dependency instanceof WidgetRun) {
-                applyGroup(((WidgetRun) dependency).start, i, 0, widgetRun.end, arrayList, null);
+        for (Dependency next : widgetRun.start.dependencies) {
+            if (next instanceof DependencyNode) {
+                applyGroup((DependencyNode) next, i, 0, widgetRun.end, arrayList, (RunGroup) null);
+            } else if (next instanceof WidgetRun) {
+                applyGroup(((WidgetRun) next).start, i, 0, widgetRun.end, arrayList, (RunGroup) null);
             }
         }
-        for (Dependency dependency2 : widgetRun.end.dependencies) {
-            if (dependency2 instanceof DependencyNode) {
-                applyGroup((DependencyNode) dependency2, i, 1, widgetRun.start, arrayList, null);
-            } else if (dependency2 instanceof WidgetRun) {
-                applyGroup(((WidgetRun) dependency2).end, i, 1, widgetRun.start, arrayList, null);
+        for (Dependency next2 : widgetRun.end.dependencies) {
+            if (next2 instanceof DependencyNode) {
+                applyGroup((DependencyNode) next2, i, 1, widgetRun.start, arrayList, (RunGroup) null);
+            } else if (next2 instanceof WidgetRun) {
+                applyGroup(((WidgetRun) next2).end, i, 1, widgetRun.start, arrayList, (RunGroup) null);
             }
         }
         if (i == 1) {
-            for (Dependency dependency3 : ((VerticalWidgetRun) widgetRun).baseline.dependencies) {
-                if (dependency3 instanceof DependencyNode) {
-                    applyGroup((DependencyNode) dependency3, i, 2, null, arrayList, null);
+            for (Dependency next3 : ((VerticalWidgetRun) widgetRun).baseline.dependencies) {
+                if (next3 instanceof DependencyNode) {
+                    applyGroup((DependencyNode) next3, i, 2, (DependencyNode) null, arrayList, (RunGroup) null);
                 }
             }
         }

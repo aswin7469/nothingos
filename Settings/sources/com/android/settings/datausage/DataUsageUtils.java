@@ -15,11 +15,11 @@ import android.util.Log;
 import com.android.settings.datausage.lib.DataUsageLib;
 import com.android.settings.network.ProxySubscriptionManager;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public final class DataUsageUtils extends com.android.settingslib.net.DataUsageUtils {
     public static CharSequence formatDataUsage(Context context, long j) {
         Formatter.BytesResult formatBytes = Formatter.formatBytes(context.getResources(), j, 8);
-        return BidiFormatter.getInstance().unicodeWrap(context.getString(17040258, formatBytes.value, formatBytes.units));
+        return BidiFormatter.getInstance().unicodeWrap(context.getString(17040322, new Object[]{formatBytes.value, formatBytes.units}));
     }
 
     public static boolean hasEthernet(Context context) {
@@ -28,16 +28,14 @@ public final class DataUsageUtils extends com.android.settingslib.net.DataUsageU
         }
         TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(TelephonyManager.class);
         try {
-            NetworkStats.Bucket querySummaryForUser = ((NetworkStatsManager) context.getSystemService(NetworkStatsManager.class)).querySummaryForUser(9, telephonyManager.getSubscriberId(), 0L, System.currentTimeMillis());
+            NetworkStats.Bucket querySummaryForUser = ((NetworkStatsManager) context.getSystemService(NetworkStatsManager.class)).querySummaryForUser(9, telephonyManager.getSubscriberId(), 0, System.currentTimeMillis());
             if (querySummaryForUser == null) {
                 return false;
             }
-            if (querySummaryForUser.getRxBytes() <= 0) {
-                if (querySummaryForUser.getTxBytes() <= 0) {
-                    return false;
-                }
+            if (querySummaryForUser.getRxBytes() > 0 || querySummaryForUser.getTxBytes() > 0) {
+                return true;
             }
-            return true;
+            return false;
         } catch (RemoteException e) {
             Log.e("DataUsageUtils", "Exception querying network detail.", e);
             return false;
@@ -55,10 +53,13 @@ public final class DataUsageUtils extends com.android.settingslib.net.DataUsageU
         }
         TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(TelephonyManager.class);
         boolean z = true;
-        for (SubscriptionInfo subscriptionInfo : activeSubscriptionsInfo) {
-            z &= telephonyManager.getSimState(subscriptionInfo.getSimSlotIndex()) == 5;
+        for (SubscriptionInfo simSlotIndex : activeSubscriptionsInfo) {
+            z &= telephonyManager.getSimState(simSlotIndex.getSimSlotIndex()) == 5;
         }
-        return telephonyManager.isDataCapable() && z;
+        if (!telephonyManager.isDataCapable() || !z) {
+            return false;
+        }
+        return true;
     }
 
     public static boolean hasWifiRadio(Context context) {
@@ -71,15 +72,15 @@ public final class DataUsageUtils extends com.android.settingslib.net.DataUsageU
         if (SubscriptionManager.isValidSubscriptionId(defaultDataSubscriptionId)) {
             return defaultDataSubscriptionId;
         }
-        ProxySubscriptionManager proxySubscriptionManager = ProxySubscriptionManager.getInstance(context);
-        List<SubscriptionInfo> activeSubscriptionsInfo = proxySubscriptionManager.getActiveSubscriptionsInfo();
+        ProxySubscriptionManager instance = ProxySubscriptionManager.getInstance(context);
+        List<SubscriptionInfo> activeSubscriptionsInfo = instance.getActiveSubscriptionsInfo();
         if (activeSubscriptionsInfo == null || activeSubscriptionsInfo.size() <= 0) {
-            activeSubscriptionsInfo = proxySubscriptionManager.getAccessibleSubscriptionsInfo();
+            activeSubscriptionsInfo = instance.getAccessibleSubscriptionsInfo();
         }
-        if (activeSubscriptionsInfo != null && activeSubscriptionsInfo.size() > 0) {
-            return activeSubscriptionsInfo.get(0).getSubscriptionId();
+        if (activeSubscriptionsInfo == null || activeSubscriptionsInfo.size() <= 0) {
+            return -1;
         }
-        return -1;
+        return activeSubscriptionsInfo.get(0).getSubscriptionId();
     }
 
     public static NetworkTemplate getDefaultTemplate(Context context, int i) {
@@ -87,8 +88,8 @@ public final class DataUsageUtils extends com.android.settingslib.net.DataUsageU
             return DataUsageLib.getMobileTemplate(context, i);
         }
         if (hasWifiRadio(context)) {
-            return NetworkTemplate.buildTemplateWifi(NetworkTemplate.WIFI_NETWORKID_ALL, (String) null);
+            return new NetworkTemplate.Builder(4).build();
         }
-        return NetworkTemplate.buildTemplateEthernet();
+        return new NetworkTemplate.Builder(5).build();
     }
 }

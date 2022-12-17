@@ -5,37 +5,36 @@ import android.media.MediaRoute2Info;
 import android.media.MediaRouter2Manager;
 import com.android.settingslib.R$drawable;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class InfoMediaDevice extends MediaDevice {
-    @Override // com.android.settingslib.media.MediaDevice
     public boolean isConnected() {
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public InfoMediaDevice(Context context, MediaRouter2Manager mediaRouter2Manager, MediaRoute2Info mediaRoute2Info, String str) {
+    InfoMediaDevice(Context context, MediaRouter2Manager mediaRouter2Manager, MediaRoute2Info mediaRoute2Info, String str) {
         super(context, mediaRouter2Manager, mediaRoute2Info, str);
         initDeviceRecord();
     }
 
-    @Override // com.android.settingslib.media.MediaDevice
     public String getName() {
         return this.mRouteInfo.getName().toString();
     }
 
-    int getDrawableResId() {
+    /* access modifiers changed from: package-private */
+    public int getDrawableResId() {
         int type = this.mRouteInfo.getType();
-        if (type != 1001) {
-            if (type == 2000) {
-                return R$drawable.ic_media_group_device;
-            }
+        if (type == 1001) {
+            return R$drawable.ic_media_display_device;
+        }
+        if (type != 2000) {
             return R$drawable.ic_media_speaker_device;
         }
-        return R$drawable.ic_media_display_device;
+        return R$drawable.ic_media_group_device;
     }
 
-    int getDrawableResIdByFeature() {
-        List<String> features = this.mRouteInfo.getFeatures();
+    /* access modifiers changed from: package-private */
+    public int getDrawableResIdByFeature() {
+        List features = this.mRouteInfo.getFeatures();
         if (features.contains("android.media.route.feature.REMOTE_GROUP_PLAYBACK")) {
             return R$drawable.ic_media_group_device;
         }
@@ -45,7 +44,6 @@ public class InfoMediaDevice extends MediaDevice {
         return R$drawable.ic_media_speaker_device;
     }
 
-    @Override // com.android.settingslib.media.MediaDevice
     public String getId() {
         return MediaDeviceUtils.getId(this.mRouteInfo);
     }

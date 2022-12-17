@@ -12,22 +12,23 @@ import android.os.Bundle;
 import android.os.UserHandle;
 import android.text.TextUtils;
 import android.util.Log;
-import androidx.appcompat.R$styleable;
 import androidx.appcompat.app.AlertDialog;
-import com.android.settings.R;
-import com.android.settings.bluetooth.RequestPermissionActivity;
+import com.android.settings.R$bool;
+import com.android.settings.R$string;
 import com.android.settingslib.bluetooth.BluetoothDiscoverableTimeoutReceiver;
-/* loaded from: classes.dex */
+import java.time.Duration;
+
 public class RequestPermissionActivity extends Activity implements DialogInterface.OnClickListener, DialogInterface.OnDismissListener {
     private CharSequence mAppLabel;
     private BluetoothAdapter mBluetoothAdapter;
     private AlertDialog mDialog;
     private BroadcastReceiver mReceiver;
-    private int mRequest;
-    private int mTimeout = R$styleable.AppCompatTheme_windowFixedHeightMajor;
+    /* access modifiers changed from: private */
+    public int mRequest;
+    private int mTimeout = 120;
 
-    @Override // android.app.Activity
-    protected void onCreate(Bundle bundle) {
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         getWindow().addSystemFlags(524288);
         setResult(0);
@@ -55,48 +56,49 @@ public class RequestPermissionActivity extends Activity implements DialogInterfa
                     cancelAndFinish();
                     return;
             }
-        }
-        switch (state) {
-            case 10:
-            case 11:
-            case 13:
-                Intent intent2 = new Intent(this, RequestPermissionHelperActivity.class);
-                intent2.setAction("com.android.settings.bluetooth.ACTION_INTERNAL_REQUEST_BT_ON");
-                intent2.putExtra("com.android.settings.bluetooth.extra.APP_LABEL", this.mAppLabel);
-                if (this.mRequest == 2) {
-                    intent2.putExtra("android.bluetooth.adapter.extra.DISCOVERABLE_DURATION", this.mTimeout);
-                }
-                startActivityForResult(intent2, 0);
-                return;
-            case 12:
-                if (i == 1) {
-                    proceedAndFinish();
+        } else {
+            switch (state) {
+                case 10:
+                case 11:
+                case 13:
+                    Intent intent2 = new Intent(this, RequestPermissionHelperActivity.class);
+                    intent2.setAction("com.android.settings.bluetooth.ACTION_INTERNAL_REQUEST_BT_ON");
+                    intent2.putExtra("com.android.settings.bluetooth.extra.APP_LABEL", this.mAppLabel);
+                    if (this.mRequest == 2) {
+                        intent2.putExtra("android.bluetooth.adapter.extra.DISCOVERABLE_DURATION", this.mTimeout);
+                    }
+                    startActivityForResult(intent2, 0);
                     return;
-                } else {
-                    createDialog();
+                case 12:
+                    if (i == 1) {
+                        proceedAndFinish();
+                        return;
+                    } else {
+                        createDialog();
+                        return;
+                    }
+                default:
+                    Log.e("BtRequestPermission", "Unknown adapter state: " + state);
+                    cancelAndFinish();
                     return;
-                }
-            default:
-                Log.e("BtRequestPermission", "Unknown adapter state: " + state);
-                cancelAndFinish();
-                return;
+            }
         }
     }
 
     private void createDialog() {
-        String string;
-        String string2;
-        if (getResources().getBoolean(R.bool.auto_confirm_bluetooth_activation_dialog)) {
-            onClick(null, -1);
+        String str;
+        String str2;
+        if (getResources().getBoolean(R$bool.auto_confirm_bluetooth_activation_dialog)) {
+            onClick((DialogInterface) null, -1);
             return;
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         if (this.mReceiver != null) {
             int i = this.mRequest;
             if (i == 1 || i == 2) {
-                builder.setMessage(getString(R.string.bluetooth_turning_on));
+                builder.setMessage((CharSequence) getString(R$string.bluetooth_turning_on));
             } else {
-                builder.setMessage(getString(R.string.bluetooth_turning_off));
+                builder.setMessage((CharSequence) getString(R$string.bluetooth_turning_off));
             }
             builder.setCancelable(false);
         } else {
@@ -104,22 +106,22 @@ public class RequestPermissionActivity extends Activity implements DialogInterfa
             if (i2 == 0) {
                 CharSequence charSequence = this.mAppLabel;
                 if (charSequence != null) {
-                    string2 = getString(R.string.bluetooth_ask_lasting_discovery, new Object[]{charSequence});
+                    str2 = getString(R$string.bluetooth_ask_lasting_discovery, new Object[]{charSequence});
                 } else {
-                    string2 = getString(R.string.bluetooth_ask_lasting_discovery_no_name);
+                    str2 = getString(R$string.bluetooth_ask_lasting_discovery_no_name);
                 }
-                builder.setMessage(string2);
+                builder.setMessage((CharSequence) str2);
             } else {
                 CharSequence charSequence2 = this.mAppLabel;
                 if (charSequence2 != null) {
-                    string = getString(R.string.bluetooth_ask_discovery, new Object[]{charSequence2, Integer.valueOf(i2)});
+                    str = getString(R$string.bluetooth_ask_discovery, new Object[]{charSequence2, Integer.valueOf(i2)});
                 } else {
-                    string = getString(R.string.bluetooth_ask_discovery_no_name, new Object[]{Integer.valueOf(i2)});
+                    str = getString(R$string.bluetooth_ask_discovery_no_name, new Object[]{Integer.valueOf(i2)});
                 }
-                builder.setMessage(string);
+                builder.setMessage((CharSequence) str);
             }
-            builder.setPositiveButton(getString(R.string.allow), this);
-            builder.setNegativeButton(getString(R.string.deny), this);
+            builder.setPositiveButton((CharSequence) getString(R$string.allow), (DialogInterface.OnClickListener) this);
+            builder.setNegativeButton((CharSequence) getString(R$string.deny), (DialogInterface.OnClickListener) this);
         }
         builder.setOnDismissListener(this);
         AlertDialog create = builder.create();
@@ -127,8 +129,8 @@ public class RequestPermissionActivity extends Activity implements DialogInterfa
         create.show();
     }
 
-    @Override // android.app.Activity
-    protected void onActivityResult(int i, int i2, Intent intent) {
+    /* access modifiers changed from: protected */
+    public void onActivityResult(int i, int i2, Intent intent) {
         if (i2 != -1) {
             cancelAndFinish();
             return;
@@ -143,53 +145,51 @@ public class RequestPermissionActivity extends Activity implements DialogInterfa
             this.mReceiver = stateChangeReceiver;
             registerReceiver(stateChangeReceiver, new IntentFilter("android.bluetooth.adapter.action.STATE_CHANGED"));
             createDialog();
-        } else if (i3 == 3) {
-            if (this.mBluetoothAdapter.getState() == 10) {
-                proceedAndFinish();
-                return;
-            }
+        } else if (i3 != 3) {
+            cancelAndFinish();
+        } else if (this.mBluetoothAdapter.getState() == 10) {
+            proceedAndFinish();
+        } else {
             StateChangeReceiver stateChangeReceiver2 = new StateChangeReceiver();
             this.mReceiver = stateChangeReceiver2;
             registerReceiver(stateChangeReceiver2, new IntentFilter("android.bluetooth.adapter.action.STATE_CHANGED"));
             createDialog();
-        } else {
-            cancelAndFinish();
         }
     }
 
-    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialogInterface, int i) {
         if (i == -2) {
             cancelAndFinish();
-        } else if (i != -1) {
-        } else {
+        } else if (i == -1) {
             proceedAndFinish();
         }
     }
 
-    @Override // android.content.DialogInterface.OnDismissListener
     public void onDismiss(DialogInterface dialogInterface) {
         cancelAndFinish();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void proceedAndFinish() {
         int i = this.mRequest;
         int i2 = 1;
         if (i == 1 || i == 3) {
             i2 = -1;
-        } else if (this.mBluetoothAdapter.setScanMode(23, this.mTimeout)) {
-            long currentTimeMillis = System.currentTimeMillis() + (this.mTimeout * 1000);
-            LocalBluetoothPreferences.persistDiscoverableEndTimestamp(this, currentTimeMillis);
-            if (this.mTimeout > 0) {
-                BluetoothDiscoverableTimeoutReceiver.setDiscoverableAlarm(this, currentTimeMillis);
-            }
-            int i3 = this.mTimeout;
-            if (i3 >= 1) {
-                i2 = i3;
-            }
         } else {
-            i2 = 0;
+            this.mBluetoothAdapter.setDiscoverableTimeout(Duration.ofSeconds((long) this.mTimeout));
+            if (this.mBluetoothAdapter.setScanMode(23) == 0) {
+                long currentTimeMillis = System.currentTimeMillis() + (((long) this.mTimeout) * 1000);
+                LocalBluetoothPreferences.persistDiscoverableEndTimestamp(this, currentTimeMillis);
+                if (this.mTimeout > 0) {
+                    BluetoothDiscoverableTimeoutReceiver.setDiscoverableAlarm(this, currentTimeMillis);
+                }
+                int i3 = this.mTimeout;
+                if (i3 >= 1) {
+                    i2 = i3;
+                }
+            } else {
+                i2 = 0;
+            }
         }
         AlertDialog alertDialog = this.mDialog;
         if (alertDialog != null) {
@@ -199,7 +199,7 @@ public class RequestPermissionActivity extends Activity implements DialogInterfa
         finish();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void cancelAndFinish() {
         setResult(0);
         finish();
@@ -216,11 +216,11 @@ public class RequestPermissionActivity extends Activity implements DialogInterfa
             this.mRequest = 3;
         } else if (intent.getAction().equals("android.bluetooth.adapter.action.REQUEST_DISCOVERABLE")) {
             this.mRequest = 2;
-            this.mTimeout = intent.getIntExtra("android.bluetooth.adapter.extra.DISCOVERABLE_DURATION", R$styleable.AppCompatTheme_windowFixedHeightMajor);
+            this.mTimeout = intent.getIntExtra("android.bluetooth.adapter.extra.DISCOVERABLE_DURATION", 120);
             Log.d("BtRequestPermission", "Setting Bluetooth Discoverable Timeout = " + this.mTimeout);
             int i = this.mTimeout;
             if (i < 1 || i > 3600) {
-                this.mTimeout = R$styleable.AppCompatTheme_windowFixedHeightMajor;
+                this.mTimeout = 120;
             }
         } else {
             Log.e("BtRequestPermission", "Error: this activity may be started only with intent android.bluetooth.adapter.action.REQUEST_ENABLE, android.bluetooth.adapter.action.REQUEST_DISABLE or android.bluetooth.adapter.action.REQUEST_DISCOVERABLE");
@@ -254,8 +254,8 @@ public class RequestPermissionActivity extends Activity implements DialogInterfa
         return true;
     }
 
-    @Override // android.app.Activity
-    protected void onDestroy() {
+    /* access modifiers changed from: protected */
+    public void onDestroy() {
         super.onDestroy();
         BroadcastReceiver broadcastReceiver = this.mReceiver;
         if (broadcastReceiver != null) {
@@ -264,47 +264,34 @@ public class RequestPermissionActivity extends Activity implements DialogInterfa
         }
     }
 
-    @Override // android.app.Activity
     public void onBackPressed() {
         setResult(0);
         super.onBackPressed();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public final class StateChangeReceiver extends BroadcastReceiver {
+    private final class StateChangeReceiver extends BroadcastReceiver {
         public StateChangeReceiver() {
-            RequestPermissionActivity.this.getWindow().getDecorView().postDelayed(new Runnable() { // from class: com.android.settings.bluetooth.RequestPermissionActivity$StateChangeReceiver$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    RequestPermissionActivity.StateChangeReceiver.this.lambda$new$0();
-                }
-            }, 10000L);
+            RequestPermissionActivity.this.getWindow().getDecorView().postDelayed(new C0809xfa9b1fc8(this), 10000);
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public /* synthetic */ void lambda$new$0() {
-            if (RequestPermissionActivity.this.isFinishing() || RequestPermissionActivity.this.isDestroyed()) {
-                return;
+            if (!RequestPermissionActivity.this.isFinishing() && !RequestPermissionActivity.this.isDestroyed()) {
+                RequestPermissionActivity.this.cancelAndFinish();
             }
-            RequestPermissionActivity.this.cancelAndFinish();
         }
 
-        @Override // android.content.BroadcastReceiver
         public void onReceive(Context context, Intent intent) {
-            if (intent == null) {
-                return;
-            }
-            int intExtra = intent.getIntExtra("android.bluetooth.adapter.extra.STATE", Integer.MIN_VALUE);
-            int i = RequestPermissionActivity.this.mRequest;
-            if (i == 1 || i == 2) {
-                if (intExtra != 12) {
-                    return;
+            if (intent != null) {
+                int intExtra = intent.getIntExtra("android.bluetooth.adapter.extra.STATE", Integer.MIN_VALUE);
+                int r3 = RequestPermissionActivity.this.mRequest;
+                if (r3 == 1 || r3 == 2) {
+                    if (intExtra == 12) {
+                        RequestPermissionActivity.this.proceedAndFinish();
+                    }
+                } else if (r3 == 3 && intExtra == 10) {
+                    RequestPermissionActivity.this.proceedAndFinish();
                 }
-                RequestPermissionActivity.this.proceedAndFinish();
-            } else if (i != 3 || intExtra != 10) {
-            } else {
-                RequestPermissionActivity.this.proceedAndFinish();
             }
         }
     }

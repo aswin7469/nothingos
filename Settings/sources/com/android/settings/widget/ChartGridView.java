@@ -9,10 +9,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import com.android.internal.R;
 import com.android.settings.R$styleable;
-/* loaded from: classes.dex */
+
 public class ChartGridView extends View {
     private Drawable mBorder;
-    private ChartAxis mHoriz;
     private int mLabelColor;
     private Layout mLabelEnd;
     private Layout mLabelMid;
@@ -20,10 +19,9 @@ public class ChartGridView extends View {
     private Layout mLabelStart;
     private Drawable mPrimary;
     private Drawable mSecondary;
-    private ChartAxis mVert;
 
     public ChartGridView(Context context) {
-        this(context, null, 0);
+        this(context, (AttributeSet) null, 0);
     }
 
     public ChartGridView(Context context, AttributeSet attributeSet) {
@@ -44,56 +42,50 @@ public class ChartGridView extends View {
         obtainStyledAttributes.recycle();
     }
 
-    @Override // android.view.View
-    protected void onDraw(Canvas canvas) {
-        float[] tickPoints;
-        float[] tickPoints2;
+    /* access modifiers changed from: protected */
+    public void onDraw(Canvas canvas) {
         int width = getWidth();
         int height = getHeight() - getPaddingBottom();
         Drawable drawable = this.mSecondary;
-        int i = 0;
-        if (drawable != null) {
-            int intrinsicHeight = drawable.getIntrinsicHeight();
-            for (float f : this.mVert.getTickPoints()) {
-                drawable.setBounds(0, (int) f, width, (int) Math.min(intrinsicHeight + f, height));
-                drawable.draw(canvas);
+        if (drawable == null) {
+            Drawable drawable2 = this.mPrimary;
+            if (drawable2 == null) {
+                int i = 0;
+                this.mBorder.setBounds(0, 0, width, height);
+                this.mBorder.draw(canvas);
+                Layout layout = this.mLabelStart;
+                if (layout != null) {
+                    i = layout.getHeight() / 8;
+                }
+                Layout layout2 = this.mLabelStart;
+                if (layout2 != null) {
+                    int save = canvas.save();
+                    canvas.translate(0.0f, (float) (height + i));
+                    layout2.draw(canvas);
+                    canvas.restoreToCount(save);
+                }
+                Layout layout3 = this.mLabelMid;
+                if (layout3 != null) {
+                    int save2 = canvas.save();
+                    canvas.translate((float) ((width - layout3.getWidth()) / 2), (float) (height + i));
+                    layout3.draw(canvas);
+                    canvas.restoreToCount(save2);
+                }
+                Layout layout4 = this.mLabelEnd;
+                if (layout4 != null) {
+                    int save3 = canvas.save();
+                    canvas.translate((float) (width - layout4.getWidth()), (float) (height + i));
+                    layout4.draw(canvas);
+                    canvas.restoreToCount(save3);
+                    return;
+                }
+                return;
             }
-        }
-        Drawable drawable2 = this.mPrimary;
-        if (drawable2 != null) {
-            int intrinsicWidth = drawable2.getIntrinsicWidth();
+            drawable2.getIntrinsicWidth();
             drawable2.getIntrinsicHeight();
-            for (float f2 : this.mHoriz.getTickPoints()) {
-                drawable2.setBounds((int) f2, 0, (int) Math.min(intrinsicWidth + f2, width), height);
-                drawable2.draw(canvas);
-            }
+            throw null;
         }
-        this.mBorder.setBounds(0, 0, width, height);
-        this.mBorder.draw(canvas);
-        Layout layout = this.mLabelStart;
-        if (layout != null) {
-            i = layout.getHeight() / 8;
-        }
-        Layout layout2 = this.mLabelStart;
-        if (layout2 != null) {
-            int save = canvas.save();
-            canvas.translate(0.0f, height + i);
-            layout2.draw(canvas);
-            canvas.restoreToCount(save);
-        }
-        Layout layout3 = this.mLabelMid;
-        if (layout3 != null) {
-            int save2 = canvas.save();
-            canvas.translate((width - layout3.getWidth()) / 2, height + i);
-            layout3.draw(canvas);
-            canvas.restoreToCount(save2);
-        }
-        Layout layout4 = this.mLabelEnd;
-        if (layout4 != null) {
-            int save3 = canvas.save();
-            canvas.translate(width - layout4.getWidth(), height + i);
-            layout4.draw(canvas);
-            canvas.restoreToCount(save3);
-        }
+        drawable.getIntrinsicHeight();
+        throw null;
     }
 }

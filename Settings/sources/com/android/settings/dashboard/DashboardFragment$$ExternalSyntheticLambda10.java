@@ -1,16 +1,12 @@
 package com.android.settings.dashboard;
 
-import java.util.List;
-import java.util.function.Function;
-/* loaded from: classes.dex */
-public final /* synthetic */ class DashboardFragment$$ExternalSyntheticLambda10 implements Function {
-    public static final /* synthetic */ DashboardFragment$$ExternalSyntheticLambda10 INSTANCE = new DashboardFragment$$ExternalSyntheticLambda10();
+import androidx.preference.Preference;
+import java.util.Objects;
+import java.util.function.Predicate;
 
-    private /* synthetic */ DashboardFragment$$ExternalSyntheticLambda10() {
-    }
-
-    @Override // java.util.function.Function
-    public final Object apply(Object obj) {
-        return ((List) obj).stream();
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class DashboardFragment$$ExternalSyntheticLambda10 implements Predicate {
+    public final boolean test(Object obj) {
+        return Objects.nonNull((Preference) obj);
     }
 }

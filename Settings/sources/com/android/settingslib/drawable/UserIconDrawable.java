@@ -1,5 +1,6 @@
 package com.android.settingslib.drawable;
 
+import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
@@ -15,8 +16,8 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import com.android.settingslib.R$dimen;
-/* loaded from: classes.dex */
+import com.android.settingslib.utils.BuildCompatUtils;
+
 public class UserIconDrawable extends Drawable implements Drawable.Callback {
     private Drawable mBadge;
     private float mBadgeMargin;
@@ -24,41 +25,51 @@ public class UserIconDrawable extends Drawable implements Drawable.Callback {
     private Bitmap mBitmap;
     private Paint mClearPaint;
     private float mDisplayRadius;
+    private ColorStateList mFrameColor;
     private float mFramePadding;
     private Paint mFramePaint;
     private float mFrameWidth;
+    private final Matrix mIconMatrix;
     private final Paint mIconPaint;
     private float mIntrinsicRadius;
+    private boolean mInvalidated;
+    private float mPadding;
     private final Paint mPaint;
+    private int mSize;
+    private ColorStateList mTintColor;
+    private PorterDuff.Mode mTintMode;
     private Drawable mUserDrawable;
     private Bitmap mUserIcon;
-    private final Matrix mIconMatrix = new Matrix();
-    private float mPadding = 0.0f;
-    private int mSize = 0;
-    private boolean mInvalidated = true;
-    private ColorStateList mTintColor = null;
-    private PorterDuff.Mode mTintMode = PorterDuff.Mode.SRC_ATOP;
-    private ColorStateList mFrameColor = null;
 
-    @Override // android.graphics.drawable.Drawable
     public int getOpacity() {
         return -3;
     }
 
-    @Override // android.graphics.drawable.Drawable
     public void setColorFilter(ColorFilter colorFilter) {
     }
 
     public static Drawable getManagedUserDrawable(Context context) {
-        return getDrawableForDisplayDensity(context, 17302401);
+        if (BuildCompatUtils.isAtLeastT()) {
+            return getUpdatableManagedUserDrawable(context);
+        }
+        return getDrawableForDisplayDensity(context, 17302410);
     }
 
-    private static Drawable getDrawableForDisplayDensity(Context context, int i) {
+    private static Drawable getUpdatableManagedUserDrawable(Context context) {
+        return ((DevicePolicyManager) context.getSystemService(DevicePolicyManager.class)).getResources().getDrawableForDensity("WORK_PROFILE_USER_ICON", "SOLID_COLORED", context.getResources().getDisplayMetrics().densityDpi, new UserIconDrawable$$ExternalSyntheticLambda0(context));
+    }
+
+    /* access modifiers changed from: private */
+    public static Drawable getDrawableForDisplayDensity(Context context, int i) {
         return context.getResources().getDrawableForDensity(i, context.getResources().getDisplayMetrics().densityDpi, context.getTheme());
     }
 
-    public static int getSizeForList(Context context) {
-        return (int) context.getResources().getDimension(R$dimen.circle_avatar_size);
+    public static int getDefaultSize(Context context) {
+        return context.getResources().getDimensionPixelSize(17105619);
+    }
+
+    public UserIconDrawable() {
+        this(0);
     }
 
     public UserIconDrawable(int i) {
@@ -66,6 +77,13 @@ public class UserIconDrawable extends Drawable implements Drawable.Callback {
         this.mIconPaint = paint;
         Paint paint2 = new Paint();
         this.mPaint = paint2;
+        this.mIconMatrix = new Matrix();
+        this.mPadding = 0.0f;
+        this.mSize = 0;
+        this.mInvalidated = true;
+        this.mTintColor = null;
+        this.mTintMode = PorterDuff.Mode.SRC_ATOP;
+        this.mFrameColor = null;
         paint.setAntiAlias(true);
         paint.setFilterBitmap(true);
         paint2.setFilterBitmap(true);
@@ -74,18 +92,18 @@ public class UserIconDrawable extends Drawable implements Drawable.Callback {
             setBounds(0, 0, i, i);
             setIntrinsicSize(i);
         }
-        setIcon(null);
+        setIcon((Bitmap) null);
     }
 
     public UserIconDrawable setIcon(Bitmap bitmap) {
         Drawable drawable = this.mUserDrawable;
         if (drawable != null) {
-            drawable.setCallback(null);
+            drawable.setCallback((Drawable.Callback) null);
             this.mUserDrawable = null;
         }
         this.mUserIcon = bitmap;
         if (bitmap == null) {
-            this.mIconPaint.setShader(null);
+            this.mIconPaint.setShader((Shader) null);
             this.mBitmap = null;
         } else {
             Paint paint = this.mIconPaint;
@@ -99,7 +117,7 @@ public class UserIconDrawable extends Drawable implements Drawable.Callback {
     public UserIconDrawable setIconDrawable(Drawable drawable) {
         Drawable drawable2 = this.mUserDrawable;
         if (drawable2 != null) {
-            drawable2.setCallback(null);
+            drawable2.setCallback((Drawable.Callback) null);
         }
         this.mUserIcon = null;
         this.mUserDrawable = drawable;
@@ -116,7 +134,6 @@ public class UserIconDrawable extends Drawable implements Drawable.Callback {
         this.mSize = i;
     }
 
-    @Override // android.graphics.drawable.Drawable
     public void draw(Canvas canvas) {
         if (this.mInvalidated) {
             rebake();
@@ -124,7 +141,7 @@ public class UserIconDrawable extends Drawable implements Drawable.Callback {
         if (this.mBitmap != null) {
             ColorStateList colorStateList = this.mTintColor;
             if (colorStateList == null) {
-                this.mPaint.setColorFilter(null);
+                this.mPaint.setColorFilter((ColorFilter) null);
             } else {
                 int colorForState = colorStateList.getColorForState(getState(), this.mTintColor.getDefaultColor());
                 if (shouldUpdateColorFilter(colorForState, this.mTintMode)) {
@@ -137,66 +154,67 @@ public class UserIconDrawable extends Drawable implements Drawable.Callback {
 
     private boolean shouldUpdateColorFilter(int i, PorterDuff.Mode mode) {
         ColorFilter colorFilter = this.mPaint.getColorFilter();
-        if (colorFilter instanceof PorterDuffColorFilter) {
-            PorterDuffColorFilter porterDuffColorFilter = (PorterDuffColorFilter) colorFilter;
-            return (porterDuffColorFilter.getColor() == i && porterDuffColorFilter.getMode() == mode) ? false : true;
+        if (!(colorFilter instanceof PorterDuffColorFilter)) {
+            return true;
+        }
+        PorterDuffColorFilter porterDuffColorFilter = (PorterDuffColorFilter) colorFilter;
+        int color = porterDuffColorFilter.getColor();
+        PorterDuff.Mode mode2 = porterDuffColorFilter.getMode();
+        if (color == i && mode2 == mode) {
+            return false;
         }
         return true;
     }
 
-    @Override // android.graphics.drawable.Drawable
     public void setAlpha(int i) {
         this.mPaint.setAlpha(i);
         super.invalidateSelf();
     }
 
-    @Override // android.graphics.drawable.Drawable
     public void setTintList(ColorStateList colorStateList) {
         this.mTintColor = colorStateList;
         super.invalidateSelf();
     }
 
-    @Override // android.graphics.drawable.Drawable
     public void setTintMode(PorterDuff.Mode mode) {
         this.mTintMode = mode;
         super.invalidateSelf();
     }
 
-    @Override // android.graphics.drawable.Drawable
     public Drawable.ConstantState getConstantState() {
         return new BitmapDrawable(this.mBitmap).getConstantState();
     }
 
     public UserIconDrawable bake() {
-        if (this.mSize <= 0) {
-            throw new IllegalStateException("Baking requires an explicit intrinsic size");
-        }
-        int i = this.mSize;
-        onBoundsChange(new Rect(0, 0, i, i));
-        rebake();
-        this.mFrameColor = null;
-        this.mFramePaint = null;
-        this.mClearPaint = null;
-        Drawable drawable = this.mUserDrawable;
-        if (drawable != null) {
-            drawable.setCallback(null);
-            this.mUserDrawable = null;
-        } else {
-            Bitmap bitmap = this.mUserIcon;
-            if (bitmap != null) {
-                bitmap.recycle();
-                this.mUserIcon = null;
+        if (this.mSize > 0) {
+            int i = this.mSize;
+            onBoundsChange(new Rect(0, 0, i, i));
+            rebake();
+            this.mFrameColor = null;
+            this.mFramePaint = null;
+            this.mClearPaint = null;
+            Drawable drawable = this.mUserDrawable;
+            if (drawable != null) {
+                drawable.setCallback((Drawable.Callback) null);
+                this.mUserDrawable = null;
+            } else {
+                Bitmap bitmap = this.mUserIcon;
+                if (bitmap != null) {
+                    bitmap.recycle();
+                    this.mUserIcon = null;
+                }
             }
+            return this;
         }
-        return this;
+        throw new IllegalStateException("Baking requires an explicit intrinsic size");
     }
 
     private void rebake() {
         this.mInvalidated = false;
-        if (this.mBitmap != null) {
-            if (this.mUserDrawable == null && this.mUserIcon == null) {
-                return;
-            }
+        if (this.mBitmap == null) {
+            return;
+        }
+        if (this.mUserDrawable != null || this.mUserIcon != null) {
             Canvas canvas = new Canvas(this.mBitmap);
             canvas.drawColor(0, PorterDuff.Mode.CLEAR);
             Drawable drawable = this.mUserDrawable;
@@ -205,7 +223,7 @@ public class UserIconDrawable extends Drawable implements Drawable.Callback {
             } else if (this.mUserIcon != null) {
                 int save = canvas.save();
                 canvas.concat(this.mIconMatrix);
-                canvas.drawCircle(this.mUserIcon.getWidth() * 0.5f, this.mUserIcon.getHeight() * 0.5f, this.mIntrinsicRadius, this.mIconPaint);
+                canvas.drawCircle(((float) this.mUserIcon.getWidth()) * 0.5f, ((float) this.mUserIcon.getHeight()) * 0.5f, this.mIntrinsicRadius, this.mIconPaint);
                 canvas.restoreToCount(save);
             }
             ColorStateList colorStateList = this.mFrameColor;
@@ -216,31 +234,29 @@ public class UserIconDrawable extends Drawable implements Drawable.Callback {
             if (this.mFramePadding + f > 0.001f) {
                 canvas.drawCircle(getBounds().exactCenterX(), getBounds().exactCenterY(), (this.mDisplayRadius - this.mPadding) - (f * 0.5f), this.mFramePaint);
             }
-            if (this.mBadge == null) {
-                return;
+            if (this.mBadge != null) {
+                float f2 = this.mBadgeRadius;
+                if (f2 > 0.001f) {
+                    float f3 = f2 * 2.0f;
+                    float height = ((float) this.mBitmap.getHeight()) - f3;
+                    float width = ((float) this.mBitmap.getWidth()) - f3;
+                    this.mBadge.setBounds((int) width, (int) height, (int) (width + f3), (int) (f3 + height));
+                    float width2 = (((float) this.mBadge.getBounds().width()) * 0.5f) + this.mBadgeMargin;
+                    float f4 = this.mBadgeRadius;
+                    canvas.drawCircle(width + f4, height + f4, width2, this.mClearPaint);
+                    this.mBadge.draw(canvas);
+                }
             }
-            float f2 = this.mBadgeRadius;
-            if (f2 <= 0.001f) {
-                return;
-            }
-            float f3 = f2 * 2.0f;
-            float height = this.mBitmap.getHeight() - f3;
-            float width = this.mBitmap.getWidth() - f3;
-            this.mBadge.setBounds((int) width, (int) height, (int) (width + f3), (int) (f3 + height));
-            float width2 = (this.mBadge.getBounds().width() * 0.5f) + this.mBadgeMargin;
-            float f4 = this.mBadgeRadius;
-            canvas.drawCircle(width + f4, height + f4, width2, this.mClearPaint);
-            this.mBadge.draw(canvas);
         }
     }
 
-    @Override // android.graphics.drawable.Drawable
-    protected void onBoundsChange(Rect rect) {
-        if (!rect.isEmpty()) {
-            if (this.mUserIcon == null && this.mUserDrawable == null) {
-                return;
-            }
-            float min = Math.min(rect.width(), rect.height()) * 0.5f;
+    /* access modifiers changed from: protected */
+    public void onBoundsChange(Rect rect) {
+        if (rect.isEmpty()) {
+            return;
+        }
+        if (this.mUserIcon != null || this.mUserDrawable != null) {
+            float min = ((float) Math.min(rect.width(), rect.height())) * 0.5f;
             int i = (int) (min * 2.0f);
             Bitmap bitmap = this.mBitmap;
             if (bitmap == null || i != ((int) (this.mDisplayRadius * 2.0f))) {
@@ -250,20 +266,20 @@ public class UserIconDrawable extends Drawable implements Drawable.Callback {
                 }
                 this.mBitmap = Bitmap.createBitmap(i, i, Bitmap.Config.ARGB_8888);
             }
-            float min2 = Math.min(rect.width(), rect.height()) * 0.5f;
+            float min2 = ((float) Math.min(rect.width(), rect.height())) * 0.5f;
             this.mDisplayRadius = min2;
             float f = ((min2 - this.mFrameWidth) - this.mFramePadding) - this.mPadding;
             RectF rectF = new RectF(rect.exactCenterX() - f, rect.exactCenterY() - f, rect.exactCenterX() + f, rect.exactCenterY() + f);
             if (this.mUserDrawable != null) {
                 Rect rect2 = new Rect();
                 rectF.round(rect2);
-                this.mIntrinsicRadius = Math.min(this.mUserDrawable.getIntrinsicWidth(), this.mUserDrawable.getIntrinsicHeight()) * 0.5f;
+                this.mIntrinsicRadius = ((float) Math.min(this.mUserDrawable.getIntrinsicWidth(), this.mUserDrawable.getIntrinsicHeight())) * 0.5f;
                 this.mUserDrawable.setBounds(rect2);
             } else {
                 Bitmap bitmap2 = this.mUserIcon;
                 if (bitmap2 != null) {
-                    float width = bitmap2.getWidth() * 0.5f;
-                    float height = this.mUserIcon.getHeight() * 0.5f;
+                    float width = ((float) bitmap2.getWidth()) * 0.5f;
+                    float height = ((float) this.mUserIcon.getHeight()) * 0.5f;
                     this.mIntrinsicRadius = Math.min(width, height);
                     float f2 = this.mIntrinsicRadius;
                     this.mIconMatrix.setRectToRect(new RectF(width - f2, height - f2, width + f2, height + f2), rectF, Matrix.ScaleToFit.FILL);
@@ -273,41 +289,50 @@ public class UserIconDrawable extends Drawable implements Drawable.Callback {
         }
     }
 
-    @Override // android.graphics.drawable.Drawable
     public void invalidateSelf() {
         super.invalidateSelf();
         this.mInvalidated = true;
     }
 
-    @Override // android.graphics.drawable.Drawable
     public boolean isStateful() {
         ColorStateList colorStateList = this.mFrameColor;
         return colorStateList != null && colorStateList.isStateful();
     }
 
-    @Override // android.graphics.drawable.Drawable
     public int getIntrinsicWidth() {
         int i = this.mSize;
         return i <= 0 ? ((int) this.mIntrinsicRadius) * 2 : i;
     }
 
-    @Override // android.graphics.drawable.Drawable
     public int getIntrinsicHeight() {
         return getIntrinsicWidth();
     }
 
-    @Override // android.graphics.drawable.Drawable.Callback
     public void invalidateDrawable(Drawable drawable) {
         invalidateSelf();
     }
 
-    @Override // android.graphics.drawable.Drawable.Callback
     public void scheduleDrawable(Drawable drawable, Runnable runnable, long j) {
         scheduleSelf(runnable, j);
     }
 
-    @Override // android.graphics.drawable.Drawable.Callback
     public void unscheduleDrawable(Drawable drawable, Runnable runnable) {
         unscheduleSelf(runnable);
+    }
+
+    public Drawable getUserDrawable() {
+        return this.mUserDrawable;
+    }
+
+    public Bitmap getUserIcon() {
+        return this.mUserIcon;
+    }
+
+    public boolean isInvalidated() {
+        return this.mInvalidated;
+    }
+
+    public Drawable getBadge() {
+        return this.mBadge;
     }
 }

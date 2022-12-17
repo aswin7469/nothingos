@@ -1,9 +1,8 @@
 package com.android.settings.network.telephony;
 
-import android.content.BroadcastReceiver;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.UserManager;
@@ -18,33 +17,40 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
+import com.android.settings.Settings;
+import com.android.settings.SettingsActivity;
 import com.android.settings.datausage.BillingCyclePreferenceController;
 import com.android.settings.datausage.DataUsageSummaryPreferenceController;
 import com.android.settings.network.ActiveSubscriptionsListener;
 import com.android.settings.network.CarrierWifiTogglePreferenceController;
+import com.android.settings.network.SubscriptionUtil;
 import com.android.settings.network.telephony.cdma.CdmaSubscriptionPreferenceController;
 import com.android.settings.network.telephony.cdma.CdmaSystemSelectPreferenceController;
 import com.android.settings.network.telephony.gsm.AutoSelectPreferenceController;
 import com.android.settings.network.telephony.gsm.OpenNetworkSelectPagePreferenceController;
+import com.android.settings.network.telephony.gsm.SelectNetworkPreferenceController;
 import com.android.settings.search.BaseSearchIndexProvider;
 import com.android.settings.wifi.WifiPickerTrackerHelper;
-import com.android.settingslib.WirelessUtils;
 import com.android.settingslib.core.AbstractPreferenceController;
 import com.android.settingslib.utils.ThreadUtils;
+import com.android.wifitrackerlib.WifiPickerTracker;
+import com.nothing.settings.network.telephony.SAPreferenceController;
+import com.nothing.settings.network.telephony.SmartFiveGPreferenceController;
 import java.util.Arrays;
 import java.util.List;
-/* loaded from: classes.dex */
+import java.util.function.Consumer;
+
 public class MobileNetworkSettings extends AbstractMobileNetworkSettings {
     static final String KEY_CLICKED_PREF = "key_clicked_pref";
-    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R.xml.mobile_network_settings) { // from class: com.android.settings.network.telephony.MobileNetworkSettings.4
-        @Override // com.android.settings.search.BaseSearchIndexProvider, com.android.settingslib.search.Indexable$SearchIndexProvider
+    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R$xml.mobile_network_settings) {
         public List<SearchIndexableResource> getXmlResourcesToIndex(Context context, boolean z) {
             return super.getXmlResourcesToIndex(context, z);
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // com.android.settings.search.BaseSearchIndexProvider
+        /* access modifiers changed from: protected */
         public boolean isPageSearchEnabled(Context context) {
             return ((UserManager) context.getSystemService(UserManager.class)).isAdminUser();
         }
@@ -55,80 +61,27 @@ public class MobileNetworkSettings extends AbstractMobileNetworkSettings {
     private CdmaSystemSelectPreferenceController mCdmaSystemSelectPreferenceController;
     private String mClickedPrefKey;
     private boolean mDropFirstSubscriptionChangeNotify;
+    private int mSubId = -1;
     private TelephonyManager mTelephonyManager;
     private UserManager mUserManager;
-    private int mSubId = -1;
-    private int mPhoneId = -1;
-    private final BroadcastReceiver mSimStateReceiver = new BroadcastReceiver() { // from class: com.android.settings.network.telephony.MobileNetworkSettings.1
-        @Override // android.content.BroadcastReceiver
-        public void onReceive(Context context, Intent intent) {
-            if ("android.intent.action.SIM_STATE_CHANGED".equals(intent.getAction())) {
-                String stringExtra = intent.getStringExtra("ss");
-                Log.d("NetworkSettings", "Received ACTION_SIM_STATE_CHANGED: " + stringExtra);
-                MobileNetworkSettings.this.setScreenState();
-            }
-        }
-    };
-    private final BroadcastReceiver mAirplaneStateReceiver = new BroadcastReceiver() { // from class: com.android.settings.network.telephony.MobileNetworkSettings.2
-        @Override // android.content.BroadcastReceiver
-        public void onReceive(Context context, Intent intent) {
-            if ("android.intent.action.AIRPLANE_MODE".equals(intent.getAction())) {
-                boolean isAirplaneModeOn = WirelessUtils.isAirplaneModeOn(context);
-                Log.d("NetworkSettings", "Received ACTION_AIRPLANE_MODE_CHANGED: isAirplaneModeOn=" + isAirplaneModeOn);
-                if (isAirplaneModeOn) {
-                    MobileNetworkSettings.this.getPreferenceScreen().setEnabled(false);
-                } else {
-                    MobileNetworkSettings.this.getPreferenceScreen().setEnabled(true);
-                }
-            }
-        }
-    };
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "NetworkSettings";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1571;
     }
 
-    @Override // com.android.settings.network.telephony.AbstractMobileNetworkSettings, com.android.settings.dashboard.DashboardFragment, androidx.preference.PreferenceGroup.OnExpandButtonClickListener
     public /* bridge */ /* synthetic */ void onExpandButtonClick() {
         super.onExpandButtonClick();
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:9:0x0046, code lost:
-        if (r3.areUiccApplicationsEnabled() == false) goto L10;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public void setScreenState() {
-        boolean z = false;
-        boolean z2 = true;
-        if (this.mTelephonyManager.getSimState() == 1) {
-            z2 = false;
-        }
-        if (z2) {
-            SubscriptionInfo activeSubscriptionInfo = ((SubscriptionManager) getContext().getSystemService("telephony_subscription_service")).getActiveSubscriptionInfo(this.mSubId);
-            Log.d("NetworkSettings", "subInfo: " + activeSubscriptionInfo + ", mSubId: " + this.mSubId);
-            if (activeSubscriptionInfo != null) {
-            }
-        }
-        z = z2;
-        Log.d("NetworkSettings", "Setting screen state to: " + z);
-        getPreferenceScreen().setEnabled(z);
     }
 
     public MobileNetworkSettings() {
         super("no_config_mobile_networks");
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.preference.PreferenceManager.OnPreferenceTreeClickListener
     public boolean onPreferenceTreeClick(Preference preference) {
         if (super.onPreferenceTreeClick(preference)) {
             return true;
@@ -144,48 +97,73 @@ public class MobileNetworkSettings extends AbstractMobileNetworkSettings {
         return true;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment
-    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
-        int i = getArguments().getInt("android.provider.extra.SUB_ID", MobileNetworkUtils.getSearchableSubscriptionId(context));
-        this.mSubId = i;
-        this.mPhoneId = SubscriptionManager.getPhoneId(i);
-        Log.i("NetworkSettings", "display subId: " + this.mSubId + ", phoneId: " + this.mPhoneId);
+    /* access modifiers changed from: protected */
+    public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+        if (getArguments() == null) {
+            Intent intent = getIntent();
+            if (intent != null) {
+                this.mSubId = intent.getIntExtra("android.provider.extra.SUB_ID", MobileNetworkUtils.getSearchableSubscriptionId(context));
+                Log.d("NetworkSettings", "display subId from intent: " + this.mSubId);
+            } else {
+                Log.d("NetworkSettings", "intent is null, can not get the subId from intent.");
+            }
+        } else {
+            this.mSubId = getArguments().getInt("android.provider.extra.SUB_ID", MobileNetworkUtils.getSearchableSubscriptionId(context));
+            Log.d("NetworkSettings", "display subId from getArguments(): " + this.mSubId);
+        }
+        Log.i("NetworkSettings", "display subId: " + this.mSubId);
         if (!SubscriptionManager.isValidSubscriptionId(this.mSubId)) {
             return Arrays.asList(new AbstractPreferenceController[0]);
         }
-        return Arrays.asList(new DataUsageSummaryPreferenceController(getActivity(), getSettingsLifecycle(), this, this.mSubId));
+        return Arrays.asList(new AbstractPreferenceController[]{new DataUsageSummaryPreferenceController(getActivity(), getSettingsLifecycle(), this, this.mSubId)});
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
+        Class cls = MobileDataPreferenceController.class;
         super.onAttach(context);
+        Intent intent = getIntent();
+        SubscriptionInfo subscriptionOrDefault = SubscriptionUtil.getSubscriptionOrDefault(context, this.mSubId);
+        if (subscriptionOrDefault == null) {
+            Log.d("NetworkSettings", "Invalid subId request " + this.mSubId);
+            return;
+        }
+        int i = this.mSubId;
+        updateSubscriptions(subscriptionOrDefault);
+        if (!Settings.MobileNetworkActivity.doesIntentContainOptInAction(intent)) {
+            removeContactDiscoveryDialog(i);
+        }
+        if (Settings.MobileNetworkActivity.doesIntentContainOptInAction(intent)) {
+            showContactDiscoveryDialog(SubscriptionUtil.getSubscriptionOrDefault(context, this.mSubId));
+        }
         DataUsageSummaryPreferenceController dataUsageSummaryPreferenceController = (DataUsageSummaryPreferenceController) use(DataUsageSummaryPreferenceController.class);
         if (dataUsageSummaryPreferenceController != null) {
             dataUsageSummaryPreferenceController.init(this.mSubId);
         }
-        ((MobileNetworkSwitchController) use(MobileNetworkSwitchController.class)).init(mo959getLifecycle(), this.mSubId);
+        ((MobileNetworkSwitchController) use(MobileNetworkSwitchController.class)).init(this.mSubId);
         ((CarrierSettingsVersionPreferenceController) use(CarrierSettingsVersionPreferenceController.class)).init(this.mSubId);
         ((BillingCyclePreferenceController) use(BillingCyclePreferenceController.class)).init(this.mSubId);
         ((MmsMessagePreferenceController) use(MmsMessagePreferenceController.class)).init(this.mSubId);
-        ((DataDuringCallsPreferenceController) use(DataDuringCallsPreferenceController.class)).init(mo959getLifecycle(), this.mSubId);
-        ((DisabledSubscriptionController) use(DisabledSubscriptionController.class)).init(mo959getLifecycle(), this.mSubId);
+        ((DataDuringCallsPreferenceController) use(DataDuringCallsPreferenceController.class)).init(this.mSubId);
+        ((DisabledSubscriptionController) use(DisabledSubscriptionController.class)).init(this.mSubId);
         ((DeleteSimProfilePreferenceController) use(DeleteSimProfilePreferenceController.class)).init(this.mSubId, this, 18);
         ((DisableSimFooterPreferenceController) use(DisableSimFooterPreferenceController.class)).init(this.mSubId);
         ((NrDisabledInDsdsFooterPreferenceController) use(NrDisabledInDsdsFooterPreferenceController.class)).init(this.mSubId);
-        ((MobileDataPreferenceController) use(MobileDataPreferenceController.class)).init(getFragmentManager(), this.mSubId);
-        ((MobileDataPreferenceController) use(MobileDataPreferenceController.class)).setWifiPickerTrackerHelper(new WifiPickerTrackerHelper(getSettingsLifecycle(), context, null));
+        ((MobileDataPreferenceController) use(cls)).init(getFragmentManager(), this.mSubId);
+        ((MobileDataPreferenceController) use(cls)).setWifiPickerTrackerHelper(new WifiPickerTrackerHelper(getSettingsLifecycle(), context, (WifiPickerTracker.WifiPickerTrackerCallback) null));
         ((RoamingPreferenceController) use(RoamingPreferenceController.class)).init(getFragmentManager(), this.mSubId);
         ((ApnPreferenceController) use(ApnPreferenceController.class)).init(this.mSubId);
         ((UserPLMNPreferenceController) use(UserPLMNPreferenceController.class)).init(this.mSubId);
         ((CarrierPreferenceController) use(CarrierPreferenceController.class)).init(this.mSubId);
         ((DataUsagePreferenceController) use(DataUsagePreferenceController.class)).init(this.mSubId);
-        ((PreferredNetworkModePreferenceController) use(PreferredNetworkModePreferenceController.class)).init(mo959getLifecycle(), this.mSubId);
-        ((EnabledNetworkModePreferenceController) use(EnabledNetworkModePreferenceController.class)).init(mo959getLifecycle(), this.mSubId);
+        ((PreferredNetworkModePreferenceController) use(PreferredNetworkModePreferenceController.class)).init(getLifecycle(), this.mSubId);
+        ((EnabledNetworkModePreferenceController) use(EnabledNetworkModePreferenceController.class)).init(this.mSubId);
         ((DataServiceSetupPreferenceController) use(DataServiceSetupPreferenceController.class)).init(this.mSubId);
         ((Enable2gPreferenceController) use(Enable2gPreferenceController.class)).init(this.mSubId);
-        ((CarrierWifiTogglePreferenceController) use(CarrierWifiTogglePreferenceController.class)).init(mo959getLifecycle(), this.mSubId);
+        ((CarrierWifiTogglePreferenceController) use(CarrierWifiTogglePreferenceController.class)).init(getLifecycle(), this.mSubId);
         WifiCallingPreferenceController init = ((WifiCallingPreferenceController) use(WifiCallingPreferenceController.class)).init(this.mSubId);
-        ((NetworkPreferenceCategoryController) use(NetworkPreferenceCategoryController.class)).init(mo959getLifecycle(), this.mSubId).setChildren(Arrays.asList(((AutoSelectPreferenceController) use(AutoSelectPreferenceController.class)).init(mo959getLifecycle(), this.mSubId).addListener(((OpenNetworkSelectPagePreferenceController) use(OpenNetworkSelectPagePreferenceController.class)).init(mo959getLifecycle(), this.mSubId))));
+        AutoSelectPreferenceController addListener = ((AutoSelectPreferenceController) use(AutoSelectPreferenceController.class)).init(this.mSubId).addListener(((OpenNetworkSelectPagePreferenceController) use(OpenNetworkSelectPagePreferenceController.class)).init(this.mSubId));
+        ((SelectNetworkPreferenceController) use(SelectNetworkPreferenceController.class)).init(this.mSubId).addListener(addListener);
+        ((NetworkPreferenceCategoryController) use(NetworkPreferenceCategoryController.class)).init(this.mSubId).setChildren(Arrays.asList(new AbstractPreferenceController[]{addListener}));
         CdmaSystemSelectPreferenceController cdmaSystemSelectPreferenceController = (CdmaSystemSelectPreferenceController) use(CdmaSystemSelectPreferenceController.class);
         this.mCdmaSystemSelectPreferenceController = cdmaSystemSelectPreferenceController;
         cdmaSystemSelectPreferenceController.init(getPreferenceManager(), this.mSubId);
@@ -193,19 +171,15 @@ public class MobileNetworkSettings extends AbstractMobileNetworkSettings {
         this.mCdmaSubscriptionPreferenceController = cdmaSubscriptionPreferenceController;
         cdmaSubscriptionPreferenceController.init(getPreferenceManager(), this.mSubId);
         VideoCallingPreferenceController init2 = ((VideoCallingPreferenceController) use(VideoCallingPreferenceController.class)).init(this.mSubId);
-        BackupCallingPreferenceController init3 = ((BackupCallingPreferenceController) use(BackupCallingPreferenceController.class)).init(this.mSubId);
+        BackupCallingPreferenceController init3 = ((BackupCallingPreferenceController) use(BackupCallingPreferenceController.class)).init(getFragmentManager(), this.mSubId);
         ((Enabled5GPreferenceController) use(Enabled5GPreferenceController.class)).init(this.mSubId);
-        ((CallingPreferenceCategoryController) use(CallingPreferenceCategoryController.class)).setChildren(Arrays.asList(init, init2, init3));
-        ((Enhanced4gLtePreferenceController) use(Enhanced4gLtePreferenceController.class)).init(this.mSubId).addListener(init2);
-        ((Enhanced4gCallingPreferenceController) use(Enhanced4gCallingPreferenceController.class)).init(this.mSubId).addListener(init2);
-        ((Enhanced4gAdvancedCallingPreferenceController) use(Enhanced4gAdvancedCallingPreferenceController.class)).init(this.mSubId).addListener(init2);
-        ((ContactDiscoveryPreferenceController) use(ContactDiscoveryPreferenceController.class)).init(getParentFragmentManager(), this.mSubId, mo959getLifecycle());
+        ((CallingPreferenceCategoryController) use(CallingPreferenceCategoryController.class)).setChildren(Arrays.asList(new AbstractPreferenceController[]{init, init2, init3, ((Enhanced4gLtePreferenceController) use(Enhanced4gLtePreferenceController.class)).init(this.mSubId).addListener(init2), ((Enhanced4gCallingPreferenceController) use(Enhanced4gCallingPreferenceController.class)).init(this.mSubId).addListener(init2), ((Enhanced4gAdvancedCallingPreferenceController) use(Enhanced4gAdvancedCallingPreferenceController.class)).init(this.mSubId).addListener(init2)}));
+        ((ContactDiscoveryPreferenceController) use(ContactDiscoveryPreferenceController.class)).init(getParentFragmentManager(), this.mSubId);
         ((NrAdvancedCallingPreferenceController) use(NrAdvancedCallingPreferenceController.class)).init(this.mSubId);
-        ((SmartFiveGPreferenceController) use(SmartFiveGPreferenceController.class)).init(this.mSubId);
         ((SAPreferenceController) use(SAPreferenceController.class)).init(this.mSubId);
+        ((SmartFiveGPreferenceController) use(SmartFiveGPreferenceController.class)).init(this.mSubId);
     }
 
-    @Override // com.android.settings.dashboard.RestrictedDashboardFragment, com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         Log.i("NetworkSettings", "onCreate:+");
         TelephonyStatusControlSession telephonyAvailabilityStatus = setTelephonyAvailabilityStatus(getPreferenceControllersAsList());
@@ -215,16 +189,19 @@ public class MobileNetworkSettings extends AbstractMobileNetworkSettings {
         this.mTelephonyManager = ((TelephonyManager) context.getSystemService(TelephonyManager.class)).createForSubscriptionId(this.mSubId);
         telephonyAvailabilityStatus.close();
         onRestoreInstance(bundle);
+        UserManager userManager = this.mUserManager;
+        if (userManager != null && !userManager.isAdminUser()) {
+            Log.i("NetworkSettings", "onCreate: not admin user, finish");
+            finish();
+        }
     }
 
-    @Override // com.android.settings.dashboard.RestrictedDashboardFragment, com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onResume() {
         Log.i("NetworkSettings", "onResume:+");
         super.onResume();
         Log.d("NetworkSettings", "onResume() subId=" + this.mSubId);
         if (this.mActiveSubscriptionsListener == null) {
-            this.mActiveSubscriptionsListener = new ActiveSubscriptionsListener(getContext().getMainLooper(), getContext(), this.mSubId) { // from class: com.android.settings.network.telephony.MobileNetworkSettings.3
-                @Override // com.android.settings.network.ActiveSubscriptionsListener
+            this.mActiveSubscriptionsListener = new ActiveSubscriptionsListener(getContext().getMainLooper(), getContext(), this.mSubId) {
                 public void onChanged() {
                     MobileNetworkSettings.this.onSubscriptionDetailChanged();
                 }
@@ -232,42 +209,48 @@ public class MobileNetworkSettings extends AbstractMobileNetworkSettings {
             this.mDropFirstSubscriptionChangeNotify = true;
         }
         this.mActiveSubscriptionsListener.start();
-        Context context = getContext();
-        if (context != null) {
-            context.registerReceiver(this.mSimStateReceiver, new IntentFilter("android.intent.action.SIM_STATE_CHANGED"));
-            context.registerReceiver(this.mAirplaneStateReceiver, new IntentFilter("android.intent.action.AIRPLANE_MODE"));
-            return;
-        }
-        Log.i("NetworkSettings", "context is null, not registering SimStateReceiver");
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void onSubscriptionDetailChanged() {
         if (this.mDropFirstSubscriptionChangeNotify) {
             this.mDropFirstSubscriptionChangeNotify = false;
             Log.d("NetworkSettings", "Callback during onResume()");
             return;
         }
+        SubscriptionInfo subscriptionOrDefault = SubscriptionUtil.getSubscriptionOrDefault(getContext(), this.mSubId);
+        if (subscriptionOrDefault != null) {
+            ThreadUtils.postOnMainThread(new MobileNetworkSettings$$ExternalSyntheticLambda1(this, new MobileNetworkSettings$$ExternalSyntheticLambda0(subscriptionOrDefault)));
+        }
         int i = this.mActiveSubscriptionsListenerCount + 1;
         this.mActiveSubscriptionsListenerCount = i;
-        if (i != 1) {
-            return;
+        if (i == 1) {
+            ThreadUtils.postOnMainThread(new MobileNetworkSettings$$ExternalSyntheticLambda2(this, subscriptionOrDefault));
         }
-        ThreadUtils.postOnMainThread(new Runnable() { // from class: com.android.settings.network.telephony.MobileNetworkSettings$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                MobileNetworkSettings.this.lambda$onSubscriptionDetailChanged$0();
-            }
-        });
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onSubscriptionDetailChanged$0() {
+    /* access modifiers changed from: private */
+    public static /* synthetic */ void lambda$onSubscriptionDetailChanged$0(SubscriptionInfo subscriptionInfo, Activity activity) {
+        if (activity != null && !activity.isFinishing() && (activity instanceof SettingsActivity)) {
+            ((SettingsActivity) activity).setTitle(SubscriptionUtil.getUniqueSubscriptionDisplayName(subscriptionInfo, (Context) activity));
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$onSubscriptionDetailChanged$1(Consumer consumer) {
+        consumer.accept(getActivity());
+    }
+
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$onSubscriptionDetailChanged$2(SubscriptionInfo subscriptionInfo) {
+        if (subscriptionInfo == null) {
+            finishFragment();
+            return;
+        }
         this.mActiveSubscriptionsListenerCount = 0;
         redrawPreferenceControllers();
     }
 
-    @Override // com.android.settings.dashboard.RestrictedDashboardFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onDestroy() {
         ActiveSubscriptionsListener activeSubscriptionsListener = this.mActiveSubscriptionsListener;
         if (activeSubscriptionsListener != null) {
@@ -276,68 +259,82 @@ public class MobileNetworkSettings extends AbstractMobileNetworkSettings {
         super.onDestroy();
     }
 
-    @Override // com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
-    public void onPause() {
-        Log.i("NetworkSettings", "onPause:+");
-        super.onPause();
-        Context context = getContext();
-        if (context != null) {
-            context.unregisterReceiver(this.mSimStateReceiver);
-            context.unregisterReceiver(this.mAirplaneStateReceiver);
-            return;
-        }
-        Log.i("NetworkSettings", "context already null, not unregistering Receivers");
-    }
-
-    void onRestoreInstance(Bundle bundle) {
+    /* access modifiers changed from: package-private */
+    public void onRestoreInstance(Bundle bundle) {
         if (bundle != null) {
             this.mClickedPrefKey = bundle.getString(KEY_CLICKED_PREF);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.mobile_network_settings;
+        return R$xml.mobile_network_settings;
     }
 
-    @Override // com.android.settings.dashboard.RestrictedDashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         bundle.putString(KEY_CLICKED_PREF, this.mClickedPrefKey);
     }
 
-    @Override // com.android.settings.dashboard.RestrictedDashboardFragment, androidx.fragment.app.Fragment
     public void onActivityResult(int i, int i2, Intent intent) {
         Preference findPreference;
         FragmentActivity activity;
-        if (i == 17) {
-            if (i2 == 0 || (findPreference = getPreferenceScreen().findPreference(this.mClickedPrefKey)) == null) {
-                return;
+        if (i != 17) {
+            if (i == 18 && i2 != 0 && (activity = getActivity()) != null && !activity.isFinishing()) {
+                activity.finish();
             }
+        } else if (i2 != 0 && (findPreference = getPreferenceScreen().findPreference(this.mClickedPrefKey)) != null) {
             findPreference.performClick();
-        } else if (i != 18 || i2 == 0 || (activity = getActivity()) == null || activity.isFinishing()) {
-        } else {
-            activity.finish();
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         if (SubscriptionManager.isValidSubscriptionId(this.mSubId)) {
-            MenuItem add = menu.add(0, R.id.edit_sim_name, 0, R.string.mobile_network_sim_name);
-            add.setIcon(17302768);
+            MenuItem add = menu.add(0, R$id.edit_sim_name, 0, R$string.mobile_network_sim_name);
+            add.setIcon(17302779);
             add.setShowAsAction(2);
         }
         super.onCreateOptionsMenu(menu, menuInflater);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public boolean onOptionsItemSelected(MenuItem menuItem) {
-        if (SubscriptionManager.isValidSubscriptionId(this.mSubId) && menuItem.getItemId() == R.id.edit_sim_name) {
-            RenameMobileNetworkDialogFragment.newInstance(this.mSubId).show(getFragmentManager(), "RenameMobileNetwork");
-            return true;
+        if (!SubscriptionManager.isValidSubscriptionId(this.mSubId) || menuItem.getItemId() != R$id.edit_sim_name) {
+            return super.onOptionsItemSelected(menuItem);
         }
-        return super.onOptionsItemSelected(menuItem);
+        RenameMobileNetworkDialogFragment.newInstance(this.mSubId).show(getFragmentManager(), "RenameMobileNetwork");
+        return true;
+    }
+
+    private ContactDiscoveryDialogFragment getContactDiscoveryFragment(int i) {
+        return (ContactDiscoveryDialogFragment) getChildFragmentManager().findFragmentByTag(ContactDiscoveryDialogFragment.getFragmentTag(i));
+    }
+
+    private void removeContactDiscoveryDialog(int i) {
+        ContactDiscoveryDialogFragment contactDiscoveryFragment = getContactDiscoveryFragment(i);
+        if (contactDiscoveryFragment != null) {
+            contactDiscoveryFragment.dismiss();
+        }
+    }
+
+    private void showContactDiscoveryDialog(SubscriptionInfo subscriptionInfo) {
+        if (subscriptionInfo == null) {
+            Log.d("NetworkSettings", "Invalid subId request " + this.mSubId);
+            onDestroy();
+            return;
+        }
+        CharSequence uniqueSubscriptionDisplayName = SubscriptionUtil.getUniqueSubscriptionDisplayName(subscriptionInfo, getContext());
+        ContactDiscoveryDialogFragment contactDiscoveryFragment = getContactDiscoveryFragment(this.mSubId);
+        if (contactDiscoveryFragment == null) {
+            contactDiscoveryFragment = ContactDiscoveryDialogFragment.newInstance(this.mSubId, uniqueSubscriptionDisplayName);
+        }
+        if (!contactDiscoveryFragment.isAdded()) {
+            contactDiscoveryFragment.show(getChildFragmentManager(), ContactDiscoveryDialogFragment.getFragmentTag(this.mSubId));
+        }
+    }
+
+    private void updateSubscriptions(SubscriptionInfo subscriptionInfo) {
+        if (subscriptionInfo != null) {
+            this.mSubId = subscriptionInfo.getSubscriptionId();
+        }
     }
 }

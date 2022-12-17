@@ -9,14 +9,13 @@ import com.android.internal.util.Preconditions;
 import com.android.settingslib.applications.StorageStatsSource;
 import com.android.settingslib.utils.AsyncLoaderCompat;
 import java.io.IOException;
-/* loaded from: classes.dex */
+
 public class FetchPackageStorageAsyncLoader extends AsyncLoaderCompat<StorageStatsSource.AppStorageStats> {
     private final ApplicationInfo mInfo;
     private final StorageStatsSource mSource;
     private final UserHandle mUser;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.utils.AsyncLoaderCompat
+    /* access modifiers changed from: protected */
     public void onDiscardResult(StorageStatsSource.AppStorageStats appStorageStats) {
     }
 
@@ -27,9 +26,7 @@ public class FetchPackageStorageAsyncLoader extends AsyncLoaderCompat<StorageSta
         this.mUser = userHandle;
     }
 
-    @Override // androidx.loader.content.AsyncTaskLoader
-    /* renamed from: loadInBackground */
-    public StorageStatsSource.AppStorageStats mo611loadInBackground() {
+    public StorageStatsSource.AppStorageStats loadInBackground() {
         try {
             StorageStatsSource storageStatsSource = this.mSource;
             ApplicationInfo applicationInfo = this.mInfo;

@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.AttributeSet;
 import com.android.settings.DefaultRingtonePreference;
-/* loaded from: classes.dex */
+
 public class DefaultNotificationTonePreference extends DefaultRingtonePreference {
     private Uri mRingtone;
 
@@ -13,12 +13,11 @@ public class DefaultNotificationTonePreference extends DefaultRingtonePreference
         super(context, attributeSet);
     }
 
-    @Override // com.android.settings.DefaultRingtonePreference, com.android.settings.RingtonePreference
-    protected Uri onRestoreRingtone() {
+    /* access modifiers changed from: protected */
+    public Uri onRestoreRingtone() {
         return this.mRingtone;
     }
 
-    @Override // com.android.settings.DefaultRingtonePreference, com.android.settings.RingtonePreference
     public void onPrepareRingtonePickerIntent(Intent intent) {
         super.onPrepareRingtonePickerIntent(intent);
         intent.putExtra("android.intent.extra.ringtone.EXISTING_URI", this.mRingtone);

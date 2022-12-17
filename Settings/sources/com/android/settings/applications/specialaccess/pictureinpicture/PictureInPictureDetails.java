@@ -5,48 +5,46 @@ import android.content.Context;
 import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.Preference;
-import androidx.preference.SwitchPreference;
-import com.android.settings.R;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.applications.AppInfoWithHeader;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
-/* loaded from: classes.dex */
-public class PictureInPictureDetails extends AppInfoWithHeader implements Preference.OnPreferenceChangeListener {
-    private SwitchPreference mSwitchPref;
+import com.nothing.p006ui.support.NtCustSwitchPreference;
 
-    @Override // com.android.settings.applications.AppInfoBase
-    protected AlertDialog createDialog(int i, int i2) {
+public class PictureInPictureDetails extends AppInfoWithHeader implements Preference.OnPreferenceChangeListener {
+    private NtCustSwitchPreference mSwitchPref;
+
+    /* access modifiers changed from: protected */
+    public AlertDialog createDialog(int i, int i2) {
         return null;
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 812;
     }
 
-    @Override // com.android.settings.applications.AppInfoBase, com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        addPreferencesFromResource(R.xml.picture_in_picture_permissions_details);
-        SwitchPreference switchPreference = (SwitchPreference) findPreference("app_ops_settings_switch");
-        this.mSwitchPref = switchPreference;
-        switchPreference.setTitle(R.string.picture_in_picture_app_detail_switch);
+        addPreferencesFromResource(R$xml.picture_in_picture_permissions_details);
+        NtCustSwitchPreference ntCustSwitchPreference = (NtCustSwitchPreference) findPreference("app_ops_settings_switch");
+        this.mSwitchPref = ntCustSwitchPreference;
+        ntCustSwitchPreference.setTitle(R$string.picture_in_picture_app_detail_switch);
         this.mSwitchPref.setOnPreferenceChangeListener(this);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
-        if (preference == this.mSwitchPref) {
-            Boolean bool = (Boolean) obj;
-            logSpecialPermissionChange(bool.booleanValue(), this.mPackageName);
-            setEnterPipStateForPackage(getActivity(), this.mPackageInfo.applicationInfo.uid, this.mPackageName, bool.booleanValue());
-            return true;
+        if (preference != this.mSwitchPref) {
+            return false;
         }
-        return false;
+        Boolean bool = (Boolean) obj;
+        logSpecialPermissionChange(bool.booleanValue(), this.mPackageName);
+        setEnterPipStateForPackage(getActivity(), this.mPackageInfo.applicationInfo.uid, this.mPackageName, bool.booleanValue());
+        return true;
     }
 
-    @Override // com.android.settings.applications.AppInfoBase
-    protected boolean refreshUi() {
+    /* access modifiers changed from: protected */
+    public boolean refreshUi() {
         this.mSwitchPref.setChecked(getEnterPipStateForPackage(getActivity(), this.mPackageInfo.applicationInfo.uid, this.mPackageName));
         return true;
     }
@@ -61,12 +59,13 @@ public class PictureInPictureDetails extends AppInfoWithHeader implements Prefer
 
     public static int getPreferenceSummary(Context context, int i, String str) {
         if (getEnterPipStateForPackage(context, i, str)) {
-            return R.string.app_permission_summary_allowed;
+            return R$string.app_permission_summary_allowed;
         }
-        return R.string.app_permission_summary_not_allowed;
+        return R$string.app_permission_summary_not_allowed;
     }
 
-    void logSpecialPermissionChange(boolean z, String str) {
+    /* access modifiers changed from: package-private */
+    public void logSpecialPermissionChange(boolean z, String str) {
         int i = z ? 813 : 814;
         MetricsFeatureProvider metricsFeatureProvider = FeatureFactory.getFactory(getContext()).getMetricsFeatureProvider();
         metricsFeatureProvider.action(metricsFeatureProvider.getAttribution(getActivity()), i, getMetricsCategory(), str, 0);

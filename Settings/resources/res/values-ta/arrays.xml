@@ -76,7 +76,7 @@
         <item>ஆடியோவை இயக்கு</item>
         <item>கிளிப்போர்டைப் படி</item>
         <item>கிளிப்போர்ட்டை மாற்று</item>
-        <item>மீடியா பொத்தான்கள்</item>
+        <item>மீடியா பட்டன்கள்</item>
         <item>ஆடியோவை மையப்படுத்து</item>
         <item>முதன்மை ஒலியளவு</item>
         <item>குரல் ஒலியளவு</item>
@@ -143,7 +143,7 @@
         <item>ஆடியோவை இயக்கு</item>
         <item>கிளிப்போர்டைப் படி</item>
         <item>கிளிப்போர்ட்டை மாற்று</item>
-        <item>மீடியா பொத்தான்கள்</item>
+        <item>மீடியா பட்டன்கள்</item>
         <item>ஆடியோவை மையப்படுத்து</item>
         <item>முதன்மை ஒலியளவு</item>
         <item>குரல் ஒலியளவு</item>
@@ -195,6 +195,8 @@
         <item>30 நாட்களுக்கு மேல்</item>
         <item>60 நாட்களுக்கு மேல்</item>
         <item>90 நாட்களுக்கு மேல்</item>
+    </array>
+    <array name="avatar_image_descriptions">
     </array>
     <array name="battery_labels">
         <item>0%</item>
@@ -260,6 +262,8 @@
         <item>48.0 kHz</item>
         <item>88.2 kHz</item>
         <item>96.0 kHz</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
         <item>சாதனத் தேர்வைப் பயன்படுத்து (இயல்பு)</item>
@@ -267,6 +271,8 @@
         <item>48.0 kHz</item>
         <item>88.2 kHz</item>
         <item>96.0 kHz</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
         <item>சாதனத் தேர்வைப் பயன்படுத்து (இயல்பு)</item>
@@ -277,6 +283,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive ஆடியோ</item>
         <item>Qualcomm® aptX™ TWS+ ஆடியோ</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
         <item>சாதனத் தேர்வைப் பயன்படுத்து (இயல்பு)</item>
@@ -287,6 +297,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive ஆடியோ</item>
         <item>Qualcomm® aptX™ TWS+ ஆடியோ</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -343,17 +357,10 @@
         <item>மேலெழும்பியது</item>
         <item>அழுத்தப்பட்டது</item>
     </array>
-    <array name="captioning_font_size_selector_summaries">
-        <item>மிகச் சிறிய உரை அளவு</item>
-        <item>சிறிய உரை அளவு</item>
-        <item>இயல்பான உரை அளவு</item>
-        <item>பெரிய உரை அளவு</item>
-        <item>மிகப் பெரிய உரை அளவு</item>
-    </array>
     <array name="captioning_font_size_selector_titles">
         <item>மிகச் சிறியது</item>
         <item>சிறியது</item>
-        <item>இயல்பு</item>
+        <item>நடுத்தரம்</item>
         <item>பெரியது</item>
         <item>மிகப் பெரியது</item>
     </array>
@@ -485,6 +492,14 @@
         <item>IMSI</item>
         <item>GID</item>
         <item>ICCID</item>
+    </array>
+    <array name="nfc_payment_favor">
+        <item>எப்போதும்</item>
+        <item>மற்றொரு பேமெண்ட் ஆப்ஸ் திறந்திருக்கும் நேரம் தவிர</item>
+    </array>
+    <array name="nfc_payment_favor_values">
+        <item>@null</item>
+        <item>1</item>
     </array>
     <array name="overlay_display_devices_entries">
         <item>ஏதுமில்லை</item>
@@ -618,17 +633,20 @@
         <item>செவ்வகம் அல்லாத கிளிப் பகுதியை நீல நிறத்தில் வரையவும்</item>
         <item>சோதிக்கப்பட்ட வரைதல் கட்டளைகளைப் பச்சை நிறத்தில் தனிப்படுத்தவும்</item>
     </array>
-    <array name="sim_color_light">
-        <item>@color/SIM_color_cyan</item>
-        <item>@color/SIM_color_blue800</item>
-        <item>@color/SIM_color_green800</item>
-        <item>@color/SIM_color_purple800</item>
-        <item>@color/SIM_color_pink800</item>
-        <item>@color/SIM_color_orange</item>
-    </array>
     <array name="swipe_direction_values">
         <item>1</item>
         <item>@null</item>
+    </array>
+    <array name="switch_to_user_zero_when_docked_timeout_entries">
+        <item>ஒருபோதுமில்லை</item>
+        <item>1 நிமிடத்திற்குப் பிறகு</item>
+        <item>5 நிமிடங்களுக்குப் பிறகு</item>
+    </array>
+    <array name="tare_modifiers_subfactors">
+        <item>சார்ஜாகிறது</item>
+        <item>பேட்டரி சேமிப்பு</item>
+        <item>பவர் சேமிப்புப் பயன்முறை</item>
+        <item>செயலாக்க நிலை</item>
     </array>
     <array name="timezone_filters">
         <item>அமெரிக்கா</item>

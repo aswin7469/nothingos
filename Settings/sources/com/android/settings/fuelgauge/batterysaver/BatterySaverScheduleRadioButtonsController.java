@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import com.android.settingslib.fuelgauge.BatterySaverUtils;
-/* loaded from: classes.dex */
+
 public class BatterySaverScheduleRadioButtonsController {
     private Context mContext;
     private BatterySaverScheduleSeekBarController mSeekBarController;
@@ -18,7 +18,10 @@ public class BatterySaverScheduleRadioButtonsController {
 
     public String getDefaultKey() {
         ContentResolver contentResolver = this.mContext.getContentResolver();
-        return Settings.Global.getInt(contentResolver, "automatic_power_save_mode", 0) == 0 ? Settings.Global.getInt(contentResolver, "low_power_trigger_level", 0) <= 0 ? "key_battery_saver_no_schedule" : "key_battery_saver_percentage" : "key_battery_saver_routine";
+        if (Settings.Global.getInt(contentResolver, "automatic_power_save_mode", 0) == 0) {
+            return Settings.Global.getInt(contentResolver, "low_power_trigger_level", 0) <= 0 ? "key_battery_saver_no_schedule" : "key_battery_saver_percentage";
+        }
+        return "key_battery_saver_routine";
     }
 
     public boolean setDefaultKey(String str) {
@@ -55,33 +58,33 @@ public class BatterySaverScheduleRadioButtonsController {
             case 0:
                 bundle.putBoolean("extra_confirm_only", true);
                 bundle.putInt("extra_power_save_mode_trigger", 1);
-                i = 0;
-                i2 = 1;
+                i2 = 0;
+                i = 1;
                 break;
             case 1:
-                i = 0;
                 i2 = 0;
+                i = 0;
                 break;
             case 2:
-                i = 5;
+                i2 = 5;
                 bundle.putBoolean("extra_confirm_only", true);
                 bundle.putInt("extra_power_save_mode_trigger", 0);
                 bundle.putInt("extra_power_save_mode_trigger_level", 5);
-                i2 = 0;
+                i = 0;
                 break;
             default:
-                throw new IllegalStateException("Not a valid key for " + BatterySaverScheduleRadioButtonsController.class.getSimpleName());
+                throw new IllegalStateException("Not a valid key for " + getClass().getSimpleName());
         }
         if (TextUtils.equals(str, "key_battery_saver_no_schedule") || !BatterySaverUtils.maybeShowBatterySaverConfirmation(this.mContext, bundle)) {
-            i3 = i2;
+            i3 = i;
         } else {
-            i = 0;
+            i2 = 0;
         }
         Settings.Global.putInt(contentResolver, "automatic_power_save_mode", i3);
         if (i3 != 1) {
-            Settings.Global.putInt(contentResolver, "low_power_trigger_level", i);
+            Settings.Global.putInt(contentResolver, "low_power_trigger_level", i2);
         }
-        if (i3 == 1 || i != 0) {
+        if (i3 == 1 || i2 != 0) {
             BatterySaverUtils.suppressAutoBatterySaver(this.mContext);
         }
         this.mSeekBarController.updateSeekBar();

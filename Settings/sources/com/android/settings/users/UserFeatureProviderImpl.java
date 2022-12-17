@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.UserHandle;
 import android.os.UserManager;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class UserFeatureProviderImpl implements UserFeatureProvider {
     UserManager mUm;
 
@@ -12,7 +12,6 @@ public class UserFeatureProviderImpl implements UserFeatureProvider {
         this.mUm = (UserManager) context.getSystemService("user");
     }
 
-    @Override // com.android.settings.users.UserFeatureProvider
     public List<UserHandle> getUserProfiles() {
         return this.mUm.getUserProfiles();
     }

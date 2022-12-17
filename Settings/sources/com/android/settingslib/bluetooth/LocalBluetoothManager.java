@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.os.UserHandle;
 import android.util.Log;
 import java.lang.ref.WeakReference;
-/* loaded from: classes.dex */
+
 public class LocalBluetoothManager {
     private static LocalBluetoothManager sInstance;
     private final CachedBluetoothDeviceManager mCachedDeviceManager;
@@ -15,7 +15,6 @@ public class LocalBluetoothManager {
     private final LocalBluetoothAdapter mLocalAdapter;
     private final LocalBluetoothProfileManager mProfileManager;
 
-    /* loaded from: classes.dex */
     public interface BluetoothManagerCallback {
         void onBluetoothManagerInitialized(Context context, LocalBluetoothManager localBluetoothManager);
     }
@@ -23,16 +22,17 @@ public class LocalBluetoothManager {
     public static synchronized LocalBluetoothManager getInstance(Context context, BluetoothManagerCallback bluetoothManagerCallback) {
         synchronized (LocalBluetoothManager.class) {
             if (sInstance == null) {
-                LocalBluetoothAdapter localBluetoothAdapter = LocalBluetoothAdapter.getInstance();
-                if (localBluetoothAdapter == null) {
+                LocalBluetoothAdapter instance = LocalBluetoothAdapter.getInstance();
+                if (instance == null) {
                     return null;
                 }
-                sInstance = new LocalBluetoothManager(localBluetoothAdapter, context, null, null);
+                sInstance = new LocalBluetoothManager(instance, context, (Handler) null, (UserHandle) null);
                 if (bluetoothManagerCallback != null) {
                     bluetoothManagerCallback.onBluetoothManagerInitialized(context.getApplicationContext(), sInstance);
                 }
             }
-            return sInstance;
+            LocalBluetoothManager localBluetoothManager = sInstance;
+            return localBluetoothManager;
         }
     }
 
@@ -59,7 +59,7 @@ public class LocalBluetoothManager {
         if (weakReference == null) {
             return null;
         }
-        return weakReference.get();
+        return (Context) weakReference.get();
     }
 
     public boolean isForegroundActivity() {

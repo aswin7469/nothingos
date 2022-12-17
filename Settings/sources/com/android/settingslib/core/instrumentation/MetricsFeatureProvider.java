@@ -9,7 +9,7 @@ import android.util.Pair;
 import androidx.preference.Preference;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class MetricsFeatureProvider {
     protected List<LogWriter> mLoggerWriters = new ArrayList();
 
@@ -17,7 +17,8 @@ public class MetricsFeatureProvider {
         installLogWriters();
     }
 
-    protected void installLogWriters() {
+    /* access modifiers changed from: protected */
+    public void installLogWriters() {
         this.mLoggerWriters.add(new EventLogWriter());
     }
 
@@ -30,44 +31,44 @@ public class MetricsFeatureProvider {
     }
 
     public void visible(Context context, int i, int i2, int i3) {
-        for (LogWriter logWriter : this.mLoggerWriters) {
-            logWriter.visible(context, i, i2, i3);
+        for (LogWriter visible : this.mLoggerWriters) {
+            visible.visible(context, i, i2, i3);
         }
     }
 
     public void hidden(Context context, int i, int i2) {
-        for (LogWriter logWriter : this.mLoggerWriters) {
-            logWriter.hidden(context, i, i2);
+        for (LogWriter hidden : this.mLoggerWriters) {
+            hidden.hidden(context, i, i2);
         }
     }
 
     public void action(Context context, int i, Pair<Integer, Object>... pairArr) {
-        for (LogWriter logWriter : this.mLoggerWriters) {
-            logWriter.action(context, i, pairArr);
+        for (LogWriter action : this.mLoggerWriters) {
+            action.action(context, i, pairArr);
         }
     }
 
     public void action(Context context, int i, String str) {
-        for (LogWriter logWriter : this.mLoggerWriters) {
-            logWriter.action(context, i, str);
+        for (LogWriter action : this.mLoggerWriters) {
+            action.action(context, i, str);
         }
     }
 
     public void action(int i, int i2, int i3, String str, int i4) {
-        for (LogWriter logWriter : this.mLoggerWriters) {
-            logWriter.action(i, i2, i3, str, i4);
+        for (LogWriter action : this.mLoggerWriters) {
+            action.action(i, i2, i3, str, i4);
         }
     }
 
     public void action(Context context, int i, int i2) {
-        for (LogWriter logWriter : this.mLoggerWriters) {
-            logWriter.action(context, i, i2);
+        for (LogWriter action : this.mLoggerWriters) {
+            action.action(context, i, i2);
         }
     }
 
     public void action(Context context, int i, boolean z) {
-        for (LogWriter logWriter : this.mLoggerWriters) {
-            logWriter.action(context, i, z);
+        for (LogWriter action : this.mLoggerWriters) {
+            action.action(context, i, z);
         }
     }
 
@@ -82,7 +83,10 @@ public class MetricsFeatureProvider {
         if (preference == null) {
             return false;
         }
-        return logSettingsTileClick(preference.getKey(), i) || logStartedIntent(preference.getIntent(), i) || logSettingsTileClick(preference.getFragment(), i);
+        if (logSettingsTileClick(preference.getKey(), i) || logStartedIntent(preference.getIntent(), i) || logSettingsTileClick(preference.getFragment(), i)) {
+            return true;
+        }
+        return false;
     }
 
     public boolean logStartedIntent(Intent intent, int i) {

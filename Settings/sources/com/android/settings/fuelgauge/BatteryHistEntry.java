@@ -1,8 +1,9 @@
 package com.android.settings.fuelgauge;
 
 import android.content.ContentValues;
+import android.content.Context;
 import java.time.Duration;
-/* loaded from: classes.dex */
+
 public class BatteryHistEntry {
     public final String mAppLabel;
     public final long mBackgroundUsageTimeInMs;
@@ -15,6 +16,8 @@ public class BatteryHistEntry {
     public final int mDrainType;
     public final long mForegroundUsageTimeInMs;
     public final boolean mIsHidden;
+    private boolean mIsValidEntry = true;
+    private String mKey = null;
     public final String mPackageName;
     public final double mPercentOfTotal;
     public final long mTimestamp;
@@ -22,8 +25,6 @@ public class BatteryHistEntry {
     public final long mUid;
     public final long mUserId;
     public final String mZoneId;
-    private String mKey = null;
-    private boolean mIsValidEntry = true;
 
     public BatteryHistEntry(ContentValues contentValues) {
         this.mUid = getLong(contentValues, "uid");
@@ -69,8 +70,8 @@ public class BatteryHistEntry {
     }
 
     public String toString() {
-        String utcToLocalTime = ConvertUtils.utcToLocalTime(null, this.mTimestamp);
-        return "\nBatteryHistEntry{" + String.format("\n\tpackage=%s|label=%s|uid=%d|userId=%d|isHidden=%b", this.mPackageName, this.mAppLabel, Long.valueOf(this.mUid), Long.valueOf(this.mUserId), Boolean.valueOf(this.mIsHidden)) + String.format("\n\ttimestamp=%s|zoneId=%s|bootTimestamp=%d", utcToLocalTime, this.mZoneId, Long.valueOf(Duration.ofMillis(this.mBootTimestamp).getSeconds())) + String.format("\n\tusage=%f|total=%f|consume=%f|elapsedTime=%d|%d", Double.valueOf(this.mPercentOfTotal), Double.valueOf(this.mTotalPower), Double.valueOf(this.mConsumePower), Long.valueOf(Duration.ofMillis(this.mForegroundUsageTimeInMs).getSeconds()), Long.valueOf(Duration.ofMillis(this.mBackgroundUsageTimeInMs).getSeconds())) + String.format("\n\tdrainType=%d|consumerType=%d", Integer.valueOf(this.mDrainType), Integer.valueOf(this.mConsumerType)) + String.format("\n\tbattery=%d|status=%d|health=%d\n}", Integer.valueOf(this.mBatteryLevel), Integer.valueOf(this.mBatteryStatus), Integer.valueOf(this.mBatteryHealth));
+        String utcToLocalTime = ConvertUtils.utcToLocalTime((Context) null, this.mTimestamp);
+        return "\nBatteryHistEntry{" + String.format("\n\tpackage=%s|label=%s|uid=%d|userId=%d|isHidden=%b", new Object[]{this.mPackageName, this.mAppLabel, Long.valueOf(this.mUid), Long.valueOf(this.mUserId), Boolean.valueOf(this.mIsHidden)}) + String.format("\n\ttimestamp=%s|zoneId=%s|bootTimestamp=%d", new Object[]{utcToLocalTime, this.mZoneId, Long.valueOf(Duration.ofMillis(this.mBootTimestamp).getSeconds())}) + String.format("\n\tusage=%f|total=%f|consume=%f|elapsedTime=%d|%d", new Object[]{Double.valueOf(this.mPercentOfTotal), Double.valueOf(this.mTotalPower), Double.valueOf(this.mConsumePower), Long.valueOf(Duration.ofMillis(this.mForegroundUsageTimeInMs).getSeconds()), Long.valueOf(Duration.ofMillis(this.mBackgroundUsageTimeInMs).getSeconds())}) + String.format("\n\tdrainType=%d|consumerType=%d", new Object[]{Integer.valueOf(this.mDrainType), Integer.valueOf(this.mConsumerType)}) + String.format("\n\tbattery=%d|status=%d|health=%d\n}", new Object[]{Integer.valueOf(this.mBatteryLevel), Integer.valueOf(this.mBatteryStatus), Integer.valueOf(this.mBatteryHealth)});
     }
 
     private int getInteger(ContentValues contentValues, String str) {
@@ -86,7 +87,7 @@ public class BatteryHistEntry {
             return contentValues.getAsLong(str).longValue();
         }
         this.mIsValidEntry = false;
-        return 0L;
+        return 0;
     }
 
     private double getDouble(ContentValues contentValues, String str) {

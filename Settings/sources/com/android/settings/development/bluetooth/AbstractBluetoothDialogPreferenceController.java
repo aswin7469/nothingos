@@ -10,64 +10,60 @@ import androidx.preference.Preference;
 import com.android.settings.development.BluetoothA2dpConfigStore;
 import com.android.settings.development.bluetooth.BaseBluetoothDialogPreference;
 import com.android.settingslib.core.lifecycle.Lifecycle;
-/* loaded from: classes.dex */
+import java.util.List;
+
 public abstract class AbstractBluetoothDialogPreferenceController extends AbstractBluetoothPreferenceController implements BaseBluetoothDialogPreference.Callback {
-    protected final BluetoothA2dpConfigStore mBluetoothA2dpConfigStore;
-    protected static final int[] CODEC_TYPES = {10, 4, 8, 5, 6, 7, 9, 3, 2, 1, 0};
-    protected static final int[] SAMPLE_RATES = {32, 16, 8, 4, 2, 1};
     protected static final int[] BITS_PER_SAMPLES = {4, 2, 1};
     protected static final int[] CHANNEL_MODES = {2, 1};
+    protected static final int[] CODEC_TYPES = {11, 4, 9, 6, 7, 8, 10, 3, 2, 1, 0};
+    protected static final int[] SAMPLE_RATES = {32, 16, 8, 4, 2, 1};
+    protected final BluetoothA2dpConfigStore mBluetoothA2dpConfigStore;
 
-    protected abstract int getCurrentIndexByConfig(BluetoothCodecConfig bluetoothCodecConfig);
+    /* access modifiers changed from: protected */
+    public abstract int getCurrentIndexByConfig(BluetoothCodecConfig bluetoothCodecConfig);
 
     public void onHDAudioEnabled(boolean z) {
     }
 
-    protected abstract void writeConfigurationValues(int i);
+    /* access modifiers changed from: protected */
+    public abstract void writeConfigurationValues(int i);
 
     public AbstractBluetoothDialogPreferenceController(Context context, Lifecycle lifecycle, BluetoothA2dpConfigStore bluetoothA2dpConfigStore) {
         super(context, lifecycle, bluetoothA2dpConfigStore);
         this.mBluetoothA2dpConfigStore = bluetoothA2dpConfigStore;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    /* renamed from: getSummary */
-    public CharSequence mo485getSummary() {
+    public CharSequence getSummary() {
         return ((BaseBluetoothDialogPreference) this.mPreference).generateSummary(getCurrentConfigIndex());
     }
 
-    @Override // com.android.settings.development.bluetooth.BaseBluetoothDialogPreference.Callback
     public void onIndexUpdated(int i) {
         BluetoothA2dp bluetoothA2dp = this.mBluetoothA2dp;
-        if (bluetoothA2dp == null) {
-            return;
+        if (bluetoothA2dp != null) {
+            writeConfigurationValues(i);
+            BluetoothCodecConfig createCodecConfig = this.mBluetoothA2dpConfigStore.createCodecConfig();
+            BluetoothDevice a2dpActiveDevice = getA2dpActiveDevice();
+            if (a2dpActiveDevice != null) {
+                bluetoothA2dp.setCodecConfigPreference(a2dpActiveDevice, createCodecConfig);
+            }
+            Preference preference = this.mPreference;
+            preference.setSummary((CharSequence) ((BaseBluetoothDialogPreference) preference).generateSummary(i));
         }
-        writeConfigurationValues(i);
-        BluetoothCodecConfig createCodecConfig = this.mBluetoothA2dpConfigStore.createCodecConfig();
-        BluetoothDevice activeDevice = this.mBluetoothA2dp.getActiveDevice();
-        if (activeDevice != null) {
-            bluetoothA2dp.setCodecConfigPreference(activeDevice, createCodecConfig);
-        }
-        Preference preference = this.mPreference;
-        preference.setSummary(((BaseBluetoothDialogPreference) preference).generateSummary(i));
     }
 
-    @Override // com.android.settings.development.bluetooth.BaseBluetoothDialogPreference.Callback
     public int getCurrentConfigIndex() {
         BluetoothCodecConfig currentCodecConfig = getCurrentCodecConfig();
-        if (currentCodecConfig == null) {
-            Log.d("AbstractBtDlgCtr", "Unable to get current config index. Current codec Config is null.");
-            return getDefaultIndex();
+        if (currentCodecConfig != null) {
+            return getCurrentIndexByConfig(currentCodecConfig);
         }
-        return getCurrentIndexByConfig(currentCodecConfig);
+        Log.d("AbstractBtDlgCtr", "Unable to get current config index. Current codec Config is null.");
+        return getDefaultIndex();
     }
 
-    @Override // com.android.settings.development.bluetooth.AbstractBluetoothPreferenceController, com.android.settings.development.BluetoothServiceConnectionListener
     public void onBluetoothServiceConnected(BluetoothA2dp bluetoothA2dp) {
         super.onBluetoothServiceConnected(bluetoothA2dp);
         initConfigStore();
@@ -75,106 +71,99 @@ public abstract class AbstractBluetoothDialogPreferenceController extends Abstra
 
     private void initConfigStore() {
         BluetoothCodecConfig currentCodecConfig = getCurrentCodecConfig();
-        if (currentCodecConfig == null) {
-            return;
+        if (currentCodecConfig != null) {
+            this.mBluetoothA2dpConfigStore.setCodecType(currentCodecConfig.getCodecType());
+            this.mBluetoothA2dpConfigStore.setSampleRate(currentCodecConfig.getSampleRate());
+            this.mBluetoothA2dpConfigStore.setBitsPerSample(currentCodecConfig.getBitsPerSample());
+            this.mBluetoothA2dpConfigStore.setChannelMode(currentCodecConfig.getChannelMode());
+            this.mBluetoothA2dpConfigStore.setCodecPriority(1000000);
+            this.mBluetoothA2dpConfigStore.setCodecSpecific1Value(currentCodecConfig.getCodecSpecific1());
         }
-        this.mBluetoothA2dpConfigStore.setCodecType(currentCodecConfig.getCodecType());
-        this.mBluetoothA2dpConfigStore.setSampleRate(currentCodecConfig.getSampleRate());
-        this.mBluetoothA2dpConfigStore.setBitsPerSample(currentCodecConfig.getBitsPerSample());
-        this.mBluetoothA2dpConfigStore.setChannelMode(currentCodecConfig.getChannelMode());
-        this.mBluetoothA2dpConfigStore.setCodecPriority(1000000);
-        this.mBluetoothA2dpConfigStore.setCodecSpecific1Value(currentCodecConfig.getCodecSpecific1());
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public int getDefaultIndex() {
         return ((BaseBluetoothDialogPreference) this.mPreference).getDefaultIndex();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public BluetoothCodecConfig getCurrentCodecConfig() {
         BluetoothA2dp bluetoothA2dp = this.mBluetoothA2dp;
         if (bluetoothA2dp == null) {
             return null;
         }
-        BluetoothDevice activeDevice = bluetoothA2dp.getActiveDevice();
-        if (activeDevice == null) {
+        BluetoothDevice a2dpActiveDevice = getA2dpActiveDevice();
+        if (a2dpActiveDevice == null) {
             Log.d("AbstractBtDlgCtr", "Unable to get current codec config. No active device.");
             return null;
         }
-        BluetoothCodecStatus codecStatus = bluetoothA2dp.getCodecStatus(activeDevice);
+        BluetoothCodecStatus codecStatus = bluetoothA2dp.getCodecStatus(a2dpActiveDevice);
         if (codecStatus == null) {
             Log.d("AbstractBtDlgCtr", "Unable to get current codec config. Codec status is null");
             return null;
-        } else if (codecStatus.getCodecConfig().getCodecType() >= 11) {
+        } else if (codecStatus.getCodecConfig().getCodecType() < 12) {
+            return codecStatus.getCodecConfig();
+        } else {
             Log.d("AbstractBtDlgCtr", "Invalid codec type");
             return null;
-        } else {
-            return codecStatus.getCodecConfig();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public BluetoothCodecConfig[] getSelectableConfigs(BluetoothDevice bluetoothDevice) {
+    /* access modifiers changed from: protected */
+    public List<BluetoothCodecConfig> getSelectableConfigs(BluetoothDevice bluetoothDevice) {
         BluetoothCodecStatus codecStatus;
         BluetoothA2dp bluetoothA2dp = this.mBluetoothA2dp;
         if (bluetoothA2dp == null) {
             return null;
         }
         if (bluetoothDevice == null) {
-            bluetoothDevice = bluetoothA2dp.getActiveDevice();
+            bluetoothDevice = getA2dpActiveDevice();
         }
-        if (bluetoothDevice != null && (codecStatus = bluetoothA2dp.getCodecStatus(bluetoothDevice)) != null) {
-            return codecStatus.getCodecsSelectableCapabilities();
+        if (bluetoothDevice == null || (codecStatus = bluetoothA2dp.getCodecStatus(bluetoothDevice)) == null) {
+            return null;
         }
-        return null;
+        return codecStatus.getCodecsSelectableCapabilities();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public BluetoothCodecConfig getSelectableByCodecType(int i) {
-        BluetoothDevice activeDevice = this.mBluetoothA2dp.getActiveDevice();
-        if (activeDevice == null) {
+        BluetoothDevice a2dpActiveDevice = getA2dpActiveDevice();
+        if (a2dpActiveDevice == null) {
             Log.d("AbstractBtDlgCtr", "Unable to get selectable config. No active device.");
             return null;
         }
-        BluetoothCodecConfig[] selectableConfigs = getSelectableConfigs(activeDevice);
-        if (selectableConfigs == null) {
-            Log.d("AbstractBtDlgCtr", "Unable to get selectable config. Selectable configs is empty.");
-            return null;
-        }
-        for (BluetoothCodecConfig bluetoothCodecConfig : selectableConfigs) {
-            if (bluetoothCodecConfig.getCodecType() == i) {
-                return bluetoothCodecConfig;
+        for (BluetoothCodecConfig next : getSelectableConfigs(a2dpActiveDevice)) {
+            if (next.getCodecType() == i) {
+                return next;
             }
         }
         Log.d("AbstractBtDlgCtr", "Unable to find matching codec config, type is " + i);
         return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static int getHighestCodec(BluetoothA2dp bluetoothA2dp, BluetoothDevice bluetoothDevice, BluetoothCodecConfig[] bluetoothCodecConfigArr) {
-        if (bluetoothCodecConfigArr == null) {
+    static int getHighestCodec(BluetoothA2dp bluetoothA2dp, BluetoothDevice bluetoothDevice, List<BluetoothCodecConfig> list) {
+        if (list == null) {
             Log.d("AbstractBtDlgCtr", "Unable to get highest codec. Configs are empty");
             return 1000000;
         }
-        Log.d("AbstractBtDlgCtr", "CODEC_TYPES len: " + CODEC_TYPES.length + " codec_config len: " + bluetoothCodecConfigArr.length);
-        if (bluetoothA2dp.isOptionalCodecsEnabled(bluetoothDevice) != 1) {
+        Log.d("AbstractBtDlgCtr", "CODEC_TYPES len: " + CODEC_TYPES.length + " codec_config len: " + list.size());
+        int isOptionalCodecsEnabled = bluetoothA2dp.isOptionalCodecsEnabled(bluetoothDevice);
+        if (isOptionalCodecsEnabled != 1) {
             return 0;
         }
         for (int i = 0; i < CODEC_TYPES.length; i++) {
-            for (BluetoothCodecConfig bluetoothCodecConfig : bluetoothCodecConfigArr) {
-                int codecType = bluetoothCodecConfig.getCodecType();
-                int[] iArr = CODEC_TYPES;
-                if (codecType == iArr[i]) {
-                    return iArr[i];
+            for (BluetoothCodecConfig codecType : list) {
+                int codecType2 = codecType.getCodecType();
+                int i2 = CODEC_TYPES[i];
+                if (codecType2 == i2) {
+                    return i2;
                 }
             }
         }
         return 1000000;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static int getHighestSampleRate(BluetoothCodecConfig bluetoothCodecConfig) {
+    static int getHighestSampleRate(BluetoothCodecConfig bluetoothCodecConfig) {
         if (bluetoothCodecConfig == null) {
             Log.d("AbstractBtDlgCtr", "Unable to get highest sample rate. Config is empty");
             return 0;
@@ -186,15 +175,15 @@ public abstract class AbstractBluetoothDialogPreferenceController extends Abstra
             if (i >= iArr.length) {
                 return 0;
             }
-            if ((iArr[i] & sampleRate) != 0) {
-                return iArr[i];
+            int i2 = iArr[i];
+            if ((sampleRate & i2) != 0) {
+                return i2;
             }
             i++;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static int getHighestBitsPerSample(BluetoothCodecConfig bluetoothCodecConfig) {
+    static int getHighestBitsPerSample(BluetoothCodecConfig bluetoothCodecConfig) {
         if (bluetoothCodecConfig == null) {
             Log.d("AbstractBtDlgCtr", "Unable to get highest bits per sample. Config is empty");
             return 0;
@@ -206,15 +195,15 @@ public abstract class AbstractBluetoothDialogPreferenceController extends Abstra
             if (i >= iArr.length) {
                 return 0;
             }
-            if ((iArr[i] & bitsPerSample) != 0) {
-                return iArr[i];
+            int i2 = iArr[i];
+            if ((bitsPerSample & i2) != 0) {
+                return i2;
             }
             i++;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static int getHighestChannelMode(BluetoothCodecConfig bluetoothCodecConfig) {
+    static int getHighestChannelMode(BluetoothCodecConfig bluetoothCodecConfig) {
         if (bluetoothCodecConfig == null) {
             Log.d("AbstractBtDlgCtr", "Unable to get highest channel mode. Config is empty");
             return 0;
@@ -226,8 +215,9 @@ public abstract class AbstractBluetoothDialogPreferenceController extends Abstra
             if (i >= iArr.length) {
                 return 0;
             }
-            if ((iArr[i] & channelMode) != 0) {
-                return iArr[i];
+            int i2 = iArr[i];
+            if ((channelMode & i2) != 0) {
+                return i2;
             }
             i++;
         }

@@ -6,14 +6,14 @@ import android.util.AttributeSet;
 import android.widget.CheckBox;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.RestrictedLockUtilsInternal;
-/* loaded from: classes.dex */
+
 public class RestrictedCheckBox extends CheckBox {
     private Context mContext;
     private boolean mDisabledByAdmin;
     private RestrictedLockUtils.EnforcedAdmin mEnforcedAdmin;
 
     public RestrictedCheckBox(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public RestrictedCheckBox(Context context, AttributeSet attributeSet) {
@@ -21,13 +21,12 @@ public class RestrictedCheckBox extends CheckBox {
         this.mContext = context;
     }
 
-    @Override // android.widget.CompoundButton, android.view.View
     public boolean performClick() {
-        if (this.mDisabledByAdmin) {
-            RestrictedLockUtils.sendShowAdminSupportDetailsIntent(this.mContext, this.mEnforcedAdmin);
-            return true;
+        if (!this.mDisabledByAdmin) {
+            return super.performClick();
         }
-        return super.performClick();
+        RestrictedLockUtils.sendShowAdminSupportDetailsIntent(this.mContext, this.mEnforcedAdmin);
+        return true;
     }
 
     public void setDisabledByAdmin(RestrictedLockUtils.EnforcedAdmin enforcedAdmin) {
@@ -37,7 +36,7 @@ public class RestrictedCheckBox extends CheckBox {
             this.mDisabledByAdmin = z;
             RestrictedLockUtilsInternal.setTextViewAsDisabledByAdmin(this.mContext, this, z);
             if (this.mDisabledByAdmin) {
-                getButtonDrawable().setColorFilter(this.mContext.getColor(R.color.disabled_text_color), PorterDuff.Mode.MULTIPLY);
+                getButtonDrawable().setColorFilter(this.mContext.getColor(R$color.disabled_text_color), PorterDuff.Mode.MULTIPLY);
             } else {
                 getButtonDrawable().clearColorFilter();
             }

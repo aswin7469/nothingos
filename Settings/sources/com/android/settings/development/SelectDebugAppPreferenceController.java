@@ -5,15 +5,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.provider.Settings;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.development.DeveloperOptionsPreferenceController;
-/* loaded from: classes.dex */
+
 public class SelectDebugAppPreferenceController extends DeveloperOptionsPreferenceController implements PreferenceControllerMixin, OnActivityResultListener {
     private final DevelopmentSettingsDashboardFragment mFragment;
     private final PackageManager mPackageManager = this.mContext.getPackageManager();
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "debug_app";
     }
@@ -23,50 +22,47 @@ public class SelectDebugAppPreferenceController extends DeveloperOptionsPreferen
         this.mFragment = developmentSettingsDashboardFragment;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
-        if ("debug_app".equals(preference.getKey())) {
-            Intent activityStartIntent = getActivityStartIntent();
-            activityStartIntent.putExtra("com.android.settings.extra.DEBUGGABLE", true);
-            this.mFragment.startActivityForResult(activityStartIntent, 1);
-            return true;
+        if (!"debug_app".equals(preference.getKey())) {
+            return false;
         }
-        return false;
+        Intent activityStartIntent = getActivityStartIntent();
+        activityStartIntent.putExtra("com.android.settings.extra.DEBUGGABLE", true);
+        this.mFragment.startActivityForResult(activityStartIntent, 1);
+        return true;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         updatePreferenceSummary();
     }
 
-    @Override // com.android.settings.development.OnActivityResultListener
     public boolean onActivityResult(int i, int i2, Intent intent) {
-        if (i == 1 && i2 == -1) {
-            Settings.Global.putString(this.mContext.getContentResolver(), "debug_app", intent.getAction());
-            updatePreferenceSummary();
-            return true;
+        if (i != 1 || i2 != -1) {
+            return false;
         }
-        return false;
+        Settings.Global.putString(this.mContext.getContentResolver(), "debug_app", intent.getAction());
+        updatePreferenceSummary();
+        return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController
+    /* access modifiers changed from: protected */
     public void onDeveloperOptionsSwitchDisabled() {
         super.onDeveloperOptionsSwitchDisabled();
-        this.mPreference.setSummary(this.mContext.getResources().getString(R.string.debug_app_not_set));
+        this.mPreference.setSummary((CharSequence) this.mContext.getResources().getString(R$string.debug_app_not_set));
     }
 
-    Intent getActivityStartIntent() {
+    /* access modifiers changed from: package-private */
+    public Intent getActivityStartIntent() {
         return new Intent(this.mContext, AppPicker.class);
     }
 
     private void updatePreferenceSummary() {
         String string = Settings.Global.getString(this.mContext.getContentResolver(), "debug_app");
-        if (string != null && string.length() > 0) {
-            this.mPreference.setSummary(this.mContext.getResources().getString(R.string.debug_app_set, getAppLabel(string)));
-        } else {
-            this.mPreference.setSummary(this.mContext.getResources().getString(R.string.debug_app_not_set));
+        if (string == null || string.length() <= 0) {
+            this.mPreference.setSummary((CharSequence) this.mContext.getResources().getString(R$string.debug_app_not_set));
+            return;
         }
+        this.mPreference.setSummary((CharSequence) this.mContext.getResources().getString(R$string.debug_app_set, new Object[]{getAppLabel(string)}));
     }
 
     private String getAppLabel(String str) {

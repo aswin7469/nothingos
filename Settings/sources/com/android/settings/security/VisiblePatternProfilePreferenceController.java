@@ -8,17 +8,16 @@ import android.util.Log;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import com.android.internal.widget.LockPatternUtils;
+import com.android.settings.R$string;
 import com.android.settings.Utils;
 import com.android.settings.core.TogglePreferenceController;
 import com.android.settings.overlay.FeatureFactory;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.core.lifecycle.Lifecycle;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnResume;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
-/* loaded from: classes.dex */
+
 public class VisiblePatternProfilePreferenceController extends TogglePreferenceController implements LifecycleObserver, OnResume {
     private static final String KEY_VISIBLE_PATTERN_PROFILE = "visiblepattern_profile";
     private static final String TAG = "VisPtnProfPrefCtrl";
@@ -28,38 +27,24 @@ public class VisiblePatternProfilePreferenceController extends TogglePreferenceC
     private final UserManager mUm;
     private final int mUserId;
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
 
     public VisiblePatternProfilePreferenceController(Context context) {
-        this(context, null);
+        this(context, (Lifecycle) null);
     }
 
     public VisiblePatternProfilePreferenceController(Context context, Lifecycle lifecycle) {
@@ -79,16 +64,8 @@ public class VisiblePatternProfilePreferenceController extends TogglePreferenceC
         }
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
-        FutureTask futureTask = new FutureTask(new Callable() { // from class: com.android.settings.security.VisiblePatternProfilePreferenceController$$ExternalSyntheticLambda0
-            @Override // java.util.concurrent.Callable
-            public final Object call() {
-                Integer lambda$getAvailabilityStatus$0;
-                lambda$getAvailabilityStatus$0 = VisiblePatternProfilePreferenceController.this.lambda$getAvailabilityStatus$0();
-                return lambda$getAvailabilityStatus$0;
-            }
-        });
+        FutureTask futureTask = new FutureTask(new C1354x8053bab1(this));
         try {
             futureTask.run();
             return ((Integer) futureTask.get()).intValue();
@@ -98,22 +75,20 @@ public class VisiblePatternProfilePreferenceController extends TogglePreferenceC
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ Integer lambda$getAvailabilityStatus$0() throws Exception {
         boolean isSecure = this.mLockPatternUtils.isSecure(this.mProfileChallengeUserId);
         boolean z = this.mLockPatternUtils.getKeyguardStoredPasswordQuality(this.mProfileChallengeUserId) == 65536;
-        if (isSecure && z) {
-            return 0;
+        if (!isSecure || !z) {
+            return 4;
         }
-        return 4;
+        return 0;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean isChecked() {
         return this.mLockPatternUtils.isVisiblePatternEnabled(this.mProfileChallengeUserId);
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean setChecked(boolean z) {
         if (Utils.startQuietModeDialogIfNecessary(this.mContext, this.mUm, this.mProfileChallengeUserId)) {
             return false;
@@ -122,14 +97,19 @@ public class VisiblePatternProfilePreferenceController extends TogglePreferenceC
         return true;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = preferenceScreen.findPreference(getPreferenceKey());
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnResume
+    public int getSliceHighlightMenuRes() {
+        return R$string.menu_key_security;
+    }
+
     public void onResume() {
-        this.mPreference.setVisible(isAvailable());
+        Preference preference = this.mPreference;
+        if (preference != null) {
+            preference.setVisible(isAvailable());
+        }
     }
 }

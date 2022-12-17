@@ -1,5 +1,5 @@
 package com.airbnb.lottie.model;
-/* loaded from: classes.dex */
+
 public class DocumentData {
     public final float baselineShift;
     public final int color;
@@ -13,18 +13,17 @@ public class DocumentData {
     public final String text;
     public final int tracking;
 
-    /* loaded from: classes.dex */
     public enum Justification {
         LEFT_ALIGN,
         RIGHT_ALIGN,
         CENTER
     }
 
-    public DocumentData(String str, String str2, float f, Justification justification, int i, float f2, float f3, int i2, int i3, float f4, boolean z) {
+    public DocumentData(String str, String str2, float f, Justification justification2, int i, float f2, float f3, int i2, int i3, float f4, boolean z) {
         this.text = str;
         this.fontName = str2;
         this.size = f;
-        this.justification = justification;
+        this.justification = justification2;
         this.tracking = i;
         this.lineHeight = f2;
         this.baselineShift = f3;
@@ -35,8 +34,8 @@ public class DocumentData {
     }
 
     public int hashCode() {
-        int hashCode = (((((int) ((((this.text.hashCode() * 31) + this.fontName.hashCode()) * 31) + this.size)) * 31) + this.justification.ordinal()) * 31) + this.tracking;
-        long floatToRawIntBits = Float.floatToRawIntBits(this.lineHeight);
+        int hashCode = (((((int) (((float) (((this.text.hashCode() * 31) + this.fontName.hashCode()) * 31)) + this.size)) * 31) + this.justification.ordinal()) * 31) + this.tracking;
+        long floatToRawIntBits = (long) Float.floatToRawIntBits(this.lineHeight);
         return (((hashCode * 31) + ((int) (floatToRawIntBits ^ (floatToRawIntBits >>> 32)))) * 31) + this.color;
     }
 }

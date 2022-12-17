@@ -5,12 +5,11 @@ import com.airbnb.lottie.model.animatable.AnimatableShapeValue;
 import com.airbnb.lottie.model.content.ShapePath;
 import com.airbnb.lottie.parser.moshi.JsonReader;
 import java.io.IOException;
-/* loaded from: classes.dex */
-class ShapePathParser {
-    static JsonReader.Options NAMES = JsonReader.Options.of("nm", "ind", "ks", "hd");
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static ShapePath parse(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
+class ShapePathParser {
+    static JsonReader.Options NAMES = JsonReader.Options.m9of("nm", "ind", "ks", "hd");
+
+    static ShapePath parse(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
         int i = 0;
         String str = null;
         AnimatableShapeValue animatableShapeValue = null;
@@ -23,10 +22,10 @@ class ShapePathParser {
                 i = jsonReader.nextInt();
             } else if (selectName == 2) {
                 animatableShapeValue = AnimatableValueParser.parseShapeData(jsonReader, lottieComposition);
-            } else if (selectName == 3) {
-                z = jsonReader.nextBoolean();
-            } else {
+            } else if (selectName != 3) {
                 jsonReader.skipValue();
+            } else {
+                z = jsonReader.nextBoolean();
             }
         }
         return new ShapePath(str, i, animatableShapeValue, z);

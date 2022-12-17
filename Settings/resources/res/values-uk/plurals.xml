@@ -7,16 +7,16 @@
         <item quantity="other">%d дня тому</item>
     </plurals>
     <plurals name="abc_slice_duration_min">
-        <item quantity="one">%d хвилину тому</item>
-        <item quantity="few">%d хвилини тому</item>
-        <item quantity="many">%d хвилин тому</item>
-        <item quantity="other">%d хвилини тому</item>
+        <item quantity="one">%d хв тому</item>
+        <item quantity="few">%d хв тому</item>
+        <item quantity="many">%d хв тому</item>
+        <item quantity="other">%d хв тому</item>
     </plurals>
     <plurals name="abc_slice_duration_years">
-        <item quantity="one">%d рік тому</item>
-        <item quantity="few">%d роки тому</item>
-        <item quantity="many">%d років тому</item>
-        <item quantity="other">%d року тому</item>
+        <item quantity="one">%d р. тому</item>
+        <item quantity="few">%d р. тому</item>
+        <item quantity="many">%d р. тому</item>
+        <item quantity="other">%d р. тому</item>
     </plurals>
     <plurals name="accessibility_usage_summary">
         <item quantity="one">%1$d додаток має повний доступ до вашого пристрою</item>
@@ -199,10 +199,10 @@
         <item quantity="other">%s години</item>
     </plurals>
     <plurals name="interact_across_profiles_number_of_connected_apps">
-        <item quantity="one">%d додаток з’єднано</item>
-        <item quantity="few">%d додатки з’єднано</item>
-        <item quantity="many">%d додатків з’єднано</item>
-        <item quantity="other">%d додатка з’єднано</item>
+        <item quantity="one">%d додаток підключено</item>
+        <item quantity="few">%d додатки підключено</item>
+        <item quantity="many">%d додатків підключено</item>
+        <item quantity="other">%d додатка підключено</item>
     </plurals>
     <plurals name="location_app_permission_summary_location_on">
         <item quantity="one">Кількість додатків із доступом до геоданих: %1$d з %2$d</item>
@@ -349,16 +349,16 @@
         <item quantity="other">Вимкнено %d категорії</item>
     </plurals>
     <plurals name="notifications_sent_daily">
-        <item quantity="one">~%d сповіщення на день</item>
-        <item quantity="few">~%d сповіщення на день</item>
-        <item quantity="many">~%d сповіщень на день</item>
-        <item quantity="other">~%d сповіщення на день</item>
+        <item quantity="one">~%,d сповіщення на день</item>
+        <item quantity="few">~%,d сповіщення на день</item>
+        <item quantity="many">~%,d сповіщень на день</item>
+        <item quantity="other">~%,d сповіщення на день</item>
     </plurals>
     <plurals name="notifications_sent_weekly">
-        <item quantity="one">~%d сповіщення на тиждень</item>
-        <item quantity="few">~%d сповіщення на тиждень</item>
-        <item quantity="many">~%d сповіщень на тиждень</item>
-        <item quantity="other">~%d сповіщення на тиждень</item>
+        <item quantity="one">~%,d сповіщення на тиждень</item>
+        <item quantity="few">~%,d сповіщення на тиждень</item>
+        <item quantity="many">~%,d сповіщень на тиждень</item>
+        <item quantity="other">~%,d сповіщення на тиждень</item>
     </plurals>
     <plurals name="number_of_device_admins">
         <item quantity="one">%d активний додаток</item>
@@ -480,18 +480,6 @@
         <item quantity="many">Зробити сертифікати надійними або вилучити їх</item>
         <item quantity="other">Зробити сертифікати надійними або вилучити їх</item>
     </plurals>
-    <plurals name="ssl_ca_cert_info_message">
-        <item quantity="one">Адміністратор домену %s установив для вашого робочого профілю центри сертифікації, за допомогою яких зможе відстежувати активність у корпоративній мережі, зокрема електронні листи, додатки та безпечні веб-сайти.\n\nЩоб дізнатися більше про ці сертифікати, зв’яжіться зі своїм адміністратором.</item>
-        <item quantity="few">Адміністратор домену %s установив для вашого робочого профілю центри сертифікації, за допомогою яких зможе відстежувати активність у корпоративній мережі, зокрема електронні листи, додатки та безпечні веб-сайти.\n\nЩоб дізнатися більше про ці сертифікати, зв’яжіться зі своїм адміністратором.</item>
-        <item quantity="many">Адміністратор домену %s установив для вашого робочого профілю центри сертифікації, за допомогою яких зможе відстежувати активність у корпоративній мережі, зокрема електронні листи, додатки та безпечні веб-сайти.\n\nЩоб дізнатися більше про ці сертифікати, зв’яжіться зі своїм адміністратором.</item>
-        <item quantity="other">Адміністратор домену %s установив для вашого робочого профілю центри сертифікації, за допомогою яких зможе відстежувати активність у корпоративній мережі, зокрема електронні листи, додатки та безпечні веб-сайти.\n\nЩоб дізнатися більше про ці сертифікати, зв’яжіться зі своїм адміністратором.</item>
-    </plurals>
-    <plurals name="ssl_ca_cert_info_message_device_owner">
-        <item quantity="one">Адміністратор домену %s установив на вашому пристрої центри сертифікації, за допомогою яких зможе відстежувати активність у мережі пристрою, зокрема електронні листи, додатки та безпечні веб-сайти.\n\nЩоб дізнатися більше про ці сертифікати, зв’яжіться зі своїм адміністратором.</item>
-        <item quantity="few">Адміністратор домену %s установив на вашому пристрої центри сертифікації, за допомогою яких зможе відстежувати активність у мережі пристрою, зокрема електронні листи, додатки та безпечні веб-сайти.\n\nЩоб дізнатися більше про ці сертифікати, зв’яжіться зі своїм адміністратором.</item>
-        <item quantity="many">Адміністратор домену %s установив на вашому пристрої центри сертифікації, за допомогою яких зможе відстежувати активність у мережі пристрою, зокрема електронні листи, додатки та безпечні веб-сайти.\n\nЩоб дізнатися більше про ці сертифікати, зв’яжіться зі своїм адміністратором.</item>
-        <item quantity="other">Адміністратор домену %s установив на вашому пристрої центри сертифікації, за допомогою яких зможе відстежувати активність у мережі пристрою, зокрема електронні листи, додатки та безпечні веб-сайти.\n\nЩоб дізнатися більше про ці сертифікати, зв’яжіться зі своїм адміністратором.</item>
-    </plurals>
     <plurals name="ssl_ca_cert_settings_button">
         <item quantity="one">Перевірити сертифікати</item>
         <item quantity="few">Перевірити сертифікати</item>
@@ -539,12 +527,6 @@
         <item quantity="few">%d підписки</item>
         <item quantity="many">%d підписок</item>
         <item quantity="other">%d підписки</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">Під’єднано %1$d пристрій</item>
-        <item quantity="few">Під’єднано %1$d пристрої</item>
-        <item quantity="many">Під’єднано %1$d пристроїв</item>
-        <item quantity="other">Під’єднано %1$d пристрою</item>
     </plurals>
     <plurals name="wrong_pin_code">
         <item quantity="one">Неправильний PIN-код SIM-карти. У вас залишилась %d спроба.</item>

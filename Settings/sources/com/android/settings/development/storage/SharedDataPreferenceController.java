@@ -5,15 +5,14 @@ import android.content.Context;
 import android.os.UserHandle;
 import android.util.Log;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.development.DeveloperOptionsPreferenceController;
 import java.io.IOException;
-/* loaded from: classes.dex */
+
 public class SharedDataPreferenceController extends DeveloperOptionsPreferenceController implements PreferenceControllerMixin {
     private BlobStoreManager mBlobStoreManager;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "shared_data";
     }
@@ -23,7 +22,6 @@ public class SharedDataPreferenceController extends DeveloperOptionsPreferenceCo
         this.mBlobStoreManager = (BlobStoreManager) context.getSystemService(BlobStoreManager.class);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         int i;
         try {
@@ -31,15 +29,15 @@ public class SharedDataPreferenceController extends DeveloperOptionsPreferenceCo
             boolean z = blobStoreManager != null && !blobStoreManager.queryBlobsForUser(UserHandle.CURRENT).isEmpty();
             preference.setEnabled(z);
             if (z) {
-                i = R.string.shared_data_summary;
+                i = R$string.shared_data_summary;
             } else {
-                i = R.string.shared_data_no_blobs_text;
+                i = R$string.shared_data_no_blobs_text;
             }
             preference.setSummary(i);
         } catch (IOException e) {
             Log.e("SharedDataPrefCtrl", "Unable to fetch blobs for current user: " + e.getMessage());
             preference.setEnabled(false);
-            preference.setSummary(R.string.shared_data_no_blobs_text);
+            preference.setSummary(R$string.shared_data_no_blobs_text);
         }
     }
 }

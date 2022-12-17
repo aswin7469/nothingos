@@ -1,30 +1,29 @@
 package kotlin.ranges;
 
-import java.util.Iterator;
+import kotlin.collections.IntIterator;
 import kotlin.internal.ProgressionUtilKt;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 /* compiled from: Progressions.kt */
-/* loaded from: classes2.dex */
 public class IntProgression implements Iterable<Integer> {
     @NotNull
-    public static final Companion Companion = new Companion(null);
+    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
     private final int first;
     private final int last;
     private final int step;
 
     public IntProgression(int i, int i2, int i3) {
-        if (i3 != 0) {
-            if (i3 == Integer.MIN_VALUE) {
-                throw new IllegalArgumentException("Step must be greater than Int.MIN_VALUE to avoid overflow on negation.");
-            }
+        if (i3 == 0) {
+            throw new IllegalArgumentException("Step must be non-zero.");
+        } else if (i3 != Integer.MIN_VALUE) {
             this.first = i;
             this.last = ProgressionUtilKt.getProgressionLastElement(i, i2, i3);
             this.step = i3;
-            return;
+        } else {
+            throw new IllegalArgumentException("Step must be greater than Int.MIN_VALUE to avoid overflow on negation.");
         }
-        throw new IllegalArgumentException("Step must be non-zero.");
     }
 
     public final int getFirst() {
@@ -39,9 +38,8 @@ public class IntProgression implements Iterable<Integer> {
         return this.step;
     }
 
-    @Override // java.lang.Iterable
     @NotNull
-    public Iterator<Integer> iterator() {
+    public IntIterator iterator() {
         return new IntProgressionIterator(this.first, this.last, this.step);
     }
 
@@ -60,7 +58,8 @@ public class IntProgression implements Iterable<Integer> {
         if (obj instanceof IntProgression) {
             if (!isEmpty() || !((IntProgression) obj).isEmpty()) {
                 IntProgression intProgression = (IntProgression) obj;
-                if (this.first != intProgression.first || this.last != intProgression.last || this.step != intProgression.step) {
+                if (!(this.first == intProgression.first && this.last == intProgression.last && this.step == intProgression.step)) {
+                    return false;
                 }
             }
             return true;
@@ -77,8 +76,8 @@ public class IntProgression implements Iterable<Integer> {
 
     @NotNull
     public String toString() {
-        StringBuilder sb;
         int i;
+        StringBuilder sb;
         if (this.step > 0) {
             sb = new StringBuilder();
             sb.append(this.first);
@@ -99,13 +98,12 @@ public class IntProgression implements Iterable<Integer> {
     }
 
     /* compiled from: Progressions.kt */
-    /* loaded from: classes2.dex */
     public static final class Companion {
-        private Companion() {
-        }
-
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
             this();
+        }
+
+        private Companion() {
         }
 
         @NotNull

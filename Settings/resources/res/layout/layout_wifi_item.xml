@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.nt.settings.wifi.seeall.NothingWizardWifiItemLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="horizontal" android:background="?android:attr/colorBackground" android:paddingTop="16dp" android:paddingBottom="16dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="24dp" android:paddingEnd="24dp">
+<com.nothing.settings.wifi.seeall.WizardWifiItemLayout xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:orientation="horizontal" android:background="?android:attr/colorBackground" android:paddingTop="16dp" android:paddingBottom="16dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="24dp" android:paddingEnd="24dp">
     <ImageView android:layout_gravity="center_vertical" android:id="@+id/layout_wifi_item_icon_imageview" android:layout_width="24dp" android:layout_height="24dp"/>
     <LinearLayout android:layout_gravity="center_vertical" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginStart="24dp">
         <TextView android:textSize="18sp" android:textColor="#f0f2f2" android:id="@+id/layout_wifi_item_title_textview" android:layout_width="match_parent" android:layout_height="wrap_content" android:fontFamily="Roboto"/>
         <TextView android:textSize="13sp" android:textColor="#f0f2f2" android:id="@+id/layout_wifi_item_content_textview" android:layout_width="match_parent" android:layout_height="wrap_content" android:alpha="0.5" android:fontFamily="Roboto"/>
     </LinearLayout>
-</com.nt.settings.wifi.seeall.NothingWizardWifiItemLayout>
+</com.nothing.settings.wifi.seeall.WizardWifiItemLayout>

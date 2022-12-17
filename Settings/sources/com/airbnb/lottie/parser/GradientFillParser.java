@@ -2,6 +2,7 @@ package com.airbnb.lottie.parser;
 
 import android.graphics.Path;
 import com.airbnb.lottie.LottieComposition;
+import com.airbnb.lottie.model.animatable.AnimatableFloatValue;
 import com.airbnb.lottie.model.animatable.AnimatableGradientColorValue;
 import com.airbnb.lottie.model.animatable.AnimatableIntegerValue;
 import com.airbnb.lottie.model.animatable.AnimatablePointValue;
@@ -9,14 +10,12 @@ import com.airbnb.lottie.model.content.GradientFill;
 import com.airbnb.lottie.model.content.GradientType;
 import com.airbnb.lottie.parser.moshi.JsonReader;
 import java.io.IOException;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class GradientFillParser {
-    private static final JsonReader.Options NAMES = JsonReader.Options.of("nm", "g", "o", "t", "s", "e", "r", "hd");
-    private static final JsonReader.Options GRADIENT_NAMES = JsonReader.Options.of("p", "k");
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static GradientFill parse(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
+class GradientFillParser {
+    private static final JsonReader.Options GRADIENT_NAMES = JsonReader.Options.m9of("p", "k");
+    private static final JsonReader.Options NAMES = JsonReader.Options.m9of("nm", "g", "o", "t", "s", "e", "r", "hd");
+
+    static GradientFill parse(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
         Path.FillType fillType = Path.FillType.WINDING;
         String str = null;
         GradientType gradientType = null;
@@ -37,11 +36,11 @@ public class GradientFillParser {
                         int selectName = jsonReader.selectName(GRADIENT_NAMES);
                         if (selectName == 0) {
                             i = jsonReader.nextInt();
-                        } else if (selectName == 1) {
-                            animatableGradientColorValue = AnimatableValueParser.parseGradientColor(jsonReader, lottieComposition, i);
-                        } else {
+                        } else if (selectName != 1) {
                             jsonReader.skipName();
                             jsonReader.skipValue();
+                        } else {
+                            animatableGradientColorValue = AnimatableValueParser.parseGradientColor(jsonReader, lottieComposition, i);
                         }
                     }
                     jsonReader.endObject();
@@ -70,6 +69,6 @@ public class GradientFillParser {
                     break;
             }
         }
-        return new GradientFill(str, gradientType, fillType, animatableGradientColorValue, animatableIntegerValue, animatablePointValue, animatablePointValue2, null, null, z);
+        return new GradientFill(str, gradientType, fillType, animatableGradientColorValue, animatableIntegerValue, animatablePointValue, animatablePointValue2, (AnimatableFloatValue) null, (AnimatableFloatValue) null, z);
     }
 }

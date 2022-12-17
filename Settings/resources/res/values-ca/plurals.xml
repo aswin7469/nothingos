@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="abc_slice_duration_days">
-        <item quantity="one">Fa %d dia</item>
-        <item quantity="other">Fa %d dies</item>
+        <item quantity="one">Fa %d dia</item>
+        <item quantity="other">Fa %d dies</item>
     </plurals>
     <plurals name="abc_slice_duration_min">
-        <item quantity="one">Fa %d min</item>
-        <item quantity="other">Fa %d min</item>
+        <item quantity="one">Fa %d min</item>
+        <item quantity="other">Fa %d min</item>
     </plurals>
     <plurals name="abc_slice_duration_years">
-        <item quantity="one">Fa %d any</item>
-        <item quantity="other">Fa %d anys</item>
+        <item quantity="one">Fa %d any</item>
+        <item quantity="other">Fa %d anys</item>
     </plurals>
     <plurals name="accessibility_usage_summary">
         <item quantity="one">1 aplicació té accés complet al dispositiu</item>
@@ -234,11 +234,11 @@
     </plurals>
     <plurals name="notifications_sent_daily">
         <item quantity="one">~%d notificació al dia</item>
-        <item quantity="other">~%d notificacions al dia</item>
+        <item quantity="other">~%,d notificacions al dia</item>
     </plurals>
     <plurals name="notifications_sent_weekly">
         <item quantity="one">~%d notificació a la setmana</item>
-        <item quantity="other">~%d notificacions a la setmana</item>
+        <item quantity="other">~%,d notificacions a la setmana</item>
     </plurals>
     <plurals name="number_of_device_admins">
         <item quantity="one">%d aplicació activa</item>
@@ -261,8 +261,8 @@
         <item quantity="other">%2$d aplicacions s&apos;estan comportant de manera anòmala</item>
     </plurals>
     <plurals name="power_high_usage_title">
-        <item quantity="one">%1$s consumeix molta bateria</item>
-        <item quantity="other">Hi ha aplicacions que consumeixen molta bateria</item>
+        <item quantity="one">%1$s està exhaurint la bateria</item>
+        <item quantity="other">Hi ha aplicacions que estan exhaurint la bateria</item>
     </plurals>
     <plurals name="print_jobs_summary">
         <item quantity="one">1 tasca d&apos;impressió</item>
@@ -320,14 +320,6 @@
         <item quantity="one">Confia en el certificat o suprimeix-lo</item>
         <item quantity="other">Confia en els certificats o suprimeix-los</item>
     </plurals>
-    <plurals name="ssl_ca_cert_info_message">
-        <item quantity="one">%s ha instal·lat una autoritat de certificació per al teu perfil de treball, de manera que podrà supervisar la teva activitat professional a la xarxa, inclosos els correus electrònics, les aplicacions i els llocs web segurs.\n\nPer obtenir més informació sobre aquest certificat, contacta amb l&apos;administrador.</item>
-        <item quantity="other">%s ha instal·lat autoritats de certificació per al teu perfil de treball, de manera que podrà supervisar la teva activitat professional a la xarxa, inclosos els correus electrònics, les aplicacions i els llocs web segurs.\n\nPer obtenir més informació sobre aquests certificats, contacta amb l&apos;administrador.</item>
-    </plurals>
-    <plurals name="ssl_ca_cert_info_message_device_owner">
-        <item quantity="one">%s ha instal·lat una autoritat de certificació al teu dispositiu, de manera que podrà supervisar-ne l&apos;activitat a la xarxa, inclosos els correus electrònics, les aplicacions i els llocs web segurs.\n\nPer obtenir més informació sobre aquest certificat, contacta amb l&apos;administrador.</item>
-        <item quantity="other">%s ha instal·lat autoritats de certificació al teu dispositiu, de manera que podrà supervisar-ne l&apos;activitat a la xarxa, inclosos els correus electrònics, les aplicacions i els llocs web segurs.\n\nPer obtenir més informació sobre aquests certificats, contacta amb l&apos;administrador.</item>
-    </plurals>
     <plurals name="ssl_ca_cert_settings_button">
         <item quantity="one">Comprova el certificat</item>
         <item quantity="other">Comprova els certificats</item>
@@ -359,10 +351,6 @@
     <plurals name="wifi_saved_passpoint_access_points_summary">
         <item quantity="one">1 subscripció</item>
         <item quantity="other">%d subscripcions</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d dispositiu connectat</item>
-        <item quantity="other">%1$d dispositius connectats</item>
     </plurals>
     <plurals name="wrong_pin_code">
         <item quantity="one">El codi PIN de la SIM no és correcte. Et queda %d intent; si no l&apos;encertes, contacta amb l&apos;operador de telefonia mòbil per desbloquejar el dispositiu.</item>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="24dp" android:paddingEnd="16dp">
+    <ImageView android:gravity="center_vertical" android:id="@+id/about_info_device_image" android:layout_width="100dp" android:layout_height="208dp" android:scaleType="fitCenter" android:layout_marginEnd="12dp" app:layout_constraintBottom_toBottomOf="0" app:layout_constraintEnd_toStartOf="@+id/about_info_basic_parent" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toTopOf="0"/>
+    <androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/about_info_basic_parent" android:layout_width="0dp" android:layout_height="wrap_content" android:minHeight="240dp" android:layout_weight="1" app:layout_constraintBottom_toBottomOf="0" app:layout_constraintEnd_toEndOf="0" app:layout_constraintStart_toEndOf="@+id/about_info_device_image" app:layout_constraintTop_toTopOf="0">
+        <androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/about_info_device_name_parent" app:layout_constraintEnd_toEndOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toTopOf="0" style="@style/nt_about_phone_basic_info_preference">
+            <RelativeLayout android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintBottom_toBottomOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toTopOf="0">
+                <TextView android:id="@+id/about_info_device_name_title" android:text="@string/my_device_info_device_name_preference_title" style="@style/AboutDevice.Item.Title"/>
+                <TextView android:id="@+id/about_info_device_name_summary" android:layout_below="@+id/about_info_device_name_title" style="@style/AboutDevice.Item.Summary"/>
+            </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/about_info_software_info" app:layout_constraintBottom_toTopOf="@+id/about_info_storage_parent" app:layout_constraintEnd_toEndOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toBottomOf="@+id/about_info_device_name_parent" style="@style/nt_about_phone_basic_info_preference">
+            <RelativeLayout android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintBottom_toBottomOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toTopOf="0">
+                <TextView android:id="@+id/about_info_software_title" android:text="@string/nt_software_info" style="@style/AboutDevice.Item.Title"/>
+                <TextView android:id="@+id/about_info_software_summary" android:layout_below="@+id/about_info_software_title" style="@style/AboutDevice.Item.Summary"/>
+            </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/about_info_storage_parent" app:layout_constraintBottom_toBottomOf="0" app:layout_constraintEnd_toEndOf="0" app:layout_constraintStart_toStartOf="0" style="@style/nt_about_phone_basic_info_preference">
+            <RelativeLayout android:layout_width="wrap_content" android:layout_height="wrap_content" app:layout_constraintBottom_toBottomOf="0" app:layout_constraintStart_toStartOf="0" app:layout_constraintTop_toTopOf="0">
+                <TextView android:id="@+id/about_info_storage_title" android:text="@string/storage_settings" style="@style/AboutDevice.Item.Title"/>
+                <TextView android:id="@+id/about_info_storage_summary" android:layout_below="@+id/about_info_storage_title" style="@style/AboutDevice.Item.Summary"/>
+            </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

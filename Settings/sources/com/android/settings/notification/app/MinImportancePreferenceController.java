@@ -7,11 +7,10 @@ import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settings.notification.NotificationBackend;
 import com.android.settings.notification.app.NotificationSettings;
 import com.android.settingslib.RestrictedSwitchPreference;
-/* loaded from: classes.dex */
+
 public class MinImportancePreferenceController extends NotificationPreferenceController implements PreferenceControllerMixin, Preference.OnPreferenceChangeListener {
     private NotificationSettings.DependentFieldListener mDependentFieldListener;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "min_importance";
     }
@@ -21,32 +20,31 @@ public class MinImportancePreferenceController extends NotificationPreferenceCon
         this.mDependentFieldListener = dependentFieldListener;
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
-        return super.isAvailable() && this.mChannel != null && !isDefaultChannel() && this.mChannel.getImportance() <= 2;
+        if (super.isAvailable() && this.mChannel != null && !isDefaultChannel() && this.mChannel.getImportance() <= 2) {
+            return true;
+        }
+        return false;
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController
-    boolean isIncludedInFilter() {
+    /* access modifiers changed from: package-private */
+    public boolean isIncludedInFilter() {
         return this.mPreferenceFilter.contains("importance");
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         NotificationChannel notificationChannel;
-        if (this.mAppRow == null || (notificationChannel = this.mChannel) == null) {
-            return;
+        if (this.mAppRow != null && (notificationChannel = this.mChannel) != null) {
+            boolean z = false;
+            preference.setEnabled(this.mAdmin == null && isChannelConfigurable(notificationChannel));
+            RestrictedSwitchPreference restrictedSwitchPreference = (RestrictedSwitchPreference) preference;
+            if (this.mChannel.getImportance() == 1) {
+                z = true;
+            }
+            restrictedSwitchPreference.setChecked(z);
         }
-        boolean z = false;
-        preference.setEnabled(this.mAdmin == null && !notificationChannel.isImportanceLockedByOEM());
-        RestrictedSwitchPreference restrictedSwitchPreference = (RestrictedSwitchPreference) preference;
-        if (this.mChannel.getImportance() == 1) {
-            z = true;
-        }
-        restrictedSwitchPreference.setChecked(z);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         if (this.mChannel != null) {
             this.mChannel.setImportance(((Boolean) obj).booleanValue() ? 1 : 2);

@@ -2,7 +2,7 @@
 <resources>
     <array name="accessibility_button_gesture_selector_titles">
         <item>ボタン</item>
-        <item>操作</item>
+        <item>ジェスチャー</item>
     </array>
     <array name="accessibility_button_location_selector_titles">
         <item>他のアプリの上にフローティング</item>
@@ -14,12 +14,12 @@
     </array>
     <array name="animator_duration_scale_entries">
         <item>アニメーションオフ</item>
-        <item>アニメーションスケール.5x</item>
-        <item>アニメーションスケール1x</item>
-        <item>アニメーションスケール1.5x</item>
-        <item>アニメーションスケール2x</item>
-        <item>アニメーションスケール5x</item>
-        <item>アニメーションスケール10x</item>
+        <item>アニメーション スケール .5x</item>
+        <item>アニメーション スケール 1x</item>
+        <item>アニメーション スケール 1.5x</item>
+        <item>アニメーション スケール 2x</item>
+        <item>アニメーション スケール 5x</item>
+        <item>アニメーション スケール 10x</item>
     </array>
     <array name="apn_auth_entries">
         <item>なし</item>
@@ -196,6 +196,8 @@
         <item>60 日以上経過</item>
         <item>90 日以上経過</item>
     </array>
+    <array name="avatar_image_descriptions">
+    </array>
     <array name="battery_labels">
         <item>0%</item>
         <item>50%</item>
@@ -260,6 +262,8 @@
         <item>48.0 kHz</item>
         <item>88.2 kHz</item>
         <item>96.0 kHz</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
         <item>システムの選択（デフォルト）を使用</item>
@@ -267,6 +271,8 @@
         <item>48.0 kHz</item>
         <item>88.2 kHz</item>
         <item>96.0 kHz</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
         <item>システムの選択（デフォルト）を使用</item>
@@ -277,6 +283,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive オーディオ</item>
         <item>Qualcomm® aptX™ TWS+ オーディオ</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
         <item>システムの選択（デフォルト）を使用</item>
@@ -287,6 +297,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive オーディオ</item>
         <item>Qualcomm® aptX™ TWS+ オーディオ</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -345,17 +359,10 @@
         <item>浮き彫り</item>
         <item>沈み彫り</item>
     </array>
-    <array name="captioning_font_size_selector_summaries">
-        <item>テキストサイズ: 極小</item>
-        <item>テキストサイズ: 小</item>
-        <item>テキストサイズ: デフォルト</item>
-        <item>テキストサイズ: 大</item>
-        <item>テキストサイズ: 極大</item>
-    </array>
     <array name="captioning_font_size_selector_titles">
         <item>極小</item>
         <item>小</item>
-        <item>デフォルト</item>
+        <item>中</item>
         <item>大</item>
         <item>極大</item>
     </array>
@@ -488,15 +495,13 @@
         <item>GID</item>
         <item>ICCID</item>
     </array>
-    <array name="res_0x7f0300b1_nt_preferred_network_mode_choices">
-        <item>3G</item>
-        <item>4G</item>
-        <item>5G</item>
+    <array name="nfc_payment_favor">
+        <item>常時</item>
+        <item>別の決済アプリが起動されている場合を除く</item>
     </array>
-    <array name="res_0x7f0300b2_nt_preferred_network_mode_values">
-        <item>21</item>
-        <item>22</item>
-        <item>33</item>
+    <array name="nfc_payment_favor_values">
+        <item>@null</item>
+        <item>1</item>
     </array>
     <array name="overlay_display_devices_entries">
         <item>なし</item>
@@ -630,17 +635,20 @@
         <item>非矩形クリップ領域を青で描画</item>
         <item>テスト済み描画コマンドを緑でハイライト表示</item>
     </array>
-    <array name="sim_color_light">
-        <item>@color/SIM_color_cyan</item>
-        <item>@color/SIM_color_blue800</item>
-        <item>@color/SIM_color_green800</item>
-        <item>@color/SIM_color_purple800</item>
-        <item>@color/SIM_color_pink800</item>
-        <item>@color/SIM_color_orange</item>
-    </array>
     <array name="swipe_direction_values">
         <item>1</item>
         <item>@null</item>
+    </array>
+    <array name="switch_to_user_zero_when_docked_timeout_entries">
+        <item>なし</item>
+        <item>1 分後</item>
+        <item>5 分後</item>
+    </array>
+    <array name="tare_modifiers_subfactors">
+        <item>充電</item>
+        <item>Doze</item>
+        <item>省電力モード</item>
+        <item>プロセスの状態</item>
     </array>
     <array name="timezone_filters">
         <item>アメリカ</item>
@@ -658,12 +666,12 @@
     </array>
     <array name="transition_animation_scale_entries">
         <item>アニメーションオフ</item>
-        <item>アニメーションスケール.5x</item>
-        <item>アニメーションスケール1x</item>
-        <item>アニメーションスケール1.5x</item>
-        <item>アニメーションスケール2x</item>
-        <item>アニメーションスケール5x</item>
-        <item>アニメーションスケール10x</item>
+        <item>アニメーション スケール .5x</item>
+        <item>アニメーション スケール 1x</item>
+        <item>アニメーション スケール 1.5x</item>
+        <item>アニメーション スケール 2x</item>
+        <item>アニメーション スケール 5x</item>
+        <item>アニメーション スケール 10x</item>
     </array>
     <array name="tts_rate_entries">
         <item>非常に遅い</item>
@@ -829,11 +837,11 @@
     </array>
     <array name="window_animation_scale_entries">
         <item>アニメーションオフ</item>
-        <item>アニメーションスケール.5x</item>
-        <item>アニメーションスケール1x</item>
-        <item>アニメーションスケール1.5x</item>
-        <item>アニメーションスケール2x</item>
-        <item>アニメーションスケール5x</item>
-        <item>アニメーションスケール10x</item>
+        <item>アニメーション スケール .5x</item>
+        <item>アニメーション スケール 1x</item>
+        <item>アニメーション スケール 1.5x</item>
+        <item>アニメーション スケール 2x</item>
+        <item>アニメーション スケール 5x</item>
+        <item>アニメーション スケール 10x</item>
     </array>
 </resources>

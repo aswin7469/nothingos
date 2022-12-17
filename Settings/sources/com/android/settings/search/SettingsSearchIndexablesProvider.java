@@ -12,7 +12,7 @@ import android.util.ArrayMap;
 import android.util.ArraySet;
 import android.util.Log;
 import androidx.slice.SliceViewManager;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.dashboard.CategoryManager;
 import com.android.settings.dashboard.DashboardFeatureProvider;
 import com.android.settings.dashboard.DashboardFragmentRegistry;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public class SettingsSearchIndexablesProvider extends SearchIndexablesProvider {
     private static final Collection<String> INVALID_KEYS;
     private Map<String, Boolean> mSearchEnabledByCategoryKeyMap;
@@ -35,7 +35,7 @@ public class SettingsSearchIndexablesProvider extends SearchIndexablesProvider {
     static {
         ArraySet arraySet = new ArraySet();
         INVALID_KEYS = arraySet;
-        arraySet.add(null);
+        arraySet.add((Object) null);
         arraySet.add("");
     }
 
@@ -46,14 +46,14 @@ public class SettingsSearchIndexablesProvider extends SearchIndexablesProvider {
 
     public Cursor queryXmlResources(String[] strArr) {
         MatrixCursor matrixCursor = new MatrixCursor(SearchIndexablesContract.INDEXABLES_XML_RES_COLUMNS);
-        for (SearchIndexableResource searchIndexableResource : getSearchIndexableResourcesFromProvider(getContext())) {
+        for (SearchIndexableResource next : getSearchIndexableResourcesFromProvider(getContext())) {
             Object[] objArr = new Object[SearchIndexablesContract.INDEXABLES_XML_RES_COLUMNS.length];
-            objArr[0] = Integer.valueOf(searchIndexableResource.rank);
-            objArr[1] = Integer.valueOf(searchIndexableResource.xmlResId);
-            objArr[2] = searchIndexableResource.className;
-            objArr[3] = Integer.valueOf(searchIndexableResource.iconResId);
-            objArr[4] = searchIndexableResource.intentAction;
-            objArr[5] = searchIndexableResource.intentTargetPackage;
+            objArr[0] = Integer.valueOf(next.rank);
+            objArr[1] = Integer.valueOf(next.xmlResId);
+            objArr[2] = next.className;
+            objArr[3] = Integer.valueOf(next.iconResId);
+            objArr[4] = next.intentAction;
+            objArr[5] = next.intentTargetPackage;
             objArr[6] = null;
             matrixCursor.addRow(objArr);
         }
@@ -62,8 +62,8 @@ public class SettingsSearchIndexablesProvider extends SearchIndexablesProvider {
 
     public Cursor queryRawData(String[] strArr) {
         MatrixCursor matrixCursor = new MatrixCursor(SearchIndexablesContract.INDEXABLES_RAW_COLUMNS);
-        for (SearchIndexableRaw searchIndexableRaw : getSearchIndexableRawFromProvider(getContext())) {
-            matrixCursor.addRow(createIndexableRawColumnObjects(searchIndexableRaw));
+        for (SearchIndexableRaw createIndexableRawColumnObjects : getSearchIndexableRawFromProvider(getContext())) {
+            matrixCursor.addRow(createIndexableRawColumnObjects(createIndexableRawColumnObjects));
         }
         return matrixCursor;
     }
@@ -80,62 +80,67 @@ public class SettingsSearchIndexablesProvider extends SearchIndexablesProvider {
 
     public Cursor queryDynamicRawData(String[] strArr) {
         Context context = getContext();
-        ArrayList<SearchIndexableRaw> arrayList = new ArrayList();
-        for (SearchIndexableData searchIndexableData : FeatureFactory.getFactory(context).getSearchFeatureProvider().getSearchIndexableResources().getProviderValues()) {
-            arrayList.addAll(getDynamicSearchIndexableRawData(context, searchIndexableData));
-            Indexable$SearchIndexProvider searchIndexProvider = searchIndexableData.getSearchIndexProvider();
+        ArrayList<SearchIndexableRaw> arrayList = new ArrayList<>();
+        for (SearchIndexableData next : FeatureFactory.getFactory(context).getSearchFeatureProvider().getSearchIndexableResources().getProviderValues()) {
+            arrayList.addAll(getDynamicSearchIndexableRawData(context, next));
+            Indexable$SearchIndexProvider searchIndexProvider = next.getSearchIndexProvider();
             if (searchIndexProvider instanceof BaseSearchIndexProvider) {
                 refreshSearchEnabledState(context, (BaseSearchIndexProvider) searchIndexProvider);
             }
         }
         arrayList.addAll(getInjectionIndexableRawData(context));
         MatrixCursor matrixCursor = new MatrixCursor(SearchIndexablesContract.INDEXABLES_RAW_COLUMNS);
-        for (SearchIndexableRaw searchIndexableRaw : arrayList) {
-            matrixCursor.addRow(createIndexableRawColumnObjects(searchIndexableRaw));
+        for (SearchIndexableRaw createIndexableRawColumnObjects : arrayList) {
+            matrixCursor.addRow(createIndexableRawColumnObjects(createIndexableRawColumnObjects));
         }
         return matrixCursor;
     }
 
     public Cursor querySiteMapPairs() {
-        CharSequence charSequence;
+        Object obj;
         MatrixCursor matrixCursor = new MatrixCursor(SearchIndexablesContract.SITE_MAP_COLUMNS);
         Context context = getContext();
-        for (DashboardCategory dashboardCategory : FeatureFactory.getFactory(context).getDashboardFeatureProvider(context).getAllCategories()) {
-            String str = DashboardFragmentRegistry.CATEGORY_KEY_TO_PARENT_MAP.get(dashboardCategory.key);
+        for (DashboardCategory next : FeatureFactory.getFactory(context).getDashboardFeatureProvider(context).getAllCategories()) {
+            String str = DashboardFragmentRegistry.CATEGORY_KEY_TO_PARENT_MAP.get(next.key);
             if (str != null) {
-                for (Tile tile : dashboardCategory.getTiles()) {
+                for (Tile next2 : next.getTiles()) {
                     String str2 = null;
-                    if (tile.getMetaData() != null) {
-                        str2 = tile.getMetaData().getString("com.android.settings.FRAGMENT_CLASS");
+                    if (next2.getMetaData() != null) {
+                        str2 = next2.getMetaData().getString("com.android.settings.FRAGMENT_CLASS");
                     }
                     if (str2 == null) {
-                        str2 = tile.getComponentName();
-                        charSequence = tile.getTitle(getContext());
+                        str2 = next2.getComponentName();
+                        obj = next2.getTitle(getContext());
                     } else {
-                        charSequence = "";
+                        obj = "";
                     }
                     if (str2 != null) {
-                        matrixCursor.newRow().add("parent_class", str).add("child_class", str2).add("child_title", charSequence);
+                        matrixCursor.newRow().add("parent_class", str).add("child_class", str2).add("child_title", obj);
                     }
                 }
             }
         }
-        for (String str3 : CustomSiteMapRegistry.CUSTOM_SITE_MAP.keySet()) {
-            matrixCursor.newRow().add("parent_class", CustomSiteMapRegistry.CUSTOM_SITE_MAP.get(str3)).add("child_class", str3);
+        for (String next3 : CustomSiteMapRegistry.CUSTOM_SITE_MAP.keySet()) {
+            matrixCursor.newRow().add("parent_class", CustomSiteMapRegistry.CUSTOM_SITE_MAP.get(next3)).add("child_class", next3);
         }
         return matrixCursor;
     }
 
     public Cursor querySliceUriPairs() {
-        SliceViewManager sliceViewManager = SliceViewManager.getInstance(getContext());
+        Uri uri;
+        SliceViewManager instance = SliceViewManager.getInstance(getContext());
         MatrixCursor matrixCursor = new MatrixCursor(SearchIndexablesContract.SLICE_URI_PAIRS_COLUMNS);
-        String string = getContext().getString(R.string.config_non_public_slice_query_uri);
-        Uri parse = !TextUtils.isEmpty(string) ? Uri.parse(string) : new Uri.Builder().scheme("content").authority("com.android.settings.slices").build();
+        String string = getContext().getString(R$string.config_non_public_slice_query_uri);
+        if (!TextUtils.isEmpty(string)) {
+            uri = Uri.parse(string);
+        } else {
+            uri = new Uri.Builder().scheme("content").authority("com.android.settings.slices").build();
+        }
         Uri build = new Uri.Builder().scheme("content").authority("android.settings.slices").build();
-        Collection<Uri> sliceDescendants = sliceViewManager.getSliceDescendants(parse);
-        sliceDescendants.addAll(sliceViewManager.getSliceDescendants(build));
-        for (Uri uri : sliceDescendants) {
-            matrixCursor.newRow().add("key", uri.getLastPathSegment()).add("slice_uri", uri);
+        Collection<Uri> sliceDescendants = instance.getSliceDescendants(uri);
+        sliceDescendants.addAll(instance.getSliceDescendants(build));
+        for (Uri next : sliceDescendants) {
+            matrixCursor.newRow().add("key", next.getLastPathSegment()).add("slice_uri", next);
         }
         return matrixCursor;
     }
@@ -143,9 +148,9 @@ public class SettingsSearchIndexablesProvider extends SearchIndexablesProvider {
     private List<String> getNonIndexableKeysFromProvider(Context context) {
         Collection<SearchIndexableData> providerValues = FeatureFactory.getFactory(context).getSearchFeatureProvider().getSearchIndexableResources().getProviderValues();
         ArrayList arrayList = new ArrayList();
-        for (SearchIndexableData searchIndexableData : providerValues) {
+        for (SearchIndexableData next : providerValues) {
             System.currentTimeMillis();
-            Indexable$SearchIndexProvider searchIndexProvider = searchIndexableData.getSearchIndexProvider();
+            Indexable$SearchIndexProvider searchIndexProvider = next.getSearchIndexProvider();
             try {
                 List<String> nonIndexableKeys = searchIndexProvider.getNonIndexableKeys(context);
                 if (nonIndexableKeys != null && !nonIndexableKeys.isEmpty()) {
@@ -155,10 +160,11 @@ public class SettingsSearchIndexablesProvider extends SearchIndexablesProvider {
                     arrayList.addAll(nonIndexableKeys);
                 }
             } catch (Exception e) {
-                if (System.getProperty("debug.com.android.settings.search.crash_on_error") != null) {
+                if (System.getProperty("debug.com.android.settings.search.crash_on_error") == null) {
+                    Log.e("SettingsSearchProvider", "Error trying to get non-indexable keys from: " + next.getTargetClass().getName(), e);
+                } else {
                     throw new RuntimeException(e);
                 }
-                Log.e("SettingsSearchProvider", "Error trying to get non-indexable keys from: " + searchIndexableData.getTargetClass().getName(), e);
             }
         }
         return arrayList;
@@ -168,16 +174,16 @@ public class SettingsSearchIndexablesProvider extends SearchIndexablesProvider {
         String str;
         Collection<SearchIndexableData> providerValues = FeatureFactory.getFactory(context).getSearchFeatureProvider().getSearchIndexableResources().getProviderValues();
         ArrayList arrayList = new ArrayList();
-        for (SearchIndexableData searchIndexableData : providerValues) {
-            List<SearchIndexableResource> xmlResourcesToIndex = searchIndexableData.getSearchIndexProvider().getXmlResourcesToIndex(context, true);
+        for (SearchIndexableData next : providerValues) {
+            List<SearchIndexableResource> xmlResourcesToIndex = next.getSearchIndexProvider().getXmlResourcesToIndex(context, true);
             if (xmlResourcesToIndex != null) {
-                for (SearchIndexableResource searchIndexableResource : xmlResourcesToIndex) {
-                    if (TextUtils.isEmpty(searchIndexableResource.className)) {
-                        str = searchIndexableData.getTargetClass().getName();
+                for (SearchIndexableResource next2 : xmlResourcesToIndex) {
+                    if (TextUtils.isEmpty(next2.className)) {
+                        str = next.getTargetClass().getName();
                     } else {
-                        str = searchIndexableResource.className;
+                        str = next2.className;
                     }
-                    searchIndexableResource.className = str;
+                    next2.className = str;
                 }
                 arrayList.addAll(xmlResourcesToIndex);
             }
@@ -188,11 +194,11 @@ public class SettingsSearchIndexablesProvider extends SearchIndexablesProvider {
     private List<SearchIndexableRaw> getSearchIndexableRawFromProvider(Context context) {
         Collection<SearchIndexableData> providerValues = FeatureFactory.getFactory(context).getSearchFeatureProvider().getSearchIndexableResources().getProviderValues();
         ArrayList arrayList = new ArrayList();
-        for (SearchIndexableData searchIndexableData : providerValues) {
-            List<SearchIndexableRaw> rawDataToIndex = searchIndexableData.getSearchIndexProvider().getRawDataToIndex(context, true);
+        for (SearchIndexableData next : providerValues) {
+            List<SearchIndexableRaw> rawDataToIndex = next.getSearchIndexProvider().getRawDataToIndex(context, true);
             if (rawDataToIndex != null) {
                 for (SearchIndexableRaw searchIndexableRaw : rawDataToIndex) {
-                    ((android.provider.SearchIndexableData) searchIndexableRaw).className = searchIndexableData.getTargetClass().getName();
+                    searchIndexableRaw.className = next.getTargetClass().getName();
                 }
                 arrayList.addAll(rawDataToIndex);
             }
@@ -206,45 +212,47 @@ public class SettingsSearchIndexablesProvider extends SearchIndexablesProvider {
             return new ArrayList();
         }
         for (SearchIndexableRaw searchIndexableRaw : dynamicRawDataToIndex) {
-            ((android.provider.SearchIndexableData) searchIndexableRaw).className = searchIndexableData.getTargetClass().getName();
+            searchIndexableRaw.className = searchIndexableData.getTargetClass().getName();
         }
         return dynamicRawDataToIndex;
     }
 
-    List<SearchIndexableRaw> getInjectionIndexableRawData(Context context) {
+    /* access modifiers changed from: package-private */
+    public List<SearchIndexableRaw> getInjectionIndexableRawData(Context context) {
         DashboardFeatureProvider dashboardFeatureProvider = FeatureFactory.getFactory(context).getDashboardFeatureProvider(context);
         ArrayList arrayList = new ArrayList();
         String packageName = context.getPackageName();
-        for (DashboardCategory dashboardCategory : dashboardFeatureProvider.getAllCategories()) {
-            if (this.mSearchEnabledByCategoryKeyMap.containsKey(dashboardCategory.key) && !this.mSearchEnabledByCategoryKeyMap.get(dashboardCategory.key).booleanValue()) {
-                Log.i("SettingsSearchProvider", "Skip indexing category: " + dashboardCategory.key);
-            } else {
-                for (Tile tile : dashboardCategory.getTiles()) {
-                    if (isEligibleForIndexing(packageName, tile)) {
+        for (DashboardCategory next : dashboardFeatureProvider.getAllCategories()) {
+            if (!this.mSearchEnabledByCategoryKeyMap.containsKey(next.key) || this.mSearchEnabledByCategoryKeyMap.get(next.key).booleanValue()) {
+                for (Tile next2 : next.getTiles()) {
+                    if (isEligibleForIndexing(packageName, next2)) {
                         SearchIndexableRaw searchIndexableRaw = new SearchIndexableRaw(context);
-                        CharSequence title = tile.getTitle(context);
+                        CharSequence title = next2.getTitle(context);
                         String str = null;
                         String charSequence = TextUtils.isEmpty(title) ? null : title.toString();
                         searchIndexableRaw.title = charSequence;
                         if (!TextUtils.isEmpty(charSequence)) {
-                            ((android.provider.SearchIndexableData) searchIndexableRaw).key = dashboardFeatureProvider.getDashboardKeyForTile(tile);
-                            CharSequence summary = tile.getSummary(context);
+                            searchIndexableRaw.key = dashboardFeatureProvider.getDashboardKeyForTile(next2);
+                            CharSequence summary = next2.getSummary(context);
                             if (!TextUtils.isEmpty(summary)) {
                                 str = summary.toString();
                             }
                             searchIndexableRaw.summaryOn = str;
                             searchIndexableRaw.summaryOff = str;
-                            ((android.provider.SearchIndexableData) searchIndexableRaw).className = DashboardFragmentRegistry.CATEGORY_KEY_TO_PARENT_MAP.get(tile.getCategory());
+                            searchIndexableRaw.className = DashboardFragmentRegistry.CATEGORY_KEY_TO_PARENT_MAP.get(next2.getCategory());
                             arrayList.add(searchIndexableRaw);
                         }
                     }
                 }
+            } else {
+                Log.i("SettingsSearchProvider", "Skip indexing category: " + next.key);
             }
         }
         return arrayList;
     }
 
-    void refreshSearchEnabledState(Context context, BaseSearchIndexProvider baseSearchIndexProvider) {
+    /* access modifiers changed from: package-private */
+    public void refreshSearchEnabledState(Context context, BaseSearchIndexProvider baseSearchIndexProvider) {
         DashboardCategory tilesByCategory;
         String name = baseSearchIndexProvider.getClass().getName();
         int lastIndexOf = name.lastIndexOf("$");
@@ -252,13 +260,13 @@ public class SettingsSearchIndexablesProvider extends SearchIndexablesProvider {
             name = name.substring(0, lastIndexOf);
         }
         String str = DashboardFragmentRegistry.PARENT_TO_CATEGORY_KEY_MAP.get(name);
-        if (str == null || (tilesByCategory = CategoryManager.get(context).getTilesByCategory(context, str)) == null) {
-            return;
+        if (str != null && (tilesByCategory = CategoryManager.get(context).getTilesByCategory(context, str)) != null) {
+            this.mSearchEnabledByCategoryKeyMap.put(tilesByCategory.key, Boolean.valueOf(baseSearchIndexProvider.isPageSearchEnabled(context)));
         }
-        this.mSearchEnabledByCategoryKeyMap.put(tilesByCategory.key, Boolean.valueOf(baseSearchIndexProvider.isPageSearchEnabled(context)));
     }
 
-    boolean isEligibleForIndexing(String str, Tile tile) {
+    /* access modifiers changed from: package-private */
+    public boolean isEligibleForIndexing(String str, Tile tile) {
         return !TextUtils.equals(str, tile.getPackageName()) || !(tile instanceof ActivityTile);
     }
 
@@ -270,13 +278,13 @@ public class SettingsSearchIndexablesProvider extends SearchIndexablesProvider {
         objArr[4] = searchIndexableRaw.entries;
         objArr[5] = searchIndexableRaw.keywords;
         objArr[6] = searchIndexableRaw.screenTitle;
-        objArr[7] = ((android.provider.SearchIndexableData) searchIndexableRaw).className;
-        objArr[8] = Integer.valueOf(((android.provider.SearchIndexableData) searchIndexableRaw).iconResId);
-        objArr[9] = ((android.provider.SearchIndexableData) searchIndexableRaw).intentAction;
-        objArr[10] = ((android.provider.SearchIndexableData) searchIndexableRaw).intentTargetPackage;
-        objArr[11] = ((android.provider.SearchIndexableData) searchIndexableRaw).intentTargetClass;
-        objArr[12] = ((android.provider.SearchIndexableData) searchIndexableRaw).key;
-        objArr[13] = Integer.valueOf(((android.provider.SearchIndexableData) searchIndexableRaw).userId);
+        objArr[7] = searchIndexableRaw.className;
+        objArr[8] = Integer.valueOf(searchIndexableRaw.iconResId);
+        objArr[9] = searchIndexableRaw.intentAction;
+        objArr[10] = searchIndexableRaw.intentTargetPackage;
+        objArr[11] = searchIndexableRaw.intentTargetClass;
+        objArr[12] = searchIndexableRaw.key;
+        objArr[13] = Integer.valueOf(searchIndexableRaw.userId);
         return objArr;
     }
 }

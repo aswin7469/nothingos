@@ -10,8 +10,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TabHost;
 import java.util.ArrayList;
+
 @Deprecated
-/* loaded from: classes.dex */
 public class FragmentTabHost extends TabHost implements TabHost.OnTabChangeListener {
     private boolean mAttached;
     private int mContainerId;
@@ -21,30 +21,20 @@ public class FragmentTabHost extends TabHost implements TabHost.OnTabChangeListe
     private TabHost.OnTabChangeListener mOnTabChangeListener;
     private final ArrayList<TabInfo> mTabs = new ArrayList<>();
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static final class TabInfo {
+    static final class TabInfo {
         final Bundle args;
         final Class<?> clss;
         Fragment fragment;
         final String tag;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class SavedState extends View.BaseSavedState {
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() { // from class: androidx.fragment.app.FragmentTabHost.SavedState.1
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: createFromParcel */
-            public SavedState mo108createFromParcel(Parcel parcel) {
+    static class SavedState extends View.BaseSavedState {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel parcel) {
                 return new SavedState(parcel);
             }
 
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: newArray */
-            public SavedState[] mo109newArray(int i) {
+            public SavedState[] newArray(int i) {
                 return new SavedState[i];
             }
         };
@@ -59,7 +49,6 @@ public class FragmentTabHost extends TabHost implements TabHost.OnTabChangeListe
             this.curTab = parcel.readString();
         }
 
-        @Override // android.view.View.BaseSavedState, android.view.AbsSavedState, android.os.Parcelable
         public void writeToParcel(Parcel parcel, int i) {
             super.writeToParcel(parcel, i);
             parcel.writeString(this.curTab);
@@ -72,8 +61,8 @@ public class FragmentTabHost extends TabHost implements TabHost.OnTabChangeListe
 
     @Deprecated
     public FragmentTabHost(Context context) {
-        super(context, null);
-        initFragmentTabHost(context, null);
+        super(context, (AttributeSet) null);
+        initFragmentTabHost(context, (AttributeSet) null);
     }
 
     @Deprecated
@@ -89,21 +78,19 @@ public class FragmentTabHost extends TabHost implements TabHost.OnTabChangeListe
         super.setOnTabChangedListener(this);
     }
 
-    @Override // android.widget.TabHost
     @Deprecated
     public void setup() {
         throw new IllegalStateException("Must call setup() that takes a Context and FragmentManager");
     }
 
-    @Override // android.widget.TabHost
     @Deprecated
     public void setOnTabChangedListener(TabHost.OnTabChangeListener onTabChangeListener) {
         this.mOnTabChangeListener = onTabChangeListener;
     }
 
-    @Override // android.view.ViewGroup, android.view.View
+    /* access modifiers changed from: protected */
     @Deprecated
-    protected void onAttachedToWindow() {
+    public void onAttachedToWindow() {
         super.onAttachedToWindow();
         String currentTabTag = getCurrentTabTag();
         int size = this.mTabs.size();
@@ -131,24 +118,24 @@ public class FragmentTabHost extends TabHost implements TabHost.OnTabChangeListe
         }
     }
 
-    @Override // android.view.ViewGroup, android.view.View
+    /* access modifiers changed from: protected */
     @Deprecated
-    protected void onDetachedFromWindow() {
+    public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         this.mAttached = false;
     }
 
-    @Override // android.view.View
+    /* access modifiers changed from: protected */
     @Deprecated
-    protected Parcelable onSaveInstanceState() {
+    public Parcelable onSaveInstanceState() {
         SavedState savedState = new SavedState(super.onSaveInstanceState());
         savedState.curTab = getCurrentTabTag();
         return savedState;
     }
 
-    @Override // android.view.View
+    /* access modifiers changed from: protected */
     @Deprecated
-    protected void onRestoreInstanceState(@SuppressLint({"UnknownNullness"}) Parcelable parcelable) {
+    public void onRestoreInstanceState(@SuppressLint({"UnknownNullness"}) Parcelable parcelable) {
         if (!(parcelable instanceof SavedState)) {
             super.onRestoreInstanceState(parcelable);
             return;
@@ -158,11 +145,10 @@ public class FragmentTabHost extends TabHost implements TabHost.OnTabChangeListe
         setCurrentTabByTag(savedState.curTab);
     }
 
-    @Override // android.widget.TabHost.OnTabChangeListener
     @Deprecated
     public void onTabChanged(String str) {
         FragmentTransaction doTabChanged;
-        if (this.mAttached && (doTabChanged = doTabChanged(str, null)) != null) {
+        if (this.mAttached && (doTabChanged = doTabChanged(str, (FragmentTransaction) null)) != null) {
             doTabChanged.commit();
         }
         TabHost.OnTabChangeListener onTabChangeListener = this.mOnTabChangeListener;
@@ -179,7 +165,7 @@ public class FragmentTabHost extends TabHost implements TabHost.OnTabChangeListe
                 fragmentTransaction = this.mFragmentManager.beginTransaction();
             }
             TabInfo tabInfo = this.mLastTab;
-            if (tabInfo != null && (fragment = tabInfo.fragment) != null) {
+            if (!(tabInfo == null || (fragment = tabInfo.fragment) == null)) {
                 fragmentTransaction.detach(fragment);
             }
             if (tabInfoForTag != null) {

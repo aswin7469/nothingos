@@ -1,8 +1,7 @@
 package com.google.android.setupdesign.items;
-/* loaded from: classes2.dex */
+
 public interface ItemHierarchy {
 
-    /* loaded from: classes2.dex */
     public interface Observer {
         void onItemRangeChanged(ItemHierarchy itemHierarchy, int i, int i2);
 

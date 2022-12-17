@@ -10,27 +10,32 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
-import com.android.settings.R;
+import com.android.settings.R$dimen;
+import com.android.settings.R$fraction;
 import com.android.settingslib.Utils;
-/* loaded from: classes.dex */
+
 public class FingerprintLocationAnimationView extends View implements FingerprintFindSensorAnimation {
-    private ValueAnimator mAlphaAnimator;
+    /* access modifiers changed from: private */
+    public ValueAnimator mAlphaAnimator;
     private final Paint mDotPaint;
+    private final int mDotRadius = getResources().getDimensionPixelSize(R$dimen.fingerprint_dot_radius);
     private final Interpolator mFastOutSlowInInterpolator;
+    private final float mFractionCenterX = getResources().getFraction(R$fraction.fingerprint_sensor_location_fraction_x, 1, 1);
+    private final float mFractionCenterY = getResources().getFraction(R$fraction.fingerprint_sensor_location_fraction_y, 1, 1);
     private final Interpolator mLinearOutSlowInInterpolator;
-    private final Paint mPulsePaint;
-    private float mPulseRadius;
-    private ValueAnimator mRadiusAnimator;
-    private final Runnable mStartPhaseRunnable = new Runnable() { // from class: com.android.settings.biometrics.fingerprint.FingerprintLocationAnimationView.5
-        @Override // java.lang.Runnable
+    private final int mMaxPulseRadius = getResources().getDimensionPixelSize(R$dimen.fingerprint_pulse_radius);
+    /* access modifiers changed from: private */
+    public final Paint mPulsePaint;
+    /* access modifiers changed from: private */
+    public float mPulseRadius;
+    /* access modifiers changed from: private */
+    public ValueAnimator mRadiusAnimator;
+    /* access modifiers changed from: private */
+    public final Runnable mStartPhaseRunnable = new Runnable() {
         public void run() {
             FingerprintLocationAnimationView.this.startPhase();
         }
     };
-    private final int mDotRadius = getResources().getDimensionPixelSize(R.dimen.fingerprint_dot_radius);
-    private final int mMaxPulseRadius = getResources().getDimensionPixelSize(R.dimen.fingerprint_pulse_radius);
-    private final float mFractionCenterX = getResources().getFraction(R.fraction.fingerprint_sensor_location_fraction_x, 1, 1);
-    private final float mFractionCenterY = getResources().getFraction(R.fraction.fingerprint_sensor_location_fraction_y, 1, 1);
 
     public FingerprintLocationAnimationView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -47,14 +52,14 @@ public class FingerprintLocationAnimationView extends View implements Fingerprin
         this.mFastOutSlowInInterpolator = AnimationUtils.loadInterpolator(context, 17563662);
     }
 
-    @Override // android.view.View
-    protected void onDraw(Canvas canvas) {
+    /* access modifiers changed from: protected */
+    public void onDraw(Canvas canvas) {
         drawPulse(canvas);
         drawDot(canvas);
     }
 
     private void drawDot(Canvas canvas) {
-        canvas.drawCircle(getCenterX(), getCenterY(), this.mDotRadius, this.mDotPaint);
+        canvas.drawCircle(getCenterX(), getCenterY(), (float) this.mDotRadius, this.mDotPaint);
     }
 
     private void drawPulse(Canvas canvas) {
@@ -62,19 +67,17 @@ public class FingerprintLocationAnimationView extends View implements Fingerprin
     }
 
     private float getCenterX() {
-        return getWidth() * this.mFractionCenterX;
+        return ((float) getWidth()) * this.mFractionCenterX;
     }
 
     private float getCenterY() {
-        return getHeight() * this.mFractionCenterY;
+        return ((float) getHeight()) * this.mFractionCenterY;
     }
 
-    @Override // com.android.settings.biometrics.fingerprint.FingerprintFindSensorAnimation
     public void startAnimation() {
         startPhase();
     }
 
-    @Override // com.android.settings.biometrics.fingerprint.FingerprintFindSensorAnimation
     public void stopAnimation() {
         removeCallbacks(this.mStartPhaseRunnable);
         ValueAnimator valueAnimator = this.mRadiusAnimator;
@@ -87,44 +90,40 @@ public class FingerprintLocationAnimationView extends View implements Fingerprin
         }
     }
 
-    @Override // com.android.settings.biometrics.fingerprint.FingerprintFindSensorAnimation
     public void pauseAnimation() {
         stopAnimation();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void startPhase() {
         startRadiusAnimation();
         startAlphaAnimation();
     }
 
     private void startRadiusAnimation() {
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(0.0f, this.mMaxPulseRadius);
-        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.android.settings.biometrics.fingerprint.FingerprintLocationAnimationView.1
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, (float) this.mMaxPulseRadius});
+        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 FingerprintLocationAnimationView.this.mPulseRadius = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                 FingerprintLocationAnimationView.this.invalidate();
             }
         });
-        ofFloat.addListener(new AnimatorListenerAdapter() { // from class: com.android.settings.biometrics.fingerprint.FingerprintLocationAnimationView.2
+        ofFloat.addListener(new AnimatorListenerAdapter() {
             boolean mCancelled;
 
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
             public void onAnimationCancel(Animator animator) {
                 this.mCancelled = true;
             }
 
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
             public void onAnimationEnd(Animator animator) {
                 FingerprintLocationAnimationView.this.mRadiusAnimator = null;
                 if (!this.mCancelled) {
                     FingerprintLocationAnimationView fingerprintLocationAnimationView = FingerprintLocationAnimationView.this;
-                    fingerprintLocationAnimationView.postDelayed(fingerprintLocationAnimationView.mStartPhaseRunnable, 1000L);
+                    fingerprintLocationAnimationView.postDelayed(fingerprintLocationAnimationView.mStartPhaseRunnable, 1000);
                 }
             }
         });
-        ofFloat.setDuration(1000L);
+        ofFloat.setDuration(1000);
         ofFloat.setInterpolator(this.mLinearOutSlowInInterpolator);
         ofFloat.start();
         this.mRadiusAnimator = ofFloat;
@@ -132,23 +131,21 @@ public class FingerprintLocationAnimationView extends View implements Fingerprin
 
     private void startAlphaAnimation() {
         this.mPulsePaint.setAlpha(38);
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(0.15f, 0.0f);
-        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.android.settings.biometrics.fingerprint.FingerprintLocationAnimationView.3
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.15f, 0.0f});
+        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 FingerprintLocationAnimationView.this.mPulsePaint.setAlpha((int) (((Float) valueAnimator.getAnimatedValue()).floatValue() * 255.0f));
                 FingerprintLocationAnimationView.this.invalidate();
             }
         });
-        ofFloat.addListener(new AnimatorListenerAdapter() { // from class: com.android.settings.biometrics.fingerprint.FingerprintLocationAnimationView.4
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
+        ofFloat.addListener(new AnimatorListenerAdapter() {
             public void onAnimationEnd(Animator animator) {
                 FingerprintLocationAnimationView.this.mAlphaAnimator = null;
             }
         });
-        ofFloat.setDuration(750L);
+        ofFloat.setDuration(750);
         ofFloat.setInterpolator(this.mFastOutSlowInInterpolator);
-        ofFloat.setStartDelay(250L);
+        ofFloat.setStartDelay(250);
         ofFloat.start();
         this.mAlphaAnimator = ofFloat;
     }

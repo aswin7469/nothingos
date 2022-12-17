@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewParent;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-/* loaded from: classes.dex */
+
 public final class ExpandableWidgetHelper {
     private boolean expanded = false;
     private int expandedComponentIdHint = 0;

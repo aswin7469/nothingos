@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/prv/res/android" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
-    <TextView android:textSize="12sp" android:textColor="@color/black_fourty_alpha" android:id="@+id/r_angle_description" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="@string/r_angle_adjust_description" android:paddingStart="@dimen/category_title_padding_start" android:paddingEnd="@dimen/category_title_padding_start"/>
-    <TextView android:id="@+id/category_title" android:layout_marginTop="24dp" android:text="@string/r_angle_adjust_tips" style="@style/category_title_style_with_padding_start"/>
-    <include android:id="@+id/divider" layout="@layout/nt_settings_horizontal_divider_with_padding"/>
-    <TextView android:textSize="16sp" android:textColor="@color/black_fourty_alpha" android:gravity="center" android:id="@+id/empty_text" android:visibility="gone" android:fadingEdge="horizontal" android:layout_width="match_parent" android:layout_height="265dp" android:text="@string/r_angle_adjust_empty_text" android:fontFamily="sans-serif-medium"/>
-</LinearLayout>

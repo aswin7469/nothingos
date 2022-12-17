@@ -11,62 +11,56 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$color;
+
 public class BackGestureIndicatorDrawable extends Drawable {
     private Context mContext;
-    private float mCurrentWidth;
-    private float mFinalWidth;
-    private boolean mReversed;
-    private float mWidthChangePerMs;
-    private Paint mPaint = new Paint();
-    private TimeAnimator mTimeAnimator = new TimeAnimator();
-    private final Handler mHandler = new Handler(Looper.getMainLooper()) { // from class: com.android.settings.gestures.BackGestureIndicatorDrawable.1
-        @Override // android.os.Handler
+    /* access modifiers changed from: private */
+    public float mCurrentWidth;
+    /* access modifiers changed from: private */
+    public float mFinalWidth;
+    private final Handler mHandler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message message) {
             int i = message.what;
             if (i == 1) {
                 BackGestureIndicatorDrawable.this.mTimeAnimator.end();
-                BackGestureIndicatorDrawable.this.mFinalWidth = message.arg1;
+                BackGestureIndicatorDrawable.this.mFinalWidth = (float) message.arg1;
                 BackGestureIndicatorDrawable backGestureIndicatorDrawable = BackGestureIndicatorDrawable.this;
                 backGestureIndicatorDrawable.mWidthChangePerMs = Math.abs(backGestureIndicatorDrawable.mCurrentWidth - BackGestureIndicatorDrawable.this.mFinalWidth) / 200.0f;
                 BackGestureIndicatorDrawable.this.mTimeAnimator.start();
-            } else if (i != 3) {
-            } else {
+            } else if (i == 3) {
                 BackGestureIndicatorDrawable backGestureIndicatorDrawable2 = BackGestureIndicatorDrawable.this;
                 backGestureIndicatorDrawable2.mCurrentWidth = backGestureIndicatorDrawable2.mFinalWidth;
                 removeMessages(1);
-                sendMessageDelayed(obtainMessage(1, 0, 0), 700L);
+                sendMessageDelayed(obtainMessage(1, 0, 0), 700);
                 BackGestureIndicatorDrawable.this.invalidateSelf();
             }
         }
     };
+    private Paint mPaint = new Paint();
+    private boolean mReversed;
+    /* access modifiers changed from: private */
+    public TimeAnimator mTimeAnimator = new TimeAnimator();
+    /* access modifiers changed from: private */
+    public float mWidthChangePerMs;
 
-    @Override // android.graphics.drawable.Drawable
     public int getOpacity() {
         return 0;
     }
 
-    @Override // android.graphics.drawable.Drawable
     public void setAlpha(int i) {
     }
 
-    @Override // android.graphics.drawable.Drawable
     public void setColorFilter(ColorFilter colorFilter) {
     }
 
     public BackGestureIndicatorDrawable(Context context, boolean z) {
         this.mContext = context;
         this.mReversed = z;
-        this.mTimeAnimator.setTimeListener(new TimeAnimator.TimeListener() { // from class: com.android.settings.gestures.BackGestureIndicatorDrawable$$ExternalSyntheticLambda0
-            @Override // android.animation.TimeAnimator.TimeListener
-            public final void onTimeUpdate(TimeAnimator timeAnimator, long j, long j2) {
-                BackGestureIndicatorDrawable.this.lambda$new$0(timeAnimator, j, j2);
-            }
-        });
+        this.mTimeAnimator.setTimeListener(new BackGestureIndicatorDrawable$$ExternalSyntheticLambda0(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$new$0(TimeAnimator timeAnimator, long j, long j2) {
         updateCurrentWidth(j, j2);
         invalidateSelf();
@@ -75,19 +69,20 @@ public class BackGestureIndicatorDrawable extends Drawable {
     private void updateCurrentWidth(long j, long j2) {
         synchronized (this.mTimeAnimator) {
             float f = ((float) j2) * this.mWidthChangePerMs;
-            if (j < 200 && f < Math.abs(this.mFinalWidth - this.mCurrentWidth)) {
-                float f2 = this.mCurrentWidth;
-                this.mCurrentWidth = f2 + ((f2 < this.mFinalWidth ? 1.0f : -1.0f) * f);
+            if (j < 200) {
+                if (f < Math.abs(this.mFinalWidth - this.mCurrentWidth)) {
+                    float f2 = this.mCurrentWidth;
+                    this.mCurrentWidth = f2 + ((f2 < this.mFinalWidth ? 1.0f : -1.0f) * f);
+                }
             }
             this.mCurrentWidth = this.mFinalWidth;
             this.mTimeAnimator.end();
         }
     }
 
-    @Override // android.graphics.drawable.Drawable
     public void draw(Canvas canvas) {
         this.mPaint.setAntiAlias(true);
-        this.mPaint.setColor(this.mContext.getResources().getColor(R.color.back_gesture_indicator));
+        this.mPaint.setColor(this.mContext.getResources().getColor(R$color.back_gesture_indicator));
         this.mPaint.setAlpha(64);
         int height = canvas.getHeight();
         int i = (int) this.mCurrentWidth;

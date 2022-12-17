@@ -38,7 +38,7 @@ import com.android.settingslib.core.AbstractPreferenceController;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
-/* loaded from: classes.dex */
+
 public class AllInOneTetherSettings extends RestrictedDashboardFragment implements DataSaverBackend.Listener, WifiTetherBasePreferenceController.OnTetherConfigUpdateListener {
     static final int EXPANDED_CHILD_COUNT_DEFAULT = 4;
     static final int EXPANDED_CHILD_COUNT_MAX = Integer.MAX_VALUE;
@@ -48,8 +48,7 @@ public class AllInOneTetherSettings extends RestrictedDashboardFragment implemen
     static final String KEY_WIFI_TETHER_NETWORK_NAME = "wifi_tether_network_name_2";
     static final String KEY_WIFI_TETHER_NETWORK_PASSWORD = "wifi_tether_network_password_2";
     static final String KEY_WIFI_TETHER_SECURITY = "wifi_tether_security_2";
-    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R.xml.all_tether_prefs) { // from class: com.android.settings.AllInOneTetherSettings.3
-        @Override // com.android.settings.search.BaseSearchIndexProvider, com.android.settingslib.search.Indexable$SearchIndexProvider
+    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R$xml.all_tether_prefs) {
         public List<String> getNonIndexableKeys(Context context) {
             List<String> nonIndexableKeys = super.getNonIndexableKeys(context);
             if (!TetherUtil.isTetherAvailable(context)) {
@@ -62,40 +61,39 @@ public class AllInOneTetherSettings extends RestrictedDashboardFragment implemen
             return nonIndexableKeys;
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // com.android.settings.search.BaseSearchIndexProvider
+        /* access modifiers changed from: protected */
         public boolean isPageSearchEnabled(Context context) {
             return FeatureFlagUtils.isEnabled(context, "settings_tether_all_in_one");
         }
 
-        @Override // com.android.settings.search.BaseSearchIndexProvider
         public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
-            return AllInOneTetherSettings.buildPreferenceControllers(context, null);
+            return AllInOneTetherSettings.buildPreferenceControllers(context, (WifiTetherBasePreferenceController.OnTetherConfigUpdateListener) null);
         }
     };
     private WifiTetherApBandPreferenceController mApBandPreferenceController;
+    /* access modifiers changed from: private */
+    public final AtomicReference<BluetoothPan> mBluetoothPan = new AtomicReference<>();
     private DataSaverBackend mDataSaverBackend;
     private boolean mDataSaverEnabled;
     private Preference mDataSaverFooter;
     private boolean mHasShownAdvance;
     private WifiTetherPasswordPreferenceController mPasswordPreferenceController;
-    private boolean mRestartWifiApAfterConfigChange;
-    private WifiTetherSSIDPreferenceController mSSIDPreferenceController;
-    private WifiTetherSecurityPreferenceController mSecurityPreferenceController;
-    private TetherEnabler mTetherEnabler;
-    private boolean mUnavailable;
-    private WifiManager mWifiManager;
-    private PreferenceGroup mWifiTetherGroup;
-    private final AtomicReference<BluetoothPan> mBluetoothPan = new AtomicReference<>();
-    private boolean mShouldShowWifiConfig = true;
-    final TetherEnabler.OnTetherStateUpdateListener mStateUpdateListener = new TetherEnabler.OnTetherStateUpdateListener() { // from class: com.android.settings.AllInOneTetherSettings$$ExternalSyntheticLambda0
-        @Override // com.android.settings.network.TetherEnabler.OnTetherStateUpdateListener
-        public final void onTetherStateUpdated(int i) {
-            AllInOneTetherSettings.this.lambda$new$0(i);
+    private final BluetoothProfile.ServiceListener mProfileServiceListener = new BluetoothProfile.ServiceListener() {
+        public void onServiceConnected(int i, BluetoothProfile bluetoothProfile) {
+            AllInOneTetherSettings.this.mBluetoothPan.set((BluetoothPan) bluetoothProfile);
+        }
+
+        public void onServiceDisconnected(int i) {
+            AllInOneTetherSettings.this.mBluetoothPan.set((Object) null);
         }
     };
-    private final BroadcastReceiver mTetherChangeReceiver = new BroadcastReceiver() { // from class: com.android.settings.AllInOneTetherSettings.1
-        @Override // android.content.BroadcastReceiver
+    /* access modifiers changed from: private */
+    public boolean mRestartWifiApAfterConfigChange;
+    private WifiTetherSSIDPreferenceController mSSIDPreferenceController;
+    private WifiTetherSecurityPreferenceController mSecurityPreferenceController;
+    private boolean mShouldShowWifiConfig = true;
+    final TetherEnabler.OnTetherStateUpdateListener mStateUpdateListener = new AllInOneTetherSettings$$ExternalSyntheticLambda0(this);
+    private final BroadcastReceiver mTetherChangeReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (Log.isLoggable("AllInOneTetherSettings", 3)) {
@@ -104,52 +102,41 @@ public class AllInOneTetherSettings extends RestrictedDashboardFragment implemen
             AllInOneTetherSettings.this.updateDisplayWithNewConfig();
             if (TextUtils.equals(action, "android.net.conn.TETHER_STATE_CHANGED")) {
                 restartWifiTetherIfNeed(AllInOneTetherSettings.this.mWifiManager.getWifiApState());
-            } else if (!TextUtils.equals(action, "android.net.wifi.WIFI_AP_STATE_CHANGED")) {
-            } else {
+            } else if (TextUtils.equals(action, "android.net.wifi.WIFI_AP_STATE_CHANGED")) {
                 restartWifiTetherIfNeed(intent.getIntExtra("wifi_state", 0));
             }
         }
 
         private void restartWifiTetherIfNeed(int i) {
-            if (i != 11 || !AllInOneTetherSettings.this.mRestartWifiApAfterConfigChange) {
-                return;
+            if (i == 11 && AllInOneTetherSettings.this.mRestartWifiApAfterConfigChange) {
+                AllInOneTetherSettings.this.mRestartWifiApAfterConfigChange = false;
+                AllInOneTetherSettings.this.mTetherEnabler.startTethering(0);
             }
-            AllInOneTetherSettings.this.mRestartWifiApAfterConfigChange = false;
-            AllInOneTetherSettings.this.mTetherEnabler.startTethering(0);
         }
     };
-    private final BluetoothProfile.ServiceListener mProfileServiceListener = new BluetoothProfile.ServiceListener() { // from class: com.android.settings.AllInOneTetherSettings.2
-        @Override // android.bluetooth.BluetoothProfile.ServiceListener
-        public void onServiceConnected(int i, BluetoothProfile bluetoothProfile) {
-            AllInOneTetherSettings.this.mBluetoothPan.set((BluetoothPan) bluetoothProfile);
-        }
+    /* access modifiers changed from: private */
+    public TetherEnabler mTetherEnabler;
+    private boolean mUnavailable;
+    /* access modifiers changed from: private */
+    public WifiManager mWifiManager;
+    private PreferenceGroup mWifiTetherGroup;
 
-        @Override // android.bluetooth.BluetoothProfile.ServiceListener
-        public void onServiceDisconnected(int i) {
-            AllInOneTetherSettings.this.mBluetoothPan.set(null);
-        }
-    };
-
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "AllInOneTetherSettings";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 90;
     }
 
-    @Override // com.android.settings.datausage.DataSaverBackend.Listener
     public void onAllowlistStatusChanged(int i, boolean z) {
     }
 
-    @Override // com.android.settings.datausage.DataSaverBackend.Listener
     public void onDenylistStatusChanged(int i, boolean z) {
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$new$0(int i) {
         boolean z = false;
         if (TetherEnabler.isTethering(i, 0) || i == 0) {
@@ -164,7 +151,6 @@ public class AllInOneTetherSettings extends RestrictedDashboardFragment implemen
         super("no_config_tethering");
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         this.mWifiManager = (WifiManager) context.getSystemService("wifi");
@@ -178,7 +164,6 @@ public class AllInOneTetherSettings extends RestrictedDashboardFragment implemen
         getSettingsLifecycle().addObserver((LifecycleObserver) use(WifiTetherDisablePreferenceController.class));
     }
 
-    @Override // com.android.settings.dashboard.RestrictedDashboardFragment, com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         DataSaverBackend dataSaverBackend = new DataSaverBackend(getContext());
@@ -195,47 +180,42 @@ public class AllInOneTetherSettings extends RestrictedDashboardFragment implemen
         onDataSaverChanged(this.mDataSaverBackend.isDataSaverEnabled());
     }
 
-    @Override // com.android.settings.dashboard.RestrictedDashboardFragment, com.android.settings.SettingsPreferenceFragment, androidx.fragment.app.Fragment
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-        if (this.mUnavailable) {
-            return;
+        if (!this.mUnavailable) {
+            SettingsActivity settingsActivity = (SettingsActivity) getActivity();
+            BluetoothAdapter defaultAdapter = BluetoothAdapter.getDefaultAdapter();
+            if (defaultAdapter != null) {
+                defaultAdapter.getProfileProxy(settingsActivity.getApplicationContext(), this.mProfileServiceListener, 5);
+            }
+            SettingsMainSwitchBar switchBar = settingsActivity.getSwitchBar();
+            this.mTetherEnabler = new TetherEnabler(settingsActivity, new MainSwitchBarController(switchBar), this.mBluetoothPan);
+            getSettingsLifecycle().addObserver(this.mTetherEnabler);
+            ((UsbTetherPreferenceController) use(UsbTetherPreferenceController.class)).setTetherEnabler(this.mTetherEnabler);
+            ((BluetoothTetherPreferenceController) use(BluetoothTetherPreferenceController.class)).setTetherEnabler(this.mTetherEnabler);
+            ((EthernetTetherPreferenceController) use(EthernetTetherPreferenceController.class)).setTetherEnabler(this.mTetherEnabler);
+            ((WifiTetherDisablePreferenceController) use(WifiTetherDisablePreferenceController.class)).setTetherEnabler(this.mTetherEnabler);
+            switchBar.show();
         }
-        SettingsActivity settingsActivity = (SettingsActivity) getActivity();
-        BluetoothAdapter defaultAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (defaultAdapter != null) {
-            defaultAdapter.getProfileProxy(settingsActivity.getApplicationContext(), this.mProfileServiceListener, 5);
-        }
-        SettingsMainSwitchBar switchBar = settingsActivity.getSwitchBar();
-        this.mTetherEnabler = new TetherEnabler(settingsActivity, new MainSwitchBarController(switchBar), this.mBluetoothPan);
-        getSettingsLifecycle().addObserver(this.mTetherEnabler);
-        ((UsbTetherPreferenceController) use(UsbTetherPreferenceController.class)).setTetherEnabler(this.mTetherEnabler);
-        ((BluetoothTetherPreferenceController) use(BluetoothTetherPreferenceController.class)).setTetherEnabler(this.mTetherEnabler);
-        ((EthernetTetherPreferenceController) use(EthernetTetherPreferenceController.class)).setTetherEnabler(this.mTetherEnabler);
-        ((WifiTetherDisablePreferenceController) use(WifiTetherDisablePreferenceController.class)).setTetherEnabler(this.mTetherEnabler);
-        switchBar.show();
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onStart() {
         super.onStart();
         if (this.mUnavailable) {
             if (!isUiRestrictedByOnlyAdmin()) {
-                getEmptyTextView().setText(R.string.tethering_settings_not_available);
+                getEmptyTextView().setText(R$string.tethering_settings_not_available);
             }
             getPreferenceScreen().removeAll();
             return;
         }
         Context context = getContext();
-        if (context == null) {
-            return;
+        if (context != null) {
+            IntentFilter intentFilter = new IntentFilter("android.net.conn.TETHER_STATE_CHANGED");
+            intentFilter.addAction("android.net.wifi.WIFI_AP_STATE_CHANGED");
+            context.registerReceiver(this.mTetherChangeReceiver, intentFilter);
         }
-        IntentFilter intentFilter = new IntentFilter("android.net.conn.TETHER_STATE_CHANGED");
-        intentFilter.addAction("android.net.wifi.WIFI_AP_STATE_CHANGED");
-        context.registerReceiver(this.mTetherChangeReceiver, intentFilter);
     }
 
-    @Override // com.android.settings.dashboard.RestrictedDashboardFragment, com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onResume() {
         TetherEnabler tetherEnabler;
         super.onResume();
@@ -244,7 +224,6 @@ public class AllInOneTetherSettings extends RestrictedDashboardFragment implemen
         }
     }
 
-    @Override // com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onPause() {
         TetherEnabler tetherEnabler;
         super.onPause();
@@ -253,7 +232,6 @@ public class AllInOneTetherSettings extends RestrictedDashboardFragment implemen
         }
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onStop() {
         Context context;
         super.onStop();
@@ -262,24 +240,22 @@ public class AllInOneTetherSettings extends RestrictedDashboardFragment implemen
         }
     }
 
-    @Override // com.android.settings.dashboard.RestrictedDashboardFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onDestroy() {
         this.mDataSaverBackend.remListener(this);
         super.onDestroy();
     }
 
-    @Override // com.android.settings.datausage.DataSaverBackend.Listener
     public void onDataSaverChanged(boolean z) {
         this.mDataSaverEnabled = z;
         this.mDataSaverFooter.setVisible(z);
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment
-    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+    /* access modifiers changed from: protected */
+    public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
         return buildPreferenceControllers(context, this);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static List<AbstractPreferenceController> buildPreferenceControllers(Context context, WifiTetherBasePreferenceController.OnTetherConfigUpdateListener onTetherConfigUpdateListener) {
         ArrayList arrayList = new ArrayList();
         arrayList.add(new WifiTetherSSIDPreferenceController(context, onTetherConfigUpdateListener));
@@ -291,18 +267,15 @@ public class AllInOneTetherSettings extends RestrictedDashboardFragment implemen
         return arrayList;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.all_tether_prefs;
+        return R$xml.all_tether_prefs;
     }
 
-    @Override // com.android.settings.support.actionbar.HelpResourceProvider
     public int getHelpResource() {
-        return R.string.help_url_tether;
+        return R$string.help_url_tether;
     }
 
-    @Override // com.android.settings.wifi.tether.WifiTetherBasePreferenceController.OnTetherConfigUpdateListener
     public void onTetherConfigUpdated(AbstractPreferenceController abstractPreferenceController) {
         SoftApConfiguration buildNewConfig = buildNewConfig();
         this.mPasswordPreferenceController.setSecurityType(buildNewConfig.getSecurityType());
@@ -327,7 +300,7 @@ public class AllInOneTetherSettings extends RestrictedDashboardFragment implemen
         return builder.build();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateDisplayWithNewConfig() {
         this.mSSIDPreferenceController.updateDisplay();
         this.mSecurityPreferenceController.updateDisplay();
@@ -335,17 +308,18 @@ public class AllInOneTetherSettings extends RestrictedDashboardFragment implemen
         this.mApBandPreferenceController.updateDisplay();
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment
     public int getInitialExpandedChildCount() {
         if (this.mHasShownAdvance || !this.mShouldShowWifiConfig) {
             this.mHasShownAdvance = true;
             return EXPANDED_CHILD_COUNT_MAX;
         }
         WifiTetherSecurityPreferenceController wifiTetherSecurityPreferenceController = this.mSecurityPreferenceController;
-        return (wifiTetherSecurityPreferenceController != null && wifiTetherSecurityPreferenceController.getSecurityType() == 0) ? 3 : 4;
+        if (wifiTetherSecurityPreferenceController != null && wifiTetherSecurityPreferenceController.getSecurityType() == 0) {
+            return 3;
+        }
+        return 4;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, androidx.preference.PreferenceGroup.OnExpandButtonClickListener
     public void onExpandButtonClick() {
         super.onExpandButtonClick();
         this.mHasShownAdvance = true;

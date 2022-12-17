@@ -9,7 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import androidx.core.content.ContextCompat;
-/* loaded from: classes.dex */
+
 public class PagerTabStrip extends PagerTitleStrip {
     private boolean mDrawFullUnderline;
     private boolean mDrawFullUnderlineSet;
@@ -28,7 +28,7 @@ public class PagerTabStrip extends PagerTitleStrip {
     private int mTouchSlop;
 
     public PagerTabStrip(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public PagerTabStrip(Context context, AttributeSet attributeSet) {
@@ -53,16 +53,14 @@ public class PagerTabStrip extends PagerTitleStrip {
         setTextSpacing(getTextSpacing());
         setWillNotDraw(false);
         this.mPrevText.setFocusable(true);
-        this.mPrevText.setOnClickListener(new View.OnClickListener() { // from class: androidx.viewpager.widget.PagerTabStrip.1
-            @Override // android.view.View.OnClickListener
+        this.mPrevText.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 ViewPager viewPager = PagerTabStrip.this.mPager;
                 viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
             }
         });
         this.mNextText.setFocusable(true);
-        this.mNextText.setOnClickListener(new View.OnClickListener() { // from class: androidx.viewpager.widget.PagerTabStrip.2
-            @Override // android.view.View.OnClickListener
+        this.mNextText.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 ViewPager viewPager = PagerTabStrip.this.mPager;
                 viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
@@ -87,7 +85,6 @@ public class PagerTabStrip extends PagerTitleStrip {
         return this.mIndicatorColor;
     }
 
-    @Override // android.view.View
     public void setPadding(int i, int i2, int i3, int i4) {
         int i5 = this.mMinPaddingBottom;
         if (i4 < i5) {
@@ -96,7 +93,6 @@ public class PagerTabStrip extends PagerTitleStrip {
         super.setPadding(i, i2, i3, i4);
     }
 
-    @Override // androidx.viewpager.widget.PagerTitleStrip
     public void setTextSpacing(int i) {
         int i2 = this.mMinTextSpacing;
         if (i < i2) {
@@ -105,7 +101,6 @@ public class PagerTabStrip extends PagerTitleStrip {
         super.setTextSpacing(i);
     }
 
-    @Override // android.view.View
     public void setBackgroundDrawable(Drawable drawable) {
         super.setBackgroundDrawable(drawable);
         if (!this.mDrawFullUnderlineSet) {
@@ -113,15 +108,13 @@ public class PagerTabStrip extends PagerTitleStrip {
         }
     }
 
-    @Override // android.view.View
     public void setBackgroundColor(int i) {
         super.setBackgroundColor(i);
         if (!this.mDrawFullUnderlineSet) {
-            this.mDrawFullUnderline = (i & (-16777216)) == 0;
+            this.mDrawFullUnderline = (i & -16777216) == 0;
         }
     }
 
-    @Override // android.view.View
     public void setBackgroundResource(int i) {
         super.setBackgroundResource(i);
         if (!this.mDrawFullUnderlineSet) {
@@ -139,55 +132,52 @@ public class PagerTabStrip extends PagerTitleStrip {
         return this.mDrawFullUnderline;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // androidx.viewpager.widget.PagerTitleStrip
+    /* access modifiers changed from: package-private */
     public int getMinHeight() {
         return Math.max(super.getMinHeight(), this.mMinStripHeight);
     }
 
-    @Override // android.view.View
     public boolean onTouchEvent(MotionEvent motionEvent) {
         int action = motionEvent.getAction();
-        if (action == 0 || !this.mIgnoreTap) {
-            float x = motionEvent.getX();
-            float y = motionEvent.getY();
-            if (action == 0) {
-                this.mInitialMotionX = x;
-                this.mInitialMotionY = y;
-                this.mIgnoreTap = false;
-            } else if (action != 1) {
-                if (action == 2 && (Math.abs(x - this.mInitialMotionX) > this.mTouchSlop || Math.abs(y - this.mInitialMotionY) > this.mTouchSlop)) {
-                    this.mIgnoreTap = true;
-                }
-            } else if (x < this.mCurrText.getLeft() - this.mTabPadding) {
-                ViewPager viewPager = this.mPager;
-                viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
-            } else if (x > this.mCurrText.getRight() + this.mTabPadding) {
-                ViewPager viewPager2 = this.mPager;
-                viewPager2.setCurrentItem(viewPager2.getCurrentItem() + 1);
-            }
-            return true;
+        if (action != 0 && this.mIgnoreTap) {
+            return false;
         }
-        return false;
+        float x = motionEvent.getX();
+        float y = motionEvent.getY();
+        if (action == 0) {
+            this.mInitialMotionX = x;
+            this.mInitialMotionY = y;
+            this.mIgnoreTap = false;
+        } else if (action != 1) {
+            if (action == 2 && (Math.abs(x - this.mInitialMotionX) > ((float) this.mTouchSlop) || Math.abs(y - this.mInitialMotionY) > ((float) this.mTouchSlop))) {
+                this.mIgnoreTap = true;
+            }
+        } else if (x < ((float) (this.mCurrText.getLeft() - this.mTabPadding))) {
+            ViewPager viewPager = this.mPager;
+            viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+        } else if (x > ((float) (this.mCurrText.getRight() + this.mTabPadding))) {
+            ViewPager viewPager2 = this.mPager;
+            viewPager2.setCurrentItem(viewPager2.getCurrentItem() + 1);
+        }
+        return true;
     }
 
-    @Override // android.view.View
-    protected void onDraw(Canvas canvas) {
+    /* access modifiers changed from: protected */
+    public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         int height = getHeight();
         int left = this.mCurrText.getLeft() - this.mTabPadding;
         int right = this.mCurrText.getRight() + this.mTabPadding;
         this.mTabPaint.setColor((this.mTabAlpha << 24) | (this.mIndicatorColor & 16777215));
-        float f = height;
-        canvas.drawRect(left, height - this.mIndicatorHeight, right, f, this.mTabPaint);
+        float f = (float) height;
+        canvas.drawRect((float) left, (float) (height - this.mIndicatorHeight), (float) right, f, this.mTabPaint);
         if (this.mDrawFullUnderline) {
-            this.mTabPaint.setColor((-16777216) | (this.mIndicatorColor & 16777215));
-            canvas.drawRect(getPaddingLeft(), height - this.mFullUnderlineHeight, getWidth() - getPaddingRight(), f, this.mTabPaint);
+            this.mTabPaint.setColor(-16777216 | (this.mIndicatorColor & 16777215));
+            canvas.drawRect((float) getPaddingLeft(), (float) (height - this.mFullUnderlineHeight), (float) (getWidth() - getPaddingRight()), f, this.mTabPaint);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // androidx.viewpager.widget.PagerTitleStrip
+    /* access modifiers changed from: package-private */
     public void updateTextPositions(int i, float f, boolean z) {
         super.updateTextPositions(i, f, z);
         this.mTabAlpha = (int) (Math.abs(f - 0.5f) * 2.0f * 255.0f);

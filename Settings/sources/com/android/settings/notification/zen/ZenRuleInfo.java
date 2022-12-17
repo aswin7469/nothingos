@@ -2,11 +2,13 @@ package com.android.settings.notification.zen;
 
 import android.content.ComponentName;
 import android.net.Uri;
-/* loaded from: classes.dex */
+
 public class ZenRuleInfo {
     public ComponentName configurationActivity;
     public Uri defaultConditionId;
-    public String id;
+
+    /* renamed from: id */
+    public String f215id;
     public boolean isSystem;
     public CharSequence packageLabel;
     public String packageName;
@@ -19,7 +21,7 @@ public class ZenRuleInfo {
         if (this == obj) {
             return true;
         }
-        if (obj == null || ZenRuleInfo.class != obj.getClass()) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
         ZenRuleInfo zenRuleInfo = (ZenRuleInfo) obj;
@@ -50,11 +52,17 @@ public class ZenRuleInfo {
         if (componentName2 == null ? zenRuleInfo.serviceComponent != null : !componentName2.equals(zenRuleInfo.serviceComponent)) {
             return false;
         }
-        String str4 = this.id;
-        if (str4 == null ? zenRuleInfo.id != null : !str4.equals(zenRuleInfo.id)) {
+        String str4 = this.f215id;
+        if (str4 == null ? zenRuleInfo.f215id != null : !str4.equals(zenRuleInfo.f215id)) {
             return false;
         }
         CharSequence charSequence = this.packageLabel;
-        return charSequence != null ? charSequence.equals(zenRuleInfo.packageLabel) : zenRuleInfo.packageLabel == null;
+        if (charSequence != null) {
+            return charSequence.equals(zenRuleInfo.packageLabel);
+        }
+        if (zenRuleInfo.packageLabel == null) {
+            return true;
+        }
+        return false;
     }
 }

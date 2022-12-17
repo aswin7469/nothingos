@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-/* loaded from: classes.dex */
+
 public class AnomalyDatabaseHelper extends SQLiteOpenHelper {
     private static AnomalyDatabaseHelper sSingleton;
 
@@ -23,12 +23,10 @@ public class AnomalyDatabaseHelper extends SQLiteOpenHelper {
         super(context, "battery_settings.db", (SQLiteDatabase.CursorFactory) null, 5);
     }
 
-    @Override // android.database.sqlite.SQLiteOpenHelper
     public void onCreate(SQLiteDatabase sQLiteDatabase) {
         bootstrapDB(sQLiteDatabase);
     }
 
-    @Override // android.database.sqlite.SQLiteOpenHelper
     public void onUpgrade(SQLiteDatabase sQLiteDatabase, int i, int i2) {
         if (i < 5) {
             Log.w("BatteryDatabaseHelper", "Detected schema version '" + i + "'. Index needs to be rebuilt for schema version '" + i2 + "'.");
@@ -36,7 +34,6 @@ public class AnomalyDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    @Override // android.database.sqlite.SQLiteOpenHelper
     public void onDowngrade(SQLiteDatabase sQLiteDatabase, int i, int i2) {
         Log.w("BatteryDatabaseHelper", "Detected schema version '" + i + "'. Index needs to be rebuilt for schema version '" + i2 + "'.");
         reconstruct(sQLiteDatabase);

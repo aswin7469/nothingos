@@ -1,33 +1,33 @@
 package com.android.settings.wifi.calling;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import androidx.constraintlayout.widget.R$styleable;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
 import com.android.settings.core.InstrumentedFragment;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class WifiCallingDisclaimerFragment extends InstrumentedFragment implements View.OnClickListener {
     private Button mAgreeButton;
     private Button mDisagreeButton;
     private List<DisclaimerItem> mDisclaimerItemList = new ArrayList();
-    private boolean mScrollToBottom;
+    /* access modifiers changed from: private */
+    public boolean mScrollToBottom;
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
-        return R$styleable.Constraint_pathMotionArc;
+        return 105;
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         Bundle arguments = getArguments();
@@ -35,61 +35,55 @@ public class WifiCallingDisclaimerFragment extends InstrumentedFragment implemen
         this.mDisclaimerItemList = create;
         if (create.isEmpty()) {
             finish(-1);
-        } else if (bundle == null) {
-        } else {
+        } else if (bundle != null) {
             this.mScrollToBottom = bundle.getBoolean("state_is_scroll_to_bottom", this.mScrollToBottom);
         }
     }
 
-    @Override // androidx.fragment.app.Fragment
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
-        View inflate = layoutInflater.inflate(R.layout.wfc_disclaimer_fragment, viewGroup, false);
-        Button button = (Button) inflate.findViewById(R.id.agree_button);
+        View inflate = layoutInflater.inflate(R$layout.wfc_disclaimer_fragment, viewGroup, false);
+        Button button = (Button) inflate.findViewById(R$id.agree_button);
         this.mAgreeButton = button;
         button.setOnClickListener(this);
-        Button button2 = (Button) inflate.findViewById(R.id.disagree_button);
+        Button button2 = (Button) inflate.findViewById(R$id.disagree_button);
         this.mDisagreeButton = button2;
         button2.setOnClickListener(this);
-        RecyclerView recyclerView = (RecyclerView) inflate.findViewById(R.id.disclaimer_item_list);
+        RecyclerView recyclerView = (RecyclerView) inflate.findViewById(R$id.disclaimer_item_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(new DisclaimerItemListAdapter(this.mDisclaimerItemList));
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), 1));
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() { // from class: com.android.settings.wifi.calling.WifiCallingDisclaimerFragment.1
-            @Override // androidx.recyclerview.widget.RecyclerView.OnScrollListener
-            public void onScrolled(RecyclerView recyclerView2, int i, int i2) {
-                super.onScrolled(recyclerView2, i, i2);
-                if (!recyclerView2.canScrollVertically(1)) {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            public void onScrolled(RecyclerView recyclerView, int i, int i2) {
+                super.onScrolled(recyclerView, i, i2);
+                if (!recyclerView.canScrollVertically(1)) {
                     WifiCallingDisclaimerFragment.this.mScrollToBottom = true;
                     WifiCallingDisclaimerFragment.this.updateButtonState();
-                    recyclerView2.removeOnScrollListener(this);
+                    recyclerView.removeOnScrollListener(this);
                 }
             }
         });
         return inflate;
     }
 
-    @Override // com.android.settings.core.InstrumentedFragment, com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
         updateButtonState();
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         bundle.putBoolean("state_is_scroll_to_bottom", this.mScrollToBottom);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateButtonState() {
         this.mAgreeButton.setEnabled(this.mScrollToBottom);
     }
 
-    @Override // android.view.View.OnClickListener
     public void onClick(View view) {
         if (view == this.mAgreeButton) {
-            for (DisclaimerItem disclaimerItem : this.mDisclaimerItemList) {
-                disclaimerItem.onAgreed();
+            for (DisclaimerItem onAgreed : this.mDisclaimerItemList) {
+                onAgreed.onAgreed();
             }
             finish(-1);
         } else if (view == this.mDisagreeButton) {
@@ -97,10 +91,11 @@ public class WifiCallingDisclaimerFragment extends InstrumentedFragment implemen
         }
     }
 
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    void finish(int i) {
+    public void finish(int i) {
         FragmentActivity activity = getActivity();
-        activity.setResult(i, null);
+        activity.setResult(i, (Intent) null);
         activity.finish();
     }
 }

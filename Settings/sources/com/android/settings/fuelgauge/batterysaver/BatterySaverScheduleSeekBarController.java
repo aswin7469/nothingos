@@ -6,10 +6,11 @@ import android.provider.Settings;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.settings.R;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
 import com.android.settings.widget.SeekBarPreference;
 import com.android.settingslib.Utils;
-/* loaded from: classes.dex */
+
 public class BatterySaverScheduleSeekBarController implements Preference.OnPreferenceChangeListener {
     private Context mContext;
     @VisibleForTesting
@@ -19,7 +20,7 @@ public class BatterySaverScheduleSeekBarController implements Preference.OnPrefe
         this.mContext = context;
         SeekBarPreference seekBarPreference = new SeekBarPreference(context);
         this.mSeekBarPreference = seekBarPreference;
-        seekBarPreference.setLayoutResource(R.layout.preference_widget_seekbar_settings);
+        seekBarPreference.setLayoutResource(R$layout.preference_widget_seekbar_settings);
         this.mSeekBarPreference.setIconSpaceReserved(false);
         this.mSeekBarPreference.setOnPreferenceChangeListener(this);
         this.mSeekBarPreference.setContinuousUpdates(true);
@@ -30,7 +31,6 @@ public class BatterySaverScheduleSeekBarController implements Preference.OnPrefe
         updateSeekBar();
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         int intValue = ((Integer) obj).intValue() * 5;
         Settings.Global.putInt(this.mContext.getContentResolver(), "low_power_trigger_level", intValue);
@@ -65,6 +65,6 @@ public class BatterySaverScheduleSeekBarController implements Preference.OnPrefe
     }
 
     private CharSequence formatStateDescription(int i) {
-        return this.mContext.getString(R.string.battery_saver_seekbar_title, Utils.formatPercentage(i));
+        return this.mContext.getString(R$string.battery_saver_seekbar_title, new Object[]{Utils.formatPercentage(i)});
     }
 }

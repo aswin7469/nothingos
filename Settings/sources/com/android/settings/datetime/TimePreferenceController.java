@@ -12,22 +12,19 @@ import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.RestrictedPreference;
 import com.android.settingslib.core.AbstractPreferenceController;
 import java.util.Calendar;
-/* loaded from: classes.dex */
+
 public class TimePreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin, TimePickerDialog.OnTimeSetListener {
     private final AutoTimePreferenceController mAutoTimePreferenceController;
     private final TimePreferenceHost mHost;
 
-    /* loaded from: classes.dex */
     public interface TimePreferenceHost extends UpdateTimeAndDateCallback {
         void showTimePicker();
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "time";
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return true;
     }
@@ -38,19 +35,15 @@ public class TimePreferenceController extends AbstractPreferenceController imple
         this.mAutoTimePreferenceController = autoTimePreferenceController;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
-        if (!(preference instanceof RestrictedPreference)) {
-            return;
+        if (preference instanceof RestrictedPreference) {
+            preference.setSummary((CharSequence) DateFormat.getTimeFormat(this.mContext).format(Calendar.getInstance().getTime()));
+            if (!((RestrictedPreference) preference).isDisabledByAdmin()) {
+                preference.setEnabled(!this.mAutoTimePreferenceController.isEnabled());
+            }
         }
-        preference.setSummary(DateFormat.getTimeFormat(this.mContext).format(Calendar.getInstance().getTime()));
-        if (((RestrictedPreference) preference).isDisabledByAdmin()) {
-            return;
-        }
-        preference.setEnabled(!this.mAutoTimePreferenceController.isEnabled());
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
         if (!TextUtils.equals("time", preference.getKey())) {
             return false;
@@ -59,7 +52,6 @@ public class TimePreferenceController extends AbstractPreferenceController imple
         return true;
     }
 
-    @Override // android.app.TimePickerDialog.OnTimeSetListener
     public void onTimeSet(TimePicker timePicker, int i, int i2) {
         if (this.mContext != null) {
             setTime(i, i2);
@@ -68,17 +60,18 @@ public class TimePreferenceController extends AbstractPreferenceController imple
     }
 
     public TimePickerDialog buildTimePicker(Activity activity) {
-        Calendar calendar = Calendar.getInstance();
-        return new TimePickerDialog(activity, this, calendar.get(11), calendar.get(12), DateFormat.is24HourFormat(activity));
+        Calendar instance = Calendar.getInstance();
+        return new TimePickerDialog(activity, this, instance.get(11), instance.get(12), DateFormat.is24HourFormat(activity));
     }
 
-    void setTime(int i, int i2) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(11, i);
-        calendar.set(12, i2);
-        calendar.set(13, 0);
-        calendar.set(14, 0);
-        long max = Math.max(calendar.getTimeInMillis(), 1194220800000L);
+    /* access modifiers changed from: package-private */
+    public void setTime(int i, int i2) {
+        Calendar instance = Calendar.getInstance();
+        instance.set(11, i);
+        instance.set(12, i2);
+        instance.set(13, 0);
+        instance.set(14, 0);
+        long max = Math.max(instance.getTimeInMillis(), 1194220800000L);
         if (max / 1000 < 2147483647L) {
             ((TimeDetector) this.mContext.getSystemService(TimeDetector.class)).suggestManualTime(TimeDetector.createManualTimeSuggestion(max, "Settings: Set time"));
         }

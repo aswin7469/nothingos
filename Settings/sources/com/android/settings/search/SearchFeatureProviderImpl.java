@@ -7,28 +7,28 @@ import android.net.Uri;
 import android.text.TextUtils;
 import com.android.settingslib.search.SearchIndexableResources;
 import com.android.settingslib.search.SearchIndexableResourcesMobile;
-/* loaded from: classes.dex */
+
 public class SearchFeatureProviderImpl implements SearchFeatureProvider {
     private SearchIndexableResources mSearchIndexableResources;
 
-    protected boolean isSignatureAllowlisted(Context context, String str) {
+    /* access modifiers changed from: protected */
+    public boolean isSignatureAllowlisted(Context context, String str) {
         return false;
     }
 
-    @Override // com.android.settings.search.SearchFeatureProvider
     public void verifyLaunchSearchResultPageCaller(Context context, ComponentName componentName) {
-        if (componentName == null) {
-            throw new IllegalArgumentException("ExternalSettingsTrampoline intents must be called with startActivityForResult");
+        if (componentName != null) {
+            String packageName = componentName.getPackageName();
+            boolean z = TextUtils.equals(packageName, context.getPackageName()) || TextUtils.equals(getSettingsIntelligencePkgName(context), packageName);
+            boolean isSignatureAllowlisted = isSignatureAllowlisted(context, componentName.getPackageName());
+            if (!z && !isSignatureAllowlisted) {
+                throw new SecurityException("Search result intents must be called with from an allowlisted package.");
+            }
+            return;
         }
-        String packageName = componentName.getPackageName();
-        boolean z = TextUtils.equals(packageName, context.getPackageName()) || TextUtils.equals(getSettingsIntelligencePkgName(context), packageName);
-        boolean isSignatureAllowlisted = isSignatureAllowlisted(context, componentName.getPackageName());
-        if (!z && !isSignatureAllowlisted) {
-            throw new SecurityException("Search result intents must be called with from a allowlisted package.");
-        }
+        throw new IllegalArgumentException("ExternalSettingsTrampoline intents must be called with startActivityForResult");
     }
 
-    @Override // com.android.settings.search.SearchFeatureProvider
     public SearchIndexableResources getSearchIndexableResources() {
         if (this.mSearchIndexableResources == null) {
             this.mSearchIndexableResources = new SearchIndexableResourcesMobile();
@@ -36,7 +36,6 @@ public class SearchFeatureProviderImpl implements SearchFeatureProvider {
         return this.mSearchIndexableResources;
     }
 
-    @Override // com.android.settings.search.SearchFeatureProvider
     public Intent buildSearchIntent(Context context, int i) {
         return new Intent("android.settings.APP_SEARCH_SETTINGS").setPackage(getSettingsIntelligencePkgName(context)).putExtra("android.intent.extra.REFERRER", buildReferrer(context, i));
     }

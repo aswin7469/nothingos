@@ -2,32 +2,32 @@ package com.google.android.material.appbar;
 
 import android.view.View;
 import androidx.core.view.ViewCompat;
-/* loaded from: classes.dex */
+
 class ViewOffsetHelper {
+    private boolean horizontalOffsetEnabled = true;
     private int layoutLeft;
     private int layoutTop;
     private int offsetLeft;
     private int offsetTop;
-    private final View view;
     private boolean verticalOffsetEnabled = true;
-    private boolean horizontalOffsetEnabled = true;
+    private final View view;
 
-    public ViewOffsetHelper(View view) {
-        this.view = view;
+    public ViewOffsetHelper(View view2) {
+        this.view = view2;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void onViewLayout() {
         this.layoutTop = this.view.getTop();
         this.layoutLeft = this.view.getLeft();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void applyOffsets() {
-        View view = this.view;
-        ViewCompat.offsetTopAndBottom(view, this.offsetTop - (view.getTop() - this.layoutTop));
         View view2 = this.view;
-        ViewCompat.offsetLeftAndRight(view2, this.offsetLeft - (view2.getLeft() - this.layoutLeft));
+        ViewCompat.offsetTopAndBottom(view2, this.offsetTop - (view2.getTop() - this.layoutTop));
+        View view3 = this.view;
+        ViewCompat.offsetLeftAndRight(view3, this.offsetLeft - (view3.getLeft() - this.layoutLeft));
     }
 
     public boolean setTopAndBottomOffset(int i) {

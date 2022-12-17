@@ -2,24 +2,22 @@ package androidx.constraintlayout.solver.widgets.analyzer;
 
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
-public class DependencyNode implements Dependency {
-    int margin;
-    WidgetRun run;
-    public int value;
-    public Dependency updateDelegate = null;
-    public boolean delegateToWidgetRun = false;
-    public boolean readyToSolve = false;
-    Type type = Type.UNKNOWN;
-    int marginFactor = 1;
-    DimensionDependency marginDependency = null;
-    public boolean resolved = false;
-    List<Dependency> dependencies = new ArrayList();
-    List<DependencyNode> targets = new ArrayList();
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public enum Type {
+public class DependencyNode implements Dependency {
+    public boolean delegateToWidgetRun = false;
+    List<Dependency> dependencies = new ArrayList();
+    int margin;
+    DimensionDependency marginDependency = null;
+    int marginFactor = 1;
+    public boolean readyToSolve = false;
+    public boolean resolved = false;
+    WidgetRun run;
+    List<DependencyNode> targets = new ArrayList();
+    Type type = Type.UNKNOWN;
+    public Dependency updateDelegate = null;
+    public int value;
+
+    enum Type {
         UNKNOWN,
         HORIZONTAL_DIMENSION,
         VERTICAL_DIMENSION,
@@ -50,17 +48,15 @@ public class DependencyNode implements Dependency {
     }
 
     public void resolve(int i) {
-        if (this.resolved) {
-            return;
-        }
-        this.resolved = true;
-        this.value = i;
-        for (Dependency dependency : this.dependencies) {
-            dependency.update(dependency);
+        if (!this.resolved) {
+            this.resolved = true;
+            this.value = i;
+            for (Dependency next : this.dependencies) {
+                next.update(next);
+            }
         }
     }
 
-    @Override // androidx.constraintlayout.solver.widgets.analyzer.Dependency
     public void update(Dependency dependency) {
         for (DependencyNode dependencyNode : this.targets) {
             if (!dependencyNode.resolved) {
@@ -78,27 +74,27 @@ public class DependencyNode implements Dependency {
         }
         DependencyNode dependencyNode2 = null;
         int i = 0;
-        for (DependencyNode dependencyNode3 : this.targets) {
-            if (!(dependencyNode3 instanceof DimensionDependency)) {
+        for (DependencyNode next : this.targets) {
+            if (!(next instanceof DimensionDependency)) {
                 i++;
-                dependencyNode2 = dependencyNode3;
+                dependencyNode2 = next;
             }
         }
         if (dependencyNode2 != null && i == 1 && dependencyNode2.resolved) {
             DimensionDependency dimensionDependency = this.marginDependency;
             if (dimensionDependency != null) {
-                if (!dimensionDependency.resolved) {
+                if (dimensionDependency.resolved) {
+                    this.margin = this.marginFactor * dimensionDependency.value;
+                } else {
                     return;
                 }
-                this.margin = this.marginFactor * dimensionDependency.value;
             }
             resolve(dependencyNode2.value + this.margin);
         }
         Dependency dependency3 = this.updateDelegate;
-        if (dependency3 == null) {
-            return;
+        if (dependency3 != null) {
+            dependency3.update(this);
         }
-        dependency3.update(this);
     }
 
     public void addDependency(Dependency dependency) {

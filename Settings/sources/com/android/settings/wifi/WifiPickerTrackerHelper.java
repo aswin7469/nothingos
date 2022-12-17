@@ -8,41 +8,42 @@ import android.os.Looper;
 import android.os.PersistableBundle;
 import android.os.SimpleClock;
 import android.os.SystemClock;
-import android.telephony.CarrierConfigManager;
 import android.util.Log;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 import com.android.internal.annotations.VisibleForTesting;
+import com.android.settings.network.CarrierConfigCache;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.wifitrackerlib.MergedCarrierEntry;
 import com.android.wifitrackerlib.WifiEntry;
 import com.android.wifitrackerlib.WifiPickerTracker;
 import java.time.Clock;
 import java.time.ZoneOffset;
-/* loaded from: classes.dex */
+
 public class WifiPickerTrackerHelper implements LifecycleObserver {
-    private static final Clock ELAPSED_REALTIME_CLOCK = new SimpleClock(ZoneOffset.UTC) { // from class: com.android.settings.wifi.WifiPickerTrackerHelper.1
+    private static final Clock ELAPSED_REALTIME_CLOCK = new SimpleClock(ZoneOffset.UTC) {
         public long millis() {
             return SystemClock.elapsedRealtime();
         }
     };
-    protected final CarrierConfigManager mCarrierConfigManager;
+    protected final CarrierConfigCache mCarrierConfigCache;
     protected final WifiManager mWifiManager;
     protected WifiPickerTracker mWifiPickerTracker;
     protected HandlerThread mWorkerThread;
 
     public WifiPickerTrackerHelper(Lifecycle lifecycle, Context context, WifiPickerTracker.WifiPickerTrackerCallback wifiPickerTrackerCallback) {
-        if (lifecycle == null) {
-            throw new IllegalArgumentException("lifecycle must be non-null.");
+        if (lifecycle != null) {
+            lifecycle.addObserver(this);
+            HandlerThread handlerThread = new HandlerThread("WifiPickerTrackerHelper{" + Integer.toHexString(System.identityHashCode(this)) + "}", 10);
+            this.mWorkerThread = handlerThread;
+            handlerThread.start();
+            this.mWifiPickerTracker = FeatureFactory.getFactory(context).getWifiTrackerLibProvider().createWifiPickerTracker(lifecycle, context, new Handler(Looper.getMainLooper()), this.mWorkerThread.getThreadHandler(), ELAPSED_REALTIME_CLOCK, 15000, 10000, wifiPickerTrackerCallback);
+            this.mWifiManager = (WifiManager) context.getSystemService(WifiManager.class);
+            this.mCarrierConfigCache = CarrierConfigCache.getInstance(context);
+            return;
         }
-        lifecycle.addObserver(this);
-        HandlerThread handlerThread = new HandlerThread("WifiPickerTrackerHelper{" + Integer.toHexString(System.identityHashCode(this)) + "}", 10);
-        this.mWorkerThread = handlerThread;
-        handlerThread.start();
-        this.mWifiPickerTracker = FeatureFactory.getFactory(context).getWifiTrackerLibProvider().createWifiPickerTracker(lifecycle, context, new Handler(Looper.getMainLooper()), this.mWorkerThread.getThreadHandler(), ELAPSED_REALTIME_CLOCK, 15000L, 10000L, wifiPickerTrackerCallback);
-        this.mWifiManager = (WifiManager) context.getSystemService(WifiManager.class);
-        this.mCarrierConfigManager = (CarrierConfigManager) context.getSystemService(CarrierConfigManager.class);
+        throw new IllegalArgumentException("lifecycle must be non-null.");
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
@@ -55,7 +56,7 @@ public class WifiPickerTrackerHelper implements LifecycleObserver {
     }
 
     public boolean isCarrierNetworkProvisionEnabled(int i) {
-        PersistableBundle configForSubId = this.mCarrierConfigManager.getConfigForSubId(i);
+        PersistableBundle configForSubId = this.mCarrierConfigCache.getConfigForSubId(i);
         if (configForSubId == null) {
             Log.e("WifiPickerTrackerHelper", "Could not get carrier config, subId:" + i);
             return false;
@@ -65,15 +66,24 @@ public class WifiPickerTrackerHelper implements LifecycleObserver {
         return z;
     }
 
-    public boolean isCarrierNetworkEnabled(int i) {
-        return this.mWifiManager.isCarrierNetworkOffloadEnabled(i, true);
+    public boolean isCarrierNetworkEnabled() {
+        MergedCarrierEntry mergedCarrierEntry = this.mWifiPickerTracker.getMergedCarrierEntry();
+        if (mergedCarrierEntry == null) {
+            Log.e("WifiPickerTrackerHelper", "Failed to get MergedCarrierEntry to query enabled status");
+            return false;
+        }
+        boolean isEnabled = mergedCarrierEntry.isEnabled();
+        Log.i("WifiPickerTrackerHelper", "isCarrierNetworkEnabled:" + isEnabled);
+        return isEnabled;
     }
 
     public void setCarrierNetworkEnabled(boolean z) {
         MergedCarrierEntry mergedCarrierEntry = this.mWifiPickerTracker.getMergedCarrierEntry();
         if (mergedCarrierEntry == null) {
+            Log.e("WifiPickerTrackerHelper", "Unable to get MergedCarrierEntry to set enabled status");
             return;
         }
+        Log.i("WifiPickerTrackerHelper", "setCarrierNetworkEnabled:" + z);
         mergedCarrierEntry.setEnabled(z);
     }
 
@@ -99,13 +109,24 @@ public class WifiPickerTrackerHelper implements LifecycleObserver {
         return mergedCarrierEntry.getSsid();
     }
 
+    public int getCarrierNetworkLevel() {
+        int level;
+        MergedCarrierEntry mergedCarrierEntry = this.mWifiPickerTracker.getMergedCarrierEntry();
+        if (mergedCarrierEntry != null && (level = mergedCarrierEntry.getLevel()) >= 0) {
+            return level;
+        }
+        return 0;
+    }
+
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    void setWifiPickerTracker(WifiPickerTracker wifiPickerTracker) {
+    public void setWifiPickerTracker(WifiPickerTracker wifiPickerTracker) {
         this.mWifiPickerTracker = wifiPickerTracker;
     }
 
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    void setWorkerThread(HandlerThread handlerThread) {
+    public void setWorkerThread(HandlerThread handlerThread) {
         this.mWorkerThread = handlerThread;
     }
 }

@@ -9,21 +9,22 @@ import com.qti.extphone.ExtTelephonyManager;
 import com.qti.extphone.QtiImeiInfo;
 import com.qti.extphone.ServiceCallback;
 import java.util.Optional;
-/* loaded from: classes.dex */
+
 public final class TelephonyUtils {
-    private static ExtTelephonyManager mExtTelephonyManager;
-    private static boolean mIsServiceBound;
     public static boolean DBG = Log.isLoggable("TelephonyUtils", 3);
+    private static ExtTelephonyManager mExtTelephonyManager;
+    /* access modifiers changed from: private */
+    public static boolean mIsServiceBound;
     private static Optional<Boolean> mIsSubsidyFeatureEnabled = Optional.empty();
-    private static ServiceCallback mServiceCallback = new ServiceCallback() { // from class: com.android.settings.network.telephony.TelephonyUtils.1
+    private static ServiceCallback mServiceCallback = new ServiceCallback() {
         public void onConnected() {
             Log.d("TelephonyUtils", "ExtTelephony Service connected");
-            boolean unused = TelephonyUtils.mIsServiceBound = true;
+            TelephonyUtils.mIsServiceBound = true;
         }
 
         public void onDisconnected() {
             Log.d("TelephonyUtils", "ExtTelephony Service disconnected...");
-            boolean unused = TelephonyUtils.mIsServiceBound = false;
+            TelephonyUtils.mIsServiceBound = false;
         }
     };
 
@@ -35,9 +36,10 @@ public final class TelephonyUtils {
                 Log.e("TelephonyUtils", "isAdvancedPlmnScanSupported: , Exception: ", e);
                 return false;
             }
+        } else {
+            Log.e("TelephonyUtils", "isAdvancedPlmnScanSupported: ExtTelephony Service not connected!");
+            return false;
         }
-        Log.e("TelephonyUtils", "isAdvancedPlmnScanSupported: ExtTelephony Service not connected!");
-        return false;
     }
 
     public static boolean performIncrementalScan(Context context, int i) {
@@ -134,9 +136,9 @@ public final class TelephonyUtils {
     public static void connectExtTelephonyService(Context context) {
         if (!mIsServiceBound) {
             Log.d("TelephonyUtils", "Connect to ExtTelephonyService...");
-            ExtTelephonyManager extTelephonyManager = ExtTelephonyManager.getInstance(context);
-            mExtTelephonyManager = extTelephonyManager;
-            extTelephonyManager.connectService(mServiceCallback);
+            ExtTelephonyManager instance = ExtTelephonyManager.getInstance(context);
+            mExtTelephonyManager = instance;
+            instance.connectService(mServiceCallback);
         }
     }
 

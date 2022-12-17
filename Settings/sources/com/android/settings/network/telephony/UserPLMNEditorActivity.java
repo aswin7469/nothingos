@@ -15,41 +15,45 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import androidx.constraintlayout.widget.R$styleable;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$array;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
+
 public class UserPLMNEditorActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener, TextWatcher {
+    /* access modifiers changed from: private */
+    public boolean mAirplaneModeOn = false;
     private IntentFilter mIntentFilter;
-    private EditText mNWIDText;
-    private String mNoSet = null;
-    private boolean mAirplaneModeOn = false;
-    private Preference mNWIDPref = null;
-    private EditTextPreference mPRIpref = null;
-    private ListPreference mNWMPref = null;
     private AlertDialog mNWIDDialog = null;
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() { // from class: com.android.settings.network.telephony.UserPLMNEditorActivity.1
-        @Override // android.content.BroadcastReceiver
+    /* access modifiers changed from: private */
+    public Preference mNWIDPref = null;
+    private DialogInterface.OnClickListener mNWIDPrefListener = new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialogInterface, int i) {
+            if (i == -1) {
+                UserPLMNEditorActivity userPLMNEditorActivity = UserPLMNEditorActivity.this;
+                String r2 = userPLMNEditorActivity.genText(userPLMNEditorActivity.mNWIDText.getText().toString());
+                Log.d("UserPLMNEditorActivity", "input network id is " + r2);
+                UserPLMNEditorActivity.this.mNWIDPref.setSummary(r2);
+                UserPLMNEditorActivity.this.mNWMPref.setEntries(UserPLMNEditorActivity.this.getResources().getTextArray(UserPLMNEditorActivity.this.selectNetworkChoices(r2)));
+            }
+        }
+    };
+    /* access modifiers changed from: private */
+    public EditText mNWIDText;
+    /* access modifiers changed from: private */
+    public ListPreference mNWMPref = null;
+    private String mNoSet = null;
+    private EditTextPreference mPRIpref = null;
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if ("android.intent.action.AIRPLANE_MODE".equals(intent.getAction())) {
                 UserPLMNEditorActivity.this.mAirplaneModeOn = intent.getBooleanExtra("state", false);
                 UserPLMNEditorActivity.this.setScreenEnabled();
-            }
-        }
-    };
-    private DialogInterface.OnClickListener mNWIDPrefListener = new DialogInterface.OnClickListener() { // from class: com.android.settings.network.telephony.UserPLMNEditorActivity.2
-        @Override // android.content.DialogInterface.OnClickListener
-        public void onClick(DialogInterface dialogInterface, int i) {
-            if (i == -1) {
-                UserPLMNEditorActivity userPLMNEditorActivity = UserPLMNEditorActivity.this;
-                String genText = userPLMNEditorActivity.genText(userPLMNEditorActivity.mNWIDText.getText().toString());
-                Log.d("UserPLMNEditorActivity", "input network id is " + genText);
-                UserPLMNEditorActivity.this.mNWIDPref.setSummary(genText);
-                UserPLMNEditorActivity.this.mNWMPref.setEntries(UserPLMNEditorActivity.this.getResources().getTextArray(UserPLMNEditorActivity.this.selectNetworkChoices(genText)));
             }
         }
     };
@@ -74,19 +78,17 @@ public class UserPLMNEditorActivity extends PreferenceActivity implements Prefer
         return i == 8 ? 2 : 0;
     }
 
-    @Override // android.text.TextWatcher
     public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
     }
 
-    @Override // android.text.TextWatcher
     public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
     }
 
-    @Override // android.preference.PreferenceActivity, android.app.Activity
-    protected void onCreate(Bundle bundle) {
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        addPreferencesFromResource(R.xml.uplmn_editor);
-        this.mNoSet = getResources().getString(R.string.voicemail_number_not_set);
+        addPreferencesFromResource(R$xml.uplmn_editor);
+        this.mNoSet = getResources().getString(R$string.voicemail_number_not_set);
         this.mNWIDPref = findPreference("network_id_key");
         this.mPRIpref = (EditTextPreference) findPreference("priority_key");
         this.mNWMPref = (ListPreference) findPreference("network_mode_key");
@@ -97,8 +99,8 @@ public class UserPLMNEditorActivity extends PreferenceActivity implements Prefer
         registerReceiver(this.mReceiver, intentFilter);
     }
 
-    @Override // android.app.Activity
-    protected void onResume() {
+    /* access modifiers changed from: protected */
+    public void onResume() {
         super.onResume();
         displayNetworkInfo(getIntent());
         boolean z = false;
@@ -109,13 +111,12 @@ public class UserPLMNEditorActivity extends PreferenceActivity implements Prefer
         setScreenEnabled();
     }
 
-    @Override // android.preference.PreferenceActivity, android.app.ListActivity, android.app.Activity
-    protected void onDestroy() {
+    /* access modifiers changed from: protected */
+    public void onDestroy() {
         super.onDestroy();
         unregisterReceiver(this.mReceiver);
     }
 
-    @Override // android.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         String obj2 = obj.toString();
         EditTextPreference editTextPreference = this.mPRIpref;
@@ -132,18 +133,16 @@ public class UserPLMNEditorActivity extends PreferenceActivity implements Prefer
         return true;
     }
 
-    @Override // android.app.Activity
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         if (!getIntent().getBooleanExtra("uplmn_add", false)) {
-            menu.add(0, 1, 0, 17040099);
+            menu.add(0, 1, 0, 17040145);
         }
-        menu.add(0, 2, 0, R.string.save);
+        menu.add(0, 2, 0, R$string.save);
         menu.add(0, 3, 0, 17039360);
         return true;
     }
 
-    @Override // android.app.Activity, android.view.Window.Callback
     public boolean onMenuOpened(int i, Menu menu) {
         super.onMenuOpened(i, menu);
         boolean z = false;
@@ -167,7 +166,6 @@ public class UserPLMNEditorActivity extends PreferenceActivity implements Prefer
         return true;
     }
 
-    @Override // android.preference.PreferenceActivity, android.app.Activity
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         int itemId = menuItem.getItemId();
         if (itemId == 1) {
@@ -185,43 +183,71 @@ public class UserPLMNEditorActivity extends PreferenceActivity implements Prefer
     private void setSavedNWInfo() {
         Intent intent = new Intent(this, UserPLMNListActivity.class);
         genNWInfoToIntent(intent);
-        setResult(R$styleable.Constraint_layout_goneMarginRight, intent);
+        setResult(101, intent);
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:6:0x0030, code lost:
-        if (r2 > r1) goto L8;
+    /* JADX WARNING: Code restructure failed: missing block: B:7:0x0033, code lost:
+        if (r2 > r1) goto L_0x003c;
      */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private void genNWInfoToIntent(Intent intent) {
-        int i;
-        int intExtra = getIntent().getIntExtra("uplmn_size", 0);
-        try {
-            i = Integer.parseInt(String.valueOf(this.mPRIpref.getSummary()));
-        } catch (NumberFormatException unused) {
-            Log.d("UserPLMNEditorActivity", "parse value of basband error");
-            i = 0;
-        }
-        if (!getIntent().getBooleanExtra("uplmn_add", false)) {
-            if (i >= intExtra) {
-                intExtra--;
-            }
-            intExtra = i;
-        }
-        intent.putExtra("uplmn_priority", intExtra);
-        try {
-            intent.putExtra("uplmn_service", convertApMode2EF(Integer.parseInt(String.valueOf(this.mNWMPref.getValue()))));
-        } catch (NumberFormatException unused2) {
-            intent.putExtra("uplmn_service", convertApMode2EF(0));
-        }
-        intent.putExtra("uplmn_code", this.mNWIDPref.getSummary());
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private void genNWInfoToIntent(android.content.Intent r7) {
+        /*
+            r6 = this;
+            java.lang.String r0 = "uplmn_service"
+            android.content.Intent r1 = r6.getIntent()
+            java.lang.String r2 = "uplmn_size"
+            r3 = 0
+            int r1 = r1.getIntExtra(r2, r3)
+            android.preference.EditTextPreference r2 = r6.mPRIpref     // Catch:{ NumberFormatException -> 0x001e }
+            java.lang.CharSequence r2 = r2.getSummary()     // Catch:{ NumberFormatException -> 0x001e }
+            java.lang.String r2 = java.lang.String.valueOf(r2)     // Catch:{ NumberFormatException -> 0x001e }
+            int r2 = java.lang.Integer.parseInt(r2)     // Catch:{ NumberFormatException -> 0x001e }
+            goto L_0x0026
+        L_0x001e:
+            java.lang.String r2 = "UserPLMNEditorActivity"
+            java.lang.String r4 = "parse value of basband error"
+            android.util.Log.d(r2, r4)
+            r2 = r3
+        L_0x0026:
+            android.content.Intent r4 = r6.getIntent()
+            java.lang.String r5 = "uplmn_add"
+            boolean r4 = r4.getBooleanExtra(r5, r3)
+            if (r4 == 0) goto L_0x0036
+            if (r2 <= r1) goto L_0x003b
+            goto L_0x003c
+        L_0x0036:
+            if (r2 < r1) goto L_0x003b
+            int r1 = r1 + -1
+            goto L_0x003c
+        L_0x003b:
+            r1 = r2
+        L_0x003c:
+            java.lang.String r2 = "uplmn_priority"
+            r7.putExtra(r2, r1)
+            android.preference.ListPreference r1 = r6.mNWMPref     // Catch:{ NumberFormatException -> 0x0058 }
+            java.lang.String r1 = r1.getValue()     // Catch:{ NumberFormatException -> 0x0058 }
+            java.lang.String r1 = java.lang.String.valueOf(r1)     // Catch:{ NumberFormatException -> 0x0058 }
+            int r1 = java.lang.Integer.parseInt(r1)     // Catch:{ NumberFormatException -> 0x0058 }
+            int r1 = convertApMode2EF(r1)     // Catch:{ NumberFormatException -> 0x0058 }
+            r7.putExtra(r0, r1)     // Catch:{ NumberFormatException -> 0x0058 }
+            goto L_0x005f
+        L_0x0058:
+            int r1 = convertApMode2EF(r3)
+            r7.putExtra(r0, r1)
+        L_0x005f:
+            android.preference.Preference r6 = r6.mNWIDPref
+            java.lang.CharSequence r6 = r6.getSummary()
+            java.lang.String r0 = "uplmn_code"
+            r7.putExtra(r0, r6)
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.network.telephony.UserPLMNEditorActivity.genNWInfoToIntent(android.content.Intent):void");
     }
 
     private void setRemovedNWInfo() {
         Intent intent = new Intent(this, UserPLMNListActivity.class);
         genNWInfoToIntent(intent);
-        setResult(R$styleable.Constraint_layout_goneMarginStart, intent);
+        setResult(102, intent);
     }
 
     private void displayNetworkInfo(Intent intent) {
@@ -244,17 +270,20 @@ public class UserPLMNEditorActivity extends PreferenceActivity implements Prefer
 
     public int selectNetworkChoices(String str) {
         Log.d("UserPLMNEditorActivity", "plmn = " + str);
-        for (String str2 : getResources().getStringArray(R.array.uplmn_cu_mcc_mnc_values)) {
-            if (str.equals(str2)) {
-                return R.array.uplmn_prefer_network_mode_w_choices;
+        for (String str2 : getResources().getStringArray(R$array.uplmn_cu_mcc_mnc_values)) {
+            if (!TextUtils.isEmpty(str) && str.equals(str2)) {
+                return R$array.uplmn_prefer_network_mode_w_choices;
             }
         }
-        return R.array.uplmn_prefer_network_mode_td_choices;
+        return R$array.uplmn_prefer_network_mode_td_choices;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public String genText(String str) {
-        return (str == null || str.length() == 0) ? this.mNoSet : str;
+        if (str == null || str.length() == 0) {
+            return this.mNoSet;
+        }
+        return str;
     }
 
     public void buttonEnabled() {
@@ -266,13 +295,12 @@ public class UserPLMNEditorActivity extends PreferenceActivity implements Prefer
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setScreenEnabled() {
         getPreferenceScreen().setEnabled(!this.mAirplaneModeOn);
         invalidateOptionsMenu();
     }
 
-    @Override // android.preference.PreferenceActivity
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
         if (preference == this.mNWIDPref) {
             removeDialog(0);
@@ -282,24 +310,22 @@ public class UserPLMNEditorActivity extends PreferenceActivity implements Prefer
         return super.onPreferenceTreeClick(preferenceScreen, preference);
     }
 
-    @Override // android.app.Activity
     public Dialog onCreateDialog(int i) {
-        if (i == 0) {
-            this.mNWIDText = new EditText(this);
-            if (!this.mNoSet.equals(this.mNWIDPref.getSummary())) {
-                this.mNWIDText.setText(this.mNWIDPref.getSummary());
-            }
-            this.mNWIDText.addTextChangedListener(this);
-            this.mNWIDText.setInputType(2);
-            AlertDialog create = new AlertDialog.Builder(this).setTitle(getResources().getString(R.string.network_id)).setView(this.mNWIDText).setPositiveButton(getResources().getString(17039370), this.mNWIDPrefListener).setNegativeButton(getResources().getString(17039360), (DialogInterface.OnClickListener) null).create();
-            this.mNWIDDialog = create;
-            create.getWindow().setSoftInputMode(4);
-            return this.mNWIDDialog;
+        if (i != 0) {
+            return null;
         }
-        return null;
+        this.mNWIDText = new EditText(this);
+        if (!this.mNoSet.equals(this.mNWIDPref.getSummary())) {
+            this.mNWIDText.setText(this.mNWIDPref.getSummary());
+        }
+        this.mNWIDText.addTextChangedListener(this);
+        this.mNWIDText.setInputType(2);
+        AlertDialog create = new AlertDialog.Builder(this).setTitle(getResources().getString(R$string.network_id)).setView(this.mNWIDText).setPositiveButton(getResources().getString(17039370), this.mNWIDPrefListener).setNegativeButton(getResources().getString(17039360), (DialogInterface.OnClickListener) null).create();
+        this.mNWIDDialog = create;
+        create.getWindow().setSoftInputMode(4);
+        return this.mNWIDDialog;
     }
 
-    @Override // android.text.TextWatcher
     public void afterTextChanged(Editable editable) {
         buttonEnabled();
     }

@@ -1,23 +1,26 @@
 package androidx.core.text;
 
 import android.annotation.SuppressLint;
-import android.os.Build;
 import android.text.Html;
 import android.text.Spanned;
+
 @SuppressLint({"InlinedApi"})
-/* loaded from: classes.dex */
 public final class HtmlCompat {
-    public static Spanned fromHtml(String source, int flags) {
-        if (Build.VERSION.SDK_INT >= 24) {
-            return Html.fromHtml(source, flags);
-        }
-        return Html.fromHtml(source);
+    public static Spanned fromHtml(String str, int i) {
+        return Api24Impl.fromHtml(str, i);
     }
 
-    public static String toHtml(Spanned text, int options) {
-        if (Build.VERSION.SDK_INT >= 24) {
-            return Html.toHtml(text, options);
+    public static String toHtml(Spanned spanned, int i) {
+        return Api24Impl.toHtml(spanned, i);
+    }
+
+    static class Api24Impl {
+        static Spanned fromHtml(String str, int i) {
+            return Html.fromHtml(str, i);
         }
-        return Html.toHtml(text);
+
+        static String toHtml(Spanned spanned, int i) {
+            return Html.toHtml(spanned, i);
+        }
     }
 }

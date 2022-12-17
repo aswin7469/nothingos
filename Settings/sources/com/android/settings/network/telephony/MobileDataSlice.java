@@ -15,7 +15,8 @@ import androidx.core.graphics.drawable.IconCompat;
 import androidx.slice.Slice;
 import androidx.slice.builders.ListBuilder;
 import androidx.slice.builders.SliceAction;
-import com.android.settings.R;
+import com.android.settings.R$drawable;
+import com.android.settings.R$string;
 import com.android.settings.network.MobileDataContentObserver;
 import com.android.settings.network.SubscriptionUtil;
 import com.android.settings.slices.CustomSliceRegistry;
@@ -25,7 +26,7 @@ import com.android.settingslib.Utils;
 import com.android.settingslib.WirelessUtils;
 import java.io.IOException;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class MobileDataSlice implements CustomSliceable {
     private final Context mContext;
     private final SubscriptionManager mSubscriptionManager;
@@ -43,51 +44,48 @@ public class MobileDataSlice implements CustomSliceable {
         }
     }
 
-    @Override // com.android.settings.slices.CustomSliceable
     public Slice getSlice() {
-        IconCompat createWithResource = IconCompat.createWithResource(this.mContext, R.drawable.ic_network_cell);
-        String charSequence = this.mContext.getText(R.string.mobile_data_settings_title).toString();
+        IconCompat createWithResource = IconCompat.createWithResource(this.mContext, R$drawable.ic_network_cell);
+        String charSequence = this.mContext.getText(R$string.mobile_data_settings_title).toString();
         int colorAccentDefaultColor = Utils.getColorAccentDefaultColor(this.mContext);
-        if (!isAirplaneModeEnabled() && isMobileDataAvailable()) {
-            CharSequence summary = getSummary();
-            PendingIntent broadcastIntent = getBroadcastIntent(this.mContext);
-            ListBuilder.RowBuilder primaryAction = new ListBuilder.RowBuilder().setTitle(charSequence).addEndItem(SliceAction.createToggle(broadcastIntent, null, isMobileDataEnabled())).setPrimaryAction(SliceAction.createDeeplink(getPrimaryAction(), createWithResource, 0, charSequence));
-            if (!com.android.settings.Utils.isSettingsIntelligence(this.mContext)) {
-                primaryAction.setSubtitle(summary);
-            }
-            return new ListBuilder(this.mContext, getUri(), -1L).setAccentColor(colorAccentDefaultColor).addRow(primaryAction).build();
+        if (isAirplaneModeEnabled() || !isMobileDataAvailable()) {
+            return null;
         }
-        return null;
+        CharSequence summary = getSummary();
+        PendingIntent broadcastIntent = getBroadcastIntent(this.mContext);
+        ListBuilder.RowBuilder primaryAction = new ListBuilder.RowBuilder().setTitle(charSequence).addEndItem(SliceAction.createToggle(broadcastIntent, (CharSequence) null, isMobileDataEnabled())).setPrimaryAction(SliceAction.createDeeplink(getPrimaryAction(), createWithResource, 0, charSequence));
+        if (!com.android.settings.Utils.isSettingsIntelligence(this.mContext)) {
+            primaryAction.setSubtitle(summary);
+        }
+        return new ListBuilder(this.mContext, getUri(), -1).setAccentColor(colorAccentDefaultColor).addRow(primaryAction).build();
     }
 
-    @Override // com.android.settings.slices.CustomSliceable
     public Uri getUri() {
         return CustomSliceRegistry.MOBILE_DATA_SLICE_URI;
     }
 
-    @Override // com.android.settings.slices.CustomSliceable
     public void onNotifyChange(Intent intent) {
         boolean booleanExtra = intent.getBooleanExtra("android.app.slice.extra.TOGGLE_STATE", isMobileDataEnabled());
         int defaultSubscriptionId = getDefaultSubscriptionId(this.mSubscriptionManager);
-        if (defaultSubscriptionId == -1) {
-            return;
+        if (defaultSubscriptionId != -1) {
+            MobileNetworkUtils.setMobileDataEnabled(this.mContext, defaultSubscriptionId, booleanExtra, false);
         }
-        MobileNetworkUtils.setMobileDataEnabled(this.mContext, defaultSubscriptionId, booleanExtra, false);
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public IntentFilter getIntentFilter() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.AIRPLANE_MODE");
         return intentFilter;
     }
 
-    @Override // com.android.settings.slices.CustomSliceable
     public Intent getIntent() {
-        return new Intent(this.mContext, MobileNetworkActivity.class);
+        return new Intent("android.settings.NETWORK_OPERATOR_SETTINGS").setPackage("com.android.settings");
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public int getSliceHighlightMenuRes() {
+        return R$string.menu_key_network;
+    }
+
     public Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
         return MobileDataWorker.class;
     }
@@ -117,11 +115,13 @@ public class MobileDataSlice implements CustomSliceable {
         return selectableSubscriptionInfoList != null && !selectableSubscriptionInfoList.isEmpty();
     }
 
-    boolean isAirplaneModeEnabled() {
+    /* access modifiers changed from: package-private */
+    public boolean isAirplaneModeEnabled() {
         return WirelessUtils.isAirplaneModeOn(this.mContext);
     }
 
-    boolean isMobileDataEnabled() {
+    /* access modifiers changed from: package-private */
+    public boolean isMobileDataEnabled() {
         TelephonyManager telephonyManager = this.mTelephonyManager;
         if (telephonyManager == null) {
             return false;
@@ -129,7 +129,6 @@ public class MobileDataSlice implements CustomSliceable {
         return telephonyManager.isDataEnabled();
     }
 
-    /* loaded from: classes.dex */
     public static class MobileDataWorker extends SliceBackgroundWorker<Void> {
         DataContentObserver mMobileDataObserver = new DataContentObserver(new Handler(Looper.getMainLooper()), this);
 
@@ -137,17 +136,16 @@ public class MobileDataSlice implements CustomSliceable {
             super(context, uri);
         }
 
-        @Override // com.android.settings.slices.SliceBackgroundWorker
-        protected void onSlicePinned() {
+        /* access modifiers changed from: protected */
+        public void onSlicePinned() {
             this.mMobileDataObserver.register(getContext(), MobileDataSlice.getDefaultSubscriptionId((SubscriptionManager) getContext().getSystemService(SubscriptionManager.class)));
         }
 
-        @Override // com.android.settings.slices.SliceBackgroundWorker
-        protected void onSliceUnpinned() {
+        /* access modifiers changed from: protected */
+        public void onSliceUnpinned() {
             this.mMobileDataObserver.unRegister(getContext());
         }
 
-        @Override // java.io.Closeable, java.lang.AutoCloseable
         public void close() throws IOException {
             this.mMobileDataObserver = null;
         }
@@ -156,7 +154,6 @@ public class MobileDataSlice implements CustomSliceable {
             notifySliceChange();
         }
 
-        /* loaded from: classes.dex */
         public class DataContentObserver extends ContentObserver {
             private final MobileDataWorker mSliceBackgroundWorker;
 
@@ -165,7 +162,6 @@ public class MobileDataSlice implements CustomSliceable {
                 this.mSliceBackgroundWorker = mobileDataWorker;
             }
 
-            @Override // android.database.ContentObserver
             public void onChange(boolean z) {
                 this.mSliceBackgroundWorker.updateSlice();
             }

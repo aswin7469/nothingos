@@ -12,7 +12,7 @@ import android.widget.ListView;
 import com.google.android.setupdesign.template.ListMixin;
 import com.google.android.setupdesign.template.ListViewScrollHandlingDelegate;
 import com.google.android.setupdesign.template.RequireScrollMixin;
-/* loaded from: classes2.dex */
+
 public class GlifListLayout extends GlifLayout {
     private ListMixin listMixin;
 
@@ -22,7 +22,7 @@ public class GlifListLayout extends GlifLayout {
 
     public GlifListLayout(Context context, int i, int i2) {
         super(context, i, i2);
-        init(null, 0);
+        init((AttributeSet) null, 0);
     }
 
     public GlifListLayout(Context context, AttributeSet attributeSet) {
@@ -37,29 +37,27 @@ public class GlifListLayout extends GlifLayout {
     }
 
     private void init(AttributeSet attributeSet, int i) {
-        if (isInEditMode()) {
-            return;
+        if (!isInEditMode()) {
+            ListMixin listMixin2 = new ListMixin(this, attributeSet, i);
+            this.listMixin = listMixin2;
+            registerMixin(ListMixin.class, listMixin2);
+            RequireScrollMixin requireScrollMixin = (RequireScrollMixin) getMixin(RequireScrollMixin.class);
+            requireScrollMixin.setScrollHandlingDelegate(new ListViewScrollHandlingDelegate(requireScrollMixin, getListView()));
+            View findManagedViewById = findManagedViewById(R$id.sud_landscape_content_area);
+            if (findManagedViewById != null) {
+                tryApplyPartnerCustomizationContentPaddingTopStyle(findManagedViewById);
+            }
+            updateLandscapeMiddleHorizontalSpacing();
         }
-        ListMixin listMixin = new ListMixin(this, attributeSet, i);
-        this.listMixin = listMixin;
-        registerMixin(ListMixin.class, listMixin);
-        RequireScrollMixin requireScrollMixin = (RequireScrollMixin) getMixin(RequireScrollMixin.class);
-        requireScrollMixin.setScrollHandlingDelegate(new ListViewScrollHandlingDelegate(requireScrollMixin, getListView()));
-        View findManagedViewById = findManagedViewById(R$id.sud_landscape_content_area);
-        if (findManagedViewById != null) {
-            GlifLayout.applyPartnerCustomizationContentPaddingTopStyle(findManagedViewById);
-        }
-        updateLandscapeMiddleHorizontalSpacing();
     }
 
-    @Override // android.widget.FrameLayout, android.view.ViewGroup, android.view.View
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
         this.listMixin.onLayout();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.google.android.setupdesign.GlifLayout, com.google.android.setupcompat.PartnerCustomizationLayout, com.google.android.setupcompat.internal.TemplateLayout
+    /* access modifiers changed from: protected */
     public View onInflateTemplate(LayoutInflater layoutInflater, int i) {
         if (i == 0) {
             i = R$layout.sud_glif_list_template;
@@ -67,8 +65,7 @@ public class GlifListLayout extends GlifLayout {
         return super.onInflateTemplate(layoutInflater, i);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.google.android.setupdesign.GlifLayout, com.google.android.setupcompat.PartnerCustomizationLayout, com.google.android.setupcompat.internal.TemplateLayout
+    /* access modifiers changed from: protected */
     public ViewGroup findContainer(int i) {
         if (i == 0) {
             i = 16908298;

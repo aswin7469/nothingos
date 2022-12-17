@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" androidprv:orientation="vertical" androidprv:layout_width="wrap_content" androidprv:layout_height="match_parent">
+    <TextView androidprv:textSize="12sp" androidprv:textColor="@color/black_fourty_alpha" androidprv:id="@+id/r_angle_description" androidprv:layout_width="wrap_content" androidprv:layout_height="wrap_content" androidprv:layout_marginTop="16dp" androidprv:text="@string/r_angle_adjust_description" androidprv:paddingStart="@dimen/category_title_padding_start" androidprv:paddingEnd="@dimen/category_title_padding_start"/>
+    <TextView androidprv:id="@+id/category_title" androidprv:layout_marginTop="24dp" androidprv:text="@string/r_angle_adjust_tips" style="@style/category_title_style_with_padding_start"/>
+    <View androidprv:id="@+id/divider" androidprv:background="@color/divider_color" androidprv:layout_width="match_parent" androidprv:layout_height="2px" androidprv:layout_marginStart="@dimen/nt_setting_content_margin_side" androidprv:layout_marginEnd="@dimen/nt_setting_content_margin_side"/>
+</LinearLayout>

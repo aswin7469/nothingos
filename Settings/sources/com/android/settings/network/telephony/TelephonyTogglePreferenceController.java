@@ -4,50 +4,38 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.PersistableBundle;
-import android.telephony.CarrierConfigManager;
 import android.telephony.SubscriptionManager;
 import com.android.settings.core.TogglePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
+import com.android.settings.network.CarrierConfigCache;
 import java.util.concurrent.atomic.AtomicInteger;
-/* loaded from: classes.dex */
+
 public abstract class TelephonyTogglePreferenceController extends TogglePreferenceController implements TelephonyAvailabilityCallback, TelephonyAvailabilityHandler {
     private AtomicInteger mAvailabilityStatus = new AtomicInteger(0);
     private AtomicInteger mSetSessionCount = new AtomicInteger(0);
     protected int mSubId = -1;
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
     public abstract /* synthetic */ int getAvailabilityStatus(int i);
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
+    public int getSliceHighlightMenuRes() {
+        return 0;
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public boolean isSliceable() {
         return false;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -56,26 +44,18 @@ public abstract class TelephonyTogglePreferenceController extends TogglePreferen
         super(context, str);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         if (this.mSetSessionCount.get() <= 0) {
-            this.mAvailabilityStatus.set(MobileNetworkUtils.getAvailability(this.mContext, this.mSubId, new TelephonyAvailabilityCallback() { // from class: com.android.settings.network.telephony.TelephonyTogglePreferenceController$$ExternalSyntheticLambda0
-                @Override // com.android.settings.network.telephony.TelephonyAvailabilityCallback
-                public final int getAvailabilityStatus(int i) {
-                    return TelephonyTogglePreferenceController.this.getAvailabilityStatus(i);
-                }
-            }));
+            this.mAvailabilityStatus.set(MobileNetworkUtils.getAvailability(this.mContext, this.mSubId, new TelephonyTogglePreferenceController$$ExternalSyntheticLambda0(this)));
         }
         return this.mAvailabilityStatus.get();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyAvailabilityHandler
     public void setAvailabilityStatus(int i) {
         this.mAvailabilityStatus.set(i);
         this.mSetSessionCount.getAndIncrement();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyAvailabilityHandler
     public void unsetAvailabilityStatus() {
         this.mSetSessionCount.getAndDecrement();
     }
@@ -84,7 +64,7 @@ public abstract class TelephonyTogglePreferenceController extends TogglePreferen
         if (!SubscriptionManager.isValidSubscriptionId(i)) {
             return null;
         }
-        return ((CarrierConfigManager) this.mContext.getSystemService(CarrierConfigManager.class)).getConfigForSubId(i);
+        return CarrierConfigCache.getInstance(this.mContext).getConfigForSubId(i);
     }
 
     public Resources getResourcesForSubId() {

@@ -1,21 +1,19 @@
 package androidx.transition;
 
 import android.view.ViewGroup;
-/* loaded from: classes.dex */
+
 public class Scene {
     private Runnable mExitAction;
     private ViewGroup mSceneRoot;
 
     public void exit() {
         Runnable runnable;
-        if (getCurrentScene(this.mSceneRoot) != this || (runnable = this.mExitAction) == null) {
-            return;
+        if (getCurrentScene(this.mSceneRoot) == this && (runnable = this.mExitAction) != null) {
+            runnable.run();
         }
-        runnable.run();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static void setCurrentScene(ViewGroup viewGroup, Scene scene) {
+    static void setCurrentScene(ViewGroup viewGroup, Scene scene) {
         viewGroup.setTag(R$id.transition_current_scene, scene);
     }
 

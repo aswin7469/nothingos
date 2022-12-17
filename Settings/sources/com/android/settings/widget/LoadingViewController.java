@@ -5,7 +5,7 @@ import android.os.Looper;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-/* loaded from: classes.dex */
+
 public class LoadingViewController {
     private final View mContentView;
     private final View mEmptyView;
@@ -14,12 +14,11 @@ public class LoadingViewController {
     private Runnable mShowLoadingContainerRunnable;
 
     public LoadingViewController(View view, View view2) {
-        this(view, view2, null);
+        this(view, view2, (View) null);
     }
 
     public LoadingViewController(View view, View view2, View view3) {
-        this.mShowLoadingContainerRunnable = new Runnable() { // from class: com.android.settings.widget.LoadingViewController.1
-            @Override // java.lang.Runnable
+        this.mShowLoadingContainerRunnable = new Runnable() {
             public void run() {
                 LoadingViewController.this.showLoadingView();
             }
@@ -36,11 +35,10 @@ public class LoadingViewController {
     }
 
     public void showEmpty(boolean z) {
-        if (this.mEmptyView == null) {
-            return;
+        if (this.mEmptyView != null) {
+            this.mFgHandler.removeCallbacks(this.mShowLoadingContainerRunnable);
+            handleLoadingContainer(false, true, z);
         }
-        this.mFgHandler.removeCallbacks(this.mShowLoadingContainerRunnable);
-        handleLoadingContainer(false, true, z);
     }
 
     public void showLoadingView() {
@@ -48,7 +46,7 @@ public class LoadingViewController {
     }
 
     public void showLoadingViewDelayed() {
-        this.mFgHandler.postDelayed(this.mShowLoadingContainerRunnable, 100L);
+        this.mFgHandler.postDelayed(this.mShowLoadingContainerRunnable, 100);
     }
 
     private void handleLoadingContainer(boolean z, boolean z2, boolean z3) {
@@ -75,16 +73,13 @@ public class LoadingViewController {
             if (z) {
                 view.setVisibility(0);
             } else {
-                loadAnimation.setAnimationListener(new Animation.AnimationListener() { // from class: com.android.settings.widget.LoadingViewController.2
-                    @Override // android.view.animation.Animation.AnimationListener
+                loadAnimation.setAnimationListener(new Animation.AnimationListener() {
                     public void onAnimationRepeat(Animation animation) {
                     }
 
-                    @Override // android.view.animation.Animation.AnimationListener
                     public void onAnimationStart(Animation animation) {
                     }
 
-                    @Override // android.view.animation.Animation.AnimationListener
                     public void onAnimationEnd(Animation animation) {
                         view.setVisibility(4);
                     }

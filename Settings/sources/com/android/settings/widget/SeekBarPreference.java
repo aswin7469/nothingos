@@ -15,17 +15,20 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
 import androidx.preference.R$attr;
 import com.android.internal.R;
-import com.android.settings.R$styleable;
+import com.android.internal.jank.InteractionJankMonitor;
 import com.android.settingslib.RestrictedPreference;
-/* loaded from: classes.dex */
+
 public class SeekBarPreference extends RestrictedPreference implements SeekBar.OnSeekBarChangeListener, View.OnKeyListener {
-    private int mAccessibilityRangeInfoType;
+    /* access modifiers changed from: private */
+    public int mAccessibilityRangeInfoType;
     private boolean mContinuousUpdates;
     private int mDefaultProgress;
     private int mHapticFeedbackMode;
+    private final InteractionJankMonitor mJankMonitor;
     private int mMax;
     private int mMin;
-    private CharSequence mOverrideSeekBarStateDescription;
+    /* access modifiers changed from: private */
+    public CharSequence mOverrideSeekBarStateDescription;
     private int mProgress;
     private SeekBar mSeekBar;
     private CharSequence mSeekBarContentDescription;
@@ -33,13 +36,9 @@ public class SeekBarPreference extends RestrictedPreference implements SeekBar.O
     private boolean mShouldBlink;
     private boolean mTrackingTouch;
 
-    @Override // androidx.preference.Preference
-    public CharSequence getSummary() {
-        return null;
-    }
-
     public SeekBarPreference(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
+        this.mJankMonitor = InteractionJankMonitor.getInstance();
         this.mHapticFeedbackMode = 0;
         this.mDefaultProgress = -1;
         this.mAccessibilityRangeInfoType = 0;
@@ -48,11 +47,9 @@ public class SeekBarPreference extends RestrictedPreference implements SeekBar.O
         setMin(obtainStyledAttributes.getInt(26, this.mMin));
         obtainStyledAttributes.recycle();
         TypedArray obtainStyledAttributes2 = context.obtainStyledAttributes(attributeSet, R.styleable.SeekBarPreference, i, i2);
-        int resourceId = obtainStyledAttributes2.getResourceId(0, 17367268);
+        int resourceId = obtainStyledAttributes2.getResourceId(0, 17367279);
         obtainStyledAttributes2.recycle();
-        TypedArray obtainStyledAttributes3 = context.obtainStyledAttributes(attributeSet, R.styleable.Preference, i, i2);
-        setSelectable(obtainStyledAttributes3.getBoolean(R$styleable.Preference_android_selectable, false));
-        obtainStyledAttributes3.recycle();
+        setSelectable(false);
         setLayoutResource(resourceId);
     }
 
@@ -61,14 +58,13 @@ public class SeekBarPreference extends RestrictedPreference implements SeekBar.O
     }
 
     public SeekBarPreference(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, TypedArrayUtils.getAttr(context, R$attr.seekBarPreferenceStyle, 17957080));
+        this(context, attributeSet, TypedArrayUtils.getAttr(context, R$attr.seekBarPreferenceStyle, 17957081));
     }
 
     public SeekBarPreference(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
-    @Override // androidx.preference.Preference
     public boolean isSelectable() {
         if (isDisabledByAdmin()) {
             return true;
@@ -76,11 +72,10 @@ public class SeekBarPreference extends RestrictedPreference implements SeekBar.O
         return super.isSelectable();
     }
 
-    @Override // com.android.settingslib.RestrictedPreference, com.android.settingslib.widget.TwoTargetPreference, androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         preferenceViewHolder.itemView.setOnKeyListener(this);
-        SeekBar seekBar = (SeekBar) preferenceViewHolder.findViewById(16909419);
+        SeekBar seekBar = (SeekBar) preferenceViewHolder.findViewById(16909465);
         this.mSeekBar = seekBar;
         seekBar.setOnSeekBarChangeListener(this);
         this.mSeekBar.setMax(this.mMax);
@@ -101,18 +96,12 @@ public class SeekBarPreference extends RestrictedPreference implements SeekBar.O
             ((DefaultIndicatorSeekBar) seekBar2).setDefaultProgress(this.mDefaultProgress);
         }
         if (this.mShouldBlink) {
-            final View view = preferenceViewHolder.itemView;
-            view.post(new Runnable() { // from class: com.android.settings.widget.SeekBarPreference$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    SeekBarPreference.this.lambda$onBindViewHolder$0(view);
-                }
-            });
+            View view = preferenceViewHolder.itemView;
+            view.post(new SeekBarPreference$$ExternalSyntheticLambda0(this, view));
         }
-        this.mSeekBar.setAccessibilityDelegate(new View.AccessibilityDelegate() { // from class: com.android.settings.widget.SeekBarPreference.1
-            @Override // android.view.View.AccessibilityDelegate
-            public void onInitializeAccessibilityNodeInfo(View view2, AccessibilityNodeInfo accessibilityNodeInfo) {
-                super.onInitializeAccessibilityNodeInfo(view2, accessibilityNodeInfo);
+        this.mSeekBar.setAccessibilityDelegate(new View.AccessibilityDelegate() {
+            public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfo accessibilityNodeInfo) {
+                super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfo);
                 AccessibilityNodeInfo.RangeInfo rangeInfo = accessibilityNodeInfo.getRangeInfo();
                 if (rangeInfo != null) {
                     accessibilityNodeInfo.setRangeInfo(AccessibilityNodeInfo.RangeInfo.obtain(SeekBarPreference.this.mAccessibilityRangeInfoType, rangeInfo.getMin(), rangeInfo.getMax(), rangeInfo.getCurrent()));
@@ -124,45 +113,38 @@ public class SeekBarPreference extends RestrictedPreference implements SeekBar.O
         });
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onBindViewHolder$0(View view) {
         if (view.getBackground() != null) {
-            view.getBackground().setHotspot(view.getWidth() / 2, view.getHeight() / 2);
+            view.getBackground().setHotspot((float) (view.getWidth() / 2), (float) (view.getHeight() / 2));
         }
         view.setPressed(true);
         view.setPressed(false);
         this.mShouldBlink = false;
     }
 
-    @Override // androidx.preference.Preference
-    protected void onSetInitialValue(boolean z, Object obj) {
-        int intValue;
+    /* access modifiers changed from: protected */
+    public void onSetInitialValue(boolean z, Object obj) {
+        int i;
         if (z) {
-            intValue = getPersistedInt(this.mProgress);
+            i = getPersistedInt(this.mProgress);
         } else {
-            intValue = ((Integer) obj).intValue();
+            i = ((Integer) obj).intValue();
         }
-        setProgress(intValue);
+        setProgress(i);
     }
 
-    @Override // androidx.preference.Preference
-    protected Object onGetDefaultValue(TypedArray typedArray, int i) {
+    /* access modifiers changed from: protected */
+    public Object onGetDefaultValue(TypedArray typedArray, int i) {
         return Integer.valueOf(typedArray.getInt(i, 0));
     }
 
-    @Override // android.view.View.OnKeyListener
     public boolean onKey(View view, int i, KeyEvent keyEvent) {
         SeekBar seekBar;
-        if (keyEvent.getAction() == 0 && (seekBar = (SeekBar) view.findViewById(16909419)) != null) {
+        if (keyEvent.getAction() == 0 && (seekBar = (SeekBar) view.findViewById(16909465)) != null) {
             return seekBar.onKeyDown(i, keyEvent);
         }
         return false;
-    }
-
-    public void setProgressBarConfig(int i, int i2) {
-        this.mMax = i;
-        this.mMin = i2;
-        notifyChanged();
     }
 
     public void setMax(int i) {
@@ -211,10 +193,9 @@ public class SeekBarPreference extends RestrictedPreference implements SeekBar.O
         if (i != this.mProgress) {
             this.mProgress = i;
             persistInt(i);
-            if (!z) {
-                return;
+            if (z) {
+                notifyChanged();
             }
-            notifyChanged();
         }
     }
 
@@ -222,41 +203,39 @@ public class SeekBarPreference extends RestrictedPreference implements SeekBar.O
         return this.mProgress;
     }
 
-    void syncProgress(SeekBar seekBar) {
+    /* access modifiers changed from: package-private */
+    public void syncProgress(SeekBar seekBar) {
         int progress = seekBar.getProgress();
-        if (progress != this.mProgress) {
-            if (callChangeListener(Integer.valueOf(progress))) {
-                setProgress(progress, false);
-                int i = this.mHapticFeedbackMode;
-                if (i == 1) {
+        if (progress == this.mProgress) {
+            return;
+        }
+        if (callChangeListener(Integer.valueOf(progress))) {
+            setProgress(progress, false);
+            int i = this.mHapticFeedbackMode;
+            if (i == 1) {
+                seekBar.performHapticFeedback(4);
+            } else if (i == 2) {
+                if (progress == this.mMax || progress == this.mMin) {
                     seekBar.performHapticFeedback(4);
-                    return;
-                } else if (i != 2) {
-                    return;
-                } else {
-                    if (progress != this.mMax && progress != this.mMin) {
-                        return;
-                    }
-                    seekBar.performHapticFeedback(4);
-                    return;
                 }
             }
+        } else {
             seekBar.setProgress(this.mProgress);
         }
     }
 
     public void onProgressChanged(SeekBar seekBar, int i, boolean z) {
-        if (z) {
-            if (!this.mContinuousUpdates && this.mTrackingTouch) {
-                return;
-            }
+        if (!z) {
+            return;
+        }
+        if (this.mContinuousUpdates || !this.mTrackingTouch) {
             syncProgress(seekBar);
         }
     }
 
-    @Override // android.widget.SeekBar.OnSeekBarChangeListener
     public void onStartTrackingTouch(SeekBar seekBar) {
         this.mTrackingTouch = true;
+        this.mJankMonitor.begin(InteractionJankMonitor.Configuration.Builder.withView(53, seekBar).setTag(getKey()));
     }
 
     public void onStopTrackingTouch(SeekBar seekBar) {
@@ -264,14 +243,14 @@ public class SeekBarPreference extends RestrictedPreference implements SeekBar.O
         if (seekBar.getProgress() != this.mProgress) {
             syncProgress(seekBar);
         }
+        this.mJankMonitor.end(53);
     }
 
     public void overrideSeekBarStateDescription(CharSequence charSequence) {
         this.mOverrideSeekBarStateDescription = charSequence;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public Parcelable onSaveInstanceState() {
         Parcelable onSaveInstanceState = super.onSaveInstanceState();
         if (isPersistent()) {
@@ -284,8 +263,7 @@ public class SeekBarPreference extends RestrictedPreference implements SeekBar.O
         return savedState;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public void onRestoreInstanceState(Parcelable parcelable) {
         if (!parcelable.getClass().equals(SavedState.class)) {
             super.onRestoreInstanceState(parcelable);
@@ -299,21 +277,13 @@ public class SeekBarPreference extends RestrictedPreference implements SeekBar.O
         notifyChanged();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class SavedState extends Preference.BaseSavedState {
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() { // from class: com.android.settings.widget.SeekBarPreference.SavedState.1
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: createFromParcel */
-            public SavedState mo548createFromParcel(Parcel parcel) {
+    private static class SavedState extends Preference.BaseSavedState {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel parcel) {
                 return new SavedState(parcel);
             }
 
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: newArray */
-            public SavedState[] mo549newArray(int i) {
+            public SavedState[] newArray(int i) {
                 return new SavedState[i];
             }
         };
@@ -328,7 +298,6 @@ public class SeekBarPreference extends RestrictedPreference implements SeekBar.O
             this.min = parcel.readInt();
         }
 
-        @Override // android.view.AbsSavedState, android.os.Parcelable
         public void writeToParcel(Parcel parcel, int i) {
             super.writeToParcel(parcel, i);
             parcel.writeInt(this.progress);

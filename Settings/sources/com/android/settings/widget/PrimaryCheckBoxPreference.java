@@ -5,12 +5,15 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.CheckBox;
 import androidx.preference.PreferenceViewHolder;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
 import com.android.settingslib.widget.TwoTargetPreference;
-/* loaded from: classes.dex */
+
 public class PrimaryCheckBoxPreference extends TwoTargetPreference {
-    private CheckBox mCheckBox;
-    private boolean mChecked;
+    /* access modifiers changed from: private */
+    public CheckBox mCheckBox;
+    /* access modifiers changed from: private */
+    public boolean mChecked;
     private boolean mEnableCheckBox = true;
 
     public PrimaryCheckBoxPreference(Context context, AttributeSet attributeSet, int i, int i2) {
@@ -25,18 +28,16 @@ public class PrimaryCheckBoxPreference extends TwoTargetPreference {
         super(context, attributeSet);
     }
 
-    @Override // com.android.settingslib.widget.TwoTargetPreference
-    protected int getSecondTargetResId() {
-        return R.layout.preference_widget_primary_checkbox;
+    /* access modifiers changed from: protected */
+    public int getSecondTargetResId() {
+        return R$layout.preference_widget_primary_checkbox;
     }
 
-    @Override // com.android.settingslib.widget.TwoTargetPreference, androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         View findViewById = preferenceViewHolder.findViewById(16908312);
         if (findViewById != null) {
-            findViewById.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.widget.PrimaryCheckBoxPreference.1
-                @Override // android.view.View.OnClickListener
+            findViewById.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     if (PrimaryCheckBoxPreference.this.mCheckBox == null || PrimaryCheckBoxPreference.this.mCheckBox.isEnabled()) {
                         PrimaryCheckBoxPreference primaryCheckBoxPreference = PrimaryCheckBoxPreference.this;
@@ -48,12 +49,12 @@ public class PrimaryCheckBoxPreference extends TwoTargetPreference {
                             return;
                         }
                         PrimaryCheckBoxPreference primaryCheckBoxPreference4 = PrimaryCheckBoxPreference.this;
-                        primaryCheckBoxPreference4.persistBoolean(primaryCheckBoxPreference4.mChecked);
+                        boolean unused = primaryCheckBoxPreference4.persistBoolean(primaryCheckBoxPreference4.mChecked);
                     }
                 }
             });
         }
-        CheckBox checkBox = (CheckBox) preferenceViewHolder.findViewById(R.id.checkboxWidget);
+        CheckBox checkBox = (CheckBox) preferenceViewHolder.findViewById(R$id.checkboxWidget);
         this.mCheckBox = checkBox;
         if (checkBox != null) {
             checkBox.setContentDescription(getTitle());
@@ -62,7 +63,6 @@ public class PrimaryCheckBoxPreference extends TwoTargetPreference {
         }
     }
 
-    @Override // androidx.preference.Preference
     public void setEnabled(boolean z) {
         super.setEnabled(z);
         setCheckBoxEnabled(z);

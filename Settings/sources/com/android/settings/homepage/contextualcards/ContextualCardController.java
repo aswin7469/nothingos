@@ -1,5 +1,5 @@
 package com.android.settings.homepage.contextualcards;
-/* loaded from: classes.dex */
+
 public interface ContextualCardController {
     void onActionClick(ContextualCard contextualCard);
 

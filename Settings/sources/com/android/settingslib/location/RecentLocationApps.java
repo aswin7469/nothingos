@@ -14,15 +14,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class RecentLocationApps {
     static final String ANDROID_SYSTEM_PACKAGE_NAME = "android";
+    static final int[] LOCATION_PERMISSION_OPS = {1, 0};
+    static final int[] LOCATION_REQUEST_OPS = {41, 42};
     private static final String TAG = "RecentLocationApps";
     private final Context mContext;
     private final IconDrawableFactory mDrawableFactory;
     private final PackageManager mPackageManager;
-    static final int[] LOCATION_REQUEST_OPS = {41, 42};
-    static final int[] LOCATION_PERMISSION_OPS = {1, 0};
 
     public RecentLocationApps(Context context) {
         this.mContext = context;
@@ -31,9 +31,9 @@ public class RecentLocationApps {
     }
 
     public List<Request> getAppList(boolean z) {
+        int i;
         PackageManager packageManager;
         List list;
-        int i;
         boolean z2;
         Request requestFromOps;
         PackageManager packageManager2 = this.mContext.getPackageManager();
@@ -48,7 +48,7 @@ public class RecentLocationApps {
             String packageName = packageOps.getPackageName();
             int uid = packageOps.getUid();
             UserHandle userHandleForUid = UserHandle.getUserHandleForUid(uid);
-            if ((uid == 1000 && ANDROID_SYSTEM_PACKAGE_NAME.equals(packageName)) || !userProfiles.contains(userHandleForUid)) {
+            if ((uid == 1000 && "android".equals(packageName)) || !userProfiles.contains(userHandleForUid)) {
                 packageManager = packageManager2;
                 list = packagesForOps;
                 i = size;
@@ -57,7 +57,10 @@ public class RecentLocationApps {
                     int[] iArr = LOCATION_PERMISSION_OPS;
                     int length = iArr.length;
                     int i3 = 0;
-                    while (i3 < length) {
+                    while (true) {
+                        if (i3 >= length) {
+                            break;
+                        }
                         list = packagesForOps;
                         String opToPermission = AppOpsManager.opToPermission(iArr[i3]);
                         int i4 = length;
@@ -66,7 +69,6 @@ public class RecentLocationApps {
                         i = size;
                         if (PermissionChecker.checkPermissionForPreflight(this.mContext, opToPermission, -1, uid, packageName) == 0) {
                             if ((permissionFlags & 256) == 0) {
-                                z2 = false;
                                 break;
                             }
                             i3++;
@@ -75,7 +77,6 @@ public class RecentLocationApps {
                             packageManager2 = packageManager;
                             size = i;
                         } else if ((permissionFlags & 512) == 0) {
-                            z2 = false;
                             break;
                         } else {
                             i3++;
@@ -85,14 +86,16 @@ public class RecentLocationApps {
                             size = i;
                         }
                     }
+                    z2 = false;
+                    if (z2 && (requestFromOps = getRequestFromOps(currentTimeMillis, packageOps)) != null) {
+                        arrayList.add(requestFromOps);
+                    }
                 }
                 packageManager = packageManager2;
                 list = packagesForOps;
                 i = size;
                 z2 = true;
-                if (z2 && (requestFromOps = getRequestFromOps(currentTimeMillis, packageOps)) != null) {
-                    arrayList.add(requestFromOps);
-                }
+                arrayList.add(requestFromOps);
             }
             i2++;
             packagesForOps = list;
@@ -104,8 +107,7 @@ public class RecentLocationApps {
 
     public List<Request> getAppListSorted(boolean z) {
         List<Request> appList = getAppList(z);
-        Collections.sort(appList, Collections.reverseOrder(new Comparator<Request>() { // from class: com.android.settingslib.location.RecentLocationApps.1
-            @Override // java.util.Comparator
+        Collections.sort(appList, Collections.reverseOrder(new Comparator<Request>() {
             public int compare(Request request, Request request2) {
                 return Long.compare(request.requestFinishTime, request2.requestFinishTime);
             }
@@ -130,32 +132,32 @@ public class RecentLocationApps {
                 }
             }
         }
-        if (!z2 && !z) {
+        if (z2 || z) {
+            int userId = UserHandle.getUserId(packageOps.getUid());
+            try {
+                ApplicationInfo applicationInfoAsUser = this.mPackageManager.getApplicationInfoAsUser(packageName, 128, userId);
+                if (applicationInfoAsUser == null) {
+                    Log.w(TAG, "Null application info retrieved for package " + packageName + ", userId " + userId);
+                    return null;
+                }
+                UserHandle userHandle = new UserHandle(userId);
+                Drawable badgedIcon = this.mDrawableFactory.getBadgedIcon(applicationInfoAsUser, userId);
+                CharSequence applicationLabel = this.mPackageManager.getApplicationLabel(applicationInfoAsUser);
+                CharSequence userBadgedLabel = this.mPackageManager.getUserBadgedLabel(applicationLabel, userHandle);
+                return new Request(packageName, userHandle, badgedIcon, applicationLabel, z2, applicationLabel.toString().contentEquals(userBadgedLabel) ? null : userBadgedLabel, j3);
+            } catch (PackageManager.NameNotFoundException unused) {
+                Log.w(TAG, "package name not found for " + packageName + ", userId " + userId);
+                return null;
+            }
+        } else {
             String str = TAG;
             if (Log.isLoggable(str, 2)) {
                 Log.v(str, packageName + " hadn't used location within the time interval.");
             }
             return null;
         }
-        int userId = UserHandle.getUserId(packageOps.getUid());
-        try {
-            ApplicationInfo applicationInfoAsUser = this.mPackageManager.getApplicationInfoAsUser(packageName, 128, userId);
-            if (applicationInfoAsUser == null) {
-                Log.w(TAG, "Null application info retrieved for package " + packageName + ", userId " + userId);
-                return null;
-            }
-            UserHandle userHandle = new UserHandle(userId);
-            Drawable badgedIcon = this.mDrawableFactory.getBadgedIcon(applicationInfoAsUser, userId);
-            CharSequence applicationLabel = this.mPackageManager.getApplicationLabel(applicationInfoAsUser);
-            CharSequence userBadgedLabel = this.mPackageManager.getUserBadgedLabel(applicationLabel, userHandle);
-            return new Request(packageName, userHandle, badgedIcon, applicationLabel, z2, applicationLabel.toString().contentEquals(userBadgedLabel) ? null : userBadgedLabel, j3);
-        } catch (PackageManager.NameNotFoundException unused) {
-            Log.w(TAG, "package name not found for " + packageName + ", userId " + userId);
-            return null;
-        }
     }
 
-    /* loaded from: classes.dex */
     public static class Request {
         public final CharSequence contentDescription;
         public final Drawable icon;
@@ -165,9 +167,9 @@ public class RecentLocationApps {
         public final long requestFinishTime;
         public final UserHandle userHandle;
 
-        public Request(String str, UserHandle userHandle, Drawable drawable, CharSequence charSequence, boolean z, CharSequence charSequence2, long j) {
+        public Request(String str, UserHandle userHandle2, Drawable drawable, CharSequence charSequence, boolean z, CharSequence charSequence2, long j) {
             this.packageName = str;
-            this.userHandle = userHandle;
+            this.userHandle = userHandle2;
             this.icon = drawable;
             this.label = charSequence;
             this.isHighBattery = z;

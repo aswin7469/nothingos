@@ -15,15 +15,15 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 import android.widget.Toast;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-/* loaded from: classes.dex */
+
 public class BugReportHandlerUtil {
     public boolean isBugReportHandlerEnabled(Context context) {
-        return context.getResources().getBoolean(17891391);
+        return context.getResources().getBoolean(17891394);
     }
 
     public Pair<String, Integer> getCurrentBugReportHandlerAppAndUser(Context context) {
@@ -64,21 +64,17 @@ public class BugReportHandlerUtil {
     }
 
     private String getDefaultBugReportHandlerApp(Context context) {
-        return context.getResources().getString(17039897);
+        return context.getResources().getString(17039924);
     }
 
     public boolean setCurrentBugReportHandlerAppAndUser(Context context, String str, int i) {
-        if (isBugreportAllowlistedApp(str) && !getBugReportHandlerAppReceivers(context, str, i).isEmpty()) {
-            setBugreportHandlerAppAndUser(context, str, i);
-            return true;
+        if (!isBugreportAllowlistedApp(str) || getBugReportHandlerAppReceivers(context, str, i).isEmpty()) {
+            return false;
         }
-        return false;
+        setBugreportHandlerAppAndUser(context, str, i);
+        return true;
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:18:0x0076  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     public List<Pair<ApplicationInfo, Integer>> getValidBugReportHandlerInfos(Context context) {
         ArrayList arrayList = new ArrayList();
         try {
@@ -90,18 +86,16 @@ public class BugReportHandlerUtil {
                 }
             }
             List<UserInfo> profiles = ((UserManager) context.getSystemService(UserManager.class)).getProfiles(UserHandle.getCallingUserId());
-            List<String> list = (List) bugreportWhitelistedPackages.stream().filter(BugReportHandlerUtil$$ExternalSyntheticLambda0.INSTANCE).collect(Collectors.toList());
+            List<String> list = (List) bugreportWhitelistedPackages.stream().filter(new BugReportHandlerUtil$$ExternalSyntheticLambda0()).collect(Collectors.toList());
             Collections.sort(list);
             for (String str : list) {
-                for (UserInfo userInfo : profiles) {
-                    int identifier = userInfo.getUserHandle().getIdentifier();
+                for (UserInfo userHandle : profiles) {
+                    int identifier = userHandle.getUserHandle().getIdentifier();
                     if (!getBugReportHandlerAppReceivers(context, str, identifier).isEmpty()) {
                         try {
                             arrayList.add(Pair.create(context.getPackageManager().getApplicationInfo(str, 4194304), Integer.valueOf(identifier)));
                         } catch (PackageManager.NameNotFoundException unused2) {
                         }
-                    }
-                    while (r5.hasNext()) {
                     }
                 }
             }
@@ -112,7 +106,7 @@ public class BugReportHandlerUtil {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ boolean lambda$getValidBugReportHandlerInfos$0(String str) {
         return !"com.android.shell".equals(str);
     }
@@ -141,6 +135,6 @@ public class BugReportHandlerUtil {
     }
 
     public void showInvalidChoiceToast(Context context) {
-        Toast.makeText(context, R.string.select_invalid_bug_report_handler_toast_text, 0).show();
+        Toast.makeText(context, R$string.select_invalid_bug_report_handler_toast_text, 0).show();
     }
 }

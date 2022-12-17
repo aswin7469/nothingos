@@ -5,8 +5,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.telephony.UiccPortInfo;
 import android.telephony.UiccSlotInfo;
 import android.util.ArraySet;
 import android.util.Log;
@@ -16,37 +18,35 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-/* loaded from: classes.dex */
+
 public class EnableMultiSimSidecar extends AsyncTaskSidecar<Void, Boolean> {
-    private TelephonyManager mTelephonyManager;
-    final CountDownLatch mSimCardStateChangedLatch = new CountDownLatch(1);
-    private int mNumOfActiveSim = 0;
-    private final BroadcastReceiver mCarrierConfigChangeReceiver = new BroadcastReceiver() { // from class: com.android.settings.network.EnableMultiSimSidecar.1
-        @Override // android.content.BroadcastReceiver
+    private final BroadcastReceiver mCarrierConfigChangeReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
-            int readySimsCount = EnableMultiSimSidecar.this.getReadySimsCount();
-            int activeSlotsCount = EnableMultiSimSidecar.this.getActiveSlotsCount();
-            if (readySimsCount == EnableMultiSimSidecar.this.mNumOfActiveSim && activeSlotsCount == EnableMultiSimSidecar.this.mNumOfActiveSim) {
-                Log.i("EnableMultiSimSidecar", String.format("%d slots are active and ready.", Integer.valueOf(EnableMultiSimSidecar.this.mNumOfActiveSim)));
+            int r5 = EnableMultiSimSidecar.this.getReadySimsCount();
+            int r6 = EnableMultiSimSidecar.this.getActivePortsCount();
+            if (r5 == EnableMultiSimSidecar.this.mNumOfActiveSim && r6 == EnableMultiSimSidecar.this.mNumOfActiveSim) {
+                Log.i("EnableMultiSimSidecar", String.format("%d ports are active and ready.", new Object[]{Integer.valueOf(EnableMultiSimSidecar.this.mNumOfActiveSim)}));
                 EnableMultiSimSidecar.this.mSimCardStateChangedLatch.countDown();
                 return;
             }
-            Log.i("EnableMultiSimSidecar", String.format("%d slots are active and %d SIMs are ready. Keep waiting until timeout.", Integer.valueOf(activeSlotsCount), Integer.valueOf(readySimsCount)));
+            Log.i("EnableMultiSimSidecar", String.format("%d ports are active and %d SIMs are ready. Keep waiting until timeout.", new Object[]{Integer.valueOf(r6), Integer.valueOf(r5)}));
         }
     };
+    /* access modifiers changed from: private */
+    public int mNumOfActiveSim = 0;
+    final CountDownLatch mSimCardStateChangedLatch = new CountDownLatch(1);
+    private TelephonyManager mTelephonyManager;
 
     public static EnableMultiSimSidecar get(FragmentManager fragmentManager) {
-        return (EnableMultiSimSidecar) SidecarFragment.get(fragmentManager, "EnableMultiSimSidecar", EnableMultiSimSidecar.class, null);
+        return (EnableMultiSimSidecar) SidecarFragment.get(fragmentManager, "EnableMultiSimSidecar", EnableMultiSimSidecar.class, (Bundle) null);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.AsyncTaskSidecar
-    public Boolean doInBackground(Void r1) {
+    /* access modifiers changed from: protected */
+    public Boolean doInBackground(Void voidR) {
         return Boolean.valueOf(updateMultiSimConfig());
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.AsyncTaskSidecar
+    /* access modifiers changed from: protected */
     public void onPostExecute(Boolean bool) {
         if (bool.booleanValue()) {
             setState(2, 0);
@@ -66,30 +66,31 @@ public class EnableMultiSimSidecar extends AsyncTaskSidecar<Void, Boolean> {
             Log.e("EnableMultiSimSidecar", "The device does not support reboot free DSDS.");
             setState(3, 0);
         } else {
-            super.run((EnableMultiSimSidecar) null);
+            super.run(null);
         }
     }
 
     private boolean updateMultiSimConfig() {
         try {
-            try {
-                getContext().registerReceiver(this.mCarrierConfigChangeReceiver, new IntentFilter("android.telephony.action.CARRIER_CONFIG_CHANGED"));
-                this.mTelephonyManager.switchMultiSimConfig(this.mNumOfActiveSim);
-            } catch (InterruptedException e) {
-                Log.e("EnableMultiSimSidecar", "Failed to enable multiple SIM due to InterruptedException", e);
-            }
-            if (this.mSimCardStateChangedLatch.await(Settings.Global.getLong(getContext().getContentResolver(), "enable_multi_slot_timeout_millis", 40000L), TimeUnit.MILLISECONDS)) {
+            getContext().registerReceiver(this.mCarrierConfigChangeReceiver, new IntentFilter("android.telephony.action.CARRIER_CONFIG_CHANGED"));
+            this.mTelephonyManager.switchMultiSimConfig(this.mNumOfActiveSim);
+            if (this.mSimCardStateChangedLatch.await(Settings.Global.getLong(getContext().getContentResolver(), "enable_multi_slot_timeout_millis", 40000), TimeUnit.MILLISECONDS)) {
                 Log.i("EnableMultiSimSidecar", "Multi SIM were successfully enabled.");
+                getContext().unregisterReceiver(this.mCarrierConfigChangeReceiver);
                 return true;
             }
             Log.e("EnableMultiSimSidecar", "Timeout for waiting SIM status.");
-            return false;
-        } finally {
             getContext().unregisterReceiver(this.mCarrierConfigChangeReceiver);
+            return false;
+        } catch (InterruptedException e) {
+            Log.e("EnableMultiSimSidecar", "Failed to enable multiple SIM due to InterruptedException", e);
+        } catch (Throwable th) {
+            getContext().unregisterReceiver(this.mCarrierConfigChangeReceiver);
+            throw th;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public int getReadySimsCount() {
         int activeModemCount = this.mTelephonyManager.getActiveModemCount();
         Set<Integer> activeRemovableLogicalSlotIds = getActiveRemovableLogicalSlotIds();
@@ -103,16 +104,18 @@ public class EnableMultiSimSidecar extends AsyncTaskSidecar<Void, Boolean> {
         return i;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public int getActiveSlotsCount() {
+    /* access modifiers changed from: private */
+    public int getActivePortsCount() {
         UiccSlotInfo[] uiccSlotsInfo = this.mTelephonyManager.getUiccSlotsInfo();
         if (uiccSlotsInfo == null) {
             return 0;
         }
         int i = 0;
-        for (UiccSlotInfo uiccSlotInfo : uiccSlotsInfo) {
-            if (uiccSlotInfo != null && uiccSlotInfo.getIsActive()) {
-                i++;
+        for (UiccSlotInfo ports : uiccSlotsInfo) {
+            for (UiccPortInfo isActive : ports.getPorts()) {
+                if (isActive.isActive()) {
+                    i++;
+                }
             }
         }
         return i;
@@ -125,8 +128,10 @@ public class EnableMultiSimSidecar extends AsyncTaskSidecar<Void, Boolean> {
         }
         ArraySet arraySet = new ArraySet();
         for (UiccSlotInfo uiccSlotInfo : uiccSlotsInfo) {
-            if (uiccSlotInfo != null && uiccSlotInfo.getIsActive() && uiccSlotInfo.isRemovable()) {
-                arraySet.add(Integer.valueOf(uiccSlotInfo.getLogicalSlotIdx()));
+            for (UiccPortInfo uiccPortInfo : uiccSlotInfo.getPorts()) {
+                if (uiccPortInfo.isActive() && uiccSlotInfo.isRemovable()) {
+                    arraySet.add(Integer.valueOf(uiccPortInfo.getLogicalSlotIndex()));
+                }
             }
         }
         return arraySet;

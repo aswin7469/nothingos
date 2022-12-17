@@ -1,6 +1,7 @@
 package com.android.settings.accessibility;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothCodecStatus;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,27 +13,27 @@ import android.util.Log;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.bluetooth.BluetoothDeviceDetailsFragment;
 import com.android.settings.bluetooth.Utils;
 import com.android.settings.core.BasePreferenceController;
 import com.android.settings.core.SubSettingLauncher;
-import com.android.settings.slices.SliceBackgroundWorker;
+import com.android.settingslib.bluetooth.BluetoothCallback;
 import com.android.settingslib.bluetooth.CachedBluetoothDevice;
+import com.android.settingslib.bluetooth.CachedBluetoothDeviceManager;
 import com.android.settingslib.bluetooth.LocalBluetoothManager;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnStart;
 import com.android.settingslib.core.lifecycle.events.OnStop;
-import java.util.concurrent.Callable;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
-/* loaded from: classes.dex */
-public class AccessibilityHearingAidPreferenceController extends BasePreferenceController implements LifecycleObserver, OnStart, OnStop {
+
+public class AccessibilityHearingAidPreferenceController extends BasePreferenceController implements LifecycleObserver, OnStart, OnStop, BluetoothCallback {
     private static final String TAG = "AccessibilityHearingAidPreferenceController";
+    private final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     private FragmentManager mFragmentManager;
-    private Preference mHearingAidPreference;
-    private final BroadcastReceiver mHearingAidChangedReceiver = new BroadcastReceiver() { // from class: com.android.settings.accessibility.AccessibilityHearingAidPreferenceController.1
-        @Override // android.content.BroadcastReceiver
+    private final BroadcastReceiver mHearingAidChangedReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if ("android.bluetooth.hearingaid.profile.action.CONNECTION_STATE_CHANGED".equals(intent.getAction())) {
                 if (intent.getIntExtra("android.bluetooth.profile.extra.STATE", 0) == 2) {
@@ -40,53 +41,96 @@ public class AccessibilityHearingAidPreferenceController extends BasePreferenceC
                     accessibilityHearingAidPreferenceController.updateState(accessibilityHearingAidPreferenceController.mHearingAidPreference);
                     return;
                 }
-                AccessibilityHearingAidPreferenceController.this.mHearingAidPreference.setSummary(R.string.accessibility_hearingaid_not_connected_summary);
-            } else if (!"android.bluetooth.adapter.action.STATE_CHANGED".equals(intent.getAction()) || intent.getIntExtra("android.bluetooth.adapter.extra.STATE", Integer.MIN_VALUE) == 12) {
-            } else {
-                AccessibilityHearingAidPreferenceController.this.mHearingAidPreference.setSummary(R.string.accessibility_hearingaid_not_connected_summary);
+                AccessibilityHearingAidPreferenceController.this.mHearingAidPreference.setSummary(R$string.accessibility_hearingaid_not_connected_summary);
+            } else if ("android.bluetooth.adapter.action.STATE_CHANGED".equals(intent.getAction()) && intent.getIntExtra("android.bluetooth.adapter.extra.STATE", Integer.MIN_VALUE) != 12) {
+                AccessibilityHearingAidPreferenceController.this.mHearingAidPreference.setSummary(R$string.accessibility_hearingaid_not_connected_summary);
             }
         }
     };
+    /* access modifiers changed from: private */
+    public Preference mHearingAidPreference;
     private final LocalBluetoothManager mLocalBluetoothManager = getLocalBluetoothManager();
-    private final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    private boolean mHearingAidProfileSupported = isHearingAidProfileSupported();
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ void onA2dpCodecConfigChanged(CachedBluetoothDevice cachedBluetoothDevice, BluetoothCodecStatus bluetoothCodecStatus) {
+        super.onA2dpCodecConfigChanged(cachedBluetoothDevice, bluetoothCodecStatus);
+    }
+
+    public /* bridge */ /* synthetic */ void onAclConnectionStateChanged(CachedBluetoothDevice cachedBluetoothDevice, int i) {
+        super.onAclConnectionStateChanged(cachedBluetoothDevice, i);
+    }
+
+    public /* bridge */ /* synthetic */ void onAudioModeChanged() {
+        super.onAudioModeChanged();
+    }
+
+    public /* bridge */ /* synthetic */ void onBluetoothStateChanged(int i) {
+        super.onBluetoothStateChanged(i);
+    }
+
+    public /* bridge */ /* synthetic */ void onBroadcastKeyGenerated() {
+        super.onBroadcastKeyGenerated();
+    }
+
+    public /* bridge */ /* synthetic */ void onBroadcastStateChanged(int i) {
+        super.onBroadcastStateChanged(i);
+    }
+
+    public /* bridge */ /* synthetic */ void onConnectionStateChanged(CachedBluetoothDevice cachedBluetoothDevice, int i) {
+        super.onConnectionStateChanged(cachedBluetoothDevice, i);
+    }
+
+    public /* bridge */ /* synthetic */ void onDeviceAdded(CachedBluetoothDevice cachedBluetoothDevice) {
+        super.onDeviceAdded(cachedBluetoothDevice);
+    }
+
+    public /* bridge */ /* synthetic */ void onDeviceBondStateChanged(CachedBluetoothDevice cachedBluetoothDevice, int i) {
+        super.onDeviceBondStateChanged(cachedBluetoothDevice, i);
+    }
+
+    public /* bridge */ /* synthetic */ void onDeviceDeleted(CachedBluetoothDevice cachedBluetoothDevice) {
+        super.onDeviceDeleted(cachedBluetoothDevice);
+    }
+
+    public /* bridge */ /* synthetic */ void onGroupDiscoveryStatusChanged(int i, int i2, int i3) {
+        super.onGroupDiscoveryStatusChanged(i, i2, i3);
+    }
+
+    public /* bridge */ /* synthetic */ void onNewGroupFound(CachedBluetoothDevice cachedBluetoothDevice, int i, UUID uuid) {
+        super.onNewGroupFound(cachedBluetoothDevice, i, uuid);
+    }
+
+    public /* bridge */ /* synthetic */ void onProfileConnectionStateChanged(CachedBluetoothDevice cachedBluetoothDevice, int i, int i2) {
+        super.onProfileConnectionStateChanged(cachedBluetoothDevice, i, i2);
+    }
+
+    public /* bridge */ /* synthetic */ void onScanningStateChanged(boolean z) {
+        super.onScanningStateChanged(z);
+    }
+
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -95,88 +139,109 @@ public class AccessibilityHearingAidPreferenceController extends BasePreferenceC
         super(context, str);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mHearingAidPreference = preferenceScreen.findPreference(getPreferenceKey());
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
-        return this.mHearingAidProfileSupported ? 0 : 3;
+        return isHearingAidProfileSupported() ? 0 : 3;
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStart
     public void onStart() {
-        if (this.mHearingAidProfileSupported) {
-            IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction("android.bluetooth.hearingaid.profile.action.CONNECTION_STATE_CHANGED");
-            intentFilter.addAction("android.bluetooth.adapter.action.STATE_CHANGED");
-            this.mContext.registerReceiver(this.mHearingAidChangedReceiver, intentFilter);
-        }
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("android.bluetooth.hearingaid.profile.action.CONNECTION_STATE_CHANGED");
+        intentFilter.addAction("android.bluetooth.adapter.action.STATE_CHANGED");
+        this.mContext.registerReceiver(this.mHearingAidChangedReceiver, intentFilter);
+        this.mLocalBluetoothManager.getEventManager().registerCallback(this);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStop
     public void onStop() {
-        if (this.mHearingAidProfileSupported) {
-            this.mContext.unregisterReceiver(this.mHearingAidChangedReceiver);
-        }
+        this.mContext.unregisterReceiver(this.mHearingAidChangedReceiver);
+        this.mLocalBluetoothManager.getEventManager().unregisterCallback(this);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
-        if (TextUtils.equals(preference.getKey(), getPreferenceKey())) {
-            CachedBluetoothDevice connectedHearingAidDevice = getConnectedHearingAidDevice();
-            if (connectedHearingAidDevice == null) {
-                launchHearingAidInstructionDialog();
-                return true;
-            }
-            launchBluetoothDeviceDetailSetting(connectedHearingAidDevice);
-            return true;
+        if (!TextUtils.equals(preference.getKey(), getPreferenceKey())) {
+            return false;
         }
-        return false;
-    }
-
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    /* renamed from: getSummary */
-    public CharSequence mo485getSummary() {
         CachedBluetoothDevice connectedHearingAidDevice = getConnectedHearingAidDevice();
         if (connectedHearingAidDevice == null) {
-            return this.mContext.getText(R.string.accessibility_hearingaid_not_connected_summary);
+            launchHearingAidInstructionDialog();
+            return true;
         }
-        return connectedHearingAidDevice.getName();
+        launchBluetoothDeviceDetailSetting(connectedHearingAidDevice);
+        return true;
+    }
+
+    public CharSequence getSummary() {
+        CachedBluetoothDevice connectedHearingAidDevice = getConnectedHearingAidDevice();
+        if (connectedHearingAidDevice == null) {
+            return this.mContext.getText(R$string.accessibility_hearingaid_not_connected_summary);
+        }
+        int connectedHearingAidDeviceNum = getConnectedHearingAidDeviceNum();
+        String name = connectedHearingAidDevice.getName();
+        int deviceSide = connectedHearingAidDevice.getDeviceSide();
+        CachedBluetoothDevice subDevice = connectedHearingAidDevice.getSubDevice();
+        if (connectedHearingAidDeviceNum > 1) {
+            return this.mContext.getString(R$string.accessibility_hearingaid_more_device_summary, new Object[]{name});
+        } else if (subDevice != null && subDevice.isConnected()) {
+            return this.mContext.getString(R$string.accessibility_hearingaid_left_and_right_side_device_summary, new Object[]{name});
+        } else if (deviceSide == -1) {
+            return this.mContext.getString(R$string.accessibility_hearingaid_active_device_summary, new Object[]{name});
+        } else if (deviceSide == 0) {
+            return this.mContext.getString(R$string.accessibility_hearingaid_left_side_device_summary, new Object[]{name});
+        } else {
+            return this.mContext.getString(R$string.accessibility_hearingaid_right_side_device_summary, new Object[]{name});
+        }
+    }
+
+    public void onActiveDeviceChanged(CachedBluetoothDevice cachedBluetoothDevice, int i) {
+        if (cachedBluetoothDevice != null && i == 21) {
+            HearingAidUtils.launchHearingAidPairingDialog(this.mFragmentManager, cachedBluetoothDevice);
+        }
     }
 
     public void setFragmentManager(FragmentManager fragmentManager) {
         this.mFragmentManager = fragmentManager;
     }
 
-    CachedBluetoothDevice getConnectedHearingAidDevice() {
-        BluetoothAdapter bluetoothAdapter;
-        if (this.mHearingAidProfileSupported && (bluetoothAdapter = this.mBluetoothAdapter) != null && bluetoothAdapter.isEnabled()) {
-            for (BluetoothDevice bluetoothDevice : this.mLocalBluetoothManager.getProfileManager().getHearingAidProfile().getConnectedDevices()) {
-                if (!this.mLocalBluetoothManager.getCachedDeviceManager().isSubDevice(bluetoothDevice)) {
-                    return this.mLocalBluetoothManager.getCachedDeviceManager().findDevice(bluetoothDevice);
-                }
+    /* access modifiers changed from: package-private */
+    public CachedBluetoothDevice getConnectedHearingAidDevice() {
+        if (!isHearingAidProfileSupported()) {
+            return null;
+        }
+        CachedBluetoothDeviceManager cachedDeviceManager = this.mLocalBluetoothManager.getCachedDeviceManager();
+        for (BluetoothDevice next : this.mLocalBluetoothManager.getProfileManager().getHearingAidProfile().getConnectedDevices()) {
+            if (!cachedDeviceManager.isSubDevice(next)) {
+                return cachedDeviceManager.findDevice(next);
             }
         }
         return null;
     }
 
+    private int getConnectedHearingAidDeviceNum() {
+        if (!isHearingAidProfileSupported()) {
+            return 0;
+        }
+        return (int) this.mLocalBluetoothManager.getProfileManager().getHearingAidProfile().getConnectedDevices().stream().filter(new C0577x99de13bd(this.mLocalBluetoothManager.getCachedDeviceManager())).count();
+    }
+
+    /* access modifiers changed from: private */
+    public static /* synthetic */ boolean lambda$getConnectedHearingAidDeviceNum$0(CachedBluetoothDeviceManager cachedBluetoothDeviceManager, BluetoothDevice bluetoothDevice) {
+        return !cachedBluetoothDeviceManager.isSubDevice(bluetoothDevice);
+    }
+
     private boolean isHearingAidProfileSupported() {
         BluetoothAdapter bluetoothAdapter = this.mBluetoothAdapter;
-        return bluetoothAdapter != null && bluetoothAdapter.isEnabled() && this.mBluetoothAdapter.getSupportedProfiles().contains(21);
+        if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
+            return false;
+        }
+        return this.mBluetoothAdapter.getSupportedProfiles().contains(21);
     }
 
     private LocalBluetoothManager getLocalBluetoothManager() {
-        FutureTask futureTask = new FutureTask(new Callable() { // from class: com.android.settings.accessibility.AccessibilityHearingAidPreferenceController$$ExternalSyntheticLambda0
-            @Override // java.util.concurrent.Callable
-            public final Object call() {
-                LocalBluetoothManager lambda$getLocalBluetoothManager$0;
-                lambda$getLocalBluetoothManager$0 = AccessibilityHearingAidPreferenceController.this.lambda$getLocalBluetoothManager$0();
-                return lambda$getLocalBluetoothManager$0;
-            }
-        });
+        FutureTask futureTask = new FutureTask(new C0576x99de13bc(this));
         try {
             futureTask.run();
             return (LocalBluetoothManager) futureTask.get();
@@ -186,25 +251,27 @@ public class AccessibilityHearingAidPreferenceController extends BasePreferenceC
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ LocalBluetoothManager lambda$getLocalBluetoothManager$0() throws Exception {
+    /* access modifiers changed from: private */
+    public /* synthetic */ LocalBluetoothManager lambda$getLocalBluetoothManager$1() throws Exception {
         return Utils.getLocalBtManager(this.mContext);
     }
 
-    void setPreference(Preference preference) {
+    /* access modifiers changed from: package-private */
+    public void setPreference(Preference preference) {
         this.mHearingAidPreference = preference;
     }
 
-    void launchBluetoothDeviceDetailSetting(CachedBluetoothDevice cachedBluetoothDevice) {
-        if (cachedBluetoothDevice == null) {
-            return;
+    /* access modifiers changed from: package-private */
+    public void launchBluetoothDeviceDetailSetting(CachedBluetoothDevice cachedBluetoothDevice) {
+        if (cachedBluetoothDevice != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString("device_address", cachedBluetoothDevice.getDevice().getAddress());
+            new SubSettingLauncher(this.mContext).setDestination(BluetoothDeviceDetailsFragment.class.getName()).setArguments(bundle).setTitleRes(R$string.device_details_title).setSourceMetricsCategory(2).launch();
         }
-        Bundle bundle = new Bundle();
-        bundle.putString("device_address", cachedBluetoothDevice.getDevice().getAddress());
-        new SubSettingLauncher(this.mContext).setDestination(BluetoothDeviceDetailsFragment.class.getName()).setArguments(bundle).setTitleRes(R.string.device_details_title).setSourceMetricsCategory(2).launch();
     }
 
-    void launchHearingAidInstructionDialog() {
+    /* access modifiers changed from: package-private */
+    public void launchHearingAidInstructionDialog() {
         HearingAidDialogFragment.newInstance().show(this.mFragmentManager, HearingAidDialogFragment.class.toString());
     }
 }

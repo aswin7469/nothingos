@@ -1,33 +1,31 @@
 package com.google.zxing.pdf417.decoder;
 
 import java.util.Formatter;
-/* loaded from: classes2.dex */
+
 final class DetectionResult {
     private final int barcodeColumnCount;
     private final BarcodeMetadata barcodeMetadata;
     private BoundingBox boundingBox;
     private final DetectionResultColumn[] detectionResultColumns;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public DetectionResult(BarcodeMetadata barcodeMetadata, BoundingBox boundingBox) {
-        this.barcodeMetadata = barcodeMetadata;
-        int columnCount = barcodeMetadata.getColumnCount();
+    DetectionResult(BarcodeMetadata barcodeMetadata2, BoundingBox boundingBox2) {
+        this.barcodeMetadata = barcodeMetadata2;
+        int columnCount = barcodeMetadata2.getColumnCount();
         this.barcodeColumnCount = columnCount;
-        this.boundingBox = boundingBox;
-        this.detectionResultColumns = new DetectionResultColumn[columnCount + 2];
+        this.boundingBox = boundingBox2;
+        this.detectionResultColumns = new DetectionResultColumn[(columnCount + 2)];
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public DetectionResultColumn[] getDetectionResultColumns() {
         adjustIndicatorColumnRowNumbers(this.detectionResultColumns[0]);
         adjustIndicatorColumnRowNumbers(this.detectionResultColumns[this.barcodeColumnCount + 1]);
         int i = 928;
         while (true) {
             int adjustRowNumbers = adjustRowNumbers();
-            if (adjustRowNumbers <= 0 || adjustRowNumbers >= i) {
-                break;
+            if (adjustRowNumbers > 0 && adjustRowNumbers < i) {
+                i = adjustRowNumbers;
             }
-            i = adjustRowNumbers;
         }
         return this.detectionResultColumns;
     }
@@ -46,7 +44,8 @@ final class DetectionResult {
         for (int i = 1; i < this.barcodeColumnCount + 1; i++) {
             Codeword[] codewords = this.detectionResultColumns[i].getCodewords();
             for (int i2 = 0; i2 < codewords.length; i2++) {
-                if (codewords[i2] != null && !codewords[i2].hasValidRowNumber()) {
+                Codeword codeword = codewords[i2];
+                if (codeword != null && !codeword.hasValidRowNumber()) {
                     adjustRowNumbers(i, i2, codewords);
                 }
             }
@@ -61,19 +60,20 @@ final class DetectionResult {
 
     private void adjustRowNumbersFromBothRI() {
         DetectionResultColumn[] detectionResultColumnArr = this.detectionResultColumns;
-        if (detectionResultColumnArr[0] == null || detectionResultColumnArr[this.barcodeColumnCount + 1] == null) {
-            return;
-        }
-        Codeword[] codewords = detectionResultColumnArr[0].getCodewords();
-        Codeword[] codewords2 = this.detectionResultColumns[this.barcodeColumnCount + 1].getCodewords();
-        for (int i = 0; i < codewords.length; i++) {
-            if (codewords[i] != null && codewords2[i] != null && codewords[i].getRowNumber() == codewords2[i].getRowNumber()) {
-                for (int i2 = 1; i2 <= this.barcodeColumnCount; i2++) {
-                    Codeword codeword = this.detectionResultColumns[i2].getCodewords()[i];
-                    if (codeword != null) {
-                        codeword.setRowNumber(codewords[i].getRowNumber());
-                        if (!codeword.hasValidRowNumber()) {
-                            this.detectionResultColumns[i2].getCodewords()[i] = null;
+        DetectionResultColumn detectionResultColumn = detectionResultColumnArr[0];
+        if (detectionResultColumn != null && detectionResultColumnArr[this.barcodeColumnCount + 1] != null) {
+            Codeword[] codewords = detectionResultColumn.getCodewords();
+            Codeword[] codewords2 = this.detectionResultColumns[this.barcodeColumnCount + 1].getCodewords();
+            for (int i = 0; i < codewords.length; i++) {
+                Codeword codeword = codewords[i];
+                if (!(codeword == null || codewords2[i] == null || codeword.getRowNumber() != codewords2[i].getRowNumber())) {
+                    for (int i2 = 1; i2 <= this.barcodeColumnCount; i2++) {
+                        Codeword codeword2 = this.detectionResultColumns[i2].getCodewords()[i];
+                        if (codeword2 != null) {
+                            codeword2.setRowNumber(codewords[i].getRowNumber());
+                            if (!codeword2.hasValidRowNumber()) {
+                                this.detectionResultColumns[i2].getCodewords()[i] = null;
+                            }
                         }
                     }
                 }
@@ -90,14 +90,15 @@ final class DetectionResult {
         Codeword[] codewords = detectionResultColumnArr[i + 1].getCodewords();
         int i2 = 0;
         for (int i3 = 0; i3 < codewords.length; i3++) {
-            if (codewords[i3] != null) {
-                int rowNumber = codewords[i3].getRowNumber();
+            Codeword codeword = codewords[i3];
+            if (codeword != null) {
+                int rowNumber = codeword.getRowNumber();
                 int i4 = 0;
                 for (int i5 = this.barcodeColumnCount + 1; i5 > 0 && i4 < 2; i5--) {
-                    Codeword codeword = this.detectionResultColumns[i5].getCodewords()[i3];
-                    if (codeword != null) {
-                        i4 = adjustRowNumberIfValid(rowNumber, i4, codeword);
-                        if (!codeword.hasValidRowNumber()) {
+                    Codeword codeword2 = this.detectionResultColumns[i5].getCodewords()[i3];
+                    if (codeword2 != null) {
+                        i4 = adjustRowNumberIfValid(rowNumber, i4, codeword2);
+                        if (!codeword2.hasValidRowNumber()) {
                             i2++;
                         }
                     }
@@ -108,21 +109,22 @@ final class DetectionResult {
     }
 
     private int adjustRowNumbersFromLRI() {
-        DetectionResultColumn[] detectionResultColumnArr = this.detectionResultColumns;
-        if (detectionResultColumnArr[0] == null) {
+        DetectionResultColumn detectionResultColumn = this.detectionResultColumns[0];
+        if (detectionResultColumn == null) {
             return 0;
         }
-        Codeword[] codewords = detectionResultColumnArr[0].getCodewords();
+        Codeword[] codewords = detectionResultColumn.getCodewords();
         int i = 0;
         for (int i2 = 0; i2 < codewords.length; i2++) {
-            if (codewords[i2] != null) {
-                int rowNumber = codewords[i2].getRowNumber();
+            Codeword codeword = codewords[i2];
+            if (codeword != null) {
+                int rowNumber = codeword.getRowNumber();
                 int i3 = 0;
                 for (int i4 = 1; i4 < this.barcodeColumnCount + 1 && i3 < 2; i4++) {
-                    Codeword codeword = this.detectionResultColumns[i4].getCodewords()[i2];
-                    if (codeword != null) {
-                        i3 = adjustRowNumberIfValid(rowNumber, i3, codeword);
-                        if (!codeword.hasValidRowNumber()) {
+                    Codeword codeword2 = this.detectionResultColumns[i4].getCodewords()[i2];
+                    if (codeword2 != null) {
+                        i3 = adjustRowNumberIfValid(rowNumber, i3, codeword2);
+                        if (!codeword2.hasValidRowNumber()) {
                             i++;
                         }
                     }
@@ -133,25 +135,25 @@ final class DetectionResult {
     }
 
     private static int adjustRowNumberIfValid(int i, int i2, Codeword codeword) {
-        if (codeword != null && !codeword.hasValidRowNumber()) {
-            if (!codeword.isValidRowNumber(i)) {
-                return i2 + 1;
-            }
-            codeword.setRowNumber(i);
-            return 0;
+        if (codeword == null || codeword.hasValidRowNumber()) {
+            return i2;
         }
-        return i2;
+        if (!codeword.isValidRowNumber(i)) {
+            return i2 + 1;
+        }
+        codeword.setRowNumber(i);
+        return 0;
     }
 
     private void adjustRowNumbers(int i, int i2, Codeword[] codewordArr) {
         Codeword codeword = codewordArr[i2];
         Codeword[] codewords = this.detectionResultColumns[i - 1].getCodewords();
-        DetectionResultColumn[] detectionResultColumnArr = this.detectionResultColumns;
-        int i3 = i + 1;
-        Codeword[] codewords2 = detectionResultColumnArr[i3] != null ? detectionResultColumnArr[i3].getCodewords() : codewords;
+        DetectionResultColumn detectionResultColumn = this.detectionResultColumns[i + 1];
+        Codeword[] codewords2 = detectionResultColumn != null ? detectionResultColumn.getCodewords() : codewords;
         Codeword[] codewordArr2 = new Codeword[14];
         codewordArr2[2] = codewords[i2];
         codewordArr2[3] = codewords2[i2];
+        int i3 = 0;
         if (i2 > 0) {
             int i4 = i2 - 1;
             codewordArr2[0] = codewordArr[i4];
@@ -176,48 +178,49 @@ final class DetectionResult {
             codewordArr2[12] = codewords[i7];
             codewordArr2[13] = codewords2[i7];
         }
-        for (int i8 = 0; i8 < 14 && !adjustRowNumber(codeword, codewordArr2[i8]); i8++) {
+        while (i3 < 14 && !adjustRowNumber(codeword, codewordArr2[i3])) {
+            i3++;
         }
     }
 
     private static boolean adjustRowNumber(Codeword codeword, Codeword codeword2) {
-        if (codeword2 != null && codeword2.hasValidRowNumber() && codeword2.getBucket() == codeword.getBucket()) {
-            codeword.setRowNumber(codeword2.getRowNumber());
-            return true;
+        if (codeword2 == null || !codeword2.hasValidRowNumber() || codeword2.getBucket() != codeword.getBucket()) {
+            return false;
         }
-        return false;
+        codeword.setRowNumber(codeword2.getRowNumber());
+        return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getBarcodeColumnCount() {
         return this.barcodeColumnCount;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getBarcodeRowCount() {
         return this.barcodeMetadata.getRowCount();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getBarcodeECLevel() {
         return this.barcodeMetadata.getErrorCorrectionLevel();
     }
 
-    public void setBoundingBox(BoundingBox boundingBox) {
-        this.boundingBox = boundingBox;
+    public void setBoundingBox(BoundingBox boundingBox2) {
+        this.boundingBox = boundingBox2;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public BoundingBox getBoundingBox() {
         return this.boundingBox;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setDetectionResultColumn(int i, DetectionResultColumn detectionResultColumn) {
         this.detectionResultColumns[i] = detectionResultColumn;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public DetectionResultColumn getDetectionResultColumn(int i) {
         return this.detectionResultColumns[i];
     }
@@ -230,17 +233,17 @@ final class DetectionResult {
         }
         Formatter formatter = new Formatter();
         for (int i = 0; i < detectionResultColumn.getCodewords().length; i++) {
-            formatter.format("CW %3d:", Integer.valueOf(i));
+            formatter.format("CW %3d:", new Object[]{Integer.valueOf(i)});
             for (int i2 = 0; i2 < this.barcodeColumnCount + 2; i2++) {
-                DetectionResultColumn[] detectionResultColumnArr2 = this.detectionResultColumns;
-                if (detectionResultColumnArr2[i2] == null) {
+                DetectionResultColumn detectionResultColumn2 = this.detectionResultColumns[i2];
+                if (detectionResultColumn2 == null) {
                     formatter.format("    |   ", new Object[0]);
                 } else {
-                    Codeword codeword = detectionResultColumnArr2[i2].getCodewords()[i];
+                    Codeword codeword = detectionResultColumn2.getCodewords()[i];
                     if (codeword == null) {
                         formatter.format("    |   ", new Object[0]);
                     } else {
-                        formatter.format(" %3d|%3d", Integer.valueOf(codeword.getRowNumber()), Integer.valueOf(codeword.getValue()));
+                        formatter.format(" %3d|%3d", new Object[]{Integer.valueOf(codeword.getRowNumber()), Integer.valueOf(codeword.getValue())});
                     }
                 }
             }

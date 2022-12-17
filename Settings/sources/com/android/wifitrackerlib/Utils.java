@@ -1,156 +1,98 @@
 package com.android.wifitrackerlib;
 
+import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
-import android.net.NetworkKey;
-import android.net.NetworkScoreManager;
-import android.net.ScoredNetwork;
-import android.net.WifiKey;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiNetworkScoreCache;
 import android.os.PersistableBundle;
-import android.provider.Settings;
+import android.os.UserHandle;
 import android.telephony.CarrierConfigManager;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
-import android.text.Annotation;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.text.style.ClickableSpan;
-import android.util.FeatureFlagUtils;
-import android.view.View;
-import com.android.internal.annotations.VisibleForTesting;
-import com.android.settingslib.HelpUtils;
+import android.util.Pair;
+import com.android.settingslib.applications.RecentAppOpsAccess;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CoderResult;
+import java.nio.charset.CodingErrorAction;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.StringJoiner;
-import java.util.function.Predicate;
-/* loaded from: classes.dex */
+
 public class Utils {
-    @VisibleForTesting
-    static FeatureFlagUtilsWrapper sFeatureFlagUtilsWrapper = new FeatureFlagUtilsWrapper();
-    private static NetworkScoreManager sNetworkScoreManager;
-
-    private static int roundToClosestSpeedEnum(int i) {
-        if (i == 0) {
-            return 0;
+    public static int convertSecurityTypeToDpmWifiSecurity(int i) {
+        switch (i) {
+            case 0:
+            case 6:
+                return 0;
+            case 1:
+            case 2:
+            case 4:
+            case 7:
+                return 1;
+            case 3:
+            case 8:
+            case 9:
+            case 11:
+            case 12:
+                return 2;
+            case 5:
+                return 3;
+            default:
+                return -1;
         }
-        if (i < 7) {
-            return 5;
-        }
-        if (i < 15) {
-            return 10;
-        }
-        return i < 25 ? 20 : 30;
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class FeatureFlagUtilsWrapper {
-        FeatureFlagUtilsWrapper() {
-        }
-
-        boolean isProviderModelEnabled(Context context) {
-            return FeatureFlagUtils.isEnabled(context, "settings_provider_model");
-        }
-    }
-
-    private static String getActiveScorerPackage(Context context) {
-        if (sNetworkScoreManager == null) {
-            sNetworkScoreManager = (NetworkScoreManager) context.getSystemService(NetworkScoreManager.class);
-        }
-        return sNetworkScoreManager.getActiveScorerPackage();
     }
 
     public static ScanResult getBestScanResultByLevel(List<ScanResult> list) {
         if (list.isEmpty()) {
             return null;
         }
-        return (ScanResult) Collections.max(list, Comparator.comparingInt(Utils$$ExternalSyntheticLambda1.INSTANCE));
+        return (ScanResult) Collections.max(list, Comparator.comparingInt(new Utils$$ExternalSyntheticLambda0()));
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static List<Integer> getSecurityTypesFromScanResult(ScanResult scanResult) {
+    static List<Integer> getSecurityTypesFromScanResult(ScanResult scanResult) {
         ArrayList arrayList = new ArrayList();
-        if (isScanResultForOweTransitionNetwork(scanResult)) {
-            arrayList.add(0);
-            arrayList.add(6);
-            return arrayList;
-        } else if (isScanResultForOweNetwork(scanResult)) {
-            arrayList.add(6);
-            return arrayList;
-        } else if (isScanResultForOpenNetwork(scanResult)) {
-            arrayList.add(0);
-            return arrayList;
-        } else if (isScanResultForWepNetwork(scanResult)) {
-            arrayList.add(1);
-            return arrayList;
-        } else if (isScanResultForWapiPskNetwork(scanResult)) {
-            arrayList.add(7);
-            return arrayList;
-        } else if (isScanResultForWapiCertNetwork(scanResult)) {
-            arrayList.add(8);
-            return arrayList;
-        } else if (isScanResultForPskNetwork(scanResult) && isScanResultForSaeNetwork(scanResult)) {
-            arrayList.add(2);
-            arrayList.add(4);
-            return arrayList;
-        } else if (isScanResultForPskNetwork(scanResult)) {
-            arrayList.add(2);
-            return arrayList;
-        } else if (isScanResultForSaeNetwork(scanResult)) {
-            arrayList.add(4);
-            return arrayList;
-        } else {
-            if (isScanResultForEapSuiteBNetwork(scanResult)) {
-                arrayList.add(5);
-            } else if (isScanResultForWpa3EnterpriseTransitionNetwork(scanResult)) {
-                arrayList.add(3);
-                arrayList.add(9);
-            } else if (isScanResultForWpa3EnterpriseOnlyNetwork(scanResult)) {
-                arrayList.add(9);
-            } else if (isScanResultForEapNetwork(scanResult)) {
-                arrayList.add(3);
-            }
-            return arrayList;
+        for (int valueOf : scanResult.getSecurityTypes()) {
+            arrayList.add(Integer.valueOf(valueOf));
         }
+        return arrayList;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static List<Integer> getSecurityTypesFromWifiConfiguration(WifiConfiguration wifiConfiguration) {
+    static List<Integer> getSecurityTypesFromWifiConfiguration(WifiConfiguration wifiConfiguration) {
         if (wifiConfiguration.allowedKeyManagement.get(14)) {
-            return Arrays.asList(8);
-        }
-        if (wifiConfiguration.allowedKeyManagement.get(13)) {
-            return Arrays.asList(7);
-        }
-        if (wifiConfiguration.allowedKeyManagement.get(10)) {
-            return Arrays.asList(5);
-        }
-        if (wifiConfiguration.allowedKeyManagement.get(9)) {
-            return Arrays.asList(6);
-        }
-        if (wifiConfiguration.allowedKeyManagement.get(8)) {
-            return Arrays.asList(4);
-        }
-        if (wifiConfiguration.allowedKeyManagement.get(4)) {
-            return Arrays.asList(2);
-        }
-        if (wifiConfiguration.allowedKeyManagement.get(2)) {
-            return (!wifiConfiguration.requirePmf || wifiConfiguration.allowedPairwiseCiphers.get(1) || !wifiConfiguration.allowedProtocols.get(1)) ? Arrays.asList(3, 9) : Arrays.asList(9);
+            return Arrays.asList(new Integer[]{8});
+        } else if (wifiConfiguration.allowedKeyManagement.get(13)) {
+            return Arrays.asList(new Integer[]{7});
+        } else if (wifiConfiguration.allowedKeyManagement.get(10)) {
+            return Arrays.asList(new Integer[]{5});
+        } else if (wifiConfiguration.allowedKeyManagement.get(9)) {
+            return Arrays.asList(new Integer[]{6});
+        } else if (wifiConfiguration.allowedKeyManagement.get(8)) {
+            return Arrays.asList(new Integer[]{4});
+        } else if (wifiConfiguration.allowedKeyManagement.get(4)) {
+            return Arrays.asList(new Integer[]{2});
+        } else if (wifiConfiguration.allowedKeyManagement.get(2)) {
+            if (!wifiConfiguration.requirePmf || wifiConfiguration.allowedPairwiseCiphers.get(1) || !wifiConfiguration.allowedProtocols.get(1)) {
+                return Arrays.asList(new Integer[]{3, 9});
+            }
+            return Arrays.asList(new Integer[]{9});
         } else if (wifiConfiguration.allowedKeyManagement.get(1)) {
-            return Arrays.asList(2);
+            return Arrays.asList(new Integer[]{2});
         } else {
             if (wifiConfiguration.allowedKeyManagement.get(0) && wifiConfiguration.wepKeys != null) {
                 int i = 0;
@@ -159,18 +101,17 @@ public class Utils {
                     if (i >= strArr.length) {
                         break;
                     } else if (strArr[i] != null) {
-                        return Arrays.asList(1);
+                        return Arrays.asList(new Integer[]{1});
                     } else {
                         i++;
                     }
                 }
             }
-            return Arrays.asList(0);
+            return Arrays.asList(new Integer[]{0});
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static int getSingleSecurityTypeFromMultipleSecurityTypes(List<Integer> list) {
+    static int getSingleSecurityTypeFromMultipleSecurityTypes(List<Integer> list) {
         if (list.size() == 1) {
             return list.get(0).intValue();
         }
@@ -183,69 +124,140 @@ public class Utils {
         if (list.contains(2)) {
             return 2;
         }
-        return list.contains(3) ? 3 : -1;
+        if (list.contains(3)) {
+            return 3;
+        }
+        return -1;
     }
 
-    public static int getAverageSpeedFromScanResults(WifiNetworkScoreCache wifiNetworkScoreCache, List<ScanResult> list) {
-        int calculateBadge;
-        int i = 0;
-        int i2 = 0;
-        for (ScanResult scanResult : list) {
-            ScoredNetwork scoredNetwork = wifiNetworkScoreCache.getScoredNetwork(scanResult);
-            if (scoredNetwork != null && (calculateBadge = scoredNetwork.calculateBadge(scanResult.level)) != 0) {
-                i++;
-                i2 += calculateBadge;
+    private static int toDigit(char[] cArr, int i) throws IllegalArgumentException {
+        char c = cArr[i];
+        if ('0' <= c && c <= '9') {
+            return c - '0';
+        }
+        char c2 = 'a';
+        if ('a' > c || c > 'f') {
+            c2 = 'A';
+            if ('A' > c || c > 'F') {
+                throw new IllegalArgumentException("Illegal char: " + cArr[i] + " at offset " + i);
             }
         }
-        if (i == 0) {
-            return 0;
-        }
-        return roundToClosestSpeedEnum(i2 / i);
+        return (c - c2) + 10;
     }
 
-    public static int getSpeedFromWifiInfo(WifiNetworkScoreCache wifiNetworkScoreCache, WifiInfo wifiInfo) {
-        try {
-            ScoredNetwork scoredNetwork = wifiNetworkScoreCache.getScoredNetwork(new NetworkKey(new WifiKey(wifiInfo.getSSID(), wifiInfo.getBSSID())));
-            if (scoredNetwork != null) {
-                return roundToClosestSpeedEnum(scoredNetwork.calculateBadge(wifiInfo.getRssi()));
-            }
-            return 0;
-        } catch (IllegalArgumentException unused) {
-            return 0;
+    /* JADX WARNING: Removed duplicated region for block: B:9:0x001f A[LOOP:0: B:8:0x001d->B:9:0x001f, LOOP_END] */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private static byte[] decode(char[] r6, boolean r7) throws java.lang.IllegalArgumentException {
+        /*
+            int r0 = r6.length
+            int r1 = r0 + 1
+            int r1 = r1 / 2
+            byte[] r1 = new byte[r1]
+            r2 = 0
+            r3 = 1
+            if (r7 == 0) goto L_0x0018
+            int r7 = r0 % 2
+            if (r7 == 0) goto L_0x001c
+            int r7 = toDigit(r6, r2)
+            byte r7 = (byte) r7
+            r1[r2] = r7
+            r2 = r3
+            goto L_0x001d
+        L_0x0018:
+            int r7 = r0 % 2
+            if (r7 != 0) goto L_0x0036
+        L_0x001c:
+            r3 = r2
+        L_0x001d:
+            if (r2 >= r0) goto L_0x0035
+            int r7 = r3 + 1
+            int r4 = toDigit(r6, r2)
+            int r4 = r4 << 4
+            int r5 = r2 + 1
+            int r5 = toDigit(r6, r5)
+            r4 = r4 | r5
+            byte r4 = (byte) r4
+            r1[r3] = r4
+            int r2 = r2 + 2
+            r3 = r7
+            goto L_0x001d
+        L_0x0035:
+            return r1
+        L_0x0036:
+            java.lang.IllegalArgumentException r6 = new java.lang.IllegalArgumentException
+            java.lang.StringBuilder r7 = new java.lang.StringBuilder
+            r7.<init>()
+            java.lang.String r1 = "Invalid input length: "
+            r7.append(r1)
+            r7.append(r0)
+            java.lang.String r7 = r7.toString()
+            r6.<init>(r7)
+            throw r6
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.wifitrackerlib.Utils.decode(char[], boolean):byte[]");
+    }
+
+    private static String decodeSsid(byte[] bArr, Charset charset) {
+        CharsetDecoder onUnmappableCharacter = charset.newDecoder().onMalformedInput(CodingErrorAction.REPORT).onUnmappableCharacter(CodingErrorAction.REPORT);
+        CharBuffer allocate = CharBuffer.allocate(32);
+        CoderResult decode = onUnmappableCharacter.decode(ByteBuffer.wrap(bArr), allocate, true);
+        allocate.flip();
+        if (decode.isError()) {
+            return null;
         }
+        return allocate.toString();
+    }
+
+    private static String removeEnclosingQuotes(String str) {
+        int length = str.length();
+        if (length < 2 || str.charAt(0) != '\"') {
+            return str;
+        }
+        int i = length - 1;
+        return str.charAt(i) == '\"' ? str.substring(1, i) : str;
+    }
+
+    static String getReadableText(String str) {
+        if (!TextUtils.isEmpty(str) && str.charAt(0) != '\"') {
+            try {
+                byte[] decode = decode(str.toCharArray(), false);
+                Charset forName = Charset.forName("UTF-8");
+                if (forName != null) {
+                    String decodeSsid = decodeSsid(decode, forName);
+                    if (!TextUtils.isEmpty(decodeSsid)) {
+                        return decodeSsid;
+                    }
+                }
+                Charset forName2 = Charset.forName("GBK");
+                if (forName2 != null) {
+                    String decodeSsid2 = decodeSsid(decode, forName2);
+                    if (!TextUtils.isEmpty(decodeSsid2)) {
+                        return decodeSsid2;
+                    }
+                }
+            } catch (IllegalArgumentException unused) {
+            }
+        }
+        return removeEnclosingQuotes(str);
     }
 
     static String getAppLabel(Context context, String str) {
         try {
-            String string = Settings.Global.getString(context.getContentResolver(), "use_open_wifi_package");
-            if (!TextUtils.isEmpty(string) && TextUtils.equals(str, getActiveScorerPackage(context))) {
-                str = string;
-            }
             return context.getPackageManager().getApplicationInfo(str, 0).loadLabel(context.getPackageManager()).toString();
         } catch (PackageManager.NameNotFoundException unused) {
             return "";
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static String getConnectedDescription(Context context, WifiConfiguration wifiConfiguration, NetworkCapabilities networkCapabilities, String str, boolean z, boolean z2) {
+    static String getConnectedDescription(Context context, WifiConfiguration wifiConfiguration, NetworkCapabilities networkCapabilities, boolean z, boolean z2) {
         StringJoiner stringJoiner = new StringJoiner(context.getString(R$string.wifitrackerlib_summary_separator));
-        boolean z3 = !z && sFeatureFlagUtilsWrapper.isProviderModelEnabled(context);
-        if (wifiConfiguration != null) {
-            if (wifiConfiguration.fromWifiNetworkSuggestion || wifiConfiguration.fromWifiNetworkSpecifier) {
-                String suggestionOrSpecifierLabel = getSuggestionOrSpecifierLabel(context, wifiConfiguration);
-                if (!TextUtils.isEmpty(suggestionOrSpecifierLabel)) {
-                    if (z3) {
-                        stringJoiner.add(context.getString(R$string.wifitrackerlib_available_via_app, suggestionOrSpecifierLabel));
-                    } else {
-                        stringJoiner.add(context.getString(R$string.wifitrackerlib_connected_via_app, suggestionOrSpecifierLabel));
-                    }
-                }
-            } else if (wifiConfiguration.isEphemeral() && !z3) {
-                if (!TextUtils.isEmpty(str)) {
-                    stringJoiner.add(String.format(context.getString(R$string.wifitrackerlib_connected_via_network_scorer), str));
+        if (wifiConfiguration != null && (wifiConfiguration.fromWifiNetworkSuggestion || wifiConfiguration.fromWifiNetworkSpecifier)) {
+            String suggestionOrSpecifierLabel = getSuggestionOrSpecifierLabel(context, wifiConfiguration);
+            if (!TextUtils.isEmpty(suggestionOrSpecifierLabel)) {
+                if (!z) {
+                    stringJoiner.add(context.getString(R$string.wifitrackerlib_available_via_app, new Object[]{suggestionOrSpecifierLabel}));
                 } else {
-                    stringJoiner.add(context.getString(R$string.wifitrackerlib_connected_via_network_scorer_default));
+                    stringJoiner.add(context.getString(R$string.wifitrackerlib_connected_via_app, new Object[]{suggestionOrSpecifierLabel}));
                 }
             }
         }
@@ -256,44 +268,45 @@ public class Utils {
         if (!TextUtils.isEmpty(currentNetworkCapabilitiesInformation)) {
             stringJoiner.add(currentNetworkCapabilitiesInformation);
         }
-        if (stringJoiner.length() == 0 && !z3) {
-            return context.getResources().getStringArray(R$array.wifitrackerlib_wifi_status)[NetworkInfo.DetailedState.CONNECTED.ordinal()];
+        if (stringJoiner.length() != 0 || !z) {
+            return stringJoiner.toString();
         }
-        return stringJoiner.toString();
+        return context.getResources().getStringArray(R$array.wifitrackerlib_wifi_status)[NetworkInfo.DetailedState.CONNECTED.ordinal()];
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static String getConnectingDescription(Context context, NetworkInfo networkInfo) {
+    static String getConnectingDescription(Context context, NetworkInfo networkInfo) {
         NetworkInfo.DetailedState detailedState;
         if (context == null || networkInfo == null || (detailedState = networkInfo.getDetailedState()) == null) {
             return "";
         }
         String[] stringArray = context.getResources().getStringArray(R$array.wifitrackerlib_wifi_status);
         int ordinal = detailedState.ordinal();
-        return ordinal >= stringArray.length ? "" : stringArray[ordinal];
+        if (ordinal >= stringArray.length) {
+            return "";
+        }
+        return stringArray[ordinal];
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static String getDisconnectedDescription(Context context, WifiConfiguration wifiConfiguration, boolean z, boolean z2) {
-        if (context == null) {
+    static String getDisconnectedDescription(WifiTrackerInjector wifiTrackerInjector, Context context, WifiConfiguration wifiConfiguration, boolean z, boolean z2) {
+        if (context == null || wifiConfiguration == null) {
             return "";
         }
         StringJoiner stringJoiner = new StringJoiner(context.getString(R$string.wifitrackerlib_summary_separator));
         if (z2) {
             stringJoiner.add(context.getString(R$string.wifitrackerlib_wifi_disconnected));
-        } else if (wifiConfiguration != null) {
-            if (z && !wifiConfiguration.isPasspoint()) {
-                String appLabel = getAppLabel(context, wifiConfiguration.creatorName);
-                if (!TextUtils.isEmpty(appLabel)) {
-                    stringJoiner.add(context.getString(R$string.wifitrackerlib_saved_network, appLabel));
-                }
-            } else if (wifiConfiguration.fromWifiNetworkSuggestion) {
+        } else if (!z || wifiConfiguration.isPasspoint()) {
+            if (wifiConfiguration.fromWifiNetworkSuggestion) {
                 String suggestionOrSpecifierLabel = getSuggestionOrSpecifierLabel(context, wifiConfiguration);
                 if (!TextUtils.isEmpty(suggestionOrSpecifierLabel)) {
-                    stringJoiner.add(context.getString(R$string.wifitrackerlib_available_via_app, suggestionOrSpecifierLabel));
+                    stringJoiner.add(context.getString(R$string.wifitrackerlib_available_via_app, new Object[]{suggestionOrSpecifierLabel}));
                 }
             } else {
                 stringJoiner.add(context.getString(R$string.wifitrackerlib_wifi_remembered));
+            }
+        } else if (!wifiTrackerInjector.getNoAttributionAnnotationPackages().contains(wifiConfiguration.creatorName)) {
+            String appLabel = getAppLabel(context, wifiConfiguration.creatorName);
+            if (!TextUtils.isEmpty(appLabel)) {
+                stringJoiner.add(context.getString(R$string.wifitrackerlib_saved_network, new Object[]{appLabel}));
             }
         }
         String wifiConfigurationFailureMessage = getWifiConfigurationFailureMessage(context, wifiConfiguration);
@@ -312,75 +325,133 @@ public class Utils {
             return carrierNameForSubId;
         }
         String appLabel = getAppLabel(context, wifiConfiguration.creatorName);
-        return !TextUtils.isEmpty(appLabel) ? appLabel : wifiConfiguration.creatorName;
+        if (!TextUtils.isEmpty(appLabel)) {
+            return appLabel;
+        }
+        return wifiConfiguration.creatorName;
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:27:0x0049, code lost:
-        if (r4 != 9) goto L28;
+    /* JADX WARNING: Code restructure failed: missing block: B:25:0x0049, code lost:
+        if (r1 != 9) goto L_0x006f;
      */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private static String getWifiConfigurationFailureMessage(Context context, WifiConfiguration wifiConfiguration) {
-        int i;
-        if (context == null || wifiConfiguration == null) {
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private static java.lang.String getWifiConfigurationFailureMessage(android.content.Context r4, android.net.wifi.WifiConfiguration r5) {
+        /*
+            java.lang.String r0 = ""
+            if (r4 == 0) goto L_0x00a5
+            if (r5 != 0) goto L_0x0008
+            goto L_0x00a5
+        L_0x0008:
+            boolean r1 = r5.hasNoInternetAccess()
+            r2 = 2
+            if (r1 == 0) goto L_0x0023
+            android.net.wifi.WifiConfiguration$NetworkSelectionStatus r5 = r5.getNetworkSelectionStatus()
+            int r5 = r5.getNetworkSelectionStatus()
+            if (r5 != r2) goto L_0x001c
+            int r5 = com.android.wifitrackerlib.R$string.wifitrackerlib_wifi_no_internet_no_reconnect
+            goto L_0x001e
+        L_0x001c:
+            int r5 = com.android.wifitrackerlib.R$string.wifitrackerlib_wifi_no_internet
+        L_0x001e:
+            java.lang.String r4 = r4.getString(r5)
+            return r4
+        L_0x0023:
+            android.net.wifi.WifiConfiguration$NetworkSelectionStatus r1 = r5.getNetworkSelectionStatus()
+            int r1 = r1.getNetworkSelectionStatus()
+            if (r1 == 0) goto L_0x006f
+            android.net.wifi.WifiConfiguration$NetworkSelectionStatus r1 = r5.getNetworkSelectionStatus()
+            int r1 = r1.getNetworkSelectionDisableReason()
+            r3 = 1
+            if (r1 == r3) goto L_0x0068
+            if (r1 == r2) goto L_0x0061
+            r2 = 3
+            if (r1 == r2) goto L_0x005a
+            r2 = 4
+            if (r1 == r2) goto L_0x0053
+            r2 = 6
+            if (r1 == r2) goto L_0x0053
+            r2 = 8
+            if (r1 == r2) goto L_0x004c
+            r2 = 9
+            if (r1 == r2) goto L_0x0061
+            goto L_0x006f
+        L_0x004c:
+            int r5 = com.android.wifitrackerlib.R$string.wifitrackerlib_wifi_check_password_try_again
+            java.lang.String r4 = r4.getString(r5)
+            return r4
+        L_0x0053:
+            int r5 = com.android.wifitrackerlib.R$string.wifitrackerlib_wifi_no_internet_no_reconnect
+            java.lang.String r4 = r4.getString(r5)
+            return r4
+        L_0x005a:
+            int r5 = com.android.wifitrackerlib.R$string.wifitrackerlib_wifi_disabled_network_failure
+            java.lang.String r4 = r4.getString(r5)
+            return r4
+        L_0x0061:
+            int r5 = com.android.wifitrackerlib.R$string.wifitrackerlib_wifi_disabled_password_failure
+            java.lang.String r4 = r4.getString(r5)
+            return r4
+        L_0x0068:
+            int r5 = com.android.wifitrackerlib.R$string.wifitrackerlib_wifi_disabled_generic
+            java.lang.String r4 = r4.getString(r5)
+            return r4
+        L_0x006f:
+            int r5 = r5.getRecentFailureReason()
+            r1 = 17
+            if (r5 == r1) goto L_0x009e
+            switch(r5) {
+                case 1002: goto L_0x009e;
+                case 1003: goto L_0x0097;
+                case 1004: goto L_0x009e;
+                case 1005: goto L_0x0090;
+                case 1006: goto L_0x0089;
+                case 1007: goto L_0x0090;
+                case 1008: goto L_0x0090;
+                case 1009: goto L_0x0082;
+                case 1010: goto L_0x0082;
+                case 1011: goto L_0x007b;
+                default: goto L_0x007a;
+            }
+        L_0x007a:
+            return r0
+        L_0x007b:
+            int r5 = com.android.wifitrackerlib.R$string.wifitrackerlib_wifi_network_not_found
+            java.lang.String r4 = r4.getString(r5)
+            return r4
+        L_0x0082:
+            int r5 = com.android.wifitrackerlib.R$string.wifitrackerlib_wifi_mbo_oce_assoc_disallowed_insufficient_rssi
+            java.lang.String r4 = r4.getString(r5)
+            return r4
+        L_0x0089:
+            int r5 = com.android.wifitrackerlib.R$string.wifitrackerlib_wifi_mbo_assoc_disallowed_max_num_sta_associated
+            java.lang.String r4 = r4.getString(r5)
+            return r4
+        L_0x0090:
+            int r5 = com.android.wifitrackerlib.R$string.wifitrackerlib_wifi_mbo_assoc_disallowed_cannot_connect
+            java.lang.String r4 = r4.getString(r5)
+            return r4
+        L_0x0097:
+            int r5 = com.android.wifitrackerlib.R$string.wifitrackerlib_wifi_poor_channel_conditions
+            java.lang.String r4 = r4.getString(r5)
+            return r4
+        L_0x009e:
+            int r5 = com.android.wifitrackerlib.R$string.wifitrackerlib_wifi_ap_unable_to_handle_new_sta
+            java.lang.String r4 = r4.getString(r5)
+            return r4
+        L_0x00a5:
+            return r0
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.wifitrackerlib.Utils.getWifiConfigurationFailureMessage(android.content.Context, android.net.wifi.WifiConfiguration):java.lang.String");
+    }
+
+    static String getAutoConnectDescription(Context context, WifiEntry wifiEntry) {
+        if (context == null || wifiEntry == null || !wifiEntry.canSetAutoJoinEnabled() || wifiEntry.isAutoJoinEnabled()) {
             return "";
         }
-        if (wifiConfiguration.hasNoInternetAccess()) {
-            if (wifiConfiguration.getNetworkSelectionStatus().getNetworkSelectionStatus() == 2) {
-                i = R$string.wifitrackerlib_wifi_no_internet_no_reconnect;
-            } else {
-                i = R$string.wifitrackerlib_wifi_no_internet;
-            }
-            return context.getString(i);
-        }
-        if (wifiConfiguration.getNetworkSelectionStatus().getNetworkSelectionStatus() != 0) {
-            int networkSelectionDisableReason = wifiConfiguration.getNetworkSelectionStatus().getNetworkSelectionDisableReason();
-            if (networkSelectionDisableReason != 1) {
-                if (networkSelectionDisableReason != 2) {
-                    if (networkSelectionDisableReason == 3) {
-                        return context.getString(R$string.wifitrackerlib_wifi_disabled_network_failure);
-                    }
-                    if (networkSelectionDisableReason == 4 || networkSelectionDisableReason == 6) {
-                        return context.getString(R$string.wifitrackerlib_wifi_no_internet_no_reconnect);
-                    }
-                    if (networkSelectionDisableReason == 8) {
-                        return context.getString(R$string.wifitrackerlib_wifi_check_password_try_again);
-                    }
-                }
-                return context.getString(R$string.wifitrackerlib_wifi_disabled_password_failure);
-            }
-            return context.getString(R$string.wifitrackerlib_wifi_disabled_generic);
-        }
-        int recentFailureReason = wifiConfiguration.getRecentFailureReason();
-        if (recentFailureReason != 17) {
-            switch (recentFailureReason) {
-                case 1003:
-                    return context.getString(R$string.wifitrackerlib_wifi_poor_channel_conditions);
-                case 1005:
-                case 1007:
-                case 1008:
-                    return context.getString(R$string.wifitrackerlib_wifi_mbo_assoc_disallowed_cannot_connect);
-                case 1006:
-                    return context.getString(R$string.wifitrackerlib_wifi_mbo_assoc_disallowed_max_num_sta_associated);
-                case 1009:
-                case 1010:
-                    return context.getString(R$string.wifitrackerlib_wifi_mbo_oce_assoc_disallowed_insufficient_rssi);
-                case 1011:
-                    return context.getString(R$string.wifitrackerlib_wifi_network_not_found);
-            }
-        }
-        return context.getString(R$string.wifitrackerlib_wifi_ap_unable_to_handle_new_sta);
-        return "";
+        return context.getString(R$string.wifitrackerlib_auto_connect_disable);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static String getAutoConnectDescription(Context context, WifiEntry wifiEntry) {
-        return (context == null || wifiEntry == null || !wifiEntry.canSetAutoJoinEnabled() || wifiEntry.isAutoJoinEnabled()) ? "" : context.getString(R$string.wifitrackerlib_auto_connect_disable);
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static String getMeteredDescription(Context context, WifiEntry wifiEntry) {
+    static String getMeteredDescription(Context context, WifiEntry wifiEntry) {
         if (context == null || wifiEntry == null) {
             return "";
         }
@@ -393,29 +464,13 @@ public class Utils {
         if (wifiEntry.getMeteredChoice() == 2) {
             return context.getString(R$string.wifitrackerlib_wifi_unmetered_label);
         }
-        return wifiEntry.isMetered() ? context.getString(R$string.wifitrackerlib_wifi_metered_label) : "";
+        if (wifiEntry.isMetered()) {
+            return context.getString(R$string.wifitrackerlib_wifi_metered_label);
+        }
+        return "";
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static String getSpeedDescription(Context context, WifiEntry wifiEntry) {
-        if (context == null || wifiEntry == null) {
-            return "";
-        }
-        int speed = wifiEntry.getSpeed();
-        if (speed == 5) {
-            return context.getString(R$string.wifitrackerlib_speed_label_slow);
-        }
-        if (speed == 10) {
-            return context.getString(R$string.wifitrackerlib_speed_label_okay);
-        }
-        if (speed == 20) {
-            return context.getString(R$string.wifitrackerlib_speed_label_fast);
-        }
-        return speed != 30 ? "" : context.getString(R$string.wifitrackerlib_speed_label_very_fast);
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static String getVerboseLoggingDescription(WifiEntry wifiEntry) {
+    static String getVerboseLoggingDescription(WifiEntry wifiEntry) {
         if (!BaseWifiTracker.isVerboseLoggingEnabled() || wifiEntry == null) {
             return "";
         }
@@ -439,8 +494,7 @@ public class Utils {
         return stringJoiner.toString();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static String getNetworkSelectionDescription(WifiConfiguration wifiConfiguration) {
+    static String getNetworkSelectionDescription(WifiConfiguration wifiConfiguration) {
         if (wifiConfiguration == null) {
             return "";
         }
@@ -467,9 +521,9 @@ public class Utils {
     }
 
     static String getCurrentNetworkCapabilitiesInformation(Context context, NetworkCapabilities networkCapabilities) {
-        if (context != null && networkCapabilities != null) {
+        if (!(context == null || networkCapabilities == null)) {
             if (networkCapabilities.hasCapability(17)) {
-                return context.getString(context.getResources().getIdentifier("network_available_sign_in", "string", "android"));
+                return context.getString(context.getResources().getIdentifier("network_available_sign_in", "string", RecentAppOpsAccess.ANDROID_SYSTEM_PACKAGE_NAME));
             }
             if (networkCapabilities.hasCapability(24)) {
                 return context.getString(R$string.wifitrackerlib_wifi_limited_connection);
@@ -484,24 +538,19 @@ public class Utils {
         return "";
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static boolean isSimPresent(Context context, final int i) {
+    static boolean isSimPresent(Context context, int i) {
         List<SubscriptionInfo> activeSubscriptionInfoList;
         SubscriptionManager subscriptionManager = (SubscriptionManager) context.getSystemService("telephony_subscription_service");
         if (subscriptionManager == null || (activeSubscriptionInfoList = subscriptionManager.getActiveSubscriptionInfoList()) == null || activeSubscriptionInfoList.isEmpty()) {
             return false;
         }
-        return activeSubscriptionInfoList.stream().anyMatch(new Predicate() { // from class: com.android.wifitrackerlib.Utils$$ExternalSyntheticLambda0
-            @Override // java.util.function.Predicate
-            public final boolean test(Object obj) {
-                boolean lambda$isSimPresent$1;
-                lambda$isSimPresent$1 = Utils.lambda$isSimPresent$1(i, (SubscriptionInfo) obj);
-                return lambda$isSimPresent$1;
-            }
-        });
+        if (i == -1) {
+            return true;
+        }
+        return activeSubscriptionInfoList.stream().anyMatch(new Utils$$ExternalSyntheticLambda1(i));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ boolean lambda$isSimPresent$1(int i, SubscriptionInfo subscriptionInfo) {
         return subscriptionInfo.getCarrierId() == i;
     }
@@ -516,8 +565,12 @@ public class Utils {
         return simCarrierIdName.toString();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static boolean isSimCredential(WifiConfiguration wifiConfiguration) {
+    static boolean isServerCertUsedNetwork(WifiConfiguration wifiConfiguration) {
+        WifiEnterpriseConfig wifiEnterpriseConfig = wifiConfiguration.enterpriseConfig;
+        return wifiEnterpriseConfig != null && wifiEnterpriseConfig.isEapMethodServerCertUsed();
+    }
+
+    static boolean isSimCredential(WifiConfiguration wifiConfiguration) {
         WifiEnterpriseConfig wifiEnterpriseConfig = wifiConfiguration.enterpriseConfig;
         return wifiEnterpriseConfig != null && wifiEnterpriseConfig.isAuthenticationSimBased();
     }
@@ -531,8 +584,8 @@ public class Utils {
         List<SubscriptionInfo> activeSubscriptionInfoList = subscriptionManager.getActiveSubscriptionInfoList();
         if (activeSubscriptionInfoList != null && !activeSubscriptionInfoList.isEmpty()) {
             int defaultDataSubscriptionId = SubscriptionManager.getDefaultDataSubscriptionId();
-            for (SubscriptionInfo subscriptionInfo : activeSubscriptionInfoList) {
-                if (subscriptionInfo.getCarrierId() == wifiConfiguration.carrierId && (i = subscriptionInfo.getSubscriptionId()) == defaultDataSubscriptionId) {
+            for (SubscriptionInfo next : activeSubscriptionInfoList) {
+                if (next.getCarrierId() == wifiConfiguration.carrierId && (i = next.getSubscriptionId()) == defaultDataSubscriptionId) {
                     break;
                 }
             }
@@ -543,104 +596,126 @@ public class Utils {
     static boolean isImsiPrivacyProtectionProvided(Context context, int i) {
         PersistableBundle configForSubId;
         CarrierConfigManager carrierConfigManager = (CarrierConfigManager) context.getSystemService("carrier_config");
-        return (carrierConfigManager == null || (configForSubId = carrierConfigManager.getConfigForSubId(i)) == null || (configForSubId.getInt("imsi_key_availability_int") & 2) == 0) ? false : true;
+        if (carrierConfigManager == null || (configForSubId = carrierConfigManager.getConfigForSubId(i)) == null || (configForSubId.getInt("imsi_key_availability_int") & 2) == 0) {
+            return false;
+        }
+        return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static CharSequence getImsiProtectionDescription(Context context, WifiConfiguration wifiConfiguration) {
-        int subIdForConfig;
-        if (context != null && wifiConfiguration != null && isSimCredential(wifiConfiguration)) {
+    static CharSequence getImsiProtectionDescription(Context context, WifiConfiguration wifiConfiguration) {
+        int i;
+        if (context != null && wifiConfiguration != null && isSimCredential(wifiConfiguration) && !isServerCertUsedNetwork(wifiConfiguration)) {
             if (wifiConfiguration.carrierId == -1) {
-                subIdForConfig = SubscriptionManager.getDefaultSubscriptionId();
+                i = SubscriptionManager.getDefaultSubscriptionId();
             } else {
-                subIdForConfig = getSubIdForConfig(context, wifiConfiguration);
+                i = getSubIdForConfig(context, wifiConfiguration);
             }
-            if (subIdForConfig != -1 && !isImsiPrivacyProtectionProvided(context, subIdForConfig)) {
-                return linkifyAnnotation(context, context.getText(R$string.wifitrackerlib_imsi_protection_warning), "url", context.getString(R$string.wifitrackerlib_help_url_imsi_protection));
+            if (i != -1 && !isImsiPrivacyProtectionProvided(context, i)) {
+                return NonSdkApiWrapper.linkifyAnnotation(context, context.getText(R$string.wifitrackerlib_imsi_protection_warning), "url", context.getString(R$string.wifitrackerlib_help_url_imsi_protection));
             }
         }
         return "";
     }
 
-    static CharSequence linkifyAnnotation(final Context context, CharSequence charSequence, String str, final String str2) {
-        Annotation[] annotationArr;
-        if (TextUtils.isEmpty(str2)) {
-            return charSequence;
+    public static InetAddress getNetworkPart(InetAddress inetAddress, int i) {
+        byte[] address = inetAddress.getAddress();
+        maskRawAddress(address, i);
+        try {
+            return InetAddress.getByAddress(address);
+        } catch (UnknownHostException e) {
+            throw new RuntimeException("getNetworkPart error - " + e.toString());
         }
-        SpannableString spannableString = new SpannableString(charSequence);
-        for (Annotation annotation : (Annotation[]) spannableString.getSpans(0, spannableString.length(), Annotation.class)) {
-            if (TextUtils.equals(annotation.getValue(), str)) {
-                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(spannableString);
-                ClickableSpan clickableSpan = new ClickableSpan() { // from class: com.android.wifitrackerlib.Utils.1
-                    @Override // android.text.style.ClickableSpan
-                    public void onClick(View view) {
-                        view.startActivityForResult(HelpUtils.getHelpIntent(context, str2, view.getClass().getName()), 0);
-                    }
-                };
-                spannableStringBuilder.setSpan(clickableSpan, spannableString.getSpanStart(annotation), spannableString.getSpanEnd(annotation), spannableString.getSpanFlags(clickableSpan));
-                return spannableStringBuilder;
+    }
+
+    public static void maskRawAddress(byte[] bArr, int i) {
+        if (i < 0 || i > bArr.length * 8) {
+            throw new RuntimeException("IP address with " + bArr.length + " bytes has invalid prefix length " + i);
+        }
+        int i2 = i / 8;
+        byte b = (byte) (255 << (8 - (i % 8)));
+        if (i2 < bArr.length) {
+            bArr[i2] = (byte) (b & bArr[i2]);
+        }
+        while (true) {
+            i2++;
+            if (i2 < bArr.length) {
+                bArr[i2] = 0;
+            } else {
+                return;
             }
         }
-        return charSequence;
     }
 
-    public static boolean isScanResultForPskNetwork(ScanResult scanResult) {
-        return scanResult.capabilities.contains("PSK");
+    private static Context createPackageContextAsUser(int i, Context context) {
+        try {
+            return context.createPackageContextAsUser(context.getPackageName(), 0, UserHandle.getUserHandleForUid(i));
+        } catch (PackageManager.NameNotFoundException unused) {
+            return null;
+        }
     }
 
-    public static boolean isScanResultForWapiPskNetwork(ScanResult scanResult) {
-        return scanResult.capabilities.contains("WAPI-PSK");
+    private static DevicePolicyManager retrieveDevicePolicyManagerFromUserContext(int i, Context context) {
+        Context createPackageContextAsUser = createPackageContextAsUser(i, context);
+        if (createPackageContextAsUser == null) {
+            return null;
+        }
+        return (DevicePolicyManager) createPackageContextAsUser.getSystemService(DevicePolicyManager.class);
     }
 
-    public static boolean isScanResultForWapiCertNetwork(ScanResult scanResult) {
-        return scanResult.capabilities.contains("WAPI-CERT");
+    private static Pair<UserHandle, ComponentName> getDeviceOwner(Context context) {
+        DevicePolicyManager devicePolicyManager = (DevicePolicyManager) context.getSystemService(DevicePolicyManager.class);
+        if (devicePolicyManager == null) {
+            return null;
+        }
+        try {
+            UserHandle deviceOwnerUser = devicePolicyManager.getDeviceOwnerUser();
+            ComponentName deviceOwnerComponentOnAnyUser = devicePolicyManager.getDeviceOwnerComponentOnAnyUser();
+            if (deviceOwnerUser == null || deviceOwnerComponentOnAnyUser == null || deviceOwnerComponentOnAnyUser.getPackageName() == null) {
+                return null;
+            }
+            return new Pair<>(deviceOwnerUser, deviceOwnerComponentOnAnyUser);
+        } catch (Exception e) {
+            throw new RuntimeException("getDeviceOwner error - " + e.toString());
+        }
     }
 
-    public static boolean isScanResultForEapNetwork(ScanResult scanResult) {
-        return (scanResult.capabilities.contains("EAP/SHA1") || scanResult.capabilities.contains("EAP/SHA256") || scanResult.capabilities.contains("FT/EAP") || scanResult.capabilities.contains("EAP-FILS")) && !isScanResultForWpa3EnterpriseOnlyNetwork(scanResult) && !isScanResultForWpa3EnterpriseTransitionNetwork(scanResult);
+    public static boolean isDeviceOwner(int i, String str, Context context) {
+        Pair<UserHandle, ComponentName> deviceOwner;
+        if (str != null && (deviceOwner = getDeviceOwner(context)) != null && ((UserHandle) deviceOwner.first).equals(UserHandle.getUserHandleForUid(i)) && ((ComponentName) deviceOwner.second).getPackageName().equals(str)) {
+            return true;
+        }
+        return false;
     }
 
-    private static boolean isScanResultForPmfMandatoryNetwork(ScanResult scanResult) {
-        return scanResult.capabilities.contains("[MFPR]");
+    public static boolean isProfileOwner(int i, String str, Context context) {
+        DevicePolicyManager retrieveDevicePolicyManagerFromUserContext;
+        if (str == null || (retrieveDevicePolicyManagerFromUserContext = retrieveDevicePolicyManagerFromUserContext(i, context)) == null) {
+            return false;
+        }
+        return retrieveDevicePolicyManagerFromUserContext.isProfileOwnerApp(str);
     }
 
-    private static boolean isScanResultForPmfCapableNetwork(ScanResult scanResult) {
-        return scanResult.capabilities.contains("[MFPC]");
+    public static boolean isDeviceOrProfileOwner(int i, String str, Context context) {
+        return isDeviceOwner(i, str, context) || isProfileOwner(i, str, context);
     }
 
-    public static boolean isScanResultForWpa3EnterpriseTransitionNetwork(ScanResult scanResult) {
-        return scanResult.capabilities.contains("EAP/SHA1") && scanResult.capabilities.contains("EAP/SHA256") && scanResult.capabilities.contains("RSN") && !scanResult.capabilities.contains("WEP") && !scanResult.capabilities.contains("TKIP") && !isScanResultForPmfMandatoryNetwork(scanResult) && isScanResultForPmfCapableNetwork(scanResult);
-    }
-
-    public static boolean isScanResultForWpa3EnterpriseOnlyNetwork(ScanResult scanResult) {
-        return scanResult.capabilities.contains("EAP/SHA256") && !scanResult.capabilities.contains("EAP/SHA1") && scanResult.capabilities.contains("RSN") && !scanResult.capabilities.contains("WEP") && !scanResult.capabilities.contains("TKIP") && isScanResultForPmfMandatoryNetwork(scanResult) && isScanResultForPmfCapableNetwork(scanResult);
-    }
-
-    public static boolean isScanResultForEapSuiteBNetwork(ScanResult scanResult) {
-        return scanResult.capabilities.contains("SUITE_B_192") && scanResult.capabilities.contains("RSN") && !scanResult.capabilities.contains("WEP") && !scanResult.capabilities.contains("TKIP") && isScanResultForPmfMandatoryNetwork(scanResult);
-    }
-
-    public static boolean isScanResultForWepNetwork(ScanResult scanResult) {
-        return scanResult.capabilities.contains("WEP");
-    }
-
-    public static boolean isScanResultForOweNetwork(ScanResult scanResult) {
-        return scanResult.capabilities.contains("OWE");
-    }
-
-    public static boolean isScanResultForOweTransitionNetwork(ScanResult scanResult) {
-        return scanResult.capabilities.contains("OWE_TRANSITION");
-    }
-
-    public static boolean isScanResultForSaeNetwork(ScanResult scanResult) {
-        return scanResult.capabilities.contains("SAE");
-    }
-
-    public static boolean isScanResultForUnknownAkmNetwork(ScanResult scanResult) {
-        return scanResult.capabilities.contains("?");
-    }
-
-    public static boolean isScanResultForOpenNetwork(ScanResult scanResult) {
-        return !isScanResultForWepNetwork(scanResult) && !isScanResultForPskNetwork(scanResult) && !isScanResultForEapNetwork(scanResult) && !isScanResultForSaeNetwork(scanResult) && !isScanResultForWpa3EnterpriseTransitionNetwork(scanResult) && !isScanResultForWpa3EnterpriseOnlyNetwork(scanResult) && !isScanResultForWapiPskNetwork(scanResult) && !isScanResultForWapiCertNetwork(scanResult) && !isScanResultForEapSuiteBNetwork(scanResult) && !isScanResultForUnknownAkmNetwork(scanResult);
+    public static String getStandardString(Context context, int i) {
+        if (i == 1) {
+            return context.getString(R$string.wifitrackerlib_wifi_standard_legacy);
+        }
+        switch (i) {
+            case 4:
+                return context.getString(R$string.wifitrackerlib_wifi_standard_11n);
+            case 5:
+                return context.getString(R$string.wifitrackerlib_wifi_standard_11ac);
+            case 6:
+                return context.getString(R$string.wifitrackerlib_wifi_standard_11ax);
+            case 7:
+                return context.getString(R$string.wifitrackerlib_wifi_standard_11ad);
+            case 8:
+                return context.getString(R$string.wifitrackerlib_wifi_standard_11be);
+            default:
+                return context.getString(R$string.wifitrackerlib_wifi_standard_unknown);
+        }
     }
 }

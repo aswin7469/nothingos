@@ -17,33 +17,31 @@ import com.google.zxing.datamatrix.decoder.Decoder;
 import com.google.zxing.datamatrix.detector.Detector;
 import java.util.List;
 import java.util.Map;
-/* loaded from: classes2.dex */
+
 public final class DataMatrixReader implements Reader {
     private static final ResultPoint[] NO_POINTS = new ResultPoint[0];
     private final Decoder decoder = new Decoder();
 
-    @Override // com.google.zxing.Reader
     public void reset() {
     }
 
-    @Override // com.google.zxing.Reader
     public Result decode(BinaryBitmap binaryBitmap, Map<DecodeHintType, ?> map) throws NotFoundException, ChecksumException, FormatException {
-        DecoderResult decode;
-        ResultPoint[] points;
-        if (map != null && map.containsKey(DecodeHintType.PURE_BARCODE)) {
-            decode = this.decoder.decode(extractPureBits(binaryBitmap.getBlackMatrix()));
-            points = NO_POINTS;
-        } else {
+        ResultPoint[] resultPointArr;
+        DecoderResult decoderResult;
+        if (map == null || !map.containsKey(DecodeHintType.PURE_BARCODE)) {
             DetectorResult detect = new Detector(binaryBitmap.getBlackMatrix()).detect();
-            decode = this.decoder.decode(detect.getBits());
-            points = detect.getPoints();
+            decoderResult = this.decoder.decode(detect.getBits());
+            resultPointArr = detect.getPoints();
+        } else {
+            decoderResult = this.decoder.decode(extractPureBits(binaryBitmap.getBlackMatrix()));
+            resultPointArr = NO_POINTS;
         }
-        Result result = new Result(decode.getText(), decode.getRawBytes(), points, BarcodeFormat.DATA_MATRIX);
-        List<byte[]> byteSegments = decode.getByteSegments();
+        Result result = new Result(decoderResult.getText(), decoderResult.getRawBytes(), resultPointArr, BarcodeFormat.DATA_MATRIX);
+        List<byte[]> byteSegments = decoderResult.getByteSegments();
         if (byteSegments != null) {
             result.putMetadata(ResultMetadataType.BYTE_SEGMENTS, byteSegments);
         }
-        String eCLevel = decode.getECLevel();
+        String eCLevel = decoderResult.getECLevel();
         if (eCLevel != null) {
             result.putMetadata(ResultMetadataType.ERROR_CORRECTION_LEVEL, eCLevel);
         }
@@ -87,13 +85,13 @@ public final class DataMatrixReader implements Reader {
         while (i < width && bitMatrix.get(i, i2)) {
             i++;
         }
-        if (i == width) {
+        if (i != width) {
+            int i3 = i - iArr[0];
+            if (i3 != 0) {
+                return i3;
+            }
             throw NotFoundException.getNotFoundInstance();
         }
-        int i3 = i - iArr[0];
-        if (i3 == 0) {
-            throw NotFoundException.getNotFoundInstance();
-        }
-        return i3;
+        throw NotFoundException.getNotFoundInstance();
     }
 }

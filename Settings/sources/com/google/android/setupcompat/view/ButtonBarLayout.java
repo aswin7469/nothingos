@@ -5,7 +5,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 import com.google.android.setupcompat.R$id;
-/* loaded from: classes2.dex */
+import com.google.android.setupcompat.partnerconfig.PartnerConfigHelper;
+import com.google.android.setupcompat.template.FooterActionButton;
+
 public class ButtonBarLayout extends LinearLayout {
     private int originalPaddingLeft;
     private int originalPaddingRight;
@@ -19,8 +21,8 @@ public class ButtonBarLayout extends LinearLayout {
         super(context, attributeSet);
     }
 
-    @Override // android.widget.LinearLayout, android.view.View
-    protected void onMeasure(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         boolean z;
         int i3;
         int size = View.MeasureSpec.getSize(i);
@@ -34,10 +36,10 @@ public class ButtonBarLayout extends LinearLayout {
             i3 = i;
         }
         super.onMeasure(i3, i2);
-        if (getMeasuredWidth() > size) {
-            setStacked(true);
-        } else {
+        if (isFooterButtonsEventlyWeighted(getContext()) || getMeasuredWidth() <= size) {
             z2 = z;
+        } else {
+            setStacked(true);
         }
         if (z2) {
             super.onMeasure(i, i2);
@@ -45,37 +47,53 @@ public class ButtonBarLayout extends LinearLayout {
     }
 
     private void setStacked(boolean z) {
-        if (this.stacked == z) {
-            return;
-        }
-        this.stacked = z;
-        int childCount = getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            View childAt = getChildAt(i);
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) childAt.getLayoutParams();
-            if (z) {
-                childAt.setTag(R$id.suc_customization_original_weight, Float.valueOf(layoutParams.weight));
-                layoutParams.weight = 0.0f;
-            } else {
-                Float f = (Float) childAt.getTag(R$id.suc_customization_original_weight);
-                if (f != null) {
-                    layoutParams.weight = f.floatValue();
+        if (this.stacked != z) {
+            this.stacked = z;
+            int childCount = getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View childAt = getChildAt(i);
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) childAt.getLayoutParams();
+                if (z) {
+                    childAt.setTag(R$id.suc_customization_original_weight, Float.valueOf(layoutParams.weight));
+                    layoutParams.weight = 0.0f;
+                    layoutParams.leftMargin = 0;
+                } else {
+                    Float f = (Float) childAt.getTag(R$id.suc_customization_original_weight);
+                    if (f != null) {
+                        layoutParams.weight = f.floatValue();
+                    }
                 }
+                childAt.setLayoutParams(layoutParams);
             }
-            childAt.setLayoutParams(layoutParams);
+            setOrientation(z ? 1 : 0);
+            for (int i2 = childCount - 1; i2 >= 0; i2--) {
+                bringChildToFront(getChildAt(i2));
+            }
+            if (z) {
+                setHorizontalGravity(17);
+                this.originalPaddingLeft = getPaddingLeft();
+                int paddingRight = getPaddingRight();
+                this.originalPaddingRight = paddingRight;
+                int max = Math.max(this.originalPaddingLeft, paddingRight);
+                setPadding(max, getPaddingTop(), max, getPaddingBottom());
+                return;
+            }
+            setPadding(this.originalPaddingLeft, getPaddingTop(), this.originalPaddingRight, getPaddingBottom());
         }
-        setOrientation(z ? 1 : 0);
-        for (int i2 = childCount - 1; i2 >= 0; i2--) {
-            bringChildToFront(getChildAt(i2));
+    }
+
+    private boolean isFooterButtonsEventlyWeighted(Context context) {
+        int childCount = getChildCount();
+        int i = 0;
+        for (int i2 = 0; i2 < childCount; i2++) {
+            View childAt = getChildAt(i2);
+            if ((childAt instanceof FooterActionButton) && ((FooterActionButton) childAt).isPrimaryButtonStyle()) {
+                i++;
+            }
         }
-        if (z) {
-            this.originalPaddingLeft = getPaddingLeft();
-            int paddingRight = getPaddingRight();
-            this.originalPaddingRight = paddingRight;
-            int max = Math.max(this.originalPaddingLeft, paddingRight);
-            setPadding(max, getPaddingTop(), max, getPaddingBottom());
-            return;
+        if (i == 2 && context.getResources().getConfiguration().smallestScreenWidthDp >= 600 && PartnerConfigHelper.shouldApplyExtendedPartnerConfig(context)) {
+            return true;
         }
-        setPadding(this.originalPaddingLeft, getPaddingTop(), this.originalPaddingRight, getPaddingBottom());
+        return false;
     }
 }

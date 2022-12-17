@@ -1,6 +1,7 @@
 package com.android.settings.widget;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -9,18 +10,19 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+
 public class GroupOptionsPreference extends Preference {
     private final ButtonInfo mBtnAddSrcGroup = new ButtonInfo();
-    private final ButtonInfo mBtnConnect = new ButtonInfo();
-    private final ButtonInfo mBtnForget = new ButtonInfo();
-    private final ButtonInfo mBtnDisconnect = new ButtonInfo();
-    private final ButtonInfo mBtnRefresh = new ButtonInfo();
     private final ButtonInfo mBtnCancelRefresh = new ButtonInfo();
+    private final ButtonInfo mBtnConnect = new ButtonInfo();
+    private final ButtonInfo mBtnDisconnect = new ButtonInfo();
+    private final ButtonInfo mBtnForget = new ButtonInfo();
+    private final ButtonInfo mBtnRefresh = new ButtonInfo();
+    private final ProgressInfo mProgressScan = new ProgressInfo();
     private final TextViewInfo mTvGroupId = new TextViewInfo();
     private final TextViewInfo mTvStatus = new TextViewInfo();
-    private final ProgressInfo mProgressScan = new ProgressInfo();
 
     public GroupOptionsPreference(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
@@ -37,24 +39,23 @@ public class GroupOptionsPreference extends Preference {
     }
 
     private void init() {
-        setLayoutResource(R.layout.bluetooth_group_options);
+        setLayoutResource(R$layout.bluetooth_group_options);
         setSelectable(false);
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         preferenceViewHolder.setDividerAllowedAbove(true);
         preferenceViewHolder.setDividerAllowedBelow(true);
-        this.mBtnAddSrcGroup.mButton = (Button) preferenceViewHolder.findViewById(R.id.id_btn_group_add_source);
-        this.mBtnConnect.mButton = (Button) preferenceViewHolder.findViewById(R.id.id_btn_connect);
-        this.mBtnForget.mButton = (Button) preferenceViewHolder.findViewById(R.id.id_btn_forget);
-        this.mBtnDisconnect.mButton = (Button) preferenceViewHolder.findViewById(R.id.id_btn_disconnect);
-        this.mBtnRefresh.mButton = (Button) preferenceViewHolder.findViewById(R.id.id_btn_refresh);
-        this.mBtnCancelRefresh.mButton = (Button) preferenceViewHolder.findViewById(R.id.id_btn_refresh_cancel);
-        this.mTvGroupId.mTextView = (TextView) preferenceViewHolder.findViewById(R.id.id_tv_groupid);
-        this.mTvStatus.mTextView = (TextView) preferenceViewHolder.findViewById(R.id.id_tv_status);
-        this.mProgressScan.mProgress = (ProgressBar) preferenceViewHolder.findViewById(R.id.id_progress_group_scan);
+        this.mBtnAddSrcGroup.mButton = (Button) preferenceViewHolder.findViewById(R$id.id_btn_group_add_source);
+        this.mBtnConnect.mButton = (Button) preferenceViewHolder.findViewById(R$id.id_btn_connect);
+        this.mBtnForget.mButton = (Button) preferenceViewHolder.findViewById(R$id.id_btn_forget);
+        this.mBtnDisconnect.mButton = (Button) preferenceViewHolder.findViewById(R$id.id_btn_disconnect);
+        this.mBtnRefresh.mButton = (Button) preferenceViewHolder.findViewById(R$id.id_btn_refresh);
+        this.mBtnCancelRefresh.mButton = (Button) preferenceViewHolder.findViewById(R$id.id_btn_refresh_cancel);
+        this.mTvGroupId.mTextView = (TextView) preferenceViewHolder.findViewById(R$id.id_tv_groupid);
+        this.mTvStatus.mTextView = (TextView) preferenceViewHolder.findViewById(R$id.id_tv_status);
+        this.mProgressScan.mProgress = (ProgressBar) preferenceViewHolder.findViewById(R$id.id_progress_group_scan);
         this.mBtnAddSrcGroup.setUpButton();
         this.mBtnConnect.setUpButton();
         this.mBtnForget.setUpButton();
@@ -289,23 +290,27 @@ public class GroupOptionsPreference extends Preference {
         return this;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class ButtonInfo {
-        private Button mButton;
-        private boolean mIsEnabled = true;
-        private boolean mIsVisible = true;
-        private View.OnClickListener mListener;
-        private CharSequence mText;
+    static class ButtonInfo {
+        /* access modifiers changed from: private */
+        public Button mButton;
+        /* access modifiers changed from: private */
+        public boolean mIsEnabled = true;
+        /* access modifiers changed from: private */
+        public boolean mIsVisible = true;
+        /* access modifiers changed from: private */
+        public View.OnClickListener mListener;
+        /* access modifiers changed from: private */
+        public CharSequence mText;
 
         ButtonInfo() {
         }
 
-        void setUpButton() {
+        /* access modifiers changed from: package-private */
+        public void setUpButton() {
             this.mButton.setText(this.mText);
             this.mButton.setOnClickListener(this.mListener);
             this.mButton.setEnabled(this.mIsEnabled);
-            this.mButton.setTypeface(null, 1);
+            this.mButton.setTypeface((Typeface) null, 1);
             if (shouldBeVisible()) {
                 this.mButton.setVisibility(0);
             } else {
@@ -318,19 +323,21 @@ public class GroupOptionsPreference extends Preference {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class TextViewInfo {
-        private boolean mIsVisible = true;
-        private CharSequence mText;
-        private TextView mTextView;
+    static class TextViewInfo {
+        /* access modifiers changed from: private */
+        public boolean mIsVisible = true;
+        /* access modifiers changed from: private */
+        public CharSequence mText;
+        /* access modifiers changed from: private */
+        public TextView mTextView;
 
         TextViewInfo() {
         }
 
-        void setUpTextView() {
+        /* access modifiers changed from: package-private */
+        public void setUpTextView() {
             this.mTextView.setText(this.mText);
-            this.mTextView.setTypeface(null, 1);
+            this.mTextView.setTypeface((Typeface) null, 1);
             if (shouldBeVisible()) {
                 this.mTextView.setVisibility(0);
             } else {
@@ -343,16 +350,17 @@ public class GroupOptionsPreference extends Preference {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class ProgressInfo {
-        private boolean mIsVisible = true;
-        private ProgressBar mProgress;
+    static class ProgressInfo {
+        /* access modifiers changed from: private */
+        public boolean mIsVisible = true;
+        /* access modifiers changed from: private */
+        public ProgressBar mProgress;
 
         ProgressInfo() {
         }
 
-        void setUpProgress() {
+        /* access modifiers changed from: package-private */
+        public void setUpProgress() {
             if (shouldBeVisible()) {
                 this.mProgress.setVisibility(0);
             } else {

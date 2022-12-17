@@ -6,11 +6,10 @@ import android.util.AttributeSet;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.PreferenceViewHolder;
 import com.android.settingslib.CustomDialogPreferenceCompat;
-/* loaded from: classes.dex */
+
 public class NfcPaymentPreference extends CustomDialogPreferenceCompat {
     private Listener mListener;
 
-    /* loaded from: classes.dex */
     interface Listener {
         void onBindViewHolder(PreferenceViewHolder preferenceViewHolder);
 
@@ -29,12 +28,11 @@ public class NfcPaymentPreference extends CustomDialogPreferenceCompat {
         super(context, attributeSet);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void initialize(Listener listener) {
         this.mListener = listener;
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         Listener listener = this.mListener;
@@ -43,8 +41,7 @@ public class NfcPaymentPreference extends CustomDialogPreferenceCompat {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.CustomDialogPreferenceCompat
+    /* access modifiers changed from: protected */
     public void onPrepareDialogBuilder(AlertDialog.Builder builder, DialogInterface.OnClickListener onClickListener) {
         super.onPrepareDialogBuilder(builder, onClickListener);
         Listener listener = this.mListener;

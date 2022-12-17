@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:layout_width="match_parent" android:layout_height="match_parent">
+    <androidx.recyclerview.widget.RecyclerView android:id="@+id/activity_wizard_list_recyclerview" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_marginBottom="88dp"/>
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="@dimen/nt_activity_wizard_list_navigation_bar_height">
+        <View android:id="@+id/activity_wizard_list_background_view" android:background="?android:attr/colorBackground" android:layout_width="match_parent" android:layout_height="match_parent" android:alpha="0"/>
+        <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="52dp">
+            <ImageView android:layout_gravity="center_vertical" android:id="@+id/activity_wizard_list_back_imageview" android:background="#01000000" android:padding="20dp" android:layout_width="56dp" android:layout_height="56dp" android:src="@drawable/nt_ic_arrow_left_wizard"/>
+            <TextView android:textSize="24sp" android:textColor="#ddf0f2f2" android:layout_gravity="center_vertical" android:id="@+id/activity_wizard_list_title_textview" android:layout_width="match_parent" android:layout_height="wrap_content" android:alpha="0" android:layout_marginStart="12dp"/>
+        </LinearLayout>
+    </RelativeLayout>
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="88dp" android:layout_alignParentBottom="true">
+        <TextView android:textSize="14sp" android:textColor="#f0f2f2" android:id="@+id/activity_wizard_list_left_function_textview" android:background="?android:attr/colorBackground" android:paddingTop="10dp" android:paddingBottom="10dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerVertical="true" android:fontFamily="Roboto" android:paddingStart="12dp" android:paddingEnd="12dp" android:layout_marginStart="12dp"/>
+        <TextView android:textSize="14sp" android:textColor="#06080a" android:id="@+id/activity_wizard_list_right_function_textview" android:background="@drawable/nt_shape_roundrect_white_white" android:paddingTop="10dp" android:paddingBottom="10dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerVertical="true" android:fontFamily="Roboto" android:paddingStart="16dp" android:paddingEnd="16dp" android:layout_marginEnd="8dp" android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
+</RelativeLayout>

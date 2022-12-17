@@ -11,13 +11,12 @@ import android.telephony.emergency.EmergencyNumber;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
-import com.android.settings.homepage.contextualcards.ContextualCardManager$$ExternalSyntheticLambda8;
+import com.android.settings.homepage.contextualcards.ContextualCardManager$$ExternalSyntheticLambda5;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-/* loaded from: classes.dex */
+
 public class EmergencyNumberUtils {
     public static final Uri EMERGENCY_NUMBER_OVERRIDE_AUTHORITY = new Uri.Builder().scheme("content").authority("com.android.emergency.gesture").build();
     static final String FALL_BACK_NUMBER = "112";
@@ -38,7 +37,10 @@ public class EmergencyNumberUtils {
 
     public String getDefaultPoliceNumber() {
         List<String> promotedEmergencyNumbers;
-        return (this.mTelephonyManager == null || (promotedEmergencyNumbers = getPromotedEmergencyNumbers(1)) == null || promotedEmergencyNumbers.isEmpty()) ? FALL_BACK_NUMBER : promotedEmergencyNumbers.get(0);
+        if (this.mTelephonyManager == null || (promotedEmergencyNumbers = getPromotedEmergencyNumbers(1)) == null || promotedEmergencyNumbers.isEmpty()) {
+            return FALL_BACK_NUMBER;
+        }
+        return promotedEmergencyNumbers.get(0);
     }
 
     public String getPoliceNumber() {
@@ -66,7 +68,10 @@ public class EmergencyNumberUtils {
 
     public boolean getEmergencyGestureEnabled() {
         Bundle call = this.mContext.getContentResolver().call(EMERGENCY_NUMBER_OVERRIDE_AUTHORITY, "GET_EMERGENCY_GESTURE", (String) null, (Bundle) null);
-        return call == null || call.getInt("emergency_setting_value", 1) == 1;
+        if (call == null || call.getInt("emergency_setting_value", 1) == 1) {
+            return true;
+        }
+        return false;
     }
 
     public boolean getEmergencyGestureSoundEnabled() {
@@ -89,15 +94,15 @@ public class EmergencyNumberUtils {
             return new ArrayList();
         }
         ArrayMap arrayMap = new ArrayMap();
-        for (Map.Entry<Integer, List<EmergencyNumber>> entry : emergencyNumberList.entrySet()) {
-            if (entry.getKey() != null && entry.getValue() != null) {
-                int intValue = entry.getKey().intValue();
-                Log.d("EmergencyNumberUtils", "Emergency numbers for subscription id " + entry.getKey());
-                List<EmergencyNumber> arrayList = new ArrayList<>();
+        for (Map.Entry next : emergencyNumberList.entrySet()) {
+            if (!(next.getKey() == null || next.getValue() == null)) {
+                int intValue = ((Integer) next.getKey()).intValue();
+                Log.d("EmergencyNumberUtils", "Emergency numbers for subscription id " + next.getKey());
+                ArrayList arrayList = new ArrayList();
                 ArrayList arrayList2 = new ArrayList();
-                for (EmergencyNumber emergencyNumber : entry.getValue()) {
+                for (EmergencyNumber emergencyNumber : (List) next.getValue()) {
                     boolean contains = emergencyNumber.getEmergencyNumberSources().contains(16);
-                    Log.d("EmergencyNumberUtils", String.format("Number %s, isFromPrioritizedSource %b", emergencyNumber, Boolean.valueOf(contains)));
+                    Log.d("EmergencyNumberUtils", String.format("Number %s, isFromPrioritizedSource %b", new Object[]{emergencyNumber, Boolean.valueOf(contains)}));
                     if (contains) {
                         arrayList.add(emergencyNumber);
                     } else {
@@ -117,27 +122,23 @@ public class EmergencyNumberUtils {
     }
 
     private List<String> sanitizeEmergencyNumbers(List<EmergencyNumber> list, int i) {
-        ArrayList arrayList = new ArrayList(list);
-        final String[] carrierEmergencyNumberPrefixes = getCarrierEmergencyNumberPrefixes(this.mCarrierConfigManager, i);
-        return (List) arrayList.stream().map(new Function() { // from class: com.android.settingslib.emergencynumber.EmergencyNumberUtils$$ExternalSyntheticLambda0
-            @Override // java.util.function.Function
-            public final Object apply(Object obj) {
-                String lambda$sanitizeEmergencyNumbers$0;
-                lambda$sanitizeEmergencyNumbers$0 = EmergencyNumberUtils.this.lambda$sanitizeEmergencyNumbers$0(carrierEmergencyNumberPrefixes, (EmergencyNumber) obj);
-                return lambda$sanitizeEmergencyNumbers$0;
-            }
-        }).collect(Collectors.toCollection(ContextualCardManager$$ExternalSyntheticLambda8.INSTANCE));
+        return (List) new ArrayList(list).stream().map(new EmergencyNumberUtils$$ExternalSyntheticLambda0(this, getCarrierEmergencyNumberPrefixes(this.mCarrierConfigManager, i))).collect(Collectors.toCollection(new ContextualCardManager$$ExternalSyntheticLambda5()));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     /* renamed from: removePrefix */
     public String lambda$sanitizeEmergencyNumbers$0(EmergencyNumber emergencyNumber, String[] strArr) {
         String number = emergencyNumber.getNumber();
         if (strArr == null || strArr.length == 0) {
             return number;
         }
-        for (String str : strArr) {
-            if (number.indexOf(str) == 0) {
+        int length = strArr.length;
+        int i = 0;
+        while (i < length) {
+            String str = strArr[i];
+            if (number.indexOf(str) != 0) {
+                i++;
+            } else {
                 Log.d("EmergencyNumberUtils", "Removing prefix " + str + " from " + number);
                 return number.substring(str.length());
             }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:state_enabled="true" android:state_pressed="true">
         <objectAnimator android:duration="@integer/mtrl_chip_anim_duration" android:valueTo="@dimen/mtrl_chip_pressed_translation_z" android:valueType="floatType" android:propertyName="translationZ"/>
     </item>

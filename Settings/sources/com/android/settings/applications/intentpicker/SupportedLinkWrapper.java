@@ -5,21 +5,19 @@ import android.content.pm.PackageManager;
 import android.content.pm.verify.domain.DomainOwner;
 import android.text.TextUtils;
 import android.util.Log;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import java.util.List;
 import java.util.SortedSet;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-/* loaded from: classes.dex */
+
 public class SupportedLinkWrapper implements Comparable {
     private String mHost;
-    private SortedSet<DomainOwner> mOwnerSet;
+    private boolean mIsChecked = false;
     private boolean mIsEnabled = true;
     private String mLastOwnerName = "";
-    private boolean mIsChecked = false;
+    private SortedSet<DomainOwner> mOwnerSet;
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ boolean lambda$getLastPackageLabel$3(String str) {
         return str != null;
     }
@@ -32,7 +30,7 @@ public class SupportedLinkWrapper implements Comparable {
 
     private void init(Context context) {
         if (this.mOwnerSet.size() > 0) {
-            int i = (this.mOwnerSet.stream().filter(SupportedLinkWrapper$$ExternalSyntheticLambda2.INSTANCE).count() > 0L ? 1 : (this.mOwnerSet.stream().filter(SupportedLinkWrapper$$ExternalSyntheticLambda2.INSTANCE).count() == 0L ? 0 : -1));
+            int i = (this.mOwnerSet.stream().filter(new SupportedLinkWrapper$$ExternalSyntheticLambda0()).count() > 0 ? 1 : (this.mOwnerSet.stream().filter(new SupportedLinkWrapper$$ExternalSyntheticLambda0()).count() == 0 ? 0 : -1));
             this.mIsEnabled = i == 0;
             if (i > 0) {
                 this.mLastOwnerName = getLastPackageLabel(context, false);
@@ -42,36 +40,22 @@ public class SupportedLinkWrapper implements Comparable {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ boolean lambda$init$0(DomainOwner domainOwner) {
         return !domainOwner.isOverrideable();
     }
 
-    private String getLastPackageLabel(final Context context, final boolean z) {
-        List list = (List) this.mOwnerSet.stream().filter(new Predicate() { // from class: com.android.settings.applications.intentpicker.SupportedLinkWrapper$$ExternalSyntheticLambda1
-            @Override // java.util.function.Predicate
-            public final boolean test(Object obj) {
-                boolean lambda$getLastPackageLabel$1;
-                lambda$getLastPackageLabel$1 = SupportedLinkWrapper.lambda$getLastPackageLabel$1(z, (DomainOwner) obj);
-                return lambda$getLastPackageLabel$1;
-            }
-        }).map(new Function() { // from class: com.android.settings.applications.intentpicker.SupportedLinkWrapper$$ExternalSyntheticLambda0
-            @Override // java.util.function.Function
-            public final Object apply(Object obj) {
-                String lambda$getLastPackageLabel$2;
-                lambda$getLastPackageLabel$2 = SupportedLinkWrapper.this.lambda$getLastPackageLabel$2(context, (DomainOwner) obj);
-                return lambda$getLastPackageLabel$2;
-            }
-        }).filter(SupportedLinkWrapper$$ExternalSyntheticLambda3.INSTANCE).collect(Collectors.toList());
+    private String getLastPackageLabel(Context context, boolean z) {
+        List list = (List) this.mOwnerSet.stream().filter(new SupportedLinkWrapper$$ExternalSyntheticLambda1(z)).map(new SupportedLinkWrapper$$ExternalSyntheticLambda2(this, context)).filter(new SupportedLinkWrapper$$ExternalSyntheticLambda3()).collect(Collectors.toList());
         return (String) list.get(list.size() - 1);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ boolean lambda$getLastPackageLabel$1(boolean z, DomainOwner domainOwner) {
         return domainOwner.isOverrideable() == z;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ String lambda$getLastPackageLabel$2(Context context, DomainOwner domainOwner) {
         return getLabel(context, domainOwner.getPackageName());
     }
@@ -94,7 +78,7 @@ public class SupportedLinkWrapper implements Comparable {
         if (TextUtils.isEmpty(this.mLastOwnerName) || context == null) {
             return this.mHost;
         }
-        return this.mHost + System.lineSeparator() + context.getString(R.string.app_launch_supported_links_subtext, this.mLastOwnerName);
+        return this.mHost + System.lineSeparator() + context.getString(R$string.app_launch_supported_links_subtext, new Object[]{this.mLastOwnerName});
     }
 
     public String getHost() {
@@ -109,16 +93,18 @@ public class SupportedLinkWrapper implements Comparable {
         this.mIsChecked = z;
     }
 
-    @Override // java.lang.Comparable
     public int compareTo(Object obj) {
         SupportedLinkWrapper supportedLinkWrapper = (SupportedLinkWrapper) obj;
         boolean z = this.mIsEnabled;
         if (z != supportedLinkWrapper.mIsEnabled) {
             return z ? -1 : 1;
-        } else if (TextUtils.isEmpty(this.mLastOwnerName) == TextUtils.isEmpty(supportedLinkWrapper.mLastOwnerName)) {
-            return 0;
-        } else {
-            return TextUtils.isEmpty(this.mLastOwnerName) ? -1 : 1;
         }
+        if (TextUtils.isEmpty(this.mLastOwnerName) == TextUtils.isEmpty(supportedLinkWrapper.mLastOwnerName)) {
+            return 0;
+        }
+        if (TextUtils.isEmpty(this.mLastOwnerName)) {
+            return -1;
+        }
+        return 1;
     }
 }

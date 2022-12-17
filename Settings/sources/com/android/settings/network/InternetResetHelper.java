@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
-import android.os.Handler;
 import android.os.HandlerThread;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,9 +14,10 @@ import androidx.lifecycle.OnLifecycleEvent;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import com.android.settingslib.connectivity.ConnectivitySubsystemsRecoveryManager;
+import com.android.settingslib.utils.HandlerInjector;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class InternetResetHelper implements LifecycleObserver, ConnectivitySubsystemsRecoveryManager.RecoveryStatusCallback {
     protected ConnectivitySubsystemsRecoveryManager mConnectivitySubsystemsRecoveryManager;
     protected final Context mContext;
@@ -26,34 +26,22 @@ public class InternetResetHelper implements LifecycleObserver, ConnectivitySubsy
     protected boolean mIsWifiReady;
     protected NetworkMobileProviderController mMobileNetworkController;
     protected Preference mResettingPreference;
+    protected final Runnable mResumeRunnable = new InternetResetHelper$$ExternalSyntheticLambda0(this);
+    protected final Runnable mTimeoutRunnable = new InternetResetHelper$$ExternalSyntheticLambda1(this);
     protected final WifiManager mWifiManager;
+    protected List<PreferenceCategory> mWifiNetworkPreferences = new ArrayList();
+    protected final IntentFilter mWifiStateFilter;
+    protected final BroadcastReceiver mWifiStateReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null && TextUtils.equals(intent.getAction(), "android.net.wifi.STATE_CHANGE")) {
+                InternetResetHelper.this.updateWifiStateChange();
+            }
+        }
+    };
     protected Preference mWifiTogglePreferences;
     protected HandlerThread mWorkerThread;
-    protected List<PreferenceCategory> mWifiNetworkPreferences = new ArrayList();
-    protected final BroadcastReceiver mWifiStateReceiver = new BroadcastReceiver() { // from class: com.android.settings.network.InternetResetHelper.1
-        @Override // android.content.BroadcastReceiver
-        public void onReceive(Context context, Intent intent) {
-            if (intent == null || !TextUtils.equals(intent.getAction(), "android.net.wifi.STATE_CHANGE")) {
-                return;
-            }
-            InternetResetHelper.this.updateWifiStateChange();
-        }
-    };
-    protected final Runnable mResumeRunnable = new Runnable() { // from class: com.android.settings.network.InternetResetHelper$$ExternalSyntheticLambda1
-        @Override // java.lang.Runnable
-        public final void run() {
-            InternetResetHelper.this.lambda$new$0();
-        }
-    };
-    protected final Runnable mTimeoutRunnable = new Runnable() { // from class: com.android.settings.network.InternetResetHelper$$ExternalSyntheticLambda0
-        @Override // java.lang.Runnable
-        public final void run() {
-            InternetResetHelper.this.lambda$new$1();
-        }
-    };
-    protected final IntentFilter mWifiStateFilter = new IntentFilter("android.net.wifi.STATE_CHANGE");
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$new$1() {
         this.mIsRecoveryReady = true;
         this.mIsWifiReady = true;
@@ -62,8 +50,9 @@ public class InternetResetHelper implements LifecycleObserver, ConnectivitySubsy
 
     public InternetResetHelper(Context context, Lifecycle lifecycle) {
         this.mContext = context;
-        this.mHandlerInjector = new HandlerInjector(context);
+        this.mHandlerInjector = new HandlerInjector(context.getMainThreadHandler());
         this.mWifiManager = (WifiManager) context.getSystemService(WifiManager.class);
+        this.mWifiStateFilter = new IntentFilter("android.net.wifi.STATE_CHANGE");
         HandlerThread handlerThread = new HandlerThread("InternetResetHelper{" + Integer.toHexString(System.identityHashCode(this)) + "}", 10);
         this.mWorkerThread = handlerThread;
         handlerThread.start();
@@ -75,7 +64,7 @@ public class InternetResetHelper implements LifecycleObserver, ConnectivitySubsy
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     public void onResume() {
-        this.mContext.registerReceiver(this.mWifiStateReceiver, this.mWifiStateFilter);
+        this.mContext.registerReceiver(this.mWifiStateReceiver, this.mWifiStateFilter, 2);
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
@@ -90,27 +79,25 @@ public class InternetResetHelper implements LifecycleObserver, ConnectivitySubsy
         this.mWorkerThread.quit();
     }
 
-    @Override // com.android.settingslib.connectivity.ConnectivitySubsystemsRecoveryManager.RecoveryStatusCallback
     public void onSubsystemRestartOperationBegin() {
         Log.d("InternetResetHelper", "The connectivity subsystem is starting for recovery.");
     }
 
-    @Override // com.android.settingslib.connectivity.ConnectivitySubsystemsRecoveryManager.RecoveryStatusCallback
     public void onSubsystemRestartOperationEnd() {
         Log.d("InternetResetHelper", "The connectivity subsystem is done for recovery.");
         if (!this.mIsRecoveryReady) {
             this.mIsRecoveryReady = true;
-            this.mHandlerInjector.postDelayed(this.mResumeRunnable, 0L);
+            this.mHandlerInjector.postDelayed(this.mResumeRunnable, 0);
         }
     }
 
-    protected void updateWifiStateChange() {
-        if (this.mIsWifiReady || !this.mWifiManager.isWifiEnabled()) {
-            return;
+    /* access modifiers changed from: protected */
+    public void updateWifiStateChange() {
+        if (!this.mIsWifiReady && this.mWifiManager.isWifiEnabled()) {
+            Log.d("InternetResetHelper", "The Wi-Fi subsystem is done for recovery.");
+            this.mIsWifiReady = true;
+            this.mHandlerInjector.postDelayed(this.mResumeRunnable, 0);
         }
-        Log.d("InternetResetHelper", "The Wi-Fi subsystem is done for recovery.");
-        this.mIsWifiReady = true;
-        this.mHandlerInjector.postDelayed(this.mResumeRunnable, 0L);
     }
 
     public void setResettingPreference(Preference preference) {
@@ -131,7 +118,8 @@ public class InternetResetHelper implements LifecycleObserver, ConnectivitySubsy
         }
     }
 
-    protected void suspendPreferences() {
+    /* access modifiers changed from: protected */
+    public void suspendPreferences() {
         Log.d("InternetResetHelper", "Suspend the subsystem preferences");
         NetworkMobileProviderController networkMobileProviderController = this.mMobileNetworkController;
         if (networkMobileProviderController != null) {
@@ -141,9 +129,9 @@ public class InternetResetHelper implements LifecycleObserver, ConnectivitySubsy
         if (preference != null) {
             preference.setVisible(false);
         }
-        for (PreferenceCategory preferenceCategory : this.mWifiNetworkPreferences) {
-            preferenceCategory.removeAll();
-            preferenceCategory.setVisible(false);
+        for (PreferenceCategory next : this.mWifiNetworkPreferences) {
+            next.removeAll();
+            next.setVisible(false);
         }
         Preference preference2 = this.mResettingPreference;
         if (preference2 != null) {
@@ -151,29 +139,27 @@ public class InternetResetHelper implements LifecycleObserver, ConnectivitySubsy
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     /* renamed from: resumePreferences */
     public void lambda$new$0() {
         if (this.mIsRecoveryReady && this.mMobileNetworkController != null) {
             Log.d("InternetResetHelper", "Resume the Mobile Network controller");
-            this.mMobileNetworkController.hidePreference(false, false);
+            this.mMobileNetworkController.hidePreference(false, true);
         }
         if (this.mIsWifiReady && this.mWifiTogglePreferences != null) {
             Log.d("InternetResetHelper", "Resume the Wi-Fi preferences");
             this.mWifiTogglePreferences.setVisible(true);
-            for (PreferenceCategory preferenceCategory : this.mWifiNetworkPreferences) {
-                preferenceCategory.setVisible(true);
+            for (PreferenceCategory visible : this.mWifiNetworkPreferences) {
+                visible.setVisible(true);
             }
         }
-        if (!this.mIsRecoveryReady || !this.mIsWifiReady) {
-            return;
+        if (this.mIsRecoveryReady && this.mIsWifiReady) {
+            this.mHandlerInjector.removeCallbacks(this.mTimeoutRunnable);
+            if (this.mResettingPreference != null) {
+                Log.d("InternetResetHelper", "Resume the Resetting preference");
+                this.mResettingPreference.setVisible(false);
+            }
         }
-        this.mHandlerInjector.removeCallbacks(this.mTimeoutRunnable);
-        if (this.mResettingPreference == null) {
-            return;
-        }
-        Log.d("InternetResetHelper", "Resume the Resetting preference");
-        this.mResettingPreference.setVisible(false);
     }
 
     public void restart() {
@@ -185,25 +171,7 @@ public class InternetResetHelper implements LifecycleObserver, ConnectivitySubsy
         suspendPreferences();
         this.mIsRecoveryReady = false;
         this.mIsWifiReady = !this.mWifiManager.isWifiEnabled();
-        this.mHandlerInjector.postDelayed(this.mTimeoutRunnable, 15000L);
-        this.mConnectivitySubsystemsRecoveryManager.triggerSubsystemRestart(null, this);
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class HandlerInjector {
-        protected final Handler mHandler;
-
-        HandlerInjector(Context context) {
-            this.mHandler = context.getMainThreadHandler();
-        }
-
-        public void postDelayed(Runnable runnable, long j) {
-            this.mHandler.postDelayed(runnable, j);
-        }
-
-        public void removeCallbacks(Runnable runnable) {
-            this.mHandler.removeCallbacks(runnable);
-        }
+        this.mHandlerInjector.postDelayed(this.mTimeoutRunnable, 15000);
+        this.mConnectivitySubsystemsRecoveryManager.triggerSubsystemRestart((String) null, this);
     }
 }

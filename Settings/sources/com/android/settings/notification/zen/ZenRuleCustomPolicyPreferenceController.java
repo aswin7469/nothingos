@@ -8,64 +8,53 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import com.android.settings.core.SubSettingLauncher;
 import com.android.settingslib.core.lifecycle.Lifecycle;
-import com.android.settingslib.widget.RadioButtonPreference;
-/* loaded from: classes.dex */
-public class ZenRuleCustomPolicyPreferenceController extends AbstractZenCustomRulePreferenceController {
-    private RadioButtonPreference mPreference;
+import com.android.settingslib.widget.SelectorWithWidgetPreference;
 
-    @Override // com.android.settings.notification.zen.AbstractZenCustomRulePreferenceController, com.android.settingslib.core.AbstractPreferenceController
+public class ZenRuleCustomPolicyPreferenceController extends AbstractZenCustomRulePreferenceController {
+    private SelectorWithWidgetPreference mPreference;
+
     public /* bridge */ /* synthetic */ boolean isAvailable() {
         return super.isAvailable();
     }
 
-    @Override // com.android.settings.notification.zen.AbstractZenCustomRulePreferenceController
-    public /* bridge */ /* synthetic */ void onResume(AutomaticZenRule automaticZenRule, String str) {
-        super.onResume(automaticZenRule, str);
+    public /* bridge */ /* synthetic */ void onResume() {
+        super.onResume();
+    }
+
+    public /* bridge */ /* synthetic */ void setIdAndRule(String str, AutomaticZenRule automaticZenRule) {
+        super.setIdAndRule(str, automaticZenRule);
     }
 
     public ZenRuleCustomPolicyPreferenceController(Context context, Lifecycle lifecycle, String str) {
         super(context, str, lifecycle);
     }
 
-    @Override // com.android.settings.notification.zen.AbstractZenModePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
-        RadioButtonPreference radioButtonPreference = (RadioButtonPreference) preferenceScreen.findPreference(getPreferenceKey());
-        this.mPreference = radioButtonPreference;
-        radioButtonPreference.setExtraWidgetOnClickListener(new View.OnClickListener() { // from class: com.android.settings.notification.zen.ZenRuleCustomPolicyPreferenceController$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                ZenRuleCustomPolicyPreferenceController.this.lambda$displayPreference$0(view);
-            }
-        });
-        this.mPreference.setOnClickListener(new RadioButtonPreference.OnClickListener() { // from class: com.android.settings.notification.zen.ZenRuleCustomPolicyPreferenceController$$ExternalSyntheticLambda1
-            @Override // com.android.settingslib.widget.RadioButtonPreference.OnClickListener
-            public final void onRadioButtonClicked(RadioButtonPreference radioButtonPreference2) {
-                ZenRuleCustomPolicyPreferenceController.this.lambda$displayPreference$1(radioButtonPreference2);
-            }
-        });
+        SelectorWithWidgetPreference selectorWithWidgetPreference = (SelectorWithWidgetPreference) preferenceScreen.findPreference(getPreferenceKey());
+        this.mPreference = selectorWithWidgetPreference;
+        selectorWithWidgetPreference.setExtraWidgetOnClickListener(new C1237xdfd2fb48(this));
+        this.mPreference.setOnClickListener(new C1238xdfd2fb49(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$displayPreference$0(View view) {
         setCustomPolicy();
         launchCustomSettings();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$displayPreference$1(RadioButtonPreference radioButtonPreference) {
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$displayPreference$1(SelectorWithWidgetPreference selectorWithWidgetPreference) {
         setCustomPolicy();
         launchCustomSettings();
     }
 
-    @Override // com.android.settings.notification.zen.AbstractZenCustomRulePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         AutomaticZenRule automaticZenRule;
         super.updateState(preference);
-        if (this.mId == null || (automaticZenRule = this.mRule) == null) {
-            return;
+        if (this.mId != null && (automaticZenRule = this.mRule) != null) {
+            this.mPreference.setChecked(automaticZenRule.getZenPolicy() != null);
         }
-        this.mPreference.setChecked(automaticZenRule.getZenPolicy() != null);
     }
 
     private void setCustomPolicy() {

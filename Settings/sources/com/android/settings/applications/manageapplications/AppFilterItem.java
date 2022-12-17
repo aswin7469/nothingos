@@ -2,7 +2,7 @@ package com.android.settings.applications.manageapplications;
 
 import com.android.settingslib.applications.ApplicationsState;
 import java.util.Objects;
-/* loaded from: classes.dex */
+
 public class AppFilterItem implements Comparable<AppFilterItem> {
     private final ApplicationsState.AppFilter mFilter;
     private final int mFilterType;
@@ -26,15 +26,14 @@ public class AppFilterItem implements Comparable<AppFilterItem> {
         return this.mFilterType;
     }
 
-    @Override // java.lang.Comparable
     public int compareTo(AppFilterItem appFilterItem) {
         if (appFilterItem == null) {
             return 1;
         }
-        if (this != appFilterItem) {
-            return this.mFilterType - appFilterItem.mFilterType;
+        if (this == appFilterItem) {
+            return 0;
         }
-        return 0;
+        return this.mFilterType - appFilterItem.mFilterType;
     }
 
     public boolean equals(Object obj) {
@@ -45,10 +44,13 @@ public class AppFilterItem implements Comparable<AppFilterItem> {
             return true;
         }
         AppFilterItem appFilterItem = (AppFilterItem) obj;
-        return this.mTitle == appFilterItem.mTitle && this.mFilterType == appFilterItem.mFilterType && this.mFilter == appFilterItem.mFilter;
+        if (this.mTitle == appFilterItem.mTitle && this.mFilterType == appFilterItem.mFilterType && this.mFilter == appFilterItem.mFilter) {
+            return true;
+        }
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(this.mFilter, Integer.valueOf(this.mTitle), Integer.valueOf(this.mFilterType));
+        return Objects.hash(new Object[]{this.mFilter, Integer.valueOf(this.mTitle), Integer.valueOf(this.mFilterType)});
     }
 }

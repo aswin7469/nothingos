@@ -14,62 +14,56 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
-/* loaded from: classes.dex */
+
 public abstract class AbstractImsStatusPreferenceController extends AbstractConnectivityPreferenceController {
     private static final String[] CONNECTIVITY_INTENTS = {"android.bluetooth.adapter.action.STATE_CHANGED", "android.net.conn.CONNECTIVITY_CHANGE", "android.net.wifi.LINK_CONFIGURATION_CHANGED", "android.net.wifi.STATE_CHANGE"};
     static final String KEY_IMS_REGISTRATION_STATE = "ims_reg_state";
     private Preference mImsStatus;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return KEY_IMS_REGISTRATION_STATE;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         CarrierConfigManager carrierConfigManager = (CarrierConfigManager) this.mContext.getSystemService(CarrierConfigManager.class);
         PersistableBundle configForSubId = carrierConfigManager != null ? carrierConfigManager.getConfigForSubId(SubscriptionManager.getDefaultDataSubscriptionId()) : null;
         return configForSubId != null && configForSubId.getBoolean("show_ims_registration_status_bool");
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mImsStatus = preferenceScreen.findPreference(KEY_IMS_REGISTRATION_STATE);
         updateConnectivity();
     }
 
-    @Override // com.android.settingslib.deviceinfo.AbstractConnectivityPreferenceController
-    protected String[] getConnectivityIntents() {
+    /* access modifiers changed from: protected */
+    public String[] getConnectivityIntents() {
         return CONNECTIVITY_INTENTS;
     }
 
-    @Override // com.android.settingslib.deviceinfo.AbstractConnectivityPreferenceController
-    protected void updateConnectivity() {
-        if (this.mImsStatus == null) {
-            return;
-        }
-        int defaultDataSubscriptionId = SubscriptionManager.getDefaultDataSubscriptionId();
-        if (!SubscriptionManager.isValidSubscriptionId(defaultDataSubscriptionId)) {
-            this.mImsStatus.setSummary(R$string.ims_reg_status_not_registered);
-            return;
-        }
-        ExecutorService newSingleThreadExecutor = Executors.newSingleThreadExecutor();
-        StateCallback stateCallback = new StateCallback();
-        try {
-            ImsMmTelManager.createForSubscriptionId(defaultDataSubscriptionId).getRegistrationState(newSingleThreadExecutor, stateCallback);
-        } catch (Exception unused) {
-        }
-        this.mImsStatus.setSummary(stateCallback.waitUntilResult() ? R$string.ims_reg_status_registered : R$string.ims_reg_status_not_registered);
-        try {
-            newSingleThreadExecutor.shutdownNow();
-        } catch (Exception unused2) {
+    /* access modifiers changed from: protected */
+    public void updateConnectivity() {
+        if (this.mImsStatus != null) {
+            int defaultDataSubscriptionId = SubscriptionManager.getDefaultDataSubscriptionId();
+            if (!SubscriptionManager.isValidSubscriptionId(defaultDataSubscriptionId)) {
+                this.mImsStatus.setSummary(R$string.ims_reg_status_not_registered);
+                return;
+            }
+            ExecutorService newSingleThreadExecutor = Executors.newSingleThreadExecutor();
+            StateCallback stateCallback = new StateCallback();
+            try {
+                ImsMmTelManager.createForSubscriptionId(defaultDataSubscriptionId).getRegistrationState(newSingleThreadExecutor, stateCallback);
+            } catch (Exception unused) {
+            }
+            this.mImsStatus.setSummary(stateCallback.waitUntilResult() ? R$string.ims_reg_status_registered : R$string.ims_reg_status_not_registered);
+            try {
+                newSingleThreadExecutor.shutdownNow();
+            } catch (Exception unused2) {
+            }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public final class StateCallback extends AtomicBoolean implements Consumer<Integer> {
+    private final class StateCallback extends AtomicBoolean implements Consumer<Integer> {
         private final Semaphore mSemaphore;
 
         private StateCallback() {
@@ -77,7 +71,6 @@ public abstract class AbstractImsStatusPreferenceController extends AbstractConn
             this.mSemaphore = new Semaphore(0);
         }
 
-        @Override // java.util.function.Consumer
         public void accept(Integer num) {
             set(num.intValue() == 2);
             try {
@@ -88,7 +81,7 @@ public abstract class AbstractImsStatusPreferenceController extends AbstractConn
 
         public boolean waitUntilResult() {
             try {
-                if (!this.mSemaphore.tryAcquire(2000L, TimeUnit.MILLISECONDS)) {
+                if (!this.mSemaphore.tryAcquire(2000, TimeUnit.MILLISECONDS)) {
                     Log.w("AbstractImsPrefController", "IMS registration state query timeout");
                     return false;
                 }

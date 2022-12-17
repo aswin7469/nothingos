@@ -6,7 +6,7 @@ import com.airbnb.lottie.animation.content.Content;
 import com.airbnb.lottie.animation.keyframe.TransformKeyframeAnimation;
 import com.airbnb.lottie.model.content.ContentModel;
 import com.airbnb.lottie.model.layer.BaseLayer;
-/* loaded from: classes.dex */
+
 public class AnimatableTransform implements ContentModel {
     private final AnimatablePathValue anchorPoint;
     private final AnimatableFloatValue endOpacity;
@@ -18,13 +18,12 @@ public class AnimatableTransform implements ContentModel {
     private final AnimatableFloatValue skewAngle;
     private final AnimatableFloatValue startOpacity;
 
-    @Override // com.airbnb.lottie.model.content.ContentModel
     public Content toContent(LottieDrawable lottieDrawable, BaseLayer baseLayer) {
         return null;
     }
 
     public AnimatableTransform() {
-        this(null, null, null, null, null, null, null, null, null);
+        this((AnimatablePathValue) null, (AnimatableValue<PointF, PointF>) null, (AnimatableScaleValue) null, (AnimatableFloatValue) null, (AnimatableIntegerValue) null, (AnimatableFloatValue) null, (AnimatableFloatValue) null, (AnimatableFloatValue) null, (AnimatableFloatValue) null);
     }
 
     public AnimatableTransform(AnimatablePathValue animatablePathValue, AnimatableValue<PointF, PointF> animatableValue, AnimatableScaleValue animatableScaleValue, AnimatableFloatValue animatableFloatValue, AnimatableIntegerValue animatableIntegerValue, AnimatableFloatValue animatableFloatValue2, AnimatableFloatValue animatableFloatValue3, AnimatableFloatValue animatableFloatValue4, AnimatableFloatValue animatableFloatValue5) {

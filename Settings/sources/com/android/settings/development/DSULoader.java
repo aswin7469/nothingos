@@ -3,6 +3,7 @@ package com.android.settings.development;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemProperties;
@@ -13,8 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import com.android.settings.R;
-import java.io.BufferedInputStream;
+import com.android.settings.R$string;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -25,96 +25,118 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import javax.net.ssl.HttpsURLConnection;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-/* loaded from: classes.dex */
+
 public class DSULoader extends ListActivity {
-    private ArrayAdapter<Object> mAdapter;
-    private List<Object> mDSUList = new ArrayList();
+    /* access modifiers changed from: private */
+    public ArrayAdapter<Object> mAdapter;
+    /* access modifiers changed from: private */
+    public List<Object> mDSUList = new ArrayList();
 
     private static String readAll(InputStream inputStream) throws IOException {
         StringBuilder sb = new StringBuilder();
         byte[] bArr = new byte[4096];
         while (true) {
             int read = inputStream.read(bArr, 0, 4096);
-            if (read != -1) {
-                sb.append(new String(Arrays.copyOf(bArr, read)));
-            } else {
+            if (read == -1) {
                 return sb.toString();
             }
+            sb.append(new String(Arrays.copyOf(bArr, read)));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Type inference failed for: r1v2, types: [java.lang.String] */
-    /* JADX WARN: Type inference failed for: r1v3 */
-    /* JADX WARN: Type inference failed for: r1v5, types: [java.io.InputStream] */
-    /* JADX WARN: Type inference failed for: r1v8 */
-    /* JADX WARN: Type inference failed for: r6v0, types: [java.net.URL] */
-    /* JADX WARN: Type inference failed for: r6v2 */
-    /* JADX WARN: Type inference failed for: r6v5, types: [javax.net.ssl.HttpsURLConnection] */
-    /* JADX WARN: Type inference failed for: r6v7, types: [javax.net.ssl.HttpsURLConnection] */
-    public static String readAll(URL url) throws IOException {
-        Throwable th;
-        ?? r1 = "DSULOADER";
-        Slog.i((String) r1, "fetch " + url.toString());
-        try {
-            try {
-                url = (HttpsURLConnection) url.openConnection();
-            } catch (Throwable th2) {
-                th = th2;
-            }
-        } catch (Exception e) {
-            throw e;
-        } catch (Throwable th3) {
-            r1 = 0;
-            th = th3;
-            url = 0;
-        }
-        try {
-            url.setReadTimeout(10000);
-            url.setConnectTimeout(10000);
-            url.setRequestMethod("GET");
-            url.setDoInput(true);
-            url.connect();
-            int responseCode = url.getResponseCode();
-            if (url.getResponseCode() != 200) {
-                throw new IOException("HTTP error code: " + responseCode);
-            }
-            BufferedInputStream bufferedInputStream = new BufferedInputStream(url.getInputStream());
-            try {
-                String readAll = readAll(bufferedInputStream);
-                try {
-                    bufferedInputStream.close();
-                } catch (IOException unused) {
-                }
-                url.disconnect();
-                return readAll;
-            } catch (Exception e2) {
-                throw e2;
-            }
-        } catch (Exception e3) {
-            throw e3;
-        } catch (Throwable th4) {
-            r1 = 0;
-            th = th4;
-            if (r1 != 0) {
-                try {
-                    r1.close();
-                } catch (IOException unused2) {
-                }
-            }
-            if (url != 0) {
-                url.disconnect();
-            }
-            throw th;
-        }
+    /* access modifiers changed from: private */
+    /* JADX WARNING: Removed duplicated region for block: B:31:0x0085 A[SYNTHETIC, Splitter:B:31:0x0085] */
+    /* JADX WARNING: Removed duplicated region for block: B:35:0x008a  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public static java.lang.String readAll(java.net.URL r6) throws java.io.IOException {
+        /*
+            java.lang.StringBuilder r0 = new java.lang.StringBuilder
+            r0.<init>()
+            java.lang.String r1 = "fetch "
+            r0.append(r1)
+            java.lang.String r1 = r6.toString()
+            r0.append(r1)
+            java.lang.String r0 = r0.toString()
+            java.lang.String r1 = "DSULOADER"
+            android.util.Slog.i(r1, r0)
+            r0 = 0
+            java.net.URLConnection r6 = r6.openConnection()     // Catch:{ Exception -> 0x007d, all -> 0x0078 }
+            javax.net.ssl.HttpsURLConnection r6 = (javax.net.ssl.HttpsURLConnection) r6     // Catch:{ Exception -> 0x007d, all -> 0x0078 }
+            r1 = 10000(0x2710, float:1.4013E-41)
+            r6.setReadTimeout(r1)     // Catch:{ Exception -> 0x0073, all -> 0x006e }
+            r6.setConnectTimeout(r1)     // Catch:{ Exception -> 0x0073, all -> 0x006e }
+            java.lang.String r1 = "GET"
+            r6.setRequestMethod(r1)     // Catch:{ Exception -> 0x0073, all -> 0x006e }
+            r1 = 1
+            r6.setDoInput(r1)     // Catch:{ Exception -> 0x0073, all -> 0x006e }
+            r6.connect()     // Catch:{ Exception -> 0x0073, all -> 0x006e }
+            int r1 = r6.getResponseCode()     // Catch:{ Exception -> 0x0073, all -> 0x006e }
+            int r2 = r6.getResponseCode()     // Catch:{ Exception -> 0x0073, all -> 0x006e }
+            r3 = 200(0xc8, float:2.8E-43)
+            if (r2 != r3) goto L_0x0057
+            java.io.BufferedInputStream r1 = new java.io.BufferedInputStream     // Catch:{ Exception -> 0x0073, all -> 0x006e }
+            java.io.InputStream r2 = r6.getInputStream()     // Catch:{ Exception -> 0x0073, all -> 0x006e }
+            r1.<init>(r2)     // Catch:{ Exception -> 0x0073, all -> 0x006e }
+            java.lang.String r0 = readAll((java.io.InputStream) r1)     // Catch:{ Exception -> 0x0055 }
+            r1.close()     // Catch:{ IOException -> 0x0051 }
+        L_0x0051:
+            r6.disconnect()
+            return r0
+        L_0x0055:
+            r0 = move-exception
+            goto L_0x0081
+        L_0x0057:
+            java.io.IOException r2 = new java.io.IOException     // Catch:{ Exception -> 0x0073, all -> 0x006e }
+            java.lang.StringBuilder r3 = new java.lang.StringBuilder     // Catch:{ Exception -> 0x0073, all -> 0x006e }
+            r3.<init>()     // Catch:{ Exception -> 0x0073, all -> 0x006e }
+            java.lang.String r4 = "HTTP error code: "
+            r3.append(r4)     // Catch:{ Exception -> 0x0073, all -> 0x006e }
+            r3.append(r1)     // Catch:{ Exception -> 0x0073, all -> 0x006e }
+            java.lang.String r1 = r3.toString()     // Catch:{ Exception -> 0x0073, all -> 0x006e }
+            r2.<init>(r1)     // Catch:{ Exception -> 0x0073, all -> 0x006e }
+            throw r2     // Catch:{ Exception -> 0x0073, all -> 0x006e }
+        L_0x006e:
+            r1 = move-exception
+            r5 = r1
+            r1 = r0
+            r0 = r5
+            goto L_0x0083
+        L_0x0073:
+            r1 = move-exception
+            r5 = r1
+            r1 = r0
+            r0 = r5
+            goto L_0x0081
+        L_0x0078:
+            r6 = move-exception
+            r1 = r0
+            r0 = r6
+            r6 = r1
+            goto L_0x0083
+        L_0x007d:
+            r6 = move-exception
+            r1 = r0
+            r0 = r6
+            r6 = r1
+        L_0x0081:
+            throw r0     // Catch:{ all -> 0x0082 }
+        L_0x0082:
+            r0 = move-exception
+        L_0x0083:
+            if (r1 == 0) goto L_0x0088
+            r1.close()     // Catch:{ IOException -> 0x0088 }
+        L_0x0088:
+            if (r6 == 0) goto L_0x008d
+            r6.disconnect()
+        L_0x008d:
+            throw r0
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.development.DSULoader.readAll(java.net.URL):java.lang.String");
     }
 
-    /* loaded from: classes.dex */
     private class Fetcher implements Runnable {
         private URL mDsuList;
 
@@ -145,7 +167,6 @@ public class DSULoader extends ListActivity {
             }
         }
 
-        @Override // java.lang.Runnable
         public void run() {
             try {
                 fetch(this.mDsuList);
@@ -159,8 +180,7 @@ public class DSULoader extends ListActivity {
             if (DSULoader.this.mDSUList.size() == 0) {
                 DSULoader.this.mDSUList.add(0, "No DSU available for this device");
             }
-            DSULoader.this.runOnUiThread(new Runnable() { // from class: com.android.settings.development.DSULoader.Fetcher.1
-                @Override // java.lang.Runnable
+            DSULoader.this.runOnUiThread(new Runnable() {
                 public void run() {
                     DSULoader.this.mAdapter.clear();
                     DSULoader.this.mAdapter.addAll(DSULoader.this.mDSUList);
@@ -169,28 +189,18 @@ public class DSULoader extends ListActivity {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class DSUPackage {
-        String mCpuAbi;
-        String mDetails;
-        String mName;
-        int mOsVersion;
-        String mPubKey;
-        Date mSPL;
-        URL mTosUrl;
+    private class DSUPackage {
+        String mCpuAbi = null;
+        String mDetails = null;
+        String mName = null;
+        int mOsVersion = -1;
+        String mPubKey = "";
+        Date mSPL = null;
+        URL mTosUrl = null;
         URL mUri;
-        int[] mVndk;
+        int[] mVndk = null;
 
         DSUPackage(JSONObject jSONObject) throws JSONException, MalformedURLException, ParseException {
-            this.mName = null;
-            this.mDetails = null;
-            this.mCpuAbi = null;
-            this.mOsVersion = -1;
-            this.mVndk = null;
-            this.mPubKey = "";
-            this.mSPL = null;
-            this.mTosUrl = null;
             Slog.i("DSULOADER", "DSUPackage: " + jSONObject.toString());
             this.mName = jSONObject.getString("name");
             this.mDetails = jSONObject.getString("details");
@@ -217,7 +227,8 @@ public class DSULoader extends ListActivity {
             }
         }
 
-        int dessertNumber(String str, int i) {
+        /* access modifiers changed from: package-private */
+        public int dessertNumber(String str, int i) {
             if (str == null || str.isEmpty()) {
                 return -1;
             }
@@ -227,20 +238,24 @@ public class DSULoader extends ListActivity {
             return (str.toUpperCase().charAt(0) - 'Q') + i;
         }
 
-        int getDeviceVndk() {
+        /* access modifiers changed from: package-private */
+        public int getDeviceVndk() {
             return dessertNumber(SystemProperties.get("ro.vndk.version"), 28);
         }
 
-        int getDeviceOs() {
+        /* access modifiers changed from: package-private */
+        public int getDeviceOs() {
             return dessertNumber(SystemProperties.get("ro.system.build.version.release"), 10);
         }
 
-        String getDeviceCpu() {
+        /* access modifiers changed from: package-private */
+        public String getDeviceCpu() {
             String lowerCase = SystemProperties.get("ro.product.cpu.abi").toLowerCase();
             return lowerCase.startsWith("aarch64") ? "arm64-v8a" : lowerCase;
         }
 
-        Date getDeviceSPL() {
+        /* access modifiers changed from: package-private */
+        public Date getDeviceSPL() {
             String str = SystemProperties.get("ro.build.version.security_patch");
             if (TextUtils.isEmpty(str)) {
                 return null;
@@ -252,7 +267,8 @@ public class DSULoader extends ListActivity {
             }
         }
 
-        boolean isSupported() {
+        /* access modifiers changed from: package-private */
+        public boolean isSupported() {
             boolean z;
             String deviceCpu = getDeviceCpu();
             boolean z2 = true;
@@ -311,8 +327,8 @@ public class DSULoader extends ListActivity {
         }
     }
 
-    @Override // android.app.Activity
-    protected void onCreate(Bundle bundle) {
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         String str = SystemProperties.get("persist.sys.fflag.override.settings_dynamic_system.list");
         Slog.e("DSULOADER", "Try to get DSU list from: persist.sys.fflag.override.settings_dynamic_system.list");
@@ -325,40 +341,39 @@ public class DSULoader extends ListActivity {
             DSUPackageListAdapter dSUPackageListAdapter = new DSUPackageListAdapter(this);
             this.mAdapter = dSUPackageListAdapter;
             setListAdapter(dSUPackageListAdapter);
-            this.mAdapter.add(getResources().getString(R.string.dsu_loader_loading));
+            this.mAdapter.add(getResources().getString(R$string.dsu_loader_loading));
             new Thread(new Fetcher(url)).start();
         } catch (MalformedURLException e) {
             Slog.e("DSULOADER", e.toString());
         }
     }
 
-    @Override // android.app.ListActivity
-    protected void onListItemClick(ListView listView, View view, int i, long j) {
+    /* access modifiers changed from: protected */
+    public void onListItemClick(ListView listView, View view, int i, long j) {
         Object item = this.mAdapter.getItem(i);
         if (item instanceof DSUPackage) {
             final DSUPackage dSUPackage = (DSUPackage) item;
             this.mAdapter.clear();
-            this.mAdapter.add(getResources().getString(R.string.dsu_loader_loading));
-            new Thread(new Runnable() { // from class: com.android.settings.development.DSULoader.1
-                @Override // java.lang.Runnable
+            this.mAdapter.add(getResources().getString(R$string.dsu_loader_loading));
+            new Thread(new Runnable() {
                 public void run() {
-                    String readAll;
+                    String str;
                     URL url = dSUPackage.mTosUrl;
                     if (url != null) {
                         try {
-                            readAll = DSULoader.readAll(url);
+                            str = DSULoader.readAll(url);
                         } catch (IOException e) {
                             Slog.e("DSULOADER", e.toString());
                         }
                         Intent intent = new Intent(DSULoader.this, DSUTermsOfServiceActivity.class);
-                        intent.putExtra("KEY_TOS", readAll);
+                        intent.putExtra("KEY_TOS", str);
                         intent.setData(Uri.parse(dSUPackage.mUri.toString()));
                         intent.putExtra("KEY_PUBKEY", dSUPackage.mPubKey);
                         DSULoader.this.startActivity(intent);
                     }
-                    readAll = "";
+                    str = "";
                     Intent intent2 = new Intent(DSULoader.this, DSUTermsOfServiceActivity.class);
-                    intent2.putExtra("KEY_TOS", readAll);
+                    intent2.putExtra("KEY_TOS", str);
                     intent2.setData(Uri.parse(dSUPackage.mUri.toString()));
                     intent2.putExtra("KEY_PUBKEY", dSUPackage.mPubKey);
                     DSULoader.this.startActivity(intent2);
@@ -368,7 +383,6 @@ public class DSULoader extends ListActivity {
         finish();
     }
 
-    /* loaded from: classes.dex */
     private class DSUPackageListAdapter extends ArrayAdapter<Object> {
         private final LayoutInflater mInflater;
 
@@ -377,7 +391,6 @@ public class DSULoader extends ListActivity {
             this.mInflater = (LayoutInflater) context.getSystemService("layout_inflater");
         }
 
-        @Override // android.widget.ArrayAdapter, android.widget.Adapter
         public View getView(int i, View view, ViewGroup viewGroup) {
             AppViewHolder createOrRecycle = AppViewHolder.createOrRecycle(this.mInflater, view);
             View view2 = createOrRecycle.rootView;
@@ -389,7 +402,7 @@ public class DSULoader extends ListActivity {
             } else {
                 createOrRecycle.summary.setText((String) item);
             }
-            createOrRecycle.appIcon.setImageDrawable(null);
+            createOrRecycle.appIcon.setImageDrawable((Drawable) null);
             createOrRecycle.disabled.setVisibility(8);
             return view2;
         }

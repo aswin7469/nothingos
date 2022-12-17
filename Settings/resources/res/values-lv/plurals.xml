@@ -291,14 +291,14 @@
         <item quantity="other">%d kategorijas tika izslēgtas</item>
     </plurals>
     <plurals name="notifications_sent_daily">
-        <item quantity="zero">Ap %d paziņojumiem dienā</item>
-        <item quantity="one">Ap %d paziņojumu dienā</item>
-        <item quantity="other">Ap %d paziņojumiem dienā</item>
+        <item quantity="zero">Ap %,d paziņojumiem dienā</item>
+        <item quantity="one">Ap %,d paziņojumu dienā</item>
+        <item quantity="other">Ap %,d paziņojumiem dienā</item>
     </plurals>
     <plurals name="notifications_sent_weekly">
-        <item quantity="zero">Ap %d paziņojumiem nedēļā</item>
-        <item quantity="one">Ap %d paziņojumu nedēļā</item>
-        <item quantity="other">Ap %d paziņojumiem nedēļā</item>
+        <item quantity="zero">Ap %,d paziņojumiem nedēļā</item>
+        <item quantity="one">Ap %,d paziņojumu nedēļā</item>
+        <item quantity="other">Ap %,d paziņojumiem nedēļā</item>
     </plurals>
     <plurals name="number_of_device_admins">
         <item quantity="zero">%d aktīvu lietotņu</item>
@@ -400,16 +400,6 @@
         <item quantity="one">Sertifikātu pieņemšana vai noņemšana</item>
         <item quantity="other">Sertifikātu pieņemšana vai noņemšana</item>
     </plurals>
-    <plurals name="ssl_ca_cert_info_message">
-        <item quantity="zero">%s instalēja sertificēšanas iestāžu sertifikātus jūsu darba profilam. Šie sertifikāti atļauj iestādēm pārraudzīt darbības darba tīklā, tostarp e-pasta kontus, lietotnes un drošās vietnes.\n\nLai iegūtu plašāku informāciju par šiem sertifikātiem, sazinieties ar administratoru.</item>
-        <item quantity="one">%s instalēja sertificēšanas iestāžu sertifikātus jūsu darba profilam. Šie sertifikāti atļauj iestādēm pārraudzīt darbības darba tīklā, tostarp e-pasta kontus, lietotnes un drošās vietnes.\n\nLai iegūtu plašāku informāciju par šiem sertifikātiem, sazinieties ar administratoru.</item>
-        <item quantity="other">%s instalēja sertificēšanas iestāžu sertifikātus jūsu darba profilam. Šie sertifikāti atļauj iestādēm pārraudzīt darbības darba tīklā, tostarp e-pasta kontus, lietotnes un drošās vietnes.\n\nLai iegūtu plašāku informāciju par šiem sertifikātiem, sazinieties ar administratoru.</item>
-    </plurals>
-    <plurals name="ssl_ca_cert_info_message_device_owner">
-        <item quantity="zero">%s instalēja jūsu ierīcē sertificēšanas iestāžu sertifikātus. Šie sertifikāti atļauj iestādēm pārraudzīt darbības jūsu ierīces tīklā, tostarp e-pasta kontus, lietotnes un drošās vietnes.\n\nLai iegūtu plašāku informāciju par šiem sertifikātiem, sazinieties ar administratoru.</item>
-        <item quantity="one">%s instalēja jūsu ierīcē sertificēšanas iestāžu sertifikātus. Šie sertifikāti atļauj iestādēm pārraudzīt darbības jūsu ierīces tīklā, tostarp e-pasta kontus, lietotnes un drošās vietnes.\n\nLai iegūtu plašāku informāciju par šiem sertifikātiem, sazinieties ar administratoru.</item>
-        <item quantity="other">%s instalēja jūsu ierīcē sertificēšanas iestāžu sertifikātus. Šie sertifikāti atļauj iestādēm pārraudzīt darbības jūsu ierīces tīklā, tostarp e-pasta kontus, lietotnes un drošās vietnes.\n\nLai iegūtu plašāku informāciju par šiem sertifikātiem, sazinieties ar administratoru.</item>
-    </plurals>
     <plurals name="ssl_ca_cert_settings_button">
         <item quantity="zero">Pārbaudīt sertifikātus</item>
         <item quantity="one">Pārbaudīt sertifikātus</item>
@@ -449,11 +439,6 @@
         <item quantity="zero">%d abonementi</item>
         <item quantity="one">%d abonements</item>
         <item quantity="other">%d abonementi</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="zero">Pievienotas %1$d ierīces</item>
-        <item quantity="one">Pievienota %1$d ierīce</item>
-        <item quantity="other">Pievienotas %1$d ierīces</item>
     </plurals>
     <plurals name="wrong_pin_code">
         <item quantity="zero">Nepareizs SIM kartes PIN kods. Varat mēģināt vēl %d reizes.</item>

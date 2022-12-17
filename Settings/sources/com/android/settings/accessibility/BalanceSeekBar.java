@@ -9,20 +9,26 @@ import android.graphics.Rect;
 import android.provider.Settings;
 import android.util.AttributeSet;
 import android.widget.SeekBar;
-import com.android.settings.R;
+import com.android.settings.R$dimen;
 import com.android.settings.Utils;
-/* loaded from: classes.dex */
+
 public class BalanceSeekBar extends SeekBar {
     static final float SNAP_TO_PERCENTAGE = 0.03f;
-    private int mCenter;
+    /* access modifiers changed from: private */
+    public int mCenter;
     private final Paint mCenterMarkerPaint;
     private final Rect mCenterMarkerRect;
-    private final Context mContext;
-    private int mLastProgress;
-    private final Object mListenerLock;
-    private SeekBar.OnSeekBarChangeListener mOnSeekBarChangeListener;
+    /* access modifiers changed from: private */
+    public final Context mContext;
+    /* access modifiers changed from: private */
+    public int mLastProgress;
+    /* access modifiers changed from: private */
+    public final Object mListenerLock;
+    /* access modifiers changed from: private */
+    public SeekBar.OnSeekBarChangeListener mOnSeekBarChangeListener;
     private final SeekBar.OnSeekBarChangeListener mProxySeekBarListener;
-    private float mSnapThreshold;
+    /* access modifiers changed from: private */
+    public float mSnapThreshold;
 
     public BalanceSeekBar(Context context, AttributeSet attributeSet) {
         this(context, attributeSet, 16842875);
@@ -37,8 +43,7 @@ public class BalanceSeekBar extends SeekBar {
         this.mListenerLock = new Object();
         int i3 = -1;
         this.mLastProgress = -1;
-        SeekBar.OnSeekBarChangeListener onSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() { // from class: com.android.settings.accessibility.BalanceSeekBar.1
-            @Override // android.widget.SeekBar.OnSeekBarChangeListener
+        C05901 r6 = new SeekBar.OnSeekBarChangeListener() {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 synchronized (BalanceSeekBar.this.mListenerLock) {
                     if (BalanceSeekBar.this.mOnSeekBarChangeListener != null) {
@@ -47,7 +52,6 @@ public class BalanceSeekBar extends SeekBar {
                 }
             }
 
-            @Override // android.widget.SeekBar.OnSeekBarChangeListener
             public void onStartTrackingTouch(SeekBar seekBar) {
                 synchronized (BalanceSeekBar.this.mListenerLock) {
                     if (BalanceSeekBar.this.mOnSeekBarChangeListener != null) {
@@ -56,63 +60,58 @@ public class BalanceSeekBar extends SeekBar {
                 }
             }
 
-            @Override // android.widget.SeekBar.OnSeekBarChangeListener
-            public void onProgressChanged(SeekBar seekBar, int i4, boolean z) {
+            public void onProgressChanged(SeekBar seekBar, int i, boolean z) {
                 if (z) {
-                    if (i4 != BalanceSeekBar.this.mCenter) {
-                        float f = i4;
-                        if (f > BalanceSeekBar.this.mCenter - BalanceSeekBar.this.mSnapThreshold && f < BalanceSeekBar.this.mCenter + BalanceSeekBar.this.mSnapThreshold) {
-                            i4 = BalanceSeekBar.this.mCenter;
-                            seekBar.setProgress(i4);
+                    if (i != BalanceSeekBar.this.mCenter) {
+                        float f = (float) i;
+                        if (f > ((float) BalanceSeekBar.this.mCenter) - BalanceSeekBar.this.mSnapThreshold && f < ((float) BalanceSeekBar.this.mCenter) + BalanceSeekBar.this.mSnapThreshold) {
+                            i = BalanceSeekBar.this.mCenter;
+                            seekBar.setProgress(i);
                         }
                     }
-                    if (i4 != BalanceSeekBar.this.mLastProgress) {
-                        if (i4 == BalanceSeekBar.this.mCenter || i4 == BalanceSeekBar.this.getMin() || i4 == BalanceSeekBar.this.getMax()) {
+                    if (i != BalanceSeekBar.this.mLastProgress) {
+                        if (i == BalanceSeekBar.this.mCenter || i == BalanceSeekBar.this.getMin() || i == BalanceSeekBar.this.getMax()) {
                             seekBar.performHapticFeedback(4);
                         }
-                        BalanceSeekBar.this.mLastProgress = i4;
+                        BalanceSeekBar.this.mLastProgress = i;
                     }
-                    Settings.System.putFloatForUser(BalanceSeekBar.this.mContext.getContentResolver(), "master_balance", (i4 - BalanceSeekBar.this.mCenter) * 0.01f, -2);
+                    Settings.System.putFloatForUser(BalanceSeekBar.this.mContext.getContentResolver(), "master_balance", ((float) (i - BalanceSeekBar.this.mCenter)) * 0.01f, -2);
                 }
                 synchronized (BalanceSeekBar.this.mListenerLock) {
                     if (BalanceSeekBar.this.mOnSeekBarChangeListener != null) {
-                        BalanceSeekBar.this.mOnSeekBarChangeListener.onProgressChanged(seekBar, i4, z);
+                        BalanceSeekBar.this.mOnSeekBarChangeListener.onProgressChanged(seekBar, i, z);
                     }
                 }
             }
         };
-        this.mProxySeekBarListener = onSeekBarChangeListener;
+        this.mProxySeekBarListener = r6;
         this.mContext = context;
         Resources resources = getResources();
-        this.mCenterMarkerRect = new Rect(0, 0, resources.getDimensionPixelSize(R.dimen.balance_seekbar_center_marker_width), resources.getDimensionPixelSize(R.dimen.balance_seekbar_center_marker_height));
+        this.mCenterMarkerRect = new Rect(0, 0, resources.getDimensionPixelSize(R$dimen.balance_seekbar_center_marker_width), resources.getDimensionPixelSize(R$dimen.balance_seekbar_center_marker_height));
         Paint paint = new Paint();
         this.mCenterMarkerPaint = paint;
         paint.setColor(!Utils.isNightMode(context) ? -16777216 : i3);
         paint.setStyle(Paint.Style.FILL);
         setProgressTintList(ColorStateList.valueOf(0));
-        super.setOnSeekBarChangeListener(onSeekBarChangeListener);
+        super.setOnSeekBarChangeListener(r6);
     }
 
-    @Override // android.widget.SeekBar
     public void setOnSeekBarChangeListener(SeekBar.OnSeekBarChangeListener onSeekBarChangeListener) {
         synchronized (this.mListenerLock) {
             this.mOnSeekBarChangeListener = onSeekBarChangeListener;
         }
     }
 
-    @Override // android.widget.AbsSeekBar, android.widget.ProgressBar
     public synchronized void setMax(int i) {
         super.setMax(i);
         this.mCenter = i / 2;
-        this.mSnapThreshold = i * SNAP_TO_PERCENTAGE;
+        this.mSnapThreshold = ((float) i) * SNAP_TO_PERCENTAGE;
     }
 
-    @Override // android.widget.AbsSeekBar, android.widget.ProgressBar, android.view.View
-    protected synchronized void onDraw(Canvas canvas) {
+    /* access modifiers changed from: protected */
+    public synchronized void onDraw(Canvas canvas) {
         canvas.save();
-        int width = canvas.getWidth();
-        Rect rect = this.mCenterMarkerRect;
-        canvas.translate((width - rect.right) / 2, ((canvas.getHeight() - getPaddingBottom()) / 2) - (rect.bottom / 2));
+        canvas.translate((float) (((canvas.getWidth() - this.mCenterMarkerRect.right) - getPaddingEnd()) / 2), (float) (((canvas.getHeight() - getPaddingBottom()) / 2) - (this.mCenterMarkerRect.bottom / 2)));
         canvas.drawRect(this.mCenterMarkerRect, this.mCenterMarkerPaint);
         canvas.restore();
         super.onDraw(canvas);

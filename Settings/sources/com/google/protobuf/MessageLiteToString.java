@@ -8,11 +8,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes2.dex */
-public final class MessageLiteToString {
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static String toString(MessageLite messageLite, String str) {
+
+final class MessageLiteToString {
+    static String toString(MessageLite messageLite, String str) {
         StringBuilder sb = new StringBuilder();
         sb.append("# ");
         sb.append(str);
@@ -21,11 +19,9 @@ public final class MessageLiteToString {
     }
 
     private static void reflectivePrintWithIndent(MessageLite messageLite, StringBuilder sb, int i) {
-        Method[] declaredMethods;
-        Map.Entry<GeneratedMessageLite.ExtensionDescriptor, Object> next;
         HashMap hashMap = new HashMap();
         HashMap hashMap2 = new HashMap();
-        TreeSet<String> treeSet = new TreeSet();
+        TreeSet<String> treeSet = new TreeSet<>();
         for (Method method : messageLite.getClass().getDeclaredMethods()) {
             hashMap2.put(method.getName(), method);
             if (method.getParameterTypes().length == 0) {
@@ -62,12 +58,10 @@ public final class MessageLiteToString {
                 Method method5 = (Method) hashMap.get("has" + replaceFirst);
                 if (method4 != null) {
                     Object invokeOrDie = GeneratedMessageLite.invokeOrDie(method4, messageLite, new Object[0]);
-                    if (method5 == null) {
-                        if (isDefaultValue(invokeOrDie)) {
-                            z = false;
-                        }
-                    } else {
+                    if (method5 != null) {
                         z = ((Boolean) GeneratedMessageLite.invokeOrDie(method5, messageLite, new Object[0])).booleanValue();
+                    } else if (isDefaultValue(invokeOrDie)) {
+                        z = false;
                     }
                     if (z) {
                         printField(sb, i, camelCaseToSnakeCase(str4), invokeOrDie);
@@ -78,7 +72,8 @@ public final class MessageLiteToString {
         if (messageLite instanceof GeneratedMessageLite.ExtendableMessage) {
             Iterator<Map.Entry<GeneratedMessageLite.ExtensionDescriptor, Object>> it = ((GeneratedMessageLite.ExtendableMessage) messageLite).extensions.iterator();
             while (it.hasNext()) {
-                printField(sb, i, "[" + next.getKey().getNumber() + "]", it.next().getValue());
+                Map.Entry next = it.next();
+                printField(sb, i, "[" + ((GeneratedMessageLite.ExtensionDescriptor) next.getKey()).getNumber() + "]", next.getValue());
             }
         }
         UnknownFieldSetLite unknownFieldSetLite = ((GeneratedMessageLite) messageLite).unknownFields;
@@ -92,33 +87,53 @@ public final class MessageLiteToString {
             return !((Boolean) obj).booleanValue();
         }
         if (obj instanceof Integer) {
-            return ((Integer) obj).intValue() == 0;
+            if (((Integer) obj).intValue() == 0) {
+                return true;
+            }
+            return false;
         } else if (obj instanceof Float) {
-            return ((Float) obj).floatValue() == 0.0f;
+            if (((Float) obj).floatValue() == 0.0f) {
+                return true;
+            }
+            return false;
         } else if (obj instanceof Double) {
-            return ((Double) obj).doubleValue() == 0.0d;
+            if (((Double) obj).doubleValue() == 0.0d) {
+                return true;
+            }
+            return false;
         } else if (obj instanceof String) {
             return obj.equals("");
         } else {
             if (obj instanceof ByteString) {
                 return obj.equals(ByteString.EMPTY);
             }
-            return obj instanceof MessageLite ? obj == ((MessageLite) obj).mo911getDefaultInstanceForType() : (obj instanceof Enum) && ((Enum) obj).ordinal() == 0;
+            if (obj instanceof MessageLite) {
+                if (obj == ((MessageLite) obj).getDefaultInstanceForType()) {
+                    return true;
+                }
+                return false;
+            } else if (!(obj instanceof Enum)) {
+                return false;
+            } else {
+                if (((Enum) obj).ordinal() == 0) {
+                    return true;
+                }
+                return false;
+            }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static final void printField(StringBuilder sb, int i, String str, Object obj) {
+    static final void printField(StringBuilder sb, int i, String str, Object obj) {
         if (obj instanceof List) {
-            for (Object obj2 : (List) obj) {
-                printField(sb, i, str, obj2);
+            for (Object printField : (List) obj) {
+                printField(sb, i, str, printField);
             }
         } else if (obj instanceof Map) {
-            for (Map.Entry entry : ((Map) obj).entrySet()) {
-                printField(sb, i, str, entry);
+            for (Map.Entry printField2 : ((Map) obj).entrySet()) {
+                printField(sb, i, str, printField2);
             }
         } else {
-            sb.append('\n');
+            sb.append(10);
             int i2 = 0;
             for (int i3 = 0; i3 < i; i3++) {
                 sb.append(' ');
@@ -143,10 +158,10 @@ public final class MessageLiteToString {
                 sb.append("}");
             } else if (obj instanceof Map.Entry) {
                 sb.append(" {");
-                Map.Entry entry2 = (Map.Entry) obj;
+                Map.Entry entry = (Map.Entry) obj;
                 int i4 = i + 2;
-                printField(sb, i4, "key", entry2.getKey());
-                printField(sb, i4, "value", entry2.getValue());
+                printField(sb, i4, "key", entry.getKey());
+                printField(sb, i4, "value", entry.getValue());
                 sb.append("\n");
                 while (i2 < i) {
                     sb.append(' ');

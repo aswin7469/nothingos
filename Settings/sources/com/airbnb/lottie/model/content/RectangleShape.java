@@ -8,7 +8,7 @@ import com.airbnb.lottie.model.animatable.AnimatableFloatValue;
 import com.airbnb.lottie.model.animatable.AnimatablePointValue;
 import com.airbnb.lottie.model.animatable.AnimatableValue;
 import com.airbnb.lottie.model.layer.BaseLayer;
-/* loaded from: classes.dex */
+
 public class RectangleShape implements ContentModel {
     private final AnimatableFloatValue cornerRadius;
     private final boolean hidden;
@@ -44,7 +44,6 @@ public class RectangleShape implements ContentModel {
         return this.hidden;
     }
 
-    @Override // com.airbnb.lottie.model.content.ContentModel
     public Content toContent(LottieDrawable lottieDrawable, BaseLayer baseLayer) {
         return new RectangleContent(lottieDrawable, baseLayer, this);
     }

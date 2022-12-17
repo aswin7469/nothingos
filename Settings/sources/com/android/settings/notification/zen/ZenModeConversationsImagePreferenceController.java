@@ -10,23 +10,26 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$dimen;
+import com.android.settings.R$id;
+import com.android.settings.R$string;
 import com.android.settings.notification.NotificationBackend;
-import com.android.settingslib.core.AbstractPreferenceController;
 import com.android.settingslib.core.lifecycle.Lifecycle;
 import com.android.settingslib.widget.LayoutPreference;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
-public class ZenModeConversationsImagePreferenceController extends AbstractZenModePreferenceController {
-    private final NotificationBackend mNotificationBackend;
-    private LayoutPreference mPreference;
-    private ViewGroup mViewGroup;
-    private final ArrayList<Drawable> mConversationDrawables = new ArrayList<>();
-    private final int mIconSizePx = this.mContext.getResources().getDimensionPixelSize(R.dimen.zen_conversations_icon_size);
-    private final int mIconOffsetPx = this.mContext.getResources().getDimensionPixelSize(R.dimen.zen_conversations_icon_offset);
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
+public class ZenModeConversationsImagePreferenceController extends AbstractZenModePreferenceController {
+    /* access modifiers changed from: private */
+    public final ArrayList<Drawable> mConversationDrawables = new ArrayList<>();
+    private final int mIconOffsetPx;
+    private final int mIconSizePx;
+    /* access modifiers changed from: private */
+    public final NotificationBackend mNotificationBackend;
+    /* access modifiers changed from: private */
+    public LayoutPreference mPreference;
+    private ViewGroup mViewGroup;
+
     public boolean isAvailable() {
         return true;
     }
@@ -34,34 +37,33 @@ public class ZenModeConversationsImagePreferenceController extends AbstractZenMo
     public ZenModeConversationsImagePreferenceController(Context context, String str, Lifecycle lifecycle, NotificationBackend notificationBackend) {
         super(context, str, lifecycle);
         this.mNotificationBackend = notificationBackend;
+        this.mIconSizePx = this.mContext.getResources().getDimensionPixelSize(R$dimen.zen_conversations_icon_size);
+        this.mIconOffsetPx = this.mContext.getResources().getDimensionPixelSize(R$dimen.zen_conversations_icon_offset);
     }
 
-    @Override // com.android.settings.notification.zen.AbstractZenModePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         LayoutPreference layoutPreference = (LayoutPreference) preferenceScreen.findPreference(this.KEY);
         this.mPreference = layoutPreference;
-        this.mViewGroup = (ViewGroup) layoutPreference.findViewById(R.id.zen_mode_settings_senders_overlay_view);
+        this.mViewGroup = (ViewGroup) layoutPreference.findViewById(R$id.zen_mode_settings_senders_overlay_view);
         loadConversations();
     }
 
-    @Override // com.android.settings.notification.zen.AbstractZenModePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return this.KEY;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         loadConversations();
         this.mViewGroup.removeAllViews();
         int priorityConversationSenders = this.mBackend.getPriorityConversationSenders();
         int i = 8;
         if (priorityConversationSenders == 1) {
-            this.mViewGroup.setContentDescription(this.mContext.getResources().getString(R.string.zen_mode_from_all_conversations));
+            this.mViewGroup.setContentDescription(this.mContext.getResources().getString(R$string.zen_mode_from_all_conversations));
         } else if (priorityConversationSenders == 2) {
-            this.mViewGroup.setContentDescription(this.mContext.getResources().getString(R.string.zen_mode_from_important_conversations));
+            this.mViewGroup.setContentDescription(this.mContext.getResources().getString(R$string.zen_mode_from_important_conversations));
         } else {
-            this.mViewGroup.setContentDescription(null);
+            this.mViewGroup.setContentDescription((CharSequence) null);
             this.mViewGroup.setVisibility(8);
             return;
         }
@@ -84,11 +86,10 @@ public class ZenModeConversationsImagePreferenceController extends AbstractZenMo
     }
 
     private void loadConversations() {
-        new AsyncTask<Void, Void, Void>() { // from class: com.android.settings.notification.zen.ZenModeConversationsImagePreferenceController.1
+        new AsyncTask<Void, Void, Void>() {
             private List<Drawable> mDrawables = new ArrayList();
 
-            /* JADX INFO: Access modifiers changed from: protected */
-            @Override // android.os.AsyncTask
+            /* access modifiers changed from: protected */
             public Void doInBackground(Void... voidArr) {
                 Drawable conversationDrawable;
                 this.mDrawables.clear();
@@ -99,7 +100,7 @@ public class ZenModeConversationsImagePreferenceController extends AbstractZenMo
                 ParceledListSlice<ConversationChannelWrapper> conversations = ZenModeConversationsImagePreferenceController.this.mNotificationBackend.getConversations(priorityConversationSenders == 2);
                 if (conversations != null) {
                     for (ConversationChannelWrapper conversationChannelWrapper : conversations.getList()) {
-                        if (!conversationChannelWrapper.getNotificationChannel().isDemoted() && (conversationDrawable = ZenModeConversationsImagePreferenceController.this.mNotificationBackend.getConversationDrawable(((AbstractPreferenceController) ZenModeConversationsImagePreferenceController.this).mContext, conversationChannelWrapper.getShortcutInfo(), conversationChannelWrapper.getPkg(), conversationChannelWrapper.getUid(), conversationChannelWrapper.getNotificationChannel().isImportantConversation())) != null) {
+                        if (!conversationChannelWrapper.getNotificationChannel().isDemoted() && (conversationDrawable = ZenModeConversationsImagePreferenceController.this.mNotificationBackend.getConversationDrawable(ZenModeConversationsImagePreferenceController.this.mContext, conversationChannelWrapper.getShortcutInfo(), conversationChannelWrapper.getPkg(), conversationChannelWrapper.getUid(), conversationChannelWrapper.getNotificationChannel().isImportantConversation())) != null) {
                             this.mDrawables.add(conversationDrawable);
                         }
                     }
@@ -107,16 +108,14 @@ public class ZenModeConversationsImagePreferenceController extends AbstractZenMo
                 return null;
             }
 
-            /* JADX INFO: Access modifiers changed from: protected */
-            @Override // android.os.AsyncTask
-            public void onPostExecute(Void r2) {
-                if (((AbstractPreferenceController) ZenModeConversationsImagePreferenceController.this).mContext == null) {
-                    return;
+            /* access modifiers changed from: protected */
+            public void onPostExecute(Void voidR) {
+                if (ZenModeConversationsImagePreferenceController.this.mContext != null) {
+                    ZenModeConversationsImagePreferenceController.this.mConversationDrawables.clear();
+                    ZenModeConversationsImagePreferenceController.this.mConversationDrawables.addAll(this.mDrawables);
+                    ZenModeConversationsImagePreferenceController zenModeConversationsImagePreferenceController = ZenModeConversationsImagePreferenceController.this;
+                    zenModeConversationsImagePreferenceController.updateState(zenModeConversationsImagePreferenceController.mPreference);
                 }
-                ZenModeConversationsImagePreferenceController.this.mConversationDrawables.clear();
-                ZenModeConversationsImagePreferenceController.this.mConversationDrawables.addAll(this.mDrawables);
-                ZenModeConversationsImagePreferenceController zenModeConversationsImagePreferenceController = ZenModeConversationsImagePreferenceController.this;
-                zenModeConversationsImagePreferenceController.updateState(zenModeConversationsImagePreferenceController.mPreference);
             }
         }.execute(new Void[0]);
     }

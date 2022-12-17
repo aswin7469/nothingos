@@ -14,15 +14,17 @@ import android.os.UserHandle;
 import android.os.UserManager;
 import android.text.TextUtils;
 import android.util.ArrayMap;
+import android.util.Log;
 import android.util.SparseArray;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceScreen;
 import com.android.internal.os.PowerProfile;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.SettingsActivity;
 import com.android.settings.core.InstrumentedPreferenceFragment;
 import com.android.settings.core.PreferenceControllerMixin;
+import com.android.settings.overlay.FeatureFactory;
 import com.android.settingslib.core.AbstractPreferenceController;
 import com.android.settingslib.core.lifecycle.Lifecycle;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
@@ -32,54 +34,61 @@ import com.android.settingslib.utils.StringUtil;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.ToIntFunction;
-/* loaded from: classes.dex */
+import java.util.Set;
+
 public class BatteryAppListPreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin, LifecycleObserver, OnPause, OnDestroy {
     static final boolean USE_FAKE_DATA = false;
-    static Config sConfig = new Config() { // from class: com.android.settings.fuelgauge.BatteryAppListPreferenceController.1
-        @Override // com.android.settings.fuelgauge.BatteryAppListPreferenceController.Config
+    static Config sConfig = new Config() {
         public boolean shouldShowBatteryAttributionList(Context context) {
-            return new PowerProfile(context).getAveragePower("screen.full") >= 10.0d;
+            boolean z = false;
+            double averagePowerForOrdinal = new PowerProfile(context).getAveragePowerForOrdinal("screen.full.display", 0);
+            if (averagePowerForOrdinal >= 10.0d) {
+                z = true;
+            }
+            if (!z) {
+                Log.w("BatteryAppListPreferenceController", "shouldShowBatteryAttributionList(): " + averagePowerForOrdinal);
+            }
+            return z;
         }
     };
-    private final SettingsActivity mActivity;
+    /* access modifiers changed from: private */
+    public final SettingsActivity mActivity;
     PreferenceGroup mAppListGroup;
     private BatteryUsageStats mBatteryUsageStats;
     BatteryUtils mBatteryUtils;
     private final InstrumentedPreferenceFragment mFragment;
-    private final Handler mHandler = new Handler(Looper.getMainLooper()) { // from class: com.android.settings.fuelgauge.BatteryAppListPreferenceController.2
-        @Override // android.os.Handler
+    private final Handler mHandler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message message) {
-            SettingsActivity settingsActivity;
+            SettingsActivity r0;
             int i = message.what;
             if (i == 1) {
                 BatteryEntry batteryEntry = (BatteryEntry) message.obj;
                 PowerGaugePreference powerGaugePreference = (PowerGaugePreference) BatteryAppListPreferenceController.this.mAppListGroup.findPreference(batteryEntry.getKey());
                 if (powerGaugePreference != null) {
                     powerGaugePreference.setIcon(BatteryAppListPreferenceController.this.mUserManager.getBadgedIconForUser(batteryEntry.getIcon(), new UserHandle(UserHandle.getUserId(batteryEntry.getUid()))));
-                    powerGaugePreference.setTitle(batteryEntry.name);
+                    powerGaugePreference.setTitle((CharSequence) batteryEntry.mName);
                     if (batteryEntry.isAppEntry()) {
-                        powerGaugePreference.setContentDescription(batteryEntry.name);
+                        powerGaugePreference.setContentDescription(batteryEntry.mName);
                     }
                 }
-            } else if (i == 2 && (settingsActivity = BatteryAppListPreferenceController.this.mActivity) != null) {
-                settingsActivity.reportFullyDrawn();
+            } else if (i == 2 && (r0 = BatteryAppListPreferenceController.this.mActivity) != null) {
+                r0.reportFullyDrawn();
             }
             super.handleMessage(message);
         }
     };
+    private final Set<CharSequence> mNotAllowShowSummaryPackages;
     private final PackageManager mPackageManager;
     private Context mPrefContext;
     private ArrayMap<String, Preference> mPreferenceCache;
     private final String mPreferenceKey;
-    private final UserManager mUserManager;
+    /* access modifiers changed from: private */
+    public final UserManager mUserManager;
 
-    /* loaded from: classes.dex */
     public interface Config {
         boolean shouldShowBatteryAttributionList(Context context);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return true;
     }
@@ -95,105 +104,108 @@ public class BatteryAppListPreferenceController extends AbstractPreferenceContro
         this.mPackageManager = context.getPackageManager();
         this.mActivity = settingsActivity;
         this.mFragment = instrumentedPreferenceFragment;
+        this.mNotAllowShowSummaryPackages = Set.of(FeatureFactory.getFactory(context).getPowerUsageFeatureProvider(context).getHideApplicationSummary(context));
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnPause
     public void onPause() {
         BatteryEntry.stopRequestQueue();
         this.mHandler.removeMessages(1);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnDestroy
     public void onDestroy() {
         if (this.mActivity.isChangingConfigurations()) {
             BatteryEntry.clearUidCache();
         }
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPrefContext = preferenceScreen.getContext();
         PreferenceGroup preferenceGroup = (PreferenceGroup) preferenceScreen.findPreference(this.mPreferenceKey);
         this.mAppListGroup = preferenceGroup;
-        preferenceGroup.setTitle(this.mPrefContext.getString(R.string.power_usage_list_summary));
+        preferenceGroup.setTitle((CharSequence) this.mPrefContext.getString(R$string.power_usage_list_summary));
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return this.mPreferenceKey;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
-        if (preference instanceof PowerGaugePreference) {
-            PowerGaugePreference powerGaugePreference = (PowerGaugePreference) preference;
-            AdvancedPowerUsageDetail.startBatteryDetailPage(this.mActivity, this.mFragment, powerGaugePreference.getInfo(), powerGaugePreference.getPercent(), true);
-            return true;
+        if (!(preference instanceof PowerGaugePreference)) {
+            return false;
         }
-        return false;
+        PowerGaugePreference powerGaugePreference = (PowerGaugePreference) preference;
+        AdvancedPowerUsageDetail.startBatteryDetailPage(this.mActivity, this.mFragment, powerGaugePreference.getInfo(), powerGaugePreference.getPercent(), true);
+        return true;
     }
 
     public void refreshAppListGroup(BatteryUsageStats batteryUsageStats, boolean z) {
+        boolean z2;
         BatteryEntry batteryEntry;
-        if (!isAvailable()) {
-            return;
-        }
-        this.mBatteryUsageStats = batteryUsageStats;
-        this.mAppListGroup.setTitle(R.string.power_usage_list_summary);
-        cacheRemoveAllPrefs(this.mAppListGroup);
-        boolean z2 = false;
-        this.mAppListGroup.setOrderingAsAdded(false);
-        int i = 1;
-        if (sConfig.shouldShowBatteryAttributionList(this.mContext)) {
-            int dischargePercentage = getDischargePercentage(batteryUsageStats);
-            List<BatteryEntry> coalescedUsageList = getCoalescedUsageList(z, true);
-            double consumedPower = batteryUsageStats.getConsumedPower();
-            int size = coalescedUsageList.size();
-            int i2 = 0;
+        if (isAvailable()) {
+            this.mBatteryUsageStats = batteryUsageStats;
+            this.mAppListGroup.setTitle(R$string.power_usage_list_summary);
+            cacheRemoveAllPrefs(this.mAppListGroup);
             boolean z3 = false;
-            while (true) {
-                if (i2 >= size) {
-                    z2 = z3;
-                    break;
-                }
-                BatteryEntry batteryEntry2 = coalescedUsageList.get(i2);
-                double calculateBatteryPercent = this.mBatteryUtils.calculateBatteryPercent(batteryEntry2.getConsumedPower(), consumedPower, dischargePercentage);
-                if (((int) (0.5d + calculateBatteryPercent)) >= i) {
-                    UserHandle userHandle = new UserHandle(UserHandle.getUserId(batteryEntry2.getUid()));
-                    Drawable badgedIconForUser = this.mUserManager.getBadgedIconForUser(batteryEntry2.getIcon(), userHandle);
-                    CharSequence badgedLabelForUser = this.mUserManager.getBadgedLabelForUser(batteryEntry2.getLabel(), userHandle);
-                    String key = batteryEntry2.getKey();
-                    PowerGaugePreference powerGaugePreference = (PowerGaugePreference) getCachedPreference(key);
-                    if (powerGaugePreference == null) {
-                        batteryEntry = batteryEntry2;
-                        powerGaugePreference = new PowerGaugePreference(this.mPrefContext, badgedIconForUser, badgedLabelForUser, batteryEntry);
-                        powerGaugePreference.setKey(key);
-                    } else {
-                        batteryEntry = batteryEntry2;
-                    }
-                    batteryEntry.percent = calculateBatteryPercent;
-                    powerGaugePreference.setTitle(batteryEntry.getLabel());
-                    powerGaugePreference.setOrder(i2 + 1);
-                    powerGaugePreference.setPercent(calculateBatteryPercent);
-                    powerGaugePreference.shouldShowAnomalyIcon(false);
-                    setUsageSummary(powerGaugePreference, batteryEntry);
-                    this.mAppListGroup.addPreference(powerGaugePreference);
-                    if (this.mAppListGroup.getPreferenceCount() - getCachedCount() > 21) {
-                        z2 = true;
+            this.mAppListGroup.setOrderingAsAdded(false);
+            int i = 1;
+            if (sConfig.shouldShowBatteryAttributionList(this.mContext)) {
+                int dischargePercentage = getDischargePercentage(batteryUsageStats);
+                List<BatteryEntry> coalescedUsageList = getCoalescedUsageList(z, true);
+                double consumedPower = batteryUsageStats.getConsumedPower();
+                int size = coalescedUsageList.size();
+                int i2 = 0;
+                boolean z4 = false;
+                while (true) {
+                    if (i2 >= size) {
+                        z3 = z4;
                         break;
                     }
-                    z3 = true;
+                    BatteryEntry batteryEntry2 = coalescedUsageList.get(i2);
+                    BatteryEntry batteryEntry3 = batteryEntry2;
+                    double calculateBatteryPercent = this.mBatteryUtils.calculateBatteryPercent(batteryEntry2.getConsumedPower(), consumedPower, dischargePercentage);
+                    if (((int) (0.5d + calculateBatteryPercent)) < i || batteryEntry3.getTimeInForegroundMs() < 60000) {
+                        z2 = z3;
+                    } else {
+                        int uid = batteryEntry3.getUid();
+                        UserHandle userHandle = new UserHandle(UserHandle.getUserId(uid));
+                        Drawable badgedIconForUser = this.mUserManager.getBadgedIconForUser(batteryEntry3.getIcon(), userHandle);
+                        CharSequence badgedLabelForUser = this.mUserManager.getBadgedLabelForUser(batteryEntry3.getLabel(), userHandle);
+                        String key = batteryEntry3.getKey();
+                        PowerGaugePreference powerGaugePreference = (PowerGaugePreference) getCachedPreference(key);
+                        if (powerGaugePreference == null) {
+                            batteryEntry = batteryEntry3;
+                            powerGaugePreference = new PowerGaugePreference(this.mPrefContext, badgedIconForUser, badgedLabelForUser, batteryEntry);
+                            powerGaugePreference.setKey(key);
+                        } else {
+                            batteryEntry = batteryEntry3;
+                        }
+                        batteryEntry.mPercent = calculateBatteryPercent;
+                        powerGaugePreference.setTitle((CharSequence) batteryEntry.getLabel());
+                        powerGaugePreference.setOrder(i2 + 1);
+                        powerGaugePreference.setPercent(calculateBatteryPercent);
+                        z2 = false;
+                        powerGaugePreference.shouldShowAnomalyIcon(false);
+                        powerGaugePreference.setEnabled((uid == -5 || uid == -4) ? false : true);
+                        setUsageSummary(powerGaugePreference, batteryEntry);
+                        this.mAppListGroup.addPreference(powerGaugePreference);
+                        if (this.mAppListGroup.getPreferenceCount() - getCachedCount() > 21) {
+                            z3 = true;
+                            break;
+                        }
+                        z4 = true;
+                    }
+                    i2++;
+                    z3 = z2;
+                    i = 1;
                 }
-                i2++;
-                i = 1;
             }
+            if (!z3) {
+                addNotAvailableMessage();
+            }
+            removeCachedPrefs(this.mAppListGroup);
+            BatteryEntry.startRequestQueue();
         }
-        if (!z2) {
-            addNotAvailableMessage();
-        }
-        removeCachedPrefs(this.mAppListGroup);
-        BatteryEntry.startRequestQueue();
     }
 
     private int getDischargePercentage(BatteryUsageStats batteryUsageStats) {
@@ -209,25 +221,18 @@ public class BatteryAppListPreferenceController extends AbstractPreferenceContro
         SparseArray sparseArray = new SparseArray();
         ArrayList arrayList = new ArrayList();
         List uidBatteryConsumers = this.mBatteryUsageStats.getUidBatteryConsumers();
-        uidBatteryConsumers.sort(Comparator.comparingInt(new ToIntFunction() { // from class: com.android.settings.fuelgauge.BatteryAppListPreferenceController$$ExternalSyntheticLambda0
-            @Override // java.util.function.ToIntFunction
-            public final int applyAsInt(Object obj) {
-                int lambda$getCoalescedUsageList$0;
-                lambda$getCoalescedUsageList$0 = BatteryAppListPreferenceController.this.lambda$getCoalescedUsageList$0((UidBatteryConsumer) obj);
-                return lambda$getCoalescedUsageList$0;
-            }
-        }));
+        uidBatteryConsumers.sort(Comparator.comparingInt(new BatteryAppListPreferenceController$$ExternalSyntheticLambda0(this)));
         int size = uidBatteryConsumers.size();
         for (int i = 0; i < size; i++) {
-            BatteryConsumer batteryConsumer = (UidBatteryConsumer) uidBatteryConsumers.get(i);
-            int realUid = getRealUid(batteryConsumer);
+            UidBatteryConsumer uidBatteryConsumer = (UidBatteryConsumer) uidBatteryConsumers.get(i);
+            int realUid = getRealUid(uidBatteryConsumer);
             String[] packagesForUid = this.mPackageManager.getPackagesForUid(realUid);
-            if (!this.mBatteryUtils.shouldHideUidBatteryConsumerUnconditionally(batteryConsumer, packagesForUid) && (!(shouldHideUidBatteryConsumer = this.mBatteryUtils.shouldHideUidBatteryConsumer(batteryConsumer, packagesForUid)) || z)) {
+            if (!this.mBatteryUtils.shouldHideUidBatteryConsumerUnconditionally(uidBatteryConsumer, packagesForUid) && ((!(shouldHideUidBatteryConsumer = this.mBatteryUtils.shouldHideUidBatteryConsumer(uidBatteryConsumer, packagesForUid)) || z) && (realUid != 1000 || TextUtils.equals("system", uidBatteryConsumer.getPackageWithHighestDrain())))) {
                 int indexOfKey = sparseArray.indexOfKey(realUid);
                 if (indexOfKey < 0) {
-                    sparseArray.put(realUid, new BatteryEntry(this.mContext, this.mHandler, this.mUserManager, batteryConsumer, shouldHideUidBatteryConsumer, realUid, packagesForUid, null, z2));
+                    sparseArray.put(realUid, new BatteryEntry(this.mContext, this.mHandler, this.mUserManager, uidBatteryConsumer, shouldHideUidBatteryConsumer, realUid, packagesForUid, (String) null, z2));
                 } else {
-                    ((BatteryEntry) sparseArray.valueAt(indexOfKey)).add(batteryConsumer);
+                    ((BatteryEntry) sparseArray.valueAt(indexOfKey)).add(uidBatteryConsumer);
                 }
             }
         }
@@ -235,7 +240,9 @@ public class BatteryAppListPreferenceController extends AbstractPreferenceContro
         BatteryConsumer aggregateBatteryConsumer2 = this.mBatteryUsageStats.getAggregateBatteryConsumer(1);
         for (int i2 = 0; i2 < 18; i2++) {
             if (z || !this.mBatteryUtils.shouldHideDevicePowerComponent(aggregateBatteryConsumer, i2)) {
-                arrayList.add(new BatteryEntry(this.mContext, i2, aggregateBatteryConsumer.getConsumedPower(i2), aggregateBatteryConsumer2.getConsumedPower(i2), aggregateBatteryConsumer.getUsageDurationMillis(i2)));
+                BatteryEntry batteryEntry = r8;
+                BatteryEntry batteryEntry2 = new BatteryEntry(this.mContext, i2, aggregateBatteryConsumer.getConsumedPower(i2), aggregateBatteryConsumer2.getConsumedPower(i2), aggregateBatteryConsumer.getUsageDurationMillis(i2));
+                arrayList.add(batteryEntry);
             }
         }
         for (int i3 = 1000; i3 < aggregateBatteryConsumer.getCustomPowerComponentCount() + 1000; i3++) {
@@ -247,7 +254,7 @@ public class BatteryAppListPreferenceController extends AbstractPreferenceContro
             List userBatteryConsumers = this.mBatteryUsageStats.getUserBatteryConsumers();
             int size2 = userBatteryConsumers.size();
             for (int i4 = 0; i4 < size2; i4++) {
-                arrayList.add(new BatteryEntry(this.mContext, this.mHandler, this.mUserManager, (UserBatteryConsumer) userBatteryConsumers.get(i4), true, -1, null, null, z2));
+                arrayList.add(new BatteryEntry(this.mContext, this.mHandler, this.mUserManager, (UserBatteryConsumer) userBatteryConsumers.get(i4), true, -1, (String[]) null, (String) null, z2));
             }
         }
         int size3 = sparseArray.size();
@@ -258,7 +265,7 @@ public class BatteryAppListPreferenceController extends AbstractPreferenceContro
         return arrayList;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ int lambda$getCoalescedUsageList$0(UidBatteryConsumer uidBatteryConsumer) {
         return uidBatteryConsumer.getUid() == getRealUid(uidBatteryConsumer) ? 0 : 1;
     }
@@ -274,16 +281,22 @@ public class BatteryAppListPreferenceController extends AbstractPreferenceContro
         return 1000;
     }
 
-    void setUsageSummary(Preference preference, BatteryEntry batteryEntry) {
-        long timeInForegroundMs = batteryEntry.getTimeInForegroundMs();
-        if (!shouldShowSummary(batteryEntry) || timeInForegroundMs < 60000) {
-            return;
+    /* access modifiers changed from: package-private */
+    public void setUsageSummary(Preference preference, BatteryEntry batteryEntry) {
+        Set<CharSequence> set;
+        if (!BatteryEntry.isSystemUid(batteryEntry.getUid())) {
+            String defaultPackageName = batteryEntry.getDefaultPackageName();
+            if (defaultPackageName == null || (set = this.mNotAllowShowSummaryPackages) == null || !set.contains(defaultPackageName)) {
+                long timeInForegroundMs = batteryEntry.getTimeInForegroundMs();
+                if (shouldShowSummary(batteryEntry) && timeInForegroundMs >= 60000) {
+                    CharSequence formatElapsedTime = StringUtil.formatElapsedTime(this.mContext, (double) timeInForegroundMs, false, false);
+                    if (!batteryEntry.isHidden()) {
+                        formatElapsedTime = TextUtils.expandTemplate(this.mContext.getText(R$string.battery_used_for), new CharSequence[]{formatElapsedTime});
+                    }
+                    preference.setSummary(formatElapsedTime);
+                }
+            }
         }
-        CharSequence formatElapsedTime = StringUtil.formatElapsedTime(this.mContext, timeInForegroundMs, false, false);
-        if (!batteryEntry.isHidden()) {
-            formatElapsedTime = TextUtils.expandTemplate(this.mContext.getText(R.string.battery_used_for), formatElapsedTime);
-        }
-        preference.setSummary(formatElapsedTime);
     }
 
     private void cacheRemoveAllPrefs(PreferenceGroup preferenceGroup) {
@@ -298,10 +311,10 @@ public class BatteryAppListPreferenceController extends AbstractPreferenceContro
     }
 
     private boolean shouldShowSummary(BatteryEntry batteryEntry) {
-        CharSequence[] textArray = this.mContext.getResources().getTextArray(R.array.allowlist_hide_summary_in_battery_usage);
+        CharSequence[] hideApplicationSummary = FeatureFactory.getFactory(this.mContext).getPowerUsageFeatureProvider(this.mContext).getHideApplicationSummary(this.mContext);
         String defaultPackageName = batteryEntry.getDefaultPackageName();
-        for (CharSequence charSequence : textArray) {
-            if (TextUtils.equals(defaultPackageName, charSequence)) {
+        for (CharSequence equals : hideApplicationSummary) {
+            if (TextUtils.equals(defaultPackageName, equals)) {
                 return false;
             }
         }
@@ -326,8 +339,8 @@ public class BatteryAppListPreferenceController extends AbstractPreferenceContro
     }
 
     private void removeCachedPrefs(PreferenceGroup preferenceGroup) {
-        for (Preference preference : this.mPreferenceCache.values()) {
-            preferenceGroup.removePreference(preference);
+        for (Preference removePreference : this.mPreferenceCache.values()) {
+            preferenceGroup.removePreference(removePreference);
         }
         this.mPreferenceCache = null;
     }
@@ -344,7 +357,7 @@ public class BatteryAppListPreferenceController extends AbstractPreferenceContro
         if (getCachedPreference("not_available") == null) {
             Preference preference = new Preference(this.mPrefContext);
             preference.setKey("not_available");
-            preference.setTitle(R.string.power_usage_not_available);
+            preference.setTitle(R$string.power_usage_not_available);
             preference.setSelectable(false);
             this.mAppListGroup.addPreference(preference);
         }

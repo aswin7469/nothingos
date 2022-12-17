@@ -14,13 +14,12 @@ import com.android.settingslib.utils.AsyncLoaderCompat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class BatteryTipLoader extends AsyncLoaderCompat<List<BatteryTip>> {
     private BatteryUsageStats mBatteryUsageStats;
     BatteryUtils mBatteryUtils;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.utils.AsyncLoaderCompat
+    /* access modifiers changed from: protected */
     public void onDiscardResult(List<BatteryTip> list) {
     }
 
@@ -30,9 +29,7 @@ public class BatteryTipLoader extends AsyncLoaderCompat<List<BatteryTip>> {
         this.mBatteryUtils = BatteryUtils.getInstance(context);
     }
 
-    @Override // androidx.loader.content.AsyncTaskLoader
-    /* renamed from: loadInBackground  reason: collision with other method in class */
-    public List<BatteryTip> mo611loadInBackground() {
+    public List<BatteryTip> loadInBackground() {
         ArrayList arrayList = new ArrayList();
         BatteryTipPolicy batteryTipPolicy = new BatteryTipPolicy(getContext());
         BatteryInfo batteryInfo = this.mBatteryUtils.getBatteryInfo("BatteryTipLoader");

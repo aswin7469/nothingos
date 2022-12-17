@@ -2,19 +2,19 @@ package com.android.settings.wifi.calling;
 
 import android.content.Context;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$string;
+
 public class EmergencyCallLimitationDisclaimer extends DisclaimerItem {
     @VisibleForTesting
     static final String KEY_HAS_AGREED_EMERGENCY_LIMITATION_DISCLAIMER = "key_has_agreed_emergency_limitation_disclaimer";
 
-    @Override // com.android.settings.wifi.calling.DisclaimerItem
-    protected String getName() {
+    /* access modifiers changed from: protected */
+    public String getName() {
         return "EmergencyCallLimitationDisclaimer";
     }
 
-    @Override // com.android.settings.wifi.calling.DisclaimerItem
-    protected String getPrefKey() {
+    /* access modifiers changed from: protected */
+    public String getPrefKey() {
         return KEY_HAS_AGREED_EMERGENCY_LIMITATION_DISCLAIMER;
     }
 
@@ -22,25 +22,22 @@ public class EmergencyCallLimitationDisclaimer extends DisclaimerItem {
         super(context, i);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // com.android.settings.wifi.calling.DisclaimerItem
+    /* access modifiers changed from: package-private */
     public boolean shouldShow() {
-        if (getCarrierConfig().getInt("emergency_notification_delay_int") == -1) {
-            logd("shouldShow: false due to carrier config is default(-1).");
-            return false;
+        if (getCarrierConfig().getInt("emergency_notification_delay_int") != -1) {
+            return super.shouldShow();
         }
-        return super.shouldShow();
+        logd("shouldShow: false due to carrier config is default(-1).");
+        return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.wifi.calling.DisclaimerItem
+    /* access modifiers changed from: protected */
     public int getTitleId() {
-        return R.string.wfc_disclaimer_emergency_limitation_title_text;
+        return R$string.wfc_disclaimer_emergency_limitation_title_text;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.wifi.calling.DisclaimerItem
+    /* access modifiers changed from: protected */
     public int getMessageId() {
-        return R.string.wfc_disclaimer_emergency_limitation_desc_text;
+        return R$string.wfc_disclaimer_emergency_limitation_desc_text;
     }
 }

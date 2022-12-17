@@ -2,7 +2,7 @@ package com.android.settings.accessibility;
 
 import android.text.TextUtils;
 import com.google.common.base.Objects;
-/* loaded from: classes.dex */
+
 public class PreferredShortcut {
     private static final TextUtils.SimpleStringSplitter sStringColonSplitter = new TextUtils.SimpleStringSplitter(':');
     private String mComponentName;
@@ -38,11 +38,14 @@ public class PreferredShortcut {
         if (this == obj) {
             return true;
         }
-        if (obj == null || PreferredShortcut.class != obj.getClass()) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
         PreferredShortcut preferredShortcut = (PreferredShortcut) obj;
-        return this.mType == preferredShortcut.mType && Objects.equal(this.mComponentName, preferredShortcut.mComponentName);
+        if (this.mType != preferredShortcut.mType || !Objects.equal(this.mComponentName, preferredShortcut.mComponentName)) {
+            return false;
+        }
+        return true;
     }
 
     public int hashCode() {

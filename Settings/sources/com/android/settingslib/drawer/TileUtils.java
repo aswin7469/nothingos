@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public class TileUtils {
     static final String SETTING_PKG = "com.android.settings";
 
@@ -34,15 +34,23 @@ public class TileUtils {
             z = true;
         }
         ArrayList arrayList = new ArrayList();
-        for (UserHandle userHandle : ((UserManager) context.getSystemService("user")).getUserProfiles()) {
-            if (userHandle.getIdentifier() == ActivityManager.getCurrentUser()) {
-                loadTilesForAction(context, userHandle, "com.android.settings.action.SETTINGS", map, null, arrayList, true);
-                loadTilesForAction(context, userHandle, "com.android.settings.OPERATOR_APPLICATION_SETTING", map, "com.android.settings.category.wireless", arrayList, false);
-                loadTilesForAction(context, userHandle, "com.android.settings.MANUFACTURER_APPLICATION_SETTING", map, "com.android.settings.category.device", arrayList, false);
+        for (UserHandle next : ((UserManager) context.getSystemService("user")).getUserProfiles()) {
+            if (next.getIdentifier() == ActivityManager.getCurrentUser()) {
+                Context context2 = context;
+                UserHandle userHandle = next;
+                Map<Pair<String, String>, Tile> map2 = map;
+                ArrayList arrayList2 = arrayList;
+                loadTilesForAction(context2, userHandle, "com.android.settings.action.SETTINGS", map2, (String) null, arrayList2, true);
+                loadTilesForAction(context2, userHandle, "com.android.settings.OPERATOR_APPLICATION_SETTING", map2, "com.android.settings.category.wireless", arrayList2, false);
+                loadTilesForAction(context2, userHandle, "com.android.settings.MANUFACTURER_APPLICATION_SETTING", map2, "com.android.settings.category.device", arrayList2, false);
             }
             if (z) {
-                loadTilesForAction(context, userHandle, "com.android.settings.action.EXTRA_SETTINGS", map, null, arrayList, false);
-                loadTilesForAction(context, userHandle, "com.android.settings.action.IA_SETTINGS", map, null, arrayList, false);
+                Context context3 = context;
+                UserHandle userHandle2 = next;
+                Map<Pair<String, String>, Tile> map3 = map;
+                ArrayList arrayList3 = arrayList;
+                loadTilesForAction(context3, userHandle2, "com.android.settings.action.EXTRA_SETTINGS", map3, (String) null, arrayList3, false);
+                loadTilesForAction(context3, userHandle2, "com.android.settings.action.IA_SETTINGS", map3, (String) null, arrayList3, false);
             }
         }
         HashMap hashMap = new HashMap();
@@ -57,12 +65,12 @@ public class TileUtils {
             }
             dashboardCategory.addTile(tile);
         }
-        ArrayList arrayList2 = new ArrayList(hashMap.values());
-        Iterator it2 = arrayList2.iterator();
+        ArrayList arrayList4 = new ArrayList(hashMap.values());
+        Iterator it2 = arrayList4.iterator();
         while (it2.hasNext()) {
             ((DashboardCategory) it2.next()).sortTiles();
         }
-        return arrayList2;
+        return arrayList4;
     }
 
     static void loadTilesForAction(Context context, UserHandle userHandle, String str, Map<Pair<String, String>, Tile> map, String str2, List<Tile> list, boolean z) {
@@ -70,8 +78,14 @@ public class TileUtils {
         if (z) {
             intent.setPackage(SETTING_PKG);
         }
-        loadActivityTiles(context, userHandle, map, str2, list, intent);
-        loadProviderTiles(context, userHandle, map, str2, list, intent);
+        Context context2 = context;
+        UserHandle userHandle2 = userHandle;
+        Map<Pair<String, String>, Tile> map2 = map;
+        String str3 = str2;
+        List<Tile> list2 = list;
+        Intent intent2 = intent;
+        loadActivityTiles(context2, userHandle2, map2, str3, list2, intent2);
+        loadProviderTiles(context2, userHandle2, map2, str3, list2, intent2);
     }
 
     private static void loadActivityTiles(Context context, UserHandle userHandle, Map<Pair<String, String>, Tile> map, String str, List<Tile> list, Intent intent) {
@@ -89,8 +103,8 @@ public class TileUtils {
                 ProviderInfo providerInfo = resolveInfo.providerInfo;
                 List<Bundle> switchDataFromProvider = getSwitchDataFromProvider(context, providerInfo.authority);
                 if (switchDataFromProvider != null && !switchDataFromProvider.isEmpty()) {
-                    for (Bundle bundle : switchDataFromProvider) {
-                        loadTile(userHandle, map, str, list, intent, bundle, providerInfo);
+                    for (Bundle loadTile : switchDataFromProvider) {
+                        loadTile(userHandle, map, str, list, intent, loadTile, providerInfo);
                     }
                 }
             }
@@ -98,62 +112,61 @@ public class TileUtils {
     }
 
     private static void loadTile(UserHandle userHandle, Map<Pair<String, String>, Tile> map, String str, List<Tile> list, Intent intent, Bundle bundle, ComponentInfo componentInfo) {
-        Pair<String, String> pair;
-        Tile activityTile;
-        if (userHandle.getIdentifier() != ActivityManager.getCurrentUser() && Tile.isPrimaryProfileOnly(componentInfo.metaData)) {
-            Log.w("TileUtils", "Found " + componentInfo.name + " for intent " + intent + " is primary profile only, skip loading tile for uid " + userHandle.getIdentifier());
-            return;
-        }
-        String str2 = "com.android.settings.category";
-        if ((bundle == null || !bundle.containsKey(str2)) && str == null) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("Found ");
-            sb.append(componentInfo.name);
-            sb.append(" for intent ");
-            sb.append(intent);
-            sb.append(" missing metadata ");
-            if (bundle == null) {
-                str2 = "";
+        Pair pair;
+        Tile tile;
+        if (userHandle.getIdentifier() == ActivityManager.getCurrentUser() || !Tile.isPrimaryProfileOnly(componentInfo.metaData)) {
+            String str2 = "com.android.settings.category";
+            if ((bundle == null || !bundle.containsKey(str2)) && str == null) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("Found ");
+                sb.append(componentInfo.name);
+                sb.append(" for intent ");
+                sb.append(intent);
+                sb.append(" missing metadata ");
+                if (bundle == null) {
+                    str2 = "";
+                }
+                sb.append(str2);
+                Log.w("TileUtils", sb.toString());
+                return;
             }
-            sb.append(str2);
-            Log.w("TileUtils", sb.toString());
-            return;
-        }
-        String string = bundle.getString(str2);
-        boolean z = componentInfo instanceof ProviderInfo;
-        if (z) {
-            pair = new Pair<>(((ProviderInfo) componentInfo).authority, bundle.getString("com.android.settings.keyhint"));
-        } else {
-            pair = new Pair<>(componentInfo.packageName, componentInfo.name);
-        }
-        Tile tile = map.get(pair);
-        if (tile == null) {
+            String string = bundle.getString(str2);
+            boolean z = componentInfo instanceof ProviderInfo;
             if (z) {
-                activityTile = new ProviderTile((ProviderInfo) componentInfo, string, bundle);
+                pair = new Pair(((ProviderInfo) componentInfo).authority, bundle.getString("com.android.settings.keyhint"));
             } else {
-                activityTile = new ActivityTile((ActivityInfo) componentInfo, string);
+                pair = new Pair(componentInfo.packageName, componentInfo.name);
             }
-            tile = activityTile;
-            map.put(pair, tile);
-        } else {
-            tile.setMetaData(bundle);
-        }
-        if (!tile.userHandle.contains(userHandle)) {
-            tile.userHandle.add(userHandle);
-        }
-        if (list.contains(tile)) {
+            Tile tile2 = map.get(pair);
+            if (tile2 == null) {
+                if (z) {
+                    tile = new ProviderTile((ProviderInfo) componentInfo, string, bundle);
+                } else {
+                    tile = new ActivityTile((ActivityInfo) componentInfo, string);
+                }
+                tile2 = tile;
+                map.put(pair, tile2);
+            } else {
+                tile2.setMetaData(bundle);
+            }
+            if (!tile2.userHandle.contains(userHandle)) {
+                tile2.userHandle.add(userHandle);
+            }
+            if (!list.contains(tile2)) {
+                list.add(tile2);
+                return;
+            }
             return;
         }
-        list.add(tile);
+        Log.w("TileUtils", "Found " + componentInfo.name + " for intent " + intent + " is primary profile only, skip loading tile for uid " + userHandle.getIdentifier());
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static Bundle getSwitchDataFromProvider(Context context, String str, String str2) {
-        return getBundleFromUri(context, buildUri(str, "getSwitchData", str2), new ArrayMap(), null);
+    static Bundle getSwitchDataFromProvider(Context context, String str, String str2) {
+        return getBundleFromUri(context, buildUri(str, "getSwitchData", str2), new ArrayMap(), (Bundle) null);
     }
 
     private static List<Bundle> getSwitchDataFromProvider(Context context, String str) {
-        Bundle bundleFromUri = getBundleFromUri(context, buildUri(str, "getSwitchData"), new ArrayMap(), null);
+        Bundle bundleFromUri = getBundleFromUri(context, buildUri(str, "getSwitchData"), new ArrayMap(), (Bundle) null);
         if (bundleFromUri != null) {
             return bundleFromUri.getParcelableArrayList("switch_data");
         }
@@ -171,11 +184,11 @@ public class TileUtils {
             return parse;
         }
         String string2 = tile.getMetaData().getString("com.android.settings.keyhint");
-        if (TextUtils.isEmpty(string2)) {
-            Log.w("TileUtils", "Please specify the meta-data com.android.settings.keyhint in AndroidManifest.xml for " + string);
-            return buildUri(parse.getAuthority(), str2);
+        if (!TextUtils.isEmpty(string2)) {
+            return buildUri(parse.getAuthority(), str2, string2);
         }
-        return buildUri(parse.getAuthority(), str2, string2);
+        Log.w("TileUtils", "Please specify the meta-data com.android.settings.keyhint in AndroidManifest.xml for " + string);
+        return buildUri(parse.getAuthority(), str2);
     }
 
     static Uri buildUri(String str, String str2, String str3) {
@@ -188,7 +201,7 @@ public class TileUtils {
 
     public static Pair<String, Integer> getIconFromUri(Context context, String str, Uri uri, Map<String, IContentProvider> map) {
         int i;
-        Bundle bundleFromUri = getBundleFromUri(context, uri, map, null);
+        Bundle bundleFromUri = getBundleFromUri(context, uri, map, (Bundle) null);
         if (bundleFromUri == null) {
             return null;
         }
@@ -196,14 +209,14 @@ public class TileUtils {
         if (TextUtils.isEmpty(string) || (i = bundleFromUri.getInt("com.android.settings.icon", 0)) == 0) {
             return null;
         }
-        if (!string.equals(str) && !string.equals(context.getPackageName())) {
-            return null;
+        if (string.equals(str) || string.equals(context.getPackageName())) {
+            return Pair.create(string, Integer.valueOf(i));
         }
-        return Pair.create(string, Integer.valueOf(i));
+        return null;
     }
 
     public static String getTextFromUri(Context context, Uri uri, Map<String, IContentProvider> map, String str) {
-        Bundle bundleFromUri = getBundleFromUri(context, uri, map, null);
+        Bundle bundleFromUri = getBundleFromUri(context, uri, map, (Bundle) null);
         if (bundleFromUri != null) {
             return bundleFromUri.getString(str);
         }
@@ -211,7 +224,7 @@ public class TileUtils {
     }
 
     public static boolean getBooleanFromUri(Context context, Uri uri, Map<String, IContentProvider> map, String str) {
-        Bundle bundleFromUri = getBundleFromUri(context, uri, map, null);
+        Bundle bundleFromUri = getBundleFromUri(context, uri, map, (Bundle) null);
         if (bundleFromUri != null) {
             return bundleFromUri.getBoolean(str);
         }

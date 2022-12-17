@@ -2,21 +2,21 @@ package androidx.constraintlayout.solver.widgets;
 
 import androidx.constraintlayout.solver.widgets.ConstraintWidget;
 import androidx.constraintlayout.solver.widgets.analyzer.BasicMeasure;
-/* loaded from: classes.dex */
+
 public class VirtualLayout extends HelperWidget {
-    private int mPaddingTop = 0;
+    protected BasicMeasure.Measure mMeasure = new BasicMeasure.Measure();
+    private int mMeasuredHeight = 0;
+    private int mMeasuredWidth = 0;
+    BasicMeasure.Measurer mMeasurer = null;
+    private boolean mNeedsCallFromSolver = false;
     private int mPaddingBottom = 0;
+    private int mPaddingEnd = 0;
     private int mPaddingLeft = 0;
     private int mPaddingRight = 0;
     private int mPaddingStart = 0;
-    private int mPaddingEnd = 0;
+    private int mPaddingTop = 0;
     private int mResolvedPaddingLeft = 0;
     private int mResolvedPaddingRight = 0;
-    private boolean mNeedsCallFromSolver = false;
-    private int mMeasuredWidth = 0;
-    private int mMeasuredHeight = 0;
-    protected BasicMeasure.Measure mMeasure = new BasicMeasure.Measure();
-    BasicMeasure.Measurer mMeasurer = null;
 
     public void measure(int i, int i2, int i3, int i4) {
     }
@@ -47,15 +47,16 @@ public class VirtualLayout extends HelperWidget {
 
     public void applyRtl(boolean z) {
         int i = this.mPaddingStart;
-        if (i > 0 || this.mPaddingEnd > 0) {
-            if (z) {
-                this.mResolvedPaddingLeft = this.mPaddingEnd;
-                this.mResolvedPaddingRight = i;
-                return;
-            }
-            this.mResolvedPaddingLeft = i;
-            this.mResolvedPaddingRight = this.mPaddingEnd;
+        if (i <= 0 && this.mPaddingEnd <= 0) {
+            return;
         }
+        if (z) {
+            this.mResolvedPaddingLeft = this.mPaddingEnd;
+            this.mResolvedPaddingRight = i;
+            return;
+        }
+        this.mResolvedPaddingLeft = i;
+        this.mResolvedPaddingRight = this.mPaddingEnd;
     }
 
     public void setPaddingTop(int i) {
@@ -87,7 +88,7 @@ public class VirtualLayout extends HelperWidget {
         return this.mResolvedPaddingRight;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void needsCallbackFromSolver(boolean z) {
         this.mNeedsCallFromSolver = z;
     }
@@ -96,7 +97,6 @@ public class VirtualLayout extends HelperWidget {
         return this.mNeedsCallFromSolver;
     }
 
-    @Override // androidx.constraintlayout.solver.widgets.HelperWidget, androidx.constraintlayout.solver.widgets.Helper
     public void updateConstraints(ConstraintWidgetContainer constraintWidgetContainer) {
         captureWidgets();
     }
@@ -123,7 +123,7 @@ public class VirtualLayout extends HelperWidget {
         this.mMeasuredHeight = i2;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean measureChildren() {
         ConstraintWidget constraintWidget = this.mParent;
         BasicMeasure.Measurer measurer = constraintWidget != null ? ((ConstraintWidgetContainer) constraintWidget).getMeasurer() : null;
@@ -166,7 +166,7 @@ public class VirtualLayout extends HelperWidget {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void measure(ConstraintWidget constraintWidget, ConstraintWidget.DimensionBehaviour dimensionBehaviour, int i, ConstraintWidget.DimensionBehaviour dimensionBehaviour2, int i2) {
         while (this.mMeasurer == null && getParent() != null) {
             this.mMeasurer = ((ConstraintWidgetContainer) getParent()).getMeasurer();

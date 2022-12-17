@@ -6,16 +6,15 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.connecteddevice.ConnectedDeviceDashboardFragment;
 import com.android.settings.core.instrumentation.InstrumentedDialogFragment;
-/* loaded from: classes.dex */
+
 public class GroupForgetDialogFragment extends InstrumentedDialogFragment {
     private static final boolean DBG = ConnectedDeviceDashboardFragment.DBG_GROUP;
     private int mGroupId;
     private GroupUtils mGroupUtils;
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 0;
     }
@@ -28,29 +27,24 @@ public class GroupForgetDialogFragment extends InstrumentedDialogFragment {
         return groupForgetDialogFragment;
     }
 
-    String getGroupTitle() {
+    /* access modifiers changed from: package-private */
+    public String getGroupTitle() {
         int i = getArguments().getInt("groupid");
         this.mGroupId = i;
         return this.mGroupUtils.getGroupTitle(i);
     }
 
-    @Override // androidx.fragment.app.DialogFragment
     public Dialog onCreateDialog(Bundle bundle) {
-        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() { // from class: com.android.settings.bluetooth.GroupForgetDialogFragment$$ExternalSyntheticLambda0
-            @Override // android.content.DialogInterface.OnClickListener
-            public final void onClick(DialogInterface dialogInterface, int i) {
-                GroupForgetDialogFragment.this.lambda$onCreateDialog$0(dialogInterface, i);
-            }
-        };
+        GroupForgetDialogFragment$$ExternalSyntheticLambda0 groupForgetDialogFragment$$ExternalSyntheticLambda0 = new GroupForgetDialogFragment$$ExternalSyntheticLambda0(this);
         Context context = getContext();
         this.mGroupUtils = new GroupUtils(context);
-        AlertDialog create = new AlertDialog.Builder(context).setPositiveButton(R.string.groupaudio_unpair_dialog_forget_confirm_button, onClickListener).setNegativeButton(17039360, (DialogInterface.OnClickListener) null).create();
-        create.setTitle(R.string.groupaudio_unpair_dialog_title);
-        create.setMessage(context.getString(R.string.groupaudio_unpair_dialog_body, getGroupTitle()));
+        AlertDialog create = new AlertDialog.Builder(context).setPositiveButton(R$string.groupaudio_unpair_dialog_forget_confirm_button, (DialogInterface.OnClickListener) groupForgetDialogFragment$$ExternalSyntheticLambda0).setNegativeButton(17039360, (DialogInterface.OnClickListener) null).create();
+        create.setTitle(R$string.groupaudio_unpair_dialog_title);
+        create.setMessage(context.getString(R$string.groupaudio_unpair_dialog_body, new Object[]{getGroupTitle()}));
         return create;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onCreateDialog$0(DialogInterface dialogInterface, int i) {
         forget();
         FragmentActivity activity = getActivity();

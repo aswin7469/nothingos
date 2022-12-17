@@ -4,7 +4,7 @@ import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.util.AttributeSet;
 import androidx.preference.ListPreference;
-/* loaded from: classes.dex */
+
 public class CdmaListPreference extends ListPreference {
     private TelephonyManager mTelephonyManager;
 
@@ -12,8 +12,7 @@ public class CdmaListPreference extends ListPreference {
         super(context, attributeSet);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.DialogPreference, androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public void onClick() {
         TelephonyManager telephonyManager = this.mTelephonyManager;
         if (telephonyManager == null || !telephonyManager.getEmergencyCallbackMode()) {

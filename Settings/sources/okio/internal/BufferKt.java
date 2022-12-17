@@ -6,27 +6,28 @@ import okio.Options;
 import okio.Platform;
 import okio.Segment;
 import org.jetbrains.annotations.NotNull;
+
 /* compiled from: Buffer.kt */
-/* loaded from: classes2.dex */
 public final class BufferKt {
     @NotNull
     private static final byte[] HEX_DIGIT_BYTES = Platform.asUtf8ToByteArray("0123456789abcdef");
 
-    public static final boolean rangeEquals(@NotNull Segment segment, int i, @NotNull byte[] bytes, int i2, int i3) {
+    public static final boolean rangeEquals(@NotNull Segment segment, int i, @NotNull byte[] bArr, int i2, int i3) {
         Intrinsics.checkNotNullParameter(segment, "segment");
-        Intrinsics.checkNotNullParameter(bytes, "bytes");
+        Intrinsics.checkNotNullParameter(bArr, "bytes");
         int i4 = segment.limit;
-        byte[] bArr = segment.data;
+        byte[] bArr2 = segment.data;
         while (i2 < i3) {
             if (i == i4) {
                 segment = segment.next;
                 Intrinsics.checkNotNull(segment);
-                byte[] bArr2 = segment.data;
-                bArr = bArr2;
-                i = segment.pos;
+                byte[] bArr3 = segment.data;
+                int i5 = segment.pos;
+                bArr2 = bArr3;
+                i = i5;
                 i4 = segment.limit;
             }
-            if (bArr[i] != bytes[i2]) {
+            if (bArr2[i] != bArr[i2]) {
                 return false;
             }
             i++;
@@ -46,11 +47,12 @@ public final class BufferKt {
         int i;
         int i2;
         int i3;
-        int i4;
         Segment segment;
-        Intrinsics.checkNotNullParameter(buffer, "<this>");
+        int i4;
+        Buffer buffer2 = buffer;
+        Intrinsics.checkNotNullParameter(buffer2, "<this>");
         Intrinsics.checkNotNullParameter(options, "options");
-        Segment segment2 = buffer.head;
+        Segment segment2 = buffer2.head;
         if (segment2 == null) {
             return z ? -2 : -1;
         }
@@ -61,7 +63,8 @@ public final class BufferKt {
         Segment segment3 = segment2;
         int i7 = -1;
         int i8 = 0;
-        loop0: while (true) {
+        loop0:
+        while (true) {
             int i9 = i8 + 1;
             int i10 = trie$external__okio__android_common__okio_lib[i8];
             int i11 = i9 + 1;
@@ -72,12 +75,56 @@ public final class BufferKt {
             if (segment3 == null) {
                 break;
             }
-            if (i10 >= 0) {
+            if (i10 < 0) {
+                int i13 = i11 + (i10 * -1);
+                while (true) {
+                    int i14 = i5 + 1;
+                    int i15 = i11 + 1;
+                    if ((bArr[i5] & 255) != trie$external__okio__android_common__okio_lib[i11]) {
+                        return i7;
+                    }
+                    boolean z2 = i15 == i13;
+                    if (i14 == i6) {
+                        Intrinsics.checkNotNull(segment3);
+                        Segment segment4 = segment3.next;
+                        Intrinsics.checkNotNull(segment4);
+                        i4 = segment4.pos;
+                        byte[] bArr2 = segment4.data;
+                        i3 = segment4.limit;
+                        if (segment4 != segment2) {
+                            byte[] bArr3 = bArr2;
+                            segment = segment4;
+                            bArr = bArr3;
+                        } else if (!z2) {
+                            break loop0;
+                        } else {
+                            bArr = bArr2;
+                            segment = null;
+                        }
+                    } else {
+                        Segment segment5 = segment3;
+                        i3 = i6;
+                        i4 = i14;
+                        segment = segment5;
+                    }
+                    if (z2) {
+                        i2 = trie$external__okio__android_common__okio_lib[i15];
+                        i = i4;
+                        i6 = i3;
+                        segment3 = segment;
+                        break;
+                    }
+                    i5 = i4;
+                    i6 = i3;
+                    i11 = i15;
+                    segment3 = segment;
+                }
+            } else {
                 i = i5 + 1;
-                int i13 = bArr[i5] & 255;
-                int i14 = i11 + i10;
-                while (i11 != i14) {
-                    if (i13 == trie$external__okio__android_common__okio_lib[i11]) {
+                byte b = bArr[i5] & 255;
+                int i16 = i11 + i10;
+                while (i11 != i16) {
+                    if (b == trie$external__okio__android_common__okio_lib[i11]) {
                         i2 = trie$external__okio__android_common__okio_lib[i11 + i10];
                         if (i == i6) {
                             segment3 = segment3.next;
@@ -95,57 +142,15 @@ public final class BufferKt {
                 }
                 return i7;
             }
-            int i15 = i11 + (i10 * (-1));
-            while (true) {
-                int i16 = i5 + 1;
-                int i17 = i11 + 1;
-                if ((bArr[i5] & 255) != trie$external__okio__android_common__okio_lib[i11]) {
-                    return i7;
-                }
-                boolean z2 = i17 == i15;
-                if (i16 == i6) {
-                    Intrinsics.checkNotNull(segment3);
-                    Segment segment4 = segment3.next;
-                    Intrinsics.checkNotNull(segment4);
-                    i4 = segment4.pos;
-                    byte[] bArr2 = segment4.data;
-                    i3 = segment4.limit;
-                    if (segment4 != segment2) {
-                        segment = segment4;
-                        bArr = bArr2;
-                    } else if (!z2) {
-                        break loop0;
-                    } else {
-                        bArr = bArr2;
-                        segment = null;
-                    }
-                } else {
-                    Segment segment5 = segment3;
-                    i3 = i6;
-                    i4 = i16;
-                    segment = segment5;
-                }
-                if (z2) {
-                    i2 = trie$external__okio__android_common__okio_lib[i17];
-                    i = i4;
-                    i6 = i3;
-                    segment3 = segment;
-                    break;
-                }
-                i5 = i4;
-                i6 = i3;
-                i11 = i17;
-                segment3 = segment;
-            }
             if (i2 >= 0) {
                 return i2;
             }
             i8 = -i2;
             i5 = i;
         }
-        if (!z) {
-            return i7;
+        if (z) {
+            return -2;
         }
-        return -2;
+        return i7;
     }
 }

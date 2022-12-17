@@ -5,11 +5,13 @@ import java.util.AbstractList;
 import java.util.Collection;
 import java.util.List;
 import java.util.RandomAccess;
-/* loaded from: classes2.dex */
+
 abstract class AbstractProtobufList<E> extends AbstractList<E> implements Internal.ProtobufList<E> {
     private boolean isMutable = true;
 
-    @Override // java.util.AbstractList, java.util.Collection, java.util.List
+    AbstractProtobufList() {
+    }
+
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;
@@ -33,7 +35,6 @@ abstract class AbstractProtobufList<E> extends AbstractList<E> implements Intern
         return true;
     }
 
-    @Override // java.util.AbstractList, java.util.Collection, java.util.List
     public int hashCode() {
         int size = size();
         int i = 1;
@@ -43,63 +44,53 @@ abstract class AbstractProtobufList<E> extends AbstractList<E> implements Intern
         return i;
     }
 
-    @Override // java.util.AbstractList, java.util.AbstractCollection, java.util.Collection, java.util.List
     public boolean add(E e) {
         ensureIsMutable();
         return super.add(e);
     }
 
-    @Override // java.util.AbstractCollection, java.util.Collection, java.util.List
     public boolean addAll(Collection<? extends E> collection) {
         ensureIsMutable();
         return super.addAll(collection);
     }
 
-    @Override // java.util.AbstractList, java.util.List
     public boolean addAll(int i, Collection<? extends E> collection) {
         ensureIsMutable();
         return super.addAll(i, collection);
     }
 
-    @Override // java.util.AbstractList, java.util.AbstractCollection, java.util.Collection, java.util.List
     public void clear() {
         ensureIsMutable();
         super.clear();
     }
 
-    @Override // com.google.protobuf.Internal.ProtobufList
     public boolean isModifiable() {
         return this.isMutable;
     }
 
-    @Override // com.google.protobuf.Internal.ProtobufList
     public final void makeImmutable() {
         this.isMutable = false;
     }
 
-    @Override // java.util.AbstractCollection, java.util.Collection, java.util.List
     public boolean remove(Object obj) {
         ensureIsMutable();
         return super.remove(obj);
     }
 
-    @Override // java.util.AbstractCollection, java.util.Collection, java.util.List
     public boolean removeAll(Collection<?> collection) {
         ensureIsMutable();
         return super.removeAll(collection);
     }
 
-    @Override // java.util.AbstractCollection, java.util.Collection, java.util.List
     public boolean retainAll(Collection<?> collection) {
         ensureIsMutable();
         return super.retainAll(collection);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void ensureIsMutable() {
-        if (this.isMutable) {
-            return;
+        if (!this.isMutable) {
+            throw new UnsupportedOperationException();
         }
-        throw new UnsupportedOperationException();
     }
 }

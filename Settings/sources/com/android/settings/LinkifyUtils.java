@@ -6,10 +6,9 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.TextView;
-/* loaded from: classes.dex */
+
 public class LinkifyUtils {
 
-    /* loaded from: classes.dex */
     public interface OnClickListener {
         void onClick();
     }
@@ -29,13 +28,11 @@ public class LinkifyUtils {
         sb.delete(indexOf2, indexOf2 + 8);
         textView.setText(sb.toString(), TextView.BufferType.SPANNABLE);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
-        ((Spannable) textView.getText()).setSpan(new ClickableSpan() { // from class: com.android.settings.LinkifyUtils.1
-            @Override // android.text.style.ClickableSpan
+        ((Spannable) textView.getText()).setSpan(new ClickableSpan() {
             public void onClick(View view) {
                 OnClickListener.this.onClick();
             }
 
-            @Override // android.text.style.ClickableSpan, android.text.style.CharacterStyle
             public void updateDrawState(TextPaint textPaint) {
                 super.updateDrawState(textPaint);
                 textPaint.setUnderlineText(true);

@@ -7,20 +7,20 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import com.android.settingslib.CustomDialogPreferenceCompat;
-/* loaded from: classes.dex */
+
 public class SeekBarDialogPreference extends CustomDialogPreferenceCompat {
     private final Drawable mMyIcon;
 
     public SeekBarDialogPreference(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        setDialogLayoutResource(R.layout.preference_dialog_seekbar_material);
+        setDialogLayoutResource(R$layout.preference_dialog_seekbar_material);
         createActionButtons();
         this.mMyIcon = getDialogIcon();
-        setDialogIcon(null);
+        setDialogIcon((Drawable) null);
     }
 
     public SeekBarDialogPreference(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public void createActionButtons() {
@@ -28,8 +28,7 @@ public class SeekBarDialogPreference extends CustomDialogPreferenceCompat {
         setNegativeButtonText(17039360);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.CustomDialogPreferenceCompat
+    /* access modifiers changed from: protected */
     public void onBindDialogView(View view) {
         super.onBindDialogView(view);
         ImageView imageView = (ImageView) view.findViewById(16908294);
@@ -41,8 +40,7 @@ public class SeekBarDialogPreference extends CustomDialogPreferenceCompat {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public static SeekBar getSeekBar(View view) {
-        return (SeekBar) view.findViewById(R.id.seekbar);
+    protected static SeekBar getSeekBar(View view) {
+        return (SeekBar) view.findViewById(R$id.seekbar);
     }
 }

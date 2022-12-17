@@ -8,59 +8,39 @@ import android.text.TextUtils;
 import android.widget.TimePicker;
 import androidx.preference.Preference;
 import com.android.settings.core.BasePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-/* loaded from: classes.dex */
+
 public class DarkModeCustomPreferenceController extends BasePreferenceController {
     private static final String END_TIME_KEY = "dark_theme_end_time";
     private static final String START_TIME_KEY = "dark_theme_start_time";
-    public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
     private TimeFormatter mFormat;
     private DarkModeSettingsFragment mFragmet;
     private final UiModeManager mUiModeManager;
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.BasePreferenceController
-    public int getAvailabilityStatus() {
-        return 0;
-    }
-
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -81,22 +61,21 @@ public class DarkModeCustomPreferenceController extends BasePreferenceController
         this.mFormat = timeFormatter;
     }
 
-    public TimePickerDialog getDialog() {
-        LocalTime customNightModeEnd;
-        if (TextUtils.equals(getPreferenceKey(), START_TIME_KEY)) {
-            customNightModeEnd = this.mUiModeManager.getCustomNightModeStart();
-        } else {
-            customNightModeEnd = this.mUiModeManager.getCustomNightModeEnd();
-        }
-        return new TimePickerDialog(this.mContext, new TimePickerDialog.OnTimeSetListener() { // from class: com.android.settings.display.darkmode.DarkModeCustomPreferenceController$$ExternalSyntheticLambda0
-            @Override // android.app.TimePickerDialog.OnTimeSetListener
-            public final void onTimeSet(TimePicker timePicker, int i, int i2) {
-                DarkModeCustomPreferenceController.this.lambda$getDialog$0(timePicker, i, i2);
-            }
-        }, customNightModeEnd.getHour(), customNightModeEnd.getMinute(), this.mFormat.is24HourFormat());
+    public int getAvailabilityStatus() {
+        return (this.mUiModeManager.getNightMode() == 3 && this.mUiModeManager.getNightModeCustomType() == 0) ? 0 : 2;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    public TimePickerDialog getDialog() {
+        LocalTime localTime;
+        if (TextUtils.equals(getPreferenceKey(), START_TIME_KEY)) {
+            localTime = this.mUiModeManager.getCustomNightModeStart();
+        } else {
+            localTime = this.mUiModeManager.getCustomNightModeEnd();
+        }
+        return new TimePickerDialog(this.mContext, new DarkModeCustomPreferenceController$$ExternalSyntheticLambda0(this), localTime.getHour(), localTime.getMinute(), this.mFormat.is24HourFormat());
+    }
+
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$getDialog$0(TimePicker timePicker, int i, int i2) {
         LocalTime of = LocalTime.of(i, i2);
         if (TextUtils.equals(getPreferenceKey(), START_TIME_KEY)) {
@@ -110,20 +89,14 @@ public class DarkModeCustomPreferenceController extends BasePreferenceController
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.core.AbstractPreferenceController
+    /* access modifiers changed from: protected */
     public void refreshSummary(Preference preference) {
-        LocalTime customNightModeEnd;
-        if (this.mUiModeManager.getNightMode() != 3) {
-            preference.setVisible(false);
-            return;
-        }
-        preference.setVisible(true);
+        LocalTime localTime;
         if (TextUtils.equals(getPreferenceKey(), START_TIME_KEY)) {
-            customNightModeEnd = this.mUiModeManager.getCustomNightModeStart();
+            localTime = this.mUiModeManager.getCustomNightModeStart();
         } else {
-            customNightModeEnd = this.mUiModeManager.getCustomNightModeEnd();
+            localTime = this.mUiModeManager.getCustomNightModeEnd();
         }
-        preference.setSummary(this.mFormat.of(customNightModeEnd));
+        preference.setSummary((CharSequence) this.mFormat.mo12819of(localTime));
     }
 }

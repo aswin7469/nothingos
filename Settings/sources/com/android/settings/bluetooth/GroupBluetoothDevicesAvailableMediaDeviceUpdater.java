@@ -6,14 +6,14 @@ import android.util.Log;
 import com.android.settings.connecteddevice.DevicePreferenceCallback;
 import com.android.settings.dashboard.DashboardFragment;
 import com.android.settingslib.bluetooth.CachedBluetoothDevice;
-/* loaded from: classes.dex */
+
 public class GroupBluetoothDevicesAvailableMediaDeviceUpdater extends GroupBluetoothGroupDeviceUpdater {
     private final AudioManager mAudioManager;
     private int mGroupId;
     private GroupUtils mGroupUtils;
 
-    @Override // com.android.settings.bluetooth.BluetoothDeviceUpdater
-    protected String getPreferenceKey() {
+    /* access modifiers changed from: protected */
+    public String getPreferenceKey() {
         return "group_options_active_devices";
     }
 
@@ -24,12 +24,10 @@ public class GroupBluetoothDevicesAvailableMediaDeviceUpdater extends GroupBluet
         this.mGroupUtils = new GroupUtils(context);
     }
 
-    @Override // com.android.settingslib.bluetooth.BluetoothCallback
     public void onAudioModeChanged() {
         forceUpdate();
     }
 
-    @Override // com.android.settings.bluetooth.BluetoothDeviceUpdater
     public boolean isFilterMatched(CachedBluetoothDevice cachedBluetoothDevice) {
         boolean z;
         int mode = this.mAudioManager.getMode();
@@ -53,6 +51,9 @@ public class GroupBluetoothDevicesAvailableMediaDeviceUpdater extends GroupBluet
         } else {
             z = false;
         }
-        return z && isGroupDevice(cachedBluetoothDevice) && this.mGroupId == this.mGroupUtils.getGroupId(cachedBluetoothDevice);
+        if (!z || !isGroupDevice(cachedBluetoothDevice) || this.mGroupId != this.mGroupUtils.getGroupId(cachedBluetoothDevice)) {
+            return false;
+        }
+        return true;
     }
 }

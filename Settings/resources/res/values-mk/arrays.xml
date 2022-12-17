@@ -196,6 +196,8 @@
         <item>Постари од 60 дена</item>
         <item>Постари од 90 дена</item>
     </array>
+    <array name="avatar_image_descriptions">
+    </array>
     <array name="battery_labels">
         <item>0%</item>
         <item>50%</item>
@@ -260,6 +262,8 @@
         <item>48,0 kHz</item>
         <item>88,2 kHz</item>
         <item>96,0 kHz</item>
+        <item>176,4 kHz</item>
+        <item>192,0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
         <item>Користи избор на системот (стандардно)</item>
@@ -267,6 +271,8 @@
         <item>48,0 kHz</item>
         <item>88,2 kHz</item>
         <item>96,0 kHz</item>
+        <item>176,4 kHz</item>
+        <item>192,0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
         <item>Користи избор на системот (стандардно)</item>
@@ -277,6 +283,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive аудио</item>
         <item>Qualcomm® aptX™ TWS+ аудио</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
         <item>Користи избор на системот (стандардно)</item>
@@ -287,6 +297,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive аудио</item>
         <item>Qualcomm® aptX™ TWS+ аудио</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -343,17 +357,10 @@
         <item>Поткренат</item>
         <item>Вдлабнат</item>
     </array>
-    <array name="captioning_font_size_selector_summaries">
-        <item>Многу ситен текст</item>
-        <item>Ситен текст</item>
-        <item>Стандардна големина</item>
-        <item>Крупен текст</item>
-        <item>Многу крупен текст</item>
-    </array>
     <array name="captioning_font_size_selector_titles">
         <item>Многу мали</item>
         <item>Мали</item>
-        <item>Стандарден</item>
+        <item>Среден</item>
         <item>Големи</item>
         <item>Многу големи</item>
     </array>
@@ -486,15 +493,13 @@
         <item>GID</item>
         <item>ICCID</item>
     </array>
-    <array name="res_0x7f0300b1_nt_preferred_network_mode_choices">
-        <item>3G</item>
-        <item>4G</item>
-        <item>5G</item>
+    <array name="nfc_payment_favor">
+        <item>Секогаш</item>
+        <item>Освен кога е отворена друга апликација за плаќање</item>
     </array>
-    <array name="res_0x7f0300b2_nt_preferred_network_mode_values">
-        <item>21</item>
-        <item>22</item>
-        <item>33</item>
+    <array name="nfc_payment_favor_values">
+        <item>@null</item>
+        <item>1</item>
     </array>
     <array name="overlay_display_devices_entries">
         <item>Ниедна</item>
@@ -628,17 +633,20 @@
         <item>Нацртај неправоаголен реон со сино</item>
         <item>Со зелено тестир. наредби за цртање</item>
     </array>
-    <array name="sim_color_light">
-        <item>@color/SIM_color_cyan</item>
-        <item>@color/SIM_color_blue800</item>
-        <item>@color/SIM_color_green800</item>
-        <item>@color/SIM_color_purple800</item>
-        <item>@color/SIM_color_pink800</item>
-        <item>@color/SIM_color_orange</item>
-    </array>
     <array name="swipe_direction_values">
         <item>1</item>
         <item>@null</item>
+    </array>
+    <array name="switch_to_user_zero_when_docked_timeout_entries">
+        <item>Никогаш</item>
+        <item>По 1 минута</item>
+        <item>По 5 минути</item>
+    </array>
+    <array name="tare_modifiers_subfactors">
+        <item>Се полни</item>
+        <item>Дремка</item>
+        <item>Режим за заштеда на енергија</item>
+        <item>Состојба на процес</item>
     </array>
     <array name="timezone_filters">
         <item>Америка</item>

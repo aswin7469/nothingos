@@ -1,5 +1,5 @@
 package com.google.protobuf;
-/* loaded from: classes2.dex */
+
 final class StructuralMessageInfo implements MessageInfo {
     private final int[] checkInitialized;
     private final MessageLite defaultInstance;
@@ -7,12 +7,10 @@ final class StructuralMessageInfo implements MessageInfo {
     private final boolean messageSetWireFormat;
     private final ProtoSyntax syntax;
 
-    @Override // com.google.protobuf.MessageInfo
     public ProtoSyntax getSyntax() {
         return this.syntax;
     }
 
-    @Override // com.google.protobuf.MessageInfo
     public boolean isMessageSetWireFormat() {
         return this.messageSetWireFormat;
     }
@@ -25,7 +23,6 @@ final class StructuralMessageInfo implements MessageInfo {
         return this.fields;
     }
 
-    @Override // com.google.protobuf.MessageInfo
     public MessageLite getDefaultInstance() {
         return this.defaultInstance;
     }

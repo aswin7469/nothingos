@@ -10,55 +10,52 @@ import android.provider.Settings;
 import android.telephony.TelephonyCallback;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-/* loaded from: classes.dex */
+
 public class ConnectivitySubsystemsRecoveryManager {
-    private final Context mContext;
-    private final Handler mHandler;
-    private TelephonyManager mTelephonyManager;
-    private WifiManager mWifiManager;
-    private RecoveryAvailableListener mRecoveryAvailableListener = null;
-    private final BroadcastReceiver mApmMonitor = new BroadcastReceiver() { // from class: com.android.settingslib.connectivity.ConnectivitySubsystemsRecoveryManager.1
-        @Override // android.content.BroadcastReceiver
+    private final BroadcastReceiver mApmMonitor = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
-            RecoveryAvailableListener recoveryAvailableListener = ConnectivitySubsystemsRecoveryManager.this.mRecoveryAvailableListener;
-            if (recoveryAvailableListener != null) {
-                recoveryAvailableListener.onRecoveryAvailableChangeListener(ConnectivitySubsystemsRecoveryManager.this.isRecoveryAvailable());
+            RecoveryAvailableListener r1 = ConnectivitySubsystemsRecoveryManager.this.mRecoveryAvailableListener;
+            if (r1 != null) {
+                r1.onRecoveryAvailableChangeListener(ConnectivitySubsystemsRecoveryManager.this.isRecoveryAvailable());
             }
         }
     };
     private boolean mApmMonitorRegistered = false;
-    private boolean mWifiRestartInProgress = false;
-    private boolean mTelephonyRestartInProgress = false;
-    private RecoveryStatusCallback mCurrentRecoveryCallback = null;
-    private final WifiManager.SubsystemRestartTrackingCallback mWifiSubsystemRestartTrackingCallback = new WifiManager.SubsystemRestartTrackingCallback() { // from class: com.android.settingslib.connectivity.ConnectivitySubsystemsRecoveryManager.2
-        @Override // android.net.wifi.WifiManager.SubsystemRestartTrackingCallback
+    private final Context mContext;
+    /* access modifiers changed from: private */
+    public RecoveryStatusCallback mCurrentRecoveryCallback = null;
+    private final Handler mHandler;
+    /* access modifiers changed from: private */
+    public RecoveryAvailableListener mRecoveryAvailableListener = null;
+    private final MobileTelephonyCallback mTelephonyCallback = new MobileTelephonyCallback();
+    private TelephonyManager mTelephonyManager = null;
+    /* access modifiers changed from: private */
+    public boolean mTelephonyRestartInProgress = false;
+    private WifiManager mWifiManager = null;
+    /* access modifiers changed from: private */
+    public boolean mWifiRestartInProgress = false;
+    private final WifiManager.SubsystemRestartTrackingCallback mWifiSubsystemRestartTrackingCallback = new WifiManager.SubsystemRestartTrackingCallback() {
         public void onSubsystemRestarting() {
         }
 
-        @Override // android.net.wifi.WifiManager.SubsystemRestartTrackingCallback
         public void onSubsystemRestarted() {
             ConnectivitySubsystemsRecoveryManager.this.mWifiRestartInProgress = false;
             ConnectivitySubsystemsRecoveryManager.this.stopTrackingWifiRestart();
             ConnectivitySubsystemsRecoveryManager.this.checkIfAllSubsystemsRestartsAreDone();
         }
     };
-    private final MobileTelephonyCallback mTelephonyCallback = new MobileTelephonyCallback();
 
-    /* loaded from: classes.dex */
     public interface RecoveryAvailableListener {
         void onRecoveryAvailableChangeListener(boolean z);
     }
 
-    /* loaded from: classes.dex */
     public interface RecoveryStatusCallback {
         void onSubsystemRestartOperationBegin();
 
         void onSubsystemRestartOperationEnd();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class MobileTelephonyCallback extends TelephonyCallback implements TelephonyCallback.RadioPowerStateListener {
+    private class MobileTelephonyCallback extends TelephonyCallback implements TelephonyCallback.RadioPowerStateListener {
         private MobileTelephonyCallback() {
         }
 
@@ -75,8 +72,6 @@ public class ConnectivitySubsystemsRecoveryManager {
     }
 
     public ConnectivitySubsystemsRecoveryManager(Context context, Handler handler) {
-        this.mWifiManager = null;
-        this.mTelephonyManager = null;
         this.mContext = context;
         this.mHandler = new Handler(handler.getLooper());
         if (context.getPackageManager().hasSystemFeature("android.hardware.wifi")) {
@@ -89,10 +84,9 @@ public class ConnectivitySubsystemsRecoveryManager {
         if (context.getPackageManager().hasSystemFeature("android.hardware.telephony")) {
             TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(TelephonyManager.class);
             this.mTelephonyManager = telephonyManager;
-            if (telephonyManager != null) {
-                return;
+            if (telephonyManager == null) {
+                Log.e("ConnectivitySubsystemsRecoveryManager", "TelephonyManager not available!?");
             }
-            Log.e("ConnectivitySubsystemsRecoveryManager", "TelephonyManager not available!?");
         }
     }
 
@@ -112,44 +106,52 @@ public class ConnectivitySubsystemsRecoveryManager {
         return isWifiEnabled();
     }
 
-    private void startTrackingWifiRestart() {
-        this.mWifiManager.registerSubsystemRestartTrackingCallback(new HandlerExecutor(this.mHandler), this.mWifiSubsystemRestartTrackingCallback);
+    /* access modifiers changed from: package-private */
+    public void startTrackingWifiRestart() {
+        WifiManager wifiManager = this.mWifiManager;
+        if (wifiManager != null) {
+            wifiManager.registerSubsystemRestartTrackingCallback(new HandlerExecutor(this.mHandler), this.mWifiSubsystemRestartTrackingCallback);
+        }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: package-private */
     public void stopTrackingWifiRestart() {
-        this.mWifiManager.unregisterSubsystemRestartTrackingCallback(this.mWifiSubsystemRestartTrackingCallback);
+        WifiManager wifiManager = this.mWifiManager;
+        if (wifiManager != null) {
+            wifiManager.unregisterSubsystemRestartTrackingCallback(this.mWifiSubsystemRestartTrackingCallback);
+        }
     }
 
-    private void startTrackingTelephonyRestart() {
-        this.mTelephonyManager.registerTelephonyCallback(new HandlerExecutor(this.mHandler), this.mTelephonyCallback);
+    /* access modifiers changed from: package-private */
+    public void startTrackingTelephonyRestart() {
+        TelephonyManager telephonyManager = this.mTelephonyManager;
+        if (telephonyManager != null) {
+            telephonyManager.registerTelephonyCallback(new HandlerExecutor(this.mHandler), this.mTelephonyCallback);
+        }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: package-private */
     public void stopTrackingTelephonyRestart() {
-        this.mTelephonyManager.unregisterTelephonyCallback(this.mTelephonyCallback);
+        TelephonyManager telephonyManager = this.mTelephonyManager;
+        if (telephonyManager != null) {
+            telephonyManager.unregisterTelephonyCallback(this.mTelephonyCallback);
+        }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void checkIfAllSubsystemsRestartsAreDone() {
         RecoveryStatusCallback recoveryStatusCallback;
-        if (this.mWifiRestartInProgress || this.mTelephonyRestartInProgress || (recoveryStatusCallback = this.mCurrentRecoveryCallback) == null) {
-            return;
+        if (!this.mWifiRestartInProgress && !this.mTelephonyRestartInProgress && (recoveryStatusCallback = this.mCurrentRecoveryCallback) != null) {
+            recoveryStatusCallback.onSubsystemRestartOperationEnd();
+            this.mCurrentRecoveryCallback = null;
         }
-        recoveryStatusCallback.onSubsystemRestartOperationEnd();
-        this.mCurrentRecoveryCallback = null;
     }
 
-    public void triggerSubsystemRestart(String str, final RecoveryStatusCallback recoveryStatusCallback) {
-        this.mHandler.post(new Runnable() { // from class: com.android.settingslib.connectivity.ConnectivitySubsystemsRecoveryManager$$ExternalSyntheticLambda1
-            @Override // java.lang.Runnable
-            public final void run() {
-                ConnectivitySubsystemsRecoveryManager.this.lambda$triggerSubsystemRestart$3(recoveryStatusCallback);
-            }
-        });
+    public void triggerSubsystemRestart(String str, RecoveryStatusCallback recoveryStatusCallback) {
+        this.mHandler.post(new ConnectivitySubsystemsRecoveryManager$$ExternalSyntheticLambda0(this, recoveryStatusCallback));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$triggerSubsystemRestart$3(RecoveryStatusCallback recoveryStatusCallback) {
         boolean z;
         if (this.mWifiRestartInProgress) {
@@ -172,21 +174,15 @@ public class ConnectivitySubsystemsRecoveryManager {
                 this.mTelephonyRestartInProgress = true;
                 startTrackingTelephonyRestart();
             }
-            if (!z2) {
-                return;
+            if (z2) {
+                this.mCurrentRecoveryCallback = recoveryStatusCallback;
+                recoveryStatusCallback.onSubsystemRestartOperationBegin();
+                this.mHandler.postDelayed(new ConnectivitySubsystemsRecoveryManager$$ExternalSyntheticLambda1(this), 15000);
             }
-            this.mCurrentRecoveryCallback = recoveryStatusCallback;
-            recoveryStatusCallback.onSubsystemRestartOperationBegin();
-            this.mHandler.postDelayed(new Runnable() { // from class: com.android.settingslib.connectivity.ConnectivitySubsystemsRecoveryManager$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    ConnectivitySubsystemsRecoveryManager.this.lambda$triggerSubsystemRestart$2();
-                }
-            }, 15000L);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$triggerSubsystemRestart$2() {
         stopTrackingWifiRestart();
         stopTrackingTelephonyRestart();

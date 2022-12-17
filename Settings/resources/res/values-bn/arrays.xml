@@ -196,6 +196,8 @@
         <item>৬০ দিনের বেশি পুরনো</item>
         <item>৯০ দিনের বেশি পুরনো</item>
     </array>
+    <array name="avatar_image_descriptions">
+    </array>
     <array name="battery_labels">
         <item>০%</item>
         <item>৫০%</item>
@@ -260,6 +262,8 @@
         <item>৪৮.০ kHz</item>
         <item>৮৮.২ kHz</item>
         <item>৯৬.০ kHz</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
         <item>সিস্টেমের নির্বাচন ব্যবহার করুন (ডিফল্ট)</item>
@@ -267,6 +271,8 @@
         <item>৪৮.০ kHz</item>
         <item>৮৮.২ kHz</item>
         <item>৯৬.০ kHz</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
         <item>সিস্টেমের নির্বাচন ব্যবহার করুন (ডিফল্ট)</item>
@@ -277,6 +283,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive অডিওa</item>
         <item>Qualcomm® aptX™ TWS+ অডিও</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
         <item>সিস্টেমের নির্বাচন ব্যবহার করুন (ডিফল্ট)</item>
@@ -287,6 +297,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive অডিওa</item>
         <item>Qualcomm® aptX™ TWS+ অডিও</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -343,17 +357,10 @@
         <item>ওঠানো</item>
         <item>চাপা</item>
     </array>
-    <array name="captioning_font_size_selector_summaries">
-        <item>টেক্সটের সাইজ খুব ছোট</item>
-        <item>টেক্সটের সাইজ ছোট</item>
-        <item>টেক্সটের ডিফল্ট সাইজ</item>
-        <item>টেক্সটের সাইজ বড়</item>
-        <item>টেক্সটের সাইজের খুব বড়</item>
-    </array>
     <array name="captioning_font_size_selector_titles">
         <item>অতি ক্ষুদ্র</item>
         <item>ক্ষুদ্র</item>
-        <item>ডিফল্ট</item>
+        <item>মাঝারি</item>
         <item>বৃহত্‍</item>
         <item>খুব বড়</item>
     </array>
@@ -485,6 +492,14 @@
         <item>IMSI</item>
         <item>GID</item>
         <item>ICCID</item>
+    </array>
+    <array name="nfc_payment_favor">
+        <item>সবসময়</item>
+        <item>অন্য কোনও পেমেন্ট অ্যাপ খোলা না থাকলে</item>
+    </array>
+    <array name="nfc_payment_favor_values">
+        <item>@null</item>
+        <item>1</item>
     </array>
     <array name="overlay_display_devices_entries">
         <item>কোনো কিছুই নয়</item>
@@ -618,17 +633,20 @@
         <item>নীল বঙের অ-আয়তক্ষেত্রাকার ক্লিপ অঞ্চল অঙ্কন করুন</item>
         <item>সবুজ রঙে অঙ্কন করা পরীক্ষিত কমান্ডগুলি হাইলাইট করুন</item>
     </array>
-    <array name="sim_color_light">
-        <item>@color/SIM_color_cyan</item>
-        <item>@color/SIM_color_blue800</item>
-        <item>@color/SIM_color_green800</item>
-        <item>@color/SIM_color_purple800</item>
-        <item>@color/SIM_color_pink800</item>
-        <item>@color/SIM_color_orange</item>
-    </array>
     <array name="swipe_direction_values">
         <item>1</item>
         <item>@null</item>
+    </array>
+    <array name="switch_to_user_zero_when_docked_timeout_entries">
+        <item>কখনওই নয়</item>
+        <item>১ মিনিট পর</item>
+        <item>৫ মিনিট পর</item>
+    </array>
+    <array name="tare_modifiers_subfactors">
+        <item>চার্জ হচ্ছে</item>
+        <item>ব্যাটারি &apos;ডজ&apos; অবস্থায় আছে</item>
+        <item>&apos;পাওয়ার সেভ&apos; মোড</item>
+        <item>&apos;প্রসেস চলাকালীন&apos; অবস্থা</item>
     </array>
     <array name="timezone_filters">
         <item>আমেরিকা</item>

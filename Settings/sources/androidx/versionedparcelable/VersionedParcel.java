@@ -14,65 +14,86 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
+
 public abstract class VersionedParcel {
     final SimpleArrayMap<String, Class<?>> mParcelizerCache;
     final SimpleArrayMap<String, Method> mReadCache;
     final SimpleArrayMap<String, Method> mWriteCache;
 
-    protected abstract void closeField();
+    /* access modifiers changed from: protected */
+    public abstract void closeField();
 
-    protected abstract VersionedParcel createSubParcel();
+    /* access modifiers changed from: protected */
+    public abstract VersionedParcel createSubParcel();
 
     public boolean isStream() {
         return false;
     }
 
-    protected abstract boolean readBoolean();
+    /* access modifiers changed from: protected */
+    public abstract boolean readBoolean();
 
-    protected abstract Bundle readBundle();
+    /* access modifiers changed from: protected */
+    public abstract Bundle readBundle();
 
-    protected abstract byte[] readByteArray();
+    /* access modifiers changed from: protected */
+    public abstract byte[] readByteArray();
 
-    protected abstract CharSequence readCharSequence();
+    /* access modifiers changed from: protected */
+    public abstract CharSequence readCharSequence();
 
-    protected abstract boolean readField(int i);
+    /* access modifiers changed from: protected */
+    public abstract boolean readField(int i);
 
-    protected abstract int readInt();
+    /* access modifiers changed from: protected */
+    public abstract int readInt();
 
-    protected abstract long readLong();
+    /* access modifiers changed from: protected */
+    public abstract long readLong();
 
-    protected abstract <T extends Parcelable> T readParcelable();
+    /* access modifiers changed from: protected */
+    public abstract <T extends Parcelable> T readParcelable();
 
-    protected abstract String readString();
+    /* access modifiers changed from: protected */
+    public abstract String readString();
 
-    protected abstract IBinder readStrongBinder();
+    /* access modifiers changed from: protected */
+    public abstract IBinder readStrongBinder();
 
-    protected abstract void setOutputField(int i);
+    /* access modifiers changed from: protected */
+    public abstract void setOutputField(int i);
 
     public void setSerializationFlags(boolean z, boolean z2) {
     }
 
-    protected abstract void writeBoolean(boolean z);
+    /* access modifiers changed from: protected */
+    public abstract void writeBoolean(boolean z);
 
-    protected abstract void writeBundle(Bundle bundle);
+    /* access modifiers changed from: protected */
+    public abstract void writeBundle(Bundle bundle);
 
-    protected abstract void writeByteArray(byte[] bArr);
+    /* access modifiers changed from: protected */
+    public abstract void writeByteArray(byte[] bArr);
 
-    protected abstract void writeCharSequence(CharSequence charSequence);
+    /* access modifiers changed from: protected */
+    public abstract void writeCharSequence(CharSequence charSequence);
 
-    protected abstract void writeInt(int i);
+    /* access modifiers changed from: protected */
+    public abstract void writeInt(int i);
 
-    protected abstract void writeLong(long j);
+    /* access modifiers changed from: protected */
+    public abstract void writeLong(long j);
 
-    protected abstract void writeParcelable(Parcelable parcelable);
+    /* access modifiers changed from: protected */
+    public abstract void writeParcelable(Parcelable parcelable);
 
-    protected abstract void writeString(String str);
+    /* access modifiers changed from: protected */
+    public abstract void writeString(String str);
 
-    protected abstract void writeStrongBinder(IBinder iBinder);
+    /* access modifiers changed from: protected */
+    public abstract void writeStrongBinder(IBinder iBinder);
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public VersionedParcel(SimpleArrayMap<String, Method> simpleArrayMap, SimpleArrayMap<String, Method> simpleArrayMap2, SimpleArrayMap<String, Class<?>> simpleArrayMap3) {
+    VersionedParcel(SimpleArrayMap<String, Method> simpleArrayMap, SimpleArrayMap<String, Method> simpleArrayMap2, SimpleArrayMap<String, Class<?>> simpleArrayMap3) {
         this.mReadCache = simpleArrayMap;
         this.mWriteCache = simpleArrayMap2;
         this.mParcelizerCache = simpleArrayMap3;
@@ -119,35 +140,59 @@ public abstract class VersionedParcel {
     }
 
     public boolean readBoolean(boolean z, int i) {
-        return !readField(i) ? z : readBoolean();
+        if (!readField(i)) {
+            return z;
+        }
+        return readBoolean();
     }
 
     public int readInt(int i, int i2) {
-        return !readField(i2) ? i : readInt();
+        if (!readField(i2)) {
+            return i;
+        }
+        return readInt();
     }
 
     public long readLong(long j, int i) {
-        return !readField(i) ? j : readLong();
+        if (!readField(i)) {
+            return j;
+        }
+        return readLong();
     }
 
     public String readString(String str, int i) {
-        return !readField(i) ? str : readString();
+        if (!readField(i)) {
+            return str;
+        }
+        return readString();
     }
 
     public byte[] readByteArray(byte[] bArr, int i) {
-        return !readField(i) ? bArr : readByteArray();
+        if (!readField(i)) {
+            return bArr;
+        }
+        return readByteArray();
     }
 
     public <T extends Parcelable> T readParcelable(T t, int i) {
-        return !readField(i) ? t : (T) readParcelable();
+        if (!readField(i)) {
+            return t;
+        }
+        return readParcelable();
     }
 
     public Bundle readBundle(Bundle bundle, int i) {
-        return !readField(i) ? bundle : readBundle();
+        if (!readField(i)) {
+            return bundle;
+        }
+        return readBundle();
     }
 
     public CharSequence readCharSequence(CharSequence charSequence, int i) {
-        return !readField(i) ? charSequence : readCharSequence();
+        if (!readField(i)) {
+            return charSequence;
+        }
+        return readCharSequence();
     }
 
     public <T> void writeArray(T[] tArr, int i) {
@@ -155,44 +200,43 @@ public abstract class VersionedParcel {
         writeArray(tArr);
     }
 
-    protected <T> void writeArray(T[] tArr) {
+    /* access modifiers changed from: protected */
+    public <T> void writeArray(T[] tArr) {
         if (tArr == null) {
             writeInt(-1);
             return;
         }
         int length = tArr.length;
         writeInt(length);
-        if (length <= 0) {
-            return;
-        }
-        int i = 0;
-        int type = getType(tArr[0]);
-        writeInt(type);
-        if (type == 1) {
-            while (i < length) {
-                writeVersionedParcelable((VersionedParcelable) tArr[i]);
-                i++;
-            }
-        } else if (type == 2) {
-            while (i < length) {
-                writeParcelable((Parcelable) tArr[i]);
-                i++;
-            }
-        } else if (type == 3) {
-            while (i < length) {
-                writeSerializable((Serializable) tArr[i]);
-                i++;
-            }
-        } else if (type == 4) {
-            while (i < length) {
-                writeString((String) tArr[i]);
-                i++;
-            }
-        } else if (type != 5) {
-        } else {
-            while (i < length) {
-                writeStrongBinder((IBinder) tArr[i]);
-                i++;
+        if (length > 0) {
+            int i = 0;
+            int type = getType(tArr[0]);
+            writeInt(type);
+            if (type == 1) {
+                while (i < length) {
+                    writeVersionedParcelable((VersionedParcelable) tArr[i]);
+                    i++;
+                }
+            } else if (type == 2) {
+                while (i < length) {
+                    writeParcelable((Parcelable) tArr[i]);
+                    i++;
+                }
+            } else if (type == 3) {
+                while (i < length) {
+                    writeSerializable((Serializable) tArr[i]);
+                    i++;
+                }
+            } else if (type == 4) {
+                while (i < length) {
+                    writeString((String) tArr[i]);
+                    i++;
+                }
+            } else if (type == 5) {
+                while (i < length) {
+                    writeStrongBinder((IBinder) tArr[i]);
+                    i++;
+                }
             }
         }
     }
@@ -227,10 +271,10 @@ public abstract class VersionedParcel {
         writeVersionedParcelable(versionedParcelable);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void writeVersionedParcelable(VersionedParcelable versionedParcelable) {
         if (versionedParcelable == null) {
-            writeString(null);
+            writeString((String) null);
             return;
         }
         writeVersionedParcelableCreator(versionedParcelable);
@@ -249,7 +293,7 @@ public abstract class VersionedParcel {
 
     private void writeSerializable(Serializable serializable) {
         if (serializable == null) {
-            writeString(null);
+            writeString((String) null);
             return;
         }
         String name = serializable.getClass().getName();
@@ -266,10 +310,14 @@ public abstract class VersionedParcel {
     }
 
     public <T> T[] readArray(T[] tArr, int i) {
-        return !readField(i) ? tArr : (T[]) readArray(tArr);
+        if (!readField(i)) {
+            return tArr;
+        }
+        return readArray(tArr);
     }
 
-    protected <T> T[] readArray(T[] tArr) {
+    /* access modifiers changed from: protected */
+    public <T> T[] readArray(T[] tArr) {
         int readInt = readInt();
         if (readInt < 0) {
             return null;
@@ -307,33 +355,40 @@ public abstract class VersionedParcel {
                 }
             }
         }
-        return (T[]) arrayList.toArray(tArr);
+        return arrayList.toArray(tArr);
     }
 
     public <T extends VersionedParcelable> T readVersionedParcelable(T t, int i) {
-        return !readField(i) ? t : (T) readVersionedParcelable();
+        if (!readField(i)) {
+            return t;
+        }
+        return readVersionedParcelable();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public <T extends VersionedParcelable> T readVersionedParcelable() {
         String readString = readString();
         if (readString == null) {
             return null;
         }
-        return (T) readFromParcel(readString, createSubParcel());
+        return readFromParcel(readString, createSubParcel());
     }
 
-    protected Serializable readSerializable() {
+    /* access modifiers changed from: protected */
+    public Serializable readSerializable() {
         String readString = readString();
         if (readString == null) {
             return null;
         }
         try {
-            return (Serializable) new ObjectInputStream(new ByteArrayInputStream(readByteArray())) { // from class: androidx.versionedparcelable.VersionedParcel.1
-                @Override // java.io.ObjectInputStream
-                protected Class<?> resolveClass(ObjectStreamClass objectStreamClass) throws IOException, ClassNotFoundException {
-                    Class<?> cls = Class.forName(objectStreamClass.getName(), false, AnonymousClass1.class.getClassLoader());
-                    return cls != null ? cls : super.resolveClass(objectStreamClass);
+            return (Serializable) new ObjectInputStream(new ByteArrayInputStream(readByteArray())) {
+                /* access modifiers changed from: protected */
+                public Class<?> resolveClass(ObjectStreamClass objectStreamClass) throws IOException, ClassNotFoundException {
+                    Class<?> cls = Class.forName(objectStreamClass.getName(), false, getClass().getClassLoader());
+                    if (cls != null) {
+                        return cls;
+                    }
+                    return super.resolveClass(objectStreamClass);
                 }
             }.readObject();
         } catch (IOException e) {
@@ -343,75 +398,78 @@ public abstract class VersionedParcel {
         }
     }
 
-    protected <T extends VersionedParcelable> T readFromParcel(String str, VersionedParcel versionedParcel) {
+    /* access modifiers changed from: protected */
+    public <T extends VersionedParcelable> T readFromParcel(String str, VersionedParcel versionedParcel) {
         try {
-            return (T) getReadMethod(str).invoke(null, versionedParcel);
-        } catch (ClassNotFoundException e) {
+            return (VersionedParcelable) getReadMethod(str).invoke((Object) null, new Object[]{versionedParcel});
+        } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
-        } catch (IllegalAccessException e2) {
-            throw new RuntimeException(e2);
-        } catch (NoSuchMethodException e3) {
-            throw new RuntimeException(e3);
-        } catch (InvocationTargetException e4) {
-            Throwable cause = e4.getCause();
+        } catch (InvocationTargetException e2) {
+            Throwable cause = e2.getCause();
             if (cause instanceof RuntimeException) {
                 throw ((RuntimeException) cause);
-            }
-            if (cause instanceof Error) {
+            } else if (cause instanceof Error) {
                 throw ((Error) cause);
+            } else {
+                throw new RuntimeException(e2);
             }
+        } catch (NoSuchMethodException e3) {
+            throw new RuntimeException(e3);
+        } catch (ClassNotFoundException e4) {
             throw new RuntimeException(e4);
         }
     }
 
-    protected <T extends VersionedParcelable> void writeToParcel(T t, VersionedParcel versionedParcel) {
+    /* access modifiers changed from: protected */
+    public <T extends VersionedParcelable> void writeToParcel(T t, VersionedParcel versionedParcel) {
         try {
-            getWriteMethod(t.getClass()).invoke(null, t, versionedParcel);
-        } catch (ClassNotFoundException e) {
+            getWriteMethod(t.getClass()).invoke((Object) null, new Object[]{t, versionedParcel});
+        } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
-        } catch (IllegalAccessException e2) {
-            throw new RuntimeException(e2);
-        } catch (NoSuchMethodException e3) {
-            throw new RuntimeException(e3);
-        } catch (InvocationTargetException e4) {
-            Throwable cause = e4.getCause();
+        } catch (InvocationTargetException e2) {
+            Throwable cause = e2.getCause();
             if (cause instanceof RuntimeException) {
                 throw ((RuntimeException) cause);
-            }
-            if (cause instanceof Error) {
+            } else if (cause instanceof Error) {
                 throw ((Error) cause);
+            } else {
+                throw new RuntimeException(e2);
             }
+        } catch (NoSuchMethodException e3) {
+            throw new RuntimeException(e3);
+        } catch (ClassNotFoundException e4) {
             throw new RuntimeException(e4);
         }
     }
 
     private Method getReadMethod(String str) throws IllegalAccessException, NoSuchMethodException, ClassNotFoundException {
+        Class<VersionedParcel> cls = VersionedParcel.class;
         Method method = this.mReadCache.get(str);
-        if (method == null) {
-            Method declaredMethod = Class.forName(str, true, VersionedParcel.class.getClassLoader()).getDeclaredMethod("read", VersionedParcel.class);
-            this.mReadCache.put(str, declaredMethod);
-            return declaredMethod;
+        if (method != null) {
+            return method;
         }
-        return method;
+        Method declaredMethod = Class.forName(str, true, cls.getClassLoader()).getDeclaredMethod("read", new Class[]{cls});
+        this.mReadCache.put(str, declaredMethod);
+        return declaredMethod;
     }
 
     private Method getWriteMethod(Class<?> cls) throws IllegalAccessException, NoSuchMethodException, ClassNotFoundException {
         Method method = this.mWriteCache.get(cls.getName());
-        if (method == null) {
-            Method declaredMethod = findParcelClass(cls).getDeclaredMethod("write", cls, VersionedParcel.class);
-            this.mWriteCache.put(cls.getName(), declaredMethod);
-            return declaredMethod;
+        if (method != null) {
+            return method;
         }
-        return method;
+        Method declaredMethod = findParcelClass(cls).getDeclaredMethod("write", new Class[]{cls, VersionedParcel.class});
+        this.mWriteCache.put(cls.getName(), declaredMethod);
+        return declaredMethod;
     }
 
     private Class<?> findParcelClass(Class<?> cls) throws ClassNotFoundException {
         Class<?> cls2 = this.mParcelizerCache.get(cls.getName());
-        if (cls2 == null) {
-            Class<?> cls3 = Class.forName(String.format("%s.%sParcelizer", cls.getPackage().getName(), cls.getSimpleName()), false, cls.getClassLoader());
-            this.mParcelizerCache.put(cls.getName(), cls3);
-            return cls3;
+        if (cls2 != null) {
+            return cls2;
         }
-        return cls2;
+        Class<?> cls3 = Class.forName(String.format("%s.%sParcelizer", new Object[]{cls.getPackage().getName(), cls.getSimpleName()}), false, cls.getClassLoader());
+        this.mParcelizerCache.put(cls.getName(), cls3);
+        return cls3;
     }
 }

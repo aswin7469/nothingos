@@ -2,71 +2,90 @@ package androidx.core.view;
 
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
-import android.os.Build;
 import android.util.Log;
 import android.view.MenuItem;
 import androidx.core.internal.view.SupportMenuItem;
-/* loaded from: classes.dex */
+
 public final class MenuItemCompat {
-    public static MenuItem setActionProvider(MenuItem item, ActionProvider provider) {
-        if (item instanceof SupportMenuItem) {
-            return ((SupportMenuItem) item).setSupportActionProvider(provider);
+    public static MenuItem setActionProvider(MenuItem menuItem, ActionProvider actionProvider) {
+        if (menuItem instanceof SupportMenuItem) {
+            return ((SupportMenuItem) menuItem).setSupportActionProvider(actionProvider);
         }
         Log.w("MenuItemCompat", "setActionProvider: item does not implement SupportMenuItem; ignoring");
-        return item;
+        return menuItem;
     }
 
-    public static void setContentDescription(MenuItem item, CharSequence contentDescription) {
-        if (item instanceof SupportMenuItem) {
-            ((SupportMenuItem) item).mo41setContentDescription(contentDescription);
-        } else if (Build.VERSION.SDK_INT < 26) {
+    public static void setContentDescription(MenuItem menuItem, CharSequence charSequence) {
+        if (menuItem instanceof SupportMenuItem) {
+            ((SupportMenuItem) menuItem).setContentDescription(charSequence);
         } else {
-            item.setContentDescription(contentDescription);
+            Api26Impl.setContentDescription(menuItem, charSequence);
         }
     }
 
-    public static void setTooltipText(MenuItem item, CharSequence tooltipText) {
-        if (item instanceof SupportMenuItem) {
-            ((SupportMenuItem) item).mo43setTooltipText(tooltipText);
-        } else if (Build.VERSION.SDK_INT < 26) {
+    public static void setTooltipText(MenuItem menuItem, CharSequence charSequence) {
+        if (menuItem instanceof SupportMenuItem) {
+            ((SupportMenuItem) menuItem).setTooltipText(charSequence);
         } else {
-            item.setTooltipText(tooltipText);
+            Api26Impl.setTooltipText(menuItem, charSequence);
         }
     }
 
-    public static void setNumericShortcut(MenuItem item, char numericChar, int numericModifiers) {
-        if (item instanceof SupportMenuItem) {
-            ((SupportMenuItem) item).setNumericShortcut(numericChar, numericModifiers);
-        } else if (Build.VERSION.SDK_INT < 26) {
+    public static void setNumericShortcut(MenuItem menuItem, char c, int i) {
+        if (menuItem instanceof SupportMenuItem) {
+            ((SupportMenuItem) menuItem).setNumericShortcut(c, i);
         } else {
-            item.setNumericShortcut(numericChar, numericModifiers);
+            Api26Impl.setNumericShortcut(menuItem, c, i);
         }
     }
 
-    public static void setAlphabeticShortcut(MenuItem item, char alphaChar, int alphaModifiers) {
-        if (item instanceof SupportMenuItem) {
-            ((SupportMenuItem) item).setAlphabeticShortcut(alphaChar, alphaModifiers);
-        } else if (Build.VERSION.SDK_INT < 26) {
+    public static void setAlphabeticShortcut(MenuItem menuItem, char c, int i) {
+        if (menuItem instanceof SupportMenuItem) {
+            ((SupportMenuItem) menuItem).setAlphabeticShortcut(c, i);
         } else {
-            item.setAlphabeticShortcut(alphaChar, alphaModifiers);
+            Api26Impl.setAlphabeticShortcut(menuItem, c, i);
         }
     }
 
-    public static void setIconTintList(MenuItem item, ColorStateList tint) {
-        if (item instanceof SupportMenuItem) {
-            ((SupportMenuItem) item).setIconTintList(tint);
-        } else if (Build.VERSION.SDK_INT < 26) {
+    public static void setIconTintList(MenuItem menuItem, ColorStateList colorStateList) {
+        if (menuItem instanceof SupportMenuItem) {
+            ((SupportMenuItem) menuItem).setIconTintList(colorStateList);
         } else {
-            item.setIconTintList(tint);
+            Api26Impl.setIconTintList(menuItem, colorStateList);
         }
     }
 
-    public static void setIconTintMode(MenuItem item, PorterDuff.Mode tintMode) {
-        if (item instanceof SupportMenuItem) {
-            ((SupportMenuItem) item).setIconTintMode(tintMode);
-        } else if (Build.VERSION.SDK_INT < 26) {
+    public static void setIconTintMode(MenuItem menuItem, PorterDuff.Mode mode) {
+        if (menuItem instanceof SupportMenuItem) {
+            ((SupportMenuItem) menuItem).setIconTintMode(mode);
         } else {
-            item.setIconTintMode(tintMode);
+            Api26Impl.setIconTintMode(menuItem, mode);
+        }
+    }
+
+    static class Api26Impl {
+        static MenuItem setContentDescription(MenuItem menuItem, CharSequence charSequence) {
+            return menuItem.setContentDescription(charSequence);
+        }
+
+        static MenuItem setTooltipText(MenuItem menuItem, CharSequence charSequence) {
+            return menuItem.setTooltipText(charSequence);
+        }
+
+        static MenuItem setNumericShortcut(MenuItem menuItem, char c, int i) {
+            return menuItem.setNumericShortcut(c, i);
+        }
+
+        static MenuItem setAlphabeticShortcut(MenuItem menuItem, char c, int i) {
+            return menuItem.setAlphabeticShortcut(c, i);
+        }
+
+        static MenuItem setIconTintList(MenuItem menuItem, ColorStateList colorStateList) {
+            return menuItem.setIconTintList(colorStateList);
+        }
+
+        static MenuItem setIconTintMode(MenuItem menuItem, PorterDuff.Mode mode) {
+            return menuItem.setIconTintMode(mode);
         }
     }
 }

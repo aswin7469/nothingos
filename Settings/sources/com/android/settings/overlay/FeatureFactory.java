@@ -2,12 +2,11 @@ package com.android.settings.overlay;
 
 import android.content.Context;
 import android.text.TextUtils;
-import com.android.settings.R;
+import com.android.settings.R$string;
+import com.android.settings.accessibility.AccessibilityMetricsFeatureProvider;
 import com.android.settings.accessibility.AccessibilitySearchFeatureProvider;
 import com.android.settings.accounts.AccountFeatureProvider;
 import com.android.settings.applications.ApplicationFeatureProvider;
-import com.android.settings.applications.GameSettingsFeatureProvider;
-import com.android.settings.applications.appinfo.ExtraAppInfoFeatureProvider;
 import com.android.settings.aware.AwareFeatureProvider;
 import com.android.settings.biometrics.face.FaceFeatureProvider;
 import com.android.settings.bluetooth.BluetoothFeatureProvider;
@@ -28,12 +27,14 @@ import com.android.settings.slices.SlicesFeatureProvider;
 import com.android.settings.users.UserFeatureProvider;
 import com.android.settings.wifi.WifiTrackerLibProvider;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
-/* loaded from: classes.dex */
+
 public abstract class FeatureFactory {
     private static final boolean DEBUG = false;
     private static final String LOG_TAG = "FeatureFactory";
     protected static Context sAppContext;
     protected static FeatureFactory sFactory;
+
+    public abstract AccessibilityMetricsFeatureProvider getAccessibilityMetricsFeatureProvider();
 
     public abstract AccessibilitySearchFeatureProvider getAccessibilitySearchFeatureProvider();
 
@@ -49,7 +50,7 @@ public abstract class FeatureFactory {
 
     public abstract BatteryStatusFeatureProvider getBatteryStatusFeatureProvider(Context context);
 
-    public abstract BluetoothFeatureProvider getBluetoothFeatureProvider(Context context);
+    public abstract BluetoothFeatureProvider getBluetoothFeatureProvider();
 
     public abstract ContextualCardFeatureProvider getContextualCardFeatureProvider(Context context);
 
@@ -59,11 +60,7 @@ public abstract class FeatureFactory {
 
     public abstract EnterprisePrivacyFeatureProvider getEnterprisePrivacyFeatureProvider(Context context);
 
-    public abstract ExtraAppInfoFeatureProvider getExtraAppInfoFeatureProvider();
-
     public abstract FaceFeatureProvider getFaceFeatureProvider();
-
-    public abstract GameSettingsFeatureProvider getGameSettingsFeatureProvider();
 
     public abstract LocaleFeatureProvider getLocaleFeatureProvider();
 
@@ -99,16 +96,17 @@ public abstract class FeatureFactory {
         if (sAppContext == null) {
             sAppContext = context.getApplicationContext();
         }
-        String string = context.getString(R.string.config_featureFactory);
-        if (TextUtils.isEmpty(string)) {
+        String string = context.getString(R$string.config_featureFactory);
+        if (!TextUtils.isEmpty(string)) {
+            try {
+                FeatureFactory featureFactory2 = (FeatureFactory) context.getClassLoader().loadClass(string).newInstance();
+                sFactory = featureFactory2;
+                return featureFactory2;
+            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+                throw new FactoryNotFoundException(e);
+            }
+        } else {
             throw new UnsupportedOperationException("No feature factory configured");
-        }
-        try {
-            FeatureFactory featureFactory2 = (FeatureFactory) context.getClassLoader().loadClass(string).newInstance();
-            sFactory = featureFactory2;
-            return featureFactory2;
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
-            throw new FactoryNotFoundException(e);
         }
     }
 
@@ -116,7 +114,6 @@ public abstract class FeatureFactory {
         return sAppContext;
     }
 
-    /* loaded from: classes.dex */
     public static final class FactoryNotFoundException extends RuntimeException {
         public FactoryNotFoundException(Throwable th) {
             super("Unable to create factory. Did you misconfigure Proguard?", th);

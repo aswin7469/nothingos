@@ -10,21 +10,20 @@ import android.os.storage.StorageManager;
 import android.text.TextUtils;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.instrumentation.InstrumentedDialogFragment;
-/* loaded from: classes.dex */
+
 public class StorageWizardFormatConfirm extends InstrumentedDialogFragment {
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1375;
     }
 
     public static void showPublic(FragmentActivity fragmentActivity, String str) {
-        show(fragmentActivity, str, null, false);
+        show(fragmentActivity, str, (String) null, false);
     }
 
     public static void showPrivate(FragmentActivity fragmentActivity, String str) {
-        show(fragmentActivity, str, null, true);
+        show(fragmentActivity, str, (String) null, true);
     }
 
     private static void show(FragmentActivity fragmentActivity, String str, String str2, boolean z) {
@@ -37,28 +36,22 @@ public class StorageWizardFormatConfirm extends InstrumentedDialogFragment {
         storageWizardFormatConfirm.show(fragmentActivity.getSupportFragmentManager(), "format_warning");
     }
 
-    @Override // androidx.fragment.app.DialogFragment
     public Dialog onCreateDialog(Bundle bundle) {
-        final Context context = getContext();
+        Context context = getContext();
         Bundle arguments = getArguments();
-        final String string = arguments.getString("android.os.storage.extra.DISK_ID");
-        final String string2 = arguments.getString("format_forget_uuid");
-        final boolean z = arguments.getBoolean("format_private", false);
+        String string = arguments.getString("android.os.storage.extra.DISK_ID");
+        String string2 = arguments.getString("format_forget_uuid");
+        boolean z = arguments.getBoolean("format_private", false);
         DiskInfo findDiskById = ((StorageManager) context.getSystemService(StorageManager.class)).findDiskById(string);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(TextUtils.expandTemplate(getText(R.string.storage_wizard_format_confirm_v2_title), findDiskById.getShortDescription()));
-        builder.setMessage(TextUtils.expandTemplate(getText(R.string.storage_wizard_format_confirm_v2_body), findDiskById.getDescription(), findDiskById.getShortDescription(), findDiskById.getShortDescription()));
+        builder.setTitle(TextUtils.expandTemplate(getText(R$string.storage_wizard_format_confirm_v2_title), new CharSequence[]{findDiskById.getShortDescription()}));
+        builder.setMessage(TextUtils.expandTemplate(getText(R$string.storage_wizard_format_confirm_v2_body), new CharSequence[]{findDiskById.getDescription(), findDiskById.getShortDescription(), findDiskById.getShortDescription()}));
         builder.setNegativeButton(17039360, (DialogInterface.OnClickListener) null);
-        builder.setPositiveButton(TextUtils.expandTemplate(getText(R.string.storage_wizard_format_confirm_v2_action), findDiskById.getShortDescription()), new DialogInterface.OnClickListener() { // from class: com.android.settings.deviceinfo.StorageWizardFormatConfirm$$ExternalSyntheticLambda0
-            @Override // android.content.DialogInterface.OnClickListener
-            public final void onClick(DialogInterface dialogInterface, int i) {
-                StorageWizardFormatConfirm.lambda$onCreateDialog$0(context, string, string2, z, dialogInterface, i);
-            }
-        });
+        builder.setPositiveButton(TextUtils.expandTemplate(getText(R$string.storage_wizard_format_confirm_v2_action), new CharSequence[]{findDiskById.getShortDescription()}), (DialogInterface.OnClickListener) new StorageWizardFormatConfirm$$ExternalSyntheticLambda0(context, string, string2, z));
         return builder.create();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ void lambda$onCreateDialog$0(Context context, String str, String str2, boolean z, DialogInterface dialogInterface, int i) {
         Intent intent = new Intent(context, StorageWizardFormatProgress.class);
         intent.putExtra("android.os.storage.extra.DISK_ID", str);

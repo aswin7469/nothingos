@@ -5,10 +5,12 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.TextView;
 import androidx.preference.PreferenceViewHolder;
-import com.android.settings.R;
+import com.android.settings.R$drawable;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
 import com.android.settingslib.Utils;
 import com.android.settingslib.widget.AppPreference;
-/* loaded from: classes.dex */
+
 public class PowerGaugePreference extends AppPreference {
     private BatteryDiffEntry mBatteryDiffEntry;
     private CharSequence mContentDescription;
@@ -17,15 +19,15 @@ public class PowerGaugePreference extends AppPreference {
     private boolean mShowAnomalyIcon;
 
     public PowerGaugePreference(Context context, Drawable drawable, CharSequence charSequence, BatteryEntry batteryEntry) {
-        this(context, null, drawable, charSequence, batteryEntry);
+        this(context, (AttributeSet) null, drawable, charSequence, batteryEntry);
     }
 
     public PowerGaugePreference(Context context) {
-        this(context, null, null, null, null);
+        this(context, (AttributeSet) null, (Drawable) null, (CharSequence) null, (BatteryEntry) null);
     }
 
     public PowerGaugePreference(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, null, null, null);
+        this(context, attributeSet, (Drawable) null, (CharSequence) null, (BatteryEntry) null);
     }
 
     private PowerGaugePreference(Context context, AttributeSet attributeSet, Drawable drawable, CharSequence charSequence, BatteryEntry batteryEntry) {
@@ -33,7 +35,7 @@ public class PowerGaugePreference extends AppPreference {
         if (drawable != null) {
             setIcon(drawable);
         }
-        setWidgetLayoutResource(R.layout.preference_widget_summary);
+        setWidgetLayoutResource(R$layout.preference_widget_summary);
         this.mInfo = batteryEntry;
         this.mContentDescription = charSequence;
         this.mShowAnomalyIcon = false;
@@ -62,23 +64,22 @@ public class PowerGaugePreference extends AppPreference {
         this.mBatteryDiffEntry = batteryDiffEntry;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public BatteryEntry getInfo() {
         return this.mInfo;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public BatteryDiffEntry getBatteryDiffEntry() {
         return this.mBatteryDiffEntry;
     }
 
-    @Override // com.android.settingslib.widget.AppPreference, androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
-        TextView textView = (TextView) preferenceViewHolder.findViewById(R.id.widget_summary);
+        TextView textView = (TextView) preferenceViewHolder.findViewById(R$id.widget_summary);
         textView.setText(this.mProgress);
         if (this.mShowAnomalyIcon) {
-            textView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_warning_24dp, 0, 0, 0);
+            textView.setCompoundDrawablesRelativeWithIntrinsicBounds(R$drawable.ic_warning_24dp, 0, 0, 0);
         } else {
             textView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
         }

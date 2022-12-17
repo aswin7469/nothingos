@@ -3,16 +3,14 @@ package com.android.settingslib.fuelgauge;
 import android.content.Context;
 import android.content.Intent;
 import com.android.settingslib.R$integer;
-/* loaded from: classes.dex */
+
 public class BatteryStatus {
-    public final int current;
     public final int health;
     public final int level;
     public final int maxChargingWattage;
     public final int plugged;
     public final boolean present;
     public final int status;
-    public final int voltage;
 
     public BatteryStatus(Intent intent) {
         this.status = intent.getIntExtra("status", 1);
@@ -20,8 +18,6 @@ public class BatteryStatus {
         this.level = intent.getIntExtra("level", 0);
         this.health = intent.getIntExtra("health", 1);
         this.present = intent.getBooleanExtra("present", true);
-        this.voltage = intent.getIntExtra("voltage", 0);
-        this.current = intent.getIntExtra("current", 0);
         int intExtra = intent.getIntExtra("max_charging_current", -1);
         int intExtra2 = intent.getIntExtra("max_charging_voltage", -1);
         intExtra2 = intExtra2 <= 0 ? 5000000 : intExtra2;
@@ -55,6 +51,6 @@ public class BatteryStatus {
     }
 
     public String toString() {
-        return "BatteryStatus{status=" + this.status + ",level=" + this.level + ",plugged=" + this.plugged + ",health=" + this.health + ",maxChargingWattage=" + this.maxChargingWattage + ",voltage=" + this.voltage + ",current=" + this.current + "}";
+        return "BatteryStatus{status=" + this.status + ",level=" + this.level + ",plugged=" + this.plugged + ",health=" + this.health + ",maxChargingWattage=" + this.maxChargingWattage + "}";
     }
 }

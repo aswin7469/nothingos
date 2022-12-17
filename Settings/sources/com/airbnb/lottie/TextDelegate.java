@@ -2,12 +2,12 @@ package com.airbnb.lottie;
 
 import java.util.HashMap;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public class TextDelegate {
-    private final Map<String, String> stringMap = new HashMap();
-    private boolean cacheText = true;
     private final LottieAnimationView animationView = null;
+    private boolean cacheText = true;
     private final LottieDrawable drawable = null;
+    private final Map<String, String> stringMap = new HashMap();
 
     private String getText(String str) {
         return str;

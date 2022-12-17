@@ -1,10 +1,9 @@
 package com.google.common.collect;
 
 import java.util.Collection;
-/* loaded from: classes2.dex */
+
 public final class Iterables {
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static Object[] toArray(Iterable<?> iterable) {
+    static Object[] toArray(Iterable<?> iterable) {
         return castOrCopyToCollection(iterable).toArray();
     }
 
@@ -16,6 +15,6 @@ public final class Iterables {
     }
 
     public static <T> T getFirst(Iterable<? extends T> iterable, T t) {
-        return (T) Iterators.getNext(iterable.iterator(), t);
+        return Iterators.getNext(iterable.iterator(), t);
     }
 }

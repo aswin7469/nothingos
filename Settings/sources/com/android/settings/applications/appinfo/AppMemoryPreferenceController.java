@@ -8,85 +8,64 @@ import android.text.format.Formatter;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$bool;
+import com.android.settings.R$string;
 import com.android.settings.SettingsActivity;
 import com.android.settings.applications.ProcStatsData;
 import com.android.settings.applications.ProcStatsEntry;
 import com.android.settings.applications.ProcStatsPackageEntry;
 import com.android.settings.applications.ProcessStatsBase;
 import com.android.settings.core.BasePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
-import com.android.settingslib.core.AbstractPreferenceController;
 import com.android.settingslib.core.lifecycle.Lifecycle;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
-import com.android.settingslib.core.lifecycle.events.OnPause;
 import com.android.settingslib.core.lifecycle.events.OnResume;
 import com.android.settingslib.development.DevelopmentSettingsEnabler;
 import java.util.Iterator;
-/* loaded from: classes.dex */
-public class AppMemoryPreferenceController extends BasePreferenceController implements LifecycleObserver, OnResume, OnPause {
+
+public class AppMemoryPreferenceController extends BasePreferenceController implements LifecycleObserver, OnResume {
     private static final String KEY_MEMORY = "memory";
-    private MemoryUpdater mMemoryUpdater;
-    private final AppInfoDashboardFragment mParent;
-    private Preference mPreference;
-    private ProcStatsPackageEntry mStats;
-    private ProcStatsData mStatsManager;
+    /* access modifiers changed from: private */
+    public final AppInfoDashboardFragment mParent;
+    /* access modifiers changed from: private */
+    public Preference mPreference;
+    /* access modifiers changed from: private */
+    public ProcStatsPackageEntry mStats;
+    /* access modifiers changed from: private */
+    public ProcStatsData mStatsManager;
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnPause
-    public void onPause() {
-        MemoryUpdater memoryUpdater = this.mMemoryUpdater;
-        if (memoryUpdater != null) {
-            memoryUpdater.cancel(true);
-        }
-    }
-
-    /* loaded from: classes.dex */
     private class MemoryUpdater extends AsyncTask<Void, Void, ProcStatsPackageEntry> {
         private MemoryUpdater() {
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // android.os.AsyncTask
+        /* access modifiers changed from: protected */
         public ProcStatsPackageEntry doInBackground(Void... voidArr) {
             PackageInfo packageInfo;
             FragmentActivity activity = AppMemoryPreferenceController.this.mParent.getActivity();
@@ -98,32 +77,33 @@ public class AppMemoryPreferenceController extends BasePreferenceController impl
                 AppMemoryPreferenceController.this.mStatsManager.setDuration(ProcessStatsBase.sDurations[0]);
             }
             AppMemoryPreferenceController.this.mStatsManager.refreshStats(true);
-            for (ProcStatsPackageEntry procStatsPackageEntry : AppMemoryPreferenceController.this.mStatsManager.getEntries()) {
-                Iterator<ProcStatsEntry> it = procStatsPackageEntry.getEntries().iterator();
-                while (it.hasNext()) {
-                    if (it.next().getUid() == packageInfo.applicationInfo.uid) {
-                        procStatsPackageEntry.updateMetrics();
-                        return procStatsPackageEntry;
+            for (ProcStatsPackageEntry next : AppMemoryPreferenceController.this.mStatsManager.getEntries()) {
+                Iterator<ProcStatsEntry> it = next.getEntries().iterator();
+                while (true) {
+                    if (it.hasNext()) {
+                        if (it.next().getUid() == packageInfo.applicationInfo.uid) {
+                            next.updateMetrics();
+                            return next;
+                        }
                     }
                 }
             }
             return null;
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // android.os.AsyncTask
+        /* access modifiers changed from: protected */
         public void onPostExecute(ProcStatsPackageEntry procStatsPackageEntry) {
-            if (AppMemoryPreferenceController.this.mParent.getActivity() == null) {
-                return;
+            if (AppMemoryPreferenceController.this.mParent.getActivity() != null) {
+                if (procStatsPackageEntry != null) {
+                    AppMemoryPreferenceController.this.mStats = procStatsPackageEntry;
+                    AppMemoryPreferenceController.this.mPreference.setEnabled(true);
+                    double max = Math.max(procStatsPackageEntry.getRunWeight(), procStatsPackageEntry.getBgWeight()) * AppMemoryPreferenceController.this.mStatsManager.getMemInfo().getWeightToRam();
+                    AppMemoryPreferenceController.this.mPreference.setSummary((CharSequence) AppMemoryPreferenceController.this.mContext.getString(R$string.memory_use_summary, new Object[]{Formatter.formatShortFileSize(AppMemoryPreferenceController.this.mContext, (long) max)}));
+                    return;
+                }
+                AppMemoryPreferenceController.this.mPreference.setEnabled(false);
+                AppMemoryPreferenceController.this.mPreference.setSummary((CharSequence) AppMemoryPreferenceController.this.mContext.getString(R$string.no_memory_use_summary));
             }
-            if (procStatsPackageEntry != null) {
-                AppMemoryPreferenceController.this.mStats = procStatsPackageEntry;
-                AppMemoryPreferenceController.this.mPreference.setEnabled(true);
-                AppMemoryPreferenceController.this.mPreference.setSummary(((AbstractPreferenceController) AppMemoryPreferenceController.this).mContext.getString(R.string.memory_use_summary, Formatter.formatShortFileSize(((AbstractPreferenceController) AppMemoryPreferenceController.this).mContext, (long) (Math.max(procStatsPackageEntry.getRunWeight(), procStatsPackageEntry.getBgWeight()) * AppMemoryPreferenceController.this.mStatsManager.getMemInfo().getWeightToRam()))));
-                return;
-            }
-            AppMemoryPreferenceController.this.mPreference.setEnabled(false);
-            AppMemoryPreferenceController.this.mPreference.setSummary(((AbstractPreferenceController) AppMemoryPreferenceController.this).mContext.getString(R.string.no_memory_use_summary));
         }
     }
 
@@ -135,35 +115,29 @@ public class AppMemoryPreferenceController extends BasePreferenceController impl
         }
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
-        if (!this.mContext.getResources().getBoolean(R.bool.config_show_app_info_settings_memory)) {
+        if (!this.mContext.getResources().getBoolean(R$bool.config_show_app_info_settings_memory)) {
             return 3;
         }
         return DevelopmentSettingsEnabler.isDevelopmentSettingsEnabled(this.mContext) ? 0 : 2;
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = preferenceScreen.findPreference(getPreferenceKey());
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
-        if (KEY_MEMORY.equals(preference.getKey())) {
-            ProcessStatsBase.launchMemoryDetail((SettingsActivity) this.mParent.getActivity(), this.mStatsManager.getMemInfo(), this.mStats, false);
-            return true;
+        if (!KEY_MEMORY.equals(preference.getKey())) {
+            return false;
         }
-        return false;
+        ProcessStatsBase.launchMemoryDetail((SettingsActivity) this.mParent.getActivity(), this.mStatsManager.getMemInfo(), this.mStats, false);
+        return true;
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnResume
     public void onResume() {
         if (isAvailable()) {
-            MemoryUpdater memoryUpdater = new MemoryUpdater();
-            this.mMemoryUpdater = memoryUpdater;
-            memoryUpdater.execute(new Void[0]);
+            new MemoryUpdater().execute(new Void[0]);
         }
     }
 }

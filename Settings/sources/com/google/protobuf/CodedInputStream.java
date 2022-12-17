@@ -2,7 +2,7 @@ package com.google.protobuf;
 
 import java.io.IOException;
 import java.util.Arrays;
-/* loaded from: classes2.dex */
+
 public abstract class CodedInputStream {
     int recursionDepth;
     int recursionLimit;
@@ -74,8 +74,7 @@ public abstract class CodedInputStream {
         return newInstance(bArr, i, i2, false);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static CodedInputStream newInstance(byte[] bArr, int i, int i2, boolean z) {
+    static CodedInputStream newInstance(byte[] bArr, int i, int i2, boolean z) {
         ArrayDecoder arrayDecoder = new ArrayDecoder(bArr, i, i2, z);
         try {
             arrayDecoder.pushLimit(i2);
@@ -91,9 +90,7 @@ public abstract class CodedInputStream {
         this.shouldDiscardUnknownFields = false;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static final class ArrayDecoder extends CodedInputStream {
+    private static final class ArrayDecoder extends CodedInputStream {
         private final byte[] buffer;
         private int bufferSizeAfterLimit;
         private int currentLimit;
@@ -114,7 +111,6 @@ public abstract class CodedInputStream {
             this.immutable = z;
         }
 
-        @Override // com.google.protobuf.CodedInputStream
         public int readTag() throws IOException {
             if (isAtEnd()) {
                 this.lastTag = 0;
@@ -122,21 +118,18 @@ public abstract class CodedInputStream {
             }
             int readRawVarint32 = readRawVarint32();
             this.lastTag = readRawVarint32;
-            if (WireFormat.getTagFieldNumber(readRawVarint32) == 0) {
-                throw InvalidProtocolBufferException.invalidTag();
+            if (WireFormat.getTagFieldNumber(readRawVarint32) != 0) {
+                return this.lastTag;
             }
-            return this.lastTag;
+            throw InvalidProtocolBufferException.invalidTag();
         }
 
-        @Override // com.google.protobuf.CodedInputStream
         public void checkLastTagWas(int i) throws InvalidProtocolBufferException {
-            if (this.lastTag == i) {
-                return;
+            if (this.lastTag != i) {
+                throw InvalidProtocolBufferException.invalidEndTag();
             }
-            throw InvalidProtocolBufferException.invalidEndTag();
         }
 
-        @Override // com.google.protobuf.CodedInputStream
         public boolean skipField(int i) throws IOException {
             int tagWireType = WireFormat.getTagWireType(i);
             if (tagWireType == 0) {
@@ -163,57 +156,57 @@ public abstract class CodedInputStream {
             }
         }
 
-        public void skipMessage() throws IOException {
-            int readTag;
-            do {
-                readTag = readTag();
-                if (readTag == 0) {
-                    return;
-                }
-            } while (skipField(readTag));
+        /*  JADX ERROR: StackOverflow in pass: RegionMakerVisitor
+            jadx.core.utils.exceptions.JadxOverflowException: 
+            	at jadx.core.utils.ErrorsCounter.addError(ErrorsCounter.java:47)
+            	at jadx.core.utils.ErrorsCounter.methodError(ErrorsCounter.java:81)
+            */
+        public void skipMessage() throws java.io.IOException {
+            /*
+                r1 = this;
+            L_0x0000:
+                int r0 = r1.readTag()
+                if (r0 == 0) goto L_0x000c
+                boolean r0 = r1.skipField(r0)
+                if (r0 != 0) goto L_0x0000
+            L_0x000c:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.google.protobuf.CodedInputStream.ArrayDecoder.skipMessage():void");
         }
 
-        @Override // com.google.protobuf.CodedInputStream
         public double readDouble() throws IOException {
             return Double.longBitsToDouble(readRawLittleEndian64());
         }
 
-        @Override // com.google.protobuf.CodedInputStream
         public float readFloat() throws IOException {
             return Float.intBitsToFloat(readRawLittleEndian32());
         }
 
-        @Override // com.google.protobuf.CodedInputStream
         public long readUInt64() throws IOException {
             return readRawVarint64();
         }
 
-        @Override // com.google.protobuf.CodedInputStream
         public long readInt64() throws IOException {
             return readRawVarint64();
         }
 
-        @Override // com.google.protobuf.CodedInputStream
         public int readInt32() throws IOException {
             return readRawVarint32();
         }
 
-        @Override // com.google.protobuf.CodedInputStream
         public long readFixed64() throws IOException {
             return readRawLittleEndian64();
         }
 
-        @Override // com.google.protobuf.CodedInputStream
         public int readFixed32() throws IOException {
             return readRawLittleEndian32();
         }
 
-        @Override // com.google.protobuf.CodedInputStream
         public boolean readBool() throws IOException {
             return readRawVarint64() != 0;
         }
 
-        @Override // com.google.protobuf.CodedInputStream
         public String readString() throws IOException {
             int readRawVarint32 = readRawVarint32();
             if (readRawVarint32 > 0) {
@@ -234,7 +227,6 @@ public abstract class CodedInputStream {
             throw InvalidProtocolBufferException.truncatedMessage();
         }
 
-        @Override // com.google.protobuf.CodedInputStream
         public String readStringRequireUtf8() throws IOException {
             int readRawVarint32 = readRawVarint32();
             if (readRawVarint32 > 0) {
@@ -255,21 +247,20 @@ public abstract class CodedInputStream {
             throw InvalidProtocolBufferException.truncatedMessage();
         }
 
-        @Override // com.google.protobuf.CodedInputStream
         public ByteString readBytes() throws IOException {
-            ByteString copyFrom;
+            ByteString byteString;
             int readRawVarint32 = readRawVarint32();
             if (readRawVarint32 > 0) {
                 int i = this.limit;
                 int i2 = this.pos;
                 if (readRawVarint32 <= i - i2) {
-                    if (this.immutable && this.enableAliasing) {
-                        copyFrom = ByteString.wrap(this.buffer, i2, readRawVarint32);
+                    if (!this.immutable || !this.enableAliasing) {
+                        byteString = ByteString.copyFrom(this.buffer, i2, readRawVarint32);
                     } else {
-                        copyFrom = ByteString.copyFrom(this.buffer, i2, readRawVarint32);
+                        byteString = ByteString.wrap(this.buffer, i2, readRawVarint32);
                     }
                     this.pos += readRawVarint32;
-                    return copyFrom;
+                    return byteString;
                 }
             }
             if (readRawVarint32 == 0) {
@@ -278,96 +269,112 @@ public abstract class CodedInputStream {
             return ByteString.wrap(readRawBytes(readRawVarint32));
         }
 
-        @Override // com.google.protobuf.CodedInputStream
         public int readUInt32() throws IOException {
             return readRawVarint32();
         }
 
-        @Override // com.google.protobuf.CodedInputStream
         public int readEnum() throws IOException {
             return readRawVarint32();
         }
 
-        @Override // com.google.protobuf.CodedInputStream
         public int readSFixed32() throws IOException {
             return readRawLittleEndian32();
         }
 
-        @Override // com.google.protobuf.CodedInputStream
         public long readSFixed64() throws IOException {
             return readRawLittleEndian64();
         }
 
-        @Override // com.google.protobuf.CodedInputStream
         public int readSInt32() throws IOException {
             return CodedInputStream.decodeZigZag32(readRawVarint32());
         }
 
-        @Override // com.google.protobuf.CodedInputStream
         public long readSInt64() throws IOException {
             return CodedInputStream.decodeZigZag64(readRawVarint64());
         }
 
-        /* JADX WARN: Code restructure failed: missing block: B:33:0x0068, code lost:
-            if (r2[r3] < 0) goto L34;
+        /* JADX WARNING: Code restructure failed: missing block: B:29:0x0068, code lost:
+            if (r2[r3] < 0) goto L_0x006a;
          */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
-        public int readRawVarint32() throws IOException {
-            int i;
-            int i2 = this.pos;
-            int i3 = this.limit;
-            if (i3 != i2) {
-                byte[] bArr = this.buffer;
-                int i4 = i2 + 1;
-                byte b = bArr[i2];
-                if (b >= 0) {
-                    this.pos = i4;
-                    return b;
-                } else if (i3 - i4 >= 9) {
-                    int i5 = i4 + 1;
-                    int i6 = b ^ (bArr[i4] << 7);
-                    if (i6 < 0) {
-                        i = i6 ^ (-128);
-                    } else {
-                        int i7 = i5 + 1;
-                        int i8 = i6 ^ (bArr[i5] << 14);
-                        if (i8 >= 0) {
-                            i = i8 ^ 16256;
-                        } else {
-                            i5 = i7 + 1;
-                            int i9 = i8 ^ (bArr[i7] << 21);
-                            if (i9 < 0) {
-                                i = i9 ^ (-2080896);
-                            } else {
-                                i7 = i5 + 1;
-                                byte b2 = bArr[i5];
-                                i = (i9 ^ (b2 << 28)) ^ 266354560;
-                                if (b2 < 0) {
-                                    i5 = i7 + 1;
-                                    if (bArr[i7] < 0) {
-                                        i7 = i5 + 1;
-                                        if (bArr[i5] < 0) {
-                                            i5 = i7 + 1;
-                                            if (bArr[i7] < 0) {
-                                                i7 = i5 + 1;
-                                                if (bArr[i5] < 0) {
-                                                    i5 = i7 + 1;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        i5 = i7;
-                    }
-                    this.pos = i5;
-                    return i;
-                }
-            }
-            return (int) readRawVarint64SlowPath();
+        /* Code decompiled incorrectly, please refer to instructions dump. */
+        public int readRawVarint32() throws java.io.IOException {
+            /*
+                r5 = this;
+                int r0 = r5.pos
+                int r1 = r5.limit
+                if (r1 != r0) goto L_0x0007
+                goto L_0x006a
+            L_0x0007:
+                byte[] r2 = r5.buffer
+                int r3 = r0 + 1
+                byte r0 = r2[r0]
+                if (r0 < 0) goto L_0x0012
+                r5.pos = r3
+                return r0
+            L_0x0012:
+                int r1 = r1 - r3
+                r4 = 9
+                if (r1 >= r4) goto L_0x0018
+                goto L_0x006a
+            L_0x0018:
+                int r1 = r3 + 1
+                byte r3 = r2[r3]
+                int r3 = r3 << 7
+                r0 = r0 ^ r3
+                if (r0 >= 0) goto L_0x0024
+                r0 = r0 ^ -128(0xffffffffffffff80, float:NaN)
+                goto L_0x0070
+            L_0x0024:
+                int r3 = r1 + 1
+                byte r1 = r2[r1]
+                int r1 = r1 << 14
+                r0 = r0 ^ r1
+                if (r0 < 0) goto L_0x0031
+                r0 = r0 ^ 16256(0x3f80, float:2.278E-41)
+            L_0x002f:
+                r1 = r3
+                goto L_0x0070
+            L_0x0031:
+                int r1 = r3 + 1
+                byte r3 = r2[r3]
+                int r3 = r3 << 21
+                r0 = r0 ^ r3
+                if (r0 >= 0) goto L_0x003f
+                r2 = -2080896(0xffffffffffe03f80, float:NaN)
+                r0 = r0 ^ r2
+                goto L_0x0070
+            L_0x003f:
+                int r3 = r1 + 1
+                byte r1 = r2[r1]
+                int r4 = r1 << 28
+                r0 = r0 ^ r4
+                r4 = 266354560(0xfe03f80, float:2.2112565E-29)
+                r0 = r0 ^ r4
+                if (r1 >= 0) goto L_0x002f
+                int r1 = r3 + 1
+                byte r3 = r2[r3]
+                if (r3 >= 0) goto L_0x0070
+                int r3 = r1 + 1
+                byte r1 = r2[r1]
+                if (r1 >= 0) goto L_0x002f
+                int r1 = r3 + 1
+                byte r3 = r2[r3]
+                if (r3 >= 0) goto L_0x0070
+                int r3 = r1 + 1
+                byte r1 = r2[r1]
+                if (r1 >= 0) goto L_0x002f
+                int r1 = r3 + 1
+                byte r2 = r2[r3]
+                if (r2 >= 0) goto L_0x0070
+            L_0x006a:
+                long r0 = r5.readRawVarint64SlowPath()
+                int r5 = (int) r0
+                return r5
+            L_0x0070:
+                r5.pos = r1
+                return r0
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.google.protobuf.CodedInputStream.ArrayDecoder.readRawVarint32():int");
         }
 
         private void skipRawVarint() throws IOException {
@@ -379,11 +386,14 @@ public abstract class CodedInputStream {
         }
 
         private void skipRawVarintFastPath() throws IOException {
-            for (int i = 0; i < 10; i++) {
+            int i = 0;
+            while (i < 10) {
                 byte[] bArr = this.buffer;
                 int i2 = this.pos;
                 this.pos = i2 + 1;
-                if (bArr[i2] >= 0) {
+                if (bArr[i2] < 0) {
+                    i++;
+                } else {
                     return;
                 }
             }
@@ -391,100 +401,159 @@ public abstract class CodedInputStream {
         }
 
         private void skipRawVarintSlowPath() throws IOException {
-            for (int i = 0; i < 10; i++) {
-                if (readRawByte() >= 0) {
+            int i = 0;
+            while (i < 10) {
+                if (readRawByte() < 0) {
+                    i++;
+                } else {
                     return;
                 }
             }
             throw InvalidProtocolBufferException.malformedVarint();
         }
 
-        /* JADX WARN: Code restructure failed: missing block: B:39:0x00b4, code lost:
-            if (r2[r0] < 0) goto L42;
+        /* JADX WARNING: Code restructure failed: missing block: B:35:0x00b4, code lost:
+            if (((long) r2[r0]) < 0) goto L_0x00b6;
          */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
-        public long readRawVarint64() throws IOException {
-            long j;
-            long j2;
-            long j3;
-            int i;
-            int i2 = this.pos;
-            int i3 = this.limit;
-            if (i3 != i2) {
-                byte[] bArr = this.buffer;
-                int i4 = i2 + 1;
-                byte b = bArr[i2];
-                if (b >= 0) {
-                    this.pos = i4;
-                    return b;
-                } else if (i3 - i4 >= 9) {
-                    int i5 = i4 + 1;
-                    int i6 = b ^ (bArr[i4] << 7);
-                    if (i6 >= 0) {
-                        int i7 = i5 + 1;
-                        int i8 = i6 ^ (bArr[i5] << 14);
-                        if (i8 >= 0) {
-                            i5 = i7;
-                            j = i8 ^ 16256;
-                        } else {
-                            i5 = i7 + 1;
-                            int i9 = i8 ^ (bArr[i7] << 21);
-                            if (i9 < 0) {
-                                i = i9 ^ (-2080896);
-                            } else {
-                                long j4 = i9;
-                                int i10 = i5 + 1;
-                                long j5 = j4 ^ (bArr[i5] << 28);
-                                if (j5 >= 0) {
-                                    j3 = 266354560;
-                                } else {
-                                    i5 = i10 + 1;
-                                    long j6 = j5 ^ (bArr[i10] << 35);
-                                    if (j6 < 0) {
-                                        j2 = -34093383808L;
-                                    } else {
-                                        i10 = i5 + 1;
-                                        j5 = j6 ^ (bArr[i5] << 42);
-                                        if (j5 >= 0) {
-                                            j3 = 4363953127296L;
-                                        } else {
-                                            i5 = i10 + 1;
-                                            j6 = j5 ^ (bArr[i10] << 49);
-                                            if (j6 < 0) {
-                                                j2 = -558586000294016L;
-                                            } else {
-                                                int i11 = i5 + 1;
-                                                long j7 = (j6 ^ (bArr[i5] << 56)) ^ 71499008037633920L;
-                                                i5 = j7 < 0 ? i11 + 1 : i11;
-                                                j = j7;
-                                            }
-                                        }
-                                    }
-                                    j = j6 ^ j2;
-                                }
-                                j = j5 ^ j3;
-                                i5 = i10;
-                            }
-                        }
-                        this.pos = i5;
-                        return j;
-                    }
-                    i = i6 ^ (-128);
-                    j = i;
-                    this.pos = i5;
-                    return j;
-                }
-            }
-            return readRawVarint64SlowPath();
+        /* Code decompiled incorrectly, please refer to instructions dump. */
+        public long readRawVarint64() throws java.io.IOException {
+            /*
+                r11 = this;
+                int r0 = r11.pos
+                int r1 = r11.limit
+                if (r1 != r0) goto L_0x0008
+                goto L_0x00b6
+            L_0x0008:
+                byte[] r2 = r11.buffer
+                int r3 = r0 + 1
+                byte r0 = r2[r0]
+                if (r0 < 0) goto L_0x0014
+                r11.pos = r3
+                long r0 = (long) r0
+                return r0
+            L_0x0014:
+                int r1 = r1 - r3
+                r4 = 9
+                if (r1 >= r4) goto L_0x001b
+                goto L_0x00b6
+            L_0x001b:
+                int r1 = r3 + 1
+                byte r3 = r2[r3]
+                int r3 = r3 << 7
+                r0 = r0 ^ r3
+                if (r0 >= 0) goto L_0x0029
+                r0 = r0 ^ -128(0xffffffffffffff80, float:NaN)
+            L_0x0026:
+                long r2 = (long) r0
+                goto L_0x00bd
+            L_0x0029:
+                int r3 = r1 + 1
+                byte r1 = r2[r1]
+                int r1 = r1 << 14
+                r0 = r0 ^ r1
+                if (r0 < 0) goto L_0x003a
+                r0 = r0 ^ 16256(0x3f80, float:2.278E-41)
+                long r0 = (long) r0
+                r9 = r0
+                r1 = r3
+                r2 = r9
+                goto L_0x00bd
+            L_0x003a:
+                int r1 = r3 + 1
+                byte r3 = r2[r3]
+                int r3 = r3 << 21
+                r0 = r0 ^ r3
+                if (r0 >= 0) goto L_0x0048
+                r2 = -2080896(0xffffffffffe03f80, float:NaN)
+                r0 = r0 ^ r2
+                goto L_0x0026
+            L_0x0048:
+                long r3 = (long) r0
+                int r0 = r1 + 1
+                byte r1 = r2[r1]
+                long r5 = (long) r1
+                r1 = 28
+                long r5 = r5 << r1
+                long r3 = r3 ^ r5
+                r5 = 0
+                int r1 = (r3 > r5 ? 1 : (r3 == r5 ? 0 : -1))
+                if (r1 < 0) goto L_0x005f
+                r1 = 266354560(0xfe03f80, double:1.315966377E-315)
+            L_0x005b:
+                long r2 = r3 ^ r1
+                r1 = r0
+                goto L_0x00bd
+            L_0x005f:
+                int r1 = r0 + 1
+                byte r0 = r2[r0]
+                long r7 = (long) r0
+                r0 = 35
+                long r7 = r7 << r0
+                long r3 = r3 ^ r7
+                int r0 = (r3 > r5 ? 1 : (r3 == r5 ? 0 : -1))
+                if (r0 >= 0) goto L_0x0074
+                r5 = -34093383808(0xfffffff80fe03f80, double:NaN)
+            L_0x0071:
+                long r2 = r3 ^ r5
+                goto L_0x00bd
+            L_0x0074:
+                int r0 = r1 + 1
+                byte r1 = r2[r1]
+                long r7 = (long) r1
+                r1 = 42
+                long r7 = r7 << r1
+                long r3 = r3 ^ r7
+                int r1 = (r3 > r5 ? 1 : (r3 == r5 ? 0 : -1))
+                if (r1 < 0) goto L_0x0087
+                r1 = 4363953127296(0x3f80fe03f80, double:2.1560793202584E-311)
+                goto L_0x005b
+            L_0x0087:
+                int r1 = r0 + 1
+                byte r0 = r2[r0]
+                long r7 = (long) r0
+                r0 = 49
+                long r7 = r7 << r0
+                long r3 = r3 ^ r7
+                int r0 = (r3 > r5 ? 1 : (r3 == r5 ? 0 : -1))
+                if (r0 >= 0) goto L_0x009a
+                r5 = -558586000294016(0xfffe03f80fe03f80, double:NaN)
+                goto L_0x0071
+            L_0x009a:
+                int r0 = r1 + 1
+                byte r1 = r2[r1]
+                long r7 = (long) r1
+                r1 = 56
+                long r7 = r7 << r1
+                long r3 = r3 ^ r7
+                r7 = 71499008037633920(0xfe03f80fe03f80, double:6.838959413692434E-304)
+                long r3 = r3 ^ r7
+                int r1 = (r3 > r5 ? 1 : (r3 == r5 ? 0 : -1))
+                if (r1 >= 0) goto L_0x00bb
+                int r1 = r0 + 1
+                byte r0 = r2[r0]
+                long r7 = (long) r0
+                int r0 = (r7 > r5 ? 1 : (r7 == r5 ? 0 : -1))
+                if (r0 >= 0) goto L_0x00bc
+            L_0x00b6:
+                long r0 = r11.readRawVarint64SlowPath()
+                return r0
+            L_0x00bb:
+                r1 = r0
+            L_0x00bc:
+                r2 = r3
+            L_0x00bd:
+                r11.pos = r1
+                return r2
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.google.protobuf.CodedInputStream.ArrayDecoder.readRawVarint64():long");
         }
 
-        long readRawVarint64SlowPath() throws IOException {
+        /* access modifiers changed from: package-private */
+        public long readRawVarint64SlowPath() throws IOException {
             long j = 0;
             for (int i = 0; i < 64; i += 7) {
                 byte readRawByte = readRawByte();
-                j |= (readRawByte & Byte.MAX_VALUE) << i;
+                j |= ((long) (readRawByte & Byte.MAX_VALUE)) << i;
                 if ((readRawByte & 128) == 0) {
                     return j;
                 }
@@ -494,37 +563,36 @@ public abstract class CodedInputStream {
 
         public int readRawLittleEndian32() throws IOException {
             int i = this.pos;
-            if (this.limit - i < 4) {
-                throw InvalidProtocolBufferException.truncatedMessage();
+            if (this.limit - i >= 4) {
+                byte[] bArr = this.buffer;
+                this.pos = i + 4;
+                return (bArr[i] & 255) | ((bArr[i + 1] & 255) << 8) | ((bArr[i + 2] & 255) << 16) | ((bArr[i + 3] & 255) << 24);
             }
-            byte[] bArr = this.buffer;
-            this.pos = i + 4;
-            return (bArr[i] & 255) | ((bArr[i + 1] & 255) << 8) | ((bArr[i + 2] & 255) << 16) | ((bArr[i + 3] & 255) << 24);
+            throw InvalidProtocolBufferException.truncatedMessage();
         }
 
         public long readRawLittleEndian64() throws IOException {
             int i = this.pos;
-            if (this.limit - i < 8) {
-                throw InvalidProtocolBufferException.truncatedMessage();
+            if (this.limit - i >= 8) {
+                byte[] bArr = this.buffer;
+                this.pos = i + 8;
+                return ((((long) bArr[i + 7]) & 255) << 56) | (((long) bArr[i]) & 255) | ((((long) bArr[i + 1]) & 255) << 8) | ((((long) bArr[i + 2]) & 255) << 16) | ((((long) bArr[i + 3]) & 255) << 24) | ((((long) bArr[i + 4]) & 255) << 32) | ((((long) bArr[i + 5]) & 255) << 40) | ((((long) bArr[i + 6]) & 255) << 48);
             }
-            byte[] bArr = this.buffer;
-            this.pos = i + 8;
-            return ((bArr[i + 7] & 255) << 56) | (bArr[i] & 255) | ((bArr[i + 1] & 255) << 8) | ((bArr[i + 2] & 255) << 16) | ((bArr[i + 3] & 255) << 24) | ((bArr[i + 4] & 255) << 32) | ((bArr[i + 5] & 255) << 40) | ((bArr[i + 6] & 255) << 48);
+            throw InvalidProtocolBufferException.truncatedMessage();
         }
 
-        @Override // com.google.protobuf.CodedInputStream
         public int pushLimit(int i) throws InvalidProtocolBufferException {
-            if (i < 0) {
-                throw InvalidProtocolBufferException.negativeSize();
-            }
-            int totalBytesRead = i + getTotalBytesRead();
-            int i2 = this.currentLimit;
-            if (totalBytesRead > i2) {
+            if (i >= 0) {
+                int totalBytesRead = i + getTotalBytesRead();
+                int i2 = this.currentLimit;
+                if (totalBytesRead <= i2) {
+                    this.currentLimit = totalBytesRead;
+                    recomputeBufferSizeAfterLimit();
+                    return i2;
+                }
                 throw InvalidProtocolBufferException.truncatedMessage();
             }
-            this.currentLimit = totalBytesRead;
-            recomputeBufferSizeAfterLimit();
-            return i2;
+            throw InvalidProtocolBufferException.negativeSize();
         }
 
         private void recomputeBufferSizeAfterLimit() {
@@ -541,30 +609,27 @@ public abstract class CodedInputStream {
             this.bufferSizeAfterLimit = 0;
         }
 
-        @Override // com.google.protobuf.CodedInputStream
         public void popLimit(int i) {
             this.currentLimit = i;
             recomputeBufferSizeAfterLimit();
         }
 
-        @Override // com.google.protobuf.CodedInputStream
         public boolean isAtEnd() throws IOException {
             return this.pos == this.limit;
         }
 
-        @Override // com.google.protobuf.CodedInputStream
         public int getTotalBytesRead() {
             return this.pos - this.startPos;
         }
 
         public byte readRawByte() throws IOException {
             int i = this.pos;
-            if (i == this.limit) {
-                throw InvalidProtocolBufferException.truncatedMessage();
+            if (i != this.limit) {
+                byte[] bArr = this.buffer;
+                this.pos = i + 1;
+                return bArr[i];
             }
-            byte[] bArr = this.buffer;
-            this.pos = i + 1;
-            return bArr[i];
+            throw InvalidProtocolBufferException.truncatedMessage();
         }
 
         public byte[] readRawBytes(int i) throws IOException {
@@ -577,13 +642,13 @@ public abstract class CodedInputStream {
                     return Arrays.copyOfRange(this.buffer, i3, i4);
                 }
             }
-            if (i <= 0) {
-                if (i == 0) {
-                    return Internal.EMPTY_BYTE_ARRAY;
-                }
+            if (i > 0) {
+                throw InvalidProtocolBufferException.truncatedMessage();
+            } else if (i == 0) {
+                return Internal.EMPTY_BYTE_ARRAY;
+            } else {
                 throw InvalidProtocolBufferException.negativeSize();
             }
-            throw InvalidProtocolBufferException.truncatedMessage();
         }
 
         public void skipRawBytes(int i) throws IOException {

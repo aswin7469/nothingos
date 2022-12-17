@@ -5,26 +5,24 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.RectF;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowInsets;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.ListView;
 import com.google.android.setupdesign.R$styleable;
-/* loaded from: classes2.dex */
+
 public class StickyHeaderListView extends ListView {
+    private int statusBarInset = 0;
     private View sticky;
     private View stickyContainer;
-    private int statusBarInset = 0;
     private final RectF stickyRect = new RectF();
 
     public StickyHeaderListView(Context context) {
         super(context);
-        init(null, 16842868);
+        init((AttributeSet) null, 16842868);
     }
 
     public StickyHeaderListView(Context context, AttributeSet attributeSet) {
@@ -38,19 +36,18 @@ public class StickyHeaderListView extends ListView {
     }
 
     private void init(AttributeSet attributeSet, int i) {
-        if (isInEditMode()) {
-            return;
+        if (!isInEditMode()) {
+            TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(attributeSet, R$styleable.SudStickyHeaderListView, i, 0);
+            int resourceId = obtainStyledAttributes.getResourceId(R$styleable.SudStickyHeaderListView_sudHeader, 0);
+            if (resourceId != 0) {
+                addHeaderView(LayoutInflater.from(getContext()).inflate(resourceId, this, false), (Object) null, false);
+            }
+            obtainStyledAttributes.recycle();
         }
-        TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(attributeSet, R$styleable.SudStickyHeaderListView, i, 0);
-        int resourceId = obtainStyledAttributes.getResourceId(R$styleable.SudStickyHeaderListView_sudHeader, 0);
-        if (resourceId != 0) {
-            addHeaderView(LayoutInflater.from(getContext()).inflate(resourceId, (ViewGroup) this, false), null, false);
-        }
-        obtainStyledAttributes.recycle();
     }
 
-    @Override // android.widget.AbsListView, android.widget.AdapterView, android.view.ViewGroup, android.view.View
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
         if (this.sticky == null) {
             updateStickyView();
@@ -62,17 +59,15 @@ public class StickyHeaderListView extends ListView {
         this.stickyContainer = findViewWithTag("stickyContainer");
     }
 
-    @Override // android.view.ViewGroup, android.view.View
     public boolean dispatchTouchEvent(MotionEvent motionEvent) {
-        if (this.stickyRect.contains(motionEvent.getX(), motionEvent.getY())) {
-            RectF rectF = this.stickyRect;
-            motionEvent.offsetLocation(-rectF.left, -rectF.top);
-            return this.stickyContainer.dispatchTouchEvent(motionEvent);
+        if (!this.stickyRect.contains(motionEvent.getX(), motionEvent.getY())) {
+            return super.dispatchTouchEvent(motionEvent);
         }
-        return super.dispatchTouchEvent(motionEvent);
+        RectF rectF = this.stickyRect;
+        motionEvent.offsetLocation(-rectF.left, -rectF.top);
+        return this.stickyContainer.dispatchTouchEvent(motionEvent);
     }
 
-    @Override // android.widget.AbsListView, android.view.View
     public void draw(Canvas canvas) {
         super.draw(canvas);
         if (this.sticky != null) {
@@ -81,7 +76,7 @@ public class StickyHeaderListView extends ListView {
             View view2 = view != null ? view : this.sticky;
             int top = view != null ? this.sticky.getTop() : 0;
             if (view2.getTop() + top < this.statusBarInset || !view2.isShown()) {
-                this.stickyRect.set(0.0f, (-top) + this.statusBarInset, view2.getWidth(), (view2.getHeight() - top) + this.statusBarInset);
+                this.stickyRect.set(0.0f, (float) ((-top) + this.statusBarInset), (float) view2.getWidth(), (float) ((view2.getHeight() - top) + this.statusBarInset));
                 canvas.translate(0.0f, this.stickyRect.top);
                 canvas.clipRect(0, 0, view2.getWidth(), view2.getHeight());
                 view2.draw(canvas);
@@ -92,7 +87,6 @@ public class StickyHeaderListView extends ListView {
         }
     }
 
-    @Override // android.view.View
     @TargetApi(21)
     public WindowInsets onApplyWindowInsets(WindowInsets windowInsets) {
         if (getFitsSystemWindows()) {
@@ -102,14 +96,11 @@ public class StickyHeaderListView extends ListView {
         return windowInsets;
     }
 
-    @Override // android.view.View
     public void onInitializeAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
         super.onInitializeAccessibilityEvent(accessibilityEvent);
         int i = this.sticky != null ? 1 : 0;
         accessibilityEvent.setItemCount(accessibilityEvent.getItemCount() - i);
         accessibilityEvent.setFromIndex(Math.max(accessibilityEvent.getFromIndex() - i, 0));
-        if (Build.VERSION.SDK_INT >= 14) {
-            accessibilityEvent.setToIndex(Math.max(accessibilityEvent.getToIndex() - i, 0));
-        }
+        accessibilityEvent.setToIndex(Math.max(accessibilityEvent.getToIndex() - i, 0));
     }
 }

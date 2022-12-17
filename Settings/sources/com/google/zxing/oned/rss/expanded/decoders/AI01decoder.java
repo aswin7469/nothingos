@@ -1,14 +1,13 @@
 package com.google.zxing.oned.rss.expanded.decoders;
 
 import com.google.zxing.common.BitArray;
-/* loaded from: classes2.dex */
+
 abstract class AI01decoder extends AbstractExpandedDecoder {
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public AI01decoder(BitArray bitArray) {
+    AI01decoder(BitArray bitArray) {
         super(bitArray);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public final void encodeCompressedGtin(StringBuilder sb, int i) {
         sb.append("(01)");
         int length = sb.length();
@@ -16,7 +15,7 @@ abstract class AI01decoder extends AbstractExpandedDecoder {
         encodeCompressedGtinWithoutAI(sb, i, length);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public final void encodeCompressedGtinWithoutAI(StringBuilder sb, int i, int i2) {
         for (int i3 = 0; i3 < 4; i3++) {
             int extractNumericValueFromBitArray = getGeneralDecoder().extractNumericValueFromBitArray((i3 * 10) + i, 10);

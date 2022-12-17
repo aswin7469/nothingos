@@ -10,24 +10,24 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.fragment.app.FragmentActivity;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
 import com.android.settings.core.InstrumentedFragment;
 import com.android.settings.wifi.dpp.WifiDppUtils;
-/* loaded from: classes.dex */
+import com.android.wifitrackerlib.WifiEntry;
+
 public class AddNetworkFragment extends InstrumentedFragment implements WifiConfigUiBase2, View.OnClickListener {
     static final int CANCEL_BUTTON_ID = 16908314;
-    static final int SSID_SCANNER_BUTTON_ID = R.id.ssid_scanner_button;
+    static final int SSID_SCANNER_BUTTON_ID = R$id.ssid_scanner_button;
     static final int SUBMIT_BUTTON_ID = 16908313;
     private Button mCancelBtn;
     private Button mSubmitBtn;
     private WifiConfigController2 mUIController;
 
-    @Override // com.android.settings.wifi.WifiConfigUiBase2
     public Button getForgetButton() {
         return null;
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1556;
     }
@@ -36,18 +36,15 @@ public class AddNetworkFragment extends InstrumentedFragment implements WifiConf
         return 1;
     }
 
-    @Override // com.android.settings.wifi.WifiConfigUiBase2
     public void setForgetButton(CharSequence charSequence) {
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
     }
 
-    @Override // androidx.fragment.app.Fragment
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
-        View inflate = layoutInflater.inflate(R.layout.wifi_add_network_view, viewGroup, false);
+        View inflate = layoutInflater.inflate(R$layout.wifi_add_network_view, viewGroup, false);
         Button button = (Button) inflate.findViewById(16908315);
         if (button != null) {
             button.setVisibility(8);
@@ -57,35 +54,31 @@ public class AddNetworkFragment extends InstrumentedFragment implements WifiConf
         this.mSubmitBtn.setOnClickListener(this);
         this.mCancelBtn.setOnClickListener(this);
         ((ImageButton) inflate.findViewById(SSID_SCANNER_BUTTON_ID)).setOnClickListener(this);
-        this.mUIController = new WifiConfigController2(this, inflate, null, getMode());
+        this.mUIController = new WifiConfigController2(this, inflate, (WifiEntry) null, getMode());
+        getActivity().getWindow().setSoftInputMode(16);
         return inflate;
     }
 
-    @Override // com.android.settings.core.InstrumentedFragment, com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
         this.mUIController.showSecurityFields(false, true);
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onViewStateRestored(Bundle bundle) {
         super.onViewStateRestored(bundle);
         this.mUIController.updatePassword();
     }
 
-    @Override // android.view.View.OnClickListener
     public void onClick(View view) {
         if (view.getId() == SUBMIT_BUTTON_ID) {
             handleSubmitAction();
         } else if (view.getId() == CANCEL_BUTTON_ID) {
             handleCancelAction();
-        } else if (view.getId() != SSID_SCANNER_BUTTON_ID) {
-        } else {
-            startActivityForResult(WifiDppUtils.getEnrolleeQrCodeScannerIntent(((TextView) getView().findViewById(R.id.ssid)).getText().toString()), 0);
+        } else if (view.getId() == SSID_SCANNER_BUTTON_ID) {
+            startActivityForResult(WifiDppUtils.getEnrolleeQrCodeScannerIntent(view.getContext(), ((TextView) getView().findViewById(R$id.ssid)).getText().toString()), 0);
         }
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onActivityResult(int i, int i2, Intent intent) {
         super.onActivityResult(i, i2, intent);
         if (i == 0 && i2 == -1) {
@@ -93,37 +86,32 @@ public class AddNetworkFragment extends InstrumentedFragment implements WifiConf
         }
     }
 
-    @Override // com.android.settings.wifi.WifiConfigUiBase2
     public void dispatchSubmit() {
         handleSubmitAction();
     }
 
-    @Override // com.android.settings.wifi.WifiConfigUiBase2
     public void setTitle(int i) {
         getActivity().setTitle(i);
     }
 
-    @Override // com.android.settings.wifi.WifiConfigUiBase2
     public void setTitle(CharSequence charSequence) {
         getActivity().setTitle(charSequence);
     }
 
-    @Override // com.android.settings.wifi.WifiConfigUiBase2
     public void setSubmitButton(CharSequence charSequence) {
         this.mSubmitBtn.setText(charSequence);
     }
 
-    @Override // com.android.settings.wifi.WifiConfigUiBase2
     public void setCancelButton(CharSequence charSequence) {
         this.mCancelBtn.setText(charSequence);
     }
 
-    @Override // com.android.settings.wifi.WifiConfigUiBase2
     public Button getSubmitButton() {
         return this.mSubmitBtn;
     }
 
-    void handleSubmitAction() {
+    /* access modifiers changed from: package-private */
+    public void handleSubmitAction() {
         successfullyFinish(this.mUIController.getConfig());
     }
 
@@ -135,7 +123,8 @@ public class AddNetworkFragment extends InstrumentedFragment implements WifiConf
         activity.finish();
     }
 
-    void handleCancelAction() {
+    /* access modifiers changed from: package-private */
+    public void handleCancelAction() {
         FragmentActivity activity = getActivity();
         activity.setResult(0);
         activity.finish();

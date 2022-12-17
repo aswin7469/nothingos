@@ -3,20 +3,14 @@ package com.android.settingslib;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.SparseBooleanArray;
-/* loaded from: classes.dex */
+
 public class AppItem implements Comparable<AppItem>, Parcelable {
-    public static final Parcelable.Creator<AppItem> CREATOR = new Parcelable.Creator<AppItem>() { // from class: com.android.settingslib.AppItem.1
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: createFromParcel */
-        public AppItem mo584createFromParcel(Parcel parcel) {
+    public static final Parcelable.Creator<AppItem> CREATOR = new Parcelable.Creator<AppItem>() {
+        public AppItem createFromParcel(Parcel parcel) {
             return new AppItem(parcel);
         }
 
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: newArray */
-        public AppItem[] mo585newArray(int i) {
+        public AppItem[] newArray(int i) {
             return new AppItem[i];
         }
     };
@@ -26,7 +20,6 @@ public class AppItem implements Comparable<AppItem>, Parcelable {
     public long total;
     public SparseBooleanArray uids;
 
-    @Override // android.os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -52,14 +45,12 @@ public class AppItem implements Comparable<AppItem>, Parcelable {
         this.uids.put(i, true);
     }
 
-    @Override // android.os.Parcelable
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeInt(this.key);
         parcel.writeSparseBooleanArray(this.uids);
         parcel.writeLong(this.total);
     }
 
-    @Override // java.lang.Comparable
     public int compareTo(AppItem appItem) {
         int compare = Integer.compare(this.category, appItem.category);
         return compare == 0 ? Long.compare(appItem.total, this.total) : compare;

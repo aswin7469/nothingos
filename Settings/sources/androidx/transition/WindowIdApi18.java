@@ -2,13 +2,11 @@ package androidx.transition;
 
 import android.view.View;
 import android.view.WindowId;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class WindowIdApi18 implements WindowIdImpl {
+
+class WindowIdApi18 implements WindowIdImpl {
     private final WindowId mWindowId;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public WindowIdApi18(View view) {
+    WindowIdApi18(View view) {
         this.mWindowId = view.getWindowId();
     }
 

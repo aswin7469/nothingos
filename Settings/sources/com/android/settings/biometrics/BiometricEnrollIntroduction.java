@@ -1,5 +1,6 @@
 package com.android.settings.biometrics;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
@@ -9,7 +10,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import com.android.internal.widget.LockPatternUtils;
-import com.android.settings.R;
+import com.android.settings.R$anim;
+import com.android.settings.R$string;
 import com.android.settings.SetupWizardUtils;
 import com.google.android.setupcompat.template.FooterBarMixin;
 import com.google.android.setupcompat.template.FooterButton;
@@ -18,7 +20,7 @@ import com.google.android.setupdesign.GlifLayout;
 import com.google.android.setupdesign.span.LinkSpan;
 import com.google.android.setupdesign.template.RequireScrollMixin;
 import com.google.android.setupdesign.util.DynamicColorPalette;
-/* loaded from: classes.dex */
+
 public abstract class BiometricEnrollIntroduction extends BiometricEnrollBase implements LinkSpan.OnClickListener {
     private boolean mBiometricUnlockDisabledByAdmin;
     protected boolean mConfirmingCredentials;
@@ -29,9 +31,7 @@ public abstract class BiometricEnrollIntroduction extends BiometricEnrollBase im
     private boolean mParentalConsentRequired;
     private UserManager mUserManager;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    /* loaded from: classes.dex */
-    public interface GenerateChallengeCallback {
+    protected interface GenerateChallengeCallback {
         void onChallengeGenerated(int i, int i2, long j);
     }
 
@@ -39,44 +39,62 @@ public abstract class BiometricEnrollIntroduction extends BiometricEnrollBase im
         return i == 2 || i == 11 || i == 1;
     }
 
-    protected abstract int checkMaxEnrolled();
+    /* access modifiers changed from: protected */
+    public abstract int checkMaxEnrolled();
 
-    protected abstract int getAgreeButtonTextRes();
+    /* access modifiers changed from: protected */
+    public abstract int getAgreeButtonTextRes();
 
-    protected abstract void getChallenge(GenerateChallengeCallback generateChallengeCallback);
+    /* access modifiers changed from: protected */
+    public abstract void getChallenge(GenerateChallengeCallback generateChallengeCallback);
 
-    protected abstract int getConfirmLockTitleResId();
+    /* access modifiers changed from: protected */
+    public abstract int getConfirmLockTitleResId();
 
-    protected abstract int getDescriptionResDisabledByAdmin();
+    /* access modifiers changed from: protected */
+    public abstract String getDescriptionDisabledByAdmin();
 
-    protected abstract Intent getEnrollingIntent();
+    /* access modifiers changed from: protected */
+    public abstract Intent getEnrollingIntent();
 
-    protected abstract TextView getErrorTextView();
+    /* access modifiers changed from: protected */
+    public abstract TextView getErrorTextView();
 
-    protected abstract String getExtraKeyForBiometric();
+    /* access modifiers changed from: protected */
+    public abstract String getExtraKeyForBiometric();
 
-    protected abstract int getHeaderResDefault();
+    /* access modifiers changed from: protected */
+    public abstract int getHeaderResDefault();
 
-    protected abstract int getHeaderResDisabledByAdmin();
+    /* access modifiers changed from: protected */
+    public abstract int getHeaderResDisabledByAdmin();
 
-    protected abstract int getLayoutResource();
+    /* access modifiers changed from: protected */
+    public abstract int getLayoutResource();
 
     public abstract int getModality();
 
-    protected abstract int getMoreButtonTextRes();
+    /* access modifiers changed from: protected */
+    public abstract int getMoreButtonTextRes();
 
-    protected abstract FooterButton getPrimaryFooterButton();
+    /* access modifiers changed from: protected */
+    public abstract FooterButton getNextButton();
 
-    protected abstract FooterButton getSecondaryFooterButton();
+    /* access modifiers changed from: protected */
+    public abstract FooterButton getPrimaryFooterButton();
 
-    protected abstract boolean isDisabledByAdmin();
+    /* access modifiers changed from: protected */
+    public abstract FooterButton getSecondaryFooterButton();
 
-    protected boolean onSetOrConfirmCredentials(Intent intent) {
+    /* access modifiers changed from: protected */
+    public abstract boolean isDisabledByAdmin();
+
+    /* access modifiers changed from: protected */
+    public boolean onSetOrConfirmCredentials(Intent intent) {
         return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.biometrics.BiometricEnrollBase, com.android.settings.core.InstrumentedActivity, com.android.settingslib.core.lifecycle.ObservableActivity, androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         if (bundle != null) {
@@ -91,10 +109,10 @@ public abstract class BiometricEnrollIntroduction extends BiometricEnrollBase im
         int i = 0;
         boolean z = ParentalControlsUtils.parentConsentRequired(this, getModality()) != null;
         this.mParentalConsentRequired = z;
-        if (this.mBiometricUnlockDisabledByAdmin && !z) {
-            setHeaderText(getHeaderResDisabledByAdmin());
-        } else {
+        if (!this.mBiometricUnlockDisabledByAdmin || z) {
             setHeaderText(getHeaderResDefault());
+        } else {
+            setHeaderText(getHeaderResDisabledByAdmin());
         }
         this.mErrorText = getErrorTextView();
         this.mUserManager = UserManager.get(this);
@@ -121,37 +139,25 @@ public abstract class BiometricEnrollIntroduction extends BiometricEnrollBase im
         }
         secondaryButton.setVisibility(i);
         RequireScrollMixin requireScrollMixin = (RequireScrollMixin) layout.getMixin(RequireScrollMixin.class);
-        requireScrollMixin.requireScrollWithButton(this, getPrimaryFooterButton(), getMoreButtonTextRes(), new View.OnClickListener() { // from class: com.android.settings.biometrics.BiometricEnrollIntroduction$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                BiometricEnrollIntroduction.this.onNextButtonClick(view);
-            }
-        });
-        requireScrollMixin.setOnRequireScrollStateChangedListener(new RequireScrollMixin.OnRequireScrollStateChangedListener() { // from class: com.android.settings.biometrics.BiometricEnrollIntroduction$$ExternalSyntheticLambda3
-            @Override // com.google.android.setupdesign.template.RequireScrollMixin.OnRequireScrollStateChangedListener
-            public final void onRequireScrollStateChanged(boolean z2) {
-                BiometricEnrollIntroduction.this.lambda$onCreate$0(z2);
-            }
-        });
+        requireScrollMixin.requireScrollWithButton(this, getPrimaryFooterButton(), getMoreButtonTextRes(), new BiometricEnrollIntroduction$$ExternalSyntheticLambda0(this));
+        requireScrollMixin.setOnRequireScrollStateChangedListener(new BiometricEnrollIntroduction$$ExternalSyntheticLambda1(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onCreate$0(boolean z) {
-        int agreeButtonTextRes;
+        int i;
         if (z) {
-            agreeButtonTextRes = getMoreButtonTextRes();
+            i = getMoreButtonTextRes();
         } else {
-            agreeButtonTextRes = getAgreeButtonTextRes();
+            i = getAgreeButtonTextRes();
         }
-        getPrimaryFooterButton().setText(this, agreeButtonTextRes);
-        if (z || !WizardManagerHelper.isAnySetupWizard(getIntent())) {
-            return;
+        getPrimaryFooterButton().setText(this, i);
+        if (!z && WizardManagerHelper.isAnySetupWizard(getIntent())) {
+            getSecondaryFooterButton().setVisibility(0);
         }
-        getSecondaryFooterButton().setVisibility(0);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.core.lifecycle.ObservableActivity, androidx.fragment.app.FragmentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onResume() {
         super.onResume();
         int checkMaxEnrolled = checkMaxEnrolled();
@@ -163,19 +169,17 @@ public abstract class BiometricEnrollIntroduction extends BiometricEnrollBase im
         }
         this.mErrorText.setText(checkMaxEnrolled);
         this.mErrorText.setVisibility(0);
-        getNextButton().setText(getResources().getString(R.string.done));
+        getNextButton().setText(getResources().getString(R$string.done));
         getNextButton().setVisibility(0);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.biometrics.BiometricEnrollBase, androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         bundle.putBoolean("confirming_credentials", this.mConfirmingCredentials);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.biometrics.BiometricEnrollBase
+    /* access modifiers changed from: protected */
     public boolean shouldFinishWhenBackgrounded() {
         return super.shouldFinishWhenBackgrounded() && !this.mConfirmingCredentials && !this.mNextClicked;
     }
@@ -184,7 +188,7 @@ public abstract class BiometricEnrollIntroduction extends BiometricEnrollBase im
         this.mHasPassword = new LockPatternUtils(this).getActivePasswordQuality(this.mUserManager.getCredentialOwnerProfile(this.mUserId)) != 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onNextButtonClick(View view) {
         this.mNextClicked = true;
         if (checkMaxEnrolled() == 0) {
@@ -208,6 +212,7 @@ public abstract class BiometricEnrollIntroduction extends BiometricEnrollBase im
     }
 
     private void launchNextEnrollingActivity(byte[] bArr) {
+        Log.d("Security", "BiometricEnrollIntroduction::launchNextEnrollingActivity");
         Intent enrollingIntent = getEnrollingIntent();
         if (bArr != null) {
             enrollingIntent.putExtra("hw_auth_token", bArr);
@@ -223,10 +228,10 @@ public abstract class BiometricEnrollIntroduction extends BiometricEnrollBase im
         startActivityForResult(enrollingIntent, 2);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, android.app.Activity
-    public void onActivityResult(int i, int i2, final Intent intent) {
+    /* access modifiers changed from: protected */
+    public void onActivityResult(int i, int i2, Intent intent) {
         if (i == 2) {
+            Log.d("Security", "BiometricEnrollIntroduction::onActivityResult 1111");
             if (isResultSkipOrFinished(i2)) {
                 handleBiometricResultSkipOrFinished(i2, intent);
             } else if (i2 == 3) {
@@ -234,45 +239,41 @@ public abstract class BiometricEnrollIntroduction extends BiometricEnrollBase im
                 finish();
             }
         } else if (i == 1) {
+            Log.d("Security", "BiometricEnrollIntroduction::onActivityResult 2222");
             this.mConfirmingCredentials = false;
             if (i2 == 1) {
                 updatePasswordQuality();
                 if (!onSetOrConfirmCredentials(intent)) {
-                    overridePendingTransition(R.anim.sud_slide_next_in, R.anim.sud_slide_next_out);
+                    overridePendingTransition(R$anim.sud_slide_next_in, R$anim.sud_slide_next_out);
                     getNextButton().setEnabled(false);
                     setFooterButtonTextColor(this.mFooterBarMixin.getPrimaryButtonView(), -16777216);
-                    getChallenge(new GenerateChallengeCallback() { // from class: com.android.settings.biometrics.BiometricEnrollIntroduction$$ExternalSyntheticLambda2
-                        @Override // com.android.settings.biometrics.BiometricEnrollIntroduction.GenerateChallengeCallback
-                        public final void onChallengeGenerated(int i3, int i4, long j) {
-                            BiometricEnrollIntroduction.this.lambda$onActivityResult$1(intent, i3, i4, j);
-                        }
-                    });
+                    getChallenge(new BiometricEnrollIntroduction$$ExternalSyntheticLambda2(this, intent));
                 }
             } else {
+                Log.d("Security", "BiometricEnrollIntroduction::onActivityResult 3333");
                 setResult(i2, intent);
                 finish();
             }
         } else if (i == 4) {
             this.mConfirmingCredentials = false;
-            if (i2 == -1 && intent != null) {
-                if (!onSetOrConfirmCredentials(intent)) {
-                    overridePendingTransition(R.anim.sud_slide_next_in, R.anim.sud_slide_next_out);
-                    getNextButton().setEnabled(false);
-                    setFooterButtonTextColor(this.mFooterBarMixin.getPrimaryButtonView(), -16777216);
-                    getChallenge(new GenerateChallengeCallback() { // from class: com.android.settings.biometrics.BiometricEnrollIntroduction$$ExternalSyntheticLambda1
-                        @Override // com.android.settings.biometrics.BiometricEnrollIntroduction.GenerateChallengeCallback
-                        public final void onChallengeGenerated(int i3, int i4, long j) {
-                            BiometricEnrollIntroduction.this.lambda$onActivityResult$2(intent, i3, i4, j);
-                        }
-                    });
-                }
-            } else {
+            if (i2 != -1 || intent == null) {
+                Log.d("Security", "BiometricEnrollIntroduction::onActivityResult 55555");
                 setResult(i2, intent);
                 finish();
+            } else {
+                Log.d("Security", "BiometricEnrollIntroduction::onActivityResult 4444");
+                if (!onSetOrConfirmCredentials(intent)) {
+                    overridePendingTransition(R$anim.sud_slide_next_in, R$anim.sud_slide_next_out);
+                    getNextButton().setEnabled(false);
+                    setFooterButtonTextColor(this.mFooterBarMixin.getPrimaryButtonView(), -16777216);
+                    getChallenge(new BiometricEnrollIntroduction$$ExternalSyntheticLambda3(this, intent));
+                }
             }
         } else if (i == 3) {
-            overridePendingTransition(R.anim.sud_slide_back_in, R.anim.sud_slide_back_out);
+            Log.d("Security", "BiometricEnrollIntroduction::onActivityResult 6666");
+            overridePendingTransition(R$anim.sud_slide_back_in, R$anim.sud_slide_back_out);
         } else if (i == 6) {
+            Log.d("Security", "BiometricEnrollIntroduction::onActivityResult 7777");
             Log.d("BiometricEnrollIntroduction", "ENROLL_NEXT_BIOMETRIC_REQUEST, result: " + i2);
             if (isResultSkipOrFinished(i2)) {
                 handleBiometricResultSkipOrFinished(i2, intent);
@@ -284,22 +285,22 @@ public abstract class BiometricEnrollIntroduction extends BiometricEnrollBase im
         super.onActivityResult(i, i2, intent);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onActivityResult$1(Intent intent, int i, int i2, long j) {
         this.mSensorId = i;
         this.mChallenge = j;
-        this.mToken = BiometricUtils.requestGatekeeperHat(this, intent, this.mUserId, j);
-        BiometricUtils.removeGatekeeperPasswordHandle(this, intent);
+        this.mToken = BiometricUtils.requestGatekeeperHat((Context) this, intent, this.mUserId, j);
+        BiometricUtils.removeGatekeeperPasswordHandle((Context) this, intent);
         getNextButton().setEnabled(true);
         setFooterButtonTextColor(this.mFooterBarMixin.getPrimaryButtonView(), -16777216);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onActivityResult$2(Intent intent, int i, int i2, long j) {
         this.mSensorId = i;
         this.mChallenge = j;
-        this.mToken = BiometricUtils.requestGatekeeperHat(this, intent, this.mUserId, j);
-        BiometricUtils.removeGatekeeperPasswordHandle(this, intent);
+        this.mToken = BiometricUtils.requestGatekeeperHat((Context) this, intent, this.mUserId, j);
+        BiometricUtils.removeGatekeeperPasswordHandle((Context) this, intent);
         getNextButton().setEnabled(true);
         setFooterButtonTextColor(this.mFooterBarMixin.getPrimaryButtonView(), -16777216);
     }
@@ -310,40 +311,37 @@ public abstract class BiometricEnrollIntroduction extends BiometricEnrollBase im
         }
         if (i == 2) {
             onEnrollmentSkipped(intent);
-        } else if (i != 1) {
-        } else {
+        } else if (i == 1) {
             onFinishedEnrolling(intent);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onSkipButtonClick(View view) {
-        onEnrollmentSkipped(null);
+        onEnrollmentSkipped((Intent) null);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onEnrollmentSkipped(Intent intent) {
         setResult(2, intent);
         finish();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onFinishedEnrolling(Intent intent) {
         setResult(1, intent);
         finish();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.biometrics.BiometricEnrollBase
+    /* access modifiers changed from: protected */
     public void initViews() {
         super.initViews();
-        if (!this.mBiometricUnlockDisabledByAdmin || this.mParentalConsentRequired) {
-            return;
+        if (this.mBiometricUnlockDisabledByAdmin && !this.mParentalConsentRequired) {
+            setDescriptionText((CharSequence) getDescriptionDisabledByAdmin());
         }
-        setDescriptionText(getDescriptionResDisabledByAdmin());
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public PorterDuffColorFilter getIconColorFilter() {
         if (this.mIconColorFilter == null) {
             this.mIconColorFilter = new PorterDuffColorFilter(DynamicColorPalette.getColor(this, 0), PorterDuff.Mode.SRC_IN);

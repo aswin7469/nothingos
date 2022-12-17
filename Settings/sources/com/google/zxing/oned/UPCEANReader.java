@@ -1,6 +1,5 @@
 package com.google.zxing.oned;
 
-import androidx.appcompat.R$styleable;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.ChecksumException;
 import com.google.zxing.DecodeHintType;
@@ -14,25 +13,26 @@ import com.google.zxing.ResultPointCallback;
 import com.google.zxing.common.BitArray;
 import java.util.Arrays;
 import java.util.Map;
-/* loaded from: classes2.dex */
+
 public abstract class UPCEANReader extends OneDReader {
     static final int[][] L_AND_G_PATTERNS;
     static final int[][] L_PATTERNS;
-    static final int[] START_END_PATTERN = {1, 1, 1};
     static final int[] MIDDLE_PATTERN = {1, 1, 1, 1, 1};
+    static final int[] START_END_PATTERN = {1, 1, 1};
     private final StringBuilder decodeRowStringBuffer = new StringBuilder(20);
-    private final UPCEANExtensionSupport extensionReader = new UPCEANExtensionSupport();
     private final EANManufacturerOrgSupport eanManSupport = new EANManufacturerOrgSupport();
+    private final UPCEANExtensionSupport extensionReader = new UPCEANExtensionSupport();
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public abstract int decodeMiddle(BitArray bitArray, int[] iArr, StringBuilder sb) throws NotFoundException;
 
-    abstract BarcodeFormat getBarcodeFormat();
+    /* access modifiers changed from: package-private */
+    public abstract BarcodeFormat getBarcodeFormat();
 
     static {
         int[][] iArr = {new int[]{3, 2, 1, 1}, new int[]{2, 2, 2, 1}, new int[]{2, 1, 2, 2}, new int[]{1, 4, 1, 1}, new int[]{1, 1, 3, 2}, new int[]{1, 2, 3, 1}, new int[]{1, 1, 1, 4}, new int[]{1, 3, 1, 2}, new int[]{1, 2, 1, 3}, new int[]{3, 1, 1, 2}};
         L_PATTERNS = iArr;
-        int[][] iArr2 = new int[20];
+        int[][] iArr2 = new int[20][];
         L_AND_G_PATTERNS = iArr2;
         System.arraycopy(iArr, 0, iArr2, 0, 10);
         for (int i = 10; i < 20; i++) {
@@ -45,8 +45,10 @@ public abstract class UPCEANReader extends OneDReader {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static int[] findStartGuardPattern(BitArray bitArray) throws NotFoundException {
+    protected UPCEANReader() {
+    }
+
+    static int[] findStartGuardPattern(BitArray bitArray) throws NotFoundException {
         int[] iArr = new int[START_END_PATTERN.length];
         int[] iArr2 = null;
         boolean z = false;
@@ -66,7 +68,6 @@ public abstract class UPCEANReader extends OneDReader {
         return iArr2;
     }
 
-    @Override // com.google.zxing.oned.OneDReader
     public Result decodeRow(int i, BitArray bitArray, Map<DecodeHintType, ?> map) throws NotFoundException, ChecksumException, FormatException {
         return decodeRow(i, bitArray, findStartGuardPattern(bitArray), map);
     }
@@ -75,17 +76,17 @@ public abstract class UPCEANReader extends OneDReader {
         String lookupCountryIdentifier;
         ResultPointCallback resultPointCallback = map == null ? null : (ResultPointCallback) map.get(DecodeHintType.NEED_RESULT_POINT_CALLBACK);
         if (resultPointCallback != null) {
-            resultPointCallback.foundPossibleResultPoint(new ResultPoint((iArr[0] + iArr[1]) / 2.0f, i));
+            resultPointCallback.foundPossibleResultPoint(new ResultPoint(((float) (iArr[0] + iArr[1])) / 2.0f, (float) i));
         }
         StringBuilder sb = this.decodeRowStringBuffer;
         sb.setLength(0);
         int decodeMiddle = decodeMiddle(bitArray, iArr, sb);
         if (resultPointCallback != null) {
-            resultPointCallback.foundPossibleResultPoint(new ResultPoint(decodeMiddle, i));
+            resultPointCallback.foundPossibleResultPoint(new ResultPoint((float) decodeMiddle, (float) i));
         }
         int[] decodeEnd = decodeEnd(bitArray, decodeMiddle);
         if (resultPointCallback != null) {
-            resultPointCallback.foundPossibleResultPoint(new ResultPoint((decodeEnd[0] + decodeEnd[1]) / 2.0f, i));
+            resultPointCallback.foundPossibleResultPoint(new ResultPoint(((float) (decodeEnd[0] + decodeEnd[1])) / 2.0f, (float) i));
         }
         int i2 = decodeEnd[1];
         int i3 = (i2 - decodeEnd[0]) + i2;
@@ -93,32 +94,31 @@ public abstract class UPCEANReader extends OneDReader {
             throw NotFoundException.getNotFoundInstance();
         }
         String sb2 = sb.toString();
-        if (!checkChecksum(sb2)) {
-            throw ChecksumException.getChecksumInstance();
+        if (checkChecksum(sb2)) {
+            BarcodeFormat barcodeFormat = getBarcodeFormat();
+            float f = (float) i;
+            Result result = new Result(sb2, (byte[]) null, new ResultPoint[]{new ResultPoint(((float) (iArr[1] + iArr[0])) / 2.0f, f), new ResultPoint(((float) (decodeEnd[1] + decodeEnd[0])) / 2.0f, f)}, barcodeFormat);
+            try {
+                Result decodeRow = this.extensionReader.decodeRow(i, bitArray, decodeEnd[1]);
+                result.putMetadata(ResultMetadataType.UPC_EAN_EXTENSION, decodeRow.getText());
+                result.putAllMetadata(decodeRow.getResultMetadata());
+                result.addResultPoints(decodeRow.getResultPoints());
+            } catch (ReaderException unused) {
+            }
+            if ((barcodeFormat == BarcodeFormat.EAN_13 || barcodeFormat == BarcodeFormat.UPC_A) && (lookupCountryIdentifier = this.eanManSupport.lookupCountryIdentifier(sb2)) != null) {
+                result.putMetadata(ResultMetadataType.POSSIBLE_COUNTRY, lookupCountryIdentifier);
+            }
+            return result;
         }
-        BarcodeFormat barcodeFormat = getBarcodeFormat();
-        float f = i;
-        Result result = new Result(sb2, null, new ResultPoint[]{new ResultPoint((iArr[1] + iArr[0]) / 2.0f, f), new ResultPoint((decodeEnd[1] + decodeEnd[0]) / 2.0f, f)}, barcodeFormat);
-        try {
-            Result decodeRow = this.extensionReader.decodeRow(i, bitArray, decodeEnd[1]);
-            result.putMetadata(ResultMetadataType.UPC_EAN_EXTENSION, decodeRow.getText());
-            result.putAllMetadata(decodeRow.getResultMetadata());
-            result.addResultPoints(decodeRow.getResultPoints());
-        } catch (ReaderException unused) {
-        }
-        if ((barcodeFormat == BarcodeFormat.EAN_13 || barcodeFormat == BarcodeFormat.UPC_A) && (lookupCountryIdentifier = this.eanManSupport.lookupCountryIdentifier(sb2)) != null) {
-            result.putMetadata(ResultMetadataType.POSSIBLE_COUNTRY, lookupCountryIdentifier);
-        }
-        return result;
+        throw ChecksumException.getChecksumInstance();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean checkChecksum(String str) throws ChecksumException, FormatException {
         return checkStandardUPCEANChecksum(str);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static boolean checkStandardUPCEANChecksum(CharSequence charSequence) throws FormatException {
+    static boolean checkStandardUPCEANChecksum(CharSequence charSequence) throws FormatException {
         int length = charSequence.length();
         if (length == 0) {
             return false;
@@ -139,15 +139,18 @@ public abstract class UPCEANReader extends OneDReader {
             }
             i3 += charAt2;
         }
-        return i3 % 10 == 0;
+        if (i3 % 10 == 0) {
+            return true;
+        }
+        return false;
     }
 
-    int[] decodeEnd(BitArray bitArray, int i) throws NotFoundException {
+    /* access modifiers changed from: package-private */
+    public int[] decodeEnd(BitArray bitArray, int i) throws NotFoundException {
         return findGuardPattern(bitArray, i, false, START_END_PATTERN);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static int[] findGuardPattern(BitArray bitArray, int i, boolean z, int[] iArr) throws NotFoundException {
+    static int[] findGuardPattern(BitArray bitArray, int i, boolean z, int[] iArr) throws NotFoundException {
         return findGuardPattern(bitArray, i, z, iArr, new int[iArr.length]);
     }
 
@@ -183,11 +186,10 @@ public abstract class UPCEANReader extends OneDReader {
         throw NotFoundException.getNotFoundInstance();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static int decodeDigit(BitArray bitArray, int[] iArr, int i, int[][] iArr2) throws NotFoundException {
+    static int decodeDigit(BitArray bitArray, int[] iArr, int i, int[][] iArr2) throws NotFoundException {
         OneDReader.recordPattern(bitArray, i, iArr);
         int length = iArr2.length;
-        int i2 = R$styleable.AppCompatTheme_windowFixedWidthMajor;
+        int i2 = 122;
         int i3 = -1;
         for (int i4 = 0; i4 < length; i4++) {
             int patternMatchVariance = OneDReader.patternMatchVariance(iArr, iArr2[i4], 179);

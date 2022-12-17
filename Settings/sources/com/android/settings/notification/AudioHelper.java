@@ -7,7 +7,7 @@ import android.os.UserHandle;
 import android.os.UserManager;
 import android.util.Log;
 import com.android.settings.Utils;
-/* loaded from: classes.dex */
+
 public class AudioHelper {
     private AudioManager mAudioManager;
     private Context mContext;

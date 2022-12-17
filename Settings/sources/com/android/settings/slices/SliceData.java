@@ -2,9 +2,11 @@ package com.android.settings.slices;
 
 import android.net.Uri;
 import android.text.TextUtils;
-/* loaded from: classes.dex */
+import android.util.Log;
+
 public class SliceData {
     private final String mFragmentClassName;
+    private final int mHighlightMenuRes;
     private final int mIconResource;
     private final boolean mIsPublicSlice;
     private final String mKey;
@@ -61,6 +63,10 @@ public class SliceData {
         return this.mUnavailableSliceSubtitle;
     }
 
+    public int getHighlightMenuRes() {
+        return this.mHighlightMenuRes;
+    }
+
     public boolean isPublicSlice() {
         return this.mIsPublicSlice;
     }
@@ -78,6 +84,7 @@ public class SliceData {
         this.mSliceType = builder.mSliceType;
         this.mUnavailableSliceSubtitle = builder.mUnavailableSliceSubtitle;
         this.mIsPublicSlice = builder.mIsPublicSlice;
+        this.mHighlightMenuRes = builder.mHighlightMenuRes;
     }
 
     public int hashCode() {
@@ -91,21 +98,36 @@ public class SliceData {
         return TextUtils.equals(this.mKey, ((SliceData) obj).mKey);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class Builder {
-        private String mFragmentClassName;
-        private int mIconResource;
-        private boolean mIsPublicSlice;
-        private String mKey;
-        private String mKeywords;
-        private String mPrefControllerClassName;
-        private CharSequence mScreenTitle;
-        private int mSliceType;
-        private String mSummary;
-        private String mTitle;
-        private String mUnavailableSliceSubtitle;
-        private Uri mUri;
+    static class Builder {
+        /* access modifiers changed from: private */
+        public String mFragmentClassName;
+        /* access modifiers changed from: private */
+        public int mHighlightMenuRes;
+        /* access modifiers changed from: private */
+        public int mIconResource;
+        /* access modifiers changed from: private */
+        public boolean mIsPublicSlice;
+        /* access modifiers changed from: private */
+        public String mKey;
+        /* access modifiers changed from: private */
+        public String mKeywords;
+        /* access modifiers changed from: private */
+        public String mPrefControllerClassName;
+        /* access modifiers changed from: private */
+        public CharSequence mScreenTitle;
+        /* access modifiers changed from: private */
+        public int mSliceType;
+        /* access modifiers changed from: private */
+        public String mSummary;
+        /* access modifiers changed from: private */
+        public String mTitle;
+        /* access modifiers changed from: private */
+        public String mUnavailableSliceSubtitle;
+        /* access modifiers changed from: private */
+        public Uri mUri;
+
+        Builder() {
+        }
 
         public Builder setKey(String str) {
             this.mKey = str;
@@ -162,6 +184,11 @@ public class SliceData {
             return this;
         }
 
+        public Builder setHighlightMenuRes(int i) {
+            this.mHighlightMenuRes = i;
+            return this;
+        }
+
         public Builder setIsPublicSlice(boolean z) {
             this.mIsPublicSlice = z;
             return this;
@@ -170,21 +197,21 @@ public class SliceData {
         public SliceData build() {
             if (TextUtils.isEmpty(this.mKey)) {
                 throw new InvalidSliceDataException("Key cannot be empty");
-            }
-            if (TextUtils.isEmpty(this.mTitle)) {
+            } else if (TextUtils.isEmpty(this.mTitle)) {
                 throw new InvalidSliceDataException("Title cannot be empty");
-            }
-            if (TextUtils.isEmpty(this.mFragmentClassName)) {
+            } else if (TextUtils.isEmpty(this.mFragmentClassName)) {
                 throw new InvalidSliceDataException("Fragment Name cannot be empty");
-            }
-            if (TextUtils.isEmpty(this.mPrefControllerClassName)) {
+            } else if (!TextUtils.isEmpty(this.mPrefControllerClassName)) {
+                if (this.mHighlightMenuRes == 0) {
+                    Log.w("SliceData", "Highlight menu key res is empty: " + this.mPrefControllerClassName);
+                }
+                return new SliceData(this);
+            } else {
                 throw new InvalidSliceDataException("Preference Controller cannot be empty");
             }
-            return new SliceData(this);
         }
     }
 
-    /* loaded from: classes.dex */
     public static class InvalidSliceDataException extends RuntimeException {
         public InvalidSliceDataException(String str) {
             super(str);

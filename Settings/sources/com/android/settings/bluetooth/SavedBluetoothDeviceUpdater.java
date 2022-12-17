@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.util.Log;
+import android.util.Pair;
 import androidx.preference.Preference;
 import com.android.settings.connecteddevice.DevicePreferenceCallback;
 import com.android.settings.connecteddevice.PreviouslyConnectedDeviceDashboardFragment;
@@ -13,14 +14,14 @@ import com.android.settingslib.bluetooth.CachedBluetoothDeviceManager;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class SavedBluetoothDeviceUpdater extends BluetoothDeviceUpdater implements Preference.OnPreferenceClickListener {
     private static final boolean DBG = Log.isLoggable("SavedBluetoothDeviceUpdater", 3);
     BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     private final boolean mDisplayConnected;
 
-    @Override // com.android.settings.bluetooth.BluetoothDeviceUpdater
-    protected String getPreferenceKey() {
+    /* access modifiers changed from: protected */
+    public String getPreferenceKey() {
         return "saved_bt";
     }
 
@@ -29,7 +30,6 @@ public class SavedBluetoothDeviceUpdater extends BluetoothDeviceUpdater implemen
         this.mDisplayConnected = dashboardFragment instanceof PreviouslyConnectedDeviceDashboardFragment;
     }
 
-    @Override // com.android.settings.bluetooth.BluetoothDeviceUpdater
     public void forceUpdate() {
         if (this.mBluetoothAdapter.isEnabled()) {
             CachedBluetoothDeviceManager cachedDeviceManager = this.mLocalManager.getCachedDeviceManager();
@@ -37,7 +37,7 @@ public class SavedBluetoothDeviceUpdater extends BluetoothDeviceUpdater implemen
             removePreferenceIfNecessary(mostRecentlyConnectedDevices, cachedDeviceManager);
             for (BluetoothDevice bluetoothDevice : mostRecentlyConnectedDevices) {
                 CachedBluetoothDevice findDevice = cachedDeviceManager.findDevice(bluetoothDevice);
-                if (findDevice != null) {
+                if (findDevice != null && !cachedDeviceManager.isSubDevice(bluetoothDevice)) {
                     update(findDevice);
                 }
             }
@@ -57,7 +57,6 @@ public class SavedBluetoothDeviceUpdater extends BluetoothDeviceUpdater implemen
         }
     }
 
-    @Override // com.android.settings.bluetooth.BluetoothDeviceUpdater
     public void update(CachedBluetoothDevice cachedBluetoothDevice) {
         if (isFilterMatched(cachedBluetoothDevice)) {
             addPreference(cachedBluetoothDevice, 3);
@@ -66,22 +65,21 @@ public class SavedBluetoothDeviceUpdater extends BluetoothDeviceUpdater implemen
         }
     }
 
-    @Override // com.android.settings.bluetooth.BluetoothDeviceUpdater
     public boolean isFilterMatched(CachedBluetoothDevice cachedBluetoothDevice) {
         BluetoothDevice device = cachedBluetoothDevice.getDevice();
         if (DBG) {
             Log.d("SavedBluetoothDeviceUpdater", "isFilterMatched() device name : " + cachedBluetoothDevice.getName() + ", is connected : " + device.isConnected() + ", is profile connected : " + cachedBluetoothDevice.isConnected() + ", is twsplusdevice : " + device.isTwsPlusDevice());
         }
-        return device.getBondState() == 12 && (this.mDisplayConnected || !device.isConnected()) && !device.isTwsPlusDevice() && !isGroupDevice(cachedBluetoothDevice) && !isPrivateAddr(cachedBluetoothDevice);
+        return device.getBondState() == 12 && (this.mDisplayConnected || (!device.isConnected() && isDeviceInCachedDevicesList(cachedBluetoothDevice))) && !device.isTwsPlusDevice() && !isGroupDevice(cachedBluetoothDevice) && !isPrivateAddr(cachedBluetoothDevice);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceClickListener
     public boolean onPreferenceClick(Preference preference) {
         this.mMetricsFeatureProvider.logClickedPreference(preference, this.mFragment.getMetricsCategory());
         CachedBluetoothDevice bluetoothDevice = ((BluetoothDevicePreference) preference).getBluetoothDevice();
         if (bluetoothDevice.isConnected()) {
             return bluetoothDevice.setActive();
         }
+        this.mMetricsFeatureProvider.action(this.mPrefContext, 867, (Pair<Integer, Object>[]) new Pair[0]);
         bluetoothDevice.connect();
         return true;
     }

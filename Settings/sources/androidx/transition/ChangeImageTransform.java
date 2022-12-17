@@ -14,26 +14,23 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import androidx.transition.TransitionUtils;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public class ChangeImageTransform extends Transition {
-    private static final String[] sTransitionProperties = {"android:changeImageTransform:matrix", "android:changeImageTransform:bounds"};
-    private static final TypeEvaluator<Matrix> NULL_MATRIX_EVALUATOR = new TypeEvaluator<Matrix>() { // from class: androidx.transition.ChangeImageTransform.1
-        @Override // android.animation.TypeEvaluator
-        public Matrix evaluate(float f, Matrix matrix, Matrix matrix2) {
-            return null;
-        }
-    };
-    private static final Property<ImageView, Matrix> ANIMATED_TRANSFORM_PROPERTY = new Property<ImageView, Matrix>(Matrix.class, "animatedTransform") { // from class: androidx.transition.ChangeImageTransform.2
-        @Override // android.util.Property
+    private static final Property<ImageView, Matrix> ANIMATED_TRANSFORM_PROPERTY = new Property<ImageView, Matrix>(Matrix.class, "animatedTransform") {
         public Matrix get(ImageView imageView) {
             return null;
         }
 
-        @Override // android.util.Property
         public void set(ImageView imageView, Matrix matrix) {
             ImageViewUtils.animateTransform(imageView, matrix);
         }
     };
+    private static final TypeEvaluator<Matrix> NULL_MATRIX_EVALUATOR = new TypeEvaluator<Matrix>() {
+        public Matrix evaluate(float f, Matrix matrix, Matrix matrix2) {
+            return null;
+        }
+    };
+    private static final String[] sTransitionProperties = {"android:changeImageTransform:matrix", "android:changeImageTransform:bounds"};
 
     public ChangeImageTransform() {
     }
@@ -44,39 +41,33 @@ public class ChangeImageTransform extends Transition {
 
     private void captureValues(TransitionValues transitionValues) {
         View view = transitionValues.view;
-        if (!(view instanceof ImageView) || view.getVisibility() != 0) {
-            return;
+        if ((view instanceof ImageView) && view.getVisibility() == 0) {
+            ImageView imageView = (ImageView) view;
+            if (imageView.getDrawable() != null) {
+                Map<String, Object> map = transitionValues.values;
+                map.put("android:changeImageTransform:bounds", new Rect(view.getLeft(), view.getTop(), view.getRight(), view.getBottom()));
+                map.put("android:changeImageTransform:matrix", copyImageMatrix(imageView));
+            }
         }
-        ImageView imageView = (ImageView) view;
-        if (imageView.getDrawable() == null) {
-            return;
-        }
-        Map<String, Object> map = transitionValues.values;
-        map.put("android:changeImageTransform:bounds", new Rect(view.getLeft(), view.getTop(), view.getRight(), view.getBottom()));
-        map.put("android:changeImageTransform:matrix", copyImageMatrix(imageView));
     }
 
-    @Override // androidx.transition.Transition
     public void captureStartValues(TransitionValues transitionValues) {
         captureValues(transitionValues);
     }
 
-    @Override // androidx.transition.Transition
     public void captureEndValues(TransitionValues transitionValues) {
         captureValues(transitionValues);
     }
 
-    @Override // androidx.transition.Transition
     public String[] getTransitionProperties() {
         return sTransitionProperties;
     }
 
-    @Override // androidx.transition.Transition
     public Animator createAnimator(ViewGroup viewGroup, TransitionValues transitionValues, TransitionValues transitionValues2) {
-        if (transitionValues != null && transitionValues2 != null) {
+        if (!(transitionValues == null || transitionValues2 == null)) {
             Rect rect = (Rect) transitionValues.values.get("android:changeImageTransform:bounds");
             Rect rect2 = (Rect) transitionValues2.values.get("android:changeImageTransform:bounds");
-            if (rect != null && rect2 != null) {
+            if (!(rect == null || rect2 == null)) {
                 Matrix matrix = (Matrix) transitionValues.values.get("android:changeImageTransform:matrix");
                 Matrix matrix2 = (Matrix) transitionValues2.values.get("android:changeImageTransform:matrix");
                 boolean z = (matrix == null && matrix2 == null) || (matrix != null && matrix.equals(matrix2));
@@ -107,69 +98,82 @@ public class ChangeImageTransform extends Transition {
         Property<ImageView, Matrix> property = ANIMATED_TRANSFORM_PROPERTY;
         TypeEvaluator<Matrix> typeEvaluator = NULL_MATRIX_EVALUATOR;
         Matrix matrix = MatrixUtils.IDENTITY_MATRIX;
-        return ObjectAnimator.ofObject(imageView, (Property<ImageView, V>) property, (TypeEvaluator) typeEvaluator, (Object[]) new Matrix[]{matrix, matrix});
+        return ObjectAnimator.ofObject(imageView, property, typeEvaluator, new Matrix[]{matrix, matrix});
     }
 
     private ObjectAnimator createMatrixAnimator(ImageView imageView, Matrix matrix, Matrix matrix2) {
-        return ObjectAnimator.ofObject(imageView, (Property<ImageView, V>) ANIMATED_TRANSFORM_PROPERTY, (TypeEvaluator) new TransitionUtils.MatrixEvaluator(), (Object[]) new Matrix[]{matrix, matrix2});
+        return ObjectAnimator.ofObject(imageView, ANIMATED_TRANSFORM_PROPERTY, new TransitionUtils.MatrixEvaluator(), new Matrix[]{matrix, matrix2});
     }
 
     private static Matrix copyImageMatrix(ImageView imageView) {
         Drawable drawable = imageView.getDrawable();
-        if (drawable.getIntrinsicWidth() > 0 && drawable.getIntrinsicHeight() > 0) {
-            int i = AnonymousClass3.$SwitchMap$android$widget$ImageView$ScaleType[imageView.getScaleType().ordinal()];
-            if (i == 1) {
-                return fitXYMatrix(imageView);
-            }
-            if (i == 2) {
-                return centerCropMatrix(imageView);
-            }
+        if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
             return new Matrix(imageView.getImageMatrix());
         }
-        return new Matrix(imageView.getImageMatrix());
+        int i = C03893.$SwitchMap$android$widget$ImageView$ScaleType[imageView.getScaleType().ordinal()];
+        if (i == 1) {
+            return fitXYMatrix(imageView);
+        }
+        if (i != 2) {
+            return new Matrix(imageView.getImageMatrix());
+        }
+        return centerCropMatrix(imageView);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: androidx.transition.ChangeImageTransform$3  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public static /* synthetic */ class AnonymousClass3 {
+    /* renamed from: androidx.transition.ChangeImageTransform$3 */
+    static /* synthetic */ class C03893 {
         static final /* synthetic */ int[] $SwitchMap$android$widget$ImageView$ScaleType;
 
+        /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|6) */
+        /* JADX WARNING: Code restructure failed: missing block: B:7:?, code lost:
+            return;
+         */
+        /* JADX WARNING: Failed to process nested try/catch */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0012 */
         static {
-            int[] iArr = new int[ImageView.ScaleType.values().length];
-            $SwitchMap$android$widget$ImageView$ScaleType = iArr;
-            try {
-                iArr[ImageView.ScaleType.FIT_XY.ordinal()] = 1;
-            } catch (NoSuchFieldError unused) {
-            }
-            try {
-                $SwitchMap$android$widget$ImageView$ScaleType[ImageView.ScaleType.CENTER_CROP.ordinal()] = 2;
-            } catch (NoSuchFieldError unused2) {
-            }
+            /*
+                android.widget.ImageView$ScaleType[] r0 = android.widget.ImageView.ScaleType.values()
+                int r0 = r0.length
+                int[] r0 = new int[r0]
+                $SwitchMap$android$widget$ImageView$ScaleType = r0
+                android.widget.ImageView$ScaleType r1 = android.widget.ImageView.ScaleType.FIT_XY     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
+                r2 = 1
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                int[] r0 = $SwitchMap$android$widget$ImageView$ScaleType     // Catch:{ NoSuchFieldError -> 0x001d }
+                android.widget.ImageView$ScaleType r1 = android.widget.ImageView.ScaleType.CENTER_CROP     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
+                r2 = 2
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: androidx.transition.ChangeImageTransform.C03893.<clinit>():void");
         }
     }
 
     private static Matrix fitXYMatrix(ImageView imageView) {
         Drawable drawable = imageView.getDrawable();
         Matrix matrix = new Matrix();
-        matrix.postScale(imageView.getWidth() / drawable.getIntrinsicWidth(), imageView.getHeight() / drawable.getIntrinsicHeight());
+        matrix.postScale(((float) imageView.getWidth()) / ((float) drawable.getIntrinsicWidth()), ((float) imageView.getHeight()) / ((float) drawable.getIntrinsicHeight()));
         return matrix;
     }
 
     private static Matrix centerCropMatrix(ImageView imageView) {
         Drawable drawable = imageView.getDrawable();
         int intrinsicWidth = drawable.getIntrinsicWidth();
-        float width = imageView.getWidth();
-        float f = intrinsicWidth;
+        float width = (float) imageView.getWidth();
+        float f = (float) intrinsicWidth;
         int intrinsicHeight = drawable.getIntrinsicHeight();
-        float height = imageView.getHeight();
-        float f2 = intrinsicHeight;
+        float height = (float) imageView.getHeight();
+        float f2 = (float) intrinsicHeight;
         float max = Math.max(width / f, height / f2);
         int round = Math.round((width - (f * max)) / 2.0f);
         int round2 = Math.round((height - (f2 * max)) / 2.0f);
         Matrix matrix = new Matrix();
         matrix.postScale(max, max);
-        matrix.postTranslate(round, round2);
+        matrix.postTranslate((float) round, (float) round2);
         return matrix;
     }
 }

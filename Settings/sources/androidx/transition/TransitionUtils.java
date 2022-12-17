@@ -8,34 +8,21 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Picture;
 import android.graphics.RectF;
-import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-/* loaded from: classes.dex */
+
 class TransitionUtils {
-    private static final boolean HAS_IS_ATTACHED_TO_WINDOW;
-    private static final boolean HAS_OVERLAY;
-    private static final boolean HAS_PICTURE_BITMAP;
+    private static final boolean HAS_IS_ATTACHED_TO_WINDOW = true;
+    private static final boolean HAS_OVERLAY = true;
+    private static final boolean HAS_PICTURE_BITMAP = true;
 
-    static {
-        int i = Build.VERSION.SDK_INT;
-        boolean z = true;
-        HAS_IS_ATTACHED_TO_WINDOW = i >= 19;
-        HAS_OVERLAY = i >= 18;
-        if (i < 28) {
-            z = false;
-        }
-        HAS_PICTURE_BITMAP = z;
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static View copyViewImage(ViewGroup viewGroup, View view, View view2) {
+    static View copyViewImage(ViewGroup viewGroup, View view, View view2) {
         Matrix matrix = new Matrix();
-        matrix.setTranslate(-view2.getScrollX(), -view2.getScrollY());
+        matrix.setTranslate((float) (-view2.getScrollX()), (float) (-view2.getScrollY()));
         ViewUtils.transformMatrixToGlobal(view, matrix);
         ViewUtils.transformMatrixToLocal(viewGroup, matrix);
-        RectF rectF = new RectF(0.0f, 0.0f, view.getWidth(), view.getHeight());
+        RectF rectF = new RectF(0.0f, 0.0f, (float) view.getWidth(), (float) view.getHeight());
         matrix.mapRect(rectF);
         int round = Math.round(rectF.left);
         int round2 = Math.round(rectF.top);
@@ -58,18 +45,18 @@ class TransitionUtils {
         int i;
         ViewGroup viewGroup2;
         if (HAS_IS_ATTACHED_TO_WINDOW) {
-            z = !view.isAttachedToWindow();
-            z2 = viewGroup == null ? false : viewGroup.isAttachedToWindow();
+            z2 = !view.isAttachedToWindow();
+            z = viewGroup == null ? false : viewGroup.isAttachedToWindow();
         } else {
-            z = false;
             z2 = false;
+            z = false;
         }
         boolean z3 = HAS_OVERLAY;
         Bitmap bitmap = null;
-        if (!z3 || !z) {
+        if (!z3 || !z2) {
             i = 0;
             viewGroup2 = null;
-        } else if (!z2) {
+        } else if (!z) {
             return null;
         } else {
             viewGroup2 = (ViewGroup) view.getParent();
@@ -79,9 +66,9 @@ class TransitionUtils {
         int round = Math.round(rectF.width());
         int round2 = Math.round(rectF.height());
         if (round > 0 && round2 > 0) {
-            float min = Math.min(1.0f, 1048576.0f / (round * round2));
-            int round3 = Math.round(round * min);
-            int round4 = Math.round(round2 * min);
+            float min = Math.min(1.0f, 1048576.0f / ((float) (round * round2)));
+            int round3 = Math.round(((float) round) * min);
+            int round4 = Math.round(((float) round2) * min);
             matrix.postTranslate(-rectF.left, -rectF.top);
             matrix.postScale(min, min);
             if (HAS_PICTURE_BITMAP) {
@@ -98,15 +85,14 @@ class TransitionUtils {
                 view.draw(canvas);
             }
         }
-        if (z3 && z) {
+        if (z3 && z2) {
             viewGroup.getOverlay().remove(view);
             viewGroup2.addView(view, i);
         }
         return bitmap;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static Animator mergeAnimators(Animator animator, Animator animator2) {
+    static Animator mergeAnimators(Animator animator, Animator animator2) {
         if (animator == null) {
             return animator2;
         }
@@ -114,25 +100,26 @@ class TransitionUtils {
             return animator;
         }
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(animator, animator2);
+        animatorSet.playTogether(new Animator[]{animator, animator2});
         return animatorSet;
     }
 
-    /* loaded from: classes.dex */
     static class MatrixEvaluator implements TypeEvaluator<Matrix> {
-        final float[] mTempStartValues = new float[9];
         final float[] mTempEndValues = new float[9];
         final Matrix mTempMatrix = new Matrix();
+        final float[] mTempStartValues = new float[9];
 
-        @Override // android.animation.TypeEvaluator
+        MatrixEvaluator() {
+        }
+
         public Matrix evaluate(float f, Matrix matrix, Matrix matrix2) {
             matrix.getValues(this.mTempStartValues);
             matrix2.getValues(this.mTempEndValues);
             for (int i = 0; i < 9; i++) {
                 float[] fArr = this.mTempEndValues;
                 float f2 = fArr[i];
-                float[] fArr2 = this.mTempStartValues;
-                fArr[i] = fArr2[i] + ((f2 - fArr2[i]) * f);
+                float f3 = this.mTempStartValues[i];
+                fArr[i] = f3 + ((f2 - f3) * f);
             }
             this.mTempMatrix.setValues(this.mTempEndValues);
             return this.mTempMatrix;

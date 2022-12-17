@@ -141,8 +141,8 @@
         <item quantity="other">%1$d 個應用程式 (共 %2$d 個) 可存取位置資訊</item>
     </plurals>
     <plurals name="location_settings_summary_location_on">
-        <item quantity="one">開 - %1$d 個應用程式可存取位置資訊</item>
-        <item quantity="other">開 - %1$d 個應用程式可存取位置資訊</item>
+        <item quantity="one">已開啟 - %1$d 個應用程式可存取位置資訊</item>
+        <item quantity="other">已開啟 - %1$d 個應用程式可存取位置資訊</item>
     </plurals>
     <plurals name="lockpassword_password_requires_letters">
         <item quantity="one">必須包含最少 1 個字母</item>
@@ -234,15 +234,15 @@
     </plurals>
     <plurals name="notifications_sent_daily">
         <item quantity="one">~每天 %d 個通知</item>
-        <item quantity="other">~每天 %d 個通知</item>
+        <item quantity="other">~每天 %,d 個通知</item>
     </plurals>
     <plurals name="notifications_sent_weekly">
         <item quantity="one">~每星期 %d 個通知</item>
-        <item quantity="other">~每星期 %d 個通知</item>
+        <item quantity="other">~每星期 %,d 個通知</item>
     </plurals>
     <plurals name="number_of_device_admins">
-        <item quantity="one">%d 個使用中的應用程式</item>
-        <item quantity="other">%d 個使用中的應用程式</item>
+        <item quantity="one">有 %d 個應用程式正在使用</item>
+        <item quantity="other">有 %d 個應用程式正在使用</item>
     </plurals>
     <plurals name="number_of_urls">
         <item quantity="one">%d 個網址</item>
@@ -320,14 +320,6 @@
         <item quantity="one">信任或移除憑證</item>
         <item quantity="other">信任或移除憑證</item>
     </plurals>
-    <plurals name="ssl_ca_cert_info_message">
-        <item quantity="one">%s 已為您的工作設定檔安裝憑證，這可能允許憑證核發當局監察電郵、應用程式和安全網站等工作網絡活動。\n\n如需進一步瞭解此憑證，請聯絡您的管理員。</item>
-        <item quantity="other">%s 已為您的工作設定檔安裝憑證，這可能允許憑證核發當局監察電郵、應用程式和安全網站等工作網絡活動。\n\n如需進一步瞭解此憑證，請聯絡您的管理員。</item>
-    </plurals>
-    <plurals name="ssl_ca_cert_info_message_device_owner">
-        <item quantity="one">%s 已在您的裝置上安裝憑證，這可能允許憑證核發當局監察您裝置的電郵、應用程式和安全網站等網絡活動。\n\n如需進一步瞭解此憑證，請聯絡您的管理員。</item>
-        <item quantity="other">%s 已在您的裝置上安裝憑證，這可能允許憑證核發當局監察您裝置的電郵、應用程式和安全網站等網絡活動。\n\n如需進一步瞭解這些憑證，請聯絡您的管理員。</item>
-    </plurals>
     <plurals name="ssl_ca_cert_settings_button">
         <item quantity="one">檢查憑證</item>
         <item quantity="other">檢查憑證</item>
@@ -359,10 +351,6 @@
     <plurals name="wifi_saved_passpoint_access_points_summary">
         <item quantity="one">1 個訂閱</item>
         <item quantity="other">%d 個訂閱</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d 部已連線的裝置</item>
-        <item quantity="other">%1$d 部已連線的裝置</item>
     </plurals>
     <plurals name="wrong_pin_code">
         <item quantity="one">SIM PIN 碼不正確，您還有 %d 次機會輸入。如果仍然輸入錯誤，您必須聯絡流動網絡供應商為您的裝置解鎖。</item>

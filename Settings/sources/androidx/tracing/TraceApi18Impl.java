@@ -1,11 +1,13 @@
 package androidx.tracing;
-/* loaded from: classes.dex */
+
+import android.os.Trace;
+
 final class TraceApi18Impl {
-    public static void beginSection(String label) {
-        android.os.Trace.beginSection(label);
+    public static void beginSection(String str) {
+        Trace.beginSection(str);
     }
 
     public static void endSection() {
-        android.os.Trace.endSection();
+        Trace.endSection();
     }
 }

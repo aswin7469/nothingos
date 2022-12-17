@@ -9,12 +9,10 @@ import android.text.TextUtils;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import com.android.internal.util.CollectionUtils;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.BasePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
 import java.util.concurrent.Executor;
-import java.util.function.Consumer;
-/* loaded from: classes.dex */
+
 public abstract class DefaultAppShortcutPreferenceControllerBase extends BasePreferenceController {
     private boolean mAppVisible;
     protected final String mPackageName;
@@ -23,42 +21,30 @@ public abstract class DefaultAppShortcutPreferenceControllerBase extends BasePre
     private final String mRoleName;
     private boolean mRoleVisible;
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -70,33 +56,22 @@ public abstract class DefaultAppShortcutPreferenceControllerBase extends BasePre
         RoleManager roleManager = (RoleManager) context.getSystemService(RoleManager.class);
         this.mRoleManager = roleManager;
         Executor mainExecutor = this.mContext.getMainExecutor();
-        roleManager.isRoleVisible(str2, mainExecutor, new Consumer() { // from class: com.android.settings.applications.appinfo.DefaultAppShortcutPreferenceControllerBase$$ExternalSyntheticLambda1
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                DefaultAppShortcutPreferenceControllerBase.this.lambda$new$0((Boolean) obj);
-            }
-        });
-        roleManager.isApplicationVisibleForRole(str2, str3, mainExecutor, new Consumer() { // from class: com.android.settings.applications.appinfo.DefaultAppShortcutPreferenceControllerBase$$ExternalSyntheticLambda0
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                DefaultAppShortcutPreferenceControllerBase.this.lambda$new$1((Boolean) obj);
-            }
-        });
+        roleManager.isRoleVisible(str2, mainExecutor, new C0678x5368185d(this));
+        roleManager.isApplicationVisibleForRole(str2, str3, mainExecutor, new C0679x5368185e(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$new$0(Boolean bool) {
         this.mRoleVisible = bool.booleanValue();
         refreshAvailability();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$new$1(Boolean bool) {
         this.mAppVisible = bool.booleanValue();
         refreshAvailability();
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreferenceScreen = preferenceScreen;
@@ -105,14 +80,12 @@ public abstract class DefaultAppShortcutPreferenceControllerBase extends BasePre
     private void refreshAvailability() {
         Preference findPreference;
         PreferenceScreen preferenceScreen = this.mPreferenceScreen;
-        if (preferenceScreen == null || (findPreference = preferenceScreen.findPreference(getPreferenceKey())) == null) {
-            return;
+        if (preferenceScreen != null && (findPreference = preferenceScreen.findPreference(getPreferenceKey())) != null) {
+            findPreference.setVisible(isAvailable());
+            updateState(findPreference);
         }
-        findPreference.setVisible(isAvailable());
-        updateState(findPreference);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         if (((UserManager) this.mContext.getSystemService(UserManager.class)).isManagedProfile()) {
             return 4;
@@ -120,13 +93,10 @@ public abstract class DefaultAppShortcutPreferenceControllerBase extends BasePre
         return (!this.mRoleVisible || !this.mAppVisible) ? 3 : 0;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    /* renamed from: getSummary */
-    public CharSequence mo485getSummary() {
-        return this.mContext.getText(isDefaultApp() ? R.string.yes : R.string.no);
+    public CharSequence getSummary() {
+        return this.mContext.getText(isDefaultApp() ? R$string.yes : R$string.f142no);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
         if (!TextUtils.equals(this.mPreferenceKey, preference.getKey())) {
             return false;

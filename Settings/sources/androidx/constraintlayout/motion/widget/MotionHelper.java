@@ -9,26 +9,22 @@ import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.constraintlayout.widget.ConstraintHelper;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.R$styleable;
-/* loaded from: classes.dex */
+
 public class MotionHelper extends ConstraintHelper implements MotionLayout.TransitionListener {
     private float mProgress;
-    protected View[] views;
-    private boolean mUseOnShow = false;
     private boolean mUseOnHide = false;
+    private boolean mUseOnShow = false;
+    protected View[] views;
 
-    @Override // androidx.constraintlayout.motion.widget.MotionLayout.TransitionListener
     public void onTransitionChange(MotionLayout motionLayout, int i, int i2, float f) {
     }
 
-    @Override // androidx.constraintlayout.motion.widget.MotionLayout.TransitionListener
     public void onTransitionCompleted(MotionLayout motionLayout, int i) {
     }
 
-    @Override // androidx.constraintlayout.motion.widget.MotionLayout.TransitionListener
     public void onTransitionStarted(MotionLayout motionLayout, int i, int i2) {
     }
 
-    @Override // androidx.constraintlayout.motion.widget.MotionLayout.TransitionListener
     public void onTransitionTrigger(MotionLayout motionLayout, int i, boolean z, float f) {
     }
 
@@ -49,8 +45,7 @@ public class MotionHelper extends ConstraintHelper implements MotionLayout.Trans
         init(attributeSet);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.constraintlayout.widget.ConstraintHelper
+    /* access modifiers changed from: protected */
     public void init(AttributeSet attributeSet) {
         super.init(attributeSet);
         if (attributeSet != null) {

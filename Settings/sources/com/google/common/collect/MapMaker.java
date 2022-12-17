@@ -5,34 +5,31 @@ import com.google.common.base.Equivalence;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.MapMakerInternalMap;
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-/* loaded from: classes2.dex */
+
 public final class MapMaker {
+    int concurrencyLevel = -1;
+    int initialCapacity = -1;
     Equivalence<Object> keyEquivalence;
     MapMakerInternalMap.Strength keyStrength;
     boolean useCustomMap;
     MapMakerInternalMap.Strength valueStrength;
-    int initialCapacity = -1;
-    int concurrencyLevel = -1;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @CanIgnoreReturnValue
+    /* access modifiers changed from: package-private */
     public MapMaker keyEquivalence(Equivalence<Object> equivalence) {
         Equivalence<Object> equivalence2 = this.keyEquivalence;
-        Preconditions.checkState(equivalence2 == null, "key equivalence was already set to %s", equivalence2);
+        Preconditions.checkState(equivalence2 == null, "key equivalence was already set to %s", (Object) equivalence2);
         this.keyEquivalence = (Equivalence) Preconditions.checkNotNull(equivalence);
         this.useCustomMap = true;
         return this;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public Equivalence<Object> getKeyEquivalence() {
         return (Equivalence) MoreObjects.firstNonNull(this.keyEquivalence, getKeyStrength().defaultEquivalence());
     }
 
-    @CanIgnoreReturnValue
     public MapMaker initialCapacity(int i) {
         int i2 = this.initialCapacity;
         boolean z = true;
@@ -45,7 +42,7 @@ public final class MapMaker {
         return this;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getInitialCapacity() {
         int i = this.initialCapacity;
         if (i == -1) {
@@ -54,7 +51,6 @@ public final class MapMaker {
         return i;
     }
 
-    @CanIgnoreReturnValue
     public MapMaker concurrencyLevel(int i) {
         int i2 = this.concurrencyLevel;
         boolean z = true;
@@ -67,7 +63,7 @@ public final class MapMaker {
         return this;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getConcurrencyLevel() {
         int i = this.concurrencyLevel;
         if (i == -1) {
@@ -76,15 +72,14 @@ public final class MapMaker {
         return i;
     }
 
-    @CanIgnoreReturnValue
     public MapMaker weakKeys() {
         return setKeyStrength(MapMakerInternalMap.Strength.WEAK);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public MapMaker setKeyStrength(MapMakerInternalMap.Strength strength) {
         MapMakerInternalMap.Strength strength2 = this.keyStrength;
-        Preconditions.checkState(strength2 == null, "Key strength was already set to %s", strength2);
+        Preconditions.checkState(strength2 == null, "Key strength was already set to %s", (Object) strength2);
         this.keyStrength = (MapMakerInternalMap.Strength) Preconditions.checkNotNull(strength);
         if (strength != MapMakerInternalMap.Strength.STRONG) {
             this.useCustomMap = true;
@@ -92,15 +87,15 @@ public final class MapMaker {
         return this;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public MapMakerInternalMap.Strength getKeyStrength() {
         return (MapMakerInternalMap.Strength) MoreObjects.firstNonNull(this.keyStrength, MapMakerInternalMap.Strength.STRONG);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public MapMaker setValueStrength(MapMakerInternalMap.Strength strength) {
         MapMakerInternalMap.Strength strength2 = this.valueStrength;
-        Preconditions.checkState(strength2 == null, "Value strength was already set to %s", strength2);
+        Preconditions.checkState(strength2 == null, "Value strength was already set to %s", (Object) strength2);
         this.valueStrength = (MapMakerInternalMap.Strength) Preconditions.checkNotNull(strength);
         if (strength != MapMakerInternalMap.Strength.STRONG) {
             this.useCustomMap = true;
@@ -108,7 +103,7 @@ public final class MapMaker {
         return this;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public MapMakerInternalMap.Strength getValueStrength() {
         return (MapMakerInternalMap.Strength) MoreObjects.firstNonNull(this.valueStrength, MapMakerInternalMap.Strength.STRONG);
     }
@@ -132,11 +127,11 @@ public final class MapMaker {
         }
         MapMakerInternalMap.Strength strength = this.keyStrength;
         if (strength != null) {
-            stringHelper.add("keyStrength", Ascii.toLowerCase(strength.toString()));
+            stringHelper.add("keyStrength", (Object) Ascii.toLowerCase(strength.toString()));
         }
         MapMakerInternalMap.Strength strength2 = this.valueStrength;
         if (strength2 != null) {
-            stringHelper.add("valueStrength", Ascii.toLowerCase(strength2.toString()));
+            stringHelper.add("valueStrength", (Object) Ascii.toLowerCase(strength2.toString()));
         }
         if (this.keyEquivalence != null) {
             stringHelper.addValue("keyEquivalence");

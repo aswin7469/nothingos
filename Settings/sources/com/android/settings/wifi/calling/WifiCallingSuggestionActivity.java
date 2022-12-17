@@ -4,7 +4,7 @@ import android.content.Context;
 import android.telephony.SubscriptionManager;
 import com.android.settings.SettingsActivity;
 import com.android.settings.network.ims.WifiCallingQueryImsState;
-/* loaded from: classes.dex */
+
 public class WifiCallingSuggestionActivity extends SettingsActivity {
     public static boolean isSuggestionComplete(Context context) {
         WifiCallingQueryImsState wifiCallingQueryImsState = new WifiCallingQueryImsState(context, SubscriptionManager.getDefaultVoiceSubscriptionId());

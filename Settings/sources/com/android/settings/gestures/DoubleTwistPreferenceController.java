@@ -10,53 +10,39 @@ import android.os.UserHandle;
 import android.os.UserManager;
 import android.provider.Settings;
 import android.text.TextUtils;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.Utils;
-import com.android.settings.slices.SliceBackgroundWorker;
-/* loaded from: classes.dex */
+
 public class DoubleTwistPreferenceController extends GesturePreferenceController {
     private static final String PREF_KEY_VIDEO = "gesture_double_twist_video";
-    private final String mDoubleTwistPrefKey;
-    private final UserManager mUserManager;
-    private final int ON = 1;
     private final int OFF = 0;
 
-    @Override // com.android.settings.gestures.GesturePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
+    /* renamed from: ON */
+    private final int f187ON = 1;
+    private final String mDoubleTwistPrefKey;
+    private final UserManager mUserManager;
 
-    @Override // com.android.settings.gestures.GesturePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.gestures.GesturePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.gestures.GesturePreferenceController
-    protected String getVideoPrefKey() {
+    /* access modifiers changed from: protected */
+    public String getVideoPrefKey() {
         return PREF_KEY_VIDEO;
     }
 
-    @Override // com.android.settings.gestures.GesturePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.gestures.GesturePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public boolean isPublicSlice() {
         return true;
     }
 
-    @Override // com.android.settings.gestures.GesturePreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -68,40 +54,39 @@ public class DoubleTwistPreferenceController extends GesturePreferenceController
     }
 
     public static boolean isSuggestionComplete(Context context, SharedPreferences sharedPreferences) {
-        return !isGestureAvailable(context) || sharedPreferences.getBoolean("pref_double_twist_suggestion_complete", false);
+        if (!isGestureAvailable(context) || sharedPreferences.getBoolean("pref_double_twist_suggestion_complete", false)) {
+            return true;
+        }
+        return false;
     }
 
     public static boolean isGestureAvailable(Context context) {
         Resources resources = context.getResources();
-        String string = resources.getString(R.string.gesture_double_twist_sensor_type);
-        String string2 = resources.getString(R.string.gesture_double_twist_sensor_vendor);
+        String string = resources.getString(R$string.gesture_double_twist_sensor_type);
+        String string2 = resources.getString(R$string.gesture_double_twist_sensor_vendor);
         if (TextUtils.isEmpty(string) || TextUtils.isEmpty(string2)) {
             return false;
         }
-        for (Sensor sensor : ((SensorManager) context.getSystemService("sensor")).getSensorList(-1)) {
-            if (string.equals(sensor.getStringType()) && string2.equals(sensor.getVendor())) {
+        for (Sensor next : ((SensorManager) context.getSystemService("sensor")).getSensorList(-1)) {
+            if (string.equals(next.getStringType()) && string2.equals(next.getVendor())) {
                 return true;
             }
         }
         return false;
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return isGestureAvailable(this.mContext) ? 0 : 3;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public boolean isSliceable() {
         return TextUtils.equals(getPreferenceKey(), "gesture_double_twist");
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return this.mDoubleTwistPrefKey;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean setChecked(boolean z) {
         setDoubleTwistPreference(this.mContext, this.mUserManager, z ? 1 : 0);
         return true;
@@ -115,7 +100,6 @@ public class DoubleTwistPreferenceController extends GesturePreferenceController
         }
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean isChecked() {
         return Settings.Secure.getInt(this.mContext.getContentResolver(), "camera_double_twist_to_flip_enabled", 1) != 0;
     }

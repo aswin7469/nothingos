@@ -14,26 +14,22 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import androidx.appcompat.app.AlertDialog;
 import com.android.internal.widget.LockPatternUtils;
-import com.android.settings.TrustedCredentialsDialogBuilder;
-import com.android.settings.TrustedCredentialsSettings;
+import com.android.settings.TrustedCredentialsFragment;
 import com.android.settingslib.RestrictedLockUtils;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.IntConsumer;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class TrustedCredentialsDialogBuilder extends AlertDialog.Builder {
+
+class TrustedCredentialsDialogBuilder extends AlertDialog.Builder {
     private final DialogEventHandler mDialogEventHandler;
 
-    /* loaded from: classes.dex */
     public interface DelegateInterface {
-        List<X509Certificate> getX509CertsFromCertHolder(TrustedCredentialsSettings.CertHolder certHolder);
+        List<X509Certificate> getX509CertsFromCertHolder(TrustedCredentialsFragment.CertHolder certHolder);
 
-        void removeOrInstallCert(TrustedCredentialsSettings.CertHolder certHolder);
+        void removeOrInstallCert(TrustedCredentialsFragment.CertHolder certHolder);
 
         boolean startConfirmCredentialIfNotConfirmed(int i, IntConsumer intConsumer);
     }
@@ -44,16 +40,21 @@ public class TrustedCredentialsDialogBuilder extends AlertDialog.Builder {
         initDefaultBuilderParams();
     }
 
-    public TrustedCredentialsDialogBuilder setCertHolder(TrustedCredentialsSettings.CertHolder certHolder) {
-        return setCertHolders(certHolder == null ? new TrustedCredentialsSettings.CertHolder[0] : new TrustedCredentialsSettings.CertHolder[]{certHolder});
+    public TrustedCredentialsDialogBuilder setCertHolder(TrustedCredentialsFragment.CertHolder certHolder) {
+        TrustedCredentialsFragment.CertHolder[] certHolderArr;
+        if (certHolder == null) {
+            certHolderArr = new TrustedCredentialsFragment.CertHolder[0];
+        } else {
+            certHolderArr = new TrustedCredentialsFragment.CertHolder[]{certHolder};
+        }
+        return setCertHolders(certHolderArr);
     }
 
-    public TrustedCredentialsDialogBuilder setCertHolders(TrustedCredentialsSettings.CertHolder[] certHolderArr) {
+    public TrustedCredentialsDialogBuilder setCertHolders(TrustedCredentialsFragment.CertHolder[] certHolderArr) {
         this.mDialogEventHandler.setCertHolders(certHolderArr);
         return this;
     }
 
-    @Override // androidx.appcompat.app.AlertDialog.Builder
     public AlertDialog create() {
         AlertDialog create = super.create();
         create.setOnShowListener(this.mDialogEventHandler);
@@ -62,27 +63,29 @@ public class TrustedCredentialsDialogBuilder extends AlertDialog.Builder {
     }
 
     private void initDefaultBuilderParams() {
-        setTitle(17041434);
-        setView(this.mDialogEventHandler.mRootContainer);
-        setPositiveButton(R.string.trusted_credentials_trust_label, (DialogInterface.OnClickListener) null);
+        setTitle(17041551);
+        setView((View) this.mDialogEventHandler.mRootContainer);
+        setPositiveButton(R$string.trusted_credentials_trust_label, (DialogInterface.OnClickListener) null);
         setNegativeButton(17039370, (DialogInterface.OnClickListener) null);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class DialogEventHandler implements DialogInterface.OnShowListener, View.OnClickListener {
-        private final Activity mActivity;
-        private final DelegateInterface mDelegate;
+    private static class DialogEventHandler implements DialogInterface.OnShowListener, View.OnClickListener {
+        /* access modifiers changed from: private */
+        public final Activity mActivity;
+        private TrustedCredentialsFragment.CertHolder[] mCertHolders = new TrustedCredentialsFragment.CertHolder[0];
+        private int mCurrentCertIndex = -1;
+        /* access modifiers changed from: private */
+        public View mCurrentCertLayout = null;
+        /* access modifiers changed from: private */
+        public final DelegateInterface mDelegate;
         private AlertDialog mDialog;
         private final DevicePolicyManager mDpm;
         private boolean mNeedsApproval;
         private Button mNegativeButton;
         private Button mPositiveButton;
-        private final LinearLayout mRootContainer;
+        /* access modifiers changed from: private */
+        public final LinearLayout mRootContainer;
         private final UserManager mUserManager;
-        private int mCurrentCertIndex = -1;
-        private TrustedCredentialsSettings.CertHolder[] mCertHolders = new TrustedCredentialsSettings.CertHolder[0];
-        private View mCurrentCertLayout = null;
 
         public DialogEventHandler(Activity activity, DelegateInterface delegateInterface) {
             this.mActivity = activity;
@@ -98,16 +101,14 @@ public class TrustedCredentialsDialogBuilder extends AlertDialog.Builder {
             this.mDialog = alertDialog;
         }
 
-        public void setCertHolders(TrustedCredentialsSettings.CertHolder[] certHolderArr) {
+        public void setCertHolders(TrustedCredentialsFragment.CertHolder[] certHolderArr) {
             this.mCertHolders = certHolderArr;
         }
 
-        @Override // android.content.DialogInterface.OnShowListener
         public void onShow(DialogInterface dialogInterface) {
             nextOrDismiss();
         }
 
-        @Override // android.view.View.OnClickListener
         public void onClick(View view) {
             if (view == this.mPositiveButton) {
                 if (this.mNeedsApproval) {
@@ -115,8 +116,7 @@ public class TrustedCredentialsDialogBuilder extends AlertDialog.Builder {
                 } else {
                     onClickOk();
                 }
-            } else if (view != this.mNegativeButton) {
-            } else {
+            } else if (view == this.mNegativeButton) {
                 onClickEnableOrDisable();
             }
         }
@@ -126,52 +126,45 @@ public class TrustedCredentialsDialogBuilder extends AlertDialog.Builder {
         }
 
         private void onClickTrust() {
-            TrustedCredentialsSettings.CertHolder currentCertInfo = getCurrentCertInfo();
-            if (!this.mDelegate.startConfirmCredentialIfNotConfirmed(currentCertInfo.getUserId(), new IntConsumer() { // from class: com.android.settings.TrustedCredentialsDialogBuilder$DialogEventHandler$$ExternalSyntheticLambda0
-                @Override // java.util.function.IntConsumer
-                public final void accept(int i) {
-                    TrustedCredentialsDialogBuilder.DialogEventHandler.this.onCredentialConfirmed(i);
-                }
-            })) {
+            TrustedCredentialsFragment.CertHolder currentCertInfo = getCurrentCertInfo();
+            if (!this.mDelegate.startConfirmCredentialIfNotConfirmed(currentCertInfo.getUserId(), new C0562xaae824fd(this))) {
                 this.mDpm.approveCaCert(currentCertInfo.getAlias(), currentCertInfo.getUserId(), true);
                 nextOrDismiss();
             }
         }
 
         private void onClickEnableOrDisable() {
-            final TrustedCredentialsSettings.CertHolder currentCertInfo = getCurrentCertInfo();
-            DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() { // from class: com.android.settings.TrustedCredentialsDialogBuilder.DialogEventHandler.1
-                @Override // android.content.DialogInterface.OnClickListener
+            final TrustedCredentialsFragment.CertHolder currentCertInfo = getCurrentCertInfo();
+            C05581 r1 = new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     DialogEventHandler.this.mDelegate.removeOrInstallCert(currentCertInfo);
                     DialogEventHandler.this.nextOrDismiss();
                 }
             };
             if (currentCertInfo.isSystemCert()) {
-                onClickListener.onClick(null, -1);
+                r1.onClick((DialogInterface) null, -1);
             } else {
-                new AlertDialog.Builder(this.mActivity).setMessage(R.string.trusted_credentials_remove_confirmation).setPositiveButton(17039379, onClickListener).setNegativeButton(17039369, (DialogInterface.OnClickListener) null).show();
+                new AlertDialog.Builder(this.mActivity).setMessage(R$string.trusted_credentials_remove_confirmation).setPositiveButton(17039379, (DialogInterface.OnClickListener) r1).setNegativeButton(17039369, (DialogInterface.OnClickListener) null).show();
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public void onCredentialConfirmed(int i) {
-            if (!this.mDialog.isShowing() || !this.mNeedsApproval || getCurrentCertInfo() == null || getCurrentCertInfo().getUserId() != i) {
-                return;
+            if (this.mDialog.isShowing() && this.mNeedsApproval && getCurrentCertInfo() != null && getCurrentCertInfo().getUserId() == i) {
+                onClickTrust();
             }
-            onClickTrust();
         }
 
-        private TrustedCredentialsSettings.CertHolder getCurrentCertInfo() {
+        private TrustedCredentialsFragment.CertHolder getCurrentCertInfo() {
             int i = this.mCurrentCertIndex;
-            TrustedCredentialsSettings.CertHolder[] certHolderArr = this.mCertHolders;
+            TrustedCredentialsFragment.CertHolder[] certHolderArr = this.mCertHolders;
             if (i < certHolderArr.length) {
                 return certHolderArr[i];
             }
             return null;
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public void nextOrDismiss() {
             this.mCurrentCertIndex++;
             while (this.mCurrentCertIndex < this.mCertHolders.length && getCurrentCertInfo() == null) {
@@ -192,24 +185,24 @@ public class TrustedCredentialsDialogBuilder extends AlertDialog.Builder {
                 return true;
             }
             UserInfo profileParent = this.mUserManager.getProfileParent(i);
-            if (profileParent != null) {
-                return lockPatternUtils.isSecure(profileParent.id);
+            if (profileParent == null) {
+                return false;
             }
-            return false;
+            return lockPatternUtils.isSecure(profileParent.id);
         }
 
         private void updatePositiveButton() {
-            TrustedCredentialsSettings.CertHolder currentCertInfo = getCurrentCertInfo();
+            TrustedCredentialsFragment.CertHolder currentCertInfo = getCurrentCertInfo();
             boolean z = true;
             this.mNeedsApproval = !currentCertInfo.isSystemCert() && isUserSecure(currentCertInfo.getUserId()) && !this.mDpm.isCaCertApproved(currentCertInfo.getAlias(), currentCertInfo.getUserId());
             if (RestrictedLockUtils.getProfileOrDeviceOwner(this.mActivity, UserHandle.of(currentCertInfo.getUserId())) == null) {
                 z = false;
             }
-            this.mPositiveButton = updateButton(-1, this.mActivity.getText((z || !this.mNeedsApproval) ? 17039370 : R.string.trusted_credentials_trust_label));
+            this.mPositiveButton = updateButton(-1, this.mActivity.getText((z || !this.mNeedsApproval) ? 17039370 : R$string.trusted_credentials_trust_label));
         }
 
         private void updateNegativeButton() {
-            TrustedCredentialsSettings.CertHolder currentCertInfo = getCurrentCertInfo();
+            TrustedCredentialsFragment.CertHolder currentCertInfo = getCurrentCertInfo();
             boolean z = !this.mUserManager.hasUserRestriction("no_config_credentials", new UserHandle(currentCertInfo.getUserId()));
             Button updateButton = updateButton(-2, this.mActivity.getText(getButtonLabel(currentCertInfo)));
             this.mNegativeButton = updateButton;
@@ -217,7 +210,7 @@ public class TrustedCredentialsDialogBuilder extends AlertDialog.Builder {
         }
 
         private Button updateButton(int i, CharSequence charSequence) {
-            this.mDialog.setButton(i, charSequence, null);
+            this.mDialog.setButton(i, charSequence, (DialogInterface.OnClickListener) null);
             Button button = this.mDialog.getButton(i);
             button.setText(charSequence);
             button.setOnClickListener(this);
@@ -234,27 +227,25 @@ public class TrustedCredentialsDialogBuilder extends AlertDialog.Builder {
             animateViewTransition(certLayout);
         }
 
-        private LinearLayout getCertLayout(TrustedCredentialsSettings.CertHolder certHolder) {
+        private LinearLayout getCertLayout(TrustedCredentialsFragment.CertHolder certHolder) {
             final ArrayList arrayList = new ArrayList();
             ArrayList arrayList2 = new ArrayList();
             List<X509Certificate> x509CertsFromCertHolder = this.mDelegate.getX509CertsFromCertHolder(certHolder);
             if (x509CertsFromCertHolder != null) {
-                for (X509Certificate x509Certificate : x509CertsFromCertHolder) {
-                    SslCertificate sslCertificate = new SslCertificate(x509Certificate);
-                    arrayList.add(sslCertificate.inflateCertificateView(this.mActivity));
-                    arrayList2.add(sslCertificate.getIssuedTo().getCName());
+                for (X509Certificate sslCertificate : x509CertsFromCertHolder) {
+                    SslCertificate sslCertificate2 = new SslCertificate(sslCertificate);
+                    arrayList.add(sslCertificate2.inflateCertificateView(this.mActivity));
+                    arrayList2.add(sslCertificate2.getIssuedTo().getCName());
                 }
             }
             ArrayAdapter arrayAdapter = new ArrayAdapter(this.mActivity, 17367048, arrayList2);
             arrayAdapter.setDropDownViewResource(17367049);
             Spinner spinner = new Spinner(this.mActivity);
-            spinner.setAdapter((SpinnerAdapter) arrayAdapter);
-            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() { // from class: com.android.settings.TrustedCredentialsDialogBuilder.DialogEventHandler.2
-                @Override // android.widget.AdapterView.OnItemSelectedListener
+            spinner.setAdapter(arrayAdapter);
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 public void onNothingSelected(AdapterView<?> adapterView) {
                 }
 
-                @Override // android.widget.AdapterView.OnItemSelectedListener
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long j) {
                     int i2 = 0;
                     while (i2 < arrayList.size()) {
@@ -276,19 +267,18 @@ public class TrustedCredentialsDialogBuilder extends AlertDialog.Builder {
             return linearLayout;
         }
 
-        private static int getButtonLabel(TrustedCredentialsSettings.CertHolder certHolder) {
-            if (certHolder.isSystemCert()) {
-                if (certHolder.isDeleted()) {
-                    return R.string.trusted_credentials_enable_label;
-                }
-                return R.string.trusted_credentials_disable_label;
+        private static int getButtonLabel(TrustedCredentialsFragment.CertHolder certHolder) {
+            if (!certHolder.isSystemCert()) {
+                return R$string.trusted_credentials_remove_label;
             }
-            return R.string.trusted_credentials_remove_label;
+            if (certHolder.isDeleted()) {
+                return R$string.trusted_credentials_enable_label;
+            }
+            return R$string.trusted_credentials_disable_label;
         }
 
         private void animateViewTransition(final View view) {
-            animateOldContent(new Runnable() { // from class: com.android.settings.TrustedCredentialsDialogBuilder.DialogEventHandler.3
-                @Override // java.lang.Runnable
+            animateOldContent(new Runnable() {
                 public void run() {
                     DialogEventHandler.this.addAndAnimateNewContent(view);
                 }
@@ -296,20 +286,19 @@ public class TrustedCredentialsDialogBuilder extends AlertDialog.Builder {
         }
 
         private void animateOldContent(Runnable runnable) {
-            this.mCurrentCertLayout.animate().alpha(0.0f).setDuration(300L).setInterpolator(AnimationUtils.loadInterpolator(this.mActivity, 17563663)).withEndAction(runnable).start();
+            this.mCurrentCertLayout.animate().alpha(0.0f).setDuration(300).setInterpolator(AnimationUtils.loadInterpolator(this.mActivity, 17563663)).withEndAction(runnable).start();
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public void addAndAnimateNewContent(View view) {
             this.mCurrentCertLayout = view;
             this.mRootContainer.removeAllViews();
             this.mRootContainer.addView(view);
-            this.mRootContainer.addOnLayoutChangeListener(new View.OnLayoutChangeListener() { // from class: com.android.settings.TrustedCredentialsDialogBuilder.DialogEventHandler.4
-                @Override // android.view.View.OnLayoutChangeListener
-                public void onLayoutChange(View view2, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
+            this.mRootContainer.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+                public void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
                     DialogEventHandler.this.mRootContainer.removeOnLayoutChangeListener(this);
-                    DialogEventHandler.this.mCurrentCertLayout.setTranslationX(DialogEventHandler.this.mRootContainer.getWidth());
-                    DialogEventHandler.this.mCurrentCertLayout.animate().translationX(0.0f).setInterpolator(AnimationUtils.loadInterpolator(DialogEventHandler.this.mActivity, 17563662)).setDuration(200L).start();
+                    DialogEventHandler.this.mCurrentCertLayout.setTranslationX((float) DialogEventHandler.this.mRootContainer.getWidth());
+                    DialogEventHandler.this.mCurrentCertLayout.animate().translationX(0.0f).setInterpolator(AnimationUtils.loadInterpolator(DialogEventHandler.this.mActivity, 17563662)).setDuration(200).start();
                 }
             });
         }

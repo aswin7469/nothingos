@@ -3,7 +3,7 @@ package androidx.constraintlayout.motion.widget;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
-/* loaded from: classes.dex */
+
 public class Debug {
     public static void logStack(String str, String str2, int i) {
         StackTraceElement[] stackTrace = new Throwable().getStackTrace();
@@ -35,7 +35,10 @@ public class Debug {
     }
 
     public static String getState(MotionLayout motionLayout, int i) {
-        return i == -1 ? "UNDEFINED" : motionLayout.getContext().getResources().getResourceEntryName(i);
+        if (i == -1) {
+            return "UNDEFINED";
+        }
+        return motionLayout.getContext().getResources().getResourceEntryName(i);
     }
 
     public static String getLocation() {

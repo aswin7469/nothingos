@@ -2,15 +2,18 @@ package com.android.settings.fuelgauge;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.SparseIntArray;
 import com.android.settingslib.fuelgauge.Estimate;
-import java.util.List;
 import java.util.Map;
-/* loaded from: classes.dex */
+import java.util.Set;
+
 public interface PowerUsageFeatureProvider {
     String getAdvancedUsageScreenInfoString();
 
     Map<Long, Map<String, BatteryHistEntry>> getBatteryHistory(Context context);
+
+    Uri getBatteryHistoryUri();
 
     boolean getEarlyWarningSignal(Context context, String str);
 
@@ -18,9 +21,15 @@ public interface PowerUsageFeatureProvider {
 
     SparseIntArray getEnhancedBatteryPredictionCurve(Context context, long j);
 
-    List<CharSequence> getHideBackgroundUsageTimeList(Context context);
+    CharSequence[] getHideApplicationEntries(Context context);
+
+    CharSequence[] getHideApplicationSummary(Context context);
+
+    Set<CharSequence> getHideBackgroundUsageTimeSet(Context context);
 
     Intent getResumeChargeIntent();
+
+    boolean isAdaptiveChargingSupported();
 
     boolean isChartGraphEnabled(Context context);
 

@@ -5,6 +5,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.hardware.face.FaceManager;
+import android.hardware.face.FaceSensorPropertiesInternal;
 import android.os.storage.StorageManager;
 import android.util.Log;
 import androidx.fragment.app.FragmentActivity;
@@ -19,21 +21,21 @@ import com.android.settings.biometrics.fingerprint.SetupFingerprintEnrollIntrodu
 import com.android.settings.password.ChooseLockGeneric;
 import com.android.settings.password.SetupChooseLockGeneric;
 import com.google.android.setupcompat.util.WizardManagerHelper;
-/* loaded from: classes.dex */
+
 public class BiometricUtils {
     public static byte[] requestGatekeeperHat(Context context, Intent intent, int i, long j) {
-        if (!containsGatekeeperPasswordHandle(intent)) {
-            throw new IllegalStateException("Gatekeeper Password is missing!!");
+        if (containsGatekeeperPasswordHandle(intent)) {
+            return requestGatekeeperHat(context, intent.getLongExtra("gk_pw_handle", 0), i, j);
         }
-        return requestGatekeeperHat(context, intent.getLongExtra("gk_pw_handle", 0L), i, j);
+        throw new IllegalStateException("Gatekeeper Password is missing!!");
     }
 
     public static byte[] requestGatekeeperHat(Context context, long j, int i, long j2) {
         VerifyCredentialResponse verifyGatekeeperPasswordHandle = new LockPatternUtils(context).verifyGatekeeperPasswordHandle(j, j2, i);
-        if (!verifyGatekeeperPasswordHandle.isMatched()) {
-            throw new IllegalStateException("Unable to request Gatekeeper HAT");
+        if (verifyGatekeeperPasswordHandle.isMatched()) {
+            return verifyGatekeeperPasswordHandle.getGatekeeperHAT();
         }
-        return verifyGatekeeperPasswordHandle.getGatekeeperHAT();
+        throw new IllegalStateException("Unable to request Gatekeeper HAT");
     }
 
     public static boolean containsGatekeeperPasswordHandle(Intent intent) {
@@ -41,7 +43,7 @@ public class BiometricUtils {
     }
 
     public static long getGatekeeperPasswordHandle(Intent intent) {
-        return intent.getLongExtra("gk_pw_handle", 0L);
+        return intent.getLongExtra("gk_pw_handle", 0);
     }
 
     public static void removeGatekeeperPasswordHandle(Context context, Intent intent) {
@@ -56,16 +58,16 @@ public class BiometricUtils {
     }
 
     public static Intent getChooseLockIntent(Context context, Intent intent) {
-        if (WizardManagerHelper.isAnySetupWizard(intent)) {
-            Intent intent2 = new Intent(context, SetupChooseLockGeneric.class);
-            if (StorageManager.isFileEncryptedNativeOrEmulated()) {
-                intent2.putExtra("lockscreen.password_type", 131072);
-                intent2.putExtra("show_options_button", true);
-            }
-            WizardManagerHelper.copyWizardManagerExtras(intent, intent2);
-            return intent2;
+        if (!WizardManagerHelper.isAnySetupWizard(intent)) {
+            return new Intent(context, ChooseLockGeneric.class);
         }
-        return new Intent(context, ChooseLockGeneric.class);
+        Intent intent2 = new Intent(context, SetupChooseLockGeneric.class);
+        if (StorageManager.isFileEncryptedNativeOrEmulated()) {
+            intent2.putExtra("lockscreen.password_type", 131072);
+            intent2.putExtra("show_options_button", true);
+        }
+        WizardManagerHelper.copyWizardManagerExtras(intent, intent2);
+        return intent2;
     }
 
     public static Intent getFingerprintFindSensorIntent(Context context, Intent intent) {
@@ -75,12 +77,12 @@ public class BiometricUtils {
     }
 
     public static Intent getFingerprintIntroIntent(Context context, Intent intent) {
-        if (WizardManagerHelper.isAnySetupWizard(intent)) {
-            Intent intent2 = new Intent(context, SetupFingerprintEnrollIntroduction.class);
-            WizardManagerHelper.copyWizardManagerExtras(intent, intent2);
-            return intent2;
+        if (!WizardManagerHelper.isAnySetupWizard(intent)) {
+            return new Intent(context, FingerprintEnrollIntroduction.class);
         }
-        return new Intent(context, FingerprintEnrollIntroduction.class);
+        Intent intent2 = new Intent(context, SetupFingerprintEnrollIntroduction.class);
+        WizardManagerHelper.copyWizardManagerExtras(intent, intent2);
+        return intent2;
     }
 
     public static Intent getFaceIntroIntent(Context context, Intent intent) {
@@ -114,7 +116,7 @@ public class BiometricUtils {
     }
 
     public static void copyMultiBiometricExtras(Intent intent, Intent intent2) {
-        PendingIntent pendingIntent = (PendingIntent) intent.getExtra("enroll_after_face", null);
+        PendingIntent pendingIntent = (PendingIntent) intent.getExtra("enroll_after_face", (Object) null);
         if (pendingIntent != null) {
             intent2.putExtra("enroll_after_face", pendingIntent);
         }
@@ -123,20 +125,25 @@ public class BiometricUtils {
     public static boolean tryStartingNextBiometricEnroll(Activity activity, int i, String str) {
         Log.d("BiometricUtils", "tryStartingNextBiometricEnroll, debugReason: " + str);
         PendingIntent pendingIntent = (PendingIntent) activity.getIntent().getExtra("enroll_after_face");
-        if (pendingIntent != null) {
-            try {
-                Log.d("BiometricUtils", "Starting pendingIntent: " + pendingIntent);
-                activity.startIntentSenderForResult(pendingIntent.getIntentSender(), i, null, 0, 0, 0);
+        if (pendingIntent == null) {
+            return false;
+        }
+        try {
+            Log.d("BiometricUtils", "Starting pendingIntent: " + pendingIntent);
+            activity.startIntentSenderForResult(pendingIntent.getIntentSender(), i, (Intent) null, 0, 0, 0);
+            return true;
+        } catch (IntentSender.SendIntentException e) {
+            Log.e("BiometricUtils", "Pending intent canceled: " + e);
+            return false;
+        }
+    }
+
+    public static boolean isConvenience(FaceManager faceManager) {
+        for (FaceSensorPropertiesInternal faceSensorPropertiesInternal : faceManager.getSensorPropertiesInternal()) {
+            if (faceSensorPropertiesInternal.sensorStrength == 0) {
                 return true;
-            } catch (IntentSender.SendIntentException e) {
-                Log.e("BiometricUtils", "Pending intent canceled: " + e);
-                return false;
             }
         }
         return false;
-    }
-
-    public static boolean isReverseLandscape(Context context) {
-        return context.getDisplay().getRotation() == 3;
     }
 }

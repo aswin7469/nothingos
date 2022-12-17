@@ -1,47 +1,47 @@
 package androidx.slice.widget;
-/* loaded from: classes.dex */
+
 public class EventInfo {
+    public int actionCount = -1;
+    public int actionIndex = -1;
+    public int actionPosition = 0;
     public int actionType;
     public int rowIndex;
     public int rowTemplateType;
     public int sliceMode;
-    public int actionPosition = -1;
-    public int actionIndex = -1;
-    public int actionCount = -1;
     public int state = -1;
 
-    public EventInfo(int sliceMode, int actionType, int rowTemplateType, int rowIndex) {
-        this.sliceMode = sliceMode;
-        this.actionType = actionType;
-        this.rowTemplateType = rowTemplateType;
-        this.rowIndex = rowIndex;
+    public EventInfo(int i, int i2, int i3, int i4) {
+        this.sliceMode = i;
+        this.actionType = i2;
+        this.rowTemplateType = i3;
+        this.rowIndex = i4;
     }
 
-    public void setPosition(int actionPosition, int actionIndex, int actionCount) {
-        this.actionPosition = actionPosition;
-        this.actionIndex = actionIndex;
-        this.actionCount = actionCount;
+    public void setPosition(int i, int i2, int i3) {
+        this.actionPosition = i;
+        this.actionIndex = i2;
+        this.actionCount = i3;
     }
 
     public String toString() {
         return "mode=" + SliceView.modeToString(this.sliceMode) + ", actionType=" + actionToString(this.actionType) + ", rowTemplateType=" + rowTypeToString(this.rowTemplateType) + ", rowIndex=" + this.rowIndex + ", actionPosition=" + positionToString(this.actionPosition) + ", actionIndex=" + this.actionIndex + ", actionCount=" + this.actionCount + ", state=" + this.state;
     }
 
-    private static String positionToString(int position) {
-        if (position != 0) {
-            if (position == 1) {
-                return "END";
-            }
-            if (position == 2) {
-                return "CELL";
-            }
-            return "unknown position: " + position;
+    private static String positionToString(int i) {
+        if (i == 0) {
+            return "START";
         }
-        return "START";
+        if (i == 1) {
+            return "END";
+        }
+        if (i == 2) {
+            return "CELL";
+        }
+        return "unknown position: " + i;
     }
 
-    private static String actionToString(int action) {
-        switch (action) {
+    private static String actionToString(int i) {
+        switch (i) {
             case 0:
                 return "TOGGLE";
             case 1:
@@ -59,12 +59,12 @@ public class EventInfo {
             case 7:
                 return "TIME_PICK";
             default:
-                return "unknown action: " + action;
+                return "unknown action: " + i;
         }
     }
 
-    private static String rowTypeToString(int type) {
-        switch (type) {
+    private static String rowTypeToString(int i) {
+        switch (i) {
             case -1:
                 return "SHORTCUT";
             case 0:
@@ -86,7 +86,7 @@ public class EventInfo {
             case 8:
                 return "TIME_PICK";
             default:
-                return "unknown row type: " + type;
+                return "unknown row type: " + i;
         }
     }
 }

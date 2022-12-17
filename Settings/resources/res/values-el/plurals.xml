@@ -5,12 +5,12 @@
         <item quantity="other">%d ημ. πριν</item>
     </plurals>
     <plurals name="abc_slice_duration_min">
-        <item quantity="one">%d λεπ. πριν</item>
-        <item quantity="other">%d λεπ. πριν</item>
+        <item quantity="one">%d λ. πριν</item>
+        <item quantity="other">%d λ. πριν</item>
     </plurals>
     <plurals name="abc_slice_duration_years">
-        <item quantity="one">%d χρ. πριν</item>
-        <item quantity="other">%d χρ. πριν</item>
+        <item quantity="one">%d έτος πριν</item>
+        <item quantity="other">%d έτη πριν</item>
     </plurals>
     <plurals name="accessibility_usage_summary">
         <item quantity="one">1 εφαρμογή έχει πλήρη πρόσβαση στη συσκευή σας</item>
@@ -234,11 +234,11 @@
     </plurals>
     <plurals name="notifications_sent_daily">
         <item quantity="one">~%d ειδοποίηση ανά ημέρα</item>
-        <item quantity="other">~%d ειδοποιήσεις ανά ημέρα</item>
+        <item quantity="other">~%,d ειδοποιήσεις ανά ημέρα</item>
     </plurals>
     <plurals name="notifications_sent_weekly">
         <item quantity="one">~%d ειδοποίηση ανά εβδομάδα</item>
-        <item quantity="other">~%d ειδοποιήσεις ανά εβδομάδα</item>
+        <item quantity="other">~%,d ειδοποιήσεις ανά εβδομάδα</item>
     </plurals>
     <plurals name="number_of_device_admins">
         <item quantity="one">%d ενεργή εφαρμογή</item>
@@ -320,14 +320,6 @@
         <item quantity="one">Κατάργηση ή ορισμός του πιστοποιητικού ως αξιόπιστου</item>
         <item quantity="other">Κατάργηση ή ορισμός των πιστοποιητικών ως αξιόπιστων</item>
     </plurals>
-    <plurals name="ssl_ca_cert_info_message">
-        <item quantity="one">Ο τομέας %s εγκατέστησε μια αρχή έκδοσης πιστοποιητικού για το προφίλ εργασίας σας, η οποία μπορεί να του επιτρέψει να παρακολουθεί τη δραστηριότητα του δικτύου εργασίας σας, συμπεριλαμβανομένων των μηνυμάτων ηλεκτρονικού ταχυδρομείου, των εφαρμογών και των ασφαλών ιστοτόπων.\n\nΓια περισσότερες πληροφορίες σχετικά με αυτό το πιστοποιητικό, επικοινωνήστε με τον διαχειριστή σας.</item>
-        <item quantity="other">Ο τομέας %s εγκατέστησε μια αρχή έκδοσης πιστοποιητικού για το προφίλ εργασίας σας, η οποία μπορεί να του επιτρέψει να παρακολουθεί τη δραστηριότητα του δικτύου εργασίας σας, συμπεριλαμβανομένων των μηνυμάτων ηλεκτρονικού ταχυδρομείου, των εφαρμογών και των ασφαλών ιστοτόπων.\n\nΓια περισσότερες πληροφορίες σχετικά με αυτό το πιστοποιητικό, επικοινωνήστε με τον διαχειριστή σας.</item>
-    </plurals>
-    <plurals name="ssl_ca_cert_info_message_device_owner">
-        <item quantity="one">Ο τομέας %s εγκατέστησε μια αρχή έκδοσης πιστοποιητικού στη συσκευή σας, η οποία μπορεί να του επιτρέπει να παρακολουθεί τη δραστηριότητα δικτύου της συσκευής σας, συμπεριλαμβανομένων των μηνυμάτων ηλεκτρονικού ταχυδρομείου, των εφαρμογών και των ασφαλών ιστοτόπων.\n\nΓια περισσότερες πληροφορίες σχετικά με αυτό το πιστοποιητικό, επικοινωνήστε με τον διαχειριστή σας.</item>
-        <item quantity="other">Ο τομέας %s εγκατέστησε μια αρχή έκδοσης πιστοποιητικού στη συσκευή σας, η οποία μπορεί να του επιτρέπει να παρακολουθεί τη δραστηριότητα δικτύου της συσκευής σας, συμπεριλαμβανομένων των μηνυμάτων ηλεκτρονικού ταχυδρομείου, των εφαρμογών και των ασφαλών ιστοτόπων.\n\nΓια περισσότερες πληροφορίες σχετικά με αυτό το πιστοποιητικό, επικοινωνήστε με τον διαχειριστή σας.</item>
-    </plurals>
     <plurals name="ssl_ca_cert_settings_button">
         <item quantity="one">Έλεγχος πιστοποιητικού</item>
         <item quantity="other">Έλεγχος πιστοποιητικών</item>
@@ -359,10 +351,6 @@
     <plurals name="wifi_saved_passpoint_access_points_summary">
         <item quantity="one">1 συνδρομή</item>
         <item quantity="other">%d συνδρομές</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d συσκευή συνδέθηκε</item>
-        <item quantity="other">%1$d συσκευές συνδέθηκαν</item>
     </plurals>
     <plurals name="wrong_pin_code">
         <item quantity="one">Λανθασμένος κωδικός PIN κάρτας SIM. Απομένει άλλη %d προσπάθεια. Στη συνέχεια, θα πρέπει να επικοινωνήσετε με τον πάροχο κινητής τηλεφωνίας σας για να ξεκλειδώσετε τη συσκευή σας.</item>

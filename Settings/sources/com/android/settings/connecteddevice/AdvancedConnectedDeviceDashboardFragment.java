@@ -2,8 +2,8 @@ package com.android.settings.connecteddevice;
 
 import android.content.Context;
 import android.provider.SearchIndexableResource;
-import com.android.settings.R;
-import com.android.settings.bluetooth.BluetoothFilesPreferenceController;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.dashboard.DashboardFragment;
 import com.android.settings.nfc.AndroidBeamPreferenceController;
 import com.android.settings.print.PrintSettingPreferenceController;
@@ -14,17 +14,15 @@ import com.android.settingslib.core.lifecycle.Lifecycle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class AdvancedConnectedDeviceDashboardFragment extends DashboardFragment {
-    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider() { // from class: com.android.settings.connecteddevice.AdvancedConnectedDeviceDashboardFragment.1
-        @Override // com.android.settings.search.BaseSearchIndexProvider, com.android.settingslib.search.Indexable$SearchIndexProvider
+    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider() {
         public List<SearchIndexableResource> getXmlResourcesToIndex(Context context, boolean z) {
             SearchIndexableResource searchIndexableResource = new SearchIndexableResource(context);
-            searchIndexableResource.xmlResId = R.xml.connected_devices_advanced;
-            return Arrays.asList(searchIndexableResource);
+            searchIndexableResource.xmlResId = R$xml.connected_devices_advanced;
+            return Arrays.asList(new SearchIndexableResource[]{searchIndexableResource});
         }
 
-        @Override // com.android.settings.search.BaseSearchIndexProvider, com.android.settingslib.search.Indexable$SearchIndexProvider
         public List<String> getNonIndexableKeys(Context context) {
             List<String> nonIndexableKeys = super.getNonIndexableKeys(context);
             if (!context.getPackageManager().hasSystemFeature("android.hardware.nfc")) {
@@ -33,53 +31,45 @@ public class AdvancedConnectedDeviceDashboardFragment extends DashboardFragment 
             return nonIndexableKeys;
         }
 
-        @Override // com.android.settings.search.BaseSearchIndexProvider
         public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
-            return AdvancedConnectedDeviceDashboardFragment.buildControllers(context, null);
+            return AdvancedConnectedDeviceDashboardFragment.buildControllers(context, (Lifecycle) null);
         }
     };
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "AdvancedConnectedDeviceFrag";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1264;
     }
 
-    @Override // com.android.settings.support.actionbar.HelpResourceProvider
     public int getHelpResource() {
-        return R.string.help_url_connected_devices;
+        return R$string.help_url_connected_devices;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.connected_devices_advanced;
+        return R$xml.connected_devices_advanced;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         UwbPreferenceController uwbPreferenceController = (UwbPreferenceController) use(UwbPreferenceController.class);
-        if (uwbPreferenceController == null || getSettingsLifecycle() == null) {
-            return;
+        if (uwbPreferenceController != null && getSettingsLifecycle() != null) {
+            getSettingsLifecycle().addObserver(uwbPreferenceController);
         }
-        getSettingsLifecycle().addObserver(uwbPreferenceController);
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment
-    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+    /* access modifiers changed from: protected */
+    public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
         return buildControllers(context, getSettingsLifecycle());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static List<AbstractPreferenceController> buildControllers(Context context, Lifecycle lifecycle) {
         ArrayList arrayList = new ArrayList();
-        arrayList.add(new BluetoothFilesPreferenceController(context));
         PrintSettingPreferenceController printSettingPreferenceController = new PrintSettingPreferenceController(context);
         if (lifecycle != null) {
             lifecycle.addObserver(printSettingPreferenceController);

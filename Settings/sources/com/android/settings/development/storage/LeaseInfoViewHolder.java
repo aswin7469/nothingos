@@ -5,8 +5,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+
 class LeaseInfoViewHolder {
     ImageView appIcon;
     TextView leaseDescription;
@@ -17,18 +18,17 @@ class LeaseInfoViewHolder {
     LeaseInfoViewHolder() {
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static LeaseInfoViewHolder createOrRecycle(LayoutInflater layoutInflater, View view) {
+    static LeaseInfoViewHolder createOrRecycle(LayoutInflater layoutInflater, View view) {
         if (view != null) {
             return (LeaseInfoViewHolder) view.getTag();
         }
-        View inflate = layoutInflater.inflate(R.layout.lease_list_item_view, (ViewGroup) null);
+        View inflate = layoutInflater.inflate(R$layout.lease_list_item_view, (ViewGroup) null);
         LeaseInfoViewHolder leaseInfoViewHolder = new LeaseInfoViewHolder();
         leaseInfoViewHolder.rootView = inflate;
-        leaseInfoViewHolder.appIcon = (ImageView) inflate.findViewById(R.id.app_icon);
-        leaseInfoViewHolder.leasePackageName = (TextView) inflate.findViewById(R.id.lease_package);
-        leaseInfoViewHolder.leaseDescription = (TextView) inflate.findViewById(R.id.lease_desc);
-        leaseInfoViewHolder.leaseExpiry = (TextView) inflate.findViewById(R.id.lease_expiry);
+        leaseInfoViewHolder.appIcon = (ImageView) inflate.findViewById(R$id.app_icon);
+        leaseInfoViewHolder.leasePackageName = (TextView) inflate.findViewById(R$id.lease_package);
+        leaseInfoViewHolder.leaseDescription = (TextView) inflate.findViewById(R$id.lease_desc);
+        leaseInfoViewHolder.leaseExpiry = (TextView) inflate.findViewById(R$id.lease_expiry);
         inflate.setTag(leaseInfoViewHolder);
         return leaseInfoViewHolder;
     }

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class ListContent extends SliceContent {
     private RowContent mHeaderContent;
     private SliceAction mPrimaryAction;
@@ -21,76 +21,72 @@ public class ListContent extends SliceContent {
 
     public ListContent(Slice slice) {
         super(slice);
-        if (this.mSliceItem == null) {
-            return;
+        if (this.mSliceItem != null) {
+            populate(slice);
         }
-        populate(slice);
     }
 
     private void populate(Slice slice) {
-        if (slice == null) {
-            return;
-        }
-        this.mSliceActions = SliceMetadata.getSliceActions(slice);
-        SliceItem findHeaderItem = findHeaderItem(slice);
-        if (findHeaderItem != null) {
-            RowContent rowContent = new RowContent(findHeaderItem, 0);
-            this.mHeaderContent = rowContent;
-            this.mRowItems.add(rowContent);
-        }
-        SliceItem seeMoreItem = getSeeMoreItem(slice);
-        if (seeMoreItem != null) {
-            this.mSeeMoreContent = new RowContent(seeMoreItem, -1);
-        }
-        List<SliceItem> items = slice.getItems();
-        for (int i = 0; i < items.size(); i++) {
-            SliceItem sliceItem = items.get(i);
-            String format = sliceItem.getFormat();
-            if (!sliceItem.hasAnyHints("actions", "see_more", "keywords", "ttl", "last_updated") && ("action".equals(format) || "slice".equals(format))) {
-                if (this.mHeaderContent == null && !sliceItem.hasHint("list_item")) {
-                    RowContent rowContent2 = new RowContent(sliceItem, 0);
-                    this.mHeaderContent = rowContent2;
-                    this.mRowItems.add(0, rowContent2);
-                } else if (sliceItem.hasHint("list_item")) {
-                    if (sliceItem.hasHint("horizontal")) {
-                        this.mRowItems.add(new GridContent(sliceItem, i));
-                    } else {
-                        this.mRowItems.add(new RowContent(sliceItem, i));
+        if (slice != null) {
+            this.mSliceActions = SliceMetadata.getSliceActions(slice);
+            SliceItem findHeaderItem = findHeaderItem(slice);
+            if (findHeaderItem != null) {
+                RowContent rowContent = new RowContent(findHeaderItem, 0);
+                this.mHeaderContent = rowContent;
+                this.mRowItems.add(rowContent);
+            }
+            SliceItem seeMoreItem = getSeeMoreItem(slice);
+            if (seeMoreItem != null) {
+                this.mSeeMoreContent = new RowContent(seeMoreItem, -1);
+            }
+            List<SliceItem> items = slice.getItems();
+            for (int i = 0; i < items.size(); i++) {
+                SliceItem sliceItem = items.get(i);
+                String format = sliceItem.getFormat();
+                if (!sliceItem.hasAnyHints("actions", "see_more", "keywords", "ttl", "last_updated") && ("action".equals(format) || "slice".equals(format))) {
+                    if (this.mHeaderContent == null && !sliceItem.hasHint("list_item")) {
+                        RowContent rowContent2 = new RowContent(sliceItem, 0);
+                        this.mHeaderContent = rowContent2;
+                        this.mRowItems.add(0, rowContent2);
+                    } else if (sliceItem.hasHint("list_item")) {
+                        if (sliceItem.hasHint("horizontal")) {
+                            this.mRowItems.add(new GridContent(sliceItem, i));
+                        } else {
+                            this.mRowItems.add(new RowContent(sliceItem, i));
+                        }
                     }
                 }
             }
-        }
-        if (this.mHeaderContent == null && this.mRowItems.size() >= 1) {
-            RowContent rowContent3 = (RowContent) this.mRowItems.get(0);
-            this.mHeaderContent = rowContent3;
-            rowContent3.setIsHeader(true);
-        }
-        if (this.mRowItems.size() > 0) {
-            ArrayList<SliceContent> arrayList = this.mRowItems;
-            if (arrayList.get(arrayList.size() - 1) instanceof GridContent) {
-                ArrayList<SliceContent> arrayList2 = this.mRowItems;
-                ((GridContent) arrayList2.get(arrayList2.size() - 1)).setIsLastIndex(true);
+            if (this.mHeaderContent == null && this.mRowItems.size() >= 1) {
+                RowContent rowContent3 = (RowContent) this.mRowItems.get(0);
+                this.mHeaderContent = rowContent3;
+                rowContent3.setIsHeader(true);
             }
+            if (this.mRowItems.size() > 0) {
+                ArrayList<SliceContent> arrayList = this.mRowItems;
+                if (arrayList.get(arrayList.size() - 1) instanceof GridContent) {
+                    ArrayList<SliceContent> arrayList2 = this.mRowItems;
+                    ((GridContent) arrayList2.get(arrayList2.size() - 1)).setIsLastIndex(true);
+                }
+            }
+            this.mPrimaryAction = findPrimaryAction();
         }
-        this.mPrimaryAction = findPrimaryAction();
     }
 
-    @Override // androidx.slice.widget.SliceContent
-    public int getHeight(SliceStyle style, SliceViewPolicy policy) {
-        return style.getListHeight(this, policy);
+    public int getHeight(SliceStyle sliceStyle, SliceViewPolicy sliceViewPolicy) {
+        return sliceStyle.getListHeight(this, sliceViewPolicy);
     }
 
-    public DisplayedListItems getRowItems(int availableHeight, SliceStyle style, SliceViewPolicy policy) {
-        if (policy.getMode() == 1) {
-            return new DisplayedListItems(new ArrayList(Arrays.asList(getHeader())), this.mRowItems.size() - 1);
+    public DisplayedListItems getRowItems(int i, SliceStyle sliceStyle, SliceViewPolicy sliceViewPolicy) {
+        if (sliceViewPolicy.getMode() == 1) {
+            return new DisplayedListItems(new ArrayList(Arrays.asList(new RowContent[]{getHeader()})), this.mRowItems.size() - 1);
+        } else if (sliceViewPolicy.isScrollable() || i <= 0) {
+            return new DisplayedListItems(sliceStyle.getListItemsToDisplay(this), 0);
+        } else {
+            return sliceStyle.getListItemsForNonScrollingList(this, i, sliceViewPolicy);
         }
-        if (!policy.isScrollable() && availableHeight > 0) {
-            return style.getListItemsForNonScrollingList(this, availableHeight, policy);
-        }
-        return new DisplayedListItems(style.getListItemsToDisplay(this), 0);
     }
 
-    @Override // androidx.slice.widget.SliceContent
     public boolean isValid() {
         return super.isValid() && this.mRowItems.size() > 0;
     }
@@ -115,32 +111,30 @@ public class ListContent extends SliceContent {
         return getRowType(this.mHeaderContent, true, this.mSliceActions);
     }
 
-    @Override // androidx.slice.widget.SliceContent
     public SliceAction getShortcut(Context context) {
         SliceAction sliceAction = this.mPrimaryAction;
         return sliceAction != null ? sliceAction : super.getShortcut(context);
     }
 
-    public void showTitleItems(boolean enabled) {
+    public void showTitleItems(boolean z) {
         RowContent rowContent = this.mHeaderContent;
         if (rowContent != null) {
-            rowContent.showTitleItems(enabled);
+            rowContent.showTitleItems(z);
         }
     }
 
-    public void showHeaderDivider(boolean enabled) {
-        if (this.mHeaderContent == null || this.mRowItems.size() <= 1) {
-            return;
+    public void showHeaderDivider(boolean z) {
+        if (this.mHeaderContent != null && this.mRowItems.size() > 1) {
+            this.mHeaderContent.showBottomDivider(z);
         }
-        this.mHeaderContent.showBottomDivider(enabled);
     }
 
-    public void showActionDividers(boolean enabled) {
+    public void showActionDividers(boolean z) {
         Iterator<SliceContent> it = this.mRowItems.iterator();
         while (it.hasNext()) {
             SliceContent next = it.next();
             if (next instanceof RowContent) {
-                ((RowContent) next).showActionDivider(enabled);
+                ((RowContent) next).showActionDivider(z);
             }
         }
     }
@@ -160,41 +154,44 @@ public class ListContent extends SliceContent {
         return null;
     }
 
-    public static int getRowType(SliceContent content, boolean isHeader, List<SliceAction> actions) {
-        if (content != null) {
-            if (content instanceof GridContent) {
-                return 1;
-            }
-            RowContent rowContent = (RowContent) content;
-            SliceItem primaryAction = rowContent.getPrimaryAction();
-            SliceActionImpl sliceActionImpl = null;
-            if (primaryAction != null) {
-                sliceActionImpl = new SliceActionImpl(primaryAction);
-            }
-            if (rowContent.getRange() != null) {
-                return "action".equals(rowContent.getRange().getFormat()) ? 4 : 5;
-            } else if (rowContent.getSelection() != null) {
-                return 6;
-            } else {
-                if (sliceActionImpl != null && sliceActionImpl.isToggle()) {
+    public static int getRowType(SliceContent sliceContent, boolean z, List<SliceAction> list) {
+        if (sliceContent == null) {
+            return 0;
+        }
+        if (sliceContent instanceof GridContent) {
+            return 1;
+        }
+        RowContent rowContent = (RowContent) sliceContent;
+        SliceItem primaryAction = rowContent.getPrimaryAction();
+        SliceActionImpl sliceActionImpl = null;
+        if (primaryAction != null) {
+            sliceActionImpl = new SliceActionImpl(primaryAction);
+        }
+        if (rowContent.getRange() != null) {
+            return "action".equals(rowContent.getRange().getFormat()) ? 4 : 5;
+        }
+        if (rowContent.getSelection() != null) {
+            return 6;
+        }
+        if (sliceActionImpl != null && sliceActionImpl.isToggle()) {
+            return 3;
+        }
+        if (z && list != null) {
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).isToggle()) {
                     return 3;
                 }
-                if (!isHeader || actions == null) {
-                    return rowContent.getToggleItems().size() > 0 ? 3 : 0;
-                }
-                for (int i = 0; i < actions.size(); i++) {
-                    if (actions.get(i).isToggle()) {
-                        return 3;
-                    }
-                }
-                return 0;
             }
+            return 0;
+        } else if (rowContent.getToggleItems().size() > 0) {
+            return 3;
+        } else {
+            return 0;
         }
-        return 0;
     }
 
-    public static int getListHeight(List<SliceContent> listItems, SliceStyle style, SliceViewPolicy policy) {
-        return style.getListItemsHeight(listItems, policy);
+    public static int getListHeight(List<SliceContent> list, SliceStyle sliceStyle, SliceViewPolicy sliceViewPolicy) {
+        return sliceStyle.getListItemsHeight(list, sliceViewPolicy);
     }
 
     private static SliceItem findHeaderItem(Slice slice) {
@@ -206,7 +203,7 @@ public class ListContent extends SliceContent {
     }
 
     private static SliceItem getSeeMoreItem(Slice slice) {
-        SliceItem findTopLevelItem = SliceQuery.findTopLevelItem(slice, null, null, new String[]{"see_more"}, null);
+        SliceItem findTopLevelItem = SliceQuery.findTopLevelItem(slice, (String) null, (String) null, new String[]{"see_more"}, (String[]) null);
         if (findTopLevelItem == null || !"slice".equals(findTopLevelItem.getFormat())) {
             return null;
         }
@@ -215,6 +212,9 @@ public class ListContent extends SliceContent {
     }
 
     private static boolean isValidHeader(SliceItem sliceItem) {
-        return "slice".equals(sliceItem.getFormat()) && !sliceItem.hasAnyHints("actions", "keywords", "see_more") && SliceQuery.find(sliceItem, "text", (String) null, (String) null) != null;
+        if (!"slice".equals(sliceItem.getFormat()) || sliceItem.hasAnyHints("actions", "keywords", "see_more") || SliceQuery.find(sliceItem, "text", (String) null, (String) null) == null) {
+            return false;
+        }
+        return true;
     }
 }

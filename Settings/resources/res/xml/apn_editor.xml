@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:title="@string/apn_edit">
+<PreferenceScreen xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:title="@string/apn_edit">
     <EditTextPreference android:persistent="false" android:singleLine="true" android:title="@string/apn_name" android:key="apn_name" android:dialogTitle="@string/apn_name" android:inputType="text"/>
     <EditTextPreference android:persistent="false" android:singleLine="true" android:title="@string/apn_apn" android:key="apn_apn" android:dialogTitle="@string/apn_apn" android:inputType="textEmailAddress"/>
     <EditTextPreference android:persistent="false" android:singleLine="true" android:title="@string/apn_http_proxy" android:key="apn_http_proxy" android:dialogTitle="@string/apn_http_proxy" android:inputType="textUri"/>
@@ -16,7 +16,7 @@
     <EditTextPreference android:persistent="false" android:singleLine="true" android:title="@string/apn_type" android:key="apn_type" android:dialogTitle="@string/apn_type" android:inputType="textNoSuggestions"/>
     <ListPreference android:persistent="false" android:entries="@array/apn_protocol_entries" android:title="@string/apn_protocol" android:key="apn_protocol" android:dialogTitle="@string/apn_protocol" android:entryValues="@array/apn_protocol_values"/>
     <ListPreference android:persistent="false" android:entries="@array/apn_protocol_entries" android:title="@string/apn_roaming_protocol" android:key="apn_roaming_protocol" android:dialogTitle="@string/apn_roaming_protocol" android:entryValues="@array/apn_protocol_values"/>
-    <SwitchPreference android:persistent="false" android:enabled="false" android:title="@string/carrier_enabled" android:key="carrier_enabled" android:summaryOn="@string/carrier_enabled_summaryOn" android:summaryOff="@string/carrier_enabled_summaryOff"/>
+    <com.nothing.p006ui.support.NtCustSwitchPreference android:persistent="false" android:enabled="false" android:title="@string/carrier_enabled" android:key="carrier_enabled" android:summaryOn="@string/carrier_enabled_summaryOn" android:summaryOff="@string/carrier_enabled_summaryOff"/>
     <MultiSelectListPreference android:persistent="false" android:entries="@array/bearer_entries" android:title="@string/bearer" android:key="bearer_multi" android:entryValues="@array/bearer_values" style="@style/SettingsMultiSelectListPreference"/>
     <ListPreference android:persistent="false" android:entries="@array/mvno_type_entries" android:title="@string/mvno_type" android:key="mvno_type" android:entryValues="@array/mvno_type_values"/>
     <EditTextPreference android:persistent="false" android:singleLine="true" android:title="@string/mvno_match_data" android:key="mvno_match_data" android:dialogTitle="@string/mvno_match_data" android:inputType="text"/>

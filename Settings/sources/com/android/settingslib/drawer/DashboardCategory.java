@@ -5,29 +5,21 @@ import android.os.Parcelable;
 import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class DashboardCategory implements Parcelable {
-    public static final Parcelable.Creator<DashboardCategory> CREATOR = new Parcelable.Creator<DashboardCategory>() { // from class: com.android.settingslib.drawer.DashboardCategory.1
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: createFromParcel */
-        public DashboardCategory mo595createFromParcel(Parcel parcel) {
+    public static final Parcelable.Creator<DashboardCategory> CREATOR = new Parcelable.Creator<DashboardCategory>() {
+        public DashboardCategory createFromParcel(Parcel parcel) {
             return new DashboardCategory(parcel);
         }
 
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: newArray */
-        public DashboardCategory[] mo596newArray(int i) {
+        public DashboardCategory[] newArray(int i) {
             return new DashboardCategory[i];
         }
     };
     public final String key;
     private List<Tile> mTiles = new ArrayList();
 
-    @Override // android.os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -47,8 +39,8 @@ public class DashboardCategory implements Parcelable {
     public synchronized List<Tile> getTiles() {
         ArrayList arrayList;
         arrayList = new ArrayList(this.mTiles.size());
-        for (Tile tile : this.mTiles) {
-            arrayList.add(tile);
+        for (Tile add : this.mTiles) {
+            arrayList.add(add);
         }
         return arrayList;
     }
@@ -73,18 +65,11 @@ public class DashboardCategory implements Parcelable {
         Collections.sort(this.mTiles, Tile.TILE_COMPARATOR);
     }
 
-    public synchronized void sortTiles(final String str) {
-        Collections.sort(this.mTiles, new Comparator() { // from class: com.android.settingslib.drawer.DashboardCategory$$ExternalSyntheticLambda0
-            @Override // java.util.Comparator
-            public final int compare(Object obj, Object obj2) {
-                int lambda$sortTiles$0;
-                lambda$sortTiles$0 = DashboardCategory.lambda$sortTiles$0(str, (Tile) obj, (Tile) obj2);
-                return lambda$sortTiles$0;
-            }
-        });
+    public synchronized void sortTiles(String str) {
+        Collections.sort(this.mTiles, new DashboardCategory$$ExternalSyntheticLambda0(str));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ int lambda$sortTiles$0(String str, Tile tile, Tile tile2) {
         int order = tile2.getOrder() - tile.getOrder();
         if (order != 0) {
@@ -104,7 +89,6 @@ public class DashboardCategory implements Parcelable {
         return compare;
     }
 
-    @Override // android.os.Parcelable
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(this.key);
         int size = this.mTiles.size();

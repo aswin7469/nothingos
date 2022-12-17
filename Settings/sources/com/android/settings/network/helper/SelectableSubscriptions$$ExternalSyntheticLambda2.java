@@ -1,16 +1,17 @@
 package com.android.settings.network.helper;
 
-import android.telephony.SubscriptionManager;
-import java.util.function.Function;
-/* loaded from: classes.dex */
-public final /* synthetic */ class SelectableSubscriptions$$ExternalSyntheticLambda2 implements Function {
-    public static final /* synthetic */ SelectableSubscriptions$$ExternalSyntheticLambda2 INSTANCE = new SelectableSubscriptions$$ExternalSyntheticLambda2();
+import java.util.concurrent.atomic.AtomicIntegerArray;
+import java.util.function.IntUnaryOperator;
 
-    private /* synthetic */ SelectableSubscriptions$$ExternalSyntheticLambda2() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class SelectableSubscriptions$$ExternalSyntheticLambda2 implements IntUnaryOperator {
+    public final /* synthetic */ AtomicIntegerArray f$0;
+
+    public /* synthetic */ SelectableSubscriptions$$ExternalSyntheticLambda2(AtomicIntegerArray atomicIntegerArray) {
+        this.f$0 = atomicIntegerArray;
     }
 
-    @Override // java.util.function.Function
-    public final Object apply(Object obj) {
-        return ((SubscriptionManager) obj).getAvailableSubscriptionInfoList();
+    public final int applyAsInt(int i) {
+        return this.f$0.get(i);
     }
 }

@@ -2,7 +2,7 @@ package com.google.common.primitives;
 
 import com.google.common.base.Preconditions;
 import java.util.Arrays;
-/* loaded from: classes2.dex */
+
 public final class Longs {
     public static int compare(long j, long j2) {
         int i = (j > j2 ? 1 : (j == j2 ? 0 : -1));
@@ -12,7 +12,6 @@ public final class Longs {
         return i > 0 ? 1 : 0;
     }
 
-    /* loaded from: classes2.dex */
     static final class AsciiDigits {
         private static final byte[] asciiDigits;
 
@@ -39,47 +38,49 @@ public final class Longs {
     }
 
     public static Long tryParse(String str, int i) {
+        String str2 = str;
+        int i2 = i;
         if (((String) Preconditions.checkNotNull(str)).isEmpty()) {
             return null;
         }
-        if (i < 2 || i > 36) {
-            throw new IllegalArgumentException("radix must be between MIN_RADIX and MAX_RADIX but was " + i);
+        if (i2 < 2 || i2 > 36) {
+            throw new IllegalArgumentException("radix must be between MIN_RADIX and MAX_RADIX but was " + i2);
         }
-        int i2 = 0;
-        if (str.charAt(0) == '-') {
-            i2 = 1;
+        int i3 = 0;
+        if (str2.charAt(0) == '-') {
+            i3 = 1;
         }
-        if (i2 == str.length()) {
+        if (i3 == str.length()) {
             return null;
         }
-        int i3 = i2 + 1;
-        int digit = AsciiDigits.digit(str.charAt(i2));
-        if (digit < 0 || digit >= i) {
+        int i4 = i3 + 1;
+        int digit = AsciiDigits.digit(str2.charAt(i3));
+        if (digit < 0 || digit >= i2) {
             return null;
         }
-        long j = -digit;
-        long j2 = i;
+        long j = (long) (-digit);
+        long j2 = (long) i2;
         long j3 = Long.MIN_VALUE / j2;
-        while (i3 < str.length()) {
-            int i4 = i3 + 1;
-            int digit2 = AsciiDigits.digit(str.charAt(i3));
-            if (digit2 < 0 || digit2 >= i || j < j3) {
+        while (i4 < str.length()) {
+            int i5 = i4 + 1;
+            int digit2 = AsciiDigits.digit(str2.charAt(i4));
+            if (digit2 < 0 || digit2 >= i2 || j < j3) {
                 return null;
             }
             long j4 = j * j2;
-            long j5 = digit2;
+            long j5 = (long) digit2;
             if (j4 < j5 - Long.MIN_VALUE) {
                 return null;
             }
             j = j4 - j5;
-            i3 = i4;
+            i4 = i5;
         }
-        if (i2 != 0) {
+        if (i3 != 0) {
             return Long.valueOf(j);
         }
-        if (j != Long.MIN_VALUE) {
-            return Long.valueOf(-j);
+        if (j == Long.MIN_VALUE) {
+            return null;
         }
-        return null;
+        return Long.valueOf(-j);
     }
 }

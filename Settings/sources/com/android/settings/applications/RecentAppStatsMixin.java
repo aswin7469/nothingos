@@ -14,6 +14,7 @@ import android.util.ArraySet;
 import android.util.Log;
 import com.android.settingslib.applications.AppUtils;
 import com.android.settingslib.applications.ApplicationsState;
+import com.android.settingslib.applications.RecentAppOpsAccess;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnStart;
 import com.android.settingslib.utils.ThreadUtils;
@@ -24,21 +25,20 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public class RecentAppStatsMixin implements Comparator<UsageStats>, LifecycleObserver, OnStart {
     private static final Set<String> SKIP_SYSTEM_PACKAGES;
+    private final List<RecentAppStatsListener> mAppStatsListeners;
     private final ApplicationsState mApplicationsState;
     private Calendar mCalendar;
     private final Context mContext;
     private final int mMaximumApps;
     private final PackageManager mPm;
     private final PowerManager mPowerManager;
+    final List<UsageStats> mRecentApps;
     private final UsageStatsManager mUsageStatsManager;
     private final int mUserId = UserHandle.myUserId();
-    final List<UsageStats> mRecentApps = new ArrayList();
-    private final List<RecentAppStatsListener> mAppStatsListeners = new ArrayList();
 
-    /* loaded from: classes.dex */
     public interface RecentAppStatsListener {
         void onReloadDataCompleted(List<UsageStats> list);
     }
@@ -46,7 +46,7 @@ public class RecentAppStatsMixin implements Comparator<UsageStats>, LifecycleObs
     static {
         ArraySet arraySet = new ArraySet();
         SKIP_SYSTEM_PACKAGES = arraySet;
-        arraySet.addAll(Arrays.asList("android", "com.android.phone", "com.android.settings", "com.android.systemui", "com.android.providers.calendar", "com.android.providers.media"));
+        arraySet.addAll(Arrays.asList(new String[]{RecentAppOpsAccess.ANDROID_SYSTEM_PACKAGE_NAME, "com.android.phone", "com.android.settings", "com.android.systemui", "com.android.providers.calendar", "com.android.providers.media"}));
     }
 
     public RecentAppStatsMixin(Context context, int i) {
@@ -56,58 +56,48 @@ public class RecentAppStatsMixin implements Comparator<UsageStats>, LifecycleObs
         this.mPowerManager = (PowerManager) context.getSystemService(PowerManager.class);
         this.mUsageStatsManager = (UsageStatsManager) context.getSystemService(UsageStatsManager.class);
         this.mApplicationsState = ApplicationsState.getInstance((Application) context.getApplicationContext());
+        this.mRecentApps = new ArrayList();
+        this.mAppStatsListeners = new ArrayList();
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStart
     public void onStart() {
-        ThreadUtils.postOnBackgroundThread(new Runnable() { // from class: com.android.settings.applications.RecentAppStatsMixin$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                RecentAppStatsMixin.this.lambda$onStart$1();
-            }
-        });
+        ThreadUtils.postOnBackgroundThread((Runnable) new RecentAppStatsMixin$$ExternalSyntheticLambda0(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onStart$1() {
         loadDisplayableRecentApps(this.mMaximumApps);
-        for (final RecentAppStatsListener recentAppStatsListener : this.mAppStatsListeners) {
-            ThreadUtils.postOnMainThread(new Runnable() { // from class: com.android.settings.applications.RecentAppStatsMixin$$ExternalSyntheticLambda1
-                @Override // java.lang.Runnable
-                public final void run() {
-                    RecentAppStatsMixin.this.lambda$onStart$0(recentAppStatsListener);
-                }
-            });
+        for (RecentAppStatsListener recentAppStatsMixin$$ExternalSyntheticLambda1 : this.mAppStatsListeners) {
+            ThreadUtils.postOnMainThread(new RecentAppStatsMixin$$ExternalSyntheticLambda1(this, recentAppStatsMixin$$ExternalSyntheticLambda1));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onStart$0(RecentAppStatsListener recentAppStatsListener) {
         recentAppStatsListener.onReloadDataCompleted(this.mRecentApps);
     }
 
-    @Override // java.util.Comparator
     public final int compare(UsageStats usageStats, UsageStats usageStats2) {
         return Long.compare(usageStats2.getLastTimeUsed(), usageStats.getLastTimeUsed());
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void loadDisplayableRecentApps(int i) {
-        List<UsageStats> queryUsageStats;
+        List list;
         this.mRecentApps.clear();
-        Calendar calendar = Calendar.getInstance();
-        this.mCalendar = calendar;
-        calendar.add(6, -1);
+        Calendar instance = Calendar.getInstance();
+        this.mCalendar = instance;
+        instance.add(6, -1);
         if (this.mPowerManager.isPowerSaveMode()) {
-            queryUsageStats = new ArrayList<>();
+            list = new ArrayList();
         } else {
-            queryUsageStats = this.mUsageStatsManager.queryUsageStats(4, this.mCalendar.getTimeInMillis(), System.currentTimeMillis());
+            list = this.mUsageStatsManager.queryUsageStats(4, this.mCalendar.getTimeInMillis(), System.currentTimeMillis());
         }
         ArrayMap arrayMap = new ArrayMap();
-        int size = queryUsageStats.size();
+        int size = list.size();
         int i2 = 0;
         for (int i3 = 0; i3 < size; i3++) {
-            UsageStats usageStats = queryUsageStats.get(i3);
+            UsageStats usageStats = (UsageStats) list.get(i3);
             if (shouldIncludePkgInRecents(usageStats)) {
                 String packageName = usageStats.getPackageName();
                 UsageStats usageStats2 = (UsageStats) arrayMap.get(packageName);
@@ -118,7 +108,7 @@ public class RecentAppStatsMixin implements Comparator<UsageStats>, LifecycleObs
                 }
             }
         }
-        ArrayList<UsageStats> arrayList = new ArrayList();
+        ArrayList<UsageStats> arrayList = new ArrayList<>();
         arrayList.addAll(arrayMap.values());
         Collections.sort(arrayList, this);
         for (UsageStats usageStats3 : arrayList) {

@@ -1,0 +1,48 @@
+package com.android.settings;
+
+public final class R$style {
+    public static final int AccessibilityDialogDescription = 2132017160;
+    public static final int AccessibilityDialogTitle = 2132017165;
+    public static final int FallbackHome_SetupWizard = 2132017499;
+    public static final int GlifTheme = 2132017501;
+    public static final int GlifTheme_DayNight = 2132017502;
+    public static final int GlifTheme_Light = 2132017503;
+    public static final int GlifV2Theme = 2132017504;
+    public static final int GlifV2Theme_DayNight = 2132017505;
+    public static final int GlifV2Theme_DayNight_Transparent = 2132017506;
+    public static final int GlifV2Theme_Light = 2132017507;
+    public static final int GlifV2Theme_Light_Transparent = 2132017508;
+    public static final int GlifV2Theme_Transparent = 2132017509;
+    public static final int GlifV3Theme = 2132017512;
+    public static final int GlifV3Theme_DayNight = 2132017513;
+    public static final int GlifV3Theme_DayNight_Transparent = 2132017515;
+    public static final int GlifV3Theme_Light = 2132017517;
+    public static final int GlifV3Theme_Light_Transparent = 2132017519;
+    public static final int GlifV3Theme_Transparent = 2132017521;
+    public static final int GlifV4Theme = 2132017522;
+    public static final int GlifV4Theme_DayNight = 2132017523;
+    public static final int GlifV4Theme_Light = 2132017524;
+    public static final int RingProgressBarStyle = 2132017618;
+    public static final int SettingsPreferenceTheme_SetupWizard = 2132017661;
+    public static final int SetupWizardPartnerResource = 2132017670;
+    public static final int SetupWizardTheme_DayNight_Transparent = 2132017672;
+    public static final int SetupWizardTheme_Light_Transparent = 2132017673;
+    public static final int SetupWizardTheme_Transparent = 2132017674;
+    public static final int SudGlifButton_NtPrimary = 2132017788;
+    public static final int SudGlifButton_Primary = 2132017790;
+    public static final int SudGlifButton_PrimaryButton = 2132017791;
+    public static final int SudGlifButton_Secondary = 2132017792;
+    public static final int SudGlifButton_SecondaryButton = 2132017793;
+    public static final int SuwAlertDialogThemeCompat_DayNight = 2132017864;
+    public static final int SuwAlertDialogThemeCompat_Light = 2132017865;
+    public static final int SyncSwitchPreference = 2132017868;
+    public static final int TelephonyToggleAlertDialog = 2132017869;
+    public static final int TextAppearance_Small_SwitchBar = 2132018042;
+    public static final int Theme_AlertDialog = 2132018076;
+    public static final int Theme_ConfirmDeviceCredentialsDark = 2132018105;
+    public static final int Theme_SettingsBase = 2132018200;
+    public static final int Theme_SetupWizardOverlay = 2132018202;
+    public static final int Theme_SubSettings = 2132018203;
+    public static final int vpn_app_management_version_summary = 2132018707;
+    public static final int vpn_app_management_version_title = 2132018708;
+}

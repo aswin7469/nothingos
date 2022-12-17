@@ -6,18 +6,19 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.UserHandle;
+import android.util.AttributeSet;
 import androidx.preference.Preference;
 import com.android.internal.net.VpnConfig;
 import com.android.settingslib.RestrictedLockUtils;
-/* loaded from: classes.dex */
+
 public class AppPreference extends ManageablePreference {
     public static final int STATE_DISCONNECTED = ManageablePreference.STATE_NONE;
     private final String mName;
     private final String mPackageName;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public AppPreference(Context context, int i, String str) {
-        super(context, null);
+        super(context, (AttributeSet) null);
         Drawable drawable = null;
         super.setUserId(i);
         this.mPackageName = str;
@@ -39,7 +40,7 @@ public class AppPreference extends ManageablePreference {
         } catch (PackageManager.NameNotFoundException unused2) {
         }
         this.mName = str;
-        setTitle(str);
+        setTitle((CharSequence) str);
         setIcon(drawable);
     }
 
@@ -69,8 +70,6 @@ public class AppPreference extends ManageablePreference {
         return getContext().createPackageContextAsUser(getContext().getPackageName(), 0, UserHandle.of(this.mUserId));
     }
 
-    /* JADX WARN: Can't rename method to resolve collision */
-    @Override // androidx.preference.Preference, java.lang.Comparable
     public int compareTo(Preference preference) {
         if (preference instanceof AppPreference) {
             AppPreference appPreference = (AppPreference) preference;

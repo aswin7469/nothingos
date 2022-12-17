@@ -6,7 +6,7 @@ import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
 import java.util.ArrayDeque;
 import java.util.Iterator;
-/* loaded from: classes.dex */
+
 public final class OnBackPressedDispatcher {
     private final Runnable mFallbackOnBackPressed;
     final ArrayDeque<OnBackPressedCallback> mOnBackPressedCallbacks = new ArrayDeque<>();
@@ -15,7 +15,8 @@ public final class OnBackPressedDispatcher {
         this.mFallbackOnBackPressed = runnable;
     }
 
-    Cancellable addCancellableCallback(OnBackPressedCallback onBackPressedCallback) {
+    /* access modifiers changed from: package-private */
+    public Cancellable addCancellableCallback(OnBackPressedCallback onBackPressedCallback) {
         this.mOnBackPressedCallbacks.add(onBackPressedCallback);
         OnBackPressedCancellable onBackPressedCancellable = new OnBackPressedCancellable(onBackPressedCallback);
         onBackPressedCallback.addCancellable(onBackPressedCancellable);
@@ -24,11 +25,10 @@ public final class OnBackPressedDispatcher {
 
     @SuppressLint({"LambdaLast"})
     public void addCallback(LifecycleOwner lifecycleOwner, OnBackPressedCallback onBackPressedCallback) {
-        Lifecycle mo959getLifecycle = lifecycleOwner.mo959getLifecycle();
-        if (mo959getLifecycle.getCurrentState() == Lifecycle.State.DESTROYED) {
-            return;
+        Lifecycle lifecycle = lifecycleOwner.getLifecycle();
+        if (lifecycle.getCurrentState() != Lifecycle.State.DESTROYED) {
+            onBackPressedCallback.addCancellable(new LifecycleOnBackPressedCancellable(lifecycle, onBackPressedCallback));
         }
-        onBackPressedCallback.addCancellable(new LifecycleOnBackPressedCancellable(mo959getLifecycle, onBackPressedCallback));
     }
 
     public void onBackPressed() {
@@ -46,25 +46,20 @@ public final class OnBackPressedDispatcher {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class OnBackPressedCancellable implements Cancellable {
+    private class OnBackPressedCancellable implements Cancellable {
         private final OnBackPressedCallback mOnBackPressedCallback;
 
         OnBackPressedCancellable(OnBackPressedCallback onBackPressedCallback) {
             this.mOnBackPressedCallback = onBackPressedCallback;
         }
 
-        @Override // androidx.activity.Cancellable
         public void cancel() {
             OnBackPressedDispatcher.this.mOnBackPressedCallbacks.remove(this.mOnBackPressedCallback);
             this.mOnBackPressedCallback.removeCancellable(this);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class LifecycleOnBackPressedCancellable implements LifecycleEventObserver, Cancellable {
+    private class LifecycleOnBackPressedCancellable implements LifecycleEventObserver, Cancellable {
         private Cancellable mCurrentCancellable;
         private final Lifecycle mLifecycle;
         private final OnBackPressedCallback mOnBackPressedCallback;
@@ -75,23 +70,19 @@ public final class OnBackPressedDispatcher {
             lifecycle.addObserver(this);
         }
 
-        @Override // androidx.lifecycle.LifecycleEventObserver
         public void onStateChanged(LifecycleOwner lifecycleOwner, Lifecycle.Event event) {
             if (event == Lifecycle.Event.ON_START) {
                 this.mCurrentCancellable = OnBackPressedDispatcher.this.addCancellableCallback(this.mOnBackPressedCallback);
             } else if (event == Lifecycle.Event.ON_STOP) {
                 Cancellable cancellable = this.mCurrentCancellable;
-                if (cancellable == null) {
-                    return;
+                if (cancellable != null) {
+                    cancellable.cancel();
                 }
-                cancellable.cancel();
-            } else if (event != Lifecycle.Event.ON_DESTROY) {
-            } else {
+            } else if (event == Lifecycle.Event.ON_DESTROY) {
                 cancel();
             }
         }
 
-        @Override // androidx.activity.Cancellable
         public void cancel() {
             this.mLifecycle.removeObserver(this);
             this.mOnBackPressedCallback.removeCancellable(this);

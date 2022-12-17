@@ -15,10 +15,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.xmlpull.v1.XmlPullParserException;
-/* loaded from: classes.dex */
+
 public class PreferenceXmlParserUtils {
     static final String PREF_SCREEN_TAG = "PreferenceScreen";
-    private static final List<String> SUPPORTED_PREF_TYPES = Arrays.asList("Preference", "PreferenceCategory", PREF_SCREEN_TAG, "com.android.settings.widget.WorkOnlyCategory");
+    private static final List<String> SUPPORTED_PREF_TYPES = Arrays.asList(new String[]{"Preference", "PreferenceCategory", PREF_SCREEN_TAG, "com.android.settings.widget.WorkOnlyCategory"});
 
     private static boolean hasFlag(int i, int i2) {
         return (i & i2) != 0;
@@ -89,13 +89,16 @@ public class PreferenceXmlParserUtils {
                     if (hasFlag(i2, 4096)) {
                         bundle.putBoolean("for_work", isForWork(obtainStyledAttributes));
                     }
+                    if (hasFlag(i2, 8192)) {
+                        bundle.putString("highlightable_menu_key", getHighlightableMenuKey(obtainStyledAttributes));
+                    }
                     arrayList.add(bundle);
                     obtainStyledAttributes.recycle();
                 }
             }
             next = xml.next();
             if (next == 1 || (next == 3 && xml.getDepth() <= depth)) {
-                break;
+                xml.close();
             }
         }
         xml.close();
@@ -124,6 +127,10 @@ public class PreferenceXmlParserUtils {
 
     private static String getController(TypedArray typedArray) {
         return typedArray.getString(R$styleable.Preference_controller);
+    }
+
+    private static String getHighlightableMenuKey(TypedArray typedArray) {
+        return typedArray.getString(R$styleable.Preference_highlightableMenuKey);
     }
 
     private static int getIcon(TypedArray typedArray) {

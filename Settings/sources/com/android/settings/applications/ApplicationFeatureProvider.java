@@ -3,15 +3,13 @@ package com.android.settings.applications;
 import android.content.Intent;
 import java.util.List;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public interface ApplicationFeatureProvider {
 
-    /* loaded from: classes.dex */
     public interface ListOfAppsCallback {
         void onListOfAppsResult(List<UserAppInfo> list);
     }
 
-    /* loaded from: classes.dex */
     public interface NumberOfAppsCallback {
         void onNumberOfAppsResult(int i);
     }
@@ -24,7 +22,7 @@ public interface ApplicationFeatureProvider {
 
     Set<String> getKeepEnabledPackages();
 
-    default CharSequence getTimeSpentInApp(String str) {
+    CharSequence getTimeSpentInApp(String str) {
         return null;
     }
 

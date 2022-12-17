@@ -2,80 +2,111 @@ package com.google.android.material.appbar;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.content.res.TypedArray;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.ViewCompat;
 import com.google.android.material.R$attr;
 import com.google.android.material.R$style;
-import com.google.android.material.R$styleable;
-import com.google.android.material.internal.ThemeEnforcement;
 import com.google.android.material.internal.ToolbarUtils;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.MaterialShapeUtils;
-import com.google.android.material.theme.overlay.MaterialThemeOverlay;
-/* loaded from: classes.dex */
+
 public class MaterialToolbar extends Toolbar {
     private static final int DEF_STYLE_RES = R$style.Widget_MaterialComponents_Toolbar;
+    private static final ImageView.ScaleType[] LOGO_SCALE_TYPE_ARRAY = {ImageView.ScaleType.MATRIX, ImageView.ScaleType.FIT_XY, ImageView.ScaleType.FIT_START, ImageView.ScaleType.FIT_CENTER, ImageView.ScaleType.FIT_END, ImageView.ScaleType.CENTER, ImageView.ScaleType.CENTER_CROP, ImageView.ScaleType.CENTER_INSIDE};
+    private Boolean logoAdjustViewBounds;
+    private ImageView.ScaleType logoScaleType;
     private Integer navigationIconTint;
     private boolean subtitleCentered;
     private boolean titleCentered;
 
     public MaterialToolbar(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public MaterialToolbar(Context context, AttributeSet attributeSet) {
         this(context, attributeSet, R$attr.toolbarStyle);
     }
 
-    /* JADX WARN: Illegal instructions before constructor call */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public MaterialToolbar(Context context, AttributeSet attributeSet, int i) {
-        super(MaterialThemeOverlay.wrap(context, attributeSet, i, r4), attributeSet, i);
-        int i2 = DEF_STYLE_RES;
-        Context context2 = getContext();
-        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context2, attributeSet, R$styleable.MaterialToolbar, i, i2, new int[0]);
-        int i3 = R$styleable.MaterialToolbar_navigationIconTint;
-        if (obtainStyledAttributes.hasValue(i3)) {
-            setNavigationIconTint(obtainStyledAttributes.getColor(i3, -1));
-        }
-        this.titleCentered = obtainStyledAttributes.getBoolean(R$styleable.MaterialToolbar_titleCentered, false);
-        this.subtitleCentered = obtainStyledAttributes.getBoolean(R$styleable.MaterialToolbar_subtitleCentered, false);
-        obtainStyledAttributes.recycle();
-        initBackground(context2);
+    /* JADX WARNING: Illegal instructions before constructor call */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public MaterialToolbar(android.content.Context r8, android.util.AttributeSet r9, int r10) {
+        /*
+            r7 = this;
+            int r4 = DEF_STYLE_RES
+            android.content.Context r8 = com.google.android.material.theme.overlay.MaterialThemeOverlay.wrap(r8, r9, r10, r4)
+            r7.<init>(r8, r9, r10)
+            android.content.Context r8 = r7.getContext()
+            int[] r2 = com.google.android.material.R$styleable.MaterialToolbar
+            r6 = 0
+            int[] r5 = new int[r6]
+            r0 = r8
+            r1 = r9
+            r3 = r10
+            android.content.res.TypedArray r9 = com.google.android.material.internal.ThemeEnforcement.obtainStyledAttributes(r0, r1, r2, r3, r4, r5)
+            int r10 = com.google.android.material.R$styleable.MaterialToolbar_navigationIconTint
+            boolean r0 = r9.hasValue(r10)
+            r1 = -1
+            if (r0 == 0) goto L_0x0029
+            int r10 = r9.getColor(r10, r1)
+            r7.setNavigationIconTint(r10)
+        L_0x0029:
+            int r10 = com.google.android.material.R$styleable.MaterialToolbar_titleCentered
+            boolean r10 = r9.getBoolean(r10, r6)
+            r7.titleCentered = r10
+            int r10 = com.google.android.material.R$styleable.MaterialToolbar_subtitleCentered
+            boolean r10 = r9.getBoolean(r10, r6)
+            r7.subtitleCentered = r10
+            int r10 = com.google.android.material.R$styleable.MaterialToolbar_logoScaleType
+            int r10 = r9.getInt(r10, r1)
+            if (r10 < 0) goto L_0x004a
+            android.widget.ImageView$ScaleType[] r0 = LOGO_SCALE_TYPE_ARRAY
+            int r1 = r0.length
+            if (r10 >= r1) goto L_0x004a
+            r10 = r0[r10]
+            r7.logoScaleType = r10
+        L_0x004a:
+            int r10 = com.google.android.material.R$styleable.MaterialToolbar_logoAdjustViewBounds
+            boolean r0 = r9.hasValue(r10)
+            if (r0 == 0) goto L_0x005c
+            boolean r10 = r9.getBoolean(r10, r6)
+            java.lang.Boolean r10 = java.lang.Boolean.valueOf(r10)
+            r7.logoAdjustViewBounds = r10
+        L_0x005c:
+            r9.recycle()
+            r7.initBackground(r8)
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.google.android.material.appbar.MaterialToolbar.<init>(android.content.Context, android.util.AttributeSet, int):void");
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.appcompat.widget.Toolbar, android.view.ViewGroup, android.view.View
+    /* access modifiers changed from: protected */
     public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
         maybeCenterTitleViews();
+        updateLogoImageView();
     }
 
     private void maybeCenterTitleViews() {
         if (this.titleCentered || this.subtitleCentered) {
             TextView titleTextView = ToolbarUtils.getTitleTextView(this);
             TextView subtitleTextView = ToolbarUtils.getSubtitleTextView(this);
-            if (titleTextView == null && subtitleTextView == null) {
-                return;
+            if (titleTextView != null || subtitleTextView != null) {
+                Pair<Integer, Integer> calculateTitleBoundLimits = calculateTitleBoundLimits(titleTextView, subtitleTextView);
+                if (this.titleCentered && titleTextView != null) {
+                    layoutTitleCenteredHorizontally(titleTextView, calculateTitleBoundLimits);
+                }
+                if (this.subtitleCentered && subtitleTextView != null) {
+                    layoutTitleCenteredHorizontally(subtitleTextView, calculateTitleBoundLimits);
+                }
             }
-            Pair<Integer, Integer> calculateTitleBoundLimits = calculateTitleBoundLimits(titleTextView, subtitleTextView);
-            if (this.titleCentered && titleTextView != null) {
-                layoutTitleCenteredHorizontally(titleTextView, calculateTitleBoundLimits);
-            }
-            if (!this.subtitleCentered || subtitleTextView == null) {
-                return;
-            }
-            layoutTitleCenteredHorizontally(subtitleTextView, calculateTitleBoundLimits);
         }
     }
 
@@ -86,7 +117,7 @@ public class MaterialToolbar extends Toolbar {
         int paddingRight = measuredWidth - getPaddingRight();
         for (int i2 = 0; i2 < getChildCount(); i2++) {
             View childAt = getChildAt(i2);
-            if (childAt.getVisibility() != 8 && childAt != textView && childAt != textView2) {
+            if (!(childAt.getVisibility() == 8 || childAt == textView || childAt == textView2)) {
                 if (childAt.getRight() < i && childAt.getRight() > paddingLeft) {
                     paddingLeft = childAt.getRight();
                 }
@@ -112,19 +143,50 @@ public class MaterialToolbar extends Toolbar {
         view.layout(i, view.getTop(), i2, view.getBottom());
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onAttachedToWindow() {
+    private void updateLogoImageView() {
+        ImageView logoImageView = ToolbarUtils.getLogoImageView(this);
+        if (logoImageView != null) {
+            Boolean bool = this.logoAdjustViewBounds;
+            if (bool != null) {
+                logoImageView.setAdjustViewBounds(bool.booleanValue());
+            }
+            ImageView.ScaleType scaleType = this.logoScaleType;
+            if (scaleType != null) {
+                logoImageView.setScaleType(scaleType);
+            }
+        }
+    }
+
+    public ImageView.ScaleType getLogoScaleType() {
+        return this.logoScaleType;
+    }
+
+    public void setLogoScaleType(ImageView.ScaleType scaleType) {
+        if (this.logoScaleType != scaleType) {
+            this.logoScaleType = scaleType;
+            requestLayout();
+        }
+    }
+
+    public void setLogoAdjustViewBounds(boolean z) {
+        Boolean bool = this.logoAdjustViewBounds;
+        if (bool == null || bool.booleanValue() != z) {
+            this.logoAdjustViewBounds = Boolean.valueOf(z);
+            requestLayout();
+        }
+    }
+
+    /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
         super.onAttachedToWindow();
         MaterialShapeUtils.setParentAbsoluteElevation(this);
     }
 
-    @Override // android.view.View
     public void setElevation(float f) {
         super.setElevation(f);
         MaterialShapeUtils.setElevation(this, f);
     }
 
-    @Override // androidx.appcompat.widget.Toolbar
     public void setNavigationIcon(Drawable drawable) {
         super.setNavigationIcon(maybeTintNavigationIcon(drawable));
     }
@@ -135,6 +197,10 @@ public class MaterialToolbar extends Toolbar {
         if (navigationIcon != null) {
             setNavigationIcon(navigationIcon);
         }
+    }
+
+    public Integer getNavigationIconTint() {
+        return this.navigationIconTint;
     }
 
     public void setTitleCentered(boolean z) {
@@ -166,7 +232,7 @@ public class MaterialToolbar extends Toolbar {
         if (drawable == null || this.navigationIconTint == null) {
             return drawable;
         }
-        Drawable wrap = DrawableCompat.wrap(drawable);
+        Drawable wrap = DrawableCompat.wrap(drawable.mutate());
         DrawableCompat.setTint(wrap, this.navigationIconTint.intValue());
         return wrap;
     }

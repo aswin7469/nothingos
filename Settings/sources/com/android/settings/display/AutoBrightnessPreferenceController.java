@@ -2,41 +2,28 @@ package com.android.settings.display;
 
 import android.content.Context;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.provider.Settings;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.TogglePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
-/* loaded from: classes.dex */
+import com.nothing.experience.AppTracking;
+
 public class AutoBrightnessPreferenceController extends TogglePreferenceController {
+    private final int DEFAULT_VALUE = 1;
     private final String SYSTEM_KEY = "screen_brightness_mode";
-    private final int DEFAULT_VALUE = 0;
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -45,32 +32,34 @@ public class AutoBrightnessPreferenceController extends TogglePreferenceControll
         super(context, str);
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean isChecked() {
-        return Settings.System.getInt(this.mContext.getContentResolver(), "screen_brightness_mode", 0) != 0;
+        return Settings.System.getInt(this.mContext.getContentResolver(), "screen_brightness_mode", 1) == 1;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean setChecked(boolean z) {
         Settings.System.putInt(this.mContext.getContentResolver(), "screen_brightness_mode", z ? 1 : 0);
+        Bundle bundle = new Bundle();
+        bundle.putInt("auto_bright", z);
+        AppTracking.getInstance(this.mContext).logProductEvent("Display_Event", bundle);
         return true;
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
-        return this.mContext.getResources().getBoolean(17891375) ? 1 : 3;
+        return this.mContext.getResources().getBoolean(17891379) ? 1 : 3;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    /* renamed from: getSummary */
-    public CharSequence mo485getSummary() {
+    public CharSequence getSummary() {
         int i;
         Context context = this.mContext;
         if (isChecked()) {
-            i = R.string.auto_brightness_summary_on;
+            i = R$string.auto_brightness_summary_on;
         } else {
-            i = R.string.auto_brightness_summary_off;
+            i = R$string.auto_brightness_summary_off;
         }
         return context.getText(i);
+    }
+
+    public int getSliceHighlightMenuRes() {
+        return R$string.menu_key_display;
     }
 }

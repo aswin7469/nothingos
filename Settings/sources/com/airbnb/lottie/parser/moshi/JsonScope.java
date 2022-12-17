@@ -1,8 +1,7 @@
 package com.airbnb.lottie.parser.moshi;
-/* loaded from: classes.dex */
+
 final class JsonScope {
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static String getPath(int i, int[] iArr, String[] strArr, int[] iArr2) {
+    static String getPath(int i, int[] iArr, String[] strArr, int[] iArr2) {
         StringBuilder sb = new StringBuilder();
         sb.append('$');
         for (int i2 = 0; i2 < i; i2++) {
@@ -13,8 +12,9 @@ final class JsonScope {
                 sb.append(']');
             } else if (i3 == 3 || i3 == 4 || i3 == 5) {
                 sb.append('.');
-                if (strArr[i2] != null) {
-                    sb.append(strArr[i2]);
+                String str = strArr[i2];
+                if (str != null) {
+                    sb.append(str);
                 }
             }
         }

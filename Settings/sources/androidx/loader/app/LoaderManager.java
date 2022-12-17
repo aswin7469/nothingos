@@ -7,10 +7,9 @@ import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.loader.content.Loader;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
-/* loaded from: classes.dex */
+
 public abstract class LoaderManager {
 
-    /* loaded from: classes.dex */
     public interface LoaderCallbacks<D> {
         Loader<D> onCreateLoader(int i, Bundle bundle);
 
@@ -31,6 +30,6 @@ public abstract class LoaderManager {
     public abstract <D> Loader<D> restartLoader(int i, Bundle bundle, LoaderCallbacks<D> loaderCallbacks);
 
     public static <T extends LifecycleOwner & ViewModelStoreOwner> LoaderManager getInstance(T t) {
-        return new LoaderManagerImpl(t, t.getViewModelStore());
+        return new LoaderManagerImpl(t, ((ViewModelStoreOwner) t).getViewModelStore());
     }
 }

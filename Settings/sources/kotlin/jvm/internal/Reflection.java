@@ -1,9 +1,11 @@
 package kotlin.jvm.internal;
 
 import kotlin.reflect.KClass;
-/* loaded from: classes2.dex */
+import kotlin.reflect.KDeclarationContainer;
+import kotlin.reflect.KFunction;
+
 public class Reflection {
-    private static final KClass[] EMPTY_K_CLASS_ARRAY;
+    private static final KClass[] EMPTY_K_CLASS_ARRAY = new KClass[0];
     private static final ReflectionFactory factory;
 
     static {
@@ -16,10 +18,25 @@ public class Reflection {
             reflectionFactory = new ReflectionFactory();
         }
         factory = reflectionFactory;
-        EMPTY_K_CLASS_ARRAY = new KClass[0];
+    }
+
+    public static KDeclarationContainer getOrCreateKotlinPackage(Class cls) {
+        return factory.getOrCreateKotlinPackage(cls, "");
+    }
+
+    public static KClass getOrCreateKotlinClass(Class cls) {
+        return factory.getOrCreateKotlinClass(cls);
     }
 
     public static String renderLambdaToString(Lambda lambda) {
         return factory.renderLambdaToString(lambda);
+    }
+
+    public static String renderLambdaToString(FunctionBase functionBase) {
+        return factory.renderLambdaToString(functionBase);
+    }
+
+    public static KFunction function(FunctionReference functionReference) {
+        return factory.function(functionReference);
     }
 }

@@ -2,18 +2,19 @@ package com.android.settings.vpn2;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.AttributeSet;
 import android.view.View;
 import androidx.preference.Preference;
 import com.android.internal.net.VpnProfile;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$drawable;
+import com.android.settings.R$id;
+
 public class LegacyVpnPreference extends ManageablePreference {
     private VpnProfile mProfile;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public LegacyVpnPreference(Context context) {
-        super(context, null);
-        setIcon(R.drawable.ic_vpn_key);
+    LegacyVpnPreference(Context context) {
+        super(context, (AttributeSet) null);
+        setIcon(R$drawable.ic_vpn_key);
         setIconSize(2);
     }
 
@@ -29,14 +30,12 @@ public class LegacyVpnPreference extends ManageablePreference {
             str = vpnProfile.name;
         }
         if (!TextUtils.equals(str2, str)) {
-            setTitle(str);
+            setTitle((CharSequence) str);
             notifyHierarchyChanged();
         }
         this.mProfile = vpnProfile;
     }
 
-    /* JADX WARN: Can't rename method to resolve collision */
-    @Override // androidx.preference.Preference, java.lang.Comparable
     public int compareTo(Preference preference) {
         if (preference instanceof LegacyVpnPreference) {
             LegacyVpnPreference legacyVpnPreference = (LegacyVpnPreference) preference;
@@ -60,12 +59,11 @@ public class LegacyVpnPreference extends ManageablePreference {
         }
     }
 
-    @Override // com.android.settings.widget.GearPreference, android.view.View.OnClickListener
     public void onClick(View view) {
-        if (view.getId() == R.id.settings_button && isDisabledByAdmin()) {
-            performClick();
-        } else {
+        if (view.getId() != R$id.settings_button || !isDisabledByAdmin()) {
             super.onClick(view);
+        } else {
+            performClick();
         }
     }
 }

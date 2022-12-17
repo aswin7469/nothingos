@@ -7,11 +7,11 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.SystemClock;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.EditTextPreference;
 import androidx.preference.MultiSelectListPreference;
@@ -20,7 +20,8 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.SwitchPreference;
-import com.android.settings.R;
+import com.android.settings.R$drawable;
+import com.android.settings.R$string;
 import com.android.settingslib.bluetooth.CachedBluetoothDevice;
 import com.android.settingslib.bluetooth.VendorCachedBluetoothDevice;
 import com.android.settingslib.core.lifecycle.Lifecycle;
@@ -30,15 +31,24 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public class BleBroadcastSourceInfoDetailsController extends BluetoothDetailsController implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
+    private final String EMPTY_BD_ADDRESS = "00:00:00:00:00:00";
+    private String EMPTY_ENTRY = "EMPTY ENTRY";
+    private boolean isBroadcastPINUpdated = false;
     private int mAudioSyncState;
     private List<BleBroadcastSourceChannel> mBisIndicies;
     private BleBroadcastSourceInfo mBleBroadcastSourceInfo;
     private String mBroadcastCode;
     private CachedBluetoothDevice mCachedDevice;
+    /* access modifiers changed from: private */
+    public boolean mGroupOp = false;
+    private boolean mIsButtonRefreshOnly = false;
+    private boolean mIsValueChanged = false;
     private int mMetadataSyncState;
-    private boolean mPAsyncCtrlNeeded;
+    private boolean mPAsyncCtrlNeeded = false;
+    /* access modifiers changed from: private */
+    public AlertDialog mScanAssistGroupOpDialog = null;
     private BleBroadcastAudioScanAssistManager mScanAssistanceMgr;
     private MultiSelectListPreference mSourceAudioSyncStatusPref;
     private SwitchPreference mSourceAudioSyncSwitchPref;
@@ -53,13 +63,6 @@ public class BleBroadcastSourceInfoDetailsController extends BluetoothDetailsCon
     private EditTextPreference mSourceUpdateBcastCodePref;
     private ActionButtonsPreference mSourceUpdateSourceInfoPref;
     private VendorCachedBluetoothDevice mVendorCachedDevice;
-    private final String EMPTY_BD_ADDRESS = "00:00:00:00:00:00";
-    private boolean mIsValueChanged = false;
-    private boolean isBroadcastPINUpdated = false;
-    private String EMPTY_ENTRY = "EMPTY ENTRY";
-    private boolean mIsButtonRefreshOnly = false;
-    private boolean mGroupOp = false;
-    private AlertDialog mScanAssistGroupOpDialog = null;
 
     private int getSyncState(int i, int i2) {
         if (i2 == 1 && i == 2) {
@@ -71,26 +74,27 @@ public class BleBroadcastSourceInfoDetailsController extends BluetoothDetailsCon
         return (i2 == 1 || i != 2) ? -1 : 0;
     }
 
-    String getAudioSyncStatusString(int i) {
+    /* access modifiers changed from: package-private */
+    public String getAudioSyncStatusString(int i) {
         return i != 0 ? i != 1 ? "UNKNOWN" : "IN SYNC" : "NOT IN SYNC";
     }
 
-    String getEncryptionStatusString(int i) {
+    /* access modifiers changed from: package-private */
+    public String getEncryptionStatusString(int i) {
         return i != 0 ? i != 1 ? i != 2 ? i != 3 ? "ENCRYPTION STATE UNKNOWN" : "INCORRECT BROADCAST PIN" : "DECRYPTING SUCCESSFULLY" : "PIN UPDATE NEEDED" : "UNENCRYPTED STREAMING";
     }
 
-    String getMetadataSyncStatusString(int i) {
+    /* access modifiers changed from: package-private */
+    public String getMetadataSyncStatusString(int i) {
         return i != 0 ? i != 1 ? i != 2 ? i != 3 ? i != 4 ? "UNKNOWN" : "NO PAST" : "SYNC FAIL" : "IN SYNC" : "SYNCINFO NEEDED" : "IDLE";
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "broadcast_source_details_category";
     }
 
     public BleBroadcastSourceInfoDetailsController(Context context, PreferenceFragmentCompat preferenceFragmentCompat, BleBroadcastSourceInfo bleBroadcastSourceInfo, CachedBluetoothDevice cachedBluetoothDevice, int i, Lifecycle lifecycle) {
         super(context, preferenceFragmentCompat, cachedBluetoothDevice, lifecycle);
-        this.mPAsyncCtrlNeeded = false;
         this.mBleBroadcastSourceInfo = bleBroadcastSourceInfo;
         this.mCachedDevice = cachedBluetoothDevice;
         VendorCachedBluetoothDevice vendorCachedBluetoothDevice = VendorCachedBluetoothDevice.getVendorCachedBluetoothDevice(cachedBluetoothDevice, Utils.getLocalBtManager(context).getProfileManager());
@@ -109,7 +113,7 @@ public class BleBroadcastSourceInfoDetailsController extends BluetoothDetailsCon
         this.isBroadcastPINUpdated = false;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void triggerRemoveBroadcastSource() {
         forceUpdateBroadcastSourceToLoseSync();
         BleBroadcastAudioScanAssistManager bleBroadcastAudioScanAssistManager = this.mScanAssistanceMgr;
@@ -120,12 +124,12 @@ public class BleBroadcastSourceInfoDetailsController extends BluetoothDetailsCon
 
     private void forceUpdateBroadcastSourceToLoseSync() {
         BleBroadcastSourceInfo bleBroadcastSourceInfo = this.mBleBroadcastSourceInfo;
-        if (bleBroadcastSourceInfo == null || bleBroadcastSourceInfo.getMetadataSyncState() != 2) {
-            return;
+        if (bleBroadcastSourceInfo != null && bleBroadcastSourceInfo.getMetadataSyncState() == 2) {
+            Log.e("BleBroadcastSourceInfoDetailsController", "triggerUpdateBroadcastsource with PA off");
+            this.mMetadataSyncState = 0;
+            triggerUpdateBroadcastSource();
+            SystemClock.sleep(200);
         }
-        Log.e("BleBroadcastSourceInfoDetailsController", "triggerUpdateBroadcastsource with PA off");
-        this.mMetadataSyncState = 0;
-        triggerUpdateBroadcastSource();
     }
 
     private void onRemoveBroadcastSourceInfoPressed() {
@@ -133,39 +137,39 @@ public class BleBroadcastSourceInfoDetailsController extends BluetoothDetailsCon
         if (this.mCachedDevice.isGroupDevice()) {
             String name = this.mCachedDevice.getName();
             if (TextUtils.isEmpty(name)) {
-                name = ((BluetoothDetailsController) this).mContext.getString(R.string.bluetooth_device);
+                name = this.mContext.getString(R$string.bluetooth_device);
             }
-            String string = ((BluetoothDetailsController) this).mContext.getString(R.string.group_remove_source_message, name);
-            String string2 = ((BluetoothDetailsController) this).mContext.getString(R.string.group_remove_source_title);
-            DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() { // from class: com.android.settings.bluetooth.BleBroadcastSourceInfoDetailsController.1
-                @Override // android.content.DialogInterface.OnClickListener
+            String string = this.mContext.getString(R$string.group_remove_source_message, new Object[]{name});
+            String string2 = this.mContext.getString(R$string.group_remove_source_title);
+            C07671 r6 = new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     if (BleBroadcastSourceInfoDetailsController.this.mScanAssistGroupOpDialog != null) {
                         BleBroadcastSourceInfoDetailsController.this.mScanAssistGroupOpDialog.dismiss();
+                        BleBroadcastSourceInfoDetailsController.this.mScanAssistGroupOpDialog = null;
                     }
                     BleBroadcastSourceInfoDetailsController.this.mGroupOp = true;
                     BleBroadcastSourceInfoDetailsController.this.triggerRemoveBroadcastSource();
                 }
             };
-            DialogInterface.OnClickListener onClickListener2 = new DialogInterface.OnClickListener() { // from class: com.android.settings.bluetooth.BleBroadcastSourceInfoDetailsController.2
-                @Override // android.content.DialogInterface.OnClickListener
+            C07682 r7 = new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     if (BleBroadcastSourceInfoDetailsController.this.mScanAssistGroupOpDialog != null) {
                         BleBroadcastSourceInfoDetailsController.this.mScanAssistGroupOpDialog.dismiss();
+                        BleBroadcastSourceInfoDetailsController.this.mScanAssistGroupOpDialog = null;
                     }
                     BleBroadcastSourceInfoDetailsController.this.mGroupOp = false;
                     BleBroadcastSourceInfoDetailsController.this.triggerRemoveBroadcastSource();
                 }
             };
             this.mGroupOp = false;
-            this.mScanAssistGroupOpDialog = BroadcastScanAssistanceUtils.showAssistanceGroupOptionsDialog(((BluetoothDetailsController) this).mContext, this.mScanAssistGroupOpDialog, onClickListener, onClickListener2, string2, Html.fromHtml(string));
+            this.mScanAssistGroupOpDialog = BroadcastScanAssistanceUtils.showAssistanceGroupOptionsDialog(this.mContext, this.mScanAssistGroupOpDialog, r6, r7, string2, Html.fromHtml(string));
             return;
         }
         this.mGroupOp = false;
         triggerRemoveBroadcastSource();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void triggerUpdateBroadcastSource() {
         if (this.mScanAssistanceMgr != null) {
             int syncState = getSyncState(this.mMetadataSyncState, this.mAudioSyncState);
@@ -189,34 +193,40 @@ public class BleBroadcastSourceInfoDetailsController extends BluetoothDetailsCon
         if (this.mCachedDevice.isGroupDevice()) {
             String name = this.mCachedDevice.getName();
             if (TextUtils.isEmpty(name)) {
-                name = ((BluetoothDetailsController) this).mContext.getString(R.string.bluetooth_device);
+                name = this.mContext.getString(R$string.bluetooth_device);
             }
-            String string = ((BluetoothDetailsController) this).mContext.getString(R.string.group_update_source_message, name);
-            String string2 = ((BluetoothDetailsController) this).mContext.getString(R.string.group_update_source_title);
-            DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() { // from class: com.android.settings.bluetooth.BleBroadcastSourceInfoDetailsController.3
-                @Override // android.content.DialogInterface.OnClickListener
+            String string = this.mContext.getString(R$string.group_update_source_message, new Object[]{name});
+            String string2 = this.mContext.getString(R$string.group_update_source_title);
+            C07693 r6 = new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    if (BleBroadcastSourceInfoDetailsController.this.mScanAssistGroupOpDialog != null) {
+                        BleBroadcastSourceInfoDetailsController.this.mScanAssistGroupOpDialog.dismiss();
+                        BleBroadcastSourceInfoDetailsController.this.mScanAssistGroupOpDialog = null;
+                    }
                     BleBroadcastSourceInfoDetailsController.this.mGroupOp = true;
                     BleBroadcastSourceInfoDetailsController.this.triggerUpdateBroadcastSource();
                 }
             };
-            DialogInterface.OnClickListener onClickListener2 = new DialogInterface.OnClickListener() { // from class: com.android.settings.bluetooth.BleBroadcastSourceInfoDetailsController.4
-                @Override // android.content.DialogInterface.OnClickListener
+            C07704 r7 = new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    if (BleBroadcastSourceInfoDetailsController.this.mScanAssistGroupOpDialog != null) {
+                        BleBroadcastSourceInfoDetailsController.this.mScanAssistGroupOpDialog.dismiss();
+                        BleBroadcastSourceInfoDetailsController.this.mScanAssistGroupOpDialog = null;
+                    }
                     BleBroadcastSourceInfoDetailsController.this.mGroupOp = false;
                     BleBroadcastSourceInfoDetailsController.this.triggerUpdateBroadcastSource();
                 }
             };
             this.mGroupOp = false;
-            this.mScanAssistGroupOpDialog = BroadcastScanAssistanceUtils.showAssistanceGroupOptionsDialog(((BluetoothDetailsController) this).mContext, this.mScanAssistGroupOpDialog, onClickListener, onClickListener2, string2, Html.fromHtml(string));
+            this.mScanAssistGroupOpDialog = BroadcastScanAssistanceUtils.showAssistanceGroupOptionsDialog(this.mContext, this.mScanAssistGroupOpDialog, r6, r7, string2, Html.fromHtml(string));
             return;
         }
         this.mGroupOp = false;
         triggerUpdateBroadcastSource();
     }
 
-    @Override // com.android.settings.bluetooth.BluetoothDetailsController
-    protected void init(PreferenceScreen preferenceScreen) {
+    /* access modifiers changed from: protected */
+    public void init(PreferenceScreen preferenceScreen) {
         PreferenceCategory preferenceCategory = (PreferenceCategory) preferenceScreen.findPreference(getPreferenceKey());
         this.mSourceInfoContainer = preferenceCategory;
         this.mSourceIdPref = preferenceCategory.findPreference("broadcast_si_sourceId");
@@ -247,63 +257,44 @@ public class BleBroadcastSourceInfoDetailsController extends BluetoothDetailsCon
             editTextPreference.setOnPreferenceClickListener(this);
             this.mSourceUpdateBcastCodePref.setOnPreferenceChangeListener(this);
         }
-        this.mSourceUpdateSourceInfoPref = ((ActionButtonsPreference) this.mSourceInfoContainer.findPreference("bcast_si_update_button")).setButton1Text(R.string.update_sourceinfo_btn_txt).setButton1Enabled(false).setButton1OnClickListener(new View.OnClickListener() { // from class: com.android.settings.bluetooth.BleBroadcastSourceInfoDetailsController$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                BleBroadcastSourceInfoDetailsController.this.lambda$init$0(view);
-            }
-        }).setButton2Text(R.string.remove_sourceinfo_btn_txt).setButton2Icon(R.drawable.ic_settings_close).setButton2Enabled(false).setButton2OnClickListener(new View.OnClickListener() { // from class: com.android.settings.bluetooth.BleBroadcastSourceInfoDetailsController$$ExternalSyntheticLambda1
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                BleBroadcastSourceInfoDetailsController.this.lambda$init$1(view);
-            }
-        });
+        this.mSourceUpdateSourceInfoPref = ((ActionButtonsPreference) this.mSourceInfoContainer.findPreference("bcast_si_update_button")).setButton1Text(R$string.update_sourceinfo_btn_txt).setButton1Enabled(false).setButton1OnClickListener(new C0771x79c59d7e(this)).setButton2Text(R$string.remove_sourceinfo_btn_txt).setButton2Icon(R$drawable.ic_settings_close).setButton2Enabled(false).setButton2OnClickListener(new C0772x79c59d7f(this));
         refresh();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$init$0(View view) {
         onUpdateBroadcastSourceInfoPressed();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$init$1(View view) {
         onRemoveBroadcastSourceInfoPressed();
     }
 
-    @Override // com.android.settings.bluetooth.BluetoothDetailsController, com.android.settingslib.bluetooth.CachedBluetoothDevice.Callback
     public void onDeviceAttributesChanged() {
         Map<Integer, BleBroadcastSourceInfo> allBleBroadcastreceiverStates = this.mVendorCachedDevice.getAllBleBroadcastreceiverStates();
-        if (allBleBroadcastreceiverStates == null) {
-            return;
-        }
-        for (Map.Entry<Integer, BleBroadcastSourceInfo> entry : allBleBroadcastreceiverStates.entrySet()) {
-            BleBroadcastSourceInfo value = entry.getValue();
-            String str = null;
-            if (entry.getKey().intValue() == this.mSourceInfoIndex) {
-                BroadcastScanAssistanceUtils.debug("BleBroadcastSourceInfoDetailsController", this.mSourceInfoIndex + ":matching source Info");
-                if (value.isEmptyEntry()) {
-                    BroadcastScanAssistanceUtils.debug("BleBroadcastSourceInfoDetailsController", this.mSourceInfoIndex + ":source info seem to be removed");
-                    this.mBleBroadcastSourceInfo = value;
-                    str = "Source Info Removal";
-                } else if (!value.equals(this.mBleBroadcastSourceInfo)) {
-                    this.mBleBroadcastSourceInfo = value;
-                    BroadcastScanAssistanceUtils.debug("BleBroadcastSourceInfoDetailsController", this.mSourceInfoIndex + ":Update in Broadcast Source Information");
-                    str = "Source Info Update";
+        if (allBleBroadcastreceiverStates != null) {
+            for (Map.Entry next : allBleBroadcastreceiverStates.entrySet()) {
+                BleBroadcastSourceInfo bleBroadcastSourceInfo = (BleBroadcastSourceInfo) next.getValue();
+                if (((Integer) next.getKey()).intValue() == this.mSourceInfoIndex) {
+                    BroadcastScanAssistanceUtils.debug("BleBroadcastSourceInfoDetailsController", this.mSourceInfoIndex + ":matching source Info");
+                    if (bleBroadcastSourceInfo.isEmptyEntry()) {
+                        BroadcastScanAssistanceUtils.debug("BleBroadcastSourceInfoDetailsController", this.mSourceInfoIndex + ":source info seem to be removed");
+                        this.mBleBroadcastSourceInfo = bleBroadcastSourceInfo;
+                    } else if (!bleBroadcastSourceInfo.equals(this.mBleBroadcastSourceInfo)) {
+                        this.mBleBroadcastSourceInfo = bleBroadcastSourceInfo;
+                        BroadcastScanAssistanceUtils.debug("BleBroadcastSourceInfoDetailsController", this.mSourceInfoIndex + ":Update in Broadcast Source Information");
+                    } else {
+                        BroadcastScanAssistanceUtils.debug("BleBroadcastSourceInfoDetailsController", this.mSourceInfoIndex + ":No Update to Source Information values");
+                    }
                 } else {
-                    BroadcastScanAssistanceUtils.debug("BleBroadcastSourceInfoDetailsController", this.mSourceInfoIndex + ":No Update to Source Information values");
+                    BroadcastScanAssistanceUtils.debug("BleBroadcastSourceInfoDetailsController", this.mSourceInfoIndex + ":Ignore this case");
                 }
-            } else {
-                BroadcastScanAssistanceUtils.debug("BleBroadcastSourceInfoDetailsController", this.mSourceInfoIndex + ":Ignore this case");
             }
-            if (str != null) {
-                Toast.makeText(((BluetoothDetailsController) this).mContext, str, 0).show();
-            }
+            refresh();
         }
-        refresh();
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         String key = preference.getKey();
         BroadcastScanAssistanceUtils.debug("BleBroadcastSourceInfoDetailsController", this.mSourceInfoIndex + ":onPreferenceChange" + obj);
@@ -341,7 +332,6 @@ public class BleBroadcastSourceInfoDetailsController extends BluetoothDetailsCon
         return true;
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceClickListener
     public boolean onPreferenceClick(Preference preference) {
         SwitchPreference switchPreference;
         String key = preference.getKey();
@@ -395,13 +385,11 @@ public class BleBroadcastSourceInfoDetailsController extends BluetoothDetailsCon
         return true;
     }
 
-    @Override // com.android.settings.bluetooth.BluetoothDetailsController, com.android.settingslib.core.lifecycle.events.OnPause
     public void onPause() {
         super.onPause();
         this.mCachedDevice.unregisterCallback(this);
     }
 
-    @Override // com.android.settings.bluetooth.BluetoothDetailsController, com.android.settingslib.core.lifecycle.events.OnResume
     public void onResume() {
         super.onResume();
         this.mCachedDevice.registerCallback(this);
@@ -420,19 +408,23 @@ public class BleBroadcastSourceInfoDetailsController extends BluetoothDetailsCon
         return z;
     }
 
-    @Override // com.android.settings.bluetooth.BluetoothDetailsController
-    protected void refresh() {
+    /* access modifiers changed from: protected */
+    public void refresh() {
         String str;
         int i;
         BroadcastScanAssistanceUtils.debug("BleBroadcastSourceInfoDetailsController", this.mSourceInfoIndex + ":refresh: " + this.mBleBroadcastSourceInfo + " mSourceIndex" + this.mSourceInfoIndex);
-        this.mSourceIdPref.setSummary(String.valueOf((int) this.mBleBroadcastSourceInfo.getSourceId()));
+        this.mSourceIdPref.setSummary((CharSequence) String.valueOf(this.mBleBroadcastSourceInfo.getSourceId()));
         BluetoothDevice sourceDevice = this.mBleBroadcastSourceInfo.getSourceDevice();
         BluetoothAdapter defaultAdapter = BluetoothAdapter.getDefaultAdapter();
         byte[] bArr = null;
         if (sourceDevice == null || defaultAdapter == null) {
             str = null;
         } else {
-            str = defaultAdapter.getAddress().equals(sourceDevice.getAddress()) ? defaultAdapter.getName() + "(Self)" : sourceDevice.getAlias();
+            if (defaultAdapter.getAddress().equals(sourceDevice.getAddress())) {
+                str = defaultAdapter.getName() + "(Self)";
+            } else {
+                str = sourceDevice.getAlias();
+            }
             if (str == null) {
                 str = String.valueOf(sourceDevice.getAddress());
             }
@@ -441,8 +433,8 @@ public class BleBroadcastSourceInfoDetailsController extends BluetoothDetailsCon
             BroadcastScanAssistanceUtils.debug("BleBroadcastSourceInfoDetailsController", this.mSourceInfoIndex + ":NULL source device");
             str = "EMPTY_ENTRY";
         }
-        this.mSourceDevicePref.setSummary(str);
-        this.mSourceEncStatusPref.setSummary(getEncryptionStatusString(this.mBleBroadcastSourceInfo.getEncryptionStatus()));
+        this.mSourceDevicePref.setSummary((CharSequence) str);
+        this.mSourceEncStatusPref.setSummary((CharSequence) getEncryptionStatusString(this.mBleBroadcastSourceInfo.getEncryptionStatus()));
         if (this.mBleBroadcastSourceInfo.isEmptyEntry()) {
             BroadcastScanAssistanceUtils.debug("BleBroadcastSourceInfoDetailsController", this.mSourceInfoIndex + ":Source Information seem to be Empty");
             if (this.mPAsyncCtrlNeeded) {
@@ -462,8 +454,8 @@ public class BleBroadcastSourceInfoDetailsController extends BluetoothDetailsCon
         this.mSourceAudioSyncSwitchPref.setEnabled(true);
         this.mSourceUpdateBcastCodePref.setEnabled(isPinUpdatedNeeded());
         if (!this.mIsButtonRefreshOnly) {
-            this.mSourceMetadataSyncStatusPref.setSummary(getMetadataSyncStatusString(this.mBleBroadcastSourceInfo.getMetadataSyncState()));
-            this.mSourceAudioSyncStatusPref.setSummary(getAudioSyncStatusString(this.mBleBroadcastSourceInfo.getAudioSyncState()));
+            this.mSourceMetadataSyncStatusPref.setSummary((CharSequence) getMetadataSyncStatusString(this.mBleBroadcastSourceInfo.getMetadataSyncState()));
+            this.mSourceAudioSyncStatusPref.setSummary((CharSequence) getAudioSyncStatusString(this.mBleBroadcastSourceInfo.getAudioSyncState()));
             List<BleBroadcastSourceChannel> broadcastChannelsSyncStatus = this.mBleBroadcastSourceInfo.getBroadcastChannelsSyncStatus();
             this.mBisIndicies = broadcastChannelsSyncStatus;
             if (broadcastChannelsSyncStatus != null) {
@@ -485,11 +477,14 @@ public class BleBroadcastSourceInfoDetailsController extends BluetoothDetailsCon
             this.mSourceAudioSyncSwitchPref.setChecked(this.mBleBroadcastSourceInfo.getAudioSyncState() == 1);
             if (this.mBisIndicies != null) {
                 i = 0;
-                while (i < this.mBisIndicies.size()) {
-                    if (this.mBisIndicies.get(i).getStatus()) {
+                while (true) {
+                    if (i >= this.mBisIndicies.size()) {
                         break;
+                    } else if (this.mBisIndicies.get(i).getStatus()) {
+                        break;
+                    } else {
+                        i++;
                     }
-                    i++;
                 }
             }
             i = -1;
@@ -499,9 +494,9 @@ public class BleBroadcastSourceInfoDetailsController extends BluetoothDetailsCon
             if (bArr != null) {
                 String str2 = new String(bArr);
                 BroadcastScanAssistanceUtils.debug("BleBroadcastSourceInfoDetailsController", this.mSourceInfoIndex + ":Metadata:" + str2);
-                this.mSourceMetadataPref.setSummary(str2);
+                this.mSourceMetadataPref.setSummary((CharSequence) str2);
             } else {
-                this.mSourceMetadataPref.setSummary("NONE");
+                this.mSourceMetadataPref.setSummary((CharSequence) "NONE");
             }
             this.mSourceUpdateSourceInfoPref.setButton2Enabled(true);
         }

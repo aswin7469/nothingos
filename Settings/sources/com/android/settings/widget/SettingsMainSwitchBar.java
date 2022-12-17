@@ -4,16 +4,13 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Switch;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
 import com.android.settingslib.widget.MainSwitchBar;
-import com.android.settingslib.widget.OnMainSwitchChangeListener;
 import com.android.settingslib.widget.R$id;
-import com.nt.settings.utils.NtSettingsVibrateUtils;
-/* loaded from: classes.dex */
+
 public class SettingsMainSwitchBar extends MainSwitchBar {
     private boolean mDisabledByAdmin;
     private RestrictedLockUtils.EnforcedAdmin mEnforcedAdmin;
@@ -22,13 +19,12 @@ public class SettingsMainSwitchBar extends MainSwitchBar {
     private OnBeforeCheckedChangeListener mOnBeforeListener;
     private ImageView mRestrictedIcon;
 
-    /* loaded from: classes.dex */
     public interface OnBeforeCheckedChangeListener {
-        boolean onBeforeCheckedChanged(Switch r1, boolean z);
+        boolean onBeforeCheckedChanged(Switch switchR, boolean z);
     }
 
     public SettingsMainSwitchBar(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public SettingsMainSwitchBar(Context context, AttributeSet attributeSet) {
@@ -39,31 +35,21 @@ public class SettingsMainSwitchBar extends MainSwitchBar {
         this(context, attributeSet, i, 0);
     }
 
-    public SettingsMainSwitchBar(final Context context, AttributeSet attributeSet, int i, int i2) {
+    public SettingsMainSwitchBar(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
         this.mMetricsFeatureProvider = FeatureFactory.getFactory(context).getMetricsFeatureProvider();
-        addOnSwitchChangeListener(new OnMainSwitchChangeListener() { // from class: com.android.settings.widget.SettingsMainSwitchBar$$ExternalSyntheticLambda1
-            @Override // com.android.settingslib.widget.OnMainSwitchChangeListener
-            public final void onSwitchChanged(Switch r1, boolean z) {
-                SettingsMainSwitchBar.this.lambda$new$0(r1, z);
-            }
-        });
+        addOnSwitchChangeListener(new SettingsMainSwitchBar$$ExternalSyntheticLambda0(this));
         ImageView imageView = (ImageView) findViewById(R$id.restricted_icon);
         this.mRestrictedIcon = imageView;
-        imageView.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.widget.SettingsMainSwitchBar$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                SettingsMainSwitchBar.this.lambda$new$1(context, view);
-            }
-        });
+        imageView.setOnClickListener(new SettingsMainSwitchBar$$ExternalSyntheticLambda1(this, context));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$0(Switch r1, boolean z) {
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$new$0(Switch switchR, boolean z) {
         logMetrics(z);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$new$1(Context context, View view) {
         if (this.mDisabledByAdmin) {
             RestrictedLockUtils.sendShowAdminSupportDetailsIntent(context, this.mEnforcedAdmin);
@@ -88,27 +74,24 @@ public class SettingsMainSwitchBar extends MainSwitchBar {
         setEnabled(isEnabled());
     }
 
-    @Override // com.android.settingslib.widget.MainSwitchBar, android.view.View
     public void setEnabled(boolean z) {
-        if (z && this.mDisabledByAdmin) {
-            setDisabledByAdmin(null);
-        } else {
+        if (!z || !this.mDisabledByAdmin) {
             super.setEnabled(z);
+        } else {
+            setDisabledByAdmin((RestrictedLockUtils.EnforcedAdmin) null);
         }
     }
 
-    @Override // com.android.settingslib.widget.MainSwitchBar, android.view.View
     public boolean performClick() {
-        NtSettingsVibrateUtils.getInstance(((LinearLayout) this).mContext).playSwitchVibrate();
         return getDelegatingView().performClick();
     }
 
-    protected void onRestrictedIconClick() {
+    /* access modifiers changed from: protected */
+    public void onRestrictedIconClick() {
         MetricsFeatureProvider metricsFeatureProvider = this.mMetricsFeatureProvider;
         metricsFeatureProvider.action(0, 853, 0, this.mMetricsTag + "/switch_bar|restricted", 1);
     }
 
-    @Override // com.android.settingslib.widget.MainSwitchBar
     public void setChecked(boolean z) {
         OnBeforeCheckedChangeListener onBeforeCheckedChangeListener = this.mOnBeforeListener;
         if (onBeforeCheckedChangeListener == null || !onBeforeCheckedChangeListener.onBeforeCheckedChanged(this.mSwitch, z)) {

@@ -5,50 +5,37 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.BasePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
-/* loaded from: classes.dex */
+
 public class SystemNavigationPreferenceController extends BasePreferenceController {
     private static final String ACTION_QUICKSTEP = "android.intent.action.QUICKSTEP_SERVICE";
     static final String PREF_KEY_SYSTEM_NAVIGATION = "gesture_system_navigation";
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -57,34 +44,32 @@ public class SystemNavigationPreferenceController extends BasePreferenceControll
         super(context, str);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return isGestureAvailable(this.mContext) ? 0 : 3;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    /* renamed from: getSummary */
-    public CharSequence mo485getSummary() {
+    public CharSequence getSummary() {
         if (isGestureNavigationEnabled(this.mContext)) {
-            return this.mContext.getText(R.string.edge_to_edge_navigation_title);
+            return this.mContext.getText(R$string.edge_to_edge_navigation_title);
         }
         if (is2ButtonNavigationEnabled(this.mContext)) {
-            return this.mContext.getText(R.string.swipe_up_to_switch_apps_title);
+            return this.mContext.getText(R$string.swipe_up_to_switch_apps_title);
         }
-        return this.mContext.getText(R.string.legacy_navigation_title);
+        return this.mContext.getText(R$string.legacy_navigation_title);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static boolean isGestureAvailable(Context context) {
+    static boolean isGestureAvailable(Context context) {
         ComponentName unflattenFromString;
-        if (context.getResources().getBoolean(17891670) && (unflattenFromString = ComponentName.unflattenFromString(context.getString(17039990))) != null) {
-            return context.getPackageManager().resolveService(new Intent(ACTION_QUICKSTEP).setPackage(unflattenFromString.getPackageName()), 1048576) != null;
+        if (!context.getResources().getBoolean(17891794) || (unflattenFromString = ComponentName.unflattenFromString(context.getString(17040027))) == null) {
+            return false;
         }
-        return false;
+        if (context.getPackageManager().resolveService(new Intent(ACTION_QUICKSTEP).setPackage(unflattenFromString.getPackageName()), 1048576) == null) {
+            return false;
+        }
+        return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static boolean isOverlayPackageAvailable(Context context, String str) {
+    static boolean isOverlayPackageAvailable(Context context, String str) {
         try {
             return context.getPackageManager().getPackageInfo(str, 0) != null;
         } catch (PackageManager.NameNotFoundException unused) {
@@ -92,13 +77,11 @@ public class SystemNavigationPreferenceController extends BasePreferenceControll
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static boolean is2ButtonNavigationEnabled(Context context) {
-        return 1 == context.getResources().getInteger(17694868);
+    static boolean is2ButtonNavigationEnabled(Context context) {
+        return 1 == context.getResources().getInteger(17694882);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static boolean isGestureNavigationEnabled(Context context) {
-        return 2 == context.getResources().getInteger(17694868);
+    static boolean isGestureNavigationEnabled(Context context) {
+        return 2 == context.getResources().getInteger(17694882);
     }
 }

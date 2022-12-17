@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.UserHandle;
 import android.view.View;
-import com.android.settings.R;
+import com.android.settings.R$xml;
 import com.android.settings.Utils;
 import com.android.settings.connecteddevice.usb.UsbConnectionBroadcastReceiver;
 import com.android.settings.dashboard.DashboardFragment;
@@ -13,63 +13,52 @@ import com.android.settingslib.RestrictedLockUtilsInternal;
 import com.android.settingslib.core.AbstractPreferenceController;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class UsbDetailsFragment extends DashboardFragment {
-    private List<UsbDetailsController> mControllers;
-    private UsbBackend mUsbBackend;
-    private UsbConnectionBroadcastReceiver.UsbConnectionListener mUsbConnectionListener = new UsbConnectionBroadcastReceiver.UsbConnectionListener() { // from class: com.android.settings.connecteddevice.usb.UsbDetailsFragment$$ExternalSyntheticLambda0
-        @Override // com.android.settings.connecteddevice.usb.UsbConnectionBroadcastReceiver.UsbConnectionListener
-        public final void onUsbConnectionChanged(boolean z, long j, int i, int i2) {
-            UsbDetailsFragment.this.lambda$new$0(z, j, i, i2);
-        }
-    };
-    UsbConnectionBroadcastReceiver mUsbReceiver;
-    private static final String TAG = UsbDetailsFragment.class.getSimpleName();
-    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R.xml.usb_details_fragment) { // from class: com.android.settings.connecteddevice.usb.UsbDetailsFragment.1
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // com.android.settings.search.BaseSearchIndexProvider
+    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R$xml.usb_details_fragment) {
+        /* access modifiers changed from: protected */
         public boolean isPageSearchEnabled(Context context) {
             return RestrictedLockUtilsInternal.checkIfUsbDataSignalingIsDisabled(context, UserHandle.myUserId()) == null;
         }
 
-        @Override // com.android.settings.search.BaseSearchIndexProvider
         public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
-            return new ArrayList(UsbDetailsFragment.createControllerList(context, new UsbBackend(context), null));
+            return new ArrayList(UsbDetailsFragment.createControllerList(context, new UsbBackend(context), (UsbDetailsFragment) null));
         }
     };
+    private static final String TAG = UsbDetailsFragment.class.getSimpleName();
+    private List<UsbDetailsController> mControllers;
+    private UsbBackend mUsbBackend;
+    private UsbConnectionBroadcastReceiver.UsbConnectionListener mUsbConnectionListener = new UsbDetailsFragment$$ExternalSyntheticLambda0(this);
+    UsbConnectionBroadcastReceiver mUsbReceiver;
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1291;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$0(boolean z, long j, int i, int i2) {
-        for (UsbDetailsController usbDetailsController : this.mControllers) {
-            usbDetailsController.refresh(z, j, i, i2);
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$new$0(boolean z, long j, int i, int i2, boolean z2) {
+        for (UsbDetailsController refresh : this.mControllers) {
+            refresh.refresh(z, j, i, i2);
         }
     }
 
-    @Override // androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
         Utils.setActionBarShadowAnimation(getActivity(), getSettingsLifecycle(), getListView());
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return TAG;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.usb_details_fragment;
+        return R$xml.usb_details_fragment;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment
-    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+    /* access modifiers changed from: protected */
+    public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
         UsbBackend usbBackend = new UsbBackend(context);
         this.mUsbBackend = usbBackend;
         this.mControllers = createControllerList(context, usbBackend, this);
@@ -78,7 +67,7 @@ public class UsbDetailsFragment extends DashboardFragment {
         return new ArrayList(this.mControllers);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static List<UsbDetailsController> createControllerList(Context context, UsbBackend usbBackend, UsbDetailsFragment usbDetailsFragment) {
         ArrayList arrayList = new ArrayList();
         arrayList.add(new UsbDetailsHeaderController(context, usbDetailsFragment, usbBackend));

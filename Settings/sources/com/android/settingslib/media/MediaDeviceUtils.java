@@ -2,7 +2,7 @@ package com.android.settingslib.media;
 
 import android.media.MediaRoute2Info;
 import com.android.settingslib.bluetooth.CachedBluetoothDevice;
-/* loaded from: classes.dex */
+
 public class MediaDeviceUtils {
     public static String getId(CachedBluetoothDevice cachedBluetoothDevice) {
         if (cachedBluetoothDevice.isHearingAidDevice()) {

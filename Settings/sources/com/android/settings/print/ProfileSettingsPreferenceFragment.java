@@ -7,29 +7,26 @@ import android.os.UserManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import androidx.fragment.app.FragmentActivity;
-import com.android.settings.R;
+import com.android.settings.R$layout;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.dashboard.profileselector.UserAdapter;
-/* loaded from: classes.dex */
-public abstract class ProfileSettingsPreferenceFragment extends SettingsPreferenceFragment {
-    protected abstract String getIntentActionString();
 
-    @Override // androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
+public abstract class ProfileSettingsPreferenceFragment extends SettingsPreferenceFragment {
+    /* access modifiers changed from: protected */
+    public abstract String getIntentActionString();
+
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
         final UserAdapter createUserSpinnerAdapter = UserAdapter.createUserSpinnerAdapter((UserManager) getSystemService("user"), getActivity());
         if (createUserSpinnerAdapter != null) {
-            final Spinner spinner = (Spinner) setPinnedHeaderView(R.layout.spinner_view);
-            spinner.setAdapter((SpinnerAdapter) createUserSpinnerAdapter);
-            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() { // from class: com.android.settings.print.ProfileSettingsPreferenceFragment.1
-                @Override // android.widget.AdapterView.OnItemSelectedListener
+            final Spinner spinner = (Spinner) setPinnedHeaderView(R$layout.spinner_view);
+            spinner.setAdapter(createUserSpinnerAdapter);
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 public void onNothingSelected(AdapterView<?> adapterView) {
                 }
 
-                @Override // android.widget.AdapterView.OnItemSelectedListener
-                public void onItemSelected(AdapterView<?> adapterView, View view2, int i, long j) {
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long j) {
                     UserHandle userHandle = createUserSpinnerAdapter.getUserHandle(i);
                     if (userHandle.getIdentifier() != UserHandle.myUserId()) {
                         FragmentActivity activity = ProfileSettingsPreferenceFragment.this.getActivity();

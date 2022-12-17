@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public class TimeZoneData {
     private static WeakReference<TimeZoneData> sCache;
     private final CountryZonesFinder mCountryZonesFinder;
@@ -19,7 +19,7 @@ public class TimeZoneData {
     public static synchronized TimeZoneData getInstance() {
         synchronized (TimeZoneData.class) {
             WeakReference<TimeZoneData> weakReference = sCache;
-            TimeZoneData timeZoneData = weakReference == null ? null : weakReference.get();
+            TimeZoneData timeZoneData = weakReference == null ? null : (TimeZoneData) weakReference.get();
             if (timeZoneData != null) {
                 return timeZoneData;
             }
@@ -44,10 +44,10 @@ public class TimeZoneData {
         }
         List<CountryTimeZones> lookupCountryTimeZonesForZoneId = this.mCountryZonesFinder.lookupCountryTimeZonesForZoneId(str);
         ArraySet arraySet = new ArraySet();
-        for (CountryTimeZones countryTimeZones : lookupCountryTimeZonesForZoneId) {
-            FilteredCountryTimeZones filteredCountryTimeZones = new FilteredCountryTimeZones(countryTimeZones);
-            if (filteredCountryTimeZones.matches(str)) {
-                arraySet.add(filteredCountryTimeZones.getRegionId());
+        for (CountryTimeZones filteredCountryTimeZones : lookupCountryTimeZonesForZoneId) {
+            FilteredCountryTimeZones filteredCountryTimeZones2 = new FilteredCountryTimeZones(filteredCountryTimeZones);
+            if (filteredCountryTimeZones2.matches(str)) {
+                arraySet.add(filteredCountryTimeZones2.getRegionId());
             }
         }
         return arraySet;
@@ -63,8 +63,8 @@ public class TimeZoneData {
 
     private static Set<String> getNormalizedRegionIds(List<String> list) {
         HashSet hashSet = new HashSet(list.size());
-        for (String str : list) {
-            hashSet.add(normalizeRegionId(str));
+        for (String normalizeRegionId : list) {
+            hashSet.add(normalizeRegionId(normalizeRegionId));
         }
         return Collections.unmodifiableSet(hashSet);
     }

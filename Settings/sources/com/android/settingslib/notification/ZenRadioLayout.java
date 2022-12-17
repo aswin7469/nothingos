@@ -5,14 +5,14 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-/* loaded from: classes.dex */
+
 public class ZenRadioLayout extends LinearLayout {
     public ZenRadioLayout(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
     }
 
-    @Override // android.widget.LinearLayout, android.view.View
-    protected void onMeasure(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         super.onMeasure(i, i2);
         ViewGroup viewGroup = (ViewGroup) getChildAt(0);
         ViewGroup viewGroup2 = (ViewGroup) getChildAt(1);
@@ -36,10 +36,10 @@ public class ZenRadioLayout extends LinearLayout {
                     z = true;
                 }
             }
-            if (!z) {
+            if (z) {
+                super.onMeasure(i, i2);
                 return;
             }
-            super.onMeasure(i, i2);
             return;
         }
         throw new IllegalStateException("Expected matching children");

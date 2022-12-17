@@ -9,10 +9,10 @@ import androidx.savedstate.SavedStateRegistryOwner;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
-/* loaded from: classes.dex */
+
 public final class SavedStateViewModelFactory extends ViewModelProvider.KeyedFactory {
-    private static final Class<?>[] ANDROID_VIEWMODEL_SIGNATURE = {Application.class, SavedStateHandle.class};
-    private static final Class<?>[] VIEWMODEL_SIGNATURE = {SavedStateHandle.class};
+    private static final Class<?>[] ANDROID_VIEWMODEL_SIGNATURE;
+    private static final Class<?>[] VIEWMODEL_SIGNATURE;
     private final Application mApplication;
     private final Bundle mDefaultArgs;
     private final ViewModelProvider.Factory mFactory;
@@ -20,76 +20,94 @@ public final class SavedStateViewModelFactory extends ViewModelProvider.KeyedFac
     private final SavedStateRegistry mSavedStateRegistry;
 
     @SuppressLint({"LambdaLast"})
-    public SavedStateViewModelFactory(Application application, SavedStateRegistryOwner owner, Bundle defaultArgs) {
-        ViewModelProvider.Factory newInstanceFactory;
-        this.mSavedStateRegistry = owner.getSavedStateRegistry();
-        this.mLifecycle = owner.mo959getLifecycle();
-        this.mDefaultArgs = defaultArgs;
+    public SavedStateViewModelFactory(Application application, SavedStateRegistryOwner savedStateRegistryOwner, Bundle bundle) {
+        ViewModelProvider.Factory factory;
+        this.mSavedStateRegistry = savedStateRegistryOwner.getSavedStateRegistry();
+        this.mLifecycle = savedStateRegistryOwner.getLifecycle();
+        this.mDefaultArgs = bundle;
         this.mApplication = application;
         if (application != null) {
-            newInstanceFactory = ViewModelProvider.AndroidViewModelFactory.getInstance(application);
+            factory = ViewModelProvider.AndroidViewModelFactory.getInstance(application);
         } else {
-            newInstanceFactory = ViewModelProvider.NewInstanceFactory.getInstance();
+            factory = ViewModelProvider.NewInstanceFactory.getInstance();
         }
-        this.mFactory = newInstanceFactory;
+        this.mFactory = factory;
     }
 
-    @Override // androidx.lifecycle.ViewModelProvider.KeyedFactory
-    public <T extends ViewModel> T create(String key, Class<T> modelClass) {
-        Constructor findMatchingConstructor;
+    public <T extends ViewModel> T create(String str, Class<T> cls) {
+        Constructor<T> constructor;
         T t;
-        boolean isAssignableFrom = AndroidViewModel.class.isAssignableFrom(modelClass);
-        if (isAssignableFrom && this.mApplication != null) {
-            findMatchingConstructor = findMatchingConstructor(modelClass, ANDROID_VIEWMODEL_SIGNATURE);
+        boolean isAssignableFrom = AndroidViewModel.class.isAssignableFrom(cls);
+        if (!isAssignableFrom || this.mApplication == null) {
+            constructor = findMatchingConstructor(cls, VIEWMODEL_SIGNATURE);
         } else {
-            findMatchingConstructor = findMatchingConstructor(modelClass, VIEWMODEL_SIGNATURE);
+            constructor = findMatchingConstructor(cls, ANDROID_VIEWMODEL_SIGNATURE);
         }
-        if (findMatchingConstructor == null) {
-            return (T) this.mFactory.create(modelClass);
+        if (constructor == null) {
+            return this.mFactory.create(cls);
         }
-        SavedStateHandleController create = SavedStateHandleController.create(this.mSavedStateRegistry, this.mLifecycle, key, this.mDefaultArgs);
+        SavedStateHandleController create = SavedStateHandleController.create(this.mSavedStateRegistry, this.mLifecycle, str, this.mDefaultArgs);
         if (isAssignableFrom) {
             try {
                 Application application = this.mApplication;
                 if (application != null) {
-                    t = (T) findMatchingConstructor.newInstance(application, create.getHandle());
+                    t = (ViewModel) constructor.newInstance(new Object[]{application, create.getHandle()});
                     t.setTagIfAbsent("androidx.lifecycle.savedstate.vm.tag", create);
                     return t;
                 }
             } catch (IllegalAccessException e) {
-                throw new RuntimeException("Failed to access " + modelClass, e);
+                throw new RuntimeException("Failed to access " + cls, e);
             } catch (InstantiationException e2) {
-                throw new RuntimeException("A " + modelClass + " cannot be instantiated.", e2);
+                throw new RuntimeException("A " + cls + " cannot be instantiated.", e2);
             } catch (InvocationTargetException e3) {
-                throw new RuntimeException("An exception happened in constructor of " + modelClass, e3.getCause());
+                throw new RuntimeException("An exception happened in constructor of " + cls, e3.getCause());
             }
         }
-        t = (T) findMatchingConstructor.newInstance(create.getHandle());
+        t = (ViewModel) constructor.newInstance(new Object[]{create.getHandle()});
         t.setTagIfAbsent("androidx.lifecycle.savedstate.vm.tag", create);
         return t;
     }
 
-    @Override // androidx.lifecycle.ViewModelProvider.KeyedFactory, androidx.lifecycle.ViewModelProvider.Factory
-    public <T extends ViewModel> T create(Class<T> modelClass) {
-        String canonicalName = modelClass.getCanonicalName();
-        if (canonicalName == null) {
-            throw new IllegalArgumentException("Local and anonymous classes can not be ViewModels");
+    public <T extends ViewModel> T create(Class<T> cls) {
+        String canonicalName = cls.getCanonicalName();
+        if (canonicalName != null) {
+            return create(canonicalName, cls);
         }
-        return (T) create(canonicalName, modelClass);
+        throw new IllegalArgumentException("Local and anonymous classes can not be ViewModels");
     }
 
-    private static <T> Constructor<T> findMatchingConstructor(Class<T> modelClass, Class<?>[] signature) {
-        for (Constructor<?> constructor : modelClass.getConstructors()) {
-            Constructor<T> constructor2 = (Constructor<T>) constructor;
-            if (Arrays.equals(signature, constructor2.getParameterTypes())) {
-                return constructor2;
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v1, resolved type: java.lang.Class<?>[]} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v2, resolved type: java.lang.Class<?>[]} */
+    /* JADX WARNING: Multi-variable type inference failed */
+    static {
+        /*
+            java.lang.Class<androidx.lifecycle.SavedStateHandle> r0 = androidx.lifecycle.SavedStateHandle.class
+            r1 = 2
+            java.lang.Class[] r1 = new java.lang.Class[r1]
+            java.lang.Class<android.app.Application> r2 = android.app.Application.class
+            r3 = 0
+            r1[r3] = r2
+            r2 = 1
+            r1[r2] = r0
+            ANDROID_VIEWMODEL_SIGNATURE = r1
+            java.lang.Class[] r1 = new java.lang.Class[r2]
+            r1[r3] = r0
+            VIEWMODEL_SIGNATURE = r1
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.lifecycle.SavedStateViewModelFactory.<clinit>():void");
+    }
+
+    private static <T> Constructor<T> findMatchingConstructor(Class<T> cls, Class<?>[] clsArr) {
+        for (Constructor<T> constructor : cls.getConstructors()) {
+            if (Arrays.equals(clsArr, constructor.getParameterTypes())) {
+                return constructor;
             }
         }
         return null;
     }
 
-    @Override // androidx.lifecycle.ViewModelProvider.OnRequeryFactory
-    void onRequery(ViewModel viewModel) {
+    public void onRequery(ViewModel viewModel) {
         SavedStateHandleController.attachHandleIfNeeded(viewModel, this.mSavedStateRegistry, this.mLifecycle);
     }
 }

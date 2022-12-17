@@ -7,21 +7,22 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+
 public class DSUTermsOfServiceActivity extends Activity {
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void installDSU(Intent intent) {
         intent.setClassName("com.android.dynsystem", "com.android.dynsystem.VerificationActivity");
         startActivity(intent);
         finish();
     }
 
-    @Override // android.app.Activity
-    protected void onCreate(Bundle bundle) {
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setContentView(R.layout.dsu_terms_of_service);
-        TextView textView = (TextView) findViewById(R.id.tos_content);
+        setContentView(R$layout.dsu_terms_of_service);
+        TextView textView = (TextView) findViewById(R$id.tos_content);
         final Intent intent = getIntent();
         if (!intent.hasExtra("KEY_TOS")) {
             finish();
@@ -32,8 +33,7 @@ public class DSUTermsOfServiceActivity extends Activity {
             return;
         }
         textView.setText(stringExtra);
-        ((Button) findViewById(R.id.accept)).setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.development.DSUTermsOfServiceActivity.1
-            @Override // android.view.View.OnClickListener
+        ((Button) findViewById(R$id.accept)).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 DSUTermsOfServiceActivity.this.installDSU(intent);
             }

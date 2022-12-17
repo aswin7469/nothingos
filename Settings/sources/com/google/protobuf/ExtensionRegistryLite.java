@@ -4,13 +4,13 @@ import com.google.protobuf.GeneratedMessageLite;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-/* loaded from: classes2.dex */
+
 public class ExtensionRegistryLite {
+    static final ExtensionRegistryLite EMPTY_REGISTRY_LITE = new ExtensionRegistryLite(true);
     private static boolean doFullRuntimeInheritanceCheck = true;
     private static volatile ExtensionRegistryLite emptyRegistry;
-    private final Map<ObjectIntPair, GeneratedMessageLite.GeneratedExtension<?, ?>> extensionsByNumber;
     private static final Class<?> extensionClass = resolveExtensionClass();
-    static final ExtensionRegistryLite EMPTY_REGISTRY_LITE = new ExtensionRegistryLite(true);
+    private final Map<ObjectIntPair, GeneratedMessageLite.GeneratedExtension<?, ?>> extensionsByNumber;
 
     static Class<?> resolveExtensionClass() {
         try {
@@ -39,7 +39,7 @@ public class ExtensionRegistryLite {
     }
 
     public <ContainingType extends MessageLite> GeneratedMessageLite.GeneratedExtension<ContainingType, ?> findLiteExtensionByNumber(ContainingType containingtype, int i) {
-        return (GeneratedMessageLite.GeneratedExtension<ContainingType, ?>) this.extensionsByNumber.get(new ObjectIntPair(containingtype, i));
+        return this.extensionsByNumber.get(new ObjectIntPair(containingtype, i));
     }
 
     ExtensionRegistryLite() {
@@ -50,7 +50,6 @@ public class ExtensionRegistryLite {
         this.extensionsByNumber = Collections.emptyMap();
     }
 
-    /* loaded from: classes2.dex */
     private static final class ObjectIntPair {
         private final int number;
         private final Object object;
@@ -69,7 +68,10 @@ public class ExtensionRegistryLite {
                 return false;
             }
             ObjectIntPair objectIntPair = (ObjectIntPair) obj;
-            return this.object == objectIntPair.object && this.number == objectIntPair.number;
+            if (this.object == objectIntPair.object && this.number == objectIntPair.number) {
+                return true;
+            }
+            return false;
         }
     }
 }

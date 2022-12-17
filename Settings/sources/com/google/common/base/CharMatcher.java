@@ -1,8 +1,8 @@
 package com.google.common.base;
 
 import java.util.Arrays;
-/* loaded from: classes2.dex */
-public abstract class CharMatcher implements Predicate<Character> {
+
+public abstract class CharMatcher {
     public abstract boolean matches(char c);
 
     public static CharMatcher any() {
@@ -17,8 +17,9 @@ public abstract class CharMatcher implements Predicate<Character> {
         return Ascii.INSTANCE;
     }
 
-    public static CharMatcher is(char c) {
-        return new Is(c);
+    /* renamed from: is */
+    public static CharMatcher m14is(char c) {
+        return new C1852Is(c);
     }
 
     public static CharMatcher isNot(char c) {
@@ -27,16 +28,16 @@ public abstract class CharMatcher implements Predicate<Character> {
 
     public static CharMatcher anyOf(CharSequence charSequence) {
         int length = charSequence.length();
-        if (length != 0) {
-            if (length == 1) {
-                return is(charSequence.charAt(0));
-            }
-            if (length == 2) {
-                return isEither(charSequence.charAt(0), charSequence.charAt(1));
-            }
+        if (length == 0) {
+            return none();
+        }
+        if (length == 1) {
+            return m14is(charSequence.charAt(0));
+        }
+        if (length != 2) {
             return new AnyOf(charSequence);
         }
-        return none();
+        return isEither(charSequence.charAt(0), charSequence.charAt(1));
     }
 
     public static CharMatcher inRange(char c, char c2) {
@@ -50,8 +51,9 @@ public abstract class CharMatcher implements Predicate<Character> {
         return new Negated(this);
     }
 
-    public CharMatcher or(CharMatcher charMatcher) {
-        return new Or(this, charMatcher);
+    /* renamed from: or */
+    public CharMatcher mo22046or(CharMatcher charMatcher) {
+        return new C1853Or(this, charMatcher);
     }
 
     public boolean matchesAllOf(CharSequence charSequence) {
@@ -95,13 +97,13 @@ public abstract class CharMatcher implements Predicate<Character> {
             indexIn++;
             while (indexIn != charArray.length) {
                 if (matches(charArray[indexIn])) {
-                    break;
+                    i++;
+                } else {
+                    charArray[indexIn - i] = charArray[indexIn];
+                    indexIn++;
                 }
-                charArray[indexIn - i] = charArray[indexIn];
-                indexIn++;
             }
             return new String(charArray, 0, indexIn - i);
-            i++;
         }
     }
 
@@ -119,12 +121,11 @@ public abstract class CharMatcher implements Predicate<Character> {
         charArray[indexIn] = c;
         while (true) {
             indexIn++;
-            if (indexIn < charArray.length) {
-                if (matches(charArray[indexIn])) {
-                    charArray[indexIn] = c;
-                }
-            } else {
+            if (indexIn >= charArray.length) {
                 return new String(charArray);
+            }
+            if (matches(charArray[indexIn])) {
+                charArray[indexIn] = c;
             }
         }
     }
@@ -133,7 +134,7 @@ public abstract class CharMatcher implements Predicate<Character> {
         return super.toString();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static String showCharacter(char c) {
         char[] cArr = {'\\', 'u', 0, 0, 0, 0};
         for (int i = 0; i < 4; i++) {
@@ -143,18 +144,15 @@ public abstract class CharMatcher implements Predicate<Character> {
         return String.copyValueOf(cArr);
     }
 
-    /* loaded from: classes2.dex */
     static abstract class FastMatcher extends CharMatcher {
         FastMatcher() {
         }
 
-        @Override // com.google.common.base.CharMatcher
         public CharMatcher negate() {
             return new NegatedFastMatcher(this);
         }
     }
 
-    /* loaded from: classes2.dex */
     static abstract class NamedFastMatcher extends FastMatcher {
         private final String description;
 
@@ -162,25 +160,20 @@ public abstract class CharMatcher implements Predicate<Character> {
             this.description = (String) Preconditions.checkNotNull(str);
         }
 
-        @Override // com.google.common.base.CharMatcher
         public final String toString() {
             return this.description;
         }
     }
 
-    /* loaded from: classes2.dex */
     static class NegatedFastMatcher extends Negated {
         NegatedFastMatcher(CharMatcher charMatcher) {
             super(charMatcher);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static final class Any extends NamedFastMatcher {
+    private static final class Any extends NamedFastMatcher {
         static final Any INSTANCE = new Any();
 
-        @Override // com.google.common.base.CharMatcher
         public boolean matches(char c) {
             return true;
         }
@@ -189,12 +182,10 @@ public abstract class CharMatcher implements Predicate<Character> {
             super("CharMatcher.any()");
         }
 
-        @Override // com.google.common.base.CharMatcher
         public int indexIn(CharSequence charSequence) {
             return charSequence.length() == 0 ? -1 : 0;
         }
 
-        @Override // com.google.common.base.CharMatcher
         public int indexIn(CharSequence charSequence, int i) {
             int length = charSequence.length();
             Preconditions.checkPositionIndex(i, length);
@@ -204,48 +195,40 @@ public abstract class CharMatcher implements Predicate<Character> {
             return i;
         }
 
-        @Override // com.google.common.base.CharMatcher
         public boolean matchesAllOf(CharSequence charSequence) {
             Preconditions.checkNotNull(charSequence);
             return true;
         }
 
-        @Override // com.google.common.base.CharMatcher
         public boolean matchesNoneOf(CharSequence charSequence) {
             return charSequence.length() == 0;
         }
 
-        @Override // com.google.common.base.CharMatcher
         public String removeFrom(CharSequence charSequence) {
             Preconditions.checkNotNull(charSequence);
             return "";
         }
 
-        @Override // com.google.common.base.CharMatcher
         public String replaceFrom(CharSequence charSequence, char c) {
             char[] cArr = new char[charSequence.length()];
             Arrays.fill(cArr, c);
             return new String(cArr);
         }
 
-        @Override // com.google.common.base.CharMatcher
-        public CharMatcher or(CharMatcher charMatcher) {
+        /* renamed from: or */
+        public CharMatcher mo22046or(CharMatcher charMatcher) {
             Preconditions.checkNotNull(charMatcher);
             return this;
         }
 
-        @Override // com.google.common.base.CharMatcher.FastMatcher, com.google.common.base.CharMatcher
         public CharMatcher negate() {
             return CharMatcher.none();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static final class None extends NamedFastMatcher {
+    private static final class None extends NamedFastMatcher {
         static final None INSTANCE = new None();
 
-        @Override // com.google.common.base.CharMatcher
         public boolean matches(char c) {
             return false;
         }
@@ -254,70 +237,59 @@ public abstract class CharMatcher implements Predicate<Character> {
             super("CharMatcher.none()");
         }
 
-        @Override // com.google.common.base.CharMatcher
         public int indexIn(CharSequence charSequence) {
             Preconditions.checkNotNull(charSequence);
             return -1;
         }
 
-        @Override // com.google.common.base.CharMatcher
         public int indexIn(CharSequence charSequence, int i) {
             Preconditions.checkPositionIndex(i, charSequence.length());
             return -1;
         }
 
-        @Override // com.google.common.base.CharMatcher
         public boolean matchesAllOf(CharSequence charSequence) {
             return charSequence.length() == 0;
         }
 
-        @Override // com.google.common.base.CharMatcher
         public boolean matchesNoneOf(CharSequence charSequence) {
             Preconditions.checkNotNull(charSequence);
             return true;
         }
 
-        @Override // com.google.common.base.CharMatcher
         public String removeFrom(CharSequence charSequence) {
             return charSequence.toString();
         }
 
-        @Override // com.google.common.base.CharMatcher
         public String replaceFrom(CharSequence charSequence, char c) {
             return charSequence.toString();
         }
 
-        @Override // com.google.common.base.CharMatcher
-        public CharMatcher or(CharMatcher charMatcher) {
+        /* renamed from: or */
+        public CharMatcher mo22046or(CharMatcher charMatcher) {
             return (CharMatcher) Preconditions.checkNotNull(charMatcher);
         }
 
-        @Override // com.google.common.base.CharMatcher.FastMatcher, com.google.common.base.CharMatcher
         public CharMatcher negate() {
             return CharMatcher.any();
         }
     }
 
-    /* loaded from: classes2.dex */
     static final class Whitespace extends NamedFastMatcher {
-        static final int SHIFT = Integer.numberOfLeadingZeros(31);
         static final Whitespace INSTANCE = new Whitespace();
+        static final int SHIFT = Integer.numberOfLeadingZeros(31);
 
         Whitespace() {
             super("CharMatcher.whitespace()");
         }
 
-        @Override // com.google.common.base.CharMatcher
         public boolean matches(char c) {
-            return "\u2002\u3000\r\u0085\u200a\u2005\u2000\u3000\u2029\u000b\u3000\u2008\u2003\u205f\u3000\u1680\t \u2006\u2001  \f\u2009\u3000\u2004\u3000\u3000\u2028\n \u3000".charAt((48906 * c) >>> SHIFT) == c;
+            return " 　\r   　 \u000b　   　 \t     \f 　 　　 \n 　".charAt((48906 * c) >>> SHIFT) == c;
         }
     }
 
-    /* loaded from: classes2.dex */
     private static final class Ascii extends NamedFastMatcher {
         static final Ascii INSTANCE = new Ascii();
 
-        @Override // com.google.common.base.CharMatcher
         public boolean matches(char c) {
             return c <= 127;
         }
@@ -327,123 +299,103 @@ public abstract class CharMatcher implements Predicate<Character> {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static class Negated extends CharMatcher {
+    private static class Negated extends CharMatcher {
         final CharMatcher original;
 
         Negated(CharMatcher charMatcher) {
             this.original = (CharMatcher) Preconditions.checkNotNull(charMatcher);
         }
 
-        @Override // com.google.common.base.CharMatcher
         public boolean matches(char c) {
             return !this.original.matches(c);
         }
 
-        @Override // com.google.common.base.CharMatcher
         public boolean matchesAllOf(CharSequence charSequence) {
             return this.original.matchesNoneOf(charSequence);
         }
 
-        @Override // com.google.common.base.CharMatcher
         public boolean matchesNoneOf(CharSequence charSequence) {
             return this.original.matchesAllOf(charSequence);
         }
 
-        @Override // com.google.common.base.CharMatcher
         public CharMatcher negate() {
             return this.original;
         }
 
-        @Override // com.google.common.base.CharMatcher
         public String toString() {
             return this.original + ".negate()";
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static final class Or extends CharMatcher {
+    /* renamed from: com.google.common.base.CharMatcher$Or */
+    private static final class C1853Or extends CharMatcher {
         final CharMatcher first;
         final CharMatcher second;
 
-        Or(CharMatcher charMatcher, CharMatcher charMatcher2) {
+        C1853Or(CharMatcher charMatcher, CharMatcher charMatcher2) {
             this.first = (CharMatcher) Preconditions.checkNotNull(charMatcher);
             this.second = (CharMatcher) Preconditions.checkNotNull(charMatcher2);
         }
 
-        @Override // com.google.common.base.CharMatcher
         public boolean matches(char c) {
             return this.first.matches(c) || this.second.matches(c);
         }
 
-        @Override // com.google.common.base.CharMatcher
         public String toString() {
             return "CharMatcher.or(" + this.first + ", " + this.second + ")";
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static final class Is extends FastMatcher {
+    /* renamed from: com.google.common.base.CharMatcher$Is */
+    private static final class C1852Is extends FastMatcher {
         private final char match;
 
-        Is(char c) {
+        C1852Is(char c) {
             this.match = c;
         }
 
-        @Override // com.google.common.base.CharMatcher
         public boolean matches(char c) {
             return c == this.match;
         }
 
-        @Override // com.google.common.base.CharMatcher
         public String replaceFrom(CharSequence charSequence, char c) {
             return charSequence.toString().replace(this.match, c);
         }
 
-        @Override // com.google.common.base.CharMatcher
-        public CharMatcher or(CharMatcher charMatcher) {
-            return charMatcher.matches(this.match) ? charMatcher : super.or(charMatcher);
+        /* renamed from: or */
+        public CharMatcher mo22046or(CharMatcher charMatcher) {
+            return charMatcher.matches(this.match) ? charMatcher : CharMatcher.super.mo22046or(charMatcher);
         }
 
-        @Override // com.google.common.base.CharMatcher.FastMatcher, com.google.common.base.CharMatcher
         public CharMatcher negate() {
             return CharMatcher.isNot(this.match);
         }
 
-        @Override // com.google.common.base.CharMatcher
         public String toString() {
             return "CharMatcher.is('" + CharMatcher.showCharacter(this.match) + "')";
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static final class IsNot extends FastMatcher {
+    private static final class IsNot extends FastMatcher {
         private final char match;
 
         IsNot(char c) {
             this.match = c;
         }
 
-        @Override // com.google.common.base.CharMatcher
         public boolean matches(char c) {
             return c != this.match;
         }
 
-        @Override // com.google.common.base.CharMatcher
-        public CharMatcher or(CharMatcher charMatcher) {
+        /* renamed from: or */
+        public CharMatcher mo22046or(CharMatcher charMatcher) {
             return charMatcher.matches(this.match) ? CharMatcher.any() : this;
         }
 
-        @Override // com.google.common.base.CharMatcher.FastMatcher, com.google.common.base.CharMatcher
         public CharMatcher negate() {
-            return CharMatcher.is(this.match);
+            return CharMatcher.m14is(this.match);
         }
 
-        @Override // com.google.common.base.CharMatcher
         public String toString() {
             return "CharMatcher.isNot('" + CharMatcher.showCharacter(this.match) + "')";
         }
@@ -453,9 +405,7 @@ public abstract class CharMatcher implements Predicate<Character> {
         return new IsEither(c, c2);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static final class IsEither extends FastMatcher {
+    private static final class IsEither extends FastMatcher {
         private final char match1;
         private final char match2;
 
@@ -464,18 +414,15 @@ public abstract class CharMatcher implements Predicate<Character> {
             this.match2 = c2;
         }
 
-        @Override // com.google.common.base.CharMatcher
         public boolean matches(char c) {
             return c == this.match1 || c == this.match2;
         }
 
-        @Override // com.google.common.base.CharMatcher
         public String toString() {
             return "CharMatcher.anyOf(\"" + CharMatcher.showCharacter(this.match1) + CharMatcher.showCharacter(this.match2) + "\")";
         }
     }
 
-    /* loaded from: classes2.dex */
     private static final class AnyOf extends CharMatcher {
         private final char[] chars;
 
@@ -485,23 +432,20 @@ public abstract class CharMatcher implements Predicate<Character> {
             Arrays.sort(charArray);
         }
 
-        @Override // com.google.common.base.CharMatcher
         public boolean matches(char c) {
             return Arrays.binarySearch(this.chars, c) >= 0;
         }
 
-        @Override // com.google.common.base.CharMatcher
         public String toString() {
             StringBuilder sb = new StringBuilder("CharMatcher.anyOf(\"");
-            for (char c : this.chars) {
-                sb.append(CharMatcher.showCharacter(c));
+            for (char access$100 : this.chars) {
+                sb.append(CharMatcher.showCharacter(access$100));
             }
             sb.append("\")");
             return sb.toString();
         }
     }
 
-    /* loaded from: classes2.dex */
     private static final class InRange extends FastMatcher {
         private final char endInclusive;
         private final char startInclusive;
@@ -512,12 +456,10 @@ public abstract class CharMatcher implements Predicate<Character> {
             this.endInclusive = c2;
         }
 
-        @Override // com.google.common.base.CharMatcher
         public boolean matches(char c) {
             return this.startInclusive <= c && c <= this.endInclusive;
         }
 
-        @Override // com.google.common.base.CharMatcher
         public String toString() {
             return "CharMatcher.inRange('" + CharMatcher.showCharacter(this.startInclusive) + "', '" + CharMatcher.showCharacter(this.endInclusive) + "')";
         }

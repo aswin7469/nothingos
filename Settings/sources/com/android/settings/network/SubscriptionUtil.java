@@ -7,13 +7,15 @@ import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.telephony.UiccCardInfo;
+import android.telephony.UiccPortInfo;
 import android.telephony.UiccSlotInfo;
 import android.text.TextUtils;
 import android.util.Log;
 import com.android.internal.telephony.MccTable;
 import com.android.internal.util.CollectionUtils;
-import com.android.settings.R;
-import com.android.settings.network.SubscriptionUtil;
+import com.android.settings.R$string;
+import com.android.settings.network.helper.SelectableSubscriptions;
+import com.android.settings.network.helper.SubscriptionAnnotation;
 import com.android.settings.network.telephony.DeleteEuiccSubscriptionDialogActivity;
 import com.android.settings.network.telephony.ToggleSubscriptionDialogActivity;
 import com.android.settingslib.DeviceInfoUtils;
@@ -26,11 +28,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-/* loaded from: classes.dex */
+
 public class SubscriptionUtil {
     private static List<SubscriptionInfo> sActiveResultsForTesting;
     private static List<SubscriptionInfo> sAvailableResultsForTesting;
@@ -60,12 +60,18 @@ public class SubscriptionUtil {
     }
 
     static boolean isInactiveInsertedPSim(UiccSlotInfo uiccSlotInfo) {
-        return uiccSlotInfo != null && !uiccSlotInfo.getIsEuicc() && !uiccSlotInfo.getIsActive() && uiccSlotInfo.getCardStateInfo() == 2;
+        if (uiccSlotInfo != null && !uiccSlotInfo.getIsEuicc() && !((UiccPortInfo) uiccSlotInfo.getPorts().stream().findFirst().get()).isActive() && uiccSlotInfo.getCardStateInfo() == 2) {
+            return true;
+        }
+        return false;
     }
 
     public static List<SubscriptionInfo> getAvailableSubscriptions(Context context) {
         List<SubscriptionInfo> list = sAvailableResultsForTesting;
-        return list != null ? list : new ArrayList(CollectionUtils.emptyIfNull(getSelectableSubscriptionInfoList(context)));
+        if (list != null) {
+            return list;
+        }
+        return new ArrayList(CollectionUtils.emptyIfNull(getSelectableSubscriptionInfoList(context)));
     }
 
     public static SubscriptionInfo getAvailableSubscription(Context context, ProxySubscriptionManager proxySubscriptionManager, int i) {
@@ -74,10 +80,10 @@ public class SubscriptionUtil {
             return null;
         }
         ParcelUuid groupUuid = accessibleSubscriptionInfo.getGroupUuid();
-        if (groupUuid != null && !isPrimarySubscriptionWithinSameUuid(getUiccSlotsInfo(context), groupUuid, proxySubscriptionManager.getAccessibleSubscriptionsInfo(), i)) {
-            return null;
+        if (groupUuid == null || isPrimarySubscriptionWithinSameUuid(getUiccSlotsInfo(context), groupUuid, proxySubscriptionManager.getAccessibleSubscriptionsInfo(), i)) {
+            return accessibleSubscriptionInfo;
         }
-        return accessibleSubscriptionInfo;
+        return null;
     }
 
     private static UiccSlotInfo[] getUiccSlotsInfo(Context context) {
@@ -89,18 +95,18 @@ public class SubscriptionUtil {
         ArrayList arrayList2 = new ArrayList();
         ArrayList arrayList3 = new ArrayList();
         ArrayList arrayList4 = new ArrayList();
-        for (SubscriptionInfo subscriptionInfo : list) {
-            if (parcelUuid.equals(subscriptionInfo.getGroupUuid())) {
-                if (!subscriptionInfo.isEmbedded()) {
-                    arrayList.add(subscriptionInfo);
+        for (SubscriptionInfo next : list) {
+            if (parcelUuid.equals(next.getGroupUuid())) {
+                if (!next.isEmbedded()) {
+                    arrayList.add(next);
                 } else {
-                    if (!subscriptionInfo.isOpportunistic()) {
-                        arrayList2.add(subscriptionInfo);
+                    if (!next.isOpportunistic()) {
+                        arrayList2.add(next);
                     }
-                    if (subscriptionInfo.getSimSlotIndex() != -1) {
-                        arrayList3.add(subscriptionInfo);
+                    if (next.getSimSlotIndex() != -1) {
+                        arrayList3.add(next);
                     } else {
-                        arrayList4.add(subscriptionInfo);
+                        arrayList4.add(next);
                     }
                 }
             }
@@ -111,24 +117,19 @@ public class SubscriptionUtil {
                 return false;
             }
             for (UiccSlotInfo uiccSlotInfo : uiccSlotInfoArr) {
-                if (uiccSlotInfo != null && !uiccSlotInfo.getIsEuicc() && uiccSlotInfo.getLogicalSlotIdx() == searchForSubscriptionId.getSimSlotIndex()) {
+                if (uiccSlotInfo != null && !uiccSlotInfo.getIsEuicc() && ((UiccPortInfo) uiccSlotInfo.getPorts().stream().findFirst().get()).getLogicalSlotIndex() == searchForSubscriptionId.getSimSlotIndex()) {
                     return true;
                 }
             }
             return false;
-        } else if (arrayList2.size() <= 0) {
-            if (arrayList.size() > 0) {
-                return false;
-            }
-            return arrayList3.size() > 0 ? ((SubscriptionInfo) arrayList3.get(0)).getSubscriptionId() == i : ((SubscriptionInfo) arrayList4.get(0)).getSubscriptionId() == i;
-        } else {
+        } else if (arrayList2.size() > 0) {
             Iterator it = arrayList2.iterator();
             int i2 = 0;
             boolean z = false;
             while (it.hasNext()) {
-                SubscriptionInfo subscriptionInfo2 = (SubscriptionInfo) it.next();
-                boolean z2 = subscriptionInfo2.getSubscriptionId() == i;
-                if (subscriptionInfo2.getSimSlotIndex() == -1) {
+                SubscriptionInfo subscriptionInfo = (SubscriptionInfo) it.next();
+                boolean z2 = subscriptionInfo.getSubscriptionId() == i;
+                if (subscriptionInfo.getSimSlotIndex() == -1) {
                     z |= z2;
                 } else if (z2) {
                     return true;
@@ -136,164 +137,103 @@ public class SubscriptionUtil {
                     i2++;
                 }
             }
-            if (i2 <= 0) {
-                return z;
+            if (i2 > 0) {
+                return false;
             }
+            return z;
+        } else if (arrayList.size() > 0) {
             return false;
+        } else {
+            if (arrayList3.size() > 0) {
+                if (((SubscriptionInfo) arrayList3.get(0)).getSubscriptionId() == i) {
+                    return true;
+                }
+                return false;
+            } else if (((SubscriptionInfo) arrayList4.get(0)).getSubscriptionId() == i) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
     private static SubscriptionInfo searchForSubscriptionId(List<SubscriptionInfo> list, int i) {
-        for (SubscriptionInfo subscriptionInfo : list) {
-            if (subscriptionInfo.getSubscriptionId() == i) {
-                return subscriptionInfo;
+        for (SubscriptionInfo next : list) {
+            if (next.getSubscriptionId() == i) {
+                return next;
             }
         }
         return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.android.settings.network.SubscriptionUtil$1DisplayInfo  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public class C1DisplayInfo {
-        public CharSequence originalName;
-        public SubscriptionInfo subscriptionInfo;
-        public CharSequence uniqueName;
-
-        C1DisplayInfo() {
-        }
-    }
-
-    public static Map<Integer, CharSequence> getUniqueSubscriptionDisplayNames(final Context context) {
-        final Supplier supplier = new Supplier() { // from class: com.android.settings.network.SubscriptionUtil$$ExternalSyntheticLambda12
-            @Override // java.util.function.Supplier
-            public final Object get() {
-                Stream lambda$getUniqueSubscriptionDisplayNames$2;
-                lambda$getUniqueSubscriptionDisplayNames$2 = SubscriptionUtil.lambda$getUniqueSubscriptionDisplayNames$2(context);
-                return lambda$getUniqueSubscriptionDisplayNames$2;
-            }
-        };
-        final HashSet hashSet = new HashSet();
-        final Set set = (Set) ((Stream) supplier.get()).filter(new Predicate() { // from class: com.android.settings.network.SubscriptionUtil$$ExternalSyntheticLambda9
-            @Override // java.util.function.Predicate
-            public final boolean test(Object obj) {
-                boolean lambda$getUniqueSubscriptionDisplayNames$3;
-                lambda$getUniqueSubscriptionDisplayNames$3 = SubscriptionUtil.lambda$getUniqueSubscriptionDisplayNames$3(hashSet, (SubscriptionUtil.C1DisplayInfo) obj);
-                return lambda$getUniqueSubscriptionDisplayNames$3;
-            }
-        }).map(SubscriptionUtil$$ExternalSyntheticLambda6.INSTANCE).collect(Collectors.toSet());
-        Supplier supplier2 = new Supplier() { // from class: com.android.settings.network.SubscriptionUtil$$ExternalSyntheticLambda13
-            @Override // java.util.function.Supplier
-            public final Object get() {
-                Stream lambda$getUniqueSubscriptionDisplayNames$6;
-                lambda$getUniqueSubscriptionDisplayNames$6 = SubscriptionUtil.lambda$getUniqueSubscriptionDisplayNames$6(supplier, set, context);
-                return lambda$getUniqueSubscriptionDisplayNames$6;
-            }
-        };
+    public static Map<Integer, CharSequence> getUniqueSubscriptionDisplayNames(Context context) {
+        SubscriptionUtil$$ExternalSyntheticLambda10 subscriptionUtil$$ExternalSyntheticLambda10 = new SubscriptionUtil$$ExternalSyntheticLambda10(context);
+        HashSet hashSet = new HashSet();
+        SubscriptionUtil$$ExternalSyntheticLambda13 subscriptionUtil$$ExternalSyntheticLambda13 = new SubscriptionUtil$$ExternalSyntheticLambda13(subscriptionUtil$$ExternalSyntheticLambda10, (Set) ((Stream) subscriptionUtil$$ExternalSyntheticLambda10.get()).filter(new SubscriptionUtil$$ExternalSyntheticLambda11(hashSet)).map(new SubscriptionUtil$$ExternalSyntheticLambda12()).collect(Collectors.toSet()), context);
         hashSet.clear();
-        final Set set2 = (Set) ((Stream) supplier2.get()).filter(new Predicate() { // from class: com.android.settings.network.SubscriptionUtil$$ExternalSyntheticLambda10
-            @Override // java.util.function.Predicate
-            public final boolean test(Object obj) {
-                boolean lambda$getUniqueSubscriptionDisplayNames$7;
-                lambda$getUniqueSubscriptionDisplayNames$7 = SubscriptionUtil.lambda$getUniqueSubscriptionDisplayNames$7(hashSet, (SubscriptionUtil.C1DisplayInfo) obj);
-                return lambda$getUniqueSubscriptionDisplayNames$7;
-            }
-        }).map(SubscriptionUtil$$ExternalSyntheticLambda5.INSTANCE).collect(Collectors.toSet());
-        return (Map) ((Stream) supplier2.get()).map(new Function() { // from class: com.android.settings.network.SubscriptionUtil$$ExternalSyntheticLambda1
-            @Override // java.util.function.Function
-            public final Object apply(Object obj) {
-                SubscriptionUtil.C1DisplayInfo lambda$getUniqueSubscriptionDisplayNames$9;
-                lambda$getUniqueSubscriptionDisplayNames$9 = SubscriptionUtil.lambda$getUniqueSubscriptionDisplayNames$9(set2, (SubscriptionUtil.C1DisplayInfo) obj);
-                return lambda$getUniqueSubscriptionDisplayNames$9;
-            }
-        }).collect(Collectors.toMap(SubscriptionUtil$$ExternalSyntheticLambda4.INSTANCE, SubscriptionUtil$$ExternalSyntheticLambda3.INSTANCE));
+        return (Map) ((Stream) subscriptionUtil$$ExternalSyntheticLambda13.get()).map(new SubscriptionUtil$$ExternalSyntheticLambda16((Set) ((Stream) subscriptionUtil$$ExternalSyntheticLambda13.get()).filter(new SubscriptionUtil$$ExternalSyntheticLambda14(hashSet)).map(new SubscriptionUtil$$ExternalSyntheticLambda15()).collect(Collectors.toSet()))).collect(Collectors.toMap(new SubscriptionUtil$$ExternalSyntheticLambda17(), new SubscriptionUtil$$ExternalSyntheticLambda18()));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ Stream lambda$getUniqueSubscriptionDisplayNames$2(final Context context) {
-        return getAvailableSubscriptions(context).stream().filter(SubscriptionUtil$$ExternalSyntheticLambda11.INSTANCE).map(new Function() { // from class: com.android.settings.network.SubscriptionUtil$$ExternalSyntheticLambda0
-            @Override // java.util.function.Function
-            public final Object apply(Object obj) {
-                SubscriptionUtil.C1DisplayInfo lambda$getUniqueSubscriptionDisplayNames$1;
-                lambda$getUniqueSubscriptionDisplayNames$1 = SubscriptionUtil.lambda$getUniqueSubscriptionDisplayNames$1(context, (SubscriptionInfo) obj);
-                return lambda$getUniqueSubscriptionDisplayNames$1;
-            }
-        });
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ boolean lambda$getUniqueSubscriptionDisplayNames$0(SubscriptionInfo subscriptionInfo) {
         return (subscriptionInfo == null || subscriptionInfo.getDisplayName() == null) ? false : true;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ C1DisplayInfo lambda$getUniqueSubscriptionDisplayNames$1(Context context, SubscriptionInfo subscriptionInfo) {
-        String trim;
-        C1DisplayInfo c1DisplayInfo = new C1DisplayInfo();
-        c1DisplayInfo.subscriptionInfo = subscriptionInfo;
+    /* access modifiers changed from: private */
+    public static /* synthetic */ AnonymousClass1DisplayInfo lambda$getUniqueSubscriptionDisplayNames$1(Context context, SubscriptionInfo subscriptionInfo) {
+        String str;
+        AnonymousClass1DisplayInfo r0 = new Object() {
+            public CharSequence originalName;
+            public SubscriptionInfo subscriptionInfo;
+            public CharSequence uniqueName;
+        };
+        r0.subscriptionInfo = subscriptionInfo;
         String charSequence = subscriptionInfo.getDisplayName().toString();
         if (TextUtils.equals(charSequence, "CARD")) {
-            trim = context.getResources().getString(R.string.sim_card);
+            str = context.getResources().getString(R$string.sim_card);
         } else {
-            trim = charSequence.trim();
+            str = charSequence.trim();
         }
-        c1DisplayInfo.originalName = trim;
-        return c1DisplayInfo;
+        r0.originalName = str;
+        return r0;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ boolean lambda$getUniqueSubscriptionDisplayNames$3(Set set, C1DisplayInfo c1DisplayInfo) {
-        return !set.add(c1DisplayInfo.originalName);
+    /* access modifiers changed from: private */
+    public static /* synthetic */ boolean lambda$getUniqueSubscriptionDisplayNames$3(Set set, AnonymousClass1DisplayInfo r1) {
+        return !set.add(r1.originalName);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ Stream lambda$getUniqueSubscriptionDisplayNames$6(Supplier supplier, final Set set, final Context context) {
-        return ((Stream) supplier.get()).map(new Function() { // from class: com.android.settings.network.SubscriptionUtil$$ExternalSyntheticLambda2
-            @Override // java.util.function.Function
-            public final Object apply(Object obj) {
-                SubscriptionUtil.C1DisplayInfo lambda$getUniqueSubscriptionDisplayNames$5;
-                lambda$getUniqueSubscriptionDisplayNames$5 = SubscriptionUtil.lambda$getUniqueSubscriptionDisplayNames$5(set, context, (SubscriptionUtil.C1DisplayInfo) obj);
-                return lambda$getUniqueSubscriptionDisplayNames$5;
-            }
-        });
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ C1DisplayInfo lambda$getUniqueSubscriptionDisplayNames$5(Set set, Context context, C1DisplayInfo c1DisplayInfo) {
-        if (set.contains(c1DisplayInfo.originalName)) {
-            String bidiFormattedPhoneNumber = DeviceInfoUtils.getBidiFormattedPhoneNumber(context, c1DisplayInfo.subscriptionInfo);
+    /* access modifiers changed from: private */
+    public static /* synthetic */ AnonymousClass1DisplayInfo lambda$getUniqueSubscriptionDisplayNames$5(Set set, Context context, AnonymousClass1DisplayInfo r3) {
+        if (set.contains(r3.originalName)) {
+            String bidiFormattedPhoneNumber = DeviceInfoUtils.getBidiFormattedPhoneNumber(context, r3.subscriptionInfo);
             if (bidiFormattedPhoneNumber == null) {
                 bidiFormattedPhoneNumber = "";
             } else if (bidiFormattedPhoneNumber.length() > 4) {
                 bidiFormattedPhoneNumber = bidiFormattedPhoneNumber.substring(bidiFormattedPhoneNumber.length() - 4);
             }
             if (TextUtils.isEmpty(bidiFormattedPhoneNumber)) {
-                c1DisplayInfo.uniqueName = c1DisplayInfo.originalName;
+                r3.uniqueName = r3.originalName;
             } else {
-                c1DisplayInfo.uniqueName = ((Object) c1DisplayInfo.originalName) + " " + bidiFormattedPhoneNumber;
+                r3.uniqueName = r3.originalName + " " + bidiFormattedPhoneNumber;
             }
         } else {
-            c1DisplayInfo.uniqueName = c1DisplayInfo.originalName;
+            r3.uniqueName = r3.originalName;
         }
-        return c1DisplayInfo;
+        return r3;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ boolean lambda$getUniqueSubscriptionDisplayNames$7(Set set, C1DisplayInfo c1DisplayInfo) {
-        return !set.add(c1DisplayInfo.uniqueName);
+    /* access modifiers changed from: private */
+    public static /* synthetic */ boolean lambda$getUniqueSubscriptionDisplayNames$7(Set set, AnonymousClass1DisplayInfo r1) {
+        return !set.add(r1.uniqueName);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ C1DisplayInfo lambda$getUniqueSubscriptionDisplayNames$9(Set set, C1DisplayInfo c1DisplayInfo) {
-        if (set.contains(c1DisplayInfo.uniqueName)) {
-            c1DisplayInfo.uniqueName = ((Object) c1DisplayInfo.originalName) + " " + c1DisplayInfo.subscriptionInfo.getSubscriptionId();
+    /* access modifiers changed from: private */
+    public static /* synthetic */ AnonymousClass1DisplayInfo lambda$getUniqueSubscriptionDisplayNames$9(Set set, AnonymousClass1DisplayInfo r2) {
+        if (set.contains(r2.uniqueName)) {
+            r2.uniqueName = r2.originalName + " " + r2.subscriptionInfo.getSubscriptionId();
         }
-        return c1DisplayInfo;
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ Integer lambda$getUniqueSubscriptionDisplayNames$10(C1DisplayInfo c1DisplayInfo) {
-        return Integer.valueOf(c1DisplayInfo.subscriptionInfo.getSubscriptionId());
+        return r2;
     }
 
     public static CharSequence getUniqueSubscriptionDisplayName(Integer num, Context context) {
@@ -357,21 +297,14 @@ public class SubscriptionUtil {
         }
     }
 
-    public static SubscriptionInfo getSubById(SubscriptionManager subscriptionManager, final int i) {
+    public static SubscriptionInfo getSubById(SubscriptionManager subscriptionManager, int i) {
         if (i == -1) {
             return null;
         }
-        return (SubscriptionInfo) subscriptionManager.getAllSubscriptionInfoList().stream().filter(new Predicate() { // from class: com.android.settings.network.SubscriptionUtil$$ExternalSyntheticLambda7
-            @Override // java.util.function.Predicate
-            public final boolean test(Object obj) {
-                boolean lambda$getSubById$12;
-                lambda$getSubById$12 = SubscriptionUtil.lambda$getSubById$12(i, (SubscriptionInfo) obj);
-                return lambda$getSubById$12;
-            }
-        }).findFirst().get();
+        return (SubscriptionInfo) subscriptionManager.getAllSubscriptionInfoList().stream().filter(new SubscriptionUtil$$ExternalSyntheticLambda0(i)).findFirst().orElse((Object) null);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ boolean lambda$getSubById$12(int i, SubscriptionInfo subscriptionInfo) {
         return subscriptionInfo.getSubscriptionId() == i;
     }
@@ -383,7 +316,10 @@ public class SubscriptionUtil {
         if (subscriptionInfo.getGroupUuid() == null || !subscriptionInfo.isOpportunistic()) {
             return true;
         }
-        return ((TelephonyManager) context.getSystemService(TelephonyManager.class)).createForSubscriptionId(subscriptionInfo.getSubscriptionId()).hasCarrierPrivileges() || subscriptionManager.canManageSubscription(subscriptionInfo);
+        if (((TelephonyManager) context.getSystemService(TelephonyManager.class)).createForSubscriptionId(subscriptionInfo.getSubscriptionId()).hasCarrierPrivileges() || subscriptionManager.canManageSubscription(subscriptionInfo)) {
+            return true;
+        }
+        return false;
     }
 
     public static List<SubscriptionInfo> findAllSubscriptionsInGroup(SubscriptionManager subscriptionManager, int i) {
@@ -391,22 +327,12 @@ public class SubscriptionUtil {
         if (subById == null) {
             return Collections.emptyList();
         }
-        final ParcelUuid groupUuid = subById.getGroupUuid();
+        ParcelUuid groupUuid = subById.getGroupUuid();
         List availableSubscriptionInfoList = subscriptionManager.getAvailableSubscriptionInfoList();
-        if (availableSubscriptionInfoList == null || availableSubscriptionInfoList.isEmpty() || groupUuid == null) {
-            return Collections.singletonList(subById);
-        }
-        return (List) availableSubscriptionInfoList.stream().filter(new Predicate() { // from class: com.android.settings.network.SubscriptionUtil$$ExternalSyntheticLambda8
-            @Override // java.util.function.Predicate
-            public final boolean test(Object obj) {
-                boolean lambda$findAllSubscriptionsInGroup$13;
-                lambda$findAllSubscriptionsInGroup$13 = SubscriptionUtil.lambda$findAllSubscriptionsInGroup$13(groupUuid, (SubscriptionInfo) obj);
-                return lambda$findAllSubscriptionsInGroup$13;
-            }
-        }).collect(Collectors.toList());
+        return (availableSubscriptionInfoList == null || availableSubscriptionInfoList.isEmpty() || groupUuid == null) ? Collections.singletonList(subById) : (List) availableSubscriptionInfoList.stream().filter(new SubscriptionUtil$$ExternalSyntheticLambda25(groupUuid)).collect(Collectors.toList());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ boolean lambda$findAllSubscriptionsInGroup$13(ParcelUuid parcelUuid, SubscriptionInfo subscriptionInfo) {
         return subscriptionInfo.isEmbedded() && parcelUuid.equals(subscriptionInfo.getGroupUuid());
     }
@@ -416,12 +342,11 @@ public class SubscriptionUtil {
             Log.e("SubscriptionUtil", "Invalid subscription.");
             return null;
         }
-        String line1Number = ((TelephonyManager) context.getSystemService(TelephonyManager.class)).getLine1Number(subscriptionInfo.getSubscriptionId());
-        String countryCodeForMcc = MccTable.countryCodeForMcc(subscriptionInfo.getMccString());
-        if (!TextUtils.isEmpty(line1Number)) {
-            return PhoneNumberUtils.formatNumber(line1Number, countryCodeForMcc);
+        String phoneNumber = ((SubscriptionManager) context.getSystemService(SubscriptionManager.class)).getPhoneNumber(subscriptionInfo.getSubscriptionId());
+        if (TextUtils.isEmpty(phoneNumber)) {
+            return null;
         }
-        return null;
+        return PhoneNumberUtils.formatNumber(phoneNumber, MccTable.countryCodeForMcc(subscriptionInfo.getMccString()));
     }
 
     public static SubscriptionInfo getFirstRemovableSubscription(Context context) {
@@ -436,15 +361,15 @@ public class SubscriptionUtil {
             Log.w("SubscriptionUtil", "All subscription info list is empty.");
             return null;
         }
-        for (UiccCardInfo uiccCardInfo : uiccCardsInfo) {
-            if (uiccCardInfo == null) {
+        for (UiccCardInfo next : uiccCardsInfo) {
+            if (next == null) {
                 Log.w("SubscriptionUtil", "Got null card.");
-            } else if (!uiccCardInfo.isRemovable() || uiccCardInfo.getCardId() == -1) {
-                Log.i("SubscriptionUtil", "Skip embedded card or invalid cardId on slot: " + uiccCardInfo.getSlotIndex());
+            } else if (!next.isRemovable() || next.getCardId() == -1) {
+                Log.i("SubscriptionUtil", "Skip embedded card or invalid cardId on slot: " + next.getPhysicalSlotIndex());
             } else {
-                Log.i("SubscriptionUtil", "Target removable cardId :" + uiccCardInfo.getCardId());
+                Log.i("SubscriptionUtil", "Target removable cardId :" + next.getCardId());
                 for (SubscriptionInfo subscriptionInfo : allSubscriptionInfoList) {
-                    if (uiccCardInfo.getCardId() == subscriptionInfo.getCardId()) {
+                    if (next.getCardId() == subscriptionInfo.getCardId()) {
                         return subscriptionInfo;
                     }
                 }
@@ -458,24 +383,24 @@ public class SubscriptionUtil {
         boolean z = i == getDefaultVoiceSubscriptionId();
         boolean z2 = i == getDefaultSmsSubscriptionId();
         boolean z3 = i == getDefaultDataSubscriptionId();
-        if (z3 || z || z2) {
-            StringBuilder sb = new StringBuilder();
-            if (z3) {
-                sb.append(getResForDefaultConfig(context, R.string.default_active_sim_mobile_data));
-                sb.append(", ");
-            }
-            if (z) {
-                sb.append(getResForDefaultConfig(context, R.string.default_active_sim_calls));
-                sb.append(", ");
-            }
-            if (z2) {
-                sb.append(getResForDefaultConfig(context, R.string.default_active_sim_sms));
-                sb.append(", ");
-            }
-            sb.setLength(sb.length() - 2);
-            return context.getResources().getString(R.string.sim_category_default_active_sim, sb);
+        if (!z3 && !z && !z2) {
+            return null;
         }
-        return null;
+        StringBuilder sb = new StringBuilder();
+        if (z3) {
+            sb.append(getResForDefaultConfig(context, R$string.default_active_sim_mobile_data));
+            sb.append(", ");
+        }
+        if (z) {
+            sb.append(getResForDefaultConfig(context, R$string.default_active_sim_calls));
+            sb.append(", ");
+        }
+        if (z2) {
+            sb.append(getResForDefaultConfig(context, R$string.default_active_sim_sms));
+            sb.append(", ");
+        }
+        sb.setLength(sb.length() - 2);
+        return context.getResources().getString(R$string.sim_category_default_active_sim, new Object[]{sb});
     }
 
     private static String getResForDefaultConfig(Context context, int i) {
@@ -493,4 +418,174 @@ public class SubscriptionUtil {
     private static int getDefaultDataSubscriptionId() {
         return SubscriptionManager.getDefaultDataSubscriptionId();
     }
-}
+
+    /* access modifiers changed from: private */
+    public static SubscriptionAnnotation getDefaultSubscriptionSelection(List<SubscriptionAnnotation> list) {
+        if (list == null) {
+            return null;
+        }
+        return (SubscriptionAnnotation) list.stream().filter(new MobileNetworkSummaryStatus$$ExternalSyntheticLambda3()).filter(new SubscriptionUtil$$ExternalSyntheticLambda27()).findFirst().orElse((Object) null);
+    }
+
+    public static SubscriptionInfo getSubscriptionOrDefault(Context context, int i) {
+        Function function;
+        if (i != -1) {
+            function = null;
+        } else {
+            new SubscriptionUtil$$ExternalSyntheticLambda19
+            /*  JADX ERROR: Method code generation error
+                jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0007: CONSTRUCTOR  (r0v2 ? I:com.android.settings.network.SubscriptionUtil$$ExternalSyntheticLambda19) =  call: com.android.settings.network.SubscriptionUtil$$ExternalSyntheticLambda19.<init>():void type: CONSTRUCTOR in method: com.android.settings.network.SubscriptionUtil.getSubscriptionOrDefault(android.content.Context, int):android.telephony.SubscriptionInfo, dex: classes.dex
+                	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
+                	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
+                	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
+                	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:55)
+                	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
+                	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
+                	at jadx.core.codegen.RegionGen.makeRegionIndent(RegionGen.java:98)
+                	at jadx.core.codegen.RegionGen.makeIf(RegionGen.java:156)
+                	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:62)
+                	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
+                	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
+                	at jadx.core.codegen.MethodGen.addRegionInsns(MethodGen.java:211)
+                	at jadx.core.codegen.MethodGen.addInstructions(MethodGen.java:204)
+                	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
+                	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
+                	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
+                	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
+                	at java.base/java.util.ArrayList.forEach(ArrayList.java:1540)
+                	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
+                	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
+                	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
+                	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
+                	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
+                	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
+                	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+                	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
+                	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
+                	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
+                	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
+                	at jadx.core.codegen.ClassGen.makeClass(ClassGen.java:78)
+                	at jadx.core.codegen.CodeGen.wrapCodeGen(CodeGen.java:44)
+                	at jadx.core.codegen.CodeGen.generateJavaCode(CodeGen.java:33)
+                	at jadx.core.codegen.CodeGen.generate(CodeGen.java:21)
+                	at jadx.core.ProcessClass.generateCode(ProcessClass.java:61)
+                	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
+                Caused by: jadx.core.utils.exceptions.JadxRuntimeException: Code variable not set in r0v2 ?
+                	at jadx.core.dex.instructions.args.SSAVar.getCodeVar(SSAVar.java:189)
+                	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:620)
+                	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
+                	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:250)
+                	... 34 more
+                */
+            /*
+                r0 = -1
+                if (r2 == r0) goto L_0x0005
+                r0 = 0
+                goto L_0x000a
+            L_0x0005:
+                com.android.settings.network.SubscriptionUtil$$ExternalSyntheticLambda19 r0 = new com.android.settings.network.SubscriptionUtil$$ExternalSyntheticLambda19
+                r0.<init>()
+            L_0x000a:
+                android.telephony.SubscriptionInfo r1 = getSubscription(r1, r2, r0)
+                return r1
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.android.settings.network.SubscriptionUtil.getSubscriptionOrDefault(android.content.Context, int):android.telephony.SubscriptionInfo");
+        }
+
+        private static SubscriptionInfo getSubscription(Context context, int i, Function<List<SubscriptionAnnotation>, SubscriptionAnnotation> function) {
+            List call = new SelectableSubscriptions(context, true).call();
+            Log.d("SubscriptionUtil", "get subId=" + i + " from " + call);
+            SubscriptionAnnotation subscriptionAnnotation = (SubscriptionAnnotation) call.stream().filter(new MobileNetworkSummaryStatus$$ExternalSyntheticLambda3()).filter(new SubscriptionUtil$$ExternalSyntheticLambda28(i)).findFirst().orElse((Object) null);
+            if (subscriptionAnnotation == null && function != null) {
+                subscriptionAnnotation = function.apply(call);
+            }
+            if (subscriptionAnnotation == null) {
+                return null;
+            }
+            return subscriptionAnnotation.getSubInfo();
+        }
+
+        /* access modifiers changed from: private */
+        public static /* synthetic */ boolean lambda$getSubscription$15(int i, SubscriptionAnnotation subscriptionAnnotation) {
+            return subscriptionAnnotation.getSubscriptionId() == i;
+        }
+
+        public static CharSequence getNtUniqueSubscriptionDisplayName(SubscriptionInfo subscriptionInfo, Context context, boolean z) {
+            return subscriptionInfo == null ? "" : getNtUniqueSubscriptionDisplayName(Integer.valueOf(subscriptionInfo.getSubscriptionId()), context, z);
+        }
+
+        public static CharSequence getNtUniqueSubscriptionDisplayName(Integer num, Context context, boolean z) {
+            return getNtUniqueSubscriptionDisplayNames(context, z).getOrDefault(num, "");
+        }
+
+        public static Map<Integer, CharSequence> getNtUniqueSubscriptionDisplayNames(Context context, boolean z) {
+            SubscriptionUtil$$ExternalSyntheticLambda1 subscriptionUtil$$ExternalSyntheticLambda1 = new SubscriptionUtil$$ExternalSyntheticLambda1(context);
+            HashSet hashSet = new HashSet();
+            Set set = (Set) ((Stream) subscriptionUtil$$ExternalSyntheticLambda1.get()).filter(new SubscriptionUtil$$ExternalSyntheticLambda2(hashSet)).map(new SubscriptionUtil$$ExternalSyntheticLambda3()).collect(Collectors.toSet());
+            SubscriptionUtil$$ExternalSyntheticLambda4 subscriptionUtil$$ExternalSyntheticLambda4 = new SubscriptionUtil$$ExternalSyntheticLambda4(subscriptionUtil$$ExternalSyntheticLambda1, z, context);
+            hashSet.clear();
+            return (Map) ((Stream) subscriptionUtil$$ExternalSyntheticLambda4.get()).map(new SubscriptionUtil$$ExternalSyntheticLambda7((Set) ((Stream) subscriptionUtil$$ExternalSyntheticLambda4.get()).filter(new SubscriptionUtil$$ExternalSyntheticLambda5(hashSet)).map(new SubscriptionUtil$$ExternalSyntheticLambda6()).collect(Collectors.toSet()))).collect(Collectors.toMap(new SubscriptionUtil$$ExternalSyntheticLambda8(), new SubscriptionUtil$$ExternalSyntheticLambda9()));
+        }
+
+        /* access modifiers changed from: private */
+        public static /* synthetic */ boolean lambda$getNtUniqueSubscriptionDisplayNames$16(SubscriptionInfo subscriptionInfo) {
+            return (subscriptionInfo == null || subscriptionInfo.getDisplayName() == null) ? false : true;
+        }
+
+        /* access modifiers changed from: private */
+        public static /* synthetic */ AnonymousClass2DisplayInfo lambda$getNtUniqueSubscriptionDisplayNames$17(Context context, SubscriptionInfo subscriptionInfo) {
+            String str;
+            AnonymousClass2DisplayInfo r0 = new Object() {
+                public CharSequence originalName;
+                public SubscriptionInfo subscriptionInfo;
+                public CharSequence uniqueName;
+            };
+            r0.subscriptionInfo = subscriptionInfo;
+            String charSequence = subscriptionInfo.getDisplayName().toString();
+            if (TextUtils.equals(charSequence, "CARD")) {
+                str = context.getResources().getString(R$string.sim_card);
+            } else {
+                str = charSequence.trim();
+            }
+            r0.originalName = str;
+            return r0;
+        }
+
+        /* access modifiers changed from: private */
+        public static /* synthetic */ boolean lambda$getNtUniqueSubscriptionDisplayNames$19(Set set, AnonymousClass2DisplayInfo r1) {
+            return !set.add(r1.originalName);
+        }
+
+        /* access modifiers changed from: private */
+        public static /* synthetic */ AnonymousClass2DisplayInfo lambda$getNtUniqueSubscriptionDisplayNames$21(boolean z, Context context, AnonymousClass2DisplayInfo r3) {
+            if (z) {
+                String bidiFormattedPhoneNumber = DeviceInfoUtils.getBidiFormattedPhoneNumber(context, r3.subscriptionInfo);
+                if (bidiFormattedPhoneNumber == null) {
+                    bidiFormattedPhoneNumber = "";
+                } else if (bidiFormattedPhoneNumber.length() > 4) {
+                    bidiFormattedPhoneNumber = bidiFormattedPhoneNumber.substring(bidiFormattedPhoneNumber.length() - 4);
+                }
+                if (TextUtils.isEmpty(bidiFormattedPhoneNumber)) {
+                    r3.uniqueName = r3.originalName;
+                } else {
+                    r3.uniqueName = r3.originalName + " " + bidiFormattedPhoneNumber;
+                }
+            } else {
+                r3.uniqueName = r3.originalName;
+            }
+            return r3;
+        }
+
+        /* access modifiers changed from: private */
+        public static /* synthetic */ boolean lambda$getNtUniqueSubscriptionDisplayNames$23(Set set, AnonymousClass2DisplayInfo r1) {
+            return !set.add(r1.uniqueName);
+        }
+
+        /* access modifiers changed from: private */
+        public static /* synthetic */ AnonymousClass2DisplayInfo lambda$getNtUniqueSubscriptionDisplayNames$25(Set set, AnonymousClass2DisplayInfo r2) {
+            if (set.contains(r2.uniqueName)) {
+                r2.uniqueName = r2.originalName + " " + r2.subscriptionInfo.getSubscriptionId();
+            }
+            return r2;
+        }
+    }

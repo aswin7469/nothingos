@@ -5,7 +5,7 @@ import com.airbnb.lottie.animation.keyframe.BaseKeyframeAnimation;
 import com.airbnb.lottie.animation.keyframe.SplitDimensionPathKeyframeAnimation;
 import com.airbnb.lottie.value.Keyframe;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class AnimatableSplitDimensionPathValue implements AnimatableValue<PointF, PointF> {
     private final AnimatableFloatValue animatableXDimension;
     private final AnimatableFloatValue animatableYDimension;
@@ -15,19 +15,15 @@ public class AnimatableSplitDimensionPathValue implements AnimatableValue<PointF
         this.animatableYDimension = animatableFloatValue2;
     }
 
-    @Override // com.airbnb.lottie.model.animatable.AnimatableValue
     public List<Keyframe<PointF>> getKeyframes() {
         throw new UnsupportedOperationException("Cannot call getKeyframes on AnimatableSplitDimensionPathValue.");
     }
 
-    @Override // com.airbnb.lottie.model.animatable.AnimatableValue
     public boolean isStatic() {
         return this.animatableXDimension.isStatic() && this.animatableYDimension.isStatic();
     }
 
-    @Override // com.airbnb.lottie.model.animatable.AnimatableValue
-    /* renamed from: createAnimation */
-    public BaseKeyframeAnimation<PointF, PointF> mo180createAnimation() {
-        return new SplitDimensionPathKeyframeAnimation(this.animatableXDimension.mo180createAnimation(), this.animatableYDimension.mo180createAnimation());
+    public BaseKeyframeAnimation<PointF, PointF> createAnimation() {
+        return new SplitDimensionPathKeyframeAnimation(this.animatableXDimension.createAnimation(), this.animatableYDimension.createAnimation());
     }
 }

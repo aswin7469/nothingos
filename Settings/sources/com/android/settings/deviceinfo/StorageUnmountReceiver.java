@@ -7,9 +7,8 @@ import android.os.storage.StorageManager;
 import android.os.storage.VolumeInfo;
 import android.util.Log;
 import com.android.settings.deviceinfo.storage.StorageUtils;
-/* loaded from: classes.dex */
+
 public class StorageUnmountReceiver extends BroadcastReceiver {
-    @Override // android.content.BroadcastReceiver
     public void onReceive(Context context, Intent intent) {
         String stringExtra = intent.getStringExtra("android.os.storage.extra.VOLUME_ID");
         VolumeInfo findVolumeById = ((StorageManager) context.getSystemService(StorageManager.class)).findVolumeById(stringExtra);

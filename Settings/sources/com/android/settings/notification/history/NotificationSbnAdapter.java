@@ -3,7 +3,6 @@ package com.android.settings.notification.history;
 import android.app.ActivityManager;
 import android.app.Notification;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
@@ -17,34 +16,35 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Slog;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
 import com.android.internal.logging.UiEventLogger;
 import com.android.internal.util.ContrastColorUtil;
-import com.android.settings.R;
+import com.android.settings.R$drawable;
+import com.android.settings.R$layout;
 import com.android.settingslib.Utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public class NotificationSbnAdapter extends RecyclerView.Adapter<NotificationSbnViewHolder> {
     private int mBackgroundColor;
     private final Context mContext;
     private int mCurrentUser;
+    private List<Integer> mEnabledProfiles = new ArrayList();
     private boolean mInNightMode;
     private boolean mIsSnoozed;
     private PackageManager mPm;
     private UiEventLogger mUiEventLogger;
-    private List<Integer> mEnabledProfiles = new ArrayList();
-    private Map<Integer, Drawable> mUserBadgeCache = new HashMap();
-    private List<StatusBarNotification> mValues = new ArrayList();
+    private Map<Integer, Drawable> mUserBadgeCache;
+    private List<StatusBarNotification> mValues;
 
     public NotificationSbnAdapter(Context context, PackageManager packageManager, UserManager userManager, boolean z, UiEventLogger uiEventLogger) {
-        int[] enabledProfileIds;
         this.mContext = context;
         this.mPm = packageManager;
+        this.mUserBadgeCache = new HashMap();
+        this.mValues = new ArrayList();
         this.mBackgroundColor = Utils.getColorAttrDefaultColor(context, 16842801);
         this.mInNightMode = (context.getResources().getConfiguration().uiMode & 48) == 32;
         int currentUser = ActivityManager.getCurrentUser();
@@ -59,15 +59,12 @@ public class NotificationSbnAdapter extends RecyclerView.Adapter<NotificationSbn
         this.mUiEventLogger = uiEventLogger;
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
-    /* renamed from: onCreateViewHolder  reason: collision with other method in class */
-    public NotificationSbnViewHolder mo960onCreateViewHolder(ViewGroup viewGroup, int i) {
-        return new NotificationSbnViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.notification_sbn_log_row, viewGroup, false));
+    public NotificationSbnViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        return new NotificationSbnViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R$layout.notification_sbn_log_row, viewGroup, false));
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
-    public void onBindViewHolder(final NotificationSbnViewHolder notificationSbnViewHolder, int i) {
-        final StatusBarNotification statusBarNotification = this.mValues.get(i);
+    public void onBindViewHolder(NotificationSbnViewHolder notificationSbnViewHolder, int i) {
+        StatusBarNotification statusBarNotification = this.mValues.get(i);
         if (statusBarNotification != null) {
             notificationSbnViewHolder.setIconBackground(loadBackground(statusBarNotification));
             notificationSbnViewHolder.setIcon(loadIcon(statusBarNotification));
@@ -80,33 +77,20 @@ public class NotificationSbnAdapter extends RecyclerView.Adapter<NotificationSbn
                 z = false;
             }
             notificationSbnViewHolder.setDividerVisible(z);
-            final int normalizeUserId = normalizeUserId(statusBarNotification);
+            int normalizeUserId = normalizeUserId(statusBarNotification);
             if (!this.mUserBadgeCache.containsKey(Integer.valueOf(normalizeUserId))) {
-                this.mUserBadgeCache.put(Integer.valueOf(normalizeUserId), this.mContext.getPackageManager().getUserBadgeForDensity(UserHandle.of(normalizeUserId), -1));
+                this.mUserBadgeCache.put(Integer.valueOf(normalizeUserId), this.mContext.getPackageManager().getUserBadgeForDensity(UserHandle.of(normalizeUserId), 0));
             }
             notificationSbnViewHolder.setProfileBadge(this.mUserBadgeCache.get(Integer.valueOf(normalizeUserId)));
             notificationSbnViewHolder.addOnClick(i, statusBarNotification.getPackageName(), statusBarNotification.getUid(), statusBarNotification.getUserId(), statusBarNotification.getNotification().contentIntent, statusBarNotification.getInstanceId(), this.mIsSnoozed, this.mUiEventLogger);
-            notificationSbnViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() { // from class: com.android.settings.notification.history.NotificationSbnAdapter$$ExternalSyntheticLambda0
-                @Override // android.view.View.OnLongClickListener
-                public final boolean onLongClick(View view) {
-                    boolean lambda$onBindViewHolder$0;
-                    lambda$onBindViewHolder$0 = NotificationSbnAdapter.lambda$onBindViewHolder$0(statusBarNotification, notificationSbnViewHolder, normalizeUserId, view);
-                    return lambda$onBindViewHolder$0;
-                }
-            });
+            notificationSbnViewHolder.itemView.setOnLongClickListener(new NotificationSbnAdapter$$ExternalSyntheticLambda0(statusBarNotification, notificationSbnViewHolder, normalizeUserId));
             return;
         }
         Slog.w("SbnAdapter", "null entry in list at position " + i);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ boolean lambda$onBindViewHolder$0(StatusBarNotification statusBarNotification, NotificationSbnViewHolder notificationSbnViewHolder, int i, View view) {
-        notificationSbnViewHolder.itemView.getContext().startActivityAsUser(new Intent("android.settings.CHANNEL_NOTIFICATION_SETTINGS").putExtra("android.provider.extra.APP_PACKAGE", statusBarNotification.getPackageName()).putExtra("android.provider.extra.CHANNEL_ID", statusBarNotification.getNotification().getChannelId()).putExtra("android.provider.extra.CONVERSATION_ID", statusBarNotification.getNotification().getShortcutId()), UserHandle.of(i));
-        return true;
-    }
-
     private Drawable loadBackground(StatusBarNotification statusBarNotification) {
-        Drawable drawable = this.mContext.getDrawable(R.drawable.circle);
+        Drawable drawable = this.mContext.getDrawable(R$drawable.circle);
         int i = statusBarNotification.getNotification().color;
         if (i == 0) {
             i = Utils.getColorAttrDefaultColor(this.mContext, 16843829);
@@ -115,7 +99,6 @@ public class NotificationSbnAdapter extends RecyclerView.Adapter<NotificationSbn
         return drawable;
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public int getItemCount() {
         return this.mValues.size();
     }
@@ -131,15 +114,17 @@ public class NotificationSbnAdapter extends RecyclerView.Adapter<NotificationSbn
     }
 
     public void addSbn(StatusBarNotification statusBarNotification) {
-        if (!shouldShowSbn(statusBarNotification)) {
-            return;
+        if (shouldShowSbn(statusBarNotification)) {
+            this.mValues.add(0, statusBarNotification);
+            notifyDataSetChanged();
         }
-        this.mValues.add(0, statusBarNotification);
-        notifyDataSetChanged();
     }
 
     private boolean shouldShowSbn(StatusBarNotification statusBarNotification) {
-        return (!statusBarNotification.isGroup() || !statusBarNotification.getNotification().isGroupSummary()) && this.mEnabledProfiles.contains(Integer.valueOf(normalizeUserId(statusBarNotification)));
+        if ((!statusBarNotification.isGroup() || !statusBarNotification.getNotification().isGroupSummary()) && this.mEnabledProfiles.contains(Integer.valueOf(normalizeUserId(statusBarNotification)))) {
+            return true;
+        }
+        return false;
     }
 
     private CharSequence loadPackageLabel(String str) {

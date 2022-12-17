@@ -234,11 +234,11 @@
     </plurals>
     <plurals name="notifications_sent_daily">
         <item quantity="one">~%d thông báo mỗi ngày</item>
-        <item quantity="other">~%d thông báo mỗi ngày</item>
+        <item quantity="other">~%,d thông báo mỗi ngày</item>
     </plurals>
     <plurals name="notifications_sent_weekly">
         <item quantity="one">~%d thông báo mỗi tuần</item>
-        <item quantity="other">~%d thông báo mỗi tuần</item>
+        <item quantity="other">~%,d thông báo mỗi tuần</item>
     </plurals>
     <plurals name="number_of_device_admins">
         <item quantity="one">%d ứng dụng đang hoạt động</item>
@@ -320,14 +320,6 @@
         <item quantity="one">Tin tưởng hoặc xóa chứng chỉ</item>
         <item quantity="other">Tin tưởng hoặc xóa chứng chỉ</item>
     </plurals>
-    <plurals name="ssl_ca_cert_info_message">
-        <item quantity="one">%s đã cài đặt tổ chức phát hành chứng chỉ cho hồ sơ công việc của bạn, chứng chỉ đó có thể cho phép tổ chức này giám sát hoạt động trên mạng công việc, bao gồm email, ứng dụng và trang web bảo mật.\n\nĐể biết thêm thông tin về chứng chỉ này, hãy liên hệ với quản trị viên của bạn.</item>
-        <item quantity="other">%s đã cài đặt tổ chức phát hành chứng chỉ cho hồ sơ công việc của bạn, chứng chỉ đó có thể cho phép tổ chức này giám sát hoạt động trên mạng công việc, bao gồm email, ứng dụng và trang web bảo mật.\n\nĐể biết thêm thông tin về các chứng chỉ này, hãy liên hệ với quản trị viên của bạn.</item>
-    </plurals>
-    <plurals name="ssl_ca_cert_info_message_device_owner">
-        <item quantity="one">%s đã cài đặt tổ chức phát hành chứng chỉ trên thiết bị của bạn, chứng chỉ đó có thể cho phép tổ chức này giám sát hoạt động trên mạng của thiết bị, bao gồm email, ứng dụng và trang web bảo mật.\n\nĐể biết thêm thông tin về chứng chỉ này, hãy liên hệ với quản trị viên của bạn.</item>
-        <item quantity="other">%s đã cài đặt các tổ chức phát hành chứng chỉ trên thiết bị của bạn, chứng chỉ đó có thể cho phép tổ chức này giám sát hoạt động trên mạng của thiết bị, bao gồm email, ứng dụng và trang web bảo mật.\n\nĐể biết thêm thông tin về các chứng chỉ này, hãy liên hệ với quản trị viên của bạn.</item>
-    </plurals>
     <plurals name="ssl_ca_cert_settings_button">
         <item quantity="one">Kiểm tra chứng chỉ</item>
         <item quantity="other">Kiểm tra các chứng chỉ</item>
@@ -359,10 +351,6 @@
     <plurals name="wifi_saved_passpoint_access_points_summary">
         <item quantity="one">1 gói thuê bao</item>
         <item quantity="other">%d gói thuê bao</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d thiết bị đã kết nối</item>
-        <item quantity="other">%1$d thiết bị đã kết nối</item>
     </plurals>
     <plurals name="wrong_pin_code">
         <item quantity="one">Mã PIN của SIM không chính xác, bạn còn %d lần thử trước khi bạn phải liên hệ với nhà cung cấp dịch vụ để mở khóa thiết bị của bạn.</item>

@@ -11,29 +11,16 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.telephony.SubscriptionManager;
 import android.util.Log;
-/* loaded from: classes.dex */
+
 public class SubscriptionsChangeListener extends ContentObserver {
+    private Uri mAirplaneModeSettingUri;
+    private BroadcastReceiver mBroadcastReceiver;
     private SubscriptionsChangeListenerClient mClient;
     private Context mContext;
-    private SubscriptionManager mSubscriptionManager;
     private boolean mRunning = false;
-    private SubscriptionManager.OnSubscriptionsChangedListener mSubscriptionsChangedListener = new SubscriptionManager.OnSubscriptionsChangedListener(Looper.getMainLooper()) { // from class: com.android.settings.network.SubscriptionsChangeListener.1
-        @Override // android.telephony.SubscriptionManager.OnSubscriptionsChangedListener
-        public void onSubscriptionsChanged() {
-            SubscriptionsChangeListener.this.subscriptionsChangedCallback();
-        }
-    };
-    private Uri mAirplaneModeSettingUri = Settings.Global.getUriFor("airplane_mode_on");
-    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() { // from class: com.android.settings.network.SubscriptionsChangeListener.2
-        @Override // android.content.BroadcastReceiver
-        public void onReceive(Context context, Intent intent) {
-            if (!isInitialStickyBroadcast()) {
-                SubscriptionsChangeListener.this.subscriptionsChangedCallback();
-            }
-        }
-    };
+    private SubscriptionManager mSubscriptionManager;
+    private SubscriptionManager.OnSubscriptionsChangedListener mSubscriptionsChangedListener;
 
-    /* loaded from: classes.dex */
     public interface SubscriptionsChangeListenerClient {
         void onAirplaneModeChanged(boolean z);
 
@@ -45,6 +32,19 @@ public class SubscriptionsChangeListener extends ContentObserver {
         this.mContext = context;
         this.mClient = subscriptionsChangeListenerClient;
         this.mSubscriptionManager = (SubscriptionManager) context.getSystemService(SubscriptionManager.class);
+        this.mSubscriptionsChangedListener = new SubscriptionManager.OnSubscriptionsChangedListener(Looper.getMainLooper()) {
+            public void onSubscriptionsChanged() {
+                SubscriptionsChangeListener.this.subscriptionsChangedCallback();
+            }
+        };
+        this.mAirplaneModeSettingUri = Settings.Global.getUriFor("airplane_mode_on");
+        this.mBroadcastReceiver = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                if (!isInitialStickyBroadcast()) {
+                    SubscriptionsChangeListener.this.subscriptionsChangedCallback();
+                }
+            }
+        };
     }
 
     public void start() {
@@ -70,12 +70,11 @@ public class SubscriptionsChangeListener extends ContentObserver {
         return Settings.Global.getInt(this.mContext.getContentResolver(), "airplane_mode_on", 0) != 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void subscriptionsChangedCallback() {
         this.mClient.onSubscriptionsChanged();
     }
 
-    @Override // android.database.ContentObserver
     public void onChange(boolean z, Uri uri) {
         if (uri.equals(this.mAirplaneModeSettingUri)) {
             this.mClient.onAirplaneModeChanged(isAirplaneModeOn());

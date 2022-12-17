@@ -16,7 +16,7 @@ import androidx.lifecycle.OnLifecycleEvent;
 import com.android.settings.AirplaneModeEnabler;
 import java.util.HashMap;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public class InternetUpdater implements AirplaneModeEnabler.OnAirplaneModeChangedListener, LifecycleObserver {
     private static Map<Integer, Integer> sTransportMap;
     AirplaneModeEnabler mAirplaneModeEnabler;
@@ -24,49 +24,40 @@ public class InternetUpdater implements AirplaneModeEnabler.OnAirplaneModeChange
     private final Context mContext;
     boolean mInternetAvailable;
     private int mInternetType;
-    private InternetChangeListener mListener;
-    int mTransport;
-    private final WifiManager mWifiManager;
-    private ConnectivityManager.NetworkCallback mNetworkCallback = new ConnectivityManager.NetworkCallback() { // from class: com.android.settings.network.InternetUpdater.1
-        @Override // android.net.ConnectivityManager.NetworkCallback
+    /* access modifiers changed from: private */
+    public InternetChangeListener mListener;
+    private ConnectivityManager.NetworkCallback mNetworkCallback = new ConnectivityManager.NetworkCallback() {
         public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities) {
             InternetUpdater.this.updateInternetAvailable(networkCapabilities);
         }
 
-        @Override // android.net.ConnectivityManager.NetworkCallback
         public void onLost(Network network) {
             InternetUpdater internetUpdater = InternetUpdater.this;
             internetUpdater.mInternetAvailable = false;
             internetUpdater.updateInternetType();
         }
     };
-    private int mWifiState = 4;
-    private final BroadcastReceiver mWifiStateReceiver = new BroadcastReceiver() { // from class: com.android.settings.network.InternetUpdater.2
-        @Override // android.content.BroadcastReceiver
+    int mTransport;
+    /* access modifiers changed from: private */
+    public final WifiManager mWifiManager;
+    private final IntentFilter mWifiStateFilter;
+    private final BroadcastReceiver mWifiStateReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             InternetUpdater.this.fetchActiveNetwork();
             if (InternetUpdater.this.mListener != null) {
-                boolean z = true;
-                InternetUpdater.this.mWifiState = intent.getIntExtra("wifi_state", 1);
-                InternetChangeListener internetChangeListener = InternetUpdater.this.mListener;
-                if (InternetUpdater.this.mWifiState != 3) {
-                    z = false;
-                }
-                internetChangeListener.onWifiEnabledChanged(z);
+                InternetUpdater.this.mListener.onWifiEnabledChanged(InternetUpdater.this.mWifiManager.isWifiEnabled());
             }
         }
     };
-    private final IntentFilter mWifiStateFilter = new IntentFilter("android.net.wifi.WIFI_STATE_CHANGED");
 
-    /* loaded from: classes.dex */
     public interface InternetChangeListener {
-        default void onAirplaneModeChanged(boolean z) {
+        void onAirplaneModeChanged(boolean z) {
         }
 
-        default void onInternetTypeChanged(int i) {
+        void onInternetTypeChanged(int i) {
         }
 
-        default void onWifiEnabledChanged(boolean z) {
+        void onWifiEnabledChanged(boolean z) {
         }
     }
 
@@ -83,6 +74,7 @@ public class InternetUpdater implements AirplaneModeEnabler.OnAirplaneModeChange
         this.mAirplaneModeEnabler = new AirplaneModeEnabler(context, this);
         this.mConnectivityManager = (ConnectivityManager) context.getSystemService(ConnectivityManager.class);
         this.mWifiManager = (WifiManager) context.getSystemService(WifiManager.class);
+        this.mWifiStateFilter = new IntentFilter("android.net.wifi.WIFI_STATE_CHANGED");
         this.mListener = internetChangeListener;
         fetchActiveNetwork();
         if (lifecycle != null) {
@@ -94,7 +86,7 @@ public class InternetUpdater implements AirplaneModeEnabler.OnAirplaneModeChange
     public void onResume() {
         this.mAirplaneModeEnabler.start();
         this.mConnectivityManager.registerDefaultNetworkCallback(this.mNetworkCallback);
-        this.mContext.registerReceiver(this.mWifiStateReceiver, this.mWifiStateFilter);
+        this.mContext.registerReceiver(this.mWifiStateReceiver, this.mWifiStateFilter, 2);
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
@@ -109,7 +101,6 @@ public class InternetUpdater implements AirplaneModeEnabler.OnAirplaneModeChange
         this.mAirplaneModeEnabler.close();
     }
 
-    @Override // com.android.settings.AirplaneModeEnabler.OnAirplaneModeChangedListener
     public void onAirplaneModeChanged(boolean z) {
         fetchActiveNetwork();
         InternetChangeListener internetChangeListener = this.mListener;
@@ -118,7 +109,7 @@ public class InternetUpdater implements AirplaneModeEnabler.OnAirplaneModeChange
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void fetchActiveNetwork() {
         Network activeNetwork = this.mConnectivityManager.getActiveNetwork();
         if (activeNetwork == null) {
@@ -135,7 +126,8 @@ public class InternetUpdater implements AirplaneModeEnabler.OnAirplaneModeChange
         updateInternetAvailable(networkCapabilities);
     }
 
-    void updateInternetAvailable(NetworkCapabilities networkCapabilities) {
+    /* access modifiers changed from: package-private */
+    public void updateInternetAvailable(NetworkCapabilities networkCapabilities) {
         boolean z = false;
         if (networkCapabilities.hasCapability(12) && networkCapabilities.hasCapability(16)) {
             int[] transportTypes = networkCapabilities.getTransportTypes();
@@ -159,7 +151,8 @@ public class InternetUpdater implements AirplaneModeEnabler.OnAirplaneModeChange
         updateInternetType();
     }
 
-    void updateInternetType() {
+    /* access modifiers changed from: package-private */
+    public void updateInternetType() {
         int i = 3;
         if (this.mInternetAvailable) {
             int intValue = sTransportMap.get(Integer.valueOf(this.mTransport)).intValue();
@@ -176,7 +169,8 @@ public class InternetUpdater implements AirplaneModeEnabler.OnAirplaneModeChange
         }
     }
 
-    protected boolean isCarrierWifiActive() {
+    /* access modifiers changed from: protected */
+    public boolean isCarrierWifiActive() {
         WifiInfo connectionInfo = this.mWifiManager.getConnectionInfo();
         if (connectionInfo == null || !connectionInfo.isCarrierMerged()) {
             return false;
@@ -187,17 +181,5 @@ public class InternetUpdater implements AirplaneModeEnabler.OnAirplaneModeChange
 
     public int getInternetType() {
         return this.mInternetType;
-    }
-
-    public boolean isAirplaneModeOn() {
-        return this.mAirplaneModeEnabler.isAirplaneModeOn();
-    }
-
-    public boolean isWifiEnabled() {
-        int i = this.mWifiState;
-        if (i != 4) {
-            return i == 3;
-        }
-        return this.mWifiManager.isWifiEnabled();
     }
 }

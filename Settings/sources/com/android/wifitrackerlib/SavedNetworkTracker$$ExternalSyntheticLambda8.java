@@ -1,18 +1,16 @@
 package com.android.wifitrackerlib;
 
-import android.net.wifi.WifiConfiguration;
-import java.util.function.Predicate;
-/* loaded from: classes.dex */
-public final /* synthetic */ class SavedNetworkTracker$$ExternalSyntheticLambda8 implements Predicate {
-    public static final /* synthetic */ SavedNetworkTracker$$ExternalSyntheticLambda8 INSTANCE = new SavedNetworkTracker$$ExternalSyntheticLambda8();
+import com.android.wifitrackerlib.SavedNetworkTracker;
 
-    private /* synthetic */ SavedNetworkTracker$$ExternalSyntheticLambda8() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class SavedNetworkTracker$$ExternalSyntheticLambda8 implements Runnable {
+    public final /* synthetic */ SavedNetworkTracker.SavedNetworkTrackerCallback f$0;
+
+    public /* synthetic */ SavedNetworkTracker$$ExternalSyntheticLambda8(SavedNetworkTracker.SavedNetworkTrackerCallback savedNetworkTrackerCallback) {
+        this.f$0 = savedNetworkTrackerCallback;
     }
 
-    @Override // java.util.function.Predicate
-    public final boolean test(Object obj) {
-        boolean lambda$updateStandardWifiEntryConfigs$1;
-        lambda$updateStandardWifiEntryConfigs$1 = SavedNetworkTracker.lambda$updateStandardWifiEntryConfigs$1((WifiConfiguration) obj);
-        return lambda$updateStandardWifiEntryConfigs$1;
+    public final void run() {
+        this.f$0.onSubscriptionWifiEntriesChanged();
     }
 }

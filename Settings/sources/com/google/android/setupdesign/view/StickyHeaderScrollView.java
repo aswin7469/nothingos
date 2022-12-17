@@ -2,11 +2,10 @@ package com.google.android.setupdesign.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.WindowInsets;
-/* loaded from: classes2.dex */
+
 public class StickyHeaderScrollView extends BottomScrollView {
     private int statusBarInset = 0;
     private View sticky;
@@ -24,8 +23,7 @@ public class StickyHeaderScrollView extends BottomScrollView {
         super(context, attributeSet, i);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.google.android.setupdesign.view.BottomScrollView, android.widget.ScrollView, android.widget.FrameLayout, android.view.ViewGroup, android.view.View
+    /* access modifiers changed from: protected */
     public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
         if (this.sticky == null) {
@@ -40,34 +38,31 @@ public class StickyHeaderScrollView extends BottomScrollView {
     }
 
     private void updateStickyHeaderPosition() {
-        View view;
-        if (Build.VERSION.SDK_INT < 11 || (view = this.sticky) == null) {
-            return;
-        }
-        View view2 = this.stickyContainer;
-        View view3 = view2 != null ? view2 : view;
-        int top = view2 != null ? view.getTop() : 0;
-        if ((view3.getTop() - getScrollY()) + top < this.statusBarInset || !view3.isShown()) {
-            view3.setTranslationY(getScrollY() - top);
-        } else {
-            view3.setTranslationY(0.0f);
+        View view = this.sticky;
+        if (view != null) {
+            View view2 = this.stickyContainer;
+            View view3 = view2 != null ? view2 : view;
+            int top = view2 != null ? view.getTop() : 0;
+            if ((view3.getTop() - getScrollY()) + top < this.statusBarInset || !view3.isShown()) {
+                view3.setTranslationY((float) (getScrollY() - top));
+            } else {
+                view3.setTranslationY(0.0f);
+            }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.google.android.setupdesign.view.BottomScrollView, android.view.View
+    /* access modifiers changed from: protected */
     public void onScrollChanged(int i, int i2, int i3, int i4) {
         super.onScrollChanged(i, i2, i3, i4);
         updateStickyHeaderPosition();
     }
 
-    @Override // android.view.View
     @TargetApi(21)
     public WindowInsets onApplyWindowInsets(WindowInsets windowInsets) {
-        if (getFitsSystemWindows()) {
-            this.statusBarInset = windowInsets.getSystemWindowInsetTop();
-            return windowInsets.replaceSystemWindowInsets(windowInsets.getSystemWindowInsetLeft(), 0, windowInsets.getSystemWindowInsetRight(), windowInsets.getSystemWindowInsetBottom());
+        if (!getFitsSystemWindows()) {
+            return windowInsets;
         }
-        return windowInsets;
+        this.statusBarInset = windowInsets.getSystemWindowInsetTop();
+        return windowInsets.replaceSystemWindowInsets(windowInsets.getSystemWindowInsetLeft(), 0, windowInsets.getSystemWindowInsetRight(), windowInsets.getSystemWindowInsetBottom());
     }
 }

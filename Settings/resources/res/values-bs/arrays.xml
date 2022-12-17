@@ -106,7 +106,7 @@
         <item>Lažna lokacija</item>
         <item>Čitaj sadržaj pohrane</item>
         <item>Piši u pohranu</item>
-        <item>Uključi ekran</item>
+        <item>Uključivanje ekrana</item>
         <item>Pregledaj račune</item>
         <item>Radi u pozadini</item>
         <item>Jačina zvuka za pristupačnost</item>
@@ -196,6 +196,8 @@
         <item>Starije od 60 dana</item>
         <item>Starije od 90 dana</item>
     </array>
+    <array name="avatar_image_descriptions">
+    </array>
     <array name="battery_labels">
         <item>0%</item>
         <item>50%</item>
@@ -260,6 +262,8 @@
         <item>48,0 kHz</item>
         <item>88,2 kHz</item>
         <item>96,0 kHz</item>
+        <item>176,4 kHz</item>
+        <item>192,0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
         <item>Korištenje odabira sistema (zadano)</item>
@@ -267,6 +271,8 @@
         <item>48,0 kHz</item>
         <item>88,2 kHz</item>
         <item>96,0 kHz</item>
+        <item>176,4 kHz</item>
+        <item>192,0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
         <item>Korištenje odabira sistema (zadano)</item>
@@ -277,6 +283,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive audio</item>
         <item>Qualcomm® aptX™ TWS+ audio</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
         <item>Korištenje odabira sistema (zadano)</item>
@@ -287,6 +297,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive audio</item>
         <item>Qualcomm® aptX™ TWS+ audio</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -343,19 +357,12 @@
         <item>Podignuta</item>
         <item>Udubljena</item>
     </array>
-    <array name="captioning_font_size_selector_summaries">
-        <item>Veoma mala veličina teksta</item>
-        <item>Mala veličina teksta</item>
-        <item>Zadana veličina teksta</item>
-        <item>Velika veličina teksta</item>
-        <item>Veoma velika veličina teksta</item>
-    </array>
     <array name="captioning_font_size_selector_titles">
-        <item>Vrlo mali</item>
-        <item>Mali</item>
-        <item>Zadano</item>
-        <item>Veliki</item>
-        <item>Vrlo veliki</item>
+        <item>Vrlo malo</item>
+        <item>Malo</item>
+        <item>Srednje</item>
+        <item>Veliko</item>
+        <item>Vrlo veliko</item>
     </array>
     <array name="captioning_opacity_selector_titles">
         <item>25%</item>
@@ -486,6 +493,14 @@
         <item>GID</item>
         <item>ICCID</item>
     </array>
+    <array name="nfc_payment_favor">
+        <item>Uvijek</item>
+        <item>Osim kada je otvorena druga aplikacija za plaćanje</item>
+    </array>
+    <array name="nfc_payment_favor_values">
+        <item>@null</item>
+        <item>1</item>
+    </array>
     <array name="overlay_display_devices_entries">
         <item>Ništa</item>
         <item>480p</item>
@@ -501,7 +516,7 @@
         <item>720p, 1080p (dupli ekran)</item>
     </array>
     <array name="preferred_network_mode_choices">
-        <item>Preferiraj GSM/WCDMA</item>
+        <item>Preferira se GSM/WCDMA</item>
         <item>Samo GSM</item>
         <item>Samo WCDMA</item>
         <item>Automatski GSM/WCDMA</item>
@@ -618,17 +633,20 @@
         <item>Nacrtaj plavom bojom nepravougaonu oblast za isjecanje</item>
         <item>Označite zelenom bojom testirane komande za crtanje</item>
     </array>
-    <array name="sim_color_light">
-        <item>@color/SIM_color_cyan</item>
-        <item>@color/SIM_color_blue800</item>
-        <item>@color/SIM_color_green800</item>
-        <item>@color/SIM_color_purple800</item>
-        <item>@color/SIM_color_pink800</item>
-        <item>@color/SIM_color_orange</item>
-    </array>
     <array name="swipe_direction_values">
         <item>1</item>
         <item>@null</item>
+    </array>
+    <array name="switch_to_user_zero_when_docked_timeout_entries">
+        <item>Nikada</item>
+        <item>Nakon 1 min</item>
+        <item>Nakon 5 min</item>
+    </array>
+    <array name="tare_modifiers_subfactors">
+        <item>Punjenje</item>
+        <item>Doziranje</item>
+        <item>Način rada uštede energije</item>
+        <item>Stanje procesa</item>
     </array>
     <array name="timezone_filters">
         <item>Amerika</item>

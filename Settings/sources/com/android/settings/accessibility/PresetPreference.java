@@ -6,32 +6,32 @@ import android.view.View;
 import android.view.accessibility.CaptioningManager;
 import android.widget.TextView;
 import com.android.internal.widget.SubtitleView;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+
 public class PresetPreference extends ListDialogPreference {
     private final CaptioningManager mCaptioningManager;
 
     public PresetPreference(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        setDialogLayoutResource(R.layout.grid_picker_dialog);
-        setListItemLayoutResource(R.layout.preset_picker_item);
+        setDialogLayoutResource(R$layout.grid_picker_dialog);
+        setListItemLayoutResource(R$layout.preset_picker_item);
         this.mCaptioningManager = (CaptioningManager) context.getSystemService("captioning");
     }
 
-    @Override // androidx.preference.Preference
     public boolean shouldDisableDependents() {
         return getValue() != -1 || super.shouldDisableDependents();
     }
 
-    @Override // com.android.settings.accessibility.ListDialogPreference
-    protected void onBindListItem(View view, int i) {
-        View findViewById = view.findViewById(R.id.preview_viewport);
-        SubtitleView findViewById2 = view.findViewById(R.id.preview);
+    /* access modifiers changed from: protected */
+    public void onBindListItem(View view, int i) {
+        View findViewById = view.findViewById(R$id.preview_viewport);
+        SubtitleView findViewById2 = view.findViewById(R$id.preview);
         CaptionAppearanceFragment.applyCaptionProperties(this.mCaptioningManager, findViewById2, findViewById, getValueAt(i));
         findViewById2.setTextSize(getContext().getResources().getDisplayMetrics().density * 32.0f);
         CharSequence titleAt = getTitleAt(i);
         if (titleAt != null) {
-            ((TextView) view.findViewById(R.id.summary)).setText(titleAt);
+            ((TextView) view.findViewById(R$id.summary)).setText(titleAt);
         }
     }
 }

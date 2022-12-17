@@ -5,30 +5,28 @@ import android.content.res.Resources;
 import android.icu.text.ListFormatter;
 import android.os.Parcel;
 import android.os.Parcelable;
-import com.android.settings.R;
+import com.android.settings.R$drawable;
+import com.android.settings.R$plurals;
 import com.android.settings.Utils;
 import com.android.settings.fuelgauge.batterytip.AppInfo;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class RestrictAppTip extends BatteryTip {
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() { // from class: com.android.settings.fuelgauge.batterytip.tips.RestrictAppTip.1
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: createFromParcel */
-        public BatteryTip mo361createFromParcel(Parcel parcel) {
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public BatteryTip createFromParcel(Parcel parcel) {
             return new RestrictAppTip(parcel);
         }
 
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: newArray */
-        public BatteryTip[] mo362newArray(int i) {
+        public BatteryTip[] newArray(int i) {
             return new RestrictAppTip[i];
         }
     };
     private List<AppInfo> mRestrictAppList;
 
+    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public RestrictAppTip(int i, AppInfo appInfo) {
         super(1, i, i == 0);
         ArrayList arrayList = new ArrayList();
@@ -42,36 +40,35 @@ public class RestrictAppTip extends BatteryTip {
         this.mRestrictAppList = parcel.createTypedArrayList(AppInfo.CREATOR);
     }
 
-    @Override // com.android.settings.fuelgauge.batterytip.tips.BatteryTip
     public CharSequence getTitle(Context context) {
         int size = this.mRestrictAppList.size();
         String applicationLabel = size > 0 ? Utils.getApplicationLabel(context, this.mRestrictAppList.get(0).packageName) : "";
         Resources resources = context.getResources();
-        return this.mState == 1 ? resources.getQuantityString(R.plurals.battery_tip_restrict_handled_title, size, applicationLabel, Integer.valueOf(size)) : resources.getQuantityString(R.plurals.battery_tip_restrict_title, size, Integer.valueOf(size));
+        if (this.mState == 1) {
+            return resources.getQuantityString(R$plurals.battery_tip_restrict_handled_title, size, new Object[]{applicationLabel, Integer.valueOf(size)});
+        }
+        return resources.getQuantityString(R$plurals.battery_tip_restrict_title, size, new Object[]{Integer.valueOf(size)});
     }
 
-    @Override // com.android.settings.fuelgauge.batterytip.tips.BatteryTip
     public CharSequence getSummary(Context context) {
         int i;
         int size = this.mRestrictAppList.size();
         String applicationLabel = size > 0 ? Utils.getApplicationLabel(context, this.mRestrictAppList.get(0).packageName) : "";
         if (this.mState == 1) {
-            i = R.plurals.battery_tip_restrict_handled_summary;
+            i = R$plurals.battery_tip_restrict_handled_summary;
         } else {
-            i = R.plurals.battery_tip_restrict_summary;
+            i = R$plurals.battery_tip_restrict_summary;
         }
-        return context.getResources().getQuantityString(i, size, applicationLabel, Integer.valueOf(size));
+        return context.getResources().getQuantityString(i, size, new Object[]{applicationLabel, Integer.valueOf(size)});
     }
 
-    @Override // com.android.settings.fuelgauge.batterytip.tips.BatteryTip
     public int getIconId() {
         if (this.mState == 1) {
-            return R.drawable.ic_perm_device_information_green_24dp;
+            return R$drawable.ic_perm_device_information_green_24dp;
         }
-        return R.drawable.ic_battery_alert_24dp;
+        return R$drawable.ic_battery_alert_24dp;
     }
 
-    @Override // com.android.settings.fuelgauge.batterytip.tips.BatteryTip
     public void updateState(BatteryTip batteryTip) {
         int i = batteryTip.mState;
         if (i == 0) {
@@ -88,7 +85,6 @@ public class RestrictAppTip extends BatteryTip {
         }
     }
 
-    @Override // com.android.settings.fuelgauge.batterytip.tips.BatteryTip
     public void validateCheck(Context context) {
         super.validateCheck(context);
         this.mRestrictAppList.removeIf(AppLabelPredicate.getInstance(context));
@@ -97,7 +93,6 @@ public class RestrictAppTip extends BatteryTip {
         }
     }
 
-    @Override // com.android.settings.fuelgauge.batterytip.tips.BatteryTip
     public void log(Context context, MetricsFeatureProvider metricsFeatureProvider) {
         metricsFeatureProvider.action(context, 1347, this.mState);
         if (this.mState == 0) {
@@ -125,7 +120,6 @@ public class RestrictAppTip extends BatteryTip {
         return ListFormatter.getInstance().format(arrayList);
     }
 
-    @Override // com.android.settings.fuelgauge.batterytip.tips.BatteryTip
     public String toString() {
         StringBuilder sb = new StringBuilder(super.toString());
         sb.append(" {");
@@ -137,7 +131,6 @@ public class RestrictAppTip extends BatteryTip {
         return sb.toString();
     }
 
-    @Override // com.android.settings.fuelgauge.batterytip.tips.BatteryTip, android.os.Parcelable
     public void writeToParcel(Parcel parcel, int i) {
         super.writeToParcel(parcel, i);
         parcel.writeTypedList(this.mRestrictAppList);

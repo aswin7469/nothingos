@@ -24,52 +24,20 @@ import android.os.UserManager;
 import android.text.format.Formatter;
 import android.util.Log;
 import android.util.SparseArray;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settingslib.Utils;
 import com.android.settingslib.applications.InterestingConfigChanges;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-/* loaded from: classes.dex */
+
 public class RunningState {
     static Object sGlobalLock = new Object();
     static RunningState sInstance;
+    final ArrayList<ProcessItem> mAllProcessItems = new ArrayList<>();
     final ActivityManager mAm;
     final Context mApplicationContext;
-    final BackgroundHandler mBackgroundHandler;
-    long mBackgroundProcessMemory;
-    final HandlerThread mBackgroundThread;
-    long mForegroundProcessMemory;
-    boolean mHaveData;
-    final boolean mHideManagedProfiles;
-    final int mMyUserId;
-    int mNumBackgroundProcesses;
-    int mNumForegroundProcesses;
-    int mNumServiceProcesses;
-    final PackageManager mPm;
-    OnRefreshUiListener mRefreshUiListener;
-    boolean mResumed;
-    long mServiceProcessMemory;
-    final UserManager mUm;
-    private final UserManagerBroadcastReceiver mUmBroadcastReceiver;
-    boolean mWatchingBackgroundItems;
-    final InterestingConfigChanges mInterestingConfigChanges = new InterestingConfigChanges();
-    final SparseArray<HashMap<String, ProcessItem>> mServiceProcessesByName = new SparseArray<>();
-    final SparseArray<ProcessItem> mServiceProcessesByPid = new SparseArray<>();
-    final ServiceProcessComparator mServiceProcessComparator = new ServiceProcessComparator();
-    final ArrayList<ProcessItem> mInterestingProcesses = new ArrayList<>();
-    final SparseArray<ProcessItem> mRunningProcesses = new SparseArray<>();
-    final ArrayList<ProcessItem> mProcessItems = new ArrayList<>();
-    final ArrayList<ProcessItem> mAllProcessItems = new ArrayList<>();
-    final SparseArray<MergedItem> mOtherUserMergedItems = new SparseArray<>();
-    final SparseArray<MergedItem> mOtherUserBackgroundItems = new SparseArray<>();
-    final SparseArray<AppProcessInfo> mTmpAppProcesses = new SparseArray<>();
-    int mSequence = 0;
-    final Comparator<MergedItem> mBackgroundComparator = new Comparator<MergedItem>() { // from class: com.android.settings.applications.RunningState.1
-        @Override // java.util.Comparator
+    final Comparator<MergedItem> mBackgroundComparator = new Comparator<MergedItem>() {
         public int compare(MergedItem mergedItem, MergedItem mergedItem2) {
             int i = mergedItem.mUserId;
             int i2 = mergedItem2.mUserId;
@@ -78,7 +46,13 @@ public class RunningState {
                 if (i == i3) {
                     return -1;
                 }
-                return (i2 != i3 && i < i2) ? -1 : 1;
+                if (i2 == i3) {
+                    return 1;
+                }
+                if (i < i2) {
+                    return -1;
+                }
+                return 1;
             }
             ProcessItem processItem = mergedItem.mProcess;
             ProcessItem processItem2 = mergedItem2.mProcess;
@@ -88,10 +62,10 @@ public class RunningState {
                 if (str == str2) {
                     return 0;
                 }
-                if (str == null) {
-                    return -1;
+                if (str != null) {
+                    return str.compareTo(str2);
                 }
-                return str.compareTo(str2);
+                return -1;
             } else if (processItem == null) {
                 return -1;
             } else {
@@ -101,73 +75,154 @@ public class RunningState {
                 ActivityManager.RunningAppProcessInfo runningAppProcessInfo = processItem.mRunningProcessInfo;
                 ActivityManager.RunningAppProcessInfo runningAppProcessInfo2 = processItem2.mRunningProcessInfo;
                 boolean z = runningAppProcessInfo.importance >= 400;
-                if (z != (runningAppProcessInfo2.importance >= 400)) {
-                    return z ? 1 : -1;
-                }
-                boolean z2 = (runningAppProcessInfo.flags & 4) != 0;
-                if (z2 != ((runningAppProcessInfo2.flags & 4) != 0)) {
-                    return z2 ? -1 : 1;
-                }
-                int i4 = runningAppProcessInfo.lru;
-                int i5 = runningAppProcessInfo2.lru;
-                if (i4 != i5) {
-                    return i4 < i5 ? -1 : 1;
-                }
-                String str3 = processItem.mLabel;
-                String str4 = processItem2.mLabel;
-                if (str3 == str4) {
-                    return 0;
-                }
-                if (str3 == null) {
+                if (z == (runningAppProcessInfo2.importance >= 400)) {
+                    boolean z2 = (runningAppProcessInfo.flags & 4) != 0;
+                    if (z2 == ((runningAppProcessInfo2.flags & 4) != 0)) {
+                        int i4 = runningAppProcessInfo.lru;
+                        int i5 = runningAppProcessInfo2.lru;
+                        if (i4 == i5) {
+                            String str3 = processItem.mLabel;
+                            String str4 = processItem2.mLabel;
+                            if (str3 == str4) {
+                                return 0;
+                            }
+                            if (str3 == null) {
+                                return 1;
+                            }
+                            if (str4 == null) {
+                                return -1;
+                            }
+                            return str3.compareTo(str4);
+                        } else if (i4 < i5) {
+                            return -1;
+                        } else {
+                            return 1;
+                        }
+                    } else if (z2) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                } else if (z) {
                     return 1;
+                } else {
+                    return -1;
                 }
-                if (str4 != null) {
-                    return str3.compareTo(str4);
-                }
-                return -1;
             }
         }
     };
-    final Object mLock = new Object();
-    ArrayList<BaseItem> mItems = new ArrayList<>();
-    ArrayList<MergedItem> mMergedItems = new ArrayList<>();
+    final BackgroundHandler mBackgroundHandler;
     ArrayList<MergedItem> mBackgroundItems = new ArrayList<>();
-    ArrayList<MergedItem> mUserBackgroundItems = new ArrayList<>();
-    final Handler mHandler = new Handler() { // from class: com.android.settings.applications.RunningState.2
+    long mBackgroundProcessMemory;
+    final HandlerThread mBackgroundThread;
+    long mForegroundProcessMemory;
+    final Handler mHandler = new Handler() {
         int mNextUpdate = 0;
 
-        @Override // android.os.Handler
-        public void handleMessage(Message message) {
-            int i = message.what;
-            if (i == 3) {
-                this.mNextUpdate = message.arg1 != 0 ? 2 : 1;
-            } else if (i != 4) {
-            } else {
-                synchronized (RunningState.this.mLock) {
-                    if (!RunningState.this.mResumed) {
-                        return;
-                    }
-                    removeMessages(4);
-                    sendMessageDelayed(obtainMessage(4), 1000L);
-                    OnRefreshUiListener onRefreshUiListener = RunningState.this.mRefreshUiListener;
-                    if (onRefreshUiListener == null) {
-                        return;
-                    }
-                    onRefreshUiListener.onRefreshUi(this.mNextUpdate);
-                    this.mNextUpdate = 0;
-                }
-            }
+        /* JADX WARNING: Code restructure failed: missing block: B:12:0x0017, code lost:
+            removeMessages(4);
+            sendMessageDelayed(obtainMessage(4), 1000);
+            r3 = r2.this$0.mRefreshUiListener;
+         */
+        /* JADX WARNING: Code restructure failed: missing block: B:13:0x0027, code lost:
+            if (r3 == null) goto L_?;
+         */
+        /* JADX WARNING: Code restructure failed: missing block: B:14:0x0029, code lost:
+            r3.onRefreshUi(r2.mNextUpdate);
+            r2.mNextUpdate = 0;
+         */
+        /* JADX WARNING: Code restructure failed: missing block: B:28:?, code lost:
+            return;
+         */
+        /* JADX WARNING: Code restructure failed: missing block: B:29:?, code lost:
+            return;
+         */
+        /* Code decompiled incorrectly, please refer to instructions dump. */
+        public void handleMessage(android.os.Message r3) {
+            /*
+                r2 = this;
+                int r0 = r3.what
+                r1 = 3
+                if (r0 == r1) goto L_0x0035
+                r3 = 4
+                if (r0 == r3) goto L_0x0009
+                goto L_0x003e
+            L_0x0009:
+                com.android.settings.applications.RunningState r0 = com.android.settings.applications.RunningState.this
+                java.lang.Object r0 = r0.mLock
+                monitor-enter(r0)
+                com.android.settings.applications.RunningState r1 = com.android.settings.applications.RunningState.this     // Catch:{ all -> 0x0032 }
+                boolean r1 = r1.mResumed     // Catch:{ all -> 0x0032 }
+                if (r1 != 0) goto L_0x0016
+                monitor-exit(r0)     // Catch:{ all -> 0x0032 }
+                return
+            L_0x0016:
+                monitor-exit(r0)     // Catch:{ all -> 0x0032 }
+                r2.removeMessages(r3)
+                android.os.Message r3 = r2.obtainMessage(r3)
+                r0 = 1000(0x3e8, double:4.94E-321)
+                r2.sendMessageDelayed(r3, r0)
+                com.android.settings.applications.RunningState r3 = com.android.settings.applications.RunningState.this
+                com.android.settings.applications.RunningState$OnRefreshUiListener r3 = r3.mRefreshUiListener
+                if (r3 == 0) goto L_0x003e
+                int r0 = r2.mNextUpdate
+                r3.onRefreshUi(r0)
+                r3 = 0
+                r2.mNextUpdate = r3
+                goto L_0x003e
+            L_0x0032:
+                r2 = move-exception
+                monitor-exit(r0)     // Catch:{ all -> 0x0032 }
+                throw r2
+            L_0x0035:
+                int r3 = r3.arg1
+                if (r3 == 0) goto L_0x003b
+                r3 = 2
+                goto L_0x003c
+            L_0x003b:
+                r3 = 1
+            L_0x003c:
+                r2.mNextUpdate = r3
+            L_0x003e:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.android.settings.applications.RunningState.C06712.handleMessage(android.os.Message):void");
         }
     };
+    boolean mHaveData;
+    final boolean mHideManagedProfiles;
+    final InterestingConfigChanges mInterestingConfigChanges = new InterestingConfigChanges();
+    final ArrayList<ProcessItem> mInterestingProcesses = new ArrayList<>();
+    ArrayList<BaseItem> mItems = new ArrayList<>();
+    final Object mLock = new Object();
+    ArrayList<MergedItem> mMergedItems = new ArrayList<>();
+    final int mMyUserId;
+    int mNumBackgroundProcesses;
+    int mNumForegroundProcesses;
+    int mNumServiceProcesses;
+    final SparseArray<MergedItem> mOtherUserBackgroundItems = new SparseArray<>();
+    final SparseArray<MergedItem> mOtherUserMergedItems = new SparseArray<>();
+    final PackageManager mPm;
+    final ArrayList<ProcessItem> mProcessItems = new ArrayList<>();
+    OnRefreshUiListener mRefreshUiListener;
+    boolean mResumed;
+    final SparseArray<ProcessItem> mRunningProcesses = new SparseArray<>();
+    int mSequence = 0;
+    final ServiceProcessComparator mServiceProcessComparator = new ServiceProcessComparator();
+    long mServiceProcessMemory;
+    final SparseArray<HashMap<String, ProcessItem>> mServiceProcessesByName = new SparseArray<>();
+    final SparseArray<ProcessItem> mServiceProcessesByPid = new SparseArray<>();
+    final SparseArray<AppProcessInfo> mTmpAppProcesses = new SparseArray<>();
+    final UserManager mUm;
+    private final UserManagerBroadcastReceiver mUmBroadcastReceiver;
+    ArrayList<MergedItem> mUserBackgroundItems = new ArrayList<>();
+    boolean mWatchingBackgroundItems;
 
-    /* loaded from: classes.dex */
     interface OnRefreshUiListener {
         void onRefreshUi(int i);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class AppProcessInfo {
+    static class AppProcessInfo {
         boolean hasForegroundServices;
         boolean hasServices;
         final ActivityManager.RunningAppProcessInfo info;
@@ -177,43 +232,37 @@ public class RunningState {
         }
     }
 
-    /* loaded from: classes.dex */
     final class BackgroundHandler extends Handler {
         public BackgroundHandler(Looper looper) {
             super(looper);
         }
 
-        @Override // android.os.Handler
         public void handleMessage(Message message) {
             int i = message.what;
             if (i == 1) {
                 RunningState.this.reset();
-            } else if (i != 2) {
-            } else {
+            } else if (i == 2) {
                 synchronized (RunningState.this.mLock) {
                     RunningState runningState = RunningState.this;
-                    if (!runningState.mResumed) {
-                        return;
+                    if (runningState.mResumed) {
+                        Message obtainMessage = runningState.mHandler.obtainMessage(3);
+                        RunningState runningState2 = RunningState.this;
+                        obtainMessage.arg1 = runningState2.update(runningState2.mApplicationContext, runningState2.mAm) ? 1 : 0;
+                        RunningState.this.mHandler.sendMessage(obtainMessage);
+                        removeMessages(2);
+                        sendMessageDelayed(obtainMessage(2), 2000);
                     }
-                    Message obtainMessage = runningState.mHandler.obtainMessage(3);
-                    RunningState runningState2 = RunningState.this;
-                    obtainMessage.arg1 = runningState2.update(runningState2.mApplicationContext, runningState2.mAm) ? 1 : 0;
-                    RunningState.this.mHandler.sendMessage(obtainMessage);
-                    removeMessages(2);
-                    sendMessageDelayed(obtainMessage(2), 2000L);
                 }
             }
         }
     }
 
-    /* loaded from: classes.dex */
     private final class UserManagerBroadcastReceiver extends BroadcastReceiver {
         private volatile boolean usersChanged;
 
         private UserManagerBroadcastReceiver() {
         }
 
-        @Override // android.content.BroadcastReceiver
         public void onReceive(Context context, Intent intent) {
             synchronized (RunningState.this.mLock) {
                 RunningState runningState = RunningState.this;
@@ -235,18 +284,17 @@ public class RunningState {
             return z;
         }
 
-        void register(Context context) {
+        /* access modifiers changed from: package-private */
+        public void register(Context context) {
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction("android.intent.action.USER_STOPPED");
             intentFilter.addAction("android.intent.action.USER_STARTED");
             intentFilter.addAction("android.intent.action.USER_INFO_CHANGED");
-            context.registerReceiverAsUser(this, UserHandle.ALL, intentFilter, null, null);
+            context.registerReceiverAsUser(this, UserHandle.ALL, intentFilter, (String) null, (Handler) null);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class UserState {
+    static class UserState {
         Drawable mIcon;
         UserInfo mInfo;
         String mLabel;
@@ -255,9 +303,7 @@ public class RunningState {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class BaseItem {
+    static class BaseItem {
         long mActiveSince;
         boolean mBackground;
         int mCurSeq;
@@ -279,16 +325,14 @@ public class RunningState {
 
         public Drawable loadIcon(Context context, RunningState runningState) {
             PackageItemInfo packageItemInfo = this.mPackageInfo;
-            if (packageItemInfo != null) {
-                return runningState.mPm.getUserBadgedIcon(packageItemInfo.loadUnbadgedIcon(runningState.mPm), new UserHandle(this.mUserId));
+            if (packageItemInfo == null) {
+                return null;
             }
-            return null;
+            return runningState.mPm.getUserBadgedIcon(packageItemInfo.loadUnbadgedIcon(runningState.mPm), new UserHandle(this.mUserId));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class ServiceItem extends BaseItem {
+    static class ServiceItem extends BaseItem {
         MergedItem mMergedItem;
         ActivityManager.RunningServiceInfo mRunningService;
         ServiceInfo mServiceInfo;
@@ -299,11 +343,10 @@ public class RunningState {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class ProcessItem extends BaseItem {
+    static class ProcessItem extends BaseItem {
         long mActiveSince;
         ProcessItem mClient;
+        final SparseArray<ProcessItem> mDependentProcesses = new SparseArray<>();
         boolean mInteresting;
         boolean mIsStarted;
         boolean mIsSystem;
@@ -313,78 +356,77 @@ public class RunningState {
         final String mProcessName;
         ActivityManager.RunningAppProcessInfo mRunningProcessInfo;
         int mRunningSeq;
-        final int mUid;
         final HashMap<ComponentName, ServiceItem> mServices = new HashMap<>();
-        final SparseArray<ProcessItem> mDependentProcesses = new SparseArray<>();
+        final int mUid;
 
         public ProcessItem(Context context, int i, String str) {
             super(true, UserHandle.getUserId(i));
-            this.mDescription = context.getResources().getString(R.string.service_process_name, str);
+            this.mDescription = context.getResources().getString(R$string.service_process_name, new Object[]{str});
             this.mUid = i;
             this.mProcessName = str;
         }
 
-        /* JADX INFO: Access modifiers changed from: package-private */
+        /* access modifiers changed from: package-private */
         public void ensureLabel(PackageManager packageManager) {
             CharSequence text;
-            if (this.mLabel != null) {
-                return;
-            }
-            try {
-                ApplicationInfo applicationInfo = packageManager.getApplicationInfo(this.mProcessName, 4194304);
-                if (applicationInfo.uid == this.mUid) {
-                    CharSequence loadLabel = applicationInfo.loadLabel(packageManager);
-                    this.mDisplayLabel = loadLabel;
-                    this.mLabel = loadLabel.toString();
-                    this.mPackageInfo = applicationInfo;
-                    return;
-                }
-            } catch (PackageManager.NameNotFoundException unused) {
-            }
-            String[] packagesForUid = packageManager.getPackagesForUid(this.mUid);
-            if (packagesForUid.length == 1) {
+            if (this.mLabel == null) {
                 try {
-                    ApplicationInfo applicationInfo2 = packageManager.getApplicationInfo(packagesForUid[0], 4194304);
-                    CharSequence loadLabel2 = applicationInfo2.loadLabel(packageManager);
-                    this.mDisplayLabel = loadLabel2;
-                    this.mLabel = loadLabel2.toString();
-                    this.mPackageInfo = applicationInfo2;
-                    return;
-                } catch (PackageManager.NameNotFoundException unused2) {
-                }
-            }
-            for (String str : packagesForUid) {
-                try {
-                    PackageInfo packageInfo = packageManager.getPackageInfo(str, 0);
-                    int i = packageInfo.sharedUserLabel;
-                    if (i != 0 && (text = packageManager.getText(str, i, packageInfo.applicationInfo)) != null) {
-                        this.mDisplayLabel = text;
-                        this.mLabel = text.toString();
-                        this.mPackageInfo = packageInfo.applicationInfo;
+                    ApplicationInfo applicationInfo = packageManager.getApplicationInfo(this.mProcessName, 4194304);
+                    if (applicationInfo.uid == this.mUid) {
+                        CharSequence loadLabel = applicationInfo.loadLabel(packageManager);
+                        this.mDisplayLabel = loadLabel;
+                        this.mLabel = loadLabel.toString();
+                        this.mPackageInfo = applicationInfo;
                         return;
                     }
-                } catch (PackageManager.NameNotFoundException unused3) {
+                } catch (PackageManager.NameNotFoundException unused) {
                 }
-            }
-            if (this.mServices.size() > 0) {
-                ApplicationInfo applicationInfo3 = this.mServices.values().iterator().next().mServiceInfo.applicationInfo;
-                this.mPackageInfo = applicationInfo3;
-                CharSequence loadLabel3 = applicationInfo3.loadLabel(packageManager);
-                this.mDisplayLabel = loadLabel3;
-                this.mLabel = loadLabel3.toString();
-                return;
-            }
-            try {
-                ApplicationInfo applicationInfo4 = packageManager.getApplicationInfo(packagesForUid[0], 4194304);
-                CharSequence loadLabel4 = applicationInfo4.loadLabel(packageManager);
-                this.mDisplayLabel = loadLabel4;
-                this.mLabel = loadLabel4.toString();
-                this.mPackageInfo = applicationInfo4;
-            } catch (PackageManager.NameNotFoundException unused4) {
+                String[] packagesForUid = packageManager.getPackagesForUid(this.mUid);
+                if (packagesForUid.length == 1) {
+                    try {
+                        ApplicationInfo applicationInfo2 = packageManager.getApplicationInfo(packagesForUid[0], 4194304);
+                        CharSequence loadLabel2 = applicationInfo2.loadLabel(packageManager);
+                        this.mDisplayLabel = loadLabel2;
+                        this.mLabel = loadLabel2.toString();
+                        this.mPackageInfo = applicationInfo2;
+                        return;
+                    } catch (PackageManager.NameNotFoundException unused2) {
+                    }
+                }
+                for (String str : packagesForUid) {
+                    try {
+                        PackageInfo packageInfo = packageManager.getPackageInfo(str, 0);
+                        int i = packageInfo.sharedUserLabel;
+                        if (!(i == 0 || (text = packageManager.getText(str, i, packageInfo.applicationInfo)) == null)) {
+                            this.mDisplayLabel = text;
+                            this.mLabel = text.toString();
+                            this.mPackageInfo = packageInfo.applicationInfo;
+                            return;
+                        }
+                    } catch (PackageManager.NameNotFoundException unused3) {
+                    }
+                }
+                if (this.mServices.size() > 0) {
+                    ApplicationInfo applicationInfo3 = this.mServices.values().iterator().next().mServiceInfo.applicationInfo;
+                    this.mPackageInfo = applicationInfo3;
+                    CharSequence loadLabel3 = applicationInfo3.loadLabel(packageManager);
+                    this.mDisplayLabel = loadLabel3;
+                    this.mLabel = loadLabel3.toString();
+                    return;
+                }
+                try {
+                    ApplicationInfo applicationInfo4 = packageManager.getApplicationInfo(packagesForUid[0], 4194304);
+                    CharSequence loadLabel4 = applicationInfo4.loadLabel(packageManager);
+                    this.mDisplayLabel = loadLabel4;
+                    this.mLabel = loadLabel4.toString();
+                    this.mPackageInfo = applicationInfo4;
+                } catch (PackageManager.NameNotFoundException unused4) {
+                }
             }
         }
 
-        boolean updateService(Context context, ActivityManager.RunningServiceInfo runningServiceInfo) {
+        /* access modifiers changed from: package-private */
+        public boolean updateService(Context context, ActivityManager.RunningServiceInfo runningServiceInfo) {
             boolean z;
             PackageManager packageManager = context.getPackageManager();
             ServiceItem serviceItem = this.mServices.get(runningServiceInfo.service);
@@ -412,35 +454,36 @@ public class RunningState {
             }
             serviceItem.mCurSeq = this.mCurSeq;
             serviceItem.mRunningService = runningServiceInfo;
-            long j = runningServiceInfo.restarting == 0 ? runningServiceInfo.activeSince : -1L;
+            long j = runningServiceInfo.restarting == 0 ? runningServiceInfo.activeSince : -1;
             if (serviceItem.mActiveSince != j) {
                 serviceItem.mActiveSince = j;
                 z = true;
             }
             String str = runningServiceInfo.clientPackage;
-            if (str != null && runningServiceInfo.clientLabel != 0) {
-                if (serviceItem.mShownAsStarted) {
-                    serviceItem.mShownAsStarted = false;
-                    z = true;
+            if (str == null || runningServiceInfo.clientLabel == 0) {
+                if (!serviceItem.mShownAsStarted) {
+                    serviceItem.mShownAsStarted = true;
+                } else {
+                    z2 = z;
                 }
-                try {
-                    serviceItem.mDescription = context.getResources().getString(R.string.service_client_name, packageManager.getResourcesForApplication(str).getString(runningServiceInfo.clientLabel));
-                    return z;
-                } catch (PackageManager.NameNotFoundException unused2) {
-                    serviceItem.mDescription = null;
-                    return z;
-                }
+                serviceItem.mDescription = context.getResources().getString(R$string.service_started_by_app);
+                return z2;
             }
-            if (!serviceItem.mShownAsStarted) {
-                serviceItem.mShownAsStarted = true;
-            } else {
-                z2 = z;
+            if (serviceItem.mShownAsStarted) {
+                serviceItem.mShownAsStarted = false;
+                z = true;
             }
-            serviceItem.mDescription = context.getResources().getString(R.string.service_started_by_app);
-            return z2;
+            try {
+                serviceItem.mDescription = context.getResources().getString(R$string.service_client_name, new Object[]{packageManager.getResourcesForApplication(str).getString(runningServiceInfo.clientLabel)});
+                return z;
+            } catch (PackageManager.NameNotFoundException unused2) {
+                serviceItem.mDescription = null;
+                return z;
+            }
         }
 
-        boolean updateSize(Context context, long j, int i) {
+        /* access modifiers changed from: package-private */
+        public boolean updateSize(Context context, long j, int i) {
             long j2 = j * 1024;
             this.mSize = j2;
             if (this.mCurSeq == i) {
@@ -452,7 +495,8 @@ public class RunningState {
             return false;
         }
 
-        boolean buildDependencyChain(Context context, PackageManager packageManager, int i) {
+        /* access modifiers changed from: package-private */
+        public boolean buildDependencyChain(Context context, PackageManager packageManager, int i) {
             int size = this.mDependentProcesses.size();
             boolean z = false;
             for (int i2 = 0; i2 < size; i2++) {
@@ -465,14 +509,15 @@ public class RunningState {
                 valueAt.ensureLabel(packageManager);
                 z |= valueAt.buildDependencyChain(context, packageManager, i);
             }
-            if (this.mLastNumDependentProcesses != this.mDependentProcesses.size()) {
-                this.mLastNumDependentProcesses = this.mDependentProcesses.size();
-                return true;
+            if (this.mLastNumDependentProcesses == this.mDependentProcesses.size()) {
+                return z;
             }
-            return z;
+            this.mLastNumDependentProcesses = this.mDependentProcesses.size();
+            return true;
         }
 
-        void addDependentProcesses(ArrayList<BaseItem> arrayList, ArrayList<ProcessItem> arrayList2) {
+        /* access modifiers changed from: package-private */
+        public void addDependentProcesses(ArrayList<BaseItem> arrayList, ArrayList<ProcessItem> arrayList2) {
             int size = this.mDependentProcesses.size();
             for (int i = 0; i < size; i++) {
                 ProcessItem valueAt = this.mDependentProcesses.valueAt(i);
@@ -485,41 +530,39 @@ public class RunningState {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class MergedItem extends BaseItem {
-        ProcessItem mProcess;
-        UserState mUser;
-        final ArrayList<ProcessItem> mOtherProcesses = new ArrayList<>();
-        final ArrayList<ServiceItem> mServices = new ArrayList<>();
+    static class MergedItem extends BaseItem {
         final ArrayList<MergedItem> mChildren = new ArrayList<>();
         private int mLastNumProcesses = -1;
         private int mLastNumServices = -1;
+        final ArrayList<ProcessItem> mOtherProcesses = new ArrayList<>();
+        ProcessItem mProcess;
+        final ArrayList<ServiceItem> mServices = new ArrayList<>();
+        UserState mUser;
 
         MergedItem(int i) {
             super(false, i);
         }
 
         private void setDescription(Context context, int i, int i2) {
-            if (this.mLastNumProcesses == i && this.mLastNumServices == i2) {
-                return;
-            }
-            this.mLastNumProcesses = i;
-            this.mLastNumServices = i2;
-            int i3 = R.string.running_processes_item_description_s_s;
-            if (i != 1) {
-                if (i2 != 1) {
-                    i3 = R.string.running_processes_item_description_p_p;
-                } else {
-                    i3 = R.string.running_processes_item_description_p_s;
+            if (this.mLastNumProcesses != i || this.mLastNumServices != i2) {
+                this.mLastNumProcesses = i;
+                this.mLastNumServices = i2;
+                int i3 = R$string.running_processes_item_description_s_s;
+                if (i != 1) {
+                    if (i2 != 1) {
+                        i3 = R$string.running_processes_item_description_p_p;
+                    } else {
+                        i3 = R$string.running_processes_item_description_p_s;
+                    }
+                } else if (i2 != 1) {
+                    i3 = R$string.running_processes_item_description_s_p;
                 }
-            } else if (i2 != 1) {
-                i3 = R.string.running_processes_item_description_s_p;
+                this.mDescription = context.getResources().getString(i3, new Object[]{Integer.valueOf(i), Integer.valueOf(i2)});
             }
-            this.mDescription = context.getResources().getString(i3, Integer.valueOf(i), Integer.valueOf(i2));
         }
 
-        boolean update(Context context, boolean z) {
+        /* access modifiers changed from: package-private */
+        public boolean update(Context context, boolean z) {
             this.mBackground = z;
             if (this.mUser != null) {
                 this.mPackageInfo = this.mChildren.get(0).mProcess.mPackageInfo;
@@ -527,7 +570,7 @@ public class RunningState {
                 String str = userState != null ? userState.mLabel : null;
                 this.mLabel = str;
                 this.mDisplayLabel = str;
-                this.mActiveSince = -1L;
+                this.mActiveSince = -1;
                 int i = 0;
                 int i2 = 0;
                 for (int i3 = 0; i3 < this.mChildren.size(); i3++) {
@@ -550,7 +593,7 @@ public class RunningState {
                 if (!z) {
                     setDescription(context, (processItem.mPid > 0 ? 1 : 0) + this.mOtherProcesses.size(), this.mServices.size());
                 }
-                this.mActiveSince = -1L;
+                this.mActiveSince = -1;
                 for (int i4 = 0; i4 < this.mServices.size(); i4++) {
                     long j2 = this.mServices.get(i4).mActiveSince;
                     if (j2 >= 0 && this.mActiveSince < j2) {
@@ -561,9 +604,10 @@ public class RunningState {
             return false;
         }
 
-        boolean updateSize(Context context) {
+        /* access modifiers changed from: package-private */
+        public boolean updateSize(Context context) {
             if (this.mUser != null) {
-                this.mSize = 0L;
+                this.mSize = 0;
                 for (int i = 0; i < this.mChildren.size(); i++) {
                     MergedItem mergedItem = this.mChildren.get(i);
                     mergedItem.updateSize(context);
@@ -582,31 +626,27 @@ public class RunningState {
             return false;
         }
 
-        @Override // com.android.settings.applications.RunningState.BaseItem
         public Drawable loadIcon(Context context, RunningState runningState) {
             UserState userState = this.mUser;
             if (userState == null) {
                 return super.loadIcon(context, runningState);
             }
             Drawable drawable = userState.mIcon;
-            if (drawable != null) {
-                Drawable.ConstantState constantState = drawable.getConstantState();
-                if (constantState == null) {
-                    return this.mUser.mIcon;
-                }
-                return constantState.newDrawable();
+            if (drawable == null) {
+                return context.getDrawable(17302716);
             }
-            return context.getDrawable(17302705);
+            Drawable.ConstantState constantState = drawable.getConstantState();
+            if (constantState == null) {
+                return this.mUser.mIcon;
+            }
+            return constantState.newDrawable();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public class ServiceProcessComparator implements Comparator<ProcessItem> {
+    class ServiceProcessComparator implements Comparator<ProcessItem> {
         ServiceProcessComparator() {
         }
 
-        @Override // java.util.Comparator
         public int compare(ProcessItem processItem, ProcessItem processItem2) {
             int i = processItem.mUserId;
             int i2 = processItem2.mUserId;
@@ -615,37 +655,47 @@ public class RunningState {
                 if (i == i3) {
                     return -1;
                 }
-                return (i2 != i3 && i < i2) ? -1 : 1;
+                if (i2 != i3 && i < i2) {
+                    return -1;
+                }
+                return 1;
             }
             boolean z = processItem.mIsStarted;
-            if (z != processItem2.mIsStarted) {
-                return z ? -1 : 1;
+            if (z == processItem2.mIsStarted) {
+                boolean z2 = processItem.mIsSystem;
+                if (z2 == processItem2.mIsSystem) {
+                    long j = processItem.mActiveSince;
+                    long j2 = processItem2.mActiveSince;
+                    if (j == j2) {
+                        return 0;
+                    }
+                    if (j > j2) {
+                        return -1;
+                    }
+                    return 1;
+                } else if (z2) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            } else if (z) {
+                return -1;
+            } else {
+                return 1;
             }
-            boolean z2 = processItem.mIsSystem;
-            if (z2 != processItem2.mIsSystem) {
-                return z2 ? 1 : -1;
-            }
-            long j = processItem.mActiveSince;
-            long j2 = processItem2.mActiveSince;
-            if (j == j2) {
-                return 0;
-            }
-            return j > j2 ? -1 : 1;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static CharSequence makeLabel(PackageManager packageManager, String str, PackageItemInfo packageItemInfo) {
+    static CharSequence makeLabel(PackageManager packageManager, String str, PackageItemInfo packageItemInfo) {
         CharSequence loadLabel;
-        if (packageItemInfo == null || ((packageItemInfo.labelRes == 0 && packageItemInfo.nonLocalizedLabel == null) || (loadLabel = packageItemInfo.loadLabel(packageManager)) == null)) {
-            int lastIndexOf = str.lastIndexOf(46);
-            return lastIndexOf >= 0 ? str.substring(lastIndexOf + 1, str.length()) : str;
+        if (packageItemInfo != null && ((packageItemInfo.labelRes != 0 || packageItemInfo.nonLocalizedLabel != null) && (loadLabel = packageItemInfo.loadLabel(packageManager)) != null)) {
+            return loadLabel;
         }
-        return loadLabel;
+        int lastIndexOf = str.lastIndexOf(46);
+        return lastIndexOf >= 0 ? str.substring(lastIndexOf + 1, str.length()) : str;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static RunningState getInstance(Context context) {
+    static RunningState getInstance(Context context) {
         RunningState runningState;
         synchronized (sGlobalLock) {
             if (sInstance == null) {
@@ -677,7 +727,7 @@ public class RunningState {
         userManagerBroadcastReceiver.register(applicationContext);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void resume(OnRefreshUiListener onRefreshUiListener) {
         synchronized (this.mLock) {
             this.mResumed = true;
@@ -697,7 +747,7 @@ public class RunningState {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void updateNow() {
         synchronized (this.mLock) {
             this.mBackgroundHandler.removeMessages(2);
@@ -705,7 +755,7 @@ public class RunningState {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean hasData() {
         boolean z;
         synchronized (this.mLock) {
@@ -714,19 +764,35 @@ public class RunningState {
         return z;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
+    /* JADX WARNING: Exception block dominator not found, dom blocks: [] */
+    /* JADX WARNING: Missing exception handler attribute for start block: B:2:0x0003 */
+    /* JADX WARNING: Removed duplicated region for block: B:2:0x0003 A[LOOP:0: B:2:0x0003->B:13:0x0003, LOOP_START, SYNTHETIC] */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
     public void waitForData() {
-        synchronized (this.mLock) {
-            while (!this.mHaveData) {
-                try {
-                    this.mLock.wait(0L);
-                } catch (InterruptedException unused) {
-                }
-            }
-        }
+        /*
+            r4 = this;
+            java.lang.Object r0 = r4.mLock
+            monitor-enter(r0)
+        L_0x0003:
+            boolean r1 = r4.mHaveData     // Catch:{ all -> 0x0011 }
+            if (r1 != 0) goto L_0x000f
+            java.lang.Object r1 = r4.mLock     // Catch:{ InterruptedException -> 0x0003 }
+            r2 = 0
+            r1.wait(r2)     // Catch:{ InterruptedException -> 0x0003 }
+            goto L_0x0003
+        L_0x000f:
+            monitor-exit(r0)     // Catch:{ all -> 0x0011 }
+            return
+        L_0x0011:
+            r4 = move-exception
+            monitor-exit(r0)     // Catch:{ all -> 0x0011 }
+            throw r4
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.applications.RunningState.waitForData():void");
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void pause() {
         synchronized (this.mLock) {
             this.mResumed = false;
@@ -741,10 +807,13 @@ public class RunningState {
         if ((i2 & 1) != 0) {
             return true;
         }
-        return (i2 & 2) == 0 && (i = runningAppProcessInfo.importance) >= 100 && i < 350 && runningAppProcessInfo.importanceReasonCode == 0;
+        if ((i2 & 2) != 0 || (i = runningAppProcessInfo.importance) < 100 || i >= 350 || runningAppProcessInfo.importanceReasonCode != 0) {
+            return false;
+        }
+        return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void reset() {
         this.mServiceProcessesByName.clear();
         this.mServiceProcessesByPid.clear();
@@ -758,717 +827,1119 @@ public class RunningState {
         MergedItem mergedItem2 = sparseArray.get(mergedItem.mUserId);
         if (mergedItem2 == null || mergedItem2.mCurSeq != this.mSequence) {
             UserInfo userInfo = this.mUm.getUserInfo(mergedItem.mUserId);
-            if (userInfo == null) {
-                return;
-            }
-            if (this.mHideManagedProfiles && userInfo.isManagedProfile()) {
-                return;
-            }
-            if (mergedItem2 == null) {
-                mergedItem2 = new MergedItem(mergedItem.mUserId);
-                sparseArray.put(mergedItem.mUserId, mergedItem2);
+            if (userInfo != null) {
+                if (!this.mHideManagedProfiles || !userInfo.isManagedProfile()) {
+                    if (mergedItem2 == null) {
+                        mergedItem2 = new MergedItem(mergedItem.mUserId);
+                        sparseArray.put(mergedItem.mUserId, mergedItem2);
+                    } else {
+                        mergedItem2.mChildren.clear();
+                    }
+                    mergedItem2.mCurSeq = this.mSequence;
+                    UserState userState = new UserState();
+                    mergedItem2.mUser = userState;
+                    userState.mInfo = userInfo;
+                    userState.mIcon = Utils.getUserIcon(context, this.mUm, userInfo);
+                    mergedItem2.mUser.mLabel = Utils.getUserLabel(context, userInfo);
+                    arrayList.add(mergedItem2);
+                } else {
+                    return;
+                }
             } else {
-                mergedItem2.mChildren.clear();
+                return;
             }
-            mergedItem2.mCurSeq = this.mSequence;
-            UserState userState = new UserState();
-            mergedItem2.mUser = userState;
-            userState.mInfo = userInfo;
-            userState.mIcon = Utils.getUserIcon(context, this.mUm, userInfo);
-            mergedItem2.mUser.mLabel = Utils.getUserLabel(context, userInfo);
-            arrayList.add(mergedItem2);
         }
         mergedItem2.mChildren.add(mergedItem);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Removed duplicated region for block: B:333:0x066f  */
-    /* JADX WARN: Removed duplicated region for block: B:347:0x06a4  */
-    /* JADX WARN: Removed duplicated region for block: B:352:0x06f8 A[LOOP:25: B:350:0x06f0->B:352:0x06f8, LOOP_END] */
-    /* JADX WARN: Removed duplicated region for block: B:356:0x0709 A[EXC_TOP_SPLITTER, SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:391:0x06ee  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public boolean update(Context context, ActivityManager activityManager) {
-        long j;
-        int i;
-        long j2;
-        long j3;
-        ArrayList<MergedItem> arrayList;
-        int i2;
-        boolean z;
-        long j4;
-        int i3;
-        long j5;
-        long j6;
-        long j7;
-        ArrayList<MergedItem> arrayList2;
-        int i4;
-        long j8;
-        int i5;
-        long[] jArr;
-        MergedItem mergedItem;
-        int i6;
-        ArrayList<MergedItem> arrayList3;
-        boolean z2;
-        int i7;
-        List<ActivityManager.RunningAppProcessInfo> list;
-        int i8;
-        AppProcessInfo appProcessInfo;
-        boolean z3;
-        int i9;
-        AppProcessInfo appProcessInfo2;
-        PackageManager packageManager = context.getPackageManager();
-        boolean z4 = true;
-        this.mSequence++;
-        List<ActivityManager.RunningServiceInfo> runningServices = activityManager.getRunningServices(100);
-        int size = runningServices != null ? runningServices.size() : 0;
-        int i10 = 0;
-        while (i10 < size) {
-            ActivityManager.RunningServiceInfo runningServiceInfo = runningServices.get(i10);
-            if (!runningServiceInfo.started && runningServiceInfo.clientLabel == 0) {
-                runningServices.remove(i10);
-            } else if ((runningServiceInfo.flags & 8) != 0) {
-                runningServices.remove(i10);
-            } else {
-                i10++;
-            }
-            i10--;
-            size--;
-            i10++;
-        }
-        List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = activityManager.getRunningAppProcesses();
-        int size2 = runningAppProcesses != null ? runningAppProcesses.size() : 0;
-        this.mTmpAppProcesses.clear();
-        for (int i11 = 0; i11 < size2; i11++) {
-            ActivityManager.RunningAppProcessInfo runningAppProcessInfo = runningAppProcesses.get(i11);
-            this.mTmpAppProcesses.put(runningAppProcessInfo.pid, new AppProcessInfo(runningAppProcessInfo));
-        }
-        int i12 = 0;
-        while (true) {
-            j = 0;
-            if (i12 >= size) {
-                break;
-            }
-            ActivityManager.RunningServiceInfo runningServiceInfo2 = runningServices.get(i12);
-            if (runningServiceInfo2.restarting == 0 && (i9 = runningServiceInfo2.pid) > 0 && (appProcessInfo2 = this.mTmpAppProcesses.get(i9)) != null) {
-                appProcessInfo2.hasServices = true;
-                if (runningServiceInfo2.foreground) {
-                    appProcessInfo2.hasForegroundServices = true;
-                }
-            }
-            i12++;
-        }
-        int i13 = 0;
-        boolean z5 = false;
-        while (i13 < size) {
-            ActivityManager.RunningServiceInfo runningServiceInfo3 = runningServices.get(i13);
-            if (runningServiceInfo3.restarting == 0 && (i8 = runningServiceInfo3.pid) > 0 && (appProcessInfo = this.mTmpAppProcesses.get(i8)) != null && !appProcessInfo.hasForegroundServices) {
-                ActivityManager.RunningAppProcessInfo runningAppProcessInfo2 = appProcessInfo.info;
-                if (runningAppProcessInfo2.importance < 300) {
-                    AppProcessInfo appProcessInfo3 = this.mTmpAppProcesses.get(runningAppProcessInfo2.importanceReasonPid);
-                    while (appProcessInfo3 != null) {
-                        if (appProcessInfo3.hasServices || isInterestingProcess(appProcessInfo3.info)) {
-                            z3 = z4;
-                            break;
-                        }
-                        appProcessInfo3 = this.mTmpAppProcesses.get(appProcessInfo3.info.importanceReasonPid);
-                    }
-                    z3 = false;
-                    if (z3) {
-                        list = runningAppProcesses;
-                        i13++;
-                        runningAppProcesses = list;
-                        z4 = true;
-                    }
-                }
-            }
-            HashMap<String, ProcessItem> hashMap = this.mServiceProcessesByName.get(runningServiceInfo3.uid);
-            if (hashMap == null) {
-                hashMap = new HashMap<>();
-                this.mServiceProcessesByName.put(runningServiceInfo3.uid, hashMap);
-            }
-            ProcessItem processItem = hashMap.get(runningServiceInfo3.process);
-            if (processItem == null) {
-                processItem = new ProcessItem(context, runningServiceInfo3.uid, runningServiceInfo3.process);
-                hashMap.put(runningServiceInfo3.process, processItem);
-                z5 = z4;
-            }
-            list = runningAppProcesses;
-            if (processItem.mCurSeq != this.mSequence) {
-                int i14 = runningServiceInfo3.restarting == 0 ? runningServiceInfo3.pid : 0;
-                int i15 = processItem.mPid;
-                if (i14 != i15) {
-                    if (i15 != i14) {
-                        if (i15 != 0) {
-                            this.mServiceProcessesByPid.remove(i15);
-                        }
-                        if (i14 != 0) {
-                            this.mServiceProcessesByPid.put(i14, processItem);
-                        }
-                        processItem.mPid = i14;
-                    }
-                    z5 = true;
-                }
-                processItem.mDependentProcesses.clear();
-                processItem.mCurSeq = this.mSequence;
-            }
-            z5 |= processItem.updateService(context, runningServiceInfo3);
-            i13++;
-            runningAppProcesses = list;
-            z4 = true;
-        }
-        List<ActivityManager.RunningAppProcessInfo> list2 = runningAppProcesses;
-        int i16 = 0;
-        while (i16 < size2) {
-            List<ActivityManager.RunningAppProcessInfo> list3 = list2;
-            ActivityManager.RunningAppProcessInfo runningAppProcessInfo3 = list3.get(i16);
-            ProcessItem processItem2 = this.mServiceProcessesByPid.get(runningAppProcessInfo3.pid);
-            if (processItem2 == null) {
-                processItem2 = this.mRunningProcesses.get(runningAppProcessInfo3.pid);
-                if (processItem2 == null) {
-                    processItem2 = new ProcessItem(context, runningAppProcessInfo3.uid, runningAppProcessInfo3.processName);
-                    int i17 = runningAppProcessInfo3.pid;
-                    processItem2.mPid = i17;
-                    this.mRunningProcesses.put(i17, processItem2);
-                    z5 = true;
-                }
-                processItem2.mDependentProcesses.clear();
-            }
-            if (isInterestingProcess(runningAppProcessInfo3)) {
-                if (!this.mInterestingProcesses.contains(processItem2)) {
-                    this.mInterestingProcesses.add(processItem2);
-                    z5 = true;
-                }
-                processItem2.mCurSeq = this.mSequence;
-                processItem2.mInteresting = true;
-                processItem2.ensureLabel(packageManager);
-            } else {
-                processItem2.mInteresting = false;
-            }
-            processItem2.mRunningSeq = this.mSequence;
-            processItem2.mRunningProcessInfo = runningAppProcessInfo3;
-            i16++;
-            list2 = list3;
-        }
-        int size3 = this.mRunningProcesses.size();
-        int i18 = 0;
-        while (i18 < size3) {
-            ProcessItem valueAt = this.mRunningProcesses.valueAt(i18);
-            if (valueAt.mRunningSeq == this.mSequence) {
-                int i19 = valueAt.mRunningProcessInfo.importanceReasonPid;
-                if (i19 != 0) {
-                    ProcessItem processItem3 = this.mServiceProcessesByPid.get(i19);
-                    if (processItem3 == null) {
-                        processItem3 = this.mRunningProcesses.get(i19);
-                    }
-                    if (processItem3 != null) {
-                        processItem3.mDependentProcesses.put(valueAt.mPid, valueAt);
-                    }
-                } else {
-                    valueAt.mClient = null;
-                }
-                i18++;
-            } else {
-                SparseArray<ProcessItem> sparseArray = this.mRunningProcesses;
-                sparseArray.remove(sparseArray.keyAt(i18));
-                size3--;
-                z5 = true;
-            }
-        }
-        int size4 = this.mInterestingProcesses.size();
-        int i20 = 0;
-        while (i20 < size4) {
-            ProcessItem processItem4 = this.mInterestingProcesses.get(i20);
-            if (!processItem4.mInteresting || this.mRunningProcesses.get(processItem4.mPid) == null) {
-                this.mInterestingProcesses.remove(i20);
-                i20--;
-                size4--;
-                i7 = 1;
-                z5 = true;
-            } else {
-                i7 = 1;
-            }
-            i20 += i7;
-        }
-        int size5 = this.mServiceProcessesByPid.size();
-        for (int i21 = 0; i21 < size5; i21++) {
-            ProcessItem valueAt2 = this.mServiceProcessesByPid.valueAt(i21);
-            int i22 = valueAt2.mCurSeq;
-            int i23 = this.mSequence;
-            if (i22 == i23) {
-                z5 = valueAt2.buildDependencyChain(context, packageManager, i23) | z5;
-            }
-        }
-        ArrayList arrayList4 = null;
-        for (int i24 = 0; i24 < this.mServiceProcessesByName.size(); i24++) {
-            HashMap<String, ProcessItem> valueAt3 = this.mServiceProcessesByName.valueAt(i24);
-            Iterator<ProcessItem> it = valueAt3.values().iterator();
-            while (it.hasNext()) {
-                ProcessItem next = it.next();
-                if (next.mCurSeq == this.mSequence) {
-                    next.ensureLabel(packageManager);
-                    if (next.mPid == 0) {
-                        next.mDependentProcesses.clear();
-                    }
-                    Iterator<ServiceItem> it2 = next.mServices.values().iterator();
-                    while (it2.hasNext()) {
-                        if (it2.next().mCurSeq != this.mSequence) {
-                            it2.remove();
-                            z5 = true;
-                        }
-                    }
-                } else {
-                    it.remove();
-                    if (valueAt3.size() == 0) {
-                        if (arrayList4 == null) {
-                            arrayList4 = new ArrayList();
-                        }
-                        arrayList4.add(Integer.valueOf(this.mServiceProcessesByName.keyAt(i24)));
-                    }
-                    int i25 = next.mPid;
-                    if (i25 != 0) {
-                        this.mServiceProcessesByPid.remove(i25);
-                    }
-                    z5 = true;
-                }
-            }
-        }
-        if (arrayList4 != null) {
-            for (int i26 = 0; i26 < arrayList4.size(); i26++) {
-                this.mServiceProcessesByName.remove(((Integer) arrayList4.get(i26)).intValue());
-            }
-        }
-        if (z5) {
-            ArrayList arrayList5 = new ArrayList();
-            for (int i27 = 0; i27 < this.mServiceProcessesByName.size(); i27++) {
-                for (ProcessItem processItem5 : this.mServiceProcessesByName.valueAt(i27).values()) {
-                    processItem5.mIsSystem = false;
-                    processItem5.mIsStarted = true;
-                    processItem5.mActiveSince = Long.MAX_VALUE;
-                    for (ServiceItem serviceItem : processItem5.mServices.values()) {
-                        ServiceInfo serviceInfo = serviceItem.mServiceInfo;
-                        if (serviceInfo != null && (serviceInfo.applicationInfo.flags & 1) != 0) {
-                            processItem5.mIsSystem = true;
-                        }
-                        ActivityManager.RunningServiceInfo runningServiceInfo4 = serviceItem.mRunningService;
-                        if (runningServiceInfo4 != null && runningServiceInfo4.clientLabel != 0) {
-                            processItem5.mIsStarted = false;
-                            long j9 = processItem5.mActiveSince;
-                            long j10 = runningServiceInfo4.activeSince;
-                            if (j9 > j10) {
-                                processItem5.mActiveSince = j10;
-                            }
-                        }
-                    }
-                    arrayList5.add(processItem5);
-                }
-            }
-            Collections.sort(arrayList5, this.mServiceProcessComparator);
-            ArrayList<BaseItem> arrayList6 = new ArrayList<>();
-            ArrayList<MergedItem> arrayList7 = new ArrayList<>();
-            this.mProcessItems.clear();
-            for (int i28 = 0; i28 < arrayList5.size(); i28++) {
-                ProcessItem processItem6 = (ProcessItem) arrayList5.get(i28);
-                processItem6.mNeedDivider = false;
-                processItem6.addDependentProcesses(arrayList6, this.mProcessItems);
-                arrayList6.add(processItem6);
-                if (processItem6.mPid > 0) {
-                    this.mProcessItems.add(processItem6);
-                }
-                boolean z6 = false;
-                for (ServiceItem serviceItem2 : processItem6.mServices.values()) {
-                    serviceItem2.mNeedDivider = z6;
-                    arrayList6.add(serviceItem2);
-                    if (serviceItem2.mMergedItem != null) {
-                    }
-                    z6 = true;
-                }
-                MergedItem mergedItem2 = new MergedItem(processItem6.mUserId);
-                for (ServiceItem serviceItem3 : processItem6.mServices.values()) {
-                    mergedItem2.mServices.add(serviceItem3);
-                    serviceItem3.mMergedItem = mergedItem2;
-                }
-                mergedItem2.mProcess = processItem6;
-                mergedItem2.mOtherProcesses.clear();
-                for (int size6 = this.mProcessItems.size(); size6 < this.mProcessItems.size() - 1; size6++) {
-                    mergedItem2.mOtherProcesses.add(this.mProcessItems.get(size6));
-                }
-                mergedItem2.update(context, false);
-                if (mergedItem2.mUserId != this.mMyUserId) {
-                    addOtherUserItem(context, arrayList7, this.mOtherUserMergedItems, mergedItem2);
-                } else {
-                    arrayList7.add(mergedItem2);
-                }
-            }
-            int size7 = this.mInterestingProcesses.size();
-            for (int i29 = 0; i29 < size7; i29++) {
-                ProcessItem processItem7 = this.mInterestingProcesses.get(i29);
-                if (processItem7.mClient == null && processItem7.mServices.size() <= 0) {
-                    if (processItem7.mMergedItem == null) {
-                        MergedItem mergedItem3 = new MergedItem(processItem7.mUserId);
-                        processItem7.mMergedItem = mergedItem3;
-                        mergedItem3.mProcess = processItem7;
-                    }
-                    processItem7.mMergedItem.update(context, false);
-                    MergedItem mergedItem4 = processItem7.mMergedItem;
-                    if (mergedItem4.mUserId != this.mMyUserId) {
-                        addOtherUserItem(context, arrayList7, this.mOtherUserMergedItems, mergedItem4);
-                    } else {
-                        arrayList7.add(0, mergedItem4);
-                    }
-                    this.mProcessItems.add(processItem7);
-                }
-            }
-            int size8 = this.mOtherUserMergedItems.size();
-            for (int i30 = 0; i30 < size8; i30++) {
-                MergedItem valueAt4 = this.mOtherUserMergedItems.valueAt(i30);
-                if (valueAt4.mCurSeq == this.mSequence) {
-                    valueAt4.update(context, false);
-                }
-            }
-            i = 0;
-            synchronized (this.mLock) {
-                this.mItems = arrayList6;
-                this.mMergedItems = arrayList7;
-            }
-        } else {
-            i = 0;
-        }
-        this.mAllProcessItems.clear();
-        this.mAllProcessItems.addAll(this.mProcessItems);
-        int size9 = this.mRunningProcesses.size();
-        int i31 = i;
-        int i32 = i31;
-        int i33 = i32;
-        for (int i34 = i33; i34 < size9; i34++) {
-            ProcessItem valueAt5 = this.mRunningProcesses.valueAt(i34);
-            if (valueAt5.mCurSeq != this.mSequence) {
-                int i35 = valueAt5.mRunningProcessInfo.importance;
-                if (i35 >= 400) {
-                    i32++;
-                    this.mAllProcessItems.add(valueAt5);
-                } else if (i35 <= 200) {
-                    i33++;
-                    this.mAllProcessItems.add(valueAt5);
-                } else {
-                    Log.i("RunningState", "Unknown non-service process: " + valueAt5.mProcessName + " #" + valueAt5.mPid);
-                }
-            } else {
-                i31++;
-            }
-        }
-        try {
-            int size10 = this.mAllProcessItems.size();
-            int[] iArr = new int[size10];
-            for (int i36 = i; i36 < size10; i36++) {
-                try {
-                    iArr[i36] = this.mAllProcessItems.get(i36).mPid;
-                } catch (RemoteException unused) {
-                    i2 = i;
-                    j2 = 0;
-                    j3 = 0;
-                    arrayList = null;
-                    j4 = j;
-                    z = z5;
-                    j5 = j2;
-                    i3 = i2;
-                    j6 = j3;
-                    if (arrayList == null) {
-                    }
-                    j7 = j6;
-                    if (arrayList == null) {
-                    }
-                    while (i4 < this.mMergedItems.size()) {
-                    }
-                    synchronized (this.mLock) {
-                    }
-                }
-            }
-            long[] processPss = ActivityManager.getService().getProcessPss(iArr);
-            j4 = 0;
-            j2 = 0;
-            j3 = 0;
-            z = z5;
-            ArrayList<MergedItem> arrayList8 = null;
-            int i37 = i;
-            i3 = i37;
-            int i38 = i3;
-            while (i37 < size10) {
-                try {
-                    ProcessItem processItem8 = this.mAllProcessItems.get(i37);
-                    j8 = j4;
-                    try {
-                        z |= processItem8.updateSize(context, processPss[i37], this.mSequence);
-                        if (processItem8.mCurSeq == this.mSequence) {
-                            j3 += processItem8.mSize;
-                            i5 = size10;
-                            arrayList = arrayList8;
-                            jArr = processPss;
-                        } else {
-                            int i39 = processItem8.mRunningProcessInfo.importance;
-                            if (i39 >= 400) {
-                                long j11 = j8 + processItem8.mSize;
-                                if (arrayList8 != null) {
-                                    try {
-                                        mergedItem = new MergedItem(processItem8.mUserId);
-                                        processItem8.mMergedItem = mergedItem;
-                                        mergedItem.mProcess = processItem8;
-                                        i6 = (mergedItem.mUserId != this.mMyUserId ? 1 : 0) | i3;
-                                    } catch (RemoteException unused2) {
-                                        arrayList = arrayList8;
-                                        i2 = i3;
-                                        j = j11;
-                                        z5 = z;
-                                        j4 = j;
-                                        z = z5;
-                                        j5 = j2;
-                                        i3 = i2;
-                                        j6 = j3;
-                                        if (arrayList == null) {
-                                        }
-                                        j7 = j6;
-                                        if (arrayList == null) {
-                                        }
-                                        while (i4 < this.mMergedItems.size()) {
-                                        }
-                                        synchronized (this.mLock) {
-                                        }
-                                    }
-                                    try {
-                                        arrayList8.add(mergedItem);
-                                        i5 = size10;
-                                        arrayList3 = arrayList8;
-                                        jArr = processPss;
-                                        z2 = true;
-                                        i2 = i6;
-                                    } catch (RemoteException unused3) {
-                                        arrayList = arrayList8;
-                                        i2 = i6;
-                                        j = j11;
-                                        z5 = z;
-                                        j4 = j;
-                                        z = z5;
-                                        j5 = j2;
-                                        i3 = i2;
-                                        j6 = j3;
-                                        if (arrayList == null) {
-                                        }
-                                        j7 = j6;
-                                        if (arrayList == null) {
-                                        }
-                                        while (i4 < this.mMergedItems.size()) {
-                                        }
-                                        synchronized (this.mLock) {
-                                        }
-                                    }
-                                } else {
-                                    if (i38 < this.mBackgroundItems.size() && this.mBackgroundItems.get(i38).mProcess == processItem8) {
-                                        mergedItem = this.mBackgroundItems.get(i38);
-                                        i5 = size10;
-                                        arrayList3 = arrayList8;
-                                        jArr = processPss;
-                                        i2 = i3;
-                                        z2 = true;
-                                    }
-                                    arrayList3 = new ArrayList<>(i32);
-                                    int i40 = 0;
-                                    while (i40 < i38) {
-                                        try {
-                                            MergedItem mergedItem5 = this.mBackgroundItems.get(i40);
-                                            int i41 = size10;
-                                            long[] jArr2 = processPss;
-                                            i3 |= mergedItem5.mUserId != this.mMyUserId ? 1 : 0;
-                                            arrayList3.add(mergedItem5);
-                                            i40++;
-                                            size10 = i41;
-                                            processPss = jArr2;
-                                        } catch (RemoteException unused4) {
-                                            arrayList = arrayList3;
-                                            i2 = i3;
-                                            j = j11;
-                                            z5 = z;
-                                            j4 = j;
-                                            z = z5;
-                                            j5 = j2;
-                                            i3 = i2;
-                                            j6 = j3;
-                                            if (arrayList == null) {
-                                            }
-                                            j7 = j6;
-                                            if (arrayList == null) {
-                                            }
-                                            while (i4 < this.mMergedItems.size()) {
-                                            }
-                                            synchronized (this.mLock) {
-                                            }
-                                        }
-                                    }
-                                    i5 = size10;
-                                    jArr = processPss;
-                                    mergedItem = new MergedItem(processItem8.mUserId);
-                                    processItem8.mMergedItem = mergedItem;
-                                    mergedItem.mProcess = processItem8;
-                                    i2 = i3 | (mergedItem.mUserId != this.mMyUserId ? 1 : 0);
-                                    arrayList3.add(mergedItem);
-                                    z2 = true;
-                                }
-                                try {
-                                    mergedItem.update(context, z2);
-                                    mergedItem.updateSize(context);
-                                    i38++;
-                                    arrayList = arrayList3;
-                                    i3 = i2;
-                                    j4 = j11;
-                                    i37++;
-                                    arrayList8 = arrayList;
-                                    size10 = i5;
-                                    processPss = jArr;
-                                } catch (RemoteException unused5) {
-                                    arrayList = arrayList3;
-                                    j = j11;
-                                    z5 = z;
-                                    j4 = j;
-                                    z = z5;
-                                    j5 = j2;
-                                    i3 = i2;
-                                    j6 = j3;
-                                    if (arrayList == null) {
-                                    }
-                                    j7 = j6;
-                                    if (arrayList == null) {
-                                    }
-                                    while (i4 < this.mMergedItems.size()) {
-                                    }
-                                    synchronized (this.mLock) {
-                                    }
-                                }
-                            } else {
-                                i5 = size10;
-                                arrayList = arrayList8;
-                                jArr = processPss;
-                                if (i39 <= 200) {
-                                    try {
-                                        j2 += processItem8.mSize;
-                                    } catch (RemoteException unused6) {
-                                        i2 = i3;
-                                        z5 = z;
-                                        j = j8;
-                                        j4 = j;
-                                        z = z5;
-                                        j5 = j2;
-                                        i3 = i2;
-                                        j6 = j3;
-                                        if (arrayList == null) {
-                                        }
-                                        j7 = j6;
-                                        if (arrayList == null) {
-                                        }
-                                        while (i4 < this.mMergedItems.size()) {
-                                        }
-                                        synchronized (this.mLock) {
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        j4 = j8;
-                        i37++;
-                        arrayList8 = arrayList;
-                        size10 = i5;
-                        processPss = jArr;
-                    } catch (RemoteException unused7) {
-                        arrayList = arrayList8;
-                    }
-                } catch (RemoteException unused8) {
-                    arrayList = arrayList8;
-                    j8 = j4;
-                }
-            }
-            arrayList = arrayList8;
-            j5 = j2;
-        } catch (RemoteException unused9) {
-            j2 = 0;
-            j3 = 0;
-            arrayList = null;
-            i2 = 0;
-        }
-        j6 = j3;
-        if (arrayList == null || this.mBackgroundItems.size() <= i32) {
-            j7 = j6;
-        } else {
-            arrayList = new ArrayList<>(i32);
-            int i42 = i3;
-            int i43 = 0;
-            while (i43 < i32) {
-                MergedItem mergedItem6 = this.mBackgroundItems.get(i43);
-                long j12 = j6;
-                i42 |= mergedItem6.mUserId != this.mMyUserId ? 1 : 0;
-                arrayList.add(mergedItem6);
-                i43++;
-                j6 = j12;
-            }
-            j7 = j6;
-            i3 = i42;
-        }
-        if (arrayList == null) {
-            arrayList2 = null;
-        } else if (i3 == 0) {
-            arrayList2 = arrayList;
-        } else {
-            arrayList2 = new ArrayList<>();
-            int size11 = arrayList.size();
-            for (int i44 = 0; i44 < size11; i44++) {
-                MergedItem mergedItem7 = arrayList.get(i44);
-                if (mergedItem7.mUserId != this.mMyUserId) {
-                    addOtherUserItem(context, arrayList2, this.mOtherUserBackgroundItems, mergedItem7);
-                } else {
-                    arrayList2.add(mergedItem7);
-                }
-            }
-            int size12 = this.mOtherUserBackgroundItems.size();
-            for (int i45 = 0; i45 < size12; i45++) {
-                MergedItem valueAt6 = this.mOtherUserBackgroundItems.valueAt(i45);
-                if (valueAt6.mCurSeq == this.mSequence) {
-                    valueAt6.update(context, true);
-                    valueAt6.updateSize(context);
-                }
-            }
-        }
-        for (i4 = 0; i4 < this.mMergedItems.size(); i4++) {
-            this.mMergedItems.get(i4).updateSize(context);
-        }
-        synchronized (this.mLock) {
-            this.mNumBackgroundProcesses = i32;
-            this.mNumForegroundProcesses = i33;
-            this.mNumServiceProcesses = i31;
-            this.mBackgroundProcessMemory = j4;
-            this.mForegroundProcessMemory = j5;
-            this.mServiceProcessMemory = j7;
-            if (arrayList != null) {
-                this.mBackgroundItems = arrayList;
-                this.mUserBackgroundItems = arrayList2;
-                if (this.mWatchingBackgroundItems) {
-                    z = true;
-                }
-            }
-            if (!this.mHaveData) {
-                this.mHaveData = true;
-                this.mLock.notifyAll();
-            }
-        }
-        return z;
+    /* access modifiers changed from: private */
+    /*  JADX ERROR: IndexOutOfBoundsException in pass: RegionMakerVisitor
+        java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
+        	at java.base/jdk.internal.util.Preconditions.outOfBounds(Preconditions.java:64)
+        	at java.base/jdk.internal.util.Preconditions.outOfBoundsCheckIndex(Preconditions.java:70)
+        	at java.base/jdk.internal.util.Preconditions.checkIndex(Preconditions.java:248)
+        	at java.base/java.util.Objects.checkIndex(Objects.java:372)
+        	at java.base/java.util.ArrayList.get(ArrayList.java:458)
+        	at jadx.core.dex.nodes.InsnNode.getArg(InsnNode.java:101)
+        	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:611)
+        	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+        	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+        	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+        	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+        	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+        	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+        	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+        	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+        	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+        	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+        	at jadx.core.dex.visitors.regions.RegionMaker.processMonitorEnter(RegionMaker.java:561)
+        	at jadx.core.dex.visitors.regions.RegionMaker.traverse(RegionMaker.java:133)
+        	at jadx.core.dex.visitors.regions.RegionMaker.makeRegion(RegionMaker.java:86)
+        	at jadx.core.dex.visitors.regions.RegionMaker.processExcHandler(RegionMaker.java:1043)
+        	at jadx.core.dex.visitors.regions.RegionMaker.processTryCatchBlocks(RegionMaker.java:975)
+        	at jadx.core.dex.visitors.regions.RegionMakerVisitor.visit(RegionMakerVisitor.java:52)
+        */
+    /* JADX WARNING: Removed duplicated region for block: B:348:0x0677  */
+    /* JADX WARNING: Removed duplicated region for block: B:356:0x06a0  */
+    /* JADX WARNING: Removed duplicated region for block: B:358:0x06a4  */
+    /* JADX WARNING: Removed duplicated region for block: B:373:0x06ee  */
+    /* JADX WARNING: Removed duplicated region for block: B:377:0x06f8 A[LOOP:29: B:375:0x06f0->B:377:0x06f8, LOOP_END] */
+    public boolean update(android.content.Context r26, android.app.ActivityManager r27) {
+        /*
+            r25 = this;
+            r0 = r25
+            r1 = r26
+            android.content.pm.PackageManager r2 = r26.getPackageManager()
+            int r3 = r0.mSequence
+            r4 = 1
+            int r3 = r3 + r4
+            r0.mSequence = r3
+            r3 = 100
+            r5 = r27
+            java.util.List r3 = r5.getRunningServices(r3)
+            if (r3 == 0) goto L_0x001d
+            int r7 = r3.size()
+            goto L_0x001e
+        L_0x001d:
+            r7 = 0
+        L_0x001e:
+            r8 = 0
+        L_0x001f:
+            if (r8 >= r7) goto L_0x0042
+            java.lang.Object r9 = r3.get(r8)
+            android.app.ActivityManager$RunningServiceInfo r9 = (android.app.ActivityManager.RunningServiceInfo) r9
+            boolean r10 = r9.started
+            if (r10 != 0) goto L_0x0033
+            int r10 = r9.clientLabel
+            if (r10 != 0) goto L_0x0033
+            r3.remove(r8)
+            goto L_0x003c
+        L_0x0033:
+            int r9 = r9.flags
+            r9 = r9 & 8
+            if (r9 == 0) goto L_0x0040
+            r3.remove(r8)
+        L_0x003c:
+            int r8 = r8 + -1
+            int r7 = r7 + -1
+        L_0x0040:
+            int r8 = r8 + r4
+            goto L_0x001f
+        L_0x0042:
+            java.util.List r5 = r27.getRunningAppProcesses()
+            if (r5 == 0) goto L_0x004d
+            int r8 = r5.size()
+            goto L_0x004e
+        L_0x004d:
+            r8 = 0
+        L_0x004e:
+            android.util.SparseArray<com.android.settings.applications.RunningState$AppProcessInfo> r9 = r0.mTmpAppProcesses
+            r9.clear()
+            r9 = 0
+        L_0x0054:
+            if (r9 >= r8) goto L_0x006b
+            java.lang.Object r10 = r5.get(r9)
+            android.app.ActivityManager$RunningAppProcessInfo r10 = (android.app.ActivityManager.RunningAppProcessInfo) r10
+            android.util.SparseArray<com.android.settings.applications.RunningState$AppProcessInfo> r11 = r0.mTmpAppProcesses
+            int r12 = r10.pid
+            com.android.settings.applications.RunningState$AppProcessInfo r13 = new com.android.settings.applications.RunningState$AppProcessInfo
+            r13.<init>(r10)
+            r11.put(r12, r13)
+            int r9 = r9 + 1
+            goto L_0x0054
+        L_0x006b:
+            r9 = 0
+        L_0x006c:
+            r10 = 0
+            if (r9 >= r7) goto L_0x0095
+            java.lang.Object r12 = r3.get(r9)
+            android.app.ActivityManager$RunningServiceInfo r12 = (android.app.ActivityManager.RunningServiceInfo) r12
+            long r13 = r12.restarting
+            int r10 = (r13 > r10 ? 1 : (r13 == r10 ? 0 : -1))
+            if (r10 != 0) goto L_0x0092
+            int r10 = r12.pid
+            if (r10 <= 0) goto L_0x0092
+            android.util.SparseArray<com.android.settings.applications.RunningState$AppProcessInfo> r11 = r0.mTmpAppProcesses
+            java.lang.Object r10 = r11.get(r10)
+            com.android.settings.applications.RunningState$AppProcessInfo r10 = (com.android.settings.applications.RunningState.AppProcessInfo) r10
+            if (r10 == 0) goto L_0x0092
+            r10.hasServices = r4
+            boolean r11 = r12.foreground
+            if (r11 == 0) goto L_0x0092
+            r10.hasForegroundServices = r4
+        L_0x0092:
+            int r9 = r9 + 1
+            goto L_0x006c
+        L_0x0095:
+            r9 = 0
+            r12 = 0
+        L_0x0097:
+            if (r9 >= r7) goto L_0x015c
+            java.lang.Object r13 = r3.get(r9)
+            android.app.ActivityManager$RunningServiceInfo r13 = (android.app.ActivityManager.RunningServiceInfo) r13
+            long r14 = r13.restarting
+            int r14 = (r14 > r10 ? 1 : (r14 == r10 ? 0 : -1))
+            if (r14 != 0) goto L_0x00ed
+            int r14 = r13.pid
+            if (r14 <= 0) goto L_0x00ed
+            android.util.SparseArray<com.android.settings.applications.RunningState$AppProcessInfo> r15 = r0.mTmpAppProcesses
+            java.lang.Object r14 = r15.get(r14)
+            com.android.settings.applications.RunningState$AppProcessInfo r14 = (com.android.settings.applications.RunningState.AppProcessInfo) r14
+            if (r14 == 0) goto L_0x00ed
+            boolean r15 = r14.hasForegroundServices
+            if (r15 != 0) goto L_0x00ed
+            android.app.ActivityManager$RunningAppProcessInfo r14 = r14.info
+            int r15 = r14.importance
+            r6 = 300(0x12c, float:4.2E-43)
+            if (r15 >= r6) goto L_0x00ed
+            android.util.SparseArray<com.android.settings.applications.RunningState$AppProcessInfo> r6 = r0.mTmpAppProcesses
+            int r14 = r14.importanceReasonPid
+            java.lang.Object r6 = r6.get(r14)
+            com.android.settings.applications.RunningState$AppProcessInfo r6 = (com.android.settings.applications.RunningState.AppProcessInfo) r6
+        L_0x00c9:
+            if (r6 == 0) goto L_0x00e7
+            boolean r14 = r6.hasServices
+            if (r14 != 0) goto L_0x00e5
+            android.app.ActivityManager$RunningAppProcessInfo r14 = r6.info
+            boolean r14 = r0.isInterestingProcess(r14)
+            if (r14 == 0) goto L_0x00d8
+            goto L_0x00e5
+        L_0x00d8:
+            android.util.SparseArray<com.android.settings.applications.RunningState$AppProcessInfo> r14 = r0.mTmpAppProcesses
+            android.app.ActivityManager$RunningAppProcessInfo r6 = r6.info
+            int r6 = r6.importanceReasonPid
+            java.lang.Object r6 = r14.get(r6)
+            com.android.settings.applications.RunningState$AppProcessInfo r6 = (com.android.settings.applications.RunningState.AppProcessInfo) r6
+            goto L_0x00c9
+        L_0x00e5:
+            r6 = r4
+            goto L_0x00e8
+        L_0x00e7:
+            r6 = 0
+        L_0x00e8:
+            if (r6 == 0) goto L_0x00ed
+            r27 = r5
+            goto L_0x0155
+        L_0x00ed:
+            android.util.SparseArray<java.util.HashMap<java.lang.String, com.android.settings.applications.RunningState$ProcessItem>> r6 = r0.mServiceProcessesByName
+            int r14 = r13.uid
+            java.lang.Object r6 = r6.get(r14)
+            java.util.HashMap r6 = (java.util.HashMap) r6
+            if (r6 != 0) goto L_0x0105
+            java.util.HashMap r6 = new java.util.HashMap
+            r6.<init>()
+            android.util.SparseArray<java.util.HashMap<java.lang.String, com.android.settings.applications.RunningState$ProcessItem>> r14 = r0.mServiceProcessesByName
+            int r15 = r13.uid
+            r14.put(r15, r6)
+        L_0x0105:
+            java.lang.String r14 = r13.process
+            java.lang.Object r14 = r6.get(r14)
+            com.android.settings.applications.RunningState$ProcessItem r14 = (com.android.settings.applications.RunningState.ProcessItem) r14
+            if (r14 != 0) goto L_0x011e
+            com.android.settings.applications.RunningState$ProcessItem r14 = new com.android.settings.applications.RunningState$ProcessItem
+            int r12 = r13.uid
+            java.lang.String r15 = r13.process
+            r14.<init>(r1, r12, r15)
+            java.lang.String r12 = r13.process
+            r6.put(r12, r14)
+            r12 = r4
+        L_0x011e:
+            int r6 = r14.mCurSeq
+            int r15 = r0.mSequence
+            r27 = r5
+            if (r6 == r15) goto L_0x0150
+            long r4 = r13.restarting
+            int r4 = (r4 > r10 ? 1 : (r4 == r10 ? 0 : -1))
+            if (r4 != 0) goto L_0x012f
+            int r4 = r13.pid
+            goto L_0x0130
+        L_0x012f:
+            r4 = 0
+        L_0x0130:
+            int r5 = r14.mPid
+            if (r4 == r5) goto L_0x0147
+            if (r5 == r4) goto L_0x0146
+            if (r5 == 0) goto L_0x013d
+            android.util.SparseArray<com.android.settings.applications.RunningState$ProcessItem> r12 = r0.mServiceProcessesByPid
+            r12.remove(r5)
+        L_0x013d:
+            if (r4 == 0) goto L_0x0144
+            android.util.SparseArray<com.android.settings.applications.RunningState$ProcessItem> r5 = r0.mServiceProcessesByPid
+            r5.put(r4, r14)
+        L_0x0144:
+            r14.mPid = r4
+        L_0x0146:
+            r12 = 1
+        L_0x0147:
+            android.util.SparseArray<com.android.settings.applications.RunningState$ProcessItem> r4 = r14.mDependentProcesses
+            r4.clear()
+            int r4 = r0.mSequence
+            r14.mCurSeq = r4
+        L_0x0150:
+            boolean r4 = r14.updateService(r1, r13)
+            r12 = r12 | r4
+        L_0x0155:
+            int r9 = r9 + 1
+            r5 = r27
+            r4 = 1
+            goto L_0x0097
+        L_0x015c:
+            r27 = r5
+            r3 = 0
+        L_0x015f:
+            if (r3 >= r8) goto L_0x01c6
+            r4 = r27
+            java.lang.Object r5 = r4.get(r3)
+            android.app.ActivityManager$RunningAppProcessInfo r5 = (android.app.ActivityManager.RunningAppProcessInfo) r5
+            android.util.SparseArray<com.android.settings.applications.RunningState$ProcessItem> r7 = r0.mServiceProcessesByPid
+            int r9 = r5.pid
+            java.lang.Object r7 = r7.get(r9)
+            com.android.settings.applications.RunningState$ProcessItem r7 = (com.android.settings.applications.RunningState.ProcessItem) r7
+            if (r7 != 0) goto L_0x0199
+            android.util.SparseArray<com.android.settings.applications.RunningState$ProcessItem> r7 = r0.mRunningProcesses
+            int r9 = r5.pid
+            java.lang.Object r7 = r7.get(r9)
+            com.android.settings.applications.RunningState$ProcessItem r7 = (com.android.settings.applications.RunningState.ProcessItem) r7
+            if (r7 != 0) goto L_0x0194
+            com.android.settings.applications.RunningState$ProcessItem r7 = new com.android.settings.applications.RunningState$ProcessItem
+            int r9 = r5.uid
+            java.lang.String r12 = r5.processName
+            r7.<init>(r1, r9, r12)
+            int r9 = r5.pid
+            r7.mPid = r9
+            android.util.SparseArray<com.android.settings.applications.RunningState$ProcessItem> r12 = r0.mRunningProcesses
+            r12.put(r9, r7)
+            r12 = 1
+        L_0x0194:
+            android.util.SparseArray<com.android.settings.applications.RunningState$ProcessItem> r9 = r7.mDependentProcesses
+            r9.clear()
+        L_0x0199:
+            boolean r9 = r0.isInterestingProcess(r5)
+            if (r9 == 0) goto L_0x01b8
+            java.util.ArrayList<com.android.settings.applications.RunningState$ProcessItem> r9 = r0.mInterestingProcesses
+            boolean r9 = r9.contains(r7)
+            if (r9 != 0) goto L_0x01ad
+            java.util.ArrayList<com.android.settings.applications.RunningState$ProcessItem> r9 = r0.mInterestingProcesses
+            r9.add(r7)
+            r12 = 1
+        L_0x01ad:
+            int r9 = r0.mSequence
+            r7.mCurSeq = r9
+            r6 = 1
+            r7.mInteresting = r6
+            r7.ensureLabel(r2)
+            goto L_0x01bb
+        L_0x01b8:
+            r9 = 0
+            r7.mInteresting = r9
+        L_0x01bb:
+            int r9 = r0.mSequence
+            r7.mRunningSeq = r9
+            r7.mRunningProcessInfo = r5
+            int r3 = r3 + 1
+            r27 = r4
+            goto L_0x015f
+        L_0x01c6:
+            android.util.SparseArray<com.android.settings.applications.RunningState$ProcessItem> r3 = r0.mRunningProcesses
+            int r3 = r3.size()
+            r4 = 0
+        L_0x01cd:
+            r5 = 0
+            if (r4 >= r3) goto L_0x0212
+            android.util.SparseArray<com.android.settings.applications.RunningState$ProcessItem> r7 = r0.mRunningProcesses
+            java.lang.Object r7 = r7.valueAt(r4)
+            com.android.settings.applications.RunningState$ProcessItem r7 = (com.android.settings.applications.RunningState.ProcessItem) r7
+            int r8 = r7.mRunningSeq
+            int r9 = r0.mSequence
+            if (r8 != r9) goto L_0x0205
+            android.app.ActivityManager$RunningAppProcessInfo r8 = r7.mRunningProcessInfo
+            int r8 = r8.importanceReasonPid
+            if (r8 == 0) goto L_0x0200
+            android.util.SparseArray<com.android.settings.applications.RunningState$ProcessItem> r5 = r0.mServiceProcessesByPid
+            java.lang.Object r5 = r5.get(r8)
+            com.android.settings.applications.RunningState$ProcessItem r5 = (com.android.settings.applications.RunningState.ProcessItem) r5
+            if (r5 != 0) goto L_0x01f6
+            android.util.SparseArray<com.android.settings.applications.RunningState$ProcessItem> r5 = r0.mRunningProcesses
+            java.lang.Object r5 = r5.get(r8)
+            com.android.settings.applications.RunningState$ProcessItem r5 = (com.android.settings.applications.RunningState.ProcessItem) r5
+        L_0x01f6:
+            if (r5 == 0) goto L_0x0202
+            android.util.SparseArray<com.android.settings.applications.RunningState$ProcessItem> r5 = r5.mDependentProcesses
+            int r8 = r7.mPid
+            r5.put(r8, r7)
+            goto L_0x0202
+        L_0x0200:
+            r7.mClient = r5
+        L_0x0202:
+            int r4 = r4 + 1
+            goto L_0x01cd
+        L_0x0205:
+            android.util.SparseArray<com.android.settings.applications.RunningState$ProcessItem> r5 = r0.mRunningProcesses
+            int r7 = r5.keyAt(r4)
+            r5.remove(r7)
+            int r3 = r3 + -1
+            r12 = 1
+            goto L_0x01cd
+        L_0x0212:
+            java.util.ArrayList<com.android.settings.applications.RunningState$ProcessItem> r3 = r0.mInterestingProcesses
+            int r3 = r3.size()
+            r4 = 0
+        L_0x0219:
+            if (r4 >= r3) goto L_0x0241
+            java.util.ArrayList<com.android.settings.applications.RunningState$ProcessItem> r7 = r0.mInterestingProcesses
+            java.lang.Object r7 = r7.get(r4)
+            com.android.settings.applications.RunningState$ProcessItem r7 = (com.android.settings.applications.RunningState.ProcessItem) r7
+            boolean r8 = r7.mInteresting
+            if (r8 == 0) goto L_0x0234
+            android.util.SparseArray<com.android.settings.applications.RunningState$ProcessItem> r8 = r0.mRunningProcesses
+            int r7 = r7.mPid
+            java.lang.Object r7 = r8.get(r7)
+            if (r7 != 0) goto L_0x0232
+            goto L_0x0234
+        L_0x0232:
+            r6 = 1
+            goto L_0x023f
+        L_0x0234:
+            java.util.ArrayList<com.android.settings.applications.RunningState$ProcessItem> r7 = r0.mInterestingProcesses
+            r7.remove(r4)
+            int r4 = r4 + -1
+            int r3 = r3 + -1
+            r6 = 1
+            r12 = 1
+        L_0x023f:
+            int r4 = r4 + r6
+            goto L_0x0219
+        L_0x0241:
+            android.util.SparseArray<com.android.settings.applications.RunningState$ProcessItem> r3 = r0.mServiceProcessesByPid
+            int r3 = r3.size()
+            r4 = 0
+        L_0x0248:
+            if (r4 >= r3) goto L_0x0261
+            android.util.SparseArray<com.android.settings.applications.RunningState$ProcessItem> r7 = r0.mServiceProcessesByPid
+            java.lang.Object r7 = r7.valueAt(r4)
+            com.android.settings.applications.RunningState$ProcessItem r7 = (com.android.settings.applications.RunningState.ProcessItem) r7
+            int r8 = r7.mCurSeq
+            int r9 = r0.mSequence
+            if (r8 != r9) goto L_0x025e
+            boolean r7 = r7.buildDependencyChain(r1, r2, r9)
+            r7 = r7 | r12
+            r12 = r7
+        L_0x025e:
+            int r4 = r4 + 1
+            goto L_0x0248
+        L_0x0261:
+            r4 = r5
+            r3 = 0
+        L_0x0263:
+            android.util.SparseArray<java.util.HashMap<java.lang.String, com.android.settings.applications.RunningState$ProcessItem>> r7 = r0.mServiceProcessesByName
+            int r7 = r7.size()
+            if (r3 >= r7) goto L_0x02e6
+            android.util.SparseArray<java.util.HashMap<java.lang.String, com.android.settings.applications.RunningState$ProcessItem>> r7 = r0.mServiceProcessesByName
+            java.lang.Object r7 = r7.valueAt(r3)
+            java.util.HashMap r7 = (java.util.HashMap) r7
+            java.util.Collection r8 = r7.values()
+            java.util.Iterator r8 = r8.iterator()
+        L_0x027b:
+            boolean r9 = r8.hasNext()
+            if (r9 == 0) goto L_0x02e2
+            java.lang.Object r9 = r8.next()
+            com.android.settings.applications.RunningState$ProcessItem r9 = (com.android.settings.applications.RunningState.ProcessItem) r9
+            int r13 = r9.mCurSeq
+            int r14 = r0.mSequence
+            if (r13 != r14) goto L_0x02ba
+            r9.ensureLabel(r2)
+            int r13 = r9.mPid
+            if (r13 != 0) goto L_0x0299
+            android.util.SparseArray<com.android.settings.applications.RunningState$ProcessItem> r13 = r9.mDependentProcesses
+            r13.clear()
+        L_0x0299:
+            java.util.HashMap<android.content.ComponentName, com.android.settings.applications.RunningState$ServiceItem> r9 = r9.mServices
+            java.util.Collection r9 = r9.values()
+            java.util.Iterator r9 = r9.iterator()
+        L_0x02a3:
+            boolean r13 = r9.hasNext()
+            if (r13 == 0) goto L_0x027b
+            java.lang.Object r13 = r9.next()
+            com.android.settings.applications.RunningState$ServiceItem r13 = (com.android.settings.applications.RunningState.ServiceItem) r13
+            int r13 = r13.mCurSeq
+            int r14 = r0.mSequence
+            if (r13 == r14) goto L_0x02a3
+            r9.remove()
+            r12 = 1
+            goto L_0x02a3
+        L_0x02ba:
+            r8.remove()
+            int r12 = r7.size()
+            if (r12 != 0) goto L_0x02d7
+            if (r4 != 0) goto L_0x02ca
+            java.util.ArrayList r4 = new java.util.ArrayList
+            r4.<init>()
+        L_0x02ca:
+            android.util.SparseArray<java.util.HashMap<java.lang.String, com.android.settings.applications.RunningState$ProcessItem>> r12 = r0.mServiceProcessesByName
+            int r12 = r12.keyAt(r3)
+            java.lang.Integer r12 = java.lang.Integer.valueOf(r12)
+            r4.add(r12)
+        L_0x02d7:
+            int r9 = r9.mPid
+            if (r9 == 0) goto L_0x02e0
+            android.util.SparseArray<com.android.settings.applications.RunningState$ProcessItem> r12 = r0.mServiceProcessesByPid
+            r12.remove(r9)
+        L_0x02e0:
+            r12 = 1
+            goto L_0x027b
+        L_0x02e2:
+            int r3 = r3 + 1
+            goto L_0x0263
+        L_0x02e6:
+            if (r4 == 0) goto L_0x0301
+            r2 = 0
+        L_0x02e9:
+            int r3 = r4.size()
+            if (r2 >= r3) goto L_0x0301
+            java.lang.Object r3 = r4.get(r2)
+            java.lang.Integer r3 = (java.lang.Integer) r3
+            int r3 = r3.intValue()
+            android.util.SparseArray<java.util.HashMap<java.lang.String, com.android.settings.applications.RunningState$ProcessItem>> r7 = r0.mServiceProcessesByName
+            r7.remove(r3)
+            int r2 = r2 + 1
+            goto L_0x02e9
+        L_0x0301:
+            if (r12 == 0) goto L_0x04b3
+            java.util.ArrayList r2 = new java.util.ArrayList
+            r2.<init>()
+            r3 = 0
+        L_0x0309:
+            android.util.SparseArray<java.util.HashMap<java.lang.String, com.android.settings.applications.RunningState$ProcessItem>> r4 = r0.mServiceProcessesByName
+            int r4 = r4.size()
+            if (r3 >= r4) goto L_0x037e
+            android.util.SparseArray<java.util.HashMap<java.lang.String, com.android.settings.applications.RunningState$ProcessItem>> r4 = r0.mServiceProcessesByName
+            java.lang.Object r4 = r4.valueAt(r3)
+            java.util.HashMap r4 = (java.util.HashMap) r4
+            java.util.Collection r4 = r4.values()
+            java.util.Iterator r4 = r4.iterator()
+        L_0x0321:
+            boolean r7 = r4.hasNext()
+            if (r7 == 0) goto L_0x037a
+            java.lang.Object r7 = r4.next()
+            com.android.settings.applications.RunningState$ProcessItem r7 = (com.android.settings.applications.RunningState.ProcessItem) r7
+            r8 = 0
+            r7.mIsSystem = r8
+            r6 = 1
+            r7.mIsStarted = r6
+            r8 = 9223372036854775807(0x7fffffffffffffff, double:NaN)
+            r7.mActiveSince = r8
+            java.util.HashMap<android.content.ComponentName, com.android.settings.applications.RunningState$ServiceItem> r8 = r7.mServices
+            java.util.Collection r8 = r8.values()
+            java.util.Iterator r8 = r8.iterator()
+        L_0x0344:
+            boolean r9 = r8.hasNext()
+            if (r9 == 0) goto L_0x0375
+            java.lang.Object r9 = r8.next()
+            com.android.settings.applications.RunningState$ServiceItem r9 = (com.android.settings.applications.RunningState.ServiceItem) r9
+            android.content.pm.ServiceInfo r13 = r9.mServiceInfo
+            if (r13 == 0) goto L_0x035e
+            android.content.pm.ApplicationInfo r13 = r13.applicationInfo
+            int r13 = r13.flags
+            r6 = 1
+            r13 = r13 & r6
+            if (r13 == 0) goto L_0x035e
+            r7.mIsSystem = r6
+        L_0x035e:
+            android.app.ActivityManager$RunningServiceInfo r9 = r9.mRunningService
+            if (r9 == 0) goto L_0x0373
+            int r13 = r9.clientLabel
+            if (r13 == 0) goto L_0x0373
+            r13 = 0
+            r7.mIsStarted = r13
+            long r13 = r7.mActiveSince
+            long r5 = r9.activeSince
+            int r9 = (r13 > r5 ? 1 : (r13 == r5 ? 0 : -1))
+            if (r9 <= 0) goto L_0x0373
+            r7.mActiveSince = r5
+        L_0x0373:
+            r5 = 0
+            goto L_0x0344
+        L_0x0375:
+            r2.add(r7)
+            r5 = 0
+            goto L_0x0321
+        L_0x037a:
+            int r3 = r3 + 1
+            r5 = 0
+            goto L_0x0309
+        L_0x037e:
+            com.android.settings.applications.RunningState$ServiceProcessComparator r3 = r0.mServiceProcessComparator
+            java.util.Collections.sort(r2, r3)
+            java.util.ArrayList r3 = new java.util.ArrayList
+            r3.<init>()
+            java.util.ArrayList r4 = new java.util.ArrayList
+            r4.<init>()
+            java.util.ArrayList<com.android.settings.applications.RunningState$ProcessItem> r5 = r0.mProcessItems
+            r5.clear()
+            r5 = 0
+        L_0x0393:
+            int r6 = r2.size()
+            if (r5 >= r6) goto L_0x043b
+            java.lang.Object r6 = r2.get(r5)
+            com.android.settings.applications.RunningState$ProcessItem r6 = (com.android.settings.applications.RunningState.ProcessItem) r6
+            r7 = 0
+            r6.mNeedDivider = r7
+            java.util.ArrayList<com.android.settings.applications.RunningState$ProcessItem> r7 = r0.mProcessItems
+            int r7 = r7.size()
+            java.util.ArrayList<com.android.settings.applications.RunningState$ProcessItem> r8 = r0.mProcessItems
+            r6.addDependentProcesses(r3, r8)
+            r3.add(r6)
+            int r8 = r6.mPid
+            if (r8 <= 0) goto L_0x03b9
+            java.util.ArrayList<com.android.settings.applications.RunningState$ProcessItem> r8 = r0.mProcessItems
+            r8.add(r6)
+        L_0x03b9:
+            java.util.HashMap<android.content.ComponentName, com.android.settings.applications.RunningState$ServiceItem> r8 = r6.mServices
+            java.util.Collection r8 = r8.values()
+            java.util.Iterator r8 = r8.iterator()
+            r9 = 0
+            r13 = 0
+        L_0x03c5:
+            boolean r14 = r8.hasNext()
+            if (r14 == 0) goto L_0x03dd
+            java.lang.Object r14 = r8.next()
+            com.android.settings.applications.RunningState$ServiceItem r14 = (com.android.settings.applications.RunningState.ServiceItem) r14
+            r14.mNeedDivider = r9
+            r3.add(r14)
+            com.android.settings.applications.RunningState$MergedItem r9 = r14.mMergedItem
+            if (r9 == 0) goto L_0x03db
+            r13 = r9
+        L_0x03db:
+            r9 = 1
+            goto L_0x03c5
+        L_0x03dd:
+            com.android.settings.applications.RunningState$MergedItem r8 = new com.android.settings.applications.RunningState$MergedItem
+            int r9 = r6.mUserId
+            r8.<init>(r9)
+            java.util.HashMap<android.content.ComponentName, com.android.settings.applications.RunningState$ServiceItem> r9 = r6.mServices
+            java.util.Collection r9 = r9.values()
+            java.util.Iterator r9 = r9.iterator()
+        L_0x03ee:
+            boolean r13 = r9.hasNext()
+            if (r13 == 0) goto L_0x0402
+            java.lang.Object r13 = r9.next()
+            com.android.settings.applications.RunningState$ServiceItem r13 = (com.android.settings.applications.RunningState.ServiceItem) r13
+            java.util.ArrayList<com.android.settings.applications.RunningState$ServiceItem> r14 = r8.mServices
+            r14.add(r13)
+            r13.mMergedItem = r8
+            goto L_0x03ee
+        L_0x0402:
+            r8.mProcess = r6
+            java.util.ArrayList<com.android.settings.applications.RunningState$ProcessItem> r6 = r8.mOtherProcesses
+            r6.clear()
+        L_0x0409:
+            java.util.ArrayList<com.android.settings.applications.RunningState$ProcessItem> r6 = r0.mProcessItems
+            int r6 = r6.size()
+            r9 = 1
+            int r13 = r6 + -1
+            if (r7 >= r13) goto L_0x0424
+            java.util.ArrayList<com.android.settings.applications.RunningState$ProcessItem> r9 = r8.mOtherProcesses
+            java.util.ArrayList<com.android.settings.applications.RunningState$ProcessItem> r13 = r0.mProcessItems
+            java.lang.Object r13 = r13.get(r7)
+            com.android.settings.applications.RunningState$ProcessItem r13 = (com.android.settings.applications.RunningState.ProcessItem) r13
+            r9.add(r13)
+            int r7 = r7 + 1
+            goto L_0x0409
+        L_0x0424:
+            r7 = 0
+            r8.update(r1, r7)
+            int r7 = r8.mUserId
+            int r9 = r0.mMyUserId
+            if (r7 == r9) goto L_0x0434
+            android.util.SparseArray<com.android.settings.applications.RunningState$MergedItem> r7 = r0.mOtherUserMergedItems
+            r0.addOtherUserItem(r1, r4, r7, r8)
+            goto L_0x0437
+        L_0x0434:
+            r4.add(r8)
+        L_0x0437:
+            int r5 = r5 + 1
+            goto L_0x0393
+        L_0x043b:
+            java.util.ArrayList<com.android.settings.applications.RunningState$ProcessItem> r2 = r0.mInterestingProcesses
+            int r2 = r2.size()
+            r9 = 0
+        L_0x0442:
+            if (r9 >= r2) goto L_0x0486
+            java.util.ArrayList<com.android.settings.applications.RunningState$ProcessItem> r5 = r0.mInterestingProcesses
+            java.lang.Object r5 = r5.get(r9)
+            com.android.settings.applications.RunningState$ProcessItem r5 = (com.android.settings.applications.RunningState.ProcessItem) r5
+            com.android.settings.applications.RunningState$ProcessItem r7 = r5.mClient
+            if (r7 != 0) goto L_0x0483
+            java.util.HashMap<android.content.ComponentName, com.android.settings.applications.RunningState$ServiceItem> r7 = r5.mServices
+            int r7 = r7.size()
+            if (r7 > 0) goto L_0x0483
+            com.android.settings.applications.RunningState$MergedItem r7 = r5.mMergedItem
+            if (r7 != 0) goto L_0x0467
+            com.android.settings.applications.RunningState$MergedItem r7 = new com.android.settings.applications.RunningState$MergedItem
+            int r8 = r5.mUserId
+            r7.<init>(r8)
+            r5.mMergedItem = r7
+            r7.mProcess = r5
+        L_0x0467:
+            com.android.settings.applications.RunningState$MergedItem r7 = r5.mMergedItem
+            r8 = 0
+            r7.update(r1, r8)
+            com.android.settings.applications.RunningState$MergedItem r7 = r5.mMergedItem
+            int r13 = r7.mUserId
+            int r14 = r0.mMyUserId
+            if (r13 == r14) goto L_0x047b
+            android.util.SparseArray<com.android.settings.applications.RunningState$MergedItem> r13 = r0.mOtherUserMergedItems
+            r0.addOtherUserItem(r1, r4, r13, r7)
+            goto L_0x047e
+        L_0x047b:
+            r4.add(r8, r7)
+        L_0x047e:
+            java.util.ArrayList<com.android.settings.applications.RunningState$ProcessItem> r7 = r0.mProcessItems
+            r7.add(r5)
+        L_0x0483:
+            int r9 = r9 + 1
+            goto L_0x0442
+        L_0x0486:
+            android.util.SparseArray<com.android.settings.applications.RunningState$MergedItem> r2 = r0.mOtherUserMergedItems
+            int r2 = r2.size()
+            r9 = 0
+        L_0x048d:
+            if (r9 >= r2) goto L_0x04a6
+            android.util.SparseArray<com.android.settings.applications.RunningState$MergedItem> r5 = r0.mOtherUserMergedItems
+            java.lang.Object r5 = r5.valueAt(r9)
+            com.android.settings.applications.RunningState$MergedItem r5 = (com.android.settings.applications.RunningState.MergedItem) r5
+            int r7 = r5.mCurSeq
+            int r8 = r0.mSequence
+            if (r7 != r8) goto L_0x04a2
+            r7 = 0
+            r5.update(r1, r7)
+            goto L_0x04a3
+        L_0x04a2:
+            r7 = 0
+        L_0x04a3:
+            int r9 = r9 + 1
+            goto L_0x048d
+        L_0x04a6:
+            r7 = 0
+            java.lang.Object r2 = r0.mLock
+            monitor-enter(r2)
+            r0.mItems = r3     // Catch:{ all -> 0x04b0 }
+            r0.mMergedItems = r4     // Catch:{ all -> 0x04b0 }
+            monitor-exit(r2)     // Catch:{ all -> 0x04b0 }
+            goto L_0x04b4
+        L_0x04b0:
+            r0 = move-exception
+            monitor-exit(r2)     // Catch:{ all -> 0x04b0 }
+            throw r0
+        L_0x04b3:
+            r7 = 0
+        L_0x04b4:
+            java.util.ArrayList<com.android.settings.applications.RunningState$ProcessItem> r2 = r0.mAllProcessItems
+            r2.clear()
+            java.util.ArrayList<com.android.settings.applications.RunningState$ProcessItem> r2 = r0.mAllProcessItems
+            java.util.ArrayList<com.android.settings.applications.RunningState$ProcessItem> r3 = r0.mProcessItems
+            r2.addAll(r3)
+            android.util.SparseArray<com.android.settings.applications.RunningState$ProcessItem> r2 = r0.mRunningProcesses
+            int r2 = r2.size()
+            r3 = r7
+            r4 = r3
+            r5 = r4
+            r9 = r5
+        L_0x04ca:
+            r8 = 200(0xc8, float:2.8E-43)
+            r13 = 400(0x190, float:5.6E-43)
+            if (r9 >= r2) goto L_0x051e
+            android.util.SparseArray<com.android.settings.applications.RunningState$ProcessItem> r14 = r0.mRunningProcesses
+            java.lang.Object r14 = r14.valueAt(r9)
+            com.android.settings.applications.RunningState$ProcessItem r14 = (com.android.settings.applications.RunningState.ProcessItem) r14
+            int r15 = r14.mCurSeq
+            int r6 = r0.mSequence
+            if (r15 == r6) goto L_0x0519
+            android.app.ActivityManager$RunningAppProcessInfo r6 = r14.mRunningProcessInfo
+            int r6 = r6.importance
+            if (r6 < r13) goto L_0x04ec
+            int r4 = r4 + 1
+            java.util.ArrayList<com.android.settings.applications.RunningState$ProcessItem> r6 = r0.mAllProcessItems
+            r6.add(r14)
+            goto L_0x051b
+        L_0x04ec:
+            if (r6 > r8) goto L_0x04f6
+            int r5 = r5 + 1
+            java.util.ArrayList<com.android.settings.applications.RunningState$ProcessItem> r6 = r0.mAllProcessItems
+            r6.add(r14)
+            goto L_0x051b
+        L_0x04f6:
+            java.lang.String r6 = "RunningState"
+            java.lang.StringBuilder r8 = new java.lang.StringBuilder
+            r8.<init>()
+            java.lang.String r13 = "Unknown non-service process: "
+            r8.append(r13)
+            java.lang.String r13 = r14.mProcessName
+            r8.append(r13)
+            java.lang.String r13 = " #"
+            r8.append(r13)
+            int r13 = r14.mPid
+            r8.append(r13)
+            java.lang.String r8 = r8.toString()
+            android.util.Log.i(r6, r8)
+            goto L_0x051b
+        L_0x0519:
+            int r3 = r3 + 1
+        L_0x051b:
+            int r9 = r9 + 1
+            goto L_0x04ca
+        L_0x051e:
+            java.util.ArrayList<com.android.settings.applications.RunningState$ProcessItem> r2 = r0.mAllProcessItems     // Catch:{ RemoteException -> 0x065f }
+            int r2 = r2.size()     // Catch:{ RemoteException -> 0x065f }
+            int[] r6 = new int[r2]     // Catch:{ RemoteException -> 0x065f }
+            r9 = r7
+        L_0x0527:
+            if (r9 >= r2) goto L_0x0540
+            java.util.ArrayList<com.android.settings.applications.RunningState$ProcessItem> r14 = r0.mAllProcessItems     // Catch:{ RemoteException -> 0x0538 }
+            java.lang.Object r14 = r14.get(r9)     // Catch:{ RemoteException -> 0x0538 }
+            com.android.settings.applications.RunningState$ProcessItem r14 = (com.android.settings.applications.RunningState.ProcessItem) r14     // Catch:{ RemoteException -> 0x0538 }
+            int r14 = r14.mPid     // Catch:{ RemoteException -> 0x0538 }
+            r6[r9] = r14     // Catch:{ RemoteException -> 0x0538 }
+            int r9 = r9 + 1
+            goto L_0x0527
+        L_0x0538:
+            r9 = r7
+            r16 = r10
+            r18 = r16
+            r2 = 0
+            goto L_0x0665
+        L_0x0540:
+            android.app.IActivityManager r9 = android.app.ActivityManager.getService()     // Catch:{ RemoteException -> 0x065f }
+            long[] r9 = r9.getProcessPss(r6)     // Catch:{ RemoteException -> 0x065f }
+            r14 = r10
+            r16 = r14
+            r18 = r16
+            r20 = r12
+            r6 = 0
+            r10 = r7
+            r11 = r10
+            r12 = r11
+        L_0x0553:
+            if (r10 >= r2) goto L_0x0659
+            java.util.ArrayList<com.android.settings.applications.RunningState$ProcessItem> r7 = r0.mAllProcessItems     // Catch:{ RemoteException -> 0x0650 }
+            java.lang.Object r7 = r7.get(r10)     // Catch:{ RemoteException -> 0x0650 }
+            com.android.settings.applications.RunningState$ProcessItem r7 = (com.android.settings.applications.RunningState.ProcessItem) r7     // Catch:{ RemoteException -> 0x0650 }
+            r21 = r14
+            r13 = r9[r10]     // Catch:{ RemoteException -> 0x064e }
+            int r15 = r0.mSequence     // Catch:{ RemoteException -> 0x064e }
+            boolean r13 = r7.updateSize(r1, r13, r15)     // Catch:{ RemoteException -> 0x064e }
+            r20 = r20 | r13
+            int r13 = r7.mCurSeq     // Catch:{ RemoteException -> 0x064e }
+            int r14 = r0.mSequence     // Catch:{ RemoteException -> 0x064e }
+            if (r13 != r14) goto L_0x057c
+            long r13 = r7.mSize     // Catch:{ RemoteException -> 0x064e }
+            long r18 = r18 + r13
+            r23 = r2
+            r2 = r6
+            r24 = r9
+        L_0x0578:
+            r14 = r21
+            goto L_0x0642
+        L_0x057c:
+            android.app.ActivityManager$RunningAppProcessInfo r13 = r7.mRunningProcessInfo     // Catch:{ RemoteException -> 0x064e }
+            int r13 = r13.importance     // Catch:{ RemoteException -> 0x064e }
+            r14 = 400(0x190, float:5.6E-43)
+            if (r13 < r14) goto L_0x0633
+            long r14 = r7.mSize     // Catch:{ RemoteException -> 0x064e }
+            long r13 = r21 + r14
+            if (r6 == 0) goto L_0x05af
+            com.android.settings.applications.RunningState$MergedItem r15 = new com.android.settings.applications.RunningState$MergedItem     // Catch:{ RemoteException -> 0x062d }
+            int r8 = r7.mUserId     // Catch:{ RemoteException -> 0x062d }
+            r15.<init>(r8)     // Catch:{ RemoteException -> 0x062d }
+            r7.mMergedItem = r15     // Catch:{ RemoteException -> 0x062d }
+            r15.mProcess = r7     // Catch:{ RemoteException -> 0x062d }
+            int r7 = r15.mUserId     // Catch:{ RemoteException -> 0x062d }
+            int r8 = r0.mMyUserId     // Catch:{ RemoteException -> 0x062d }
+            if (r7 == r8) goto L_0x059d
+            r7 = 1
+            goto L_0x059e
+        L_0x059d:
+            r7 = 0
+        L_0x059e:
+            r7 = r7 | r11
+            r6.add(r15)     // Catch:{ RemoteException -> 0x05ab }
+            r23 = r2
+            r8 = r6
+            r24 = r9
+            r2 = 1
+            r9 = r7
+            goto L_0x061b
+        L_0x05ab:
+            r2 = r6
+            r9 = r7
+            goto L_0x062f
+        L_0x05af:
+            java.util.ArrayList<com.android.settings.applications.RunningState$MergedItem> r8 = r0.mBackgroundItems     // Catch:{ RemoteException -> 0x062d }
+            int r8 = r8.size()     // Catch:{ RemoteException -> 0x062d }
+            if (r12 >= r8) goto L_0x05d5
+            java.util.ArrayList<com.android.settings.applications.RunningState$MergedItem> r8 = r0.mBackgroundItems     // Catch:{ RemoteException -> 0x062d }
+            java.lang.Object r8 = r8.get(r12)     // Catch:{ RemoteException -> 0x062d }
+            com.android.settings.applications.RunningState$MergedItem r8 = (com.android.settings.applications.RunningState.MergedItem) r8     // Catch:{ RemoteException -> 0x062d }
+            com.android.settings.applications.RunningState$ProcessItem r8 = r8.mProcess     // Catch:{ RemoteException -> 0x062d }
+            if (r8 == r7) goto L_0x05c4
+            goto L_0x05d5
+        L_0x05c4:
+            java.util.ArrayList<com.android.settings.applications.RunningState$MergedItem> r7 = r0.mBackgroundItems     // Catch:{ RemoteException -> 0x062d }
+            java.lang.Object r7 = r7.get(r12)     // Catch:{ RemoteException -> 0x062d }
+            r15 = r7
+            com.android.settings.applications.RunningState$MergedItem r15 = (com.android.settings.applications.RunningState.MergedItem) r15     // Catch:{ RemoteException -> 0x062d }
+            r23 = r2
+            r8 = r6
+            r24 = r9
+            r9 = r11
+        L_0x05d3:
+            r2 = 1
+            goto L_0x061b
+        L_0x05d5:
+            java.util.ArrayList r8 = new java.util.ArrayList     // Catch:{ RemoteException -> 0x062d }
+            r8.<init>(r4)     // Catch:{ RemoteException -> 0x062d }
+            r6 = 0
+        L_0x05db:
+            if (r6 >= r12) goto L_0x05fd
+            java.util.ArrayList<com.android.settings.applications.RunningState$MergedItem> r15 = r0.mBackgroundItems     // Catch:{ RemoteException -> 0x062b }
+            java.lang.Object r15 = r15.get(r6)     // Catch:{ RemoteException -> 0x062b }
+            com.android.settings.applications.RunningState$MergedItem r15 = (com.android.settings.applications.RunningState.MergedItem) r15     // Catch:{ RemoteException -> 0x062b }
+            r23 = r2
+            int r2 = r15.mUserId     // Catch:{ RemoteException -> 0x062b }
+            r24 = r9
+            int r9 = r0.mMyUserId     // Catch:{ RemoteException -> 0x062b }
+            if (r2 == r9) goto L_0x05f1
+            r2 = 1
+            goto L_0x05f2
+        L_0x05f1:
+            r2 = 0
+        L_0x05f2:
+            r11 = r11 | r2
+            r8.add(r15)     // Catch:{ RemoteException -> 0x062b }
+            int r6 = r6 + 1
+            r2 = r23
+            r9 = r24
+            goto L_0x05db
+        L_0x05fd:
+            r23 = r2
+            r24 = r9
+            com.android.settings.applications.RunningState$MergedItem r15 = new com.android.settings.applications.RunningState$MergedItem     // Catch:{ RemoteException -> 0x062b }
+            int r2 = r7.mUserId     // Catch:{ RemoteException -> 0x062b }
+            r15.<init>(r2)     // Catch:{ RemoteException -> 0x062b }
+            r7.mMergedItem = r15     // Catch:{ RemoteException -> 0x062b }
+            r15.mProcess = r7     // Catch:{ RemoteException -> 0x062b }
+            int r2 = r15.mUserId     // Catch:{ RemoteException -> 0x062b }
+            int r6 = r0.mMyUserId     // Catch:{ RemoteException -> 0x062b }
+            if (r2 == r6) goto L_0x0614
+            r6 = 1
+            goto L_0x0615
+        L_0x0614:
+            r6 = 0
+        L_0x0615:
+            r9 = r11 | r6
+            r8.add(r15)     // Catch:{ RemoteException -> 0x0629 }
+            goto L_0x05d3
+        L_0x061b:
+            r15.update(r1, r2)     // Catch:{ RemoteException -> 0x0629 }
+            r15.updateSize(r1)     // Catch:{ RemoteException -> 0x0629 }
+            int r12 = r12 + 1
+            r2 = r8
+            r11 = r9
+            r14 = r13
+            r8 = 200(0xc8, float:2.8E-43)
+            goto L_0x0642
+        L_0x0629:
+            r2 = r8
+            goto L_0x062f
+        L_0x062b:
+            r2 = r8
+            goto L_0x062e
+        L_0x062d:
+            r2 = r6
+        L_0x062e:
+            r9 = r11
+        L_0x062f:
+            r10 = r13
+            r12 = r20
+            goto L_0x0665
+        L_0x0633:
+            r23 = r2
+            r2 = r6
+            r24 = r9
+            r8 = 200(0xc8, float:2.8E-43)
+            if (r13 > r8) goto L_0x0578
+            long r13 = r7.mSize     // Catch:{ RemoteException -> 0x0653 }
+            long r16 = r16 + r13
+            goto L_0x0578
+        L_0x0642:
+            int r10 = r10 + 1
+            r6 = r2
+            r2 = r23
+            r9 = r24
+            r7 = 0
+            r13 = 400(0x190, float:5.6E-43)
+            goto L_0x0553
+        L_0x064e:
+            r2 = r6
+            goto L_0x0653
+        L_0x0650:
+            r2 = r6
+            r21 = r14
+        L_0x0653:
+            r9 = r11
+            r12 = r20
+            r10 = r21
+            goto L_0x0665
+        L_0x0659:
+            r2 = r6
+            r21 = r14
+            r7 = r16
+            goto L_0x066b
+        L_0x065f:
+            r16 = r10
+            r18 = r16
+            r2 = 0
+            r9 = 0
+        L_0x0665:
+            r14 = r10
+            r20 = r12
+            r7 = r16
+            r11 = r9
+        L_0x066b:
+            r9 = r18
+            if (r2 != 0) goto L_0x06a0
+            java.util.ArrayList<com.android.settings.applications.RunningState$MergedItem> r12 = r0.mBackgroundItems
+            int r12 = r12.size()
+            if (r12 <= r4) goto L_0x06a0
+            java.util.ArrayList r2 = new java.util.ArrayList
+            r2.<init>(r4)
+            r12 = r11
+            r11 = 0
+        L_0x067e:
+            if (r11 >= r4) goto L_0x069c
+            java.util.ArrayList<com.android.settings.applications.RunningState$MergedItem> r13 = r0.mBackgroundItems
+            java.lang.Object r13 = r13.get(r11)
+            com.android.settings.applications.RunningState$MergedItem r13 = (com.android.settings.applications.RunningState.MergedItem) r13
+            int r6 = r13.mUserId
+            r16 = r9
+            int r9 = r0.mMyUserId
+            if (r6 == r9) goto L_0x0692
+            r6 = 1
+            goto L_0x0693
+        L_0x0692:
+            r6 = 0
+        L_0x0693:
+            r12 = r12 | r6
+            r2.add(r13)
+            int r11 = r11 + 1
+            r9 = r16
+            goto L_0x067e
+        L_0x069c:
+            r16 = r9
+            r11 = r12
+            goto L_0x06a2
+        L_0x06a0:
+            r16 = r9
+        L_0x06a2:
+            if (r2 == 0) goto L_0x06ee
+            if (r11 != 0) goto L_0x06a8
+            r9 = r2
+            goto L_0x06ef
+        L_0x06a8:
+            java.util.ArrayList r9 = new java.util.ArrayList
+            r9.<init>()
+            int r6 = r2.size()
+            r10 = 0
+        L_0x06b2:
+            if (r10 >= r6) goto L_0x06cc
+            java.lang.Object r11 = r2.get(r10)
+            com.android.settings.applications.RunningState$MergedItem r11 = (com.android.settings.applications.RunningState.MergedItem) r11
+            int r12 = r11.mUserId
+            int r13 = r0.mMyUserId
+            if (r12 == r13) goto L_0x06c6
+            android.util.SparseArray<com.android.settings.applications.RunningState$MergedItem> r12 = r0.mOtherUserBackgroundItems
+            r0.addOtherUserItem(r1, r9, r12, r11)
+            goto L_0x06c9
+        L_0x06c6:
+            r9.add(r11)
+        L_0x06c9:
+            int r10 = r10 + 1
+            goto L_0x06b2
+        L_0x06cc:
+            android.util.SparseArray<com.android.settings.applications.RunningState$MergedItem> r6 = r0.mOtherUserBackgroundItems
+            int r10 = r6.size()
+            r11 = 0
+        L_0x06d3:
+            if (r11 >= r10) goto L_0x06ef
+            android.util.SparseArray<com.android.settings.applications.RunningState$MergedItem> r6 = r0.mOtherUserBackgroundItems
+            java.lang.Object r6 = r6.valueAt(r11)
+            r12 = r6
+            com.android.settings.applications.RunningState$MergedItem r12 = (com.android.settings.applications.RunningState.MergedItem) r12
+            int r6 = r12.mCurSeq
+            int r13 = r0.mSequence
+            if (r6 != r13) goto L_0x06eb
+            r6 = 1
+            r12.update(r1, r6)
+            r12.updateSize(r1)
+        L_0x06eb:
+            int r11 = r11 + 1
+            goto L_0x06d3
+        L_0x06ee:
+            r9 = 0
+        L_0x06ef:
+            r10 = 0
+        L_0x06f0:
+            java.util.ArrayList<com.android.settings.applications.RunningState$MergedItem> r11 = r0.mMergedItems
+            int r11 = r11.size()
+            if (r10 >= r11) goto L_0x0706
+            java.util.ArrayList<com.android.settings.applications.RunningState$MergedItem> r11 = r0.mMergedItems
+            java.lang.Object r11 = r11.get(r10)
+            com.android.settings.applications.RunningState$MergedItem r11 = (com.android.settings.applications.RunningState.MergedItem) r11
+            r11.updateSize(r1)
+            int r10 = r10 + 1
+            goto L_0x06f0
+        L_0x0706:
+            java.lang.Object r1 = r0.mLock
+            monitor-enter(r1)
+            r0.mNumBackgroundProcesses = r4     // Catch:{ all -> 0x0731 }
+            r0.mNumForegroundProcesses = r5     // Catch:{ all -> 0x0731 }
+            r0.mNumServiceProcesses = r3     // Catch:{ all -> 0x0731 }
+            r0.mBackgroundProcessMemory = r14     // Catch:{ all -> 0x0731 }
+            r0.mForegroundProcessMemory = r7     // Catch:{ all -> 0x0731 }
+            r3 = r16
+            r0.mServiceProcessMemory = r3     // Catch:{ all -> 0x0731 }
+            if (r2 == 0) goto L_0x0723
+            r0.mBackgroundItems = r2     // Catch:{ all -> 0x0731 }
+            r0.mUserBackgroundItems = r9     // Catch:{ all -> 0x0731 }
+            boolean r2 = r0.mWatchingBackgroundItems     // Catch:{ all -> 0x0731 }
+            if (r2 == 0) goto L_0x0723
+            r20 = 1
+        L_0x0723:
+            boolean r2 = r0.mHaveData     // Catch:{ all -> 0x0731 }
+            if (r2 != 0) goto L_0x072f
+            r2 = 1
+            r0.mHaveData = r2     // Catch:{ all -> 0x0731 }
+            java.lang.Object r0 = r0.mLock     // Catch:{ all -> 0x0731 }
+            r0.notifyAll()     // Catch:{ all -> 0x0731 }
+        L_0x072f:
+            monitor-exit(r1)     // Catch:{ all -> 0x0731 }
+            return r20
+        L_0x0731:
+            r0 = move-exception
+            monitor-exit(r1)     // Catch:{ all -> 0x0731 }
+            throw r0
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.applications.RunningState.update(android.content.Context, android.app.ActivityManager):boolean");
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setWatchingBackgroundItems(boolean z) {
         synchronized (this.mLock) {
             this.mWatchingBackgroundItems = z;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public ArrayList<MergedItem> getCurrentMergedItems() {
         ArrayList<MergedItem> arrayList;
         synchronized (this.mLock) {
@@ -1477,7 +1948,7 @@ public class RunningState {
         return arrayList;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public ArrayList<MergedItem> getCurrentBackgroundItems() {
         ArrayList<MergedItem> arrayList;
         synchronized (this.mLock) {

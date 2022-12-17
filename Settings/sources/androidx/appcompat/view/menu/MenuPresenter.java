@@ -2,10 +2,9 @@ package androidx.appcompat.view.menu;
 
 import android.content.Context;
 import android.os.Parcelable;
-/* loaded from: classes.dex */
+
 public interface MenuPresenter {
 
-    /* loaded from: classes.dex */
     public interface Callback {
         void onCloseMenu(MenuBuilder menuBuilder, boolean z);
 

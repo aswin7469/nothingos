@@ -6,17 +6,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import com.android.settings.R;
+import com.android.settings.R$drawable;
+import com.android.settings.R$string;
 import com.android.settings.core.instrumentation.InstrumentedDialogFragment;
-/* loaded from: classes.dex */
+
 public class LocationToggleDisabledDialogFragment extends InstrumentedDialogFragment {
     private final Context mContext;
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ void lambda$onCreateDialog$1(DialogInterface dialogInterface, int i) {
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1876;
     }
@@ -25,17 +25,11 @@ public class LocationToggleDisabledDialogFragment extends InstrumentedDialogFrag
         this.mContext = context;
     }
 
-    @Override // androidx.fragment.app.DialogFragment
     public Dialog onCreateDialog(Bundle bundle) {
-        return new AlertDialog.Builder(getActivity()).setTitle(R.string.location_time_zone_detection_location_is_off_dialog_title).setIcon(R.drawable.ic_warning_24dp).setMessage(R.string.location_time_zone_detection_location_is_off_dialog_message).setPositiveButton(R.string.location_time_zone_detection_location_is_off_dialog_ok_button, new DialogInterface.OnClickListener() { // from class: com.android.settings.datetime.LocationToggleDisabledDialogFragment$$ExternalSyntheticLambda0
-            @Override // android.content.DialogInterface.OnClickListener
-            public final void onClick(DialogInterface dialogInterface, int i) {
-                LocationToggleDisabledDialogFragment.this.lambda$onCreateDialog$0(dialogInterface, i);
-            }
-        }).setNegativeButton(R.string.location_time_zone_detection_location_is_off_dialog_cancel_button, LocationToggleDisabledDialogFragment$$ExternalSyntheticLambda1.INSTANCE).create();
+        return new AlertDialog.Builder(getActivity()).setTitle(R$string.location_time_zone_detection_location_is_off_dialog_title).setIcon(R$drawable.ic_warning_24dp).setMessage(R$string.location_time_zone_detection_location_is_off_dialog_message).setPositiveButton(R$string.location_time_zone_detection_location_is_off_dialog_ok_button, new LocationToggleDisabledDialogFragment$$ExternalSyntheticLambda0(this)).setNegativeButton(R$string.f141x7c5ba9e0, new LocationToggleDisabledDialogFragment$$ExternalSyntheticLambda1()).create();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onCreateDialog$0(DialogInterface dialogInterface, int i) {
         this.mContext.startActivity(new Intent("android.settings.LOCATION_SOURCE_SETTINGS"));
     }

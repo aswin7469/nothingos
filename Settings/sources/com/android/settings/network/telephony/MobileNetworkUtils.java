@@ -18,7 +18,6 @@ import android.provider.Settings;
 import android.provider.Telephony;
 import android.telecom.PhoneAccountHandle;
 import android.telecom.TelecomManager;
-import android.telephony.CarrierConfigManager;
 import android.telephony.ServiceState;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
@@ -31,34 +30,30 @@ import android.telephony.ims.ProvisioningManager;
 import android.text.TextUtils;
 import android.util.Log;
 import com.android.internal.util.ArrayUtils;
-import com.android.settings.R;
+import com.android.settings.R$dimen;
+import com.android.settings.R$string;
+import com.android.settings.core.SubSettingLauncher;
+import com.android.settings.network.CarrierConfigCache;
 import com.android.settings.network.SubscriptionUtil;
 import com.android.settings.network.ims.WifiCallingQueryImsState;
-import com.android.settings.network.telephony.MobileNetworkUtils;
-import com.android.settingslib.DeviceInfoUtils;
 import com.android.settingslib.Utils;
 import com.android.settingslib.development.DevelopmentSettingsEnabler;
 import com.android.settingslib.graph.SignalDrawable;
 import com.android.settingslib.utils.ThreadUtils;
 import com.nothing.experience.AppTracking;
+import com.qti.extphone.ExtTelephonyManager;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-/* loaded from: classes.dex */
+
 public class MobileNetworkUtils {
     public static final Drawable EMPTY_DRAWABLE = new ColorDrawable(0);
     private static AppTracking mAppTracker;
+    private static int mCagSnpnFeatureStatus = -1;
+    private static ExtTelephonyManager mExtTelephonyManager;
 
     private static int getAdjustedRaf(int i) {
         if ((i & 32771) > 0) {
@@ -82,85 +77,80 @@ public class MobileNetworkUtils {
     public static long getRafFromNetworkType(int i) {
         switch (i) {
             case 0:
-                return 50055L;
+                return 50055;
             case 1:
-                return 32771L;
+                return 32771;
             case 2:
-                return 17284L;
+                return 17284;
             case 3:
-                return 50055L;
+                return 50055;
             case 4:
-                return 10360L;
+                return 10360;
             case 5:
-                return 72L;
+                return 72;
             case 6:
-                return 10288L;
+                return 10288;
             case 7:
-                return 60415L;
+                return 60415;
             case 8:
-                return 276600L;
+                return 276600;
             case 9:
-                return 316295L;
+                return 316295;
             case 10:
-                return 326655L;
+                return 326655;
             case 11:
-                return 266240L;
+                return 266240;
             case 12:
-                return 283524L;
+                return 283524;
             case 13:
-                return 65536L;
+                return 65536;
             case 14:
-                return 82820L;
+                return 82820;
             case 15:
-                return 331776L;
+                return 331776;
             case 16:
-                return 98307L;
+                return 98307;
             case 17:
-                return 364547L;
+                return 364547;
             case 18:
-                return 115591L;
+                return 115591;
             case 19:
-                return 349060L;
+                return 349060;
             case 20:
-                return 381831L;
+                return 381831;
             case 21:
-                return 125951L;
+                return 125951;
             case 22:
-                return 392191L;
+                return 392191;
             case 23:
-                return 524288L;
+                return 524288;
             case 24:
-                return 790528L;
+                return 790528;
             case 25:
-                return 800888L;
+                return 800888;
             case 26:
-                return 840583L;
+                return 840583;
             case 27:
-                return 850943L;
+                return 850943;
             case 28:
-                return 807812L;
+                return 807812;
             case 29:
-                return 856064L;
+                return 856064;
             case 30:
-                return 888835L;
+                return 888835;
             case 31:
-                return 873348L;
+                return 873348;
             case 32:
-                return 906119L;
+                return 906119;
             case 33:
-                return 916479L;
+                return 916479;
             default:
-                return 0L;
+                return 0;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ C1DisplayInfo lambda$getUniqueSubscriptionDisplayNames$8(C1DisplayInfo c1DisplayInfo) {
-        return c1DisplayInfo;
-    }
-
     public static boolean isDpcApnEnforced(Context context) {
-        Cursor query = context.getContentResolver().query(Telephony.Carriers.ENFORCE_MANAGED_URI, null, null, null, null);
+        Cursor query = context.getContentResolver().query(Telephony.Carriers.ENFORCE_MANAGED_URI, (String[]) null, (String) null, (String[]) null, (String) null);
         boolean z = false;
         if (query != null) {
             try {
@@ -173,18 +163,14 @@ public class MobileNetworkUtils {
                     return z;
                 }
             } catch (Throwable th) {
-                try {
-                    query.close();
-                } catch (Throwable th2) {
-                    th.addSuppressed(th2);
-                }
-                throw th;
+                th.addSuppressed(th);
             }
         }
         if (query != null) {
             query.close();
         }
         return false;
+        throw th;
     }
 
     public static boolean isWfcProvisionedOnDevice(int i) {
@@ -214,13 +200,12 @@ public class MobileNetworkUtils {
 
     public static void setContactDiscoveryEnabled(ImsManager imsManager, int i, boolean z) {
         ImsRcsManager imsRcsManager = getImsRcsManager(imsManager, i);
-        if (imsRcsManager == null) {
-            return;
-        }
-        try {
-            imsRcsManager.getUceAdapter().setUceSettingEnabled(z);
-        } catch (ImsException e) {
-            Log.w("MobileNetworkUtils", "UCE service is not available: " + e.getMessage());
+        if (imsRcsManager != null) {
+            try {
+                imsRcsManager.getUceAdapter().setUceSettingEnabled(z);
+            } catch (ImsException e) {
+                Log.w("MobileNetworkUtils", "UCE service is not available: " + e.getMessage());
+            }
         }
     }
 
@@ -237,13 +222,16 @@ public class MobileNetworkUtils {
     }
 
     public static boolean isContactDiscoveryVisible(Context context, int i) {
-        CarrierConfigManager carrierConfigManager = (CarrierConfigManager) context.getSystemService(CarrierConfigManager.class);
-        if (carrierConfigManager == null) {
+        CarrierConfigCache instance = CarrierConfigCache.getInstance(context);
+        if (!instance.hasCarrierConfigManager()) {
             Log.w("MobileNetworkUtils", "isContactDiscoveryVisible: Could not resolve carrier config");
             return false;
         }
-        PersistableBundle configForSubId = carrierConfigManager.getConfigForSubId(i);
-        return configForSubId.getBoolean("use_rcs_presence_bool", false) || configForSubId.getBoolean("ims.rcs_bulk_capability_exchange_bool", false);
+        PersistableBundle configForSubId = instance.getConfigForSubId(i);
+        if (configForSubId.getBoolean("use_rcs_presence_bool", false) || configForSubId.getBoolean("ims.rcs_bulk_capability_exchange_bool", false)) {
+            return true;
+        }
+        return false;
     }
 
     public static Intent buildPhoneAccountConfigureIntent(Context context, PhoneAccountHandle phoneAccountHandle) {
@@ -259,34 +247,27 @@ public class MobileNetworkUtils {
         intent.setPackage(phoneAccountHandle.getComponentName().getPackageName());
         intent.addCategory("android.intent.category.DEFAULT");
         intent.putExtra("android.telecom.extra.PHONE_ACCOUNT_HANDLE", phoneAccountHandle);
-        if (context.getPackageManager().queryIntentActivities(intent, 0).size() != 0) {
-            return intent;
+        if (context.getPackageManager().queryIntentActivities(intent, 0).size() == 0) {
+            return null;
         }
-        return null;
+        return intent;
     }
 
-    public static boolean showEuiccSettings(final Context context) {
+    public static boolean showEuiccSettings(Context context) {
         long elapsedRealtime = SystemClock.elapsedRealtime();
         try {
-            Boolean bool = (Boolean) ThreadUtils.postOnBackgroundThread(new Callable() { // from class: com.android.settings.network.telephony.MobileNetworkUtils$$ExternalSyntheticLambda0
-                @Override // java.util.concurrent.Callable
-                public final Object call() {
-                    Object lambda$showEuiccSettings$0;
-                    lambda$showEuiccSettings$0 = MobileNetworkUtils.lambda$showEuiccSettings$0(context);
-                    return lambda$showEuiccSettings$0;
-                }
-            }).get(3L, TimeUnit.SECONDS);
-            if (bool == null) {
+            Boolean bool = (Boolean) ThreadUtils.postOnBackgroundThread((Callable) new MobileNetworkUtils$$ExternalSyntheticLambda0(context)).get(3, TimeUnit.SECONDS);
+            if (bool == null || !bool.booleanValue()) {
                 return false;
             }
-            return bool.booleanValue();
+            return true;
         } catch (InterruptedException | ExecutionException | TimeoutException unused) {
             Log.w("MobileNetworkUtils", "Accessing Euicc takes too long: +" + (SystemClock.elapsedRealtime() - elapsedRealtime) + "ms");
             return false;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ Object lambda$showEuiccSettings$0(Context context) throws Exception {
         try {
             return showEuiccSettingsDetecting(context);
@@ -307,7 +288,7 @@ public class MobileNetworkUtils {
         boolean z2 = SystemProperties.getBoolean("esim.enable_esim_system_ui_by_default", true);
         boolean z3 = Settings.Global.getInt(contentResolver, "euicc_provisioned", 0) != 0;
         boolean isDevelopmentSettingsEnabled = DevelopmentSettingsEnabler.isDevelopmentSettingsEnabled(context);
-        Log.i("MobileNetworkUtils", String.format("showEuiccSettings: esimIgnoredDevice: %b, enabledEsimUiByDefault: %b, euiccProvisioned: %b, inDeveloperMode: %b.", Boolean.valueOf(contains), Boolean.valueOf(z2), Boolean.valueOf(z3), Boolean.valueOf(isDevelopmentSettingsEnabled)));
+        Log.i("MobileNetworkUtils", String.format("showEuiccSettings: esimIgnoredDevice: %b, enabledEsimUiByDefault: %b, euiccProvisioned: %b, inDeveloperMode: %b.", new Object[]{Boolean.valueOf(contains), Boolean.valueOf(z2), Boolean.valueOf(z3), Boolean.valueOf(isDevelopmentSettingsEnabled)}));
         if (!z3 && ((contains || !isDevelopmentSettingsEnabled) && (contains || !z2 || !isCurrentCountrySupported(context)))) {
             z = false;
         }
@@ -316,11 +297,11 @@ public class MobileNetworkUtils {
 
     public static boolean isMobileDataEnabled(Context context) {
         TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(TelephonyManager.class);
-        if (!telephonyManager.isDataEnabled()) {
-            TelephonyManager createForSubscriptionId = telephonyManager.createForSubscriptionId(SubscriptionManager.getDefaultDataSubscriptionId());
-            return createForSubscriptionId != null && createForSubscriptionId.isDataEnabled();
+        if (telephonyManager.isDataEnabled()) {
+            return true;
         }
-        return true;
+        TelephonyManager createForSubscriptionId = telephonyManager.createForSubscriptionId(SubscriptionManager.getDefaultDataSubscriptionId());
+        return createForSubscriptionId != null && createForSubscriptionId.isDataEnabled();
     }
 
     public static void setMobileDataEnabled(Context context, int i, boolean z, boolean z2) {
@@ -328,27 +309,70 @@ public class MobileNetworkUtils {
         TelephonyManager createForSubscriptionId = ((TelephonyManager) context.getSystemService(TelephonyManager.class)).createForSubscriptionId(i);
         SubscriptionManager subscriptionManager = (SubscriptionManager) context.getSystemService(SubscriptionManager.class);
         createForSubscriptionId.setDataEnabled(z);
-        if (!z2 || (activeSubscriptionInfoList = subscriptionManager.getActiveSubscriptionInfoList()) == null) {
-            return;
-        }
-        for (SubscriptionInfo subscriptionInfo : activeSubscriptionInfoList) {
-            if (subscriptionInfo.getSubscriptionId() != i && !subscriptionInfo.isOpportunistic()) {
-                ((TelephonyManager) context.getSystemService(TelephonyManager.class)).createForSubscriptionId(subscriptionInfo.getSubscriptionId()).setDataEnabled(false);
+        if (z2 && (activeSubscriptionInfoList = subscriptionManager.getActiveSubscriptionInfoList()) != null) {
+            for (SubscriptionInfo next : activeSubscriptionInfoList) {
+                if (next.getSubscriptionId() != i && !next.isOpportunistic()) {
+                    ((TelephonyManager) context.getSystemService(TelephonyManager.class)).createForSubscriptionId(next.getSubscriptionId()).setDataEnabled(false);
+                }
             }
         }
     }
 
-    public static boolean isCdmaOptions(Context context, int i) {
-        int networkTypeFromRaf;
-        if (i == -1) {
-            return false;
-        }
-        TelephonyManager createForSubscriptionId = ((TelephonyManager) context.getSystemService(TelephonyManager.class)).createForSubscriptionId(i);
-        PersistableBundle configForSubId = ((CarrierConfigManager) context.getSystemService(CarrierConfigManager.class)).getConfigForSubId(i);
-        if (createForSubscriptionId.getPhoneType() == 2) {
-            return true;
-        }
-        return (configForSubId == null || configForSubId.getBoolean("hide_carrier_network_settings_bool") || !configForSubId.getBoolean("world_phone_bool")) && isWorldMode(context, i) && ((networkTypeFromRaf = getNetworkTypeFromRaf((int) createForSubscriptionId.getAllowedNetworkTypesForReason(0))) == 9 || networkTypeFromRaf == 8 || networkTypeFromRaf == 26 || networkTypeFromRaf == 25 || shouldSpeciallyUpdateGsmCdma(context, i));
+    /* JADX WARNING: Code restructure failed: missing block: B:15:0x003c, code lost:
+        r1 = getNetworkTypeFromRaf((int) r1.getAllowedNetworkTypesForReason(0));
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public static boolean isCdmaOptions(android.content.Context r5, int r6) {
+        /*
+            r0 = 0
+            r1 = -1
+            if (r6 != r1) goto L_0x0005
+            return r0
+        L_0x0005:
+            com.android.settings.network.CarrierConfigCache r1 = com.android.settings.network.CarrierConfigCache.getInstance(r5)
+            android.os.PersistableBundle r1 = r1.getConfigForSubId(r6)
+            r2 = 1
+            if (r1 == 0) goto L_0x0022
+            java.lang.String r3 = "hide_carrier_network_settings_bool"
+            boolean r3 = r1.getBoolean(r3)
+            if (r3 != 0) goto L_0x0022
+            java.lang.String r3 = "world_phone_bool"
+            boolean r1 = r1.getBoolean(r3)
+            if (r1 == 0) goto L_0x0022
+            return r2
+        L_0x0022:
+            java.lang.Class<android.telephony.TelephonyManager> r1 = android.telephony.TelephonyManager.class
+            java.lang.Object r1 = r5.getSystemService(r1)
+            android.telephony.TelephonyManager r1 = (android.telephony.TelephonyManager) r1
+            android.telephony.TelephonyManager r1 = r1.createForSubscriptionId(r6)
+            int r3 = r1.getPhoneType()
+            r4 = 2
+            if (r3 != r4) goto L_0x0036
+            return r2
+        L_0x0036:
+            boolean r3 = isWorldMode(r5, r6)
+            if (r3 == 0) goto L_0x005d
+            long r3 = r1.getAllowedNetworkTypesForReason(r0)
+            int r1 = (int) r3
+            int r1 = getNetworkTypeFromRaf(r1)
+            r3 = 9
+            if (r1 == r3) goto L_0x005c
+            r3 = 8
+            if (r1 == r3) goto L_0x005c
+            r3 = 26
+            if (r1 == r3) goto L_0x005c
+            r3 = 25
+            if (r1 != r3) goto L_0x0056
+            goto L_0x005c
+        L_0x0056:
+            boolean r5 = shouldSpeciallyUpdateGsmCdma(r5, r6)
+            if (r5 == 0) goto L_0x005d
+        L_0x005c:
+            return r2
+        L_0x005d:
+            return r0
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.network.telephony.MobileNetworkUtils.isCdmaOptions(android.content.Context, int):boolean");
     }
 
     public static boolean isGsmOptions(Context context, int i) {
@@ -363,16 +387,15 @@ public class MobileNetworkUtils {
     }
 
     private static boolean isGsmBasicOptions(Context context, int i) {
-        TelephonyManager createForSubscriptionId = ((TelephonyManager) context.getSystemService(TelephonyManager.class)).createForSubscriptionId(i);
-        PersistableBundle configForSubId = ((CarrierConfigManager) context.getSystemService(CarrierConfigManager.class)).getConfigForSubId(i);
-        if (createForSubscriptionId.getPhoneType() == 1) {
-            return true;
+        PersistableBundle configForSubId = CarrierConfigCache.getInstance(context).getConfigForSubId(i);
+        if ((configForSubId == null || configForSubId.getBoolean("hide_carrier_network_settings_bool") || !configForSubId.getBoolean("world_phone_bool")) && ((TelephonyManager) context.getSystemService(TelephonyManager.class)).createForSubscriptionId(i).getPhoneType() != 1) {
+            return false;
         }
-        return configForSubId != null && !configForSubId.getBoolean("hide_carrier_network_settings_bool") && configForSubId.getBoolean("world_phone_bool");
+        return true;
     }
 
     public static boolean isWorldMode(Context context, int i) {
-        PersistableBundle configForSubId = ((CarrierConfigManager) context.getSystemService(CarrierConfigManager.class)).getConfigForSubId(i);
+        PersistableBundle configForSubId = CarrierConfigCache.getInstance(context).getConfigForSubId(i);
         if (configForSubId == null) {
             return false;
         }
@@ -380,16 +403,21 @@ public class MobileNetworkUtils {
     }
 
     public static boolean shouldDisplayNetworkSelectOptions(Context context, int i) {
-        int networkTypeFromRaf;
         TelephonyManager createForSubscriptionId = ((TelephonyManager) context.getSystemService(TelephonyManager.class)).createForSubscriptionId(i);
-        PersistableBundle configForSubId = ((CarrierConfigManager) context.getSystemService(CarrierConfigManager.class)).getConfigForSubId(i);
-        if (i == -1 || configForSubId == null || !configForSubId.getBoolean("operator_selection_expand_bool") || configForSubId.getBoolean("hide_carrier_network_settings_bool") || ((configForSubId.getBoolean("csp_enabled_bool") && !createForSubscriptionId.isManualNetworkSelectionAllowed()) || (((networkTypeFromRaf = getNetworkTypeFromRaf((int) createForSubscriptionId.getAllowedNetworkTypesForReason(0))) == 8 && isWorldMode(context, i)) || shouldSpeciallyUpdateGsmCdma(context, i)))) {
+        PersistableBundle configForSubId = CarrierConfigCache.getInstance(context).getConfigForSubId(i);
+        if (i == -1 || configForSubId == null || !configForSubId.getBoolean("operator_selection_expand_bool") || configForSubId.getBoolean("hide_carrier_network_settings_bool") || (configForSubId.getBoolean("csp_enabled_bool") && !createForSubscriptionId.isManualNetworkSelectionAllowed())) {
             return false;
         }
-        if (isGsmBasicOptions(context, i)) {
-            return true;
+        if (isWorldMode(context, i)) {
+            int networkTypeFromRaf = getNetworkTypeFromRaf((int) createForSubscriptionId.getAllowedNetworkTypesForReason(0));
+            if (networkTypeFromRaf == 8 || shouldSpeciallyUpdateGsmCdma(context, i)) {
+                return false;
+            }
+            if (networkTypeFromRaf == 9) {
+                return true;
+            }
         }
-        return isWorldMode(context, i) && networkTypeFromRaf == 9;
+        return isGsmBasicOptions(context, i);
     }
 
     public static boolean isTdscdmaSupported(Context context, int i) {
@@ -397,21 +425,25 @@ public class MobileNetworkUtils {
     }
 
     private static boolean isTdscdmaSupported(Context context, TelephonyManager telephonyManager) {
-        PersistableBundle config = ((CarrierConfigManager) context.getSystemService(CarrierConfigManager.class)).getConfig();
+        PersistableBundle config = CarrierConfigCache.getInstance(context).getConfig();
         if (config == null) {
             return false;
         }
         if (config.getBoolean("support_tdscdma_bool")) {
             return true;
         }
+        String[] stringArray = config.getStringArray("support_tdscdma_roaming_networks_string_array");
+        if (stringArray == null) {
+            return false;
+        }
         ServiceState serviceState = telephonyManager.getServiceState();
         String operatorNumeric = serviceState != null ? serviceState.getOperatorNumeric() : null;
-        String[] stringArray = config.getStringArray("support_tdscdma_roaming_networks_string_array");
-        if (stringArray != null && operatorNumeric != null) {
-            for (String str : stringArray) {
-                if (operatorNumeric.equals(str)) {
-                    return true;
-                }
+        if (operatorNumeric == null) {
+            return false;
+        }
+        for (String equals : stringArray) {
+            if (operatorNumeric.equals(equals)) {
+                return true;
             }
         }
         return false;
@@ -433,18 +465,24 @@ public class MobileNetworkUtils {
         if (ArrayUtils.isEmpty(activeSubscriptionIdList)) {
             return telephonyAvailabilityCallback.getAvailabilityStatus(-1);
         }
-        for (int i2 : activeSubscriptionIdList) {
-            int availabilityStatus = telephonyAvailabilityCallback.getAvailabilityStatus(i2);
-            if (availabilityStatus == 0) {
-                return availabilityStatus;
+        for (int availabilityStatus : activeSubscriptionIdList) {
+            int availabilityStatus2 = telephonyAvailabilityCallback.getAvailabilityStatus(availabilityStatus);
+            if (availabilityStatus2 == 0) {
+                return availabilityStatus2;
             }
         }
         return telephonyAvailabilityCallback.getAvailabilityStatus(activeSubscriptionIdList[0]);
     }
 
     static boolean shouldSpeciallyUpdateGsmCdma(Context context, int i) {
+        if (!isWorldMode(context, i)) {
+            return false;
+        }
         int networkTypeFromRaf = getNetworkTypeFromRaf((int) ((TelephonyManager) context.getSystemService(TelephonyManager.class)).createForSubscriptionId(i).getAllowedNetworkTypesForReason(0));
-        return (networkTypeFromRaf == 17 || networkTypeFromRaf == 20 || networkTypeFromRaf == 15 || networkTypeFromRaf == 19 || networkTypeFromRaf == 22 || networkTypeFromRaf == 10) && !isTdscdmaSupported(context, i) && isWorldMode(context, i);
+        if ((networkTypeFromRaf == 17 || networkTypeFromRaf == 20 || networkTypeFromRaf == 15 || networkTypeFromRaf == 19 || networkTypeFromRaf == 22 || networkTypeFromRaf == 10) && !isTdscdmaSupported(context, i)) {
+            return true;
+        }
+        return false;
     }
 
     public static Drawable getSignalStrengthIcon(Context context, int i, int i2, int i3, boolean z) {
@@ -456,7 +494,7 @@ public class MobileNetworkUtils {
         } else {
             drawable = context.getResources().getDrawable(i3, context.getTheme());
         }
-        int dimensionPixelSize = context.getResources().getDimensionPixelSize(R.dimen.signal_strength_icon_size);
+        int dimensionPixelSize = context.getResources().getDimensionPixelSize(R$dimen.signal_strength_icon_size);
         LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{drawable, signalDrawable});
         layerDrawable.setLayerGravity(0, 51);
         layerDrawable.setLayerGravity(1, 85);
@@ -468,10 +506,10 @@ public class MobileNetworkUtils {
     public static CharSequence getCurrentCarrierNameForDisplay(Context context, int i) {
         SubscriptionInfo subscriptionInfo;
         SubscriptionManager subscriptionManager = (SubscriptionManager) context.getSystemService(SubscriptionManager.class);
-        if (subscriptionManager != null && (subscriptionInfo = getSubscriptionInfo(subscriptionManager, i)) != null) {
-            return subscriptionInfo.getCarrierName();
+        if (subscriptionManager == null || (subscriptionInfo = getSubscriptionInfo(subscriptionManager, i)) == null) {
+            return getOperatorNameFromTelephonyManager(context);
         }
-        return getOperatorNameFromTelephonyManager(context);
+        return subscriptionInfo.getCarrierName();
     }
 
     private static SubscriptionInfo getSubscriptionInfo(SubscriptionManager subscriptionManager, int i) {
@@ -479,9 +517,9 @@ public class MobileNetworkUtils {
         if (activeSubscriptionInfoList == null) {
             return null;
         }
-        for (SubscriptionInfo subscriptionInfo : activeSubscriptionInfoList) {
-            if (subscriptionInfo.getSubscriptionId() == i) {
-                return subscriptionInfo;
+        for (SubscriptionInfo next : activeSubscriptionInfoList) {
+            if (next.getSubscriptionId() == i) {
+                return next;
             }
         }
         return null;
@@ -502,8 +540,8 @@ public class MobileNetworkUtils {
             return new int[0];
         }
         int[] iArr = new int[activeSubscriptionInfoList.size()];
-        for (SubscriptionInfo subscriptionInfo : activeSubscriptionInfoList) {
-            iArr[i] = subscriptionInfo.getSubscriptionId();
+        for (SubscriptionInfo subscriptionId : activeSubscriptionInfoList) {
+            iArr[i] = subscriptionId.getSubscriptionId();
             i++;
         }
         return iArr;
@@ -620,62 +658,140 @@ public class MobileNetworkUtils {
     }
 
     public static CharSequence getPreferredStatus(boolean z, Context context, SubscriptionManager subscriptionManager, boolean z2) {
-        CharSequence preferredSmsStatus;
+        CharSequence charSequence;
         List<SubscriptionInfo> activeSubscriptions = SubscriptionUtil.getActiveSubscriptions(subscriptionManager);
-        if (!activeSubscriptions.isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            for (SubscriptionInfo subscriptionInfo : activeSubscriptions) {
-                int size = activeSubscriptions.size();
-                CharSequence uniqueSubscriptionDisplayName = getUniqueSubscriptionDisplayName(subscriptionInfo, context);
-                if (size == 1 && SubscriptionManager.isValidSubscriptionId(subscriptionInfo.getSubscriptionId())) {
-                    return uniqueSubscriptionDisplayName;
-                }
-                if (z2) {
-                    preferredSmsStatus = getPreferredCallStatus(context, subscriptionInfo);
-                } else {
-                    preferredSmsStatus = getPreferredSmsStatus(context, subscriptionInfo);
-                }
-                if (preferredSmsStatus.toString().isEmpty()) {
-                    sb.append(uniqueSubscriptionDisplayName);
-                } else {
-                    sb.append(uniqueSubscriptionDisplayName);
-                    sb.append(" (");
-                    sb.append(preferredSmsStatus);
-                    sb.append(")");
-                }
-                if (subscriptionInfo != activeSubscriptions.get(activeSubscriptions.size() - 1)) {
-                    sb.append(", ");
-                }
-                if (z) {
-                    sb.insert(0, "\u200f").insert(sb.length(), "\u200f");
-                }
-            }
-            return sb;
+        if (activeSubscriptions.isEmpty()) {
+            return "";
         }
-        return "";
+        StringBuilder sb = new StringBuilder();
+        for (SubscriptionInfo next : activeSubscriptions) {
+            int size = activeSubscriptions.size();
+            CharSequence uniqueSubscriptionDisplayName = SubscriptionUtil.getUniqueSubscriptionDisplayName(next, context);
+            if (size == 1 && SubscriptionManager.isValidSubscriptionId(next.getSubscriptionId())) {
+                return uniqueSubscriptionDisplayName;
+            }
+            if (z2) {
+                charSequence = getPreferredCallStatus(context, next);
+            } else {
+                charSequence = getPreferredSmsStatus(context, next);
+            }
+            if (charSequence.toString().isEmpty()) {
+                sb.append(uniqueSubscriptionDisplayName);
+            } else {
+                sb.append(uniqueSubscriptionDisplayName);
+                sb.append(" (");
+                sb.append(charSequence);
+                sb.append(")");
+            }
+            if (next != activeSubscriptions.get(activeSubscriptions.size() - 1)) {
+                sb.append(", ");
+            }
+            if (z) {
+                sb.insert(0, "‏").insert(sb.length(), "‏");
+            }
+        }
+        return sb;
     }
 
     private static CharSequence getPreferredCallStatus(Context context, SubscriptionInfo subscriptionInfo) {
-        return subscriptionInfo.getSubscriptionId() == SubscriptionManager.getDefaultVoiceSubscriptionId() ? setSummaryResId(context, R.string.calls_sms_preferred) : "";
+        return subscriptionInfo.getSubscriptionId() == SubscriptionManager.getDefaultVoiceSubscriptionId() ? setSummaryResId(context, R$string.calls_sms_preferred) : "";
     }
 
     private static CharSequence getPreferredSmsStatus(Context context, SubscriptionInfo subscriptionInfo) {
-        return subscriptionInfo.getSubscriptionId() == SubscriptionManager.getDefaultSmsSubscriptionId() ? setSummaryResId(context, R.string.calls_sms_preferred) : "";
+        return subscriptionInfo.getSubscriptionId() == SubscriptionManager.getDefaultSmsSubscriptionId() ? setSummaryResId(context, R$string.calls_sms_preferred) : "";
     }
 
     private static String setSummaryResId(Context context, int i) {
         return context.getResources().getString(i);
     }
 
-    public static void setSmart5gMode(Context context, int i) {
-        Log.d("MobileNetworkUtils", "[setSmart5gMode]: mode = " + i);
-        Settings.Global.putInt(context.getContentResolver(), "smart_5g_switch", i);
+    public static void launchMobileNetworkSettings(Context context, SubscriptionInfo subscriptionInfo) {
+        int subscriptionId = subscriptionInfo.getSubscriptionId();
+        if (subscriptionId == -1) {
+            Log.d("MobileNetworkUtils", "launchMobileNetworkSettings fail, subId is invalid.");
+            return;
+        }
+        Log.d("MobileNetworkUtils", "launchMobileNetworkSettings for subId: " + subscriptionId);
+        Bundle bundle = new Bundle();
+        bundle.putInt("android.provider.extra.SUB_ID", subscriptionId);
+        new SubSettingLauncher(context).setTitleText(SubscriptionUtil.getUniqueSubscriptionDisplayName(subscriptionInfo, context)).setDestination(MobileNetworkSettings.class.getCanonicalName()).setSourceMetricsCategory(0).setArguments(bundle).launch();
     }
 
-    public static int getSmart5gMode(Context context) {
-        int i = Settings.Global.getInt(context.getContentResolver(), "smart_5g_switch", 1);
-        Log.d("MobileNetworkUtils", "[getSmart5gMode]: mode = " + i);
-        return i;
+    public static boolean isCagSnpnEnabled(Context context) {
+        if (mCagSnpnFeatureStatus == -1) {
+            ExtTelephonyManager instance = ExtTelephonyManager.getInstance(context);
+            mExtTelephonyManager = instance;
+            mCagSnpnFeatureStatus = instance.getPropertyValueBool("persist.vendor.cag_snpn", false) ? 1 : 0;
+            Log.d("MobileNetworkUtils", "isCagSnpnEnabled, mCagSnpnFeatureStatus = " + mCagSnpnFeatureStatus);
+        }
+        if (mCagSnpnFeatureStatus == 1) {
+            return true;
+        }
+        return false;
+    }
+
+    public static int getAccessMode(Context context, int i) {
+        ContentResolver contentResolver = context.getContentResolver();
+        return Settings.Global.getInt(contentResolver, "access_mode" + i, 1);
+    }
+
+    public static void setAccessMode(Context context, int i, int i2) {
+        ContentResolver contentResolver = context.getContentResolver();
+        Settings.Global.putInt(contentResolver, "access_mode" + i, i2);
+        Log.d("MobileNetworkUtils", "setAccessMode, accessMode = " + i2);
+    }
+
+    public static void setSmart5gMode(Context context, int i, int i2) {
+        Log.d("MobileNetworkUtils", "[setSmart5gMode]: mode = " + i + "; subId = " + i2);
+        ContentResolver contentResolver = context.getContentResolver();
+        StringBuilder sb = new StringBuilder();
+        sb.append("smart_5g_switch");
+        sb.append(i2);
+        Settings.Global.putInt(contentResolver, sb.toString(), i);
+    }
+
+    /* JADX WARNING: Code restructure failed: missing block: B:2:0x000a, code lost:
+        r0 = r0.getConfigForSubId(r4);
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public static int getSmart5gMode(android.content.Context r3, int r4) {
+        /*
+            java.lang.Class<android.telephony.CarrierConfigManager> r0 = android.telephony.CarrierConfigManager.class
+            java.lang.Object r0 = r3.getSystemService(r0)
+            android.telephony.CarrierConfigManager r0 = (android.telephony.CarrierConfigManager) r0
+            if (r0 == 0) goto L_0x001a
+            android.os.PersistableBundle r0 = r0.getConfigForSubId(r4)
+            if (r0 == 0) goto L_0x001a
+            java.lang.String r1 = "nt_carrier_default_smart_5g_enabled_bool"
+            boolean r0 = r0.getBoolean(r1)
+            if (r0 != 0) goto L_0x001a
+            r0 = 0
+            goto L_0x001b
+        L_0x001a:
+            r0 = 1
+        L_0x001b:
+            android.content.ContentResolver r3 = r3.getContentResolver()
+            java.lang.StringBuilder r1 = new java.lang.StringBuilder
+            r1.<init>()
+            java.lang.String r2 = "smart_5g_switch"
+            r1.append(r2)
+            r1.append(r4)
+            java.lang.String r1 = r1.toString()
+            int r3 = android.provider.Settings.Global.getInt(r3, r1, r0)
+            java.lang.StringBuilder r0 = new java.lang.StringBuilder
+            r0.<init>()
+            java.lang.String r1 = "[getSmart5gMode]: mode = "
+            r0.append(r1)
+            r0.append(r3)
+            java.lang.String r1 = "; subId = "
+            r0.append(r1)
+            r0.append(r4)
+            java.lang.String r4 = r0.toString()
+            java.lang.String r0 = "MobileNetworkUtils"
+            android.util.Log.d(r0, r4)
+            return r3
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.network.telephony.MobileNetworkUtils.getSmart5gMode(android.content.Context, int):int");
     }
 
     public static void log5GEvent(Context context, String str, int i) {
@@ -688,156 +804,5 @@ public class MobileNetworkUtils {
             bundle.putInt(str, i);
             mAppTracker.logProductEvent("5G_Event", bundle);
         }
-    }
-
-    public static int getWfcTitle(Context context, int i) {
-        PersistableBundle configForSubId;
-        CarrierConfigManager carrierConfigManager = (CarrierConfigManager) context.getSystemService(CarrierConfigManager.class);
-        if ((carrierConfigManager == null || (configForSubId = carrierConfigManager.getConfigForSubId(i)) == null) ? false : configForSubId.getBoolean("wlan_call_title_bool")) {
-            return R.string.wlan_call_settings_title;
-        }
-        return R.string.wifi_calling_settings_title;
-    }
-
-    public static boolean getWLANCallTitle(Context context, int i) {
-        PersistableBundle configForSubId;
-        CarrierConfigManager carrierConfigManager = (CarrierConfigManager) context.getSystemService(CarrierConfigManager.class);
-        if (carrierConfigManager == null || (configForSubId = carrierConfigManager.getConfigForSubId(i)) == null) {
-            return false;
-        }
-        return configForSubId.getBoolean("wlan_call_title_bool");
-    }
-
-    public static CharSequence getUniqueSubscriptionDisplayName(SubscriptionInfo subscriptionInfo, Context context) {
-        return subscriptionInfo == null ? "" : getUniqueSubscriptionDisplayNames(context, needShowSimNum(context, getActiveSubscriptionIdList(context))).getOrDefault(Integer.valueOf(subscriptionInfo.getSubscriptionId()), "");
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.android.settings.network.telephony.MobileNetworkUtils$1DisplayInfo  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public class C1DisplayInfo {
-        public CharSequence originalName;
-        public SubscriptionInfo subscriptionInfo;
-        public CharSequence uniqueName;
-
-        C1DisplayInfo() {
-        }
-    }
-
-    public static Map<Integer, CharSequence> getUniqueSubscriptionDisplayNames(final Context context, final boolean z) {
-        final Supplier supplier = new Supplier() { // from class: com.android.settings.network.telephony.MobileNetworkUtils$$ExternalSyntheticLambda9
-            @Override // java.util.function.Supplier
-            public final Object get() {
-                Stream lambda$getUniqueSubscriptionDisplayNames$3;
-                lambda$getUniqueSubscriptionDisplayNames$3 = MobileNetworkUtils.lambda$getUniqueSubscriptionDisplayNames$3(context);
-                return lambda$getUniqueSubscriptionDisplayNames$3;
-            }
-        };
-        Supplier supplier2 = new Supplier() { // from class: com.android.settings.network.telephony.MobileNetworkUtils$$ExternalSyntheticLambda10
-            @Override // java.util.function.Supplier
-            public final Object get() {
-                Stream lambda$getUniqueSubscriptionDisplayNames$5;
-                lambda$getUniqueSubscriptionDisplayNames$5 = MobileNetworkUtils.lambda$getUniqueSubscriptionDisplayNames$5(supplier, z, context);
-                return lambda$getUniqueSubscriptionDisplayNames$5;
-            }
-        };
-        final HashSet hashSet = new HashSet();
-        Set set = (Set) ((Stream) supplier2.get()).filter(new Predicate() { // from class: com.android.settings.network.telephony.MobileNetworkUtils$$ExternalSyntheticLambda7
-            @Override // java.util.function.Predicate
-            public final boolean test(Object obj) {
-                boolean lambda$getUniqueSubscriptionDisplayNames$6;
-                lambda$getUniqueSubscriptionDisplayNames$6 = MobileNetworkUtils.lambda$getUniqueSubscriptionDisplayNames$6(hashSet, (MobileNetworkUtils.C1DisplayInfo) obj);
-                return lambda$getUniqueSubscriptionDisplayNames$6;
-            }
-        }).map(MobileNetworkUtils$$ExternalSyntheticLambda3.INSTANCE).collect(Collectors.toSet());
-        return (Map) ((Stream) supplier2.get()).map(MobileNetworkUtils$$ExternalSyntheticLambda6.INSTANCE).collect(Collectors.toMap(MobileNetworkUtils$$ExternalSyntheticLambda5.INSTANCE, MobileNetworkUtils$$ExternalSyntheticLambda4.INSTANCE));
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ Stream lambda$getUniqueSubscriptionDisplayNames$3(final Context context) {
-        return SubscriptionUtil.getAvailableSubscriptions(context).stream().filter(MobileNetworkUtils$$ExternalSyntheticLambda8.INSTANCE).map(new Function() { // from class: com.android.settings.network.telephony.MobileNetworkUtils$$ExternalSyntheticLambda1
-            @Override // java.util.function.Function
-            public final Object apply(Object obj) {
-                MobileNetworkUtils.C1DisplayInfo lambda$getUniqueSubscriptionDisplayNames$2;
-                lambda$getUniqueSubscriptionDisplayNames$2 = MobileNetworkUtils.lambda$getUniqueSubscriptionDisplayNames$2(context, (SubscriptionInfo) obj);
-                return lambda$getUniqueSubscriptionDisplayNames$2;
-            }
-        });
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ boolean lambda$getUniqueSubscriptionDisplayNames$1(SubscriptionInfo subscriptionInfo) {
-        return (subscriptionInfo == null || subscriptionInfo.getDisplayName() == null) ? false : true;
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ C1DisplayInfo lambda$getUniqueSubscriptionDisplayNames$2(Context context, SubscriptionInfo subscriptionInfo) {
-        String trim;
-        C1DisplayInfo c1DisplayInfo = new C1DisplayInfo();
-        c1DisplayInfo.subscriptionInfo = subscriptionInfo;
-        String charSequence = subscriptionInfo.getDisplayName().toString();
-        if (TextUtils.equals(charSequence, "CARD")) {
-            trim = context.getResources().getString(R.string.sim_card);
-        } else {
-            trim = charSequence.trim();
-        }
-        c1DisplayInfo.originalName = trim;
-        return c1DisplayInfo;
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ Stream lambda$getUniqueSubscriptionDisplayNames$5(Supplier supplier, final boolean z, final Context context) {
-        return ((Stream) supplier.get()).map(new Function() { // from class: com.android.settings.network.telephony.MobileNetworkUtils$$ExternalSyntheticLambda2
-            @Override // java.util.function.Function
-            public final Object apply(Object obj) {
-                MobileNetworkUtils.C1DisplayInfo lambda$getUniqueSubscriptionDisplayNames$4;
-                lambda$getUniqueSubscriptionDisplayNames$4 = MobileNetworkUtils.lambda$getUniqueSubscriptionDisplayNames$4(z, context, (MobileNetworkUtils.C1DisplayInfo) obj);
-                return lambda$getUniqueSubscriptionDisplayNames$4;
-            }
-        });
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ C1DisplayInfo lambda$getUniqueSubscriptionDisplayNames$4(boolean z, Context context, C1DisplayInfo c1DisplayInfo) {
-        if (z) {
-            String bidiFormattedPhoneNumber = DeviceInfoUtils.getBidiFormattedPhoneNumber(context, c1DisplayInfo.subscriptionInfo);
-            if (bidiFormattedPhoneNumber == null) {
-                bidiFormattedPhoneNumber = "";
-            } else if (bidiFormattedPhoneNumber.length() > 4) {
-                bidiFormattedPhoneNumber = bidiFormattedPhoneNumber.substring(bidiFormattedPhoneNumber.length() - 4);
-            }
-            if (TextUtils.isEmpty(bidiFormattedPhoneNumber)) {
-                c1DisplayInfo.uniqueName = c1DisplayInfo.originalName;
-            } else {
-                c1DisplayInfo.uniqueName = ((Object) c1DisplayInfo.originalName) + " " + bidiFormattedPhoneNumber;
-            }
-            return c1DisplayInfo;
-        }
-        c1DisplayInfo.uniqueName = c1DisplayInfo.originalName;
-        return c1DisplayInfo;
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ boolean lambda$getUniqueSubscriptionDisplayNames$6(Set set, C1DisplayInfo c1DisplayInfo) {
-        return !set.add(c1DisplayInfo.uniqueName);
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ Integer lambda$getUniqueSubscriptionDisplayNames$9(C1DisplayInfo c1DisplayInfo) {
-        return Integer.valueOf(c1DisplayInfo.subscriptionInfo.getSubscriptionId());
-    }
-
-    static boolean needShowSimNum(Context context, int[] iArr) {
-        CarrierConfigManager carrierConfigManager = (CarrierConfigManager) context.getSystemService(CarrierConfigManager.class);
-        boolean z = true;
-        if (carrierConfigManager != null) {
-            for (int i : iArr) {
-                PersistableBundle configForSubId = carrierConfigManager.getConfigForSubId(i);
-                if (configForSubId != null && configForSubId.getBoolean("hide_carrier_name_extra_bool")) {
-                    z = false;
-                }
-            }
-        }
-        return z;
     }
 }

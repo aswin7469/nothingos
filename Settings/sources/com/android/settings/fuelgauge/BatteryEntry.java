@@ -17,56 +17,62 @@ import android.os.UserHandle;
 import android.os.UserManager;
 import android.util.DebugUtils;
 import android.util.Log;
-import com.android.settings.R;
+import com.android.settings.R$drawable;
+import com.android.settings.R$string;
 import com.android.settingslib.Utils;
+import com.android.settingslib.applications.RecentAppOpsAccess;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
-/* loaded from: classes.dex */
+
 public class BatteryEntry {
+    public static final Comparator<BatteryEntry> COMPARATOR = new BatteryEntry$$ExternalSyntheticLambda0();
     private static NameAndIconLoader mRequestThread;
+    static Locale sCurrentLocale = null;
     static Handler sHandler;
-    public Drawable icon;
-    public int iconId;
+    static final ArrayList<BatteryEntry> sRequestQueue = new ArrayList<>();
+    static final HashMap<String, UidToDetail> sUidCache = new HashMap<>();
     private final BatteryConsumer mBatteryConsumer;
     private double mConsumedPower;
     private final int mConsumerType;
-    private final Context mContext;
-    private String mDefaultPackageName;
+    /* access modifiers changed from: private */
+    public final Context mContext;
+    /* access modifiers changed from: private */
+    public String mDefaultPackageName;
+    public Drawable mIcon;
+    public int mIconId;
     private final boolean mIsHidden;
+    public String mName;
+    public double mPercent;
     private final int mPowerComponentId;
     private long mTimeInBackgroundMs;
     private long mTimeInForegroundMs;
     private final int mUid;
     private long mUsageDurationMs;
-    public String name;
-    public double percent;
-    static final HashMap<String, UidToDetail> sUidCache = new HashMap<>();
-    static final ArrayList<BatteryEntry> sRequestQueue = new ArrayList<>();
-    static Locale sCurrentLocale = null;
-    public static final Comparator<BatteryEntry> COMPARATOR = BatteryEntry$$ExternalSyntheticLambda0.INSTANCE;
 
-    /* loaded from: classes.dex */
+    static boolean isSystemUid(int i) {
+        return i == 1000;
+    }
+
     public static final class NameAndIcon {
-        public final Drawable icon;
-        public final int iconId;
-        public final String name;
-        public final String packageName;
+        public final Drawable mIcon;
+        public final int mIconId;
+        public final String mName;
+        public final String mPackageName;
 
         public NameAndIcon(String str, Drawable drawable, int i) {
-            this(str, null, drawable, i);
+            this(str, (String) null, drawable, i);
         }
 
         public NameAndIcon(String str, String str2, Drawable drawable, int i) {
-            this.name = str;
-            this.icon = drawable;
-            this.iconId = i;
-            this.packageName = str2;
+            this.mName = str;
+            this.mIcon = drawable;
+            this.mIconId = i;
+            this.mPackageName = str2;
         }
     }
 
-    /* loaded from: classes.dex */
     private static class NameAndIconLoader extends Thread {
         private boolean mAbort = false;
 
@@ -78,28 +84,64 @@ public class BatteryEntry {
             this.mAbort = true;
         }
 
-        @Override // java.lang.Thread, java.lang.Runnable
+        /* JADX WARNING: Code restructure failed: missing block: B:10:0x0016, code lost:
+            r0 = com.android.settings.fuelgauge.BatteryEntry.loadNameAndIcon(com.android.settings.fuelgauge.BatteryEntry.m850$$Nest$fgetmContext(r1), r1.getUid(), com.android.settings.fuelgauge.BatteryEntry.sHandler, r1, com.android.settings.fuelgauge.BatteryEntry.m851$$Nest$fgetmDefaultPackageName(r1), r1.mName, r1.mIcon);
+         */
+        /* JADX WARNING: Code restructure failed: missing block: B:11:0x002d, code lost:
+            if (r0 == null) goto L_0x0000;
+         */
+        /* JADX WARNING: Code restructure failed: missing block: B:12:0x002f, code lost:
+            r1.mIcon = r0.mIcon;
+            r1.mName = r0.mName;
+            com.android.settings.fuelgauge.BatteryEntry.m852$$Nest$fputmDefaultPackageName(r1, r0.mPackageName);
+         */
+        /* Code decompiled incorrectly, please refer to instructions dump. */
         public void run() {
-            BatteryEntry remove;
-            while (true) {
-                ArrayList<BatteryEntry> arrayList = BatteryEntry.sRequestQueue;
-                synchronized (arrayList) {
-                    if (arrayList.isEmpty() || this.mAbort) {
-                        break;
-                    }
-                    remove = arrayList.remove(0);
-                }
-                NameAndIcon loadNameAndIcon = BatteryEntry.loadNameAndIcon(remove.mContext, remove.getUid(), BatteryEntry.sHandler, remove, remove.mDefaultPackageName, remove.name, remove.icon);
-                if (loadNameAndIcon != null) {
-                    remove.icon = loadNameAndIcon.icon;
-                    remove.name = loadNameAndIcon.name;
-                    remove.mDefaultPackageName = loadNameAndIcon.packageName;
-                }
-            }
-            Handler handler = BatteryEntry.sHandler;
-            if (handler != null) {
-                handler.sendEmptyMessage(2);
-            }
+            /*
+                r9 = this;
+            L_0x0000:
+                java.util.ArrayList<com.android.settings.fuelgauge.BatteryEntry> r0 = com.android.settings.fuelgauge.BatteryEntry.sRequestQueue
+                monitor-enter(r0)
+                boolean r1 = r0.isEmpty()     // Catch:{ all -> 0x0047 }
+                if (r1 != 0) goto L_0x003d
+                boolean r1 = r9.mAbort     // Catch:{ all -> 0x0047 }
+                if (r1 == 0) goto L_0x000e
+                goto L_0x003d
+            L_0x000e:
+                r1 = 0
+                java.lang.Object r1 = r0.remove(r1)     // Catch:{ all -> 0x0047 }
+                com.android.settings.fuelgauge.BatteryEntry r1 = (com.android.settings.fuelgauge.BatteryEntry) r1     // Catch:{ all -> 0x0047 }
+                monitor-exit(r0)     // Catch:{ all -> 0x0047 }
+                android.content.Context r2 = r1.mContext
+                int r3 = r1.getUid()
+                android.os.Handler r4 = com.android.settings.fuelgauge.BatteryEntry.sHandler
+                java.lang.String r6 = r1.mDefaultPackageName
+                java.lang.String r7 = r1.mName
+                android.graphics.drawable.Drawable r8 = r1.mIcon
+                r5 = r1
+                com.android.settings.fuelgauge.BatteryEntry$NameAndIcon r0 = com.android.settings.fuelgauge.BatteryEntry.loadNameAndIcon(r2, r3, r4, r5, r6, r7, r8)
+                if (r0 == 0) goto L_0x0000
+                android.graphics.drawable.Drawable r2 = r0.mIcon
+                r1.mIcon = r2
+                java.lang.String r2 = r0.mName
+                r1.mName = r2
+                java.lang.String r0 = r0.mPackageName
+                r1.mDefaultPackageName = r0
+                goto L_0x0000
+            L_0x003d:
+                android.os.Handler r9 = com.android.settings.fuelgauge.BatteryEntry.sHandler     // Catch:{ all -> 0x0047 }
+                if (r9 == 0) goto L_0x0045
+                r1 = 2
+                r9.sendEmptyMessage(r1)     // Catch:{ all -> 0x0047 }
+            L_0x0045:
+                monitor-exit(r0)     // Catch:{ all -> 0x0047 }
+                return
+            L_0x0047:
+                r9 = move-exception
+                monitor-exit(r0)     // Catch:{ all -> 0x0047 }
+                throw r9
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.android.settings.fuelgauge.BatteryEntry.NameAndIconLoader.run():void");
         }
     }
 
@@ -139,17 +181,10 @@ public class BatteryEntry {
         sUidCache.clear();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ int lambda$static$0(BatteryEntry batteryEntry, BatteryEntry batteryEntry2) {
-        return Double.compare(batteryEntry2.getConsumedPower(), batteryEntry.getConsumedPower());
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class UidToDetail {
-        Drawable icon;
-        String name;
-        String packageName;
+    static class UidToDetail {
+        Drawable mIcon;
+        String mName;
+        String mPackageName;
 
         UidToDetail() {
         }
@@ -160,6 +195,7 @@ public class BatteryEntry {
     }
 
     public BatteryEntry(Context context, Handler handler, UserManager userManager, BatteryConsumer batteryConsumer, boolean z, int i, String[] strArr, String str, boolean z2) {
+        String str2;
         sHandler = handler;
         this.mContext = context;
         this.mBatteryConsumer = batteryConsumer;
@@ -172,19 +208,24 @@ public class BatteryEntry {
             this.mConsumedPower = batteryConsumer.getConsumedPower();
             UidBatteryConsumer uidBatteryConsumer = (UidBatteryConsumer) batteryConsumer;
             if (this.mDefaultPackageName == null) {
-                if (strArr != null && strArr.length == 1) {
-                    this.mDefaultPackageName = strArr[0];
+                if (strArr == null || strArr.length != 1) {
+                    if (isSystemUid(i)) {
+                        str2 = RecentAppOpsAccess.ANDROID_SYSTEM_PACKAGE_NAME;
+                    } else {
+                        str2 = uidBatteryConsumer.getPackageWithHighestDrain();
+                    }
+                    this.mDefaultPackageName = str2;
                 } else {
-                    this.mDefaultPackageName = uidBatteryConsumer.getPackageWithHighestDrain();
+                    this.mDefaultPackageName = strArr[0];
                 }
             }
             if (this.mDefaultPackageName != null) {
                 PackageManager packageManager = context.getPackageManager();
                 try {
-                    this.name = packageManager.getApplicationLabel(packageManager.getApplicationInfo(this.mDefaultPackageName, 0)).toString();
+                    this.mName = packageManager.getApplicationLabel(packageManager.getApplicationInfo(this.mDefaultPackageName, 0)).toString();
                 } catch (PackageManager.NameNotFoundException unused) {
                     Log.d("BatteryEntry", "PackageManager failed to retrieve ApplicationInfo for: " + this.mDefaultPackageName);
-                    this.name = this.mDefaultPackageName;
+                    this.mName = this.mDefaultPackageName;
                 }
             }
             getQuickNameIconForUid(i, strArr, z2);
@@ -195,10 +236,10 @@ public class BatteryEntry {
             this.mConsumerType = 2;
             this.mConsumedPower = batteryConsumer.getConsumedPower();
             NameAndIcon nameAndIconFromUserId = getNameAndIconFromUserId(context, ((UserBatteryConsumer) batteryConsumer).getUserId());
-            this.icon = nameAndIconFromUserId.icon;
-            this.name = nameAndIconFromUserId.name;
+            this.mIcon = nameAndIconFromUserId.mIcon;
+            this.mName = nameAndIconFromUserId.mName;
         } else {
-            throw new IllegalArgumentException("Unsupported battery consumer: " + batteryConsumer);
+            throw new IllegalArgumentException("Unsupported: " + batteryConsumer);
         }
     }
 
@@ -212,11 +253,11 @@ public class BatteryEntry {
         this.mUsageDurationMs = j;
         this.mConsumerType = 3;
         NameAndIcon nameAndIconFromPowerComponent = getNameAndIconFromPowerComponent(context, i);
-        int i2 = nameAndIconFromPowerComponent.iconId;
-        this.iconId = i2;
-        this.name = nameAndIconFromPowerComponent.name;
+        int i2 = nameAndIconFromPowerComponent.mIconId;
+        this.mIconId = i2;
+        this.mName = nameAndIconFromPowerComponent.mName;
         if (i2 != 0) {
-            this.icon = context.getDrawable(i2);
+            this.mIcon = context.getDrawable(i2);
         }
     }
 
@@ -226,23 +267,24 @@ public class BatteryEntry {
         this.mUid = -1;
         this.mIsHidden = false;
         this.mPowerComponentId = i;
-        int i2 = R.drawable.ic_power_system;
-        this.iconId = i2;
-        this.icon = context.getDrawable(i2);
-        this.name = str;
+        int i2 = R$drawable.ic_power_system;
+        this.mIconId = i2;
+        this.mIcon = context.getDrawable(i2);
+        this.mName = str;
         this.mConsumedPower = i != 0 ? d - d2 : d;
         this.mConsumerType = 3;
     }
 
     public Drawable getIcon() {
-        return this.icon;
+        return this.mIcon;
     }
 
     public String getLabel() {
-        return this.name;
+        return this.mName;
     }
 
-    void getQuickNameIconForUid(int i, String[] strArr, boolean z) {
+    /* access modifiers changed from: package-private */
+    public void getQuickNameIconForUid(int i, String[] strArr, boolean z) {
         Locale locale = Locale.getDefault();
         if (sCurrentLocale != locale) {
             clearUidCache();
@@ -252,129 +294,150 @@ public class BatteryEntry {
         HashMap<String, UidToDetail> hashMap = sUidCache;
         if (hashMap.containsKey(num)) {
             UidToDetail uidToDetail = hashMap.get(num);
-            this.mDefaultPackageName = uidToDetail.packageName;
-            this.name = uidToDetail.name;
-            this.icon = uidToDetail.icon;
+            this.mDefaultPackageName = uidToDetail.mPackageName;
+            this.mName = uidToDetail.mName;
+            this.mIcon = uidToDetail.mIcon;
             return;
         }
         if (strArr == null || strArr.length == 0) {
-            NameAndIcon nameAndIconFromUid = getNameAndIconFromUid(this.mContext, this.name, i);
-            this.icon = nameAndIconFromUid.icon;
-            this.name = nameAndIconFromUid.name;
+            NameAndIcon nameAndIconFromUid = getNameAndIconFromUid(this.mContext, this.mName, i);
+            this.mIcon = nameAndIconFromUid.mIcon;
+            this.mName = nameAndIconFromUid.mName;
         } else {
-            this.icon = this.mContext.getPackageManager().getDefaultActivityIcon();
+            this.mIcon = this.mContext.getPackageManager().getDefaultActivityIcon();
         }
-        if (sHandler == null || !z) {
-            return;
-        }
-        ArrayList<BatteryEntry> arrayList = sRequestQueue;
-        synchronized (arrayList) {
-            arrayList.add(this);
+        if (sHandler != null && z) {
+            ArrayList<BatteryEntry> arrayList = sRequestQueue;
+            synchronized (arrayList) {
+                arrayList.add(this);
+            }
         }
     }
 
     public static NameAndIcon loadNameAndIcon(Context context, int i, Handler handler, BatteryEntry batteryEntry, String str, String str2, Drawable drawable) {
-        String[] packagesForUid;
+        Drawable drawable2;
         String str3;
         String str4;
-        Drawable drawable2;
+        String str5;
+        String str6;
         CharSequence text;
-        Drawable drawable3;
-        if (i == 0 || i == -1) {
+        String charSequence;
+        int i2 = i;
+        Handler handler2 = handler;
+        if (i2 == 0 || i2 == -1) {
             return null;
         }
         PackageManager packageManager = context.getPackageManager();
-        if (i == 1000) {
-            packagesForUid = new String[]{"android"};
-        } else {
-            packagesForUid = packageManager.getPackagesForUid(i);
-        }
-        String[] strArr = packagesForUid;
-        int i2 = 0;
-        if (strArr != null) {
-            int length = strArr.length;
-            String[] strArr2 = new String[length];
-            System.arraycopy(strArr, 0, strArr2, 0, strArr.length);
+        String[] packagesForUid = isSystemUid(i) ? new String[]{RecentAppOpsAccess.ANDROID_SYSTEM_PACKAGE_NAME} : packageManager.getPackagesForUid(i2);
+        if (packagesForUid != null) {
+            int length = packagesForUid.length;
+            String[] strArr = new String[length];
+            System.arraycopy(packagesForUid, 0, strArr, 0, packagesForUid.length);
             IPackageManager packageManager2 = AppGlobals.getPackageManager();
             int userId = UserHandle.getUserId(i);
             str3 = str;
             int i3 = 0;
             while (true) {
+                str5 = "BatteryEntry";
                 if (i3 >= length) {
                     drawable2 = drawable;
                     break;
                 }
                 try {
-                    ApplicationInfo applicationInfo = packageManager2.getApplicationInfo(strArr2[i3], i2, userId);
+                    ApplicationInfo applicationInfo = packageManager2.getApplicationInfo(strArr[i3], 0, userId);
                     if (applicationInfo == null) {
-                        Log.d("BatteryEntry", "Retrieving null app info for package " + strArr2[i3] + ", user " + userId);
+                        Log.d(str5, "Retrieving null app info for package " + strArr[i3] + ", user " + userId);
                     } else {
                         CharSequence loadLabel = applicationInfo.loadLabel(packageManager);
                         if (loadLabel != null) {
-                            strArr2[i3] = loadLabel.toString();
+                            strArr[i3] = loadLabel.toString();
                         }
                         if (applicationInfo.icon != 0) {
-                            str3 = strArr[i3];
+                            str3 = packagesForUid[i3];
                             drawable2 = applicationInfo.loadIcon(packageManager);
                             break;
                         }
-                        continue;
                     }
                 } catch (RemoteException e) {
-                    Log.d("BatteryEntry", "Error while retrieving app info for package " + strArr2[i3] + ", user " + userId, e);
+                    Log.d(str5, "Error while retrieving app info for package " + strArr[i3] + ", user " + userId, e);
                 }
                 i3++;
-                i2 = 0;
             }
             if (length == 1) {
-                str4 = strArr2[0];
+                str4 = strArr[0];
             } else {
+                int length2 = packagesForUid.length;
+                String str7 = str2;
                 int i4 = 0;
-                int length2 = strArr.length;
-                str4 = str2;
-                int i5 = 0;
-                while (i5 < length2) {
-                    String str5 = strArr[i5];
+                while (true) {
+                    if (i4 >= length2) {
+                        str4 = str7;
+                        break;
+                    }
+                    String str8 = packagesForUid[i4];
+                    String str9 = str5;
                     try {
-                        PackageInfo packageInfo = packageManager2.getPackageInfo(str5, i4, userId);
+                        PackageInfo packageInfo = packageManager2.getPackageInfo(str8, 0, userId);
                         if (packageInfo == null) {
-                            Log.d("BatteryEntry", "Retrieving null package info for package " + str5 + ", user " + userId);
+                            str6 = str9;
+                            try {
+                                Log.d(str6, "Retrieving null package info for package " + str8 + ", user " + userId);
+                            } catch (RemoteException e2) {
+                                e = e2;
+                                Log.d(str6, "Error while retrieving package info for package " + str8 + ", user " + userId, e);
+                                i4++;
+                                int i5 = i;
+                                str5 = str6;
+                            }
+                            i4++;
+                            int i52 = i;
+                            str5 = str6;
                         } else {
+                            str6 = str9;
                             int i6 = packageInfo.sharedUserLabel;
-                            if (i6 != 0 && (text = packageManager.getText(str5, i6, packageInfo.applicationInfo)) != null) {
-                                String charSequence = text.toString();
+                            if (!(i6 == 0 || (text = packageManager.getText(str8, i6, packageInfo.applicationInfo)) == null)) {
+                                charSequence = text.toString();
                                 try {
                                     ApplicationInfo applicationInfo2 = packageInfo.applicationInfo;
-                                    if (applicationInfo2.icon != 0) {
-                                        try {
-                                            drawable3 = applicationInfo2.loadIcon(packageManager);
-                                            str3 = str5;
-                                        } catch (RemoteException e2) {
-                                            e = e2;
-                                            str4 = charSequence;
-                                            str3 = str5;
-                                            Log.d("BatteryEntry", "Error while retrieving package info for package " + str5 + ", user " + userId, e);
-                                            i5++;
-                                            i4 = 0;
-                                        }
-                                    } else {
-                                        drawable3 = drawable2;
+                                    if (applicationInfo2.icon == 0) {
+                                        break;
                                     }
-                                    drawable2 = drawable3;
-                                    str4 = charSequence;
-                                    break;
-                                } catch (RemoteException e3) {
-                                    e = e3;
-                                    str4 = charSequence;
+                                    try {
+                                        drawable2 = applicationInfo2.loadIcon(packageManager);
+                                        str3 = str8;
+                                        break;
+                                    } catch (RemoteException e3) {
+                                        e = e3;
+                                        str7 = charSequence;
+                                        str3 = str8;
+                                        Log.d(str6, "Error while retrieving package info for package " + str8 + ", user " + userId, e);
+                                        i4++;
+                                        int i522 = i;
+                                        str5 = str6;
+                                    }
+                                } catch (RemoteException e4) {
+                                    e = e4;
+                                    str7 = charSequence;
+                                    Log.d(str6, "Error while retrieving package info for package " + str8 + ", user " + userId, e);
+                                    i4++;
+                                    int i5222 = i;
+                                    str5 = str6;
                                 }
                             }
+                            i4++;
+                            int i52222 = i;
+                            str5 = str6;
                         }
-                    } catch (RemoteException e4) {
-                        e = e4;
+                    } catch (RemoteException e5) {
+                        e = e5;
+                        str6 = str9;
+                        Log.d(str6, "Error while retrieving package info for package " + str8 + ", user " + userId, e);
+                        i4++;
+                        int i522222 = i;
+                        str5 = str6;
                     }
-                    i5++;
-                    i4 = 0;
                 }
+                str4 = charSequence;
             }
         } else {
             str3 = str;
@@ -386,12 +449,12 @@ public class BatteryEntry {
             drawable2 = packageManager.getDefaultActivityIcon();
         }
         UidToDetail uidToDetail = new UidToDetail();
-        uidToDetail.name = str4;
-        uidToDetail.icon = drawable2;
-        uidToDetail.packageName = str3;
+        uidToDetail.mName = str4;
+        uidToDetail.mIcon = drawable2;
+        uidToDetail.mPackageName = str3;
         sUidCache.put(num, uidToDetail);
-        if (handler != null) {
-            handler.sendMessage(handler.obtainMessage(1, batteryEntry));
+        if (handler2 != null) {
+            handler2.sendMessage(handler2.obtainMessage(1, batteryEntry));
         }
         return new NameAndIcon(str4, str3, drawable2, 0);
     }
@@ -438,7 +501,7 @@ public class BatteryEntry {
         if (this.mBatteryConsumer instanceof UidBatteryConsumer) {
             return this.mTimeInBackgroundMs;
         }
-        return 0L;
+        return 0;
     }
 
     public double getConsumedPower() {
@@ -451,82 +514,86 @@ public class BatteryEntry {
             UidBatteryConsumer uidBatteryConsumer = (UidBatteryConsumer) batteryConsumer;
             this.mTimeInForegroundMs += uidBatteryConsumer.getTimeInStateMs(0);
             this.mTimeInBackgroundMs += uidBatteryConsumer.getTimeInStateMs(1);
-            if (this.mDefaultPackageName != null) {
-                return;
+            if (this.mDefaultPackageName == null) {
+                this.mDefaultPackageName = uidBatteryConsumer.getPackageWithHighestDrain();
             }
-            this.mDefaultPackageName = uidBatteryConsumer.getPackageWithHighestDrain();
         }
     }
 
     public static NameAndIcon getNameAndIconFromUserId(Context context, int i) {
-        String string;
+        String str;
         Drawable drawable;
         UserManager userManager = (UserManager) context.getSystemService(UserManager.class);
         UserInfo userInfo = userManager.getUserInfo(i);
         if (userInfo != null) {
             drawable = Utils.getUserIcon(context, userManager, userInfo);
-            string = Utils.getUserLabel(context, userInfo);
+            str = Utils.getUserLabel(context, userInfo);
         } else {
-            string = context.getResources().getString(R.string.running_process_item_removed_user_label);
+            str = context.getResources().getString(R$string.running_process_item_removed_user_label);
             drawable = null;
         }
-        return new NameAndIcon(string, drawable, 0);
+        return new NameAndIcon(str, drawable, 0);
     }
 
     public static NameAndIcon getNameAndIconFromUid(Context context, String str, int i) {
-        Drawable drawable = context.getDrawable(R.drawable.ic_power_system);
+        Drawable drawable = context.getDrawable(R$drawable.ic_power_system);
         if (i == 0) {
-            str = context.getResources().getString(R.string.process_kernel_label);
+            str = context.getResources().getString(R$string.process_kernel_label);
+        } else if (i == -4) {
+            str = context.getResources().getString(R$string.process_removed_apps);
+        } else if (i == -5) {
+            str = context.getResources().getString(R$string.process_network_tethering);
         } else if ("mediaserver".equals(str)) {
-            str = context.getResources().getString(R.string.process_mediaserver_label);
+            str = context.getResources().getString(R$string.process_mediaserver_label);
         } else if ("dex2oat".equals(str) || "dex2oat32".equals(str) || "dex2oat64".equals(str)) {
-            str = context.getResources().getString(R.string.process_dex2oat_label);
+            str = context.getResources().getString(R$string.process_dex2oat_label);
         }
         return new NameAndIcon(str, drawable, 0);
     }
 
     public static NameAndIcon getNameAndIconFromPowerComponent(Context context, int i) {
-        String string;
         int i2;
+        String str;
         if (i == 0) {
-            string = context.getResources().getString(R.string.power_screen);
-            i2 = R.drawable.ic_settings_display;
+            str = context.getResources().getString(R$string.power_screen);
+            i2 = R$drawable.ic_settings_display;
         } else if (i == 6) {
-            string = context.getResources().getString(R.string.power_flashlight);
-            i2 = R.drawable.ic_settings_display;
+            str = context.getResources().getString(R$string.power_flashlight);
+            i2 = R$drawable.ic_settings_display;
         } else if (i == 8) {
-            string = context.getResources().getString(R.string.power_cell);
-            i2 = R.drawable.ic_cellular_1_bar;
+            str = context.getResources().getString(R$string.power_cell);
+            i2 = R$drawable.ic_cellular_1_bar;
         } else if (i == 11) {
-            string = context.getResources().getString(R.string.power_wifi);
-            i2 = R.drawable.ic_settings_wireless;
+            str = context.getResources().getString(R$string.power_wifi);
+            i2 = R$drawable.ic_settings_wireless;
         } else if (i == 2) {
-            string = context.getResources().getString(R.string.power_bluetooth);
-            i2 = 17302837;
-        } else if (i == 3) {
-            string = context.getResources().getString(R.string.power_camera);
-            i2 = R.drawable.ic_settings_camera;
-        } else {
+            str = context.getResources().getString(R$string.power_bluetooth);
+            i2 = 17302848;
+        } else if (i != 3) {
             switch (i) {
                 case 13:
                 case 16:
-                    string = context.getResources().getString(R.string.power_idle);
-                    i2 = R.drawable.ic_settings_phone_idle;
+                    str = context.getResources().getString(R$string.power_idle);
+                    i2 = R$drawable.ic_settings_phone_idle;
                     break;
                 case 14:
-                    string = context.getResources().getString(R.string.power_phone);
-                    i2 = R.drawable.ic_settings_voice_calls;
+                    str = context.getResources().getString(R$string.power_phone);
+                    i2 = R$drawable.ic_settings_voice_calls;
                     break;
                 case 15:
-                    string = context.getResources().getString(R.string.ambient_display_screen_title);
-                    i2 = R.drawable.ic_settings_aod;
+                    str = context.getResources().getString(R$string.ambient_display_screen_title);
+                    i2 = R$drawable.ic_settings_aod;
                     break;
                 default:
-                    string = DebugUtils.constantToString(BatteryConsumer.class, "POWER_COMPONENT_", i);
-                    i2 = R.drawable.ic_power_system;
+                    Log.w("BatteryEntry", "unknown attribute:" + DebugUtils.constantToString(BatteryConsumer.class, "POWER_COMPONENT_", i));
+                    i2 = R$drawable.ic_power_system;
+                    str = null;
                     break;
             }
+        } else {
+            str = context.getResources().getString(R$string.power_camera);
+            i2 = R$drawable.ic_settings_camera;
         }
-        return new NameAndIcon(string, null, i2);
+        return new NameAndIcon(str, (Drawable) null, i2);
     }
 }

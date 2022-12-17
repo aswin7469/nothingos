@@ -8,11 +8,11 @@ import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
+import com.android.settings.R$string;
 import com.android.settings.core.TogglePreferenceController;
 import com.android.settings.datausage.DataSaverBackend;
 import com.android.settings.network.TetherEnabler;
-import com.android.settings.slices.SliceBackgroundWorker;
-/* loaded from: classes.dex */
+
 public abstract class TetherBasePreferenceController extends TogglePreferenceController implements LifecycleObserver, DataSaverBackend.Listener, TetherEnabler.OnTetherStateUpdateListener {
     private static final String TAG = "TetherBasePreferenceController";
     private final DataSaverBackend mDataSaverBackend;
@@ -22,38 +22,23 @@ public abstract class TetherBasePreferenceController extends TogglePreferenceCon
     int mTetheringState;
     final TetheringManager mTm;
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
     public abstract int getTetherType();
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.datausage.DataSaverBackend.Listener
     public void onAllowlistStatusChanged(int i, boolean z) {
     }
 
-    @Override // com.android.settings.datausage.DataSaverBackend.Listener
     public void onDenylistStatusChanged(int i, boolean z) {
     }
 
@@ -61,13 +46,11 @@ public abstract class TetherBasePreferenceController extends TogglePreferenceCon
 
     public abstract boolean shouldShow();
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public TetherBasePreferenceController(Context context, String str) {
+    TetherBasePreferenceController(Context context, String str) {
         super(context, str);
         this.mTm = (TetheringManager) context.getSystemService(TetheringManager.class);
         DataSaverBackend dataSaverBackend = new DataSaverBackend(context);
@@ -97,12 +80,10 @@ public abstract class TetherBasePreferenceController extends TogglePreferenceCon
         this.mDataSaverBackend.remListener(this);
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean isChecked() {
         return TetherEnabler.isTethering(this.mTetheringState, getTetherType());
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController
     public boolean setChecked(boolean z) {
         TetherEnabler tetherEnabler = this.mTetherEnabler;
         if (tetherEnabler == null) {
@@ -116,13 +97,11 @@ public abstract class TetherBasePreferenceController extends TogglePreferenceCon
         return true;
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = preferenceScreen.findPreference(this.mPreferenceKey);
     }
 
-    @Override // com.android.settings.core.TogglePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         if (isAvailable()) {
@@ -130,7 +109,6 @@ public abstract class TetherBasePreferenceController extends TogglePreferenceCon
         }
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         if (!shouldShow()) {
             return 2;
@@ -138,13 +116,15 @@ public abstract class TetherBasePreferenceController extends TogglePreferenceCon
         return (this.mDataSaverEnabled || !shouldEnable()) ? 5 : 0;
     }
 
-    @Override // com.android.settings.network.TetherEnabler.OnTetherStateUpdateListener
+    public int getSliceHighlightMenuRes() {
+        return R$string.menu_key_network;
+    }
+
     public void onTetherStateUpdated(int i) {
         this.mTetheringState = i;
         updateState(this.mPreference);
     }
 
-    @Override // com.android.settings.datausage.DataSaverBackend.Listener
     public void onDataSaverChanged(boolean z) {
         this.mDataSaverEnabled = z;
     }

@@ -1,15 +1,16 @@
 package com.google.zxing.datamatrix.encoder;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes2.dex */
-public final class Base256Encoder implements Encoder {
+
+final class Base256Encoder implements Encoder {
     public int getEncodingMode() {
         return 5;
     }
 
-    @Override // com.google.zxing.datamatrix.encoder.Encoder
+    Base256Encoder() {
+    }
+
     public void encode(EncoderContext encoderContext) {
         StringBuilder sb = new StringBuilder();
-        sb.append((char) 0);
+        sb.append(0);
         while (true) {
             if (!encoderContext.hasMoreCharacters()) {
                 break;
@@ -29,11 +30,11 @@ public final class Base256Encoder implements Encoder {
         if (encoderContext.hasMoreCharacters() || z) {
             if (length <= 249) {
                 sb.setCharAt(0, (char) length);
-            } else if (length > 249 && length <= 1555) {
+            } else if (length <= 249 || length > 1555) {
+                throw new IllegalStateException("Message length not in valid ranges: " + length);
+            } else {
                 sb.setCharAt(0, (char) ((length / 250) + 249));
                 sb.insert(1, (char) (length % 250));
-            } else {
-                throw new IllegalStateException("Message length not in valid ranges: " + length);
             }
         }
         int length2 = sb.length();

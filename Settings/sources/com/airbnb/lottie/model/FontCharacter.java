@@ -2,7 +2,7 @@ package com.airbnb.lottie.model;
 
 import com.airbnb.lottie.model.content.ShapeGroup;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class FontCharacter {
     private final char character;
     private final String fontFamily;

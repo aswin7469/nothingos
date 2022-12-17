@@ -1,9 +1,8 @@
 package com.android.settings.enterprise;
 
 import android.content.Context;
-/* loaded from: classes.dex */
+
 public class FailedPasswordWipeManagedProfilePreferenceController extends FailedPasswordWipePreferenceControllerBase {
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "failed_password_wipe_managed_profile";
     }
@@ -12,8 +11,8 @@ public class FailedPasswordWipeManagedProfilePreferenceController extends Failed
         super(context);
     }
 
-    @Override // com.android.settings.enterprise.FailedPasswordWipePreferenceControllerBase
-    protected int getMaximumFailedPasswordsBeforeWipe() {
+    /* access modifiers changed from: protected */
+    public int getMaximumFailedPasswordsBeforeWipe() {
         return this.mFeatureProvider.getMaximumFailedPasswordsBeforeWipeInManagedProfile();
     }
 }

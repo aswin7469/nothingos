@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
 import java.util.concurrent.CountDownLatch;
-/* loaded from: classes.dex */
+
 public class CarrierConfigChangedReceiver extends BroadcastReceiver {
     private final CountDownLatch mLatch;
 
@@ -18,7 +18,6 @@ public class CarrierConfigChangedReceiver extends BroadcastReceiver {
         context.registerReceiver(this, new IntentFilter("android.telephony.action.CARRIER_CONFIG_CHANGED"));
     }
 
-    @Override // android.content.BroadcastReceiver
     public void onReceive(Context context, Intent intent) {
         if (!isInitialStickyBroadcast() && "android.telephony.action.CARRIER_CONFIG_CHANGED".equals(intent.getAction())) {
             checkSubscriptionIndex(intent);

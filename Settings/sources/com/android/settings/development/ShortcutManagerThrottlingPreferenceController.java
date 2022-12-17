@@ -8,14 +8,13 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.development.DeveloperOptionsPreferenceController;
-/* loaded from: classes.dex */
+
 public class ShortcutManagerThrottlingPreferenceController extends DeveloperOptionsPreferenceController implements PreferenceControllerMixin {
     private final IShortcutService mShortcutService = getShortCutService();
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "reset_shortcut_manager_throttling";
     }
@@ -24,7 +23,6 @@ public class ShortcutManagerThrottlingPreferenceController extends DeveloperOpti
         super(context);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
         if (!TextUtils.equals("reset_shortcut_manager_throttling", preference.getKey())) {
             return false;
@@ -35,14 +33,13 @@ public class ShortcutManagerThrottlingPreferenceController extends DeveloperOpti
 
     private void resetShortcutManagerThrottling() {
         IShortcutService iShortcutService = this.mShortcutService;
-        if (iShortcutService == null) {
-            return;
-        }
-        try {
-            iShortcutService.resetThrottling();
-            Toast.makeText(this.mContext, R.string.reset_shortcut_manager_throttling_complete, 0).show();
-        } catch (RemoteException e) {
-            Log.e("ShortcutMgrPrefCtrl", "Failed to reset rate limiting", e);
+        if (iShortcutService != null) {
+            try {
+                iShortcutService.resetThrottling();
+                Toast.makeText(this.mContext, R$string.reset_shortcut_manager_throttling_complete, 0).show();
+            } catch (RemoteException e) {
+                Log.e("ShortcutMgrPrefCtrl", "Failed to reset rate limiting", e);
+            }
         }
     }
 

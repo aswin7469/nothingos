@@ -11,14 +11,12 @@ import com.android.internal.util.ArrayUtils;
 import com.android.settings.applications.AppStateBaseBridge;
 import com.android.settingslib.applications.ApplicationsState;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
+
 public class AppStateInstallAppsBridge extends AppStateBaseBridge {
-    public static final ApplicationsState.AppFilter FILTER_APP_SOURCES = new ApplicationsState.AppFilter() { // from class: com.android.settings.applications.AppStateInstallAppsBridge.1
-        @Override // com.android.settingslib.applications.ApplicationsState.AppFilter
+    public static final ApplicationsState.AppFilter FILTER_APP_SOURCES = new ApplicationsState.AppFilter() {
         public void init() {
         }
 
-        @Override // com.android.settingslib.applications.ApplicationsState.AppFilter
         public boolean filterApp(ApplicationsState.AppEntry appEntry) {
             Object obj = appEntry.extraInfo;
             if (obj == null || !(obj instanceof InstallAppsState)) {
@@ -36,13 +34,13 @@ public class AppStateInstallAppsBridge extends AppStateBaseBridge {
         this.mAppOpsManager = (AppOpsManager) context.getSystemService("appops");
     }
 
-    @Override // com.android.settings.applications.AppStateBaseBridge
-    protected void updateExtraInfo(ApplicationsState.AppEntry appEntry, String str, int i) {
+    /* access modifiers changed from: protected */
+    public void updateExtraInfo(ApplicationsState.AppEntry appEntry, String str, int i) {
         appEntry.extraInfo = createInstallAppsStateFor(str, i);
     }
 
-    @Override // com.android.settings.applications.AppStateBaseBridge
-    protected void loadAllExtraInfo() {
+    /* access modifiers changed from: protected */
+    public void loadAllExtraInfo() {
         ArrayList<ApplicationsState.AppEntry> allApps = this.mAppSession.getAllApps();
         for (int i = 0; i < allApps.size(); i++) {
             ApplicationsState.AppEntry appEntry = allApps.get(i);
@@ -71,7 +69,6 @@ public class AppStateInstallAppsBridge extends AppStateBaseBridge {
         return installAppsState;
     }
 
-    /* loaded from: classes.dex */
     public static class InstallAppsState {
         int appOpMode = 3;
         boolean permissionRequested;

@@ -6,7 +6,7 @@ import android.telephony.SubscriptionManager;
 import android.telephony.ims.ImsException;
 import android.telephony.ims.ProvisioningManager;
 import android.util.Log;
-/* loaded from: classes.dex */
+
 public class VolteQueryImsState extends ImsQueryController {
     private Context mContext;
     private int mSubId;
@@ -17,7 +17,8 @@ public class VolteQueryImsState extends ImsQueryController {
         this.mSubId = i;
     }
 
-    boolean isEnabledByUser(int i) {
+    /* access modifiers changed from: package-private */
+    public boolean isEnabledByUser(int i) {
         if (!SubscriptionManager.isValidSubscriptionId(i)) {
             return false;
         }
@@ -25,37 +26,41 @@ public class VolteQueryImsState extends ImsQueryController {
     }
 
     public boolean isVoLteProvisioned() {
-        if (SubscriptionManager.isValidSubscriptionId(this.mSubId) && isProvisionedOnDevice(this.mSubId)) {
-            try {
-                return isEnabledByPlatform(this.mSubId);
-            } catch (ImsException | IllegalArgumentException | InterruptedException e) {
-                Log.w("VolteQueryImsState", "fail to get VoLte supporting status. subId=" + this.mSubId, e);
-                return false;
-            }
+        if (!SubscriptionManager.isValidSubscriptionId(this.mSubId) || !isProvisionedOnDevice(this.mSubId)) {
+            return false;
         }
-        return false;
+        try {
+            return isEnabledByPlatform(this.mSubId);
+        } catch (ImsException | IllegalArgumentException | InterruptedException e) {
+            Log.w("VolteQueryImsState", "fail to get VoLte supporting status. subId=" + this.mSubId, e);
+            return false;
+        }
     }
 
     public boolean isReadyToVoLte() {
-        if (SubscriptionManager.isValidSubscriptionId(this.mSubId) && isVoLteProvisioned()) {
-            try {
-                return isServiceStateReady(this.mSubId);
-            } catch (ImsException | IllegalArgumentException | InterruptedException e) {
-                Log.w("VolteQueryImsState", "fail to get VoLte service status. subId=" + this.mSubId, e);
-                return false;
-            }
+        if (!SubscriptionManager.isValidSubscriptionId(this.mSubId) || !isVoLteProvisioned()) {
+            return false;
         }
-        return false;
+        try {
+            return isServiceStateReady(this.mSubId);
+        } catch (ImsException | IllegalArgumentException | InterruptedException e) {
+            Log.w("VolteQueryImsState", "fail to get VoLte service status. subId=" + this.mSubId, e);
+            return false;
+        }
     }
 
     public boolean isAllowUserControl() {
         if (!SubscriptionManager.isValidSubscriptionId(this.mSubId)) {
             return false;
         }
-        return !isTtyEnabled(this.mContext) || isTtyOnVolteEnabled(this.mSubId);
+        if (!isTtyEnabled(this.mContext) || isTtyOnVolteEnabled(this.mSubId)) {
+            return true;
+        }
+        return false;
     }
 
-    boolean isTtyEnabled(Context context) {
+    /* access modifiers changed from: package-private */
+    public boolean isTtyEnabled(Context context) {
         return ((TelecomManager) context.getSystemService(TelecomManager.class)).getCurrentTtyMode() != 0;
     }
 

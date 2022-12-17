@@ -14,11 +14,10 @@ import androidx.preference.TwoStatePreference;
 import com.android.settingslib.RestrictedLockUtilsInternal;
 import com.android.settingslib.RestrictedSwitchPreference;
 import com.android.settingslib.core.ConfirmationDialogController;
-/* loaded from: classes.dex */
+
 public abstract class AbstractEnableAdbPreferenceController extends DeveloperOptionsPreferenceController implements ConfirmationDialogController {
     protected RestrictedSwitchPreference mPreference;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "enable_adb";
     }
@@ -27,7 +26,6 @@ public abstract class AbstractEnableAdbPreferenceController extends DeveloperOpt
         super(context);
     }
 
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         if (isAvailable()) {
@@ -35,16 +33,17 @@ public abstract class AbstractEnableAdbPreferenceController extends DeveloperOpt
         }
     }
 
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return ((UserManager) this.mContext.getSystemService(UserManager.class)).isAdminUser();
     }
 
     private boolean isAdbEnabled() {
-        return Settings.Global.getInt(this.mContext.getContentResolver(), "adb_enabled", 0) != 0;
+        if (Settings.Global.getInt(this.mContext.getContentResolver(), "adb_enabled", 0) != 0) {
+            return true;
+        }
+        return false;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         ((TwoStatePreference) preference).setChecked(isAdbEnabled());
         if (isAvailable()) {
@@ -52,8 +51,7 @@ public abstract class AbstractEnableAdbPreferenceController extends DeveloperOpt
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController
+    /* access modifiers changed from: protected */
     public void onDeveloperOptionsSwitchEnabled() {
         super.onDeveloperOptionsSwitchEnabled();
         if (isAvailable()) {
@@ -61,20 +59,19 @@ public abstract class AbstractEnableAdbPreferenceController extends DeveloperOpt
         }
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
-        if (!isUserAMonkey() && TextUtils.equals("enable_adb", preference.getKey())) {
-            if (!isAdbEnabled()) {
-                showConfirmationDialog(preference);
-                return true;
-            }
-            writeAdbSetting(false);
+        if (isUserAMonkey() || !TextUtils.equals("enable_adb", preference.getKey())) {
+            return false;
+        }
+        if (!isAdbEnabled()) {
+            showConfirmationDialog(preference);
             return true;
         }
-        return false;
+        writeAdbSetting(false);
+        return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void writeAdbSetting(boolean z) {
         Settings.Global.putInt(this.mContext.getContentResolver(), "adb_enabled", z ? 1 : 0);
         notifyStateChanged();
@@ -84,7 +81,8 @@ public abstract class AbstractEnableAdbPreferenceController extends DeveloperOpt
         LocalBroadcastManager.getInstance(this.mContext).sendBroadcast(new Intent("com.android.settingslib.development.AbstractEnableAdbController.ENABLE_ADB_STATE_CHANGED"));
     }
 
-    boolean isUserAMonkey() {
+    /* access modifiers changed from: package-private */
+    public boolean isUserAMonkey() {
         return ActivityManager.isUserAMonkey();
     }
 }

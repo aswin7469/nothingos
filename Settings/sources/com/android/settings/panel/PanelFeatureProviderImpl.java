@@ -3,9 +3,8 @@ package com.android.settings.panel;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-/* loaded from: classes.dex */
+
 public class PanelFeatureProviderImpl implements PanelFeatureProvider {
-    @Override // com.android.settings.panel.PanelFeatureProvider
     public PanelContent getPanel(Context context, Bundle bundle) {
         if (context == null) {
             return null;

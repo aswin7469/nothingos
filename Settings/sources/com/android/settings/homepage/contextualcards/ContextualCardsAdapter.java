@@ -13,7 +13,7 @@ import com.android.settings.homepage.contextualcards.slices.SwipeDismissalDelega
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public class ContextualCardsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ContextualCardUpdateListener, SwipeDismissalDelegate.Listener {
     private final Context mContext;
     final List<ContextualCard> mContextualCards = new ArrayList();
@@ -28,41 +28,33 @@ public class ContextualCardsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         setHasStableIds(true);
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public long getItemId(int i) {
-        return this.mContextualCards.get(i).hashCode();
+        return (long) this.mContextualCards.get(i).hashCode();
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public int getItemViewType(int i) {
         return this.mContextualCards.get(i).getViewType();
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
-    /* renamed from: onCreateViewHolder */
-    public RecyclerView.ViewHolder mo960onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         return this.mControllerRendererPool.getRendererByViewType(this.mContext, this.mLifecycleOwner, i).createViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(i, viewGroup, false), i);
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i) {
         ContextualCard contextualCard = this.mContextualCards.get(i);
         this.mControllerRendererPool.getRendererByViewType(this.mContext, this.mLifecycleOwner, contextualCard.getViewType()).bindView(viewHolder, contextualCard);
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public int getItemCount() {
         return this.mContextualCards.size();
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
         this.mRecyclerView = recyclerView;
         RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
         if (layoutManager instanceof GridLayoutManager) {
-            ((GridLayoutManager) layoutManager).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() { // from class: com.android.settings.homepage.contextualcards.ContextualCardsAdapter.1
-                @Override // androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
+            ((GridLayoutManager) layoutManager).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 public int getSpanSize(int i) {
                     int viewType = ContextualCardsAdapter.this.mContextualCards.get(i).getViewType();
                     return (viewType == ConditionContextualCardRenderer.VIEW_TYPE_HALF_WIDTH || viewType == SliceContextualCardRenderer.VIEW_TYPE_HALF_WIDTH) ? 1 : 2;
@@ -71,10 +63,9 @@ public class ContextualCardsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
-    @Override // com.android.settings.homepage.contextualcards.ContextualCardUpdateListener
     public void onContextualCardUpdated(Map<Integer, List<ContextualCard>> map) {
         boolean z = false;
-        List<ContextualCard> list = map.get(0);
+        List list = map.get(0);
         boolean isEmpty = this.mContextualCards.isEmpty();
         if (list == null || list.isEmpty()) {
             z = true;
@@ -86,18 +77,16 @@ public class ContextualCardsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             DiffUtil.DiffResult calculateDiff = DiffUtil.calculateDiff(new ContextualCardsDiffCallback(this.mContextualCards, list));
             this.mContextualCards.clear();
             this.mContextualCards.addAll(list);
-            calculateDiff.dispatchUpdatesTo(this);
+            calculateDiff.dispatchUpdatesTo((RecyclerView.Adapter) this);
         }
         RecyclerView recyclerView = this.mRecyclerView;
-        if (recyclerView == null || !isEmpty || z) {
-            return;
+        if (recyclerView != null && isEmpty && !z) {
+            recyclerView.scheduleLayoutAnimation();
         }
-        recyclerView.scheduleLayoutAnimation();
     }
 
-    @Override // com.android.settings.homepage.contextualcards.slices.SwipeDismissalDelegate.Listener
     public void onSwiped(int i) {
-        this.mContextualCards.set(i, this.mContextualCards.get(i).mutate().setIsPendingDismiss(true).mo389build());
+        this.mContextualCards.set(i, this.mContextualCards.get(i).mutate().setIsPendingDismiss(true).build());
         notifyItemChanged(i);
     }
 }

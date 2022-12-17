@@ -2,14 +2,13 @@ package com.google.zxing.datamatrix.decoder;
 
 import com.google.zxing.FormatException;
 import com.google.zxing.common.BitMatrix;
-/* loaded from: classes2.dex */
+
 final class BitMatrixParser {
     private final BitMatrix mappingBitMatrix;
     private final BitMatrix readMappingMatrix;
     private final Version version;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public BitMatrixParser(BitMatrix bitMatrix) throws FormatException {
+    BitMatrixParser(BitMatrix bitMatrix) throws FormatException {
         int height = bitMatrix.getHeight();
         if (height < 8 || height > 144 || (height & 1) != 0) {
             throw FormatException.getFormatInstance();
@@ -20,7 +19,7 @@ final class BitMatrixParser {
         this.readMappingMatrix = new BitMatrix(extractDataRegion.getWidth(), extractDataRegion.getHeight());
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public Version getVersion() {
         return this.version;
     }
@@ -29,7 +28,7 @@ final class BitMatrixParser {
         return Version.getVersionForDimensions(bitMatrix.getHeight(), bitMatrix.getWidth());
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public byte[] readCodewords() throws FormatException {
         byte[] bArr = new byte[this.version.getTotalCodewords()];
         int height = this.mappingBitMatrix.getHeight();
@@ -107,7 +106,8 @@ final class BitMatrixParser {
         throw FormatException.getFormatInstance();
     }
 
-    boolean readModule(int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: package-private */
+    public boolean readModule(int i, int i2, int i3, int i4) {
         if (i < 0) {
             i += i3;
             i2 += 4 - ((i3 + 4) & 7);
@@ -120,10 +120,11 @@ final class BitMatrixParser {
         return this.mappingBitMatrix.get(i2, i);
     }
 
-    int readUtah(int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: package-private */
+    public int readUtah(int i, int i2, int i3, int i4) {
         int i5 = i - 2;
         int i6 = i2 - 2;
-        int i7 = (readModule(i5, i6, i3, i4) ? 1 : 0) << 1;
+        int i7 = (readModule(i5, i6, i3, i4) ? 1 : 0) << true;
         int i8 = i2 - 1;
         if (readModule(i5, i8, i3, i4)) {
             i7 |= 1;
@@ -153,9 +154,10 @@ final class BitMatrixParser {
         return readModule(i, i2, i3, i4) ? i15 | 1 : i15;
     }
 
-    int readCorner1(int i, int i2) {
+    /* access modifiers changed from: package-private */
+    public int readCorner1(int i, int i2) {
         int i3 = i - 1;
-        int i4 = (readModule(i3, 0, i, i2) ? 1 : 0) << 1;
+        int i4 = (readModule(i3, 0, i, i2) ? 1 : 0) << true;
         if (readModule(i3, 1, i, i2)) {
             i4 |= 1;
         }
@@ -184,8 +186,9 @@ final class BitMatrixParser {
         return readModule(3, i8, i, i2) ? i11 | 1 : i11;
     }
 
-    int readCorner2(int i, int i2) {
-        int i3 = (readModule(i + (-3), 0, i, i2) ? 1 : 0) << 1;
+    /* access modifiers changed from: package-private */
+    public int readCorner2(int i, int i2) {
+        int i3 = (readModule(i + -3, 0, i, i2) ? 1 : 0) << true;
         if (readModule(i - 2, 0, i, i2)) {
             i3 |= 1;
         }
@@ -214,9 +217,10 @@ final class BitMatrixParser {
         return readModule(1, i9, i, i2) ? i10 | 1 : i10;
     }
 
-    int readCorner3(int i, int i2) {
+    /* access modifiers changed from: package-private */
+    public int readCorner3(int i, int i2) {
         int i3 = i - 1;
-        int i4 = (readModule(i3, 0, i, i2) ? 1 : 0) << 1;
+        int i4 = (readModule(i3, 0, i, i2) ? 1 : 0) << true;
         int i5 = i2 - 1;
         if (readModule(i3, i5, i, i2)) {
             i4 |= 1;
@@ -247,8 +251,9 @@ final class BitMatrixParser {
         return readModule(1, i5, i, i2) ? i13 | 1 : i13;
     }
 
-    int readCorner4(int i, int i2) {
-        int i3 = (readModule(i + (-3), 0, i, i2) ? 1 : 0) << 1;
+    /* access modifiers changed from: package-private */
+    public int readCorner4(int i, int i2) {
+        int i3 = (readModule(i + -3, 0, i, i2) ? 1 : 0) << true;
         if (readModule(i - 2, 0, i, i2)) {
             i3 |= 1;
         }
@@ -277,32 +282,33 @@ final class BitMatrixParser {
         return readModule(3, i7, i, i2) ? i10 | 1 : i10;
     }
 
-    BitMatrix extractDataRegion(BitMatrix bitMatrix) {
+    /* access modifiers changed from: package-private */
+    public BitMatrix extractDataRegion(BitMatrix bitMatrix) {
         int symbolSizeRows = this.version.getSymbolSizeRows();
         int symbolSizeColumns = this.version.getSymbolSizeColumns();
-        if (bitMatrix.getHeight() != symbolSizeRows) {
-            throw new IllegalArgumentException("Dimension of bitMarix must match the version size");
-        }
-        int dataRegionSizeRows = this.version.getDataRegionSizeRows();
-        int dataRegionSizeColumns = this.version.getDataRegionSizeColumns();
-        int i = symbolSizeRows / dataRegionSizeRows;
-        int i2 = symbolSizeColumns / dataRegionSizeColumns;
-        BitMatrix bitMatrix2 = new BitMatrix(i2 * dataRegionSizeColumns, i * dataRegionSizeRows);
-        for (int i3 = 0; i3 < i; i3++) {
-            int i4 = i3 * dataRegionSizeRows;
-            for (int i5 = 0; i5 < i2; i5++) {
-                int i6 = i5 * dataRegionSizeColumns;
-                for (int i7 = 0; i7 < dataRegionSizeRows; i7++) {
-                    int i8 = ((dataRegionSizeRows + 2) * i3) + 1 + i7;
-                    int i9 = i4 + i7;
-                    for (int i10 = 0; i10 < dataRegionSizeColumns; i10++) {
-                        if (bitMatrix.get(((dataRegionSizeColumns + 2) * i5) + 1 + i10, i8)) {
-                            bitMatrix2.set(i6 + i10, i9);
+        if (bitMatrix.getHeight() == symbolSizeRows) {
+            int dataRegionSizeRows = this.version.getDataRegionSizeRows();
+            int dataRegionSizeColumns = this.version.getDataRegionSizeColumns();
+            int i = symbolSizeRows / dataRegionSizeRows;
+            int i2 = symbolSizeColumns / dataRegionSizeColumns;
+            BitMatrix bitMatrix2 = new BitMatrix(i2 * dataRegionSizeColumns, i * dataRegionSizeRows);
+            for (int i3 = 0; i3 < i; i3++) {
+                int i4 = i3 * dataRegionSizeRows;
+                for (int i5 = 0; i5 < i2; i5++) {
+                    int i6 = i5 * dataRegionSizeColumns;
+                    for (int i7 = 0; i7 < dataRegionSizeRows; i7++) {
+                        int i8 = ((dataRegionSizeRows + 2) * i3) + 1 + i7;
+                        int i9 = i4 + i7;
+                        for (int i10 = 0; i10 < dataRegionSizeColumns; i10++) {
+                            if (bitMatrix.get(((dataRegionSizeColumns + 2) * i5) + 1 + i10, i8)) {
+                                bitMatrix2.set(i6 + i10, i9);
+                            }
                         }
                     }
                 }
             }
+            return bitMatrix2;
         }
-        return bitMatrix2;
+        throw new IllegalArgumentException("Dimension of bitMarix must match the version size");
     }
 }

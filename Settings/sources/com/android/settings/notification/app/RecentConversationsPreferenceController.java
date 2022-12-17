@@ -10,39 +10,39 @@ import android.util.Slog;
 import android.view.View;
 import android.widget.Button;
 import androidx.preference.Preference;
-import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceGroup;
-import com.android.settings.R;
+import androidx.preference.PreferenceScreen;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
 import com.android.settings.core.SubSettingLauncher;
 import com.android.settings.notification.NotificationBackend;
-import com.android.settings.notification.app.RecentConversationPreference;
 import com.android.settingslib.core.AbstractPreferenceController;
 import com.android.settingslib.widget.LayoutPreference;
 import java.text.Collator;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-/* loaded from: classes.dex */
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class RecentConversationsPreferenceController extends AbstractPreferenceController {
     private final NotificationBackend mBackend;
-    protected Comparator<ConversationChannel> mConversationComparator = new Comparator<ConversationChannel>() { // from class: com.android.settings.notification.app.RecentConversationsPreferenceController.1
+    Comparator<ConversationChannel> mConversationComparator = new Comparator<ConversationChannel>() {
         private final Collator sCollator = Collator.getInstance();
 
-        @Override // java.util.Comparator
         public int compare(ConversationChannel conversationChannel, ConversationChannel conversationChannel2) {
             int compare = (conversationChannel.getShortcutInfo().getLabel() == null || conversationChannel2.getShortcutInfo().getLabel() == null) ? 0 : this.sCollator.compare(conversationChannel.getShortcutInfo().getLabel().toString(), conversationChannel2.getShortcutInfo().getLabel().toString());
             return compare == 0 ? conversationChannel.getNotificationChannel().getId().compareTo(conversationChannel2.getNotificationChannel().getId()) : compare;
         }
     };
-    private List<ConversationChannel> mConversations;
+    private PreferenceGroup mPreferenceGroup;
     private final IPeopleManager mPs;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "recent_conversations";
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return true;
     }
@@ -53,20 +53,17 @@ public class RecentConversationsPreferenceController extends AbstractPreferenceC
         this.mPs = iPeopleManager;
     }
 
-    LayoutPreference getClearAll(final PreferenceGroup preferenceGroup) {
-        LayoutPreference layoutPreference = new LayoutPreference(this.mContext, R.layout.conversations_clear_recents);
+    /* access modifiers changed from: package-private */
+    public LayoutPreference getClearAll(PreferenceGroup preferenceGroup) {
+        LayoutPreference layoutPreference = new LayoutPreference(this.mContext, R$layout.conversations_clear_recents);
+        layoutPreference.setKey(getPreferenceKey() + "_clear_all");
         layoutPreference.setOrder(1);
-        final Button button = (Button) layoutPreference.findViewById(R.id.conversation_settings_clear_recents);
-        button.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.notification.app.RecentConversationsPreferenceController$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                RecentConversationsPreferenceController.this.lambda$getClearAll$0(preferenceGroup, button, view);
-            }
-        });
+        Button button = (Button) layoutPreference.findViewById(R$id.conversation_settings_clear_recents);
+        button.setOnClickListener(new C1172x815781de(this, preferenceGroup, button));
         return layoutPreference;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$getClearAll$0(PreferenceGroup preferenceGroup, Button button, View view) {
         try {
             this.mPs.removeAllRecentConversations();
@@ -76,115 +73,116 @@ public class RecentConversationsPreferenceController extends AbstractPreferenceC
                     preferenceGroup.removePreference(preference);
                 }
             }
-            button.announceForAccessibility(this.mContext.getString(R.string.recent_convos_removed));
+            button.announceForAccessibility(this.mContext.getString(R$string.recent_convos_removed));
         } catch (RemoteException e) {
             Slog.w("RecentConversationsPC", "Could not clear recents", e);
         }
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    public void updateState(Preference preference) {
-        PreferenceCategory preferenceCategory = (PreferenceCategory) preference;
+    public void displayPreference(PreferenceScreen preferenceScreen) {
+        super.displayPreference(preferenceScreen);
+        this.mPreferenceGroup = (PreferenceGroup) preferenceScreen.findPreference(getPreferenceKey());
+    }
+
+    /* access modifiers changed from: package-private */
+    public boolean updateList() {
+        List emptyList = Collections.emptyList();
         try {
-            this.mConversations = this.mPs.getRecentConversations().getList();
+            emptyList = this.mPs.getRecentConversations().getList();
         } catch (RemoteException e) {
-            Slog.w("RecentConversationsPC", "Could get recents", e);
+            Slog.w("RecentConversationsPC", "Could not get recent conversations", e);
         }
-        Collections.sort(this.mConversations, this.mConversationComparator);
-        populateList(this.mConversations, preferenceCategory);
+        return populateList(emptyList);
     }
 
-    protected void populateList(List<ConversationChannel> list, PreferenceGroup preferenceGroup) {
+    /* access modifiers changed from: package-private */
+    public boolean populateList(List<ConversationChannel> list) {
         LayoutPreference clearAll;
-        preferenceGroup.removeAll();
-        boolean populateConversations = list != null ? populateConversations(list, preferenceGroup) : false;
-        if (preferenceGroup.getPreferenceCount() == 0) {
-            preferenceGroup.setVisible(false);
-            return;
-        }
-        preferenceGroup.setVisible(true);
-        if (!populateConversations || (clearAll = getClearAll(preferenceGroup)) == null) {
-            return;
-        }
-        preferenceGroup.addPreference(clearAll);
-    }
-
-    protected boolean populateConversations(List<ConversationChannel> list, PreferenceGroup preferenceGroup) {
-        int i = 100;
+        this.mPreferenceGroup.removeAll();
         boolean z = false;
-        for (ConversationChannel conversationChannel : list) {
-            if (conversationChannel.getNotificationChannel().getImportance() != 0 && (conversationChannel.getNotificationChannelGroup() == null || !conversationChannel.getNotificationChannelGroup().isBlocked())) {
-                int i2 = i + 1;
-                RecentConversationPreference createConversationPref = createConversationPref(preferenceGroup, conversationChannel, i);
-                preferenceGroup.addPreference(createConversationPref);
-                if (createConversationPref.hasClearListener()) {
-                    z = true;
-                }
-                i = i2;
-            }
+        boolean populateConversations = list != null ? populateConversations(list) : false;
+        if (this.mPreferenceGroup.getPreferenceCount() != 0) {
+            z = true;
+        }
+        this.mPreferenceGroup.setVisible(z);
+        if (z && populateConversations && (clearAll = getClearAll(this.mPreferenceGroup)) != null) {
+            this.mPreferenceGroup.addPreference(clearAll);
         }
         return z;
     }
 
-    protected RecentConversationPreference createConversationPref(final PreferenceGroup preferenceGroup, final ConversationChannel conversationChannel, int i) {
-        final String str = conversationChannel.getShortcutInfo().getPackage();
-        final int uid = conversationChannel.getUid();
-        final String id = conversationChannel.getShortcutInfo().getId();
-        final RecentConversationPreference recentConversationPreference = new RecentConversationPreference(this.mContext);
-        if (!conversationChannel.hasActiveNotifications()) {
-            recentConversationPreference.setOnClearClickListener(new RecentConversationPreference.OnClearClickListener() { // from class: com.android.settings.notification.app.RecentConversationsPreferenceController$$ExternalSyntheticLambda2
-                @Override // com.android.settings.notification.app.RecentConversationPreference.OnClearClickListener
-                public final void onClear() {
-                    RecentConversationsPreferenceController.this.lambda$createConversationPref$1(str, uid, id, recentConversationPreference, preferenceGroup);
-                }
-            });
+    /* access modifiers changed from: protected */
+    public boolean populateConversations(List<ConversationChannel> list) {
+        AtomicInteger atomicInteger = new AtomicInteger(100);
+        AtomicBoolean atomicBoolean = new AtomicBoolean(false);
+        list.stream().filter(new C1169x815781db()).sorted(this.mConversationComparator).map(new C1170x815781dc(this)).forEachOrdered(new C1171x815781dd(this, atomicInteger, atomicBoolean));
+        return atomicBoolean.get();
+    }
+
+    /* access modifiers changed from: private */
+    public static /* synthetic */ boolean lambda$populateConversations$1(ConversationChannel conversationChannel) {
+        return conversationChannel.getNotificationChannel().getImportance() != 0 && (conversationChannel.getNotificationChannelGroup() == null || !conversationChannel.getNotificationChannelGroup().isBlocked());
+    }
+
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$populateConversations$2(AtomicInteger atomicInteger, AtomicBoolean atomicBoolean, RecentConversationPreference recentConversationPreference) {
+        recentConversationPreference.setOrder(atomicInteger.getAndIncrement());
+        this.mPreferenceGroup.addPreference(recentConversationPreference);
+        if (recentConversationPreference.hasClearListener()) {
+            atomicBoolean.set(true);
         }
-        recentConversationPreference.setOrder(i);
+    }
+
+    /* access modifiers changed from: protected */
+    public RecentConversationPreference createConversationPref(ConversationChannel conversationChannel) {
+        String str = conversationChannel.getShortcutInfo().getPackage();
+        int uid = conversationChannel.getUid();
+        String id = conversationChannel.getShortcutInfo().getId();
+        RecentConversationPreference recentConversationPreference = new RecentConversationPreference(this.mContext);
+        if (!conversationChannel.hasActiveNotifications()) {
+            recentConversationPreference.setOnClearClickListener(new C1173x815781df(this, str, uid, id, recentConversationPreference));
+        }
         recentConversationPreference.setTitle(getTitle(conversationChannel));
         recentConversationPreference.setSummary(getSummary(conversationChannel));
         recentConversationPreference.setIcon(this.mBackend.getConversationDrawable(this.mContext, conversationChannel.getShortcutInfo(), str, uid, false));
         recentConversationPreference.setKey(conversationChannel.getNotificationChannel().getId() + ":" + id);
-        recentConversationPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() { // from class: com.android.settings.notification.app.RecentConversationsPreferenceController$$ExternalSyntheticLambda1
-            @Override // androidx.preference.Preference.OnPreferenceClickListener
-            public final boolean onPreferenceClick(Preference preference) {
-                boolean lambda$createConversationPref$2;
-                lambda$createConversationPref$2 = RecentConversationsPreferenceController.this.lambda$createConversationPref$2(str, uid, conversationChannel, id, recentConversationPreference, preference);
-                return lambda$createConversationPref$2;
-            }
-        });
+        recentConversationPreference.setOnPreferenceClickListener(new C1174x815781e0(this, str, uid, conversationChannel, id, recentConversationPreference));
         return recentConversationPreference;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$createConversationPref$1(String str, int i, String str2, RecentConversationPreference recentConversationPreference, PreferenceGroup preferenceGroup) {
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$createConversationPref$3(String str, int i, String str2, RecentConversationPreference recentConversationPreference) {
         try {
             this.mPs.removeRecentConversation(str, UserHandle.getUserId(i), str2);
-            recentConversationPreference.getClearView().announceForAccessibility(this.mContext.getString(R.string.recent_convo_removed));
-            preferenceGroup.removePreference(recentConversationPreference);
+            recentConversationPreference.getClearView().announceForAccessibility(this.mContext.getString(R$string.recent_convo_removed));
+            this.mPreferenceGroup.removePreference(recentConversationPreference);
         } catch (RemoteException e) {
             Slog.w("RecentConversationsPC", "Could not clear recent", e);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ boolean lambda$createConversationPref$2(String str, int i, ConversationChannel conversationChannel, String str2, RecentConversationPreference recentConversationPreference, Preference preference) {
+    /* access modifiers changed from: private */
+    public /* synthetic */ boolean lambda$createConversationPref$4(String str, int i, ConversationChannel conversationChannel, String str2, RecentConversationPreference recentConversationPreference, Preference preference) {
         this.mBackend.createConversationNotificationChannel(str, i, conversationChannel.getNotificationChannel(), str2);
         getSubSettingLauncher(conversationChannel, recentConversationPreference.getTitle()).launch();
         return true;
     }
 
-    CharSequence getSummary(ConversationChannel conversationChannel) {
+    /* access modifiers changed from: package-private */
+    public CharSequence getSummary(ConversationChannel conversationChannel) {
         if (conversationChannel.getNotificationChannelGroup() == null) {
             return conversationChannel.getNotificationChannel().getName();
         }
-        return this.mContext.getString(R.string.notification_conversation_summary, conversationChannel.getNotificationChannel().getName(), conversationChannel.getNotificationChannelGroup().getName());
+        return this.mContext.getString(R$string.notification_conversation_summary, new Object[]{conversationChannel.getNotificationChannel().getName(), conversationChannel.getNotificationChannelGroup().getName()});
     }
 
-    CharSequence getTitle(ConversationChannel conversationChannel) {
+    /* access modifiers changed from: package-private */
+    public CharSequence getTitle(ConversationChannel conversationChannel) {
         return conversationChannel.getShortcutInfo().getLabel();
     }
 
-    SubSettingLauncher getSubSettingLauncher(ConversationChannel conversationChannel, CharSequence charSequence) {
+    /* access modifiers changed from: package-private */
+    public SubSettingLauncher getSubSettingLauncher(ConversationChannel conversationChannel, CharSequence charSequence) {
         Bundle bundle = new Bundle();
         bundle.putInt("uid", conversationChannel.getUid());
         bundle.putString("package", conversationChannel.getShortcutInfo().getPackage());

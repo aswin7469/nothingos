@@ -2,45 +2,53 @@ package androidx.constraintlayout.motion.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseIntArray;
-import androidx.constraintlayout.motion.widget.SplineSet;
-import androidx.constraintlayout.widget.ConstraintAttribute;
 import androidx.constraintlayout.widget.R$styleable;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-/* loaded from: classes.dex */
+
 public class KeyAttributes extends Key {
-    private String mTransitionEasing;
-    private int mCurveFit = -1;
+    /* access modifiers changed from: private */
+    public float mAlpha = Float.NaN;
+    /* access modifiers changed from: private */
+    public int mCurveFit = -1;
+    /* access modifiers changed from: private */
+    public float mElevation = Float.NaN;
+    /* access modifiers changed from: private */
+    public float mProgress = Float.NaN;
+    /* access modifiers changed from: private */
+    public float mRotation = Float.NaN;
+    /* access modifiers changed from: private */
+    public float mRotationX = Float.NaN;
+    /* access modifiers changed from: private */
+    public float mRotationY = Float.NaN;
+    /* access modifiers changed from: private */
+    public float mScaleX = Float.NaN;
+    /* access modifiers changed from: private */
+    public float mScaleY = Float.NaN;
+    /* access modifiers changed from: private */
+    public String mTransitionEasing;
+    /* access modifiers changed from: private */
+    public float mTransitionPathRotate = Float.NaN;
+    /* access modifiers changed from: private */
+    public float mTranslationX = Float.NaN;
+    /* access modifiers changed from: private */
+    public float mTranslationY = Float.NaN;
+    /* access modifiers changed from: private */
+    public float mTranslationZ = Float.NaN;
     private boolean mVisibility = false;
-    private float mAlpha = Float.NaN;
-    private float mElevation = Float.NaN;
-    private float mRotation = Float.NaN;
-    private float mRotationX = Float.NaN;
-    private float mRotationY = Float.NaN;
-    private float mTransitionPathRotate = Float.NaN;
-    private float mScaleX = Float.NaN;
-    private float mScaleY = Float.NaN;
-    private float mTranslationX = Float.NaN;
-    private float mTranslationY = Float.NaN;
-    private float mTranslationZ = Float.NaN;
-    private float mProgress = Float.NaN;
 
     public KeyAttributes() {
         this.mType = 1;
         this.mCustomConstraints = new HashMap<>();
     }
 
-    @Override // androidx.constraintlayout.motion.widget.Key
     public void load(Context context, AttributeSet attributeSet) {
         Loader.read(this, context.obtainStyledAttributes(attributeSet, R$styleable.KeyAttribute));
     }
 
-    @Override // androidx.constraintlayout.motion.widget.Key
     public void getAttributeNames(HashSet<String> hashSet) {
         if (!Float.isNaN(this.mAlpha)) {
             hashSet.add("alpha");
@@ -79,261 +87,331 @@ public class KeyAttributes extends Key {
             hashSet.add("progress");
         }
         if (this.mCustomConstraints.size() > 0) {
-            Iterator<String> it = this.mCustomConstraints.keySet().iterator();
-            while (it.hasNext()) {
-                hashSet.add("CUSTOM," + it.next());
+            for (String str : this.mCustomConstraints.keySet()) {
+                hashSet.add("CUSTOM," + str);
             }
         }
     }
 
-    @Override // androidx.constraintlayout.motion.widget.Key
     public void setInterpolation(HashMap<String, Integer> hashMap) {
-        if (this.mCurveFit == -1) {
-            return;
-        }
-        if (!Float.isNaN(this.mAlpha)) {
-            hashMap.put("alpha", Integer.valueOf(this.mCurveFit));
-        }
-        if (!Float.isNaN(this.mElevation)) {
-            hashMap.put("elevation", Integer.valueOf(this.mCurveFit));
-        }
-        if (!Float.isNaN(this.mRotation)) {
-            hashMap.put("rotation", Integer.valueOf(this.mCurveFit));
-        }
-        if (!Float.isNaN(this.mRotationX)) {
-            hashMap.put("rotationX", Integer.valueOf(this.mCurveFit));
-        }
-        if (!Float.isNaN(this.mRotationY)) {
-            hashMap.put("rotationY", Integer.valueOf(this.mCurveFit));
-        }
-        if (!Float.isNaN(this.mTranslationX)) {
-            hashMap.put("translationX", Integer.valueOf(this.mCurveFit));
-        }
-        if (!Float.isNaN(this.mTranslationY)) {
-            hashMap.put("translationY", Integer.valueOf(this.mCurveFit));
-        }
-        if (!Float.isNaN(this.mTranslationZ)) {
-            hashMap.put("translationZ", Integer.valueOf(this.mCurveFit));
-        }
-        if (!Float.isNaN(this.mTransitionPathRotate)) {
-            hashMap.put("transitionPathRotate", Integer.valueOf(this.mCurveFit));
-        }
-        if (!Float.isNaN(this.mScaleX)) {
-            hashMap.put("scaleX", Integer.valueOf(this.mCurveFit));
-        }
-        if (!Float.isNaN(this.mScaleY)) {
-            hashMap.put("scaleY", Integer.valueOf(this.mCurveFit));
-        }
-        if (!Float.isNaN(this.mProgress)) {
-            hashMap.put("progress", Integer.valueOf(this.mCurveFit));
-        }
-        if (this.mCustomConstraints.size() <= 0) {
-            return;
-        }
-        Iterator<String> it = this.mCustomConstraints.keySet().iterator();
-        while (it.hasNext()) {
-            hashMap.put("CUSTOM," + it.next(), Integer.valueOf(this.mCurveFit));
-        }
-    }
-
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Code restructure failed: missing block: B:112:0x007d, code lost:
-        if (r1.equals("scaleY") == false) goto L9;
-     */
-    @Override // androidx.constraintlayout.motion.widget.Key
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public void addValues(HashMap<String, SplineSet> hashMap) {
-        Iterator<String> it = hashMap.keySet().iterator();
-        while (it.hasNext()) {
-            String next = it.next();
-            SplineSet splineSet = hashMap.get(next);
-            char c = 7;
-            if (next.startsWith("CUSTOM")) {
-                ConstraintAttribute constraintAttribute = this.mCustomConstraints.get(next.substring(7));
-                if (constraintAttribute != null) {
-                    ((SplineSet.CustomSet) splineSet).setPoint(this.mFramePosition, constraintAttribute);
-                }
-            } else {
-                switch (next.hashCode()) {
-                    case -1249320806:
-                        if (next.equals("rotationX")) {
-                            c = 0;
-                            break;
-                        }
-                        c = 65535;
-                        break;
-                    case -1249320805:
-                        if (next.equals("rotationY")) {
-                            c = 1;
-                            break;
-                        }
-                        c = 65535;
-                        break;
-                    case -1225497657:
-                        if (next.equals("translationX")) {
-                            c = 2;
-                            break;
-                        }
-                        c = 65535;
-                        break;
-                    case -1225497656:
-                        if (next.equals("translationY")) {
-                            c = 3;
-                            break;
-                        }
-                        c = 65535;
-                        break;
-                    case -1225497655:
-                        if (next.equals("translationZ")) {
-                            c = 4;
-                            break;
-                        }
-                        c = 65535;
-                        break;
-                    case -1001078227:
-                        if (next.equals("progress")) {
-                            c = 5;
-                            break;
-                        }
-                        c = 65535;
-                        break;
-                    case -908189618:
-                        if (next.equals("scaleX")) {
-                            c = 6;
-                            break;
-                        }
-                        c = 65535;
-                        break;
-                    case -908189617:
-                        break;
-                    case -40300674:
-                        if (next.equals("rotation")) {
-                            c = '\b';
-                            break;
-                        }
-                        c = 65535;
-                        break;
-                    case -4379043:
-                        if (next.equals("elevation")) {
-                            c = '\t';
-                            break;
-                        }
-                        c = 65535;
-                        break;
-                    case 37232917:
-                        if (next.equals("transitionPathRotate")) {
-                            c = '\n';
-                            break;
-                        }
-                        c = 65535;
-                        break;
-                    case 92909918:
-                        if (next.equals("alpha")) {
-                            c = 11;
-                            break;
-                        }
-                        c = 65535;
-                        break;
-                    default:
-                        c = 65535;
-                        break;
-                }
-                switch (c) {
-                    case 0:
-                        if (!Float.isNaN(this.mRotationX)) {
-                            splineSet.setPoint(this.mFramePosition, this.mRotationX);
-                            break;
-                        } else {
-                            continue;
-                        }
-                    case 1:
-                        if (!Float.isNaN(this.mRotationY)) {
-                            splineSet.setPoint(this.mFramePosition, this.mRotationY);
-                            break;
-                        } else {
-                            continue;
-                        }
-                    case 2:
-                        if (!Float.isNaN(this.mTranslationX)) {
-                            splineSet.setPoint(this.mFramePosition, this.mTranslationX);
-                            break;
-                        } else {
-                            continue;
-                        }
-                    case 3:
-                        if (!Float.isNaN(this.mTranslationY)) {
-                            splineSet.setPoint(this.mFramePosition, this.mTranslationY);
-                            break;
-                        } else {
-                            continue;
-                        }
-                    case 4:
-                        if (!Float.isNaN(this.mTranslationZ)) {
-                            splineSet.setPoint(this.mFramePosition, this.mTranslationZ);
-                            break;
-                        } else {
-                            continue;
-                        }
-                    case 5:
-                        if (!Float.isNaN(this.mProgress)) {
-                            splineSet.setPoint(this.mFramePosition, this.mProgress);
-                            break;
-                        } else {
-                            continue;
-                        }
-                    case 6:
-                        if (!Float.isNaN(this.mScaleX)) {
-                            splineSet.setPoint(this.mFramePosition, this.mScaleX);
-                            break;
-                        } else {
-                            continue;
-                        }
-                    case 7:
-                        if (!Float.isNaN(this.mScaleY)) {
-                            splineSet.setPoint(this.mFramePosition, this.mScaleY);
-                            break;
-                        } else {
-                            continue;
-                        }
-                    case '\b':
-                        if (!Float.isNaN(this.mRotation)) {
-                            splineSet.setPoint(this.mFramePosition, this.mRotation);
-                            break;
-                        } else {
-                            continue;
-                        }
-                    case '\t':
-                        if (!Float.isNaN(this.mElevation)) {
-                            splineSet.setPoint(this.mFramePosition, this.mElevation);
-                            break;
-                        } else {
-                            continue;
-                        }
-                    case '\n':
-                        if (!Float.isNaN(this.mTransitionPathRotate)) {
-                            splineSet.setPoint(this.mFramePosition, this.mTransitionPathRotate);
-                            break;
-                        } else {
-                            continue;
-                        }
-                    case 11:
-                        if (!Float.isNaN(this.mAlpha)) {
-                            splineSet.setPoint(this.mFramePosition, this.mAlpha);
-                            break;
-                        } else {
-                            continue;
-                        }
-                    default:
-                        Log.v("KeyAttributes", "UNKNOWN addValues \"" + next + "\"");
-                        continue;
+        if (this.mCurveFit != -1) {
+            if (!Float.isNaN(this.mAlpha)) {
+                hashMap.put("alpha", Integer.valueOf(this.mCurveFit));
+            }
+            if (!Float.isNaN(this.mElevation)) {
+                hashMap.put("elevation", Integer.valueOf(this.mCurveFit));
+            }
+            if (!Float.isNaN(this.mRotation)) {
+                hashMap.put("rotation", Integer.valueOf(this.mCurveFit));
+            }
+            if (!Float.isNaN(this.mRotationX)) {
+                hashMap.put("rotationX", Integer.valueOf(this.mCurveFit));
+            }
+            if (!Float.isNaN(this.mRotationY)) {
+                hashMap.put("rotationY", Integer.valueOf(this.mCurveFit));
+            }
+            if (!Float.isNaN(this.mTranslationX)) {
+                hashMap.put("translationX", Integer.valueOf(this.mCurveFit));
+            }
+            if (!Float.isNaN(this.mTranslationY)) {
+                hashMap.put("translationY", Integer.valueOf(this.mCurveFit));
+            }
+            if (!Float.isNaN(this.mTranslationZ)) {
+                hashMap.put("translationZ", Integer.valueOf(this.mCurveFit));
+            }
+            if (!Float.isNaN(this.mTransitionPathRotate)) {
+                hashMap.put("transitionPathRotate", Integer.valueOf(this.mCurveFit));
+            }
+            if (!Float.isNaN(this.mScaleX)) {
+                hashMap.put("scaleX", Integer.valueOf(this.mCurveFit));
+            }
+            if (!Float.isNaN(this.mScaleY)) {
+                hashMap.put("scaleY", Integer.valueOf(this.mCurveFit));
+            }
+            if (!Float.isNaN(this.mProgress)) {
+                hashMap.put("progress", Integer.valueOf(this.mCurveFit));
+            }
+            if (this.mCustomConstraints.size() > 0) {
+                for (String str : this.mCustomConstraints.keySet()) {
+                    hashMap.put("CUSTOM," + str, Integer.valueOf(this.mCurveFit));
                 }
             }
         }
     }
 
-    /* loaded from: classes.dex */
+    /* JADX WARNING: Can't fix incorrect switch cases order */
+    /* JADX WARNING: Code restructure failed: missing block: B:24:0x0080, code lost:
+        if (r1.equals("scaleY") == false) goto L_0x0041;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void addValues(java.util.HashMap<java.lang.String, androidx.constraintlayout.motion.widget.SplineSet> r7) {
+        /*
+            r6 = this;
+            java.util.Set r0 = r7.keySet()
+            java.util.Iterator r0 = r0.iterator()
+        L_0x0008:
+            boolean r1 = r0.hasNext()
+            if (r1 == 0) goto L_0x01c4
+            java.lang.Object r1 = r0.next()
+            java.lang.String r1 = (java.lang.String) r1
+            java.lang.Object r2 = r7.get(r1)
+            androidx.constraintlayout.motion.widget.SplineSet r2 = (androidx.constraintlayout.motion.widget.SplineSet) r2
+            java.lang.String r3 = "CUSTOM"
+            boolean r3 = r1.startsWith(r3)
+            r4 = 7
+            if (r3 == 0) goto L_0x0039
+            java.lang.String r1 = r1.substring(r4)
+            java.util.HashMap<java.lang.String, androidx.constraintlayout.widget.ConstraintAttribute> r3 = r6.mCustomConstraints
+            java.lang.Object r1 = r3.get(r1)
+            androidx.constraintlayout.widget.ConstraintAttribute r1 = (androidx.constraintlayout.widget.ConstraintAttribute) r1
+            if (r1 == 0) goto L_0x0008
+            androidx.constraintlayout.motion.widget.SplineSet$CustomSet r2 = (androidx.constraintlayout.motion.widget.SplineSet.CustomSet) r2
+            int r3 = r6.mFramePosition
+            r2.setPoint((int) r3, (androidx.constraintlayout.widget.ConstraintAttribute) r1)
+            goto L_0x0008
+        L_0x0039:
+            r3 = -1
+            int r5 = r1.hashCode()
+            switch(r5) {
+                case -1249320806: goto L_0x00cc;
+                case -1249320805: goto L_0x00bf;
+                case -1225497657: goto L_0x00b3;
+                case -1225497656: goto L_0x00a7;
+                case -1225497655: goto L_0x009b;
+                case -1001078227: goto L_0x008f;
+                case -908189618: goto L_0x0083;
+                case -908189617: goto L_0x0079;
+                case -40300674: goto L_0x006c;
+                case -4379043: goto L_0x005f;
+                case 37232917: goto L_0x0051;
+                case 92909918: goto L_0x0044;
+                default: goto L_0x0041;
+            }
+        L_0x0041:
+            r4 = r3
+            goto L_0x00d8
+        L_0x0044:
+            java.lang.String r4 = "alpha"
+            boolean r4 = r1.equals(r4)
+            if (r4 != 0) goto L_0x004d
+            goto L_0x0041
+        L_0x004d:
+            r4 = 11
+            goto L_0x00d8
+        L_0x0051:
+            java.lang.String r4 = "transitionPathRotate"
+            boolean r4 = r1.equals(r4)
+            if (r4 != 0) goto L_0x005b
+            goto L_0x0041
+        L_0x005b:
+            r4 = 10
+            goto L_0x00d8
+        L_0x005f:
+            java.lang.String r4 = "elevation"
+            boolean r4 = r1.equals(r4)
+            if (r4 != 0) goto L_0x0068
+            goto L_0x0041
+        L_0x0068:
+            r4 = 9
+            goto L_0x00d8
+        L_0x006c:
+            java.lang.String r4 = "rotation"
+            boolean r4 = r1.equals(r4)
+            if (r4 != 0) goto L_0x0076
+            goto L_0x0041
+        L_0x0076:
+            r4 = 8
+            goto L_0x00d8
+        L_0x0079:
+            java.lang.String r5 = "scaleY"
+            boolean r5 = r1.equals(r5)
+            if (r5 != 0) goto L_0x00d8
+            goto L_0x0041
+        L_0x0083:
+            java.lang.String r4 = "scaleX"
+            boolean r4 = r1.equals(r4)
+            if (r4 != 0) goto L_0x008d
+            goto L_0x0041
+        L_0x008d:
+            r4 = 6
+            goto L_0x00d8
+        L_0x008f:
+            java.lang.String r4 = "progress"
+            boolean r4 = r1.equals(r4)
+            if (r4 != 0) goto L_0x0099
+            goto L_0x0041
+        L_0x0099:
+            r4 = 5
+            goto L_0x00d8
+        L_0x009b:
+            java.lang.String r4 = "translationZ"
+            boolean r4 = r1.equals(r4)
+            if (r4 != 0) goto L_0x00a5
+            goto L_0x0041
+        L_0x00a5:
+            r4 = 4
+            goto L_0x00d8
+        L_0x00a7:
+            java.lang.String r4 = "translationY"
+            boolean r4 = r1.equals(r4)
+            if (r4 != 0) goto L_0x00b1
+            goto L_0x0041
+        L_0x00b1:
+            r4 = 3
+            goto L_0x00d8
+        L_0x00b3:
+            java.lang.String r4 = "translationX"
+            boolean r4 = r1.equals(r4)
+            if (r4 != 0) goto L_0x00bd
+            goto L_0x0041
+        L_0x00bd:
+            r4 = 2
+            goto L_0x00d8
+        L_0x00bf:
+            java.lang.String r4 = "rotationY"
+            boolean r4 = r1.equals(r4)
+            if (r4 != 0) goto L_0x00ca
+            goto L_0x0041
+        L_0x00ca:
+            r4 = 1
+            goto L_0x00d8
+        L_0x00cc:
+            java.lang.String r4 = "rotationX"
+            boolean r4 = r1.equals(r4)
+            if (r4 != 0) goto L_0x00d7
+            goto L_0x0041
+        L_0x00d7:
+            r4 = 0
+        L_0x00d8:
+            switch(r4) {
+                case 0: goto L_0x01b3;
+                case 1: goto L_0x01a2;
+                case 2: goto L_0x0191;
+                case 3: goto L_0x0180;
+                case 4: goto L_0x016f;
+                case 5: goto L_0x015e;
+                case 6: goto L_0x014d;
+                case 7: goto L_0x013c;
+                case 8: goto L_0x012b;
+                case 9: goto L_0x011a;
+                case 10: goto L_0x0109;
+                case 11: goto L_0x00f8;
+                default: goto L_0x00db;
+            }
+        L_0x00db:
+            java.lang.StringBuilder r2 = new java.lang.StringBuilder
+            r2.<init>()
+            java.lang.String r3 = "UNKNOWN addValues \""
+            r2.append(r3)
+            r2.append(r1)
+            java.lang.String r1 = "\""
+            r2.append(r1)
+            java.lang.String r1 = r2.toString()
+            java.lang.String r2 = "KeyAttributes"
+            android.util.Log.v(r2, r1)
+            goto L_0x0008
+        L_0x00f8:
+            float r1 = r6.mAlpha
+            boolean r1 = java.lang.Float.isNaN(r1)
+            if (r1 != 0) goto L_0x0008
+            int r1 = r6.mFramePosition
+            float r3 = r6.mAlpha
+            r2.setPoint(r1, r3)
+            goto L_0x0008
+        L_0x0109:
+            float r1 = r6.mTransitionPathRotate
+            boolean r1 = java.lang.Float.isNaN(r1)
+            if (r1 != 0) goto L_0x0008
+            int r1 = r6.mFramePosition
+            float r3 = r6.mTransitionPathRotate
+            r2.setPoint(r1, r3)
+            goto L_0x0008
+        L_0x011a:
+            float r1 = r6.mElevation
+            boolean r1 = java.lang.Float.isNaN(r1)
+            if (r1 != 0) goto L_0x0008
+            int r1 = r6.mFramePosition
+            float r3 = r6.mElevation
+            r2.setPoint(r1, r3)
+            goto L_0x0008
+        L_0x012b:
+            float r1 = r6.mRotation
+            boolean r1 = java.lang.Float.isNaN(r1)
+            if (r1 != 0) goto L_0x0008
+            int r1 = r6.mFramePosition
+            float r3 = r6.mRotation
+            r2.setPoint(r1, r3)
+            goto L_0x0008
+        L_0x013c:
+            float r1 = r6.mScaleY
+            boolean r1 = java.lang.Float.isNaN(r1)
+            if (r1 != 0) goto L_0x0008
+            int r1 = r6.mFramePosition
+            float r3 = r6.mScaleY
+            r2.setPoint(r1, r3)
+            goto L_0x0008
+        L_0x014d:
+            float r1 = r6.mScaleX
+            boolean r1 = java.lang.Float.isNaN(r1)
+            if (r1 != 0) goto L_0x0008
+            int r1 = r6.mFramePosition
+            float r3 = r6.mScaleX
+            r2.setPoint(r1, r3)
+            goto L_0x0008
+        L_0x015e:
+            float r1 = r6.mProgress
+            boolean r1 = java.lang.Float.isNaN(r1)
+            if (r1 != 0) goto L_0x0008
+            int r1 = r6.mFramePosition
+            float r3 = r6.mProgress
+            r2.setPoint(r1, r3)
+            goto L_0x0008
+        L_0x016f:
+            float r1 = r6.mTranslationZ
+            boolean r1 = java.lang.Float.isNaN(r1)
+            if (r1 != 0) goto L_0x0008
+            int r1 = r6.mFramePosition
+            float r3 = r6.mTranslationZ
+            r2.setPoint(r1, r3)
+            goto L_0x0008
+        L_0x0180:
+            float r1 = r6.mTranslationY
+            boolean r1 = java.lang.Float.isNaN(r1)
+            if (r1 != 0) goto L_0x0008
+            int r1 = r6.mFramePosition
+            float r3 = r6.mTranslationY
+            r2.setPoint(r1, r3)
+            goto L_0x0008
+        L_0x0191:
+            float r1 = r6.mTranslationX
+            boolean r1 = java.lang.Float.isNaN(r1)
+            if (r1 != 0) goto L_0x0008
+            int r1 = r6.mFramePosition
+            float r3 = r6.mTranslationX
+            r2.setPoint(r1, r3)
+            goto L_0x0008
+        L_0x01a2:
+            float r1 = r6.mRotationY
+            boolean r1 = java.lang.Float.isNaN(r1)
+            if (r1 != 0) goto L_0x0008
+            int r1 = r6.mFramePosition
+            float r3 = r6.mRotationY
+            r2.setPoint(r1, r3)
+            goto L_0x0008
+        L_0x01b3:
+            float r1 = r6.mRotationX
+            boolean r1 = java.lang.Float.isNaN(r1)
+            if (r1 != 0) goto L_0x0008
+            int r1 = r6.mFramePosition
+            float r3 = r6.mRotationX
+            r2.setPoint(r1, r3)
+            goto L_0x0008
+        L_0x01c4:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.constraintlayout.motion.widget.KeyAttributes.addValues(java.util.HashMap):void");
+    }
+
     private static class Loader {
         private static SparseIntArray mAttrMap;
 
@@ -364,75 +442,71 @@ public class KeyAttributes extends Key {
                 int index = typedArray.getIndex(i);
                 switch (mAttrMap.get(index)) {
                     case 1:
-                        keyAttributes.mAlpha = typedArray.getFloat(index, keyAttributes.mAlpha);
+                        float unused = keyAttributes.mAlpha = typedArray.getFloat(index, keyAttributes.mAlpha);
                         break;
                     case 2:
-                        keyAttributes.mElevation = typedArray.getDimension(index, keyAttributes.mElevation);
-                        break;
-                    case 3:
-                    case 11:
-                    default:
-                        Log.e("KeyAttribute", "unused attribute 0x" + Integer.toHexString(index) + "   " + mAttrMap.get(index));
+                        float unused2 = keyAttributes.mElevation = typedArray.getDimension(index, keyAttributes.mElevation);
                         break;
                     case 4:
-                        keyAttributes.mRotation = typedArray.getFloat(index, keyAttributes.mRotation);
+                        float unused3 = keyAttributes.mRotation = typedArray.getFloat(index, keyAttributes.mRotation);
                         break;
                     case 5:
-                        keyAttributes.mRotationX = typedArray.getFloat(index, keyAttributes.mRotationX);
+                        float unused4 = keyAttributes.mRotationX = typedArray.getFloat(index, keyAttributes.mRotationX);
                         break;
                     case 6:
-                        keyAttributes.mRotationY = typedArray.getFloat(index, keyAttributes.mRotationY);
+                        float unused5 = keyAttributes.mRotationY = typedArray.getFloat(index, keyAttributes.mRotationY);
                         break;
                     case 7:
-                        keyAttributes.mScaleX = typedArray.getFloat(index, keyAttributes.mScaleX);
+                        float unused6 = keyAttributes.mScaleX = typedArray.getFloat(index, keyAttributes.mScaleX);
                         break;
                     case 8:
-                        keyAttributes.mTransitionPathRotate = typedArray.getFloat(index, keyAttributes.mTransitionPathRotate);
+                        float unused7 = keyAttributes.mTransitionPathRotate = typedArray.getFloat(index, keyAttributes.mTransitionPathRotate);
                         break;
                     case 9:
-                        keyAttributes.mTransitionEasing = typedArray.getString(index);
+                        String unused8 = keyAttributes.mTransitionEasing = typedArray.getString(index);
                         break;
                     case 10:
-                        if (MotionLayout.IS_IN_EDIT_MODE) {
-                            int resourceId = typedArray.getResourceId(index, keyAttributes.mTargetId);
-                            keyAttributes.mTargetId = resourceId;
-                            if (resourceId == -1) {
-                                keyAttributes.mTargetString = typedArray.getString(index);
+                        if (!MotionLayout.IS_IN_EDIT_MODE) {
+                            if (typedArray.peekValue(index).type != 3) {
+                                keyAttributes.mTargetId = typedArray.getResourceId(index, keyAttributes.mTargetId);
                                 break;
                             } else {
+                                keyAttributes.mTargetString = typedArray.getString(index);
                                 break;
                             }
-                        } else if (typedArray.peekValue(index).type == 3) {
-                            keyAttributes.mTargetString = typedArray.getString(index);
-                            break;
                         } else {
-                            keyAttributes.mTargetId = typedArray.getResourceId(index, keyAttributes.mTargetId);
-                            break;
+                            int resourceId = typedArray.getResourceId(index, keyAttributes.mTargetId);
+                            keyAttributes.mTargetId = resourceId;
+                            if (resourceId != -1) {
+                                break;
+                            } else {
+                                keyAttributes.mTargetString = typedArray.getString(index);
+                                break;
+                            }
                         }
                     case 12:
                         keyAttributes.mFramePosition = typedArray.getInt(index, keyAttributes.mFramePosition);
                         break;
                     case 13:
-                        keyAttributes.mCurveFit = typedArray.getInteger(index, keyAttributes.mCurveFit);
+                        int unused9 = keyAttributes.mCurveFit = typedArray.getInteger(index, keyAttributes.mCurveFit);
                         break;
                     case 14:
-                        keyAttributes.mScaleY = typedArray.getFloat(index, keyAttributes.mScaleY);
+                        float unused10 = keyAttributes.mScaleY = typedArray.getFloat(index, keyAttributes.mScaleY);
                         break;
                     case 15:
-                        keyAttributes.mTranslationX = typedArray.getDimension(index, keyAttributes.mTranslationX);
+                        float unused11 = keyAttributes.mTranslationX = typedArray.getDimension(index, keyAttributes.mTranslationX);
                         break;
                     case 16:
-                        keyAttributes.mTranslationY = typedArray.getDimension(index, keyAttributes.mTranslationY);
+                        float unused12 = keyAttributes.mTranslationY = typedArray.getDimension(index, keyAttributes.mTranslationY);
                         break;
                     case 17:
-                        if (Build.VERSION.SDK_INT >= 21) {
-                            keyAttributes.mTranslationZ = typedArray.getDimension(index, keyAttributes.mTranslationZ);
-                            break;
-                        } else {
-                            break;
-                        }
+                        float unused13 = keyAttributes.mTranslationZ = typedArray.getDimension(index, keyAttributes.mTranslationZ);
+                        break;
                     case 18:
-                        keyAttributes.mProgress = typedArray.getFloat(index, keyAttributes.mProgress);
+                        float unused14 = keyAttributes.mProgress = typedArray.getFloat(index, keyAttributes.mProgress);
+                        break;
+                    default:
+                        Log.e("KeyAttribute", "unused attribute 0x" + Integer.toHexString(index) + "   " + mAttrMap.get(index));
                         break;
                 }
             }

@@ -3,50 +3,48 @@ package com.google.android.material.progressindicator;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.animation.TimeInterpolator;
 import android.util.Property;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat;
 import com.google.android.material.color.MaterialColors;
 import java.util.Arrays;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes2.dex */
-public final class LinearIndeterminateContiguousAnimatorDelegate extends IndeterminateAnimatorDelegate<ObjectAnimator> {
-    private static final Property<LinearIndeterminateContiguousAnimatorDelegate, Float> ANIMATION_FRACTION = new Property<LinearIndeterminateContiguousAnimatorDelegate, Float>(Float.class, "animationFraction") { // from class: com.google.android.material.progressindicator.LinearIndeterminateContiguousAnimatorDelegate.2
-        @Override // android.util.Property
+
+final class LinearIndeterminateContiguousAnimatorDelegate extends IndeterminateAnimatorDelegate<ObjectAnimator> {
+    private static final Property<LinearIndeterminateContiguousAnimatorDelegate, Float> ANIMATION_FRACTION = new Property<LinearIndeterminateContiguousAnimatorDelegate, Float>(Float.class, "animationFraction") {
         public Float get(LinearIndeterminateContiguousAnimatorDelegate linearIndeterminateContiguousAnimatorDelegate) {
             return Float.valueOf(linearIndeterminateContiguousAnimatorDelegate.getAnimationFraction());
         }
 
-        @Override // android.util.Property
         public void set(LinearIndeterminateContiguousAnimatorDelegate linearIndeterminateContiguousAnimatorDelegate, Float f) {
             linearIndeterminateContiguousAnimatorDelegate.setAnimationFraction(f.floatValue());
         }
     };
     private float animationFraction;
     private ObjectAnimator animator;
-    private final BaseProgressIndicatorSpec baseSpec;
-    private boolean dirtyColors;
-    private int newIndicatorColorIndex = 1;
-    private FastOutSlowInInterpolator interpolator = new FastOutSlowInInterpolator();
+    /* access modifiers changed from: private */
+    public final BaseProgressIndicatorSpec baseSpec;
+    /* access modifiers changed from: private */
+    public boolean dirtyColors;
+    private FastOutSlowInInterpolator interpolator;
+    /* access modifiers changed from: private */
+    public int newIndicatorColorIndex = 1;
 
-    @Override // com.google.android.material.progressindicator.IndeterminateAnimatorDelegate
     public void registerAnimatorsCompleteCallback(Animatable2Compat.AnimationCallback animationCallback) {
     }
 
-    @Override // com.google.android.material.progressindicator.IndeterminateAnimatorDelegate
     public void requestCancelAnimatorAfterCurrentCycle() {
     }
 
-    @Override // com.google.android.material.progressindicator.IndeterminateAnimatorDelegate
     public void unregisterAnimatorsCompleteCallback() {
     }
 
     public LinearIndeterminateContiguousAnimatorDelegate(LinearProgressIndicatorSpec linearProgressIndicatorSpec) {
         super(3);
         this.baseSpec = linearProgressIndicatorSpec;
+        this.interpolator = new FastOutSlowInInterpolator();
     }
 
-    @Override // com.google.android.material.progressindicator.IndeterminateAnimatorDelegate
     public void startAnimator() {
         maybeInitializeAnimators();
         resetPropertiesForNewStart();
@@ -55,24 +53,22 @@ public final class LinearIndeterminateContiguousAnimatorDelegate extends Indeter
 
     private void maybeInitializeAnimators() {
         if (this.animator == null) {
-            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, ANIMATION_FRACTION, 0.0f, 1.0f);
+            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, ANIMATION_FRACTION, new float[]{0.0f, 1.0f});
             this.animator = ofFloat;
-            ofFloat.setDuration(333L);
-            this.animator.setInterpolator(null);
+            ofFloat.setDuration(333);
+            this.animator.setInterpolator((TimeInterpolator) null);
             this.animator.setRepeatCount(-1);
-            this.animator.addListener(new AnimatorListenerAdapter() { // from class: com.google.android.material.progressindicator.LinearIndeterminateContiguousAnimatorDelegate.1
-                @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
+            this.animator.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationRepeat(Animator animator) {
                     super.onAnimationRepeat(animator);
                     LinearIndeterminateContiguousAnimatorDelegate linearIndeterminateContiguousAnimatorDelegate = LinearIndeterminateContiguousAnimatorDelegate.this;
-                    linearIndeterminateContiguousAnimatorDelegate.newIndicatorColorIndex = (linearIndeterminateContiguousAnimatorDelegate.newIndicatorColorIndex + 1) % LinearIndeterminateContiguousAnimatorDelegate.this.baseSpec.indicatorColors.length;
-                    LinearIndeterminateContiguousAnimatorDelegate.this.dirtyColors = true;
+                    int unused = linearIndeterminateContiguousAnimatorDelegate.newIndicatorColorIndex = (linearIndeterminateContiguousAnimatorDelegate.newIndicatorColorIndex + 1) % LinearIndeterminateContiguousAnimatorDelegate.this.baseSpec.indicatorColors.length;
+                    boolean unused2 = LinearIndeterminateContiguousAnimatorDelegate.this.dirtyColors = true;
                 }
             });
         }
     }
 
-    @Override // com.google.android.material.progressindicator.IndeterminateAnimatorDelegate
     public void cancelAnimatorImmediately() {
         ObjectAnimator objectAnimator = this.animator;
         if (objectAnimator != null) {
@@ -80,7 +76,6 @@ public final class LinearIndeterminateContiguousAnimatorDelegate extends Indeter
         }
     }
 
-    @Override // com.google.android.material.progressindicator.IndeterminateAnimatorDelegate
     public void invalidateSpecValues() {
         resetPropertiesForNewStart();
     }
@@ -100,28 +95,29 @@ public final class LinearIndeterminateContiguousAnimatorDelegate extends Indeter
     }
 
     private void maybeUpdateSegmentColors() {
-        if (!this.dirtyColors || this.segmentPositions[3] >= 1.0f) {
-            return;
+        if (this.dirtyColors && this.segmentPositions[3] < 1.0f) {
+            int[] iArr = this.segmentColors;
+            iArr[2] = iArr[1];
+            iArr[1] = iArr[0];
+            iArr[0] = MaterialColors.compositeARGBWithAlpha(this.baseSpec.indicatorColors[this.newIndicatorColorIndex], this.drawable.getAlpha());
+            this.dirtyColors = false;
         }
-        int[] iArr = this.segmentColors;
-        iArr[2] = iArr[1];
-        iArr[1] = iArr[0];
-        iArr[0] = MaterialColors.compositeARGBWithAlpha(this.baseSpec.indicatorColors[this.newIndicatorColorIndex], this.drawable.getAlpha());
-        this.dirtyColors = false;
     }
 
-    void resetPropertiesForNewStart() {
+    /* access modifiers changed from: package-private */
+    public void resetPropertiesForNewStart() {
         this.dirtyColors = true;
         this.newIndicatorColorIndex = 1;
         Arrays.fill(this.segmentColors, MaterialColors.compositeARGBWithAlpha(this.baseSpec.indicatorColors[0], this.drawable.getAlpha()));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public float getAnimationFraction() {
         return this.animationFraction;
     }
 
-    void setAnimationFraction(float f) {
+    /* access modifiers changed from: package-private */
+    public void setAnimationFraction(float f) {
         this.animationFraction = f;
         updateSegmentPositions((int) (f * 333.0f));
         maybeUpdateSegmentColors();

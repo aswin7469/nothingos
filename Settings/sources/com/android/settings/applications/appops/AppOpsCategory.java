@@ -1,6 +1,5 @@
 package com.android.settings.applications.appops;
 
-import android.app.AppOpsManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,16 +13,17 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.TextView;
 import androidx.fragment.app.ListFragment;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.AsyncTaskLoader;
 import androidx.loader.content.Loader;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
 import com.android.settings.applications.appops.AppOpsState;
+import com.nothing.p006ui.support.NtCustSwitch;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class AppOpsCategory extends ListFragment implements LoaderManager.LoaderCallbacks<List<AppOpsState.AppOpEntry>> {
     AppListAdapter mAdapter;
     AppOpsState mState;
@@ -37,22 +37,21 @@ public class AppOpsCategory extends ListFragment implements LoaderManager.Loader
         setArguments(bundle);
     }
 
-    /* loaded from: classes.dex */
     public static class InterestingConfigChanges {
         final Configuration mLastConfiguration = new Configuration();
         int mLastDensity;
 
-        boolean applyNewConfig(Resources resources) {
+        /* access modifiers changed from: package-private */
+        public boolean applyNewConfig(Resources resources) {
             int updateFrom = this.mLastConfiguration.updateFrom(resources.getConfiguration());
-            if ((this.mLastDensity != resources.getDisplayMetrics().densityDpi) || (updateFrom & 772) != 0) {
-                this.mLastDensity = resources.getDisplayMetrics().densityDpi;
-                return true;
+            if (!(this.mLastDensity != resources.getDisplayMetrics().densityDpi) && (updateFrom & 772) == 0) {
+                return false;
             }
-            return false;
+            this.mLastDensity = resources.getDisplayMetrics().densityDpi;
+            return true;
         }
     }
 
-    /* loaded from: classes.dex */
     public static class PackageIntentReceiver extends BroadcastReceiver {
         final AppListLoader mLoader;
 
@@ -69,13 +68,11 @@ public class AppOpsCategory extends ListFragment implements LoaderManager.Loader
             appListLoader.getContext().registerReceiver(this, intentFilter2);
         }
 
-        @Override // android.content.BroadcastReceiver
         public void onReceive(Context context, Intent intent) {
             this.mLoader.onContentChanged();
         }
     }
 
-    /* loaded from: classes.dex */
     public static class AppListLoader extends AsyncTaskLoader<List<AppOpsState.AppOpEntry>> {
         List<AppOpsState.AppOpEntry> mApps;
         final InterestingConfigChanges mLastConfig = new InterestingConfigChanges();
@@ -83,7 +80,8 @@ public class AppOpsCategory extends ListFragment implements LoaderManager.Loader
         final AppOpsState mState;
         final AppOpsState.OpsTemplate mTemplate;
 
-        protected void onReleaseResources(List<AppOpsState.AppOpEntry> list) {
+        /* access modifiers changed from: protected */
+        public void onReleaseResources(List<AppOpsState.AppOpEntry> list) {
         }
 
         public AppListLoader(Context context, AppOpsState appOpsState, AppOpsState.OpsTemplate opsTemplate) {
@@ -92,28 +90,24 @@ public class AppOpsCategory extends ListFragment implements LoaderManager.Loader
             this.mTemplate = opsTemplate;
         }
 
-        @Override // androidx.loader.content.AsyncTaskLoader
-        /* renamed from: loadInBackground  reason: collision with other method in class */
-        public List<AppOpsState.AppOpEntry> mo611loadInBackground() {
-            return this.mState.buildState(this.mTemplate, 0, null, AppOpsState.LABEL_COMPARATOR);
+        public List<AppOpsState.AppOpEntry> loadInBackground() {
+            return this.mState.buildState(this.mTemplate, 0, (String) null, AppOpsState.LABEL_COMPARATOR);
         }
 
-        @Override // androidx.loader.content.Loader
         public void deliverResult(List<AppOpsState.AppOpEntry> list) {
             if (isReset() && list != null) {
                 onReleaseResources(list);
             }
             this.mApps = list;
             if (isStarted()) {
-                super.deliverResult((AppListLoader) list);
+                super.deliverResult(list);
             }
             if (list != null) {
                 onReleaseResources(list);
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // androidx.loader.content.Loader
+        /* access modifiers changed from: protected */
         public void onStartLoading() {
             onContentChanged();
             List<AppOpsState.AppOpEntry> list = this.mApps;
@@ -129,20 +123,17 @@ public class AppOpsCategory extends ListFragment implements LoaderManager.Loader
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // androidx.loader.content.Loader
+        /* access modifiers changed from: protected */
         public void onStopLoading() {
             cancelLoad();
         }
 
-        @Override // androidx.loader.content.AsyncTaskLoader
         public void onCanceled(List<AppOpsState.AppOpEntry> list) {
-            super.onCanceled((AppListLoader) list);
+            super.onCanceled(list);
             onReleaseResources(list);
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // androidx.loader.content.Loader
+        /* access modifiers changed from: protected */
         public void onReset() {
             super.onReset();
             onStopLoading();
@@ -158,16 +149,14 @@ public class AppOpsCategory extends ListFragment implements LoaderManager.Loader
         }
     }
 
-    /* loaded from: classes.dex */
     public static class AppListAdapter extends BaseAdapter {
         private final LayoutInflater mInflater;
         List<AppOpsState.AppOpEntry> mList;
         private final Resources mResources;
         private final AppOpsState mState;
 
-        @Override // android.widget.Adapter
         public long getItemId(int i) {
-            return i;
+            return (long) i;
         }
 
         public AppListAdapter(Context context, AppOpsState appOpsState) {
@@ -181,7 +170,6 @@ public class AppOpsCategory extends ListFragment implements LoaderManager.Loader
             notifyDataSetChanged();
         }
 
-        @Override // android.widget.Adapter
         public int getCount() {
             List<AppOpsState.AppOpEntry> list = this.mList;
             if (list != null) {
@@ -190,39 +178,34 @@ public class AppOpsCategory extends ListFragment implements LoaderManager.Loader
             return 0;
         }
 
-        @Override // android.widget.Adapter
-        /* renamed from: getItem */
-        public AppOpsState.AppOpEntry mo242getItem(int i) {
+        public AppOpsState.AppOpEntry getItem(int i) {
             return this.mList.get(i);
         }
 
-        @Override // android.widget.Adapter
         public View getView(int i, View view, ViewGroup viewGroup) {
             boolean z = false;
             if (view == null) {
-                view = this.mInflater.inflate(R.layout.app_ops_item, viewGroup, false);
+                view = this.mInflater.inflate(R$layout.app_ops_item, viewGroup, false);
             }
-            AppOpsState.AppOpEntry mo242getItem = mo242getItem(i);
-            ((ImageView) view.findViewById(R.id.app_icon)).setImageDrawable(mo242getItem.getAppEntry().getIcon());
-            ((TextView) view.findViewById(R.id.app_name)).setText(mo242getItem.getAppEntry().getLabel());
-            ((TextView) view.findViewById(R.id.op_name)).setText(mo242getItem.getTimeText(this.mResources, false));
-            view.findViewById(R.id.op_time).setVisibility(8);
-            Switch r2 = (Switch) view.findViewById(R.id.op_switch);
-            if (mo242getItem.getPrimaryOpMode() == 0) {
+            AppOpsState.AppOpEntry item = getItem(i);
+            ((ImageView) view.findViewById(R$id.app_icon)).setImageDrawable(item.getAppEntry().getIcon());
+            ((TextView) view.findViewById(R$id.app_name)).setText(item.getAppEntry().getLabel());
+            ((TextView) view.findViewById(R$id.op_name)).setText(item.getTimeText(this.mResources, false));
+            view.findViewById(R$id.op_time).setVisibility(8);
+            NtCustSwitch ntCustSwitch = (NtCustSwitch) view.findViewById(R$id.op_switch);
+            if (item.getPrimaryOpMode() == 0) {
                 z = true;
             }
-            r2.setChecked(z);
+            ntCustSwitch.setChecked(z);
             return view;
         }
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         this.mState = new AppOpsState(getActivity());
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
         setEmptyText("No applications");
@@ -231,30 +214,26 @@ public class AppOpsCategory extends ListFragment implements LoaderManager.Loader
         this.mAdapter = appListAdapter;
         setListAdapter(appListAdapter);
         setListShown(false);
-        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(0, (Bundle) null, this);
     }
 
-    @Override // androidx.fragment.app.ListFragment
     public void onListItemClick(ListView listView, View view, int i, long j) {
-        AppOpsState.AppOpEntry mo242getItem = this.mAdapter.mo242getItem(i);
-        if (mo242getItem != null) {
-            Switch r2 = (Switch) view.findViewById(R.id.op_switch);
-            boolean z = !r2.isChecked() ? 1 : 0;
-            r2.setChecked(z);
-            AppOpsManager.OpEntry opEntry = mo242getItem.getOpEntry(0);
-            int i2 = !z ? 1 : 0;
-            this.mState.getAppOpsManager().setMode(opEntry.getOp(), mo242getItem.getAppEntry().getApplicationInfo().uid, mo242getItem.getAppEntry().getApplicationInfo().packageName, i2);
-            mo242getItem.overridePrimaryOpMode(i2);
+        AppOpsState.AppOpEntry item = this.mAdapter.getItem(i);
+        if (item != null) {
+            NtCustSwitch ntCustSwitch = (NtCustSwitch) view.findViewById(R$id.op_switch);
+            boolean z = !ntCustSwitch.isChecked();
+            ntCustSwitch.setChecked(z);
+            boolean z2 = !z;
+            this.mState.getAppOpsManager().setMode(item.getOpEntry(0).getOp(), item.getAppEntry().getApplicationInfo().uid, item.getAppEntry().getApplicationInfo().packageName, z2 ? 1 : 0);
+            item.overridePrimaryOpMode(z2);
         }
     }
 
-    @Override // androidx.loader.app.LoaderManager.LoaderCallbacks
     public Loader<List<AppOpsState.AppOpEntry>> onCreateLoader(int i, Bundle bundle) {
         Bundle arguments = getArguments();
         return new AppListLoader(getActivity(), this.mState, arguments != null ? (AppOpsState.OpsTemplate) arguments.getParcelable("template") : null);
     }
 
-    @Override // androidx.loader.app.LoaderManager.LoaderCallbacks
     public void onLoadFinished(Loader<List<AppOpsState.AppOpEntry>> loader, List<AppOpsState.AppOpEntry> list) {
         this.mAdapter.setData(list);
         if (isResumed()) {
@@ -264,8 +243,7 @@ public class AppOpsCategory extends ListFragment implements LoaderManager.Loader
         }
     }
 
-    @Override // androidx.loader.app.LoaderManager.LoaderCallbacks
     public void onLoaderReset(Loader<List<AppOpsState.AppOpEntry>> loader) {
-        this.mAdapter.setData(null);
+        this.mAdapter.setData((List<AppOpsState.AppOpEntry>) null);
     }
 }

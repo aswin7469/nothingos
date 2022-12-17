@@ -3,8 +3,8 @@ package okio;
 import java.io.IOException;
 import java.nio.channels.ReadableByteChannel;
 import org.jetbrains.annotations.NotNull;
+
 /* compiled from: BufferedSource.kt */
-/* loaded from: classes2.dex */
 public interface BufferedSource extends Source, ReadableByteChannel {
     @NotNull
     Buffer getBuffer();

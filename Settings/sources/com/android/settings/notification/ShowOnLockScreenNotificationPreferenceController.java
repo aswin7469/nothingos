@@ -1,24 +1,24 @@
 package com.android.settings.notification;
 
 import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.os.UserHandle;
 import android.provider.Settings;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.RestrictedListPreference;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.RestrictedLockUtilsInternal;
 import com.android.settingslib.core.AbstractPreferenceController;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
+
 public class ShowOnLockScreenNotificationPreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin, Preference.OnPreferenceChangeListener {
     private DevicePolicyManager mDpm;
     private final String mSettingKey;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return true;
     }
@@ -29,16 +29,15 @@ public class ShowOnLockScreenNotificationPreferenceController extends AbstractPr
         this.mDpm = (DevicePolicyManager) context.getSystemService(DevicePolicyManager.class);
     }
 
-    void setDpm(DevicePolicyManager devicePolicyManager) {
+    /* access modifiers changed from: package-private */
+    public void setDpm(DevicePolicyManager devicePolicyManager) {
         this.mDpm = devicePolicyManager;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return this.mSettingKey;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         RestrictedListPreference restrictedListPreference = (RestrictedListPreference) preferenceScreen.findPreference(this.mSettingKey);
@@ -46,21 +45,21 @@ public class ShowOnLockScreenNotificationPreferenceController extends AbstractPr
         ArrayList arrayList = new ArrayList();
         ArrayList arrayList2 = new ArrayList();
         Context context = this.mContext;
-        int i = R.string.lock_screen_notifs_show_all;
+        int i = R$string.lock_screen_notifs_show_all;
         String string = context.getString(i);
         String num = Integer.toString(i);
         arrayList.add(string);
         arrayList2.add(num);
         setRestrictedIfNotificationFeaturesDisabled(restrictedListPreference, string, num, 4);
         Context context2 = this.mContext;
-        int i2 = R.string.lock_screen_notifs_show_alerting;
+        int i2 = R$string.lock_screen_notifs_show_alerting;
         String string2 = context2.getString(i2);
         String num2 = Integer.toString(i2);
         arrayList.add(string2);
         arrayList2.add(num2);
         setRestrictedIfNotificationFeaturesDisabled(restrictedListPreference, string2, num2, 4);
         Context context3 = this.mContext;
-        int i3 = R.string.lock_screen_notifs_show_none;
+        int i3 = R$string.lock_screen_notifs_show_none;
         arrayList.add(context3.getString(i3));
         arrayList2.add(Integer.toString(i3));
         restrictedListPreference.setEntries((CharSequence[]) arrayList.toArray(new CharSequence[arrayList.size()]));
@@ -76,24 +75,21 @@ public class ShowOnLockScreenNotificationPreferenceController extends AbstractPr
         refreshSummary(restrictedListPreference);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    /* renamed from: getSummary */
-    public CharSequence mo485getSummary() {
+    public CharSequence getSummary() {
         if (!adminAllowsNotifications() || !getLockscreenNotificationsEnabled()) {
-            return this.mContext.getString(R.string.lock_screen_notifs_show_none);
+            return this.mContext.getString(R$string.lock_screen_notifs_show_none);
         }
         if (!getLockscreenSilentNotificationsEnabled()) {
-            return this.mContext.getString(R.string.lock_screen_notifs_show_alerting);
+            return this.mContext.getString(R$string.lock_screen_notifs_show_alerting);
         }
-        return this.mContext.getString(R.string.lock_screen_notifs_show_all);
+        return this.mContext.getString(R$string.lock_screen_notifs_show_all_summary);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         int parseInt = Integer.parseInt((String) obj);
         int i = 0;
-        int i2 = parseInt != R.string.lock_screen_notifs_show_none ? 1 : 0;
-        if (parseInt == R.string.lock_screen_notifs_show_all) {
+        int i2 = parseInt != R$string.lock_screen_notifs_show_none ? 1 : 0;
+        if (parseInt == R$string.lock_screen_notifs_show_all) {
             i = 1;
         }
         Settings.Secure.putInt(this.mContext.getContentResolver(), "lock_screen_show_silent_notifications", i);
@@ -104,14 +100,13 @@ public class ShowOnLockScreenNotificationPreferenceController extends AbstractPr
 
     private void setRestrictedIfNotificationFeaturesDisabled(RestrictedListPreference restrictedListPreference, CharSequence charSequence, CharSequence charSequence2, int i) {
         RestrictedLockUtils.EnforcedAdmin checkIfKeyguardFeaturesDisabled = RestrictedLockUtilsInternal.checkIfKeyguardFeaturesDisabled(this.mContext, i, UserHandle.myUserId());
-        if (checkIfKeyguardFeaturesDisabled == null || restrictedListPreference == null) {
-            return;
+        if (checkIfKeyguardFeaturesDisabled != null && restrictedListPreference != null) {
+            restrictedListPreference.addRestrictedItem(new RestrictedListPreference.RestrictedItem(charSequence, charSequence2, checkIfKeyguardFeaturesDisabled));
         }
-        restrictedListPreference.addRestrictedItem(new RestrictedListPreference.RestrictedItem(charSequence, charSequence2, checkIfKeyguardFeaturesDisabled));
     }
 
     private boolean adminAllowsNotifications() {
-        return (this.mDpm.getKeyguardDisabledFeatures(null) & 4) == 0;
+        return (this.mDpm.getKeyguardDisabledFeatures((ComponentName) null) & 4) == 0;
     }
 
     private boolean getLockscreenNotificationsEnabled() {

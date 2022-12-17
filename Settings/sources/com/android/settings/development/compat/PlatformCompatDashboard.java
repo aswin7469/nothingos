@@ -11,113 +11,120 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.os.ServiceManager;
+import android.text.TextUtils;
 import android.util.ArraySet;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
-import androidx.preference.SwitchPreference;
 import com.android.internal.compat.AndroidBuildClassifier;
 import com.android.internal.compat.CompatibilityChangeConfig;
 import com.android.internal.compat.CompatibilityChangeInfo;
 import com.android.internal.compat.IPlatformCompat;
-import com.android.settings.R;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.dashboard.DashboardFragment;
 import com.android.settings.development.AppPicker;
+import com.nothing.p006ui.support.NtCustSwitchPreference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
-/* loaded from: classes.dex */
+
 public class PlatformCompatDashboard extends DashboardFragment {
     private AndroidBuildClassifier mAndroidBuildClassifier = new AndroidBuildClassifier();
     private CompatibilityChangeInfo[] mChanges;
     private IPlatformCompat mPlatformCompat;
     String mSelectedApp;
+    private boolean mShouldStartAppPickerOnResume = true;
 
-    @Override // com.android.settings.support.actionbar.HelpResourceProvider
     public int getHelpResource() {
         return 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "PlatformCompatDashboard";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1805;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.platform_compat_settings;
+        return R$xml.platform_compat_settings;
     }
 
-    IPlatformCompat getPlatformCompat() {
+    /* access modifiers changed from: package-private */
+    public IPlatformCompat getPlatformCompat() {
         if (this.mPlatformCompat == null) {
             this.mPlatformCompat = IPlatformCompat.Stub.asInterface(ServiceManager.getService("platform_compat"));
         }
         return this.mPlatformCompat;
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, androidx.fragment.app.Fragment
-    public void onActivityCreated(Bundle bundle) {
-        super.onActivityCreated(bundle);
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
         try {
             this.mChanges = getPlatformCompat().listUIChanges();
-            startAppPicker();
+            if (bundle != null) {
+                this.mShouldStartAppPickerOnResume = false;
+                this.mSelectedApp = bundle.getString("compat_app");
+            }
         } catch (RemoteException e) {
             throw new RuntimeException("Could not list changes!", e);
         }
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
+    public void onActivityResult(int i, int i2, Intent intent) {
+        if (i == 6) {
+            this.mShouldStartAppPickerOnResume = false;
+            if (i2 == -2) {
+                this.mSelectedApp = null;
+            } else if (i2 == -1) {
+                this.mSelectedApp = intent.getAction();
+            } else if (i2 == 0 && TextUtils.isEmpty(this.mSelectedApp)) {
+                finish();
+            }
+        } else {
+            super.onActivityResult(i, i2, intent);
+        }
+    }
+
+    public void onResume() {
+        super.onResume();
+        if (!isFinishingOrDestroyed()) {
+            if (!this.mShouldStartAppPickerOnResume) {
+                if (TextUtils.isEmpty(this.mSelectedApp)) {
+                    new AlertDialog.Builder(getContext()).setTitle(R$string.platform_compat_dialog_title_no_apps).setMessage(R$string.platform_compat_dialog_text_no_apps).setPositiveButton(R$string.okay, new PlatformCompatDashboard$$ExternalSyntheticLambda0(this)).setOnDismissListener(new PlatformCompatDashboard$$ExternalSyntheticLambda1(this)).setCancelable(false).show();
+                    return;
+                }
+                try {
+                    addPreferences(getApplicationInfo());
+                    return;
+                } catch (PackageManager.NameNotFoundException unused) {
+                    this.mShouldStartAppPickerOnResume = true;
+                    this.mSelectedApp = null;
+                }
+            }
+            startAppPicker();
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$onResume$0(DialogInterface dialogInterface, int i) {
+        finish();
+    }
+
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$onResume$1(DialogInterface dialogInterface) {
+        finish();
+    }
+
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         bundle.putString("compat_app", this.mSelectedApp);
     }
 
-    @Override // androidx.fragment.app.Fragment
-    public void onActivityResult(int i, int i2, Intent intent) {
-        if (i != 6) {
-            super.onActivityResult(i, i2, intent);
-        } else if (i2 == -1) {
-            this.mSelectedApp = intent.getAction();
-            try {
-                addPreferences(getApplicationInfo());
-            } catch (PackageManager.NameNotFoundException unused) {
-                startAppPicker();
-            }
-        } else if (i2 == -2) {
-            new AlertDialog.Builder(getContext()).setTitle(R.string.platform_compat_dialog_title_no_apps).setMessage(R.string.platform_compat_dialog_text_no_apps).setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() { // from class: com.android.settings.development.compat.PlatformCompatDashboard$$ExternalSyntheticLambda0
-                @Override // android.content.DialogInterface.OnClickListener
-                public final void onClick(DialogInterface dialogInterface, int i3) {
-                    PlatformCompatDashboard.this.lambda$onActivityResult$0(dialogInterface, i3);
-                }
-            }).setOnDismissListener(new DialogInterface.OnDismissListener() { // from class: com.android.settings.development.compat.PlatformCompatDashboard$$ExternalSyntheticLambda1
-                @Override // android.content.DialogInterface.OnDismissListener
-                public final void onDismiss(DialogInterface dialogInterface) {
-                    PlatformCompatDashboard.this.lambda$onActivityResult$1(dialogInterface);
-                }
-            }).setCancelable(false).show();
-        } else {
-            finish();
-        }
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onActivityResult$0(DialogInterface dialogInterface, int i) {
-        finish();
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onActivityResult$1(DialogInterface dialogInterface) {
-        finish();
-    }
-
     private void addPreferences(ApplicationInfo applicationInfo) {
-        CompatibilityChangeInfo[] compatibilityChangeInfoArr;
         List list;
         getPreferenceScreen().removeAll();
         getPreferenceScreen().addPreference(createAppPreference(applicationInfo));
@@ -140,10 +147,10 @@ public class PlatformCompatDashboard extends DashboardFragment {
                 arrayList.add(compatibilityChangeInfo);
             }
         }
-        createChangeCategoryPreference(arrayList, appChangeMappings, getString(R.string.platform_compat_default_enabled_title));
-        createChangeCategoryPreference(arrayList2, appChangeMappings, getString(R.string.platform_compat_default_disabled_title));
+        createChangeCategoryPreference(arrayList, appChangeMappings, getString(R$string.platform_compat_default_enabled_title));
+        createChangeCategoryPreference(arrayList2, appChangeMappings, getString(R$string.platform_compat_default_disabled_title));
         for (Integer num : treeMap.keySet()) {
-            createChangeCategoryPreference((List) treeMap.get(num), appChangeMappings, getString(R.string.platform_compat_target_sdk_title, num));
+            createChangeCategoryPreference((List) treeMap.get(num), appChangeMappings, getString(R$string.platform_compat_target_sdk_title, num));
         }
     }
 
@@ -155,66 +162,63 @@ public class PlatformCompatDashboard extends DashboardFragment {
         }
     }
 
-    Preference createPreferenceForChange(Context context, CompatibilityChangeInfo compatibilityChangeInfo, CompatibilityChangeConfig compatibilityChangeConfig) {
+    /* access modifiers changed from: package-private */
+    public Preference createPreferenceForChange(Context context, CompatibilityChangeInfo compatibilityChangeInfo, CompatibilityChangeConfig compatibilityChangeConfig) {
         String str;
         boolean isChangeEnabled = compatibilityChangeConfig.isChangeEnabled(compatibilityChangeInfo.getId());
-        SwitchPreference switchPreference = new SwitchPreference(context);
+        NtCustSwitchPreference ntCustSwitchPreference = new NtCustSwitchPreference(context);
         if (compatibilityChangeInfo.getName() != null) {
             str = compatibilityChangeInfo.getName();
         } else {
             str = "Change_" + compatibilityChangeInfo.getId();
         }
-        switchPreference.setSummary(str);
-        switchPreference.setKey(str);
+        ntCustSwitchPreference.setSummary((CharSequence) str);
+        ntCustSwitchPreference.setKey(str);
         try {
-            switchPreference.setEnabled(getPlatformCompat().getOverrideValidator().getOverrideAllowedState(compatibilityChangeInfo.getId(), this.mSelectedApp).state == 0);
-            switchPreference.setChecked(isChangeEnabled);
-            switchPreference.setOnPreferenceChangeListener(new CompatChangePreferenceChangeListener(compatibilityChangeInfo.getId()));
-            return switchPreference;
+            ntCustSwitchPreference.setEnabled(getPlatformCompat().getOverrideValidator().getOverrideAllowedState(compatibilityChangeInfo.getId(), this.mSelectedApp).state == 0);
+            ntCustSwitchPreference.setChecked(isChangeEnabled);
+            ntCustSwitchPreference.setOnPreferenceChangeListener(new CompatChangePreferenceChangeListener(compatibilityChangeInfo.getId()));
+            return ntCustSwitchPreference;
         } catch (RemoteException e) {
             throw new RuntimeException("Could not check if change can be overridden for app.", e);
         }
     }
 
-    ApplicationInfo getApplicationInfo() throws PackageManager.NameNotFoundException {
+    /* access modifiers changed from: package-private */
+    public ApplicationInfo getApplicationInfo() throws PackageManager.NameNotFoundException {
         return getPackageManager().getApplicationInfo(this.mSelectedApp, 0);
     }
 
-    Preference createAppPreference(ApplicationInfo applicationInfo) {
+    /* access modifiers changed from: package-private */
+    public Preference createAppPreference(ApplicationInfo applicationInfo) {
         Context context = getPreferenceScreen().getContext();
         Drawable loadIcon = applicationInfo.loadIcon(context.getPackageManager());
         Preference preference = new Preference(context);
         preference.setIcon(loadIcon);
-        preference.setSummary(getString(R.string.platform_compat_selected_app_summary, this.mSelectedApp, Integer.valueOf(applicationInfo.targetSdkVersion)));
+        preference.setSummary((CharSequence) getString(R$string.platform_compat_selected_app_summary, this.mSelectedApp, Integer.valueOf(applicationInfo.targetSdkVersion)));
         preference.setKey(this.mSelectedApp);
-        preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() { // from class: com.android.settings.development.compat.PlatformCompatDashboard$$ExternalSyntheticLambda2
-            @Override // androidx.preference.Preference.OnPreferenceClickListener
-            public final boolean onPreferenceClick(Preference preference2) {
-                boolean lambda$createAppPreference$2;
-                lambda$createAppPreference$2 = PlatformCompatDashboard.this.lambda$createAppPreference$2(preference2);
-                return lambda$createAppPreference$2;
-            }
-        });
+        preference.setOnPreferenceClickListener(new PlatformCompatDashboard$$ExternalSyntheticLambda2(this));
         return preference;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ boolean lambda$createAppPreference$2(Preference preference) {
         startAppPicker();
         return true;
     }
 
-    PreferenceCategory createChangeCategoryPreference(List<CompatibilityChangeInfo> list, CompatibilityChangeConfig compatibilityChangeConfig, String str) {
+    /* access modifiers changed from: package-private */
+    public PreferenceCategory createChangeCategoryPreference(List<CompatibilityChangeInfo> list, CompatibilityChangeConfig compatibilityChangeConfig, String str) {
         PreferenceCategory preferenceCategory = new PreferenceCategory(getPreferenceScreen().getContext());
-        preferenceCategory.setTitle(str);
+        preferenceCategory.setTitle((CharSequence) str);
         getPreferenceScreen().addPreference(preferenceCategory);
         addChangePreferencesToCategory(list, preferenceCategory, compatibilityChangeConfig);
         return preferenceCategory;
     }
 
     private void addChangePreferencesToCategory(List<CompatibilityChangeInfo> list, PreferenceCategory preferenceCategory, CompatibilityChangeConfig compatibilityChangeConfig) {
-        for (CompatibilityChangeInfo compatibilityChangeInfo : list) {
-            preferenceCategory.addPreference(createPreferenceForChange(getPreferenceScreen().getContext(), compatibilityChangeInfo, compatibilityChangeConfig));
+        for (CompatibilityChangeInfo createPreferenceForChange : list) {
+            preferenceCategory.addPreference(createPreferenceForChange(getPreferenceScreen().getContext(), createPreferenceForChange, compatibilityChangeConfig));
         }
     }
 
@@ -226,16 +230,13 @@ public class PlatformCompatDashboard extends DashboardFragment {
         startActivityForResult(putExtra, 6);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class CompatChangePreferenceChangeListener implements Preference.OnPreferenceChangeListener {
+    private class CompatChangePreferenceChangeListener implements Preference.OnPreferenceChangeListener {
         private final long changeId;
 
         CompatChangePreferenceChangeListener(long j) {
             this.changeId = j;
         }
 
-        @Override // androidx.preference.Preference.OnPreferenceChangeListener
         public boolean onPreferenceChange(Preference preference, Object obj) {
             try {
                 ArraySet arraySet = new ArraySet();

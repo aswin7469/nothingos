@@ -2,8 +2,7 @@ package com.android.settings.network;
 
 import android.content.Context;
 import android.os.UserManager;
-import com.android.settings.R;
-import com.android.settings.Utils;
+import com.android.settings.R$xml;
 import com.android.settings.dashboard.DashboardFragment;
 import com.android.settings.network.telephony.CallsDefaultSubscriptionController;
 import com.android.settings.network.telephony.NetworkProviderBackupCallingPreferenceController;
@@ -13,35 +12,32 @@ import com.android.settings.search.BaseSearchIndexProvider;
 import com.android.settingslib.core.AbstractPreferenceController;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class NetworkProviderCallsSmsFragment extends DashboardFragment {
     static final String KEY_PREFERENCE_CALLS = "provider_model_calls_preference";
     static final String KEY_PREFERENCE_CATEGORY_BACKUP_CALLING = "provider_model_backup_calling_category";
     static final String KEY_PREFERENCE_CATEGORY_CALLING = "provider_model_calling_category";
     static final String KEY_PREFERENCE_SMS = "provider_model_sms_preference";
     static final String LOG_TAG = "NetworkProviderCallsSmsFragment";
-    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R.xml.network_provider_calls_sms) { // from class: com.android.settings.network.NetworkProviderCallsSmsFragment.1
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // com.android.settings.search.BaseSearchIndexProvider
+    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R$xml.network_provider_calls_sms) {
+        /* access modifiers changed from: protected */
         public boolean isPageSearchEnabled(Context context) {
-            return Utils.isProviderModelEnabled(context) && ((UserManager) context.getSystemService(UserManager.class)).isAdminUser();
+            return ((UserManager) context.getSystemService(UserManager.class)).isAdminUser();
         }
     };
     private NetworkProviderWifiCallingPreferenceController mNetworkProviderWifiCallingPreferenceController;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return LOG_TAG;
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 0;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment
-    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+    /* access modifiers changed from: protected */
+    public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
         ArrayList arrayList = new ArrayList();
         arrayList.add(new CallsDefaultSubscriptionController(context, KEY_PREFERENCE_CALLS));
         arrayList.add(new SmsDefaultSubscriptionController(context, KEY_PREFERENCE_SMS));
@@ -55,15 +51,13 @@ public class NetworkProviderCallsSmsFragment extends DashboardFragment {
         return arrayList;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
         updatePreferenceStates();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.network_provider_calls_sms;
+        return R$xml.network_provider_calls_sms;
     }
 }

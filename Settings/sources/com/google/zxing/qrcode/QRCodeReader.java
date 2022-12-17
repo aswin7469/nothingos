@@ -18,36 +18,34 @@ import com.google.zxing.qrcode.decoder.QRCodeDecoderMetaData;
 import com.google.zxing.qrcode.detector.Detector;
 import java.util.List;
 import java.util.Map;
-/* loaded from: classes2.dex */
+
 public class QRCodeReader implements Reader {
     private static final ResultPoint[] NO_POINTS = new ResultPoint[0];
     private final Decoder decoder = new Decoder();
 
-    @Override // com.google.zxing.Reader
     public void reset() {
     }
 
-    @Override // com.google.zxing.Reader
     public final Result decode(BinaryBitmap binaryBitmap, Map<DecodeHintType, ?> map) throws NotFoundException, ChecksumException, FormatException {
-        DecoderResult decode;
-        ResultPoint[] points;
-        if (map != null && map.containsKey(DecodeHintType.PURE_BARCODE)) {
-            decode = this.decoder.decode(extractPureBits(binaryBitmap.getBlackMatrix()), map);
-            points = NO_POINTS;
-        } else {
+        ResultPoint[] resultPointArr;
+        DecoderResult decoderResult;
+        if (map == null || !map.containsKey(DecodeHintType.PURE_BARCODE)) {
             DetectorResult detect = new Detector(binaryBitmap.getBlackMatrix()).detect(map);
-            decode = this.decoder.decode(detect.getBits(), map);
-            points = detect.getPoints();
+            decoderResult = this.decoder.decode(detect.getBits(), map);
+            resultPointArr = detect.getPoints();
+        } else {
+            decoderResult = this.decoder.decode(extractPureBits(binaryBitmap.getBlackMatrix()), map);
+            resultPointArr = NO_POINTS;
         }
-        if (decode.getOther() instanceof QRCodeDecoderMetaData) {
-            ((QRCodeDecoderMetaData) decode.getOther()).applyMirroredCorrection(points);
+        if (decoderResult.getOther() instanceof QRCodeDecoderMetaData) {
+            ((QRCodeDecoderMetaData) decoderResult.getOther()).applyMirroredCorrection(resultPointArr);
         }
-        Result result = new Result(decode.getText(), decode.getRawBytes(), points, BarcodeFormat.QR_CODE);
-        List<byte[]> byteSegments = decode.getByteSegments();
+        Result result = new Result(decoderResult.getText(), decoderResult.getRawBytes(), resultPointArr, BarcodeFormat.QR_CODE);
+        List<byte[]> byteSegments = decoderResult.getByteSegments();
         if (byteSegments != null) {
             result.putMetadata(ResultMetadataType.BYTE_SEGMENTS, byteSegments);
         }
-        String eCLevel = decode.getECLevel();
+        String eCLevel = decoderResult.getECLevel();
         if (eCLevel != null) {
             result.putMetadata(ResultMetadataType.ERROR_CORRECTION_LEVEL, eCLevel);
         }
@@ -72,41 +70,43 @@ public class QRCodeReader implements Reader {
         if (i5 != i4 - i3) {
             i4 = i3 + i5;
         }
-        int round = Math.round(((i4 - i3) + 1) / moduleSize);
-        int round2 = Math.round((i5 + 1) / moduleSize);
+        int round = Math.round(((float) ((i4 - i3) + 1)) / moduleSize);
+        int round2 = Math.round(((float) (i5 + 1)) / moduleSize);
         if (round <= 0 || round2 <= 0) {
             throw NotFoundException.getNotFoundInstance();
-        }
-        if (round2 != round) {
-            throw NotFoundException.getNotFoundInstance();
-        }
-        int i6 = (int) (moduleSize / 2.0f);
-        int i7 = i + i6;
-        int i8 = i3 + i6;
-        int i9 = (((int) ((round - 1) * moduleSize)) + i8) - (i4 - 1);
-        if (i9 > 0) {
-            if (i9 > i6) {
-                throw NotFoundException.getNotFoundInstance();
-            }
-            i8 -= i9;
-        }
-        int i10 = (((int) ((round2 - 1) * moduleSize)) + i7) - (i2 - 1);
-        if (i10 > 0) {
-            if (i10 > i6) {
-                throw NotFoundException.getNotFoundInstance();
-            }
-            i7 -= i10;
-        }
-        BitMatrix bitMatrix2 = new BitMatrix(round, round2);
-        for (int i11 = 0; i11 < round2; i11++) {
-            int i12 = ((int) (i11 * moduleSize)) + i7;
-            for (int i13 = 0; i13 < round; i13++) {
-                if (bitMatrix.get(((int) (i13 * moduleSize)) + i8, i12)) {
-                    bitMatrix2.set(i13, i11);
+        } else if (round2 == round) {
+            int i6 = (int) (moduleSize / 2.0f);
+            int i7 = i + i6;
+            int i8 = i3 + i6;
+            int i9 = (((int) (((float) (round - 1)) * moduleSize)) + i8) - (i4 - 1);
+            if (i9 > 0) {
+                if (i9 <= i6) {
+                    i8 -= i9;
+                } else {
+                    throw NotFoundException.getNotFoundInstance();
                 }
             }
+            int i10 = (((int) (((float) (round2 - 1)) * moduleSize)) + i7) - (i2 - 1);
+            if (i10 > 0) {
+                if (i10 <= i6) {
+                    i7 -= i10;
+                } else {
+                    throw NotFoundException.getNotFoundInstance();
+                }
+            }
+            BitMatrix bitMatrix2 = new BitMatrix(round, round2);
+            for (int i11 = 0; i11 < round2; i11++) {
+                int i12 = ((int) (((float) i11) * moduleSize)) + i7;
+                for (int i13 = 0; i13 < round; i13++) {
+                    if (bitMatrix.get(((int) (((float) i13) * moduleSize)) + i8, i12)) {
+                        bitMatrix2.set(i13, i11);
+                    }
+                }
+            }
+            return bitMatrix2;
+        } else {
+            throw NotFoundException.getNotFoundInstance();
         }
-        return bitMatrix2;
     }
 
     private static float moduleSize(int[] iArr, BitMatrix bitMatrix) throws NotFoundException {
@@ -127,9 +127,9 @@ public class QRCodeReader implements Reader {
             i++;
             i2++;
         }
-        if (i == width || i2 == height) {
-            throw NotFoundException.getNotFoundInstance();
+        if (i != width && i2 != height) {
+            return ((float) (i - iArr[0])) / 7.0f;
         }
-        return (i - iArr[0]) / 7.0f;
+        throw NotFoundException.getNotFoundInstance();
     }
 }

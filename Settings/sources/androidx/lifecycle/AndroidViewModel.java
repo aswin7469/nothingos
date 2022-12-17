@@ -2,7 +2,7 @@ package androidx.lifecycle;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
-/* loaded from: classes.dex */
+
 public class AndroidViewModel extends ViewModel {
     @SuppressLint({"StaticFieldLeak"})
     private Application mApplication;
@@ -12,6 +12,6 @@ public class AndroidViewModel extends ViewModel {
     }
 
     public <T extends Application> T getApplication() {
-        return (T) this.mApplication;
+        return this.mApplication;
     }
 }

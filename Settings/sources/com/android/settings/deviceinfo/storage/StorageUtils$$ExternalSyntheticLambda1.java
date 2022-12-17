@@ -1,18 +1,18 @@
 package com.android.settings.deviceinfo.storage;
 
-import android.os.storage.DiskInfo;
+import android.content.Context;
+import android.os.storage.VolumeInfo;
 import java.util.function.Function;
-/* loaded from: classes.dex */
-public final /* synthetic */ class StorageUtils$$ExternalSyntheticLambda1 implements Function {
-    public static final /* synthetic */ StorageUtils$$ExternalSyntheticLambda1 INSTANCE = new StorageUtils$$ExternalSyntheticLambda1();
 
-    private /* synthetic */ StorageUtils$$ExternalSyntheticLambda1() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class StorageUtils$$ExternalSyntheticLambda1 implements Function {
+    public final /* synthetic */ Context f$0;
+
+    public /* synthetic */ StorageUtils$$ExternalSyntheticLambda1(Context context) {
+        this.f$0 = context;
     }
 
-    @Override // java.util.function.Function
     public final Object apply(Object obj) {
-        StorageEntry lambda$getAllStorageEntries$3;
-        lambda$getAllStorageEntries$3 = StorageUtils.lambda$getAllStorageEntries$3((DiskInfo) obj);
-        return lambda$getAllStorageEntries$3;
+        return StorageUtils.lambda$getAllStorageEntries$1(this.f$0, (VolumeInfo) obj);
     }
 }

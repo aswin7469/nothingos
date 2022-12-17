@@ -11,7 +11,7 @@ import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnStart;
 import com.android.settingslib.core.lifecycle.events.OnStop;
 import com.android.settingslib.widget.OnMainSwitchChangeListener;
-/* loaded from: classes.dex */
+
 public class LocationSwitchBarController implements OnMainSwitchChangeListener, LocationEnabler.LocationModeChangeListener, LifecycleObserver, OnStart, OnStop {
     private final LocationEnabler mLocationEnabler;
     private final SettingsMainSwitchBar mSwitchBar;
@@ -25,7 +25,6 @@ public class LocationSwitchBarController implements OnMainSwitchChangeListener, 
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStart
     public void onStart() {
         if (!this.mValidListener) {
             this.mSwitchBar.addOnSwitchChangeListener(this);
@@ -33,7 +32,6 @@ public class LocationSwitchBarController implements OnMainSwitchChangeListener, 
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStop
     public void onStop() {
         if (this.mValidListener) {
             this.mSwitchBar.removeOnSwitchChangeListener(this);
@@ -41,30 +39,27 @@ public class LocationSwitchBarController implements OnMainSwitchChangeListener, 
         }
     }
 
-    @Override // com.android.settings.location.LocationEnabler.LocationModeChangeListener
     public void onLocationModeChanged(int i, boolean z) {
         boolean isEnabled = this.mLocationEnabler.isEnabled(i);
         int myUserId = UserHandle.myUserId();
         RestrictedLockUtils.EnforcedAdmin shareLocationEnforcedAdmin = this.mLocationEnabler.getShareLocationEnforcedAdmin(myUserId);
-        if (!this.mLocationEnabler.hasShareLocationRestriction(myUserId) && shareLocationEnforcedAdmin != null) {
-            this.mSwitchBar.setDisabledByAdmin(shareLocationEnforcedAdmin);
-        } else {
+        if (this.mLocationEnabler.hasShareLocationRestriction(myUserId) || shareLocationEnforcedAdmin == null) {
             this.mSwitchBar.setEnabled(!z);
+        } else {
+            this.mSwitchBar.setDisabledByAdmin(shareLocationEnforcedAdmin);
         }
         if (isEnabled != this.mSwitchBar.isChecked()) {
             if (this.mValidListener) {
                 this.mSwitchBar.removeOnSwitchChangeListener(this);
             }
             this.mSwitchBar.setChecked(isEnabled);
-            if (!this.mValidListener) {
-                return;
+            if (this.mValidListener) {
+                this.mSwitchBar.addOnSwitchChangeListener(this);
             }
-            this.mSwitchBar.addOnSwitchChangeListener(this);
         }
     }
 
-    @Override // com.android.settingslib.widget.OnMainSwitchChangeListener
-    public void onSwitchChanged(Switch r1, boolean z) {
+    public void onSwitchChanged(Switch switchR, boolean z) {
         this.mLocationEnabler.setLocationEnabled(z);
     }
 }

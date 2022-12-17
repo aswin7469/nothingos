@@ -9,53 +9,39 @@ import android.text.TextUtils;
 import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 import com.android.settings.core.BasePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
-/* loaded from: classes.dex */
+
 public class LanguageAndInputPreferenceController extends BasePreferenceController {
+    private InputMethodManager mInputMethodManager = ((InputMethodManager) this.mContext.getSystemService(InputMethodManager.class));
     private PackageManager mPackageManager = this.mContext.getPackageManager();
-    private InputMethodManager mInputMethodManager = (InputMethodManager) this.mContext.getSystemService(InputMethodManager.class);
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return 0;
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -64,18 +50,16 @@ public class LanguageAndInputPreferenceController extends BasePreferenceControll
         super(context, str);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    /* renamed from: getSummary */
-    public CharSequence mo485getSummary() {
+    public CharSequence getSummary() {
         String string = Settings.Secure.getString(this.mContext.getContentResolver(), "default_input_method");
-        if (!TextUtils.isEmpty(string)) {
-            String packageName = ComponentName.unflattenFromString(string).getPackageName();
-            for (InputMethodInfo inputMethodInfo : this.mInputMethodManager.getInputMethodList()) {
-                if (TextUtils.equals(inputMethodInfo.getPackageName(), packageName)) {
-                    return inputMethodInfo.loadLabel(this.mPackageManager);
-                }
-            }
+        if (TextUtils.isEmpty(string)) {
             return "";
+        }
+        String packageName = ComponentName.unflattenFromString(string).getPackageName();
+        for (InputMethodInfo next : this.mInputMethodManager.getInputMethodList()) {
+            if (TextUtils.equals(next.getPackageName(), packageName)) {
+                return next.loadLabel(this.mPackageManager);
+            }
         }
         return "";
     }

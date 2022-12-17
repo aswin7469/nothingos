@@ -9,7 +9,7 @@ import com.google.android.material.R$styleable;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.internal.ThemeEnforcement;
 import com.google.android.material.resources.MaterialResources;
-/* loaded from: classes2.dex */
+
 public abstract class BaseProgressIndicatorSpec {
     public int hideAnimationBehavior;
     public int[] indicatorColors = new int[0];
@@ -18,11 +18,10 @@ public abstract class BaseProgressIndicatorSpec {
     public int trackCornerRadius;
     public int trackThickness;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public abstract void validateSpec();
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public BaseProgressIndicatorSpec(Context context, AttributeSet attributeSet, int i, int i2) {
+    protected BaseProgressIndicatorSpec(Context context, AttributeSet attributeSet, int i, int i2) {
         int dimensionPixelSize = context.getResources().getDimensionPixelSize(R$dimen.mtrl_progress_track_thickness);
         TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context, attributeSet, R$styleable.BaseProgressIndicator, i, i2, new int[0]);
         this.trackThickness = MaterialResources.getDimensionPixelSize(context, obtainStyledAttributes, R$styleable.BaseProgressIndicator_trackThickness, dimensionPixelSize);

@@ -1,9 +1,15 @@
 package com.android.settingslib.net;
-/* loaded from: classes.dex */
+
 public class NetworkCycleData {
-    private long mEndTime;
-    private long mStartTime;
-    private long mTotalUsage;
+    /* access modifiers changed from: private */
+    public long mEndTime;
+    /* access modifiers changed from: private */
+    public long mStartTime;
+    /* access modifiers changed from: private */
+    public long mTotalUsage;
+
+    protected NetworkCycleData() {
+    }
 
     public long getStartTime() {
         return this.mStartTime;
@@ -17,33 +23,31 @@ public class NetworkCycleData {
         return this.mTotalUsage;
     }
 
-    /* loaded from: classes.dex */
     public static class Builder {
         private NetworkCycleData mObject = new NetworkCycleData();
 
         public Builder setStartTime(long j) {
-            mo607getObject().mStartTime = j;
+            getObject().mStartTime = j;
             return this;
         }
 
         public Builder setEndTime(long j) {
-            mo607getObject().mEndTime = j;
+            getObject().mEndTime = j;
             return this;
         }
 
         public Builder setTotalUsage(long j) {
-            mo607getObject().mTotalUsage = j;
+            getObject().mTotalUsage = j;
             return this;
         }
 
-        /* renamed from: getObject */
-        protected NetworkCycleData mo607getObject() {
+        /* access modifiers changed from: protected */
+        public NetworkCycleData getObject() {
             return this.mObject;
         }
 
-        /* renamed from: build */
-        public NetworkCycleData mo606build() {
-            return mo607getObject();
+        public NetworkCycleData build() {
+            return getObject();
         }
     }
 }

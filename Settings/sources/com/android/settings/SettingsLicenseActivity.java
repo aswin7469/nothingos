@@ -12,14 +12,12 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import com.android.settingslib.license.LicenseHtmlLoaderCompat;
 import java.io.File;
-/* loaded from: classes.dex */
+
 public class SettingsLicenseActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<File> {
-    @Override // androidx.loader.app.LoaderManager.LoaderCallbacks
     public void onLoaderReset(Loader<File> loader) {
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         File file = new File("/system/etc/NOTICE.html.gz");
@@ -30,12 +28,10 @@ public class SettingsLicenseActivity extends FragmentActivity implements LoaderM
         }
     }
 
-    @Override // androidx.loader.app.LoaderManager.LoaderCallbacks
     public Loader<File> onCreateLoader(int i, Bundle bundle) {
         return new LicenseHtmlLoaderCompat(this);
     }
 
-    @Override // androidx.loader.app.LoaderManager.LoaderCallbacks
     public void onLoadFinished(Loader<File> loader, File file) {
         showGeneratedHtmlFile(file);
     }
@@ -44,7 +40,8 @@ public class SettingsLicenseActivity extends FragmentActivity implements LoaderM
         getSupportLoaderManager().initLoader(0, Bundle.EMPTY, this);
     }
 
-    Uri getUriFromGeneratedHtmlFile(File file) {
+    /* access modifiers changed from: package-private */
+    public Uri getUriFromGeneratedHtmlFile(File file) {
         return FileProvider.getUriForFile(this, "com.android.settings.files", file);
     }
 
@@ -60,7 +57,7 @@ public class SettingsLicenseActivity extends FragmentActivity implements LoaderM
     private void showHtmlFromUri(Uri uri) {
         Intent intent = new Intent("android.intent.action.VIEW");
         intent.setDataAndType(uri, "text/html");
-        intent.putExtra("android.intent.extra.TITLE", getString(R.string.settings_license_activity_title));
+        intent.putExtra("android.intent.extra.TITLE", getString(R$string.settings_license_activity_title));
         if ("content".equals(uri.getScheme())) {
             intent.addFlags(1);
         }
@@ -76,11 +73,12 @@ public class SettingsLicenseActivity extends FragmentActivity implements LoaderM
     }
 
     private void showErrorAndFinish() {
-        Toast.makeText(this, R.string.settings_license_activity_unavailable, 1).show();
+        Toast.makeText(this, R$string.settings_license_activity_unavailable, 1).show();
         finish();
     }
 
-    boolean isFileValid(File file) {
+    /* access modifiers changed from: package-private */
+    public boolean isFileValid(File file) {
         return file.exists() && file.length() != 0;
     }
 }

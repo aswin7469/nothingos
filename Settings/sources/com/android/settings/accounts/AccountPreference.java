@@ -4,14 +4,14 @@ import android.util.Log;
 import android.widget.ImageView;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$drawable;
+import com.android.settings.R$string;
+
 public class AccountPreference extends Preference {
     private boolean mShowTypeIcon;
     private int mStatus;
     private ImageView mSyncStatusIcon;
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         if (!this.mShowTypeIcon) {
@@ -25,34 +25,34 @@ public class AccountPreference extends Preference {
     private int getSyncStatusIcon(int i) {
         if (i != 0) {
             if (i == 1) {
-                return R.drawable.ic_settings_sync_disabled;
+                return R$drawable.ic_settings_sync_disabled;
             }
             if (i == 2) {
-                return R.drawable.ic_settings_sync_failed;
+                return R$drawable.ic_settings_sync_failed;
             }
             if (i != 3) {
-                int i2 = R.drawable.ic_settings_sync_failed;
+                int i2 = R$drawable.ic_settings_sync_failed;
                 Log.e("AccountPreference", "Unknown sync status: " + i);
                 return i2;
             }
         }
-        return R.drawable.ic_settings_sync;
+        return R$drawable.ic_settings_sync;
     }
 
     private String getSyncContentDescription(int i) {
-        if (i != 0) {
-            if (i == 1) {
-                return getContext().getString(R.string.accessibility_sync_disabled);
-            }
-            if (i == 2) {
-                return getContext().getString(R.string.accessibility_sync_error);
-            }
-            if (i == 3) {
-                return getContext().getString(R.string.accessibility_sync_in_progress);
-            }
-            Log.e("AccountPreference", "Unknown sync status: " + i);
-            return getContext().getString(R.string.accessibility_sync_error);
+        if (i == 0) {
+            return getContext().getString(R$string.accessibility_sync_enabled);
         }
-        return getContext().getString(R.string.accessibility_sync_enabled);
+        if (i == 1) {
+            return getContext().getString(R$string.accessibility_sync_disabled);
+        }
+        if (i == 2) {
+            return getContext().getString(R$string.accessibility_sync_error);
+        }
+        if (i == 3) {
+            return getContext().getString(R$string.accessibility_sync_in_progress);
+        }
+        Log.e("AccountPreference", "Unknown sync status: " + i);
+        return getContext().getString(R$string.accessibility_sync_error);
     }
 }

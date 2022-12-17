@@ -4,7 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
 import androidx.fragment.app.Fragment;
-/* loaded from: classes.dex */
+
 public interface SuggestionFeatureProvider {
     Class<? extends Fragment> getContextualSuggestionFragment();
 

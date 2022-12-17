@@ -1,18 +1,16 @@
 package androidx.constraintlayout.motion.utils;
 
-import androidx.constraintlayout.widget.R$styleable;
 import java.util.Arrays;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class ArcCurveFit extends CurveFit {
+
+class ArcCurveFit extends CurveFit {
     Arc[] mArcs;
     private final double[] mTime;
 
-    @Override // androidx.constraintlayout.motion.utils.CurveFit
     public void getPos(double d, double[] dArr) {
         Arc[] arcArr = this.mArcs;
-        if (d < arcArr[0].mTime1) {
-            d = arcArr[0].mTime1;
+        double d2 = arcArr[0].mTime1;
+        if (d < d2) {
+            d = d2;
         }
         if (d > arcArr[arcArr.length - 1].mTime2) {
             d = arcArr[arcArr.length - 1].mTime2;
@@ -21,29 +19,30 @@ public class ArcCurveFit extends CurveFit {
         while (true) {
             Arc[] arcArr2 = this.mArcs;
             if (i < arcArr2.length) {
-                if (d <= arcArr2[i].mTime2) {
-                    if (arcArr2[i].linear) {
-                        dArr[0] = arcArr2[i].getLinearX(d);
-                        dArr[1] = this.mArcs[i].getLinearY(d);
-                        return;
-                    }
-                    arcArr2[i].setPoint(d);
+                Arc arc = arcArr2[i];
+                if (d > arc.mTime2) {
+                    i++;
+                } else if (arc.linear) {
+                    dArr[0] = arc.getLinearX(d);
+                    dArr[1] = this.mArcs[i].getLinearY(d);
+                    return;
+                } else {
+                    arc.setPoint(d);
                     dArr[0] = this.mArcs[i].getX();
                     dArr[1] = this.mArcs[i].getY();
                     return;
                 }
-                i++;
             } else {
                 return;
             }
         }
     }
 
-    @Override // androidx.constraintlayout.motion.utils.CurveFit
     public void getPos(double d, float[] fArr) {
         Arc[] arcArr = this.mArcs;
-        if (d < arcArr[0].mTime1) {
-            d = arcArr[0].mTime1;
+        double d2 = arcArr[0].mTime1;
+        if (d < d2) {
+            d = d2;
         } else if (d > arcArr[arcArr.length - 1].mTime2) {
             d = arcArr[arcArr.length - 1].mTime2;
         }
@@ -51,29 +50,30 @@ public class ArcCurveFit extends CurveFit {
         while (true) {
             Arc[] arcArr2 = this.mArcs;
             if (i < arcArr2.length) {
-                if (d <= arcArr2[i].mTime2) {
-                    if (arcArr2[i].linear) {
-                        fArr[0] = (float) arcArr2[i].getLinearX(d);
-                        fArr[1] = (float) this.mArcs[i].getLinearY(d);
-                        return;
-                    }
-                    arcArr2[i].setPoint(d);
+                Arc arc = arcArr2[i];
+                if (d > arc.mTime2) {
+                    i++;
+                } else if (arc.linear) {
+                    fArr[0] = (float) arc.getLinearX(d);
+                    fArr[1] = (float) this.mArcs[i].getLinearY(d);
+                    return;
+                } else {
+                    arc.setPoint(d);
                     fArr[0] = (float) this.mArcs[i].getX();
                     fArr[1] = (float) this.mArcs[i].getY();
                     return;
                 }
-                i++;
             } else {
                 return;
             }
         }
     }
 
-    @Override // androidx.constraintlayout.motion.utils.CurveFit
     public void getSlope(double d, double[] dArr) {
         Arc[] arcArr = this.mArcs;
-        if (d < arcArr[0].mTime1) {
-            d = arcArr[0].mTime1;
+        double d2 = arcArr[0].mTime1;
+        if (d < d2) {
+            d = d2;
         } else if (d > arcArr[arcArr.length - 1].mTime2) {
             d = arcArr[arcArr.length - 1].mTime2;
         }
@@ -81,137 +81,162 @@ public class ArcCurveFit extends CurveFit {
         while (true) {
             Arc[] arcArr2 = this.mArcs;
             if (i < arcArr2.length) {
-                if (d <= arcArr2[i].mTime2) {
-                    if (arcArr2[i].linear) {
-                        dArr[0] = arcArr2[i].getLinearDX(d);
-                        dArr[1] = this.mArcs[i].getLinearDY(d);
-                        return;
-                    }
-                    arcArr2[i].setPoint(d);
+                Arc arc = arcArr2[i];
+                if (d > arc.mTime2) {
+                    i++;
+                } else if (arc.linear) {
+                    dArr[0] = arc.getLinearDX(d);
+                    dArr[1] = this.mArcs[i].getLinearDY(d);
+                    return;
+                } else {
+                    arc.setPoint(d);
                     dArr[0] = this.mArcs[i].getDX();
                     dArr[1] = this.mArcs[i].getDY();
                     return;
                 }
-                i++;
             } else {
                 return;
             }
         }
     }
 
-    @Override // androidx.constraintlayout.motion.utils.CurveFit
     public double getPos(double d, int i) {
         Arc[] arcArr = this.mArcs;
         int i2 = 0;
-        if (d < arcArr[0].mTime1) {
-            d = arcArr[0].mTime1;
+        double d2 = arcArr[0].mTime1;
+        if (d < d2) {
+            d = d2;
         } else if (d > arcArr[arcArr.length - 1].mTime2) {
             d = arcArr[arcArr.length - 1].mTime2;
         }
         while (true) {
             Arc[] arcArr2 = this.mArcs;
-            if (i2 < arcArr2.length) {
-                if (d <= arcArr2[i2].mTime2) {
-                    if (arcArr2[i2].linear) {
-                        if (i == 0) {
-                            return arcArr2[i2].getLinearX(d);
-                        }
-                        return arcArr2[i2].getLinearY(d);
-                    }
-                    arcArr2[i2].setPoint(d);
-                    if (i == 0) {
-                        return this.mArcs[i2].getX();
-                    }
-                    return this.mArcs[i2].getY();
-                }
-                i2++;
-            } else {
+            if (i2 >= arcArr2.length) {
                 return Double.NaN;
+            }
+            Arc arc = arcArr2[i2];
+            if (d > arc.mTime2) {
+                i2++;
+            } else if (!arc.linear) {
+                arc.setPoint(d);
+                if (i == 0) {
+                    return this.mArcs[i2].getX();
+                }
+                return this.mArcs[i2].getY();
+            } else if (i == 0) {
+                return arc.getLinearX(d);
+            } else {
+                return arc.getLinearY(d);
             }
         }
     }
 
-    @Override // androidx.constraintlayout.motion.utils.CurveFit
     public double getSlope(double d, int i) {
         Arc[] arcArr = this.mArcs;
         int i2 = 0;
-        if (d < arcArr[0].mTime1) {
-            d = arcArr[0].mTime1;
+        double d2 = arcArr[0].mTime1;
+        if (d < d2) {
+            d = d2;
         }
         if (d > arcArr[arcArr.length - 1].mTime2) {
             d = arcArr[arcArr.length - 1].mTime2;
         }
         while (true) {
             Arc[] arcArr2 = this.mArcs;
-            if (i2 < arcArr2.length) {
-                if (d <= arcArr2[i2].mTime2) {
-                    if (arcArr2[i2].linear) {
-                        if (i == 0) {
-                            return arcArr2[i2].getLinearDX(d);
-                        }
-                        return arcArr2[i2].getLinearDY(d);
-                    }
-                    arcArr2[i2].setPoint(d);
-                    if (i == 0) {
-                        return this.mArcs[i2].getDX();
-                    }
-                    return this.mArcs[i2].getDY();
-                }
-                i2++;
-            } else {
+            if (i2 >= arcArr2.length) {
                 return Double.NaN;
+            }
+            Arc arc = arcArr2[i2];
+            if (d > arc.mTime2) {
+                i2++;
+            } else if (!arc.linear) {
+                arc.setPoint(d);
+                if (i == 0) {
+                    return this.mArcs[i2].getDX();
+                }
+                return this.mArcs[i2].getDY();
+            } else if (i == 0) {
+                return arc.getLinearDX(d);
+            } else {
+                return arc.getLinearDY(d);
             }
         }
     }
 
-    @Override // androidx.constraintlayout.motion.utils.CurveFit
     public double[] getTimePoints() {
         return this.mTime;
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:9:0x0026, code lost:
-        if (r5 == 1) goto L12;
+    /* JADX WARNING: Code restructure failed: missing block: B:8:0x0026, code lost:
+        if (r5 == 1) goto L_0x0028;
      */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public ArcCurveFit(int[] iArr, double[] dArr, double[][] dArr2) {
-        this.mTime = dArr;
-        this.mArcs = new Arc[dArr.length - 1];
-        int i = 0;
-        int i2 = 1;
-        int i3 = 1;
-        while (true) {
-            Arc[] arcArr = this.mArcs;
-            if (i < arcArr.length) {
-                int i4 = iArr[i];
-                if (i4 != 0) {
-                    if (i4 != 1) {
-                        if (i4 != 2) {
-                            if (i4 == 3) {
-                            }
-                        }
-                        i2 = 2;
-                        i3 = i2;
-                    }
-                    i2 = 1;
-                    i3 = i2;
-                } else {
-                    i3 = 3;
-                }
-                int i5 = i + 1;
-                arcArr[i] = new Arc(i3, dArr[i], dArr[i5], dArr2[i][0], dArr2[i][1], dArr2[i5][0], dArr2[i5][1]);
-                i = i5;
-            } else {
-                return;
-            }
-        }
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public ArcCurveFit(int[] r25, double[] r26, double[][] r27) {
+        /*
+            r24 = this;
+            r0 = r24
+            r1 = r26
+            r24.<init>()
+            r0.mTime = r1
+            int r2 = r1.length
+            r3 = 1
+            int r2 = r2 - r3
+            androidx.constraintlayout.motion.utils.ArcCurveFit$Arc[] r2 = new androidx.constraintlayout.motion.utils.ArcCurveFit.Arc[r2]
+            r0.mArcs = r2
+            r2 = 0
+            r4 = r2
+            r5 = r3
+            r6 = r5
+        L_0x0014:
+            androidx.constraintlayout.motion.utils.ArcCurveFit$Arc[] r7 = r0.mArcs
+            int r8 = r7.length
+            if (r4 >= r8) goto L_0x004d
+            r8 = r25[r4]
+            r9 = 3
+            r10 = 2
+            if (r8 == 0) goto L_0x002d
+            if (r8 == r3) goto L_0x002a
+            if (r8 == r10) goto L_0x0028
+            if (r8 == r9) goto L_0x0026
+            goto L_0x002e
+        L_0x0026:
+            if (r5 != r3) goto L_0x002a
+        L_0x0028:
+            r5 = r10
+            goto L_0x002b
+        L_0x002a:
+            r5 = r3
+        L_0x002b:
+            r6 = r5
+            goto L_0x002e
+        L_0x002d:
+            r6 = r9
+        L_0x002e:
+            androidx.constraintlayout.motion.utils.ArcCurveFit$Arc r22 = new androidx.constraintlayout.motion.utils.ArcCurveFit$Arc
+            r10 = r1[r4]
+            int r23 = r4 + 1
+            r12 = r1[r23]
+            r8 = r27[r4]
+            r14 = r8[r2]
+            r16 = r8[r3]
+            r8 = r27[r23]
+            r18 = r8[r2]
+            r20 = r8[r3]
+            r8 = r22
+            r9 = r6
+            r8.<init>(r9, r10, r12, r14, r16, r18, r20)
+            r7[r4] = r22
+            r4 = r23
+            goto L_0x0014
+        L_0x004d:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.constraintlayout.motion.utils.ArcCurveFit.<init>(int[], double[], double[][]):void");
     }
 
-    /* loaded from: classes.dex */
     private static class Arc {
         private static double[] ourPercent = new double[91];
-        boolean linear;
+        boolean linear = false;
         double mArcDistance;
         double mArcVelocity;
         double mEllipseA;
@@ -231,58 +256,68 @@ public class ArcCurveFit extends CurveFit {
         double mY2;
 
         Arc(int i, double d, double d2, double d3, double d4, double d5, double d6) {
+            int i2 = i;
+            double d7 = d;
+            double d8 = d2;
+            double d9 = d3;
+            double d10 = d4;
+            double d11 = d5;
+            double d12 = d6;
             boolean z = false;
-            this.linear = false;
-            int i2 = 1;
-            this.mVertical = i == 1 ? true : z;
-            this.mTime1 = d;
-            this.mTime2 = d2;
-            this.mOneOverDeltaTime = 1.0d / (d2 - d);
-            if (3 == i) {
+            int i3 = 1;
+            this.mVertical = i2 == 1 ? true : z;
+            this.mTime1 = d7;
+            this.mTime2 = d8;
+            this.mOneOverDeltaTime = 1.0d / (d8 - d7);
+            if (3 == i2) {
                 this.linear = true;
             }
-            double d7 = d5 - d3;
-            double d8 = d6 - d4;
-            if (this.linear || Math.abs(d7) < 0.001d || Math.abs(d8) < 0.001d) {
+            double d13 = d11 - d9;
+            double d14 = d12 - d10;
+            if (this.linear || Math.abs(d13) < 0.001d || Math.abs(d14) < 0.001d) {
                 this.linear = true;
-                this.mX1 = d3;
-                this.mX2 = d5;
-                this.mY1 = d4;
+                this.mX1 = d9;
+                this.mX2 = d11;
+                this.mY1 = d10;
                 this.mY2 = d6;
-                double hypot = Math.hypot(d8, d7);
+                double hypot = Math.hypot(d14, d13);
                 this.mArcDistance = hypot;
                 this.mArcVelocity = hypot * this.mOneOverDeltaTime;
-                double d9 = this.mTime2;
-                double d10 = this.mTime1;
-                this.mEllipseCenterX = d7 / (d9 - d10);
-                this.mEllipseCenterY = d8 / (d9 - d10);
+                double d15 = this.mTime2;
+                double d16 = this.mTime1;
+                this.mEllipseCenterX = d13 / (d15 - d16);
+                this.mEllipseCenterY = d14 / (d15 - d16);
                 return;
             }
-            this.mLut = new double[R$styleable.Constraint_layout_goneMarginRight];
+            this.mLut = new double[101];
             boolean z2 = this.mVertical;
-            this.mEllipseA = d7 * (z2 ? -1 : 1);
-            this.mEllipseB = d8 * (!z2 ? -1 : i2);
-            this.mEllipseCenterX = z2 ? d5 : d3;
-            this.mEllipseCenterY = z2 ? d4 : d6;
+            this.mEllipseA = d13 * ((double) (z2 ? -1 : 1));
+            this.mEllipseB = d14 * ((double) (!z2 ? -1 : i3));
+            this.mEllipseCenterX = z2 ? d11 : d9;
+            this.mEllipseCenterY = z2 ? d10 : d6;
             buildTable(d3, d4, d5, d6);
             this.mArcVelocity = this.mArcDistance * this.mOneOverDeltaTime;
         }
 
-        void setPoint(double d) {
+        /* access modifiers changed from: package-private */
+        public void setPoint(double d) {
             double lookup = lookup((this.mVertical ? this.mTime2 - d : d - this.mTime1) * this.mOneOverDeltaTime) * 1.5707963267948966d;
             this.mTmpSinAngle = Math.sin(lookup);
             this.mTmpCosAngle = Math.cos(lookup);
         }
 
-        double getX() {
+        /* access modifiers changed from: package-private */
+        public double getX() {
             return this.mEllipseCenterX + (this.mEllipseA * this.mTmpSinAngle);
         }
 
-        double getY() {
+        /* access modifiers changed from: package-private */
+        public double getY() {
             return this.mEllipseCenterY + (this.mEllipseB * this.mTmpCosAngle);
         }
 
-        double getDX() {
+        /* access modifiers changed from: package-private */
+        public double getDX() {
             double d = this.mEllipseA * this.mTmpCosAngle;
             double hypot = this.mArcVelocity / Math.hypot(d, (-this.mEllipseB) * this.mTmpSinAngle);
             if (this.mVertical) {
@@ -291,7 +326,8 @@ public class ArcCurveFit extends CurveFit {
             return d * hypot;
         }
 
-        double getDY() {
+        /* access modifiers changed from: package-private */
+        public double getDY() {
             double d = this.mEllipseA * this.mTmpCosAngle;
             double d2 = (-this.mEllipseB) * this.mTmpSinAngle;
             double hypot = this.mArcVelocity / Math.hypot(d, d2);
@@ -318,7 +354,8 @@ public class ArcCurveFit extends CurveFit {
             return this.mEllipseCenterY;
         }
 
-        double lookup(double d) {
+        /* access modifiers changed from: package-private */
+        public double lookup(double d) {
             if (d <= 0.0d) {
                 return 0.0d;
             }
@@ -326,14 +363,14 @@ public class ArcCurveFit extends CurveFit {
                 return 1.0d;
             }
             double[] dArr = this.mLut;
-            double length = d * (dArr.length - 1);
+            double length = d * ((double) (dArr.length - 1));
             int i = (int) length;
-            return dArr[i] + ((length - i) * (dArr[i + 1] - dArr[i]));
+            double d2 = length - ((double) i);
+            double d3 = dArr[i];
+            return d3 + (d2 * (dArr[i + 1] - d3));
         }
 
         private void buildTable(double d, double d2, double d3, double d4) {
-            double[] dArr;
-            double[] dArr2;
             double d5;
             double d6 = d3 - d;
             double d7 = d2 - d4;
@@ -342,11 +379,12 @@ public class ArcCurveFit extends CurveFit {
             double d9 = 0.0d;
             double d10 = 0.0d;
             while (true) {
-                if (i >= ourPercent.length) {
+                double[] dArr = ourPercent;
+                if (i >= dArr.length) {
                     break;
                 }
                 double d11 = d8;
-                double radians = Math.toRadians((i * 90.0d) / (dArr.length - 1));
+                double radians = Math.toRadians((((double) i) * 90.0d) / ((double) (dArr.length - 1)));
                 double sin = Math.sin(radians) * d6;
                 double cos = Math.cos(radians) * d7;
                 if (i > 0) {
@@ -357,34 +395,37 @@ public class ArcCurveFit extends CurveFit {
                 }
                 i++;
                 d10 = cos;
+                double d12 = sin;
                 d8 = d5;
-                d9 = sin;
+                d9 = d12;
             }
-            double d12 = d8;
-            this.mArcDistance = d12;
+            double d13 = d8;
+            this.mArcDistance = d13;
             int i2 = 0;
             while (true) {
-                double[] dArr3 = ourPercent;
-                if (i2 >= dArr3.length) {
+                double[] dArr2 = ourPercent;
+                if (i2 >= dArr2.length) {
                     break;
                 }
-                dArr3[i2] = dArr3[i2] / d12;
+                dArr2[i2] = dArr2[i2] / d13;
                 i2++;
             }
             int i3 = 0;
             while (true) {
-                if (i3 < this.mLut.length) {
-                    double length = i3 / (dArr2.length - 1);
+                double[] dArr3 = this.mLut;
+                if (i3 < dArr3.length) {
+                    double length = ((double) i3) / ((double) (dArr3.length - 1));
                     int binarySearch = Arrays.binarySearch(ourPercent, length);
                     if (binarySearch >= 0) {
-                        this.mLut[i3] = binarySearch / (ourPercent.length - 1);
+                        this.mLut[i3] = (double) (binarySearch / (ourPercent.length - 1));
                     } else if (binarySearch == -1) {
                         this.mLut[i3] = 0.0d;
                     } else {
                         int i4 = -binarySearch;
                         int i5 = i4 - 2;
                         double[] dArr4 = ourPercent;
-                        this.mLut[i3] = (i5 + ((length - dArr4[i5]) / (dArr4[i4 - 1] - dArr4[i5]))) / (dArr4.length - 1);
+                        double d14 = dArr4[i5];
+                        this.mLut[i3] = (((double) i5) + ((length - d14) / (dArr4[i4 - 1] - d14))) / ((double) (dArr4.length - 1));
                     }
                     i3++;
                 } else {

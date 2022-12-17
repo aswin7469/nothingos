@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.setupdesign.GlifLayout xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:id="@+id/setup_wizard_layout" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_marginTop="52dp">
+    <RelativeLayout android:gravity="center_vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+        <include android:id="@+id/face_notice_layout" layout="@layout/nt_face_enroll_introduction"/>
+        <include android:id="@+id/face_camerapreview_layout" android:visibility="invisible" layout="@layout/nt_face_enroll_enrolling"/>
+    </RelativeLayout>
+</com.google.android.setupdesign.GlifLayout>

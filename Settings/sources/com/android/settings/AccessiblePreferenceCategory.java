@@ -3,7 +3,7 @@ package com.android.settings;
 import android.content.Context;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceViewHolder;
-/* loaded from: classes.dex */
+
 public class AccessiblePreferenceCategory extends PreferenceCategory {
     private String mContentDescription;
 
@@ -15,7 +15,6 @@ public class AccessiblePreferenceCategory extends PreferenceCategory {
         this.mContentDescription = str;
     }
 
-    @Override // androidx.preference.PreferenceCategory, androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         preferenceViewHolder.itemView.setContentDescription(this.mContentDescription);

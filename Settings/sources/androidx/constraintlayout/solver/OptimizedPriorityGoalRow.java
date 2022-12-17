@@ -2,16 +2,15 @@ package androidx.constraintlayout.solver;
 
 import java.util.Arrays;
 import java.util.Comparator;
-/* loaded from: classes.dex */
-public class OptimizedPriorityGoalRow extends ArrayRow {
-    Cache mCache;
-    private int TABLE_SIZE = 128;
-    private SolverVariable[] arrayGoals = new SolverVariable[128];
-    private SolverVariable[] sortArray = new SolverVariable[128];
-    private int numGoals = 0;
-    GoalVariableAccessor accessor = new GoalVariableAccessor(this);
 
-    /* loaded from: classes.dex */
+public class OptimizedPriorityGoalRow extends ArrayRow {
+    private int TABLE_SIZE = 128;
+    GoalVariableAccessor accessor = new GoalVariableAccessor(this);
+    private SolverVariable[] arrayGoals = new SolverVariable[128];
+    Cache mCache;
+    private int numGoals = 0;
+    private SolverVariable[] sortArray = new SolverVariable[128];
+
     class GoalVariableAccessor implements Comparable {
         OptimizedPriorityGoalRow row;
         SolverVariable variable;
@@ -26,34 +25,35 @@ public class OptimizedPriorityGoalRow extends ArrayRow {
 
         public boolean addToGoal(SolverVariable solverVariable, float f) {
             boolean z = true;
-            if (!this.variable.inGoal) {
+            if (this.variable.inGoal) {
                 for (int i = 0; i < 8; i++) {
-                    float f2 = solverVariable.goalStrengthVector[i];
-                    if (f2 != 0.0f) {
-                        float f3 = f2 * f;
-                        if (Math.abs(f3) < 1.0E-4f) {
-                            f3 = 0.0f;
-                        }
-                        this.variable.goalStrengthVector[i] = f3;
-                    } else {
+                    float[] fArr = this.variable.goalStrengthVector;
+                    float f2 = fArr[i] + (solverVariable.goalStrengthVector[i] * f);
+                    fArr[i] = f2;
+                    if (Math.abs(f2) < 1.0E-4f) {
                         this.variable.goalStrengthVector[i] = 0.0f;
+                    } else {
+                        z = false;
                     }
                 }
-                return true;
+                if (z) {
+                    OptimizedPriorityGoalRow.this.removeGoal(this.variable);
+                }
+                return false;
             }
             for (int i2 = 0; i2 < 8; i2++) {
-                float[] fArr = this.variable.goalStrengthVector;
-                fArr[i2] = fArr[i2] + (solverVariable.goalStrengthVector[i2] * f);
-                if (Math.abs(fArr[i2]) < 1.0E-4f) {
-                    this.variable.goalStrengthVector[i2] = 0.0f;
+                float f3 = solverVariable.goalStrengthVector[i2];
+                if (f3 != 0.0f) {
+                    float f4 = f3 * f;
+                    if (Math.abs(f4) < 1.0E-4f) {
+                        f4 = 0.0f;
+                    }
+                    this.variable.goalStrengthVector[i2] = f4;
                 } else {
-                    z = false;
+                    this.variable.goalStrengthVector[i2] = 0.0f;
                 }
             }
-            if (z) {
-                OptimizedPriorityGoalRow.this.removeGoal(this.variable);
-            }
-            return false;
+            return true;
         }
 
         public final boolean isNegative() {
@@ -86,9 +86,8 @@ public class OptimizedPriorityGoalRow extends ArrayRow {
             return false;
         }
 
-        @Override // java.lang.Comparable
         public int compareTo(Object obj) {
-            return this.variable.id - ((SolverVariable) obj).id;
+            return this.variable.f16id - ((SolverVariable) obj).f16id;
         }
 
         public void reset() {
@@ -106,7 +105,6 @@ public class OptimizedPriorityGoalRow extends ArrayRow {
         }
     }
 
-    @Override // androidx.constraintlayout.solver.ArrayRow, androidx.constraintlayout.solver.LinearSystem.Row
     public void clear() {
         this.numGoals = 0;
         this.constantValue = 0.0f;
@@ -117,22 +115,18 @@ public class OptimizedPriorityGoalRow extends ArrayRow {
         this.mCache = cache;
     }
 
-    @Override // androidx.constraintlayout.solver.ArrayRow, androidx.constraintlayout.solver.LinearSystem.Row
     public SolverVariable getPivotCandidate(LinearSystem linearSystem, boolean[] zArr) {
         int i = -1;
         for (int i2 = 0; i2 < this.numGoals; i2++) {
             SolverVariable solverVariable = this.arrayGoals[i2];
-            if (!zArr[solverVariable.id]) {
+            if (!zArr[solverVariable.f16id]) {
                 this.accessor.init(solverVariable);
                 if (i == -1) {
                     if (!this.accessor.isNegative()) {
                     }
-                    i = i2;
-                } else {
-                    if (!this.accessor.isSmallerThan(this.arrayGoals[i])) {
-                    }
-                    i = i2;
+                } else if (!this.accessor.isSmallerThan(this.arrayGoals[i])) {
                 }
+                i = i2;
             }
         }
         if (i == -1) {
@@ -141,7 +135,6 @@ public class OptimizedPriorityGoalRow extends ArrayRow {
         return this.arrayGoals[i];
     }
 
-    @Override // androidx.constraintlayout.solver.ArrayRow, androidx.constraintlayout.solver.LinearSystem.Row
     public void addError(SolverVariable solverVariable) {
         this.accessor.init(solverVariable);
         this.accessor.reset();
@@ -163,7 +156,7 @@ public class OptimizedPriorityGoalRow extends ArrayRow {
         solverVariableArr3[i3] = solverVariable;
         int i4 = i3 + 1;
         this.numGoals = i4;
-        if (i4 > 1 && solverVariableArr3[i4 - 1].id > solverVariable.id) {
+        if (i4 > 1 && solverVariableArr3[i4 - 1].f16id > solverVariable.f16id) {
             int i5 = 0;
             while (true) {
                 i = this.numGoals;
@@ -173,10 +166,9 @@ public class OptimizedPriorityGoalRow extends ArrayRow {
                 this.sortArray[i5] = this.arrayGoals[i5];
                 i5++;
             }
-            Arrays.sort(this.sortArray, 0, i, new Comparator<SolverVariable>() { // from class: androidx.constraintlayout.solver.OptimizedPriorityGoalRow.1
-                @Override // java.util.Comparator
-                public int compare(SolverVariable solverVariable2, SolverVariable solverVariable3) {
-                    return solverVariable2.id - solverVariable3.id;
+            Arrays.sort(this.sortArray, 0, i, new Comparator<SolverVariable>() {
+                public int compare(SolverVariable solverVariable, SolverVariable solverVariable2) {
+                    return solverVariable.f16id - solverVariable2.f16id;
                 }
             });
             for (int i6 = 0; i6 < this.numGoals; i6++) {
@@ -187,64 +179,52 @@ public class OptimizedPriorityGoalRow extends ArrayRow {
         solverVariable.addToRow(this);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:10:0x0012, code lost:
-        r2 = r5.arrayGoals;
-        r3 = r1 + 1;
-        r2[r1] = r2[r3];
-        r1 = r3;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:12:0x001c, code lost:
-        r5.numGoals = r2 - 1;
-        r6.inGoal = false;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:13:0x0022, code lost:
-        return;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:8:0x000c, code lost:
-        r2 = r5.numGoals;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:9:0x0010, code lost:
-        if (r1 >= (r2 - 1)) goto L11;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* access modifiers changed from: private */
     public final void removeGoal(SolverVariable solverVariable) {
         int i = 0;
         while (i < this.numGoals) {
             if (this.arrayGoals[i] == solverVariable) {
-                break;
+                while (true) {
+                    int i2 = this.numGoals;
+                    if (i < i2 - 1) {
+                        SolverVariable[] solverVariableArr = this.arrayGoals;
+                        int i3 = i + 1;
+                        solverVariableArr[i] = solverVariableArr[i3];
+                        i = i3;
+                    } else {
+                        this.numGoals = i2 - 1;
+                        solverVariable.inGoal = false;
+                        return;
+                    }
+                }
+            } else {
+                i++;
             }
-            i++;
         }
     }
 
-    @Override // androidx.constraintlayout.solver.ArrayRow
     public void updateFromRow(ArrayRow arrayRow, boolean z) {
         SolverVariable solverVariable = arrayRow.variable;
-        if (solverVariable == null) {
-            return;
-        }
-        int head = arrayRow.variables.getHead();
-        int currentSize = arrayRow.variables.getCurrentSize();
-        while (head != -1 && currentSize > 0) {
-            int id = arrayRow.variables.getId(head);
-            float value = arrayRow.variables.getValue(head);
-            SolverVariable solverVariable2 = this.mCache.mIndexedVariables[id];
-            this.accessor.init(solverVariable2);
-            if (this.accessor.addToGoal(solverVariable, value)) {
-                addToGoal(solverVariable2);
+        if (solverVariable != null) {
+            int head = arrayRow.variables.getHead();
+            int currentSize = arrayRow.variables.getCurrentSize();
+            while (head != -1 && currentSize > 0) {
+                int id = arrayRow.variables.getId(head);
+                float value = arrayRow.variables.getValue(head);
+                SolverVariable solverVariable2 = this.mCache.mIndexedVariables[id];
+                this.accessor.init(solverVariable2);
+                if (this.accessor.addToGoal(solverVariable, value)) {
+                    addToGoal(solverVariable2);
+                }
+                this.constantValue += arrayRow.constantValue * value;
+                head = arrayRow.variables.getNextIndice(head);
             }
-            this.constantValue += arrayRow.constantValue * value;
-            head = arrayRow.variables.getNextIndice(head);
+            removeGoal(solverVariable);
         }
-        removeGoal(solverVariable);
     }
 
-    @Override // androidx.constraintlayout.solver.ArrayRow
     public String toString() {
-        String str = " goal -> (" + this.constantValue + ") : ";
+        String str = "" + " goal -> (" + this.constantValue + ") : ";
         for (int i = 0; i < this.numGoals; i++) {
             this.accessor.init(this.arrayGoals[i]);
             str = str + this.accessor + " ";

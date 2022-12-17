@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:settings="http://schemas.android.com/apk/res-auto" android:title="@string/nt_screen_refresh_rate" android:key="nt_screen_refresh_rate_settings">
-    <com.android.settingslib.widget.IllustrationPreference android:key="nt_display_refresh_illustration" settings:lottie_rawRes="@raw/nt_display_refresh" settings:searchable="false"/>
-    <com.android.settingslib.widget.RadioButtonPreference android:title="@string/nt_screen_refresh_rate_high_title" android:key="nt_screen_refresh_rate_high" android:summary="@string/nt_screen_refresh_rate_high_summary" settings:searchable="false"/>
-    <com.android.settingslib.widget.RadioButtonPreference android:title="@string/nt_screen_refresh_rate_standard_title" android:key="nt_screen_refresh_rate_standard" android:summary="@string/nt_screen_refresh_rate_standard_summary" settings:searchable="false"/>
-    <com.android.settingslib.widget.FooterPreference android:title="@string/nt_display_refresh_footer_content" android:selectable="false" android:key="nt_display_refresh_footer" settings:searchable="false"/>
+<PreferenceScreen xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:title="@string/nt_screen_refresh_rate" android:key="nt_screen_refresh_rate_settings">
+    <com.android.settingslib.widget.IllustrationPreference android:key="nt_display_refresh_illustration" app:lottie_rawRes="@raw/nt_display_refresh_rate" app:searchable="false"/>
+    <com.android.settingslib.widget.RadioButtonPreference android:title="@string/nt_screen_refresh_rate_high_title" android:key="nt_screen_refresh_rate_high" android:summary="@string/nt_screen_refresh_rate_high_summary" app:searchable="false"/>
+    <com.android.settingslib.widget.RadioButtonPreference android:title="@string/nt_screen_refresh_rate_standard_title" android:key="nt_screen_refresh_rate_standard" android:summary="@string/nt_screen_refresh_rate_standard_summary" app:searchable="false"/>
+    <com.android.settingslib.widget.FooterPreference android:title="@string/nt_display_refresh_footer_content" android:selectable="false" android:key="nt_display_refresh_footer" app:searchable="false"/>
 </PreferenceScreen>

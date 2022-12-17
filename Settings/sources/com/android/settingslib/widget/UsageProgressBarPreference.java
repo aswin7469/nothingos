@@ -13,7 +13,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-/* loaded from: classes.dex */
+
 public class UsageProgressBarPreference extends Preference {
     private CharSequence mBottomSummary;
     private ImageView mCustomImageView;
@@ -24,67 +24,58 @@ public class UsageProgressBarPreference extends Preference {
 
     public UsageProgressBarPreference(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
-        this.mNumberPattern = Pattern.compile("[\\d]*[\\.,]?[\\d]+");
+        this.mNumberPattern = Pattern.compile("[\\d]*[\\٫.,]?[\\d]+");
         this.mPercent = -1;
         setLayoutResource(R$layout.preference_usage_progress_bar);
     }
 
     public UsageProgressBarPreference(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.mNumberPattern = Pattern.compile("[\\d]*[\\.,]?[\\d]+");
+        this.mNumberPattern = Pattern.compile("[\\d]*[\\٫.,]?[\\d]+");
         this.mPercent = -1;
         setLayoutResource(R$layout.preference_usage_progress_bar);
     }
 
     public UsageProgressBarPreference(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public void setUsageSummary(CharSequence charSequence) {
-        if (TextUtils.equals(this.mUsageSummary, charSequence)) {
-            return;
+        if (!TextUtils.equals(this.mUsageSummary, charSequence)) {
+            this.mUsageSummary = charSequence;
+            notifyChanged();
         }
-        this.mUsageSummary = charSequence;
-        notifyChanged();
     }
 
     public void setTotalSummary(CharSequence charSequence) {
-        if (TextUtils.equals(this.mTotalSummary, charSequence)) {
-            return;
+        if (!TextUtils.equals(this.mTotalSummary, charSequence)) {
+            this.mTotalSummary = charSequence;
+            notifyChanged();
         }
-        this.mTotalSummary = charSequence;
-        notifyChanged();
     }
 
     public void setBottomSummary(CharSequence charSequence) {
-        if (TextUtils.equals(this.mBottomSummary, charSequence)) {
-            return;
+        if (!TextUtils.equals(this.mBottomSummary, charSequence)) {
+            this.mBottomSummary = charSequence;
+            notifyChanged();
         }
-        this.mBottomSummary = charSequence;
-        notifyChanged();
     }
 
     public void setPercent(long j, long j2) {
-        if (j > j2) {
-            return;
-        }
-        if (j2 == 0) {
-            if (this.mPercent == 0) {
-                return;
+        if (j <= j2) {
+            if (j2 != 0) {
+                int i = (int) ((((double) j) / ((double) j2)) * 100.0d);
+                if (this.mPercent != i) {
+                    this.mPercent = i;
+                    notifyChanged();
+                }
+            } else if (this.mPercent != 0) {
+                this.mPercent = 0;
+                notifyChanged();
             }
-            this.mPercent = 0;
-            notifyChanged();
-            return;
         }
-        int i = (int) ((j / j2) * 100.0d);
-        if (this.mPercent == i) {
-            return;
-        }
-        this.mPercent = i;
-        notifyChanged();
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         preferenceViewHolder.setDividerAllowedAbove(false);

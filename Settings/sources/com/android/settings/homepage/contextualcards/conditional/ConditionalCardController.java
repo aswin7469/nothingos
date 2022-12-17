@@ -2,7 +2,7 @@ package com.android.settings.homepage.contextualcards.conditional;
 
 import android.content.Context;
 import com.android.settings.homepage.contextualcards.ContextualCard;
-/* loaded from: classes.dex */
+
 public interface ConditionalCardController {
     ContextualCard buildContextualCard();
 

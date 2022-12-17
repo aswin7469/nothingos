@@ -1,5 +1,6 @@
 package com.android.settings.media;
 
+import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -16,48 +17,47 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-/* loaded from: classes.dex */
+
 public class MediaDeviceUpdateWorker extends SliceBackgroundWorker implements LocalMediaManager.DeviceCallback {
     private static final boolean DEBUG = Log.isLoggable("MediaDeviceUpdateWorker", 3);
     protected final Context mContext;
     private boolean mIsTouched;
     LocalMediaManager mLocalMediaManager;
-    private final String mPackageName;
     protected final Collection<MediaDevice> mMediaDevices = new CopyOnWriteArrayList();
-    private final DevicesChangedBroadcastReceiver mReceiver = new DevicesChangedBroadcastReceiver();
+    private final String mPackageName;
+    private final DevicesChangedBroadcastReceiver mReceiver;
 
     public MediaDeviceUpdateWorker(Context context, Uri uri) {
         super(context, uri);
         this.mContext = context;
         this.mPackageName = uri.getQueryParameter("media_package_name");
+        this.mReceiver = new DevicesChangedBroadcastReceiver();
     }
 
-    @Override // com.android.settings.slices.SliceBackgroundWorker
-    protected void onSlicePinned() {
+    /* access modifiers changed from: protected */
+    public void onSlicePinned() {
         this.mMediaDevices.clear();
         this.mIsTouched = false;
         LocalMediaManager localMediaManager = this.mLocalMediaManager;
         if (localMediaManager == null || !TextUtils.equals(this.mPackageName, localMediaManager.getPackageName())) {
-            this.mLocalMediaManager = new LocalMediaManager(this.mContext, this.mPackageName, null);
+            this.mLocalMediaManager = new LocalMediaManager(this.mContext, this.mPackageName, (Notification) null);
         }
         this.mLocalMediaManager.registerCallback(this);
         this.mContext.registerReceiver(this.mReceiver, new IntentFilter("android.media.STREAM_DEVICES_CHANGED_ACTION"));
         this.mLocalMediaManager.startScan();
     }
 
-    @Override // com.android.settings.slices.SliceBackgroundWorker
-    protected void onSliceUnpinned() {
+    /* access modifiers changed from: protected */
+    public void onSliceUnpinned() {
         this.mLocalMediaManager.unregisterCallback(this);
         this.mContext.unregisterReceiver(this.mReceiver);
         this.mLocalMediaManager.stopScan();
     }
 
-    @Override // java.io.Closeable, java.lang.AutoCloseable
     public void close() {
         this.mLocalMediaManager = null;
     }
 
-    @Override // com.android.settingslib.media.LocalMediaManager.DeviceCallback
     public void onDeviceListUpdate(List<MediaDevice> list) {
         buildMediaDevices(list);
         notifySliceChange();
@@ -68,61 +68,55 @@ public class MediaDeviceUpdateWorker extends SliceBackgroundWorker implements Lo
         this.mMediaDevices.addAll(list);
     }
 
-    @Override // com.android.settingslib.media.LocalMediaManager.DeviceCallback
     public void onSelectedDeviceStateChanged(MediaDevice mediaDevice, int i) {
         notifySliceChange();
     }
 
-    @Override // com.android.settingslib.media.LocalMediaManager.DeviceCallback
     public void onDeviceAttributesChanged() {
         notifySliceChange();
     }
 
-    @Override // com.android.settingslib.media.LocalMediaManager.DeviceCallback
     public void onRequestFailed(int i) {
         notifySliceChange();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void adjustSessionVolume(String str, int i) {
         this.mLocalMediaManager.adjustSessionVolume(str, i);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public List<RoutingSessionInfo> getActiveRemoteMediaDevice() {
         ArrayList arrayList = new ArrayList();
-        for (RoutingSessionInfo routingSessionInfo : this.mLocalMediaManager.getActiveMediaSession()) {
-            if (!routingSessionInfo.isSystemSession()) {
+        for (RoutingSessionInfo next : this.mLocalMediaManager.getActiveMediaSession()) {
+            if (!next.isSystemSession()) {
                 if (DEBUG) {
-                    Log.d("MediaDeviceUpdateWorker", "getActiveRemoteMediaDevice() info : " + routingSessionInfo.toString() + ", package name : " + routingSessionInfo.getClientPackageName());
+                    Log.d("MediaDeviceUpdateWorker", "getActiveRemoteMediaDevice() info : " + next.toString() + ", package name : " + next.getClientPackageName());
                 }
-                arrayList.add(routingSessionInfo);
+                arrayList.add(next);
             }
         }
         return arrayList;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean shouldDisableMediaOutput(String str) {
         return this.mLocalMediaManager.shouldDisableMediaOutput(str);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean shouldEnableVolumeSeekBar(RoutingSessionInfo routingSessionInfo) {
         return this.mLocalMediaManager.shouldEnableVolumeSeekBar(routingSessionInfo);
     }
 
-    /* loaded from: classes.dex */
     private class DevicesChangedBroadcastReceiver extends BroadcastReceiver {
         private DevicesChangedBroadcastReceiver() {
         }
 
-        @Override // android.content.BroadcastReceiver
         public void onReceive(Context context, Intent intent) {
-            if (!TextUtils.equals("android.media.STREAM_DEVICES_CHANGED_ACTION", intent.getAction()) || !Utils.isAudioModeOngoingCall(MediaDeviceUpdateWorker.this.mContext)) {
-                return;
+            if (TextUtils.equals("android.media.STREAM_DEVICES_CHANGED_ACTION", intent.getAction()) && Utils.isAudioModeOngoingCall(MediaDeviceUpdateWorker.this.mContext)) {
+                MediaDeviceUpdateWorker.this.notifySliceChange();
             }
-            MediaDeviceUpdateWorker.this.notifySliceChange();
         }
     }
 }

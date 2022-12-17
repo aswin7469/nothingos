@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.net.EthernetManager;
+import android.net.IpConfiguration;
 import android.net.TetheringManager;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
@@ -24,10 +26,14 @@ import com.android.settings.widget.SwitchWidgetController;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
-/* loaded from: classes.dex */
+
 public class TetherEnabler implements SwitchWidgetController.OnSwitchChangeListener, DataSaverBackend.Listener, LifecycleObserver {
     private static final boolean DEBUG = Log.isLoggable("TetherEnabler", 3);
+    /* access modifiers changed from: private */
+    public final ConcurrentHashMap<String, IpConfiguration> mAvailableInterfaces = new ConcurrentHashMap<>();
+    private final BluetoothAdapter mBluetoothAdapter;
     private boolean mBluetoothEnableForTether;
     private final AtomicReference<BluetoothPan> mBluetoothPan;
     @VisibleForTesting
@@ -36,36 +42,34 @@ public class TetherEnabler implements SwitchWidgetController.OnSwitchChangeListe
     private final Context mContext;
     private final DataSaverBackend mDataSaverBackend;
     private boolean mDataSaverEnabled;
-    private final String mEthernetRegex;
+    private final EthernetManager.InterfaceStateListener mEthernetListener = new EthernetListener();
+    private final EthernetManager mEthernetManager;
+    @VisibleForTesting
+    final List<OnTetherStateUpdateListener> mListeners;
+    private final Handler mMainThreadHandler;
     @VisibleForTesting
     ConnectivityManager.OnStartTetheringCallback mOnStartTetheringCallback;
     private final SwitchWidgetController mSwitchWidgetController;
+    private final BroadcastReceiver mTetherChangeReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            boolean z;
+            String action = intent.getAction();
+            if (TextUtils.equals("android.net.wifi.WIFI_AP_STATE_CHANGED", action)) {
+                z = TetherEnabler.this.handleWifiApStateChanged(intent.getIntExtra("wifi_state", 14));
+            } else {
+                z = TextUtils.equals("android.bluetooth.adapter.action.STATE_CHANGED", action) ? TetherEnabler.this.handleBluetoothStateChanged(intent.getIntExtra("android.bluetooth.adapter.extra.STATE", Integer.MIN_VALUE)) : false;
+            }
+            if (z) {
+                TetherEnabler.this.updateState((String[]) null);
+            }
+        }
+    };
     @VisibleForTesting
     TetheringManager.TetheringEventCallback mTetheringEventCallback;
     private final TetheringManager mTetheringManager;
     private final UserManager mUserManager;
     private final WifiManager mWifiManager;
-    private final BroadcastReceiver mTetherChangeReceiver = new BroadcastReceiver() { // from class: com.android.settings.network.TetherEnabler.2
-        @Override // android.content.BroadcastReceiver
-        public void onReceive(Context context, Intent intent) {
-            boolean handleBluetoothStateChanged;
-            String action = intent.getAction();
-            if (TextUtils.equals("android.net.wifi.WIFI_AP_STATE_CHANGED", action)) {
-                handleBluetoothStateChanged = TetherEnabler.this.handleWifiApStateChanged(intent.getIntExtra("wifi_state", 14));
-            } else {
-                handleBluetoothStateChanged = TextUtils.equals("android.bluetooth.adapter.action.STATE_CHANGED", action) ? TetherEnabler.this.handleBluetoothStateChanged(intent.getIntExtra("android.bluetooth.adapter.extra.STATE", Integer.MIN_VALUE)) : false;
-            }
-            if (handleBluetoothStateChanged) {
-                TetherEnabler.this.updateState(null);
-            }
-        }
-    };
-    private final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    @VisibleForTesting
-    final List<OnTetherStateUpdateListener> mListeners = new ArrayList();
-    private final Handler mMainThreadHandler = new Handler(Looper.getMainLooper());
 
-    /* loaded from: classes.dex */
     public interface OnTetherStateUpdateListener {
         void onTetherStateUpdated(int i);
     }
@@ -74,12 +78,23 @@ public class TetherEnabler implements SwitchWidgetController.OnSwitchChangeListe
         return (i & (1 << i2)) != 0;
     }
 
-    @Override // com.android.settings.datausage.DataSaverBackend.Listener
     public void onAllowlistStatusChanged(int i, boolean z) {
     }
 
-    @Override // com.android.settings.datausage.DataSaverBackend.Listener
     public void onDenylistStatusChanged(int i, boolean z) {
+    }
+
+    private final class EthernetListener implements EthernetManager.InterfaceStateListener {
+        private EthernetListener() {
+        }
+
+        public void onInterfaceStateChanged(String str, int i, int i2, IpConfiguration ipConfiguration) {
+            if (i == 2) {
+                TetherEnabler.this.mAvailableInterfaces.put(str, ipConfiguration);
+            } else {
+                TetherEnabler.this.mAvailableInterfaces.remove(str, ipConfiguration);
+            }
+        }
     }
 
     public TetherEnabler(Context context, SwitchWidgetController switchWidgetController, AtomicReference<BluetoothPan> atomicReference) {
@@ -91,9 +106,12 @@ public class TetherEnabler implements SwitchWidgetController.OnSwitchChangeListe
         this.mTetheringManager = (TetheringManager) context.getSystemService("tethering");
         this.mWifiManager = (WifiManager) context.getSystemService("wifi");
         this.mUserManager = (UserManager) context.getSystemService("user");
+        this.mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         this.mBluetoothPan = atomicReference;
-        this.mEthernetRegex = context.getString(17039939);
         this.mDataSaverEnabled = dataSaverBackend.isDataSaverEnabled();
+        this.mListeners = new ArrayList();
+        this.mMainThreadHandler = new Handler(Looper.getMainLooper());
+        this.mEthernetManager = (EthernetManager) context.getSystemService(EthernetManager.class);
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
@@ -105,14 +123,23 @@ public class TetherEnabler implements SwitchWidgetController.OnSwitchChangeListe
         intentFilter.addAction("android.net.wifi.WIFI_AP_STATE_CHANGED");
         intentFilter.addAction("android.bluetooth.adapter.action.STATE_CHANGED");
         this.mContext.registerReceiver(this.mTetherChangeReceiver, intentFilter);
-        this.mTetheringEventCallback = new TetheringManager.TetheringEventCallback() { // from class: com.android.settings.network.TetherEnabler.1
+        this.mTetheringEventCallback = new TetheringManager.TetheringEventCallback() {
             public void onTetheredInterfacesChanged(List<String> list) {
                 TetherEnabler.this.updateState((String[]) list.toArray(new String[list.size()]));
             }
         };
         this.mTetheringManager.registerTetheringEventCallback(new HandlerExecutor(this.mMainThreadHandler), this.mTetheringEventCallback);
         this.mOnStartTetheringCallback = new OnStartTetheringCallback(this);
-        updateState(null);
+        updateState((String[]) null);
+        EthernetManager ethernetManager = this.mEthernetManager;
+        if (ethernetManager != null) {
+            ethernetManager.addInterfaceStateListener(new TetherEnabler$$ExternalSyntheticLambda0(this), this.mEthernetListener);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$onStart$0(Runnable runnable) {
+        this.mMainThreadHandler.post(runnable);
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
@@ -123,14 +150,17 @@ public class TetherEnabler implements SwitchWidgetController.OnSwitchChangeListe
         this.mContext.unregisterReceiver(this.mTetherChangeReceiver);
         this.mTetheringManager.unregisterTetheringEventCallback(this.mTetheringEventCallback);
         this.mTetheringEventCallback = null;
+        EthernetManager ethernetManager = this.mEthernetManager;
+        if (ethernetManager != null) {
+            ethernetManager.removeInterfaceStateListener(this.mEthernetListener);
+        }
     }
 
     public void addListener(OnTetherStateUpdateListener onTetherStateUpdateListener) {
-        if (onTetherStateUpdateListener == null || this.mListeners.contains(onTetherStateUpdateListener)) {
-            return;
+        if (onTetherStateUpdateListener != null && !this.mListeners.contains(onTetherStateUpdateListener)) {
+            onTetherStateUpdateListener.onTetherStateUpdated(getTetheringState((String[]) null));
+            this.mListeners.add(onTetherStateUpdateListener);
         }
-        onTetherStateUpdateListener.onTetherStateUpdated(getTetheringState(null));
-        this.mListeners.add(onTetherStateUpdateListener);
     }
 
     public void removeListener(OnTetherStateUpdateListener onTetherStateUpdateListener) {
@@ -143,8 +173,9 @@ public class TetherEnabler implements SwitchWidgetController.OnSwitchChangeListe
         this.mSwitchWidgetController.setEnabled(z && !this.mDataSaverEnabled && this.mUserManager.isAdminUser());
     }
 
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    void updateState(String[] strArr) {
+    public void updateState(String[] strArr) {
         int tetheringState = getTetheringState(strArr);
         if (DEBUG) {
             Log.d("TetherEnabler", "updateState: " + tetheringState);
@@ -167,8 +198,9 @@ public class TetherEnabler implements SwitchWidgetController.OnSwitchChangeListe
         }
     }
 
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    int getTetheringState(String[] strArr) {
+    public int getTetheringState(String[] strArr) {
         if (strArr == null) {
             strArr = this.mTetheringManager.getTetheredIfaces();
         }
@@ -177,32 +209,23 @@ public class TetherEnabler implements SwitchWidgetController.OnSwitchChangeListe
             BluetoothPan bluetoothPan = this.mBluetoothPan.get();
             BluetoothAdapter bluetoothAdapter = this.mBluetoothAdapter;
             if (bluetoothAdapter != null && bluetoothAdapter.getState() == 12 && bluetoothPan != null && bluetoothPan.isTetheringOn()) {
-                isWifiApEnabled = (isWifiApEnabled ? 1 : 0) | true;
+                isWifiApEnabled |= true;
             }
         }
         String[] tetherableUsbRegexs = this.mTetheringManager.getTetherableUsbRegexs();
         for (String str : strArr) {
-            for (String str2 : tetherableUsbRegexs) {
-                if (str.matches(str2)) {
+            for (String matches : tetherableUsbRegexs) {
+                if (str.matches(matches)) {
                     isWifiApEnabled |= true;
                 }
             }
-            if (str.matches(this.mEthernetRegex)) {
-                boolean z = isWifiApEnabled ? 1 : 0;
-                char c = isWifiApEnabled ? 1 : 0;
-                char c2 = isWifiApEnabled ? 1 : 0;
-                char c3 = isWifiApEnabled ? 1 : 0;
-                isWifiApEnabled = z | true;
+            if (this.mAvailableInterfaces.containsKey(str)) {
+                isWifiApEnabled |= true;
             }
         }
-        int i = isWifiApEnabled ? 1 : 0;
-        int i2 = isWifiApEnabled ? 1 : 0;
-        int i3 = isWifiApEnabled ? 1 : 0;
-        int i4 = isWifiApEnabled ? 1 : 0;
-        return i;
+        return isWifiApEnabled ? 1 : 0;
     }
 
-    @Override // com.android.settings.widget.SwitchWidgetController.OnSwitchChangeListener
     public boolean onSwitchToggled(boolean z) {
         if (z) {
             startTethering(0);
@@ -216,14 +239,13 @@ public class TetherEnabler implements SwitchWidgetController.OnSwitchChangeListe
     }
 
     public void stopTethering(int i) {
-        if (isTethering(getTetheringState(null), i)) {
+        if (isTethering(getTetheringState((String[]) null), i)) {
             setSwitchEnabled(false);
             this.mConnectivityManager.stopTethering(i);
-            if (i != 2) {
-                return;
+            if (i == 2) {
+                this.mBluetoothTetheringStoppedByUser = true;
+                updateState((String[]) null);
             }
-            this.mBluetoothTetheringStoppedByUser = true;
-            updateState(null);
         }
     }
 
@@ -232,24 +254,23 @@ public class TetherEnabler implements SwitchWidgetController.OnSwitchChangeListe
         if (i == 2) {
             this.mBluetoothTetheringStoppedByUser = false;
         }
-        if (isTethering(getTetheringState(null), i)) {
-            return;
-        }
-        if (i == 2 && (bluetoothAdapter = this.mBluetoothAdapter) != null && bluetoothAdapter.getState() == 10) {
-            if (DEBUG) {
-                Log.d("TetherEnabler", "Turn on bluetooth first.");
+        if (!isTethering(getTetheringState((String[]) null), i)) {
+            if (i == 2 && (bluetoothAdapter = this.mBluetoothAdapter) != null && bluetoothAdapter.getState() == 10) {
+                if (DEBUG) {
+                    Log.d("TetherEnabler", "Turn on bluetooth first.");
+                }
+                this.mBluetoothEnableForTether = true;
+                this.mBluetoothAdapter.enable();
+                return;
             }
-            this.mBluetoothEnableForTether = true;
-            this.mBluetoothAdapter.enable();
-            return;
+            setSwitchEnabled(false);
+            this.mConnectivityManager.startTethering(i, true, this.mOnStartTetheringCallback, this.mMainThreadHandler);
         }
-        setSwitchEnabled(false);
-        this.mConnectivityManager.startTethering(i, true, this.mOnStartTetheringCallback, this.mMainThreadHandler);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public boolean handleBluetoothStateChanged(int i) {
-        if (i != Integer.MIN_VALUE && i != 10) {
+        if (!(i == Integer.MIN_VALUE || i == 10)) {
             if (i != 12) {
                 return false;
             }
@@ -261,7 +282,7 @@ public class TetherEnabler implements SwitchWidgetController.OnSwitchChangeListe
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public boolean handleWifiApStateChanged(int i) {
         if (i == 11 || i == 13) {
             return true;
@@ -273,13 +294,11 @@ public class TetherEnabler implements SwitchWidgetController.OnSwitchChangeListe
         return true;
     }
 
-    @Override // com.android.settings.datausage.DataSaverBackend.Listener
     public void onDataSaverChanged(boolean z) {
         this.mDataSaverEnabled = z;
         setSwitchEnabled(true);
     }
 
-    /* loaded from: classes.dex */
     private static final class OnStartTetheringCallback extends ConnectivityManager.OnStartTetheringCallback {
         final WeakReference<TetherEnabler> mTetherEnabler;
 
@@ -296,9 +315,9 @@ public class TetherEnabler implements SwitchWidgetController.OnSwitchChangeListe
         }
 
         private void update() {
-            TetherEnabler tetherEnabler = this.mTetherEnabler.get();
+            TetherEnabler tetherEnabler = (TetherEnabler) this.mTetherEnabler.get();
             if (tetherEnabler != null) {
-                tetherEnabler.updateState(null);
+                tetherEnabler.updateState((String[]) null);
             }
         }
     }

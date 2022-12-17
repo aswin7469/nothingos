@@ -12,20 +12,23 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import com.android.settingslib.widget.R$drawable;
+import com.android.settingslib.widget.R$string;
 import java.net.URISyntaxException;
 import java.util.Locale;
-/* loaded from: classes.dex */
+
 public class HelpUtils {
     static final int MENU_HELP = 101;
-    private static final String TAG = "HelpUtils";
+    /* access modifiers changed from: private */
+    public static final String TAG = "HelpUtils";
     private static String sCachedVersionCode;
 
     public static boolean prepareHelpMenuItem(Activity activity, Menu menu, String str, String str2) {
         if (menu.findItem(101) != null) {
             return false;
         }
-        MenuItem add = menu.add(0, 101, 0, com.android.settingslib.widget.R$string.help_feedback_label);
-        add.setIcon(com.android.settingslib.widget.R$drawable.ic_help_actionbar);
+        MenuItem add = menu.add(0, 101, 0, R$string.help_feedback_label);
+        add.setIcon(R$drawable.ic_help_actionbar);
         return prepareHelpMenuItem(activity, add, str, str2);
     }
 
@@ -33,8 +36,8 @@ public class HelpUtils {
         if (menu.findItem(101) != null) {
             return false;
         }
-        MenuItem add = menu.add(0, 101, 0, com.android.settingslib.widget.R$string.help_feedback_label);
-        add.setIcon(com.android.settingslib.widget.R$drawable.ic_help_actionbar);
+        MenuItem add = menu.add(0, 101, 0, R$string.help_feedback_label);
+        add.setIcon(R$drawable.ic_help_actionbar);
         return prepareHelpMenuItem(activity, add, activity.getString(i), str);
     }
 
@@ -48,15 +51,14 @@ public class HelpUtils {
         }
         final Intent helpIntent = getHelpIntent(activity, str, str2);
         if (helpIntent != null) {
-            menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() { // from class: com.android.settingslib.HelpUtils.1
-                @Override // android.view.MenuItem.OnMenuItemClickListener
-                public boolean onMenuItemClick(MenuItem menuItem2) {
+            menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                public boolean onMenuItemClick(MenuItem menuItem) {
                     try {
                         activity.startActivityForResult(helpIntent, 0);
                         return true;
                     } catch (ActivityNotFoundException unused) {
-                        String str3 = HelpUtils.TAG;
-                        Log.e(str3, "No activity found for intent: " + helpIntent);
+                        String r3 = HelpUtils.TAG;
+                        Log.e(r3, "No activity found for intent: " + helpIntent);
                         return true;
                     }
                 }
@@ -79,10 +81,10 @@ public class HelpUtils {
             if (parseUri.resolveActivity(context.getPackageManager()) != null) {
                 return parseUri;
             }
-            if (!parseUri.hasExtra("EXTRA_BACKUP_URI")) {
-                return null;
+            if (parseUri.hasExtra("EXTRA_BACKUP_URI")) {
+                return getHelpIntent(context, parseUri.getStringExtra("EXTRA_BACKUP_URI"), str2);
             }
-            return getHelpIntent(context, parseUri.getStringExtra("EXTRA_BACKUP_URI"), str2);
+            return null;
         } catch (URISyntaxException unused) {
             Intent intent = new Intent("android.intent.action.VIEW", uriWithAddedParameters(context, Uri.parse(str)));
             intent.setFlags(276824064);

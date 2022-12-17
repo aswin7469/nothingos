@@ -10,33 +10,30 @@ import android.util.Log;
 import com.android.settingslib.R$string;
 import java.util.HashMap;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class PanProfile implements LocalBluetoothProfile {
     private final HashMap<BluetoothDevice, Integer> mDeviceRoleMap = new HashMap<>();
-    private boolean mIsProfileReady;
-    private BluetoothPan mService;
+    /* access modifiers changed from: private */
+    public boolean mIsProfileReady;
+    /* access modifiers changed from: private */
+    public BluetoothPan mService;
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean accessProfileEnabled() {
         return true;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getDrawableResource(BluetoothClass bluetoothClass) {
-        return 17302333;
+        return 17302341;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getOrdinal() {
         return 4;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getProfileId() {
         return 5;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean isEnabled(BluetoothDevice bluetoothDevice) {
         return true;
     }
@@ -45,34 +42,28 @@ public class PanProfile implements LocalBluetoothProfile {
         return "PAN";
     }
 
-    /* loaded from: classes.dex */
     private final class PanServiceListener implements BluetoothProfile.ServiceListener {
         private PanServiceListener() {
         }
 
-        @Override // android.bluetooth.BluetoothProfile.ServiceListener
         public void onServiceConnected(int i, BluetoothProfile bluetoothProfile) {
             PanProfile.this.mService = (BluetoothPan) bluetoothProfile;
             PanProfile.this.mIsProfileReady = true;
         }
 
-        @Override // android.bluetooth.BluetoothProfile.ServiceListener
         public void onServiceDisconnected(int i) {
             PanProfile.this.mIsProfileReady = false;
         }
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean isProfileReady() {
         return this.mIsProfileReady;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public PanProfile(Context context) {
+    PanProfile(Context context) {
         BluetoothAdapter.getDefaultAdapter().getProfileProxy(context, new PanServiceListener(), 5);
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getConnectionStatus(BluetoothDevice bluetoothDevice) {
         BluetoothPan bluetoothPan = this.mService;
         if (bluetoothPan == null) {
@@ -81,25 +72,23 @@ public class PanProfile implements LocalBluetoothProfile {
         return bluetoothPan.getConnectionState(bluetoothDevice);
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public boolean setEnabled(BluetoothDevice bluetoothDevice, boolean z) {
         BluetoothPan bluetoothPan = this.mService;
         if (bluetoothPan == null) {
             return false;
         }
-        if (z) {
-            List<BluetoothDevice> connectedDevices = bluetoothPan.getConnectedDevices();
-            if (connectedDevices != null) {
-                for (BluetoothDevice bluetoothDevice2 : connectedDevices) {
-                    this.mService.setConnectionPolicy(bluetoothDevice2, 0);
-                }
-            }
-            return this.mService.setConnectionPolicy(bluetoothDevice, 100);
+        if (!z) {
+            return bluetoothPan.setConnectionPolicy(bluetoothDevice, 0);
         }
-        return bluetoothPan.setConnectionPolicy(bluetoothDevice, 0);
+        List<BluetoothDevice> connectedDevices = bluetoothPan.getConnectedDevices();
+        if (connectedDevices != null) {
+            for (BluetoothDevice connectionPolicy : connectedDevices) {
+                this.mService.setConnectionPolicy(connectionPolicy, 0);
+            }
+        }
+        return this.mService.setConnectionPolicy(bluetoothDevice, 100);
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getNameResource(BluetoothDevice bluetoothDevice) {
         if (isLocalRoleNap(bluetoothDevice)) {
             return R$string.bluetooth_profile_pan_nap;
@@ -107,17 +96,21 @@ public class PanProfile implements LocalBluetoothProfile {
         return R$string.bluetooth_profile_pan;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setLocalRole(BluetoothDevice bluetoothDevice, int i) {
         this.mDeviceRoleMap.put(bluetoothDevice, Integer.valueOf(i));
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isLocalRoleNap(BluetoothDevice bluetoothDevice) {
-        return this.mDeviceRoleMap.containsKey(bluetoothDevice) && this.mDeviceRoleMap.get(bluetoothDevice).intValue() == 1;
+        if (!this.mDeviceRoleMap.containsKey(bluetoothDevice) || this.mDeviceRoleMap.get(bluetoothDevice).intValue() != 1) {
+            return false;
+        }
+        return true;
     }
 
-    protected void finalize() {
+    /* access modifiers changed from: protected */
+    public void finalize() {
         Log.d("PanProfile", "finalize()");
         if (this.mService != null) {
             try {

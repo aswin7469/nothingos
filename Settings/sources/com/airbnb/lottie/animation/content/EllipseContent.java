@@ -12,32 +12,31 @@ import com.airbnb.lottie.model.layer.BaseLayer;
 import com.airbnb.lottie.utils.MiscUtils;
 import com.airbnb.lottie.value.LottieValueCallback;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class EllipseContent implements PathContent, BaseKeyframeAnimation.AnimationListener, KeyPathElementContent {
     private final CircleShape circleShape;
     private boolean isPathValid;
     private final LottieDrawable lottieDrawable;
     private final String name;
+    private final Path path = new Path();
     private final BaseKeyframeAnimation<?, PointF> positionAnimation;
     private final BaseKeyframeAnimation<?, PointF> sizeAnimation;
-    private final Path path = new Path();
     private CompoundTrimPathContent trimPaths = new CompoundTrimPathContent();
 
-    public EllipseContent(LottieDrawable lottieDrawable, BaseLayer baseLayer, CircleShape circleShape) {
-        this.name = circleShape.getName();
-        this.lottieDrawable = lottieDrawable;
-        BaseKeyframeAnimation<PointF, PointF> mo180createAnimation = circleShape.getSize().mo180createAnimation();
-        this.sizeAnimation = mo180createAnimation;
-        BaseKeyframeAnimation<PointF, PointF> mo180createAnimation2 = circleShape.getPosition().mo180createAnimation();
-        this.positionAnimation = mo180createAnimation2;
-        this.circleShape = circleShape;
-        baseLayer.addAnimation(mo180createAnimation);
-        baseLayer.addAnimation(mo180createAnimation2);
-        mo180createAnimation.addUpdateListener(this);
-        mo180createAnimation2.addUpdateListener(this);
+    public EllipseContent(LottieDrawable lottieDrawable2, BaseLayer baseLayer, CircleShape circleShape2) {
+        this.name = circleShape2.getName();
+        this.lottieDrawable = lottieDrawable2;
+        BaseKeyframeAnimation<PointF, PointF> createAnimation = circleShape2.getSize().createAnimation();
+        this.sizeAnimation = createAnimation;
+        BaseKeyframeAnimation<PointF, PointF> createAnimation2 = circleShape2.getPosition().createAnimation();
+        this.positionAnimation = createAnimation2;
+        this.circleShape = circleShape2;
+        baseLayer.addAnimation(createAnimation);
+        baseLayer.addAnimation(createAnimation2);
+        createAnimation.addUpdateListener(this);
+        createAnimation2.addUpdateListener(this);
     }
 
-    @Override // com.airbnb.lottie.animation.keyframe.BaseKeyframeAnimation.AnimationListener
     public void onValueChanged() {
         invalidate();
     }
@@ -47,7 +46,6 @@ public class EllipseContent implements PathContent, BaseKeyframeAnimation.Animat
         this.lottieDrawable.invalidateSelf();
     }
 
-    @Override // com.airbnb.lottie.animation.content.Content
     public void setContents(List<Content> list, List<Content> list2) {
         for (int i = 0; i < list.size(); i++) {
             Content content = list.get(i);
@@ -61,12 +59,10 @@ public class EllipseContent implements PathContent, BaseKeyframeAnimation.Animat
         }
     }
 
-    @Override // com.airbnb.lottie.animation.content.Content
     public String getName() {
         return this.name;
     }
 
-    @Override // com.airbnb.lottie.animation.content.PathContent
     public Path getPath() {
         if (this.isPathValid) {
             return this.path;
@@ -76,9 +72,9 @@ public class EllipseContent implements PathContent, BaseKeyframeAnimation.Animat
             this.isPathValid = true;
             return this.path;
         }
-        PointF mo177getValue = this.sizeAnimation.mo177getValue();
-        float f = mo177getValue.x / 2.0f;
-        float f2 = mo177getValue.y / 2.0f;
+        PointF value = this.sizeAnimation.getValue();
+        float f = value.x / 2.0f;
+        float f2 = value.y / 2.0f;
         float f3 = f * 0.55228f;
         float f4 = 0.55228f * f2;
         this.path.reset();
@@ -90,42 +86,41 @@ public class EllipseContent implements PathContent, BaseKeyframeAnimation.Animat
             float f8 = 0.0f - f4;
             this.path.cubicTo(f6, f5, f7, f8, f7, 0.0f);
             float f9 = f4 + 0.0f;
+            float f10 = f5;
             this.path.cubicTo(f7, f9, f6, f2, 0.0f, f2);
-            float f10 = f3 + 0.0f;
-            this.path.cubicTo(f10, f2, f, f9, f, 0.0f);
-            this.path.cubicTo(f, f8, f10, f5, 0.0f, f5);
+            float f11 = f3 + 0.0f;
+            this.path.cubicTo(f11, f2, f, f9, f, 0.0f);
+            this.path.cubicTo(f, f8, f11, f10, 0.0f, f10);
         } else {
-            float f11 = -f2;
-            this.path.moveTo(0.0f, f11);
-            float f12 = f3 + 0.0f;
-            float f13 = 0.0f - f4;
-            this.path.cubicTo(f12, f11, f, f13, f, 0.0f);
-            float f14 = f4 + 0.0f;
-            this.path.cubicTo(f, f14, f12, f2, 0.0f, f2);
-            float f15 = 0.0f - f3;
-            float f16 = -f;
-            this.path.cubicTo(f15, f2, f16, f14, f16, 0.0f);
-            this.path.cubicTo(f16, f13, f15, f11, 0.0f, f11);
+            float f12 = -f2;
+            this.path.moveTo(0.0f, f12);
+            float f13 = f3 + 0.0f;
+            float f14 = 0.0f - f4;
+            this.path.cubicTo(f13, f12, f, f14, f, 0.0f);
+            float f15 = f4 + 0.0f;
+            this.path.cubicTo(f, f15, f13, f2, 0.0f, f2);
+            float f16 = 0.0f - f3;
+            float f17 = -f;
+            this.path.cubicTo(f16, f2, f17, f15, f17, 0.0f);
+            float f18 = f12;
+            this.path.cubicTo(f17, f14, f16, f18, 0.0f, f18);
         }
-        PointF mo177getValue2 = this.positionAnimation.mo177getValue();
-        this.path.offset(mo177getValue2.x, mo177getValue2.y);
+        PointF value2 = this.positionAnimation.getValue();
+        this.path.offset(value2.x, value2.y);
         this.path.close();
         this.trimPaths.apply(this.path);
         this.isPathValid = true;
         return this.path;
     }
 
-    @Override // com.airbnb.lottie.model.KeyPathElement
     public void resolveKeyPath(KeyPath keyPath, int i, List<KeyPath> list, KeyPath keyPath2) {
         MiscUtils.resolveKeyPath(keyPath, i, list, keyPath2, this);
     }
 
-    @Override // com.airbnb.lottie.model.KeyPathElement
     public <T> void addValueCallback(T t, LottieValueCallback<T> lottieValueCallback) {
         if (t == LottieProperty.ELLIPSE_SIZE) {
             this.sizeAnimation.setValueCallback(lottieValueCallback);
-        } else if (t != LottieProperty.POSITION) {
-        } else {
+        } else if (t == LottieProperty.POSITION) {
             this.positionAnimation.setValueCallback(lottieValueCallback);
         }
     }

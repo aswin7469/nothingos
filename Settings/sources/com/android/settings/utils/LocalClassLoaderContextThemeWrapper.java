@@ -2,7 +2,7 @@ package com.android.settings.utils;
 
 import android.content.Context;
 import android.view.ContextThemeWrapper;
-/* loaded from: classes.dex */
+
 public class LocalClassLoaderContextThemeWrapper extends ContextThemeWrapper {
     private Class mLocalClass;
 
@@ -11,7 +11,6 @@ public class LocalClassLoaderContextThemeWrapper extends ContextThemeWrapper {
         this.mLocalClass = cls;
     }
 
-    @Override // android.content.ContextWrapper, android.content.Context
     public ClassLoader getClassLoader() {
         return this.mLocalClass.getClassLoader();
     }

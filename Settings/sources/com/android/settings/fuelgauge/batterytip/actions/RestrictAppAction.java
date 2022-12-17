@@ -8,7 +8,7 @@ import com.android.settings.fuelgauge.batterytip.BatteryDatabaseManager;
 import com.android.settings.fuelgauge.batterytip.tips.RestrictAppTip;
 import java.util.Iterator;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class RestrictAppAction extends BatteryTipAction {
     BatteryDatabaseManager mBatteryDatabaseManager;
     BatteryUtils mBatteryUtils;
@@ -21,7 +21,6 @@ public class RestrictAppAction extends BatteryTipAction {
         this.mBatteryDatabaseManager = BatteryDatabaseManager.getInstance(context);
     }
 
-    @Override // com.android.settings.fuelgauge.batterytip.actions.BatteryTipAction
     public void handlePositiveAction(int i) {
         List<AppInfo> restrictAppList = this.mRestrictAppTip.getRestrictAppList();
         int size = restrictAppList.size();

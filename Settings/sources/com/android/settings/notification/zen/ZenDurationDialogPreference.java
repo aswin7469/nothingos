@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import androidx.appcompat.app.AlertDialog;
 import com.android.settingslib.CustomDialogPreferenceCompat;
 import com.android.settingslib.notification.ZenDurationDialog;
-/* loaded from: classes.dex */
+
 public class ZenDurationDialogPreference extends CustomDialogPreferenceCompat {
     public ZenDurationDialogPreference(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
@@ -23,8 +23,7 @@ public class ZenDurationDialogPreference extends CustomDialogPreferenceCompat {
         setSingleLineTitle(false);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.CustomDialogPreferenceCompat
+    /* access modifiers changed from: protected */
     public void onPrepareDialogBuilder(AlertDialog.Builder builder, DialogInterface.OnClickListener onClickListener) {
         super.onPrepareDialogBuilder(builder, onClickListener);
         new ZenDurationDialog(getContext()).setupDialog(builder);

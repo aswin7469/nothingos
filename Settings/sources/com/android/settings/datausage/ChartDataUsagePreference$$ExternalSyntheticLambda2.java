@@ -1,16 +1,19 @@
 package com.android.settings.datausage;
 
-import com.android.settings.datausage.ChartDataUsagePreference;
-import java.util.function.ToIntFunction;
-/* loaded from: classes.dex */
-public final /* synthetic */ class ChartDataUsagePreference$$ExternalSyntheticLambda2 implements ToIntFunction {
-    public static final /* synthetic */ ChartDataUsagePreference$$ExternalSyntheticLambda2 INSTANCE = new ChartDataUsagePreference$$ExternalSyntheticLambda2();
+import java.util.List;
+import java.util.function.BiConsumer;
 
-    private /* synthetic */ ChartDataUsagePreference$$ExternalSyntheticLambda2() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class ChartDataUsagePreference$$ExternalSyntheticLambda2 implements BiConsumer {
+    public final /* synthetic */ ChartDataUsagePreference f$0;
+    public final /* synthetic */ List f$1;
+
+    public /* synthetic */ ChartDataUsagePreference$$ExternalSyntheticLambda2(ChartDataUsagePreference chartDataUsagePreference, List list) {
+        this.f$0 = chartDataUsagePreference;
+        this.f$1 = list;
     }
 
-    @Override // java.util.function.ToIntFunction
-    public final int applyAsInt(Object obj) {
-        return ((ChartDataUsagePreference.DataUsageSummaryNode) obj).getDataUsagePercentage();
+    public final void accept(Object obj, Object obj2) {
+        this.f$0.lambda$getDensedStatsData$0(this.f$1, (Integer) obj, (List) obj2);
     }
 }

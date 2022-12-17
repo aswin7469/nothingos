@@ -3,12 +3,11 @@ package com.airbnb.lottie.parser;
 import com.airbnb.lottie.model.Font;
 import com.airbnb.lottie.parser.moshi.JsonReader;
 import java.io.IOException;
-/* loaded from: classes.dex */
-class FontParser {
-    private static final JsonReader.Options NAMES = JsonReader.Options.of("fFamily", "fName", "fStyle", "ascent");
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static Font parse(JsonReader jsonReader) throws IOException {
+class FontParser {
+    private static final JsonReader.Options NAMES = JsonReader.Options.m9of("fFamily", "fName", "fStyle", "ascent");
+
+    static Font parse(JsonReader jsonReader) throws IOException {
         jsonReader.beginObject();
         String str = null;
         String str2 = null;
@@ -22,11 +21,11 @@ class FontParser {
                 str3 = jsonReader.nextString();
             } else if (selectName == 2) {
                 str2 = jsonReader.nextString();
-            } else if (selectName == 3) {
-                f = (float) jsonReader.nextDouble();
-            } else {
+            } else if (selectName != 3) {
                 jsonReader.skipName();
                 jsonReader.skipValue();
+            } else {
+                f = (float) jsonReader.nextDouble();
             }
         }
         jsonReader.endObject();

@@ -13,26 +13,27 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.Preference;
 import com.android.settingslib.CustomDialogPreferenceCompat;
-/* loaded from: classes.dex */
+
 public abstract class ListDialogPreference extends CustomDialogPreferenceCompat {
     private CharSequence[] mEntryTitles;
-    private int[] mEntryValues;
-    private int mListItemLayout;
+    /* access modifiers changed from: private */
+    public int[] mEntryValues;
+    /* access modifiers changed from: private */
+    public int mListItemLayout;
     private OnValueChangedListener mOnValueChangedListener;
     private int mValue;
     private int mValueIndex;
     private boolean mValueSet;
 
-    /* loaded from: classes.dex */
     public interface OnValueChangedListener {
         void onValueChanged(ListDialogPreference listDialogPreference, int i);
     }
 
-    protected abstract void onBindListItem(View view, int i);
+    /* access modifiers changed from: protected */
+    public abstract void onBindListItem(View view, int i);
 
     public ListDialogPreference(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -48,17 +49,16 @@ public abstract class ListDialogPreference extends CustomDialogPreferenceCompat 
 
     public void setValues(int[] iArr) {
         this.mEntryValues = iArr;
-        if (!this.mValueSet || this.mValueIndex != -1) {
-            return;
+        if (this.mValueSet && this.mValueIndex == -1) {
+            this.mValueIndex = getIndexForValue(this.mValue);
         }
-        this.mValueIndex = getIndexForValue(this.mValue);
     }
 
     public void setTitles(CharSequence[] charSequenceArr) {
         this.mEntryTitles = charSequenceArr;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public CharSequence getTitleAt(int i) {
         CharSequence[] charSequenceArr = this.mEntryTitles;
         if (charSequenceArr == null || charSequenceArr.length <= i) {
@@ -67,12 +67,11 @@ public abstract class ListDialogPreference extends CustomDialogPreferenceCompat 
         return charSequenceArr[i];
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public int getValueAt(int i) {
         return this.mEntryValues[i];
     }
 
-    @Override // androidx.preference.Preference
     public CharSequence getSummary() {
         int i = this.mValueIndex;
         if (i >= 0) {
@@ -81,17 +80,15 @@ public abstract class ListDialogPreference extends CustomDialogPreferenceCompat 
         return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.CustomDialogPreferenceCompat
+    /* access modifiers changed from: protected */
     public void onPrepareDialogBuilder(AlertDialog.Builder builder, DialogInterface.OnClickListener onClickListener) {
         super.onPrepareDialogBuilder(builder, onClickListener);
         Context context = getContext();
         View inflate = LayoutInflater.from(context).inflate(getDialogLayoutResource(), (ViewGroup) null);
         ListPreferenceAdapter listPreferenceAdapter = new ListPreferenceAdapter();
         AbsListView absListView = (AbsListView) inflate.findViewById(16908298);
-        absListView.setAdapter((ListAdapter) listPreferenceAdapter);
-        absListView.setOnItemClickListener(new AdapterView.OnItemClickListener() { // from class: com.android.settings.accessibility.ListDialogPreference.1
-            @Override // android.widget.AdapterView.OnItemClickListener
+        absListView.setAdapter(listPreferenceAdapter);
+        absListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long j) {
                 int i2 = (int) j;
                 if (ListDialogPreference.this.callChangeListener(Integer.valueOf(i2))) {
@@ -111,16 +108,17 @@ public abstract class ListDialogPreference extends CustomDialogPreferenceCompat 
         builder.setPositiveButton((CharSequence) null, (DialogInterface.OnClickListener) null);
     }
 
-    protected int getIndexForValue(int i) {
+    /* access modifiers changed from: protected */
+    public int getIndexForValue(int i) {
         int[] iArr = this.mEntryValues;
-        if (iArr != null) {
-            int length = iArr.length;
-            for (int i2 = 0; i2 < length; i2++) {
-                if (iArr[i2] == i) {
-                    return i2;
-                }
-            }
+        if (iArr == null) {
             return -1;
+        }
+        int length = iArr.length;
+        for (int i2 = 0; i2 < length; i2++) {
+            if (iArr[i2] == i) {
+                return i2;
+            }
         }
         return -1;
     }
@@ -137,10 +135,9 @@ public abstract class ListDialogPreference extends CustomDialogPreferenceCompat 
                 notifyChanged();
             }
             OnValueChangedListener onValueChangedListener = this.mOnValueChangedListener;
-            if (onValueChangedListener == null) {
-                return;
+            if (onValueChangedListener != null) {
+                onValueChangedListener.onValueChanged(this, i);
             }
-            onValueChangedListener.onValueChanged(this, i);
         }
     }
 
@@ -148,18 +145,17 @@ public abstract class ListDialogPreference extends CustomDialogPreferenceCompat 
         return this.mValue;
     }
 
-    @Override // androidx.preference.Preference
-    protected Object onGetDefaultValue(TypedArray typedArray, int i) {
+    /* access modifiers changed from: protected */
+    public Object onGetDefaultValue(TypedArray typedArray, int i) {
         return Integer.valueOf(typedArray.getInt(i, 0));
     }
 
-    @Override // androidx.preference.Preference
-    protected void onSetInitialValue(boolean z, Object obj) {
+    /* access modifiers changed from: protected */
+    public void onSetInitialValue(boolean z, Object obj) {
         setValue(z ? getPersistedInt(this.mValue) : ((Integer) obj).intValue());
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public Parcelable onSaveInstanceState() {
         Parcelable onSaveInstanceState = super.onSaveInstanceState();
         if (isPersistent()) {
@@ -170,8 +166,7 @@ public abstract class ListDialogPreference extends CustomDialogPreferenceCompat 
         return savedState;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public void onRestoreInstanceState(Parcelable parcelable) {
         if (parcelable == null || !parcelable.getClass().equals(SavedState.class)) {
             super.onRestoreInstanceState(parcelable);
@@ -182,11 +177,9 @@ public abstract class ListDialogPreference extends CustomDialogPreferenceCompat 
         setValue(savedState.value);
     }
 
-    /* loaded from: classes.dex */
     private class ListPreferenceAdapter extends BaseAdapter {
         private LayoutInflater mInflater;
 
-        @Override // android.widget.BaseAdapter, android.widget.Adapter
         public boolean hasStableIds() {
             return true;
         }
@@ -194,23 +187,18 @@ public abstract class ListDialogPreference extends CustomDialogPreferenceCompat 
         private ListPreferenceAdapter() {
         }
 
-        @Override // android.widget.Adapter
         public int getCount() {
             return ListDialogPreference.this.mEntryValues.length;
         }
 
-        @Override // android.widget.Adapter
-        /* renamed from: getItem */
-        public Integer mo214getItem(int i) {
+        public Integer getItem(int i) {
             return Integer.valueOf(ListDialogPreference.this.mEntryValues[i]);
         }
 
-        @Override // android.widget.Adapter
         public long getItemId(int i) {
-            return ListDialogPreference.this.mEntryValues[i];
+            return (long) ListDialogPreference.this.mEntryValues[i];
         }
 
-        @Override // android.widget.Adapter
         public View getView(int i, View view, ViewGroup viewGroup) {
             if (view == null) {
                 if (this.mInflater == null) {
@@ -223,21 +211,13 @@ public abstract class ListDialogPreference extends CustomDialogPreferenceCompat 
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class SavedState extends Preference.BaseSavedState {
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() { // from class: com.android.settings.accessibility.ListDialogPreference.SavedState.1
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: createFromParcel */
-            public SavedState mo215createFromParcel(Parcel parcel) {
+    private static class SavedState extends Preference.BaseSavedState {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel parcel) {
                 return new SavedState(parcel);
             }
 
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: newArray */
-            public SavedState[] mo216newArray(int i) {
+            public SavedState[] newArray(int i) {
                 return new SavedState[i];
             }
         };
@@ -248,7 +228,6 @@ public abstract class ListDialogPreference extends CustomDialogPreferenceCompat 
             this.value = parcel.readInt();
         }
 
-        @Override // android.view.AbsSavedState, android.os.Parcelable
         public void writeToParcel(Parcel parcel, int i) {
             super.writeToParcel(parcel, i);
             parcel.writeInt(this.value);

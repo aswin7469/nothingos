@@ -1,34 +1,32 @@
 package androidx.core.content.res;
 
 import java.lang.reflect.Array;
-/* loaded from: classes.dex */
+
 final class GrowingArrayUtils {
-    public static int growSize(int currentSize) {
-        if (currentSize <= 4) {
+    public static int growSize(int i) {
+        if (i <= 4) {
             return 8;
         }
-        return currentSize * 2;
+        return i * 2;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Type inference failed for: r0v4, types: [java.lang.Object[], java.lang.Object] */
-    public static <T> T[] append(T[] array, int currentSize, T element) {
-        if (currentSize + 1 > array.length) {
-            ?? r0 = (Object[]) Array.newInstance(array.getClass().getComponentType(), growSize(currentSize));
-            System.arraycopy(array, 0, r0, 0, currentSize);
-            array = r0;
+    public static <T> T[] append(T[] tArr, int i, T t) {
+        if (i + 1 > tArr.length) {
+            T[] tArr2 = (Object[]) Array.newInstance(tArr.getClass().getComponentType(), growSize(i));
+            System.arraycopy(tArr, 0, tArr2, 0, i);
+            tArr = tArr2;
         }
-        array[currentSize] = element;
-        return array;
+        tArr[i] = t;
+        return tArr;
     }
 
-    public static int[] append(int[] array, int currentSize, int element) {
-        if (currentSize + 1 > array.length) {
-            int[] iArr = new int[growSize(currentSize)];
-            System.arraycopy(array, 0, iArr, 0, currentSize);
-            array = iArr;
+    public static int[] append(int[] iArr, int i, int i2) {
+        if (i + 1 > iArr.length) {
+            int[] iArr2 = new int[growSize(i)];
+            System.arraycopy(iArr, 0, iArr2, 0, i);
+            iArr = iArr2;
         }
-        array[currentSize] = element;
-        return array;
+        iArr[i] = i2;
+        return iArr;
     }
 }

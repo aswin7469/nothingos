@@ -3,12 +3,12 @@ package androidx.loader.content;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import androidx.core.os.CancellationSignal;
+import androidx.core.p002os.CancellationSignal;
 import androidx.loader.content.Loader;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.Arrays;
-/* loaded from: classes.dex */
+
 public class CursorLoader extends AsyncTaskLoader<Cursor> {
     private CancellationSignal mCancellationSignal;
     private Cursor mCursor;
@@ -19,7 +19,6 @@ public class CursorLoader extends AsyncTaskLoader<Cursor> {
     private String mSortOrder;
     private Uri mUri;
 
-    @Override // androidx.loader.content.AsyncTaskLoader
     public void cancelLoadInBackground() {
         super.cancelLoadInBackground();
         synchronized (this) {
@@ -30,32 +29,26 @@ public class CursorLoader extends AsyncTaskLoader<Cursor> {
         }
     }
 
-    @Override // androidx.loader.content.Loader
     public void deliverResult(Cursor cursor) {
-        if (isReset()) {
-            if (cursor == null) {
-                return;
+        if (!isReset()) {
+            Cursor cursor2 = this.mCursor;
+            this.mCursor = cursor;
+            if (isStarted()) {
+                super.deliverResult(cursor);
             }
+            if (cursor2 != null && cursor2 != cursor && !cursor2.isClosed()) {
+                cursor2.close();
+            }
+        } else if (cursor != null) {
             cursor.close();
-            return;
         }
-        Cursor cursor2 = this.mCursor;
-        this.mCursor = cursor;
-        if (isStarted()) {
-            super.deliverResult((CursorLoader) cursor);
-        }
-        if (cursor2 == null || cursor2 == cursor || cursor2.isClosed()) {
-            return;
-        }
-        cursor2.close();
     }
 
     public CursorLoader(Context context) {
         super(context);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.loader.content.Loader
+    /* access modifiers changed from: protected */
     public void onStartLoading() {
         Cursor cursor = this.mCursor;
         if (cursor != null) {
@@ -66,22 +59,18 @@ public class CursorLoader extends AsyncTaskLoader<Cursor> {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.loader.content.Loader
+    /* access modifiers changed from: protected */
     public void onStopLoading() {
         cancelLoad();
     }
 
-    @Override // androidx.loader.content.AsyncTaskLoader
     public void onCanceled(Cursor cursor) {
-        if (cursor == null || cursor.isClosed()) {
-            return;
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
         }
-        cursor.close();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.loader.content.Loader
+    /* access modifiers changed from: protected */
     public void onReset() {
         super.onReset();
         onStopLoading();
@@ -92,7 +81,6 @@ public class CursorLoader extends AsyncTaskLoader<Cursor> {
         this.mCursor = null;
     }
 
-    @Override // androidx.loader.content.AsyncTaskLoader, androidx.loader.content.Loader
     @Deprecated
     public void dump(String str, FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         super.dump(str, fileDescriptor, printWriter, strArr);

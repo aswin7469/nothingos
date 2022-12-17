@@ -13,7 +13,8 @@ import android.text.style.RelativeSizeSpan;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.datausage.BillingCycleSettings;
 import com.android.settings.datausage.lib.DataUsageLib;
 import com.android.settings.network.ProxySubscriptionManager;
@@ -22,36 +23,33 @@ import com.android.settingslib.NetworkPolicyEditor;
 import com.android.settingslib.core.AbstractPreferenceController;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class DataUsageSummary extends DataUsageBaseFragment implements DataUsageEditController {
     private NetworkTemplate mDefaultTemplate;
     private ProxySubscriptionManager mProxySubscriptionMgr;
     private DataUsageSummaryPreferenceController mSummaryController;
     private DataUsageSummaryPreference mSummaryPreference;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "DataUsageSummary";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 37;
     }
 
-    @Override // com.android.settings.support.actionbar.HelpResourceProvider
     public int getHelpResource() {
-        return R.string.help_url_data_usage;
+        return R$string.help_url_data_usage;
     }
 
-    @Override // com.android.settings.datausage.DataUsageBaseFragment, com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         Context context = getContext();
         enableProxySubscriptionManager(context);
         boolean hasMobileData = DataUsageUtils.hasMobileData(context);
         int defaultDataSubscriptionId = SubscriptionManager.getDefaultDataSubscriptionId();
+        int i = 0;
         if (defaultDataSubscriptionId == -1) {
             hasMobileData = false;
         }
@@ -66,13 +64,14 @@ public class DataUsageSummary extends DataUsageBaseFragment implements DataUsage
             if (activeSubscriptionInfoList == null || activeSubscriptionInfoList.size() == 0) {
                 addMobileSection(defaultDataSubscriptionId);
             }
-            for (int i = 0; activeSubscriptionInfoList != null && i < activeSubscriptionInfoList.size(); i++) {
+            while (activeSubscriptionInfoList != null && i < activeSubscriptionInfoList.size()) {
                 SubscriptionInfo subscriptionInfo = activeSubscriptionInfoList.get(i);
                 if (activeSubscriptionInfoList.size() > 1) {
                     addMobileSection(subscriptionInfo.getSubscriptionId(), subscriptionInfo);
                 } else {
                     addMobileSection(subscriptionInfo.getSubscriptionId());
                 }
+                i++;
             }
             if (hasActiveSubscription() && hasWifiRadio) {
                 addWifiSection();
@@ -86,23 +85,21 @@ public class DataUsageSummary extends DataUsageBaseFragment implements DataUsage
         setHasOptionsMenu(true);
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.preference.PreferenceManager.OnPreferenceTreeClickListener
     public boolean onPreferenceTreeClick(Preference preference) {
-        if (preference == findPreference("status_header")) {
-            BillingCycleSettings.BytesEditorFragment.show((DataUsageEditController) this, false);
-            return false;
+        if (preference != findPreference("status_header")) {
+            return super.onPreferenceTreeClick(preference);
         }
-        return super.onPreferenceTreeClick(preference);
+        BillingCycleSettings.BytesEditorFragment.show(this, false);
+        return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.data_usage;
+        return R$xml.data_usage;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment
-    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+    /* access modifiers changed from: protected */
+    public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
         FragmentActivity activity = getActivity();
         ArrayList arrayList = new ArrayList();
         DataUsageSummaryPreferenceController dataUsageSummaryPreferenceController = new DataUsageSummaryPreferenceController(activity, getSettingsLifecycle(), this, DataUsageUtils.getDefaultSubscriptionId(activity));
@@ -112,42 +109,45 @@ public class DataUsageSummary extends DataUsageBaseFragment implements DataUsage
         return arrayList;
     }
 
-    void addMobileSection(int i) {
-        addMobileSection(i, null);
+    /* access modifiers changed from: package-private */
+    public void addMobileSection(int i) {
+        addMobileSection(i, (SubscriptionInfo) null);
     }
 
-    void enableProxySubscriptionManager(Context context) {
-        ProxySubscriptionManager proxySubscriptionManager = ProxySubscriptionManager.getInstance(context);
-        this.mProxySubscriptionMgr = proxySubscriptionManager;
-        proxySubscriptionManager.setLifecycle(mo959getLifecycle());
+    /* access modifiers changed from: package-private */
+    public void enableProxySubscriptionManager(Context context) {
+        ProxySubscriptionManager instance = ProxySubscriptionManager.getInstance(context);
+        this.mProxySubscriptionMgr = instance;
+        instance.setLifecycle(getLifecycle());
     }
 
-    boolean hasActiveSubscription() {
+    /* access modifiers changed from: package-private */
+    public boolean hasActiveSubscription() {
         List<SubscriptionInfo> activeSubscriptionsInfo = this.mProxySubscriptionMgr.getActiveSubscriptionsInfo();
         return activeSubscriptionsInfo != null && activeSubscriptionsInfo.size() > 0;
     }
 
     private void addMobileSection(int i, SubscriptionInfo subscriptionInfo) {
-        TemplatePreferenceCategory templatePreferenceCategory = (TemplatePreferenceCategory) inflatePreferences(R.xml.data_usage_cellular);
+        TemplatePreferenceCategory templatePreferenceCategory = (TemplatePreferenceCategory) inflatePreferences(R$xml.data_usage_cellular);
         templatePreferenceCategory.setTemplate(DataUsageLib.getMobileTemplate(getContext(), i), i, this.services);
         templatePreferenceCategory.pushTemplates(this.services);
         CharSequence uniqueSubscriptionDisplayName = SubscriptionUtil.getUniqueSubscriptionDisplayName(subscriptionInfo, getContext());
-        if (subscriptionInfo == null || TextUtils.isEmpty(uniqueSubscriptionDisplayName)) {
-            return;
+        if (subscriptionInfo != null && !TextUtils.isEmpty(uniqueSubscriptionDisplayName)) {
+            templatePreferenceCategory.findPreference("mobile_category").setTitle(uniqueSubscriptionDisplayName);
         }
-        templatePreferenceCategory.findPreference("mobile_category").setTitle(uniqueSubscriptionDisplayName);
     }
 
-    void addWifiSection() {
-        ((TemplatePreferenceCategory) inflatePreferences(R.xml.data_usage_wifi)).setTemplate(NetworkTemplate.buildTemplateWifi(NetworkTemplate.WIFI_NETWORKID_ALL, (String) null), 0, this.services);
+    /* access modifiers changed from: package-private */
+    public void addWifiSection() {
+        ((TemplatePreferenceCategory) inflatePreferences(R$xml.data_usage_wifi)).setTemplate(new NetworkTemplate.Builder(4).build(), 0, this.services);
     }
 
     private void addEthernetSection() {
-        ((TemplatePreferenceCategory) inflatePreferences(R.xml.data_usage_ethernet)).setTemplate(NetworkTemplate.buildTemplateEthernet(), 0, this.services);
+        ((TemplatePreferenceCategory) inflatePreferences(R$xml.data_usage_ethernet)).setTemplate(new NetworkTemplate.Builder(5).build(), 0, this.services);
     }
 
     private Preference inflatePreferences(int i) {
-        PreferenceScreen inflateFromResource = getPreferenceManager().inflateFromResource(getPrefContext(), i, null);
+        PreferenceScreen inflateFromResource = getPreferenceManager().inflateFromResource(getPrefContext(), i, (PreferenceScreen) null);
         Preference preference = inflateFromResource.getPreference(0);
         inflateFromResource.removeAll();
         PreferenceScreen preferenceScreen = getPreferenceScreen();
@@ -156,7 +156,6 @@ public class DataUsageSummary extends DataUsageBaseFragment implements DataUsage
         return preference;
     }
 
-    @Override // com.android.settings.datausage.DataUsageBaseFragment, com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
         updateState();
@@ -170,10 +169,10 @@ public class DataUsageSummary extends DataUsageBaseFragment implements DataUsage
         Formatter.BytesResult formatBytes = Formatter.formatBytes(context.getResources(), j, 10);
         SpannableString spannableString = new SpannableString(formatBytes.value);
         spannableString.setSpan(new RelativeSizeSpan(f), 0, spannableString.length(), 18);
-        CharSequence expandTemplate = TextUtils.expandTemplate(new SpannableString(context.getString(17040258).replace("%1$s", "^1").replace("%2$s", "^2")), spannableString, formatBytes.units);
+        CharSequence expandTemplate = TextUtils.expandTemplate(new SpannableString(context.getString(17040322).replace("%1$s", "^1").replace("%2$s", "^2")), new CharSequence[]{spannableString, formatBytes.units});
         SpannableString spannableString2 = new SpannableString(str);
         spannableString2.setSpan(new RelativeSizeSpan(f2), 0, spannableString2.length(), 18);
-        return TextUtils.expandTemplate(spannableString2, BidiFormatter.getInstance().unicodeWrap(expandTemplate.toString()));
+        return TextUtils.expandTemplate(spannableString2, new CharSequence[]{BidiFormatter.getInstance().unicodeWrap(expandTemplate.toString())});
     }
 
     private void updateState() {
@@ -186,17 +185,14 @@ public class DataUsageSummary extends DataUsageBaseFragment implements DataUsage
         }
     }
 
-    @Override // com.android.settings.datausage.DataUsageEditController
     public NetworkPolicyEditor getNetworkPolicyEditor() {
         return this.services.mPolicyEditor;
     }
 
-    @Override // com.android.settings.datausage.DataUsageEditController
     public NetworkTemplate getNetworkTemplate() {
         return this.mDefaultTemplate;
     }
 
-    @Override // com.android.settings.datausage.DataUsageEditController
     public void updateDataUsage() {
         updateState();
         this.mSummaryController.updateState(this.mSummaryPreference);

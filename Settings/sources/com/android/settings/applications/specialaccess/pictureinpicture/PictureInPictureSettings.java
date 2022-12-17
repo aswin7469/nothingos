@@ -15,7 +15,8 @@ import android.view.View;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.applications.AppInfoBase;
 import com.android.settings.search.BaseSearchIndexProvider;
 import com.android.settings.widget.EmptyTextSettings;
@@ -26,16 +27,15 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class PictureInPictureSettings extends EmptyTextSettings {
     static final List<String> IGNORE_PACKAGE_LIST;
-    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R.xml.picture_in_picture_settings);
+    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R$xml.picture_in_picture_settings);
     private Context mContext;
     private IconDrawableFactory mIconDrawableFactory;
     private PackageManager mPackageManager;
     private UserManager mUserManager;
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 812;
     }
@@ -46,7 +46,6 @@ public class PictureInPictureSettings extends EmptyTextSettings {
         arrayList.add("com.android.systemui");
     }
 
-    /* loaded from: classes.dex */
     static class AppComparator implements Comparator<Pair<ApplicationInfo, Integer>> {
         private final Collator mCollator = Collator.getInstance();
         private final PackageManager mPm;
@@ -55,7 +54,6 @@ public class PictureInPictureSettings extends EmptyTextSettings {
             this.mPm = packageManager;
         }
 
-        @Override // java.util.Comparator
         public final int compare(Pair<ApplicationInfo, Integer> pair, Pair<ApplicationInfo, Integer> pair2) {
             CharSequence loadLabel = ((ApplicationInfo) pair.first).loadLabel(this.mPm);
             if (loadLabel == null) {
@@ -66,7 +64,10 @@ public class PictureInPictureSettings extends EmptyTextSettings {
                 loadLabel2 = ((ApplicationInfo) pair2.first).name;
             }
             int compare = this.mCollator.compare(loadLabel.toString(), loadLabel2.toString());
-            return compare != 0 ? compare : ((Integer) pair.second).intValue() - ((Integer) pair2.second).intValue();
+            if (compare != 0) {
+                return compare;
+            }
+            return ((Integer) pair.second).intValue() - ((Integer) pair2.second).intValue();
         }
     }
 
@@ -81,7 +82,6 @@ public class PictureInPictureSettings extends EmptyTextSettings {
         return false;
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         FragmentActivity activity = getActivity();
@@ -91,7 +91,6 @@ public class PictureInPictureSettings extends EmptyTextSettings {
         this.mIconDrawableFactory = IconDrawableFactory.newInstance(this.mContext);
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
         PreferenceScreen preferenceScreen = getPreferenceScreen();
@@ -101,7 +100,7 @@ public class PictureInPictureSettings extends EmptyTextSettings {
         Context prefContext = getPrefContext();
         Iterator<Pair<ApplicationInfo, Integer>> it = collectPipApps.iterator();
         while (it.hasNext()) {
-            Pair<ApplicationInfo, Integer> next = it.next();
+            Pair next = it.next();
             final ApplicationInfo applicationInfo = (ApplicationInfo) next.first;
             int intValue = ((Integer) next.second).intValue();
             UserHandle of = UserHandle.of(intValue);
@@ -111,14 +110,13 @@ public class PictureInPictureSettings extends EmptyTextSettings {
             appPreference.setIcon(this.mIconDrawableFactory.getBadgedIcon(applicationInfo, intValue));
             appPreference.setTitle(this.mPackageManager.getUserBadgedLabel(loadLabel, of));
             appPreference.setSummary(PictureInPictureDetails.getPreferenceSummary(prefContext, applicationInfo.uid, str));
-            appPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() { // from class: com.android.settings.applications.specialaccess.pictureinpicture.PictureInPictureSettings.1
-                @Override // androidx.preference.Preference.OnPreferenceClickListener
+            appPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
-                    int i = R.string.picture_in_picture_app_detail_title;
-                    String str2 = str;
-                    int i2 = applicationInfo.uid;
+                    String string = PictureInPictureSettings.this.getString(R$string.picture_in_picture_app_detail_title);
+                    String str = str;
+                    int i = applicationInfo.uid;
                     PictureInPictureSettings pictureInPictureSettings = PictureInPictureSettings.this;
-                    AppInfoBase.startAppInfoFragment(PictureInPictureDetails.class, i, str2, i2, pictureInPictureSettings, -1, pictureInPictureSettings.getMetricsCategory());
+                    AppInfoBase.startAppInfoFragment(PictureInPictureDetails.class, string, str, i, pictureInPictureSettings, -1, pictureInPictureSettings.getMetricsCategory());
                     return true;
                 }
             });
@@ -126,19 +124,18 @@ public class PictureInPictureSettings extends EmptyTextSettings {
         }
     }
 
-    @Override // com.android.settings.widget.EmptyTextSettings, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
-        setEmptyText(R.string.picture_in_picture_empty_text);
+        setEmptyText(R$string.picture_in_picture_empty_text);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.picture_in_picture_settings;
+        return R$xml.picture_in_picture_settings;
     }
 
-    ArrayList<Pair<ApplicationInfo, Integer>> collectPipApps(int i) {
+    /* access modifiers changed from: package-private */
+    public ArrayList<Pair<ApplicationInfo, Integer>> collectPipApps(int i) {
         ArrayList<Pair<ApplicationInfo, Integer>> arrayList = new ArrayList<>();
         ArrayList arrayList2 = new ArrayList();
         for (UserInfo userInfo : this.mUserManager.getProfiles(i)) {
@@ -149,7 +146,7 @@ public class PictureInPictureSettings extends EmptyTextSettings {
             int intValue = ((Integer) it.next()).intValue();
             for (PackageInfo packageInfo : this.mPackageManager.getInstalledPackagesAsUser(1, intValue)) {
                 if (checkPackageHasPictureInPictureActivities(packageInfo.packageName, packageInfo.activities)) {
-                    arrayList.add(new Pair<>(packageInfo.applicationInfo, Integer.valueOf(intValue)));
+                    arrayList.add(new Pair(packageInfo.applicationInfo, Integer.valueOf(intValue)));
                 }
             }
         }

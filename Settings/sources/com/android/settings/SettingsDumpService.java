@@ -13,6 +13,8 @@ import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import com.android.settings.applications.ProcStatsData;
+import com.android.settings.datausage.lib.DataUsageLib;
+import com.android.settingslib.applications.RecentAppOpsAccess;
 import com.android.settingslib.net.DataUsageController;
 import java.io.File;
 import java.io.FileDescriptor;
@@ -20,7 +22,7 @@ import java.io.PrintWriter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-/* loaded from: classes.dex */
+
 public class SettingsDumpService extends Service {
     static final Intent BROWSER_INTENT = new Intent("android.intent.action.VIEW", Uri.parse("http://"));
     static final String KEY_ANOMALY_DETECTION = "anomaly_detection";
@@ -30,13 +32,12 @@ public class SettingsDumpService extends Service {
     static final String KEY_SERVICE = "service";
     static final String KEY_STORAGE = "storage";
 
-    @Override // android.app.Service
     public IBinder onBind(Intent intent) {
         return null;
     }
 
-    @Override // android.app.Service
-    protected void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+    /* access modifiers changed from: protected */
+    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         JSONObject jSONObject = new JSONObject();
         try {
             jSONObject.put(KEY_SERVICE, "Settings State");
@@ -64,7 +65,6 @@ public class SettingsDumpService extends Service {
     }
 
     private JSONObject dumpDataUsage() throws JSONException {
-        NetworkTemplate buildTemplateMobileAll;
         JSONObject jSONObject = new JSONObject();
         DataUsageController dataUsageController = new DataUsageController(this);
         SubscriptionManager subscriptionManager = (SubscriptionManager) getSystemService(SubscriptionManager.class);
@@ -73,24 +73,17 @@ public class SettingsDumpService extends Service {
         if (telephonyManager.isDataCapable()) {
             JSONArray jSONArray = new JSONArray();
             for (SubscriptionInfo subscriptionInfo : subscriptionManager.getAvailableSubscriptionInfoList()) {
-                telephonyManager = telephonyManager.createForSubscriptionId(subscriptionInfo.getSubscriptionId());
-                String subscriberId = telephonyManager.getSubscriberId();
-                if (subscriberId != null) {
-                    buildTemplateMobileAll = NetworkTemplate.buildTemplateCarrierMetered(subscriberId);
-                } else {
-                    buildTemplateMobileAll = NetworkTemplate.buildTemplateMobileAll(subscriberId);
-                }
-                JSONObject dumpDataUsage = dumpDataUsage(buildTemplateMobileAll, dataUsageController);
+                JSONObject dumpDataUsage = dumpDataUsage(DataUsageLib.getMobileTemplateForSubId(telephonyManager, subscriptionInfo.getSubscriptionId()), dataUsageController);
                 dumpDataUsage.put("subId", subscriptionInfo.getSubscriptionId());
                 jSONArray.put(dumpDataUsage);
             }
             jSONObject.put("cell", jSONArray);
         }
         if (packageManager.hasSystemFeature("android.hardware.wifi")) {
-            jSONObject.put("wifi", dumpDataUsage(NetworkTemplate.buildTemplateWifi(NetworkTemplate.WIFI_NETWORKID_ALL, (String) null), dataUsageController));
+            jSONObject.put("wifi", dumpDataUsage(new NetworkTemplate.Builder(4).build(), dataUsageController));
         }
         if (packageManager.hasSystemFeature("android.hardware.ethernet")) {
-            jSONObject.put("ethernet", dumpDataUsage(NetworkTemplate.buildTemplateEthernet(), dataUsageController));
+            jSONObject.put("ethernet", dumpDataUsage(new NetworkTemplate.Builder(5).build(), dataUsageController));
         }
         return jSONObject;
     }
@@ -124,15 +117,17 @@ public class SettingsDumpService extends Service {
         return jSONObject;
     }
 
-    String dumpDefaultBrowser() {
+    /* access modifiers changed from: package-private */
+    public String dumpDefaultBrowser() {
         ResolveInfo resolveActivity = getPackageManager().resolveActivity(BROWSER_INTENT, 65536);
-        if (resolveActivity == null || resolveActivity.activityInfo.packageName.equals("android")) {
+        if (resolveActivity == null || resolveActivity.activityInfo.packageName.equals(RecentAppOpsAccess.ANDROID_SYSTEM_PACKAGE_NAME)) {
             return null;
         }
         return resolveActivity.activityInfo.packageName;
     }
 
-    JSONObject dumpAnomalyDetection() throws JSONException {
+    /* access modifiers changed from: package-private */
+    public JSONObject dumpAnomalyDetection() throws JSONException {
         JSONObject jSONObject = new JSONObject();
         jSONObject.put("anomaly_config_version", String.valueOf(getSharedPreferences("anomaly_pref", 0).getInt("anomaly_config_version", 0)));
         return jSONObject;

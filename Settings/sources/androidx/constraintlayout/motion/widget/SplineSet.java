@@ -1,6 +1,5 @@
 package androidx.constraintlayout.motion.widget;
 
-import android.os.Build;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
@@ -11,12 +10,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.util.Arrays;
-/* loaded from: classes.dex */
+
 public abstract class SplineSet {
     private int count;
     protected CurveFit mCurveFit;
-    private String mType;
     protected int[] mTimePoints = new int[10];
+    private String mType;
     protected float[] mValues = new float[10];
 
     public abstract void setProperty(View view, float f);
@@ -25,7 +24,7 @@ public abstract class SplineSet {
         String str = this.mType;
         DecimalFormat decimalFormat = new DecimalFormat("##.##");
         for (int i = 0; i < this.count; i++) {
-            str = str + "[" + this.mTimePoints[i] + " , " + decimalFormat.format(this.mValues[i]) + "] ";
+            str = str + "[" + this.mTimePoints[i] + " , " + decimalFormat.format((double) this.mValues[i]) + "] ";
         }
         return str;
     }
@@ -35,20 +34,18 @@ public abstract class SplineSet {
     }
 
     public float get(float f) {
-        return (float) this.mCurveFit.getPos(f, 0);
+        return (float) this.mCurveFit.getPos((double) f, 0);
     }
 
     public float getSlope(float f) {
-        return (float) this.mCurveFit.getSlope(f, 0);
+        return (float) this.mCurveFit.getSlope((double) f, 0);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static SplineSet makeCustomSpline(String str, SparseArray<ConstraintAttribute> sparseArray) {
+    static SplineSet makeCustomSpline(String str, SparseArray<ConstraintAttribute> sparseArray) {
         return new CustomSet(str, sparseArray);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static SplineSet makeSpline(String str) {
+    static SplineSet makeSpline(String str) {
         str.hashCode();
         char c = 65535;
         switch (str.hashCode()) {
@@ -102,19 +99,19 @@ public abstract class SplineSet {
                 break;
             case -797520672:
                 if (str.equals("waveVariesBy")) {
-                    c = '\b';
+                    c = 8;
                     break;
                 }
                 break;
             case -40300674:
                 if (str.equals("rotation")) {
-                    c = '\t';
+                    c = 9;
                     break;
                 }
                 break;
             case -4379043:
                 if (str.equals("elevation")) {
-                    c = '\n';
+                    c = 10;
                     break;
                 }
                 break;
@@ -126,13 +123,13 @@ public abstract class SplineSet {
                 break;
             case 92909918:
                 if (str.equals("alpha")) {
-                    c = '\f';
+                    c = 12;
                     break;
                 }
                 break;
             case 156108012:
                 if (str.equals("waveOffset")) {
-                    c = '\r';
+                    c = 13;
                     break;
                 }
                 break;
@@ -154,17 +151,17 @@ public abstract class SplineSet {
                 return new ScaleXset();
             case 7:
                 return new ScaleYset();
-            case '\b':
+            case 8:
                 return new AlphaSet();
-            case '\t':
+            case 9:
                 return new RotationSet();
-            case '\n':
+            case 10:
                 return new ElevationSet();
             case 11:
                 return new PathRotate();
-            case '\f':
+            case 12:
                 return new AlphaSet();
-            case '\r':
+            case 13:
                 return new AlphaSet();
             default:
                 return null;
@@ -187,94 +184,81 @@ public abstract class SplineSet {
 
     public void setup(int i) {
         int i2 = this.count;
-        if (i2 == 0) {
-            return;
-        }
-        Sort.doubleQuickSort(this.mTimePoints, this.mValues, 0, i2 - 1);
-        int i3 = 1;
-        for (int i4 = 1; i4 < this.count; i4++) {
-            int[] iArr = this.mTimePoints;
-            if (iArr[i4 - 1] != iArr[i4]) {
-                i3++;
-            }
-        }
-        double[] dArr = new double[i3];
-        double[][] dArr2 = (double[][]) Array.newInstance(double.class, i3, 1);
-        int i5 = 0;
-        for (int i6 = 0; i6 < this.count; i6++) {
-            if (i6 > 0) {
-                int[] iArr2 = this.mTimePoints;
-                if (iArr2[i6] == iArr2[i6 - 1]) {
+        if (i2 != 0) {
+            Sort.doubleQuickSort(this.mTimePoints, this.mValues, 0, i2 - 1);
+            int i3 = 1;
+            for (int i4 = 1; i4 < this.count; i4++) {
+                int[] iArr = this.mTimePoints;
+                if (iArr[i4 - 1] != iArr[i4]) {
+                    i3++;
                 }
             }
-            dArr[i5] = this.mTimePoints[i6] * 0.01d;
-            dArr2[i5][0] = this.mValues[i6];
-            i5++;
+            double[] dArr = new double[i3];
+            int[] iArr2 = new int[2];
+            iArr2[1] = 1;
+            iArr2[0] = i3;
+            double[][] dArr2 = (double[][]) Array.newInstance(double.class, iArr2);
+            int i5 = 0;
+            for (int i6 = 0; i6 < this.count; i6++) {
+                if (i6 > 0) {
+                    int[] iArr3 = this.mTimePoints;
+                    if (iArr3[i6] == iArr3[i6 - 1]) {
+                    }
+                }
+                dArr[i5] = ((double) this.mTimePoints[i6]) * 0.01d;
+                dArr2[i5][0] = (double) this.mValues[i6];
+                i5++;
+            }
+            this.mCurveFit = CurveFit.get(i, dArr, dArr2);
         }
-        this.mCurveFit = CurveFit.get(i, dArr, dArr2);
     }
 
-    /* loaded from: classes.dex */
     static class ElevationSet extends SplineSet {
         ElevationSet() {
         }
 
-        @Override // androidx.constraintlayout.motion.widget.SplineSet
         public void setProperty(View view, float f) {
-            if (Build.VERSION.SDK_INT >= 21) {
-                view.setElevation(get(f));
-            }
+            view.setElevation(get(f));
         }
     }
 
-    /* loaded from: classes.dex */
     static class AlphaSet extends SplineSet {
         AlphaSet() {
         }
 
-        @Override // androidx.constraintlayout.motion.widget.SplineSet
         public void setProperty(View view, float f) {
             view.setAlpha(get(f));
         }
     }
 
-    /* loaded from: classes.dex */
     static class RotationSet extends SplineSet {
         RotationSet() {
         }
 
-        @Override // androidx.constraintlayout.motion.widget.SplineSet
         public void setProperty(View view, float f) {
             view.setRotation(get(f));
         }
     }
 
-    /* loaded from: classes.dex */
     static class RotationXset extends SplineSet {
         RotationXset() {
         }
 
-        @Override // androidx.constraintlayout.motion.widget.SplineSet
         public void setProperty(View view, float f) {
             view.setRotationX(get(f));
         }
     }
 
-    /* loaded from: classes.dex */
     static class RotationYset extends SplineSet {
         RotationYset() {
         }
 
-        @Override // androidx.constraintlayout.motion.widget.SplineSet
         public void setProperty(View view, float f) {
             view.setRotationY(get(f));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class PathRotate extends SplineSet {
-        @Override // androidx.constraintlayout.motion.widget.SplineSet
+    static class PathRotate extends SplineSet {
         public void setProperty(View view, float f) {
         }
 
@@ -286,64 +270,51 @@ public abstract class SplineSet {
         }
     }
 
-    /* loaded from: classes.dex */
     static class ScaleXset extends SplineSet {
         ScaleXset() {
         }
 
-        @Override // androidx.constraintlayout.motion.widget.SplineSet
         public void setProperty(View view, float f) {
             view.setScaleX(get(f));
         }
     }
 
-    /* loaded from: classes.dex */
     static class ScaleYset extends SplineSet {
         ScaleYset() {
         }
 
-        @Override // androidx.constraintlayout.motion.widget.SplineSet
         public void setProperty(View view, float f) {
             view.setScaleY(get(f));
         }
     }
 
-    /* loaded from: classes.dex */
     static class TranslationXset extends SplineSet {
         TranslationXset() {
         }
 
-        @Override // androidx.constraintlayout.motion.widget.SplineSet
         public void setProperty(View view, float f) {
             view.setTranslationX(get(f));
         }
     }
 
-    /* loaded from: classes.dex */
     static class TranslationYset extends SplineSet {
         TranslationYset() {
         }
 
-        @Override // androidx.constraintlayout.motion.widget.SplineSet
         public void setProperty(View view, float f) {
             view.setTranslationY(get(f));
         }
     }
 
-    /* loaded from: classes.dex */
     static class TranslationZset extends SplineSet {
         TranslationZset() {
         }
 
-        @Override // androidx.constraintlayout.motion.widget.SplineSet
         public void setProperty(View view, float f) {
-            if (Build.VERSION.SDK_INT >= 21) {
-                view.setTranslationZ(get(f));
-            }
+            view.setTranslationZ(get(f));
         }
     }
 
-    /* loaded from: classes.dex */
     static class CustomSet extends SplineSet {
         String mAttributeName;
         SparseArray<ConstraintAttribute> mConstraintAttributeList;
@@ -354,29 +325,31 @@ public abstract class SplineSet {
             this.mConstraintAttributeList = sparseArray;
         }
 
-        @Override // androidx.constraintlayout.motion.widget.SplineSet
         public void setup(int i) {
-            float[] fArr;
             int size = this.mConstraintAttributeList.size();
             int noOfInterpValues = this.mConstraintAttributeList.valueAt(0).noOfInterpValues();
             double[] dArr = new double[size];
             this.mTempValues = new float[noOfInterpValues];
-            double[][] dArr2 = (double[][]) Array.newInstance(double.class, size, noOfInterpValues);
+            int[] iArr = new int[2];
+            iArr[1] = noOfInterpValues;
+            iArr[0] = size;
+            double[][] dArr2 = (double[][]) Array.newInstance(double.class, iArr);
             for (int i2 = 0; i2 < size; i2++) {
-                dArr[i2] = this.mConstraintAttributeList.keyAt(i2) * 0.01d;
+                dArr[i2] = ((double) this.mConstraintAttributeList.keyAt(i2)) * 0.01d;
                 this.mConstraintAttributeList.valueAt(i2).getValuesToInterpolate(this.mTempValues);
                 int i3 = 0;
                 while (true) {
-                    if (i3 < this.mTempValues.length) {
-                        dArr2[i2][i3] = fArr[i3];
-                        i3++;
+                    float[] fArr = this.mTempValues;
+                    if (i3 >= fArr.length) {
+                        break;
                     }
+                    dArr2[i2][i3] = (double) fArr[i3];
+                    i3++;
                 }
             }
             this.mCurveFit = CurveFit.get(i, dArr, dArr2);
         }
 
-        @Override // androidx.constraintlayout.motion.widget.SplineSet
         public void setPoint(int i, float f) {
             throw new RuntimeException("don't call for custom attribute call setPoint(pos, ConstraintAttribute)");
         }
@@ -385,50 +358,44 @@ public abstract class SplineSet {
             this.mConstraintAttributeList.append(i, constraintAttribute);
         }
 
-        @Override // androidx.constraintlayout.motion.widget.SplineSet
         public void setProperty(View view, float f) {
-            this.mCurveFit.getPos(f, this.mTempValues);
+            this.mCurveFit.getPos((double) f, this.mTempValues);
             this.mConstraintAttributeList.valueAt(0).setInterpolatedValue(view, this.mTempValues);
         }
     }
 
-    /* loaded from: classes.dex */
     static class ProgressSet extends SplineSet {
         boolean mNoMethod = false;
 
         ProgressSet() {
         }
 
-        @Override // androidx.constraintlayout.motion.widget.SplineSet
         public void setProperty(View view, float f) {
             if (view instanceof MotionLayout) {
                 ((MotionLayout) view).setProgress(get(f));
-            } else if (this.mNoMethod) {
-            } else {
+            } else if (!this.mNoMethod) {
                 Method method = null;
                 try {
-                    method = view.getClass().getMethod("setProgress", Float.TYPE);
+                    method = view.getClass().getMethod("setProgress", new Class[]{Float.TYPE});
                 } catch (NoSuchMethodException unused) {
                     this.mNoMethod = true;
                 }
-                if (method == null) {
-                    return;
-                }
-                try {
-                    method.invoke(view, Float.valueOf(get(f)));
-                } catch (IllegalAccessException e) {
-                    Log.e("SplineSet", "unable to setProgress", e);
-                } catch (InvocationTargetException e2) {
-                    Log.e("SplineSet", "unable to setProgress", e2);
+                if (method != null) {
+                    try {
+                        method.invoke(view, new Object[]{Float.valueOf(get(f))});
+                    } catch (IllegalAccessException e) {
+                        Log.e("SplineSet", "unable to setProgress", e);
+                    } catch (InvocationTargetException e2) {
+                        Log.e("SplineSet", "unable to setProgress", e2);
+                    }
                 }
             }
         }
     }
 
-    /* loaded from: classes.dex */
     private static class Sort {
         static void doubleQuickSort(int[] iArr, float[] fArr, int i, int i2) {
-            int[] iArr2 = new int[iArr.length + 10];
+            int[] iArr2 = new int[(iArr.length + 10)];
             iArr2[0] = i2;
             iArr2[1] = i;
             int i3 = 2;

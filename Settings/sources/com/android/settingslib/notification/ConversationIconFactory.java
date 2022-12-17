@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.LauncherApps;
 import android.content.pm.PackageManager;
 import android.content.pm.ShortcutInfo;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
@@ -14,12 +15,14 @@ import android.util.Log;
 import com.android.launcher3.icons.BaseIconFactory;
 import com.android.settingslib.R$color;
 import com.android.settingslib.Utils;
-/* loaded from: classes.dex */
+
 public class ConversationIconFactory extends BaseIconFactory {
-    private static final float CIRCLE_RADIUS;
+    /* access modifiers changed from: private */
+    public static final float CIRCLE_RADIUS;
     private static final float INN_CIRCLE_DIA;
     private static final float INN_CIRCLE_RAD;
-    private static final float RING_STROKE_WIDTH;
+    /* access modifiers changed from: private */
+    public static final float RING_STROKE_WIDTH;
     final IconDrawableFactory mIconDrawableFactory;
     private int mImportantConversationColor;
     final LauncherApps mLauncherApps;
@@ -39,7 +42,7 @@ public class ConversationIconFactory extends BaseIconFactory {
         this.mLauncherApps = launcherApps;
         this.mPackageManager = packageManager;
         this.mIconDrawableFactory = iconDrawableFactory;
-        this.mImportantConversationColor = context.getResources().getColor(R$color.important_conversation, null);
+        this.mImportantConversationColor = context.getResources().getColor(R$color.important_conversation, (Resources.Theme) null);
     }
 
     public Drawable getBaseIconDrawable(ShortcutInfo shortcutInfo) {
@@ -62,7 +65,6 @@ public class ConversationIconFactory extends BaseIconFactory {
         return new ConversationIconDrawable(drawable, getAppBadge(str, UserHandle.getUserId(i)), this.mIconBitmapSize, this.mImportantConversationColor, z);
     }
 
-    /* loaded from: classes.dex */
     public static class ConversationIconDrawable extends Drawable {
         private Drawable mBadgeIcon;
         private Drawable mBaseIcon;
@@ -71,16 +73,13 @@ public class ConversationIconFactory extends BaseIconFactory {
         private Paint mRingPaint;
         private boolean mShowRing;
 
-        @Override // android.graphics.drawable.Drawable
         public int getOpacity() {
             return 0;
         }
 
-        @Override // android.graphics.drawable.Drawable
         public void setAlpha(int i) {
         }
 
-        @Override // android.graphics.drawable.Drawable
         public void setColorFilter(ColorFilter colorFilter) {
         }
 
@@ -106,25 +105,22 @@ public class ConversationIconFactory extends BaseIconFactory {
             }
         }
 
-        @Override // android.graphics.drawable.Drawable
         public int getIntrinsicWidth() {
             return this.mIconSize;
         }
 
-        @Override // android.graphics.drawable.Drawable
         public int getIntrinsicHeight() {
             return this.mIconSize;
         }
 
-        @Override // android.graphics.drawable.Drawable
         public void draw(Canvas canvas) {
-            float width = getBounds().width() / 56.0f;
+            float width = ((float) getBounds().width()) / 56.0f;
             int i = (int) (52.0f * width);
             int i2 = (int) (40.0f * width);
             int i3 = (int) (46.0f * width);
-            float f = (int) (ConversationIconFactory.RING_STROKE_WIDTH * width);
-            this.mPaddingPaint.setStrokeWidth(f);
-            float f2 = (int) (ConversationIconFactory.CIRCLE_RADIUS * width);
+            float r1 = (float) ((int) (ConversationIconFactory.RING_STROKE_WIDTH * width));
+            this.mPaddingPaint.setStrokeWidth(r1);
+            float r0 = (float) ((int) (ConversationIconFactory.CIRCLE_RADIUS * width));
             Drawable drawable = this.mBaseIcon;
             if (drawable != null) {
                 drawable.setBounds(0, 0, i, i);
@@ -133,17 +129,17 @@ public class ConversationIconFactory extends BaseIconFactory {
                 Log.w("ConversationIconFactory", "ConversationIconDrawable has null base icon");
             }
             if (this.mBadgeIcon != null) {
-                float f3 = i3;
-                canvas.drawCircle(f3, f3, f2, this.mPaddingPaint);
+                float f = (float) i3;
+                canvas.drawCircle(f, f, r0, this.mPaddingPaint);
                 this.mBadgeIcon.setBounds(i2, i2, i, i);
                 this.mBadgeIcon.draw(canvas);
             } else {
                 Log.w("ConversationIconFactory", "ConversationIconDrawable has null badge icon");
             }
             if (this.mShowRing) {
-                this.mRingPaint.setStrokeWidth(f);
-                float f4 = i3;
-                canvas.drawCircle(f4, f4, f2, this.mRingPaint);
+                this.mRingPaint.setStrokeWidth(r1);
+                float f2 = (float) i3;
+                canvas.drawCircle(f2, f2, r0, this.mRingPaint);
             }
         }
     }

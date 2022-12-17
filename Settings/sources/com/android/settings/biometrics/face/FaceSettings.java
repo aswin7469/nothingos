@@ -1,5 +1,6 @@
 package com.android.settings.biometrics.face;
 
+import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.face.FaceManager;
@@ -8,7 +9,8 @@ import android.os.UserHandle;
 import android.os.UserManager;
 import android.util.Log;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.SettingsActivity;
 import com.android.settings.Utils;
 import com.android.settings.biometrics.BiometricUtils;
@@ -22,10 +24,9 @@ import com.android.settingslib.core.AbstractPreferenceController;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class FaceSettings extends DashboardFragment {
-    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R.xml.security_settings_face) { // from class: com.android.settings.biometrics.face.FaceSettings.1
-        @Override // com.android.settings.search.BaseSearchIndexProvider
+    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R$xml.security_settings_face) {
         public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
             if (FaceSettings.isFaceHardwareDetected(context)) {
                 return FaceSettings.buildPreferenceControllers(context);
@@ -33,8 +34,7 @@ public class FaceSettings extends DashboardFragment {
             return null;
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // com.android.settings.search.BaseSearchIndexProvider
+        /* access modifiers changed from: protected */
         public boolean isPageSearchEnabled(Context context) {
             if (FaceSettings.isFaceHardwareDetected(context)) {
                 return hasEnrolledBiometrics(context);
@@ -42,7 +42,6 @@ public class FaceSettings extends DashboardFragment {
             return false;
         }
 
-        @Override // com.android.settings.search.BaseSearchIndexProvider, com.android.settingslib.search.Indexable$SearchIndexProvider
         public List<String> getNonIndexableKeys(Context context) {
             List<String> nonIndexableKeys = super.getNonIndexableKeys(context);
             boolean isFaceHardwareDetected = FaceSettings.isFaceHardwareDetected(context);
@@ -76,11 +75,14 @@ public class FaceSettings extends DashboardFragment {
     private long mChallenge;
     private boolean mConfirmingPassword;
     private List<AbstractPreferenceController> mControllers;
+    private DevicePolicyManager mDevicePolicyManager;
     private Preference mEnrollButton;
     private FaceSettingsEnrollButtonPreferenceController mEnrollController;
+    private final FaceSettingsEnrollButtonPreferenceController.Listener mEnrollListener = new FaceSettings$$ExternalSyntheticLambda2(this);
     private FaceFeatureProvider mFaceFeatureProvider;
     private FaceManager mFaceManager;
     private FaceSettingsLockscreenBypassPreferenceController mLockscreenController;
+    private final FaceSettingsRemoveButtonPreferenceController.Listener mRemovalListener = new FaceSettings$$ExternalSyntheticLambda1(this);
     private Preference mRemoveButton;
     private FaceSettingsRemoveButtonPreferenceController mRemoveController;
     private int mSensorId;
@@ -88,70 +90,56 @@ public class FaceSettings extends DashboardFragment {
     private byte[] mToken;
     private int mUserId;
     private UserManager mUserManager;
-    private final FaceSettingsRemoveButtonPreferenceController.Listener mRemovalListener = new FaceSettingsRemoveButtonPreferenceController.Listener() { // from class: com.android.settings.biometrics.face.FaceSettings$$ExternalSyntheticLambda2
-        @Override // com.android.settings.biometrics.face.FaceSettingsRemoveButtonPreferenceController.Listener
-        public final void onRemoved() {
-            FaceSettings.this.lambda$new$0();
-        }
-    };
-    private final FaceSettingsEnrollButtonPreferenceController.Listener mEnrollListener = new FaceSettingsEnrollButtonPreferenceController.Listener() { // from class: com.android.settings.biometrics.face.FaceSettings$$ExternalSyntheticLambda1
-        @Override // com.android.settings.biometrics.face.FaceSettingsEnrollButtonPreferenceController.Listener
-        public final void onStartEnrolling(Intent intent) {
-            FaceSettings.this.lambda$new$1(intent);
-        }
-    };
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "FaceSettings";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1511;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$new$0() {
-        for (Preference preference : this.mTogglePreferences) {
-            preference.setEnabled(false);
+        for (Preference enabled : this.mTogglePreferences) {
+            enabled.setEnabled(false);
         }
         this.mRemoveButton.setVisible(false);
         this.mEnrollButton.setVisible(true);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$new$1(Intent intent) {
         startActivityForResult(intent, 5);
     }
 
     public static boolean isFaceHardwareDetected(Context context) {
-        boolean isHardwareDetected;
+        boolean z;
         FaceManager faceManagerOrNull = Utils.getFaceManagerOrNull(context);
         if (faceManagerOrNull == null) {
             Log.d("FaceSettings", "FaceManager is null");
-            isHardwareDetected = false;
+            z = false;
         } else {
-            isHardwareDetected = faceManagerOrNull.isHardwareDetected();
-            Log.d("FaceSettings", "FaceManager is not null. Hardware detected: " + isHardwareDetected);
+            z = faceManagerOrNull.isHardwareDetected();
+            Log.d("FaceSettings", "FaceManager is not null. Hardware detected: " + z);
         }
-        return faceManagerOrNull != null && isHardwareDetected;
+        if (faceManagerOrNull == null || !z) {
+            return false;
+        }
+        return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.security_settings_face;
+        return R$xml.security_settings_face;
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         bundle.putByteArray("hw_auth_token", this.mToken);
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         FaceSettingsLockscreenBypassPreferenceController faceSettingsLockscreenBypassPreferenceController;
         super.onCreate(bundle);
@@ -163,13 +151,14 @@ public class FaceSettings extends DashboardFragment {
         }
         this.mUserManager = (UserManager) prefContext.getSystemService(UserManager.class);
         this.mFaceManager = (FaceManager) prefContext.getSystemService(FaceManager.class);
+        this.mDevicePolicyManager = (DevicePolicyManager) prefContext.getSystemService(DevicePolicyManager.class);
         this.mToken = getIntent().getByteArrayExtra("hw_auth_token");
         this.mSensorId = getIntent().getIntExtra("sensor_id", -1);
-        this.mChallenge = getIntent().getLongExtra("challenge", 0L);
+        this.mChallenge = getIntent().getLongExtra("challenge", 0);
         this.mUserId = getActivity().getIntent().getIntExtra("android.intent.extra.USER_ID", UserHandle.myUserId());
         this.mFaceFeatureProvider = FeatureFactory.getFactory(getContext()).getFaceFeatureProvider();
         if (this.mUserManager.getUserInfo(this.mUserId).isManagedProfile()) {
-            getActivity().setTitle(getActivity().getResources().getString(R.string.security_settings_face_profile_preference_title));
+            getActivity().setTitle(this.mDevicePolicyManager.getResources().getString("Settings.FACE_SETTINGS_FOR_WORK_TITLE", new FaceSettings$$ExternalSyntheticLambda3(this)));
         }
         if (Utils.isMultipleBiometricsSupported(prefContext)) {
             faceSettingsLockscreenBypassPreferenceController = (FaceSettingsLockscreenBypassPreferenceController) use(BiometricLockscreenBypassPreferenceController.class);
@@ -178,14 +167,14 @@ public class FaceSettings extends DashboardFragment {
         }
         this.mLockscreenController = faceSettingsLockscreenBypassPreferenceController;
         faceSettingsLockscreenBypassPreferenceController.setUserId(this.mUserId);
-        this.mTogglePreferences = new ArrayList(Arrays.asList(findPreference("security_settings_face_keyguard"), findPreference("security_settings_face_app"), findPreference(FaceSettingsAttentionPreferenceController.KEY), findPreference("security_settings_face_require_confirmation"), findPreference(this.mLockscreenController.getPreferenceKey())));
+        this.mTogglePreferences = new ArrayList(Arrays.asList(new Preference[]{findPreference("security_settings_face_keyguard"), findPreference("security_settings_face_app"), findPreference(FaceSettingsAttentionPreferenceController.KEY), findPreference("security_settings_face_require_confirmation"), findPreference(this.mLockscreenController.getPreferenceKey())}));
         this.mRemoveButton = findPreference("security_settings_face_delete_faces_container");
         this.mEnrollButton = findPreference("security_settings_face_enroll_faces_container");
-        for (AbstractPreferenceController abstractPreferenceController : this.mControllers) {
-            if (abstractPreferenceController instanceof FaceSettingsPreferenceController) {
-                ((FaceSettingsPreferenceController) abstractPreferenceController).setUserId(this.mUserId);
-            } else if (abstractPreferenceController instanceof FaceSettingsEnrollButtonPreferenceController) {
-                ((FaceSettingsEnrollButtonPreferenceController) abstractPreferenceController).setUserId(this.mUserId);
+        for (AbstractPreferenceController next : this.mControllers) {
+            if (next instanceof FaceSettingsPreferenceController) {
+                ((FaceSettingsPreferenceController) next).setUserId(this.mUserId);
+            } else if (next instanceof FaceSettingsEnrollButtonPreferenceController) {
+                ((FaceSettingsEnrollButtonPreferenceController) next).setUserId(this.mUserId);
             }
         }
         this.mRemoveController.setUserId(this.mUserId);
@@ -193,26 +182,29 @@ public class FaceSettings extends DashboardFragment {
             removePreference("security_settings_face_keyguard");
             removePreference(this.mLockscreenController.getPreferenceKey());
         }
-        if (bundle == null) {
-            return;
+        if (bundle != null) {
+            this.mToken = bundle.getByteArray("hw_auth_token");
         }
-        this.mToken = bundle.getByteArray("hw_auth_token");
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
+    /* access modifiers changed from: private */
+    public /* synthetic */ String lambda$onCreate$2() {
+        return getActivity().getResources().getString(R$string.security_settings_face_profile_preference_title);
+    }
+
     public void onResume() {
         super.onResume();
         byte[] bArr = this.mToken;
-        if (bArr == null && !this.mConfirmingPassword) {
-            boolean show = new ChooseLockSettingsHelper.Builder(getActivity(), this).setRequestCode(4).setTitle(getString(R.string.security_settings_face_preference_title)).setRequestGatekeeperPasswordHandle(true).setUserId(this.mUserId).setForegroundOnly(true).setReturnCredentials(true).show();
+        if (bArr != null || this.mConfirmingPassword) {
+            this.mAttentionController.setToken(bArr);
+            this.mEnrollController.setToken(this.mToken);
+        } else {
+            boolean show = new ChooseLockSettingsHelper.Builder(getActivity(), this).setRequestCode(4).setTitle(getString(R$string.security_settings_face_preference_title)).setRequestGatekeeperPasswordHandle(true).setUserId(this.mUserId).setForegroundOnly(true).setReturnCredentials(true).show();
             this.mConfirmingPassword = true;
             if (!show) {
                 Log.e("FaceSettings", "Password not set");
                 finish();
             }
-        } else {
-            this.mAttentionController.setToken(bArr);
-            this.mEnrollController.setToken(this.mToken);
         }
         boolean hasEnrolledTemplates = this.mFaceManager.hasEnrolledTemplates(this.mUserId);
         this.mEnrollButton.setVisible(!hasEnrolledTemplates);
@@ -222,31 +214,24 @@ public class FaceSettings extends DashboardFragment {
         }
     }
 
-    @Override // androidx.fragment.app.Fragment
-    public void onActivityResult(int i, int i2, final Intent intent) {
+    public void onActivityResult(int i, int i2, Intent intent) {
         super.onActivityResult(i, i2, intent);
         if (this.mToken == null && !BiometricUtils.containsGatekeeperPasswordHandle(intent)) {
             Log.e("FaceSettings", "No credential");
             finish();
         }
         if (i == 4) {
-            if (i2 != 1 && i2 != -1) {
-                return;
+            if (i2 == 1 || i2 == -1) {
+                this.mFaceManager.generateChallenge(this.mUserId, new FaceSettings$$ExternalSyntheticLambda0(this, intent));
             }
-            this.mFaceManager.generateChallenge(this.mUserId, new FaceManager.GenerateChallengeCallback() { // from class: com.android.settings.biometrics.face.FaceSettings$$ExternalSyntheticLambda0
-                public final void onGenerateChallengeResult(int i3, int i4, long j) {
-                    FaceSettings.this.lambda$onActivityResult$2(intent, i3, i4, j);
-                }
-            });
-        } else if (i != 5 || i2 != 3) {
-        } else {
+        } else if (i == 5 && i2 == 3) {
             setResult(i2, intent);
             finish();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onActivityResult$2(Intent intent, int i, int i2, long j) {
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$onActivityResult$3(Intent intent, int i, int i2, long j) {
         this.mToken = BiometricUtils.requestGatekeeperHat(getPrefContext(), intent, this.mUserId, j);
         this.mSensorId = i;
         this.mChallenge = j;
@@ -256,41 +241,38 @@ public class FaceSettings extends DashboardFragment {
         this.mConfirmingPassword = false;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onStop() {
         super.onStop();
-        if (this.mEnrollController.isClicked() || getActivity().isChangingConfigurations() || this.mConfirmingPassword) {
-            return;
+        if (!this.mEnrollController.isClicked() && !getActivity().isChangingConfigurations() && !this.mConfirmingPassword) {
+            if (this.mToken != null) {
+                this.mFaceManager.revokeChallenge(this.mSensorId, this.mUserId, this.mChallenge);
+                this.mToken = null;
+            }
+            finish();
         }
-        if (this.mToken != null) {
-            this.mFaceManager.revokeChallenge(this.mSensorId, this.mUserId, this.mChallenge);
-            this.mToken = null;
-        }
-        finish();
     }
 
-    @Override // com.android.settings.support.actionbar.HelpResourceProvider
     public int getHelpResource() {
-        return R.string.help_url_face;
+        return R$string.help_url_face;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment
-    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+    /* access modifiers changed from: protected */
+    public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
         if (!isFaceHardwareDetected(context)) {
             return null;
         }
         List<AbstractPreferenceController> buildPreferenceControllers = buildPreferenceControllers(context);
         this.mControllers = buildPreferenceControllers;
-        for (AbstractPreferenceController abstractPreferenceController : buildPreferenceControllers) {
-            if (abstractPreferenceController instanceof FaceSettingsAttentionPreferenceController) {
-                this.mAttentionController = (FaceSettingsAttentionPreferenceController) abstractPreferenceController;
-            } else if (abstractPreferenceController instanceof FaceSettingsRemoveButtonPreferenceController) {
-                FaceSettingsRemoveButtonPreferenceController faceSettingsRemoveButtonPreferenceController = (FaceSettingsRemoveButtonPreferenceController) abstractPreferenceController;
+        for (AbstractPreferenceController next : buildPreferenceControllers) {
+            if (next instanceof FaceSettingsAttentionPreferenceController) {
+                this.mAttentionController = (FaceSettingsAttentionPreferenceController) next;
+            } else if (next instanceof FaceSettingsRemoveButtonPreferenceController) {
+                FaceSettingsRemoveButtonPreferenceController faceSettingsRemoveButtonPreferenceController = (FaceSettingsRemoveButtonPreferenceController) next;
                 this.mRemoveController = faceSettingsRemoveButtonPreferenceController;
                 faceSettingsRemoveButtonPreferenceController.setListener(this.mRemovalListener);
                 this.mRemoveController.setActivity((SettingsActivity) getActivity());
-            } else if (abstractPreferenceController instanceof FaceSettingsEnrollButtonPreferenceController) {
-                FaceSettingsEnrollButtonPreferenceController faceSettingsEnrollButtonPreferenceController = (FaceSettingsEnrollButtonPreferenceController) abstractPreferenceController;
+            } else if (next instanceof FaceSettingsEnrollButtonPreferenceController) {
+                FaceSettingsEnrollButtonPreferenceController faceSettingsEnrollButtonPreferenceController = (FaceSettingsEnrollButtonPreferenceController) next;
                 this.mEnrollController = faceSettingsEnrollButtonPreferenceController;
                 faceSettingsEnrollButtonPreferenceController.setListener(this.mEnrollListener);
                 this.mEnrollController.setActivity((SettingsActivity) getActivity());
@@ -299,7 +281,7 @@ public class FaceSettings extends DashboardFragment {
         return this.mControllers;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static List<AbstractPreferenceController> buildPreferenceControllers(Context context) {
         ArrayList arrayList = new ArrayList();
         arrayList.add(new FaceSettingsKeyguardPreferenceController(context));

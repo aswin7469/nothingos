@@ -2,12 +2,11 @@ package com.android.settings.fuelgauge;
 
 import android.content.Context;
 import com.android.settingslib.utils.AsyncLoaderCompat;
-/* loaded from: classes.dex */
+
 public class BatteryInfoLoader extends AsyncLoaderCompat<BatteryInfo> {
     BatteryUtils mBatteryUtils;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.utils.AsyncLoaderCompat
+    /* access modifiers changed from: protected */
     public void onDiscardResult(BatteryInfo batteryInfo) {
     }
 
@@ -16,9 +15,7 @@ public class BatteryInfoLoader extends AsyncLoaderCompat<BatteryInfo> {
         this.mBatteryUtils = BatteryUtils.getInstance(context);
     }
 
-    @Override // androidx.loader.content.AsyncTaskLoader
-    /* renamed from: loadInBackground */
-    public BatteryInfo mo611loadInBackground() {
+    public BatteryInfo loadInBackground() {
         return this.mBatteryUtils.getBatteryInfo("BatteryInfoLoader");
     }
 }

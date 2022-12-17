@@ -3,13 +3,10 @@ package com.google.android.material.internal;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.SparseIntArray;
-/* loaded from: classes2.dex */
+
 public class ParcelableSparseIntArray extends SparseIntArray implements Parcelable {
-    public static final Parcelable.Creator<ParcelableSparseIntArray> CREATOR = new Parcelable.Creator<ParcelableSparseIntArray>() { // from class: com.google.android.material.internal.ParcelableSparseIntArray.1
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: createFromParcel */
-        public ParcelableSparseIntArray mo698createFromParcel(Parcel parcel) {
+    public static final Parcelable.Creator<ParcelableSparseIntArray> CREATOR = new Parcelable.Creator<ParcelableSparseIntArray>() {
+        public ParcelableSparseIntArray createFromParcel(Parcel parcel) {
             int readInt = parcel.readInt();
             ParcelableSparseIntArray parcelableSparseIntArray = new ParcelableSparseIntArray(readInt);
             int[] iArr = new int[readInt];
@@ -22,15 +19,11 @@ public class ParcelableSparseIntArray extends SparseIntArray implements Parcelab
             return parcelableSparseIntArray;
         }
 
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: newArray */
-        public ParcelableSparseIntArray[] mo699newArray(int i) {
+        public ParcelableSparseIntArray[] newArray(int i) {
             return new ParcelableSparseIntArray[i];
         }
     };
 
-    @Override // android.os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -42,7 +35,6 @@ public class ParcelableSparseIntArray extends SparseIntArray implements Parcelab
         super(i);
     }
 
-    @Override // android.os.Parcelable
     public void writeToParcel(Parcel parcel, int i) {
         int[] iArr = new int[size()];
         int[] iArr2 = new int[size()];

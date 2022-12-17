@@ -1,16 +1,24 @@
 package com.android.settings.network.helper;
 
-import android.telephony.SubscriptionManager;
+import com.android.settings.network.helper.SubscriptionAnnotation;
+import java.util.List;
 import java.util.function.Function;
-/* loaded from: classes.dex */
-public final /* synthetic */ class SelectableSubscriptions$$ExternalSyntheticLambda1 implements Function {
-    public static final /* synthetic */ SelectableSubscriptions$$ExternalSyntheticLambda1 INSTANCE = new SelectableSubscriptions$$ExternalSyntheticLambda1();
 
-    private /* synthetic */ SelectableSubscriptions$$ExternalSyntheticLambda1() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class SelectableSubscriptions$$ExternalSyntheticLambda1 implements Function {
+    public final /* synthetic */ SelectableSubscriptions f$0;
+    public final /* synthetic */ List f$1;
+    public final /* synthetic */ List f$2;
+    public final /* synthetic */ List f$3;
+
+    public /* synthetic */ SelectableSubscriptions$$ExternalSyntheticLambda1(SelectableSubscriptions selectableSubscriptions, List list, List list2, List list3) {
+        this.f$0 = selectableSubscriptions;
+        this.f$1 = list;
+        this.f$2 = list2;
+        this.f$3 = list3;
     }
 
-    @Override // java.util.function.Function
     public final Object apply(Object obj) {
-        return ((SubscriptionManager) obj).getActiveSubscriptionInfoList();
+        return this.f$0.lambda$call$6(this.f$1, this.f$2, this.f$3, (SubscriptionAnnotation.Builder) obj);
     }
 }

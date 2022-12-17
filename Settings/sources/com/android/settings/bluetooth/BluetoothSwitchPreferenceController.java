@@ -2,7 +2,7 @@ package com.android.settings.bluetooth;
 
 import android.content.Context;
 import android.view.View;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.SubSettingLauncher;
 import com.android.settings.location.BluetoothScanningFragment;
 import com.android.settings.overlay.FeatureFactory;
@@ -12,7 +12,7 @@ import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnStart;
 import com.android.settingslib.core.lifecycle.events.OnStop;
 import com.android.settingslib.widget.FooterPreference;
-/* loaded from: classes.dex */
+
 public class BluetoothSwitchPreferenceController implements LifecycleObserver, OnStart, OnStop, SwitchWidgetController.OnSwitchChangeListener, View.OnClickListener {
     AlwaysDiscoverable mAlwaysDiscoverable;
     private BluetoothEnabler mBluetoothEnabler;
@@ -38,7 +38,6 @@ public class BluetoothSwitchPreferenceController implements LifecycleObserver, O
         this.mAlwaysDiscoverable = new AlwaysDiscoverable(context);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStart
     public void onStart() {
         this.mBluetoothEnabler.resume(this.mContext);
         this.mAlwaysDiscoverable.start();
@@ -48,28 +47,27 @@ public class BluetoothSwitchPreferenceController implements LifecycleObserver, O
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStop
     public void onStop() {
         this.mBluetoothEnabler.pause();
         this.mAlwaysDiscoverable.stop();
     }
 
-    @Override // com.android.settings.widget.SwitchWidgetController.OnSwitchChangeListener
     public boolean onSwitchToggled(boolean z) {
         updateText(z);
         return true;
     }
 
-    @Override // android.view.View.OnClickListener
     public void onClick(View view) {
         new SubSettingLauncher(this.mContext).setDestination(BluetoothScanningFragment.class.getName()).setSourceMetricsCategory(1390).launch();
     }
 
-    void updateText(boolean z) {
-        if (!z && Utils.isBluetoothScanningEnabled(this.mContext)) {
-            this.mFooterPreference.setTitle(AnnotationSpan.linkify(this.mContext.getText(R.string.bluetooth_scanning_on_info_message), new AnnotationSpan.LinkInfo("link", this)));
+    /* access modifiers changed from: package-private */
+    public void updateText(boolean z) {
+        if (z || !Utils.isBluetoothScanningEnabled(this.mContext)) {
+            this.mFooterPreference.setTitle(R$string.bluetooth_empty_list_bluetooth_off);
             return;
         }
-        this.mFooterPreference.setTitle(R.string.bluetooth_empty_list_bluetooth_off);
+        AnnotationSpan.LinkInfo linkInfo = new AnnotationSpan.LinkInfo("link", this);
+        this.mFooterPreference.setTitle(AnnotationSpan.linkify(this.mContext.getText(R$string.bluetooth_scanning_on_info_message), linkInfo));
     }
 }

@@ -1,6 +1,7 @@
 package com.android.settings.fuelgauge;
 
 import android.app.AppOpsManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -28,7 +29,7 @@ import com.android.settingslib.utils.ThreadUtils;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class BatteryUtils {
     private static BatteryUtils sInstance;
     private AppOpsManager mAppOpsManager;
@@ -40,7 +41,7 @@ public class BatteryUtils {
         if (d2 == 0.0d) {
             return 0.0d;
         }
-        return (d / d2) * i;
+        return (d / d2) * ((double) i);
     }
 
     public boolean shouldHideDevicePowerComponent(BatteryConsumer batteryConsumer, int i) {
@@ -70,15 +71,22 @@ public class BatteryUtils {
         return this.mPowerUsageFeatureProvider.isTypeSystem(uidBatteryConsumer.getUid(), strArr) || shouldHideUidBatteryConsumerUnconditionally(uidBatteryConsumer, strArr);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean shouldHideUidBatteryConsumerUnconditionally(UidBatteryConsumer uidBatteryConsumer, String[] strArr) {
-        return uidBatteryConsumer.getUid() < 0 || isHiddenSystemModule(strArr);
+        int uid = uidBatteryConsumer.getUid();
+        if (uid == -5) {
+            return false;
+        }
+        if (uid < 0 || isHiddenSystemModule(strArr)) {
+            return true;
+        }
+        return false;
     }
 
     public boolean isHiddenSystemModule(String[] strArr) {
         if (strArr != null) {
-            for (String str : strArr) {
-                if (AppUtils.isHiddenSystemModule(this.mContext, str)) {
+            for (String isHiddenSystemModule : strArr) {
+                if (AppUtils.isHiddenSystemModule(this.mContext, isHiddenSystemModule)) {
                     return true;
                 }
             }
@@ -107,36 +115,31 @@ public class BatteryUtils {
     }
 
     public int getPackageUid(String str) {
-        if (str != null) {
-            try {
-            } catch (PackageManager.NameNotFoundException unused) {
-                return -1;
-            }
+        if (str == null) {
+            return -1;
         }
-        return this.mPackageManager.getPackageUid(str, 128);
+        try {
+            return this.mPackageManager.getPackageUid(str, 128);
+        } catch (PackageManager.NameNotFoundException unused) {
+            return -1;
+        }
     }
 
-    public void setForceAppStandby(final int i, final String str, final int i2) {
+    public void setForceAppStandby(int i, String str, int i2) {
         if (isPreOApp(str)) {
             this.mAppOpsManager.setMode(63, i, str, i2);
         }
         this.mAppOpsManager.setMode(70, i, str, i2);
-        ThreadUtils.postOnBackgroundThread(new Runnable() { // from class: com.android.settings.fuelgauge.BatteryUtils$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                BatteryUtils.this.lambda$setForceAppStandby$0(i2, i, str);
-            }
-        });
+        ThreadUtils.postOnBackgroundThread((Runnable) new BatteryUtils$$ExternalSyntheticLambda0(this, i2, i, str));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$setForceAppStandby$0(int i, int i2, String str) {
-        BatteryDatabaseManager batteryDatabaseManager = BatteryDatabaseManager.getInstance(this.mContext);
+        BatteryDatabaseManager instance = BatteryDatabaseManager.getInstance(this.mContext);
         if (i == 1) {
-            batteryDatabaseManager.insertAction(0, i2, str, System.currentTimeMillis());
-        } else if (i != 0) {
-        } else {
-            batteryDatabaseManager.deleteAction(0, i2, str);
+            instance.insertAction(0, i2, str, System.currentTimeMillis());
+        } else if (i == 0) {
+            instance.deleteAction(0, i2, str);
         }
     }
 
@@ -154,29 +157,35 @@ public class BatteryUtils {
     }
 
     public BatteryInfo getBatteryInfo(String str) {
-        BatteryUsageStats build;
+        BatteryUsageStats batteryUsageStats;
+        String str2 = str;
         try {
-            build = ((BatteryStatsManager) this.mContext.getSystemService(BatteryStatsManager.class)).getBatteryUsageStats(new BatteryUsageStatsQuery.Builder().includeBatteryHistory().build());
+            batteryUsageStats = ((BatteryStatsManager) this.mContext.getSystemService(BatteryStatsManager.class)).getBatteryUsageStats(new BatteryUsageStatsQuery.Builder().includeBatteryHistory().build());
         } catch (RuntimeException e) {
-            Log.e("BatteryUtils", "getBatteryInfo() error for getBatteryUsageStats()", e);
-            build = new BatteryUsageStats.Builder(new String[0], false).build();
+            Log.e("BatteryUtils", "getBatteryInfo() error from getBatteryUsageStats()", e);
+            batteryUsageStats = new BatteryUsageStats.Builder(new String[0]).build();
         }
-        BatteryUsageStats batteryUsageStats = build;
         long currentTimeMillis = System.currentTimeMillis();
-        Intent registerReceiver = this.mContext.registerReceiver(null, new IntentFilter("android.intent.action.BATTERY_CHANGED"));
+        Intent registerReceiver = this.mContext.registerReceiver((BroadcastReceiver) null, new IntentFilter("android.intent.action.BATTERY_CHANGED"));
         long convertMsToUs = PowerUtil.convertMsToUs(SystemClock.elapsedRealtime());
         Estimate enhancedEstimate = getEnhancedEstimate();
         if (enhancedEstimate == null) {
-            enhancedEstimate = new Estimate(batteryUsageStats.getBatteryTimeRemainingMs(), false, -1L);
+            enhancedEstimate = new Estimate(batteryUsageStats.getBatteryTimeRemainingMs(), false, -1);
         }
-        logRuntime(str, "BatteryInfoLoader post query", currentTimeMillis);
+        logRuntime(str2, "BatteryInfoLoader post query", currentTimeMillis);
         BatteryInfo batteryInfo = BatteryInfo.getBatteryInfo(this.mContext, registerReceiver, batteryUsageStats, enhancedEstimate, convertMsToUs, false);
-        logRuntime(str, "BatteryInfoLoader.loadInBackground", currentTimeMillis);
+        logRuntime(str2, "BatteryInfoLoader.loadInBackground", currentTimeMillis);
+        try {
+            batteryUsageStats.close();
+        } catch (Exception e2) {
+            Log.e("BatteryUtils", "BatteryUsageStats.close() failed", e2);
+        }
         return batteryInfo;
     }
 
-    Estimate getEnhancedEstimate() {
-        if (Duration.between(Estimate.getLastCacheUpdateTime(this.mContext), Instant.now()).compareTo(Duration.ofSeconds(10L)) < 0) {
+    /* access modifiers changed from: package-private */
+    public Estimate getEnhancedEstimate() {
+        if (Duration.between(Estimate.getLastCacheUpdateTime(this.mContext), Instant.now()).compareTo(Duration.ofSeconds(10)) < 0) {
             return Estimate.getCachedEstimateIfAvailable(this.mContext);
         }
         PowerUsageFeatureProvider powerUsageFeatureProvider = this.mPowerUsageFeatureProvider;
@@ -194,25 +203,30 @@ public class BatteryUtils {
         return this.mPackageManager == null || this.mAppOpsManager == null;
     }
 
-    long getForegroundActivityTotalTimeUs(BatteryStats.Uid uid, long j) {
+    /* access modifiers changed from: package-private */
+    public long getForegroundActivityTotalTimeUs(BatteryStats.Uid uid, long j) {
         BatteryStats.Timer foregroundActivityTimer = uid.getForegroundActivityTimer();
         if (foregroundActivityTimer != null) {
             return foregroundActivityTimer.getTotalTimeLocked(j, 0);
         }
-        return 0L;
+        return 0;
     }
 
-    long getForegroundServiceTotalTimeUs(BatteryStats.Uid uid, long j) {
+    /* access modifiers changed from: package-private */
+    public long getForegroundServiceTotalTimeUs(BatteryStats.Uid uid, long j) {
         BatteryStats.Timer foregroundServiceTimer = uid.getForegroundServiceTimer();
         if (foregroundServiceTimer != null) {
             return foregroundServiceTimer.getTotalTimeLocked(j, 0);
         }
-        return 0L;
+        return 0;
     }
 
     public boolean isPreOApp(String str) {
         try {
-            return this.mPackageManager.getApplicationInfo(str, 128).targetSdkVersion < 26;
+            if (this.mPackageManager.getApplicationInfo(str, 128).targetSdkVersion < 26) {
+                return true;
+            }
+            return false;
         } catch (PackageManager.NameNotFoundException e) {
             Log.e("BatteryUtils", "Cannot find package: " + str, e);
             return false;
@@ -223,8 +237,8 @@ public class BatteryUtils {
         if (ArrayUtils.isEmpty(strArr)) {
             return false;
         }
-        for (String str : strArr) {
-            if (isPreOApp(str)) {
+        for (String isPreOApp : strArr) {
+            if (isPreOApp(isPreOApp)) {
                 return true;
             }
         }
@@ -233,11 +247,14 @@ public class BatteryUtils {
 
     public boolean shouldHideAnomaly(PowerAllowlistBackend powerAllowlistBackend, int i, AnomalyInfo anomalyInfo) {
         String[] packagesForUid = this.mPackageManager.getPackagesForUid(i);
-        if (!ArrayUtils.isEmpty(packagesForUid) && !isSystemUid(i) && !powerAllowlistBackend.isAllowlisted(packagesForUid)) {
-            if (isSystemApp(this.mPackageManager, packagesForUid) && !hasLauncherEntry(packagesForUid)) {
-                return true;
-            }
-            return isExcessiveBackgroundAnomaly(anomalyInfo) && !isPreOApp(packagesForUid);
+        if (ArrayUtils.isEmpty(packagesForUid) || isSystemUid(i) || powerAllowlistBackend.isAllowlisted(packagesForUid)) {
+            return true;
+        }
+        if (isSystemApp(this.mPackageManager, packagesForUid) && !hasLauncherEntry(packagesForUid)) {
+            return true;
+        }
+        if (!isExcessiveBackgroundAnomaly(anomalyInfo) || isPreOApp(packagesForUid)) {
+            return false;
         }
         return true;
     }
@@ -252,13 +269,17 @@ public class BatteryUtils {
     }
 
     private boolean isSystemApp(PackageManager packageManager, String[] strArr) {
-        for (String str : strArr) {
+        int length = strArr.length;
+        int i = 0;
+        while (i < length) {
+            String str = strArr[i];
             try {
+                if ((packageManager.getApplicationInfo(str, 0).flags & 1) != 0) {
+                    return true;
+                }
+                i++;
             } catch (PackageManager.NameNotFoundException e) {
                 Log.e("BatteryUtils", "Package not found: " + str, e);
-            }
-            if ((packageManager.getApplicationInfo(str, 0).flags & 1) != 0) {
-                return true;
             }
         }
         return false;
@@ -282,7 +303,7 @@ public class BatteryUtils {
             return this.mPackageManager.getPackageInfo(str, 0).getLongVersionCode();
         } catch (PackageManager.NameNotFoundException e) {
             Log.e("BatteryUtils", "Cannot find package: " + str, e);
-            return -1L;
+            return -1;
         }
     }
 }

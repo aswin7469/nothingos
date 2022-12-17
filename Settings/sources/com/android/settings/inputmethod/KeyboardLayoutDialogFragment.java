@@ -9,12 +9,14 @@ import android.hardware.input.InputDeviceIdentifier;
 import android.hardware.input.InputManager;
 import android.hardware.input.KeyboardLayout;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.InputDevice;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
+import android.widget.ListAdapter;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
@@ -22,34 +24,32 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.AsyncTaskLoader;
 import androidx.loader.content.Loader;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
 import com.android.settings.core.instrumentation.InstrumentedDialogFragment;
 import java.util.ArrayList;
 import java.util.Collections;
-/* loaded from: classes.dex */
+
 public class KeyboardLayoutDialogFragment extends InstrumentedDialogFragment implements InputManager.InputDeviceListener, LoaderManager.LoaderCallbacks<Keyboards> {
     private KeyboardLayoutAdapter mAdapter;
     private InputManager mIm;
     private int mInputDeviceId = -1;
     private InputDeviceIdentifier mInputDeviceIdentifier;
 
-    /* loaded from: classes.dex */
     public static final class Keyboards {
-        public final ArrayList<KeyboardLayout> keyboardLayouts = new ArrayList<>();
         public int current = -1;
+        public final ArrayList<KeyboardLayout> keyboardLayouts = new ArrayList<>();
     }
 
-    /* loaded from: classes.dex */
     public interface OnSetupKeyboardLayoutsListener {
         void onSetupKeyboardLayouts(InputDeviceIdentifier inputDeviceIdentifier);
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 541;
     }
 
-    @Override // android.hardware.input.InputManager.InputDeviceListener
     public void onInputDeviceAdded(int i) {
     }
 
@@ -60,7 +60,6 @@ public class KeyboardLayoutDialogFragment extends InstrumentedDialogFragment imp
         this.mInputDeviceIdentifier = inputDeviceIdentifier;
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         Context baseContext = activity.getBaseContext();
@@ -68,43 +67,37 @@ public class KeyboardLayoutDialogFragment extends InstrumentedDialogFragment imp
         this.mAdapter = new KeyboardLayoutAdapter(baseContext);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableDialogFragment, androidx.fragment.app.DialogFragment, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         if (bundle != null) {
             this.mInputDeviceIdentifier = bundle.getParcelable("inputDeviceIdentifier");
         }
-        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(0, (Bundle) null, this);
     }
 
-    @Override // androidx.fragment.app.DialogFragment, androidx.fragment.app.Fragment
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         bundle.putParcelable("inputDeviceIdentifier", this.mInputDeviceIdentifier);
     }
 
-    @Override // androidx.fragment.app.DialogFragment
     public Dialog onCreateDialog(Bundle bundle) {
         FragmentActivity activity = getActivity();
-        AlertDialog.Builder view = new AlertDialog.Builder(activity).setTitle(R.string.keyboard_layout_dialog_title).setPositiveButton(R.string.keyboard_layout_dialog_setup_button, new DialogInterface.OnClickListener() { // from class: com.android.settings.inputmethod.KeyboardLayoutDialogFragment.2
-            @Override // android.content.DialogInterface.OnClickListener
+        AlertDialog.Builder view = new AlertDialog.Builder(activity).setTitle(R$string.keyboard_layout_dialog_title).setPositiveButton(R$string.keyboard_layout_dialog_setup_button, (DialogInterface.OnClickListener) new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
                 KeyboardLayoutDialogFragment.this.onSetupLayoutsButtonClicked();
             }
-        }).setSingleChoiceItems(this.mAdapter, -1, new DialogInterface.OnClickListener() { // from class: com.android.settings.inputmethod.KeyboardLayoutDialogFragment.1
-            @Override // android.content.DialogInterface.OnClickListener
+        }).setSingleChoiceItems((ListAdapter) this.mAdapter, -1, (DialogInterface.OnClickListener) new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
                 KeyboardLayoutDialogFragment.this.onKeyboardLayoutClicked(i);
             }
-        }).setView(LayoutInflater.from(activity).inflate(R.layout.keyboard_layout_dialog_switch_hint, (ViewGroup) null));
+        }).setView(LayoutInflater.from(activity).inflate(R$layout.keyboard_layout_dialog_switch_hint, (ViewGroup) null));
         updateSwitchHintVisibility();
         return view.create();
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableDialogFragment, androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
-        this.mIm.registerInputDeviceListener(this, null);
+        this.mIm.registerInputDeviceListener(this, (Handler) null);
         InputDevice inputDeviceByDescriptor = this.mIm.getInputDeviceByDescriptor(this.mInputDeviceIdentifier.getDescriptor());
         if (inputDeviceByDescriptor == null) {
             dismiss();
@@ -113,48 +106,42 @@ public class KeyboardLayoutDialogFragment extends InstrumentedDialogFragment imp
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableDialogFragment, androidx.fragment.app.Fragment
     public void onPause() {
         this.mIm.unregisterInputDeviceListener(this);
         this.mInputDeviceId = -1;
         super.onPause();
     }
 
-    @Override // androidx.fragment.app.DialogFragment, android.content.DialogInterface.OnCancelListener
     public void onCancel(DialogInterface dialogInterface) {
         super.onCancel(dialogInterface);
         dismiss();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void onSetupLayoutsButtonClicked() {
         ((OnSetupKeyboardLayoutsListener) getTargetFragment()).onSetupKeyboardLayouts(this.mInputDeviceIdentifier);
     }
 
-    @Override // androidx.fragment.app.Fragment
     public void onActivityResult(int i, int i2, Intent intent) {
         super.onActivityResult(i, i2, intent);
         show(getActivity().getSupportFragmentManager(), "layout");
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void onKeyboardLayoutClicked(int i) {
-        if (i < 0 || i >= this.mAdapter.getCount()) {
-            return;
+        if (i >= 0 && i < this.mAdapter.getCount()) {
+            KeyboardLayout keyboardLayout = (KeyboardLayout) this.mAdapter.getItem(i);
+            if (keyboardLayout != null) {
+                this.mIm.setCurrentKeyboardLayoutForInputDevice(this.mInputDeviceIdentifier, keyboardLayout.getDescriptor());
+            }
+            dismiss();
         }
-        KeyboardLayout item = this.mAdapter.getItem(i);
-        if (item != null) {
-            this.mIm.setCurrentKeyboardLayoutForInputDevice(this.mInputDeviceIdentifier, item.getDescriptor());
-        }
-        dismiss();
     }
 
-    @Override // androidx.loader.app.LoaderManager.LoaderCallbacks
     public Loader<Keyboards> onCreateLoader(int i, Bundle bundle) {
         return new KeyboardLayoutLoader(getActivity().getBaseContext(), this.mInputDeviceIdentifier);
     }
 
-    @Override // androidx.loader.app.LoaderManager.LoaderCallbacks
     public void onLoadFinished(Loader<Keyboards> loader, Keyboards keyboards) {
         this.mAdapter.clear();
         this.mAdapter.addAll(keyboards.keyboardLayouts);
@@ -166,45 +153,38 @@ public class KeyboardLayoutDialogFragment extends InstrumentedDialogFragment imp
         updateSwitchHintVisibility();
     }
 
-    @Override // androidx.loader.app.LoaderManager.LoaderCallbacks
     public void onLoaderReset(Loader<Keyboards> loader) {
         this.mAdapter.clear();
         updateSwitchHintVisibility();
     }
 
-    @Override // android.hardware.input.InputManager.InputDeviceListener
     public void onInputDeviceChanged(int i) {
         int i2 = this.mInputDeviceId;
-        if (i2 < 0 || i != i2) {
-            return;
+        if (i2 >= 0 && i == i2) {
+            getLoaderManager().restartLoader(0, (Bundle) null, this);
         }
-        getLoaderManager().restartLoader(0, null, this);
     }
 
-    @Override // android.hardware.input.InputManager.InputDeviceListener
     public void onInputDeviceRemoved(int i) {
         int i2 = this.mInputDeviceId;
-        if (i2 < 0 || i != i2) {
-            return;
+        if (i2 >= 0 && i == i2) {
+            dismiss();
         }
-        dismiss();
     }
 
     private void updateSwitchHintVisibility() {
         AlertDialog alertDialog = (AlertDialog) getDialog();
         if (alertDialog != null) {
-            alertDialog.findViewById(R.id.customPanel).setVisibility(this.mAdapter.getCount() > 1 ? 0 : 8);
+            alertDialog.findViewById(R$id.customPanel).setVisibility(this.mAdapter.getCount() > 1 ? 0 : 8);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static final class KeyboardLayoutAdapter extends ArrayAdapter<KeyboardLayout> {
+    private static final class KeyboardLayoutAdapter extends ArrayAdapter<KeyboardLayout> {
         private int mCheckedItem = -1;
         private final LayoutInflater mInflater;
 
         public KeyboardLayoutAdapter(Context context) {
-            super(context, 17367313);
+            super(context, 17367325);
             this.mInflater = (LayoutInflater) context.getSystemService("layout_inflater");
         }
 
@@ -212,25 +192,24 @@ public class KeyboardLayoutDialogFragment extends InstrumentedDialogFragment imp
             this.mCheckedItem = i;
         }
 
-        @Override // android.widget.ArrayAdapter, android.widget.Adapter
         public View getView(int i, View view, ViewGroup viewGroup) {
-            String string;
             String str;
-            KeyboardLayout item = getItem(i);
-            if (item != null) {
-                string = item.getLabel();
-                str = item.getCollection();
+            String str2;
+            KeyboardLayout keyboardLayout = (KeyboardLayout) getItem(i);
+            if (keyboardLayout != null) {
+                str = keyboardLayout.getLabel();
+                str2 = keyboardLayout.getCollection();
             } else {
-                string = getContext().getString(R.string.keyboard_layout_default_label);
-                str = "";
+                str = getContext().getString(R$string.keyboard_layout_default_label);
+                str2 = "";
             }
-            String str2 = str;
-            String str3 = string;
+            String str3 = str2;
+            String str4 = str;
             boolean z = i == this.mCheckedItem;
-            if (str2.isEmpty()) {
-                return inflateOneLine(view, viewGroup, str3, z);
+            if (str3.isEmpty()) {
+                return inflateOneLine(view, viewGroup, str4, z);
             }
-            return inflateTwoLine(view, viewGroup, str3, str2, z);
+            return inflateTwoLine(view, viewGroup, str4, str3, z);
         }
 
         private View inflateOneLine(View view, ViewGroup viewGroup, String str, boolean z) {
@@ -246,12 +225,12 @@ public class KeyboardLayoutDialogFragment extends InstrumentedDialogFragment imp
 
         private View inflateTwoLine(View view, ViewGroup viewGroup, String str, String str2, boolean z) {
             if (view == null || !isTwoLine(view)) {
-                view = this.mInflater.inflate(17367313, viewGroup, false);
+                view = this.mInflater.inflate(17367325, viewGroup, false);
                 setTwoLine(view, true);
             }
             ((TextView) view.findViewById(16908308)).setText(str);
             ((TextView) view.findViewById(16908309)).setText(str2);
-            ((RadioButton) view.findViewById(16909344)).setChecked(z);
+            ((RadioButton) view.findViewById(16909390)).setChecked(z);
             return view;
         }
 
@@ -264,7 +243,6 @@ public class KeyboardLayoutDialogFragment extends InstrumentedDialogFragment imp
         }
     }
 
-    /* loaded from: classes.dex */
     private static final class KeyboardLayoutLoader extends AsyncTaskLoader<Keyboards> {
         private final InputDeviceIdentifier mInputDeviceIdentifier;
 
@@ -273,16 +251,13 @@ public class KeyboardLayoutDialogFragment extends InstrumentedDialogFragment imp
             this.mInputDeviceIdentifier = inputDeviceIdentifier;
         }
 
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // androidx.loader.content.AsyncTaskLoader
-        /* renamed from: loadInBackground */
-        public Keyboards mo611loadInBackground() {
+        public Keyboards loadInBackground() {
             Keyboards keyboards = new Keyboards();
             InputManager inputManager = (InputManager) getContext().getSystemService("input");
-            for (String str : inputManager.getEnabledKeyboardLayoutsForInputDevice(this.mInputDeviceIdentifier)) {
-                KeyboardLayout keyboardLayout = inputManager.getKeyboardLayout(str);
-                if (keyboardLayout != null) {
-                    keyboards.keyboardLayouts.add(keyboardLayout);
+            for (String keyboardLayout : inputManager.getEnabledKeyboardLayoutsForInputDevice(this.mInputDeviceIdentifier)) {
+                KeyboardLayout keyboardLayout2 = inputManager.getKeyboardLayout(keyboardLayout);
+                if (keyboardLayout2 != null) {
+                    keyboards.keyboardLayouts.add(keyboardLayout2);
                 }
             }
             Collections.sort(keyboards.keyboardLayouts);
@@ -302,21 +277,19 @@ public class KeyboardLayoutDialogFragment extends InstrumentedDialogFragment imp
                 }
             }
             if (keyboards.keyboardLayouts.isEmpty()) {
-                keyboards.keyboardLayouts.add(null);
+                keyboards.keyboardLayouts.add((Object) null);
                 keyboards.current = 0;
             }
             return keyboards;
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // androidx.loader.content.Loader
+        /* access modifiers changed from: protected */
         public void onStartLoading() {
             super.onStartLoading();
             forceLoad();
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // androidx.loader.content.Loader
+        /* access modifiers changed from: protected */
         public void onStopLoading() {
             super.onStopLoading();
             cancelLoad();

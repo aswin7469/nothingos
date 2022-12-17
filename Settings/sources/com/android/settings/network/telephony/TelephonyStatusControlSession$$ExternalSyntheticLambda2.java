@@ -1,15 +1,11 @@
 package com.android.settings.network.telephony;
 
-import java.util.function.Consumer;
-/* loaded from: classes.dex */
-public final /* synthetic */ class TelephonyStatusControlSession$$ExternalSyntheticLambda2 implements Consumer {
-    public static final /* synthetic */ TelephonyStatusControlSession$$ExternalSyntheticLambda2 INSTANCE = new TelephonyStatusControlSession$$ExternalSyntheticLambda2();
+import com.android.settingslib.core.AbstractPreferenceController;
+import java.util.function.Predicate;
 
-    private /* synthetic */ TelephonyStatusControlSession$$ExternalSyntheticLambda2() {
-    }
-
-    @Override // java.util.function.Consumer
-    public final void accept(Object obj) {
-        ((TelephonyAvailabilityHandler) obj).unsetAvailabilityStatus();
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class TelephonyStatusControlSession$$ExternalSyntheticLambda2 implements Predicate {
+    public final boolean test(Object obj) {
+        return TelephonyStatusControlSession.lambda$unsetAvailabilityStatus$2((AbstractPreferenceController) obj);
     }
 }

@@ -2,7 +2,7 @@ package com.google.zxing;
 
 import java.util.EnumMap;
 import java.util.Map;
-/* loaded from: classes2.dex */
+
 public final class Result {
     private final BarcodeFormat format;
     private final byte[] rawBytes;
@@ -66,9 +66,8 @@ public final class Result {
         ResultPoint[] resultPointArr2 = this.resultPoints;
         if (resultPointArr2 == null) {
             this.resultPoints = resultPointArr;
-        } else if (resultPointArr == null || resultPointArr.length <= 0) {
-        } else {
-            ResultPoint[] resultPointArr3 = new ResultPoint[resultPointArr2.length + resultPointArr.length];
+        } else if (resultPointArr != null && resultPointArr.length > 0) {
+            ResultPoint[] resultPointArr3 = new ResultPoint[(resultPointArr2.length + resultPointArr.length)];
             System.arraycopy(resultPointArr2, 0, resultPointArr3, 0, resultPointArr2.length);
             System.arraycopy(resultPointArr, 0, resultPointArr3, resultPointArr2.length, resultPointArr.length);
             this.resultPoints = resultPointArr3;

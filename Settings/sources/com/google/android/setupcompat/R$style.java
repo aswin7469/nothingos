@@ -1,7 +1,7 @@
 package com.google.android.setupcompat;
-/* loaded from: classes2.dex */
+
 public final class R$style {
-    public static final int SucPartnerCustomizationButtonBar_Stackable = 2131952108;
-    public static final int SucPartnerCustomizationButton_Primary = 2131952105;
-    public static final int SucPartnerCustomizationButton_Secondary = 2131952106;
+    public static final int SucPartnerCustomizationButtonBar_Stackable = 2132017734;
+    public static final int SucPartnerCustomizationButton_Primary = 2132017731;
+    public static final int SucPartnerCustomizationButton_Secondary = 2132017732;
 }

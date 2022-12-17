@@ -11,22 +11,20 @@ import android.util.Log;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.instrumentation.InstrumentedDialogFragment;
 import com.android.settingslib.utils.ThreadUtils;
-/* loaded from: classes.dex */
+
 public class EmptyTrashFragment extends InstrumentedDialogFragment {
     private final OnEmptyTrashCompleteListener mOnEmptyTrashCompleteListener;
     private final Fragment mParentFragment;
     private final long mTrashSize;
     private final int mUserId;
 
-    /* loaded from: classes.dex */
     public interface OnEmptyTrashCompleteListener {
         void onEmptyTrashComplete();
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1875;
     }
@@ -43,17 +41,11 @@ public class EmptyTrashFragment extends InstrumentedDialogFragment {
         show(this.mParentFragment.getFragmentManager(), "empty_trash");
     }
 
-    @Override // androidx.fragment.app.DialogFragment
     public Dialog onCreateDialog(Bundle bundle) {
-        return new AlertDialog.Builder(getActivity()).setTitle(R.string.storage_trash_dialog_title).setMessage(getActivity().getString(R.string.storage_trash_dialog_ask_message, new Object[]{StorageUtils.getStorageSizeLabel(getActivity(), this.mTrashSize)})).setPositiveButton(R.string.storage_trash_dialog_confirm, new DialogInterface.OnClickListener() { // from class: com.android.settings.deviceinfo.storage.EmptyTrashFragment$$ExternalSyntheticLambda0
-            @Override // android.content.DialogInterface.OnClickListener
-            public final void onClick(DialogInterface dialogInterface, int i) {
-                EmptyTrashFragment.this.lambda$onCreateDialog$0(dialogInterface, i);
-            }
-        }).setNegativeButton(17039360, (DialogInterface.OnClickListener) null).create();
+        return new AlertDialog.Builder(getActivity()).setTitle(R$string.storage_trash_dialog_title).setMessage((CharSequence) getActivity().getString(R$string.storage_trash_dialog_ask_message, new Object[]{StorageUtils.getStorageSizeLabel(getActivity(), this.mTrashSize)})).setPositiveButton(R$string.storage_trash_dialog_confirm, (DialogInterface.OnClickListener) new EmptyTrashFragment$$ExternalSyntheticLambda0(this)).setNegativeButton(17039360, (DialogInterface.OnClickListener) null).create();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onCreateDialog$0(DialogInterface dialogInterface, int i) {
         emptyTrashAsync();
     }
@@ -61,35 +53,24 @@ public class EmptyTrashFragment extends InstrumentedDialogFragment {
     private void emptyTrashAsync() {
         FragmentActivity activity = getActivity();
         try {
-            final Context createPackageContextAsUser = activity.createPackageContextAsUser(activity.getApplicationContext().getPackageName(), 0, UserHandle.of(this.mUserId));
-            final Bundle bundle = new Bundle();
+            Context createPackageContextAsUser = activity.createPackageContextAsUser(activity.getApplicationContext().getPackageName(), 0, UserHandle.of(this.mUserId));
+            Bundle bundle = new Bundle();
             bundle.putInt("android:query-arg-match-trashed", 3);
-            ThreadUtils.postOnBackgroundThread(new Runnable() { // from class: com.android.settings.deviceinfo.storage.EmptyTrashFragment$$ExternalSyntheticLambda2
-                @Override // java.lang.Runnable
-                public final void run() {
-                    EmptyTrashFragment.this.lambda$emptyTrashAsync$2(createPackageContextAsUser, bundle);
-                }
-            });
+            ThreadUtils.postOnBackgroundThread((Runnable) new EmptyTrashFragment$$ExternalSyntheticLambda1(this, createPackageContextAsUser, bundle));
         } catch (PackageManager.NameNotFoundException unused) {
             Log.e("EmptyTrashFragment", "Not able to get Context for user ID " + this.mUserId);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$emptyTrashAsync$2(Context context, Bundle bundle) {
         context.getContentResolver().delete(MediaStore.Files.getContentUri("external"), bundle);
-        if (this.mOnEmptyTrashCompleteListener == null) {
-            return;
+        if (this.mOnEmptyTrashCompleteListener != null) {
+            ThreadUtils.postOnMainThread(new EmptyTrashFragment$$ExternalSyntheticLambda2(this));
         }
-        ThreadUtils.postOnMainThread(new Runnable() { // from class: com.android.settings.deviceinfo.storage.EmptyTrashFragment$$ExternalSyntheticLambda1
-            @Override // java.lang.Runnable
-            public final void run() {
-                EmptyTrashFragment.this.lambda$emptyTrashAsync$1();
-            }
-        });
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$emptyTrashAsync$1() {
         this.mOnEmptyTrashCompleteListener.onEmptyTrashComplete();
     }

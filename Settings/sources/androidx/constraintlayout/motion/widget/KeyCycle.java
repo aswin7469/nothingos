@@ -2,7 +2,6 @@ package androidx.constraintlayout.motion.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseIntArray;
@@ -10,39 +9,54 @@ import androidx.constraintlayout.widget.ConstraintAttribute;
 import androidx.constraintlayout.widget.R$styleable;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-/* loaded from: classes.dex */
+
 public class KeyCycle extends Key {
-    private String mTransitionEasing = null;
-    private int mCurveFit = 0;
-    private int mWaveShape = -1;
-    private float mWavePeriod = Float.NaN;
-    private float mWaveOffset = 0.0f;
-    private float mProgress = Float.NaN;
-    private int mWaveVariesBy = -1;
-    private float mAlpha = Float.NaN;
-    private float mElevation = Float.NaN;
-    private float mRotation = Float.NaN;
-    private float mTransitionPathRotate = Float.NaN;
-    private float mRotationX = Float.NaN;
-    private float mRotationY = Float.NaN;
-    private float mScaleX = Float.NaN;
-    private float mScaleY = Float.NaN;
-    private float mTranslationX = Float.NaN;
-    private float mTranslationY = Float.NaN;
-    private float mTranslationZ = Float.NaN;
+    /* access modifiers changed from: private */
+    public float mAlpha = Float.NaN;
+    /* access modifiers changed from: private */
+    public int mCurveFit = 0;
+    /* access modifiers changed from: private */
+    public float mElevation = Float.NaN;
+    /* access modifiers changed from: private */
+    public float mProgress = Float.NaN;
+    /* access modifiers changed from: private */
+    public float mRotation = Float.NaN;
+    /* access modifiers changed from: private */
+    public float mRotationX = Float.NaN;
+    /* access modifiers changed from: private */
+    public float mRotationY = Float.NaN;
+    /* access modifiers changed from: private */
+    public float mScaleX = Float.NaN;
+    /* access modifiers changed from: private */
+    public float mScaleY = Float.NaN;
+    /* access modifiers changed from: private */
+    public String mTransitionEasing = null;
+    /* access modifiers changed from: private */
+    public float mTransitionPathRotate = Float.NaN;
+    /* access modifiers changed from: private */
+    public float mTranslationX = Float.NaN;
+    /* access modifiers changed from: private */
+    public float mTranslationY = Float.NaN;
+    /* access modifiers changed from: private */
+    public float mTranslationZ = Float.NaN;
+    /* access modifiers changed from: private */
+    public float mWaveOffset = 0.0f;
+    /* access modifiers changed from: private */
+    public float mWavePeriod = Float.NaN;
+    /* access modifiers changed from: private */
+    public int mWaveShape = -1;
+    /* access modifiers changed from: private */
+    public int mWaveVariesBy = -1;
 
     public KeyCycle() {
         this.mType = 4;
         this.mCustomConstraints = new HashMap<>();
     }
 
-    @Override // androidx.constraintlayout.motion.widget.Key
     public void load(Context context, AttributeSet attributeSet) {
         Loader.read(this, context.obtainStyledAttributes(attributeSet, R$styleable.KeyCycle));
     }
 
-    @Override // androidx.constraintlayout.motion.widget.Key
     public void getAttributeNames(HashSet<String> hashSet) {
         if (!Float.isNaN(this.mAlpha)) {
             hashSet.add("alpha");
@@ -78,24 +92,22 @@ public class KeyCycle extends Key {
             hashSet.add("translationZ");
         }
         if (this.mCustomConstraints.size() > 0) {
-            Iterator<String> it = this.mCustomConstraints.keySet().iterator();
-            while (it.hasNext()) {
-                hashSet.add("CUSTOM," + it.next());
+            for (String str : this.mCustomConstraints.keySet()) {
+                hashSet.add("CUSTOM," + str);
             }
         }
     }
 
     public void addCycleValues(HashMap<String, KeyCycleOscillator> hashMap) {
-        for (String str : hashMap.keySet()) {
-            if (str.startsWith("CUSTOM")) {
-                ConstraintAttribute constraintAttribute = this.mCustomConstraints.get(str.substring(7));
-                if (constraintAttribute != null && constraintAttribute.getType() == ConstraintAttribute.AttributeType.FLOAT_TYPE) {
-                    hashMap.get(str).setPoint(this.mFramePosition, this.mWaveShape, this.mWaveVariesBy, this.mWavePeriod, this.mWaveOffset, constraintAttribute.getValueToInterpolate(), constraintAttribute);
-                }
+        ConstraintAttribute constraintAttribute;
+        HashMap<String, KeyCycleOscillator> hashMap2 = hashMap;
+        for (String next : hashMap.keySet()) {
+            if (next.startsWith("CUSTOM") && (constraintAttribute = this.mCustomConstraints.get(next.substring(7))) != null && constraintAttribute.getType() == ConstraintAttribute.AttributeType.FLOAT_TYPE) {
+                hashMap2.get(next).setPoint(this.mFramePosition, this.mWaveShape, this.mWaveVariesBy, this.mWavePeriod, this.mWaveOffset, constraintAttribute.getValueToInterpolate(), constraintAttribute);
             }
-            float value = getValue(str);
+            float value = getValue(next);
             if (!Float.isNaN(value)) {
-                hashMap.get(str).setPoint(this.mFramePosition, this.mWaveShape, this.mWaveVariesBy, this.mWavePeriod, this.mWaveOffset, value);
+                hashMap2.get(next).setPoint(this.mFramePosition, this.mWaveShape, this.mWaveVariesBy, this.mWavePeriod, this.mWaveOffset, value);
             }
         }
     }
@@ -154,19 +166,19 @@ public class KeyCycle extends Key {
                 break;
             case -40300674:
                 if (str.equals("rotation")) {
-                    c = '\b';
+                    c = 8;
                     break;
                 }
                 break;
             case -4379043:
                 if (str.equals("elevation")) {
-                    c = '\t';
+                    c = 9;
                     break;
                 }
                 break;
             case 37232917:
                 if (str.equals("transitionPathRotate")) {
-                    c = '\n';
+                    c = 10;
                     break;
                 }
                 break;
@@ -178,7 +190,7 @@ public class KeyCycle extends Key {
                 break;
             case 156108012:
                 if (str.equals("waveOffset")) {
-                    c = '\f';
+                    c = 12;
                     break;
                 }
                 break;
@@ -200,15 +212,15 @@ public class KeyCycle extends Key {
                 return this.mScaleX;
             case 7:
                 return this.mScaleY;
-            case '\b':
+            case 8:
                 return this.mRotation;
-            case '\t':
+            case 9:
                 return this.mElevation;
-            case '\n':
+            case 10:
                 return this.mTransitionPathRotate;
             case 11:
                 return this.mAlpha;
-            case '\f':
+            case 12:
                 return this.mWaveOffset;
             default:
                 Log.v("WARNING! KeyCycle", "  UNKNOWN  " + str);
@@ -216,89 +228,88 @@ public class KeyCycle extends Key {
         }
     }
 
-    @Override // androidx.constraintlayout.motion.widget.Key
     public void addValues(HashMap<String, SplineSet> hashMap) {
         Debug.logStack("KeyCycle", "add " + hashMap.size() + " values", 2);
-        for (String str : hashMap.keySet()) {
-            SplineSet splineSet = hashMap.get(str);
-            str.hashCode();
+        for (String next : hashMap.keySet()) {
+            SplineSet splineSet = hashMap.get(next);
+            next.hashCode();
             char c = 65535;
-            switch (str.hashCode()) {
+            switch (next.hashCode()) {
                 case -1249320806:
-                    if (str.equals("rotationX")) {
+                    if (next.equals("rotationX")) {
                         c = 0;
                         break;
                     }
                     break;
                 case -1249320805:
-                    if (str.equals("rotationY")) {
+                    if (next.equals("rotationY")) {
                         c = 1;
                         break;
                     }
                     break;
                 case -1225497657:
-                    if (str.equals("translationX")) {
+                    if (next.equals("translationX")) {
                         c = 2;
                         break;
                     }
                     break;
                 case -1225497656:
-                    if (str.equals("translationY")) {
+                    if (next.equals("translationY")) {
                         c = 3;
                         break;
                     }
                     break;
                 case -1225497655:
-                    if (str.equals("translationZ")) {
+                    if (next.equals("translationZ")) {
                         c = 4;
                         break;
                     }
                     break;
                 case -1001078227:
-                    if (str.equals("progress")) {
+                    if (next.equals("progress")) {
                         c = 5;
                         break;
                     }
                     break;
                 case -908189618:
-                    if (str.equals("scaleX")) {
+                    if (next.equals("scaleX")) {
                         c = 6;
                         break;
                     }
                     break;
                 case -908189617:
-                    if (str.equals("scaleY")) {
+                    if (next.equals("scaleY")) {
                         c = 7;
                         break;
                     }
                     break;
                 case -40300674:
-                    if (str.equals("rotation")) {
-                        c = '\b';
+                    if (next.equals("rotation")) {
+                        c = 8;
                         break;
                     }
                     break;
                 case -4379043:
-                    if (str.equals("elevation")) {
-                        c = '\t';
+                    if (next.equals("elevation")) {
+                        c = 9;
                         break;
                     }
                     break;
                 case 37232917:
-                    if (str.equals("transitionPathRotate")) {
-                        c = '\n';
+                    if (next.equals("transitionPathRotate")) {
+                        c = 10;
                         break;
                     }
                     break;
                 case 92909918:
-                    if (str.equals("alpha")) {
+                    if (next.equals("alpha")) {
                         c = 11;
                         break;
                     }
                     break;
                 case 156108012:
-                    if (str.equals("waveOffset")) {
-                        c = '\f';
+                    if (next.equals("waveOffset")) {
+                        c = 12;
                         break;
                     }
                     break;
@@ -328,29 +339,28 @@ public class KeyCycle extends Key {
                 case 7:
                     splineSet.setPoint(this.mFramePosition, this.mScaleY);
                     break;
-                case '\b':
+                case 8:
                     splineSet.setPoint(this.mFramePosition, this.mRotation);
                     break;
-                case '\t':
+                case 9:
                     splineSet.setPoint(this.mFramePosition, this.mElevation);
                     break;
-                case '\n':
+                case 10:
                     splineSet.setPoint(this.mFramePosition, this.mTransitionPathRotate);
                     break;
                 case 11:
                     splineSet.setPoint(this.mFramePosition, this.mAlpha);
                     break;
-                case '\f':
+                case 12:
                     splineSet.setPoint(this.mFramePosition, this.mWaveOffset);
                     break;
                 default:
-                    Log.v("WARNING KeyCycle", "  UNKNOWN  " + str);
+                    Log.v("WARNING KeyCycle", "  UNKNOWN  " + next);
                     break;
             }
         }
     }
 
-    /* loaded from: classes.dex */
     private static class Loader {
         private static SparseIntArray mAttrMap;
 
@@ -379,94 +389,92 @@ public class KeyCycle extends Key {
             mAttrMap.append(R$styleable.KeyCycle_motionProgress, 20);
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public static void read(KeyCycle keyCycle, TypedArray typedArray) {
             int indexCount = typedArray.getIndexCount();
             for (int i = 0; i < indexCount; i++) {
                 int index = typedArray.getIndex(i);
                 switch (mAttrMap.get(index)) {
                     case 1:
-                        if (MotionLayout.IS_IN_EDIT_MODE) {
-                            int resourceId = typedArray.getResourceId(index, keyCycle.mTargetId);
-                            keyCycle.mTargetId = resourceId;
-                            if (resourceId == -1) {
-                                keyCycle.mTargetString = typedArray.getString(index);
+                        if (!MotionLayout.IS_IN_EDIT_MODE) {
+                            if (typedArray.peekValue(index).type != 3) {
+                                keyCycle.mTargetId = typedArray.getResourceId(index, keyCycle.mTargetId);
                                 break;
                             } else {
+                                keyCycle.mTargetString = typedArray.getString(index);
                                 break;
                             }
-                        } else if (typedArray.peekValue(index).type == 3) {
-                            keyCycle.mTargetString = typedArray.getString(index);
-                            break;
                         } else {
-                            keyCycle.mTargetId = typedArray.getResourceId(index, keyCycle.mTargetId);
-                            break;
+                            int resourceId = typedArray.getResourceId(index, keyCycle.mTargetId);
+                            keyCycle.mTargetId = resourceId;
+                            if (resourceId != -1) {
+                                break;
+                            } else {
+                                keyCycle.mTargetString = typedArray.getString(index);
+                                break;
+                            }
                         }
                     case 2:
                         keyCycle.mFramePosition = typedArray.getInt(index, keyCycle.mFramePosition);
                         break;
                     case 3:
-                        keyCycle.mTransitionEasing = typedArray.getString(index);
+                        String unused = keyCycle.mTransitionEasing = typedArray.getString(index);
                         break;
                     case 4:
-                        keyCycle.mCurveFit = typedArray.getInteger(index, keyCycle.mCurveFit);
+                        int unused2 = keyCycle.mCurveFit = typedArray.getInteger(index, keyCycle.mCurveFit);
                         break;
                     case 5:
-                        keyCycle.mWaveShape = typedArray.getInt(index, keyCycle.mWaveShape);
+                        int unused3 = keyCycle.mWaveShape = typedArray.getInt(index, keyCycle.mWaveShape);
                         break;
                     case 6:
-                        keyCycle.mWavePeriod = typedArray.getFloat(index, keyCycle.mWavePeriod);
+                        float unused4 = keyCycle.mWavePeriod = typedArray.getFloat(index, keyCycle.mWavePeriod);
                         break;
                     case 7:
-                        if (typedArray.peekValue(index).type == 5) {
-                            keyCycle.mWaveOffset = typedArray.getDimension(index, keyCycle.mWaveOffset);
+                        if (typedArray.peekValue(index).type != 5) {
+                            float unused5 = keyCycle.mWaveOffset = typedArray.getFloat(index, keyCycle.mWaveOffset);
                             break;
                         } else {
-                            keyCycle.mWaveOffset = typedArray.getFloat(index, keyCycle.mWaveOffset);
+                            float unused6 = keyCycle.mWaveOffset = typedArray.getDimension(index, keyCycle.mWaveOffset);
                             break;
                         }
                     case 8:
-                        keyCycle.mWaveVariesBy = typedArray.getInt(index, keyCycle.mWaveVariesBy);
+                        int unused7 = keyCycle.mWaveVariesBy = typedArray.getInt(index, keyCycle.mWaveVariesBy);
                         break;
                     case 9:
-                        keyCycle.mAlpha = typedArray.getFloat(index, keyCycle.mAlpha);
+                        float unused8 = keyCycle.mAlpha = typedArray.getFloat(index, keyCycle.mAlpha);
                         break;
                     case 10:
-                        keyCycle.mElevation = typedArray.getDimension(index, keyCycle.mElevation);
+                        float unused9 = keyCycle.mElevation = typedArray.getDimension(index, keyCycle.mElevation);
                         break;
                     case 11:
-                        keyCycle.mRotation = typedArray.getFloat(index, keyCycle.mRotation);
+                        float unused10 = keyCycle.mRotation = typedArray.getFloat(index, keyCycle.mRotation);
                         break;
                     case 12:
-                        keyCycle.mRotationX = typedArray.getFloat(index, keyCycle.mRotationX);
+                        float unused11 = keyCycle.mRotationX = typedArray.getFloat(index, keyCycle.mRotationX);
                         break;
                     case 13:
-                        keyCycle.mRotationY = typedArray.getFloat(index, keyCycle.mRotationY);
+                        float unused12 = keyCycle.mRotationY = typedArray.getFloat(index, keyCycle.mRotationY);
                         break;
                     case 14:
-                        keyCycle.mTransitionPathRotate = typedArray.getFloat(index, keyCycle.mTransitionPathRotate);
+                        float unused13 = keyCycle.mTransitionPathRotate = typedArray.getFloat(index, keyCycle.mTransitionPathRotate);
                         break;
                     case 15:
-                        keyCycle.mScaleX = typedArray.getFloat(index, keyCycle.mScaleX);
+                        float unused14 = keyCycle.mScaleX = typedArray.getFloat(index, keyCycle.mScaleX);
                         break;
                     case 16:
-                        keyCycle.mScaleY = typedArray.getFloat(index, keyCycle.mScaleY);
+                        float unused15 = keyCycle.mScaleY = typedArray.getFloat(index, keyCycle.mScaleY);
                         break;
                     case 17:
-                        keyCycle.mTranslationX = typedArray.getDimension(index, keyCycle.mTranslationX);
+                        float unused16 = keyCycle.mTranslationX = typedArray.getDimension(index, keyCycle.mTranslationX);
                         break;
                     case 18:
-                        keyCycle.mTranslationY = typedArray.getDimension(index, keyCycle.mTranslationY);
+                        float unused17 = keyCycle.mTranslationY = typedArray.getDimension(index, keyCycle.mTranslationY);
                         break;
                     case 19:
-                        if (Build.VERSION.SDK_INT >= 21) {
-                            keyCycle.mTranslationZ = typedArray.getDimension(index, keyCycle.mTranslationZ);
-                            break;
-                        } else {
-                            break;
-                        }
+                        float unused18 = keyCycle.mTranslationZ = typedArray.getDimension(index, keyCycle.mTranslationZ);
+                        break;
                     case 20:
-                        keyCycle.mProgress = typedArray.getFloat(index, keyCycle.mProgress);
+                        float unused19 = keyCycle.mProgress = typedArray.getFloat(index, keyCycle.mProgress);
                         break;
                     default:
                         Log.e("KeyCycle", "unused attribute 0x" + Integer.toHexString(index) + "   " + mAttrMap.get(index));

@@ -2,7 +2,6 @@ package com.android.settings.enterprise;
 
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,13 +11,13 @@ import android.net.ConnectivityManager;
 import android.net.VpnManager;
 import android.os.UserHandle;
 import android.os.UserManager;
-import android.provider.Settings;
 import android.text.SpannableStringBuilder;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.vpn2.VpnUtils;
+import com.android.settingslib.utils.WorkPolicyUtils;
 import java.util.Date;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class EnterprisePrivacyFeatureProviderImpl implements EnterprisePrivacyFeatureProvider {
     private static final int MY_USER_ID = UserHandle.myUserId();
     private final ConnectivityManager mCm;
@@ -28,28 +27,28 @@ public class EnterprisePrivacyFeatureProviderImpl implements EnterprisePrivacyFe
     private final Resources mResources;
     private final UserManager mUm;
     private final VpnManager mVm;
+    private final WorkPolicyUtils mWorkPolicyUtils;
 
     public EnterprisePrivacyFeatureProviderImpl(Context context, DevicePolicyManager devicePolicyManager, PackageManager packageManager, UserManager userManager, ConnectivityManager connectivityManager, VpnManager vpnManager, Resources resources) {
-        this.mContext = context.getApplicationContext();
+        Context applicationContext = context.getApplicationContext();
+        this.mContext = applicationContext;
         this.mDpm = devicePolicyManager;
         this.mPm = packageManager;
         this.mUm = userManager;
         this.mCm = connectivityManager;
         this.mVm = vpnManager;
         this.mResources = resources;
+        this.mWorkPolicyUtils = new WorkPolicyUtils(applicationContext);
     }
 
-    @Override // com.android.settings.enterprise.EnterprisePrivacyFeatureProvider
     public boolean hasDeviceOwner() {
         return getDeviceOwnerComponent() != null;
     }
 
-    @Override // com.android.settings.enterprise.EnterprisePrivacyFeatureProvider
     public boolean isInCompMode() {
         return hasDeviceOwner() && getManagedProfileUserId() != -10000;
     }
 
-    @Override // com.android.settings.enterprise.EnterprisePrivacyFeatureProvider
     public String getDeviceOwnerOrganizationName() {
         CharSequence deviceOwnerOrganizationName = this.mDpm.getDeviceOwnerOrganizationName();
         if (deviceOwnerOrganizationName == null) {
@@ -58,7 +57,6 @@ public class EnterprisePrivacyFeatureProviderImpl implements EnterprisePrivacyFe
         return deviceOwnerOrganizationName.toString();
     }
 
-    @Override // com.android.settings.enterprise.EnterprisePrivacyFeatureProvider
     public CharSequence getDeviceOwnerDisclosure() {
         if (!hasDeviceOwner()) {
             return null;
@@ -66,14 +64,23 @@ public class EnterprisePrivacyFeatureProviderImpl implements EnterprisePrivacyFe
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
         CharSequence deviceOwnerOrganizationName = this.mDpm.getDeviceOwnerOrganizationName();
         if (deviceOwnerOrganizationName != null) {
-            spannableStringBuilder.append((CharSequence) this.mResources.getString(R.string.do_disclosure_with_name, deviceOwnerOrganizationName));
+            spannableStringBuilder.append(this.mDpm.getResources().getString("Settings.DEVICE_MANAGED_WITH_NAME", new EnterprisePrivacyFeatureProviderImpl$$ExternalSyntheticLambda0(this, deviceOwnerOrganizationName), new Object[]{deviceOwnerOrganizationName}));
         } else {
-            spannableStringBuilder.append((CharSequence) this.mResources.getString(R.string.do_disclosure_generic));
+            spannableStringBuilder.append(this.mDpm.getResources().getString("Settings.DEVICE_MANAGED_WITHOUT_NAME", new EnterprisePrivacyFeatureProviderImpl$$ExternalSyntheticLambda1(this)));
         }
         return spannableStringBuilder;
     }
 
-    @Override // com.android.settings.enterprise.EnterprisePrivacyFeatureProvider
+    /* access modifiers changed from: private */
+    public /* synthetic */ String lambda$getDeviceOwnerDisclosure$0(CharSequence charSequence) {
+        return this.mResources.getString(R$string.do_disclosure_with_name, new Object[]{charSequence});
+    }
+
+    /* access modifiers changed from: private */
+    public /* synthetic */ String lambda$getDeviceOwnerDisclosure$1() {
+        return this.mResources.getString(R$string.do_disclosure_generic);
+    }
+
     public Date getLastSecurityLogRetrievalTime() {
         long lastSecurityLogRetrievalTime = this.mDpm.getLastSecurityLogRetrievalTime();
         if (lastSecurityLogRetrievalTime < 0) {
@@ -82,7 +89,6 @@ public class EnterprisePrivacyFeatureProviderImpl implements EnterprisePrivacyFe
         return new Date(lastSecurityLogRetrievalTime);
     }
 
-    @Override // com.android.settings.enterprise.EnterprisePrivacyFeatureProvider
     public Date getLastBugReportRequestTime() {
         long lastBugReportRequestTime = this.mDpm.getLastBugReportRequestTime();
         if (lastBugReportRequestTime < 0) {
@@ -91,7 +97,6 @@ public class EnterprisePrivacyFeatureProviderImpl implements EnterprisePrivacyFe
         return new Date(lastBugReportRequestTime);
     }
 
-    @Override // com.android.settings.enterprise.EnterprisePrivacyFeatureProvider
     public Date getLastNetworkLogRetrievalTime() {
         long lastNetworkLogRetrievalTime = this.mDpm.getLastNetworkLogRetrievalTime();
         if (lastNetworkLogRetrievalTime < 0) {
@@ -100,28 +105,23 @@ public class EnterprisePrivacyFeatureProviderImpl implements EnterprisePrivacyFe
         return new Date(lastNetworkLogRetrievalTime);
     }
 
-    @Override // com.android.settings.enterprise.EnterprisePrivacyFeatureProvider
     public boolean isSecurityLoggingEnabled() {
-        return this.mDpm.isSecurityLoggingEnabled(null);
+        return this.mDpm.isSecurityLoggingEnabled((ComponentName) null);
     }
 
-    @Override // com.android.settings.enterprise.EnterprisePrivacyFeatureProvider
     public boolean isNetworkLoggingEnabled() {
-        return this.mDpm.isNetworkLoggingEnabled(null);
+        return this.mDpm.isNetworkLoggingEnabled((ComponentName) null);
     }
 
-    @Override // com.android.settings.enterprise.EnterprisePrivacyFeatureProvider
     public boolean isAlwaysOnVpnSetInCurrentUser() {
         return VpnUtils.isAlwaysOnVpnSet(this.mVm, MY_USER_ID);
     }
 
-    @Override // com.android.settings.enterprise.EnterprisePrivacyFeatureProvider
     public boolean isAlwaysOnVpnSetInManagedProfile() {
         int managedProfileUserId = getManagedProfileUserId();
         return managedProfileUserId != -10000 && VpnUtils.isAlwaysOnVpnSet(this.mVm, managedProfileUserId);
     }
 
-    @Override // com.android.settings.enterprise.EnterprisePrivacyFeatureProvider
     public int getMaximumFailedPasswordsBeforeWipeInCurrentUser() {
         ComponentName deviceOwnerComponentOnCallingUser = this.mDpm.getDeviceOwnerComponentOnCallingUser();
         if (deviceOwnerComponentOnCallingUser == null) {
@@ -133,7 +133,6 @@ public class EnterprisePrivacyFeatureProviderImpl implements EnterprisePrivacyFe
         return this.mDpm.getMaximumFailedPasswordsForWipe(deviceOwnerComponentOnCallingUser, MY_USER_ID);
     }
 
-    @Override // com.android.settings.enterprise.EnterprisePrivacyFeatureProvider
     public int getMaximumFailedPasswordsBeforeWipeInManagedProfile() {
         ComponentName profileOwnerAsUser;
         int managedProfileUserId = getManagedProfileUserId();
@@ -143,25 +142,41 @@ public class EnterprisePrivacyFeatureProviderImpl implements EnterprisePrivacyFe
         return this.mDpm.getMaximumFailedPasswordsForWipe(profileOwnerAsUser, managedProfileUserId);
     }
 
-    @Override // com.android.settings.enterprise.EnterprisePrivacyFeatureProvider
-    public String getImeLabelIfOwnerSet() {
-        if (!this.mDpm.isCurrentInputMethodSetByOwner()) {
-            return null;
-        }
-        ContentResolver contentResolver = this.mContext.getContentResolver();
-        int i = MY_USER_ID;
-        String stringForUser = Settings.Secure.getStringForUser(contentResolver, "default_input_method", i);
-        if (stringForUser == null) {
-            return null;
-        }
-        try {
-            return this.mPm.getApplicationInfoAsUser(stringForUser, 0, i).loadLabel(this.mPm).toString();
-        } catch (PackageManager.NameNotFoundException unused) {
-            return null;
-        }
+    /* JADX WARNING: Code restructure failed: missing block: B:3:0x000a, code lost:
+        r0 = r5.mContext.getContentResolver();
+        r2 = MY_USER_ID;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public java.lang.String getImeLabelIfOwnerSet() {
+        /*
+            r5 = this;
+            android.app.admin.DevicePolicyManager r0 = r5.mDpm
+            boolean r0 = r0.isCurrentInputMethodSetByOwner()
+            r1 = 0
+            if (r0 != 0) goto L_0x000a
+            return r1
+        L_0x000a:
+            android.content.Context r0 = r5.mContext
+            android.content.ContentResolver r0 = r0.getContentResolver()
+            int r2 = MY_USER_ID
+            java.lang.String r3 = "default_input_method"
+            java.lang.String r0 = android.provider.Settings.Secure.getStringForUser(r0, r3, r2)
+            if (r0 != 0) goto L_0x001b
+            return r1
+        L_0x001b:
+            android.content.pm.PackageManager r3 = r5.mPm     // Catch:{ NameNotFoundException -> 0x002d }
+            r4 = 0
+            android.content.pm.ApplicationInfo r0 = r3.getApplicationInfoAsUser(r0, r4, r2)     // Catch:{ NameNotFoundException -> 0x002d }
+            android.content.pm.PackageManager r5 = r5.mPm     // Catch:{ NameNotFoundException -> 0x002d }
+            java.lang.CharSequence r5 = r0.loadLabel(r5)     // Catch:{ NameNotFoundException -> 0x002d }
+            java.lang.String r5 = r5.toString()     // Catch:{ NameNotFoundException -> 0x002d }
+            return r5
+        L_0x002d:
+            return r1
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.enterprise.EnterprisePrivacyFeatureProviderImpl.getImeLabelIfOwnerSet():java.lang.String");
     }
 
-    @Override // com.android.settings.enterprise.EnterprisePrivacyFeatureProvider
     public int getNumberOfOwnerInstalledCaCertsForCurrentUser() {
         List ownerInstalledCaCerts = this.mDpm.getOwnerInstalledCaCerts(new UserHandle(MY_USER_ID));
         if (ownerInstalledCaCerts == null) {
@@ -170,7 +185,6 @@ public class EnterprisePrivacyFeatureProviderImpl implements EnterprisePrivacyFe
         return ownerInstalledCaCerts.size();
     }
 
-    @Override // com.android.settings.enterprise.EnterprisePrivacyFeatureProvider
     public int getNumberOfOwnerInstalledCaCertsForManagedProfile() {
         List ownerInstalledCaCerts;
         int managedProfileUserId = getManagedProfileUserId();
@@ -180,7 +194,6 @@ public class EnterprisePrivacyFeatureProviderImpl implements EnterprisePrivacyFe
         return ownerInstalledCaCerts.size();
     }
 
-    @Override // com.android.settings.enterprise.EnterprisePrivacyFeatureProvider
     public int getNumberOfActiveDeviceAdminsForCurrentUserAndManagedProfile() {
         int i = 0;
         for (UserInfo userInfo : this.mUm.getProfiles(MY_USER_ID)) {
@@ -192,35 +205,21 @@ public class EnterprisePrivacyFeatureProviderImpl implements EnterprisePrivacyFe
         return i;
     }
 
-    @Override // com.android.settings.enterprise.EnterprisePrivacyFeatureProvider
     public boolean hasWorkPolicyInfo() {
-        return (getWorkPolicyInfoIntentDO() == null && getWorkPolicyInfoIntentPO() == null) ? false : true;
+        return this.mWorkPolicyUtils.hasWorkPolicy();
     }
 
-    @Override // com.android.settings.enterprise.EnterprisePrivacyFeatureProvider
-    public boolean showWorkPolicyInfo() {
-        Intent workPolicyInfoIntentDO = getWorkPolicyInfoIntentDO();
-        if (workPolicyInfoIntentDO != null) {
-            this.mContext.startActivity(workPolicyInfoIntentDO);
-            return true;
-        }
-        Intent workPolicyInfoIntentPO = getWorkPolicyInfoIntentPO();
-        UserInfo managedProfileUserInfo = getManagedProfileUserInfo();
-        if (workPolicyInfoIntentPO == null || managedProfileUserInfo == null) {
-            return false;
-        }
-        this.mContext.startActivityAsUser(workPolicyInfoIntentPO, managedProfileUserInfo.getUserHandle());
-        return true;
+    public boolean showWorkPolicyInfo(Context context) {
+        return this.mWorkPolicyUtils.showWorkPolicyInfo(context);
     }
 
-    @Override // com.android.settings.enterprise.EnterprisePrivacyFeatureProvider
     public boolean showParentalControls() {
         Intent parentalControlsIntent = getParentalControlsIntent();
-        if (parentalControlsIntent != null) {
-            this.mContext.startActivity(parentalControlsIntent);
-            return true;
+        if (parentalControlsIntent == null) {
+            return false;
         }
-        return false;
+        this.mContext.startActivity(parentalControlsIntent);
+        return true;
     }
 
     private Intent getParentalControlsIntent() {
@@ -231,10 +230,10 @@ public class EnterprisePrivacyFeatureProviderImpl implements EnterprisePrivacyFe
             return null;
         }
         Intent addFlags = new Intent("android.settings.SHOW_PARENTAL_CONTROLS").setPackage(profileOwnerOrDeviceOwnerSupervisionComponent.getPackageName()).addFlags(268435456);
-        if (this.mPm.queryIntentActivitiesAsUser(addFlags, 0, i).size() == 0) {
-            return null;
+        if (this.mPm.queryIntentActivitiesAsUser(addFlags, 0, i).size() != 0) {
+            return addFlags;
         }
-        return addFlags;
+        return null;
     }
 
     private ComponentName getDeviceOwnerComponent() {
@@ -259,30 +258,5 @@ public class EnterprisePrivacyFeatureProviderImpl implements EnterprisePrivacyFe
             return managedProfileUserInfo.id;
         }
         return -10000;
-    }
-
-    private Intent getWorkPolicyInfoIntentDO() {
-        ComponentName deviceOwnerComponent = getDeviceOwnerComponent();
-        if (deviceOwnerComponent == null) {
-            return null;
-        }
-        Intent addFlags = new Intent("android.settings.SHOW_WORK_POLICY_INFO").setPackage(deviceOwnerComponent.getPackageName()).addFlags(268435456);
-        if (this.mPm.queryIntentActivities(addFlags, 0).size() == 0) {
-            return null;
-        }
-        return addFlags;
-    }
-
-    private Intent getWorkPolicyInfoIntentPO() {
-        ComponentName profileOwnerAsUser;
-        int managedProfileUserId = getManagedProfileUserId();
-        if (managedProfileUserId == -10000 || (profileOwnerAsUser = this.mDpm.getProfileOwnerAsUser(managedProfileUserId)) == null) {
-            return null;
-        }
-        Intent addFlags = new Intent("android.settings.SHOW_WORK_POLICY_INFO").setPackage(profileOwnerAsUser.getPackageName()).addFlags(268435456);
-        if (this.mPm.queryIntentActivitiesAsUser(addFlags, 0, managedProfileUserId).size() == 0) {
-            return null;
-        }
-        return addFlags;
     }
 }

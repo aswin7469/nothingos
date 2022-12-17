@@ -1,11 +1,10 @@
 package com.android.settings.enterprise;
 
 import android.content.Context;
-/* loaded from: classes.dex */
+
 public class CaCertsManagedProfilePreferenceController extends CaCertsPreferenceControllerBase {
     static final String CA_CERTS_MANAGED_PROFILE = "ca_certs_managed_profile";
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return CA_CERTS_MANAGED_PROFILE;
     }
@@ -14,8 +13,8 @@ public class CaCertsManagedProfilePreferenceController extends CaCertsPreference
         super(context);
     }
 
-    @Override // com.android.settings.enterprise.CaCertsPreferenceControllerBase
-    protected int getNumberOfCaCerts() {
+    /* access modifiers changed from: protected */
+    public int getNumberOfCaCerts() {
         return this.mFeatureProvider.getNumberOfOwnerInstalledCaCertsForManagedProfile();
     }
 }

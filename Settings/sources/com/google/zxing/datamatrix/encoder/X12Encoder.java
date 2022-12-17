@@ -1,13 +1,13 @@
 package com.google.zxing.datamatrix.encoder;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes2.dex */
-public final class X12Encoder extends C40Encoder {
-    @Override // com.google.zxing.datamatrix.encoder.C40Encoder
+
+final class X12Encoder extends C40Encoder {
     public int getEncodingMode() {
         return 3;
     }
 
-    @Override // com.google.zxing.datamatrix.encoder.C40Encoder, com.google.zxing.datamatrix.encoder.Encoder
+    X12Encoder() {
+    }
+
     public void encode(EncoderContext encoderContext) {
         StringBuilder sb = new StringBuilder();
         while (true) {
@@ -29,40 +29,39 @@ public final class X12Encoder extends C40Encoder {
         handleEOD(encoderContext, sb);
     }
 
-    @Override // com.google.zxing.datamatrix.encoder.C40Encoder
-    int encodeChar(char c, StringBuilder sb) {
-        if (c == '\r') {
-            sb.append((char) 0);
+    /* access modifiers changed from: package-private */
+    public int encodeChar(char c, StringBuilder sb) {
+        if (c == 13) {
+            sb.append(0);
         } else if (c == '*') {
-            sb.append((char) 1);
+            sb.append(1);
         } else if (c == '>') {
-            sb.append((char) 2);
+            sb.append(2);
         } else if (c == ' ') {
-            sb.append((char) 3);
+            sb.append(3);
         } else if (c >= '0' && c <= '9') {
             sb.append((char) ((c - '0') + 4));
-        } else if (c >= 'A' && c <= 'Z') {
-            sb.append((char) ((c - 'A') + 14));
-        } else {
+        } else if (c < 'A' || c > 'Z') {
             HighLevelEncoder.illegalCharacter(c);
+        } else {
+            sb.append((char) ((c - 'A') + 14));
         }
         return 1;
     }
 
-    @Override // com.google.zxing.datamatrix.encoder.C40Encoder
-    void handleEOD(EncoderContext encoderContext, StringBuilder sb) {
+    /* access modifiers changed from: package-private */
+    public void handleEOD(EncoderContext encoderContext, StringBuilder sb) {
         encoderContext.updateSymbolInfo();
         int dataCapacity = encoderContext.getSymbolInfo().getDataCapacity() - encoderContext.getCodewordCount();
         int length = sb.length();
         if (length == 2) {
-            encoderContext.writeCodeword((char) 254);
+            encoderContext.writeCodeword(254);
             encoderContext.pos -= 2;
             encoderContext.signalEncoderChange(0);
-        } else if (length != 1) {
-        } else {
+        } else if (length == 1) {
             encoderContext.pos--;
             if (dataCapacity > 1) {
-                encoderContext.writeCodeword((char) 254);
+                encoderContext.writeCodeword(254);
             }
             encoderContext.signalEncoderChange(0);
         }

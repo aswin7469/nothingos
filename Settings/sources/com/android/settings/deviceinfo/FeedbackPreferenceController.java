@@ -8,12 +8,11 @@ import androidx.preference.Preference;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.DeviceInfoUtils;
 import com.android.settingslib.core.AbstractPreferenceController;
-/* loaded from: classes.dex */
+
 public class FeedbackPreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin {
     private final Intent intent = new Intent("android.intent.action.BUG_REPORT");
     private final Fragment mHost;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "device_feedback";
     }
@@ -23,30 +22,26 @@ public class FeedbackPreferenceController extends AbstractPreferenceController i
         this.mHost = fragment;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return !TextUtils.isEmpty(DeviceInfoUtils.getFeedbackReporterPackage(this.mContext));
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         this.intent.setPackage(DeviceInfoUtils.getFeedbackReporterPackage(this.mContext));
         preference.setIntent(this.intent);
         if (isAvailable() && !preference.isVisible()) {
             preference.setVisible(true);
-        } else if (isAvailable() || !preference.isVisible()) {
-        } else {
+        } else if (!isAvailable() && preference.isVisible()) {
             preference.setVisible(false);
         }
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
-        if (TextUtils.equals(preference.getKey(), "device_feedback") && isAvailable()) {
-            this.mHost.startActivityForResult(this.intent, 0);
-            return true;
+        if (!TextUtils.equals(preference.getKey(), "device_feedback") || !isAvailable()) {
+            return false;
         }
-        return false;
+        this.mHost.startActivityForResult(this.intent, 0);
+        return true;
     }
 }

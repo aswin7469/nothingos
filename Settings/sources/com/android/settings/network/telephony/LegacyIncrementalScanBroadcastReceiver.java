@@ -10,30 +10,30 @@ import android.util.Log;
 import com.android.internal.telephony.OperatorInfo;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class LegacyIncrementalScanBroadcastReceiver extends BroadcastReceiver {
     private static int sPhoneCount;
     private Context mContext;
     private final TelephonyScanManager.NetworkScanCallback mNetworkScanCallback;
     private QueryDetails[] mQueryDetails;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public class QueryDetails {
+    class QueryDetails {
         String[] storedScanInfo = null;
 
         QueryDetails() {
         }
 
-        void concatScanInfo(String[] strArr) {
+        /* access modifiers changed from: package-private */
+        public void concatScanInfo(String[] strArr) {
             String[] strArr2 = this.storedScanInfo;
-            String[] strArr3 = new String[strArr2.length + strArr.length];
+            String[] strArr3 = new String[(strArr2.length + strArr.length)];
             System.arraycopy(strArr2, 0, strArr3, 0, strArr2.length);
             System.arraycopy(strArr, 0, strArr3, this.storedScanInfo.length, strArr.length);
             this.storedScanInfo = strArr3;
         }
 
-        void reset() {
+        /* access modifiers changed from: package-private */
+        public void reset() {
             this.storedScanInfo = null;
         }
     }
@@ -49,7 +49,6 @@ public class LegacyIncrementalScanBroadcastReceiver extends BroadcastReceiver {
         this.mNetworkScanCallback = networkScanCallback;
     }
 
-    @Override // android.content.BroadcastReceiver
     public void onReceive(Context context, Intent intent) {
         Log.d("LegacyIncrementalScanBroadcastReceiver", "onReceive " + intent);
         if ("qualcomm.intent.action.ACTION_INCREMENTAL_NW_SCAN_IND".equals(intent.getAction())) {
@@ -70,6 +69,7 @@ public class LegacyIncrementalScanBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void broadcastIncrementalQueryResults(Intent intent) {
+        int i;
         int intExtra = intent.getIntExtra("scan_result", -1);
         int intExtra2 = intent.getIntExtra("sub_id", -1);
         Log.d("LegacyIncrementalScanBroadcastReceiver", "broadcastIncrementalQueryResults: phoneid: " + intExtra2 + ", result: " + intExtra);
@@ -79,28 +79,31 @@ public class LegacyIncrementalScanBroadcastReceiver extends BroadcastReceiver {
             onError(10000);
         } else if (intExtra == 2) {
             onError(1);
-        } else if (intExtra != 0 && intExtra != 1) {
-        } else {
+        } else if (intExtra == 0 || intExtra == 1) {
             String[] stringArrayExtra = intent.getStringArrayExtra("incr_nw_scan_data");
             QueryDetails queryDetails = this.mQueryDetails[intExtra2];
             StringBuilder sb = new StringBuilder();
             sb.append("broadcastIncrementalQueryResults, scanInfo.length: ");
-            sb.append(stringArrayExtra == null ? 0 : stringArrayExtra.length);
-            Log.d("LegacyIncrementalScanBroadcastReceiver", sb.toString());
-            if (queryDetails.storedScanInfo != null && stringArrayExtra != null) {
-                queryDetails.concatScanInfo(stringArrayExtra);
+            if (stringArrayExtra == null) {
+                i = 0;
             } else {
+                i = stringArrayExtra.length;
+            }
+            sb.append(i);
+            Log.d("LegacyIncrementalScanBroadcastReceiver", sb.toString());
+            if (queryDetails.storedScanInfo == null || stringArrayExtra == null) {
                 queryDetails.storedScanInfo = stringArrayExtra;
+            } else {
+                queryDetails.concatScanInfo(stringArrayExtra);
             }
             String[] strArr = queryDetails.storedScanInfo;
             if (strArr != null) {
                 onResults(getCellInfosFromScanResult(strArr));
             }
-            if (intExtra != 0) {
-                return;
+            if (intExtra == 0) {
+                queryDetails.reset();
+                onComplete();
             }
-            queryDetails.reset();
-            onComplete();
         }
     }
 

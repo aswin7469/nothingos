@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent">
+<ScrollView xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:layout_width="match_parent" android:layout_height="match_parent">
     <LinearLayout android:orientation="vertical" android:paddingBottom="3dp" android:scrollbars="vertical" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="6dp" android:paddingEnd="6dp">
         <TextView android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="@string/proxy_hostname_label" android:maxLines="1"/>
         <EditText android:id="@+id/hostname" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:maxLines="1" android:scrollHorizontally="true" android:capitalize="none" android:autoText="false"/>

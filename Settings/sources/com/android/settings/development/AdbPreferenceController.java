@@ -4,7 +4,7 @@ import android.content.Context;
 import androidx.preference.Preference;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.development.AbstractEnableAdbPreferenceController;
-/* loaded from: classes.dex */
+
 public class AdbPreferenceController extends AbstractEnableAdbPreferenceController implements PreferenceControllerMixin {
     private final DevelopmentSettingsDashboardFragment mFragment;
 
@@ -18,19 +18,17 @@ public class AdbPreferenceController extends AbstractEnableAdbPreferenceControll
     }
 
     public void onAdbDialogDismissed() {
-        updateState(((AbstractEnableAdbPreferenceController) this).mPreference);
+        updateState(this.mPreference);
     }
 
-    @Override // com.android.settingslib.core.ConfirmationDialogController
     public void showConfirmationDialog(Preference preference) {
         EnableAdbWarningDialog.show(this.mFragment);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController
+    /* access modifiers changed from: protected */
     public void onDeveloperOptionsSwitchDisabled() {
         super.onDeveloperOptionsSwitchDisabled();
         writeAdbSetting(false);
-        ((AbstractEnableAdbPreferenceController) this).mPreference.setChecked(false);
+        this.mPreference.setChecked(false);
     }
 }

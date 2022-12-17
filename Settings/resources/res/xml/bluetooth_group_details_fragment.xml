@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:settings="http://schemas.android.com/apk/res-auto" android:title="@string/group_options">
+<PreferenceScreen xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:title="@string/group_options">
     <com.android.settings.widget.GroupOptionsPreference android:key="group_options"/>
     <PreferenceCategory android:title="@string/group_active_devices" android:key="group_options_active_devices"/>
     <PreferenceCategory android:title="@string/group_connected_devices" android:key="group_options_connected_devices"/>

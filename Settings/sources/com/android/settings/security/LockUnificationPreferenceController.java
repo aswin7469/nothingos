@@ -10,7 +10,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.internal.widget.LockscreenCredential;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.Utils;
 import com.android.settings.core.PreferenceControllerMixin;
@@ -21,7 +21,7 @@ import com.android.settings.password.ChooseLockSettingsHelper;
 import com.android.settingslib.RestrictedLockUtilsInternal;
 import com.android.settingslib.RestrictedSwitchPreference;
 import com.android.settingslib.core.AbstractPreferenceController;
-/* loaded from: classes.dex */
+
 public class LockUnificationPreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin, Preference.OnPreferenceChangeListener {
     private static final int MY_USER_ID = UserHandle.myUserId();
     private LockscreenCredential mCurrentDevicePassword;
@@ -35,7 +35,6 @@ public class LockUnificationPreferenceController extends AbstractPreferenceContr
     private final UserManager mUm;
     private RestrictedSwitchPreference mUnifyProfile;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mUnifyProfile = (RestrictedSwitchPreference) preferenceScreen.findPreference(this.mPreferenceKey);
@@ -58,18 +57,15 @@ public class LockUnificationPreferenceController extends AbstractPreferenceContr
         this.mPreferenceKey = str;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         int i = this.mProfileUserId;
-        return i != -10000 && this.mLockPatternUtils.isSeparateProfileChallengeAllowed(i);
+        return i != -10000 && this.mUm.isManagedProfile(i);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return this.mPreferenceKey;
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         if (Utils.startQuietModeDialogIfNecessary(this.mContext, this.mUm, this.mProfileUserId)) {
             return false;
@@ -78,22 +74,20 @@ public class LockUnificationPreferenceController extends AbstractPreferenceContr
             this.mRequireNewDevicePassword = !this.mDpm.isPasswordSufficientAfterProfileUnification(UserHandle.myUserId(), this.mProfileUserId);
             startUnification();
         } else {
-            if (!new ChooseLockSettingsHelper.Builder(this.mHost.getActivity(), this.mHost).setRequestCode(130).setTitle(this.mContext.getString(R.string.unlock_set_unlock_launch_picker_title)).setReturnCredentials(true).setUserId(MY_USER_ID).show()) {
+            if (!new ChooseLockSettingsHelper.Builder(this.mHost.getActivity(), this.mHost).setRequestCode(130).setTitle(this.mContext.getString(R$string.unlock_set_unlock_launch_picker_title)).setReturnCredentials(true).setUserId(MY_USER_ID).show()) {
                 ununifyLocks();
             }
         }
         return true;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         if (this.mUnifyProfile != null) {
             boolean isSeparateProfileChallengeEnabled = this.mLockPatternUtils.isSeparateProfileChallengeEnabled(this.mProfileUserId);
             this.mUnifyProfile.setChecked(!isSeparateProfileChallengeEnabled);
-            if (!isSeparateProfileChallengeEnabled) {
-                return;
+            if (isSeparateProfileChallengeEnabled) {
+                this.mUnifyProfile.setDisabledByAdmin(RestrictedLockUtilsInternal.checkIfRestrictionEnforced(this.mContext, "no_unified_password", this.mProfileUserId));
             }
-            this.mUnifyProfile.setDisabledByAdmin(RestrictedLockUtilsInternal.checkIfRestrictionEnforced(this.mContext, "no_unified_password", this.mProfileUserId));
         }
     }
 
@@ -119,9 +113,14 @@ public class LockUnificationPreferenceController extends AbstractPreferenceContr
     }
 
     public void startUnification() {
-        if (!new ChooseLockSettingsHelper.Builder(this.mHost.getActivity(), this.mHost).setRequestCode(129).setTitle(this.mContext.getString(R.string.unlock_set_unlock_launch_picker_title_profile)).setReturnCredentials(true).setUserId(this.mProfileUserId).show()) {
+        if (!new ChooseLockSettingsHelper.Builder(this.mHost.getActivity(), this.mHost).setRequestCode(129).setTitle(this.mDpm.getResources().getString("Settings.WORK_PROFILE_SET_UNLOCK_LAUNCH_PICKER_TITLE", new LockUnificationPreferenceController$$ExternalSyntheticLambda0(this))).setReturnCredentials(true).setUserId(this.mProfileUserId).show()) {
             unifyLocks();
         }
+    }
+
+    /* access modifiers changed from: private */
+    public /* synthetic */ String lambda$startUnification$0() {
+        return this.mContext.getString(R$string.unlock_set_unlock_launch_picker_title_profile);
     }
 
     private void unifyLocks() {
@@ -150,6 +149,6 @@ public class LockUnificationPreferenceController extends AbstractPreferenceContr
         Bundle bundle = new Bundle();
         bundle.putInt("unification_profile_id", this.mProfileUserId);
         bundle.putParcelable("unification_profile_credential", this.mCurrentProfilePassword);
-        new SubSettingLauncher(this.mContext).setDestination(ChooseLockGeneric.ChooseLockGenericFragment.class.getName()).setTitleRes(R.string.lock_settings_picker_title).setSourceMetricsCategory(this.mHost.getMetricsCategory()).setArguments(bundle).setTransitionType(1).launch();
+        new SubSettingLauncher(this.mContext).setDestination(ChooseLockGeneric.ChooseLockGenericFragment.class.getName()).setTitleRes(R$string.lock_settings_picker_title).setSourceMetricsCategory(this.mHost.getMetricsCategory()).setArguments(bundle).setTransitionType(1).launch();
     }
 }

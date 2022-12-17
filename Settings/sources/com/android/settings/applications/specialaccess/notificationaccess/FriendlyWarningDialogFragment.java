@@ -6,15 +6,14 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.instrumentation.InstrumentedDialogFragment;
-/* loaded from: classes.dex */
+
 public class FriendlyWarningDialogFragment extends InstrumentedDialogFragment {
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ void lambda$onCreateDialog$0(DialogInterface dialogInterface, int i) {
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 552;
     }
@@ -28,17 +27,15 @@ public class FriendlyWarningDialogFragment extends InstrumentedDialogFragment {
         return this;
     }
 
-    @Override // androidx.fragment.app.DialogFragment
     public Dialog onCreateDialog(Bundle bundle) {
         Bundle arguments = getArguments();
         CharSequence charSequence = arguments.getCharSequence("l");
         final ComponentName unflattenFromString = ComponentName.unflattenFromString(arguments.getString("c"));
         final NotificationAccessDetails notificationAccessDetails = (NotificationAccessDetails) getTargetFragment();
-        return new AlertDialog.Builder(getContext()).setMessage(getResources().getString(R.string.notification_listener_disable_warning_summary, charSequence)).setCancelable(true).setPositiveButton(R.string.notification_listener_disable_warning_confirm, new DialogInterface.OnClickListener() { // from class: com.android.settings.applications.specialaccess.notificationaccess.FriendlyWarningDialogFragment.1
-            @Override // android.content.DialogInterface.OnClickListener
+        return new AlertDialog.Builder(getContext()).setMessage((CharSequence) getResources().getString(R$string.notification_listener_disable_warning_summary, new Object[]{charSequence})).setCancelable(true).setPositiveButton(R$string.notification_listener_disable_warning_confirm, (DialogInterface.OnClickListener) new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
                 notificationAccessDetails.disable(unflattenFromString);
             }
-        }).setNegativeButton(R.string.notification_listener_disable_warning_cancel, FriendlyWarningDialogFragment$$ExternalSyntheticLambda0.INSTANCE).create();
+        }).setNegativeButton(R$string.notification_listener_disable_warning_cancel, (DialogInterface.OnClickListener) new FriendlyWarningDialogFragment$$ExternalSyntheticLambda0()).create();
     }
 }

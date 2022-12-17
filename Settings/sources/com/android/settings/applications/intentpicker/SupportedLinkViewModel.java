@@ -3,7 +3,7 @@ package com.android.settings.applications.intentpicker;
 import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class SupportedLinkViewModel extends AndroidViewModel {
     private List<SupportedLinkWrapper> mSupportedLinkWrapperList;
 

@@ -3,11 +3,9 @@ package androidx.constraintlayout.solver.widgets.analyzer;
 import androidx.constraintlayout.solver.widgets.Barrier;
 import androidx.constraintlayout.solver.widgets.ConstraintWidget;
 import androidx.constraintlayout.solver.widgets.analyzer.DependencyNode;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class HelperReferences extends WidgetRun {
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // androidx.constraintlayout.solver.widgets.analyzer.WidgetRun
+
+class HelperReferences extends WidgetRun {
+    /* access modifiers changed from: package-private */
     public boolean supportsWrapComputation() {
         return false;
     }
@@ -16,8 +14,7 @@ public class HelperReferences extends WidgetRun {
         super(constraintWidget);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // androidx.constraintlayout.solver.widgets.analyzer.WidgetRun
+    /* access modifiers changed from: package-private */
     public void clear() {
         this.runGroup = null;
         this.start.clear();
@@ -28,8 +25,7 @@ public class HelperReferences extends WidgetRun {
         dependencyNode.targets.add(this.start);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // androidx.constraintlayout.solver.widgets.analyzer.WidgetRun
+    /* access modifiers changed from: package-private */
     public void apply() {
         ConstraintWidget constraintWidget = this.widget;
         if (constraintWidget instanceof Barrier) {
@@ -77,8 +73,7 @@ public class HelperReferences extends WidgetRun {
                 }
                 addDependency(this.widget.verticalRun.start);
                 addDependency(this.widget.verticalRun.end);
-            } else if (barrierType != 3) {
-            } else {
+            } else if (barrierType == 3) {
                 this.start.type = DependencyNode.Type.BOTTOM;
                 while (i < barrier.mWidgetsCount) {
                     ConstraintWidget constraintWidget5 = barrier.mWidgets[i];
@@ -95,7 +90,6 @@ public class HelperReferences extends WidgetRun {
         }
     }
 
-    @Override // androidx.constraintlayout.solver.widgets.analyzer.WidgetRun, androidx.constraintlayout.solver.widgets.analyzer.Dependency
     public void update(Dependency dependency) {
         Barrier barrier = (Barrier) this.widget;
         int barrierType = barrier.getBarrierType();
@@ -117,7 +111,6 @@ public class HelperReferences extends WidgetRun {
         }
     }
 
-    @Override // androidx.constraintlayout.solver.widgets.analyzer.WidgetRun
     public void applyToWidget() {
         ConstraintWidget constraintWidget = this.widget;
         if (constraintWidget instanceof Barrier) {

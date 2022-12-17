@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-/* loaded from: classes2.dex */
+
 public final class Detector {
     private final BitMatrix image;
     private final WhiteRectangleDetector rectangleDetector;
@@ -26,7 +26,7 @@ public final class Detector {
     public DetectorResult detect() throws NotFoundException {
         ResultPoint resultPoint;
         ResultPoint resultPoint2;
-        BitMatrix sampleGrid;
+        BitMatrix bitMatrix;
         ResultPoint[] detect = this.rectangleDetector.detect();
         ResultPoint resultPoint3 = detect[0];
         ResultPoint resultPoint4 = detect[1];
@@ -98,7 +98,7 @@ public final class Detector {
             if ((transitions4 & 1) == 1) {
                 transitions4++;
             }
-            sampleGrid = sampleGrid(this.image, resultPoint2, resultPoint12, resultPoint11, resultPoint, i3, transitions4);
+            bitMatrix = sampleGrid(this.image, resultPoint2, resultPoint12, resultPoint11, resultPoint, i3, transitions4);
         } else {
             ResultPoint correctTopRight = correctTopRight(resultPoint12, resultPoint11, resultPoint13, resultPoint, Math.min(i2, i));
             if (correctTopRight != null) {
@@ -109,43 +109,43 @@ public final class Detector {
                 max++;
             }
             int i4 = max;
-            sampleGrid = sampleGrid(this.image, resultPoint13, resultPoint12, resultPoint11, resultPoint, i4, i4);
+            bitMatrix = sampleGrid(this.image, resultPoint13, resultPoint12, resultPoint11, resultPoint, i4, i4);
             resultPoint2 = resultPoint13;
         }
-        return new DetectorResult(sampleGrid, new ResultPoint[]{resultPoint2, resultPoint12, resultPoint11, resultPoint});
+        return new DetectorResult(bitMatrix, new ResultPoint[]{resultPoint2, resultPoint12, resultPoint11, resultPoint});
     }
 
     private ResultPoint correctTopRightRectangular(ResultPoint resultPoint, ResultPoint resultPoint2, ResultPoint resultPoint3, ResultPoint resultPoint4, int i, int i2) {
-        float distance = distance(resultPoint, resultPoint2) / i;
-        float distance2 = distance(resultPoint3, resultPoint4);
+        float distance = ((float) distance(resultPoint, resultPoint2)) / ((float) i);
+        float distance2 = (float) distance(resultPoint3, resultPoint4);
         ResultPoint resultPoint5 = new ResultPoint(resultPoint4.getX() + (((resultPoint4.getX() - resultPoint3.getX()) / distance2) * distance), resultPoint4.getY() + (distance * ((resultPoint4.getY() - resultPoint3.getY()) / distance2)));
-        float distance3 = distance(resultPoint, resultPoint3) / i2;
-        float distance4 = distance(resultPoint2, resultPoint4);
+        float distance3 = ((float) distance(resultPoint, resultPoint3)) / ((float) i2);
+        float distance4 = (float) distance(resultPoint2, resultPoint4);
         ResultPoint resultPoint6 = new ResultPoint(resultPoint4.getX() + (((resultPoint4.getX() - resultPoint2.getX()) / distance4) * distance3), resultPoint4.getY() + (distance3 * ((resultPoint4.getY() - resultPoint2.getY()) / distance4)));
         if (isValid(resultPoint5)) {
             return (isValid(resultPoint6) && Math.abs(i - transitionsBetween(resultPoint3, resultPoint5).getTransitions()) + Math.abs(i2 - transitionsBetween(resultPoint2, resultPoint5).getTransitions()) > Math.abs(i - transitionsBetween(resultPoint3, resultPoint6).getTransitions()) + Math.abs(i2 - transitionsBetween(resultPoint2, resultPoint6).getTransitions())) ? resultPoint6 : resultPoint5;
-        } else if (!isValid(resultPoint6)) {
-            return null;
-        } else {
+        }
+        if (isValid(resultPoint6)) {
             return resultPoint6;
         }
+        return null;
     }
 
     private ResultPoint correctTopRight(ResultPoint resultPoint, ResultPoint resultPoint2, ResultPoint resultPoint3, ResultPoint resultPoint4, int i) {
-        float f = i;
-        float distance = distance(resultPoint, resultPoint2) / f;
-        float distance2 = distance(resultPoint3, resultPoint4);
+        float f = (float) i;
+        float distance = ((float) distance(resultPoint, resultPoint2)) / f;
+        float distance2 = (float) distance(resultPoint3, resultPoint4);
         ResultPoint resultPoint5 = new ResultPoint(resultPoint4.getX() + (((resultPoint4.getX() - resultPoint3.getX()) / distance2) * distance), resultPoint4.getY() + (distance * ((resultPoint4.getY() - resultPoint3.getY()) / distance2)));
-        float distance3 = distance(resultPoint, resultPoint3) / f;
-        float distance4 = distance(resultPoint2, resultPoint4);
+        float distance3 = ((float) distance(resultPoint, resultPoint3)) / f;
+        float distance4 = (float) distance(resultPoint2, resultPoint4);
         ResultPoint resultPoint6 = new ResultPoint(resultPoint4.getX() + (((resultPoint4.getX() - resultPoint2.getX()) / distance4) * distance3), resultPoint4.getY() + (distance3 * ((resultPoint4.getY() - resultPoint2.getY()) / distance4)));
         if (isValid(resultPoint5)) {
             return (isValid(resultPoint6) && Math.abs(transitionsBetween(resultPoint3, resultPoint5).getTransitions() - transitionsBetween(resultPoint2, resultPoint5).getTransitions()) > Math.abs(transitionsBetween(resultPoint3, resultPoint6).getTransitions() - transitionsBetween(resultPoint2, resultPoint6).getTransitions())) ? resultPoint6 : resultPoint5;
-        } else if (!isValid(resultPoint6)) {
-            return null;
-        } else {
+        }
+        if (isValid(resultPoint6)) {
             return resultPoint6;
         }
+        return null;
     }
 
     private boolean isValid(ResultPoint resultPoint) {
@@ -166,8 +166,8 @@ public final class Detector {
     }
 
     private static BitMatrix sampleGrid(BitMatrix bitMatrix, ResultPoint resultPoint, ResultPoint resultPoint2, ResultPoint resultPoint3, ResultPoint resultPoint4, int i, int i2) throws NotFoundException {
-        float f = i - 0.5f;
-        float f2 = i2 - 0.5f;
+        float f = ((float) i) - 0.5f;
+        float f2 = ((float) i2) - 0.5f;
         return GridSampler.getInstance().sampleGrid(bitMatrix, i, i2, 0.5f, 0.5f, f, 0.5f, f, f2, 0.5f, f2, resultPoint.getX(), resultPoint.getY(), resultPoint4.getX(), resultPoint4.getY(), resultPoint3.getX(), resultPoint3.getY(), resultPoint2.getX(), resultPoint2.getY());
     }
 
@@ -180,15 +180,17 @@ public final class Detector {
         int i2 = 1;
         boolean z = Math.abs(y2 - y) > Math.abs(x2 - x);
         if (z) {
+            int i3 = y;
             y = x;
-            x = y;
+            x = i3;
+            int i4 = y2;
             y2 = x2;
-            x2 = y2;
+            x2 = i4;
         }
         int abs = Math.abs(x2 - x);
         int abs2 = Math.abs(y2 - y);
-        int i3 = (-abs) >> 1;
-        int i4 = y < y2 ? 1 : -1;
+        int i5 = (-abs) >> 1;
+        int i6 = y < y2 ? 1 : -1;
         if (x >= x2) {
             i2 = -1;
         }
@@ -199,38 +201,40 @@ public final class Detector {
                 i++;
                 z2 = z3;
             }
-            i3 += abs2;
-            if (i3 > 0) {
+            i5 += abs2;
+            if (i5 > 0) {
                 if (y == y2) {
                     break;
                 }
-                y += i4;
-                i3 -= abs;
+                y += i6;
+                i5 -= abs;
             }
             x += i2;
         }
         return new ResultPointsAndTransitions(resultPoint, resultPoint2, i);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static final class ResultPointsAndTransitions {
+    private static final class ResultPointsAndTransitions {
         private final ResultPoint from;
-        private final ResultPoint to;
+
+        /* renamed from: to */
+        private final ResultPoint f251to;
         private final int transitions;
 
         private ResultPointsAndTransitions(ResultPoint resultPoint, ResultPoint resultPoint2, int i) {
             this.from = resultPoint;
-            this.to = resultPoint2;
+            this.f251to = resultPoint2;
             this.transitions = i;
         }
 
-        ResultPoint getFrom() {
+        /* access modifiers changed from: package-private */
+        public ResultPoint getFrom() {
             return this.from;
         }
 
-        ResultPoint getTo() {
-            return this.to;
+        /* access modifiers changed from: package-private */
+        public ResultPoint getTo() {
+            return this.f251to;
         }
 
         public int getTransitions() {
@@ -238,16 +242,14 @@ public final class Detector {
         }
 
         public String toString() {
-            return this.from + "/" + this.to + '/' + this.transitions;
+            return this.from + "/" + this.f251to + '/' + this.transitions;
         }
     }
 
-    /* loaded from: classes2.dex */
     private static final class ResultPointsAndTransitionsComparator implements Comparator<ResultPointsAndTransitions>, Serializable {
         private ResultPointsAndTransitionsComparator() {
         }
 
-        @Override // java.util.Comparator
         public int compare(ResultPointsAndTransitions resultPointsAndTransitions, ResultPointsAndTransitions resultPointsAndTransitions2) {
             return resultPointsAndTransitions.getTransitions() - resultPointsAndTransitions2.getTransitions();
         }

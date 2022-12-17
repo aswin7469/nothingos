@@ -5,8 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager.widget.PagerAdapter;
+
 @Deprecated
-/* loaded from: classes.dex */
 public abstract class FragmentPagerAdapter extends PagerAdapter {
     private final int mBehavior;
     private FragmentTransaction mCurTransaction;
@@ -17,14 +17,12 @@ public abstract class FragmentPagerAdapter extends PagerAdapter {
     public abstract Fragment getItem(int i);
 
     public long getItemId(int i) {
-        return i;
+        return (long) i;
     }
 
-    @Override // androidx.viewpager.widget.PagerAdapter
     public void restoreState(Parcelable parcelable, ClassLoader classLoader) {
     }
 
-    @Override // androidx.viewpager.widget.PagerAdapter
     public Parcelable saveState() {
         return null;
     }
@@ -41,15 +39,12 @@ public abstract class FragmentPagerAdapter extends PagerAdapter {
         this.mBehavior = i;
     }
 
-    @Override // androidx.viewpager.widget.PagerAdapter
     public void startUpdate(ViewGroup viewGroup) {
-        if (viewGroup.getId() != -1) {
-            return;
+        if (viewGroup.getId() == -1) {
+            throw new IllegalStateException("ViewPager with adapter " + this + " requires a view id");
         }
-        throw new IllegalStateException("ViewPager with adapter " + this + " requires a view id");
     }
 
-    @Override // androidx.viewpager.widget.PagerAdapter
     public Object instantiateItem(ViewGroup viewGroup, int i) {
         if (this.mCurTransaction == null) {
             this.mCurTransaction = this.mFragmentManager.beginTransaction();
@@ -73,7 +68,6 @@ public abstract class FragmentPagerAdapter extends PagerAdapter {
         return findFragmentByTag;
     }
 
-    @Override // androidx.viewpager.widget.PagerAdapter
     public void destroyItem(ViewGroup viewGroup, int i, Object obj) {
         Fragment fragment = (Fragment) obj;
         if (this.mCurTransaction == null) {
@@ -85,7 +79,6 @@ public abstract class FragmentPagerAdapter extends PagerAdapter {
         }
     }
 
-    @Override // androidx.viewpager.widget.PagerAdapter
     public void setPrimaryItem(ViewGroup viewGroup, int i, Object obj) {
         Fragment fragment = (Fragment) obj;
         Fragment fragment2 = this.mCurrentPrimaryItem;
@@ -114,7 +107,7 @@ public abstract class FragmentPagerAdapter extends PagerAdapter {
         }
     }
 
-    @Override // androidx.viewpager.widget.PagerAdapter
+    /* JADX INFO: finally extract failed */
     public void finishUpdate(ViewGroup viewGroup) {
         FragmentTransaction fragmentTransaction = this.mCurTransaction;
         if (fragmentTransaction != null) {
@@ -122,15 +115,16 @@ public abstract class FragmentPagerAdapter extends PagerAdapter {
                 try {
                     this.mExecutingFinishUpdate = true;
                     fragmentTransaction.commitNowAllowingStateLoss();
-                } finally {
                     this.mExecutingFinishUpdate = false;
+                } catch (Throwable th) {
+                    this.mExecutingFinishUpdate = false;
+                    throw th;
                 }
             }
             this.mCurTransaction = null;
         }
     }
 
-    @Override // androidx.viewpager.widget.PagerAdapter
     public boolean isViewFromObject(View view, Object obj) {
         return ((Fragment) obj).getView() == view;
     }

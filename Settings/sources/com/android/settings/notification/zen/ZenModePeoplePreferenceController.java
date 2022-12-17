@@ -2,13 +2,12 @@ package com.android.settings.notification.zen;
 
 import android.content.Context;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settingslib.core.lifecycle.Lifecycle;
-/* loaded from: classes.dex */
+
 public class ZenModePeoplePreferenceController extends AbstractZenModePreferenceController {
     private final String KEY;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return true;
     }
@@ -18,12 +17,10 @@ public class ZenModePeoplePreferenceController extends AbstractZenModePreference
         this.KEY = str;
     }
 
-    @Override // com.android.settings.notification.zen.AbstractZenModePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return this.KEY;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         int zenMode = getZenMode();
@@ -33,7 +30,7 @@ public class ZenModePeoplePreferenceController extends AbstractZenModePreference
             return;
         }
         preference.setEnabled(true);
-        preference.setSummary(getPeopleSummary());
+        preference.setSummary((CharSequence) getPeopleSummary());
     }
 
     private String getPeopleSummary() {
@@ -42,11 +39,11 @@ public class ZenModePeoplePreferenceController extends AbstractZenModePreference
         int priorityConversationSenders = this.mBackend.getPriorityConversationSenders();
         boolean isPriorityCategoryEnabled = this.mBackend.isPriorityCategoryEnabled(16);
         if (priorityCallSenders == 0 && priorityMessageSenders == 0 && priorityConversationSenders == 1) {
-            return this.mContext.getResources().getString(R.string.zen_mode_people_all);
+            return this.mContext.getResources().getString(R$string.zen_mode_people_all);
         }
         if (priorityCallSenders == -1 && priorityMessageSenders == -1 && priorityConversationSenders == 3 && !isPriorityCategoryEnabled) {
-            return this.mContext.getResources().getString(R.string.zen_mode_people_none);
+            return this.mContext.getResources().getString(R$string.zen_mode_people_none);
         }
-        return this.mContext.getResources().getString(R.string.zen_mode_people_some);
+        return this.mContext.getResources().getString(R$string.zen_mode_people_some);
     }
 }

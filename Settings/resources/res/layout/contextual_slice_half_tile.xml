@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content" style="@style/ContextualCardStyle">
+<com.google.android.material.card.MaterialCardView xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:layout_width="match_parent" android:layout_height="wrap_content" style="@style/ContextualCardStyle">
     <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
         <include layout="@layout/dismissal_swipe_background"/>
         <LinearLayout android:orientation="vertical" android:id="@+id/content" android:background="@drawable/contextual_card_background" android:paddingTop="@dimen/contextual_half_card_padding_top" android:paddingBottom="@dimen/contextual_half_card_padding_bottom" android:layout_width="match_parent" android:layout_height="match_parent" android:paddingEnd="@dimen/contextual_card_padding_end">

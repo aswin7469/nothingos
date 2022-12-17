@@ -3,19 +3,22 @@ package com.android.settingslib;
 import android.content.Context;
 import android.os.UserHandle;
 import android.util.AttributeSet;
-import android.view.View;
 import androidx.core.content.res.TypedArrayUtils;
 import androidx.preference.PreferenceManager;
 import androidx.preference.PreferenceViewHolder;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.widget.TwoTargetPreference;
-/* loaded from: classes.dex */
+
 public class RestrictedPreference extends TwoTargetPreference {
     RestrictedPreferenceHelper mHelper;
 
-    public RestrictedPreference(Context context, AttributeSet attributeSet, int i, int i2) {
+    public RestrictedPreference(Context context, AttributeSet attributeSet, int i, int i2, String str, int i3) {
         super(context, attributeSet, i, i2);
-        this.mHelper = new RestrictedPreferenceHelper(context, this, attributeSet);
+        this.mHelper = new RestrictedPreferenceHelper(context, this, attributeSet, str, i3);
+    }
+
+    public RestrictedPreference(Context context, AttributeSet attributeSet, int i, int i2) {
+        this(context, attributeSet, i, i2, (String) null, -1);
     }
 
     public RestrictedPreference(Context context, AttributeSet attributeSet, int i) {
@@ -27,30 +30,18 @@ public class RestrictedPreference extends TwoTargetPreference {
     }
 
     public RestrictedPreference(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
-    @Override // com.android.settingslib.widget.TwoTargetPreference
-    protected int getSecondTargetResId() {
-        return R$layout.restricted_icon;
+    public RestrictedPreference(Context context, String str, int i) {
+        this(context, (AttributeSet) null, TypedArrayUtils.getAttr(context, R$attr.preferenceStyle, 16842894), 0, str, i);
     }
 
-    @Override // com.android.settingslib.widget.TwoTargetPreference
-    protected boolean shouldHideSecondTarget() {
-        return !isDisabledByAdmin();
-    }
-
-    @Override // com.android.settingslib.widget.TwoTargetPreference, androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         this.mHelper.onBindViewHolder(preferenceViewHolder);
-        View findViewById = preferenceViewHolder.findViewById(R$id.restricted_icon);
-        if (findViewById != null) {
-            findViewById.setVisibility(isDisabledByAdmin() ? 0 : 8);
-        }
     }
 
-    @Override // androidx.preference.Preference
     public void performClick() {
         if (!this.mHelper.performClick()) {
             super.performClick();
@@ -61,8 +52,7 @@ public class RestrictedPreference extends TwoTargetPreference {
         this.mHelper.useAdminDisabledSummary(z);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public void onAttachedToHierarchy(PreferenceManager preferenceManager) {
         this.mHelper.onAttachedToHierarchy();
         super.onAttachedToHierarchy(preferenceManager);
@@ -76,12 +66,11 @@ public class RestrictedPreference extends TwoTargetPreference {
         this.mHelper.checkRestrictionAndSetDisabled(str, i);
     }
 
-    @Override // androidx.preference.Preference
     public void setEnabled(boolean z) {
-        if (z && isDisabledByAdmin()) {
-            this.mHelper.setDisabledByAdmin(null);
-        } else {
+        if (!z || !isDisabledByAdmin()) {
             super.setEnabled(z);
+        } else {
+            this.mHelper.setDisabledByAdmin((RestrictedLockUtils.EnforcedAdmin) null);
         }
     }
 
@@ -91,7 +80,29 @@ public class RestrictedPreference extends TwoTargetPreference {
         }
     }
 
+    public void setDisabledByAppOps(boolean z) {
+        if (this.mHelper.setDisabledByAppOps(z)) {
+            notifyChanged();
+        }
+    }
+
     public boolean isDisabledByAdmin() {
         return this.mHelper.isDisabledByAdmin();
+    }
+
+    public int getUid() {
+        RestrictedPreferenceHelper restrictedPreferenceHelper = this.mHelper;
+        if (restrictedPreferenceHelper != null) {
+            return restrictedPreferenceHelper.uid;
+        }
+        return -1;
+    }
+
+    public String getPackageName() {
+        RestrictedPreferenceHelper restrictedPreferenceHelper = this.mHelper;
+        if (restrictedPreferenceHelper != null) {
+            return restrictedPreferenceHelper.packageName;
+        }
+        return null;
     }
 }

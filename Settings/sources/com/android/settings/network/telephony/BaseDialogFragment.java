@@ -1,32 +1,32 @@
 package com.android.settings.network.telephony;
 
 import android.app.Activity;
-import android.app.DialogFragment;
-import android.app.Fragment;
 import android.os.Bundle;
-/* loaded from: classes.dex */
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+
 public abstract class BaseDialogFragment extends DialogFragment {
-    /* JADX INFO: Access modifiers changed from: protected */
-    public static <T> void setListener(Activity activity, Fragment fragment, Class<T> cls, int i, Bundle bundle) {
+    protected static <T> void setListener(Activity activity, Fragment fragment, Class<T> cls, int i, Bundle bundle) {
         checkValidity(activity, fragment, cls);
-        if (fragment != null && fragment.getParentFragment() != null) {
-            throw new IllegalArgumentException("The listener must be attached to an activity.");
-        }
-        bundle.putInt("in_caller_tag", i);
-        if (fragment == null) {
+        if (fragment == null || fragment.getParentFragment() == null) {
+            bundle.putInt("in_caller_tag", i);
+            if (fragment != null) {
+                bundle.putString("listener_tag", fragment.getTag());
+                return;
+            }
             return;
         }
-        bundle.putString("listener_tag", fragment.getTag());
+        throw new IllegalArgumentException("The listener must be attached to an activity.");
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public <T> T getListener(Class<T> cls) {
         T t;
         String string = getArguments().getString("listener_tag");
         if (string == null) {
-            t = (T) getActivity();
+            t = getActivity();
         } else {
-            t = (T) getActivity().getFragmentManager().findFragmentByTag(string);
+            t = getActivity().getFragmentManager().findFragmentByTag(string);
         }
         if (cls.isInstance(t)) {
             return t;
@@ -34,7 +34,7 @@ public abstract class BaseDialogFragment extends DialogFragment {
         throw new IllegalArgumentException("The caller should implement the callback function.");
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public int getTagInCaller() {
         return getArguments().getInt("in_caller_tag");
     }

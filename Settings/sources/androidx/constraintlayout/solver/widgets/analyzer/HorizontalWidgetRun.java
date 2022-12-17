@@ -5,7 +5,7 @@ import androidx.constraintlayout.solver.widgets.ConstraintWidget;
 import androidx.constraintlayout.solver.widgets.Helper;
 import androidx.constraintlayout.solver.widgets.analyzer.DependencyNode;
 import androidx.constraintlayout.solver.widgets.analyzer.WidgetRun;
-/* loaded from: classes.dex */
+
 public class HorizontalWidgetRun extends WidgetRun {
     private static int[] tempDimensions = new int[2];
 
@@ -20,8 +20,7 @@ public class HorizontalWidgetRun extends WidgetRun {
         return "HorizontalRun " + this.widget.getDebugName();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // androidx.constraintlayout.solver.widgets.analyzer.WidgetRun
+    /* access modifiers changed from: package-private */
     public void clear() {
         this.runGroup = null;
         this.start.clear();
@@ -30,7 +29,7 @@ public class HorizontalWidgetRun extends WidgetRun {
         this.resolved = false;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void reset() {
         this.resolved = false;
         this.start.clear();
@@ -40,14 +39,15 @@ public class HorizontalWidgetRun extends WidgetRun {
         this.dimension.resolved = false;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // androidx.constraintlayout.solver.widgets.analyzer.WidgetRun
+    /* access modifiers changed from: package-private */
     public boolean supportsWrapComputation() {
-        return this.dimensionBehavior != ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT || this.widget.mMatchConstraintDefaultWidth == 0;
+        if (this.dimensionBehavior != ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT || this.widget.mMatchConstraintDefaultWidth == 0) {
+            return true;
+        }
+        return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // androidx.constraintlayout.solver.widgets.analyzer.WidgetRun
+    /* access modifiers changed from: package-private */
     public void apply() {
         ConstraintWidget parent;
         ConstraintWidget parent2;
@@ -84,44 +84,49 @@ public class HorizontalWidgetRun extends WidgetRun {
             ConstraintWidget constraintWidget2 = this.widget;
             if (constraintWidget2.measured) {
                 ConstraintAnchor[] constraintAnchorArr = constraintWidget2.mListAnchors;
-                if (constraintAnchorArr[0].mTarget != null && constraintAnchorArr[1].mTarget != null) {
-                    if (constraintWidget2.isInHorizontalChain()) {
-                        this.start.margin = this.widget.mListAnchors[0].getMargin();
-                        this.end.margin = -this.widget.mListAnchors[1].getMargin();
+                ConstraintAnchor constraintAnchor = constraintAnchorArr[0];
+                ConstraintAnchor constraintAnchor2 = constraintAnchor.mTarget;
+                if (constraintAnchor2 == null || constraintAnchorArr[1].mTarget == null) {
+                    if (constraintAnchor2 != null) {
+                        DependencyNode target = getTarget(constraintAnchor);
+                        if (target != null) {
+                            addTarget(this.start, target, this.widget.mListAnchors[0].getMargin());
+                            addTarget(this.end, this.start, this.dimension.value);
+                            return;
+                        }
                         return;
                     }
-                    DependencyNode target = getTarget(this.widget.mListAnchors[0]);
-                    if (target != null) {
-                        addTarget(this.start, target, this.widget.mListAnchors[0].getMargin());
+                    ConstraintAnchor constraintAnchor3 = constraintAnchorArr[1];
+                    if (constraintAnchor3.mTarget != null) {
+                        DependencyNode target2 = getTarget(constraintAnchor3);
+                        if (target2 != null) {
+                            addTarget(this.end, target2, -this.widget.mListAnchors[1].getMargin());
+                            addTarget(this.start, this.end, -this.dimension.value);
+                            return;
+                        }
+                        return;
+                    } else if (!(constraintWidget2 instanceof Helper) && constraintWidget2.getParent() != null && this.widget.getAnchor(ConstraintAnchor.Type.CENTER).mTarget == null) {
+                        addTarget(this.start, this.widget.getParent().horizontalRun.start, this.widget.getX());
+                        addTarget(this.end, this.start, this.dimension.value);
+                        return;
+                    } else {
+                        return;
                     }
-                    DependencyNode target2 = getTarget(this.widget.mListAnchors[1]);
-                    if (target2 != null) {
-                        addTarget(this.end, target2, -this.widget.mListAnchors[1].getMargin());
+                } else if (constraintWidget2.isInHorizontalChain()) {
+                    this.start.margin = this.widget.mListAnchors[0].getMargin();
+                    this.end.margin = -this.widget.mListAnchors[1].getMargin();
+                    return;
+                } else {
+                    DependencyNode target3 = getTarget(this.widget.mListAnchors[0]);
+                    if (target3 != null) {
+                        addTarget(this.start, target3, this.widget.mListAnchors[0].getMargin());
+                    }
+                    DependencyNode target4 = getTarget(this.widget.mListAnchors[1]);
+                    if (target4 != null) {
+                        addTarget(this.end, target4, -this.widget.mListAnchors[1].getMargin());
                     }
                     this.start.delegateToWidgetRun = true;
                     this.end.delegateToWidgetRun = true;
-                    return;
-                } else if (constraintAnchorArr[0].mTarget != null) {
-                    DependencyNode target3 = getTarget(constraintAnchorArr[0]);
-                    if (target3 == null) {
-                        return;
-                    }
-                    addTarget(this.start, target3, this.widget.mListAnchors[0].getMargin());
-                    addTarget(this.end, this.start, this.dimension.value);
-                    return;
-                } else if (constraintAnchorArr[1].mTarget != null) {
-                    DependencyNode target4 = getTarget(constraintAnchorArr[1]);
-                    if (target4 == null) {
-                        return;
-                    }
-                    addTarget(this.end, target4, -this.widget.mListAnchors[1].getMargin());
-                    addTarget(this.start, this.end, -this.dimension.value);
-                    return;
-                } else if ((constraintWidget2 instanceof Helper) || constraintWidget2.getParent() == null || this.widget.getAnchor(ConstraintAnchor.Type.CENTER).mTarget != null) {
-                    return;
-                } else {
-                    addTarget(this.start, this.widget.getParent().horizontalRun.start, this.widget.getX());
-                    addTarget(this.end, this.start, this.dimension.value);
                     return;
                 }
             }
@@ -180,295 +185,711 @@ public class HorizontalWidgetRun extends WidgetRun {
         }
         ConstraintWidget constraintWidget4 = this.widget;
         ConstraintAnchor[] constraintAnchorArr2 = constraintWidget4.mListAnchors;
-        if (constraintAnchorArr2[0].mTarget != null && constraintAnchorArr2[1].mTarget != null) {
-            if (constraintWidget4.isInHorizontalChain()) {
-                this.start.margin = this.widget.mListAnchors[0].getMargin();
-                this.end.margin = -this.widget.mListAnchors[1].getMargin();
+        ConstraintAnchor constraintAnchor4 = constraintAnchorArr2[0];
+        ConstraintAnchor constraintAnchor5 = constraintAnchor4.mTarget;
+        if (constraintAnchor5 == null || constraintAnchorArr2[1].mTarget == null) {
+            if (constraintAnchor5 != null) {
+                DependencyNode target5 = getTarget(constraintAnchor4);
+                if (target5 != null) {
+                    addTarget(this.start, target5, this.widget.mListAnchors[0].getMargin());
+                    addTarget(this.end, this.start, 1, this.dimension);
+                    return;
+                }
                 return;
             }
-            DependencyNode target5 = getTarget(this.widget.mListAnchors[0]);
-            DependencyNode target6 = getTarget(this.widget.mListAnchors[1]);
-            target5.addDependency(this);
-            target6.addDependency(this);
-            this.mRunType = WidgetRun.RunType.CENTER;
-        } else if (constraintAnchorArr2[0].mTarget != null) {
-            DependencyNode target7 = getTarget(constraintAnchorArr2[0]);
-            if (target7 == null) {
-                return;
+            ConstraintAnchor constraintAnchor6 = constraintAnchorArr2[1];
+            if (constraintAnchor6.mTarget != null) {
+                DependencyNode target6 = getTarget(constraintAnchor6);
+                if (target6 != null) {
+                    addTarget(this.end, target6, -this.widget.mListAnchors[1].getMargin());
+                    addTarget(this.start, this.end, -1, this.dimension);
+                }
+            } else if (!(constraintWidget4 instanceof Helper) && constraintWidget4.getParent() != null) {
+                addTarget(this.start, this.widget.getParent().horizontalRun.start, this.widget.getX());
+                addTarget(this.end, this.start, 1, this.dimension);
             }
-            addTarget(this.start, target7, this.widget.mListAnchors[0].getMargin());
-            addTarget(this.end, this.start, 1, this.dimension);
-        } else if (constraintAnchorArr2[1].mTarget != null) {
-            DependencyNode target8 = getTarget(constraintAnchorArr2[1]);
-            if (target8 == null) {
-                return;
-            }
-            addTarget(this.end, target8, -this.widget.mListAnchors[1].getMargin());
-            addTarget(this.start, this.end, -1, this.dimension);
-        } else if ((constraintWidget4 instanceof Helper) || constraintWidget4.getParent() == null) {
+        } else if (constraintWidget4.isInHorizontalChain()) {
+            this.start.margin = this.widget.mListAnchors[0].getMargin();
+            this.end.margin = -this.widget.mListAnchors[1].getMargin();
         } else {
-            addTarget(this.start, this.widget.getParent().horizontalRun.start, this.widget.getX());
-            addTarget(this.end, this.start, 1, this.dimension);
+            DependencyNode target7 = getTarget(this.widget.mListAnchors[0]);
+            DependencyNode target8 = getTarget(this.widget.mListAnchors[1]);
+            target7.addDependency(this);
+            target8.addDependency(this);
+            this.mRunType = WidgetRun.RunType.CENTER;
         }
     }
 
     private void computeInsetRatio(int[] iArr, int i, int i2, int i3, int i4, float f, int i5) {
         int i6 = i2 - i;
         int i7 = i4 - i3;
-        if (i5 != -1) {
-            if (i5 == 0) {
-                iArr[0] = (int) ((i7 * f) + 0.5f);
+        if (i5 == -1) {
+            int i8 = (int) ((((float) i7) * f) + 0.5f);
+            int i9 = (int) ((((float) i6) / f) + 0.5f);
+            if (i8 <= i6) {
+                iArr[0] = i8;
                 iArr[1] = i7;
-                return;
-            } else if (i5 != 1) {
-                return;
-            } else {
+            } else if (i9 <= i7) {
                 iArr[0] = i6;
-                iArr[1] = (int) ((i6 * f) + 0.5f);
-                return;
+                iArr[1] = i9;
             }
-        }
-        int i8 = (int) ((i7 * f) + 0.5f);
-        int i9 = (int) ((i6 / f) + 0.5f);
-        if (i8 <= i6) {
-            iArr[0] = i8;
+        } else if (i5 == 0) {
+            iArr[0] = (int) ((((float) i7) * f) + 0.5f);
             iArr[1] = i7;
-        } else if (i9 > i7) {
-        } else {
+        } else if (i5 == 1) {
             iArr[0] = i6;
-            iArr[1] = i9;
+            iArr[1] = (int) ((((float) i6) * f) + 0.5f);
         }
     }
 
-    /* renamed from: androidx.constraintlayout.solver.widgets.analyzer.HorizontalWidgetRun$1  reason: invalid class name */
-    /* loaded from: classes.dex */
-    static /* synthetic */ class AnonymousClass1 {
-        static final /* synthetic */ int[] $SwitchMap$androidx$constraintlayout$solver$widgets$analyzer$WidgetRun$RunType;
+    /* renamed from: androidx.constraintlayout.solver.widgets.analyzer.HorizontalWidgetRun$1 */
+    static /* synthetic */ class C01071 {
 
+        /* renamed from: $SwitchMap$androidx$constraintlayout$solver$widgets$analyzer$WidgetRun$RunType */
+        static final /* synthetic */ int[] f23xbf6f0c8e;
+
+        /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|(3:5|6|8)) */
+        /* JADX WARNING: Failed to process nested try/catch */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0012 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001d */
         static {
-            int[] iArr = new int[WidgetRun.RunType.values().length];
-            $SwitchMap$androidx$constraintlayout$solver$widgets$analyzer$WidgetRun$RunType = iArr;
-            try {
-                iArr[WidgetRun.RunType.START.ordinal()] = 1;
-            } catch (NoSuchFieldError unused) {
-            }
-            try {
-                $SwitchMap$androidx$constraintlayout$solver$widgets$analyzer$WidgetRun$RunType[WidgetRun.RunType.END.ordinal()] = 2;
-            } catch (NoSuchFieldError unused2) {
-            }
-            try {
-                $SwitchMap$androidx$constraintlayout$solver$widgets$analyzer$WidgetRun$RunType[WidgetRun.RunType.CENTER.ordinal()] = 3;
-            } catch (NoSuchFieldError unused3) {
-            }
+            /*
+                androidx.constraintlayout.solver.widgets.analyzer.WidgetRun$RunType[] r0 = androidx.constraintlayout.solver.widgets.analyzer.WidgetRun.RunType.values()
+                int r0 = r0.length
+                int[] r0 = new int[r0]
+                f23xbf6f0c8e = r0
+                androidx.constraintlayout.solver.widgets.analyzer.WidgetRun$RunType r1 = androidx.constraintlayout.solver.widgets.analyzer.WidgetRun.RunType.START     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
+                r2 = 1
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                int[] r0 = f23xbf6f0c8e     // Catch:{ NoSuchFieldError -> 0x001d }
+                androidx.constraintlayout.solver.widgets.analyzer.WidgetRun$RunType r1 = androidx.constraintlayout.solver.widgets.analyzer.WidgetRun.RunType.END     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
+                r2 = 2
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                int[] r0 = f23xbf6f0c8e     // Catch:{ NoSuchFieldError -> 0x0028 }
+                androidx.constraintlayout.solver.widgets.analyzer.WidgetRun$RunType r1 = androidx.constraintlayout.solver.widgets.analyzer.WidgetRun.RunType.CENTER     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
+                r2 = 3
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
+            L_0x0028:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: androidx.constraintlayout.solver.widgets.analyzer.HorizontalWidgetRun.C01071.<clinit>():void");
         }
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:111:0x02b9, code lost:
-        if (r14 != 1) goto L131;
+    /* JADX WARNING: Code restructure failed: missing block: B:104:0x02b9, code lost:
+        if (r14 != 1) goto L_0x031e;
      */
-    @Override // androidx.constraintlayout.solver.widgets.analyzer.WidgetRun, androidx.constraintlayout.solver.widgets.analyzer.Dependency
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public void update(Dependency dependency) {
-        DimensionDependency dimensionDependency;
-        float f;
-        float dimensionRatio;
-        float f2;
-        int i;
-        ConstraintWidget constraintWidget;
-        int i2 = AnonymousClass1.$SwitchMap$androidx$constraintlayout$solver$widgets$analyzer$WidgetRun$RunType[this.mRunType.ordinal()];
-        if (i2 == 1) {
-            updateRunStart(dependency);
-        } else if (i2 == 2) {
-            updateRunEnd(dependency);
-        } else if (i2 == 3) {
-            ConstraintWidget constraintWidget2 = this.widget;
-            updateRunCenter(dependency, constraintWidget2.mLeft, constraintWidget2.mRight, 0);
-            return;
-        }
-        if (!this.dimension.resolved && this.dimensionBehavior == ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT) {
-            ConstraintWidget constraintWidget3 = this.widget;
-            int i3 = constraintWidget3.mMatchConstraintDefaultWidth;
-            if (i3 == 2) {
-                ConstraintWidget parent = constraintWidget3.getParent();
-                if (parent != null) {
-                    if (parent.horizontalRun.dimension.resolved) {
-                        this.dimension.resolve((int) ((dimensionDependency.value * this.widget.mMatchConstraintPercentWidth) + 0.5f));
-                    }
-                }
-            } else if (i3 == 3) {
-                int i4 = constraintWidget3.mMatchConstraintDefaultHeight;
-                if (i4 == 0 || i4 == 3) {
-                    VerticalWidgetRun verticalWidgetRun = constraintWidget3.verticalRun;
-                    DependencyNode dependencyNode = verticalWidgetRun.start;
-                    DependencyNode dependencyNode2 = verticalWidgetRun.end;
-                    boolean z = constraintWidget3.mLeft.mTarget != null;
-                    boolean z2 = constraintWidget3.mTop.mTarget != null;
-                    boolean z3 = constraintWidget3.mRight.mTarget != null;
-                    boolean z4 = constraintWidget3.mBottom.mTarget != null;
-                    int dimensionRatioSide = constraintWidget3.getDimensionRatioSide();
-                    if (z && z2 && z3 && z4) {
-                        float dimensionRatio2 = this.widget.getDimensionRatio();
-                        if (dependencyNode.resolved && dependencyNode2.resolved) {
-                            DependencyNode dependencyNode3 = this.start;
-                            if (!dependencyNode3.readyToSolve || !this.end.readyToSolve) {
-                                return;
-                            }
-                            computeInsetRatio(tempDimensions, dependencyNode3.targets.get(0).value + this.start.margin, this.end.targets.get(0).value - this.end.margin, dependencyNode.value + dependencyNode.margin, dependencyNode2.value - dependencyNode2.margin, dimensionRatio2, dimensionRatioSide);
-                            this.dimension.resolve(tempDimensions[0]);
-                            this.widget.verticalRun.dimension.resolve(tempDimensions[1]);
-                            return;
-                        }
-                        DependencyNode dependencyNode4 = this.start;
-                        if (dependencyNode4.resolved) {
-                            DependencyNode dependencyNode5 = this.end;
-                            if (dependencyNode5.resolved) {
-                                if (!dependencyNode.readyToSolve || !dependencyNode2.readyToSolve) {
-                                    return;
-                                }
-                                computeInsetRatio(tempDimensions, dependencyNode4.value + dependencyNode4.margin, dependencyNode5.value - dependencyNode5.margin, dependencyNode.targets.get(0).value + dependencyNode.margin, dependencyNode2.targets.get(0).value - dependencyNode2.margin, dimensionRatio2, dimensionRatioSide);
-                                this.dimension.resolve(tempDimensions[0]);
-                                this.widget.verticalRun.dimension.resolve(tempDimensions[1]);
-                            }
-                        }
-                        DependencyNode dependencyNode6 = this.start;
-                        if (!dependencyNode6.readyToSolve || !this.end.readyToSolve || !dependencyNode.readyToSolve || !dependencyNode2.readyToSolve) {
-                            return;
-                        }
-                        computeInsetRatio(tempDimensions, dependencyNode6.targets.get(0).value + this.start.margin, this.end.targets.get(0).value - this.end.margin, dependencyNode.targets.get(0).value + dependencyNode.margin, dependencyNode2.targets.get(0).value - dependencyNode2.margin, dimensionRatio2, dimensionRatioSide);
-                        this.dimension.resolve(tempDimensions[0]);
-                        this.widget.verticalRun.dimension.resolve(tempDimensions[1]);
-                    } else if (!z || !z3) {
-                        if (z2 && z4) {
-                            if (!dependencyNode.readyToSolve || !dependencyNode2.readyToSolve) {
-                                return;
-                            }
-                            float dimensionRatio3 = this.widget.getDimensionRatio();
-                            int i5 = dependencyNode.targets.get(0).value + dependencyNode.margin;
-                            int i6 = dependencyNode2.targets.get(0).value - dependencyNode2.margin;
-                            if (dimensionRatioSide != -1) {
-                                if (dimensionRatioSide == 0) {
-                                    int limitedDimension = getLimitedDimension(i6 - i5, 1);
-                                    int i7 = (int) ((limitedDimension * dimensionRatio3) + 0.5f);
-                                    int limitedDimension2 = getLimitedDimension(i7, 0);
-                                    if (i7 != limitedDimension2) {
-                                        limitedDimension = (int) ((limitedDimension2 / dimensionRatio3) + 0.5f);
-                                    }
-                                    this.dimension.resolve(limitedDimension2);
-                                    this.widget.verticalRun.dimension.resolve(limitedDimension);
-                                }
-                            }
-                            int limitedDimension3 = getLimitedDimension(i6 - i5, 1);
-                            int i8 = (int) ((limitedDimension3 / dimensionRatio3) + 0.5f);
-                            int limitedDimension4 = getLimitedDimension(i8, 0);
-                            if (i8 != limitedDimension4) {
-                                limitedDimension3 = (int) ((limitedDimension4 * dimensionRatio3) + 0.5f);
-                            }
-                            this.dimension.resolve(limitedDimension4);
-                            this.widget.verticalRun.dimension.resolve(limitedDimension3);
-                        }
-                    } else if (!this.start.readyToSolve || !this.end.readyToSolve) {
-                        return;
-                    } else {
-                        float dimensionRatio4 = this.widget.getDimensionRatio();
-                        int i9 = this.start.targets.get(0).value + this.start.margin;
-                        int i10 = this.end.targets.get(0).value - this.end.margin;
-                        if (dimensionRatioSide == -1 || dimensionRatioSide == 0) {
-                            int limitedDimension5 = getLimitedDimension(i10 - i9, 0);
-                            int i11 = (int) ((limitedDimension5 * dimensionRatio4) + 0.5f);
-                            int limitedDimension6 = getLimitedDimension(i11, 1);
-                            if (i11 != limitedDimension6) {
-                                limitedDimension5 = (int) ((limitedDimension6 / dimensionRatio4) + 0.5f);
-                            }
-                            this.dimension.resolve(limitedDimension5);
-                            this.widget.verticalRun.dimension.resolve(limitedDimension6);
-                        } else if (dimensionRatioSide == 1) {
-                            int limitedDimension7 = getLimitedDimension(i10 - i9, 0);
-                            int i12 = (int) ((limitedDimension7 / dimensionRatio4) + 0.5f);
-                            int limitedDimension8 = getLimitedDimension(i12, 1);
-                            if (i12 != limitedDimension8) {
-                                limitedDimension7 = (int) ((limitedDimension8 * dimensionRatio4) + 0.5f);
-                            }
-                            this.dimension.resolve(limitedDimension7);
-                            this.widget.verticalRun.dimension.resolve(limitedDimension8);
-                        }
-                    }
-                } else {
-                    int dimensionRatioSide2 = constraintWidget3.getDimensionRatioSide();
-                    if (dimensionRatioSide2 == -1) {
-                        ConstraintWidget constraintWidget4 = this.widget;
-                        f = constraintWidget4.verticalRun.dimension.value;
-                        dimensionRatio = constraintWidget4.getDimensionRatio();
-                    } else if (dimensionRatioSide2 == 0) {
-                        f2 = constraintWidget.verticalRun.dimension.value / this.widget.getDimensionRatio();
-                        i = (int) (f2 + 0.5f);
-                        this.dimension.resolve(i);
-                    } else if (dimensionRatioSide2 == 1) {
-                        ConstraintWidget constraintWidget5 = this.widget;
-                        f = constraintWidget5.verticalRun.dimension.value;
-                        dimensionRatio = constraintWidget5.getDimensionRatio();
-                    } else {
-                        i = 0;
-                        this.dimension.resolve(i);
-                    }
-                    f2 = f * dimensionRatio;
-                    i = (int) (f2 + 0.5f);
-                    this.dimension.resolve(i);
-                }
-            }
-        }
-        DependencyNode dependencyNode7 = this.start;
-        if (dependencyNode7.readyToSolve) {
-            DependencyNode dependencyNode8 = this.end;
-            if (!dependencyNode8.readyToSolve) {
-                return;
-            }
-            if (dependencyNode7.resolved && dependencyNode8.resolved && this.dimension.resolved) {
-                return;
-            }
-            if (!this.dimension.resolved && this.dimensionBehavior == ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT) {
-                ConstraintWidget constraintWidget6 = this.widget;
-                if (constraintWidget6.mMatchConstraintDefaultWidth == 0 && !constraintWidget6.isInHorizontalChain()) {
-                    int i13 = this.start.targets.get(0).value;
-                    DependencyNode dependencyNode9 = this.start;
-                    int i14 = i13 + dependencyNode9.margin;
-                    int i15 = this.end.targets.get(0).value + this.end.margin;
-                    dependencyNode9.resolve(i14);
-                    this.end.resolve(i15);
-                    this.dimension.resolve(i15 - i14);
-                    return;
-                }
-            }
-            if (!this.dimension.resolved && this.dimensionBehavior == ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT && this.matchConstraintsType == 1 && this.start.targets.size() > 0 && this.end.targets.size() > 0) {
-                int min = Math.min((this.end.targets.get(0).value + this.end.margin) - (this.start.targets.get(0).value + this.start.margin), this.dimension.wrapValue);
-                ConstraintWidget constraintWidget7 = this.widget;
-                int i16 = constraintWidget7.mMatchConstraintMaxWidth;
-                int max = Math.max(constraintWidget7.mMatchConstraintMinWidth, min);
-                if (i16 > 0) {
-                    max = Math.min(i16, max);
-                }
-                this.dimension.resolve(max);
-            }
-            if (!this.dimension.resolved) {
-                return;
-            }
-            DependencyNode dependencyNode10 = this.start.targets.get(0);
-            DependencyNode dependencyNode11 = this.end.targets.get(0);
-            int i17 = dependencyNode10.value + this.start.margin;
-            int i18 = dependencyNode11.value + this.end.margin;
-            float horizontalBiasPercent = this.widget.getHorizontalBiasPercent();
-            if (dependencyNode10 == dependencyNode11) {
-                i17 = dependencyNode10.value;
-                i18 = dependencyNode11.value;
-                horizontalBiasPercent = 0.5f;
-            }
-            this.start.resolve((int) (i17 + 0.5f + (((i18 - i17) - this.dimension.value) * horizontalBiasPercent)));
-            this.end.resolve(this.start.value + this.dimension.value);
-        }
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void update(androidx.constraintlayout.solver.widgets.analyzer.Dependency r17) {
+        /*
+            r16 = this;
+            r8 = r16
+            int[] r0 = androidx.constraintlayout.solver.widgets.analyzer.HorizontalWidgetRun.C01071.f23xbf6f0c8e
+            androidx.constraintlayout.solver.widgets.analyzer.WidgetRun$RunType r1 = r8.mRunType
+            int r1 = r1.ordinal()
+            r0 = r0[r1]
+            r1 = 2
+            r2 = 3
+            r9 = 1
+            r10 = 0
+            if (r0 == r9) goto L_0x0029
+            if (r0 == r1) goto L_0x0023
+            if (r0 == r2) goto L_0x0017
+            goto L_0x002e
+        L_0x0017:
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r0 = r8.widget
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r1 = r0.mLeft
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r0 = r0.mRight
+            r3 = r17
+            r8.updateRunCenter(r3, r1, r0, r10)
+            return
+        L_0x0023:
+            r3 = r17
+            r16.updateRunEnd(r17)
+            goto L_0x002e
+        L_0x0029:
+            r3 = r17
+            r16.updateRunStart(r17)
+        L_0x002e:
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r0 = r8.dimension
+            boolean r0 = r0.resolved
+            r11 = 1056964608(0x3f000000, float:0.5)
+            if (r0 != 0) goto L_0x031e
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r0 = r8.dimensionBehavior
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r3 = androidx.constraintlayout.solver.widgets.ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT
+            if (r0 != r3) goto L_0x031e
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r0 = r8.widget
+            int r3 = r0.mMatchConstraintDefaultWidth
+            if (r3 == r1) goto L_0x0301
+            if (r3 == r2) goto L_0x0046
+            goto L_0x031e
+        L_0x0046:
+            int r1 = r0.mMatchConstraintDefaultHeight
+            r3 = -1
+            if (r1 == 0) goto L_0x008e
+            if (r1 != r2) goto L_0x004e
+            goto L_0x008e
+        L_0x004e:
+            int r0 = r0.getDimensionRatioSide()
+            if (r0 == r3) goto L_0x0077
+            if (r0 == 0) goto L_0x0068
+            if (r0 == r9) goto L_0x005a
+            r0 = r10
+            goto L_0x0087
+        L_0x005a:
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r0 = r8.widget
+            androidx.constraintlayout.solver.widgets.analyzer.VerticalWidgetRun r1 = r0.verticalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r1 = r1.dimension
+            int r1 = r1.value
+            float r1 = (float) r1
+            float r0 = r0.getDimensionRatio()
+            goto L_0x0084
+        L_0x0068:
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r0 = r8.widget
+            androidx.constraintlayout.solver.widgets.analyzer.VerticalWidgetRun r1 = r0.verticalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r1 = r1.dimension
+            int r1 = r1.value
+            float r1 = (float) r1
+            float r0 = r0.getDimensionRatio()
+            float r1 = r1 / r0
+            goto L_0x0085
+        L_0x0077:
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r0 = r8.widget
+            androidx.constraintlayout.solver.widgets.analyzer.VerticalWidgetRun r1 = r0.verticalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r1 = r1.dimension
+            int r1 = r1.value
+            float r1 = (float) r1
+            float r0 = r0.getDimensionRatio()
+        L_0x0084:
+            float r1 = r1 * r0
+        L_0x0085:
+            float r1 = r1 + r11
+            int r0 = (int) r1
+        L_0x0087:
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r1 = r8.dimension
+            r1.resolve(r0)
+            goto L_0x031e
+        L_0x008e:
+            androidx.constraintlayout.solver.widgets.analyzer.VerticalWidgetRun r1 = r0.verticalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r12 = r1.start
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r13 = r1.end
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r1 = r0.mLeft
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r1 = r1.mTarget
+            if (r1 == 0) goto L_0x009c
+            r1 = r9
+            goto L_0x009d
+        L_0x009c:
+            r1 = r10
+        L_0x009d:
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r2 = r0.mTop
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r2 = r2.mTarget
+            if (r2 == 0) goto L_0x00a5
+            r2 = r9
+            goto L_0x00a6
+        L_0x00a5:
+            r2 = r10
+        L_0x00a6:
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r4 = r0.mRight
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r4 = r4.mTarget
+            if (r4 == 0) goto L_0x00ae
+            r4 = r9
+            goto L_0x00af
+        L_0x00ae:
+            r4 = r10
+        L_0x00af:
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r5 = r0.mBottom
+            androidx.constraintlayout.solver.widgets.ConstraintAnchor r5 = r5.mTarget
+            if (r5 == 0) goto L_0x00b7
+            r5 = r9
+            goto L_0x00b8
+        L_0x00b7:
+            r5 = r10
+        L_0x00b8:
+            int r14 = r0.getDimensionRatioSide()
+            if (r1 == 0) goto L_0x01ff
+            if (r2 == 0) goto L_0x01ff
+            if (r4 == 0) goto L_0x01ff
+            if (r5 == 0) goto L_0x01ff
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r0 = r8.widget
+            float r15 = r0.getDimensionRatio()
+            boolean r0 = r12.resolved
+            if (r0 == 0) goto L_0x012d
+            boolean r0 = r13.resolved
+            if (r0 == 0) goto L_0x012d
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = r8.start
+            boolean r1 = r0.readyToSolve
+            if (r1 == 0) goto L_0x012c
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r1 = r8.end
+            boolean r1 = r1.readyToSolve
+            if (r1 != 0) goto L_0x00df
+            goto L_0x012c
+        L_0x00df:
+            java.util.List<androidx.constraintlayout.solver.widgets.analyzer.DependencyNode> r0 = r0.targets
+            java.lang.Object r0 = r0.get(r10)
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = (androidx.constraintlayout.solver.widgets.analyzer.DependencyNode) r0
+            int r0 = r0.value
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r1 = r8.start
+            int r1 = r1.margin
+            int r2 = r0 + r1
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = r8.end
+            java.util.List<androidx.constraintlayout.solver.widgets.analyzer.DependencyNode> r0 = r0.targets
+            java.lang.Object r0 = r0.get(r10)
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = (androidx.constraintlayout.solver.widgets.analyzer.DependencyNode) r0
+            int r0 = r0.value
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r1 = r8.end
+            int r1 = r1.margin
+            int r3 = r0 - r1
+            int r0 = r12.value
+            int r1 = r12.margin
+            int r4 = r0 + r1
+            int r0 = r13.value
+            int r1 = r13.margin
+            int r5 = r0 - r1
+            int[] r1 = tempDimensions
+            r0 = r16
+            r6 = r15
+            r7 = r14
+            r0.computeInsetRatio(r1, r2, r3, r4, r5, r6, r7)
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r0 = r8.dimension
+            int[] r1 = tempDimensions
+            r1 = r1[r10]
+            r0.resolve(r1)
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r0 = r8.widget
+            androidx.constraintlayout.solver.widgets.analyzer.VerticalWidgetRun r0 = r0.verticalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r0 = r0.dimension
+            int[] r1 = tempDimensions
+            r1 = r1[r9]
+            r0.resolve(r1)
+        L_0x012c:
+            return
+        L_0x012d:
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = r8.start
+            boolean r1 = r0.resolved
+            if (r1 == 0) goto L_0x018a
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r1 = r8.end
+            boolean r2 = r1.resolved
+            if (r2 == 0) goto L_0x018a
+            boolean r2 = r12.readyToSolve
+            if (r2 == 0) goto L_0x0189
+            boolean r2 = r13.readyToSolve
+            if (r2 != 0) goto L_0x0142
+            goto L_0x0189
+        L_0x0142:
+            int r2 = r0.value
+            int r0 = r0.margin
+            int r2 = r2 + r0
+            int r0 = r1.value
+            int r1 = r1.margin
+            int r3 = r0 - r1
+            java.util.List<androidx.constraintlayout.solver.widgets.analyzer.DependencyNode> r0 = r12.targets
+            java.lang.Object r0 = r0.get(r10)
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = (androidx.constraintlayout.solver.widgets.analyzer.DependencyNode) r0
+            int r0 = r0.value
+            int r1 = r12.margin
+            int r4 = r0 + r1
+            java.util.List<androidx.constraintlayout.solver.widgets.analyzer.DependencyNode> r0 = r13.targets
+            java.lang.Object r0 = r0.get(r10)
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = (androidx.constraintlayout.solver.widgets.analyzer.DependencyNode) r0
+            int r0 = r0.value
+            int r1 = r13.margin
+            int r5 = r0 - r1
+            int[] r1 = tempDimensions
+            r0 = r16
+            r6 = r15
+            r7 = r14
+            r0.computeInsetRatio(r1, r2, r3, r4, r5, r6, r7)
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r0 = r8.dimension
+            int[] r1 = tempDimensions
+            r1 = r1[r10]
+            r0.resolve(r1)
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r0 = r8.widget
+            androidx.constraintlayout.solver.widgets.analyzer.VerticalWidgetRun r0 = r0.verticalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r0 = r0.dimension
+            int[] r1 = tempDimensions
+            r1 = r1[r9]
+            r0.resolve(r1)
+            goto L_0x018a
+        L_0x0189:
+            return
+        L_0x018a:
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = r8.start
+            boolean r1 = r0.readyToSolve
+            if (r1 == 0) goto L_0x01fe
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r1 = r8.end
+            boolean r1 = r1.readyToSolve
+            if (r1 == 0) goto L_0x01fe
+            boolean r1 = r12.readyToSolve
+            if (r1 == 0) goto L_0x01fe
+            boolean r1 = r13.readyToSolve
+            if (r1 != 0) goto L_0x019f
+            goto L_0x01fe
+        L_0x019f:
+            java.util.List<androidx.constraintlayout.solver.widgets.analyzer.DependencyNode> r0 = r0.targets
+            java.lang.Object r0 = r0.get(r10)
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = (androidx.constraintlayout.solver.widgets.analyzer.DependencyNode) r0
+            int r0 = r0.value
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r1 = r8.start
+            int r1 = r1.margin
+            int r2 = r0 + r1
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = r8.end
+            java.util.List<androidx.constraintlayout.solver.widgets.analyzer.DependencyNode> r0 = r0.targets
+            java.lang.Object r0 = r0.get(r10)
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = (androidx.constraintlayout.solver.widgets.analyzer.DependencyNode) r0
+            int r0 = r0.value
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r1 = r8.end
+            int r1 = r1.margin
+            int r3 = r0 - r1
+            java.util.List<androidx.constraintlayout.solver.widgets.analyzer.DependencyNode> r0 = r12.targets
+            java.lang.Object r0 = r0.get(r10)
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = (androidx.constraintlayout.solver.widgets.analyzer.DependencyNode) r0
+            int r0 = r0.value
+            int r1 = r12.margin
+            int r4 = r0 + r1
+            java.util.List<androidx.constraintlayout.solver.widgets.analyzer.DependencyNode> r0 = r13.targets
+            java.lang.Object r0 = r0.get(r10)
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = (androidx.constraintlayout.solver.widgets.analyzer.DependencyNode) r0
+            int r0 = r0.value
+            int r1 = r13.margin
+            int r5 = r0 - r1
+            int[] r1 = tempDimensions
+            r0 = r16
+            r6 = r15
+            r7 = r14
+            r0.computeInsetRatio(r1, r2, r3, r4, r5, r6, r7)
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r0 = r8.dimension
+            int[] r1 = tempDimensions
+            r1 = r1[r10]
+            r0.resolve(r1)
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r0 = r8.widget
+            androidx.constraintlayout.solver.widgets.analyzer.VerticalWidgetRun r0 = r0.verticalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r0 = r0.dimension
+            int[] r1 = tempDimensions
+            r1 = r1[r9]
+            r0.resolve(r1)
+            goto L_0x031e
+        L_0x01fe:
+            return
+        L_0x01ff:
+            if (r1 == 0) goto L_0x0288
+            if (r4 == 0) goto L_0x0288
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = r8.start
+            boolean r0 = r0.readyToSolve
+            if (r0 == 0) goto L_0x0287
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = r8.end
+            boolean r0 = r0.readyToSolve
+            if (r0 != 0) goto L_0x0211
+            goto L_0x0287
+        L_0x0211:
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r0 = r8.widget
+            float r0 = r0.getDimensionRatio()
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r1 = r8.start
+            java.util.List<androidx.constraintlayout.solver.widgets.analyzer.DependencyNode> r1 = r1.targets
+            java.lang.Object r1 = r1.get(r10)
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r1 = (androidx.constraintlayout.solver.widgets.analyzer.DependencyNode) r1
+            int r1 = r1.value
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r2 = r8.start
+            int r2 = r2.margin
+            int r1 = r1 + r2
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r2 = r8.end
+            java.util.List<androidx.constraintlayout.solver.widgets.analyzer.DependencyNode> r2 = r2.targets
+            java.lang.Object r2 = r2.get(r10)
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r2 = (androidx.constraintlayout.solver.widgets.analyzer.DependencyNode) r2
+            int r2 = r2.value
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r4 = r8.end
+            int r4 = r4.margin
+            int r2 = r2 - r4
+            if (r14 == r3) goto L_0x0264
+            if (r14 == 0) goto L_0x0264
+            if (r14 == r9) goto L_0x0241
+            goto L_0x031e
+        L_0x0241:
+            int r2 = r2 - r1
+            int r1 = r8.getLimitedDimension(r2, r10)
+            float r2 = (float) r1
+            float r2 = r2 / r0
+            float r2 = r2 + r11
+            int r2 = (int) r2
+            int r3 = r8.getLimitedDimension(r2, r9)
+            if (r2 == r3) goto L_0x0254
+            float r1 = (float) r3
+            float r1 = r1 * r0
+            float r1 = r1 + r11
+            int r1 = (int) r1
+        L_0x0254:
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r0 = r8.dimension
+            r0.resolve(r1)
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r0 = r8.widget
+            androidx.constraintlayout.solver.widgets.analyzer.VerticalWidgetRun r0 = r0.verticalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r0 = r0.dimension
+            r0.resolve(r3)
+            goto L_0x031e
+        L_0x0264:
+            int r2 = r2 - r1
+            int r1 = r8.getLimitedDimension(r2, r10)
+            float r2 = (float) r1
+            float r2 = r2 * r0
+            float r2 = r2 + r11
+            int r2 = (int) r2
+            int r3 = r8.getLimitedDimension(r2, r9)
+            if (r2 == r3) goto L_0x0277
+            float r1 = (float) r3
+            float r1 = r1 / r0
+            float r1 = r1 + r11
+            int r1 = (int) r1
+        L_0x0277:
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r0 = r8.dimension
+            r0.resolve(r1)
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r0 = r8.widget
+            androidx.constraintlayout.solver.widgets.analyzer.VerticalWidgetRun r0 = r0.verticalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r0 = r0.dimension
+            r0.resolve(r3)
+            goto L_0x031e
+        L_0x0287:
+            return
+        L_0x0288:
+            if (r2 == 0) goto L_0x031e
+            if (r5 == 0) goto L_0x031e
+            boolean r0 = r12.readyToSolve
+            if (r0 == 0) goto L_0x0300
+            boolean r0 = r13.readyToSolve
+            if (r0 != 0) goto L_0x0295
+            goto L_0x0300
+        L_0x0295:
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r0 = r8.widget
+            float r0 = r0.getDimensionRatio()
+            java.util.List<androidx.constraintlayout.solver.widgets.analyzer.DependencyNode> r1 = r12.targets
+            java.lang.Object r1 = r1.get(r10)
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r1 = (androidx.constraintlayout.solver.widgets.analyzer.DependencyNode) r1
+            int r1 = r1.value
+            int r2 = r12.margin
+            int r1 = r1 + r2
+            java.util.List<androidx.constraintlayout.solver.widgets.analyzer.DependencyNode> r2 = r13.targets
+            java.lang.Object r2 = r2.get(r10)
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r2 = (androidx.constraintlayout.solver.widgets.analyzer.DependencyNode) r2
+            int r2 = r2.value
+            int r4 = r13.margin
+            int r2 = r2 - r4
+            if (r14 == r3) goto L_0x02de
+            if (r14 == 0) goto L_0x02bc
+            if (r14 == r9) goto L_0x02de
+            goto L_0x031e
+        L_0x02bc:
+            int r2 = r2 - r1
+            int r1 = r8.getLimitedDimension(r2, r9)
+            float r2 = (float) r1
+            float r2 = r2 * r0
+            float r2 = r2 + r11
+            int r2 = (int) r2
+            int r3 = r8.getLimitedDimension(r2, r10)
+            if (r2 == r3) goto L_0x02cf
+            float r1 = (float) r3
+            float r1 = r1 / r0
+            float r1 = r1 + r11
+            int r1 = (int) r1
+        L_0x02cf:
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r0 = r8.dimension
+            r0.resolve(r3)
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r0 = r8.widget
+            androidx.constraintlayout.solver.widgets.analyzer.VerticalWidgetRun r0 = r0.verticalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r0 = r0.dimension
+            r0.resolve(r1)
+            goto L_0x031e
+        L_0x02de:
+            int r2 = r2 - r1
+            int r1 = r8.getLimitedDimension(r2, r9)
+            float r2 = (float) r1
+            float r2 = r2 / r0
+            float r2 = r2 + r11
+            int r2 = (int) r2
+            int r3 = r8.getLimitedDimension(r2, r10)
+            if (r2 == r3) goto L_0x02f1
+            float r1 = (float) r3
+            float r1 = r1 * r0
+            float r1 = r1 + r11
+            int r1 = (int) r1
+        L_0x02f1:
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r0 = r8.dimension
+            r0.resolve(r3)
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r0 = r8.widget
+            androidx.constraintlayout.solver.widgets.analyzer.VerticalWidgetRun r0 = r0.verticalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r0 = r0.dimension
+            r0.resolve(r1)
+            goto L_0x031e
+        L_0x0300:
+            return
+        L_0x0301:
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r0 = r0.getParent()
+            if (r0 == 0) goto L_0x031e
+            androidx.constraintlayout.solver.widgets.analyzer.HorizontalWidgetRun r0 = r0.horizontalRun
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r0 = r0.dimension
+            boolean r1 = r0.resolved
+            if (r1 == 0) goto L_0x031e
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r1 = r8.widget
+            float r1 = r1.mMatchConstraintPercentWidth
+            int r0 = r0.value
+            float r0 = (float) r0
+            float r0 = r0 * r1
+            float r0 = r0 + r11
+            int r0 = (int) r0
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r1 = r8.dimension
+            r1.resolve(r0)
+        L_0x031e:
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = r8.start
+            boolean r1 = r0.readyToSolve
+            if (r1 == 0) goto L_0x043e
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r1 = r8.end
+            boolean r2 = r1.readyToSolve
+            if (r2 != 0) goto L_0x032c
+            goto L_0x043e
+        L_0x032c:
+            boolean r0 = r0.resolved
+            if (r0 == 0) goto L_0x033b
+            boolean r0 = r1.resolved
+            if (r0 == 0) goto L_0x033b
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r0 = r8.dimension
+            boolean r0 = r0.resolved
+            if (r0 == 0) goto L_0x033b
+            return
+        L_0x033b:
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r0 = r8.dimension
+            boolean r0 = r0.resolved
+            if (r0 != 0) goto L_0x0385
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r0 = r8.dimensionBehavior
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r1 = androidx.constraintlayout.solver.widgets.ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT
+            if (r0 != r1) goto L_0x0385
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r0 = r8.widget
+            int r1 = r0.mMatchConstraintDefaultWidth
+            if (r1 != 0) goto L_0x0385
+            boolean r0 = r0.isInHorizontalChain()
+            if (r0 != 0) goto L_0x0385
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = r8.start
+            java.util.List<androidx.constraintlayout.solver.widgets.analyzer.DependencyNode> r0 = r0.targets
+            java.lang.Object r0 = r0.get(r10)
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = (androidx.constraintlayout.solver.widgets.analyzer.DependencyNode) r0
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r1 = r8.end
+            java.util.List<androidx.constraintlayout.solver.widgets.analyzer.DependencyNode> r1 = r1.targets
+            java.lang.Object r1 = r1.get(r10)
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r1 = (androidx.constraintlayout.solver.widgets.analyzer.DependencyNode) r1
+            int r0 = r0.value
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r2 = r8.start
+            int r3 = r2.margin
+            int r0 = r0 + r3
+            int r1 = r1.value
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r3 = r8.end
+            int r3 = r3.margin
+            int r1 = r1 + r3
+            int r3 = r1 - r0
+            r2.resolve(r0)
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = r8.end
+            r0.resolve(r1)
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r0 = r8.dimension
+            r0.resolve(r3)
+            return
+        L_0x0385:
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r0 = r8.dimension
+            boolean r0 = r0.resolved
+            if (r0 != 0) goto L_0x03e9
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r0 = r8.dimensionBehavior
+            androidx.constraintlayout.solver.widgets.ConstraintWidget$DimensionBehaviour r1 = androidx.constraintlayout.solver.widgets.ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT
+            if (r0 != r1) goto L_0x03e9
+            int r0 = r8.matchConstraintsType
+            if (r0 != r9) goto L_0x03e9
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = r8.start
+            java.util.List<androidx.constraintlayout.solver.widgets.analyzer.DependencyNode> r0 = r0.targets
+            int r0 = r0.size()
+            if (r0 <= 0) goto L_0x03e9
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = r8.end
+            java.util.List<androidx.constraintlayout.solver.widgets.analyzer.DependencyNode> r0 = r0.targets
+            int r0 = r0.size()
+            if (r0 <= 0) goto L_0x03e9
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = r8.start
+            java.util.List<androidx.constraintlayout.solver.widgets.analyzer.DependencyNode> r0 = r0.targets
+            java.lang.Object r0 = r0.get(r10)
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = (androidx.constraintlayout.solver.widgets.analyzer.DependencyNode) r0
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r1 = r8.end
+            java.util.List<androidx.constraintlayout.solver.widgets.analyzer.DependencyNode> r1 = r1.targets
+            java.lang.Object r1 = r1.get(r10)
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r1 = (androidx.constraintlayout.solver.widgets.analyzer.DependencyNode) r1
+            int r0 = r0.value
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r2 = r8.start
+            int r2 = r2.margin
+            int r0 = r0 + r2
+            int r1 = r1.value
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r2 = r8.end
+            int r2 = r2.margin
+            int r1 = r1 + r2
+            int r1 = r1 - r0
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r0 = r8.dimension
+            int r0 = r0.wrapValue
+            int r0 = java.lang.Math.min(r1, r0)
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r1 = r8.widget
+            int r2 = r1.mMatchConstraintMaxWidth
+            int r1 = r1.mMatchConstraintMinWidth
+            int r0 = java.lang.Math.max(r1, r0)
+            if (r2 <= 0) goto L_0x03e4
+            int r0 = java.lang.Math.min(r2, r0)
+        L_0x03e4:
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r1 = r8.dimension
+            r1.resolve(r0)
+        L_0x03e9:
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r0 = r8.dimension
+            boolean r0 = r0.resolved
+            if (r0 != 0) goto L_0x03f0
+            return
+        L_0x03f0:
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = r8.start
+            java.util.List<androidx.constraintlayout.solver.widgets.analyzer.DependencyNode> r0 = r0.targets
+            java.lang.Object r0 = r0.get(r10)
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = (androidx.constraintlayout.solver.widgets.analyzer.DependencyNode) r0
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r1 = r8.end
+            java.util.List<androidx.constraintlayout.solver.widgets.analyzer.DependencyNode> r1 = r1.targets
+            java.lang.Object r1 = r1.get(r10)
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r1 = (androidx.constraintlayout.solver.widgets.analyzer.DependencyNode) r1
+            int r2 = r0.value
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r3 = r8.start
+            int r3 = r3.margin
+            int r2 = r2 + r3
+            int r3 = r1.value
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r4 = r8.end
+            int r4 = r4.margin
+            int r3 = r3 + r4
+            androidx.constraintlayout.solver.widgets.ConstraintWidget r4 = r8.widget
+            float r4 = r4.getHorizontalBiasPercent()
+            if (r0 != r1) goto L_0x041f
+            int r2 = r0.value
+            int r3 = r1.value
+            r4 = r11
+        L_0x041f:
+            int r3 = r3 - r2
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r0 = r8.dimension
+            int r0 = r0.value
+            int r3 = r3 - r0
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = r8.start
+            float r1 = (float) r2
+            float r1 = r1 + r11
+            float r2 = (float) r3
+            float r2 = r2 * r4
+            float r1 = r1 + r2
+            int r1 = (int) r1
+            r0.resolve(r1)
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r0 = r8.end
+            androidx.constraintlayout.solver.widgets.analyzer.DependencyNode r1 = r8.start
+            int r1 = r1.value
+            androidx.constraintlayout.solver.widgets.analyzer.DimensionDependency r2 = r8.dimension
+            int r2 = r2.value
+            int r1 = r1 + r2
+            r0.resolve(r1)
+        L_0x043e:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.constraintlayout.solver.widgets.analyzer.HorizontalWidgetRun.update(androidx.constraintlayout.solver.widgets.analyzer.Dependency):void");
     }
 
-    @Override // androidx.constraintlayout.solver.widgets.analyzer.WidgetRun
     public void applyToWidget() {
         DependencyNode dependencyNode = this.start;
         if (dependencyNode.resolved) {

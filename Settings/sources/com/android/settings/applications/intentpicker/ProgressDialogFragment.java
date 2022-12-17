@@ -17,7 +17,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
 import com.android.settings.core.instrumentation.InstrumentedDialogFragment;
 import com.android.settingslib.utils.ThreadUtils;
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
-/* loaded from: classes.dex */
+
 public class ProgressDialogFragment extends InstrumentedDialogFragment {
     private DomainVerificationManager mDomainVerificationManager;
     private Handler mHandle;
@@ -34,18 +36,15 @@ public class ProgressDialogFragment extends InstrumentedDialogFragment {
     private List<SupportedLinkWrapper> mSupportedLinkWrapperList;
     private SupportedLinkViewModel mViewModel;
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 0;
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableDialogFragment, androidx.fragment.app.DialogFragment, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        this.mViewModel = (SupportedLinkViewModel) ViewModelProviders.of(getActivity()).get(SupportedLinkViewModel.class);
+        this.mViewModel = (SupportedLinkViewModel) ViewModelProviders.m7of(getActivity()).get(SupportedLinkViewModel.class);
     }
 
-    @Override // androidx.fragment.app.DialogFragment
     public Dialog onCreateDialog(Bundle bundle) {
         this.mPackage = getArguments().getString("app_package");
         this.mDomainVerificationManager = (DomainVerificationManager) getActivity().getSystemService(DomainVerificationManager.class);
@@ -58,13 +57,13 @@ public class ProgressDialogFragment extends InstrumentedDialogFragment {
     private ProgressAlertDialog createProgressAlertDialog() {
         FragmentActivity activity = getActivity();
         ProgressAlertDialog progressAlertDialog = new ProgressAlertDialog(activity);
-        progressAlertDialog.setTitle(IntentPickerUtils.getCentralizedDialogTitle(activity.getResources().getString(R.string.app_launch_checking_links_title)));
-        progressAlertDialog.setButton(-2, activity.getText(R.string.app_launch_dialog_cancel), ProgressDialogFragment$$ExternalSyntheticLambda0.INSTANCE);
+        progressAlertDialog.setTitle(IntentPickerUtils.getCentralizedDialogTitle(activity.getResources().getString(R$string.app_launch_checking_links_title)));
+        progressAlertDialog.setButton(-2, activity.getText(R$string.app_launch_dialog_cancel), new ProgressDialogFragment$$ExternalSyntheticLambda0());
         progressAlertDialog.setCanceledOnTouchOutside(true);
         return progressAlertDialog;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ void lambda$createProgressAlertDialog$0(DialogInterface dialogInterface, int i) {
         if (i == -2) {
             dialogInterface.cancel();
@@ -75,47 +74,34 @@ public class ProgressDialogFragment extends InstrumentedDialogFragment {
         show(fragmentManager, "ProgressDialog");
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableDialogFragment, androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
         generateProgressAlertDialog();
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableDialogFragment, androidx.fragment.app.Fragment
     public void onDestroy() {
         super.onDestroy();
         ProgressAlertDialog progressAlertDialog = this.mProgressAlertDialog;
-        if (progressAlertDialog == null || !progressAlertDialog.isShowing()) {
-            return;
+        if (progressAlertDialog != null && progressAlertDialog.isShowing()) {
+            this.mProgressAlertDialog.cancel();
         }
-        this.mProgressAlertDialog.cancel();
     }
 
     private void generateProgressAlertDialog() {
-        ThreadUtils.postOnBackgroundThread(new Runnable() { // from class: com.android.settings.applications.intentpicker.ProgressDialogFragment$$ExternalSyntheticLambda2
-            @Override // java.lang.Runnable
-            public final void run() {
-                ProgressDialogFragment.this.lambda$generateProgressAlertDialog$2();
-            }
-        });
+        ThreadUtils.postOnBackgroundThread((Runnable) new ProgressDialogFragment$$ExternalSyntheticLambda1(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$generateProgressAlertDialog$2() {
         long elapsedRealtime = SystemClock.elapsedRealtime();
         queryLinksInBackground();
         IntentPickerUtils.logd("queryLinksInBackground take time: " + (SystemClock.elapsedRealtime() - elapsedRealtime));
         if (this.mProgressAlertDialog.isShowing()) {
-            this.mHandle.post(new Runnable() { // from class: com.android.settings.applications.intentpicker.ProgressDialogFragment$$ExternalSyntheticLambda1
-                @Override // java.lang.Runnable
-                public final void run() {
-                    ProgressDialogFragment.this.lambda$generateProgressAlertDialog$1();
-                }
-            });
+            this.mHandle.post(new ProgressDialogFragment$$ExternalSyntheticLambda2(this));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$generateProgressAlertDialog$1() {
         synchronized (this.mHandle) {
             if (this.mProgressAlertDialog.isShowing()) {
@@ -145,22 +131,16 @@ public class ProgressDialogFragment extends InstrumentedDialogFragment {
                 this.mSupportedLinkWrapperList.clear();
                 break;
             }
-            final int i2 = (i * 100) / size;
-            this.mHandle.post(new Runnable() { // from class: com.android.settings.applications.intentpicker.ProgressDialogFragment$$ExternalSyntheticLambda3
-                @Override // java.lang.Runnable
-                public final void run() {
-                    ProgressDialogFragment.this.lambda$queryLinksInBackground$3(i2);
-                }
-            });
+            this.mHandle.post(new ProgressDialogFragment$$ExternalSyntheticLambda3(this, (i * 100) / size));
             if (ownersForDomain.size() == 0) {
-                SystemClock.sleep(20L);
+                SystemClock.sleep(20);
             }
         }
         IntentPickerUtils.logd("queryLinksInBackground : SupportedLinkWrapperList size=" + this.mSupportedLinkWrapperList.size());
         Collections.sort(this.mSupportedLinkWrapperList);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$queryLinksInBackground$3(int i) {
         synchronized (this.mHandle) {
             if (!this.mProgressAlertDialog.isShowing()) {
@@ -182,9 +162,7 @@ public class ProgressDialogFragment extends InstrumentedDialogFragment {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class ProgressAlertDialog extends AlertDialog {
+    static class ProgressAlertDialog extends AlertDialog {
         private ProgressBar mProgressBar;
 
         protected ProgressAlertDialog(Context context) {
@@ -197,15 +175,16 @@ public class ProgressDialogFragment extends InstrumentedDialogFragment {
         }
 
         private void init(Context context) {
-            View inflate = LayoutInflater.from(context).inflate(R.layout.app_launch_progress, (ViewGroup) null);
-            ProgressBar progressBar = (ProgressBar) inflate.findViewById(R.id.scan_links_progressbar);
+            View inflate = LayoutInflater.from(context).inflate(R$layout.app_launch_progress, (ViewGroup) null);
+            ProgressBar progressBar = (ProgressBar) inflate.findViewById(R$id.scan_links_progressbar);
             this.mProgressBar = progressBar;
             progressBar.setProgress(0);
             this.mProgressBar.setMax(100);
             setView(inflate);
         }
 
-        ProgressBar getProgressBar() {
+        /* access modifiers changed from: package-private */
+        public ProgressBar getProgressBar() {
             return this.mProgressBar;
         }
     }

@@ -8,12 +8,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.UserHandle;
 import com.android.settingslib.RestrictedLockUtils;
-/* loaded from: classes.dex */
+
 public class ActionDisabledByAdminDialog extends Activity implements DialogInterface.OnDismissListener {
     private ActionDisabledByAdminDialogHelper mDialogHelper;
 
-    @Override // android.app.Activity
-    protected void onCreate(Bundle bundle) {
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         RestrictedLockUtils.EnforcedAdmin adminDetailsFromIntent = getAdminDetailsFromIntent(getIntent());
         String restrictionFromIntent = getRestrictionFromIntent(getIntent());
@@ -22,16 +22,16 @@ public class ActionDisabledByAdminDialog extends Activity implements DialogInter
         actionDisabledByAdminDialogHelper.prepareDialogBuilder(restrictionFromIntent, adminDetailsFromIntent).setOnDismissListener(this).show();
     }
 
-    @Override // android.app.Activity
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         RestrictedLockUtils.EnforcedAdmin adminDetailsFromIntent = getAdminDetailsFromIntent(intent);
         this.mDialogHelper.updateDialog(getRestrictionFromIntent(intent), adminDetailsFromIntent);
     }
 
-    RestrictedLockUtils.EnforcedAdmin getAdminDetailsFromIntent(Intent intent) {
+    /* access modifiers changed from: package-private */
+    public RestrictedLockUtils.EnforcedAdmin getAdminDetailsFromIntent(Intent intent) {
         Bundle bundle;
-        RestrictedLockUtils.EnforcedAdmin enforcedAdmin = new RestrictedLockUtils.EnforcedAdmin(null, UserHandle.of(UserHandle.myUserId()));
+        RestrictedLockUtils.EnforcedAdmin enforcedAdmin = new RestrictedLockUtils.EnforcedAdmin((ComponentName) null, UserHandle.of(UserHandle.myUserId()));
         if (intent == null) {
             return enforcedAdmin;
         }
@@ -60,14 +60,14 @@ public class ActionDisabledByAdminDialog extends Activity implements DialogInter
         return enforcedAdmin;
     }
 
-    String getRestrictionFromIntent(Intent intent) {
+    /* access modifiers changed from: package-private */
+    public String getRestrictionFromIntent(Intent intent) {
         if (intent == null) {
             return null;
         }
         return intent.getStringExtra("android.app.extra.RESTRICTION");
     }
 
-    @Override // android.content.DialogInterface.OnDismissListener
     public void onDismiss(DialogInterface dialogInterface) {
         finish();
     }

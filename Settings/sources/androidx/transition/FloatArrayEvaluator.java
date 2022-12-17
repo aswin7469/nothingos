@@ -1,16 +1,14 @@
 package androidx.transition;
 
 import android.animation.TypeEvaluator;
-/* loaded from: classes.dex */
+
 class FloatArrayEvaluator implements TypeEvaluator<float[]> {
     private float[] mArray;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public FloatArrayEvaluator(float[] fArr) {
+    FloatArrayEvaluator(float[] fArr) {
         this.mArray = fArr;
     }
 
-    @Override // android.animation.TypeEvaluator
     public float[] evaluate(float f, float[] fArr, float[] fArr2) {
         float[] fArr3 = this.mArray;
         if (fArr3 == null) {

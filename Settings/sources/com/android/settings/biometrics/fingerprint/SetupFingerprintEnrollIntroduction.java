@@ -5,24 +5,24 @@ import android.content.Intent;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Bundle;
 import android.os.UserHandle;
+import android.util.Log;
 import android.view.View;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.settings.SetupWizardUtils;
 import com.android.settings.Utils;
 import com.android.settings.biometrics.BiometricUtils;
-/* loaded from: classes.dex */
+
 public class SetupFingerprintEnrollIntroduction extends FingerprintEnrollIntroduction {
     private boolean mAlreadyHadLockScreenSetup = false;
 
-    @Override // com.android.settings.biometrics.fingerprint.FingerprintEnrollIntroduction, com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 249;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.biometrics.fingerprint.FingerprintEnrollIntroduction, com.android.settings.biometrics.BiometricEnrollIntroduction, com.android.settings.biometrics.BiometricEnrollBase, com.android.settings.core.InstrumentedActivity, com.android.settingslib.core.lifecycle.ObservableActivity, androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        Log.d("Security", "SetupFingerprintEnrollIntroduction::onCreate");
         if (bundle == null) {
             this.mAlreadyHadLockScreenSetup = isKeyguardSecure();
         } else {
@@ -30,15 +30,15 @@ public class SetupFingerprintEnrollIntroduction extends FingerprintEnrollIntrodu
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction, com.android.settings.biometrics.BiometricEnrollBase, androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         bundle.putBoolean("wasLockScreenPresent", this.mAlreadyHadLockScreenSetup);
     }
 
-    @Override // com.android.settings.biometrics.fingerprint.FingerprintEnrollIntroduction, com.android.settings.biometrics.BiometricEnrollIntroduction
-    protected Intent getEnrollingIntent() {
+    /* access modifiers changed from: protected */
+    public Intent getEnrollingIntent() {
+        Thread.dumpStack();
         Intent intent = new Intent(this, SetupFingerprintEnrollFindSensor.class);
         if (BiometricUtils.containsGatekeeperPasswordHandle(getIntent())) {
             intent.putExtra("gk_pw_handle", BiometricUtils.getGatekeeperPasswordHandle(getIntent()));
@@ -47,14 +47,21 @@ public class SetupFingerprintEnrollIntroduction extends FingerprintEnrollIntrodu
         return intent;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.biometrics.fingerprint.FingerprintEnrollIntroduction, com.android.settings.biometrics.BiometricEnrollIntroduction, androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onActivityResult(int i, int i2, Intent intent) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SetupFingerprintEnrollIntroduction::onActivityResult requestCode == BIOMETRIC_FIND_SENSOR_REQUEST:");
+        sb.append(i == 2);
+        sb.append("isKeyguardSecure()");
+        sb.append(isKeyguardSecure());
+        Log.d("Security", sb.toString());
         if (i == 2 && isKeyguardSecure()) {
+            Log.d("Security", "SetupFingerprintEnrollIntroduction::onActivityResult mAlreadyHadLockScreenSetup: " + this.mAlreadyHadLockScreenSetup);
             if (!this.mAlreadyHadLockScreenSetup) {
                 intent = getMetricIntent(intent);
             }
             if (i2 == 1) {
+                Log.d("Security", "SetupFingerprintEnrollIntroduction::onActivityResult resultCode == RESULT_FINISHED: ");
                 intent = setFingerprintCount(intent);
             }
         }
@@ -80,14 +87,14 @@ public class SetupFingerprintEnrollIntroduction extends FingerprintEnrollIntrodu
         return intent;
     }
 
-    @Override // com.android.settings.biometrics.fingerprint.FingerprintEnrollIntroduction
-    protected void onCancelButtonClick(View view) {
+    /* access modifiers changed from: protected */
+    public void onCancelButtonClick(View view) {
         int i;
         Intent intent = null;
         if (isKeyguardSecure()) {
             i = 2;
             if (!this.mAlreadyHadLockScreenSetup) {
-                intent = getMetricIntent(null);
+                intent = getMetricIntent((Intent) null);
             }
         } else {
             i = 11;
@@ -96,10 +103,9 @@ public class SetupFingerprintEnrollIntroduction extends FingerprintEnrollIntrodu
         finish();
     }
 
-    @Override // androidx.activity.ComponentActivity, android.app.Activity
     public void onBackPressed() {
         if (!this.mAlreadyHadLockScreenSetup && isKeyguardSecure()) {
-            setResult(0, getMetricIntent(null));
+            setResult(0, getMetricIntent((Intent) null));
         }
         super.onBackPressed();
     }

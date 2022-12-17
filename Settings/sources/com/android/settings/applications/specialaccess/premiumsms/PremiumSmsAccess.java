@@ -9,7 +9,9 @@ import androidx.preference.DropDownPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.PreferenceViewHolder;
-import com.android.settings.R;
+import com.android.settings.R$array;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.applications.AppStateBaseBridge;
 import com.android.settings.applications.AppStateSmsPremBridge;
 import com.android.settings.overlay.FeatureFactory;
@@ -19,86 +21,72 @@ import com.android.settingslib.applications.ApplicationsState;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
 import com.android.settingslib.widget.FooterPreference;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
+
 public class PremiumSmsAccess extends EmptyTextSettings implements AppStateBaseBridge.Callback, ApplicationsState.Callbacks, Preference.OnPreferenceChangeListener {
-    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R.xml.premium_sms_settings);
-    private ApplicationsState mApplicationsState;
+    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER = new BaseSearchIndexProvider(R$xml.premium_sms_settings);
+    /* access modifiers changed from: private */
+    public ApplicationsState mApplicationsState;
     private ApplicationsState.Session mSession;
     private AppStateSmsPremBridge mSmsBackend;
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 388;
     }
 
-    @Override // com.android.settingslib.applications.ApplicationsState.Callbacks
     public void onAllSizesComputed() {
     }
 
-    @Override // com.android.settingslib.applications.ApplicationsState.Callbacks
     public void onLauncherInfoChanged() {
     }
 
-    @Override // com.android.settingslib.applications.ApplicationsState.Callbacks
     public void onLoadEntriesCompleted() {
     }
 
-    @Override // com.android.settingslib.applications.ApplicationsState.Callbacks
     public void onPackageIconChanged() {
     }
 
-    @Override // com.android.settingslib.applications.ApplicationsState.Callbacks
     public void onPackageListChanged() {
     }
 
-    @Override // com.android.settingslib.applications.ApplicationsState.Callbacks
     public void onPackageSizeChanged(String str) {
     }
 
-    @Override // com.android.settingslib.applications.ApplicationsState.Callbacks
     public void onRunningStateChanged(boolean z) {
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        ApplicationsState applicationsState = ApplicationsState.getInstance((Application) getContext().getApplicationContext());
-        this.mApplicationsState = applicationsState;
-        this.mSession = applicationsState.newSession(this, getSettingsLifecycle());
+        ApplicationsState instance = ApplicationsState.getInstance((Application) getContext().getApplicationContext());
+        this.mApplicationsState = instance;
+        this.mSession = instance.newSession(this, getSettingsLifecycle());
         this.mSmsBackend = new AppStateSmsPremBridge(getContext(), this.mApplicationsState, this);
     }
 
-    @Override // com.android.settings.widget.EmptyTextSettings, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
-        setLoading(true, false);
+        setEmptyText(R$string.premium_sms_none);
     }
 
-    @Override // com.android.settings.SettingsPreferenceFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
-        this.mSmsBackend.resume();
+        this.mSmsBackend.resume(true);
     }
 
-    @Override // com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onPause() {
         this.mSmsBackend.pause();
         super.onPause();
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onDestroy() {
         this.mSmsBackend.release();
         super.onDestroy();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.premium_sms_settings;
+        return R$xml.premium_sms_settings;
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         PremiumSmsPreference premiumSmsPreference = (PremiumSmsPreference) preference;
         int parseInt = Integer.parseInt((String) obj);
@@ -107,7 +95,8 @@ public class PremiumSmsAccess extends EmptyTextSettings implements AppStateBaseB
         return true;
     }
 
-    void logSpecialPermissionChange(int i, String str) {
+    /* access modifiers changed from: package-private */
+    public void logSpecialPermissionChange(int i, String str) {
         int i2 = i != 1 ? i != 2 ? i != 3 ? 0 : 780 : 779 : 778;
         if (i2 != 0) {
             MetricsFeatureProvider metricsFeatureProvider = FeatureFactory.getFactory(getContext()).getMetricsFeatureProvider();
@@ -116,56 +105,49 @@ public class PremiumSmsAccess extends EmptyTextSettings implements AppStateBaseB
     }
 
     private void updatePrefs(ArrayList<ApplicationsState.AppEntry> arrayList) {
-        if (arrayList == null) {
-            return;
+        if (arrayList != null) {
+            PreferenceScreen preferenceScreen = getPreferenceScreen();
+            preferenceScreen.removeAll();
+            preferenceScreen.setOrderingAsAdded(true);
+            for (int i = 0; i < arrayList.size(); i++) {
+                PremiumSmsPreference premiumSmsPreference = new PremiumSmsPreference(arrayList.get(i), getPrefContext());
+                premiumSmsPreference.setOnPreferenceChangeListener(this);
+                preferenceScreen.addPreference(premiumSmsPreference);
+            }
+            if (arrayList.size() != 0) {
+                FooterPreference footerPreference = new FooterPreference(getPrefContext());
+                footerPreference.setTitle(R$string.premium_sms_warning);
+                preferenceScreen.addPreference(footerPreference);
+            }
         }
-        setEmptyText(R.string.premium_sms_none);
-        setLoading(false, true);
-        PreferenceScreen preferenceScreen = getPreferenceScreen();
-        preferenceScreen.removeAll();
-        preferenceScreen.setOrderingAsAdded(true);
-        for (int i = 0; i < arrayList.size(); i++) {
-            PremiumSmsPreference premiumSmsPreference = new PremiumSmsPreference(arrayList.get(i), getPrefContext());
-            premiumSmsPreference.setOnPreferenceChangeListener(this);
-            preferenceScreen.addPreference(premiumSmsPreference);
-        }
-        if (arrayList.size() == 0) {
-            return;
-        }
-        FooterPreference footerPreference = new FooterPreference(getPrefContext());
-        footerPreference.setTitle(R.string.premium_sms_warning);
-        preferenceScreen.addPreference(footerPreference);
     }
 
     private void update() {
         updatePrefs(this.mSession.rebuild(AppStateSmsPremBridge.FILTER_APP_PREMIUM_SMS, ApplicationsState.ALPHA_COMPARATOR));
     }
 
-    @Override // com.android.settings.applications.AppStateBaseBridge.Callback
     public void onExtraInfoUpdated() {
         update();
     }
 
-    @Override // com.android.settingslib.applications.ApplicationsState.Callbacks
     public void onRebuildComplete(ArrayList<ApplicationsState.AppEntry> arrayList) {
         updatePrefs(arrayList);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class PremiumSmsPreference extends DropDownPreference {
-        private final ApplicationsState.AppEntry mAppEntry;
+    private class PremiumSmsPreference extends DropDownPreference {
+        /* access modifiers changed from: private */
+        public final ApplicationsState.AppEntry mAppEntry;
 
         public PremiumSmsPreference(ApplicationsState.AppEntry appEntry, Context context) {
             super(context);
             this.mAppEntry = appEntry;
             appEntry.ensureLabel(context);
-            setTitle(appEntry.label);
+            setTitle((CharSequence) appEntry.label);
             Drawable drawable = appEntry.icon;
             if (drawable != null) {
                 setIcon(drawable);
             }
-            setEntries(R.array.security_settings_premium_sms_values);
+            setEntries(R$array.security_settings_premium_sms_values);
             setEntryValues(new CharSequence[]{String.valueOf(1), String.valueOf(2), String.valueOf(3)});
             setValue(String.valueOf(getCurrentValue()));
             setSummary("%s");
@@ -179,11 +161,9 @@ public class PremiumSmsAccess extends EmptyTextSettings implements AppStateBaseB
             return 0;
         }
 
-        @Override // androidx.preference.DropDownPreference, androidx.preference.Preference
         public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
             if (getIcon() == null) {
-                preferenceViewHolder.itemView.post(new Runnable() { // from class: com.android.settings.applications.specialaccess.premiumsms.PremiumSmsAccess.PremiumSmsPreference.1
-                    @Override // java.lang.Runnable
+                preferenceViewHolder.itemView.post(new Runnable() {
                     public void run() {
                         PremiumSmsAccess.this.mApplicationsState.ensureIcon(PremiumSmsPreference.this.mAppEntry);
                         PremiumSmsPreference premiumSmsPreference = PremiumSmsPreference.this;

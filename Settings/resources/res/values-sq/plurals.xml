@@ -5,8 +5,8 @@
         <item quantity="other">%d ditë më parë</item>
     </plurals>
     <plurals name="abc_slice_duration_min">
-        <item quantity="one">%d min më parë</item>
-        <item quantity="other">%d min më parë</item>
+        <item quantity="one">%d min. më parë</item>
+        <item quantity="other">%d min. më parë</item>
     </plurals>
     <plurals name="abc_slice_duration_years">
         <item quantity="one">%d vit më parë</item>
@@ -234,11 +234,11 @@
     </plurals>
     <plurals name="notifications_sent_daily">
         <item quantity="one">~%d njoftim në ditë</item>
-        <item quantity="other">~%d njoftime në ditë</item>
+        <item quantity="other">~%,d njoftime në ditë</item>
     </plurals>
     <plurals name="notifications_sent_weekly">
         <item quantity="one">~%d njoftim në javë</item>
-        <item quantity="other">~%d njoftime në javë</item>
+        <item quantity="other">~%,d njoftime në javë</item>
     </plurals>
     <plurals name="number_of_device_admins">
         <item quantity="one">%d aplikacion aktiv</item>
@@ -320,14 +320,6 @@
         <item quantity="one">Besoje ose hiqe certifikatën</item>
         <item quantity="other">Besoji ose hiqi certifikatat</item>
     </plurals>
-    <plurals name="ssl_ca_cert_info_message">
-        <item quantity="one">%s ka instaluar një autoritet certifikate për profilin tënd të punës që mund ta lejojë atë të monitorojë aktivitetin tënd të rrjetit të punës, duke përfshirë mail-et, aplikacionet dhe sajtet e sigurta të uebit.\n\nPër më shumë informacione rreth kësaj certifikate, kontakto me administratorin.</item>
-        <item quantity="other">%s ka instaluar autoritete certifikate për profilin tënd të punës që mund ta lejojë atë të monitorojë aktivitetin tënd të rrjetit të punës, duke përfshirë mail-et, aplikacionet dhe sajtet e sigurta të uebit.\n\nPër më shumë informacione rreth këtyre certifikatave, kontakto me administratorin.</item>
-    </plurals>
-    <plurals name="ssl_ca_cert_info_message_device_owner">
-        <item quantity="one">%s ka instaluar një autoritet certifikate në pajisjen tënde, i cili mund ta lejojë atë të monitorojë aktivitetin e rrjetit të pajisjes, duke përfshirë mail-et, aplikacionet dhe sajtet e sigurta të uebit.\n\nPër më shumë informacione rreth kësaj certifikate, kontakto me administratorin.</item>
-        <item quantity="other">%s ka instaluar autoritete certifikatash në pajisjen tënde, të cilat mund ta lejojë atë të monitorojë aktivitetin e rrjetit të pajisjes, duke përfshirë mail-et, aplikacionet dhe sajtet e sigurta të uebit..\n\nPër më shumë informacione rreth këtyre certifikatave, kontakto me administratorin.</item>
-    </plurals>
     <plurals name="ssl_ca_cert_settings_button">
         <item quantity="one">Kontrollo certifikatën</item>
         <item quantity="other">Kontrollo certifikatat</item>
@@ -359,10 +351,6 @@
     <plurals name="wifi_saved_passpoint_access_points_summary">
         <item quantity="one">1 abonim</item>
         <item quantity="other">%d abonime</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d pajisje e lidhur</item>
-        <item quantity="other">%1$d pajisje të lidhura</item>
     </plurals>
     <plurals name="wrong_pin_code">
         <item quantity="one">Kodi PIN i kartës SIM është i pasaktë. Të ka mbetur edhe %d tentativë para se të duhet të kontaktosh me operatorin tënd celular për të shkyçur pajisjen.</item>

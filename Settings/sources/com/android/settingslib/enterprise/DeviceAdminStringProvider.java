@@ -1,5 +1,5 @@
 package com.android.settingslib.enterprise;
-/* loaded from: classes.dex */
+
 public interface DeviceAdminStringProvider {
     String getDefaultDisabledByPolicyContent();
 

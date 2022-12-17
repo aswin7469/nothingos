@@ -8,7 +8,7 @@ import android.net.TetheringManager;
 import android.os.UserHandle;
 import android.os.UserManager;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class UsbBackend {
     private final boolean mFileTransferRestricted;
     private final boolean mFileTransferRestrictedBySystem;
@@ -54,7 +54,10 @@ public class UsbBackend {
     }
 
     public boolean areFunctionsSupported(long j) {
-        return (this.mMidiSupported || (8 & j) == 0) && (this.mTetheringSupported || (32 & j) == 0) && !areFunctionDisallowed(j) && !areFunctionsDisallowedBySystem(j) && !areFunctionsDisallowedByNonAdminUser(j);
+        if ((this.mMidiSupported || (8 & j) == 0) && ((this.mTetheringSupported || (32 & j) == 0) && !areFunctionDisallowed(j) && !areFunctionsDisallowedBySystem(j) && !areFunctionsDisallowedByNonAdminUser(j))) {
+            return true;
+        }
+        return false;
     }
 
     public int getPowerRole() {
@@ -99,7 +102,10 @@ public class UsbBackend {
 
     public boolean areAllRolesSupported() {
         UsbPortStatus usbPortStatus;
-        return this.mPort != null && (usbPortStatus = this.mPortStatus) != null && usbPortStatus.isRoleCombinationSupported(2, 2) && this.mPortStatus.isRoleCombinationSupported(2, 1) && this.mPortStatus.isRoleCombinationSupported(1, 2) && this.mPortStatus.isRoleCombinationSupported(1, 1);
+        if (this.mPort == null || (usbPortStatus = this.mPortStatus) == null || !usbPortStatus.isRoleCombinationSupported(2, 2) || !this.mPortStatus.isRoleCombinationSupported(2, 1) || !this.mPortStatus.isRoleCombinationSupported(1, 2) || !this.mPortStatus.isRoleCombinationSupported(1, 1)) {
+            return false;
+        }
+        return true;
     }
 
     public static String usbFunctionsToString(long j) {
@@ -142,7 +148,8 @@ public class UsbBackend {
         return (this.mFileTransferRestrictedBySystem && !((4 & j) == 0 && (16 & j) == 0)) || (this.mTetheringRestrictedBySystem && (j & 32) != 0);
     }
 
-    boolean areFunctionsDisallowedByNonAdminUser(long j) {
+    /* access modifiers changed from: package-private */
+    public boolean areFunctionsDisallowedByNonAdminUser(long j) {
         return !this.mIsAdminUser && (j & 32) != 0;
     }
 

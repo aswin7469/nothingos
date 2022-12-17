@@ -3,7 +3,6 @@ package com.android.settings.system;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -14,57 +13,43 @@ import android.text.TextUtils;
 import android.util.Log;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$bool;
+import com.android.settings.R$string;
 import com.android.settings.Utils;
 import com.android.settings.core.BasePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
-import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
-/* loaded from: classes.dex */
+
 public class SystemUpdatePreferenceController extends BasePreferenceController {
     private static final String KEY_SYSTEM_UPDATE_SETTINGS = "system_update_settings";
     private static final String TAG = "SysUpdatePrefContr";
     private final UserManager mUm;
     private final SystemUpdateManager mUpdateManager;
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -75,12 +60,10 @@ public class SystemUpdatePreferenceController extends BasePreferenceController {
         this.mUpdateManager = (SystemUpdateManager) context.getSystemService("system_update");
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
-        return (!this.mContext.getResources().getBoolean(R.bool.config_show_system_update_settings) || !this.mUm.isAdminUser()) ? 3 : 0;
+        return (!this.mContext.getResources().getBoolean(R$bool.config_show_system_update_settings) || !this.mUm.isAdminUser()) ? 3 : 0;
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         if (isAvailable()) {
@@ -88,36 +71,20 @@ public class SystemUpdatePreferenceController extends BasePreferenceController {
         }
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
-        if (TextUtils.equals(getPreferenceKey(), preference.getKey())) {
-            PersistableBundle config = ((CarrierConfigManager) this.mContext.getSystemService("carrier_config")).getConfig();
-            if (config != null && config.getBoolean("ci_action_on_sys_update_bool")) {
-                ciActionOnSysUpdate(config);
-            }
-            if (checkSystemActivityExist(preference.getIntent())) {
-                return false;
-            }
-            Log.d(TAG, "Can not find system update Activity.");
-            return true;
+        PersistableBundle config;
+        if (!TextUtils.equals(getPreferenceKey(), preference.getKey()) || (config = ((CarrierConfigManager) this.mContext.getSystemService("carrier_config")).getConfig()) == null || !config.getBoolean("ci_action_on_sys_update_bool")) {
+            return false;
         }
+        ciActionOnSysUpdate(config);
         return false;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    /* renamed from: getSummary */
-    public CharSequence mo485getSummary() {
+    public CharSequence getSummary() {
         Context context = this.mContext;
-        int i = R.string.android_version_summary;
-        String string = context.getString(i, Build.VERSION.RELEASE_OR_CODENAME);
-        FutureTask futureTask = new FutureTask(new Callable() { // from class: com.android.settings.system.SystemUpdatePreferenceController$$ExternalSyntheticLambda0
-            @Override // java.util.concurrent.Callable
-            public final Object call() {
-                Bundle lambda$getSummary$0;
-                lambda$getSummary$0 = SystemUpdatePreferenceController.this.lambda$getSummary$0();
-                return lambda$getSummary$0;
-            }
-        });
+        int i = R$string.android_version_summary;
+        String string = context.getString(i, new Object[]{Build.VERSION.RELEASE_OR_PREVIEW_DISPLAY});
+        FutureTask futureTask = new FutureTask(new SystemUpdatePreferenceController$$ExternalSyntheticLambda0(this));
         try {
             futureTask.run();
             Bundle bundle = (Bundle) futureTask.get();
@@ -125,17 +92,23 @@ public class SystemUpdatePreferenceController extends BasePreferenceController {
             if (i2 == 0) {
                 Log.d(TAG, "Update statue unknown");
             } else if (i2 != 1) {
-                return (i2 == 2 || i2 == 3 || i2 == 4 || i2 == 5) ? this.mContext.getText(R.string.android_version_pending_update_summary) : string;
+                if (i2 == 2 || i2 == 3 || i2 == 4 || i2 == 5) {
+                    return this.mContext.getText(R$string.android_version_pending_update_summary);
+                }
+                return string;
             }
             String string2 = bundle.getString("title");
-            return !TextUtils.isEmpty(string2) ? this.mContext.getString(i, string2) : string;
+            if (TextUtils.isEmpty(string2)) {
+                return string;
+            }
+            return this.mContext.getString(i, new Object[]{string2});
         } catch (InterruptedException | ExecutionException unused) {
             Log.w(TAG, "Error getting system update info.");
             return string;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ Bundle lambda$getSummary$0() throws Exception {
         return this.mUpdateManager.retrieveSystemUpdateInfo();
     }
@@ -153,18 +126,5 @@ public class SystemUpdatePreferenceController extends BasePreferenceController {
             intent.addFlags(16777216);
             this.mContext.getApplicationContext().sendBroadcast(intent);
         }
-    }
-
-    private boolean checkSystemActivityExist(Intent intent) {
-        if (intent != null) {
-            List<ResolveInfo> queryIntentActivities = this.mContext.getPackageManager().queryIntentActivities(intent, 0);
-            int size = queryIntentActivities.size();
-            for (int i = 0; i < size; i++) {
-                if ((queryIntentActivities.get(i).activityInfo.applicationInfo.flags & 1) != 0) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 }

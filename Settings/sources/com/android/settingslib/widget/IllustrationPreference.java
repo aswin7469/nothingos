@@ -1,6 +1,7 @@
 package com.android.settingslib.widget;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Animatable2;
@@ -17,19 +18,16 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat;
 import com.airbnb.lottie.LottieAnimationView;
-import com.airbnb.lottie.LottieListener;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-/* loaded from: classes.dex */
+
 public class IllustrationPreference extends Preference {
-    private final Animatable2.AnimationCallback mAnimationCallback = new Animatable2.AnimationCallback() { // from class: com.android.settingslib.widget.IllustrationPreference.1
-        @Override // android.graphics.drawable.Animatable2.AnimationCallback
+    private final Animatable2.AnimationCallback mAnimationCallback = new Animatable2.AnimationCallback() {
         public void onAnimationEnd(Drawable drawable) {
             ((Animatable) drawable).start();
         }
     };
-    private final Animatable2Compat.AnimationCallback mAnimationCallbackCompat = new Animatable2Compat.AnimationCallback() { // from class: com.android.settingslib.widget.IllustrationPreference.2
-        @Override // androidx.vectordrawable.graphics.drawable.Animatable2Compat.AnimationCallback
+    private final Animatable2Compat.AnimationCallback mAnimationCallbackCompat = new Animatable2Compat.AnimationCallback() {
         public void onAnimationEnd(Drawable drawable) {
             ((Animatable) drawable).start();
         }
@@ -38,11 +36,12 @@ public class IllustrationPreference extends Preference {
     private int mImageResId;
     private Uri mImageUri;
     private boolean mIsAutoScale;
+    private int mMaxHeight = -1;
     private View mMiddleGroundView;
 
     public IllustrationPreference(Context context) {
         super(context);
-        init(context, null);
+        init(context, (AttributeSet) null);
     }
 
     public IllustrationPreference(Context context, AttributeSet attributeSet) {
@@ -60,10 +59,10 @@ public class IllustrationPreference extends Preference {
         init(context, attributeSet);
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         ImageView.ScaleType scaleType;
         super.onBindViewHolder(preferenceViewHolder);
+        ImageView imageView = (ImageView) preferenceViewHolder.findViewById(R$id.background_view);
         FrameLayout frameLayout = (FrameLayout) preferenceViewHolder.findViewById(R$id.middleground_layout);
         LottieAnimationView lottieAnimationView = (LottieAnimationView) preferenceViewHolder.findViewById(R$id.lottie_view);
         int i = getContext().getResources().getDisplayMetrics().widthPixels;
@@ -76,6 +75,7 @@ public class IllustrationPreference extends Preference {
         layoutParams.width = i;
         frameLayout2.setLayoutParams(layoutParams);
         handleImageWithAnimation(lottieAnimationView);
+        handleImageFrameMaxHeight(imageView, lottieAnimationView);
         boolean z = this.mIsAutoScale;
         if (z) {
             if (z) {
@@ -96,10 +96,25 @@ public class IllustrationPreference extends Preference {
         }
     }
 
+    public void setImageDrawable(Drawable drawable) {
+        if (drawable != this.mImageDrawable) {
+            resetImageResourceCache();
+            this.mImageDrawable = drawable;
+            notifyChanged();
+        }
+    }
+
     public void setImageUri(Uri uri) {
         if (uri != this.mImageUri) {
             resetImageResourceCache();
             this.mImageUri = uri;
+            notifyChanged();
+        }
+    }
+
+    public void setMaxHeight(int i) {
+        if (i != this.mMaxHeight) {
+            this.mMaxHeight = i;
             notifyChanged();
         }
     }
@@ -152,53 +167,44 @@ public class IllustrationPreference extends Preference {
         }
     }
 
-    private void startAnimation(Drawable drawable) {
-        if (!(drawable instanceof Animatable)) {
-            return;
+    private void handleImageFrameMaxHeight(ImageView imageView, ImageView imageView2) {
+        if (this.mMaxHeight != -1) {
+            Resources resources = imageView.getResources();
+            int dimensionPixelSize = resources.getDimensionPixelSize(R$dimen.settingslib_illustration_width);
+            int dimensionPixelSize2 = resources.getDimensionPixelSize(R$dimen.settingslib_illustration_height);
+            int min = Math.min(this.mMaxHeight, dimensionPixelSize2);
+            imageView.setMaxHeight(min);
+            imageView2.setMaxHeight(min);
+            imageView2.setMaxWidth((int) (((float) min) * (((float) dimensionPixelSize) / ((float) dimensionPixelSize2))));
         }
-        if (drawable instanceof Animatable2) {
-            ((Animatable2) drawable).registerAnimationCallback(this.mAnimationCallback);
-        } else if (drawable instanceof Animatable2Compat) {
-            ((Animatable2Compat) drawable).registerAnimationCallback(this.mAnimationCallbackCompat);
-        } else if (drawable instanceof AnimationDrawable) {
-            ((AnimationDrawable) drawable).setOneShot(false);
-        }
-        ((Animatable) drawable).start();
     }
 
-    private static void startLottieAnimationWith(LottieAnimationView lottieAnimationView, final Uri uri) {
-        InputStream inputStreamFromUri = getInputStreamFromUri(lottieAnimationView.getContext(), uri);
-        lottieAnimationView.setFailureListener(new LottieListener() { // from class: com.android.settingslib.widget.IllustrationPreference$$ExternalSyntheticLambda1
-            @Override // com.airbnb.lottie.LottieListener
-            public final void onResult(Object obj) {
-                IllustrationPreference.lambda$startLottieAnimationWith$0(uri, (Throwable) obj);
+    private void startAnimation(Drawable drawable) {
+        if (drawable instanceof Animatable) {
+            if (drawable instanceof Animatable2) {
+                ((Animatable2) drawable).registerAnimationCallback(this.mAnimationCallback);
+            } else if (drawable instanceof Animatable2Compat) {
+                ((Animatable2Compat) drawable).registerAnimationCallback(this.mAnimationCallbackCompat);
+            } else if (drawable instanceof AnimationDrawable) {
+                ((AnimationDrawable) drawable).setOneShot(false);
             }
-        });
-        lottieAnimationView.setAnimation(inputStreamFromUri, null);
+            ((Animatable) drawable).start();
+        }
+    }
+
+    private static void startLottieAnimationWith(LottieAnimationView lottieAnimationView, Uri uri) {
+        InputStream inputStreamFromUri = getInputStreamFromUri(lottieAnimationView.getContext(), uri);
+        lottieAnimationView.setFailureListener(new IllustrationPreference$$ExternalSyntheticLambda1(uri));
+        lottieAnimationView.setAnimation(inputStreamFromUri, (String) null);
         lottieAnimationView.setRepeatCount(-1);
         lottieAnimationView.playAnimation();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ void lambda$startLottieAnimationWith$0(Uri uri, Throwable th) {
-        Log.w("IllustrationPreference", "Invalid illustration image uri: " + uri, th);
-    }
-
-    private static void startLottieAnimationWith(LottieAnimationView lottieAnimationView, final int i) {
-        lottieAnimationView.setFailureListener(new LottieListener() { // from class: com.android.settingslib.widget.IllustrationPreference$$ExternalSyntheticLambda0
-            @Override // com.airbnb.lottie.LottieListener
-            public final void onResult(Object obj) {
-                IllustrationPreference.lambda$startLottieAnimationWith$1(i, (Throwable) obj);
-            }
-        });
+    private static void startLottieAnimationWith(LottieAnimationView lottieAnimationView, int i) {
+        lottieAnimationView.setFailureListener(new IllustrationPreference$$ExternalSyntheticLambda0(i));
         lottieAnimationView.setAnimation(i);
         lottieAnimationView.setRepeatCount(-1);
         lottieAnimationView.playAnimation();
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ void lambda$startLottieAnimationWith$1(int i, Throwable th) {
-        Log.w("IllustrationPreference", "Invalid illustration resource id: " + i, th);
     }
 
     private static void resetAnimations(LottieAnimationView lottieAnimationView) {
@@ -207,15 +213,14 @@ public class IllustrationPreference extends Preference {
     }
 
     private static void resetAnimation(Drawable drawable) {
-        if (!(drawable instanceof Animatable)) {
-            return;
+        if (drawable instanceof Animatable) {
+            if (drawable instanceof Animatable2) {
+                ((Animatable2) drawable).clearAnimationCallbacks();
+            } else if (drawable instanceof Animatable2Compat) {
+                ((Animatable2Compat) drawable).clearAnimationCallbacks();
+            }
+            ((Animatable) drawable).stop();
         }
-        if (drawable instanceof Animatable2) {
-            ((Animatable2) drawable).clearAnimationCallbacks();
-        } else if (drawable instanceof Animatable2Compat) {
-            ((Animatable2Compat) drawable).clearAnimationCallbacks();
-        }
-        ((Animatable) drawable).stop();
     }
 
     private static InputStream getInputStreamFromUri(Context context, Uri uri) {

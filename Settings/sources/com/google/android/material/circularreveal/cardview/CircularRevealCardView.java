@@ -7,12 +7,12 @@ import android.util.AttributeSet;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.circularreveal.CircularRevealHelper;
 import com.google.android.material.circularreveal.CircularRevealWidget;
-/* loaded from: classes.dex */
+
 public class CircularRevealCardView extends MaterialCardView implements CircularRevealWidget {
     private final CircularRevealHelper helper;
 
     public CircularRevealCardView(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public CircularRevealCardView(Context context, AttributeSet attributeSet) {
@@ -20,32 +20,26 @@ public class CircularRevealCardView extends MaterialCardView implements Circular
         this.helper = new CircularRevealHelper(this);
     }
 
-    @Override // com.google.android.material.circularreveal.CircularRevealWidget
     public void buildCircularRevealCache() {
         this.helper.buildCircularRevealCache();
     }
 
-    @Override // com.google.android.material.circularreveal.CircularRevealWidget
     public void destroyCircularRevealCache() {
         this.helper.destroyCircularRevealCache();
     }
 
-    @Override // com.google.android.material.circularreveal.CircularRevealWidget
     public void setRevealInfo(CircularRevealWidget.RevealInfo revealInfo) {
         this.helper.setRevealInfo(revealInfo);
     }
 
-    @Override // com.google.android.material.circularreveal.CircularRevealWidget
     public CircularRevealWidget.RevealInfo getRevealInfo() {
         return this.helper.getRevealInfo();
     }
 
-    @Override // com.google.android.material.circularreveal.CircularRevealWidget
     public void setCircularRevealScrimColor(int i) {
         this.helper.setCircularRevealScrimColor(i);
     }
 
-    @Override // com.google.android.material.circularreveal.CircularRevealWidget
     public int getCircularRevealScrimColor() {
         return this.helper.getCircularRevealScrimColor();
     }
@@ -54,12 +48,10 @@ public class CircularRevealCardView extends MaterialCardView implements Circular
         return this.helper.getCircularRevealOverlayDrawable();
     }
 
-    @Override // com.google.android.material.circularreveal.CircularRevealWidget
     public void setCircularRevealOverlayDrawable(Drawable drawable) {
         this.helper.setCircularRevealOverlayDrawable(drawable);
     }
 
-    @Override // android.view.View
     public void draw(Canvas canvas) {
         CircularRevealHelper circularRevealHelper = this.helper;
         if (circularRevealHelper != null) {
@@ -69,12 +61,10 @@ public class CircularRevealCardView extends MaterialCardView implements Circular
         }
     }
 
-    @Override // com.google.android.material.circularreveal.CircularRevealHelper.Delegate
     public void actualDraw(Canvas canvas) {
         super.draw(canvas);
     }
 
-    @Override // android.view.View
     public boolean isOpaque() {
         CircularRevealHelper circularRevealHelper = this.helper;
         if (circularRevealHelper != null) {
@@ -83,7 +73,6 @@ public class CircularRevealCardView extends MaterialCardView implements Circular
         return super.isOpaque();
     }
 
-    @Override // com.google.android.material.circularreveal.CircularRevealHelper.Delegate
     public boolean actualIsOpaque() {
         return super.isOpaque();
     }

@@ -1,7 +1,7 @@
 package kotlin.jvm.internal;
 
 import java.util.Arrays;
-/* loaded from: classes2.dex */
+
 public class Intrinsics {
     private Intrinsics() {
     }
@@ -21,10 +21,9 @@ public class Intrinsics {
     }
 
     public static void checkNotNullExpressionValue(Object obj, String str) {
-        if (obj != null) {
-            return;
+        if (obj == null) {
+            throw ((NullPointerException) sanitizeStackTrace(new NullPointerException(str + " must not be null")));
         }
-        throw ((NullPointerException) sanitizeStackTrace(new NullPointerException(str + " must not be null")));
     }
 
     public static void checkNotNullParameter(Object obj, String str) {
@@ -52,7 +51,7 @@ public class Intrinsics {
     }
 
     private static <T extends Throwable> T sanitizeStackTrace(T t) {
-        return (T) sanitizeStackTrace(t, Intrinsics.class.getName());
+        return sanitizeStackTrace(t, Intrinsics.class.getName());
     }
 
     static <T extends Throwable> T sanitizeStackTrace(T t, String str) {

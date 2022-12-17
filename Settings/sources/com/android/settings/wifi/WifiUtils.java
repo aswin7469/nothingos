@@ -1,100 +1,139 @@
 package com.android.settings.wifi;
 
-import android.app.admin.DevicePolicyManager;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.SoftApConfiguration;
 import android.net.wifi.WifiConfiguration;
-import android.os.UserHandle;
-import android.os.UserManager;
-import android.provider.Settings;
 import android.text.TextUtils;
-import com.android.settings.Utils;
 import com.android.wifitrackerlib.WifiEntry;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-/* loaded from: classes.dex */
+import java.util.Locale;
+
 public class WifiUtils extends com.android.settingslib.wifi.WifiUtils {
     public static boolean isSSIDTooLong(String str) {
-        return !TextUtils.isEmpty(str) && str.getBytes(StandardCharsets.UTF_8).length > 32;
+        if (!TextUtils.isEmpty(str) && str.getBytes(StandardCharsets.UTF_8).length > 32) {
+            return true;
+        }
+        return false;
     }
 
     public static boolean isSSIDTooShort(String str) {
-        return TextUtils.isEmpty(str) || str.length() < 1;
+        if (!TextUtils.isEmpty(str) && str.length() >= 1) {
+            return false;
+        }
+        return true;
     }
 
     public static boolean isHotspotPasswordValid(String str, int i) {
-        try {
-            new SoftApConfiguration.Builder().setPassphrase(str, i);
-            return true;
-        } catch (IllegalArgumentException unused) {
-            return false;
-        }
-    }
-
-    /* JADX WARN: Code restructure failed: missing block: B:15:0x003a, code lost:
-        if (r2.getPackageUidAsUser(r4.getPackageName(), r1.getDeviceOwnerUserId()) == r7.creatorUid) goto L16;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:30:0x005c, code lost:
-        if (r2.getPackageUidAsUser(r1.getPackageName(), r3) == r7.creatorUid) goto L16;
-     */
-    /* JADX WARN: Unsupported multi-entry loop pattern (BACK_EDGE: B:31:0x005f -> B:17:0x0060). Please submit an issue!!! */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static boolean isNetworkLockedDown(Context context, WifiConfiguration wifiConfiguration) {
-        boolean z;
-        if (wifiConfiguration == null) {
-            return false;
-        }
-        DevicePolicyManager devicePolicyManager = (DevicePolicyManager) context.getSystemService("device_policy");
-        PackageManager packageManager = context.getPackageManager();
-        UserManager userManager = (UserManager) context.getSystemService("user");
-        if (packageManager.hasSystemFeature("android.software.device_admin") && devicePolicyManager == null) {
-            return true;
-        }
-        if (devicePolicyManager != null) {
-            ComponentName deviceOwnerComponentOnAnyUser = devicePolicyManager.getDeviceOwnerComponentOnAnyUser();
+        SoftApConfiguration.Builder builder = new SoftApConfiguration.Builder();
+        if (i == 1 || i == 2) {
             try {
-                if (deviceOwnerComponentOnAnyUser == null) {
-                    if (devicePolicyManager.isOrganizationOwnedDeviceWithManagedProfile()) {
-                        int managedProfileId = Utils.getManagedProfileId(userManager, UserHandle.myUserId());
-                        ComponentName profileOwnerAsUser = devicePolicyManager.getProfileOwnerAsUser(managedProfileId);
-                        if (profileOwnerAsUser != null) {
-                        }
+                if (str.length() >= 8) {
+                    if (str.length() > 63) {
                     }
                 }
-                z = true;
-            } catch (PackageManager.NameNotFoundException unused) {
+            } catch (Exception unused) {
             }
-            return !z && Settings.Global.getInt(context.getContentResolver(), "wifi_device_owner_configs_lockdown", 0) != 0;
-        }
-        z = false;
-        if (!z) {
             return false;
         }
+        builder.setPassphrase(str, i);
+        return true;
+    }
+
+    /* JADX WARNING: Code restructure failed: missing block: B:13:0x003b, code lost:
+        if (r2.getPackageUidAsUser(r4.getPackageName(), r1.getDeviceOwnerUserId()) == r7.creatorUid) goto L_0x003d;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:21:0x005d, code lost:
+        if (r2.getPackageUidAsUser(r1.getPackageName(), (r3 = com.android.settings.Utils.getManagedProfileId(r3, android.os.UserHandle.myUserId()))) == r7.creatorUid) goto L_0x003d;
+     */
+    /* JADX WARNING: Removed duplicated region for block: B:28:0x0071  */
+    /* JADX WARNING: Removed duplicated region for block: B:30:? A[RETURN, SYNTHETIC] */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public static boolean isNetworkLockedDown(android.content.Context r6, android.net.wifi.WifiConfiguration r7) {
+        /*
+            r0 = 0
+            if (r7 != 0) goto L_0x0004
+            return r0
+        L_0x0004:
+            java.lang.String r1 = "device_policy"
+            java.lang.Object r1 = r6.getSystemService(r1)
+            android.app.admin.DevicePolicyManager r1 = (android.app.admin.DevicePolicyManager) r1
+            android.content.pm.PackageManager r2 = r6.getPackageManager()
+            java.lang.String r3 = "user"
+            java.lang.Object r3 = r6.getSystemService(r3)
+            android.os.UserManager r3 = (android.os.UserManager) r3
+            java.lang.String r4 = "android.software.device_admin"
+            boolean r4 = r2.hasSystemFeature(r4)
+            r5 = 1
+            if (r4 == 0) goto L_0x0025
+            if (r1 != 0) goto L_0x0025
+            return r5
+        L_0x0025:
+            if (r1 == 0) goto L_0x0060
+            android.content.ComponentName r4 = r1.getDeviceOwnerComponentOnAnyUser()
+            if (r4 == 0) goto L_0x003f
+            int r1 = r1.getDeviceOwnerUserId()
+            java.lang.String r3 = r4.getPackageName()     // Catch:{ NameNotFoundException -> 0x0060 }
+            int r1 = r2.getPackageUidAsUser(r3, r1)     // Catch:{ NameNotFoundException -> 0x0060 }
+            int r7 = r7.creatorUid     // Catch:{ NameNotFoundException -> 0x0060 }
+            if (r1 != r7) goto L_0x0060
+        L_0x003d:
+            r7 = r5
+            goto L_0x0061
+        L_0x003f:
+            boolean r4 = r1.isOrganizationOwnedDeviceWithManagedProfile()
+            if (r4 == 0) goto L_0x0060
+            int r4 = android.os.UserHandle.myUserId()
+            int r3 = com.android.settings.Utils.getManagedProfileId(r3, r4)
+            android.content.ComponentName r1 = r1.getProfileOwnerAsUser(r3)
+            if (r1 == 0) goto L_0x0060
+            java.lang.String r1 = r1.getPackageName()     // Catch:{ NameNotFoundException -> 0x0060 }
+            int r1 = r2.getPackageUidAsUser(r1, r3)     // Catch:{ NameNotFoundException -> 0x0060 }
+            int r7 = r7.creatorUid     // Catch:{ NameNotFoundException -> 0x0060 }
+            if (r1 != r7) goto L_0x0060
+            goto L_0x003d
+        L_0x0060:
+            r7 = r0
+        L_0x0061:
+            if (r7 != 0) goto L_0x0064
+            return r0
+        L_0x0064:
+            android.content.ContentResolver r6 = r6.getContentResolver()
+            java.lang.String r7 = "wifi_device_owner_configs_lockdown"
+            int r6 = android.provider.Settings.Global.getInt(r6, r7, r0)
+            if (r6 == 0) goto L_0x0072
+            r0 = r5
+        L_0x0072:
+            return r0
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.wifi.WifiUtils.isNetworkLockedDown(android.content.Context, android.net.wifi.WifiConfiguration):boolean");
     }
 
     public static WifiConfiguration getWifiConfig(WifiEntry wifiEntry, ScanResult scanResult) {
-        int security;
+        int i;
         if (wifiEntry == null && scanResult == null) {
             throw new IllegalArgumentException("At least one of WifiEntry and ScanResult input is required.");
         }
         WifiConfiguration wifiConfiguration = new WifiConfiguration();
         if (wifiEntry == null) {
-            wifiConfiguration.SSID = "\"" + scanResult.SSID + "\"";
-            security = getWifiEntrySecurity(scanResult);
-        } else {
-            if (wifiEntry.getWifiConfiguration() == null) {
-                wifiConfiguration.SSID = "\"" + wifiEntry.getSsid() + "\"";
+            if (WifiEntry.isGbkSsidSupported()) {
+                wifiConfiguration.SSID = scanResult.getWifiSsid().toString();
             } else {
+                wifiConfiguration.SSID = "\"" + scanResult.SSID + "\"";
+            }
+            i = getWifiEntrySecurity(scanResult);
+        } else {
+            if (wifiEntry.getWifiConfiguration() != null) {
                 wifiConfiguration.networkId = wifiEntry.getWifiConfiguration().networkId;
                 wifiConfiguration.hiddenSSID = wifiEntry.getWifiConfiguration().hiddenSSID;
+            } else if (WifiEntry.isGbkSsidSupported()) {
+                wifiConfiguration.SSID = wifiEntry.getSsid();
+            } else {
+                wifiConfiguration.SSID = "\"" + wifiEntry.getSsid() + "\"";
             }
-            security = wifiEntry.getSecurity();
+            i = wifiEntry.getSecurity();
         }
-        switch (security) {
+        switch (i) {
             case 0:
                 wifiConfiguration.setSecurityParams(0);
                 break;
@@ -137,5 +176,31 @@ public class WifiUtils extends com.android.settingslib.wifi.WifiUtils {
             return 3;
         }
         return scanResult.capabilities.contains("OWE") ? 4 : 0;
+    }
+
+    public static String removeEnclosingQuotes(String str) {
+        int length = str.length();
+        if (length < 2 || str.charAt(0) != '\"') {
+            return str;
+        }
+        int i = length - 1;
+        return str.charAt(i) == '\"' ? str.substring(1, i) : str;
+    }
+
+    public static String quotedStrToGbkHex(String str) {
+        byte[] bArr;
+        try {
+            bArr = removeEnclosingQuotes(str).getBytes("GBK");
+        } catch (UnsupportedEncodingException unused) {
+            bArr = null;
+        }
+        if (bArr == null || bArr.length > 32) {
+            return str;
+        }
+        StringBuffer stringBuffer = new StringBuffer(64);
+        for (int i = 0; i < bArr.length; i++) {
+            stringBuffer.append(String.format(Locale.US, "%02x", new Object[]{Byte.valueOf(bArr[i])}));
+        }
+        return stringBuffer.length() > 0 ? stringBuffer.toString() : str;
     }
 }

@@ -3,6 +3,8 @@ package com.android.settingslib.utils;
 import android.content.Context;
 import android.icu.text.DisplayContext;
 import android.icu.text.MeasureFormat;
+import android.icu.text.MessageFormat;
+import android.icu.text.NumberFormat;
 import android.icu.text.RelativeDateTimeFormatter;
 import android.icu.util.Measure;
 import android.icu.util.MeasureUnit;
@@ -11,7 +13,9 @@ import android.text.SpannableStringBuilder;
 import android.text.style.TtsSpan;
 import com.android.settingslib.R$string;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
+import java.util.HashMap;
+import java.util.Locale;
+
 public class StringUtil {
     public static CharSequence formatElapsedTime(Context context, double d, boolean z, boolean z2) {
         int i;
@@ -60,9 +64,9 @@ public class StringUtil {
             arrayList.subList(2, arrayList.size()).clear();
         }
         Measure[] measureArr = (Measure[]) arrayList.toArray(new Measure[arrayList.size()]);
-        spannableStringBuilder.append((CharSequence) MeasureFormat.getInstance(context.getResources().getConfiguration().locale, MeasureFormat.FormatWidth.SHORT).formatMeasures(measureArr));
+        spannableStringBuilder.append(MeasureFormat.getInstance(context.getResources().getConfiguration().locale, MeasureFormat.FormatWidth.SHORT).formatMeasures(measureArr));
         if (measureArr.length == 1 && MeasureUnit.MINUTE.equals(measureArr[0].getUnit())) {
-            spannableStringBuilder.setSpan(new TtsSpan.MeasureBuilder().setNumber(i3).setUnit("minute").build(), 0, spannableStringBuilder.length(), 33);
+            spannableStringBuilder.setSpan(new TtsSpan.MeasureBuilder().setNumber((long) i3).setUnit("minute").build(), 0, spannableStringBuilder.length(), 33);
         }
         return spannableStringBuilder;
     }
@@ -84,11 +88,18 @@ public class StringUtil {
             relativeUnit = RelativeDateTimeFormatter.RelativeUnit.DAYS;
             i = (floor + 43200) / 86400;
         }
-        return RelativeDateTimeFormatter.getInstance(ULocale.forLocale(context.getResources().getConfiguration().locale), null, style, DisplayContext.CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE).format(i, RelativeDateTimeFormatter.Direction.LAST, relativeUnit);
+        return RelativeDateTimeFormatter.getInstance(ULocale.forLocale(context.getResources().getConfiguration().locale), (NumberFormat) null, style, DisplayContext.CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE).format((double) i, RelativeDateTimeFormatter.Direction.LAST, relativeUnit);
     }
 
     @Deprecated
     public static CharSequence formatRelativeTime(Context context, double d, boolean z) {
         return formatRelativeTime(context, d, z, RelativeDateTimeFormatter.Style.LONG);
+    }
+
+    public static String getIcuPluralsString(Context context, int i, int i2) {
+        MessageFormat messageFormat = new MessageFormat(context.getResources().getString(i2), Locale.getDefault());
+        HashMap hashMap = new HashMap();
+        hashMap.put("count", Integer.valueOf(i));
+        return messageFormat.format(hashMap);
     }
 }

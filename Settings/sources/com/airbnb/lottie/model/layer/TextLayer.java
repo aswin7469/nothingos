@@ -29,180 +29,178 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public class TextLayer extends BaseLayer {
+    private final LongSparseArray<String> codePointCache = new LongSparseArray<>();
     private BaseKeyframeAnimation<Integer, Integer> colorAnimation;
     private final LottieComposition composition;
-    private final LottieDrawable lottieDrawable;
-    private BaseKeyframeAnimation<Integer, Integer> strokeColorAnimation;
-    private BaseKeyframeAnimation<Float, Float> strokeWidthAnimation;
-    private final TextKeyframeAnimation textAnimation;
-    private BaseKeyframeAnimation<Float, Float> textSizeAnimation;
-    private BaseKeyframeAnimation<Float, Float> trackingAnimation;
-    private final StringBuilder stringBuilder = new StringBuilder(2);
-    private final RectF rectF = new RectF();
-    private final Matrix matrix = new Matrix();
-    private final Paint fillPaint = new Paint(1) { // from class: com.airbnb.lottie.model.layer.TextLayer.1
+    private final Map<FontCharacter, List<ContentGroup>> contentsForCharacter = new HashMap();
+    private final Paint fillPaint = new Paint(1) {
         {
             setStyle(Paint.Style.FILL);
         }
     };
-    private final Paint strokePaint = new Paint(1) { // from class: com.airbnb.lottie.model.layer.TextLayer.2
+    private final LottieDrawable lottieDrawable;
+    private final Matrix matrix = new Matrix();
+    private final RectF rectF = new RectF();
+    private final StringBuilder stringBuilder = new StringBuilder(2);
+    private BaseKeyframeAnimation<Integer, Integer> strokeColorAnimation;
+    private final Paint strokePaint = new Paint(1) {
         {
             setStyle(Paint.Style.STROKE);
         }
     };
-    private final Map<FontCharacter, List<ContentGroup>> contentsForCharacter = new HashMap();
-    private final LongSparseArray<String> codePointCache = new LongSparseArray<>();
+    private BaseKeyframeAnimation<Float, Float> strokeWidthAnimation;
+    private final TextKeyframeAnimation textAnimation;
+    private BaseKeyframeAnimation<Float, Float> textSizeAnimation;
+    private BaseKeyframeAnimation<Float, Float> trackingAnimation;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public TextLayer(LottieDrawable lottieDrawable, Layer layer) {
-        super(lottieDrawable, layer);
+    TextLayer(LottieDrawable lottieDrawable2, Layer layer) {
+        super(lottieDrawable2, layer);
         AnimatableFloatValue animatableFloatValue;
         AnimatableFloatValue animatableFloatValue2;
         AnimatableColorValue animatableColorValue;
         AnimatableColorValue animatableColorValue2;
-        this.lottieDrawable = lottieDrawable;
+        this.lottieDrawable = lottieDrawable2;
         this.composition = layer.getComposition();
-        TextKeyframeAnimation mo180createAnimation = layer.getText().mo180createAnimation();
-        this.textAnimation = mo180createAnimation;
-        mo180createAnimation.addUpdateListener(this);
-        addAnimation(mo180createAnimation);
+        TextKeyframeAnimation createAnimation = layer.getText().createAnimation();
+        this.textAnimation = createAnimation;
+        createAnimation.addUpdateListener(this);
+        addAnimation(createAnimation);
         AnimatableTextProperties textProperties = layer.getTextProperties();
-        if (textProperties != null && (animatableColorValue2 = textProperties.color) != null) {
-            BaseKeyframeAnimation<Integer, Integer> mo180createAnimation2 = animatableColorValue2.mo180createAnimation();
-            this.colorAnimation = mo180createAnimation2;
-            mo180createAnimation2.addUpdateListener(this);
+        if (!(textProperties == null || (animatableColorValue2 = textProperties.color) == null)) {
+            BaseKeyframeAnimation<Integer, Integer> createAnimation2 = animatableColorValue2.createAnimation();
+            this.colorAnimation = createAnimation2;
+            createAnimation2.addUpdateListener(this);
             addAnimation(this.colorAnimation);
         }
-        if (textProperties != null && (animatableColorValue = textProperties.stroke) != null) {
-            BaseKeyframeAnimation<Integer, Integer> mo180createAnimation3 = animatableColorValue.mo180createAnimation();
-            this.strokeColorAnimation = mo180createAnimation3;
-            mo180createAnimation3.addUpdateListener(this);
+        if (!(textProperties == null || (animatableColorValue = textProperties.stroke) == null)) {
+            BaseKeyframeAnimation<Integer, Integer> createAnimation3 = animatableColorValue.createAnimation();
+            this.strokeColorAnimation = createAnimation3;
+            createAnimation3.addUpdateListener(this);
             addAnimation(this.strokeColorAnimation);
         }
-        if (textProperties != null && (animatableFloatValue2 = textProperties.strokeWidth) != null) {
-            BaseKeyframeAnimation<Float, Float> mo180createAnimation4 = animatableFloatValue2.mo180createAnimation();
-            this.strokeWidthAnimation = mo180createAnimation4;
-            mo180createAnimation4.addUpdateListener(this);
+        if (!(textProperties == null || (animatableFloatValue2 = textProperties.strokeWidth) == null)) {
+            BaseKeyframeAnimation<Float, Float> createAnimation4 = animatableFloatValue2.createAnimation();
+            this.strokeWidthAnimation = createAnimation4;
+            createAnimation4.addUpdateListener(this);
             addAnimation(this.strokeWidthAnimation);
         }
-        if (textProperties == null || (animatableFloatValue = textProperties.tracking) == null) {
-            return;
+        if (textProperties != null && (animatableFloatValue = textProperties.tracking) != null) {
+            BaseKeyframeAnimation<Float, Float> createAnimation5 = animatableFloatValue.createAnimation();
+            this.trackingAnimation = createAnimation5;
+            createAnimation5.addUpdateListener(this);
+            addAnimation(this.trackingAnimation);
         }
-        BaseKeyframeAnimation<Float, Float> mo180createAnimation5 = animatableFloatValue.mo180createAnimation();
-        this.trackingAnimation = mo180createAnimation5;
-        mo180createAnimation5.addUpdateListener(this);
-        addAnimation(this.trackingAnimation);
     }
 
-    @Override // com.airbnb.lottie.model.layer.BaseLayer, com.airbnb.lottie.animation.content.DrawingContent
-    public void getBounds(RectF rectF, Matrix matrix, boolean z) {
-        super.getBounds(rectF, matrix, z);
-        rectF.set(0.0f, 0.0f, this.composition.getBounds().width(), this.composition.getBounds().height());
+    public void getBounds(RectF rectF2, Matrix matrix2, boolean z) {
+        super.getBounds(rectF2, matrix2, z);
+        rectF2.set(0.0f, 0.0f, (float) this.composition.getBounds().width(), (float) this.composition.getBounds().height());
     }
 
-    @Override // com.airbnb.lottie.model.layer.BaseLayer
-    void drawLayer(Canvas canvas, Matrix matrix, int i) {
+    /* access modifiers changed from: package-private */
+    public void drawLayer(Canvas canvas, Matrix matrix2, int i) {
         canvas.save();
         if (!this.lottieDrawable.useTextGlyphs()) {
-            canvas.setMatrix(matrix);
+            canvas.setMatrix(matrix2);
         }
-        DocumentData mo177getValue = this.textAnimation.mo177getValue();
-        Font font = this.composition.getFonts().get(mo177getValue.fontName);
+        DocumentData documentData = (DocumentData) this.textAnimation.getValue();
+        Font font = this.composition.getFonts().get(documentData.fontName);
         if (font == null) {
             canvas.restore();
             return;
         }
         BaseKeyframeAnimation<Integer, Integer> baseKeyframeAnimation = this.colorAnimation;
         if (baseKeyframeAnimation != null) {
-            this.fillPaint.setColor(baseKeyframeAnimation.mo177getValue().intValue());
+            this.fillPaint.setColor(baseKeyframeAnimation.getValue().intValue());
         } else {
-            this.fillPaint.setColor(mo177getValue.color);
+            this.fillPaint.setColor(documentData.color);
         }
         BaseKeyframeAnimation<Integer, Integer> baseKeyframeAnimation2 = this.strokeColorAnimation;
         if (baseKeyframeAnimation2 != null) {
-            this.strokePaint.setColor(baseKeyframeAnimation2.mo177getValue().intValue());
+            this.strokePaint.setColor(baseKeyframeAnimation2.getValue().intValue());
         } else {
-            this.strokePaint.setColor(mo177getValue.strokeColor);
+            this.strokePaint.setColor(documentData.strokeColor);
         }
-        int intValue = ((this.transform.getOpacity() == null ? 100 : this.transform.getOpacity().mo177getValue().intValue()) * 255) / 100;
+        int intValue = ((this.transform.getOpacity() == null ? 100 : this.transform.getOpacity().getValue().intValue()) * 255) / 100;
         this.fillPaint.setAlpha(intValue);
         this.strokePaint.setAlpha(intValue);
         BaseKeyframeAnimation<Float, Float> baseKeyframeAnimation3 = this.strokeWidthAnimation;
         if (baseKeyframeAnimation3 != null) {
-            this.strokePaint.setStrokeWidth(baseKeyframeAnimation3.mo177getValue().floatValue());
+            this.strokePaint.setStrokeWidth(baseKeyframeAnimation3.getValue().floatValue());
         } else {
-            this.strokePaint.setStrokeWidth(mo177getValue.strokeWidth * Utils.dpScale() * Utils.getScale(matrix));
+            this.strokePaint.setStrokeWidth(documentData.strokeWidth * Utils.dpScale() * Utils.getScale(matrix2));
         }
         if (this.lottieDrawable.useTextGlyphs()) {
-            drawTextGlyphs(mo177getValue, matrix, font, canvas);
+            drawTextGlyphs(documentData, matrix2, font, canvas);
         } else {
-            drawTextWithFont(mo177getValue, font, matrix, canvas);
+            drawTextWithFont(documentData, font, matrix2, canvas);
         }
         canvas.restore();
     }
 
-    private void drawTextGlyphs(DocumentData documentData, Matrix matrix, Font font, Canvas canvas) {
+    private void drawTextGlyphs(DocumentData documentData, Matrix matrix2, Font font, Canvas canvas) {
+        DocumentData documentData2 = documentData;
+        Canvas canvas2 = canvas;
         BaseKeyframeAnimation<Float, Float> baseKeyframeAnimation = this.textSizeAnimation;
-        float floatValue = (baseKeyframeAnimation == null ? documentData.size : baseKeyframeAnimation.mo177getValue().floatValue()) / 100.0f;
-        float scale = Utils.getScale(matrix);
-        String str = documentData.text;
-        float dpScale = documentData.lineHeight * Utils.dpScale();
+        float floatValue = (baseKeyframeAnimation == null ? documentData2.size : baseKeyframeAnimation.getValue().floatValue()) / 100.0f;
+        float scale = Utils.getScale(matrix2);
+        String str = documentData2.text;
+        float dpScale = documentData2.lineHeight * Utils.dpScale();
         List<String> textLines = getTextLines(str);
         int size = textLines.size();
         for (int i = 0; i < size; i++) {
             String str2 = textLines.get(i);
             float textLineWidthForGlyphs = getTextLineWidthForGlyphs(str2, font, floatValue, scale);
             canvas.save();
-            applyJustification(documentData.justification, canvas, textLineWidthForGlyphs);
-            canvas.translate(0.0f, (i * dpScale) - (((size - 1) * dpScale) / 2.0f));
-            drawGlyphTextLine(str2, documentData, matrix, font, canvas, scale, floatValue);
+            applyJustification(documentData2.justification, canvas2, textLineWidthForGlyphs);
+            canvas2.translate(0.0f, (((float) i) * dpScale) - ((((float) (size - 1)) * dpScale) / 2.0f));
+            drawGlyphTextLine(str2, documentData, matrix2, font, canvas, scale, floatValue);
             canvas.restore();
         }
     }
 
-    private void drawGlyphTextLine(String str, DocumentData documentData, Matrix matrix, Font font, Canvas canvas, float f, float f2) {
+    private void drawGlyphTextLine(String str, DocumentData documentData, Matrix matrix2, Font font, Canvas canvas, float f, float f2) {
         for (int i = 0; i < str.length(); i++) {
             FontCharacter fontCharacter = this.composition.getCharacters().get(FontCharacter.hashFor(str.charAt(i), font.getFamily(), font.getStyle()));
             if (fontCharacter != null) {
-                drawCharacterAsGlyph(fontCharacter, matrix, f2, documentData, canvas);
+                drawCharacterAsGlyph(fontCharacter, matrix2, f2, documentData, canvas);
                 float width = ((float) fontCharacter.getWidth()) * f2 * Utils.dpScale() * f;
-                float f3 = documentData.tracking / 10.0f;
+                float f3 = ((float) documentData.tracking) / 10.0f;
                 BaseKeyframeAnimation<Float, Float> baseKeyframeAnimation = this.trackingAnimation;
                 if (baseKeyframeAnimation != null) {
-                    f3 += baseKeyframeAnimation.mo177getValue().floatValue();
+                    f3 += baseKeyframeAnimation.getValue().floatValue();
                 }
                 canvas.translate(width + (f3 * f), 0.0f);
             }
         }
     }
 
-    private void drawTextWithFont(DocumentData documentData, Font font, Matrix matrix, Canvas canvas) {
-        float scale = Utils.getScale(matrix);
+    private void drawTextWithFont(DocumentData documentData, Font font, Matrix matrix2, Canvas canvas) {
+        float scale = Utils.getScale(matrix2);
         Typeface typeface = this.lottieDrawable.getTypeface(font.getFamily(), font.getStyle());
-        if (typeface == null) {
-            return;
-        }
-        String str = documentData.text;
-        TextDelegate textDelegate = this.lottieDrawable.getTextDelegate();
-        if (textDelegate != null) {
-            str = textDelegate.getTextInternal(str);
-        }
-        this.fillPaint.setTypeface(typeface);
-        BaseKeyframeAnimation<Float, Float> baseKeyframeAnimation = this.textSizeAnimation;
-        this.fillPaint.setTextSize((baseKeyframeAnimation == null ? documentData.size : baseKeyframeAnimation.mo177getValue().floatValue()) * Utils.dpScale());
-        this.strokePaint.setTypeface(this.fillPaint.getTypeface());
-        this.strokePaint.setTextSize(this.fillPaint.getTextSize());
-        float dpScale = documentData.lineHeight * Utils.dpScale();
-        List<String> textLines = getTextLines(str);
-        int size = textLines.size();
-        for (int i = 0; i < size; i++) {
-            String str2 = textLines.get(i);
-            applyJustification(documentData.justification, canvas, this.strokePaint.measureText(str2));
-            canvas.translate(0.0f, (i * dpScale) - (((size - 1) * dpScale) / 2.0f));
-            drawFontTextLine(str2, documentData, canvas, scale);
-            canvas.setMatrix(matrix);
+        if (typeface != null) {
+            String str = documentData.text;
+            TextDelegate textDelegate = this.lottieDrawable.getTextDelegate();
+            if (textDelegate != null) {
+                str = textDelegate.getTextInternal(str);
+            }
+            this.fillPaint.setTypeface(typeface);
+            BaseKeyframeAnimation<Float, Float> baseKeyframeAnimation = this.textSizeAnimation;
+            this.fillPaint.setTextSize((baseKeyframeAnimation == null ? documentData.size : baseKeyframeAnimation.getValue().floatValue()) * Utils.dpScale());
+            this.strokePaint.setTypeface(this.fillPaint.getTypeface());
+            this.strokePaint.setTextSize(this.fillPaint.getTextSize());
+            float dpScale = documentData.lineHeight * Utils.dpScale();
+            List<String> textLines = getTextLines(str);
+            int size = textLines.size();
+            for (int i = 0; i < size; i++) {
+                String str2 = textLines.get(i);
+                applyJustification(documentData.justification, canvas, this.strokePaint.measureText(str2));
+                canvas.translate(0.0f, (((float) i) * dpScale) - ((((float) (size - 1)) * dpScale) / 2.0f));
+                drawFontTextLine(str2, documentData, canvas, scale);
+                canvas.setMatrix(matrix2);
+            }
         }
     }
 
@@ -217,10 +215,10 @@ public class TextLayer extends BaseLayer {
             i += codePointToString.length();
             drawCharacterFromFont(codePointToString, documentData, canvas);
             float measureText = this.fillPaint.measureText(codePointToString, 0, 1);
-            float f2 = documentData.tracking / 10.0f;
+            float f2 = ((float) documentData.tracking) / 10.0f;
             BaseKeyframeAnimation<Float, Float> baseKeyframeAnimation = this.trackingAnimation;
             if (baseKeyframeAnimation != null) {
-                f2 += baseKeyframeAnimation.mo177getValue().floatValue();
+                f2 += baseKeyframeAnimation.getValue().floatValue();
             }
             canvas.translate(measureText + (f2 * f), 0.0f);
         }
@@ -231,52 +229,64 @@ public class TextLayer extends BaseLayer {
         for (int i = 0; i < str.length(); i++) {
             FontCharacter fontCharacter = this.composition.getCharacters().get(FontCharacter.hashFor(str.charAt(i), font.getFamily(), font.getStyle()));
             if (fontCharacter != null) {
-                f3 = (float) (f3 + (fontCharacter.getWidth() * f * Utils.dpScale() * f2));
+                f3 = (float) (((double) f3) + (fontCharacter.getWidth() * ((double) f) * ((double) Utils.dpScale()) * ((double) f2)));
             }
         }
         return f3;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.airbnb.lottie.model.layer.TextLayer$3  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public static /* synthetic */ class AnonymousClass3 {
+    /* renamed from: com.airbnb.lottie.model.layer.TextLayer$3 */
+    static /* synthetic */ class C05043 {
         static final /* synthetic */ int[] $SwitchMap$com$airbnb$lottie$model$DocumentData$Justification;
 
+        /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|(3:5|6|8)) */
+        /* JADX WARNING: Failed to process nested try/catch */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0012 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001d */
         static {
-            int[] iArr = new int[DocumentData.Justification.values().length];
-            $SwitchMap$com$airbnb$lottie$model$DocumentData$Justification = iArr;
-            try {
-                iArr[DocumentData.Justification.LEFT_ALIGN.ordinal()] = 1;
-            } catch (NoSuchFieldError unused) {
-            }
-            try {
-                $SwitchMap$com$airbnb$lottie$model$DocumentData$Justification[DocumentData.Justification.RIGHT_ALIGN.ordinal()] = 2;
-            } catch (NoSuchFieldError unused2) {
-            }
-            try {
-                $SwitchMap$com$airbnb$lottie$model$DocumentData$Justification[DocumentData.Justification.CENTER.ordinal()] = 3;
-            } catch (NoSuchFieldError unused3) {
-            }
+            /*
+                com.airbnb.lottie.model.DocumentData$Justification[] r0 = com.airbnb.lottie.model.DocumentData.Justification.values()
+                int r0 = r0.length
+                int[] r0 = new int[r0]
+                $SwitchMap$com$airbnb$lottie$model$DocumentData$Justification = r0
+                com.airbnb.lottie.model.DocumentData$Justification r1 = com.airbnb.lottie.model.DocumentData.Justification.LEFT_ALIGN     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
+                r2 = 1
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                int[] r0 = $SwitchMap$com$airbnb$lottie$model$DocumentData$Justification     // Catch:{ NoSuchFieldError -> 0x001d }
+                com.airbnb.lottie.model.DocumentData$Justification r1 = com.airbnb.lottie.model.DocumentData.Justification.RIGHT_ALIGN     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
+                r2 = 2
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                int[] r0 = $SwitchMap$com$airbnb$lottie$model$DocumentData$Justification     // Catch:{ NoSuchFieldError -> 0x0028 }
+                com.airbnb.lottie.model.DocumentData$Justification r1 = com.airbnb.lottie.model.DocumentData.Justification.CENTER     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
+                r2 = 3
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
+            L_0x0028:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.airbnb.lottie.model.layer.TextLayer.C05043.<clinit>():void");
         }
     }
 
     private void applyJustification(DocumentData.Justification justification, Canvas canvas, float f) {
-        int i = AnonymousClass3.$SwitchMap$com$airbnb$lottie$model$DocumentData$Justification[justification.ordinal()];
+        int i = C05043.$SwitchMap$com$airbnb$lottie$model$DocumentData$Justification[justification.ordinal()];
         if (i == 2) {
             canvas.translate(-f, 0.0f);
-        } else if (i != 3) {
-        } else {
+        } else if (i == 3) {
             canvas.translate((-f) / 2.0f, 0.0f);
         }
     }
 
-    private void drawCharacterAsGlyph(FontCharacter fontCharacter, Matrix matrix, float f, DocumentData documentData, Canvas canvas) {
-        List<ContentGroup> contentsForCharacter = getContentsForCharacter(fontCharacter);
-        for (int i = 0; i < contentsForCharacter.size(); i++) {
-            Path path = contentsForCharacter.get(i).getPath();
+    private void drawCharacterAsGlyph(FontCharacter fontCharacter, Matrix matrix2, float f, DocumentData documentData, Canvas canvas) {
+        List<ContentGroup> contentsForCharacter2 = getContentsForCharacter(fontCharacter);
+        for (int i = 0; i < contentsForCharacter2.size(); i++) {
+            Path path = contentsForCharacter2.get(i).getPath();
             path.computeBounds(this.rectF, false);
-            this.matrix.set(matrix);
+            this.matrix.set(matrix2);
             this.matrix.preTranslate(0.0f, (-documentData.baselineShift) * Utils.dpScale());
             this.matrix.preScale(f, f);
             path.transform(this.matrix);
@@ -291,13 +301,11 @@ public class TextLayer extends BaseLayer {
     }
 
     private void drawGlyph(Path path, Paint paint, Canvas canvas) {
-        if (paint.getColor() == 0) {
-            return;
+        if (paint.getColor() != 0) {
+            if (paint.getStyle() != Paint.Style.STROKE || paint.getStrokeWidth() != 0.0f) {
+                canvas.drawPath(path, paint);
+            }
         }
-        if (paint.getStyle() == Paint.Style.STROKE && paint.getStrokeWidth() == 0.0f) {
-            return;
-        }
-        canvas.drawPath(path, paint);
     }
 
     private void drawCharacterFromFont(String str, DocumentData documentData, Canvas canvas) {
@@ -311,13 +319,11 @@ public class TextLayer extends BaseLayer {
     }
 
     private void drawCharacter(String str, Paint paint, Canvas canvas) {
-        if (paint.getColor() == 0) {
-            return;
+        if (paint.getColor() != 0) {
+            if (paint.getStyle() != Paint.Style.STROKE || paint.getStrokeWidth() != 0.0f) {
+                canvas.drawText(str, 0, str.length(), 0.0f, 0.0f, paint);
+            }
         }
-        if (paint.getStyle() == Paint.Style.STROKE && paint.getStrokeWidth() == 0.0f) {
-            return;
-        }
-        canvas.drawText(str, 0, str.length(), 0.0f, 0.0f, paint);
     }
 
     private List<ContentGroup> getContentsForCharacter(FontCharacter fontCharacter) {
@@ -345,7 +351,7 @@ public class TextLayer extends BaseLayer {
             charCount += Character.charCount(codePointAt2);
             codePointAt = (codePointAt * 31) + codePointAt2;
         }
-        long j = codePointAt;
+        long j = (long) codePointAt;
         if (this.codePointCache.containsKey(j)) {
             return this.codePointCache.get(j);
         }
@@ -364,15 +370,13 @@ public class TextLayer extends BaseLayer {
         return Character.getType(i) == 16 || Character.getType(i) == 27 || Character.getType(i) == 6 || Character.getType(i) == 28 || Character.getType(i) == 19;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    @Override // com.airbnb.lottie.model.layer.BaseLayer, com.airbnb.lottie.model.KeyPathElement
     public <T> void addValueCallback(T t, LottieValueCallback<T> lottieValueCallback) {
         super.addValueCallback(t, lottieValueCallback);
         if (t == LottieProperty.COLOR) {
             BaseKeyframeAnimation<Integer, Integer> baseKeyframeAnimation = this.colorAnimation;
             if (baseKeyframeAnimation != null) {
                 baseKeyframeAnimation.setValueCallback(lottieValueCallback);
-            } else if (lottieValueCallback == 0) {
+            } else if (lottieValueCallback == null) {
                 if (baseKeyframeAnimation != null) {
                     removeAnimation(baseKeyframeAnimation);
                 }
@@ -387,7 +391,7 @@ public class TextLayer extends BaseLayer {
             BaseKeyframeAnimation<Integer, Integer> baseKeyframeAnimation2 = this.strokeColorAnimation;
             if (baseKeyframeAnimation2 != null) {
                 baseKeyframeAnimation2.setValueCallback(lottieValueCallback);
-            } else if (lottieValueCallback == 0) {
+            } else if (lottieValueCallback == null) {
                 if (baseKeyframeAnimation2 != null) {
                     removeAnimation(baseKeyframeAnimation2);
                 }
@@ -402,7 +406,7 @@ public class TextLayer extends BaseLayer {
             BaseKeyframeAnimation<Float, Float> baseKeyframeAnimation3 = this.strokeWidthAnimation;
             if (baseKeyframeAnimation3 != null) {
                 baseKeyframeAnimation3.setValueCallback(lottieValueCallback);
-            } else if (lottieValueCallback == 0) {
+            } else if (lottieValueCallback == null) {
                 if (baseKeyframeAnimation3 != null) {
                     removeAnimation(baseKeyframeAnimation3);
                 }
@@ -417,7 +421,7 @@ public class TextLayer extends BaseLayer {
             BaseKeyframeAnimation<Float, Float> baseKeyframeAnimation4 = this.trackingAnimation;
             if (baseKeyframeAnimation4 != null) {
                 baseKeyframeAnimation4.setValueCallback(lottieValueCallback);
-            } else if (lottieValueCallback == 0) {
+            } else if (lottieValueCallback == null) {
                 if (baseKeyframeAnimation4 != null) {
                     removeAnimation(baseKeyframeAnimation4);
                 }
@@ -430,7 +434,7 @@ public class TextLayer extends BaseLayer {
             }
         } else if (t != LottieProperty.TEXT_SIZE) {
         } else {
-            if (lottieValueCallback == 0) {
+            if (lottieValueCallback == null) {
                 BaseKeyframeAnimation<Float, Float> baseKeyframeAnimation5 = this.textSizeAnimation;
                 if (baseKeyframeAnimation5 != null) {
                     removeAnimation(baseKeyframeAnimation5);

@@ -12,57 +12,43 @@ import android.os.ServiceManager;
 import android.util.Log;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import androidx.preference.SwitchPreference;
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.settings.core.BasePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
-/* loaded from: classes.dex */
+import com.nothing.p006ui.support.NtCustSwitchPreference;
+
 public class DevelopmentTilePreferenceController extends BasePreferenceController {
     private static final String TAG = "DevTilePrefController";
     private final OnChangeHandler mOnChangeHandler;
     private final PackageManager mPackageManager;
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return 0;
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -73,7 +59,6 @@ public class DevelopmentTilePreferenceController extends BasePreferenceControlle
         this.mPackageManager = context.getPackageManager();
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         Context context = preferenceScreen.getContext();
@@ -84,17 +69,16 @@ public class DevelopmentTilePreferenceController extends BasePreferenceControlle
             if (componentEnabledSetting != 1 && (componentEnabledSetting != 0 || !serviceInfo.enabled)) {
                 z = false;
             }
-            SwitchPreference switchPreference = new SwitchPreference(context);
-            switchPreference.setTitle(serviceInfo.loadLabel(this.mPackageManager));
-            switchPreference.setIcon(serviceInfo.icon);
-            switchPreference.setKey(serviceInfo.name);
-            switchPreference.setChecked(z);
-            switchPreference.setOnPreferenceChangeListener(this.mOnChangeHandler);
-            preferenceScreen.addPreference(switchPreference);
+            NtCustSwitchPreference ntCustSwitchPreference = new NtCustSwitchPreference(context);
+            ntCustSwitchPreference.setTitle(serviceInfo.loadLabel(this.mPackageManager));
+            ntCustSwitchPreference.setIcon(serviceInfo.icon);
+            ntCustSwitchPreference.setKey(serviceInfo.name);
+            ntCustSwitchPreference.setChecked(z);
+            ntCustSwitchPreference.setOnPreferenceChangeListener(this.mOnChangeHandler);
+            preferenceScreen.addPreference(ntCustSwitchPreference);
         }
     }
 
-    /* loaded from: classes.dex */
     static class OnChangeHandler implements Preference.OnPreferenceChangeListener {
         private final Context mContext;
         private final PackageManager mPackageManager;
@@ -105,7 +89,6 @@ public class DevelopmentTilePreferenceController extends BasePreferenceControlle
             this.mPackageManager = context.getPackageManager();
         }
 
-        @Override // androidx.preference.Preference.OnPreferenceChangeListener
         public boolean onPreferenceChange(Preference preference, Object obj) {
             boolean booleanValue = ((Boolean) obj).booleanValue();
             ComponentName componentName = new ComponentName(this.mContext.getPackageName(), preference.getKey());

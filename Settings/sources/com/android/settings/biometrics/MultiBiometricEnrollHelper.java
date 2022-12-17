@@ -1,11 +1,12 @@
 package com.android.settings.biometrics;
 
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.hardware.face.FaceManager;
 import android.hardware.fingerprint.FingerprintManager;
 import androidx.fragment.app.FragmentActivity;
-/* loaded from: classes.dex */
+
 public class MultiBiometricEnrollHelper {
     private final FragmentActivity mActivity;
     private final long mGkPwHandle;
@@ -13,8 +14,7 @@ public class MultiBiometricEnrollHelper {
     private final boolean mRequestEnrollFingerprint;
     private final int mUserId;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public MultiBiometricEnrollHelper(FragmentActivity fragmentActivity, int i, boolean z, boolean z2, long j) {
+    MultiBiometricEnrollHelper(FragmentActivity fragmentActivity, int i, boolean z, boolean z2, long j) {
         this.mActivity = fragmentActivity;
         this.mUserId = i;
         this.mGkPwHandle = j;
@@ -22,7 +22,7 @@ public class MultiBiometricEnrollHelper {
         this.mRequestEnrollFingerprint = z2;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void startNextStep() {
         if (this.mRequestEnrollFace) {
             launchFaceEnroll();
@@ -35,16 +35,12 @@ public class MultiBiometricEnrollHelper {
     }
 
     private void launchFaceEnroll() {
-        ((FaceManager) this.mActivity.getSystemService(FaceManager.class)).generateChallenge(this.mUserId, new FaceManager.GenerateChallengeCallback() { // from class: com.android.settings.biometrics.MultiBiometricEnrollHelper$$ExternalSyntheticLambda0
-            public final void onGenerateChallengeResult(int i, int i2, long j) {
-                MultiBiometricEnrollHelper.this.lambda$launchFaceEnroll$0(i, i2, j);
-            }
-        });
+        ((FaceManager) this.mActivity.getSystemService(FaceManager.class)).generateChallenge(this.mUserId, new MultiBiometricEnrollHelper$$ExternalSyntheticLambda1(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$launchFaceEnroll$0(int i, int i2, long j) {
-        byte[] requestGatekeeperHat = BiometricUtils.requestGatekeeperHat(this.mActivity, this.mGkPwHandle, this.mUserId, j);
+        byte[] requestGatekeeperHat = BiometricUtils.requestGatekeeperHat((Context) this.mActivity, this.mGkPwHandle, this.mUserId, j);
         FragmentActivity fragmentActivity = this.mActivity;
         Intent faceIntroIntent = BiometricUtils.getFaceIntroIntent(fragmentActivity, fragmentActivity.getIntent());
         faceIntroIntent.putExtra("sensor_id", i);
@@ -59,16 +55,12 @@ public class MultiBiometricEnrollHelper {
     }
 
     private void launchFingerprintEnroll() {
-        ((FingerprintManager) this.mActivity.getSystemService(FingerprintManager.class)).generateChallenge(this.mUserId, new FingerprintManager.GenerateChallengeCallback() { // from class: com.android.settings.biometrics.MultiBiometricEnrollHelper$$ExternalSyntheticLambda1
-            public final void onChallengeGenerated(int i, int i2, long j) {
-                MultiBiometricEnrollHelper.this.lambda$launchFingerprintEnroll$1(i, i2, j);
-            }
-        });
+        ((FingerprintManager) this.mActivity.getSystemService(FingerprintManager.class)).generateChallenge(this.mUserId, new MultiBiometricEnrollHelper$$ExternalSyntheticLambda0(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$launchFingerprintEnroll$1(int i, int i2, long j) {
-        byte[] requestGatekeeperHat = BiometricUtils.requestGatekeeperHat(this.mActivity, this.mGkPwHandle, this.mUserId, j);
+        byte[] requestGatekeeperHat = BiometricUtils.requestGatekeeperHat((Context) this.mActivity, this.mGkPwHandle, this.mUserId, j);
         FragmentActivity fragmentActivity = this.mActivity;
         Intent fingerprintIntroIntent = BiometricUtils.getFingerprintIntroIntent(fragmentActivity, fragmentActivity.getIntent());
         fingerprintIntroIntent.putExtra("sensor_id", i);

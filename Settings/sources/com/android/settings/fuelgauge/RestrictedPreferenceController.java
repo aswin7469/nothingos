@@ -4,15 +4,13 @@ import android.content.Context;
 import android.util.Log;
 import androidx.preference.Preference;
 import com.android.settings.core.PreferenceControllerMixin;
-import com.android.settings.fuelgauge.BatteryOptimizeUtils;
 import com.android.settingslib.core.AbstractPreferenceController;
-import com.android.settingslib.widget.RadioButtonPreference;
-/* loaded from: classes.dex */
+import com.android.settingslib.widget.SelectorWithWidgetPreference;
+
 public class RestrictedPreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin {
     String KEY_RESTRICTED_PREF = "restricted_pref";
     BatteryOptimizeUtils mBatteryOptimizeUtils;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return true;
     }
@@ -22,7 +20,6 @@ public class RestrictedPreferenceController extends AbstractPreferenceController
         this.mBatteryOptimizeUtils = new BatteryOptimizeUtils(context, i, str);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         if (!this.mBatteryOptimizeUtils.isValidPackageName()) {
             Log.d("RESTRICTED_PREF", "invalid package name, disable pref");
@@ -32,28 +29,21 @@ public class RestrictedPreferenceController extends AbstractPreferenceController
         preference.setEnabled(true);
         if (this.mBatteryOptimizeUtils.isSystemOrDefaultApp()) {
             Log.d("RESTRICTED_PREF", "is system or default app, disable pref");
-            ((RadioButtonPreference) preference).setChecked(false);
+            ((SelectorWithWidgetPreference) preference).setChecked(false);
             preference.setEnabled(false);
-        } else if (this.mBatteryOptimizeUtils.getAppUsageState() == BatteryOptimizeUtils.AppUsageState.RESTRICTED) {
+        } else if (this.mBatteryOptimizeUtils.getAppOptimizationMode() == 1) {
             Log.d("RESTRICTED_PREF", "is restricted states");
-            ((RadioButtonPreference) preference).setChecked(true);
+            ((SelectorWithWidgetPreference) preference).setChecked(true);
         } else {
-            ((RadioButtonPreference) preference).setChecked(false);
+            ((SelectorWithWidgetPreference) preference).setChecked(false);
         }
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return this.KEY_RESTRICTED_PREF;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
-        if (!this.KEY_RESTRICTED_PREF.equals(preference.getKey())) {
-            return false;
-        }
-        this.mBatteryOptimizeUtils.setAppUsageState(BatteryOptimizeUtils.AppUsageState.RESTRICTED);
-        Log.d("RESTRICTED_PREF", "Set restricted");
-        return true;
+        return getPreferenceKey().equals(preference.getKey());
     }
 }

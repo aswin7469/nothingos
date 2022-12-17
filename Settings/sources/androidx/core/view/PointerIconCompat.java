@@ -1,13 +1,12 @@
 package androidx.core.view;
 
 import android.content.Context;
-import android.os.Build;
 import android.view.PointerIcon;
-/* loaded from: classes.dex */
-public final class PointerIconCompat {
-    private Object mPointerIcon;
 
-    private PointerIconCompat(Object pointerIcon) {
+public final class PointerIconCompat {
+    private final PointerIcon mPointerIcon;
+
+    private PointerIconCompat(PointerIcon pointerIcon) {
         this.mPointerIcon = pointerIcon;
     }
 
@@ -15,10 +14,13 @@ public final class PointerIconCompat {
         return this.mPointerIcon;
     }
 
-    public static PointerIconCompat getSystemIcon(Context context, int style) {
-        if (Build.VERSION.SDK_INT >= 24) {
-            return new PointerIconCompat(PointerIcon.getSystemIcon(context, style));
+    public static PointerIconCompat getSystemIcon(Context context, int i) {
+        return new PointerIconCompat(Api24Impl.getSystemIcon(context, i));
+    }
+
+    static class Api24Impl {
+        static PointerIcon getSystemIcon(Context context, int i) {
+            return PointerIcon.getSystemIcon(context, i);
         }
-        return new PointerIconCompat(null);
     }
 }

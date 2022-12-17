@@ -13,7 +13,8 @@ import androidx.core.graphics.drawable.IconCompat;
 import androidx.slice.Slice;
 import androidx.slice.builders.ListBuilder;
 import androidx.slice.builders.SliceAction;
-import com.android.settings.R;
+import com.android.settings.R$drawable;
+import com.android.settings.R$string;
 import com.android.settings.SubSettings;
 import com.android.settings.Utils;
 import com.android.settings.fuelgauge.BatteryUsageStatsLoader;
@@ -21,7 +22,6 @@ import com.android.settings.fuelgauge.PowerUsageSummary;
 import com.android.settings.fuelgauge.batterytip.BatteryTipLoader;
 import com.android.settings.fuelgauge.batterytip.BatteryTipPreferenceController;
 import com.android.settings.fuelgauge.batterytip.tips.BatteryTip;
-import com.android.settings.homepage.contextualcards.slices.BatteryFixSlice;
 import com.android.settings.slices.CustomSliceRegistry;
 import com.android.settings.slices.CustomSliceable;
 import com.android.settings.slices.SliceBackgroundWorker;
@@ -32,42 +32,39 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-/* loaded from: classes.dex */
+
 public class BatteryFixSlice implements CustomSliceable {
     static final String KEY_CURRENT_TIPS_TYPE = "current_tip_type";
     static final String PREFS = "battery_fix_prefs";
     private static final Map<Integer, List<Integer>> UNIMPORTANT_BATTERY_TIPS;
     private final Context mContext;
 
-    @Override // com.android.settings.slices.CustomSliceable
     public void onNotifyChange(Intent intent) {
     }
 
     static {
         ArrayMap arrayMap = new ArrayMap();
         UNIMPORTANT_BATTERY_TIPS = arrayMap;
-        arrayMap.put(6, Arrays.asList(0, 1));
-        arrayMap.put(2, Arrays.asList(0, 1));
-        arrayMap.put(3, Arrays.asList(1));
+        arrayMap.put(6, Arrays.asList(new Integer[]{0, 1}));
+        arrayMap.put(2, Arrays.asList(new Integer[]{0, 1}));
+        arrayMap.put(3, Arrays.asList(new Integer[]{1}));
     }
 
     public BatteryFixSlice(Context context) {
         this.mContext = context;
     }
 
-    @Override // com.android.settings.slices.CustomSliceable
     public Uri getUri() {
         return CustomSliceRegistry.BATTERY_FIX_SLICE_URI;
     }
 
-    @Override // com.android.settings.slices.CustomSliceable
     public Slice getSlice() {
-        ListBuilder accentColor = new ListBuilder(this.mContext, CustomSliceRegistry.BATTERY_FIX_SLICE_URI, -1L).setAccentColor(-1);
+        ListBuilder accentColor = new ListBuilder(this.mContext, CustomSliceRegistry.BATTERY_FIX_SLICE_URI, -1).setAccentColor(-1);
         if (!isBatteryTipAvailableFromCache(this.mContext)) {
             return buildBatteryGoodSlice(accentColor, true);
         }
-        SliceBackgroundWorker sliceBackgroundWorker = SliceBackgroundWorker.getInstance(getUri());
-        List results = sliceBackgroundWorker != null ? sliceBackgroundWorker.getResults() : null;
+        SliceBackgroundWorker instance = SliceBackgroundWorker.getInstance(getUri());
+        List results = instance != null ? instance.getResults() : null;
         if (results == null) {
             return buildBatteryGoodSlice(accentColor, false);
         }
@@ -90,13 +87,15 @@ public class BatteryFixSlice implements CustomSliceable {
         return accentColor.build();
     }
 
-    @Override // com.android.settings.slices.CustomSliceable
     public Intent getIntent() {
-        String charSequence = this.mContext.getText(R.string.power_usage_summary_title).toString();
-        return SliceBuilderUtils.buildSearchResultPageIntent(this.mContext, PowerUsageSummary.class.getName(), BatteryTipPreferenceController.PREF_NAME, charSequence, 1401).setClassName(this.mContext.getPackageName(), SubSettings.class.getName()).setData(new Uri.Builder().appendPath(BatteryTipPreferenceController.PREF_NAME).build());
+        String charSequence = this.mContext.getText(R$string.power_usage_summary_title).toString();
+        return SliceBuilderUtils.buildSearchResultPageIntent(this.mContext, PowerUsageSummary.class.getName(), BatteryTipPreferenceController.PREF_NAME, charSequence, 1401, (CustomSliceable) this).setClassName(this.mContext.getPackageName(), SubSettings.class.getName()).setData(new Uri.Builder().appendPath(BatteryTipPreferenceController.PREF_NAME).build());
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public int getSliceHighlightMenuRes() {
+        return R$string.menu_key_battery;
+    }
+
     public Class getBackgroundWorkerClass() {
         return BatteryTipWorker.class;
     }
@@ -106,21 +105,14 @@ public class BatteryFixSlice implements CustomSliceable {
     }
 
     private Slice buildBatteryGoodSlice(ListBuilder listBuilder, boolean z) {
-        IconCompat createWithResource = IconCompat.createWithResource(this.mContext, R.drawable.ic_battery_status_good_24dp);
-        String string = this.mContext.getString(R.string.power_usage_summary_title);
+        IconCompat createWithResource = IconCompat.createWithResource(this.mContext, R$drawable.ic_battery_status_good_24dp);
+        String string = this.mContext.getString(R$string.power_usage_summary_title);
         listBuilder.addRow(new ListBuilder.RowBuilder().setTitleItem(createWithResource, 0).setTitle(string).setPrimaryAction(SliceAction.createDeeplink(getPrimaryAction(), createWithResource, 0, string))).setIsError(z);
         return listBuilder.build();
     }
 
-    public static void updateBatteryTipAvailabilityCache(final Context context) {
-        ThreadUtils.postOnBackgroundThread(new Callable() { // from class: com.android.settings.homepage.contextualcards.slices.BatteryFixSlice$$ExternalSyntheticLambda0
-            @Override // java.util.concurrent.Callable
-            public final Object call() {
-                Object refreshBatteryTips;
-                refreshBatteryTips = BatteryFixSlice.refreshBatteryTips(context);
-                return refreshBatteryTips;
-            }
-        });
+    public static void updateBatteryTipAvailabilityCache(Context context) {
+        ThreadUtils.postOnBackgroundThread((Callable) new BatteryFixSlice$$ExternalSyntheticLambda0(context));
     }
 
     static boolean isBatteryTipAvailableFromCache(Context context) {
@@ -138,10 +130,10 @@ public class BatteryFixSlice implements CustomSliceable {
         return !z;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public static List<BatteryTip> refreshBatteryTips(Context context) {
-        List<BatteryTip> mo611loadInBackground = new BatteryTipLoader(context, new BatteryUsageStatsLoader(context, false).mo611loadInBackground()).mo611loadInBackground();
-        Iterator<BatteryTip> it = mo611loadInBackground.iterator();
+        List<BatteryTip> loadInBackground = new BatteryTipLoader(context, new BatteryUsageStatsLoader(context, false).loadInBackground()).loadInBackground();
+        Iterator<BatteryTip> it = loadInBackground.iterator();
         while (true) {
             if (!it.hasNext()) {
                 break;
@@ -152,19 +144,17 @@ public class BatteryFixSlice implements CustomSliceable {
                 break;
             }
         }
-        return mo611loadInBackground;
+        return loadInBackground;
     }
 
-    /* loaded from: classes.dex */
     public static class BatteryTipWorker extends SliceBackgroundWorker<BatteryTip> {
         private final Context mContext;
 
-        @Override // java.io.Closeable, java.lang.AutoCloseable
         public void close() {
         }
 
-        @Override // com.android.settings.slices.SliceBackgroundWorker
-        protected void onSliceUnpinned() {
+        /* access modifiers changed from: protected */
+        public void onSliceUnpinned() {
         }
 
         public BatteryTipWorker(Context context, Uri uri) {
@@ -172,17 +162,12 @@ public class BatteryFixSlice implements CustomSliceable {
             this.mContext = context;
         }
 
-        @Override // com.android.settings.slices.SliceBackgroundWorker
-        protected void onSlicePinned() {
-            ThreadUtils.postOnBackgroundThread(new Runnable() { // from class: com.android.settings.homepage.contextualcards.slices.BatteryFixSlice$BatteryTipWorker$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    BatteryFixSlice.BatteryTipWorker.this.lambda$onSlicePinned$0();
-                }
-            });
+        /* access modifiers changed from: protected */
+        public void onSlicePinned() {
+            ThreadUtils.postOnBackgroundThread((Runnable) new BatteryFixSlice$BatteryTipWorker$$ExternalSyntheticLambda0(this));
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public /* synthetic */ void lambda$onSlicePinned$0() {
             updateResults(BatteryFixSlice.refreshBatteryTips(this.mContext));
         }

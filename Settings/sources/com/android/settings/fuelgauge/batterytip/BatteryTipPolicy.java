@@ -5,7 +5,7 @@ import android.provider.Settings;
 import android.util.KeyValueListParser;
 import android.util.Log;
 import java.time.Duration;
-/* loaded from: classes.dex */
+
 public class BatteryTipPolicy {
     public final int appRestrictionActiveHour;
     public final boolean appRestrictionEnabled;
@@ -44,7 +44,7 @@ public class BatteryTipPolicy {
         this.batterySaverTipEnabled = this.mParser.getBoolean("battery_saver_tip_enabled", true);
         this.highUsageEnabled = this.mParser.getBoolean("high_usage_enabled", true);
         this.highUsageAppCount = this.mParser.getInt("high_usage_app_count", 3);
-        this.highUsagePeriodMs = this.mParser.getLong("high_usage_period_ms", Duration.ofHours(2L).toMillis());
+        this.highUsagePeriodMs = this.mParser.getLong("high_usage_period_ms", Duration.ofHours(2).toMillis());
         this.highUsageBatteryDraining = this.mParser.getInt("high_usage_battery_draining", 25);
         this.appRestrictionEnabled = this.mParser.getBoolean("app_restriction_enabled", true);
         this.appRestrictionActiveHour = this.mParser.getInt("app_restriction_active_hour", 24);

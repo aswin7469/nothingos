@@ -1,19 +1,21 @@
 package com.android.settingslib.enterprise;
 
-import android.content.pm.PackageManager;
-import android.os.UserHandle;
-import com.android.settingslib.enterprise.ActionDisabledLearnMoreButtonLauncher;
-/* loaded from: classes.dex */
-public final /* synthetic */ class ActionDisabledLearnMoreButtonLauncher$$ExternalSyntheticLambda0 implements ActionDisabledLearnMoreButtonLauncher.ResolveActivityChecker {
-    public static final /* synthetic */ ActionDisabledLearnMoreButtonLauncher$$ExternalSyntheticLambda0 INSTANCE = new ActionDisabledLearnMoreButtonLauncher$$ExternalSyntheticLambda0();
+import android.content.Context;
+import com.android.settingslib.RestrictedLockUtils;
 
-    private /* synthetic */ ActionDisabledLearnMoreButtonLauncher$$ExternalSyntheticLambda0() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class ActionDisabledLearnMoreButtonLauncher$$ExternalSyntheticLambda0 implements Runnable {
+    public final /* synthetic */ ActionDisabledLearnMoreButtonLauncher f$0;
+    public final /* synthetic */ Context f$1;
+    public final /* synthetic */ RestrictedLockUtils.EnforcedAdmin f$2;
+
+    public /* synthetic */ ActionDisabledLearnMoreButtonLauncher$$ExternalSyntheticLambda0(ActionDisabledLearnMoreButtonLauncher actionDisabledLearnMoreButtonLauncher, Context context, RestrictedLockUtils.EnforcedAdmin enforcedAdmin) {
+        this.f$0 = actionDisabledLearnMoreButtonLauncher;
+        this.f$1 = context;
+        this.f$2 = enforcedAdmin;
     }
 
-    @Override // com.android.settingslib.enterprise.ActionDisabledLearnMoreButtonLauncher.ResolveActivityChecker
-    public final boolean canResolveActivityAsUser(PackageManager packageManager, String str, UserHandle userHandle) {
-        boolean lambda$static$0;
-        lambda$static$0 = ActionDisabledLearnMoreButtonLauncher.lambda$static$0(packageManager, str, userHandle);
-        return lambda$static$0;
+    public final void run() {
+        this.f$0.lambda$setupLearnMoreButtonToShowAdminPolicies$1(this.f$1, this.f$2);
     }
 }

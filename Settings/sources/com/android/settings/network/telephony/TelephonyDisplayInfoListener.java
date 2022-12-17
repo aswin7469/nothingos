@@ -10,16 +10,18 @@ import com.google.common.collect.UnmodifiableIterator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public class TelephonyDisplayInfoListener {
+    private static final TelephonyDisplayInfo mDefaultTelephonyDisplayInfo = new TelephonyDisplayInfo(0, 0);
     private TelephonyManager mBaseTelephonyManager;
-    private Callback mCallback;
-    private TelephonyDisplayInfo mTelephonyDisplayInfo = new TelephonyDisplayInfo(0, 0);
+    /* access modifiers changed from: private */
+    public Callback mCallback;
+    /* access modifiers changed from: private */
+    public Map<Integer, TelephonyDisplayInfo> mDisplayInfos = new HashMap();
     private Map<Integer, PhoneStateListener> mListeners = new HashMap();
 
-    /* loaded from: classes.dex */
     public interface Callback {
-        void onTelephonyDisplayInfoChanged(TelephonyDisplayInfo telephonyDisplayInfo);
+        void onTelephonyDisplayInfoChanged(int i, TelephonyDisplayInfo telephonyDisplayInfo);
     }
 
     public TelephonyDisplayInfoListener(Context context, Callback callback) {
@@ -28,35 +30,37 @@ public class TelephonyDisplayInfoListener {
     }
 
     public void resume() {
-        for (Integer num : this.mListeners.keySet()) {
-            startListening(num.intValue());
+        for (Integer intValue : this.mListeners.keySet()) {
+            startListening(intValue.intValue());
         }
     }
 
     public void pause() {
-        for (Integer num : this.mListeners.keySet()) {
-            stopListening(num.intValue());
+        for (Integer intValue : this.mListeners.keySet()) {
+            stopListening(intValue.intValue());
         }
     }
 
     public void updateSubscriptionIds(Set<Integer> set) {
         ArraySet arraySet = new ArraySet(this.mListeners.keySet());
-        UnmodifiableIterator mo828iterator = Sets.difference(arraySet, set).mo828iterator();
-        while (mo828iterator.hasNext()) {
-            int intValue = ((Integer) mo828iterator.next()).intValue();
+        UnmodifiableIterator<Integer> it = Sets.difference(arraySet, set).iterator();
+        while (it.hasNext()) {
+            int intValue = it.next().intValue();
             stopListening(intValue);
             this.mListeners.remove(Integer.valueOf(intValue));
+            this.mDisplayInfos.remove(Integer.valueOf(intValue));
         }
-        UnmodifiableIterator mo828iterator2 = Sets.difference(set, arraySet).mo828iterator();
-        while (mo828iterator2.hasNext()) {
-            int intValue2 = ((Integer) mo828iterator2.next()).intValue();
-            this.mListeners.put(Integer.valueOf(intValue2), new PhoneStateListener() { // from class: com.android.settings.network.telephony.TelephonyDisplayInfoListener.1
-                @Override // android.telephony.PhoneStateListener
+        UnmodifiableIterator<Integer> it2 = Sets.difference(set, arraySet).iterator();
+        while (it2.hasNext()) {
+            final int intValue2 = it2.next().intValue();
+            C11181 r1 = new PhoneStateListener() {
                 public void onDisplayInfoChanged(TelephonyDisplayInfo telephonyDisplayInfo) {
-                    TelephonyDisplayInfoListener.this.mTelephonyDisplayInfo = telephonyDisplayInfo;
-                    TelephonyDisplayInfoListener.this.mCallback.onTelephonyDisplayInfoChanged(telephonyDisplayInfo);
+                    TelephonyDisplayInfoListener.this.mDisplayInfos.put(Integer.valueOf(intValue2), telephonyDisplayInfo);
+                    TelephonyDisplayInfoListener.this.mCallback.onTelephonyDisplayInfoChanged(intValue2, telephonyDisplayInfo);
                 }
-            });
+            };
+            this.mDisplayInfos.put(Integer.valueOf(intValue2), mDefaultTelephonyDisplayInfo);
+            this.mListeners.put(Integer.valueOf(intValue2), r1);
             startListening(intValue2);
         }
     }

@@ -1,8 +1,8 @@
 package com.google.protobuf;
-/* loaded from: classes2.dex */
+
 final class ExtensionSchemas {
-    private static final ExtensionSchema<?> LITE_SCHEMA = new ExtensionSchemaLite();
     private static final ExtensionSchema<?> FULL_SCHEMA = loadSchemaForFullRuntime();
+    private static final ExtensionSchema<?> LITE_SCHEMA = new ExtensionSchemaLite();
 
     private static ExtensionSchema<?> loadSchemaForFullRuntime() {
         try {
@@ -12,13 +12,11 @@ final class ExtensionSchemas {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static ExtensionSchema<?> lite() {
+    static ExtensionSchema<?> lite() {
         return LITE_SCHEMA;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static ExtensionSchema<?> full() {
+    static ExtensionSchema<?> full() {
         ExtensionSchema<?> extensionSchema = FULL_SCHEMA;
         if (extensionSchema != null) {
             return extensionSchema;

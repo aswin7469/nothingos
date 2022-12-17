@@ -12,22 +12,21 @@ import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ResolveInfo;
 import android.content.pm.ServiceInfo;
-import android.content.pm.UserInfo;
 import android.location.LocationManager;
 import android.os.Build;
-import android.os.RemoteException;
 import android.os.UserManager;
 import android.telecom.DefaultDialerManager;
 import android.text.TextUtils;
 import android.util.ArraySet;
 import android.util.Log;
 import com.android.internal.telephony.SmsApplication;
-import com.android.settings.R;
+import com.android.settings.R$array;
+import com.android.settings.R$string;
 import com.android.settings.applications.ApplicationFeatureProvider;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public class ApplicationFeatureProviderImpl implements ApplicationFeatureProvider {
     protected final Context mContext;
     private final DevicePolicyManager mDpm;
@@ -44,7 +43,6 @@ public class ApplicationFeatureProviderImpl implements ApplicationFeatureProvide
         this.mUm = UserManager.get(applicationContext);
     }
 
-    @Override // com.android.settings.applications.ApplicationFeatureProvider
     public void calculateNumberOfPolicyInstalledApps(boolean z, ApplicationFeatureProvider.NumberOfAppsCallback numberOfAppsCallback) {
         CurrentUserAndManagedProfilePolicyInstalledAppCounter currentUserAndManagedProfilePolicyInstalledAppCounter = new CurrentUserAndManagedProfilePolicyInstalledAppCounter(this.mContext, this.mPm, numberOfAppsCallback);
         if (z) {
@@ -54,14 +52,12 @@ public class ApplicationFeatureProviderImpl implements ApplicationFeatureProvide
         }
     }
 
-    @Override // com.android.settings.applications.ApplicationFeatureProvider
     public void listPolicyInstalledApps(ApplicationFeatureProvider.ListOfAppsCallback listOfAppsCallback) {
         new CurrentUserPolicyInstalledAppLister(this.mPm, this.mUm, listOfAppsCallback).execute(new Void[0]);
     }
 
-    @Override // com.android.settings.applications.ApplicationFeatureProvider
     public void calculateNumberOfAppsWithAdminGrantedPermissions(String[] strArr, boolean z, ApplicationFeatureProvider.NumberOfAppsCallback numberOfAppsCallback) {
-        CurrentUserAndManagedProfileAppWithAdminGrantedPermissionsCounter currentUserAndManagedProfileAppWithAdminGrantedPermissionsCounter = new CurrentUserAndManagedProfileAppWithAdminGrantedPermissionsCounter(this.mContext, strArr, this.mPm, this.mPms, this.mDpm, numberOfAppsCallback);
+        C0654xa96aca6e currentUserAndManagedProfileAppWithAdminGrantedPermissionsCounter = new C0654xa96aca6e(this.mContext, strArr, this.mPm, this.mPms, this.mDpm, numberOfAppsCallback);
         if (z) {
             currentUserAndManagedProfileAppWithAdminGrantedPermissionsCounter.execute(new Void[0]);
         } else {
@@ -69,50 +65,61 @@ public class ApplicationFeatureProviderImpl implements ApplicationFeatureProvide
         }
     }
 
-    @Override // com.android.settings.applications.ApplicationFeatureProvider
     public void listAppsWithAdminGrantedPermissions(String[] strArr, ApplicationFeatureProvider.ListOfAppsCallback listOfAppsCallback) {
         new CurrentUserAppWithAdminGrantedPermissionsLister(strArr, this.mPm, this.mPms, this.mDpm, this.mUm, listOfAppsCallback).execute(new Void[0]);
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:11:0x0031 A[Catch: RemoteException -> 0x0041, TryCatch #0 {RemoteException -> 0x0041, blocks: (B:5:0x0016, B:7:0x001e, B:11:0x0031, B:13:0x003e, B:18:0x0025, B:21:0x002a), top: B:4:0x0016 }] */
-    /* JADX WARN: Removed duplicated region for block: B:17:0x0041 A[SYNTHETIC] */
-    @Override // com.android.settings.applications.ApplicationFeatureProvider
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public List<UserAppInfo> findPersistentPreferredActivities(int i, Intent[] intentArr) {
-        ArrayList arrayList = new ArrayList();
-        ArraySet arraySet = new ArraySet();
-        UserInfo userInfo = this.mUm.getUserInfo(i);
-        for (Intent intent : intentArr) {
-            try {
-                ResolveInfo findPersistentPreferredActivity = this.mPms.findPersistentPreferredActivity(intent, i);
-                if (findPersistentPreferredActivity != null) {
-                    ProviderInfo providerInfo = null;
-                    ComponentInfo componentInfo = findPersistentPreferredActivity.activityInfo;
-                    if (componentInfo == null && (componentInfo = findPersistentPreferredActivity.serviceInfo) == null) {
-                        ProviderInfo providerInfo2 = findPersistentPreferredActivity.providerInfo;
-                        if (providerInfo2 != null) {
-                            providerInfo = providerInfo2;
-                        }
-                        if (providerInfo == null) {
-                            UserAppInfo userAppInfo = new UserAppInfo(userInfo, ((ComponentInfo) providerInfo).applicationInfo);
-                            if (arraySet.add(userAppInfo)) {
-                                arrayList.add(userAppInfo);
-                            }
-                        }
-                    }
-                    providerInfo = componentInfo;
-                    if (providerInfo == null) {
-                    }
-                }
-            } catch (RemoteException unused) {
-            }
-        }
-        return arrayList;
+    /* JADX WARNING: Removed duplicated region for block: B:16:0x0031 A[Catch:{ RemoteException -> 0x0041 }] */
+    /* JADX WARNING: Removed duplicated region for block: B:25:0x0041 A[SYNTHETIC] */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public java.util.List<com.android.settings.applications.UserAppInfo> findPersistentPreferredActivities(int r9, android.content.Intent[] r10) {
+        /*
+            r8 = this;
+            java.util.ArrayList r0 = new java.util.ArrayList
+            r0.<init>()
+            android.util.ArraySet r1 = new android.util.ArraySet
+            r1.<init>()
+            android.os.UserManager r2 = r8.mUm
+            android.content.pm.UserInfo r2 = r2.getUserInfo(r9)
+            int r3 = r10.length
+            r4 = 0
+        L_0x0012:
+            if (r4 >= r3) goto L_0x0044
+            r5 = r10[r4]
+            android.content.pm.IPackageManager r6 = r8.mPms     // Catch:{ RemoteException -> 0x0041 }
+            android.content.pm.ResolveInfo r5 = r6.findPersistentPreferredActivity(r5, r9)     // Catch:{ RemoteException -> 0x0041 }
+            if (r5 == 0) goto L_0x0041
+            r6 = 0
+            android.content.pm.ActivityInfo r7 = r5.activityInfo     // Catch:{ RemoteException -> 0x0041 }
+            if (r7 == 0) goto L_0x0025
+        L_0x0023:
+            r6 = r7
+            goto L_0x002f
+        L_0x0025:
+            android.content.pm.ServiceInfo r7 = r5.serviceInfo     // Catch:{ RemoteException -> 0x0041 }
+            if (r7 == 0) goto L_0x002a
+            goto L_0x0023
+        L_0x002a:
+            android.content.pm.ProviderInfo r5 = r5.providerInfo     // Catch:{ RemoteException -> 0x0041 }
+            if (r5 == 0) goto L_0x002f
+            r6 = r5
+        L_0x002f:
+            if (r6 == 0) goto L_0x0041
+            com.android.settings.applications.UserAppInfo r5 = new com.android.settings.applications.UserAppInfo     // Catch:{ RemoteException -> 0x0041 }
+            android.content.pm.ApplicationInfo r6 = r6.applicationInfo     // Catch:{ RemoteException -> 0x0041 }
+            r5.<init>(r2, r6)     // Catch:{ RemoteException -> 0x0041 }
+            boolean r6 = r1.add(r5)     // Catch:{ RemoteException -> 0x0041 }
+            if (r6 == 0) goto L_0x0041
+            r0.add(r5)     // Catch:{ RemoteException -> 0x0041 }
+        L_0x0041:
+            int r4 = r4 + 1
+            goto L_0x0012
+        L_0x0044:
+            return r0
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.applications.ApplicationFeatureProviderImpl.findPersistentPreferredActivities(int, android.content.Intent[]):java.util.List");
     }
 
-    @Override // com.android.settings.applications.ApplicationFeatureProvider
     public Set<String> getKeepEnabledPackages() {
         ArraySet arraySet = new ArraySet();
         String defaultDialerApplication = DefaultDialerManager.getDefaultDialerApplication(this.mContext);
@@ -141,15 +148,18 @@ public class ApplicationFeatureProviderImpl implements ApplicationFeatureProvide
 
     private Set<String> getEnabledPackageAllowlist() {
         ArraySet arraySet = new ArraySet();
-        arraySet.add(this.mContext.getString(R.string.config_settingsintelligence_package_name));
-        arraySet.add(this.mContext.getString(R.string.config_package_installer_package_name));
+        arraySet.add(this.mContext.getString(R$string.config_settingsintelligence_package_name));
+        arraySet.add(this.mContext.getString(R$string.config_package_installer_package_name));
         if (this.mPm.getWellbeingPackageName() != null) {
             arraySet.add(this.mPm.getWellbeingPackageName());
+        }
+        for (String str : Arrays.asList(this.mContext.getResources().getStringArray(R$array.config_google_mandatory_packages))) {
+            Log.v("AppFeatureProviderImpl", "Keep the GMS app always enabled: " + str);
+            arraySet.add(str);
         }
         return arraySet;
     }
 
-    /* loaded from: classes.dex */
     private static class CurrentUserAndManagedProfilePolicyInstalledAppCounter extends InstalledAppCounter {
         private ApplicationFeatureProvider.NumberOfAppsCallback mCallback;
 
@@ -158,28 +168,27 @@ public class ApplicationFeatureProviderImpl implements ApplicationFeatureProvide
             this.mCallback = numberOfAppsCallback;
         }
 
-        @Override // com.android.settings.applications.AppCounter
-        protected void onCountComplete(int i) {
+        /* access modifiers changed from: protected */
+        public void onCountComplete(int i) {
             this.mCallback.onNumberOfAppsResult(i);
         }
     }
 
-    /* loaded from: classes.dex */
-    private static class CurrentUserAndManagedProfileAppWithAdminGrantedPermissionsCounter extends AppWithAdminGrantedPermissionsCounter {
+    /* renamed from: com.android.settings.applications.ApplicationFeatureProviderImpl$CurrentUserAndManagedProfileAppWithAdminGrantedPermissionsCounter */
+    private static class C0654xa96aca6e extends AppWithAdminGrantedPermissionsCounter {
         private ApplicationFeatureProvider.NumberOfAppsCallback mCallback;
 
-        CurrentUserAndManagedProfileAppWithAdminGrantedPermissionsCounter(Context context, String[] strArr, PackageManager packageManager, IPackageManager iPackageManager, DevicePolicyManager devicePolicyManager, ApplicationFeatureProvider.NumberOfAppsCallback numberOfAppsCallback) {
+        C0654xa96aca6e(Context context, String[] strArr, PackageManager packageManager, IPackageManager iPackageManager, DevicePolicyManager devicePolicyManager, ApplicationFeatureProvider.NumberOfAppsCallback numberOfAppsCallback) {
             super(context, strArr, packageManager, iPackageManager, devicePolicyManager);
             this.mCallback = numberOfAppsCallback;
         }
 
-        @Override // com.android.settings.applications.AppCounter
-        protected void onCountComplete(int i) {
+        /* access modifiers changed from: protected */
+        public void onCountComplete(int i) {
             this.mCallback.onNumberOfAppsResult(i);
         }
     }
 
-    /* loaded from: classes.dex */
     private static class CurrentUserPolicyInstalledAppLister extends InstalledAppLister {
         private ApplicationFeatureProvider.ListOfAppsCallback mCallback;
 
@@ -188,13 +197,12 @@ public class ApplicationFeatureProviderImpl implements ApplicationFeatureProvide
             this.mCallback = listOfAppsCallback;
         }
 
-        @Override // com.android.settings.applications.AppLister
-        protected void onAppListBuilt(List<UserAppInfo> list) {
+        /* access modifiers changed from: protected */
+        public void onAppListBuilt(List<UserAppInfo> list) {
             this.mCallback.onListOfAppsResult(list);
         }
     }
 
-    /* loaded from: classes.dex */
     private static class CurrentUserAppWithAdminGrantedPermissionsLister extends AppWithAdminGrantedPermissionsLister {
         private ApplicationFeatureProvider.ListOfAppsCallback mCallback;
 
@@ -203,13 +211,14 @@ public class ApplicationFeatureProviderImpl implements ApplicationFeatureProvide
             this.mCallback = listOfAppsCallback;
         }
 
-        @Override // com.android.settings.applications.AppLister
-        protected void onAppListBuilt(List<UserAppInfo> list) {
+        /* access modifiers changed from: protected */
+        public void onAppListBuilt(List<UserAppInfo> list) {
             this.mCallback.onListOfAppsResult(list);
         }
     }
 
-    ComponentInfo findEuiccService(PackageManager packageManager) {
+    /* access modifiers changed from: package-private */
+    public ComponentInfo findEuiccService(PackageManager packageManager) {
         ComponentInfo findEuiccService = findEuiccService(packageManager, packageManager.queryIntentServices(new Intent("android.service.euicc.EuiccService"), 269484096));
         if (findEuiccService == null) {
             Log.w("AppFeatureProviderImpl", "No valid EuiccService implementation found");
@@ -221,10 +230,11 @@ public class ApplicationFeatureProviderImpl implements ApplicationFeatureProvide
         ComponentInfo componentInfo = null;
         if (list != null) {
             int i = Integer.MIN_VALUE;
-            for (ResolveInfo resolveInfo : list) {
-                if (isValidEuiccComponent(packageManager, resolveInfo) && resolveInfo.filter.getPriority() > i) {
-                    i = resolveInfo.filter.getPriority();
-                    componentInfo = getComponentInfo(resolveInfo);
+            for (ResolveInfo next : list) {
+                if (isValidEuiccComponent(packageManager, next) && next.filter.getPriority() > i) {
+                    int priority = next.filter.getPriority();
+                    i = priority;
+                    componentInfo = getComponentInfo(next);
                 }
             }
         }
@@ -268,9 +278,9 @@ public class ApplicationFeatureProviderImpl implements ApplicationFeatureProvide
             return serviceInfo;
         }
         ProviderInfo providerInfo = resolveInfo.providerInfo;
-        if (providerInfo == null) {
-            throw new IllegalStateException("Missing ComponentInfo!");
+        if (providerInfo != null) {
+            return providerInfo;
         }
-        return providerInfo;
+        throw new IllegalStateException("Missing ComponentInfo!");
     }
 }

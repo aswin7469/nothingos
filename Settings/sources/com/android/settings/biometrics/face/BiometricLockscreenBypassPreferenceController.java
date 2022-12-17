@@ -3,35 +3,20 @@ package com.android.settings.biometrics.face;
 import android.content.Context;
 import android.content.IntentFilter;
 import com.android.settings.Utils;
-import com.android.settings.slices.SliceBackgroundWorker;
-/* loaded from: classes.dex */
-public class BiometricLockscreenBypassPreferenceController extends FaceSettingsLockscreenBypassPreferenceController {
-    @Override // com.android.settings.biometrics.face.FaceSettingsLockscreenBypassPreferenceController, com.android.settings.biometrics.face.FaceSettingsPreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
 
-    @Override // com.android.settings.biometrics.face.FaceSettingsLockscreenBypassPreferenceController, com.android.settings.biometrics.face.FaceSettingsPreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+public class BiometricLockscreenBypassPreferenceController extends FaceSettingsLockscreenBypassPreferenceController {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.biometrics.face.FaceSettingsLockscreenBypassPreferenceController, com.android.settings.biometrics.face.FaceSettingsPreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.biometrics.face.FaceSettingsLockscreenBypassPreferenceController, com.android.settings.biometrics.face.FaceSettingsPreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.biometrics.face.FaceSettingsLockscreenBypassPreferenceController, com.android.settings.biometrics.face.FaceSettingsPreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.biometrics.face.FaceSettingsLockscreenBypassPreferenceController, com.android.settings.biometrics.face.FaceSettingsPreferenceController, com.android.settings.core.TogglePreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -40,7 +25,6 @@ public class BiometricLockscreenBypassPreferenceController extends FaceSettingsL
         super(context, str);
     }
 
-    @Override // com.android.settings.biometrics.face.FaceSettingsLockscreenBypassPreferenceController, com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return Utils.isMultipleBiometricsSupported(this.mContext) ? 0 : 3;
     }

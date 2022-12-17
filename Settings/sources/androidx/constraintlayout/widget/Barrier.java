@@ -2,7 +2,6 @@ package androidx.constraintlayout.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import androidx.constraintlayout.solver.widgets.ConstraintWidget;
@@ -10,7 +9,7 @@ import androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer;
 import androidx.constraintlayout.solver.widgets.HelperWidget;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-/* loaded from: classes.dex */
+
 public class Barrier extends ConstraintHelper {
     private androidx.constraintlayout.solver.widgets.Barrier mBarrier;
     private int mIndicatedType;
@@ -41,25 +40,18 @@ public class Barrier extends ConstraintHelper {
 
     private void updateType(ConstraintWidget constraintWidget, int i, boolean z) {
         this.mResolvedType = i;
-        if (Build.VERSION.SDK_INT < 17) {
+        if (z) {
             int i2 = this.mIndicatedType;
             if (i2 == 5) {
-                this.mResolvedType = 0;
+                this.mResolvedType = 1;
             } else if (i2 == 6) {
-                this.mResolvedType = 1;
-            }
-        } else if (z) {
-            int i3 = this.mIndicatedType;
-            if (i3 == 5) {
-                this.mResolvedType = 1;
-            } else if (i3 == 6) {
                 this.mResolvedType = 0;
             }
         } else {
-            int i4 = this.mIndicatedType;
-            if (i4 == 5) {
+            int i3 = this.mIndicatedType;
+            if (i3 == 5) {
                 this.mResolvedType = 0;
-            } else if (i4 == 6) {
+            } else if (i3 == 6) {
                 this.mResolvedType = 1;
             }
         }
@@ -68,13 +60,11 @@ public class Barrier extends ConstraintHelper {
         }
     }
 
-    @Override // androidx.constraintlayout.widget.ConstraintHelper
     public void resolveRtl(ConstraintWidget constraintWidget, boolean z) {
         updateType(constraintWidget, this.mIndicatedType, z);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.constraintlayout.widget.ConstraintHelper
+    /* access modifiers changed from: protected */
     public void init(AttributeSet attributeSet) {
         super.init(attributeSet);
         this.mBarrier = new androidx.constraintlayout.solver.widgets.Barrier();
@@ -106,7 +96,7 @@ public class Barrier extends ConstraintHelper {
 
     public void setDpMargin(int i) {
         androidx.constraintlayout.solver.widgets.Barrier barrier = this.mBarrier;
-        barrier.setMargin((int) ((i * getResources().getDisplayMetrics().density) + 0.5f));
+        barrier.setMargin((int) ((((float) i) * getResources().getDisplayMetrics().density) + 0.5f));
     }
 
     public int getMargin() {
@@ -117,7 +107,6 @@ public class Barrier extends ConstraintHelper {
         this.mBarrier.setMargin(i);
     }
 
-    @Override // androidx.constraintlayout.widget.ConstraintHelper
     public void loadParameters(ConstraintSet.Constraint constraint, HelperWidget helperWidget, ConstraintLayout.LayoutParams layoutParams, SparseArray<ConstraintWidget> sparseArray) {
         super.loadParameters(constraint, helperWidget, layoutParams, sparseArray);
         if (helperWidget instanceof androidx.constraintlayout.solver.widgets.Barrier) {

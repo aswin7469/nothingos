@@ -1,5 +1,6 @@
 package com.google.zxing.aztec.decoder;
 
+import androidx.window.C0447R;
 import com.google.zxing.FormatException;
 import com.google.zxing.aztec.AztecDetectorResult;
 import com.google.zxing.common.BitMatrix;
@@ -8,18 +9,17 @@ import com.google.zxing.common.reedsolomon.GenericGF;
 import com.google.zxing.common.reedsolomon.ReedSolomonDecoder;
 import com.google.zxing.common.reedsolomon.ReedSolomonException;
 import java.util.Arrays;
-/* loaded from: classes2.dex */
-public final class Decoder {
-    private AztecDetectorResult ddata;
-    private static final String[] UPPER_TABLE = {"CTRL_PS", " ", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "CTRL_LL", "CTRL_ML", "CTRL_DL", "CTRL_BS"};
-    private static final String[] LOWER_TABLE = {"CTRL_PS", " ", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "CTRL_US", "CTRL_ML", "CTRL_DL", "CTRL_BS"};
-    private static final String[] MIXED_TABLE = {"CTRL_PS", " ", "\u0001", "\u0002", "\u0003", "\u0004", "\u0005", "\u0006", "\u0007", "\b", "\t", "\n", "\u000b", "\f", "\r", "\u001b", "\u001c", "\u001d", "\u001e", "\u001f", "@", "\\", "^", "_", "`", "|", "~", "\u007f", "CTRL_LL", "CTRL_UL", "CTRL_PL", "CTRL_BS"};
-    private static final String[] PUNCT_TABLE = {"", "\r", "\r\n", ". ", ", ", ": ", "!", "\"", "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/", ":", ";", "<", "=", ">", "?", "[", "]", "{", "}", "CTRL_UL"};
-    private static final String[] DIGIT_TABLE = {"CTRL_PS", " ", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ",", ".", "CTRL_UL", "CTRL_US"};
+import java.util.List;
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public enum Table {
+public final class Decoder {
+    private static final String[] DIGIT_TABLE = {"CTRL_PS", " ", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ",", ".", "CTRL_UL", "CTRL_US"};
+    private static final String[] LOWER_TABLE = {"CTRL_PS", " ", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "CTRL_US", "CTRL_ML", "CTRL_DL", "CTRL_BS"};
+    private static final String[] MIXED_TABLE = {"CTRL_PS", " ", "\u0001", "\u0002", "\u0003", "\u0004", "\u0005", "\u0006", "\u0007", "\b", "\t", "\n", "\u000b", "\f", "\r", "\u001b", "\u001c", "\u001d", "\u001e", "\u001f", "@", "\\", "^", "_", "`", "|", "~", "", "CTRL_LL", "CTRL_UL", "CTRL_PL", "CTRL_BS"};
+    private static final String[] PUNCT_TABLE = {"", "\r", "\r\n", ". ", ", ", ": ", "!", "\"", "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/", ":", ";", "<", "=", ">", "?", "[", "]", "{", "}", "CTRL_UL"};
+    private static final String[] UPPER_TABLE = {"CTRL_PS", " ", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "CTRL_LL", "CTRL_ML", "CTRL_DL", "CTRL_BS"};
+    private AztecDetectorResult ddata;
+
+    private enum Table {
         UPPER,
         LOWER,
         MIXED,
@@ -29,12 +29,12 @@ public final class Decoder {
     }
 
     private static int totalBitsInLayer(int i, boolean z) {
-        return ((z ? 88 : 112) + (i * 16)) * i;
+        return ((z ? 88 : C0447R.styleable.AppCompatTheme_toolbarNavigationButtonStyle) + (i * 16)) * i;
     }
 
     public DecoderResult decode(AztecDetectorResult aztecDetectorResult) throws FormatException {
         this.ddata = aztecDetectorResult;
-        return new DecoderResult(null, getEncodedData(correctBits(extractBits(aztecDetectorResult.getBits()))), null, null);
+        return new DecoderResult((byte[]) null, getEncodedData(correctBits(extractBits(aztecDetectorResult.getBits()))), (List<byte[]>) null, (String) null);
     }
 
     private static String getEncodedData(boolean[] zArr) {
@@ -62,7 +62,6 @@ public final class Decoder {
                     }
                 } else {
                     sb.append(character);
-                    table = table2;
                 }
             } else if (length - i < 5) {
                 break;
@@ -89,81 +88,103 @@ public final class Decoder {
                         i3++;
                     }
                 }
-                table = table2;
             }
+            table = table2;
         }
         return sb.toString();
     }
 
     private static Table getTable(char c) {
-        if (c != 'B') {
-            if (c == 'D') {
-                return Table.DIGIT;
-            }
-            if (c == 'P') {
-                return Table.PUNCT;
-            }
-            if (c == 'L') {
-                return Table.LOWER;
-            }
-            if (c == 'M') {
-                return Table.MIXED;
-            }
+        if (c == 'B') {
+            return Table.BINARY;
+        }
+        if (c == 'D') {
+            return Table.DIGIT;
+        }
+        if (c == 'P') {
+            return Table.PUNCT;
+        }
+        if (c == 'L') {
+            return Table.LOWER;
+        }
+        if (c != 'M') {
             return Table.UPPER;
         }
-        return Table.BINARY;
+        return Table.MIXED;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.google.zxing.aztec.decoder.Decoder$1  reason: invalid class name */
-    /* loaded from: classes2.dex */
-    public static /* synthetic */ class AnonymousClass1 {
+    /* renamed from: com.google.zxing.aztec.decoder.Decoder$1 */
+    static /* synthetic */ class C19191 {
         static final /* synthetic */ int[] $SwitchMap$com$google$zxing$aztec$decoder$Decoder$Table;
 
+        /* JADX WARNING: Can't wrap try/catch for region: R(12:0|1|2|3|4|5|6|7|8|9|10|12) */
+        /* JADX WARNING: Code restructure failed: missing block: B:13:?, code lost:
+            return;
+         */
+        /* JADX WARNING: Failed to process nested try/catch */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0012 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001d */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:7:0x0028 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:9:0x0033 */
         static {
-            int[] iArr = new int[Table.values().length];
-            $SwitchMap$com$google$zxing$aztec$decoder$Decoder$Table = iArr;
-            try {
-                iArr[Table.UPPER.ordinal()] = 1;
-            } catch (NoSuchFieldError unused) {
-            }
-            try {
-                $SwitchMap$com$google$zxing$aztec$decoder$Decoder$Table[Table.LOWER.ordinal()] = 2;
-            } catch (NoSuchFieldError unused2) {
-            }
-            try {
-                $SwitchMap$com$google$zxing$aztec$decoder$Decoder$Table[Table.MIXED.ordinal()] = 3;
-            } catch (NoSuchFieldError unused3) {
-            }
-            try {
-                $SwitchMap$com$google$zxing$aztec$decoder$Decoder$Table[Table.PUNCT.ordinal()] = 4;
-            } catch (NoSuchFieldError unused4) {
-            }
-            try {
-                $SwitchMap$com$google$zxing$aztec$decoder$Decoder$Table[Table.DIGIT.ordinal()] = 5;
-            } catch (NoSuchFieldError unused5) {
-            }
+            /*
+                com.google.zxing.aztec.decoder.Decoder$Table[] r0 = com.google.zxing.aztec.decoder.Decoder.Table.values()
+                int r0 = r0.length
+                int[] r0 = new int[r0]
+                $SwitchMap$com$google$zxing$aztec$decoder$Decoder$Table = r0
+                com.google.zxing.aztec.decoder.Decoder$Table r1 = com.google.zxing.aztec.decoder.Decoder.Table.UPPER     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
+                r2 = 1
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                int[] r0 = $SwitchMap$com$google$zxing$aztec$decoder$Decoder$Table     // Catch:{ NoSuchFieldError -> 0x001d }
+                com.google.zxing.aztec.decoder.Decoder$Table r1 = com.google.zxing.aztec.decoder.Decoder.Table.LOWER     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
+                r2 = 2
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                int[] r0 = $SwitchMap$com$google$zxing$aztec$decoder$Decoder$Table     // Catch:{ NoSuchFieldError -> 0x0028 }
+                com.google.zxing.aztec.decoder.Decoder$Table r1 = com.google.zxing.aztec.decoder.Decoder.Table.MIXED     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
+                r2 = 3
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
+            L_0x0028:
+                int[] r0 = $SwitchMap$com$google$zxing$aztec$decoder$Decoder$Table     // Catch:{ NoSuchFieldError -> 0x0033 }
+                com.google.zxing.aztec.decoder.Decoder$Table r1 = com.google.zxing.aztec.decoder.Decoder.Table.PUNCT     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
+                r2 = 4
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0033 }
+            L_0x0033:
+                int[] r0 = $SwitchMap$com$google$zxing$aztec$decoder$Decoder$Table     // Catch:{ NoSuchFieldError -> 0x003e }
+                com.google.zxing.aztec.decoder.Decoder$Table r1 = com.google.zxing.aztec.decoder.Decoder.Table.DIGIT     // Catch:{ NoSuchFieldError -> 0x003e }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x003e }
+                r2 = 5
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x003e }
+            L_0x003e:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.aztec.decoder.Decoder.C19191.<clinit>():void");
         }
     }
 
     private static String getCharacter(Table table, int i) {
-        int i2 = AnonymousClass1.$SwitchMap$com$google$zxing$aztec$decoder$Decoder$Table[table.ordinal()];
-        if (i2 != 1) {
-            if (i2 == 2) {
-                return LOWER_TABLE[i];
-            }
-            if (i2 == 3) {
-                return MIXED_TABLE[i];
-            }
-            if (i2 == 4) {
-                return PUNCT_TABLE[i];
-            }
-            if (i2 == 5) {
-                return DIGIT_TABLE[i];
-            }
-            throw new IllegalStateException("Bad table");
+        int i2 = C19191.$SwitchMap$com$google$zxing$aztec$decoder$Decoder$Table[table.ordinal()];
+        if (i2 == 1) {
+            return UPPER_TABLE[i];
         }
-        return UPPER_TABLE[i];
+        if (i2 == 2) {
+            return LOWER_TABLE[i];
+        }
+        if (i2 == 3) {
+            return MIXED_TABLE[i];
+        }
+        if (i2 == 4) {
+            return PUNCT_TABLE[i];
+        }
+        if (i2 == 5) {
+            return DIGIT_TABLE[i];
+        }
+        throw new IllegalStateException("Bad table");
     }
 
     private boolean[] correctBits(boolean[] zArr) throws FormatException {
@@ -205,7 +226,7 @@ public final class Decoder {
                     i5++;
                 }
             }
-            boolean[] zArr2 = new boolean[(nbDatablocks * i) - i5];
+            boolean[] zArr2 = new boolean[((nbDatablocks * i) - i5)];
             int i8 = 0;
             for (int i9 = 0; i9 < nbDatablocks; i9++) {
                 int i10 = iArr[i9];
@@ -228,7 +249,9 @@ public final class Decoder {
         }
     }
 
-    boolean[] extractBits(BitMatrix bitMatrix) {
+    /* access modifiers changed from: package-private */
+    public boolean[] extractBits(BitMatrix bitMatrix) {
+        BitMatrix bitMatrix2 = bitMatrix;
         boolean isCompact = this.ddata.isCompact();
         int nbLayers = this.ddata.getNbLayers();
         int i = isCompact ? (nbLayers * 4) + 11 : (nbLayers * 4) + 14;
@@ -262,20 +285,24 @@ public final class Decoder {
                 while (i16 < i2) {
                     int i17 = i12 + i16;
                     int i18 = i12 + i14;
-                    zArr[i9 + i15 + i16] = bitMatrix.get(iArr[i17], iArr[i18]);
+                    zArr[i9 + i15 + i16] = bitMatrix2.get(iArr[i17], iArr[i18]);
                     int i19 = i13 - i16;
-                    zArr[(i11 * 2) + i9 + i15 + i16] = bitMatrix.get(iArr[i18], iArr[i19]);
+                    zArr[(i11 * 2) + i9 + i15 + i16] = bitMatrix2.get(iArr[i18], iArr[i19]);
                     int i20 = i13 - i14;
-                    zArr[(i11 * 4) + i9 + i15 + i16] = bitMatrix.get(iArr[i19], iArr[i20]);
-                    zArr[(i11 * 6) + i9 + i15 + i16] = bitMatrix.get(iArr[i20], iArr[i17]);
+                    zArr[(i11 * 4) + i9 + i15 + i16] = bitMatrix2.get(iArr[i19], iArr[i20]);
+                    zArr[(i11 * 6) + i9 + i15 + i16] = bitMatrix2.get(iArr[i20], iArr[i17]);
                     i16++;
                     isCompact = isCompact;
                     nbLayers = nbLayers;
                     i2 = 2;
                 }
+                int i21 = nbLayers;
+                boolean z = isCompact;
                 i14++;
                 i2 = 2;
             }
+            int i22 = nbLayers;
+            boolean z2 = isCompact;
             i9 += i11 * 8;
             i8++;
             i2 = 2;

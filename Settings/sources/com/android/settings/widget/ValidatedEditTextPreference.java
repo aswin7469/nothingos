@@ -11,14 +11,14 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.PreferenceViewHolder;
 import com.android.settingslib.CustomEditTextPreferenceCompat;
-/* loaded from: classes.dex */
+
 public class ValidatedEditTextPreference extends CustomEditTextPreferenceCompat {
     private boolean mIsPassword;
     private boolean mIsSummaryPassword;
     private final EditTextWatcher mTextWatcher = new EditTextWatcher();
-    private Validator mValidator;
+    /* access modifiers changed from: private */
+    public Validator mValidator;
 
-    /* loaded from: classes.dex */
     public interface Validator {
         boolean isTextValid(String str);
     }
@@ -39,36 +39,32 @@ public class ValidatedEditTextPreference extends CustomEditTextPreferenceCompat 
         super(context);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.CustomEditTextPreferenceCompat
+    /* access modifiers changed from: protected */
     public void onBindDialogView(View view) {
         super.onBindDialogView(view);
         EditText editText = (EditText) view.findViewById(16908291);
         if (editText != null && !TextUtils.isEmpty(editText.getText())) {
             editText.setSelection(editText.getText().length());
         }
-        if (this.mValidator == null || editText == null) {
-            return;
+        if (this.mValidator != null && editText != null) {
+            editText.removeTextChangedListener(this.mTextWatcher);
+            if (this.mIsPassword) {
+                editText.setInputType(145);
+                editText.setMaxLines(1);
+            }
+            editText.addTextChangedListener(this.mTextWatcher);
         }
-        editText.removeTextChangedListener(this.mTextWatcher);
-        if (this.mIsPassword) {
-            editText.setInputType(145);
-            editText.setMaxLines(1);
-        }
-        editText.addTextChangedListener(this.mTextWatcher);
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         TextView textView = (TextView) preferenceViewHolder.findViewById(16908304);
-        if (textView == null) {
-            return;
-        }
-        if (this.mIsSummaryPassword) {
-            textView.setInputType(129);
-        } else {
-            textView.setInputType(524289);
+        if (textView != null) {
+            if (this.mIsSummaryPassword) {
+                textView.setInputType(129);
+            } else {
+                textView.setInputType(524289);
+            }
         }
     }
 
@@ -88,26 +84,21 @@ public class ValidatedEditTextPreference extends CustomEditTextPreferenceCompat 
         this.mValidator = validator;
     }
 
-    /* loaded from: classes.dex */
     private class EditTextWatcher implements TextWatcher {
-        @Override // android.text.TextWatcher
         public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
         }
 
-        @Override // android.text.TextWatcher
         public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
         }
 
         private EditTextWatcher() {
         }
 
-        @Override // android.text.TextWatcher
         public void afterTextChanged(Editable editable) {
             EditText editText = ValidatedEditTextPreference.this.getEditText();
-            if (ValidatedEditTextPreference.this.mValidator == null || editText == null) {
-                return;
+            if (ValidatedEditTextPreference.this.mValidator != null && editText != null) {
+                ((AlertDialog) ValidatedEditTextPreference.this.getDialog()).getButton(-1).setEnabled(ValidatedEditTextPreference.this.mValidator.isTextValid(editText.getText().toString()));
             }
-            ((AlertDialog) ValidatedEditTextPreference.this.getDialog()).getButton(-1).setEnabled(ValidatedEditTextPreference.this.mValidator.isTextValid(editText.getText().toString()));
         }
     }
 }

@@ -2,7 +2,7 @@ package com.android.settings.fuelgauge.batterytip;
 
 import android.util.KeyValueListParser;
 import android.util.Log;
-/* loaded from: classes.dex */
+
 public class AnomalyInfo {
     public final Integer anomalyType;
     public final boolean autoRestriction;

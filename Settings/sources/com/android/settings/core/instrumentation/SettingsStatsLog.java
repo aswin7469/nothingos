@@ -2,8 +2,18 @@ package com.android.settings.core.instrumentation;
 
 import android.util.StatsEvent;
 import android.util.StatsLog;
-/* loaded from: classes.dex */
+
 public class SettingsStatsLog {
+    public static void write(int i, int i2, int i3, int i4) {
+        StatsEvent.Builder newBuilder = StatsEvent.newBuilder();
+        newBuilder.setAtomId(i);
+        newBuilder.writeInt(i2);
+        newBuilder.writeInt(i3);
+        newBuilder.writeInt(i4);
+        newBuilder.usePooledBuffer();
+        StatsLog.write(newBuilder.build());
+    }
+
     public static void write(int i, int i2, int i3, int i4, String str, long j) {
         StatsEvent.Builder newBuilder = StatsEvent.newBuilder();
         newBuilder.setAtomId(i);

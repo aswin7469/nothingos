@@ -4,13 +4,13 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.UserInfo;
 import android.text.TextUtils;
 import java.util.Objects;
-/* loaded from: classes.dex */
+
 public class UserAppInfo {
     public final ApplicationInfo appInfo;
     public final UserInfo userInfo;
 
-    public UserAppInfo(UserInfo userInfo, ApplicationInfo applicationInfo) {
-        this.userInfo = userInfo;
+    public UserAppInfo(UserInfo userInfo2, ApplicationInfo applicationInfo) {
+        this.userInfo = userInfo2;
         this.appInfo = applicationInfo;
     }
 
@@ -18,14 +18,17 @@ public class UserAppInfo {
         if (obj == this) {
             return true;
         }
-        if (obj == null || UserAppInfo.class != obj.getClass()) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
         UserAppInfo userAppInfo = (UserAppInfo) obj;
-        return userAppInfo.userInfo.id == this.userInfo.id && TextUtils.equals(userAppInfo.appInfo.packageName, this.appInfo.packageName);
+        if (userAppInfo.userInfo.id != this.userInfo.id || !TextUtils.equals(userAppInfo.appInfo.packageName, this.appInfo.packageName)) {
+            return false;
+        }
+        return true;
     }
 
     public int hashCode() {
-        return Objects.hash(Integer.valueOf(this.userInfo.id), this.appInfo.packageName);
+        return Objects.hash(new Object[]{Integer.valueOf(this.userInfo.id), this.appInfo.packageName});
     }
 }

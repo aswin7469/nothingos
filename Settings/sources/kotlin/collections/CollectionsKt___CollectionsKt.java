@@ -1,38 +1,68 @@
 package kotlin.collections;
 
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
-import kotlin.text.StringsKt__AppendableKt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 /* compiled from: _Collections.kt */
-/* loaded from: classes2.dex */
 class CollectionsKt___CollectionsKt extends CollectionsKt___CollectionsJvmKt {
     @NotNull
-    public static final <T, A extends Appendable> A joinTo(@NotNull Iterable<? extends T> joinTo, @NotNull A buffer, @NotNull CharSequence separator, @NotNull CharSequence prefix, @NotNull CharSequence postfix, int i, @NotNull CharSequence truncated, @Nullable Function1<? super T, ? extends CharSequence> function1) {
-        Intrinsics.checkNotNullParameter(joinTo, "$this$joinTo");
-        Intrinsics.checkNotNullParameter(buffer, "buffer");
-        Intrinsics.checkNotNullParameter(separator, "separator");
-        Intrinsics.checkNotNullParameter(prefix, "prefix");
-        Intrinsics.checkNotNullParameter(postfix, "postfix");
-        Intrinsics.checkNotNullParameter(truncated, "truncated");
-        buffer.append(prefix);
+    public static final <T, C extends Collection<? super T>> C toCollection(@NotNull Iterable<? extends T> iterable, @NotNull C c) {
+        Intrinsics.checkNotNullParameter(iterable, "<this>");
+        Intrinsics.checkNotNullParameter(c, "destination");
+        for (Object add : iterable) {
+            c.add(add);
+        }
+        return c;
+    }
+
+    @NotNull
+    public static <T> Set<T> toSet(@NotNull Iterable<? extends T> iterable) {
+        Intrinsics.checkNotNullParameter(iterable, "<this>");
+        if (!(iterable instanceof Collection)) {
+            return SetsKt__SetsKt.optimizeReadOnlySet((Set) toCollection(iterable, new LinkedHashSet()));
+        }
+        Collection collection = (Collection) iterable;
+        int size = collection.size();
+        if (size == 0) {
+            return SetsKt__SetsKt.emptySet();
+        }
+        if (size != 1) {
+            return (Set) toCollection(iterable, new LinkedHashSet(MapsKt__MapsJVMKt.mapCapacity(collection.size())));
+        }
+        return SetsKt__SetsJVMKt.setOf(iterable instanceof List ? ((List) iterable).get(0) : iterable.iterator().next());
+    }
+
+    @NotNull
+    public static final <T, A extends Appendable> A joinTo(@NotNull Iterable<? extends T> iterable, @NotNull A a, @NotNull CharSequence charSequence, @NotNull CharSequence charSequence2, @NotNull CharSequence charSequence3, int i, @NotNull CharSequence charSequence4, @Nullable Function1<? super T, ? extends CharSequence> function1) {
+        Intrinsics.checkNotNullParameter(iterable, "<this>");
+        Intrinsics.checkNotNullParameter(a, "buffer");
+        Intrinsics.checkNotNullParameter(charSequence, "separator");
+        Intrinsics.checkNotNullParameter(charSequence2, "prefix");
+        Intrinsics.checkNotNullParameter(charSequence3, "postfix");
+        Intrinsics.checkNotNullParameter(charSequence4, "truncated");
+        a.append(charSequence2);
         int i2 = 0;
-        for (T t : joinTo) {
+        for (Object next : iterable) {
             i2++;
             if (i2 > 1) {
-                buffer.append(separator);
+                a.append(charSequence);
             }
             if (i >= 0 && i2 > i) {
                 break;
             }
-            StringsKt__AppendableKt.appendElement(buffer, t, function1);
+            StringsKt__AppendableKt.appendElement(a, next, function1);
         }
         if (i >= 0 && i2 > i) {
-            buffer.append(truncated);
+            a.append(charSequence4);
         }
-        buffer.append(postfix);
-        return buffer;
+        a.append(charSequence3);
+        return a;
     }
 
     public static /* synthetic */ String joinToString$default(Iterable iterable, CharSequence charSequence, CharSequence charSequence2, CharSequence charSequence3, int i, CharSequence charSequence4, Function1 function1, int i2, Object obj) {
@@ -59,13 +89,13 @@ class CollectionsKt___CollectionsKt extends CollectionsKt___CollectionsJvmKt {
     }
 
     @NotNull
-    public static final <T> String joinToString(@NotNull Iterable<? extends T> joinToString, @NotNull CharSequence separator, @NotNull CharSequence prefix, @NotNull CharSequence postfix, int i, @NotNull CharSequence truncated, @Nullable Function1<? super T, ? extends CharSequence> function1) {
-        Intrinsics.checkNotNullParameter(joinToString, "$this$joinToString");
-        Intrinsics.checkNotNullParameter(separator, "separator");
-        Intrinsics.checkNotNullParameter(prefix, "prefix");
-        Intrinsics.checkNotNullParameter(postfix, "postfix");
-        Intrinsics.checkNotNullParameter(truncated, "truncated");
-        String sb = ((StringBuilder) joinTo(joinToString, new StringBuilder(), separator, prefix, postfix, i, truncated, function1)).toString();
+    public static final <T> String joinToString(@NotNull Iterable<? extends T> iterable, @NotNull CharSequence charSequence, @NotNull CharSequence charSequence2, @NotNull CharSequence charSequence3, int i, @NotNull CharSequence charSequence4, @Nullable Function1<? super T, ? extends CharSequence> function1) {
+        Intrinsics.checkNotNullParameter(iterable, "<this>");
+        Intrinsics.checkNotNullParameter(charSequence, "separator");
+        Intrinsics.checkNotNullParameter(charSequence2, "prefix");
+        Intrinsics.checkNotNullParameter(charSequence3, "postfix");
+        Intrinsics.checkNotNullParameter(charSequence4, "truncated");
+        String sb = ((StringBuilder) joinTo(iterable, new StringBuilder(), charSequence, charSequence2, charSequence3, i, charSequence4, function1)).toString();
         Intrinsics.checkNotNullExpressionValue(sb, "joinTo(StringBuilder(), …ed, transform).toString()");
         return sb;
     }

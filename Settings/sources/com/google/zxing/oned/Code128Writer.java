@@ -1,32 +1,29 @@
 package com.google.zxing.oned;
 
-import androidx.constraintlayout.widget.R$styleable;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import java.util.ArrayList;
 import java.util.Map;
-/* loaded from: classes2.dex */
+
 public final class Code128Writer extends OneDimensionalCodeWriter {
-    @Override // com.google.zxing.oned.OneDimensionalCodeWriter, com.google.zxing.Writer
     public BitMatrix encode(String str, BarcodeFormat barcodeFormat, int i, int i2, Map<EncodeHintType, ?> map) throws WriterException {
-        if (barcodeFormat != BarcodeFormat.CODE_128) {
-            throw new IllegalArgumentException("Can only encode CODE_128, but got " + barcodeFormat);
+        if (barcodeFormat == BarcodeFormat.CODE_128) {
+            return super.encode(str, barcodeFormat, i, i2, map);
         }
-        return super.encode(str, barcodeFormat, i, i2, map);
+        throw new IllegalArgumentException("Can only encode CODE_128, but got " + barcodeFormat);
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    @Override // com.google.zxing.oned.OneDimensionalCodeWriter
     public boolean[] encode(String str) {
+        int i;
         int length = str.length();
         if (length < 1 || length > 80) {
             throw new IllegalArgumentException("Contents length should be between 1 and 80 characters, but got " + length);
         }
-        int i = 0;
-        for (int i2 = 0; i2 < length; i2++) {
-            char charAt = str.charAt(i2);
+        int i2 = 0;
+        for (int i3 = 0; i3 < length; i3++) {
+            char charAt = str.charAt(i3);
             if (charAt < ' ' || charAt > '~') {
                 switch (charAt) {
                     case 241:
@@ -39,64 +36,67 @@ public final class Code128Writer extends OneDimensionalCodeWriter {
                 }
             }
         }
-        ArrayList<int[]> arrayList = new ArrayList();
-        int i3 = 1;
-        int i4 = 0;
+        ArrayList<int[]> arrayList = new ArrayList<>();
+        int i4 = 1;
         int i5 = 0;
         int i6 = 0;
-        while (i4 < length) {
-            int i7 = 99;
-            int i8 = 100;
-            if (!isDigits(str, i4, i6 == 99 ? 2 : 4)) {
-                i7 = 100;
+        int i7 = 0;
+        while (i5 < length) {
+            int i8 = 99;
+            int i9 = 100;
+            if (!isDigits(str, i5, i7 == 99 ? 2 : 4)) {
+                i8 = 100;
             }
-            if (i7 == i6) {
-                if (i6 != 100) {
-                    switch (str.charAt(i4)) {
+            if (i8 == i7) {
+                if (i7 != 100) {
+                    switch (str.charAt(i5)) {
                         case 241:
-                            i8 = R$styleable.Constraint_layout_goneMarginStart;
+                            i9 = 102;
                             break;
                         case 242:
-                            i8 = 97;
+                            i9 = 97;
                             break;
                         case 243:
-                            i8 = 96;
+                            i9 = 96;
                             break;
                         case 244:
                             break;
                         default:
-                            int i9 = i4 + 2;
-                            i8 = Integer.parseInt(str.substring(i4, i9));
-                            i4 = i9;
+                            int i10 = i5 + 2;
+                            i = Integer.parseInt(str.substring(i5, i10));
+                            i5 = i10;
                             break;
                     }
                 } else {
-                    i8 = str.charAt(i4) - ' ';
+                    i9 = str.charAt(i5) - ' ';
                 }
-                i4++;
+                i5++;
             } else {
-                i8 = i6 == 0 ? i7 == 100 ? R$styleable.Constraint_motionStagger : R$styleable.Constraint_pathMotionArc : i7;
-                i6 = i7;
+                if (i7 == 0) {
+                    i = i8 == 100 ? 104 : 105;
+                } else {
+                    i = i8;
+                }
+                i7 = i8;
             }
-            arrayList.add(Code128Reader.CODE_PATTERNS[i8]);
-            i5 += i8 * i3;
-            if (i4 != 0) {
-                i3++;
+            arrayList.add(Code128Reader.CODE_PATTERNS[i]);
+            i6 += i * i4;
+            if (i5 != 0) {
+                i4++;
             }
         }
-        int i10 = i5 % R$styleable.Constraint_layout_goneMarginTop;
         int[][] iArr = Code128Reader.CODE_PATTERNS;
-        arrayList.add(iArr[i10]);
+        arrayList.add(iArr[i6 % 103]);
         arrayList.add(iArr[106]);
         int i11 = 0;
         for (int[] iArr2 : arrayList) {
-            for (int i12 : iArr2) {
+            for (int i12 : (int[]) r11.next()) {
                 i11 += i12;
             }
         }
         boolean[] zArr = new boolean[i11];
-        for (int[] iArr3 : arrayList) {
-            i += OneDimensionalCodeWriter.appendPattern(zArr, i, iArr3, true);
+        for (int[] appendPattern : arrayList) {
+            i2 += OneDimensionalCodeWriter.appendPattern(zArr, i2, appendPattern, true);
         }
         return zArr;
     }
@@ -114,6 +114,9 @@ public final class Code128Writer extends OneDimensionalCodeWriter {
             }
             i++;
         }
-        return i3 <= length;
+        if (i3 <= length) {
+            return true;
+        }
+        return false;
     }
 }

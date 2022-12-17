@@ -9,71 +9,63 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.constraintlayout.widget.R$styleable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import com.android.internal.util.CollectionUtils;
-import com.android.settings.R;
-import com.android.settings.core.InstrumentedFragment;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
+import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.network.ActiveSubscriptionsListener;
 import com.android.settings.network.SubscriptionUtil;
 import com.android.settings.network.ims.WifiCallingQueryImsState;
-import com.android.settings.network.telephony.MobileNetworkUtils;
-import com.android.settings.support.actionbar.HelpResourceProvider;
 import com.android.settings.widget.RtlCompatibleViewPager;
 import com.android.settings.widget.SlidingTabLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.IntPredicate;
-/* loaded from: classes.dex */
-public class WifiCallingSettings extends InstrumentedFragment implements HelpResourceProvider {
+
+public class WifiCallingSettings extends SettingsPreferenceFragment {
     private static final int[] EMPTY_SUB_ID_LIST = new int[0];
     private int mConstructionSubId;
     private WifiCallingViewPagerAdapter mPagerAdapter;
-    private List<SubscriptionInfo> mSil;
+    /* access modifiers changed from: private */
+    public List<SubscriptionInfo> mSil;
     private ActiveSubscriptionsListener mSubscriptionChangeListener;
     private SlidingTabLayout mTabLayout;
     private RtlCompatibleViewPager mViewPager;
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ boolean lambda$containsSubId$1(int i, int i2) {
         return i2 == i;
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
-        return R$styleable.Constraint_pathMotionArc;
+        return 105;
     }
 
-    /* loaded from: classes.dex */
     private final class InternalViewPagerListener implements ViewPager.OnPageChangeListener {
-        @Override // androidx.viewpager.widget.ViewPager.OnPageChangeListener
         public void onPageScrollStateChanged(int i) {
         }
 
-        @Override // androidx.viewpager.widget.ViewPager.OnPageChangeListener
         public void onPageScrolled(int i, float f, int i2) {
         }
 
         private InternalViewPagerListener() {
         }
 
-        @Override // androidx.viewpager.widget.ViewPager.OnPageChangeListener
         public void onPageSelected(int i) {
             WifiCallingSettings.this.updateTitleForCurrentSub();
         }
     }
 
-    @Override // androidx.fragment.app.Fragment
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
-        View inflate = layoutInflater.inflate(R.layout.wifi_calling_settings_tabs, viewGroup, false);
-        this.mTabLayout = (SlidingTabLayout) inflate.findViewById(R.id.sliding_tabs);
-        this.mViewPager = (RtlCompatibleViewPager) inflate.findViewById(R.id.view_pager);
+        View inflate = layoutInflater.inflate(R$layout.wifi_calling_settings_tabs, viewGroup, false);
+        this.mTabLayout = (SlidingTabLayout) inflate.findViewById(R$id.sliding_tabs);
+        this.mViewPager = (RtlCompatibleViewPager) inflate.findViewById(R$id.view_pager);
         WifiCallingViewPagerAdapter wifiCallingViewPagerAdapter = new WifiCallingViewPagerAdapter(getChildFragmentManager(), this.mViewPager);
         this.mPagerAdapter = wifiCallingViewPagerAdapter;
         this.mViewPager.setAdapter(wifiCallingViewPagerAdapter);
@@ -89,22 +81,19 @@ public class WifiCallingSettings extends InstrumentedFragment implements HelpRes
     }
 
     private void maybeSetViewForSubId() {
-        if (this.mSil == null) {
-            return;
-        }
-        int i = this.mConstructionSubId;
-        if (!SubscriptionManager.isValidSubscriptionId(i)) {
-            return;
-        }
-        for (SubscriptionInfo subscriptionInfo : this.mSil) {
-            if (i == subscriptionInfo.getSubscriptionId()) {
-                this.mViewPager.setCurrentItem(this.mSil.indexOf(subscriptionInfo));
-                return;
+        if (this.mSil != null) {
+            int i = this.mConstructionSubId;
+            if (SubscriptionManager.isValidSubscriptionId(i)) {
+                for (SubscriptionInfo next : this.mSil) {
+                    if (i == next.getSubscriptionId()) {
+                        this.mViewPager.setCurrentItem(this.mSil.indexOf(next));
+                        return;
+                    }
+                }
             }
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         this.mConstructionSubId = getConstructionSubId(bundle);
         super.onCreate(bundle);
@@ -115,14 +104,13 @@ public class WifiCallingSettings extends InstrumentedFragment implements HelpRes
         this.mSil = updateSubList();
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onStart() {
         super.onStart();
         List<SubscriptionInfo> list = this.mSil;
-        if (list != null && list.size() > 1) {
-            this.mTabLayout.setViewPager(this.mViewPager);
-        } else {
+        if (list == null || list.size() <= 1) {
             this.mTabLayout.setVisibility(8);
+        } else {
+            this.mTabLayout.setViewPager(this.mViewPager);
         }
         updateTitleForCurrentSub();
         ActiveSubscriptionsListener activeSubscriptionsListener = this.mSubscriptionChangeListener;
@@ -131,7 +119,6 @@ public class WifiCallingSettings extends InstrumentedFragment implements HelpRes
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onStop() {
         ActiveSubscriptionsListener activeSubscriptionsListener = this.mSubscriptionChangeListener;
         if (activeSubscriptionsListener != null) {
@@ -140,18 +127,15 @@ public class WifiCallingSettings extends InstrumentedFragment implements HelpRes
         super.onStop();
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         bundle.putInt("android.provider.extra.SUB_ID", this.mConstructionSubId);
     }
 
-    @Override // com.android.settings.support.actionbar.HelpResourceProvider
     public int getHelpResource() {
-        return R.string.help_uri_wifi_calling;
+        return R$string.help_uri_wifi_calling;
     }
 
-    /* loaded from: classes.dex */
     final class WifiCallingViewPagerAdapter extends FragmentPagerAdapter {
         private final RtlCompatibleViewPager mViewPager;
 
@@ -160,12 +144,10 @@ public class WifiCallingSettings extends InstrumentedFragment implements HelpRes
             this.mViewPager = rtlCompatibleViewPager;
         }
 
-        @Override // androidx.viewpager.widget.PagerAdapter
         public CharSequence getPageTitle(int i) {
             return String.valueOf(SubscriptionUtil.getUniqueSubscriptionDisplayName((SubscriptionInfo) WifiCallingSettings.this.mSil.get(i), WifiCallingSettings.this.getContext()));
         }
 
-        @Override // androidx.fragment.app.FragmentPagerAdapter
         public Fragment getItem(int i) {
             int subscriptionId = ((SubscriptionInfo) WifiCallingSettings.this.mSil.get(i)).getSubscriptionId();
             Log.d("WifiCallingSettings", "Adapter getItem " + i + " for subId=" + subscriptionId);
@@ -177,13 +159,11 @@ public class WifiCallingSettings extends InstrumentedFragment implements HelpRes
             return wifiCallingSettingsForSub;
         }
 
-        @Override // androidx.fragment.app.FragmentPagerAdapter, androidx.viewpager.widget.PagerAdapter
         public Object instantiateItem(ViewGroup viewGroup, int i) {
             Log.d("WifiCallingSettings", "Adapter instantiateItem " + i);
             return super.instantiateItem(viewGroup, this.mViewPager.getRtlAwareIndex(i));
         }
 
-        @Override // androidx.viewpager.widget.PagerAdapter
         public int getCount() {
             if (WifiCallingSettings.this.mSil == null) {
                 Log.d("WifiCallingSettings", "Adapter getCount null mSil ");
@@ -194,7 +174,8 @@ public class WifiCallingSettings extends InstrumentedFragment implements HelpRes
         }
     }
 
-    protected List<SubscriptionInfo> getSelectableSubscriptions(Context context) {
+    /* access modifiers changed from: protected */
+    public List<SubscriptionInfo> getSelectableSubscriptions(Context context) {
         return SubscriptionUtil.getSelectableSubscriptionInfoList(context);
     }
 
@@ -204,10 +185,10 @@ public class WifiCallingSettings extends InstrumentedFragment implements HelpRes
             return Collections.emptyList();
         }
         ArrayList arrayList = new ArrayList();
-        for (SubscriptionInfo subscriptionInfo : selectableSubscriptions) {
+        for (SubscriptionInfo next : selectableSubscriptions) {
             try {
-                if (queryImsState(subscriptionInfo.getSubscriptionId()).isWifiCallingProvisioned()) {
-                    arrayList.add(subscriptionInfo);
+                if (queryImsState(next.getSubscriptionId()).isWifiCallingProvisioned()) {
+                    arrayList.add(next);
                 }
             } catch (Exception unused) {
             }
@@ -215,74 +196,61 @@ public class WifiCallingSettings extends InstrumentedFragment implements HelpRes
         return arrayList;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateTitleForCurrentSub() {
         if (CollectionUtils.size(this.mSil) > 1) {
-            int subscriptionId = this.mSil.get(this.mViewPager.getCurrentItem()).getSubscriptionId();
-            String string = SubscriptionManager.getResourcesForSubId(getContext(), subscriptionId).getString(MobileNetworkUtils.getWfcTitle(getContext(), subscriptionId));
-            Log.d("WifiCallingSettings", "updateTitleForCurrentSub ActionBarTitle=" + string);
-            getActivity().getActionBar().setTitle(string);
+            getActivity().getActionBar().setTitle(SubscriptionManager.getResourcesForSubId(getContext(), this.mSil.get(this.mViewPager.getCurrentItem()).getSubscriptionId()).getString(R$string.wifi_calling_settings_title));
         }
     }
 
-    protected WifiCallingQueryImsState queryImsState(int i) {
+    /* access modifiers changed from: protected */
+    public WifiCallingQueryImsState queryImsState(int i) {
         return new WifiCallingQueryImsState(getContext(), i);
     }
 
-    protected ActiveSubscriptionsListener getSubscriptionChangeListener(final Context context) {
-        return new ActiveSubscriptionsListener(context.getMainLooper(), context) { // from class: com.android.settings.wifi.calling.WifiCallingSettings.1
-            @Override // com.android.settings.network.ActiveSubscriptionsListener
+    /* access modifiers changed from: protected */
+    public ActiveSubscriptionsListener getSubscriptionChangeListener(final Context context) {
+        return new ActiveSubscriptionsListener(context.getMainLooper(), context) {
             public void onChanged() {
                 WifiCallingSettings.this.onSubscriptionChange(context);
             }
         };
     }
 
-    protected void onSubscriptionChange(Context context) {
-        if (this.mSubscriptionChangeListener == null) {
-            return;
-        }
-        int[] subscriptionIdList = subscriptionIdList(this.mSil);
-        List<SubscriptionInfo> updateSubList = updateSubList();
-        int[] subscriptionIdList2 = subscriptionIdList(updateSubList);
-        if (subscriptionIdList2.length > 0) {
-            if (subscriptionIdList.length == 0) {
-                this.mSil = updateSubList;
-                return;
-            } else if (subscriptionIdList.length == subscriptionIdList2.length && (!containsSubId(subscriptionIdList, this.mConstructionSubId) || containsSubId(subscriptionIdList2, this.mConstructionSubId))) {
-                this.mSil = updateSubList;
-                return;
+    /* access modifiers changed from: protected */
+    public void onSubscriptionChange(Context context) {
+        if (this.mSubscriptionChangeListener != null) {
+            int[] subscriptionIdList = subscriptionIdList(this.mSil);
+            List<SubscriptionInfo> updateSubList = updateSubList();
+            int[] subscriptionIdList2 = subscriptionIdList(updateSubList);
+            if (subscriptionIdList2.length > 0) {
+                if (subscriptionIdList.length == 0) {
+                    this.mSil = updateSubList;
+                    return;
+                } else if (subscriptionIdList.length == subscriptionIdList2.length && (!containsSubId(subscriptionIdList, this.mConstructionSubId) || containsSubId(subscriptionIdList2, this.mConstructionSubId))) {
+                    this.mSil = updateSubList;
+                    return;
+                }
             }
-        }
-        Log.d("WifiCallingSettings", "Closed subId=" + this.mConstructionSubId + " due to subscription change: " + Arrays.toString(subscriptionIdList) + " -> " + Arrays.toString(subscriptionIdList2));
-        ActiveSubscriptionsListener activeSubscriptionsListener = this.mSubscriptionChangeListener;
-        if (activeSubscriptionsListener != null) {
-            activeSubscriptionsListener.stop();
-            this.mSubscriptionChangeListener = null;
-        }
-        finish();
-    }
-
-    protected void finish() {
-        FragmentActivity activity = getActivity();
-        if (activity == null) {
-            return;
-        }
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
-        } else {
-            activity.finish();
+            Log.d("WifiCallingSettings", "Closed subId=" + this.mConstructionSubId + " due to subscription change: " + Arrays.toString(subscriptionIdList) + " -> " + Arrays.toString(subscriptionIdList2));
+            ActiveSubscriptionsListener activeSubscriptionsListener = this.mSubscriptionChangeListener;
+            if (activeSubscriptionsListener != null) {
+                activeSubscriptionsListener.stop();
+                this.mSubscriptionChangeListener = null;
+            }
+            finishFragment();
         }
     }
 
-    protected int[] subscriptionIdList(List<SubscriptionInfo> list) {
+    /* access modifiers changed from: protected */
+    public int[] subscriptionIdList(List<SubscriptionInfo> list) {
         if (list == null) {
             return EMPTY_SUB_ID_LIST;
         }
-        return list.stream().mapToInt(WifiCallingSettings$$ExternalSyntheticLambda1.INSTANCE).toArray();
+        return list.stream().mapToInt(new WifiCallingSettings$$ExternalSyntheticLambda0()).toArray();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ int lambda$subscriptionIdList$0(SubscriptionInfo subscriptionInfo) {
         if (subscriptionInfo == null) {
             return -1;
@@ -290,14 +258,8 @@ public class WifiCallingSettings extends InstrumentedFragment implements HelpRes
         return subscriptionInfo.getSubscriptionId();
     }
 
-    protected boolean containsSubId(int[] iArr, final int i) {
-        return Arrays.stream(iArr).anyMatch(new IntPredicate() { // from class: com.android.settings.wifi.calling.WifiCallingSettings$$ExternalSyntheticLambda0
-            @Override // java.util.function.IntPredicate
-            public final boolean test(int i2) {
-                boolean lambda$containsSubId$1;
-                lambda$containsSubId$1 = WifiCallingSettings.lambda$containsSubId$1(i, i2);
-                return lambda$containsSubId$1;
-            }
-        });
+    /* access modifiers changed from: protected */
+    public boolean containsSubId(int[] iArr, int i) {
+        return Arrays.stream(iArr).anyMatch(new WifiCallingSettings$$ExternalSyntheticLambda1(i));
     }
 }

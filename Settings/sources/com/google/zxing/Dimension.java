@@ -1,5 +1,5 @@
 package com.google.zxing;
-/* loaded from: classes2.dex */
+
 public final class Dimension {
     private final int height;
     private final int width;
@@ -13,9 +13,12 @@ public final class Dimension {
     }
 
     public boolean equals(Object obj) {
-        if (obj instanceof Dimension) {
-            Dimension dimension = (Dimension) obj;
-            return this.width == dimension.width && this.height == dimension.height;
+        if (!(obj instanceof Dimension)) {
+            return false;
+        }
+        Dimension dimension = (Dimension) obj;
+        if (this.width == dimension.width && this.height == dimension.height) {
+            return true;
         }
         return false;
     }

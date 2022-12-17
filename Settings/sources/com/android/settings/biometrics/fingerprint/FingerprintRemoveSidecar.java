@@ -7,12 +7,16 @@ import android.util.Log;
 import com.android.settings.core.InstrumentedFragment;
 import java.util.LinkedList;
 import java.util.Queue;
-/* loaded from: classes.dex */
+
 public class FingerprintRemoveSidecar extends InstrumentedFragment {
-    FingerprintManager mFingerprintManager;
-    private Fingerprint mFingerprintRemoving;
-    private Listener mListener;
-    private FingerprintManager.RemovalCallback mRemoveCallback = new FingerprintManager.RemovalCallback() { // from class: com.android.settings.biometrics.fingerprint.FingerprintRemoveSidecar.1
+    /* access modifiers changed from: private */
+    public Fingerprint mFingerprintRemoving;
+    private FingerprintUpdater mFingerprintUpdater;
+    /* access modifiers changed from: private */
+    public Queue<Object> mFingerprintsRemoved = new LinkedList();
+    /* access modifiers changed from: private */
+    public Listener mListener;
+    private FingerprintManager.RemovalCallback mRemoveCallback = new FingerprintManager.RemovalCallback() {
         public void onRemovalSucceeded(Fingerprint fingerprint, int i) {
             if (FingerprintRemoveSidecar.this.mListener != null) {
                 FingerprintRemoveSidecar.this.mListener.onRemovalSucceeded(fingerprint);
@@ -31,28 +35,24 @@ public class FingerprintRemoveSidecar extends InstrumentedFragment {
             FingerprintRemoveSidecar.this.mFingerprintRemoving = null;
         }
     };
-    private Queue<Object> mFingerprintsRemoved = new LinkedList();
 
-    /* loaded from: classes.dex */
     public interface Listener {
         void onRemovalError(Fingerprint fingerprint, int i, CharSequence charSequence);
 
         void onRemovalSucceeded(Fingerprint fingerprint);
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 934;
     }
 
-    /* loaded from: classes.dex */
     private class RemovalError {
         int errMsgId;
         CharSequence errString;
         Fingerprint fingerprint;
 
-        public RemovalError(Fingerprint fingerprint, int i, CharSequence charSequence) {
-            this.fingerprint = fingerprint;
+        public RemovalError(Fingerprint fingerprint2, int i, CharSequence charSequence) {
+            this.fingerprint = fingerprint2;
             this.errMsgId = i;
             this.errString = charSequence;
         }
@@ -64,14 +64,13 @@ public class FingerprintRemoveSidecar extends InstrumentedFragment {
             return;
         }
         this.mFingerprintRemoving = fingerprint;
-        this.mFingerprintManager.remove(fingerprint, i, this.mRemoveCallback);
+        this.mFingerprintUpdater.remove(fingerprint, i, this.mRemoveCallback);
     }
 
-    public void setFingerprintManager(FingerprintManager fingerprintManager) {
-        this.mFingerprintManager = fingerprintManager;
+    public void setFingerprintUpdater(FingerprintUpdater fingerprintUpdater) {
+        this.mFingerprintUpdater = fingerprintUpdater;
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableFragment, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setRetainInstance(true);
@@ -92,12 +91,12 @@ public class FingerprintRemoveSidecar extends InstrumentedFragment {
         this.mListener = listener;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public final boolean isRemovingFingerprint(int i) {
         return inProgress() && this.mFingerprintRemoving.getBiometricId() == i;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public final boolean inProgress() {
         return this.mFingerprintRemoving != null;
     }

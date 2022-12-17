@@ -9,24 +9,29 @@ import android.os.UserManager;
 import android.text.TextUtils;
 import android.util.Log;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.Utils;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settings.widget.GearPreference;
 import com.android.settingslib.applications.DefaultAppInfo;
 import com.android.settingslib.core.AbstractPreferenceController;
 import com.android.settingslib.widget.TwoTargetPreference;
-/* loaded from: classes.dex */
+
 public abstract class DefaultAppPreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin {
     protected final PackageManager mPackageManager;
     protected int mUserId = UserHandle.myUserId();
     protected final UserManager mUserManager;
 
-    protected abstract DefaultAppInfo getDefaultAppInfo();
+    /* access modifiers changed from: protected */
+    public abstract DefaultAppInfo getDefaultAppInfo();
 
-    protected abstract Intent getSettingIntent(DefaultAppInfo defaultAppInfo);
+    /* access modifiers changed from: protected */
+    public Intent getSettingIntent(DefaultAppInfo defaultAppInfo) {
+        return null;
+    }
 
-    protected boolean showLabelAsTitle() {
+    /* access modifiers changed from: protected */
+    public boolean showLabelAsTitle() {
         return false;
     }
 
@@ -36,7 +41,6 @@ public abstract class DefaultAppPreferenceController extends AbstractPreferenceC
         this.mUserManager = (UserManager) context.getSystemService("user");
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         DefaultAppInfo defaultAppInfo = getDefaultAppInfo();
         CharSequence defaultAppLabel = getDefaultAppLabel();
@@ -53,9 +57,9 @@ public abstract class DefaultAppPreferenceController extends AbstractPreferenceC
         } else {
             Log.d("DefaultAppPrefControl", "No default app");
             if (showLabelAsTitle()) {
-                preference.setTitle(R.string.app_list_preference_none);
+                preference.setTitle(R$string.app_list_preference_none);
             } else {
-                preference.setSummary(R.string.app_list_preference_none);
+                preference.setSummary(R$string.app_list_preference_none);
             }
             preference.setIcon((Drawable) null);
         }
@@ -63,28 +67,23 @@ public abstract class DefaultAppPreferenceController extends AbstractPreferenceC
     }
 
     private void mayUpdateGearIcon(DefaultAppInfo defaultAppInfo, Preference preference) {
-        if (!(preference instanceof GearPreference)) {
-            return;
-        }
-        final Intent settingIntent = getSettingIntent(defaultAppInfo);
-        if (settingIntent != null) {
-            ((GearPreference) preference).setOnGearClickListener(new GearPreference.OnGearClickListener() { // from class: com.android.settings.applications.defaultapps.DefaultAppPreferenceController$$ExternalSyntheticLambda0
-                @Override // com.android.settings.widget.GearPreference.OnGearClickListener
-                public final void onGearClick(GearPreference gearPreference) {
-                    DefaultAppPreferenceController.this.lambda$mayUpdateGearIcon$0(settingIntent, gearPreference);
-                }
-            });
-        } else {
-            ((GearPreference) preference).setOnGearClickListener(null);
+        if (preference instanceof GearPreference) {
+            Intent settingIntent = getSettingIntent(defaultAppInfo);
+            if (settingIntent != null) {
+                ((GearPreference) preference).setOnGearClickListener(new DefaultAppPreferenceController$$ExternalSyntheticLambda0(this, settingIntent));
+            } else {
+                ((GearPreference) preference).setOnGearClickListener((GearPreference.OnGearClickListener) null);
+            }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$mayUpdateGearIcon$0(Intent intent, GearPreference gearPreference) {
         startActivity(intent);
     }
 
-    protected void startActivity(Intent intent) {
+    /* access modifiers changed from: protected */
+    public void startActivity(Intent intent) {
         this.mContext.startActivity(intent);
     }
 

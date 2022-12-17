@@ -4,11 +4,10 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.WindowInsets;
 import android.widget.FrameLayout;
-/* loaded from: classes2.dex */
+
 public class StatusBarBackgroundLayout extends FrameLayout {
     private Object lastInsets;
     private Drawable statusBarBackground;
@@ -26,45 +25,40 @@ public class StatusBarBackgroundLayout extends FrameLayout {
         super(context, attributeSet, i);
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onAttachedToWindow() {
+    /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        if (Build.VERSION.SDK_INT < 21 || this.lastInsets != null) {
-            return;
+        if (this.lastInsets == null) {
+            requestApplyInsets();
         }
-        requestApplyInsets();
     }
 
-    @Override // android.view.View
-    protected void onDraw(Canvas canvas) {
-        Object obj;
+    /* access modifiers changed from: protected */
+    public void onDraw(Canvas canvas) {
         int systemWindowInsetTop;
         super.onDraw(canvas);
-        if (Build.VERSION.SDK_INT < 21 || (obj = this.lastInsets) == null || (systemWindowInsetTop = ((WindowInsets) obj).getSystemWindowInsetTop()) <= 0) {
-            return;
+        Object obj = this.lastInsets;
+        if (obj != null && (systemWindowInsetTop = ((WindowInsets) obj).getSystemWindowInsetTop()) > 0) {
+            this.statusBarBackground.setBounds(0, 0, getWidth(), systemWindowInsetTop);
+            this.statusBarBackground.draw(canvas);
         }
-        this.statusBarBackground.setBounds(0, 0, getWidth(), systemWindowInsetTop);
-        this.statusBarBackground.draw(canvas);
     }
 
     public void setStatusBarBackground(Drawable drawable) {
         this.statusBarBackground = drawable;
-        if (Build.VERSION.SDK_INT >= 21) {
-            boolean z = true;
-            setWillNotDraw(drawable == null);
-            if (drawable == null) {
-                z = false;
-            }
-            setFitsSystemWindows(z);
-            invalidate();
+        boolean z = true;
+        setWillNotDraw(drawable == null);
+        if (drawable == null) {
+            z = false;
         }
+        setFitsSystemWindows(z);
+        invalidate();
     }
 
     public Drawable getStatusBarBackground() {
         return this.statusBarBackground;
     }
 
-    @Override // android.view.View
     public WindowInsets onApplyWindowInsets(WindowInsets windowInsets) {
         this.lastInsets = windowInsets;
         return super.onApplyWindowInsets(windowInsets);

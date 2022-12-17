@@ -8,11 +8,14 @@ import android.os.RemoteException;
 import android.os.UserHandle;
 import android.util.Log;
 import com.android.settingslib.Utils;
-/* loaded from: classes.dex */
+
 public final class PasswordUtils extends Utils {
     public static boolean isCallingAppPermitted(Context context, IBinder iBinder, String str) {
         try {
-            return context.checkPermission(str, -1, ActivityManager.getService().getLaunchedFromUid(iBinder)) == 0;
+            if (context.checkPermission(str, -1, ActivityManager.getService().getLaunchedFromUid(iBinder)) == 0) {
+                return true;
+            }
+            return false;
         } catch (RemoteException e) {
             Log.v("Settings", "Could not talk to activity manager.", e);
             return false;

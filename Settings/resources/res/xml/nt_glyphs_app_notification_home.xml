@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:settings="http://schemas.android.com/apk/res-auto" android:persistent="false" android:title="@string/nt_glyphs_app_notifications_home_title">
-    <Preference android:title="All your app notifications are signalled by Glyph 2. " android:order="1" settings:searchable="false"/>
-    <com.nt.settings.glyphs.widget.GlyphsAppsNotificationsPreviewPreference android:order="2"/>
-    <SwitchPreference android:title="@string/nt_glyphs_app_notifications_title" android:key="glyphs_apps_notifications_switch" android:order="3"/>
-    <SwitchPreference android:persistent="false" android:title="@string/nt_glyphs_important_apps_only_title" android:key="glyphs_important_apps_notify" android:summary="@string/nt_glyphs_important_apps_only_summary" android:order="4" settings:controller="com.nt.settings.glyphs.GlyphsImportAppsNotifyPreferenceController" settings:keywords="@string/nt_glyphs_important_apps_only_title"/>
-</PreferenceScreen>

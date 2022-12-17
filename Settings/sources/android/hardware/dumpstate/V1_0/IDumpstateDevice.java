@@ -9,7 +9,7 @@ import android.os.RemoteException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Objects;
-/* loaded from: classes.dex */
+
 public interface IDumpstateDevice extends IHwInterface {
     ArrayList<String> interfaceChain() throws RemoteException;
 
@@ -17,9 +17,9 @@ public interface IDumpstateDevice extends IHwInterface {
         if (iHwBinder == null) {
             return null;
         }
-        IHwInterface queryLocalInterface = iHwBinder.queryLocalInterface("android.hardware.dumpstate@1.0::IDumpstateDevice");
+        IDumpstateDevice queryLocalInterface = iHwBinder.queryLocalInterface("android.hardware.dumpstate@1.0::IDumpstateDevice");
         if (queryLocalInterface != null && (queryLocalInterface instanceof IDumpstateDevice)) {
-            return (IDumpstateDevice) queryLocalInterface;
+            return queryLocalInterface;
         }
         Proxy proxy = new Proxy(iHwBinder);
         try {
@@ -42,7 +42,6 @@ public interface IDumpstateDevice extends IHwInterface {
         return getService("default", z);
     }
 
-    /* loaded from: classes.dex */
     public static final class Proxy implements IDumpstateDevice {
         private IHwBinder mRemote;
 
@@ -71,7 +70,6 @@ public interface IDumpstateDevice extends IHwInterface {
             return asBinder().hashCode();
         }
 
-        @Override // android.hardware.dumpstate.V1_0.IDumpstateDevice
         public ArrayList<String> interfaceChain() throws RemoteException {
             HwParcel hwParcel = new HwParcel();
             hwParcel.writeInterfaceToken("android.hidl.base@1.0::IBase");

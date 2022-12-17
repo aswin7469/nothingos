@@ -4,12 +4,12 @@ import android.content.Context;
 import android.util.AttributeSet;
 import androidx.core.content.res.TypedArrayUtils;
 import androidx.preference.PreferenceManager;
-/* loaded from: classes.dex */
+
 public final class PreferenceScreen extends PreferenceGroup {
     private boolean mShouldUseGeneratedIds = true;
 
-    @Override // androidx.preference.PreferenceGroup
-    protected boolean isOnSameScreenAsChildren() {
+    /* access modifiers changed from: protected */
+    public boolean isOnSameScreenAsChildren() {
         return false;
     }
 
@@ -17,14 +17,12 @@ public final class PreferenceScreen extends PreferenceGroup {
         super(context, attributeSet, TypedArrayUtils.getAttr(context, R$attr.preferenceScreenStyle, 16842891));
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public void onClick() {
         PreferenceManager.OnNavigateToScreenListener onNavigateToScreenListener;
-        if (getIntent() != null || getFragment() != null || getPreferenceCount() == 0 || (onNavigateToScreenListener = getPreferenceManager().getOnNavigateToScreenListener()) == null) {
-            return;
+        if (getIntent() == null && getFragment() == null && getPreferenceCount() != 0 && (onNavigateToScreenListener = getPreferenceManager().getOnNavigateToScreenListener()) != null) {
+            onNavigateToScreenListener.onNavigateToScreen(this);
         }
-        onNavigateToScreenListener.onNavigateToScreen(this);
     }
 
     public boolean shouldUseGeneratedIds() {
@@ -32,9 +30,10 @@ public final class PreferenceScreen extends PreferenceGroup {
     }
 
     public void setShouldUseGeneratedIds(boolean z) {
-        if (isAttached()) {
-            throw new IllegalStateException("Cannot change the usage of generated IDs while attached to the preference hierarchy");
+        if (!isAttached()) {
+            this.mShouldUseGeneratedIds = z;
+            return;
         }
-        this.mShouldUseGeneratedIds = z;
+        throw new IllegalStateException("Cannot change the usage of generated IDs while attached to the preference hierarchy");
     }
 }

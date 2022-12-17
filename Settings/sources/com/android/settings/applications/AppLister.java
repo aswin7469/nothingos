@@ -8,22 +8,23 @@ import android.os.UserHandle;
 import android.os.UserManager;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public abstract class AppLister extends AsyncTask<Void, Void, List<UserAppInfo>> {
     protected final PackageManager mPm;
     protected final UserManager mUm;
 
-    protected abstract boolean includeInCount(ApplicationInfo applicationInfo);
+    /* access modifiers changed from: protected */
+    public abstract boolean includeInCount(ApplicationInfo applicationInfo);
 
-    protected abstract void onAppListBuilt(List<UserAppInfo> list);
+    /* access modifiers changed from: protected */
+    public abstract void onAppListBuilt(List<UserAppInfo> list);
 
     public AppLister(PackageManager packageManager, UserManager userManager) {
         this.mPm = packageManager;
         this.mUm = userManager;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.os.AsyncTask
+    /* access modifiers changed from: protected */
     public List<UserAppInfo> doInBackground(Void... voidArr) {
         ArrayList arrayList = new ArrayList();
         for (UserInfo userInfo : this.mUm.getProfiles(UserHandle.myUserId())) {
@@ -36,8 +37,7 @@ public abstract class AppLister extends AsyncTask<Void, Void, List<UserAppInfo>>
         return arrayList;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.os.AsyncTask
+    /* access modifiers changed from: protected */
     public void onPostExecute(List<UserAppInfo> list) {
         onAppListBuilt(list);
     }

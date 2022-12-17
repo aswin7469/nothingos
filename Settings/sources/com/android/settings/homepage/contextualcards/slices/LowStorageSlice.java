@@ -10,7 +10,8 @@ import androidx.core.graphics.drawable.IconCompat;
 import androidx.slice.Slice;
 import androidx.slice.builders.ListBuilder;
 import androidx.slice.builders.SliceAction;
-import com.android.settings.R;
+import com.android.settings.R$drawable;
+import com.android.settings.R$string;
 import com.android.settings.SubSettings;
 import com.android.settings.deviceinfo.StorageDashboardFragment;
 import com.android.settings.slices.CustomSliceRegistry;
@@ -20,11 +21,10 @@ import com.android.settingslib.Utils;
 import com.android.settingslib.deviceinfo.PrivateStorageInfo;
 import com.android.settingslib.deviceinfo.StorageManagerVolumeProvider;
 import java.text.NumberFormat;
-/* loaded from: classes.dex */
+
 public class LowStorageSlice implements CustomSliceable {
     private final Context mContext;
 
-    @Override // com.android.settings.slices.CustomSliceable
     public void onNotifyChange(Intent intent) {
     }
 
@@ -32,29 +32,30 @@ public class LowStorageSlice implements CustomSliceable {
         this.mContext = context;
     }
 
-    @Override // com.android.settings.slices.CustomSliceable
     public Slice getSlice() {
         PrivateStorageInfo privateStorageInfo = PrivateStorageInfo.getPrivateStorageInfo(new StorageManagerVolumeProvider((StorageManager) this.mContext.getSystemService(StorageManager.class)));
         long j = privateStorageInfo.totalBytes;
-        double d = (j - privateStorageInfo.freeBytes) / j;
+        double d = ((double) (j - privateStorageInfo.freeBytes)) / ((double) j);
         String format = NumberFormat.getPercentInstance().format(d);
         String formatFileSize = Formatter.formatFileSize(this.mContext, privateStorageInfo.freeBytes);
-        ListBuilder accentColor = new ListBuilder(this.mContext, CustomSliceRegistry.LOW_STORAGE_SLICE_URI, -1L).setAccentColor(Utils.getColorAccentDefaultColor(this.mContext));
-        IconCompat createWithResource = IconCompat.createWithResource(this.mContext, R.drawable.ic_storage);
+        ListBuilder accentColor = new ListBuilder(this.mContext, CustomSliceRegistry.LOW_STORAGE_SLICE_URI, -1).setAccentColor(Utils.getColorAccentDefaultColor(this.mContext));
+        IconCompat createWithResource = IconCompat.createWithResource(this.mContext, R$drawable.ic_storage);
         if (d < 0.85d) {
-            return accentColor.addRow(buildRowBuilder(this.mContext.getText(R.string.storage_settings), this.mContext.getString(R.string.storage_summary, format, formatFileSize), createWithResource)).setIsError(true).build();
+            return accentColor.addRow(buildRowBuilder(this.mContext.getText(R$string.storage_settings), this.mContext.getString(R$string.storage_summary, new Object[]{format, formatFileSize}), createWithResource)).setIsError(true).build();
         }
-        return accentColor.addRow(buildRowBuilder(this.mContext.getText(R.string.storage_menu_free), this.mContext.getString(R.string.low_storage_summary, format, formatFileSize), createWithResource)).build();
+        return accentColor.addRow(buildRowBuilder(this.mContext.getText(R$string.storage_menu_free), this.mContext.getString(R$string.low_storage_summary, new Object[]{format, formatFileSize}), createWithResource)).build();
     }
 
-    @Override // com.android.settings.slices.CustomSliceable
     public Uri getUri() {
         return CustomSliceRegistry.LOW_STORAGE_SLICE_URI;
     }
 
-    @Override // com.android.settings.slices.CustomSliceable
     public Intent getIntent() {
-        return SliceBuilderUtils.buildSearchResultPageIntent(this.mContext, StorageDashboardFragment.class.getName(), "", this.mContext.getText(R.string.storage_label).toString(), 1401).setClassName(this.mContext.getPackageName(), SubSettings.class.getName()).setData(CustomSliceRegistry.LOW_STORAGE_SLICE_URI);
+        return SliceBuilderUtils.buildSearchResultPageIntent(this.mContext, StorageDashboardFragment.class.getName(), "", this.mContext.getText(R$string.storage_label).toString(), 1401, (CustomSliceable) this).setClassName(this.mContext.getPackageName(), SubSettings.class.getName()).setData(CustomSliceRegistry.LOW_STORAGE_SLICE_URI);
+    }
+
+    public int getSliceHighlightMenuRes() {
+        return R$string.menu_key_storage;
     }
 
     private ListBuilder.RowBuilder buildRowBuilder(CharSequence charSequence, String str, IconCompat iconCompat) {

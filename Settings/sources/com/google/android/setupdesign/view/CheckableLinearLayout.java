@@ -5,7 +5,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.Checkable;
 import android.widget.LinearLayout;
-/* loaded from: classes2.dex */
+
 public class CheckableLinearLayout extends LinearLayout implements Checkable {
     private boolean checked = false;
 
@@ -31,26 +31,23 @@ public class CheckableLinearLayout extends LinearLayout implements Checkable {
         setFocusable(true);
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected int[] onCreateDrawableState(int i) {
-        if (this.checked) {
-            return LinearLayout.mergeDrawableStates(super.onCreateDrawableState(i + 1), new int[]{16842912});
+    /* access modifiers changed from: protected */
+    public int[] onCreateDrawableState(int i) {
+        if (!this.checked) {
+            return super.onCreateDrawableState(i);
         }
-        return super.onCreateDrawableState(i);
+        return LinearLayout.mergeDrawableStates(super.onCreateDrawableState(i + 1), new int[]{16842912});
     }
 
-    @Override // android.widget.Checkable
     public void setChecked(boolean z) {
         this.checked = z;
         refreshDrawableState();
     }
 
-    @Override // android.widget.Checkable
     public boolean isChecked() {
         return this.checked;
     }
 
-    @Override // android.widget.Checkable
     public void toggle() {
         setChecked(!isChecked());
     }

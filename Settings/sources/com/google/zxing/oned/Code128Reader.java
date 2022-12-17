@@ -1,17 +1,8 @@
 package com.google.zxing.oned;
 
-import androidx.constraintlayout.widget.R$styleable;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.ChecksumException;
-import com.google.zxing.DecodeHintType;
-import com.google.zxing.FormatException;
 import com.google.zxing.NotFoundException;
-import com.google.zxing.Result;
-import com.google.zxing.ResultPoint;
 import com.google.zxing.common.BitArray;
-import java.util.ArrayList;
-import java.util.Map;
-/* loaded from: classes2.dex */
+
 public final class Code128Reader extends OneDReader {
     static final int[][] CODE_PATTERNS = {new int[]{2, 1, 2, 2, 2, 2}, new int[]{2, 2, 2, 1, 2, 2}, new int[]{2, 2, 2, 2, 2, 1}, new int[]{1, 2, 1, 2, 2, 3}, new int[]{1, 2, 1, 3, 2, 2}, new int[]{1, 3, 1, 2, 2, 2}, new int[]{1, 2, 2, 2, 1, 3}, new int[]{1, 2, 2, 3, 1, 2}, new int[]{1, 3, 2, 2, 1, 2}, new int[]{2, 2, 1, 2, 1, 3}, new int[]{2, 2, 1, 3, 1, 2}, new int[]{2, 3, 1, 2, 1, 2}, new int[]{1, 1, 2, 2, 3, 2}, new int[]{1, 2, 2, 1, 3, 2}, new int[]{1, 2, 2, 2, 3, 1}, new int[]{1, 1, 3, 2, 2, 2}, new int[]{1, 2, 3, 1, 2, 2}, new int[]{1, 2, 3, 2, 2, 1}, new int[]{2, 2, 3, 2, 1, 1}, new int[]{2, 2, 1, 1, 3, 2}, new int[]{2, 2, 1, 2, 3, 1}, new int[]{2, 1, 3, 2, 1, 2}, new int[]{2, 2, 3, 1, 1, 2}, new int[]{3, 1, 2, 1, 3, 1}, new int[]{3, 1, 1, 2, 2, 2}, new int[]{3, 2, 1, 1, 2, 2}, new int[]{3, 2, 1, 2, 2, 1}, new int[]{3, 1, 2, 2, 1, 2}, new int[]{3, 2, 2, 1, 1, 2}, new int[]{3, 2, 2, 2, 1, 1}, new int[]{2, 1, 2, 1, 2, 3}, new int[]{2, 1, 2, 3, 2, 1}, new int[]{2, 3, 2, 1, 2, 1}, new int[]{1, 1, 1, 3, 2, 3}, new int[]{1, 3, 1, 1, 2, 3}, new int[]{1, 3, 1, 3, 2, 1}, new int[]{1, 1, 2, 3, 1, 3}, new int[]{1, 3, 2, 1, 1, 3}, new int[]{1, 3, 2, 3, 1, 1}, new int[]{2, 1, 1, 3, 1, 3}, new int[]{2, 3, 1, 1, 1, 3}, new int[]{2, 3, 1, 3, 1, 1}, new int[]{1, 1, 2, 1, 3, 3}, new int[]{1, 1, 2, 3, 3, 1}, new int[]{1, 3, 2, 1, 3, 1}, new int[]{1, 1, 3, 1, 2, 3}, new int[]{1, 1, 3, 3, 2, 1}, new int[]{1, 3, 3, 1, 2, 1}, new int[]{3, 1, 3, 1, 2, 1}, new int[]{2, 1, 1, 3, 3, 1}, new int[]{2, 3, 1, 1, 3, 1}, new int[]{2, 1, 3, 1, 1, 3}, new int[]{2, 1, 3, 3, 1, 1}, new int[]{2, 1, 3, 1, 3, 1}, new int[]{3, 1, 1, 1, 2, 3}, new int[]{3, 1, 1, 3, 2, 1}, new int[]{3, 3, 1, 1, 2, 1}, new int[]{3, 1, 2, 1, 1, 3}, new int[]{3, 1, 2, 3, 1, 1}, new int[]{3, 3, 2, 1, 1, 1}, new int[]{3, 1, 4, 1, 1, 1}, new int[]{2, 2, 1, 4, 1, 1}, new int[]{4, 3, 1, 1, 1, 1}, new int[]{1, 1, 1, 2, 2, 4}, new int[]{1, 1, 1, 4, 2, 2}, new int[]{1, 2, 1, 1, 2, 4}, new int[]{1, 2, 1, 4, 2, 1}, new int[]{1, 4, 1, 1, 2, 2}, new int[]{1, 4, 1, 2, 2, 1}, new int[]{1, 1, 2, 2, 1, 4}, new int[]{1, 1, 2, 4, 1, 2}, new int[]{1, 2, 2, 1, 1, 4}, new int[]{1, 2, 2, 4, 1, 1}, new int[]{1, 4, 2, 1, 1, 2}, new int[]{1, 4, 2, 2, 1, 1}, new int[]{2, 4, 1, 2, 1, 1}, new int[]{2, 2, 1, 1, 1, 4}, new int[]{4, 1, 3, 1, 1, 1}, new int[]{2, 4, 1, 1, 1, 2}, new int[]{1, 3, 4, 1, 1, 1}, new int[]{1, 1, 1, 2, 4, 2}, new int[]{1, 2, 1, 1, 4, 2}, new int[]{1, 2, 1, 2, 4, 1}, new int[]{1, 1, 4, 2, 1, 2}, new int[]{1, 2, 4, 1, 1, 2}, new int[]{1, 2, 4, 2, 1, 1}, new int[]{4, 1, 1, 2, 1, 2}, new int[]{4, 2, 1, 1, 1, 2}, new int[]{4, 2, 1, 2, 1, 1}, new int[]{2, 1, 2, 1, 4, 1}, new int[]{2, 1, 4, 1, 2, 1}, new int[]{4, 1, 2, 1, 2, 1}, new int[]{1, 1, 1, 1, 4, 3}, new int[]{1, 1, 1, 3, 4, 1}, new int[]{1, 3, 1, 1, 4, 1}, new int[]{1, 1, 4, 1, 1, 3}, new int[]{1, 1, 4, 3, 1, 1}, new int[]{4, 1, 1, 1, 1, 3}, new int[]{4, 1, 1, 3, 1, 1}, new int[]{1, 1, 3, 1, 4, 1}, new int[]{1, 1, 4, 1, 3, 1}, new int[]{3, 1, 1, 1, 4, 1}, new int[]{4, 1, 1, 1, 3, 1}, new int[]{2, 1, 1, 4, 1, 2}, new int[]{2, 1, 1, 2, 1, 4}, new int[]{2, 1, 1, 2, 3, 2}, new int[]{2, 3, 3, 1, 1, 1, 2}};
 
@@ -29,21 +20,22 @@ public final class Code128Reader extends OneDReader {
                 if (i == 5) {
                     int i3 = 64;
                     int i4 = -1;
-                    for (int i5 = R$styleable.Constraint_layout_goneMarginTop; i5 <= 105; i5++) {
+                    for (int i5 = 103; i5 <= 105; i5++) {
                         int patternMatchVariance = OneDReader.patternMatchVariance(iArr, CODE_PATTERNS[i5], 179);
                         if (patternMatchVariance < i3) {
                             i4 = i5;
                             i3 = patternMatchVariance;
                         }
                     }
-                    if (i4 >= 0 && bitArray.isRange(Math.max(0, i2 - ((nextSet - i2) / 2)), i2, false)) {
+                    if (i4 < 0 || !bitArray.isRange(Math.max(0, i2 - ((nextSet - i2) / 2)), i2, false)) {
+                        i2 += iArr[0] + iArr[1];
+                        System.arraycopy(iArr, 2, iArr, 0, 4);
+                        iArr[4] = 0;
+                        iArr[5] = 0;
+                        i--;
+                    } else {
                         return new int[]{i2, nextSet, i4};
                     }
-                    i2 += iArr[0] + iArr[1];
-                    System.arraycopy(iArr, 2, iArr, 0, 4);
-                    iArr[4] = 0;
-                    iArr[5] = 0;
-                    i--;
                 } else {
                     i++;
                 }
@@ -78,228 +70,388 @@ public final class Code128Reader extends OneDReader {
         throw NotFoundException.getNotFoundInstance();
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    @Override // com.google.zxing.oned.OneDReader
-    public Result decodeRow(int i, BitArray bitArray, Map<DecodeHintType, ?> map) throws NotFoundException, FormatException, ChecksumException {
-        char c;
-        char c2;
-        boolean z;
-        boolean z2 = map != null && map.containsKey(DecodeHintType.ASSUME_GS1);
-        int[] findStartPattern = findStartPattern(bitArray);
-        int i2 = findStartPattern[2];
-        switch (i2) {
-            case R$styleable.Constraint_layout_goneMarginTop /* 103 */:
-                c = 'e';
-                break;
-            case R$styleable.Constraint_motionStagger /* 104 */:
-                c = 'd';
-                break;
-            case R$styleable.Constraint_pathMotionArc /* 105 */:
-                c = 'c';
-                break;
-            default:
-                throw FormatException.getFormatInstance();
-        }
-        StringBuilder sb = new StringBuilder(20);
-        ArrayList arrayList = new ArrayList(20);
-        int i3 = 6;
-        int[] iArr = new int[6];
-        boolean z3 = false;
-        int i4 = 0;
-        int i5 = 0;
-        int i6 = 0;
-        int i7 = findStartPattern[0];
-        int i8 = i2;
-        int i9 = findStartPattern[1];
-        boolean z4 = false;
-        char c3 = c;
-        boolean z5 = true;
-        while (!z4) {
-            int decodeCode = decodeCode(bitArray, iArr, i9);
-            arrayList.add(Byte.valueOf((byte) decodeCode));
-            if (decodeCode != 106) {
-                z5 = true;
+    /* JADX WARNING: Can't fix incorrect switch cases order */
+    /* JADX WARNING: Code restructure failed: missing block: B:26:0x007e, code lost:
+        r9 = 'd';
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:42:0x00ab, code lost:
+        r14 = 'd';
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:68:0x00f4, code lost:
+        r7 = false;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:70:0x00f8, code lost:
+        r7 = false;
+        r14 = 'c';
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:73:0x00ff, code lost:
+        r9 = 'd';
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:92:0x0135, code lost:
+        r7 = false;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:94:0x0138, code lost:
+        if (r17 == false) goto L_0x013f;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:95:0x013a, code lost:
+        if (r14 != 'e') goto L_0x013e;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:96:0x013c, code lost:
+        r14 = r9;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:97:0x013e, code lost:
+        r14 = 'e';
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:98:0x013f, code lost:
+        r17 = r7;
+        r20 = r18;
+        r15 = 6;
+        r18 = r5;
+        r21 = r16;
+        r16 = r3;
+        r3 = r21;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public com.google.zxing.Result decodeRow(int r23, com.google.zxing.common.BitArray r24, java.util.Map<com.google.zxing.DecodeHintType, ?> r25) throws com.google.zxing.NotFoundException, com.google.zxing.FormatException, com.google.zxing.ChecksumException {
+        /*
+            r22 = this;
+            r0 = r24
+            r1 = r25
+            r2 = 1
+            r3 = 0
+            if (r1 == 0) goto L_0x0012
+            com.google.zxing.DecodeHintType r4 = com.google.zxing.DecodeHintType.ASSUME_GS1
+            boolean r1 = r1.containsKey(r4)
+            if (r1 == 0) goto L_0x0012
+            r1 = r2
+            goto L_0x0013
+        L_0x0012:
+            r1 = r3
+        L_0x0013:
+            int[] r4 = findStartPattern(r24)
+            r5 = 2
+            r6 = r4[r5]
+            switch(r6) {
+                case 103: goto L_0x0028;
+                case 104: goto L_0x0025;
+                case 105: goto L_0x0022;
+                default: goto L_0x001d;
             }
-            if (decodeCode != 106) {
-                i5++;
-                i8 += i5 * decodeCode;
+        L_0x001d:
+            com.google.zxing.FormatException r0 = com.google.zxing.FormatException.getFormatInstance()
+            throw r0
+        L_0x0022:
+            r10 = 99
+            goto L_0x002a
+        L_0x0025:
+            r10 = 100
+            goto L_0x002a
+        L_0x0028:
+            r10 = 101(0x65, float:1.42E-43)
+        L_0x002a:
+            java.lang.StringBuilder r11 = new java.lang.StringBuilder
+            r12 = 20
+            r11.<init>(r12)
+            java.util.ArrayList r13 = new java.util.ArrayList
+            r13.<init>(r12)
+            r12 = r4[r3]
+            r14 = r4[r2]
+            r15 = 6
+            int[] r2 = new int[r15]
+            r17 = r3
+            r18 = r17
+            r19 = r18
+            r20 = r19
+            r16 = r12
+            r12 = r6
+            r3 = r14
+            r6 = r20
+            r14 = r10
+            r10 = 1
+        L_0x004d:
+            if (r6 != 0) goto L_0x014f
+            int r5 = decodeCode(r0, r2, r3)
+            byte r8 = (byte) r5
+            java.lang.Byte r8 = java.lang.Byte.valueOf(r8)
+            r13.add(r8)
+            r8 = 106(0x6a, float:1.49E-43)
+            if (r5 == r8) goto L_0x0060
+            r10 = 1
+        L_0x0060:
+            if (r5 == r8) goto L_0x0068
+            int r19 = r19 + 1
+            int r16 = r19 * r5
+            int r12 = r12 + r16
+        L_0x0068:
+            r16 = r3
+            r9 = 0
+        L_0x006b:
+            if (r9 >= r15) goto L_0x0074
+            r20 = r2[r9]
+            int r16 = r16 + r20
+            int r9 = r9 + 1
+            goto L_0x006b
+        L_0x0074:
+            switch(r5) {
+                case 103: goto L_0x0082;
+                case 104: goto L_0x0082;
+                case 105: goto L_0x0082;
+                default: goto L_0x0077;
             }
-            int i10 = i9;
-            for (int i11 = 0; i11 < i3; i11++) {
-                i10 += iArr[i11];
+        L_0x0077:
+            r15 = 96
+            java.lang.String r7 = "]C1"
+            switch(r14) {
+                case 99: goto L_0x0102;
+                case 100: goto L_0x00c2;
+                case 101: goto L_0x0087;
+                default: goto L_0x007e;
             }
-            switch (decodeCode) {
-                case R$styleable.Constraint_layout_goneMarginTop /* 103 */:
-                case R$styleable.Constraint_motionStagger /* 104 */:
-                case R$styleable.Constraint_pathMotionArc /* 105 */:
-                    throw FormatException.getFormatInstance();
-                default:
-                    switch (c3) {
-                        case R$styleable.Constraint_layout_goneMarginEnd /* 99 */:
-                            c2 = 'd';
-                            if (decodeCode < 100) {
-                                if (decodeCode < 10) {
-                                    sb.append('0');
-                                }
-                                sb.append(decodeCode);
-                            } else {
-                                if (decodeCode != 106) {
-                                    z5 = false;
-                                }
-                                if (decodeCode != 106) {
-                                    switch (decodeCode) {
-                                        case R$styleable.Constraint_layout_goneMarginLeft /* 100 */:
-                                            c3 = 'd';
-                                            break;
-                                        case R$styleable.Constraint_layout_goneMarginRight /* 101 */:
-                                            z = false;
-                                            c3 = 'e';
-                                            break;
-                                        case R$styleable.Constraint_layout_goneMarginStart /* 102 */:
-                                            if (z2) {
-                                                if (sb.length() == 0) {
-                                                    sb.append("]C1");
-                                                    break;
-                                                } else {
-                                                    sb.append((char) 29);
-                                                    break;
-                                                }
-                                            }
-                                            break;
-                                    }
-                                } else {
-                                    z4 = true;
-                                }
-                            }
-                            z = false;
-                            break;
-                        case R$styleable.Constraint_layout_goneMarginLeft /* 100 */:
-                            if (decodeCode < 96) {
-                                sb.append((char) (decodeCode + 32));
-                                c2 = 'd';
-                                z = false;
-                                break;
-                            } else {
-                                if (decodeCode != 106) {
-                                    z5 = false;
-                                }
-                                if (decodeCode != 98) {
-                                    if (decodeCode != 99) {
-                                        if (decodeCode != 101) {
-                                            if (decodeCode != 102) {
-                                                if (decodeCode == 106) {
-                                                    z4 = true;
-                                                }
-                                            } else if (z2) {
-                                                if (sb.length() == 0) {
-                                                    sb.append("]C1");
-                                                } else {
-                                                    sb.append((char) 29);
-                                                }
-                                            }
-                                            z = false;
-                                            c2 = 'd';
-                                            break;
-                                        } else {
-                                            z = false;
-                                        }
-                                    }
-                                    z = false;
-                                    c3 = 'c';
-                                    c2 = 'd';
-                                } else {
-                                    z = true;
-                                }
-                                c3 = 'e';
-                                c2 = 'd';
-                            }
-                        case R$styleable.Constraint_layout_goneMarginRight /* 101 */:
-                            if (decodeCode < 64) {
-                                sb.append((char) (decodeCode + 32));
-                            } else if (decodeCode < 96) {
-                                sb.append((char) (decodeCode - 64));
-                            } else {
-                                if (decodeCode != 106) {
-                                    z5 = false;
-                                }
-                                if (decodeCode != 102) {
-                                    if (decodeCode != 106) {
-                                        switch (decodeCode) {
-                                            case R$styleable.Constraint_layout_goneMarginBottom /* 98 */:
-                                                z = true;
-                                                c3 = 'd';
-                                                break;
-                                            case R$styleable.Constraint_layout_goneMarginEnd /* 99 */:
-                                                z = false;
-                                                c3 = 'c';
-                                                break;
-                                            case R$styleable.Constraint_layout_goneMarginLeft /* 100 */:
-                                                z = false;
-                                                c3 = 'd';
-                                                break;
-                                        }
-                                        c2 = 'd';
-                                        break;
-                                    } else {
-                                        z4 = true;
-                                    }
-                                } else if (z2) {
-                                    if (sb.length() == 0) {
-                                        sb.append("]C1");
-                                    } else {
-                                        sb.append((char) 29);
-                                    }
-                                }
-                                z = false;
-                                c2 = 'd';
-                            }
-                            c2 = 'd';
-                            z = false;
-                            break;
-                        default:
-                            c2 = 'd';
-                            z = false;
-                            break;
-                    }
-                    if (z3) {
-                        c3 = c3 == 'e' ? c2 : 'e';
-                    }
-                    z3 = z;
-                    i6 = i4;
-                    i3 = 6;
-                    i4 = decodeCode;
-                    int i12 = i10;
-                    i7 = i9;
-                    i9 = i12;
+        L_0x007e:
+            r9 = 100
+            goto L_0x0135
+        L_0x0082:
+            com.google.zxing.FormatException r0 = com.google.zxing.FormatException.getFormatInstance()
+            throw r0
+        L_0x0087:
+            r9 = 64
+            if (r5 >= r9) goto L_0x0092
+            int r7 = r5 + 32
+            char r7 = (char) r7
+            r11.append(r7)
+            goto L_0x007e
+        L_0x0092:
+            if (r5 >= r15) goto L_0x009b
+            int r7 = r5 + -64
+            char r7 = (char) r7
+            r11.append(r7)
+            goto L_0x007e
+        L_0x009b:
+            if (r5 == r8) goto L_0x009e
+            r10 = 0
+        L_0x009e:
+            r9 = 102(0x66, float:1.43E-43)
+            if (r5 == r9) goto L_0x00b0
+            if (r5 == r8) goto L_0x00ae
+            switch(r5) {
+                case 98: goto L_0x00aa;
+                case 99: goto L_0x00f8;
+                case 100: goto L_0x00a8;
+                default: goto L_0x00a7;
             }
-        }
-        int nextUnset = bitArray.getNextUnset(i9);
-        if (!bitArray.isRange(nextUnset, Math.min(bitArray.getSize(), ((nextUnset - i7) / 2) + nextUnset), false)) {
-            throw NotFoundException.getNotFoundInstance();
-        }
-        int i13 = i6;
-        if ((i8 - (i5 * i13)) % R$styleable.Constraint_layout_goneMarginTop != i13) {
-            throw ChecksumException.getChecksumInstance();
-        }
-        int length = sb.length();
-        if (length == 0) {
-            throw NotFoundException.getNotFoundInstance();
-        }
-        if (length > 0 && z5) {
-            if (c3 == 'c') {
-                sb.delete(length - 2, length);
-            } else {
-                sb.delete(length - 1, length);
+        L_0x00a7:
+            goto L_0x00f4
+        L_0x00a8:
+            r7 = 0
+            goto L_0x00ab
+        L_0x00aa:
+            r7 = 1
+        L_0x00ab:
+            r14 = 100
+            goto L_0x00ff
+        L_0x00ae:
+            r6 = 1
+            goto L_0x00f4
+        L_0x00b0:
+            if (r1 == 0) goto L_0x00f4
+            int r8 = r11.length()
+            if (r8 != 0) goto L_0x00bc
+            r11.append(r7)
+            goto L_0x00f4
+        L_0x00bc:
+            r7 = 29
+            r11.append(r7)
+            goto L_0x00f4
+        L_0x00c2:
+            if (r5 >= r15) goto L_0x00cb
+            int r7 = r5 + 32
+            char r7 = (char) r7
+            r11.append(r7)
+            goto L_0x007e
+        L_0x00cb:
+            if (r5 == r8) goto L_0x00ce
+            r10 = 0
+        L_0x00ce:
+            r9 = 98
+            if (r5 == r9) goto L_0x00fc
+            r9 = 99
+            if (r5 == r9) goto L_0x00f8
+            r9 = 101(0x65, float:1.42E-43)
+            if (r5 == r9) goto L_0x00f6
+            r9 = 102(0x66, float:1.43E-43)
+            if (r5 == r9) goto L_0x00e3
+            if (r5 == r8) goto L_0x00e1
+            goto L_0x00f4
+        L_0x00e1:
+            r6 = 1
+            goto L_0x00f4
+        L_0x00e3:
+            if (r1 == 0) goto L_0x00f4
+            int r8 = r11.length()
+            if (r8 != 0) goto L_0x00ef
+            r11.append(r7)
+            goto L_0x00f4
+        L_0x00ef:
+            r7 = 29
+            r11.append(r7)
+        L_0x00f4:
+            r7 = 0
+            goto L_0x00ff
+        L_0x00f6:
+            r7 = 0
+            goto L_0x00fd
+        L_0x00f8:
+            r7 = 0
+            r14 = 99
+            goto L_0x00ff
+        L_0x00fc:
+            r7 = 1
+        L_0x00fd:
+            r14 = 101(0x65, float:1.42E-43)
+        L_0x00ff:
+            r9 = 100
+            goto L_0x0136
+        L_0x0102:
+            r9 = 100
+            if (r5 >= r9) goto L_0x0113
+            r7 = 10
+            if (r5 >= r7) goto L_0x010f
+            r7 = 48
+            r11.append(r7)
+        L_0x010f:
+            r11.append(r5)
+            goto L_0x0135
+        L_0x0113:
+            if (r5 == r8) goto L_0x0116
+            r10 = 0
+        L_0x0116:
+            if (r5 == r8) goto L_0x0134
+            switch(r5) {
+                case 100: goto L_0x0132;
+                case 101: goto L_0x012e;
+                case 102: goto L_0x011c;
+                default: goto L_0x011b;
             }
-        }
-        float f = (findStartPattern[1] + findStartPattern[0]) / 2.0f;
-        float f2 = (nextUnset + i7) / 2.0f;
-        int size = arrayList.size();
-        byte[] bArr = new byte[size];
-        for (int i14 = 0; i14 < size; i14++) {
-            bArr[i14] = ((Byte) arrayList.get(i14)).byteValue();
-        }
-        float f3 = i;
-        return new Result(sb.toString(), bArr, new ResultPoint[]{new ResultPoint(f, f3), new ResultPoint(f2, f3)}, BarcodeFormat.CODE_128);
+        L_0x011b:
+            goto L_0x0135
+        L_0x011c:
+            if (r1 == 0) goto L_0x0135
+            int r8 = r11.length()
+            if (r8 != 0) goto L_0x0128
+            r11.append(r7)
+            goto L_0x0135
+        L_0x0128:
+            r7 = 29
+            r11.append(r7)
+            goto L_0x0135
+        L_0x012e:
+            r7 = 0
+            r14 = 101(0x65, float:1.42E-43)
+            goto L_0x0136
+        L_0x0132:
+            r14 = r9
+            goto L_0x0135
+        L_0x0134:
+            r6 = 1
+        L_0x0135:
+            r7 = 0
+        L_0x0136:
+            r8 = 101(0x65, float:1.42E-43)
+            if (r17 == 0) goto L_0x013f
+            if (r14 != r8) goto L_0x013e
+            r14 = r9
+            goto L_0x013f
+        L_0x013e:
+            r14 = r8
+        L_0x013f:
+            r17 = r7
+            r20 = r18
+            r15 = 6
+            r18 = r5
+            r5 = 2
+            r21 = r16
+            r16 = r3
+            r3 = r21
+            goto L_0x004d
+        L_0x014f:
+            int r1 = r0.getNextUnset(r3)
+            int r2 = r24.getSize()
+            int r3 = r1 - r16
+            r5 = 2
+            int r3 = r3 / r5
+            int r3 = r3 + r1
+            int r2 = java.lang.Math.min(r2, r3)
+            r3 = 0
+            boolean r0 = r0.isRange(r1, r2, r3)
+            if (r0 == 0) goto L_0x01dd
+            r3 = r20
+            int r19 = r19 * r3
+            int r12 = r12 - r19
+            int r12 = r12 % 103
+            if (r12 != r3) goto L_0x01d8
+            int r0 = r11.length()
+            if (r0 == 0) goto L_0x01d3
+            if (r0 <= 0) goto L_0x018a
+            if (r10 == 0) goto L_0x018a
+            r2 = 99
+            if (r14 != r2) goto L_0x0185
+            int r2 = r0 + -2
+            r11.delete(r2, r0)
+            goto L_0x018a
+        L_0x0185:
+            int r2 = r0 + -1
+            r11.delete(r2, r0)
+        L_0x018a:
+            r0 = 1
+            r2 = r4[r0]
+            r0 = 0
+            r3 = r4[r0]
+            int r2 = r2 + r3
+            float r0 = (float) r2
+            r2 = 1073741824(0x40000000, float:2.0)
+            float r0 = r0 / r2
+            int r1 = r1 + r16
+            float r1 = (float) r1
+            float r1 = r1 / r2
+            int r2 = r13.size()
+            byte[] r3 = new byte[r2]
+            r4 = 0
+        L_0x01a0:
+            if (r4 >= r2) goto L_0x01b1
+            java.lang.Object r5 = r13.get(r4)
+            java.lang.Byte r5 = (java.lang.Byte) r5
+            byte r5 = r5.byteValue()
+            r3[r4] = r5
+            int r4 = r4 + 1
+            goto L_0x01a0
+        L_0x01b1:
+            com.google.zxing.Result r2 = new com.google.zxing.Result
+            java.lang.String r4 = r11.toString()
+            r5 = 2
+            com.google.zxing.ResultPoint[] r5 = new com.google.zxing.ResultPoint[r5]
+            com.google.zxing.ResultPoint r6 = new com.google.zxing.ResultPoint
+            r7 = r23
+            float r7 = (float) r7
+            r6.<init>(r0, r7)
+            r0 = 0
+            r5[r0] = r6
+            com.google.zxing.ResultPoint r0 = new com.google.zxing.ResultPoint
+            r0.<init>(r1, r7)
+            r1 = 1
+            r5[r1] = r0
+            com.google.zxing.BarcodeFormat r0 = com.google.zxing.BarcodeFormat.CODE_128
+            r2.<init>(r4, r3, r5, r0)
+            return r2
+        L_0x01d3:
+            com.google.zxing.NotFoundException r0 = com.google.zxing.NotFoundException.getNotFoundInstance()
+            throw r0
+        L_0x01d8:
+            com.google.zxing.ChecksumException r0 = com.google.zxing.ChecksumException.getChecksumInstance()
+            throw r0
+        L_0x01dd:
+            com.google.zxing.NotFoundException r0 = com.google.zxing.NotFoundException.getNotFoundInstance()
+            throw r0
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.oned.Code128Reader.decodeRow(int, com.google.zxing.common.BitArray, java.util.Map):com.google.zxing.Result");
     }
 }

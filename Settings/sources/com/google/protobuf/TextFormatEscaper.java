@@ -1,10 +1,8 @@
 package com.google.protobuf;
-/* loaded from: classes2.dex */
+
 final class TextFormatEscaper {
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public interface ByteSequence {
+    private interface ByteSequence {
         byte byteAt(int i);
 
         int size();
@@ -22,29 +20,29 @@ final class TextFormatEscaper {
                 switch (byteAt) {
                     case 7:
                         sb.append("\\a");
-                        continue;
+                        break;
                     case 8:
                         sb.append("\\b");
-                        continue;
+                        break;
                     case 9:
                         sb.append("\\t");
-                        continue;
+                        break;
                     case 10:
                         sb.append("\\n");
-                        continue;
+                        break;
                     case 11:
                         sb.append("\\v");
-                        continue;
+                        break;
                     case 12:
                         sb.append("\\f");
-                        continue;
+                        break;
                     case 13:
                         sb.append("\\r");
-                        continue;
+                        break;
                     default:
                         if (byteAt >= 32 && byteAt <= 126) {
                             sb.append((char) byteAt);
-                            continue;
+                            break;
                         } else {
                             sb.append('\\');
                             sb.append((char) (((byteAt >>> 6) & 3) + 48));
@@ -61,23 +59,19 @@ final class TextFormatEscaper {
         return sb.toString();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static String escapeBytes(final ByteString byteString) {
-        return escapeBytes(new ByteSequence() { // from class: com.google.protobuf.TextFormatEscaper.1
-            @Override // com.google.protobuf.TextFormatEscaper.ByteSequence
+    static String escapeBytes(final ByteString byteString) {
+        return escapeBytes((ByteSequence) new ByteSequence() {
             public int size() {
                 return ByteString.this.size();
             }
 
-            @Override // com.google.protobuf.TextFormatEscaper.ByteSequence
             public byte byteAt(int i) {
                 return ByteString.this.byteAt(i);
             }
         });
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static String escapeText(String str) {
+    static String escapeText(String str) {
         return escapeBytes(ByteString.copyFromUtf8(str));
     }
 }

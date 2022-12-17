@@ -4,17 +4,16 @@ import android.text.TextUtils;
 import com.android.settings.homepage.contextualcards.ContextualCard;
 import java.util.List;
 import java.util.Objects;
-/* loaded from: classes.dex */
+
 public class ConditionHeaderContextualCard extends ContextualCard {
     private final List<ContextualCard> mConditionalCards;
 
-    @Override // com.android.settings.homepage.contextualcards.ContextualCard
     public int getCardType() {
         return 4;
     }
 
     private ConditionHeaderContextualCard(Builder builder) {
-        super(builder);
+        super((ContextualCard.Builder) builder);
         this.mConditionalCards = builder.mConditionalCards;
     }
 
@@ -22,12 +21,10 @@ public class ConditionHeaderContextualCard extends ContextualCard {
         return this.mConditionalCards;
     }
 
-    @Override // com.android.settings.homepage.contextualcards.ContextualCard
     public int hashCode() {
-        return Objects.hash(getName(), this.mConditionalCards);
+        return Objects.hash(new Object[]{getName(), this.mConditionalCards});
     }
 
-    @Override // com.android.settings.homepage.contextualcards.ContextualCard
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
@@ -36,27 +33,26 @@ public class ConditionHeaderContextualCard extends ContextualCard {
             return false;
         }
         ConditionHeaderContextualCard conditionHeaderContextualCard = (ConditionHeaderContextualCard) obj;
-        return TextUtils.equals(getName(), conditionHeaderContextualCard.getName()) && this.mConditionalCards.equals(conditionHeaderContextualCard.mConditionalCards);
+        if (!TextUtils.equals(getName(), conditionHeaderContextualCard.getName()) || !this.mConditionalCards.equals(conditionHeaderContextualCard.mConditionalCards)) {
+            return false;
+        }
+        return true;
     }
 
-    /* loaded from: classes.dex */
     public static class Builder extends ContextualCard.Builder {
-        private List<ContextualCard> mConditionalCards;
+        /* access modifiers changed from: private */
+        public List<ContextualCard> mConditionalCards;
 
         public Builder setConditionalCards(List<ContextualCard> list) {
             this.mConditionalCards = list;
             return this;
         }
 
-        @Override // com.android.settings.homepage.contextualcards.ContextualCard.Builder
-        /* renamed from: setCardType  reason: collision with other method in class */
-        public Builder mo390setCardType(int i) {
-            throw new IllegalArgumentException("Cannot change card type for " + Builder.class.getName());
+        public Builder setCardType(int i) {
+            throw new IllegalArgumentException("Cannot change card type for " + getClass().getName());
         }
 
-        @Override // com.android.settings.homepage.contextualcards.ContextualCard.Builder
-        /* renamed from: build  reason: collision with other method in class */
-        public ConditionHeaderContextualCard mo389build() {
+        public ConditionHeaderContextualCard build() {
             return new ConditionHeaderContextualCard(this);
         }
     }

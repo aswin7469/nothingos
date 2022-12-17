@@ -1,72 +1,78 @@
 package com.android.settings.display;
 
 import android.content.Context;
-import android.widget.Switch;
+import android.content.IntentFilter;
 import com.android.internal.view.RotationPolicy;
+import com.android.settings.R$string;
 import com.android.settings.overlay.FeatureFactory;
-import com.android.settings.widget.SettingsMainSwitchBar;
+import com.android.settings.widget.SettingsMainSwitchPreferenceController;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
-import com.android.settingslib.core.lifecycle.Lifecycle;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnStart;
 import com.android.settingslib.core.lifecycle.events.OnStop;
-import com.android.settingslib.widget.OnMainSwitchChangeListener;
-/* loaded from: classes.dex */
-public class AutoRotateSwitchBarController implements OnMainSwitchChangeListener, LifecycleObserver, OnStart, OnStop {
-    private final Context mContext;
+
+public class AutoRotateSwitchBarController extends SettingsMainSwitchPreferenceController implements LifecycleObserver, OnStart, OnStop {
     private final MetricsFeatureProvider mMetricsFeatureProvider;
-    private final SettingsMainSwitchBar mSwitchBar;
-    private boolean mValidListener;
+    private RotationPolicy.RotationPolicyListener mRotationPolicyListener;
 
-    public AutoRotateSwitchBarController(Context context, SettingsMainSwitchBar settingsMainSwitchBar, Lifecycle lifecycle) {
-        this.mSwitchBar = settingsMainSwitchBar;
-        this.mContext = context;
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
+        return super.getBackgroundWorkerClass();
+    }
+
+    public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
+        return super.getIntentFilter();
+    }
+
+    public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
+        return super.hasAsyncUpdate();
+    }
+
+    public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
+        return super.useDynamicSliceSummary();
+    }
+
+    public AutoRotateSwitchBarController(Context context, String str) {
+        super(context, str);
         this.mMetricsFeatureProvider = FeatureFactory.getFactory(context).getMetricsFeatureProvider();
-        if (lifecycle != null) {
-            lifecycle.addObserver(this);
-        }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStart
+    public int getAvailabilityStatus() {
+        return (!RotationPolicy.isRotationLockToggleVisible(this.mContext) || DeviceStateAutoRotationHelper.isDeviceStateRotationEnabled(this.mContext)) ? 3 : 0;
+    }
+
     public void onStart() {
-        if (!this.mValidListener) {
-            this.mSwitchBar.addOnSwitchChangeListener(this);
-            this.mValidListener = true;
+        if (this.mRotationPolicyListener == null) {
+            this.mRotationPolicyListener = new RotationPolicy.RotationPolicyListener() {
+                public void onChange() {
+                    if (AutoRotateSwitchBarController.this.mSwitchPreference != null) {
+                        AutoRotateSwitchBarController autoRotateSwitchBarController = AutoRotateSwitchBarController.this;
+                        autoRotateSwitchBarController.updateState(autoRotateSwitchBarController.mSwitchPreference);
+                    }
+                }
+            };
         }
-        onChange();
+        RotationPolicy.registerRotationPolicyListener(this.mContext, this.mRotationPolicyListener);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStop
     public void onStop() {
-        if (this.mValidListener) {
-            this.mSwitchBar.removeOnSwitchChangeListener(this);
-            this.mValidListener = false;
+        RotationPolicy.RotationPolicyListener rotationPolicyListener = this.mRotationPolicyListener;
+        if (rotationPolicyListener != null) {
+            RotationPolicy.unregisterRotationPolicyListener(this.mContext, rotationPolicyListener);
         }
     }
 
-    @Override // com.android.settingslib.widget.OnMainSwitchChangeListener
-    public void onSwitchChanged(Switch r1, boolean z) {
-        setRotationLock(z);
+    public boolean isChecked() {
+        return !RotationPolicy.isRotationLocked(this.mContext);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public void onChange() {
-        boolean z = !RotationPolicy.isRotationLocked(this.mContext);
-        if (z != this.mSwitchBar.isChecked()) {
-            if (this.mValidListener) {
-                this.mSwitchBar.removeOnSwitchChangeListener(this);
-            }
-            this.mSwitchBar.setChecked(z);
-            if (!this.mValidListener) {
-                return;
-            }
-            this.mSwitchBar.addOnSwitchChangeListener(this);
-        }
-    }
-
-    private boolean setRotationLock(boolean z) {
-        this.mMetricsFeatureProvider.action(this.mContext, 1753, z);
-        RotationPolicy.setRotationLock(this.mContext, !z);
+    public boolean setChecked(boolean z) {
+        boolean z2 = !z;
+        this.mMetricsFeatureProvider.action(this.mContext, 1753, z2);
+        RotationPolicy.setRotationLock(this.mContext, z2);
         return true;
+    }
+
+    public int getSliceHighlightMenuRes() {
+        return R$string.menu_key_display;
     }
 }

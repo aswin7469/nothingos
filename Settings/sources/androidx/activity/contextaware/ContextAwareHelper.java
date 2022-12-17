@@ -3,7 +3,7 @@ package androidx.activity.contextaware;
 import android.content.Context;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
-/* loaded from: classes.dex */
+
 public final class ContextAwareHelper {
     private volatile Context mContext;
     private final Set<OnContextAvailableListener> mListeners = new CopyOnWriteArraySet();
@@ -17,8 +17,8 @@ public final class ContextAwareHelper {
 
     public void dispatchOnContextAvailable(Context context) {
         this.mContext = context;
-        for (OnContextAvailableListener onContextAvailableListener : this.mListeners) {
-            onContextAvailableListener.onContextAvailable(context);
+        for (OnContextAvailableListener onContextAvailable : this.mListeners) {
+            onContextAvailable.onContextAvailable(context);
         }
     }
 

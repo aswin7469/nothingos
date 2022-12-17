@@ -5,6 +5,7 @@ import android.app.slice.SliceManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.StrictMode;
@@ -16,7 +17,9 @@ import android.util.Log;
 import androidx.collection.ArraySet;
 import androidx.slice.Slice;
 import androidx.slice.SliceProvider;
-import com.android.settings.R;
+import com.android.settings.R$array;
+import com.android.settings.R$string;
+import com.android.settings.R$style;
 import com.android.settings.Utils;
 import com.android.settings.bluetooth.BluetoothSliceBuilder;
 import com.android.settings.core.BasePreferenceController;
@@ -33,25 +36,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-/* loaded from: classes.dex */
+
 public class SettingsSliceProvider extends SliceProvider {
+    private static final KeyValueListParser KEY_VALUE_LIST_PARSER = new KeyValueListParser(',');
+    private static final List<Uri> PUBLICLY_SUPPORTED_CUSTOM_SLICE_URIS = Arrays.asList(new Uri[]{CustomSliceRegistry.BLUETOOTH_URI, CustomSliceRegistry.FLASHLIGHT_SLICE_URI, CustomSliceRegistry.LOCATION_SLICE_URI, CustomSliceRegistry.MOBILE_DATA_SLICE_URI, CustomSliceRegistry.WIFI_CALLING_URI, CustomSliceRegistry.WIFI_SLICE_URI, CustomSliceRegistry.ZEN_MODE_SLICE_URI});
     private boolean mFirstSliceBound;
     private boolean mFirstSlicePinned;
     private Boolean mNightMode;
     final Map<Uri, SliceBackgroundWorker> mPinnedWorkers = new ArrayMap();
     Map<Uri, SliceData> mSliceWeakDataCache;
     SlicesDatabaseAccessor mSlicesDatabaseAccessor;
-    private static final List<Uri> PUBLICLY_SUPPORTED_CUSTOM_SLICE_URIS = Arrays.asList(CustomSliceRegistry.BLUETOOTH_URI, CustomSliceRegistry.FLASHLIGHT_SLICE_URI, CustomSliceRegistry.LOCATION_SLICE_URI, CustomSliceRegistry.MOBILE_DATA_SLICE_URI, CustomSliceRegistry.WIFI_CALLING_URI, CustomSliceRegistry.WIFI_SLICE_URI, CustomSliceRegistry.ZEN_MODE_SLICE_URI);
-    private static final KeyValueListParser KEY_VALUE_LIST_PARSER = new KeyValueListParser(',');
 
     public SettingsSliceProvider() {
         super("android.permission.READ_SEARCH_INDEXABLES");
         Log.d("SettingsSliceProvider", "init");
     }
 
-    @Override // androidx.slice.SliceProvider
     public boolean onCreateSliceProvider() {
         Log.d("SettingsSliceProvider", "onCreateSliceProvider");
         this.mSlicesDatabaseAccessor = new SlicesDatabaseAccessor(getContext());
@@ -59,25 +60,19 @@ public class SettingsSliceProvider extends SliceProvider {
         return true;
     }
 
-    @Override // androidx.slice.SliceProvider
-    public void onSlicePinned(final Uri uri) {
+    public void onSlicePinned(Uri uri) {
         if (!this.mFirstSlicePinned) {
             Log.d("SettingsSliceProvider", "onSlicePinned: " + uri);
             this.mFirstSlicePinned = true;
         }
         if (CustomSliceRegistry.isValidUri(uri)) {
             Context context = getContext();
-            final CustomSliceable sliceableFromUri = FeatureFactory.getFactory(context).getSlicesFeatureProvider().getSliceableFromUri(context, uri);
+            CustomSliceable sliceableFromUri = FeatureFactory.getFactory(context).getSlicesFeatureProvider().getSliceableFromUri(context, uri);
             IntentFilter intentFilter = sliceableFromUri.getIntentFilter();
             if (intentFilter != null) {
                 registerIntentToUri(intentFilter, uri);
             }
-            ThreadUtils.postOnMainThread(new Runnable() { // from class: com.android.settings.slices.SettingsSliceProvider$$ExternalSyntheticLambda3
-                @Override // java.lang.Runnable
-                public final void run() {
-                    SettingsSliceProvider.this.lambda$onSlicePinned$0(sliceableFromUri, uri);
-                }
-            });
+            ThreadUtils.postOnMainThread(new SettingsSliceProvider$$ExternalSyntheticLambda4(this, sliceableFromUri, uri));
         } else if (CustomSliceRegistry.ZEN_MODE_SLICE_URI.equals(uri)) {
             registerIntentToUri(ZenModeSliceBuilder.INTENT_FILTER, uri);
         } else if (CustomSliceRegistry.BLUETOOTH_URI.equals(uri)) {
@@ -87,21 +82,14 @@ public class SettingsSliceProvider extends SliceProvider {
         }
     }
 
-    @Override // androidx.slice.SliceProvider
-    public void onSliceUnpinned(final Uri uri) {
+    public void onSliceUnpinned(Uri uri) {
         Context context = getContext();
         if (!VolumeSliceHelper.unregisterUri(context, uri)) {
             SliceBroadcastRelay.unregisterReceivers(context, uri);
         }
-        ThreadUtils.postOnMainThread(new Runnable() { // from class: com.android.settings.slices.SettingsSliceProvider$$ExternalSyntheticLambda1
-            @Override // java.lang.Runnable
-            public final void run() {
-                SettingsSliceProvider.this.lambda$onSliceUnpinned$1(uri);
-            }
-        });
+        ThreadUtils.postOnMainThread(new SettingsSliceProvider$$ExternalSyntheticLambda3(this, uri));
     }
 
-    @Override // androidx.slice.SliceProvider
     public Slice onBindSlice(Uri uri) {
         if (!this.mFirstSliceBound) {
             Log.d("SettingsSliceProvider", "onBindSlice start: " + uri);
@@ -119,7 +107,7 @@ public class SettingsSliceProvider extends SliceProvider {
             Boolean bool = this.mNightMode;
             if (bool == null) {
                 this.mNightMode = Boolean.valueOf(isNightMode);
-                getContext().setTheme(R.style.Theme_SettingsBase);
+                getContext().setTheme(R$style.Theme_SettingsBase);
             } else if (bool.booleanValue() != isNightMode) {
                 Log.d("SettingsSliceProvider", "Night mode changed, reload theme");
                 this.mNightMode = Boolean.valueOf(isNightMode);
@@ -206,7 +194,6 @@ public class SettingsSliceProvider extends SliceProvider {
         }
     }
 
-    @Override // androidx.slice.SliceProvider
     public Collection<Uri> onGetSliceDescendants(Uri uri) {
         ArrayList arrayList = new ArrayList();
         if (isPrivateSlicesNeeded(uri)) {
@@ -218,35 +205,22 @@ public class SettingsSliceProvider extends SliceProvider {
             arrayList.add(uri);
             return arrayList;
         }
-        final String authority = uri.getAuthority();
+        String authority = uri.getAuthority();
         String path = uri.getPath();
         boolean isEmpty = path.isEmpty();
         if (!isEmpty && !TextUtils.equals(path, "/action") && !TextUtils.equals(path, "/intent")) {
             return arrayList;
         }
         arrayList.addAll(this.mSlicesDatabaseAccessor.getSliceUris(authority, true));
-        if (isEmpty && TextUtils.isEmpty(authority)) {
-            arrayList.addAll(PUBLICLY_SUPPORTED_CUSTOM_SLICE_URIS);
+        if (!isEmpty || !TextUtils.isEmpty(authority)) {
+            arrayList.addAll((List) PUBLICLY_SUPPORTED_CUSTOM_SLICE_URIS.stream().filter(new SettingsSliceProvider$$ExternalSyntheticLambda5(authority)).collect(Collectors.toList()));
         } else {
-            arrayList.addAll((List) PUBLICLY_SUPPORTED_CUSTOM_SLICE_URIS.stream().filter(new Predicate() { // from class: com.android.settings.slices.SettingsSliceProvider$$ExternalSyntheticLambda5
-                @Override // java.util.function.Predicate
-                public final boolean test(Object obj) {
-                    boolean lambda$onGetSliceDescendants$2;
-                    lambda$onGetSliceDescendants$2 = SettingsSliceProvider.lambda$onGetSliceDescendants$2(authority, (Uri) obj);
-                    return lambda$onGetSliceDescendants$2;
-                }
-            }).collect(Collectors.toList()));
+            arrayList.addAll(PUBLICLY_SUPPORTED_CUSTOM_SLICE_URIS);
         }
         grantAllowlistedPackagePermissions(getContext(), arrayList);
         return arrayList;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ boolean lambda$onGetSliceDescendants$2(String str, Uri uri) {
-        return TextUtils.equals(str, uri.getAuthority());
-    }
-
-    @Override // androidx.slice.SliceProvider
     public PendingIntent onCreatePermissionRequest(Uri uri, String str) {
         return PendingIntent.getActivity(getContext(), 0, new Intent("android.settings.SETTINGS").setPackage("com.android.settings"), 67108864);
     }
@@ -255,32 +229,31 @@ public class SettingsSliceProvider extends SliceProvider {
         if (list == null) {
             Log.d("SettingsSliceProvider", "No descendants to grant permission with, skipping.");
         }
-        String[] stringArray = context.getResources().getStringArray(R.array.slice_allowlist_package_names);
+        String[] stringArray = context.getResources().getStringArray(R$array.slice_allowlist_package_names);
         if (stringArray == null || stringArray.length == 0) {
             Log.d("SettingsSliceProvider", "No packages to allowlist, skipping.");
             return;
         }
-        Log.d("SettingsSliceProvider", String.format("Allowlisting %d uris to %d pkgs.", Integer.valueOf(list.size()), Integer.valueOf(stringArray.length)));
+        Log.d("SettingsSliceProvider", String.format("Allowlisting %d uris to %d pkgs.", new Object[]{Integer.valueOf(list.size()), Integer.valueOf(stringArray.length)}));
         SliceManager sliceManager = (SliceManager) context.getSystemService(SliceManager.class);
-        for (Uri uri : list) {
-            for (String str : stringArray) {
-                sliceManager.grantSlicePermission(str, uri);
+        for (Uri next : list) {
+            for (String grantSlicePermission : stringArray) {
+                sliceManager.grantSlicePermission(grantSlicePermission, next);
             }
         }
     }
 
-    @Override // android.content.ContentProvider
     public void shutdown() {
-        ThreadUtils.postOnMainThread(SettingsSliceProvider$$ExternalSyntheticLambda4.INSTANCE);
+        ThreadUtils.postOnMainThread(new SettingsSliceProvider$$ExternalSyntheticLambda2());
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     /* renamed from: loadSlice */
-    public void lambda$loadSliceInBackground$5(final Uri uri) {
+    public void lambda$loadSliceInBackground$5(Uri uri) {
         long currentTimeMillis = System.currentTimeMillis();
         try {
             SliceData sliceDataFromUri = this.mSlicesDatabaseAccessor.getSliceDataFromUri(uri);
-            final BasePreferenceController preferenceController = SliceBuilderUtils.getPreferenceController(getContext(), sliceDataFromUri);
+            BasePreferenceController preferenceController = SliceBuilderUtils.getPreferenceController(getContext(), sliceDataFromUri);
             IntentFilter intentFilter = preferenceController.getIntentFilter();
             if (intentFilter != null) {
                 if (preferenceController instanceof VolumeSeekBarPreferenceController) {
@@ -289,34 +262,27 @@ public class SettingsSliceProvider extends SliceProvider {
                     registerIntentToUri(intentFilter, uri);
                 }
             }
-            ThreadUtils.postOnMainThread(new Runnable() { // from class: com.android.settings.slices.SettingsSliceProvider$$ExternalSyntheticLambda2
-                @Override // java.lang.Runnable
-                public final void run() {
-                    SettingsSliceProvider.this.lambda$loadSlice$4(preferenceController, uri);
-                }
-            });
+            ThreadUtils.postOnMainThread(new SettingsSliceProvider$$ExternalSyntheticLambda1(this, preferenceController, uri));
             this.mSliceWeakDataCache.put(uri, sliceDataFromUri);
-            getContext().getContentResolver().notifyChange(uri, null);
+            getContext().getContentResolver().notifyChange(uri, (ContentObserver) null);
             Log.d("SettingsSliceProvider", "Built slice (" + uri + ") in: " + (System.currentTimeMillis() - currentTimeMillis));
         } catch (IllegalStateException e) {
             Log.d("SettingsSliceProvider", "Could not create slicedata for uri: " + uri, e);
         }
     }
 
-    void loadSliceInBackground(final Uri uri) {
-        ThreadUtils.postOnBackgroundThread(new Runnable() { // from class: com.android.settings.slices.SettingsSliceProvider$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                SettingsSliceProvider.this.lambda$loadSliceInBackground$5(uri);
-            }
-        });
+    /* access modifiers changed from: package-private */
+    public void loadSliceInBackground(Uri uri) {
+        ThreadUtils.postOnBackgroundThread((Runnable) new SettingsSliceProvider$$ExternalSyntheticLambda0(this, uri));
     }
 
-    void registerIntentToUri(IntentFilter intentFilter, Uri uri) {
+    /* access modifiers changed from: package-private */
+    public void registerIntentToUri(IntentFilter intentFilter, Uri uri) {
         SliceBroadcastRelay.registerReceiver(getContext(), uri, SliceRelayReceiver.class, intentFilter);
     }
 
-    Set<String> getBlockedKeys() {
+    /* access modifiers changed from: package-private */
+    public Set<String> getBlockedKeys() {
         String string = Settings.Global.getString(getContext().getContentResolver(), "blocked_slices");
         ArraySet arraySet = new ArraySet();
         try {
@@ -329,27 +295,33 @@ public class SettingsSliceProvider extends SliceProvider {
         }
     }
 
-    boolean isPrivateSlicesNeeded(Uri uri) {
-        String string = getContext().getString(R.string.config_non_public_slice_query_uri);
+    /* access modifiers changed from: package-private */
+    public boolean isPrivateSlicesNeeded(Uri uri) {
+        String string = getContext().getString(R$string.config_non_public_slice_query_uri);
         if (TextUtils.isEmpty(string) || !TextUtils.equals(uri.toString(), string)) {
             return false;
         }
         int callingUid = Binder.getCallingUid();
-        return (getContext().checkPermission("android.permission.READ_SEARCH_INDEXABLES", Binder.getCallingPid(), callingUid) == 0) && TextUtils.equals(getContext().getPackageManager().getPackagesForUid(callingUid)[0], getContext().getString(R.string.config_settingsintelligence_package_name));
+        boolean z = getContext().checkPermission("android.permission.READ_SEARCH_INDEXABLES", Binder.getCallingPid(), callingUid) == 0;
+        String str = getContext().getPackageManager().getPackagesForUid(callingUid)[0];
+        if (!z || !TextUtils.equals(str, getContext().getString(R$string.config_settingsintelligence_package_name))) {
+            return false;
+        }
+        return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     /* renamed from: startBackgroundWorker */
     public void lambda$onSlicePinned$0(Sliceable sliceable, Uri uri) {
         if (sliceable.getBackgroundWorkerClass() != null && !this.mPinnedWorkers.containsKey(uri)) {
             Log.d("SettingsSliceProvider", "Starting background worker for: " + uri);
-            SliceBackgroundWorker sliceBackgroundWorker = SliceBackgroundWorker.getInstance(getContext(), sliceable, uri);
-            this.mPinnedWorkers.put(uri, sliceBackgroundWorker);
-            sliceBackgroundWorker.pin();
+            SliceBackgroundWorker instance = SliceBackgroundWorker.getInstance(getContext(), sliceable, uri);
+            this.mPinnedWorkers.put(uri, instance);
+            instance.pin();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     /* renamed from: stopBackgroundWorker */
     public void lambda$onSliceUnpinned$1(Uri uri) {
         SliceBackgroundWorker sliceBackgroundWorker = this.mPinnedWorkers.get(uri);

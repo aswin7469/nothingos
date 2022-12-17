@@ -2,7 +2,7 @@ package com.android.settings.security.trustagent;
 
 import android.content.ComponentName;
 import android.graphics.drawable.Drawable;
-/* loaded from: classes.dex */
+
 public class TrustAgentInfo implements Comparable<TrustAgentInfo> {
     private final ComponentName mComponentName;
     private final Drawable mIcon;
@@ -33,7 +33,6 @@ public class TrustAgentInfo implements Comparable<TrustAgentInfo> {
         return false;
     }
 
-    @Override // java.lang.Comparable
     public int compareTo(TrustAgentInfo trustAgentInfo) {
         return this.mComponentName.compareTo(trustAgentInfo.getComponentName());
     }

@@ -12,7 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.constraintlayout.widget.R$styleable;
 import androidx.constraintlayout.widget.VirtualLayout;
-/* loaded from: classes.dex */
+
 public class Flow extends VirtualLayout {
     private androidx.constraintlayout.solver.widgets.Flow mFlow;
 
@@ -28,18 +28,16 @@ public class Flow extends VirtualLayout {
         super(context, attributeSet, i);
     }
 
-    @Override // androidx.constraintlayout.widget.ConstraintHelper
     public void resolveRtl(ConstraintWidget constraintWidget, boolean z) {
         this.mFlow.applyRtl(z);
     }
 
-    @Override // androidx.constraintlayout.widget.ConstraintHelper, android.view.View
+    /* access modifiers changed from: protected */
     @SuppressLint({"WrongCall"})
-    protected void onMeasure(int i, int i2) {
+    public void onMeasure(int i, int i2) {
         onMeasure(this.mFlow, i, i2);
     }
 
-    @Override // androidx.constraintlayout.widget.VirtualLayout
     public void onMeasure(androidx.constraintlayout.solver.widgets.VirtualLayout virtualLayout, int i, int i2) {
         int mode = View.MeasureSpec.getMode(i);
         int size = View.MeasureSpec.getSize(i);
@@ -53,21 +51,18 @@ public class Flow extends VirtualLayout {
         setMeasuredDimension(0, 0);
     }
 
-    @Override // androidx.constraintlayout.widget.ConstraintHelper
     public void loadParameters(ConstraintSet.Constraint constraint, HelperWidget helperWidget, ConstraintLayout.LayoutParams layoutParams, SparseArray<ConstraintWidget> sparseArray) {
         super.loadParameters(constraint, helperWidget, layoutParams, sparseArray);
         if (helperWidget instanceof androidx.constraintlayout.solver.widgets.Flow) {
             androidx.constraintlayout.solver.widgets.Flow flow = (androidx.constraintlayout.solver.widgets.Flow) helperWidget;
             int i = layoutParams.orientation;
-            if (i == -1) {
-                return;
+            if (i != -1) {
+                flow.setOrientation(i);
             }
-            flow.setOrientation(i);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.constraintlayout.widget.VirtualLayout, androidx.constraintlayout.widget.ConstraintHelper
+    /* access modifiers changed from: protected */
     public void init(AttributeSet attributeSet) {
         super.init(attributeSet);
         this.mFlow = new androidx.constraintlayout.solver.widgets.Flow();

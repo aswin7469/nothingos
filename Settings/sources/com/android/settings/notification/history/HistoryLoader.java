@@ -1,27 +1,17 @@
 package com.android.settings.notification.history;
 
-import android.app.NotificationHistory;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.os.UserHandle;
-import android.util.Slog;
 import com.android.settings.notification.NotificationBackend;
-import com.android.settings.notification.history.HistoryLoader;
 import com.android.settingslib.utils.ThreadUtils;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class HistoryLoader {
     private final NotificationBackend mBackend;
     private final Context mContext;
     private final PackageManager mPm;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public interface OnHistoryLoaderListener {
+    interface OnHistoryLoaderListener {
         void onHistoryLoaded(List<NotificationHistoryPackage> list);
     }
 
@@ -31,54 +21,106 @@ public class HistoryLoader {
         this.mPm = packageManager;
     }
 
-    public void load(final OnHistoryLoaderListener onHistoryLoaderListener) {
-        ThreadUtils.postOnBackgroundThread(new Runnable() { // from class: com.android.settings.notification.history.HistoryLoader$$ExternalSyntheticLambda1
-            @Override // java.lang.Runnable
-            public final void run() {
-                HistoryLoader.this.lambda$load$2(onHistoryLoaderListener);
-            }
-        });
+    public void load(OnHistoryLoaderListener onHistoryLoaderListener) {
+        ThreadUtils.postOnBackgroundThread((Runnable) new HistoryLoader$$ExternalSyntheticLambda0(this, onHistoryLoaderListener));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$load$2(final OnHistoryLoaderListener onHistoryLoaderListener) {
-        try {
-            HashMap hashMap = new HashMap();
-            NotificationHistory notificationHistory = this.mBackend.getNotificationHistory(this.mContext.getPackageName(), this.mContext.getAttributionTag());
-            while (notificationHistory.hasNextNotification()) {
-                NotificationHistory.HistoricalNotification nextNotification = notificationHistory.getNextNotification();
-                String str = nextNotification.getPackage() + "|" + nextNotification.getUid();
-                NotificationHistoryPackage notificationHistoryPackage = (NotificationHistoryPackage) hashMap.getOrDefault(str, new NotificationHistoryPackage(nextNotification.getPackage(), nextNotification.getUid()));
-                notificationHistoryPackage.notifications.add(nextNotification);
-                hashMap.put(str, notificationHistoryPackage);
-            }
-            final ArrayList<NotificationHistoryPackage> arrayList = new ArrayList(hashMap.values());
-            Collections.sort(arrayList, HistoryLoader$$ExternalSyntheticLambda2.INSTANCE);
-            for (NotificationHistoryPackage notificationHistoryPackage2 : arrayList) {
-                try {
-                    ApplicationInfo applicationInfoAsUser = this.mPm.getApplicationInfoAsUser(notificationHistoryPackage2.pkgName, 795136, UserHandle.getUserId(notificationHistoryPackage2.uid));
-                    if (applicationInfoAsUser != null) {
-                        notificationHistoryPackage2.label = String.valueOf(this.mPm.getApplicationLabel(applicationInfoAsUser));
-                        PackageManager packageManager = this.mPm;
-                        notificationHistoryPackage2.icon = packageManager.getUserBadgedIcon(packageManager.getApplicationIcon(applicationInfoAsUser), UserHandle.of(UserHandle.getUserId(notificationHistoryPackage2.uid)));
-                    }
-                } catch (PackageManager.NameNotFoundException unused) {
-                    notificationHistoryPackage2.icon = this.mPm.getDefaultActivityIcon();
-                }
-            }
-            ThreadUtils.postOnMainThread(new Runnable() { // from class: com.android.settings.notification.history.HistoryLoader$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    HistoryLoader.OnHistoryLoaderListener.this.onHistoryLoaded(arrayList);
-                }
-            });
-        } catch (Exception e) {
-            Slog.e("HistoryLoader", "Error loading history", e);
-        }
+    /* access modifiers changed from: private */
+    /* JADX WARNING: Code restructure failed: missing block: B:14:?, code lost:
+        r2.icon = r7.mPm.getDefaultActivityIcon();
+     */
+    /* JADX WARNING: Exception block dominator not found, dom blocks: [] */
+    /* JADX WARNING: Missing exception handler attribute for start block: B:13:0x00b1 */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public /* synthetic */ void lambda$load$2(com.android.settings.notification.history.HistoryLoader.OnHistoryLoaderListener r8) {
+        /*
+            r7 = this;
+            java.util.HashMap r0 = new java.util.HashMap     // Catch:{ Exception -> 0x00c3 }
+            r0.<init>()     // Catch:{ Exception -> 0x00c3 }
+            com.android.settings.notification.NotificationBackend r1 = r7.mBackend     // Catch:{ Exception -> 0x00c3 }
+            android.content.Context r2 = r7.mContext     // Catch:{ Exception -> 0x00c3 }
+            java.lang.String r2 = r2.getPackageName()     // Catch:{ Exception -> 0x00c3 }
+            android.content.Context r3 = r7.mContext     // Catch:{ Exception -> 0x00c3 }
+            java.lang.String r3 = r3.getAttributionTag()     // Catch:{ Exception -> 0x00c3 }
+            android.app.NotificationHistory r1 = r1.getNotificationHistory(r2, r3)     // Catch:{ Exception -> 0x00c3 }
+        L_0x0017:
+            boolean r2 = r1.hasNextNotification()     // Catch:{ Exception -> 0x00c3 }
+            if (r2 == 0) goto L_0x005a
+            android.app.NotificationHistory$HistoricalNotification r2 = r1.getNextNotification()     // Catch:{ Exception -> 0x00c3 }
+            java.lang.StringBuilder r3 = new java.lang.StringBuilder     // Catch:{ Exception -> 0x00c3 }
+            r3.<init>()     // Catch:{ Exception -> 0x00c3 }
+            java.lang.String r4 = r2.getPackage()     // Catch:{ Exception -> 0x00c3 }
+            r3.append(r4)     // Catch:{ Exception -> 0x00c3 }
+            java.lang.String r4 = "|"
+            r3.append(r4)     // Catch:{ Exception -> 0x00c3 }
+            int r4 = r2.getUid()     // Catch:{ Exception -> 0x00c3 }
+            r3.append(r4)     // Catch:{ Exception -> 0x00c3 }
+            java.lang.String r3 = r3.toString()     // Catch:{ Exception -> 0x00c3 }
+            com.android.settings.notification.history.NotificationHistoryPackage r4 = new com.android.settings.notification.history.NotificationHistoryPackage     // Catch:{ Exception -> 0x00c3 }
+            java.lang.String r5 = r2.getPackage()     // Catch:{ Exception -> 0x00c3 }
+            int r6 = r2.getUid()     // Catch:{ Exception -> 0x00c3 }
+            r4.<init>(r5, r6)     // Catch:{ Exception -> 0x00c3 }
+            java.lang.Object r4 = r0.getOrDefault(r3, r4)     // Catch:{ Exception -> 0x00c3 }
+            com.android.settings.notification.history.NotificationHistoryPackage r4 = (com.android.settings.notification.history.NotificationHistoryPackage) r4     // Catch:{ Exception -> 0x00c3 }
+            java.util.TreeSet<android.app.NotificationHistory$HistoricalNotification> r5 = r4.notifications     // Catch:{ Exception -> 0x00c3 }
+            r5.add(r2)     // Catch:{ Exception -> 0x00c3 }
+            r0.put(r3, r4)     // Catch:{ Exception -> 0x00c3 }
+            goto L_0x0017
+        L_0x005a:
+            java.util.ArrayList r1 = new java.util.ArrayList     // Catch:{ Exception -> 0x00c3 }
+            java.util.Collection r0 = r0.values()     // Catch:{ Exception -> 0x00c3 }
+            r1.<init>(r0)     // Catch:{ Exception -> 0x00c3 }
+            com.android.settings.notification.history.HistoryLoader$$ExternalSyntheticLambda1 r0 = new com.android.settings.notification.history.HistoryLoader$$ExternalSyntheticLambda1     // Catch:{ Exception -> 0x00c3 }
+            r0.<init>()     // Catch:{ Exception -> 0x00c3 }
+            java.util.Collections.sort(r1, r0)     // Catch:{ Exception -> 0x00c3 }
+            java.util.Iterator r0 = r1.iterator()     // Catch:{ Exception -> 0x00c3 }
+        L_0x006f:
+            boolean r2 = r0.hasNext()     // Catch:{ Exception -> 0x00c3 }
+            if (r2 == 0) goto L_0x00ba
+            java.lang.Object r2 = r0.next()     // Catch:{ Exception -> 0x00c3 }
+            com.android.settings.notification.history.NotificationHistoryPackage r2 = (com.android.settings.notification.history.NotificationHistoryPackage) r2     // Catch:{ Exception -> 0x00c3 }
+            android.content.pm.PackageManager r3 = r7.mPm     // Catch:{ NameNotFoundException -> 0x00b1 }
+            java.lang.String r4 = r2.pkgName     // Catch:{ NameNotFoundException -> 0x00b1 }
+            r5 = 795136(0xc2200, float:1.114223E-39)
+            int r6 = r2.uid     // Catch:{ NameNotFoundException -> 0x00b1 }
+            int r6 = android.os.UserHandle.getUserId(r6)     // Catch:{ NameNotFoundException -> 0x00b1 }
+            android.content.pm.ApplicationInfo r3 = r3.getApplicationInfoAsUser(r4, r5, r6)     // Catch:{ NameNotFoundException -> 0x00b1 }
+            if (r3 == 0) goto L_0x006f
+            android.content.pm.PackageManager r4 = r7.mPm     // Catch:{ NameNotFoundException -> 0x00b1 }
+            java.lang.CharSequence r4 = r4.getApplicationLabel(r3)     // Catch:{ NameNotFoundException -> 0x00b1 }
+            java.lang.String r4 = java.lang.String.valueOf(r4)     // Catch:{ NameNotFoundException -> 0x00b1 }
+            r2.label = r4     // Catch:{ NameNotFoundException -> 0x00b1 }
+            android.content.pm.PackageManager r4 = r7.mPm     // Catch:{ NameNotFoundException -> 0x00b1 }
+            android.graphics.drawable.Drawable r3 = r4.getApplicationIcon(r3)     // Catch:{ NameNotFoundException -> 0x00b1 }
+            int r5 = r2.uid     // Catch:{ NameNotFoundException -> 0x00b1 }
+            int r5 = android.os.UserHandle.getUserId(r5)     // Catch:{ NameNotFoundException -> 0x00b1 }
+            android.os.UserHandle r5 = android.os.UserHandle.of(r5)     // Catch:{ NameNotFoundException -> 0x00b1 }
+            android.graphics.drawable.Drawable r3 = r4.getUserBadgedIcon(r3, r5)     // Catch:{ NameNotFoundException -> 0x00b1 }
+            r2.icon = r3     // Catch:{ NameNotFoundException -> 0x00b1 }
+            goto L_0x006f
+        L_0x00b1:
+            android.content.pm.PackageManager r3 = r7.mPm     // Catch:{ Exception -> 0x00c3 }
+            android.graphics.drawable.Drawable r3 = r3.getDefaultActivityIcon()     // Catch:{ Exception -> 0x00c3 }
+            r2.icon = r3     // Catch:{ Exception -> 0x00c3 }
+            goto L_0x006f
+        L_0x00ba:
+            com.android.settings.notification.history.HistoryLoader$$ExternalSyntheticLambda2 r7 = new com.android.settings.notification.history.HistoryLoader$$ExternalSyntheticLambda2     // Catch:{ Exception -> 0x00c3 }
+            r7.<init>(r8, r1)     // Catch:{ Exception -> 0x00c3 }
+            com.android.settingslib.utils.ThreadUtils.postOnMainThread(r7)     // Catch:{ Exception -> 0x00c3 }
+            goto L_0x00cb
+        L_0x00c3:
+            r7 = move-exception
+            java.lang.String r8 = "HistoryLoader"
+            java.lang.String r0 = "Error loading history"
+            android.util.Slog.e(r8, r0, r7)
+        L_0x00cb:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.notification.history.HistoryLoader.lambda$load$2(com.android.settings.notification.history.HistoryLoader$OnHistoryLoaderListener):void");
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static /* synthetic */ int lambda$load$0(NotificationHistoryPackage notificationHistoryPackage, NotificationHistoryPackage notificationHistoryPackage2) {
-        return Long.compare(notificationHistoryPackage.getMostRecent(), notificationHistoryPackage2.getMostRecent()) * (-1);
+        return Long.compare(notificationHistoryPackage.getMostRecent(), notificationHistoryPackage2.getMostRecent()) * -1;
     }
 }

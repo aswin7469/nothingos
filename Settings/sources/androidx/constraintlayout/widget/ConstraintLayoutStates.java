@@ -10,33 +10,29 @@ import java.io.IOException;
 import java.util.ArrayList;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
-/* loaded from: classes.dex */
+
 public class ConstraintLayoutStates {
     private final ConstraintLayout mConstraintLayout;
-    int mCurrentStateId = -1;
-    int mCurrentConstraintNumber = -1;
-    private SparseArray<State> mStateList = new SparseArray<>();
     private SparseArray<ConstraintSet> mConstraintSetMap = new SparseArray<>();
+    int mCurrentConstraintNumber = -1;
+    int mCurrentStateId = -1;
+    private SparseArray<State> mStateList = new SparseArray<>();
 
     public void setOnConstraintsChanged(ConstraintsChangedListener constraintsChangedListener) {
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public ConstraintLayoutStates(Context context, ConstraintLayout constraintLayout, int i) {
+    ConstraintLayoutStates(Context context, ConstraintLayout constraintLayout, int i) {
         this.mConstraintLayout = constraintLayout;
         load(context, i);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class State {
-        int mConstraintID;
+    static class State {
+        int mConstraintID = -1;
         ConstraintSet mConstraintSet;
         int mId;
         ArrayList<Variant> mVariants = new ArrayList<>();
 
         public State(Context context, XmlPullParser xmlPullParser) {
-            this.mConstraintID = -1;
             TypedArray obtainStyledAttributes = context.obtainStyledAttributes(Xml.asAttributeSet(xmlPullParser), R$styleable.State);
             int indexCount = obtainStyledAttributes.getIndexCount();
             for (int i = 0; i < indexCount; i++) {
@@ -57,27 +53,21 @@ public class ConstraintLayoutStates {
             obtainStyledAttributes.recycle();
         }
 
-        void add(Variant variant) {
+        /* access modifiers changed from: package-private */
+        public void add(Variant variant) {
             this.mVariants.add(variant);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class Variant {
-        int mConstraintID;
+    static class Variant {
+        int mConstraintID = -1;
         ConstraintSet mConstraintSet;
-        float mMaxHeight;
-        float mMaxWidth;
-        float mMinHeight;
-        float mMinWidth;
+        float mMaxHeight = Float.NaN;
+        float mMaxWidth = Float.NaN;
+        float mMinHeight = Float.NaN;
+        float mMinWidth = Float.NaN;
 
         public Variant(Context context, XmlPullParser xmlPullParser) {
-            this.mMinWidth = Float.NaN;
-            this.mMinHeight = Float.NaN;
-            this.mMaxWidth = Float.NaN;
-            this.mMaxHeight = Float.NaN;
-            this.mConstraintID = -1;
             TypedArray obtainStyledAttributes = context.obtainStyledAttributes(Xml.asAttributeSet(xmlPullParser), R$styleable.Variant);
             int indexCount = obtainStyledAttributes.getIndexCount();
             for (int i = 0; i < indexCount; i++) {
@@ -114,10 +104,7 @@ public class ConstraintLayoutStates {
             for (int eventType = xml.getEventType(); eventType != 1; eventType = xml.next()) {
                 if (eventType == 0) {
                     xml.getName();
-                    continue;
-                } else if (eventType != 2) {
-                    continue;
-                } else {
+                } else if (eventType == 2) {
                     String name = xml.getName();
                     char c = 65535;
                     switch (name.hashCode()) {
@@ -152,52 +139,51 @@ public class ConstraintLayoutStates {
                             }
                             break;
                     }
-                    if (c != 0 && c != 1) {
+                    if (!(c == 0 || c == 1)) {
                         if (c == 2) {
                             state = new State(context, xml);
                             this.mStateList.put(state.mId, state);
-                            continue;
                         } else if (c == 3) {
                             Variant variant = new Variant(context, xml);
                             if (state != null) {
                                 state.add(variant);
-                                continue;
-                            } else {
-                                continue;
                             }
-                        } else if (c == 4) {
-                            parseConstraintSet(context, xml);
-                            continue;
-                        } else {
+                        } else if (c != 4) {
                             Log.v("ConstraintLayoutStates", "unknown tag " + name);
-                            continue;
+                        } else {
+                            parseConstraintSet(context, xml);
                         }
                     }
                 }
             }
-        } catch (IOException e) {
+        } catch (XmlPullParserException e) {
             e.printStackTrace();
-        } catch (XmlPullParserException e2) {
+        } catch (IOException e2) {
             e2.printStackTrace();
         }
     }
 
     private void parseConstraintSet(Context context, XmlPullParser xmlPullParser) {
+        int i;
         ConstraintSet constraintSet = new ConstraintSet();
         int attributeCount = xmlPullParser.getAttributeCount();
-        for (int i = 0; i < attributeCount; i++) {
-            if ("id".equals(xmlPullParser.getAttributeName(i))) {
-                String attributeValue = xmlPullParser.getAttributeValue(i);
-                int identifier = attributeValue.contains("/") ? context.getResources().getIdentifier(attributeValue.substring(attributeValue.indexOf(47) + 1), "id", context.getPackageName()) : -1;
-                if (identifier == -1) {
+        for (int i2 = 0; i2 < attributeCount; i2++) {
+            if ("id".equals(xmlPullParser.getAttributeName(i2))) {
+                String attributeValue = xmlPullParser.getAttributeValue(i2);
+                if (attributeValue.contains("/")) {
+                    i = context.getResources().getIdentifier(attributeValue.substring(attributeValue.indexOf(47) + 1), "id", context.getPackageName());
+                } else {
+                    i = -1;
+                }
+                if (i == -1) {
                     if (attributeValue.length() > 1) {
-                        identifier = Integer.parseInt(attributeValue.substring(1));
+                        i = Integer.parseInt(attributeValue.substring(1));
                     } else {
                         Log.e("ConstraintLayoutStates", "error in parsing id");
                     }
                 }
                 constraintSet.load(context, xmlPullParser);
-                this.mConstraintSetMap.put(identifier, constraintSet);
+                this.mConstraintSetMap.put(i, constraintSet);
                 return;
             }
         }

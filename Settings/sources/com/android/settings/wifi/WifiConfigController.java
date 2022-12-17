@@ -4,11 +4,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.net.InetAddresses;
 import android.net.IpConfiguration;
-import android.net.LinkAddress;
-import android.net.NetworkInfo;
 import android.net.ProxyInfo;
 import android.net.StaticIpConfiguration;
-import android.net.Uri;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiEnterpriseConfig;
 import android.net.wifi.WifiManager;
@@ -33,13 +30,12 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import androidx.constraintlayout.widget.R$styleable;
-import com.android.net.module.util.NetUtils;
 import com.android.net.module.util.ProxyUtils;
-import com.android.settings.ProxySelector;
-import com.android.settings.R;
+import com.android.settings.R$array;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
 import com.android.settings.network.SubscriptionUtil;
 import com.android.settings.utils.AndroidKeystoreAliasLoader;
 import com.android.settings.wifi.dpp.WifiDppUtils;
@@ -48,15 +44,13 @@ import com.android.settingslib.utils.ThreadUtils;
 import com.android.settingslib.wifi.AccessPoint;
 import java.net.Inet4Address;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
-/* loaded from: classes.dex */
+
 public class WifiConfigController implements TextWatcher, AdapterView.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener, TextView.OnEditorActionListener, View.OnKeyListener {
     static final int PRIVACY_SPINNER_INDEX_DEVICE_MAC = 1;
     static final int PRIVACY_SPINNER_INDEX_RANDOMIZED_MAC = 0;
@@ -65,7 +59,8 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
     int mAccessPointSecurity;
     private final List<SubscriptionInfo> mActiveSubscriptionInfos;
     private final WifiConfigUiBase mConfigUi;
-    private Context mContext;
+    /* access modifiers changed from: private */
+    public Context mContext;
     private TextView mDns1View;
     private TextView mDns2View;
     private String mDoNotProvideEapUserCertString;
@@ -113,15 +108,12 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
     private final View mView;
     private final WifiManager mWifiManager;
 
-    @Override // android.text.TextWatcher
     public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
     }
 
-    @Override // android.widget.AdapterView.OnItemSelectedListener
     public void onNothingSelected(AdapterView<?> adapterView) {
     }
 
-    @Override // android.text.TextWatcher
     public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
     }
 
@@ -161,257 +153,652 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
         initWifiConfigController(accessPoint, i);
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:49:0x01c7  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private void initWifiConfigController(AccessPoint accessPoint, int i) {
-        boolean z;
-        this.mAccessPointSecurity = accessPoint == null ? 0 : accessPoint.getSecurity();
-        this.mMode = i;
-        Resources resources = this.mContext.getResources();
-        this.mLevels = resources.getStringArray(R.array.wifi_signal);
-        if (Utils.isWifiOnly(this.mContext) || !this.mContext.getResources().getBoolean(17891523)) {
-            this.mPhase2PeapAdapter = getSpinnerAdapter(R.array.wifi_peap_phase2_entries);
-        } else {
-            this.mPhase2PeapAdapter = getSpinnerAdapterWithEapMethodsTts(R.array.wifi_peap_phase2_entries_with_sim_auth);
-        }
-        this.mPhase2TtlsAdapter = getSpinnerAdapter(R.array.wifi_ttls_phase2_entries);
-        this.mUnspecifiedCertString = this.mContext.getString(R.string.wifi_unspecified);
-        this.mMultipleCertSetString = this.mContext.getString(R.string.wifi_multiple_cert_added);
-        this.mUseSystemCertsString = this.mContext.getString(R.string.wifi_use_system_certs);
-        this.mDoNotProvideEapUserCertString = this.mContext.getString(R.string.wifi_do_not_provide_eap_user_cert);
-        this.mSsidScanButton = (ImageButton) this.mView.findViewById(R.id.ssid_scanner_button);
-        Spinner spinner = (Spinner) this.mView.findViewById(R.id.ip_settings);
-        this.mIpSettingsSpinner = spinner;
-        spinner.setOnItemSelectedListener(this);
-        Spinner spinner2 = (Spinner) this.mView.findViewById(R.id.proxy_settings);
-        this.mProxySettingsSpinner = spinner2;
-        spinner2.setOnItemSelectedListener(this);
-        this.mSharedCheckBox = (CheckBox) this.mView.findViewById(R.id.shared);
-        this.mMeteredSettingsSpinner = (Spinner) this.mView.findViewById(R.id.metered_settings);
-        this.mHiddenSettingsSpinner = (Spinner) this.mView.findViewById(R.id.hidden_settings);
-        this.mPrivacySettingsSpinner = (Spinner) this.mView.findViewById(R.id.privacy_settings);
-        if (this.mWifiManager.isConnectedMacRandomizationSupported()) {
-            this.mView.findViewById(R.id.privacy_settings_fields).setVisibility(0);
-        }
-        this.mHiddenSettingsSpinner.setOnItemSelectedListener(this);
-        TextView textView = (TextView) this.mView.findViewById(R.id.hidden_settings_warning);
-        this.mHiddenWarningView = textView;
-        textView.setVisibility(this.mHiddenSettingsSpinner.getSelectedItemPosition() == 0 ? 8 : 0);
-        this.mSecurityInPosition = new Integer[9];
-        AccessPoint accessPoint2 = this.mAccessPoint;
-        if (accessPoint2 == null) {
-            configureSecuritySpinner();
-            this.mConfigUi.setSubmitButton(resources.getString(R.string.wifi_save));
-        } else {
-            this.mConfigUi.setTitle(accessPoint2.getTitle());
-            ViewGroup viewGroup = (ViewGroup) this.mView.findViewById(R.id.info);
-            if (this.mAccessPoint.isSaved()) {
-                WifiConfiguration config = this.mAccessPoint.getConfig();
-                this.mMeteredSettingsSpinner.setSelection(config.meteredOverride);
-                this.mHiddenSettingsSpinner.setSelection(config.hiddenSSID ? 1 : 0);
-                this.mPrivacySettingsSpinner.setSelection(config.macRandomizationSetting == 1 ? 0 : 1);
-                if (config.getIpConfiguration().getIpAssignment() == IpConfiguration.IpAssignment.STATIC) {
-                    this.mIpSettingsSpinner.setSelection(1);
-                    StaticIpConfiguration staticIpConfiguration = config.getIpConfiguration().getStaticIpConfiguration();
-                    if (staticIpConfiguration != null && staticIpConfiguration.getIpAddress() != null) {
-                        addRow(viewGroup, R.string.wifi_ip_address, staticIpConfiguration.getIpAddress().getAddress().getHostAddress());
-                    }
-                    z = true;
-                } else {
-                    this.mIpSettingsSpinner.setSelection(0);
-                    z = false;
-                }
-                this.mSharedCheckBox.setEnabled(config.shared);
-                if (!config.shared) {
-                    z = true;
-                }
-                IpConfiguration.ProxySettings proxySettings = config.getIpConfiguration().getProxySettings();
-                if (proxySettings == IpConfiguration.ProxySettings.STATIC) {
-                    this.mProxySettingsSpinner.setSelection(1);
-                } else if (proxySettings == IpConfiguration.ProxySettings.PAC) {
-                    this.mProxySettingsSpinner.setSelection(2);
-                } else {
-                    this.mProxySettingsSpinner.setSelection(0);
-                    if (config.isPasspoint()) {
-                        addRow(viewGroup, R.string.passpoint_label, String.format(this.mContext.getString(R.string.passpoint_content), config.providerFriendlyName));
-                    }
-                }
-                z = true;
-                if (config.isPasspoint()) {
-                }
-            } else {
-                z = false;
-            }
-            if ((!this.mAccessPoint.isSaved() && !this.mAccessPoint.isActive() && !this.mAccessPoint.isPasspointConfig()) || this.mMode != 0) {
-                showSecurityFields(true, true);
-                showIpConfigFields();
-                showProxyFields();
-                CheckBox checkBox = (CheckBox) this.mView.findViewById(R.id.wifi_advanced_togglebox);
-                if (!z) {
-                    this.mView.findViewById(R.id.wifi_advanced_toggle).setVisibility(0);
-                    checkBox.setOnCheckedChangeListener(this);
-                    checkBox.setChecked(z);
-                    setAdvancedOptionAccessibilityString();
-                }
-                this.mView.findViewById(R.id.wifi_advanced_fields).setVisibility(z ? 0 : 8);
-            }
-            int i2 = this.mMode;
-            if (i2 == 2) {
-                this.mConfigUi.setSubmitButton(resources.getString(R.string.wifi_save));
-            } else if (i2 == 1) {
-                this.mConfigUi.setSubmitButton(resources.getString(R.string.wifi_connect));
-            } else {
-                NetworkInfo.DetailedState detailedState = this.mAccessPoint.getDetailedState();
-                String signalString = getSignalString();
-                if ((detailedState == null || detailedState == NetworkInfo.DetailedState.DISCONNECTED) && signalString != null) {
-                    this.mConfigUi.setSubmitButton(resources.getString(R.string.wifi_connect));
-                } else {
-                    String str = null;
-                    if (detailedState != null) {
-                        boolean isEphemeral = this.mAccessPoint.isEphemeral();
-                        WifiConfiguration config2 = this.mAccessPoint.getConfig();
-                        if (config2 != null) {
-                            config2.isPasspoint();
-                        }
-                        addRow(viewGroup, R.string.wifi_status, AccessPoint.getSummary(this.mConfigUi.getContext(), null, detailedState, isEphemeral, (config2 == null || (!config2.fromWifiNetworkSpecifier && !config2.fromWifiNetworkSuggestion)) ? null : config2.creatorName));
-                    }
-                    if (signalString != null) {
-                        addRow(viewGroup, R.string.wifi_signal, signalString);
-                    }
-                    android.net.wifi.WifiInfo info = this.mAccessPoint.getInfo();
-                    if (info != null && info.getTxLinkSpeedMbps() != -1) {
-                        addRow(viewGroup, R.string.tx_wifi_speed, String.format(resources.getString(R.string.tx_link_speed), Integer.valueOf(info.getTxLinkSpeedMbps())));
-                    }
-                    if (info != null && info.getRxLinkSpeedMbps() != -1) {
-                        addRow(viewGroup, R.string.rx_wifi_speed, String.format(resources.getString(R.string.rx_link_speed), Integer.valueOf(info.getRxLinkSpeedMbps())));
-                    }
-                    if (info != null && info.getFrequency() != -1) {
-                        int frequency = info.getFrequency();
-                        if (frequency >= 2400 && frequency < 2500) {
-                            str = resources.getString(R.string.wifi_band_24ghz);
-                        } else if (frequency >= 4900 && frequency < 5900) {
-                            str = resources.getString(R.string.wifi_band_5ghz);
-                        } else {
-                            Log.e("WifiConfigController", "Unexpected frequency " + frequency);
-                        }
-                        if (str != null) {
-                            addRow(viewGroup, R.string.wifi_frequency, str);
-                        }
-                    }
-                    addRow(viewGroup, R.string.wifi_security, this.mAccessPoint.getSecurityString(false));
-                    this.mView.findViewById(R.id.ip_fields).setVisibility(8);
-                }
-                if (this.mAccessPoint.isSaved() || this.mAccessPoint.isActive() || this.mAccessPoint.isPasspointConfig()) {
-                    this.mConfigUi.setForgetButton(resources.getString(R.string.wifi_forget));
-                }
-            }
-            this.mSsidScanButton.setVisibility(8);
-        }
-        this.mSharedCheckBox.setVisibility(8);
-        this.mConfigUi.setCancelButton(resources.getString(R.string.wifi_cancel));
-        if (this.mConfigUi.getSubmitButton() != null) {
-            enableSubmitIfAppropriate();
-        }
-        if (this.mRequestFocus) {
-            this.mView.findViewById(R.id.l_wifidialog).requestFocus();
-        }
+    /* JADX WARNING: Removed duplicated region for block: B:48:0x01c7  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private void initWifiConfigController(com.android.settingslib.wifi.AccessPoint r11, int r12) {
+        /*
+            r10 = this;
+            r0 = 0
+            if (r11 != 0) goto L_0x0005
+            r11 = r0
+            goto L_0x0009
+        L_0x0005:
+            int r11 = r11.getSecurity()
+        L_0x0009:
+            r10.mAccessPointSecurity = r11
+            r10.mMode = r12
+            android.content.Context r11 = r10.mContext
+            android.content.res.Resources r11 = r11.getResources()
+            int r12 = com.android.settings.R$array.wifi_signal
+            java.lang.String[] r12 = r11.getStringArray(r12)
+            r10.mLevels = r12
+            android.content.Context r12 = r10.mContext
+            boolean r12 = com.android.settingslib.Utils.isWifiOnly(r12)
+            if (r12 != 0) goto L_0x003c
+            android.content.Context r12 = r10.mContext
+            android.content.res.Resources r12 = r12.getResources()
+            r1 = 17891622(0x1110126, float:2.6633118E-38)
+            boolean r12 = r12.getBoolean(r1)
+            if (r12 != 0) goto L_0x0033
+            goto L_0x003c
+        L_0x0033:
+            int r12 = com.android.settings.R$array.wifi_peap_phase2_entries_with_sim_auth
+            android.widget.ArrayAdapter r12 = r10.getSpinnerAdapterWithEapMethodsTts(r12)
+            r10.mPhase2PeapAdapter = r12
+            goto L_0x0044
+        L_0x003c:
+            int r12 = com.android.settings.R$array.wifi_peap_phase2_entries
+            android.widget.ArrayAdapter r12 = r10.getSpinnerAdapter((int) r12)
+            r10.mPhase2PeapAdapter = r12
+        L_0x0044:
+            int r12 = com.android.settings.R$array.wifi_ttls_phase2_entries
+            android.widget.ArrayAdapter r12 = r10.getSpinnerAdapter((int) r12)
+            r10.mPhase2TtlsAdapter = r12
+            android.content.Context r12 = r10.mContext
+            int r1 = com.android.settings.R$string.wifi_unspecified
+            java.lang.String r12 = r12.getString(r1)
+            r10.mUnspecifiedCertString = r12
+            android.content.Context r12 = r10.mContext
+            int r1 = com.android.settings.R$string.wifi_multiple_cert_added
+            java.lang.String r12 = r12.getString(r1)
+            r10.mMultipleCertSetString = r12
+            android.content.Context r12 = r10.mContext
+            int r1 = com.android.settings.R$string.wifi_use_system_certs
+            java.lang.String r12 = r12.getString(r1)
+            r10.mUseSystemCertsString = r12
+            android.content.Context r12 = r10.mContext
+            int r1 = com.android.settings.R$string.wifi_do_not_provide_eap_user_cert
+            java.lang.String r12 = r12.getString(r1)
+            r10.mDoNotProvideEapUserCertString = r12
+            android.view.View r12 = r10.mView
+            int r1 = com.android.settings.R$id.ssid_scanner_button
+            android.view.View r12 = r12.findViewById(r1)
+            android.widget.ImageButton r12 = (android.widget.ImageButton) r12
+            r10.mSsidScanButton = r12
+            android.view.View r12 = r10.mView
+            int r1 = com.android.settings.R$id.ip_settings
+            android.view.View r12 = r12.findViewById(r1)
+            android.widget.Spinner r12 = (android.widget.Spinner) r12
+            r10.mIpSettingsSpinner = r12
+            r12.setOnItemSelectedListener(r10)
+            android.view.View r12 = r10.mView
+            int r1 = com.android.settings.R$id.proxy_settings
+            android.view.View r12 = r12.findViewById(r1)
+            android.widget.Spinner r12 = (android.widget.Spinner) r12
+            r10.mProxySettingsSpinner = r12
+            r12.setOnItemSelectedListener(r10)
+            android.view.View r12 = r10.mView
+            int r1 = com.android.settings.R$id.shared
+            android.view.View r12 = r12.findViewById(r1)
+            android.widget.CheckBox r12 = (android.widget.CheckBox) r12
+            r10.mSharedCheckBox = r12
+            android.view.View r12 = r10.mView
+            int r1 = com.android.settings.R$id.metered_settings
+            android.view.View r12 = r12.findViewById(r1)
+            android.widget.Spinner r12 = (android.widget.Spinner) r12
+            r10.mMeteredSettingsSpinner = r12
+            android.view.View r12 = r10.mView
+            int r1 = com.android.settings.R$id.hidden_settings
+            android.view.View r12 = r12.findViewById(r1)
+            android.widget.Spinner r12 = (android.widget.Spinner) r12
+            r10.mHiddenSettingsSpinner = r12
+            android.view.View r12 = r10.mView
+            int r1 = com.android.settings.R$id.privacy_settings
+            android.view.View r12 = r12.findViewById(r1)
+            android.widget.Spinner r12 = (android.widget.Spinner) r12
+            r10.mPrivacySettingsSpinner = r12
+            android.net.wifi.WifiManager r12 = r10.mWifiManager
+            boolean r12 = r12.isConnectedMacRandomizationSupported()
+            if (r12 == 0) goto L_0x00e1
+            android.view.View r12 = r10.mView
+            int r1 = com.android.settings.R$id.privacy_settings_fields
+            android.view.View r12 = r12.findViewById(r1)
+            r12.setVisibility(r0)
+        L_0x00e1:
+            android.widget.Spinner r12 = r10.mHiddenSettingsSpinner
+            r12.setOnItemSelectedListener(r10)
+            android.view.View r12 = r10.mView
+            int r1 = com.android.settings.R$id.hidden_settings_warning
+            android.view.View r12 = r12.findViewById(r1)
+            android.widget.TextView r12 = (android.widget.TextView) r12
+            r10.mHiddenWarningView = r12
+            android.widget.Spinner r1 = r10.mHiddenSettingsSpinner
+            int r1 = r1.getSelectedItemPosition()
+            r2 = 8
+            if (r1 != 0) goto L_0x00fe
+            r1 = r2
+            goto L_0x00ff
+        L_0x00fe:
+            r1 = r0
+        L_0x00ff:
+            r12.setVisibility(r1)
+            r12 = 9
+            java.lang.Integer[] r12 = new java.lang.Integer[r12]
+            r10.mSecurityInPosition = r12
+            com.android.settingslib.wifi.AccessPoint r12 = r10.mAccessPoint
+            if (r12 != 0) goto L_0x011c
+            r10.configureSecuritySpinner()
+            com.android.settings.wifi.WifiConfigUiBase r12 = r10.mConfigUi
+            int r0 = com.android.settings.R$string.wifi_save
+            java.lang.String r0 = r11.getString(r0)
+            r12.setSubmitButton(r0)
+            goto L_0x037e
+        L_0x011c:
+            com.android.settings.wifi.WifiConfigUiBase r1 = r10.mConfigUi
+            java.lang.String r12 = r12.getTitle()
+            r1.setTitle((java.lang.CharSequence) r12)
+            android.view.View r12 = r10.mView
+            int r1 = com.android.settings.R$id.info
+            android.view.View r12 = r12.findViewById(r1)
+            android.view.ViewGroup r12 = (android.view.ViewGroup) r12
+            com.android.settingslib.wifi.AccessPoint r1 = r10.mAccessPoint
+            boolean r1 = r1.isSaved()
+            r3 = 2
+            r4 = 1
+            if (r1 == 0) goto L_0x01df
+            com.android.settingslib.wifi.AccessPoint r1 = r10.mAccessPoint
+            android.net.wifi.WifiConfiguration r1 = r1.getConfig()
+            android.widget.Spinner r5 = r10.mMeteredSettingsSpinner
+            int r6 = r1.meteredOverride
+            r5.setSelection(r6)
+            android.widget.Spinner r5 = r10.mHiddenSettingsSpinner
+            boolean r6 = r1.hiddenSSID
+            r5.setSelection(r6)
+            android.widget.Spinner r5 = r10.mPrivacySettingsSpinner
+            int r6 = r1.macRandomizationSetting
+            if (r6 != r4) goto L_0x0155
+            r6 = r0
+            goto L_0x0156
+        L_0x0155:
+            r6 = r4
+        L_0x0156:
+            r5.setSelection(r6)
+            android.net.IpConfiguration r5 = r1.getIpConfiguration()
+            android.net.IpConfiguration$IpAssignment r5 = r5.getIpAssignment()
+            android.net.IpConfiguration$IpAssignment r6 = android.net.IpConfiguration.IpAssignment.STATIC
+            if (r5 != r6) goto L_0x018d
+            android.widget.Spinner r5 = r10.mIpSettingsSpinner
+            r5.setSelection(r4)
+            android.net.IpConfiguration r5 = r1.getIpConfiguration()
+            android.net.StaticIpConfiguration r5 = r5.getStaticIpConfiguration()
+            if (r5 == 0) goto L_0x018b
+            android.net.LinkAddress r6 = r5.getIpAddress()
+            if (r6 == 0) goto L_0x018b
+            int r6 = com.android.settings.R$string.wifi_ip_address
+            android.net.LinkAddress r5 = r5.getIpAddress()
+            java.net.InetAddress r5 = r5.getAddress()
+            java.lang.String r5 = r5.getHostAddress()
+            r10.addRow(r12, r6, r5)
+        L_0x018b:
+            r5 = r4
+            goto L_0x0193
+        L_0x018d:
+            android.widget.Spinner r5 = r10.mIpSettingsSpinner
+            r5.setSelection(r0)
+            r5 = r0
+        L_0x0193:
+            android.widget.CheckBox r6 = r10.mSharedCheckBox
+            boolean r7 = r1.shared
+            r6.setEnabled(r7)
+            boolean r6 = r1.shared
+            if (r6 != 0) goto L_0x019f
+            r5 = r4
+        L_0x019f:
+            android.net.IpConfiguration r6 = r1.getIpConfiguration()
+            android.net.IpConfiguration$ProxySettings r6 = r6.getProxySettings()
+            android.net.IpConfiguration$ProxySettings r7 = android.net.IpConfiguration.ProxySettings.STATIC
+            if (r6 != r7) goto L_0x01b2
+            android.widget.Spinner r5 = r10.mProxySettingsSpinner
+            r5.setSelection(r4)
+        L_0x01b0:
+            r5 = r4
+            goto L_0x01c1
+        L_0x01b2:
+            android.net.IpConfiguration$ProxySettings r7 = android.net.IpConfiguration.ProxySettings.PAC
+            if (r6 != r7) goto L_0x01bc
+            android.widget.Spinner r5 = r10.mProxySettingsSpinner
+            r5.setSelection(r3)
+            goto L_0x01b0
+        L_0x01bc:
+            android.widget.Spinner r6 = r10.mProxySettingsSpinner
+            r6.setSelection(r0)
+        L_0x01c1:
+            boolean r6 = r1.isPasspoint()
+            if (r6 == 0) goto L_0x01e0
+            int r6 = com.android.settings.R$string.passpoint_label
+            android.content.Context r7 = r10.mContext
+            int r8 = com.android.settings.R$string.passpoint_content
+            java.lang.String r7 = r7.getString(r8)
+            java.lang.Object[] r8 = new java.lang.Object[r4]
+            java.lang.String r1 = r1.providerFriendlyName
+            r8[r0] = r1
+            java.lang.String r1 = java.lang.String.format(r7, r8)
+            r10.addRow(r12, r6, r1)
+            goto L_0x01e0
+        L_0x01df:
+            r5 = r0
+        L_0x01e0:
+            com.android.settingslib.wifi.AccessPoint r1 = r10.mAccessPoint
+            boolean r1 = r1.isSaved()
+            if (r1 != 0) goto L_0x01f8
+            com.android.settingslib.wifi.AccessPoint r1 = r10.mAccessPoint
+            boolean r1 = r1.isActive()
+            if (r1 != 0) goto L_0x01f8
+            com.android.settingslib.wifi.AccessPoint r1 = r10.mAccessPoint
+            boolean r1 = r1.isPasspointConfig()
+            if (r1 == 0) goto L_0x01fc
+        L_0x01f8:
+            int r1 = r10.mMode
+            if (r1 == 0) goto L_0x0235
+        L_0x01fc:
+            r10.showSecurityFields(r4, r4)
+            r10.showIpConfigFields()
+            r10.showProxyFields()
+            android.view.View r1 = r10.mView
+            int r6 = com.android.settings.R$id.wifi_advanced_togglebox
+            android.view.View r1 = r1.findViewById(r6)
+            android.widget.CheckBox r1 = (android.widget.CheckBox) r1
+            if (r5 != 0) goto L_0x0225
+            android.view.View r6 = r10.mView
+            int r7 = com.android.settings.R$id.wifi_advanced_toggle
+            android.view.View r6 = r6.findViewById(r7)
+            r6.setVisibility(r0)
+            r1.setOnCheckedChangeListener(r10)
+            r1.setChecked(r5)
+            r10.setAdvancedOptionAccessibilityString()
+        L_0x0225:
+            android.view.View r1 = r10.mView
+            int r6 = com.android.settings.R$id.wifi_advanced_fields
+            android.view.View r1 = r1.findViewById(r6)
+            if (r5 == 0) goto L_0x0231
+            r5 = r0
+            goto L_0x0232
+        L_0x0231:
+            r5 = r2
+        L_0x0232:
+            r1.setVisibility(r5)
+        L_0x0235:
+            int r1 = r10.mMode
+            if (r1 != r3) goto L_0x0246
+            com.android.settings.wifi.WifiConfigUiBase r12 = r10.mConfigUi
+            int r0 = com.android.settings.R$string.wifi_save
+            java.lang.String r0 = r11.getString(r0)
+            r12.setSubmitButton(r0)
+            goto L_0x0379
+        L_0x0246:
+            if (r1 != r4) goto L_0x0255
+            com.android.settings.wifi.WifiConfigUiBase r12 = r10.mConfigUi
+            int r0 = com.android.settings.R$string.wifi_connect
+            java.lang.String r0 = r11.getString(r0)
+            r12.setSubmitButton(r0)
+            goto L_0x0379
+        L_0x0255:
+            com.android.settingslib.wifi.AccessPoint r1 = r10.mAccessPoint
+            android.net.NetworkInfo$DetailedState r1 = r1.getDetailedState()
+            java.lang.String r3 = r10.getSignalString()
+            if (r1 == 0) goto L_0x0265
+            android.net.NetworkInfo$DetailedState r5 = android.net.NetworkInfo.DetailedState.DISCONNECTED
+            if (r1 != r5) goto L_0x0274
+        L_0x0265:
+            if (r3 == 0) goto L_0x0274
+            com.android.settings.wifi.WifiConfigUiBase r12 = r10.mConfigUi
+            int r0 = com.android.settings.R$string.wifi_connect
+            java.lang.String r0 = r11.getString(r0)
+            r12.setSubmitButton(r0)
+            goto L_0x0356
+        L_0x0274:
+            r5 = 0
+            if (r1 == 0) goto L_0x02a5
+            com.android.settingslib.wifi.AccessPoint r6 = r10.mAccessPoint
+            boolean r6 = r6.isEphemeral()
+            com.android.settingslib.wifi.AccessPoint r7 = r10.mAccessPoint
+            android.net.wifi.WifiConfiguration r7 = r7.getConfig()
+            if (r7 == 0) goto L_0x0288
+            r7.isPasspoint()
+        L_0x0288:
+            if (r7 == 0) goto L_0x0295
+            boolean r8 = r7.fromWifiNetworkSpecifier
+            if (r8 != 0) goto L_0x0292
+            boolean r8 = r7.fromWifiNetworkSuggestion
+            if (r8 == 0) goto L_0x0295
+        L_0x0292:
+            java.lang.String r7 = r7.creatorName
+            goto L_0x0296
+        L_0x0295:
+            r7 = r5
+        L_0x0296:
+            com.android.settings.wifi.WifiConfigUiBase r8 = r10.mConfigUi
+            android.content.Context r8 = r8.getContext()
+            java.lang.String r1 = com.android.settingslib.wifi.AccessPoint.getSummary(r8, r5, r1, r6, r7)
+            int r6 = com.android.settings.R$string.wifi_status
+            r10.addRow(r12, r6, r1)
+        L_0x02a5:
+            if (r3 == 0) goto L_0x02ac
+            int r1 = com.android.settings.R$string.wifi_signal
+            r10.addRow(r12, r1, r3)
+        L_0x02ac:
+            com.android.settingslib.wifi.AccessPoint r1 = r10.mAccessPoint
+            android.net.wifi.WifiInfo r1 = r1.getInfo()
+            r3 = -1
+            if (r1 == 0) goto L_0x02d6
+            int r6 = r1.getTxLinkSpeedMbps()
+            if (r6 == r3) goto L_0x02d6
+            int r6 = com.android.settings.R$string.tx_wifi_speed
+            int r7 = com.android.settings.R$string.tx_link_speed
+            java.lang.String r7 = r11.getString(r7)
+            java.lang.Object[] r8 = new java.lang.Object[r4]
+            int r9 = r1.getTxLinkSpeedMbps()
+            java.lang.Integer r9 = java.lang.Integer.valueOf(r9)
+            r8[r0] = r9
+            java.lang.String r7 = java.lang.String.format(r7, r8)
+            r10.addRow(r12, r6, r7)
+        L_0x02d6:
+            if (r1 == 0) goto L_0x02f9
+            int r6 = r1.getRxLinkSpeedMbps()
+            if (r6 == r3) goto L_0x02f9
+            int r6 = com.android.settings.R$string.rx_wifi_speed
+            int r7 = com.android.settings.R$string.rx_link_speed
+            java.lang.String r7 = r11.getString(r7)
+            java.lang.Object[] r4 = new java.lang.Object[r4]
+            int r8 = r1.getRxLinkSpeedMbps()
+            java.lang.Integer r8 = java.lang.Integer.valueOf(r8)
+            r4[r0] = r8
+            java.lang.String r4 = java.lang.String.format(r7, r4)
+            r10.addRow(r12, r6, r4)
+        L_0x02f9:
+            if (r1 == 0) goto L_0x0340
+            int r4 = r1.getFrequency()
+            if (r4 == r3) goto L_0x0340
+            int r1 = r1.getFrequency()
+            r3 = 2400(0x960, float:3.363E-42)
+            if (r1 < r3) goto L_0x0314
+            r3 = 2500(0x9c4, float:3.503E-42)
+            if (r1 >= r3) goto L_0x0314
+            int r1 = com.android.settings.R$string.wifi_band_24ghz
+            java.lang.String r5 = r11.getString(r1)
+            goto L_0x0339
+        L_0x0314:
+            r3 = 4900(0x1324, float:6.866E-42)
+            if (r1 < r3) goto L_0x0323
+            r3 = 5900(0x170c, float:8.268E-42)
+            if (r1 >= r3) goto L_0x0323
+            int r1 = com.android.settings.R$string.wifi_band_5ghz
+            java.lang.String r5 = r11.getString(r1)
+            goto L_0x0339
+        L_0x0323:
+            java.lang.StringBuilder r3 = new java.lang.StringBuilder
+            r3.<init>()
+            java.lang.String r4 = "Unexpected frequency "
+            r3.append(r4)
+            r3.append(r1)
+            java.lang.String r1 = r3.toString()
+            java.lang.String r3 = "WifiConfigController"
+            android.util.Log.e(r3, r1)
+        L_0x0339:
+            if (r5 == 0) goto L_0x0340
+            int r1 = com.android.settings.R$string.wifi_frequency
+            r10.addRow(r12, r1, r5)
+        L_0x0340:
+            int r1 = com.android.settings.R$string.wifi_security
+            com.android.settingslib.wifi.AccessPoint r3 = r10.mAccessPoint
+            java.lang.String r0 = r3.getSecurityString(r0)
+            r10.addRow(r12, r1, r0)
+            android.view.View r12 = r10.mView
+            int r0 = com.android.settings.R$id.ip_fields
+            android.view.View r12 = r12.findViewById(r0)
+            r12.setVisibility(r2)
+        L_0x0356:
+            com.android.settingslib.wifi.AccessPoint r12 = r10.mAccessPoint
+            boolean r12 = r12.isSaved()
+            if (r12 != 0) goto L_0x036e
+            com.android.settingslib.wifi.AccessPoint r12 = r10.mAccessPoint
+            boolean r12 = r12.isActive()
+            if (r12 != 0) goto L_0x036e
+            com.android.settingslib.wifi.AccessPoint r12 = r10.mAccessPoint
+            boolean r12 = r12.isPasspointConfig()
+            if (r12 == 0) goto L_0x0379
+        L_0x036e:
+            com.android.settings.wifi.WifiConfigUiBase r12 = r10.mConfigUi
+            int r0 = com.android.settings.R$string.wifi_forget
+            java.lang.String r0 = r11.getString(r0)
+            r12.setForgetButton(r0)
+        L_0x0379:
+            android.widget.ImageButton r12 = r10.mSsidScanButton
+            r12.setVisibility(r2)
+        L_0x037e:
+            android.widget.CheckBox r12 = r10.mSharedCheckBox
+            r12.setVisibility(r2)
+            com.android.settings.wifi.WifiConfigUiBase r12 = r10.mConfigUi
+            int r0 = com.android.settings.R$string.wifi_cancel
+            java.lang.String r11 = r11.getString(r0)
+            r12.setCancelButton(r11)
+            com.android.settings.wifi.WifiConfigUiBase r11 = r10.mConfigUi
+            android.widget.Button r11 = r11.getSubmitButton()
+            if (r11 == 0) goto L_0x0399
+            r10.enableSubmitIfAppropriate()
+        L_0x0399:
+            boolean r11 = r10.mRequestFocus
+            if (r11 == 0) goto L_0x03a8
+            android.view.View r10 = r10.mView
+            int r11 = com.android.settings.R$id.l_wifidialog
+            android.view.View r10 = r10.findViewById(r11)
+            r10.requestFocus()
+        L_0x03a8:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.wifi.WifiConfigController.initWifiConfigController(com.android.settingslib.wifi.AccessPoint, int):void");
     }
 
     private void addRow(ViewGroup viewGroup, int i, String str) {
-        View inflate = this.mConfigUi.getLayoutInflater().inflate(R.layout.wifi_dialog_row, viewGroup, false);
-        ((TextView) inflate.findViewById(R.id.name)).setText(i);
-        ((TextView) inflate.findViewById(R.id.value)).setText(str);
+        View inflate = this.mConfigUi.getLayoutInflater().inflate(R$layout.wifi_dialog_row, viewGroup, false);
+        ((TextView) inflate.findViewById(R$id.name)).setText(i);
+        ((TextView) inflate.findViewById(R$id.value)).setText(str);
         viewGroup.addView(inflate);
     }
 
-    String getSignalString() {
+    /* access modifiers changed from: package-private */
+    public String getSignalString() {
         int level;
-        if (this.mAccessPoint.isReachable() && (level = this.mAccessPoint.getLevel()) > -1) {
-            String[] strArr = this.mLevels;
-            if (level >= strArr.length) {
-                return null;
-            }
+        if (!this.mAccessPoint.isReachable() || (level = this.mAccessPoint.getLevel()) <= -1) {
+            return null;
+        }
+        String[] strArr = this.mLevels;
+        if (level < strArr.length) {
             return strArr[level];
         }
         return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void hideForgetButton() {
         Button forgetButton = this.mConfigUi.getForgetButton();
-        if (forgetButton == null) {
-            return;
+        if (forgetButton != null) {
+            forgetButton.setVisibility(8);
         }
-        forgetButton.setVisibility(8);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void hideSubmitButton() {
         Button submitButton = this.mConfigUi.getSubmitButton();
-        if (submitButton == null) {
-            return;
+        if (submitButton != null) {
+            submitButton.setVisibility(8);
         }
-        submitButton.setVisibility(8);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void enableSubmitIfAppropriate() {
         Button submitButton = this.mConfigUi.getSubmitButton();
-        if (submitButton == null) {
-            return;
+        if (submitButton != null) {
+            submitButton.setEnabled(isSubmittable());
         }
-        submitButton.setEnabled(isSubmittable());
     }
 
-    boolean isValidPsk(String str) {
-        if (str.length() != 64 || !str.matches("[0-9A-Fa-f]{64}")) {
-            return str.length() >= 8 && str.length() <= 63;
+    /* access modifiers changed from: package-private */
+    public boolean isValidPsk(String str) {
+        if (str.length() == 64 && str.matches("[0-9A-Fa-f]{64}")) {
+            return true;
+        }
+        if (str.length() < 8 || str.length() > 63) {
+            return false;
         }
         return true;
     }
 
-    boolean isValidSaePassword(String str) {
+    /* access modifiers changed from: package-private */
+    public boolean isValidSaePassword(String str) {
         return str.length() >= 1 && str.length() <= 63;
     }
 
-    boolean isSubmittable() {
-        AccessPoint accessPoint;
-        AccessPoint accessPoint2;
-        TextView textView = this.mPasswordView;
-        boolean z = true;
-        if (textView == null || ((this.mAccessPointSecurity != 1 || textView.length() != 0) && ((this.mAccessPointSecurity != 2 || isValidPsk(this.mPasswordView.getText().toString())) && (this.mAccessPointSecurity != 5 || isValidSaePassword(this.mPasswordView.getText().toString()))))) {
-            z = false;
-        }
-        TextView textView2 = this.mSsidView;
-        boolean ipAndProxyFieldsAreValid = ((textView2 == null || textView2.length() != 0) && (((accessPoint = this.mAccessPoint) != null && accessPoint.isSaved()) || !z) && ((accessPoint2 = this.mAccessPoint) == null || !accessPoint2.isSaved() || !z || this.mPasswordView.length() <= 0)) ? ipAndProxyFieldsAreValid() : false;
-        int i = this.mAccessPointSecurity;
-        if ((i == 3 || i == 7 || i == 6) && this.mEapCaCertSpinner != null && this.mView.findViewById(R.id.l_ca_cert).getVisibility() != 8 && (((String) this.mEapCaCertSpinner.getSelectedItem()).equals(this.mUnspecifiedCertString) || (this.mEapDomainView != null && this.mView.findViewById(R.id.l_domain).getVisibility() != 8 && TextUtils.isEmpty(this.mEapDomainView.getText().toString())))) {
-            ipAndProxyFieldsAreValid = false;
-        }
-        int i2 = this.mAccessPointSecurity;
-        if ((i2 == 3 || i2 == 7 || i2 == 6) && this.mEapUserCertSpinner != null && this.mView.findViewById(R.id.l_user_cert).getVisibility() != 8 && this.mEapUserCertSpinner.getSelectedItem().equals(this.mUnspecifiedCertString)) {
-            return false;
-        }
-        return ipAndProxyFieldsAreValid;
+    /* access modifiers changed from: package-private */
+    /* JADX WARNING: Code restructure failed: missing block: B:19:0x0046, code lost:
+        r0 = r8.mAccessPoint;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:24:0x0052, code lost:
+        r0 = r8.mAccessPoint;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public boolean isSubmittable() {
+        /*
+            r8 = this;
+            android.widget.TextView r0 = r8.mPasswordView
+            r1 = 1
+            r2 = 0
+            if (r0 == 0) goto L_0x003b
+            int r3 = r8.mAccessPointSecurity
+            if (r3 != r1) goto L_0x0010
+            int r0 = r0.length()
+            if (r0 == 0) goto L_0x003c
+        L_0x0010:
+            int r0 = r8.mAccessPointSecurity
+            r3 = 2
+            if (r0 != r3) goto L_0x0025
+            android.widget.TextView r0 = r8.mPasswordView
+            java.lang.CharSequence r0 = r0.getText()
+            java.lang.String r0 = r0.toString()
+            boolean r0 = r8.isValidPsk(r0)
+            if (r0 == 0) goto L_0x003c
+        L_0x0025:
+            int r0 = r8.mAccessPointSecurity
+            r3 = 5
+            if (r0 != r3) goto L_0x003b
+            android.widget.TextView r0 = r8.mPasswordView
+            java.lang.CharSequence r0 = r0.getText()
+            java.lang.String r0 = r0.toString()
+            boolean r0 = r8.isValidSaePassword(r0)
+            if (r0 != 0) goto L_0x003b
+            goto L_0x003c
+        L_0x003b:
+            r1 = r2
+        L_0x003c:
+            android.widget.TextView r0 = r8.mSsidView
+            if (r0 == 0) goto L_0x0046
+            int r0 = r0.length()
+            if (r0 == 0) goto L_0x006c
+        L_0x0046:
+            com.android.settingslib.wifi.AccessPoint r0 = r8.mAccessPoint
+            if (r0 == 0) goto L_0x0050
+            boolean r0 = r0.isSaved()
+            if (r0 != 0) goto L_0x0052
+        L_0x0050:
+            if (r1 != 0) goto L_0x006c
+        L_0x0052:
+            com.android.settingslib.wifi.AccessPoint r0 = r8.mAccessPoint
+            if (r0 == 0) goto L_0x0067
+            boolean r0 = r0.isSaved()
+            if (r0 == 0) goto L_0x0067
+            if (r1 == 0) goto L_0x0067
+            android.widget.TextView r0 = r8.mPasswordView
+            int r0 = r0.length()
+            if (r0 <= 0) goto L_0x0067
+            goto L_0x006c
+        L_0x0067:
+            boolean r0 = r8.ipAndProxyFieldsAreValid()
+            goto L_0x006d
+        L_0x006c:
+            r0 = r2
+        L_0x006d:
+            int r1 = r8.mAccessPointSecurity
+            r3 = 6
+            r4 = 7
+            r5 = 3
+            r6 = 8
+            if (r1 == r5) goto L_0x007a
+            if (r1 == r4) goto L_0x007a
+            if (r1 != r3) goto L_0x00c1
+        L_0x007a:
+            android.widget.Spinner r1 = r8.mEapCaCertSpinner
+            if (r1 == 0) goto L_0x00c1
+            android.view.View r1 = r8.mView
+            int r7 = com.android.settings.R$id.l_ca_cert
+            android.view.View r1 = r1.findViewById(r7)
+            int r1 = r1.getVisibility()
+            if (r1 == r6) goto L_0x00c1
+            android.widget.Spinner r1 = r8.mEapCaCertSpinner
+            java.lang.Object r1 = r1.getSelectedItem()
+            java.lang.String r1 = (java.lang.String) r1
+            java.lang.String r7 = r8.mUnspecifiedCertString
+            boolean r1 = r1.equals(r7)
+            if (r1 == 0) goto L_0x009e
+        L_0x009c:
+            r0 = r2
+            goto L_0x00c1
+        L_0x009e:
+            android.widget.TextView r1 = r8.mEapDomainView
+            if (r1 == 0) goto L_0x00c1
+            android.view.View r1 = r8.mView
+            int r7 = com.android.settings.R$id.l_domain
+            android.view.View r1 = r1.findViewById(r7)
+            int r1 = r1.getVisibility()
+            if (r1 == r6) goto L_0x00c1
+            android.widget.TextView r1 = r8.mEapDomainView
+            java.lang.CharSequence r1 = r1.getText()
+            java.lang.String r1 = r1.toString()
+            boolean r1 = android.text.TextUtils.isEmpty(r1)
+            if (r1 == 0) goto L_0x00c1
+            goto L_0x009c
+        L_0x00c1:
+            int r1 = r8.mAccessPointSecurity
+            if (r1 == r5) goto L_0x00c9
+            if (r1 == r4) goto L_0x00c9
+            if (r1 != r3) goto L_0x00ea
+        L_0x00c9:
+            android.widget.Spinner r1 = r8.mEapUserCertSpinner
+            if (r1 == 0) goto L_0x00ea
+            android.view.View r1 = r8.mView
+            int r3 = com.android.settings.R$id.l_user_cert
+            android.view.View r1 = r1.findViewById(r3)
+            int r1 = r1.getVisibility()
+            if (r1 == r6) goto L_0x00ea
+            android.widget.Spinner r1 = r8.mEapUserCertSpinner
+            java.lang.Object r1 = r1.getSelectedItem()
+            java.lang.String r8 = r8.mUnspecifiedCertString
+            boolean r8 = r1.equals(r8)
+            if (r8 == 0) goto L_0x00ea
+            goto L_0x00eb
+        L_0x00ea:
+            r2 = r0
+        L_0x00eb:
+            return r2
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.wifi.WifiConfigController.isSubmittable():boolean");
     }
 
-    void showWarningMessagesIfAppropriate() {
+    /* access modifiers changed from: package-private */
+    public void showWarningMessagesIfAppropriate() {
         View view = this.mView;
-        int i = R.id.no_user_cert_warning;
+        int i = R$id.no_user_cert_warning;
         view.findViewById(i).setVisibility(8);
         View view2 = this.mView;
-        int i2 = R.id.no_domain_warning;
+        int i2 = R$id.no_domain_warning;
         view2.findViewById(i2).setVisibility(8);
         View view3 = this.mView;
-        int i3 = R.id.ssid_too_long_warning;
+        int i3 = R$id.ssid_too_long_warning;
         view3.findViewById(i3).setVisibility(8);
         TextView textView = this.mSsidView;
         if (textView != null && WifiUtils.isSSIDTooLong(textView.getText().toString())) {
             this.mView.findViewById(i3).setVisibility(0);
         }
-        if (this.mEapCaCertSpinner != null && this.mView.findViewById(R.id.l_ca_cert).getVisibility() != 8 && this.mEapDomainView != null && this.mView.findViewById(R.id.l_domain).getVisibility() != 8 && TextUtils.isEmpty(this.mEapDomainView.getText().toString())) {
+        if (!(this.mEapCaCertSpinner == null || this.mView.findViewById(R$id.l_ca_cert).getVisibility() == 8 || this.mEapDomainView == null || this.mView.findViewById(R$id.l_domain).getVisibility() == 8 || !TextUtils.isEmpty(this.mEapDomainView.getText().toString()))) {
             this.mView.findViewById(i2).setVisibility(0);
         }
         if (this.mAccessPointSecurity == 6 && this.mEapMethodSpinner.getSelectedItemPosition() == 1 && ((String) this.mEapUserCertSpinner.getSelectedItem()).equals(this.mUnspecifiedCertString)) {
@@ -446,11 +833,11 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
                 if (this.mPasswordView.length() != 0) {
                     int length = this.mPasswordView.length();
                     String charSequence = this.mPasswordView.getText().toString();
-                    if ((length == 10 || length == 26 || length == 58) && charSequence.matches("[0-9A-Fa-f]*")) {
-                        wifiConfiguration.wepKeys[0] = charSequence;
+                    if ((length != 10 && length != 26 && length != 58) || !charSequence.matches("[0-9A-Fa-f]*")) {
+                        wifiConfiguration.wepKeys[0] = '\"' + charSequence + '\"';
                         break;
                     } else {
-                        wifiConfiguration.wepKeys[0] = '\"' + charSequence + '\"';
+                        wifiConfiguration.wepKeys[0] = charSequence;
                         break;
                     }
                 }
@@ -459,11 +846,11 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
                 wifiConfiguration.setSecurityParams(2);
                 if (this.mPasswordView.length() != 0) {
                     String charSequence2 = this.mPasswordView.getText().toString();
-                    if (charSequence2.matches("[0-9A-Fa-f]{64}")) {
-                        wifiConfiguration.preSharedKey = charSequence2;
+                    if (!charSequence2.matches("[0-9A-Fa-f]{64}")) {
+                        wifiConfiguration.preSharedKey = '\"' + charSequence2 + '\"';
                         break;
                     } else {
-                        wifiConfiguration.preSharedKey = '\"' + charSequence2 + '\"';
+                        wifiConfiguration.preSharedKey = charSequence2;
                         break;
                     }
                 }
@@ -490,10 +877,10 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
                             wifiConfiguration.enterpriseConfig.setPhase2Method(2);
                         } else if (selectedItemPosition2 == 2) {
                             wifiConfiguration.enterpriseConfig.setPhase2Method(3);
-                        } else if (selectedItemPosition2 == 3) {
-                            wifiConfiguration.enterpriseConfig.setPhase2Method(4);
-                        } else {
+                        } else if (selectedItemPosition2 != 3) {
                             Log.e("WifiConfigController", "Unknown phase2 method" + selectedItemPosition2);
+                        } else {
+                            wifiConfiguration.enterpriseConfig.setPhase2Method(4);
                         }
                     }
                 } else if (selectedItemPosition2 == 0) {
@@ -504,14 +891,14 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
                     wifiConfiguration.enterpriseConfig.setPhase2Method(5);
                 } else if (selectedItemPosition2 == 3) {
                     wifiConfiguration.enterpriseConfig.setPhase2Method(6);
-                } else if (selectedItemPosition2 == 4) {
-                    wifiConfiguration.enterpriseConfig.setPhase2Method(7);
-                } else {
+                } else if (selectedItemPosition2 != 4) {
                     Log.e("WifiConfigController", "Unknown phase2 method" + selectedItemPosition2);
+                } else {
+                    wifiConfiguration.enterpriseConfig.setPhase2Method(7);
                 }
                 String str = (String) this.mEapCaCertSpinner.getSelectedItem();
-                wifiConfiguration.enterpriseConfig.setCaCertificateAliases(null);
-                wifiConfiguration.enterpriseConfig.setCaPath(null);
+                wifiConfiguration.enterpriseConfig.setCaCertificateAliases((String[]) null);
+                wifiConfiguration.enterpriseConfig.setCaPath((String) null);
                 wifiConfiguration.enterpriseConfig.setDomainSuffixMatch(this.mEapDomainView.getText().toString());
                 if (!str.equals(this.mUnspecifiedCertString)) {
                     if (str.equals(this.mUseSystemCertsString)) {
@@ -528,7 +915,7 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
                         wifiConfiguration.enterpriseConfig.setCaCertificateAliases(new String[]{str});
                     }
                 }
-                if (wifiConfiguration.enterpriseConfig.getCaCertificateAliases() != null && wifiConfiguration.enterpriseConfig.getCaPath() != null) {
+                if (!(wifiConfiguration.enterpriseConfig.getCaCertificateAliases() == null || wifiConfiguration.enterpriseConfig.getCaPath() == null)) {
                     Log.e("WifiConfigController", "ca_cert (" + wifiConfiguration.enterpriseConfig.getCaCertificateAliases() + ") and ca_path (" + wifiConfiguration.enterpriseConfig.getCaPath() + ") should not both be non-null");
                 }
                 if (str.equals(this.mUnspecifiedCertString)) {
@@ -597,65 +984,92 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
         return wifiConfiguration;
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:23:0x0066  */
-    /* JADX WARN: Removed duplicated region for block: B:25:0x0077 A[RETURN] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* JADX WARNING: Removed duplicated region for block: B:25:0x0066  */
+    /* JADX WARNING: Removed duplicated region for block: B:26:0x0077 A[RETURN] */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
     private boolean ipAndProxyFieldsAreValid() {
-        IpConfiguration.IpAssignment ipAssignment;
-        TextView textView;
-        Uri parse;
-        TextView textView2;
-        int i;
-        int i2;
-        Spinner spinner = this.mIpSettingsSpinner;
-        if (spinner != null && spinner.getSelectedItemPosition() == 1) {
-            ipAssignment = IpConfiguration.IpAssignment.STATIC;
-        } else {
-            ipAssignment = IpConfiguration.IpAssignment.DHCP;
-        }
-        this.mIpAssignment = ipAssignment;
-        if (ipAssignment == IpConfiguration.IpAssignment.STATIC) {
-            StaticIpConfiguration staticIpConfiguration = new StaticIpConfiguration();
-            this.mStaticIpConfiguration = staticIpConfiguration;
-            if (validateIpConfigFields(staticIpConfiguration) != 0) {
-                return false;
-            }
-        }
-        int selectedItemPosition = this.mProxySettingsSpinner.getSelectedItemPosition();
-        this.mProxySettings = IpConfiguration.ProxySettings.NONE;
-        this.mHttpProxy = null;
-        if (selectedItemPosition == 1 && (textView2 = this.mProxyHostView) != null) {
-            this.mProxySettings = IpConfiguration.ProxySettings.STATIC;
-            String charSequence = textView2.getText().toString();
-            String charSequence2 = this.mProxyPortView.getText().toString();
-            String charSequence3 = this.mProxyExclusionListView.getText().toString();
-            try {
-                i = Integer.parseInt(charSequence2);
-            } catch (NumberFormatException unused) {
-                i = 0;
-            }
-            try {
-                i2 = ProxySelector.validate(charSequence, charSequence2, charSequence3);
-            } catch (NumberFormatException unused2) {
-                i2 = R.string.proxy_error_invalid_port;
-                if (i2 == 0) {
-                }
-            }
-            if (i2 == 0) {
-                return false;
-            }
-            this.mHttpProxy = ProxyInfo.buildDirectProxy(charSequence, i, Arrays.asList(charSequence3.split(",")));
-        } else if (selectedItemPosition == 2 && (textView = this.mProxyPacView) != null) {
-            this.mProxySettings = IpConfiguration.ProxySettings.PAC;
-            CharSequence text = textView.getText();
-            if (TextUtils.isEmpty(text) || (parse = Uri.parse(text.toString())) == null) {
-                return false;
-            }
-            this.mHttpProxy = ProxyInfo.buildPacProxy(parse);
-        }
-        return true;
+        /*
+            r6 = this;
+            android.widget.Spinner r0 = r6.mIpSettingsSpinner
+            r1 = 1
+            if (r0 == 0) goto L_0x000e
+            int r0 = r0.getSelectedItemPosition()
+            if (r0 != r1) goto L_0x000e
+            android.net.IpConfiguration$IpAssignment r0 = android.net.IpConfiguration.IpAssignment.STATIC
+            goto L_0x0010
+        L_0x000e:
+            android.net.IpConfiguration$IpAssignment r0 = android.net.IpConfiguration.IpAssignment.DHCP
+        L_0x0010:
+            r6.mIpAssignment = r0
+            android.net.IpConfiguration$IpAssignment r2 = android.net.IpConfiguration.IpAssignment.STATIC
+            r3 = 0
+            if (r0 != r2) goto L_0x0025
+            android.net.StaticIpConfiguration r0 = new android.net.StaticIpConfiguration
+            r0.<init>()
+            r6.mStaticIpConfiguration = r0
+            int r0 = r6.validateIpConfigFields(r0)
+            if (r0 == 0) goto L_0x0025
+            return r3
+        L_0x0025:
+            android.widget.Spinner r0 = r6.mProxySettingsSpinner
+            int r0 = r0.getSelectedItemPosition()
+            android.net.IpConfiguration$ProxySettings r2 = android.net.IpConfiguration.ProxySettings.NONE
+            r6.mProxySettings = r2
+            r2 = 0
+            r6.mHttpProxy = r2
+            if (r0 != r1) goto L_0x0078
+            android.widget.TextView r2 = r6.mProxyHostView
+            if (r2 == 0) goto L_0x0078
+            android.net.IpConfiguration$ProxySettings r0 = android.net.IpConfiguration.ProxySettings.STATIC
+            r6.mProxySettings = r0
+            java.lang.CharSequence r0 = r2.getText()
+            java.lang.String r0 = r0.toString()
+            android.widget.TextView r2 = r6.mProxyPortView
+            java.lang.CharSequence r2 = r2.getText()
+            java.lang.String r2 = r2.toString()
+            android.widget.TextView r4 = r6.mProxyExclusionListView
+            java.lang.CharSequence r4 = r4.getText()
+            java.lang.String r4 = r4.toString()
+            int r5 = java.lang.Integer.parseInt(r2)     // Catch:{ NumberFormatException -> 0x0061 }
+            int r2 = com.android.settings.ProxySelector.validate(r0, r2, r4)     // Catch:{ NumberFormatException -> 0x0062 }
+            goto L_0x0064
+        L_0x0061:
+            r5 = r3
+        L_0x0062:
+            int r2 = com.android.settings.R$string.proxy_error_invalid_port
+        L_0x0064:
+            if (r2 != 0) goto L_0x0077
+            java.lang.String r2 = ","
+            java.lang.String[] r2 = r4.split(r2)
+            java.util.List r2 = java.util.Arrays.asList(r2)
+            android.net.ProxyInfo r0 = android.net.ProxyInfo.buildDirectProxy(r0, r5, r2)
+            r6.mHttpProxy = r0
+            goto L_0x009f
+        L_0x0077:
+            return r3
+        L_0x0078:
+            r2 = 2
+            if (r0 != r2) goto L_0x009f
+            android.widget.TextView r0 = r6.mProxyPacView
+            if (r0 == 0) goto L_0x009f
+            android.net.IpConfiguration$ProxySettings r2 = android.net.IpConfiguration.ProxySettings.PAC
+            r6.mProxySettings = r2
+            java.lang.CharSequence r0 = r0.getText()
+            boolean r2 = android.text.TextUtils.isEmpty(r0)
+            if (r2 == 0) goto L_0x008e
+            return r3
+        L_0x008e:
+            java.lang.String r0 = r0.toString()
+            android.net.Uri r0 = android.net.Uri.parse(r0)
+            if (r0 != 0) goto L_0x0099
+            return r3
+        L_0x0099:
+            android.net.ProxyInfo r0 = android.net.ProxyInfo.buildPacProxy(r0)
+            r6.mHttpProxy = r0
+        L_0x009f:
+            return r1
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.wifi.WifiConfigController.ipAndProxyFieldsAreValid():boolean");
     }
 
     private Inet4Address getIPv4Address(String str) {
@@ -666,90 +1080,169 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
         }
     }
 
-    private int validateIpConfigFields(StaticIpConfiguration staticIpConfiguration) {
-        TextView textView = this.mIpAddressView;
-        if (textView == null) {
-            return 0;
-        }
-        String charSequence = textView.getText().toString();
-        if (TextUtils.isEmpty(charSequence)) {
-            return R.string.wifi_ip_settings_invalid_ip_address;
-        }
-        Inet4Address iPv4Address = getIPv4Address(charSequence);
-        if (iPv4Address == null || iPv4Address.equals(Inet4Address.ANY)) {
-            return R.string.wifi_ip_settings_invalid_ip_address;
-        }
-        StaticIpConfiguration.Builder ipAddress = new StaticIpConfiguration.Builder().setDnsServers(staticIpConfiguration.getDnsServers()).setDomains(staticIpConfiguration.getDomains()).setGateway(staticIpConfiguration.getGateway()).setIpAddress(staticIpConfiguration.getIpAddress());
-        int i = -1;
-        try {
-            try {
-                try {
-                    i = Integer.parseInt(this.mNetworkPrefixLengthView.getText().toString());
-                } catch (IllegalArgumentException unused) {
-                    int i2 = R.string.wifi_ip_settings_invalid_ip_address;
-                    ipAddress.build();
-                    return i2;
-                }
-            } catch (NumberFormatException unused2) {
-                this.mNetworkPrefixLengthView.setText(this.mConfigUi.getContext().getString(R.string.wifi_network_prefix_length_hint));
-            }
-            if (i >= 0 && i <= 32) {
-                ipAddress.setIpAddress(new LinkAddress(iPv4Address, i));
-                String charSequence2 = this.mGatewayView.getText().toString();
-                if (TextUtils.isEmpty(charSequence2)) {
-                    try {
-                        byte[] address = NetUtils.getNetworkPart(iPv4Address, i).getAddress();
-                        address[address.length - 1] = 1;
-                        this.mGatewayView.setText(InetAddress.getByAddress(address).getHostAddress());
-                    } catch (RuntimeException | UnknownHostException unused3) {
-                    }
-                } else {
-                    Inet4Address iPv4Address2 = getIPv4Address(charSequence2);
-                    if (iPv4Address2 == null) {
-                        int i3 = R.string.wifi_ip_settings_invalid_gateway;
-                        ipAddress.build();
-                        return i3;
-                    } else if (iPv4Address2.isMulticastAddress()) {
-                        int i4 = R.string.wifi_ip_settings_invalid_gateway;
-                        ipAddress.build();
-                        return i4;
-                    } else {
-                        ipAddress.setGateway(iPv4Address2);
-                    }
-                }
-                String charSequence3 = this.mDns1View.getText().toString();
-                ArrayList arrayList = new ArrayList();
-                if (TextUtils.isEmpty(charSequence3)) {
-                    this.mDns1View.setText(this.mConfigUi.getContext().getString(R.string.wifi_dns1_hint));
-                } else {
-                    Inet4Address iPv4Address3 = getIPv4Address(charSequence3);
-                    if (iPv4Address3 == null) {
-                        int i5 = R.string.wifi_ip_settings_invalid_dns;
-                        ipAddress.build();
-                        return i5;
-                    }
-                    arrayList.add(iPv4Address3);
-                }
-                if (this.mDns2View.length() > 0) {
-                    Inet4Address iPv4Address4 = getIPv4Address(this.mDns2View.getText().toString());
-                    if (iPv4Address4 == null) {
-                        int i6 = R.string.wifi_ip_settings_invalid_dns;
-                        ipAddress.build();
-                        return i6;
-                    }
-                    arrayList.add(iPv4Address4);
-                }
-                ipAddress.setDnsServers(arrayList);
-                ipAddress.build();
-                return 0;
-            }
-            int i7 = R.string.wifi_ip_settings_invalid_network_prefix_length;
-            ipAddress.build();
-            return i7;
-        } catch (Throwable th) {
-            ipAddress.build();
-            throw th;
-        }
+    /* JADX WARNING: Code restructure failed: missing block: B:22:0x0071, code lost:
+        r6 = move-exception;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:26:0x0079, code lost:
+        return com.android.settings.R$string.wifi_ip_settings_invalid_ip_address;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:28:?, code lost:
+        r6.mNetworkPrefixLengthView.setText(r6.mConfigUi.getContext().getString(com.android.settings.R$string.wifi_network_prefix_length_hint));
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:70:0x012f, code lost:
+        r7.build();
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:71:0x0132, code lost:
+        throw r6;
+     */
+    /* JADX WARNING: Exception block dominator not found, dom blocks: [B:23:0x0074, B:27:0x007a] */
+    /* JADX WARNING: Missing exception handler attribute for start block: B:23:0x0074 */
+    /* JADX WARNING: Missing exception handler attribute for start block: B:27:0x007a */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private int validateIpConfigFields(android.net.StaticIpConfiguration r7) {
+        /*
+            r6 = this;
+            android.widget.TextView r0 = r6.mIpAddressView
+            r1 = 0
+            if (r0 != 0) goto L_0x0006
+            return r1
+        L_0x0006:
+            java.lang.CharSequence r0 = r0.getText()
+            java.lang.String r0 = r0.toString()
+            boolean r2 = android.text.TextUtils.isEmpty(r0)
+            if (r2 == 0) goto L_0x0017
+            int r6 = com.android.settings.R$string.wifi_ip_settings_invalid_ip_address
+            return r6
+        L_0x0017:
+            java.net.Inet4Address r0 = r6.getIPv4Address(r0)
+            if (r0 == 0) goto L_0x0133
+            java.net.InetAddress r2 = java.net.Inet4Address.ANY
+            boolean r2 = r0.equals(r2)
+            if (r2 == 0) goto L_0x0027
+            goto L_0x0133
+        L_0x0027:
+            android.net.StaticIpConfiguration$Builder r2 = new android.net.StaticIpConfiguration$Builder
+            r2.<init>()
+            java.util.List r3 = r7.getDnsServers()
+            android.net.StaticIpConfiguration$Builder r2 = r2.setDnsServers(r3)
+            java.lang.String r3 = r7.getDomains()
+            android.net.StaticIpConfiguration$Builder r2 = r2.setDomains(r3)
+            java.net.InetAddress r3 = r7.getGateway()
+            android.net.StaticIpConfiguration$Builder r2 = r2.setGateway(r3)
+            android.net.LinkAddress r7 = r7.getIpAddress()
+            android.net.StaticIpConfiguration$Builder r7 = r2.setIpAddress(r7)
+            r2 = -1
+            android.widget.TextView r3 = r6.mNetworkPrefixLengthView     // Catch:{ NumberFormatException -> 0x007a, IllegalArgumentException -> 0x0074 }
+            java.lang.CharSequence r3 = r3.getText()     // Catch:{ NumberFormatException -> 0x007a, IllegalArgumentException -> 0x0074 }
+            java.lang.String r3 = r3.toString()     // Catch:{ NumberFormatException -> 0x007a, IllegalArgumentException -> 0x0074 }
+            int r2 = java.lang.Integer.parseInt(r3)     // Catch:{ NumberFormatException -> 0x007a, IllegalArgumentException -> 0x0074 }
+            if (r2 < 0) goto L_0x006b
+            r3 = 32
+            if (r2 <= r3) goto L_0x0062
+            goto L_0x006b
+        L_0x0062:
+            android.net.LinkAddress r3 = new android.net.LinkAddress     // Catch:{ NumberFormatException -> 0x007a, IllegalArgumentException -> 0x0074 }
+            r3.<init>(r0, r2)     // Catch:{ NumberFormatException -> 0x007a, IllegalArgumentException -> 0x0074 }
+            r7.setIpAddress(r3)     // Catch:{ NumberFormatException -> 0x007a, IllegalArgumentException -> 0x0074 }
+            goto L_0x008b
+        L_0x006b:
+            int r6 = com.android.settings.R$string.wifi_ip_settings_invalid_network_prefix_length     // Catch:{ NumberFormatException -> 0x007a, IllegalArgumentException -> 0x0074 }
+            r7.build()
+            return r6
+        L_0x0071:
+            r6 = move-exception
+            goto L_0x012f
+        L_0x0074:
+            int r6 = com.android.settings.R$string.wifi_ip_settings_invalid_ip_address     // Catch:{ all -> 0x0071 }
+            r7.build()
+            return r6
+        L_0x007a:
+            android.widget.TextView r3 = r6.mNetworkPrefixLengthView     // Catch:{ all -> 0x0071 }
+            com.android.settings.wifi.WifiConfigUiBase r4 = r6.mConfigUi     // Catch:{ all -> 0x0071 }
+            android.content.Context r4 = r4.getContext()     // Catch:{ all -> 0x0071 }
+            int r5 = com.android.settings.R$string.wifi_network_prefix_length_hint     // Catch:{ all -> 0x0071 }
+            java.lang.String r4 = r4.getString(r5)     // Catch:{ all -> 0x0071 }
+            r3.setText(r4)     // Catch:{ all -> 0x0071 }
+        L_0x008b:
+            android.widget.TextView r3 = r6.mGatewayView     // Catch:{ all -> 0x0071 }
+            java.lang.CharSequence r3 = r3.getText()     // Catch:{ all -> 0x0071 }
+            java.lang.String r3 = r3.toString()     // Catch:{ all -> 0x0071 }
+            boolean r4 = android.text.TextUtils.isEmpty(r3)     // Catch:{ all -> 0x0071 }
+            if (r4 == 0) goto L_0x00b6
+            java.net.InetAddress r0 = com.android.net.module.util.NetUtils.getNetworkPart(r0, r2)     // Catch:{ RuntimeException | UnknownHostException -> 0x00d1 }
+            byte[] r0 = r0.getAddress()     // Catch:{ RuntimeException | UnknownHostException -> 0x00d1 }
+            int r2 = r0.length     // Catch:{ RuntimeException | UnknownHostException -> 0x00d1 }
+            r3 = 1
+            int r2 = r2 - r3
+            r0[r2] = r3     // Catch:{ RuntimeException | UnknownHostException -> 0x00d1 }
+            android.widget.TextView r2 = r6.mGatewayView     // Catch:{ RuntimeException | UnknownHostException -> 0x00d1 }
+            java.net.InetAddress r0 = java.net.InetAddress.getByAddress(r0)     // Catch:{ RuntimeException | UnknownHostException -> 0x00d1 }
+            java.lang.String r0 = r0.getHostAddress()     // Catch:{ RuntimeException | UnknownHostException -> 0x00d1 }
+            r2.setText(r0)     // Catch:{ RuntimeException | UnknownHostException -> 0x00d1 }
+            goto L_0x00d1
+        L_0x00b6:
+            java.net.Inet4Address r0 = r6.getIPv4Address(r3)     // Catch:{ all -> 0x0071 }
+            if (r0 != 0) goto L_0x00c2
+            int r6 = com.android.settings.R$string.wifi_ip_settings_invalid_gateway     // Catch:{ all -> 0x0071 }
+            r7.build()
+            return r6
+        L_0x00c2:
+            boolean r2 = r0.isMulticastAddress()     // Catch:{ all -> 0x0071 }
+            if (r2 == 0) goto L_0x00ce
+            int r6 = com.android.settings.R$string.wifi_ip_settings_invalid_gateway     // Catch:{ all -> 0x0071 }
+            r7.build()
+            return r6
+        L_0x00ce:
+            r7.setGateway(r0)     // Catch:{ all -> 0x0071 }
+        L_0x00d1:
+            android.widget.TextView r0 = r6.mDns1View     // Catch:{ all -> 0x0071 }
+            java.lang.CharSequence r0 = r0.getText()     // Catch:{ all -> 0x0071 }
+            java.lang.String r0 = r0.toString()     // Catch:{ all -> 0x0071 }
+            java.util.ArrayList r2 = new java.util.ArrayList     // Catch:{ all -> 0x0071 }
+            r2.<init>()     // Catch:{ all -> 0x0071 }
+            boolean r3 = android.text.TextUtils.isEmpty(r0)     // Catch:{ all -> 0x0071 }
+            if (r3 == 0) goto L_0x00f8
+            android.widget.TextView r0 = r6.mDns1View     // Catch:{ all -> 0x0071 }
+            com.android.settings.wifi.WifiConfigUiBase r3 = r6.mConfigUi     // Catch:{ all -> 0x0071 }
+            android.content.Context r3 = r3.getContext()     // Catch:{ all -> 0x0071 }
+            int r4 = com.android.settings.R$string.wifi_dns1_hint     // Catch:{ all -> 0x0071 }
+            java.lang.String r3 = r3.getString(r4)     // Catch:{ all -> 0x0071 }
+            r0.setText(r3)     // Catch:{ all -> 0x0071 }
+            goto L_0x0107
+        L_0x00f8:
+            java.net.Inet4Address r0 = r6.getIPv4Address(r0)     // Catch:{ all -> 0x0071 }
+            if (r0 != 0) goto L_0x0104
+            int r6 = com.android.settings.R$string.wifi_ip_settings_invalid_dns     // Catch:{ all -> 0x0071 }
+            r7.build()
+            return r6
+        L_0x0104:
+            r2.add(r0)     // Catch:{ all -> 0x0071 }
+        L_0x0107:
+            android.widget.TextView r0 = r6.mDns2View     // Catch:{ all -> 0x0071 }
+            int r0 = r0.length()     // Catch:{ all -> 0x0071 }
+            if (r0 <= 0) goto L_0x0128
+            android.widget.TextView r0 = r6.mDns2View     // Catch:{ all -> 0x0071 }
+            java.lang.CharSequence r0 = r0.getText()     // Catch:{ all -> 0x0071 }
+            java.lang.String r0 = r0.toString()     // Catch:{ all -> 0x0071 }
+            java.net.Inet4Address r6 = r6.getIPv4Address(r0)     // Catch:{ all -> 0x0071 }
+            if (r6 != 0) goto L_0x0125
+            int r6 = com.android.settings.R$string.wifi_ip_settings_invalid_dns     // Catch:{ all -> 0x0071 }
+            r7.build()
+            return r6
+        L_0x0125:
+            r2.add(r6)     // Catch:{ all -> 0x0071 }
+        L_0x0128:
+            r7.setDnsServers(r2)     // Catch:{ all -> 0x0071 }
+            r7.build()
+            return r1
+        L_0x012f:
+            r7.build()
+            throw r6
+        L_0x0133:
+            int r6 = com.android.settings.R$string.wifi_ip_settings_invalid_ip_address
+            return r6
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.wifi.WifiConfigController.validateIpConfigFields(android.net.StaticIpConfiguration):int");
     }
 
     private void showSecurityFields(boolean z, boolean z2) {
@@ -757,74 +1250,74 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
         AccessPoint accessPoint;
         int i = this.mAccessPointSecurity;
         if (i == 0 || i == 4) {
-            this.mView.findViewById(R.id.security_fields).setVisibility(8);
+            this.mView.findViewById(R$id.security_fields).setVisibility(8);
             return;
         }
-        this.mView.findViewById(R.id.security_fields).setVisibility(0);
+        this.mView.findViewById(R$id.security_fields).setVisibility(0);
         if (this.mPasswordView == null) {
-            TextView textView = (TextView) this.mView.findViewById(R.id.password);
+            TextView textView = (TextView) this.mView.findViewById(R$id.password);
             this.mPasswordView = textView;
             textView.addTextChangedListener(this);
             this.mPasswordView.setOnEditorActionListener(this);
             this.mPasswordView.setOnKeyListener(this);
-            ((CheckBox) this.mView.findViewById(R.id.show_password)).setOnCheckedChangeListener(this);
+            ((CheckBox) this.mView.findViewById(R$id.show_password)).setOnCheckedChangeListener(this);
             AccessPoint accessPoint2 = this.mAccessPoint;
             if (accessPoint2 != null && accessPoint2.isSaved()) {
-                this.mPasswordView.setHint(R.string.wifi_unchanged);
+                this.mPasswordView.setHint(R$string.wifi_unchanged);
             }
         }
         int i2 = this.mAccessPointSecurity;
-        if (i2 != 3 && i2 != 6) {
-            this.mView.findViewById(R.id.eap).setVisibility(8);
-            return;
-        }
-        this.mView.findViewById(R.id.eap).setVisibility(0);
-        if (this.mEapMethodSpinner == null) {
-            Spinner spinner = (Spinner) this.mView.findViewById(R.id.method);
-            this.mEapMethodSpinner = spinner;
-            spinner.setOnItemSelectedListener(this);
-            this.mEapSimSpinner = (Spinner) this.mView.findViewById(R.id.sim);
-            Spinner spinner2 = (Spinner) this.mView.findViewById(R.id.phase2);
-            this.mPhase2Spinner = spinner2;
-            spinner2.setOnItemSelectedListener(this);
-            Spinner spinner3 = (Spinner) this.mView.findViewById(R.id.ca_cert);
-            this.mEapCaCertSpinner = spinner3;
-            spinner3.setOnItemSelectedListener(this);
-            this.mEapOcspSpinner = (Spinner) this.mView.findViewById(R.id.ocsp);
-            TextView textView2 = (TextView) this.mView.findViewById(R.id.domain);
-            this.mEapDomainView = textView2;
-            textView2.addTextChangedListener(this);
-            Spinner spinner4 = (Spinner) this.mView.findViewById(R.id.user_cert);
-            this.mEapUserCertSpinner = spinner4;
-            spinner4.setOnItemSelectedListener(this);
-            this.mEapIdentityView = (TextView) this.mView.findViewById(R.id.identity);
-            this.mEapAnonymousView = (TextView) this.mView.findViewById(R.id.anonymous);
-            setAccessibilityDelegateForSecuritySpinners();
-            z3 = true;
-        } else {
-            z3 = false;
-        }
-        if (z) {
-            if (this.mAccessPointSecurity == 6) {
-                this.mEapMethodSpinner.setAdapter((SpinnerAdapter) getSpinnerAdapter(R.array.wifi_eap_method));
-                this.mEapMethodSpinner.setSelection(1);
-                this.mEapMethodSpinner.setEnabled(false);
-            } else if (Utils.isWifiOnly(this.mContext) || !this.mContext.getResources().getBoolean(17891523)) {
-                this.mEapMethodSpinner.setAdapter((SpinnerAdapter) getSpinnerAdapter(R.array.eap_method_without_sim_auth));
-                this.mEapMethodSpinner.setEnabled(true);
+        if (i2 == 3 || i2 == 6) {
+            this.mView.findViewById(R$id.eap).setVisibility(0);
+            if (this.mEapMethodSpinner == null) {
+                Spinner spinner = (Spinner) this.mView.findViewById(R$id.method);
+                this.mEapMethodSpinner = spinner;
+                spinner.setOnItemSelectedListener(this);
+                this.mEapSimSpinner = (Spinner) this.mView.findViewById(R$id.sim);
+                Spinner spinner2 = (Spinner) this.mView.findViewById(R$id.phase2);
+                this.mPhase2Spinner = spinner2;
+                spinner2.setOnItemSelectedListener(this);
+                Spinner spinner3 = (Spinner) this.mView.findViewById(R$id.ca_cert);
+                this.mEapCaCertSpinner = spinner3;
+                spinner3.setOnItemSelectedListener(this);
+                this.mEapOcspSpinner = (Spinner) this.mView.findViewById(R$id.ocsp);
+                TextView textView2 = (TextView) this.mView.findViewById(R$id.domain);
+                this.mEapDomainView = textView2;
+                textView2.addTextChangedListener(this);
+                Spinner spinner4 = (Spinner) this.mView.findViewById(R$id.user_cert);
+                this.mEapUserCertSpinner = spinner4;
+                spinner4.setOnItemSelectedListener(this);
+                this.mEapIdentityView = (TextView) this.mView.findViewById(R$id.identity);
+                this.mEapAnonymousView = (TextView) this.mView.findViewById(R$id.anonymous);
+                setAccessibilityDelegateForSecuritySpinners();
+                z3 = true;
             } else {
-                this.mEapMethodSpinner.setAdapter((SpinnerAdapter) getSpinnerAdapterWithEapMethodsTts(R.array.wifi_eap_method));
-                this.mEapMethodSpinner.setEnabled(true);
+                z3 = false;
             }
-        }
-        if (z2) {
-            loadSims();
-            AndroidKeystoreAliasLoader androidKeystoreAliasLoader = getAndroidKeystoreAliasLoader();
-            loadCertificates(this.mEapCaCertSpinner, androidKeystoreAliasLoader.getCaCertAliases(), null, false, true);
-            loadCertificates(this.mEapUserCertSpinner, androidKeystoreAliasLoader.getKeyCertAliases(), this.mDoNotProvideEapUserCertString, false, false);
-            setSelection(this.mEapCaCertSpinner, this.mUseSystemCertsString);
-        }
-        if (z3 && (accessPoint = this.mAccessPoint) != null && accessPoint.isSaved()) {
+            if (z) {
+                if (this.mAccessPointSecurity == 6) {
+                    this.mEapMethodSpinner.setAdapter(getSpinnerAdapter(R$array.wifi_eap_method));
+                    this.mEapMethodSpinner.setSelection(1);
+                    this.mEapMethodSpinner.setEnabled(false);
+                } else if (Utils.isWifiOnly(this.mContext) || !this.mContext.getResources().getBoolean(17891622)) {
+                    this.mEapMethodSpinner.setAdapter(getSpinnerAdapter(R$array.eap_method_without_sim_auth));
+                    this.mEapMethodSpinner.setEnabled(true);
+                } else {
+                    this.mEapMethodSpinner.setAdapter(getSpinnerAdapterWithEapMethodsTts(R$array.wifi_eap_method));
+                    this.mEapMethodSpinner.setEnabled(true);
+                }
+            }
+            if (z2) {
+                loadSims();
+                AndroidKeystoreAliasLoader androidKeystoreAliasLoader = getAndroidKeystoreAliasLoader();
+                loadCertificates(this.mEapCaCertSpinner, androidKeystoreAliasLoader.getCaCertAliases(), (String) null, false, true);
+                loadCertificates(this.mEapUserCertSpinner, androidKeystoreAliasLoader.getKeyCertAliases(), this.mDoNotProvideEapUserCertString, false, false);
+                setSelection(this.mEapCaCertSpinner, this.mUseSystemCertsString);
+            }
+            if (!z3 || (accessPoint = this.mAccessPoint) == null || !accessPoint.isSaved()) {
+                showEapFieldsByMethod(this.mEapMethodSpinner.getSelectedItemPosition());
+                return;
+            }
             WifiConfiguration config = this.mAccessPoint.getConfig();
             WifiEnterpriseConfig wifiEnterpriseConfig = config.enterpriseConfig;
             int eapMethod = wifiEnterpriseConfig.getEapMethod();
@@ -839,10 +1332,10 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
                         this.mPhase2Spinner.setSelection(1);
                     } else if (phase2Method == 3) {
                         this.mPhase2Spinner.setSelection(2);
-                    } else if (phase2Method == 4) {
-                        this.mPhase2Spinner.setSelection(3);
-                    } else {
+                    } else if (phase2Method != 4) {
                         Log.e("WifiConfigController", "Invalid phase 2 method " + phase2Method);
+                    } else {
+                        this.mPhase2Spinner.setSelection(3);
                     }
                 }
             } else if (phase2Method == 3) {
@@ -853,10 +1346,10 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
                 this.mPhase2Spinner.setSelection(2);
             } else if (phase2Method == 6) {
                 this.mPhase2Spinner.setSelection(3);
-            } else if (phase2Method == 7) {
-                this.mPhase2Spinner.setSelection(4);
-            } else {
+            } else if (phase2Method != 7) {
                 Log.e("WifiConfigController", "Invalid phase 2 method " + phase2Method);
+            } else {
+                this.mPhase2Spinner.setSelection(4);
             }
             if (wifiEnterpriseConfig.isAuthenticationSimBased()) {
                 int i3 = 0;
@@ -880,7 +1373,7 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
                 } else if (caCertificateAliases.length == 1) {
                     setSelection(this.mEapCaCertSpinner, caCertificateAliases[0]);
                 } else {
-                    loadCertificates(this.mEapCaCertSpinner, getAndroidKeystoreAliasLoader().getCaCertAliases(), null, true, true);
+                    loadCertificates(this.mEapCaCertSpinner, getAndroidKeystoreAliasLoader().getCaCertAliases(), (String) null, true, true);
                     setSelection(this.mEapCaCertSpinner, this.mMultipleCertSetString);
                 }
             }
@@ -896,38 +1389,36 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
             this.mEapAnonymousView.setText(wifiEnterpriseConfig.getAnonymousIdentity());
             return;
         }
-        showEapFieldsByMethod(this.mEapMethodSpinner.getSelectedItemPosition());
+        this.mView.findViewById(R$id.eap).setVisibility(8);
     }
 
     private void setAccessibilityDelegateForSecuritySpinners() {
-        View.AccessibilityDelegate accessibilityDelegate = new View.AccessibilityDelegate() { // from class: com.android.settings.wifi.WifiConfigController.1
-            @Override // android.view.View.AccessibilityDelegate
+        C14491 r0 = new View.AccessibilityDelegate() {
             public void sendAccessibilityEvent(View view, int i) {
-                if (i == 4) {
-                    return;
+                if (i != 4) {
+                    super.sendAccessibilityEvent(view, i);
                 }
-                super.sendAccessibilityEvent(view, i);
             }
         };
-        this.mEapMethodSpinner.setAccessibilityDelegate(accessibilityDelegate);
-        this.mPhase2Spinner.setAccessibilityDelegate(accessibilityDelegate);
-        this.mEapCaCertSpinner.setAccessibilityDelegate(accessibilityDelegate);
-        this.mEapOcspSpinner.setAccessibilityDelegate(accessibilityDelegate);
-        this.mEapUserCertSpinner.setAccessibilityDelegate(accessibilityDelegate);
+        this.mEapMethodSpinner.setAccessibilityDelegate(r0);
+        this.mPhase2Spinner.setAccessibilityDelegate(r0);
+        this.mEapCaCertSpinner.setAccessibilityDelegate(r0);
+        this.mEapOcspSpinner.setAccessibilityDelegate(r0);
+        this.mEapUserCertSpinner.setAccessibilityDelegate(r0);
     }
 
     private void showEapFieldsByMethod(int i) {
-        this.mView.findViewById(R.id.l_method).setVisibility(0);
-        this.mView.findViewById(R.id.l_identity).setVisibility(0);
-        this.mView.findViewById(R.id.l_domain).setVisibility(0);
+        this.mView.findViewById(R$id.l_method).setVisibility(0);
+        this.mView.findViewById(R$id.l_identity).setVisibility(0);
+        this.mView.findViewById(R$id.l_domain).setVisibility(0);
         View view = this.mView;
-        int i2 = R.id.l_ca_cert;
+        int i2 = R$id.l_ca_cert;
         view.findViewById(i2).setVisibility(0);
-        this.mView.findViewById(R.id.l_ocsp).setVisibility(0);
-        this.mView.findViewById(R.id.password_layout).setVisibility(0);
-        this.mView.findViewById(R.id.show_password_layout).setVisibility(0);
+        this.mView.findViewById(R$id.l_ocsp).setVisibility(0);
+        this.mView.findViewById(R$id.password_layout).setVisibility(0);
+        this.mView.findViewById(R$id.show_password_layout).setVisibility(0);
         View view2 = this.mView;
-        int i3 = R.id.l_sim;
+        int i3 = R$id.l_sim;
         view2.findViewById(i3).setVisibility(0);
         this.mConfigUi.getContext();
         switch (i) {
@@ -936,15 +1427,15 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
                 ArrayAdapter<CharSequence> arrayAdapter2 = this.mPhase2PeapAdapter;
                 if (arrayAdapter != arrayAdapter2) {
                     this.mPhase2Adapter = arrayAdapter2;
-                    this.mPhase2Spinner.setAdapter((SpinnerAdapter) arrayAdapter2);
+                    this.mPhase2Spinner.setAdapter(arrayAdapter2);
                 }
-                this.mView.findViewById(R.id.l_phase2).setVisibility(0);
-                this.mView.findViewById(R.id.l_anonymous).setVisibility(0);
+                this.mView.findViewById(R$id.l_phase2).setVisibility(0);
+                this.mView.findViewById(R$id.l_anonymous).setVisibility(0);
                 showPeapFields();
                 setUserCertInvisible();
                 break;
             case 1:
-                this.mView.findViewById(R.id.l_user_cert).setVisibility(0);
+                this.mView.findViewById(R$id.l_user_cert).setVisibility(0);
                 setPhase2Invisible();
                 setAnonymousIdentInvisible();
                 setPasswordInvisible();
@@ -955,10 +1446,10 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
                 ArrayAdapter<CharSequence> arrayAdapter4 = this.mPhase2TtlsAdapter;
                 if (arrayAdapter3 != arrayAdapter4) {
                     this.mPhase2Adapter = arrayAdapter4;
-                    this.mPhase2Spinner.setAdapter((SpinnerAdapter) arrayAdapter4);
+                    this.mPhase2Spinner.setAdapter(arrayAdapter4);
                 }
-                this.mView.findViewById(R.id.l_phase2).setVisibility(0);
-                this.mView.findViewById(R.id.l_anonymous).setVisibility(0);
+                this.mView.findViewById(R$id.l_phase2).setVisibility(0);
+                this.mView.findViewById(R$id.l_anonymous).setVisibility(0);
                 setUserCertInvisible();
                 this.mView.findViewById(i3).setVisibility(8);
                 break;
@@ -984,159 +1475,156 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
                 setIdentityInvisible();
                 break;
         }
-        if (this.mView.findViewById(i2).getVisibility() == 8 || !((String) this.mEapCaCertSpinner.getSelectedItem()).equals(this.mUnspecifiedCertString)) {
-            return;
+        if (this.mView.findViewById(i2).getVisibility() != 8 && ((String) this.mEapCaCertSpinner.getSelectedItem()).equals(this.mUnspecifiedCertString)) {
+            setDomainInvisible();
+            setOcspInvisible();
         }
-        setDomainInvisible();
-        setOcspInvisible();
     }
 
     private void showPeapFields() {
         int selectedItemPosition = this.mPhase2Spinner.getSelectedItemPosition();
         if (selectedItemPosition == 2 || selectedItemPosition == 3 || selectedItemPosition == 4) {
             this.mEapIdentityView.setText("");
-            this.mView.findViewById(R.id.l_identity).setVisibility(8);
+            this.mView.findViewById(R$id.l_identity).setVisibility(8);
             setPasswordInvisible();
-            this.mView.findViewById(R.id.l_sim).setVisibility(0);
+            this.mView.findViewById(R$id.l_sim).setVisibility(0);
             return;
         }
-        this.mView.findViewById(R.id.l_identity).setVisibility(0);
-        this.mView.findViewById(R.id.l_anonymous).setVisibility(0);
-        this.mView.findViewById(R.id.password_layout).setVisibility(0);
-        this.mView.findViewById(R.id.show_password_layout).setVisibility(0);
-        this.mView.findViewById(R.id.l_sim).setVisibility(8);
+        this.mView.findViewById(R$id.l_identity).setVisibility(0);
+        this.mView.findViewById(R$id.l_anonymous).setVisibility(0);
+        this.mView.findViewById(R$id.password_layout).setVisibility(0);
+        this.mView.findViewById(R$id.show_password_layout).setVisibility(0);
+        this.mView.findViewById(R$id.l_sim).setVisibility(8);
     }
 
     private void setIdentityInvisible() {
-        this.mView.findViewById(R.id.l_identity).setVisibility(8);
+        this.mView.findViewById(R$id.l_identity).setVisibility(8);
     }
 
     private void setPhase2Invisible() {
-        this.mView.findViewById(R.id.l_phase2).setVisibility(8);
+        this.mView.findViewById(R$id.l_phase2).setVisibility(8);
     }
 
     private void setCaCertInvisible() {
-        this.mView.findViewById(R.id.l_ca_cert).setVisibility(8);
+        this.mView.findViewById(R$id.l_ca_cert).setVisibility(8);
         setSelection(this.mEapCaCertSpinner, this.mUnspecifiedCertString);
     }
 
     private void setOcspInvisible() {
-        this.mView.findViewById(R.id.l_ocsp).setVisibility(8);
+        this.mView.findViewById(R$id.l_ocsp).setVisibility(8);
         this.mEapOcspSpinner.setSelection(0);
     }
 
     private void setDomainInvisible() {
-        this.mView.findViewById(R.id.l_domain).setVisibility(8);
+        this.mView.findViewById(R$id.l_domain).setVisibility(8);
         this.mEapDomainView.setText("");
     }
 
     private void setUserCertInvisible() {
-        this.mView.findViewById(R.id.l_user_cert).setVisibility(8);
+        this.mView.findViewById(R$id.l_user_cert).setVisibility(8);
         setSelection(this.mEapUserCertSpinner, this.mUnspecifiedCertString);
     }
 
     private void setAnonymousIdentInvisible() {
-        this.mView.findViewById(R.id.l_anonymous).setVisibility(8);
+        this.mView.findViewById(R$id.l_anonymous).setVisibility(8);
         this.mEapAnonymousView.setText("");
     }
 
     private void setPasswordInvisible() {
         this.mPasswordView.setText("");
-        this.mView.findViewById(R.id.password_layout).setVisibility(8);
-        this.mView.findViewById(R.id.show_password_layout).setVisibility(8);
+        this.mView.findViewById(R$id.password_layout).setVisibility(8);
+        this.mView.findViewById(R$id.show_password_layout).setVisibility(8);
     }
 
     private void showIpConfigFields() {
         StaticIpConfiguration staticIpConfiguration;
-        this.mView.findViewById(R.id.ip_fields).setVisibility(0);
+        this.mView.findViewById(R$id.ip_fields).setVisibility(0);
         AccessPoint accessPoint = this.mAccessPoint;
         WifiConfiguration config = (accessPoint == null || !accessPoint.isSaved()) ? null : this.mAccessPoint.getConfig();
         if (this.mIpSettingsSpinner.getSelectedItemPosition() == 1) {
-            this.mView.findViewById(R.id.staticip).setVisibility(0);
+            this.mView.findViewById(R$id.staticip).setVisibility(0);
             if (this.mIpAddressView == null) {
-                TextView textView = (TextView) this.mView.findViewById(R.id.ipaddress);
+                TextView textView = (TextView) this.mView.findViewById(R$id.ipaddress);
                 this.mIpAddressView = textView;
                 textView.addTextChangedListener(this);
-                TextView textView2 = (TextView) this.mView.findViewById(R.id.gateway);
+                TextView textView2 = (TextView) this.mView.findViewById(R$id.gateway);
                 this.mGatewayView = textView2;
                 textView2.addTextChangedListener(this);
-                TextView textView3 = (TextView) this.mView.findViewById(R.id.network_prefix_length);
+                TextView textView3 = (TextView) this.mView.findViewById(R$id.network_prefix_length);
                 this.mNetworkPrefixLengthView = textView3;
                 textView3.addTextChangedListener(this);
-                TextView textView4 = (TextView) this.mView.findViewById(R.id.dns1);
+                TextView textView4 = (TextView) this.mView.findViewById(R$id.dns1);
                 this.mDns1View = textView4;
                 textView4.addTextChangedListener(this);
-                TextView textView5 = (TextView) this.mView.findViewById(R.id.dns2);
+                TextView textView5 = (TextView) this.mView.findViewById(R$id.dns2);
                 this.mDns2View = textView5;
                 textView5.addTextChangedListener(this);
             }
-            if (config == null || (staticIpConfiguration = config.getIpConfiguration().getStaticIpConfiguration()) == null) {
+            if (config != null && (staticIpConfiguration = config.getIpConfiguration().getStaticIpConfiguration()) != null) {
+                if (staticIpConfiguration.getIpAddress() != null) {
+                    this.mIpAddressView.setText(staticIpConfiguration.getIpAddress().getAddress().getHostAddress());
+                    this.mNetworkPrefixLengthView.setText(Integer.toString(staticIpConfiguration.getIpAddress().getPrefixLength()));
+                }
+                if (staticIpConfiguration.getGateway() != null) {
+                    this.mGatewayView.setText(staticIpConfiguration.getGateway().getHostAddress());
+                }
+                Iterator it = staticIpConfiguration.getDnsServers().iterator();
+                if (it.hasNext()) {
+                    this.mDns1View.setText(((InetAddress) it.next()).getHostAddress());
+                }
+                if (it.hasNext()) {
+                    this.mDns2View.setText(((InetAddress) it.next()).getHostAddress());
+                    return;
+                }
                 return;
             }
-            if (staticIpConfiguration.getIpAddress() != null) {
-                this.mIpAddressView.setText(staticIpConfiguration.getIpAddress().getAddress().getHostAddress());
-                this.mNetworkPrefixLengthView.setText(Integer.toString(staticIpConfiguration.getIpAddress().getPrefixLength()));
-            }
-            if (staticIpConfiguration.getGateway() != null) {
-                this.mGatewayView.setText(staticIpConfiguration.getGateway().getHostAddress());
-            }
-            Iterator it = staticIpConfiguration.getDnsServers().iterator();
-            if (it.hasNext()) {
-                this.mDns1View.setText(((InetAddress) it.next()).getHostAddress());
-            }
-            if (!it.hasNext()) {
-                return;
-            }
-            this.mDns2View.setText(((InetAddress) it.next()).getHostAddress());
             return;
         }
-        this.mView.findViewById(R.id.staticip).setVisibility(8);
+        this.mView.findViewById(R$id.staticip).setVisibility(8);
     }
 
     private void showProxyFields() {
         ProxyInfo httpProxy;
         ProxyInfo httpProxy2;
-        this.mView.findViewById(R.id.proxy_settings_fields).setVisibility(0);
+        this.mView.findViewById(R$id.proxy_settings_fields).setVisibility(0);
         AccessPoint accessPoint = this.mAccessPoint;
         WifiConfiguration config = (accessPoint == null || !accessPoint.isSaved()) ? null : this.mAccessPoint.getConfig();
         if (this.mProxySettingsSpinner.getSelectedItemPosition() == 1) {
-            setVisibility(R.id.proxy_warning_limited_support, 0);
-            setVisibility(R.id.proxy_fields, 0);
-            setVisibility(R.id.proxy_pac_field, 8);
+            setVisibility(R$id.proxy_warning_limited_support, 0);
+            setVisibility(R$id.proxy_fields, 0);
+            setVisibility(R$id.proxy_pac_field, 8);
             if (this.mProxyHostView == null) {
-                TextView textView = (TextView) this.mView.findViewById(R.id.proxy_hostname);
+                TextView textView = (TextView) this.mView.findViewById(R$id.proxy_hostname);
                 this.mProxyHostView = textView;
                 textView.addTextChangedListener(this);
-                TextView textView2 = (TextView) this.mView.findViewById(R.id.proxy_port);
+                TextView textView2 = (TextView) this.mView.findViewById(R$id.proxy_port);
                 this.mProxyPortView = textView2;
                 textView2.addTextChangedListener(this);
-                TextView textView3 = (TextView) this.mView.findViewById(R.id.proxy_exclusionlist);
+                TextView textView3 = (TextView) this.mView.findViewById(R$id.proxy_exclusionlist);
                 this.mProxyExclusionListView = textView3;
                 textView3.addTextChangedListener(this);
             }
-            if (config == null || (httpProxy2 = config.getHttpProxy()) == null) {
-                return;
+            if (config != null && (httpProxy2 = config.getHttpProxy()) != null) {
+                this.mProxyHostView.setText(httpProxy2.getHost());
+                this.mProxyPortView.setText(Integer.toString(httpProxy2.getPort()));
+                this.mProxyExclusionListView.setText(ProxyUtils.exclusionListAsString(httpProxy2.getExclusionList()));
             }
-            this.mProxyHostView.setText(httpProxy2.getHost());
-            this.mProxyPortView.setText(Integer.toString(httpProxy2.getPort()));
-            this.mProxyExclusionListView.setText(ProxyUtils.exclusionListAsString(httpProxy2.getExclusionList()));
         } else if (this.mProxySettingsSpinner.getSelectedItemPosition() == 2) {
-            setVisibility(R.id.proxy_warning_limited_support, 8);
-            setVisibility(R.id.proxy_fields, 8);
-            setVisibility(R.id.proxy_pac_field, 0);
+            setVisibility(R$id.proxy_warning_limited_support, 8);
+            setVisibility(R$id.proxy_fields, 8);
+            setVisibility(R$id.proxy_pac_field, 0);
             if (this.mProxyPacView == null) {
-                TextView textView4 = (TextView) this.mView.findViewById(R.id.proxy_pac);
+                TextView textView4 = (TextView) this.mView.findViewById(R$id.proxy_pac);
                 this.mProxyPacView = textView4;
                 textView4.addTextChangedListener(this);
             }
-            if (config == null || (httpProxy = config.getHttpProxy()) == null) {
-                return;
+            if (config != null && (httpProxy = config.getHttpProxy()) != null) {
+                this.mProxyPacView.setText(httpProxy.getPacFileUrl().toString());
             }
-            this.mProxyPacView.setText(httpProxy.getPacFileUrl().toString());
         } else {
-            setVisibility(R.id.proxy_warning_limited_support, 8);
-            setVisibility(R.id.proxy_fields, 8);
-            setVisibility(R.id.proxy_pac_field, 8);
+            setVisibility(R$id.proxy_warning_limited_support, 8);
+            setVisibility(R$id.proxy_fields, 8);
+            setVisibility(R$id.proxy_pac_field, 8);
         }
     }
 
@@ -1147,44 +1635,44 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
         }
     }
 
-    AndroidKeystoreAliasLoader getAndroidKeystoreAliasLoader() {
-        return new AndroidKeystoreAliasLoader(Integer.valueOf((int) R$styleable.Constraint_layout_goneMarginStart));
+    /* access modifiers changed from: package-private */
+    public AndroidKeystoreAliasLoader getAndroidKeystoreAliasLoader() {
+        return new AndroidKeystoreAliasLoader(102);
     }
 
-    void loadSims() {
+    /* access modifiers changed from: package-private */
+    public void loadSims() {
         List<SubscriptionInfo> activeSubscriptionInfoList = ((SubscriptionManager) this.mContext.getSystemService(SubscriptionManager.class)).getActiveSubscriptionInfoList();
         if (activeSubscriptionInfoList == null) {
             activeSubscriptionInfoList = Collections.EMPTY_LIST;
         }
         this.mActiveSubscriptionInfos.clear();
-        for (SubscriptionInfo subscriptionInfo : activeSubscriptionInfoList) {
-            for (SubscriptionInfo subscriptionInfo2 : this.mActiveSubscriptionInfos) {
-                subscriptionInfo.getCarrierId();
-                subscriptionInfo2.getCarrierId();
+        for (SubscriptionInfo next : activeSubscriptionInfoList) {
+            for (SubscriptionInfo carrierId : this.mActiveSubscriptionInfos) {
+                next.getCarrierId();
+                carrierId.getCarrierId();
             }
-            this.mActiveSubscriptionInfos.add(subscriptionInfo);
+            this.mActiveSubscriptionInfos.add(next);
         }
         if (this.mActiveSubscriptionInfos.size() == 0) {
-            this.mEapSimSpinner.setAdapter((SpinnerAdapter) getSpinnerAdapter(new String[]{this.mContext.getString(R.string.wifi_no_sim_card)}));
+            this.mEapSimSpinner.setAdapter(getSpinnerAdapter(new String[]{this.mContext.getString(R$string.wifi_no_sim_card)}));
             this.mEapSimSpinner.setSelection(0);
             this.mEapSimSpinner.setEnabled(false);
             return;
         }
-        String[] strArr = (String[]) SubscriptionUtil.getUniqueSubscriptionDisplayNames(this.mContext).values().stream().toArray(WifiConfigController$$ExternalSyntheticLambda1.INSTANCE);
-        this.mEapSimSpinner.setAdapter((SpinnerAdapter) getSpinnerAdapter(strArr));
-        this.mEapSimSpinner.setSelection(0);
-        if (strArr.length != 1) {
-            return;
+        ArrayList arrayList = new ArrayList();
+        for (SubscriptionInfo uniqueSubscriptionDisplayName : this.mActiveSubscriptionInfos) {
+            arrayList.add(SubscriptionUtil.getUniqueSubscriptionDisplayName(uniqueSubscriptionDisplayName, this.mContext));
         }
-        this.mEapSimSpinner.setEnabled(false);
+        this.mEapSimSpinner.setAdapter(getSpinnerAdapter((String[]) arrayList.toArray(new String[arrayList.size()])));
+        this.mEapSimSpinner.setSelection(0);
+        if (arrayList.size() == 1) {
+            this.mEapSimSpinner.setEnabled(false);
+        }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ String[] lambda$loadSims$0(int i) {
-        return new String[i];
-    }
-
-    void loadCertificates(Spinner spinner, Collection<String> collection, String str, boolean z, boolean z2) {
+    /* access modifiers changed from: package-private */
+    public void loadCertificates(Spinner spinner, Collection<String> collection, String str, boolean z, boolean z2) {
         this.mConfigUi.getContext();
         ArrayList arrayList = new ArrayList();
         arrayList.add(this.mUnspecifiedCertString);
@@ -1194,8 +1682,8 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
         if (z2) {
             arrayList.add(this.mUseSystemCertsString);
         }
-        if (collection != null && collection.size() != 0) {
-            arrayList.addAll((Collection) collection.stream().filter(WifiConfigController$$ExternalSyntheticLambda2.INSTANCE).collect(Collectors.toList()));
+        if (!(collection == null || collection.size() == 0)) {
+            arrayList.addAll((Collection) collection.stream().filter(new WifiConfigController$$ExternalSyntheticLambda1()).collect(Collectors.toList()));
         }
         if (!TextUtils.isEmpty(str) && this.mAccessPointSecurity != 6) {
             arrayList.add(str);
@@ -1206,13 +1694,13 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
         } else {
             spinner.setEnabled(true);
         }
-        spinner.setAdapter((SpinnerAdapter) getSpinnerAdapter((String[]) arrayList.toArray(new String[arrayList.size()])));
+        spinner.setAdapter(getSpinnerAdapter((String[]) arrayList.toArray(new String[arrayList.size()])));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ boolean lambda$loadCertificates$1(String str) {
-        for (String str2 : UNDESIRED_CERTIFICATES) {
-            if (str.startsWith(str2)) {
+    /* access modifiers changed from: private */
+    public static /* synthetic */ boolean lambda$loadCertificates$0(String str) {
+        for (String startsWith : UNDESIRED_CERTIFICATES) {
+            if (str.startsWith(startsWith)) {
                 return false;
             }
         }
@@ -1231,58 +1719,46 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
         }
     }
 
-    @Override // android.text.TextWatcher
     public void afterTextChanged(Editable editable) {
-        ThreadUtils.postOnMainThread(new Runnable() { // from class: com.android.settings.wifi.WifiConfigController$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                WifiConfigController.this.lambda$afterTextChanged$2();
-            }
-        });
+        ThreadUtils.postOnMainThread(new WifiConfigController$$ExternalSyntheticLambda0(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$afterTextChanged$2() {
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$afterTextChanged$1() {
         showWarningMessagesIfAppropriate();
         enableSubmitIfAppropriate();
     }
 
-    @Override // android.widget.TextView.OnEditorActionListener
     public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-        if (textView == this.mPasswordView && i == 6 && isSubmittable()) {
-            this.mConfigUi.dispatchSubmit();
-            return true;
+        if (textView != this.mPasswordView || i != 6 || !isSubmittable()) {
+            return false;
         }
-        return false;
+        this.mConfigUi.dispatchSubmit();
+        return true;
     }
 
-    @Override // android.view.View.OnKeyListener
     public boolean onKey(View view, int i, KeyEvent keyEvent) {
-        if (view == this.mPasswordView && i == 66 && isSubmittable()) {
-            this.mConfigUi.dispatchSubmit();
-            return true;
+        if (view != this.mPasswordView || i != 66 || !isSubmittable()) {
+            return false;
         }
-        return false;
+        this.mConfigUi.dispatchSubmit();
+        return true;
     }
 
-    @Override // android.widget.CompoundButton.OnCheckedChangeListener
     public void onCheckedChanged(CompoundButton compoundButton, boolean z) {
-        if (compoundButton.getId() == R.id.show_password) {
+        if (compoundButton.getId() == R$id.show_password) {
             int selectionEnd = this.mPasswordView.getSelectionEnd();
             this.mPasswordView.setInputType((z ? 144 : 128) | 1);
-            if (selectionEnd < 0) {
-                return;
+            if (selectionEnd >= 0) {
+                ((EditText) this.mPasswordView).setSelection(selectionEnd);
             }
-            ((EditText) this.mPasswordView).setSelection(selectionEnd);
-        } else if (compoundButton.getId() != R.id.wifi_advanced_togglebox) {
-        } else {
+        } else if (compoundButton.getId() == R$id.wifi_advanced_togglebox) {
             hideSoftKeyboard(this.mView.getWindowToken());
             compoundButton.setVisibility(8);
-            this.mView.findViewById(R.id.wifi_advanced_fields).setVisibility(0);
+            this.mView.findViewById(R$id.wifi_advanced_fields).setVisibility(0);
         }
     }
 
-    @Override // android.widget.AdapterView.OnItemSelectedListener
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long j) {
         int i2 = 8;
         if (adapterView == this.mSecuritySpinner) {
@@ -1318,7 +1794,7 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
     }
 
     public void updatePassword() {
-        ((TextView) this.mView.findViewById(R.id.password)).setInputType((((CheckBox) this.mView.findViewById(R.id.show_password)).isChecked() ? 144 : 128) | 1);
+        ((TextView) this.mView.findViewById(R$id.password)).setInputType((((CheckBox) this.mView.findViewById(R$id.show_password)).isChecked() ? 144 : 128) | 1);
     }
 
     public AccessPoint getAccessPoint() {
@@ -1328,61 +1804,62 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
     private void configureSecuritySpinner() {
         int i;
         int i2;
-        this.mConfigUi.setTitle(R.string.wifi_add_network);
-        TextView textView = (TextView) this.mView.findViewById(R.id.ssid);
+        this.mConfigUi.setTitle(R$string.wifi_add_network);
+        TextView textView = (TextView) this.mView.findViewById(R$id.ssid);
         this.mSsidView = textView;
         textView.addTextChangedListener(this);
-        Spinner spinner = (Spinner) this.mView.findViewById(R.id.security);
+        Spinner spinner = (Spinner) this.mView.findViewById(R$id.security);
         this.mSecuritySpinner = spinner;
         spinner.setOnItemSelectedListener(this);
         ArrayAdapter arrayAdapter = new ArrayAdapter(this.mContext, 17367048, 16908308);
         arrayAdapter.setDropDownViewResource(17367049);
-        this.mSecuritySpinner.setAdapter((SpinnerAdapter) arrayAdapter);
-        arrayAdapter.add(this.mContext.getString(R.string.wifi_security_none));
+        this.mSecuritySpinner.setAdapter(arrayAdapter);
+        arrayAdapter.add(this.mContext.getString(R$string.wifi_security_none));
         this.mSecurityInPosition[0] = 0;
         if (this.mWifiManager.isEnhancedOpenSupported()) {
-            arrayAdapter.add(this.mContext.getString(R.string.wifi_security_owe));
+            arrayAdapter.add(this.mContext.getString(R$string.wifi_security_owe));
             this.mSecurityInPosition[1] = 4;
             i = 2;
         } else {
             i = 1;
         }
-        arrayAdapter.add(this.mContext.getString(R.string.wifi_security_wep));
+        arrayAdapter.add(this.mContext.getString(R$string.wifi_security_wep));
         int i3 = i + 1;
         this.mSecurityInPosition[i] = 1;
-        arrayAdapter.add(this.mContext.getString(R.string.wifi_security_wpa_wpa2));
+        arrayAdapter.add(this.mContext.getString(R$string.wifi_security_wpa_wpa2));
         int i4 = i3 + 1;
         this.mSecurityInPosition[i3] = 2;
         if (this.mWifiManager.isWpa3SaeSupported()) {
-            arrayAdapter.add(this.mContext.getString(R.string.wifi_security_sae));
+            arrayAdapter.add(this.mContext.getString(R$string.wifi_security_sae));
             int i5 = i4 + 1;
             this.mSecurityInPosition[i4] = 5;
-            arrayAdapter.add(this.mContext.getString(R.string.wifi_security_eap_wpa_wpa2));
+            arrayAdapter.add(this.mContext.getString(R$string.wifi_security_eap_wpa_wpa2));
             int i6 = i5 + 1;
             this.mSecurityInPosition[i5] = 3;
-            arrayAdapter.add(this.mContext.getString(R.string.wifi_security_eap_wpa3));
+            arrayAdapter.add(this.mContext.getString(R$string.wifi_security_eap_wpa3));
             i2 = i6 + 1;
             this.mSecurityInPosition[i6] = 7;
         } else {
-            arrayAdapter.add(this.mContext.getString(R.string.wifi_security_eap));
+            arrayAdapter.add(this.mContext.getString(R$string.wifi_security_eap));
             this.mSecurityInPosition[i4] = 3;
             i2 = i4 + 1;
         }
         if (this.mWifiManager.isWpa3SuiteBSupported()) {
-            arrayAdapter.add(this.mContext.getString(R.string.wifi_security_eap_suiteb));
+            arrayAdapter.add(this.mContext.getString(R$string.wifi_security_eap_suiteb));
             this.mSecurityInPosition[i2] = 6;
         }
         arrayAdapter.notifyDataSetChanged();
-        this.mView.findViewById(R.id.type).setVisibility(0);
+        this.mView.findViewById(R$id.type).setVisibility(0);
         showIpConfigFields();
         showProxyFields();
-        this.mView.findViewById(R.id.wifi_advanced_toggle).setVisibility(0);
-        this.mView.findViewById(R.id.hidden_settings_field).setVisibility(0);
-        ((CheckBox) this.mView.findViewById(R.id.wifi_advanced_togglebox)).setOnCheckedChangeListener(this);
+        this.mView.findViewById(R$id.wifi_advanced_toggle).setVisibility(0);
+        this.mView.findViewById(R$id.hidden_settings_field).setVisibility(0);
+        ((CheckBox) this.mView.findViewById(R$id.wifi_advanced_togglebox)).setOnCheckedChangeListener(this);
         setAdvancedOptionAccessibilityString();
     }
 
-    CharSequence[] findAndReplaceTargetStrings(CharSequence[] charSequenceArr, CharSequence[] charSequenceArr2, CharSequence[] charSequenceArr3) {
+    /* access modifiers changed from: package-private */
+    public CharSequence[] findAndReplaceTargetStrings(CharSequence[] charSequenceArr, CharSequence[] charSequenceArr2, CharSequence[] charSequenceArr3) {
         if (charSequenceArr2.length != charSequenceArr3.length) {
             return charSequenceArr;
         }
@@ -1402,7 +1879,8 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
         return getSpinnerAdapter(this.mContext.getResources().getStringArray(i));
     }
 
-    ArrayAdapter<CharSequence> getSpinnerAdapter(String[] strArr) {
+    /* access modifiers changed from: package-private */
+    public ArrayAdapter<CharSequence> getSpinnerAdapter(String[] strArr) {
         ArrayAdapter<CharSequence> arrayAdapter = new ArrayAdapter<>(this.mContext, 17367048, strArr);
         arrayAdapter.setDropDownViewResource(17367049);
         return arrayAdapter;
@@ -1411,7 +1889,7 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
     private ArrayAdapter<CharSequence> getSpinnerAdapterWithEapMethodsTts(int i) {
         Resources resources = this.mContext.getResources();
         String[] stringArray = resources.getStringArray(i);
-        ArrayAdapter<CharSequence> arrayAdapter = new ArrayAdapter<>(this.mContext, 17367048, createAccessibleEntries(stringArray, findAndReplaceTargetStrings(stringArray, resources.getStringArray(R.array.wifi_eap_method_target_strings), resources.getStringArray(R.array.wifi_eap_method_tts_strings))));
+        ArrayAdapter<CharSequence> arrayAdapter = new ArrayAdapter<>(this.mContext, 17367048, createAccessibleEntries(stringArray, findAndReplaceTargetStrings(stringArray, resources.getStringArray(R$array.wifi_eap_method_target_strings), resources.getStringArray(R$array.wifi_eap_method_tts_strings))));
         arrayAdapter.setDropDownViewResource(17367049);
         return arrayAdapter;
     }
@@ -1429,13 +1907,12 @@ public class WifiConfigController implements TextWatcher, AdapterView.OnItemSele
     }
 
     private void setAdvancedOptionAccessibilityString() {
-        ((CheckBox) this.mView.findViewById(R.id.wifi_advanced_togglebox)).setAccessibilityDelegate(new View.AccessibilityDelegate() { // from class: com.android.settings.wifi.WifiConfigController.2
-            @Override // android.view.View.AccessibilityDelegate
+        ((CheckBox) this.mView.findViewById(R$id.wifi_advanced_togglebox)).setAccessibilityDelegate(new View.AccessibilityDelegate() {
             public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfo accessibilityNodeInfo) {
                 super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfo);
                 accessibilityNodeInfo.setCheckable(false);
-                accessibilityNodeInfo.setClassName(null);
-                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(16, WifiConfigController.this.mContext.getString(R.string.wifi_advanced_toggle_description_collapsed)));
+                accessibilityNodeInfo.setClassName((CharSequence) null);
+                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(16, WifiConfigController.this.mContext.getString(R$string.wifi_advanced_toggle_description_collapsed)));
             }
         });
     }

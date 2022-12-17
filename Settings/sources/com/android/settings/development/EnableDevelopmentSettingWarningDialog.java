@@ -5,11 +5,10 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentManager;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.instrumentation.InstrumentedDialogFragment;
-/* loaded from: classes.dex */
+
 public class EnableDevelopmentSettingWarningDialog extends InstrumentedDialogFragment implements DialogInterface.OnClickListener {
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1219;
     }
@@ -23,12 +22,10 @@ public class EnableDevelopmentSettingWarningDialog extends InstrumentedDialogFra
         }
     }
 
-    @Override // androidx.fragment.app.DialogFragment
     public Dialog onCreateDialog(Bundle bundle) {
-        return new AlertDialog.Builder(getActivity()).setMessage(R.string.dev_settings_warning_message).setTitle(R.string.dev_settings_warning_title).setPositiveButton(17039379, this).setNegativeButton(17039369, this).create();
+        return new AlertDialog.Builder(getActivity()).setMessage(R$string.dev_settings_warning_message).setTitle(R$string.dev_settings_warning_title).setPositiveButton(17039379, (DialogInterface.OnClickListener) this).setNegativeButton(17039369, (DialogInterface.OnClickListener) this).create();
     }
 
-    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialogInterface, int i) {
         DevelopmentSettingsDashboardFragment developmentSettingsDashboardFragment = (DevelopmentSettingsDashboardFragment) getTargetFragment();
         if (i == -1) {

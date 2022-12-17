@@ -6,14 +6,13 @@ import android.content.pm.PackageManager;
 import android.util.ArraySet;
 import androidx.preference.Preference;
 import com.android.settingslib.utils.AsyncLoaderCompat;
-/* loaded from: classes.dex */
+
 public class AppPrefLoader extends AsyncLoaderCompat<ArraySet<Preference>> {
     private PackageManager mPackageManager;
     private ArraySet<String> mPackages;
     private Context mPrefContext;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.utils.AsyncLoaderCompat
+    /* access modifiers changed from: protected */
     public void onDiscardResult(ArraySet<Preference> arraySet) {
     }
 
@@ -24,9 +23,7 @@ public class AppPrefLoader extends AsyncLoaderCompat<ArraySet<Preference>> {
         this.mPrefContext = context;
     }
 
-    @Override // androidx.loader.content.AsyncTaskLoader
-    /* renamed from: loadInBackground */
-    public ArraySet<Preference> mo611loadInBackground() {
+    public ArraySet<Preference> loadInBackground() {
         ArraySet<Preference> arraySet = new ArraySet<>();
         int size = this.mPackages.size();
         for (int i = 1; i < size; i++) {

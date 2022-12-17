@@ -3,6 +3,7 @@ package com.android.settings.fuelgauge.batterytip.detectors;
 import android.content.Context;
 import android.os.BatteryUsageStats;
 import android.os.UidBatteryConsumer;
+import android.util.Log;
 import com.android.settings.fuelgauge.BatteryInfo;
 import com.android.settings.fuelgauge.BatteryUtils;
 import com.android.settings.fuelgauge.batterytip.AppInfo;
@@ -13,7 +14,7 @@ import com.android.settings.fuelgauge.batterytip.tips.HighUsageTip;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-/* loaded from: classes.dex */
+
 public class HighUsageDetector {
     private final BatteryInfo mBatteryInfo;
     private BatteryUsageStats mBatteryUsageStats;
@@ -41,7 +42,7 @@ public class HighUsageDetector {
                 double consumedPower = this.mBatteryUsageStats.getConsumedPower();
                 int dischargePercentage = this.mBatteryUsageStats.getDischargePercentage();
                 List<UidBatteryConsumer> uidBatteryConsumers = this.mBatteryUsageStats.getUidBatteryConsumers();
-                uidBatteryConsumers.sort(HighUsageDetector$$ExternalSyntheticLambda0.INSTANCE);
+                uidBatteryConsumers.sort(new HighUsageDetector$$ExternalSyntheticLambda0());
                 for (UidBatteryConsumer uidBatteryConsumer : uidBatteryConsumers) {
                     if (this.mBatteryUtils.calculateBatteryPercent(uidBatteryConsumer.getConsumedPower(), consumedPower, dischargePercentage) + 0.5d >= 1.0d && !this.mBatteryUtils.shouldHideUidBatteryConsumer(uidBatteryConsumer)) {
                         this.mHighUsageAppList.add(new AppInfo.Builder().setUid(uidBatteryConsumer.getUid()).setPackageName(this.mBatteryUtils.getPackageName(uidBatteryConsumer.getUid())).build());
@@ -51,19 +52,19 @@ public class HighUsageDetector {
                     }
                 }
                 if (this.mPolicy.testHighUsageTip && this.mHighUsageAppList.isEmpty()) {
-                    this.mHighUsageAppList.add(new AppInfo.Builder().setPackageName("com.android.settings").setScreenOnTimeMs(TimeUnit.HOURS.toMillis(3L)).build());
+                    this.mHighUsageAppList.add(new AppInfo.Builder().setPackageName("com.android.settings").setScreenOnTimeMs(TimeUnit.HOURS.toMillis(3)).build());
                 }
             }
         }
         return new HighUsageTip(calculateLastFullChargeTime, this.mHighUsageAppList);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ int lambda$detect$0(UidBatteryConsumer uidBatteryConsumer, UidBatteryConsumer uidBatteryConsumer2) {
-        return Double.compare(uidBatteryConsumer2.getConsumedPower(), uidBatteryConsumer.getConsumedPower());
-    }
-
-    void parseBatteryData() {
-        this.mBatteryInfo.parseBatteryHistory(this.mDataParser);
+    /* access modifiers changed from: package-private */
+    public void parseBatteryData() {
+        try {
+            this.mBatteryInfo.parseBatteryHistory(this.mDataParser);
+        } catch (IllegalStateException e) {
+            Log.e("HighUsageDetector", "parseBatteryData() failed", e);
+        }
     }
 }

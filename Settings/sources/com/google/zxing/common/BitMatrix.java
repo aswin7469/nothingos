@@ -1,5 +1,5 @@
 package com.google.zxing.common;
-/* loaded from: classes2.dex */
+
 public final class BitMatrix {
     private final int[] bits;
     private final int height;
@@ -18,7 +18,7 @@ public final class BitMatrix {
         this.height = i2;
         int i3 = (i + 31) >> 5;
         this.rowSize = i3;
-        this.bits = new int[i3 * i2];
+        this.bits = new int[(i3 * i2)];
     }
 
     public boolean get(int i, int i2) {
@@ -47,23 +47,23 @@ public final class BitMatrix {
     public void setRegion(int i, int i2, int i3, int i4) {
         if (i2 < 0 || i < 0) {
             throw new IllegalArgumentException("Left and top must be nonnegative");
-        }
-        if (i4 < 1 || i3 < 1) {
+        } else if (i4 < 1 || i3 < 1) {
             throw new IllegalArgumentException("Height and width must be at least 1");
-        }
-        int i5 = i3 + i;
-        int i6 = i4 + i2;
-        if (i6 > this.height || i5 > this.width) {
-            throw new IllegalArgumentException("The region must fit inside the matrix");
-        }
-        while (i2 < i6) {
-            int i7 = this.rowSize * i2;
-            for (int i8 = i; i8 < i5; i8++) {
-                int[] iArr = this.bits;
-                int i9 = (i8 >> 5) + i7;
-                iArr[i9] = iArr[i9] | (1 << (i8 & 31));
+        } else {
+            int i5 = i3 + i;
+            int i6 = i4 + i2;
+            if (i6 > this.height || i5 > this.width) {
+                throw new IllegalArgumentException("The region must fit inside the matrix");
             }
-            i2++;
+            while (i2 < i6) {
+                int i7 = this.rowSize * i2;
+                for (int i8 = i; i8 < i5; i8++) {
+                    int[] iArr = this.bits;
+                    int i9 = (i8 >> 5) + i7;
+                    iArr[i9] = iArr[i9] | (1 << (i8 & 31));
+                }
+                i2++;
+            }
         }
     }
 
@@ -94,39 +94,40 @@ public final class BitMatrix {
             int i6 = 0;
             while (true) {
                 int i7 = this.rowSize;
-                if (i6 < i7) {
-                    int i8 = this.bits[(i7 * i5) + i6];
-                    if (i8 != 0) {
-                        if (i5 < i2) {
-                            i2 = i5;
+                if (i6 >= i7) {
+                    break;
+                }
+                int i8 = this.bits[(i7 * i5) + i6];
+                if (i8 != 0) {
+                    if (i5 < i2) {
+                        i2 = i5;
+                    }
+                    if (i5 > i4) {
+                        i4 = i5;
+                    }
+                    int i9 = i6 * 32;
+                    if (i9 < i) {
+                        int i10 = 0;
+                        while ((i8 << (31 - i10)) == 0) {
+                            i10++;
                         }
-                        if (i5 > i4) {
-                            i4 = i5;
-                        }
-                        int i9 = i6 * 32;
-                        if (i9 < i) {
-                            int i10 = 0;
-                            while ((i8 << (31 - i10)) == 0) {
-                                i10++;
-                            }
-                            int i11 = i10 + i9;
-                            if (i11 < i) {
-                                i = i11;
-                            }
-                        }
-                        if (i9 + 31 > i3) {
-                            int i12 = 31;
-                            while ((i8 >>> i12) == 0) {
-                                i12--;
-                            }
-                            int i13 = i9 + i12;
-                            if (i13 > i3) {
-                                i3 = i13;
-                            }
+                        int i11 = i10 + i9;
+                        if (i11 < i) {
+                            i = i11;
                         }
                     }
-                    i6++;
+                    if (i9 + 31 > i3) {
+                        int i12 = 31;
+                        while ((i8 >>> i12) == 0) {
+                            i12--;
+                        }
+                        int i13 = i9 + i12;
+                        if (i13 > i3) {
+                            i3 = i13;
+                        }
+                    }
                 }
+                i6++;
             }
         }
         int i14 = i3 - i;
@@ -142,10 +143,9 @@ public final class BitMatrix {
         int i = 0;
         while (true) {
             iArr = this.bits;
-            if (i >= iArr.length || iArr[i] != 0) {
-                break;
+            if (i < iArr.length && iArr[i] == 0) {
+                i++;
             }
-            i++;
         }
         if (i == iArr.length) {
             return null;
@@ -224,7 +224,7 @@ public final class BitMatrix {
             for (int i2 = 0; i2 < this.width; i2++) {
                 sb.append(get(i2, i) ? "X " : "  ");
             }
-            sb.append('\n');
+            sb.append(10);
         }
         return sb.toString();
     }

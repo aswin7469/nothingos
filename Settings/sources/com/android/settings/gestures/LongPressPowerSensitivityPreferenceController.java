@@ -8,15 +8,13 @@ import android.provider.Settings;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import com.android.settings.core.SliderPreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settings.widget.LabeledSeekBarPreference;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnStart;
 import com.android.settingslib.core.lifecycle.events.OnStop;
-/* loaded from: classes.dex */
+
 public class LongPressPowerSensitivityPreferenceController extends SliderPreferenceController implements LifecycleObserver, OnStart, OnStop {
-    private final ContentObserver mPowerButtonObserver = new ContentObserver(Handler.getMain()) { // from class: com.android.settings.gestures.LongPressPowerSensitivityPreferenceController.1
-        @Override // android.database.ContentObserver
+    private final ContentObserver mPowerButtonObserver = new ContentObserver(Handler.getMain()) {
         public void onChange(boolean z) {
             if (LongPressPowerSensitivityPreferenceController.this.mPreference != null) {
                 LongPressPowerSensitivityPreferenceController longPressPowerSensitivityPreferenceController = LongPressPowerSensitivityPreferenceController.this;
@@ -24,70 +22,55 @@ public class LongPressPowerSensitivityPreferenceController extends SliderPrefere
             }
         }
     };
-    private LabeledSeekBarPreference mPreference;
+    /* access modifiers changed from: private */
+    public LabeledSeekBarPreference mPreference;
     private final int[] mSensitivityValues;
 
-    @Override // com.android.settings.core.SliderPreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.SliderPreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.core.SliderPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.core.SliderPreferenceController
     public int getMin() {
         return 0;
     }
 
-    @Override // com.android.settings.core.SliderPreferenceController, com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.core.SliderPreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.core.SliderPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.core.SliderPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.core.SliderPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
 
     public LongPressPowerSensitivityPreferenceController(Context context, String str) {
         super(context, str);
-        this.mSensitivityValues = context.getResources().getIntArray(17236060);
+        this.mSensitivityValues = context.getResources().getIntArray(17236082);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStart
     public void onStart() {
         this.mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("power_button_long_press"), false, this.mPowerButtonObserver);
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnStop
     public void onStop() {
         this.mContext.getContentResolver().unregisterContentObserver(this.mPowerButtonObserver);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         LabeledSeekBarPreference labeledSeekBarPreference = (LabeledSeekBarPreference) preferenceScreen.findPreference(getPreferenceKey());
@@ -100,7 +83,6 @@ public class LongPressPowerSensitivityPreferenceController extends SliderPrefere
         }
     }
 
-    @Override // com.android.settings.core.SliderPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         LabeledSeekBarPreference labeledSeekBarPreference = (LabeledSeekBarPreference) preference;
@@ -108,7 +90,6 @@ public class LongPressPowerSensitivityPreferenceController extends SliderPrefere
         labeledSeekBarPreference.setProgress(getSliderPosition());
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         int[] iArr = this.mSensitivityValues;
         if (iArr == null || iArr.length < 2) {
@@ -117,7 +98,6 @@ public class LongPressPowerSensitivityPreferenceController extends SliderPrefere
         return !PowerMenuSettingsUtils.isLongPressPowerForAssistEnabled(this.mContext) ? 5 : 0;
     }
 
-    @Override // com.android.settings.core.SliderPreferenceController
     public int getSliderPosition() {
         int[] iArr = this.mSensitivityValues;
         if (iArr == null) {
@@ -126,7 +106,6 @@ public class LongPressPowerSensitivityPreferenceController extends SliderPrefere
         return closestValueIndex(iArr, getCurrentSensitivityValue());
     }
 
-    @Override // com.android.settings.core.SliderPreferenceController
     public boolean setSliderPosition(int i) {
         int[] iArr = this.mSensitivityValues;
         if (iArr == null || i < 0 || i >= iArr.length) {
@@ -135,7 +114,6 @@ public class LongPressPowerSensitivityPreferenceController extends SliderPrefere
         return Settings.Global.putInt(this.mContext.getContentResolver(), "power_button_long_press_duration_ms", this.mSensitivityValues[i]);
     }
 
-    @Override // com.android.settings.core.SliderPreferenceController
     public int getMax() {
         int[] iArr = this.mSensitivityValues;
         if (iArr == null || iArr.length == 0) {
@@ -145,7 +123,7 @@ public class LongPressPowerSensitivityPreferenceController extends SliderPrefere
     }
 
     private int getCurrentSensitivityValue() {
-        return Settings.Global.getInt(this.mContext.getContentResolver(), "power_button_long_press_duration_ms", this.mContext.getResources().getInteger(17694845));
+        return Settings.Global.getInt(this.mContext.getContentResolver(), "power_button_long_press_duration_ms", this.mContext.getResources().getInteger(17694855));
     }
 
     private static int closestValueIndex(int[] iArr, int i) {

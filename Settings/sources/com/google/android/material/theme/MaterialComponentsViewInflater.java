@@ -13,30 +13,30 @@ import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textview.MaterialTextView;
-/* loaded from: classes2.dex */
+
 public class MaterialComponentsViewInflater extends AppCompatViewInflater {
-    @Override // androidx.appcompat.app.AppCompatViewInflater
-    protected AppCompatButton createButton(Context context, AttributeSet attributeSet) {
+    /* access modifiers changed from: protected */
+    public AppCompatButton createButton(Context context, AttributeSet attributeSet) {
         return new MaterialButton(context, attributeSet);
     }
 
-    @Override // androidx.appcompat.app.AppCompatViewInflater
-    protected AppCompatCheckBox createCheckBox(Context context, AttributeSet attributeSet) {
+    /* access modifiers changed from: protected */
+    public AppCompatCheckBox createCheckBox(Context context, AttributeSet attributeSet) {
         return new MaterialCheckBox(context, attributeSet);
     }
 
-    @Override // androidx.appcompat.app.AppCompatViewInflater
-    protected AppCompatRadioButton createRadioButton(Context context, AttributeSet attributeSet) {
+    /* access modifiers changed from: protected */
+    public AppCompatRadioButton createRadioButton(Context context, AttributeSet attributeSet) {
         return new MaterialRadioButton(context, attributeSet);
     }
 
-    @Override // androidx.appcompat.app.AppCompatViewInflater
-    protected AppCompatTextView createTextView(Context context, AttributeSet attributeSet) {
+    /* access modifiers changed from: protected */
+    public AppCompatTextView createTextView(Context context, AttributeSet attributeSet) {
         return new MaterialTextView(context, attributeSet);
     }
 
-    @Override // androidx.appcompat.app.AppCompatViewInflater
-    protected AppCompatAutoCompleteTextView createAutoCompleteTextView(Context context, AttributeSet attributeSet) {
+    /* access modifiers changed from: protected */
+    public AppCompatAutoCompleteTextView createAutoCompleteTextView(Context context, AttributeSet attributeSet) {
         return new MaterialAutoCompleteTextView(context, attributeSet);
     }
 }

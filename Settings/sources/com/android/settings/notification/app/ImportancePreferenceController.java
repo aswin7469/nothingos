@@ -8,11 +8,10 @@ import androidx.preference.Preference;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settings.notification.NotificationBackend;
 import com.android.settings.notification.app.NotificationSettings;
-/* loaded from: classes.dex */
+
 public class ImportancePreferenceController extends NotificationPreferenceController implements PreferenceControllerMixin, Preference.OnPreferenceChangeListener {
     private NotificationSettings.DependentFieldListener mDependentFieldListener;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "importance";
     }
@@ -22,7 +21,6 @@ public class ImportancePreferenceController extends NotificationPreferenceContro
         this.mDependentFieldListener = dependentFieldListener;
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         if (super.isAvailable() && this.mChannel != null) {
             return !isDefaultChannel();
@@ -30,43 +28,40 @@ public class ImportancePreferenceController extends NotificationPreferenceContro
         return false;
     }
 
-    @Override // com.android.settings.notification.app.NotificationPreferenceController
-    boolean isIncludedInFilter() {
+    /* access modifiers changed from: package-private */
+    public boolean isIncludedInFilter() {
         return this.mPreferenceFilter.contains("importance");
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         NotificationChannel notificationChannel;
-        if (this.mAppRow == null || (notificationChannel = this.mChannel) == null) {
-            return;
+        if (this.mAppRow != null && (notificationChannel = this.mChannel) != null) {
+            boolean z = false;
+            preference.setEnabled(this.mAdmin == null && isChannelConfigurable(notificationChannel));
+            ImportancePreference importancePreference = (ImportancePreference) preference;
+            importancePreference.setConfigurable(isChannelConfigurable(this.mChannel));
+            importancePreference.setImportance(this.mChannel.getImportance());
+            importancePreference.setDisplayInStatusBar(this.mBackend.showSilentInStatusBar(this.mContext.getPackageName()));
+            if (Settings.Secure.getInt(this.mContext.getContentResolver(), "lock_screen_show_silent_notifications", 1) == 1) {
+                z = true;
+            }
+            importancePreference.setDisplayOnLockscreen(z);
         }
-        boolean z = false;
-        preference.setEnabled(this.mAdmin == null && !notificationChannel.isImportanceLockedByOEM());
-        ImportancePreference importancePreference = (ImportancePreference) preference;
-        importancePreference.setConfigurable(!this.mChannel.isImportanceLockedByOEM());
-        importancePreference.setImportance(this.mChannel.getImportance());
-        importancePreference.setDisplayInStatusBar(this.mBackend.showSilentInStatusBar(((NotificationPreferenceController) this).mContext.getPackageName()));
-        if (Settings.Secure.getInt(((NotificationPreferenceController) this).mContext.getContentResolver(), "lock_screen_show_silent_notifications", 1) == 1) {
-            z = true;
-        }
-        importancePreference.setDisplayOnLockscreen(z);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
-        if (this.mChannel != null) {
-            int intValue = ((Integer) obj).intValue();
-            if (this.mChannel.getImportance() < 3 && !SoundPreferenceController.hasValidSound(this.mChannel) && intValue >= 3) {
-                this.mChannel.setSound(RingtoneManager.getDefaultUri(2), this.mChannel.getAudioAttributes());
-                this.mChannel.lockFields(32);
-            }
-            this.mChannel.setImportance(intValue);
-            this.mChannel.lockFields(4);
-            saveChannel();
-            this.mDependentFieldListener.onFieldValueChanged();
+        if (this.mChannel == null) {
             return true;
         }
+        int intValue = ((Integer) obj).intValue();
+        if (this.mChannel.getImportance() < 3 && !SoundPreferenceController.hasValidSound(this.mChannel) && intValue >= 3) {
+            this.mChannel.setSound(RingtoneManager.getDefaultUri(2), this.mChannel.getAudioAttributes());
+            this.mChannel.lockFields(32);
+        }
+        this.mChannel.setImportance(intValue);
+        this.mChannel.lockFields(4);
+        saveChannel();
+        this.mDependentFieldListener.onFieldValueChanged();
         return true;
     }
 }

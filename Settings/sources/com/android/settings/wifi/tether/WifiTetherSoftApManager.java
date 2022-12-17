@@ -5,11 +5,10 @@ import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.HandlerExecutor;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class WifiTetherSoftApManager {
-    private WifiManager mWifiManager;
-    private WifiTetherSoftApCallback mWifiTetherSoftApCallback;
-    private WifiManager.SoftApCallback mSoftApCallback = new WifiManager.SoftApCallback() { // from class: com.android.settings.wifi.tether.WifiTetherSoftApManager.1
+    private Handler mHandler;
+    private WifiManager.SoftApCallback mSoftApCallback = new WifiManager.SoftApCallback() {
         public void onStateChanged(int i, int i2) {
             WifiTetherSoftApManager.this.mWifiTetherSoftApCallback.onStateChanged(i, i2);
         }
@@ -18,18 +17,20 @@ public class WifiTetherSoftApManager {
             WifiTetherSoftApManager.this.mWifiTetherSoftApCallback.onConnectedClientsChanged(list);
         }
     };
-    private Handler mHandler = new Handler();
+    private WifiManager mWifiManager;
+    /* access modifiers changed from: private */
+    public WifiTetherSoftApCallback mWifiTetherSoftApCallback;
 
-    /* loaded from: classes.dex */
     public interface WifiTetherSoftApCallback {
         void onConnectedClientsChanged(List<WifiClient> list);
 
         void onStateChanged(int i, int i2);
     }
 
-    public WifiTetherSoftApManager(WifiManager wifiManager, WifiTetherSoftApCallback wifiTetherSoftApCallback) {
+    WifiTetherSoftApManager(WifiManager wifiManager, WifiTetherSoftApCallback wifiTetherSoftApCallback) {
         this.mWifiManager = wifiManager;
         this.mWifiTetherSoftApCallback = wifiTetherSoftApCallback;
+        this.mHandler = new Handler();
     }
 
     public void registerSoftApCallback() {

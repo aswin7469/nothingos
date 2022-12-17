@@ -1,48 +1,40 @@
 package com.google.protobuf;
 
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.RandomAccess;
-/* loaded from: classes2.dex */
+
 public class LazyStringArrayList extends AbstractProtobufList<String> implements LazyStringList, RandomAccess {
     public static final LazyStringList EMPTY;
     private static final LazyStringArrayList EMPTY_LIST;
     private final List<Object> list;
 
-    @Override // com.google.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.AbstractCollection, java.util.Collection, java.util.List
     public /* bridge */ /* synthetic */ boolean add(Object obj) {
-        return super.add((LazyStringArrayList) obj);
+        return super.add(obj);
     }
 
-    @Override // com.google.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.Collection, java.util.List
     public /* bridge */ /* synthetic */ boolean equals(Object obj) {
         return super.equals(obj);
     }
 
-    @Override // com.google.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.Collection, java.util.List
     public /* bridge */ /* synthetic */ int hashCode() {
         return super.hashCode();
     }
 
-    @Override // com.google.protobuf.AbstractProtobufList, com.google.protobuf.Internal.ProtobufList
     public /* bridge */ /* synthetic */ boolean isModifiable() {
         return super.isModifiable();
     }
 
-    @Override // com.google.protobuf.AbstractProtobufList, java.util.AbstractCollection, java.util.Collection, java.util.List
     public /* bridge */ /* synthetic */ boolean remove(Object obj) {
         return super.remove(obj);
     }
 
-    @Override // com.google.protobuf.AbstractProtobufList, java.util.AbstractCollection, java.util.Collection, java.util.List
     public /* bridge */ /* synthetic */ boolean removeAll(Collection collection) {
         return super.removeAll(collection);
     }
 
-    @Override // com.google.protobuf.AbstractProtobufList, java.util.AbstractCollection, java.util.Collection, java.util.List
     public /* bridge */ /* synthetic */ boolean retainAll(Collection collection) {
         return super.retainAll(collection);
     }
@@ -59,25 +51,22 @@ public class LazyStringArrayList extends AbstractProtobufList<String> implements
     }
 
     public LazyStringArrayList(int i) {
-        this(new ArrayList(i));
+        this((ArrayList<Object>) new ArrayList(i));
     }
 
     private LazyStringArrayList(ArrayList<Object> arrayList) {
         this.list = arrayList;
     }
 
-    @Override // com.google.protobuf.Internal.ProtobufList
-    /* renamed from: mutableCopyWithCapacity  reason: collision with other method in class */
-    public LazyStringArrayList mo922mutableCopyWithCapacity(int i) {
-        if (i < size()) {
-            throw new IllegalArgumentException();
+    public LazyStringArrayList mutableCopyWithCapacity(int i) {
+        if (i >= size()) {
+            ArrayList arrayList = new ArrayList(i);
+            arrayList.addAll(this.list);
+            return new LazyStringArrayList((ArrayList<Object>) arrayList);
         }
-        ArrayList arrayList = new ArrayList(i);
-        arrayList.addAll(this.list);
-        return new LazyStringArrayList(arrayList);
+        throw new IllegalArgumentException();
     }
 
-    @Override // java.util.AbstractList, java.util.List
     public String get(int i) {
         Object obj = this.list.get(i);
         if (obj instanceof String) {
@@ -99,63 +88,54 @@ public class LazyStringArrayList extends AbstractProtobufList<String> implements
         return stringUtf82;
     }
 
-    @Override // java.util.AbstractCollection, java.util.Collection, java.util.List
     public int size() {
         return this.list.size();
     }
 
-    @Override // java.util.AbstractList, java.util.List
     public String set(int i, String str) {
         ensureIsMutable();
         return asString(this.list.set(i, str));
     }
 
-    @Override // java.util.AbstractList, java.util.List
     public void add(int i, String str) {
         ensureIsMutable();
         this.list.add(i, str);
-        ((AbstractList) this).modCount++;
+        this.modCount++;
     }
 
-    @Override // com.google.protobuf.AbstractProtobufList, java.util.AbstractCollection, java.util.Collection, java.util.List
     public boolean addAll(Collection<? extends String> collection) {
         return addAll(size(), collection);
     }
 
-    @Override // com.google.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.List
     public boolean addAll(int i, Collection<? extends String> collection) {
         ensureIsMutable();
         if (collection instanceof LazyStringList) {
             collection = ((LazyStringList) collection).getUnderlyingElements();
         }
         boolean addAll = this.list.addAll(i, collection);
-        ((AbstractList) this).modCount++;
+        this.modCount++;
         return addAll;
     }
 
-    @Override // java.util.AbstractList, java.util.List
     public String remove(int i) {
         ensureIsMutable();
         Object remove = this.list.remove(i);
-        ((AbstractList) this).modCount++;
+        this.modCount++;
         return asString(remove);
     }
 
-    @Override // com.google.protobuf.AbstractProtobufList, java.util.AbstractList, java.util.AbstractCollection, java.util.Collection, java.util.List
     public void clear() {
         ensureIsMutable();
         this.list.clear();
-        ((AbstractList) this).modCount++;
+        this.modCount++;
     }
 
-    @Override // com.google.protobuf.LazyStringList
     public void add(ByteString byteString) {
         ensureIsMutable();
         this.list.add(byteString);
-        ((AbstractList) this).modCount++;
+        this.modCount++;
     }
 
-    @Override // com.google.protobuf.LazyStringList
     public Object getRaw(int i) {
         return this.list.get(i);
     }
@@ -170,12 +150,10 @@ public class LazyStringArrayList extends AbstractProtobufList<String> implements
         return Internal.toStringUtf8((byte[]) obj);
     }
 
-    @Override // com.google.protobuf.LazyStringList
     public List<?> getUnderlyingElements() {
         return Collections.unmodifiableList(this.list);
     }
 
-    @Override // com.google.protobuf.LazyStringList
     public LazyStringList getUnmodifiableView() {
         return isModifiable() ? new UnmodifiableLazyStringList(this) : this;
     }

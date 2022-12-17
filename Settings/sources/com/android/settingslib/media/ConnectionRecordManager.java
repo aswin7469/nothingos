@@ -2,7 +2,7 @@ package com.android.settingslib.media;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-/* loaded from: classes.dex */
+
 public class ConnectionRecordManager {
     private static ConnectionRecordManager sInstance;
     private static final Object sInstanceSync = new Object();
@@ -26,7 +26,7 @@ public class ConnectionRecordManager {
     }
 
     public synchronized void fetchLastSelectedDevice(Context context) {
-        this.mLastSelectedDevice = getSharedPreferences(context).getString("last_selected_device", null);
+        this.mLastSelectedDevice = getSharedPreferences(context).getString("last_selected_device", (String) null);
     }
 
     public synchronized void setConnectionRecord(Context context, String str, int i) {

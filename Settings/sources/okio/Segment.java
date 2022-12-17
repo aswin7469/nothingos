@@ -1,15 +1,14 @@
 package okio;
 
-import kotlin.collections.ArraysKt___ArraysJvmKt;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 /* compiled from: Segment.kt */
-/* loaded from: classes2.dex */
 public final class Segment {
     @NotNull
-    public static final Companion Companion = new Companion(null);
+    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
     @NotNull
     public final byte[] data;
     public int limit;
@@ -27,9 +26,9 @@ public final class Segment {
         this.shared = false;
     }
 
-    public Segment(@NotNull byte[] data, int i, int i2, boolean z, boolean z2) {
-        Intrinsics.checkNotNullParameter(data, "data");
-        this.data = data;
+    public Segment(@NotNull byte[] bArr, int i, int i2, boolean z, boolean z2) {
+        Intrinsics.checkNotNullParameter(bArr, "data");
+        this.data = bArr;
         this.pos = i;
         this.limit = i2;
         this.shared = z;
@@ -73,90 +72,91 @@ public final class Segment {
 
     @NotNull
     public final Segment split(int i) {
-        Segment take;
-        if (!(i > 0 && i <= this.limit - this.pos)) {
-            throw new IllegalArgumentException("byteCount out of range".toString());
+        Segment segment;
+        if (i > 0 && i <= this.limit - this.pos) {
+            if (i >= 1024) {
+                segment = sharedCopy();
+            } else {
+                segment = SegmentPool.take();
+                byte[] bArr = this.data;
+                byte[] bArr2 = segment.data;
+                int i2 = this.pos;
+                byte[] unused = ArraysKt___ArraysJvmKt.copyInto$default(bArr, bArr2, 0, i2, i2 + i, 2, (Object) null);
+            }
+            segment.limit = segment.pos + i;
+            this.pos += i;
+            Segment segment2 = this.prev;
+            Intrinsics.checkNotNull(segment2);
+            segment2.push(segment);
+            return segment;
         }
-        if (i >= 1024) {
-            take = sharedCopy();
-        } else {
-            SegmentPool segmentPool = SegmentPool.INSTANCE;
-            take = SegmentPool.take();
-            byte[] bArr = this.data;
-            byte[] bArr2 = take.data;
-            int i2 = this.pos;
-            ArraysKt___ArraysJvmKt.copyInto$default(bArr, bArr2, 0, i2, i2 + i, 2, null);
-        }
-        take.limit = take.pos + i;
-        this.pos += i;
-        Segment segment = this.prev;
-        Intrinsics.checkNotNull(segment);
-        segment.push(take);
-        return take;
+        throw new IllegalArgumentException("byteCount out of range".toString());
     }
 
     public final void compact() {
         Segment segment = this.prev;
         int i = 0;
-        if (!(segment != this)) {
-            throw new IllegalStateException("cannot compact".toString());
-        }
-        Intrinsics.checkNotNull(segment);
-        if (!segment.owner) {
+        if (segment != this) {
+            Intrinsics.checkNotNull(segment);
+            if (segment.owner) {
+                int i2 = this.limit - this.pos;
+                Segment segment2 = this.prev;
+                Intrinsics.checkNotNull(segment2);
+                int i3 = 8192 - segment2.limit;
+                Segment segment3 = this.prev;
+                Intrinsics.checkNotNull(segment3);
+                if (!segment3.shared) {
+                    Segment segment4 = this.prev;
+                    Intrinsics.checkNotNull(segment4);
+                    i = segment4.pos;
+                }
+                if (i2 <= i3 + i) {
+                    Segment segment5 = this.prev;
+                    Intrinsics.checkNotNull(segment5);
+                    writeTo(segment5, i2);
+                    pop();
+                    SegmentPool.recycle(this);
+                    return;
+                }
+                return;
+            }
             return;
         }
-        int i2 = this.limit - this.pos;
-        Segment segment2 = this.prev;
-        Intrinsics.checkNotNull(segment2);
-        int i3 = 8192 - segment2.limit;
-        Segment segment3 = this.prev;
-        Intrinsics.checkNotNull(segment3);
-        if (!segment3.shared) {
-            Segment segment4 = this.prev;
-            Intrinsics.checkNotNull(segment4);
-            i = segment4.pos;
-        }
-        if (i2 > i3 + i) {
-            return;
-        }
-        Segment segment5 = this.prev;
-        Intrinsics.checkNotNull(segment5);
-        writeTo(segment5, i2);
-        pop();
-        SegmentPool segmentPool = SegmentPool.INSTANCE;
-        SegmentPool.recycle(this);
+        throw new IllegalStateException("cannot compact".toString());
     }
 
-    public final void writeTo(@NotNull Segment sink, int i) {
-        Intrinsics.checkNotNullParameter(sink, "sink");
-        if (!sink.owner) {
-            throw new IllegalStateException("only owner can write".toString());
-        }
-        int i2 = sink.limit;
-        if (i2 + i > 8192) {
-            if (sink.shared) {
-                throw new IllegalArgumentException();
+    public final void writeTo(@NotNull Segment segment, int i) {
+        Intrinsics.checkNotNullParameter(segment, "sink");
+        if (segment.owner) {
+            int i2 = segment.limit;
+            if (i2 + i > 8192) {
+                if (!segment.shared) {
+                    int i3 = segment.pos;
+                    if ((i2 + i) - i3 <= 8192) {
+                        byte[] bArr = segment.data;
+                        byte[] unused = ArraysKt___ArraysJvmKt.copyInto$default(bArr, bArr, 0, i3, i2, 2, (Object) null);
+                        segment.limit -= segment.pos;
+                        segment.pos = 0;
+                    } else {
+                        throw new IllegalArgumentException();
+                    }
+                } else {
+                    throw new IllegalArgumentException();
+                }
             }
-            int i3 = sink.pos;
-            if ((i2 + i) - i3 > 8192) {
-                throw new IllegalArgumentException();
-            }
-            byte[] bArr = sink.data;
-            ArraysKt___ArraysJvmKt.copyInto$default(bArr, bArr, 0, i3, i2, 2, null);
-            sink.limit -= sink.pos;
-            sink.pos = 0;
+            byte[] bArr2 = this.data;
+            byte[] bArr3 = segment.data;
+            int i4 = segment.limit;
+            int i5 = this.pos;
+            byte[] unused2 = ArraysKt___ArraysJvmKt.copyInto(bArr2, bArr3, i4, i5, i5 + i);
+            segment.limit += i;
+            this.pos += i;
+            return;
         }
-        byte[] bArr2 = this.data;
-        byte[] bArr3 = sink.data;
-        int i4 = sink.limit;
-        int i5 = this.pos;
-        ArraysKt___ArraysJvmKt.copyInto(bArr2, bArr3, i4, i5, i5 + i);
-        sink.limit += i;
-        this.pos += i;
+        throw new IllegalStateException("only owner can write".toString());
     }
 
     /* compiled from: Segment.kt */
-    /* loaded from: classes2.dex */
     public static final class Companion {
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
             this();

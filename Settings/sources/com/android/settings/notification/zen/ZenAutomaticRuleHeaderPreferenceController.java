@@ -10,19 +10,17 @@ import android.service.notification.ZenModeConfig;
 import android.util.Slog;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import com.android.settings.R;
+import com.android.settings.R$drawable;
+import com.android.settings.R$id;
 import com.android.settings.widget.EntityHeaderController;
 import com.android.settingslib.core.lifecycle.Lifecycle;
 import com.android.settingslib.widget.LayoutPreference;
-/* loaded from: classes.dex */
+
 public class ZenAutomaticRuleHeaderPreferenceController extends AbstractZenModePreferenceController {
-    private final String KEY = "pref_app_header";
     private EntityHeaderController mController;
     private final PreferenceFragmentCompat mFragment;
-    private String mId;
     private AutomaticZenRule mRule;
 
-    @Override // com.android.settings.notification.zen.AbstractZenModePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "pref_app_header";
     }
@@ -32,21 +30,23 @@ public class ZenAutomaticRuleHeaderPreferenceController extends AbstractZenModeP
         this.mFragment = preferenceFragmentCompat;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
+    /* access modifiers changed from: package-private */
+    public void setRule(AutomaticZenRule automaticZenRule) {
+        this.mRule = automaticZenRule;
+    }
+
     public boolean isAvailable() {
         return this.mRule != null;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         PreferenceFragmentCompat preferenceFragmentCompat;
-        if (this.mRule == null || (preferenceFragmentCompat = this.mFragment) == null) {
-            return;
+        if (this.mRule != null && (preferenceFragmentCompat = this.mFragment) != null) {
+            if (this.mController == null) {
+                this.mController = EntityHeaderController.newInstance(preferenceFragmentCompat.getActivity(), this.mFragment, ((LayoutPreference) preference).findViewById(R$id.entity_header));
+            }
+            this.mController.setIcon(getIcon()).setLabel((CharSequence) this.mRule.getName()).done((Activity) this.mFragment.getActivity(), false);
         }
-        if (this.mController == null) {
-            this.mController = EntityHeaderController.newInstance(preferenceFragmentCompat.getActivity(), this.mFragment, ((LayoutPreference) preference).findViewById(R.id.entity_header));
-        }
-        this.mController.setIcon(getIcon()).setLabel(this.mRule.getName()).done((Activity) this.mFragment.getActivity(), false);
     }
 
     private Drawable getIcon() {
@@ -55,10 +55,10 @@ public class ZenAutomaticRuleHeaderPreferenceController extends AbstractZenModeP
             ApplicationInfo applicationInfo = packageManager.getApplicationInfo(this.mRule.getOwner().getPackageName(), 0);
             if (applicationInfo.isSystemApp()) {
                 if (ZenModeConfig.isValidScheduleConditionId(this.mRule.getConditionId())) {
-                    return this.mContext.getDrawable(R.drawable.ic_timelapse);
+                    return this.mContext.getDrawable(R$drawable.ic_timelapse);
                 }
                 if (ZenModeConfig.isValidEventConditionId(this.mRule.getConditionId())) {
-                    return this.mContext.getDrawable(R.drawable.ic_event);
+                    return this.mContext.getDrawable(R$drawable.ic_event);
                 }
             }
             return applicationInfo.loadIcon(packageManager);
@@ -66,11 +66,5 @@ public class ZenAutomaticRuleHeaderPreferenceController extends AbstractZenModeP
             Slog.w("PrefControllerMixin", "Unable to load icon - PackageManager.NameNotFoundException");
             return null;
         }
-    }
-
-    /* JADX INFO: Access modifiers changed from: protected */
-    public void onResume(AutomaticZenRule automaticZenRule, String str) {
-        this.mRule = automaticZenRule;
-        this.mId = str;
     }
 }

@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.widget.ProgressBar;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
-/* loaded from: classes.dex */
+
 public class AppPreference extends Preference {
     private int mProgress;
     private boolean mProgressVisible;
@@ -36,7 +36,6 @@ public class AppPreference extends Preference {
         notifyChanged();
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         ProgressBar progressBar = (ProgressBar) preferenceViewHolder.findViewById(16908301);

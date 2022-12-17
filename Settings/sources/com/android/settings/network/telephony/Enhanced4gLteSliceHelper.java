@@ -3,6 +3,7 @@ package com.android.settings.network.telephony;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.PersistableBundle;
 import android.telephony.CarrierConfigManager;
@@ -13,12 +14,13 @@ import androidx.core.graphics.drawable.IconCompat;
 import androidx.slice.Slice;
 import androidx.slice.builders.ListBuilder;
 import androidx.slice.builders.SliceAction;
-import com.android.settings.R;
+import com.android.settings.R$array;
+import com.android.settings.R$drawable;
 import com.android.settings.network.ims.VolteQueryImsState;
 import com.android.settings.slices.CustomSliceRegistry;
 import com.android.settings.slices.SliceBroadcastReceiver;
 import com.android.settingslib.Utils;
-/* loaded from: classes.dex */
+
 public class Enhanced4gLteSliceHelper {
     private final Context mContext;
 
@@ -50,7 +52,7 @@ public class Enhanced4gLteSliceHelper {
     }
 
     private Slice getEnhanced4gLteSlice(Uri uri, boolean z, int i) {
-        return new ListBuilder(this.mContext, uri, -1L).setAccentColor(Utils.getColorAccentDefaultColor(this.mContext)).addRow(new ListBuilder.RowBuilder().setTitle(getEnhanced4glteModeTitle(i)).addEndItem(SliceAction.createToggle(getBroadcastIntent("com.android.settings.mobilenetwork.action.ENHANCED_4G_LTE_CHANGED"), null, z)).setPrimaryAction(SliceAction.createDeeplink(getActivityIntent("android.settings.NETWORK_OPERATOR_SETTINGS"), IconCompat.createWithResource(this.mContext, R.drawable.ic_launcher_settings), 0, getEnhanced4glteModeTitle(i)))).build();
+        return new ListBuilder(this.mContext, uri, -1).setAccentColor(Utils.getColorAccentDefaultColor(this.mContext)).addRow(new ListBuilder.RowBuilder().setTitle(getEnhanced4glteModeTitle(i)).addEndItem(SliceAction.createToggle(getBroadcastIntent("com.android.settings.mobilenetwork.action.ENHANCED_4G_LTE_CHANGED"), (CharSequence) null, z)).setPrimaryAction(SliceAction.createDeeplink(getActivityIntent("android.settings.NETWORK_OPERATOR_SETTINGS"), IconCompat.createWithResource(this.mContext, R$drawable.ic_launcher_settings), 0, getEnhanced4glteModeTitle(i)))).build();
     }
 
     public void handleEnhanced4gLteChanged(Intent intent) {
@@ -80,10 +82,11 @@ public class Enhanced4gLteSliceHelper {
     }
 
     private void notifyEnhanced4gLteUpdate() {
-        this.mContext.getContentResolver().notifyChange(CustomSliceRegistry.ENHANCED_4G_SLICE_URI, null);
+        this.mContext.getContentResolver().notifyChange(CustomSliceRegistry.ENHANCED_4G_SLICE_URI, (ContentObserver) null);
     }
 
-    void setEnhanced4gLteModeSetting(int i, boolean z) {
+    /* access modifiers changed from: package-private */
+    public void setEnhanced4gLteModeSetting(int i, boolean z) {
         ImsMmTelManager createForSubscriptionId;
         if (SubscriptionManager.isValidSubscriptionId(i) && (createForSubscriptionId = ImsMmTelManager.createForSubscriptionId(i)) != null) {
             try {
@@ -98,7 +101,7 @@ public class Enhanced4gLteSliceHelper {
         char c = 0;
         int carrierConfigManagerKeyValue = getCarrierConfigManagerKeyValue("enhanced_4g_lte_title_variant_int", i, 0);
         boolean isCarrierConfigManagerKeyEnabled = isCarrierConfigManagerKeyEnabled("show_4g_for_lte_data_icon_bool", i, false);
-        CharSequence[] textArray = this.mContext.getResources().getTextArray(R.array.enhanced_4g_lte_mode_title_variant);
+        CharSequence[] textArray = this.mContext.getResources().getTextArray(R$array.enhanced_4g_lte_mode_title_variant);
         char c2 = 1;
         if (carrierConfigManagerKeyValue != 1) {
             if (isCarrierConfigManagerKeyEnabled) {
@@ -127,7 +130,8 @@ public class Enhanced4gLteSliceHelper {
         return null;
     }
 
-    protected CarrierConfigManager getCarrierConfigManager() {
+    /* access modifiers changed from: protected */
+    public CarrierConfigManager getCarrierConfigManager() {
         return (CarrierConfigManager) this.mContext.getSystemService(CarrierConfigManager.class);
     }
 
@@ -137,7 +141,8 @@ public class Enhanced4gLteSliceHelper {
         return PendingIntent.getBroadcast(this.mContext, 0, intent, 335544320);
     }
 
-    protected int getDefaultVoiceSubId() {
+    /* access modifiers changed from: protected */
+    public int getDefaultVoiceSubId() {
         return SubscriptionManager.getDefaultVoiceSubscriptionId();
     }
 
@@ -148,7 +153,8 @@ public class Enhanced4gLteSliceHelper {
         return PendingIntent.getActivity(this.mContext, 0, intent, 67108864);
     }
 
-    VolteQueryImsState queryImsState(int i) {
+    /* access modifiers changed from: package-private */
+    public VolteQueryImsState queryImsState(int i) {
         return new VolteQueryImsState(this.mContext, i);
     }
 }

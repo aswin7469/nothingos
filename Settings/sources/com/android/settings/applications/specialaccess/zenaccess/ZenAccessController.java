@@ -6,60 +6,45 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
-import android.os.AsyncTask;
 import android.os.RemoteException;
 import android.util.ArraySet;
 import android.util.Log;
 import com.android.settings.core.BasePreferenceController;
 import com.android.settings.overlay.FeatureFactory;
-import com.android.settings.slices.SliceBackgroundWorker;
 import java.util.List;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public class ZenAccessController extends BasePreferenceController {
     private static final String TAG = "ZenAccessController";
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return 0;
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -103,32 +88,12 @@ public class ZenAccessController extends BasePreferenceController {
         return ((NotificationManager) context.getSystemService(NotificationManager.class)).isNotificationPolicyAccessGrantedForPackage(str);
     }
 
-    public static void setAccess(final Context context, final String str, final boolean z) {
+    public static void setAccess(Context context, String str, boolean z) {
         logSpecialPermissionChange(z, str, context);
-        AsyncTask.execute(new Runnable() { // from class: com.android.settings.applications.specialaccess.zenaccess.ZenAccessController$$ExternalSyntheticLambda1
-            @Override // java.lang.Runnable
-            public final void run() {
-                ZenAccessController.lambda$setAccess$0(context, str, z);
-            }
-        });
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ void lambda$setAccess$0(Context context, String str, boolean z) {
         ((NotificationManager) context.getSystemService(NotificationManager.class)).setNotificationPolicyAccessGranted(str, z);
     }
 
-    public static void deleteRules(final Context context, final String str) {
-        AsyncTask.execute(new Runnable() { // from class: com.android.settings.applications.specialaccess.zenaccess.ZenAccessController$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                ZenAccessController.lambda$deleteRules$1(context, str);
-            }
-        });
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ void lambda$deleteRules$1(Context context, String str) {
+    public static void deleteRules(Context context, String str) {
         ((NotificationManager) context.getSystemService(NotificationManager.class)).removeAutomaticZenRules(str);
     }
 

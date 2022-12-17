@@ -1,9 +1,8 @@
 package com.google.protobuf;
 
 import java.io.IOException;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes2.dex */
-public interface Schema<T> {
+
+interface Schema<T> {
     boolean equals(T t, T t2);
 
     int getSerializedSize(T t);

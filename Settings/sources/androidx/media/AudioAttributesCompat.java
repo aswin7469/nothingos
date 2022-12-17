@@ -1,14 +1,9 @@
 package androidx.media;
 
 import android.media.AudioAttributes;
-import android.os.Build;
 import android.util.SparseIntArray;
-import androidx.media.AudioAttributesImpl;
-import androidx.media.AudioAttributesImplApi21;
-import androidx.media.AudioAttributesImplApi26;
-import androidx.media.AudioAttributesImplBase;
 import androidx.versionedparcelable.VersionedParcelable;
-/* loaded from: classes.dex */
+
 public class AudioAttributesCompat implements VersionedParcelable {
     private static final int[] SDK_USAGES = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16};
     private static final SparseIntArray SUPPRESSIBLE_USAGES;
@@ -29,51 +24,15 @@ public class AudioAttributesCompat implements VersionedParcelable {
     public AudioAttributesCompat() {
     }
 
-    AudioAttributesCompat(AudioAttributesImpl impl) {
-        this.mImpl = impl;
+    AudioAttributesCompat(AudioAttributesImpl audioAttributesImpl) {
+        this.mImpl = audioAttributesImpl;
     }
 
-    public static AudioAttributesCompat wrap(final Object aa) {
+    public static AudioAttributesCompat wrap(Object obj) {
         if (sForceLegacyBehavior) {
             return null;
         }
-        int i = Build.VERSION.SDK_INT;
-        if (i >= 26) {
-            return new AudioAttributesCompat(new AudioAttributesImplApi26((AudioAttributes) aa));
-        }
-        if (i < 21) {
-            return null;
-        }
-        return new AudioAttributesCompat(new AudioAttributesImplApi21((AudioAttributes) aa));
-    }
-
-    /* loaded from: classes.dex */
-    public static class Builder {
-        final AudioAttributesImpl.Builder mBuilderImpl;
-
-        public Builder() {
-            if (AudioAttributesCompat.sForceLegacyBehavior) {
-                this.mBuilderImpl = new AudioAttributesImplBase.Builder();
-                return;
-            }
-            int i = Build.VERSION.SDK_INT;
-            if (i >= 26) {
-                this.mBuilderImpl = new AudioAttributesImplApi26.Builder();
-            } else if (i >= 21) {
-                this.mBuilderImpl = new AudioAttributesImplApi21.Builder();
-            } else {
-                this.mBuilderImpl = new AudioAttributesImplBase.Builder();
-            }
-        }
-
-        public AudioAttributesCompat build() {
-            return new AudioAttributesCompat(this.mBuilderImpl.build());
-        }
-
-        public Builder setLegacyStreamType(int streamType) {
-            this.mBuilderImpl.mo111setLegacyStreamType(streamType);
-            return this;
-        }
+        return new AudioAttributesCompat(new AudioAttributesImplApi26((AudioAttributes) obj));
     }
 
     public int hashCode() {
@@ -84,9 +43,8 @@ public class AudioAttributesCompat implements VersionedParcelable {
         return this.mImpl.toString();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static String usageToString(int usage) {
-        switch (usage) {
+    static String usageToString(int i) {
+        switch (i) {
             case 0:
                 return "USAGE_UNKNOWN";
             case 1:
@@ -117,65 +75,65 @@ public class AudioAttributesCompat implements VersionedParcelable {
                 return "USAGE_ASSISTANCE_SONIFICATION";
             case 14:
                 return "USAGE_GAME";
-            case 15:
-            default:
-                return "unknown usage " + usage;
             case 16:
                 return "USAGE_ASSISTANT";
+            default:
+                return "unknown usage " + i;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static int toVolumeStreamType(boolean fromGetVolumeControlStream, int flags, int usage) {
-        if ((flags & 1) == 1) {
-            return fromGetVolumeControlStream ? 1 : 7;
-        } else if ((flags & 4) == 4) {
-            return fromGetVolumeControlStream ? 0 : 6;
-        } else {
-            switch (usage) {
-                case 0:
-                case 1:
-                case 12:
-                case 14:
-                case 16:
+    static int toVolumeStreamType(boolean z, int i, int i2) {
+        if ((i & 1) == 1) {
+            return z ? 1 : 7;
+        }
+        if ((i & 4) == 4) {
+            return z ? 0 : 6;
+        }
+        switch (i2) {
+            case 0:
+            case 1:
+            case 12:
+            case 14:
+            case 16:
+                return 3;
+            case 2:
+                return 0;
+            case 3:
+                return z ? 0 : 8;
+            case 4:
+                return 4;
+            case 5:
+            case 7:
+            case 8:
+            case 9:
+            case 10:
+                return 5;
+            case 6:
+                return 2;
+            case 11:
+                return 10;
+            case 13:
+                return 1;
+            default:
+                if (!z) {
                     return 3;
-                case 2:
-                    return 0;
-                case 3:
-                    return fromGetVolumeControlStream ? 0 : 8;
-                case 4:
-                    return 4;
-                case 5:
-                case 7:
-                case 8:
-                case 9:
-                case 10:
-                    return 5;
-                case 6:
-                    return 2;
-                case 11:
-                    return 10;
-                case 13:
-                    return 1;
-                case 15:
-                default:
-                    if (!fromGetVolumeControlStream) {
-                        return 3;
-                    }
-                    throw new IllegalArgumentException("Unknown usage value " + usage + " in audio attributes");
-            }
+                }
+                throw new IllegalArgumentException("Unknown usage value " + i2 + " in audio attributes");
         }
     }
 
-    public boolean equals(Object o) {
-        if (!(o instanceof AudioAttributesCompat)) {
+    public boolean equals(Object obj) {
+        if (!(obj instanceof AudioAttributesCompat)) {
             return false;
         }
-        AudioAttributesCompat audioAttributesCompat = (AudioAttributesCompat) o;
+        AudioAttributesCompat audioAttributesCompat = (AudioAttributesCompat) obj;
         AudioAttributesImpl audioAttributesImpl = this.mImpl;
         if (audioAttributesImpl != null) {
             return audioAttributesImpl.equals(audioAttributesCompat.mImpl);
         }
-        return audioAttributesCompat.mImpl == null;
+        if (audioAttributesCompat.mImpl == null) {
+            return true;
+        }
+        return false;
     }
 }

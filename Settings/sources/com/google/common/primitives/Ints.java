@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.RandomAccess;
-/* loaded from: classes2.dex */
+
 public final class Ints extends IntsMethodsForWeb {
     public static int hashCode(int i) {
         return i;
@@ -18,17 +18,17 @@ public final class Ints extends IntsMethodsForWeb {
         if (j > 2147483647L) {
             return Integer.MAX_VALUE;
         }
-        if (j >= -2147483648L) {
-            return (int) j;
+        if (j < -2147483648L) {
+            return Integer.MIN_VALUE;
         }
-        return Integer.MIN_VALUE;
+        return (int) j;
     }
 
     public static int indexOf(int[] iArr, int i) {
         return indexOf(iArr, i, 0, iArr.length);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static int indexOf(int[] iArr, int i, int i2, int i3) {
         while (i2 < i3) {
             if (iArr[i2] == i) {
@@ -39,7 +39,7 @@ public final class Ints extends IntsMethodsForWeb {
         return -1;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static int lastIndexOf(int[] iArr, int i, int i2, int i3) {
         for (int i4 = i3 - 1; i4 >= i2; i4--) {
             if (iArr[i4] == i) {
@@ -53,8 +53,9 @@ public final class Ints extends IntsMethodsForWeb {
         Preconditions.checkArgument(iArr.length > 0);
         int i = iArr[0];
         for (int i2 = 1; i2 < iArr.length; i2++) {
-            if (iArr[i2] > i) {
-                i = iArr[i2];
+            int i3 = iArr[i2];
+            if (i3 > i) {
+                i = i3;
             }
         }
         return i;
@@ -78,14 +79,12 @@ public final class Ints extends IntsMethodsForWeb {
         return iArr;
     }
 
-    /* loaded from: classes2.dex */
     private static class IntArrayAsList extends AbstractList<Integer> implements RandomAccess, Serializable {
         private static final long serialVersionUID = 0;
         final int[] array;
         final int end;
         final int start;
 
-        @Override // java.util.AbstractCollection, java.util.Collection, java.util.List
         public boolean isEmpty() {
             return false;
         }
@@ -96,42 +95,35 @@ public final class Ints extends IntsMethodsForWeb {
             this.end = i2;
         }
 
-        @Override // java.util.AbstractCollection, java.util.Collection, java.util.List
         public int size() {
             return this.end - this.start;
         }
 
-        @Override // java.util.AbstractList, java.util.List
-        /* renamed from: get */
-        public Integer mo844get(int i) {
+        public Integer get(int i) {
             Preconditions.checkElementIndex(i, size());
             return Integer.valueOf(this.array[this.start + i]);
         }
 
-        @Override // java.util.AbstractCollection, java.util.Collection, java.util.List
         public boolean contains(Object obj) {
             return (obj instanceof Integer) && Ints.indexOf(this.array, ((Integer) obj).intValue(), this.start, this.end) != -1;
         }
 
-        @Override // java.util.AbstractList, java.util.List
         public int indexOf(Object obj) {
-            int indexOf;
-            if (!(obj instanceof Integer) || (indexOf = Ints.indexOf(this.array, ((Integer) obj).intValue(), this.start, this.end)) < 0) {
+            int access$000;
+            if (!(obj instanceof Integer) || (access$000 = Ints.indexOf(this.array, ((Integer) obj).intValue(), this.start, this.end)) < 0) {
                 return -1;
             }
-            return indexOf - this.start;
+            return access$000 - this.start;
         }
 
-        @Override // java.util.AbstractList, java.util.List
         public int lastIndexOf(Object obj) {
-            int lastIndexOf;
-            if (!(obj instanceof Integer) || (lastIndexOf = Ints.lastIndexOf(this.array, ((Integer) obj).intValue(), this.start, this.end)) < 0) {
+            int access$100;
+            if (!(obj instanceof Integer) || (access$100 = Ints.lastIndexOf(this.array, ((Integer) obj).intValue(), this.start, this.end)) < 0) {
                 return -1;
             }
-            return lastIndexOf - this.start;
+            return access$100 - this.start;
         }
 
-        @Override // java.util.AbstractList, java.util.List
         public Integer set(int i, Integer num) {
             Preconditions.checkElementIndex(i, size());
             int[] iArr = this.array;
@@ -141,7 +133,6 @@ public final class Ints extends IntsMethodsForWeb {
             return Integer.valueOf(i3);
         }
 
-        @Override // java.util.AbstractList, java.util.List
         public List<Integer> subList(int i, int i2) {
             Preconditions.checkPositionIndexes(i, i2, size());
             if (i == i2) {
@@ -152,28 +143,26 @@ public final class Ints extends IntsMethodsForWeb {
             return new IntArrayAsList(iArr, i + i3, i3 + i2);
         }
 
-        @Override // java.util.AbstractList, java.util.Collection, java.util.List
         public boolean equals(Object obj) {
             if (obj == this) {
                 return true;
             }
-            if (obj instanceof IntArrayAsList) {
-                IntArrayAsList intArrayAsList = (IntArrayAsList) obj;
-                int size = size();
-                if (intArrayAsList.size() != size) {
+            if (!(obj instanceof IntArrayAsList)) {
+                return super.equals(obj);
+            }
+            IntArrayAsList intArrayAsList = (IntArrayAsList) obj;
+            int size = size();
+            if (intArrayAsList.size() != size) {
+                return false;
+            }
+            for (int i = 0; i < size; i++) {
+                if (this.array[this.start + i] != intArrayAsList.array[intArrayAsList.start + i]) {
                     return false;
                 }
-                for (int i = 0; i < size; i++) {
-                    if (this.array[this.start + i] != intArrayAsList.array[intArrayAsList.start + i]) {
-                        return false;
-                    }
-                }
-                return true;
             }
-            return super.equals(obj);
+            return true;
         }
 
-        @Override // java.util.AbstractList, java.util.Collection, java.util.List
         public int hashCode() {
             int i = 1;
             for (int i2 = this.start; i2 < this.end; i2++) {
@@ -182,7 +171,6 @@ public final class Ints extends IntsMethodsForWeb {
             return i;
         }
 
-        @Override // java.util.AbstractCollection
         public String toString() {
             StringBuilder sb = new StringBuilder(size() * 5);
             sb.append('[');
@@ -200,7 +188,8 @@ public final class Ints extends IntsMethodsForWeb {
             }
         }
 
-        int[] toIntArray() {
+        /* access modifiers changed from: package-private */
+        public int[] toIntArray() {
             return Arrays.copyOfRange(this.array, this.start, this.end);
         }
     }
@@ -211,7 +200,7 @@ public final class Ints extends IntsMethodsForWeb {
 
     public static Integer tryParse(String str, int i) {
         Long tryParse = Longs.tryParse(str, i);
-        if (tryParse == null || tryParse.longValue() != tryParse.intValue()) {
+        if (tryParse == null || tryParse.longValue() != ((long) tryParse.intValue())) {
             return null;
         }
         return Integer.valueOf(tryParse.intValue());

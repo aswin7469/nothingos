@@ -8,22 +8,15 @@ import android.util.Log;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Lifecycle;
 import java.util.ArrayList;
-/* JADX INFO: Access modifiers changed from: package-private */
+
 @SuppressLint({"BanParcelableUsage"})
-/* loaded from: classes.dex */
-public final class BackStackRecordState implements Parcelable {
-    public static final Parcelable.Creator<BackStackRecordState> CREATOR = new Parcelable.Creator<BackStackRecordState>() { // from class: androidx.fragment.app.BackStackRecordState.1
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: createFromParcel */
-        public BackStackRecordState mo93createFromParcel(Parcel parcel) {
+final class BackStackRecordState implements Parcelable {
+    public static final Parcelable.Creator<BackStackRecordState> CREATOR = new Parcelable.Creator<BackStackRecordState>() {
+        public BackStackRecordState createFromParcel(Parcel parcel) {
             return new BackStackRecordState(parcel);
         }
 
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: newArray */
-        public BackStackRecordState[] mo94newArray(int i) {
+        public BackStackRecordState[] newArray(int i) {
             return new BackStackRecordState[i];
         }
     };
@@ -42,55 +35,54 @@ public final class BackStackRecordState implements Parcelable {
     final ArrayList<String> mSharedElementTargetNames;
     final int mTransition;
 
-    @Override // android.os.Parcelable
     public int describeContents() {
         return 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public BackStackRecordState(BackStackRecord backStackRecord) {
+    BackStackRecordState(BackStackRecord backStackRecord) {
         int size = backStackRecord.mOps.size();
-        this.mOps = new int[size * 6];
-        if (!backStackRecord.mAddToBackStack) {
-            throw new IllegalStateException("Not on back stack");
+        this.mOps = new int[(size * 6)];
+        if (backStackRecord.mAddToBackStack) {
+            this.mFragmentWhos = new ArrayList<>(size);
+            this.mOldMaxLifecycleStates = new int[size];
+            this.mCurrentMaxLifecycleStates = new int[size];
+            int i = 0;
+            int i2 = 0;
+            while (i < size) {
+                FragmentTransaction.C0210Op op = backStackRecord.mOps.get(i);
+                int i3 = i2 + 1;
+                this.mOps[i2] = op.mCmd;
+                ArrayList<String> arrayList = this.mFragmentWhos;
+                Fragment fragment = op.mFragment;
+                arrayList.add(fragment != null ? fragment.mWho : null);
+                int[] iArr = this.mOps;
+                int i4 = i3 + 1;
+                iArr[i3] = op.mFromExpandedOp;
+                int i5 = i4 + 1;
+                iArr[i4] = op.mEnterAnim;
+                int i6 = i5 + 1;
+                iArr[i5] = op.mExitAnim;
+                int i7 = i6 + 1;
+                iArr[i6] = op.mPopEnterAnim;
+                iArr[i7] = op.mPopExitAnim;
+                this.mOldMaxLifecycleStates[i] = op.mOldMaxState.ordinal();
+                this.mCurrentMaxLifecycleStates[i] = op.mCurrentMaxState.ordinal();
+                i++;
+                i2 = i7 + 1;
+            }
+            this.mTransition = backStackRecord.mTransition;
+            this.mName = backStackRecord.mName;
+            this.mIndex = backStackRecord.mIndex;
+            this.mBreadCrumbTitleRes = backStackRecord.mBreadCrumbTitleRes;
+            this.mBreadCrumbTitleText = backStackRecord.mBreadCrumbTitleText;
+            this.mBreadCrumbShortTitleRes = backStackRecord.mBreadCrumbShortTitleRes;
+            this.mBreadCrumbShortTitleText = backStackRecord.mBreadCrumbShortTitleText;
+            this.mSharedElementSourceNames = backStackRecord.mSharedElementSourceNames;
+            this.mSharedElementTargetNames = backStackRecord.mSharedElementTargetNames;
+            this.mReorderingAllowed = backStackRecord.mReorderingAllowed;
+            return;
         }
-        this.mFragmentWhos = new ArrayList<>(size);
-        this.mOldMaxLifecycleStates = new int[size];
-        this.mCurrentMaxLifecycleStates = new int[size];
-        int i = 0;
-        int i2 = 0;
-        while (i < size) {
-            FragmentTransaction.Op op = backStackRecord.mOps.get(i);
-            int i3 = i2 + 1;
-            this.mOps[i2] = op.mCmd;
-            ArrayList<String> arrayList = this.mFragmentWhos;
-            Fragment fragment = op.mFragment;
-            arrayList.add(fragment != null ? fragment.mWho : null);
-            int[] iArr = this.mOps;
-            int i4 = i3 + 1;
-            iArr[i3] = op.mTopmostFragment ? 1 : 0;
-            int i5 = i4 + 1;
-            iArr[i4] = op.mEnterAnim;
-            int i6 = i5 + 1;
-            iArr[i5] = op.mExitAnim;
-            int i7 = i6 + 1;
-            iArr[i6] = op.mPopEnterAnim;
-            iArr[i7] = op.mPopExitAnim;
-            this.mOldMaxLifecycleStates[i] = op.mOldMaxState.ordinal();
-            this.mCurrentMaxLifecycleStates[i] = op.mCurrentMaxState.ordinal();
-            i++;
-            i2 = i7 + 1;
-        }
-        this.mTransition = backStackRecord.mTransition;
-        this.mName = backStackRecord.mName;
-        this.mIndex = backStackRecord.mIndex;
-        this.mBreadCrumbTitleRes = backStackRecord.mBreadCrumbTitleRes;
-        this.mBreadCrumbTitleText = backStackRecord.mBreadCrumbTitleText;
-        this.mBreadCrumbShortTitleRes = backStackRecord.mBreadCrumbShortTitleRes;
-        this.mBreadCrumbShortTitleText = backStackRecord.mBreadCrumbShortTitleText;
-        this.mSharedElementSourceNames = backStackRecord.mSharedElementSourceNames;
-        this.mSharedElementTargetNames = backStackRecord.mSharedElementTargetNames;
-        this.mReorderingAllowed = backStackRecord.mReorderingAllowed;
+        throw new IllegalStateException("Not on back stack");
     }
 
     BackStackRecordState(Parcel parcel) {
@@ -130,7 +122,7 @@ public final class BackStackRecordState implements Parcelable {
         while (true) {
             boolean z = true;
             if (i < this.mOps.length) {
-                FragmentTransaction.Op op = new FragmentTransaction.Op();
+                FragmentTransaction.C0210Op op = new FragmentTransaction.C0210Op();
                 int i3 = i + 1;
                 op.mCmd = this.mOps[i];
                 if (FragmentManager.isLoggingEnabled(2)) {
@@ -143,7 +135,7 @@ public final class BackStackRecordState implements Parcelable {
                 if (iArr[i3] == 0) {
                     z = false;
                 }
-                op.mTopmostFragment = z;
+                op.mFromExpandedOp = z;
                 int i5 = i4 + 1;
                 int i6 = iArr[i4];
                 op.mEnterAnim = i6;
@@ -178,7 +170,6 @@ public final class BackStackRecordState implements Parcelable {
         }
     }
 
-    @Override // android.os.Parcelable
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeIntArray(this.mOps);
         parcel.writeStringList(this.mFragmentWhos);

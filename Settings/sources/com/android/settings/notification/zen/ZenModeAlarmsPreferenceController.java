@@ -3,13 +3,12 @@ package com.android.settings.notification.zen;
 import android.content.Context;
 import android.util.Log;
 import androidx.preference.Preference;
-import androidx.preference.SwitchPreference;
 import com.android.settingslib.core.lifecycle.Lifecycle;
-/* loaded from: classes.dex */
+import com.nothing.p006ui.support.NtCustSwitchPreference;
+
 public class ZenModeAlarmsPreferenceController extends AbstractZenModePreferenceController implements Preference.OnPreferenceChangeListener {
     private final String KEY;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return true;
     }
@@ -19,29 +18,26 @@ public class ZenModeAlarmsPreferenceController extends AbstractZenModePreference
         this.KEY = str;
     }
 
-    @Override // com.android.settings.notification.zen.AbstractZenModePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return this.KEY;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
-        SwitchPreference switchPreference = (SwitchPreference) preference;
+        NtCustSwitchPreference ntCustSwitchPreference = (NtCustSwitchPreference) preference;
         int zenMode = getZenMode();
         if (zenMode == 2) {
-            switchPreference.setEnabled(false);
-            switchPreference.setChecked(false);
-        } else if (zenMode == 3) {
-            switchPreference.setEnabled(false);
-            switchPreference.setChecked(true);
+            ntCustSwitchPreference.setEnabled(false);
+            ntCustSwitchPreference.setChecked(false);
+        } else if (zenMode != 3) {
+            ntCustSwitchPreference.setEnabled(true);
+            ntCustSwitchPreference.setChecked(this.mBackend.isPriorityCategoryEnabled(32));
         } else {
-            switchPreference.setEnabled(true);
-            switchPreference.setChecked(this.mBackend.isPriorityCategoryEnabled(32));
+            ntCustSwitchPreference.setEnabled(false);
+            ntCustSwitchPreference.setChecked(true);
         }
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         boolean booleanValue = ((Boolean) obj).booleanValue();
         if (ZenModeSettingsBase.DEBUG) {

@@ -3,6 +3,7 @@ package com.android.settings.security;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,48 +14,56 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.android.settings.R;
-import com.android.settings.security.CredentialManagementAppAdapter;
+import com.android.settings.R$drawable;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$plurals;
+import com.android.settings.R$string;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-/* loaded from: classes.dex */
-public class CredentialManagementAppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private final Map<String, Map<Uri, String>> mAppUriAuthentication;
-    private final Context mContext;
-    private final String mCredentialManagerPackage;
-    private final boolean mIncludeExpander;
-    private final boolean mIncludeHeader;
-    private final boolean mIsLayoutRtl;
-    private final PackageManager mPackageManager;
-    private final List<String> mSortedAppNames;
-    private final RecyclerView.RecycledViewPool mViewPool = new RecyclerView.RecycledViewPool();
 
-    /* loaded from: classes.dex */
+public class CredentialManagementAppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    /* access modifiers changed from: private */
+    public final Map<String, Map<Uri, String>> mAppUriAuthentication;
+    /* access modifiers changed from: private */
+    public final Context mContext;
+    /* access modifiers changed from: private */
+    public final String mCredentialManagerPackage;
+    /* access modifiers changed from: private */
+    public final boolean mIncludeExpander;
+    private final boolean mIncludeHeader;
+    /* access modifiers changed from: private */
+    public final boolean mIsLayoutRtl;
+    /* access modifiers changed from: private */
+    public final PackageManager mPackageManager;
+    /* access modifiers changed from: private */
+    public final List<String> mSortedAppNames;
+    /* access modifiers changed from: private */
+    public final RecyclerView.RecycledViewPool mViewPool = new RecyclerView.RecycledViewPool();
+
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
         private final ImageView mAppIconView;
         private final TextView mTitleView;
 
         public HeaderViewHolder(View view) {
             super(view);
-            this.mAppIconView = (ImageView) view.findViewById(R.id.credential_management_app_icon);
-            this.mTitleView = (TextView) view.findViewById(R.id.credential_management_app_title);
+            this.mAppIconView = (ImageView) view.findViewById(R$id.credential_management_app_icon);
+            this.mTitleView = (TextView) view.findViewById(R$id.credential_management_app_title);
         }
 
         public void bindView() {
             try {
                 ApplicationInfo applicationInfo = CredentialManagementAppAdapter.this.mPackageManager.getApplicationInfo(CredentialManagementAppAdapter.this.mCredentialManagerPackage, 0);
                 this.mAppIconView.setImageDrawable(CredentialManagementAppAdapter.this.mPackageManager.getApplicationIcon(applicationInfo));
-                this.mTitleView.setText(TextUtils.expandTemplate(CredentialManagementAppAdapter.this.mContext.getText(R.string.request_manage_credentials_title), applicationInfo.loadLabel(CredentialManagementAppAdapter.this.mPackageManager)));
+                this.mTitleView.setText(TextUtils.expandTemplate(CredentialManagementAppAdapter.this.mContext.getText(R$string.request_manage_credentials_title), new CharSequence[]{applicationInfo.loadLabel(CredentialManagementAppAdapter.this.mPackageManager)}));
             } catch (PackageManager.NameNotFoundException unused) {
-                this.mAppIconView.setImageDrawable(null);
-                this.mTitleView.setText(TextUtils.expandTemplate(CredentialManagementAppAdapter.this.mContext.getText(R.string.request_manage_credentials_title), CredentialManagementAppAdapter.this.mCredentialManagerPackage));
+                this.mAppIconView.setImageDrawable((Drawable) null);
+                this.mTitleView.setText(TextUtils.expandTemplate(CredentialManagementAppAdapter.this.mContext.getText(R$string.request_manage_credentials_title), new CharSequence[]{CredentialManagementAppAdapter.this.mCredentialManagerPackage}));
             }
         }
     }
 
-    /* loaded from: classes.dex */
     public class AppAuthenticationViewHolder extends RecyclerView.ViewHolder {
         private final ImageView mAppIconView;
         private final TextView mAppNameView;
@@ -65,29 +74,24 @@ public class CredentialManagementAppAdapter extends RecyclerView.Adapter<Recycle
 
         public AppAuthenticationViewHolder(View view) {
             super(view);
-            int i = R.id.app_icon;
+            int i = R$id.app_icon;
             this.mAppIconView = (ImageView) view.findViewById(i);
-            this.mAppNameView = (TextView) view.findViewById(R.id.app_name);
-            this.mNumberOfUrisView = (TextView) view.findViewById(R.id.number_of_uris);
-            int i2 = R.id.expand;
+            this.mAppNameView = (TextView) view.findViewById(R$id.app_name);
+            this.mNumberOfUrisView = (TextView) view.findViewById(R$id.number_of_uris);
+            int i2 = R$id.expand;
             ImageView imageView = (ImageView) view.findViewById(i2);
             this.mExpanderIconView = imageView;
-            this.mChildRecyclerView = (RecyclerView) view.findViewById(R.id.uris);
+            this.mChildRecyclerView = (RecyclerView) view.findViewById(R$id.uris);
             if (CredentialManagementAppAdapter.this.mIsLayoutRtl) {
-                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) ((RelativeLayout) view.findViewById(R.id.app_details)).getLayoutParams();
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) ((RelativeLayout) view.findViewById(R$id.app_details)).getLayoutParams();
                 layoutParams.addRule(0, i);
                 layoutParams.addRule(1, i2);
                 view.setLayoutParams(layoutParams);
             }
-            imageView.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.security.CredentialManagementAppAdapter$AppAuthenticationViewHolder$$ExternalSyntheticLambda0
-                @Override // android.view.View.OnClickListener
-                public final void onClick(View view2) {
-                    CredentialManagementAppAdapter.AppAuthenticationViewHolder.this.lambda$new$0(view2);
-                }
-            });
+            imageView.setOnClickListener(new C1330xabc7f6bd(this));
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public /* synthetic */ void lambda$new$0(View view) {
             String str = (String) CredentialManagementAppAdapter.this.mSortedAppNames.get(getBindingAdapterPosition());
             if (this.mExpandedApps.contains(str)) {
@@ -105,7 +109,7 @@ public class CredentialManagementAppAdapter extends RecyclerView.Adapter<Recycle
                 this.mAppIconView.setImageDrawable(CredentialManagementAppAdapter.this.mPackageManager.getApplicationIcon(applicationInfo));
                 this.mAppNameView.setText(String.valueOf(applicationInfo.loadLabel(CredentialManagementAppAdapter.this.mPackageManager)));
             } catch (PackageManager.NameNotFoundException unused) {
-                this.mAppIconView.setImageDrawable(null);
+                this.mAppIconView.setImageDrawable((Drawable) null);
                 this.mAppNameView.setText(str);
             }
             bindPolicyView(str);
@@ -116,14 +120,14 @@ public class CredentialManagementAppAdapter extends RecyclerView.Adapter<Recycle
                 this.mExpanderIconView.setVisibility(0);
                 if (this.mExpandedApps.contains(str)) {
                     this.mNumberOfUrisView.setVisibility(8);
-                    this.mExpanderIconView.setImageResource(R.drawable.ic_expand_less);
+                    this.mExpanderIconView.setImageResource(R$drawable.ic_expand_less);
                     bindChildView((Map) CredentialManagementAppAdapter.this.mAppUriAuthentication.get(str));
                     return;
                 }
                 this.mChildRecyclerView.setVisibility(8);
                 this.mNumberOfUrisView.setVisibility(0);
                 this.mNumberOfUrisView.setText(getNumberOfUrlsText((Map) CredentialManagementAppAdapter.this.mAppUriAuthentication.get(str)));
-                this.mExpanderIconView.setImageResource(17302435);
+                this.mExpanderIconView.setImageResource(17302444);
                 return;
             }
             this.mNumberOfUrisView.setVisibility(8);
@@ -142,7 +146,7 @@ public class CredentialManagementAppAdapter extends RecyclerView.Adapter<Recycle
         }
 
         private String getNumberOfUrlsText(Map<Uri, String> map) {
-            return CredentialManagementAppAdapter.this.mContext.getResources().getQuantityString(R.plurals.number_of_urls, map.size(), Integer.valueOf(map.size()));
+            return CredentialManagementAppAdapter.this.mContext.getResources().getQuantityString(R$plurals.number_of_urls, map.size(), new Object[]{Integer.valueOf(map.size())});
         }
     }
 
@@ -159,18 +163,11 @@ public class CredentialManagementAppAdapter extends RecyclerView.Adapter<Recycle
 
     private List<String> sortPackageNames(Map<String, Map<Uri, String>> map) {
         ArrayList arrayList = new ArrayList(map.keySet());
-        arrayList.sort(new Comparator() { // from class: com.android.settings.security.CredentialManagementAppAdapter$$ExternalSyntheticLambda0
-            @Override // java.util.Comparator
-            public final int compare(Object obj, Object obj2) {
-                int lambda$sortPackageNames$0;
-                lambda$sortPackageNames$0 = CredentialManagementAppAdapter.this.lambda$sortPackageNames$0((String) obj, (String) obj2);
-                return lambda$sortPackageNames$0;
-            }
-        });
+        arrayList.sort(new CredentialManagementAppAdapter$$ExternalSyntheticLambda0(this));
         return arrayList;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ int lambda$sortPackageNames$0(String str, String str2) {
         boolean isPackageInstalled = isPackageInstalled(str);
         if (isPackageInstalled == isPackageInstalled(str2)) {
@@ -188,23 +185,19 @@ public class CredentialManagementAppAdapter extends RecyclerView.Adapter<Recycle
         }
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
-    /* renamed from: onCreateViewHolder */
-    public RecyclerView.ViewHolder mo960onCreateViewHolder(ViewGroup viewGroup, int i) {
-        if (i == 1) {
-            View inflate = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.request_manage_credentials_header, viewGroup, false);
-            inflate.setEnabled(false);
-            return new HeaderViewHolder(inflate);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        if (i != 1) {
+            return new AppAuthenticationViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R$layout.app_authentication_item, viewGroup, false));
         }
-        return new AppAuthenticationViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.app_authentication_item, viewGroup, false));
+        View inflate = LayoutInflater.from(viewGroup.getContext()).inflate(R$layout.request_manage_credentials_header, viewGroup, false);
+        inflate.setEnabled(false);
+        return new HeaderViewHolder(inflate);
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i) {
         if (viewHolder instanceof HeaderViewHolder) {
             ((HeaderViewHolder) viewHolder).bindView();
-        } else if (!(viewHolder instanceof AppAuthenticationViewHolder)) {
-        } else {
+        } else if (viewHolder instanceof AppAuthenticationViewHolder) {
             if (this.mIncludeHeader) {
                 i--;
             }
@@ -212,14 +205,12 @@ public class CredentialManagementAppAdapter extends RecyclerView.Adapter<Recycle
         }
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public int getItemCount() {
         boolean z = this.mIncludeHeader;
         int size = this.mAppUriAuthentication.size();
         return z ? size + 1 : size;
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public int getItemViewType(int i) {
         if (!this.mIncludeHeader || i != 0) {
             return super.getItemViewType(i);

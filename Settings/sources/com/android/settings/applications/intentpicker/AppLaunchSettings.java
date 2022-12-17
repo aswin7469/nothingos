@@ -1,5 +1,6 @@
 package com.android.settings.applications.intentpicker;
 
+import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,7 +21,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
-import com.android.settings.R;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$plurals;
+import com.android.settings.R$string;
+import com.android.settings.R$xml;
 import com.android.settings.applications.AppInfoBase;
 import com.android.settings.applications.ClearDefaultsPreference;
 import com.android.settings.widget.EntityHeaderController;
@@ -32,7 +37,7 @@ import com.android.settingslib.widget.OnMainSwitchChangeListener;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-/* loaded from: classes.dex */
+
 public class AppLaunchSettings extends AppInfoBase implements Preference.OnPreferenceChangeListener, OnMainSwitchChangeListener {
     private boolean mActivityCreated;
     private Preference mAddLinkPreference;
@@ -44,51 +49,51 @@ public class AppLaunchSettings extends AppInfoBase implements Preference.OnPrefe
     private PreferenceCategory mOtherDefaultsPreferenceCategory;
     private PreferenceCategory mSelectedLinksPreferenceCategory;
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 17;
     }
 
-    @Override // com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         this.mContext = context;
         this.mActivityCreated = false;
     }
 
-    @Override // com.android.settings.applications.AppInfoBase, com.android.settings.SettingsPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        addPreferencesFromResource(R.xml.installed_app_launch_settings);
+        if (this.mAppEntry == null) {
+            Log.w("AppLaunchSettings", "onCreate: mAppEntry is null, please check the reason!!!");
+            getActivity().finish();
+            return;
+        }
+        addPreferencesFromResource(R$xml.installed_app_launch_settings);
         this.mDomainVerificationManager = (DomainVerificationManager) this.mContext.getSystemService(DomainVerificationManager.class);
         initUIComponents();
     }
 
-    @Override // androidx.preference.PreferenceFragmentCompat, androidx.fragment.app.Fragment
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
         createHeaderPreference();
     }
 
-    @Override // com.android.settings.applications.AppInfoBase
-    protected AlertDialog createDialog(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public AlertDialog createDialog(int i, int i2) {
         if (i == 1) {
             return createVerifiedLinksDialog();
         }
         return null;
     }
 
-    @Override // com.android.settings.applications.AppInfoBase
-    protected boolean refreshUi() {
+    /* access modifiers changed from: protected */
+    public boolean refreshUi() {
         this.mClearDefaultsPreference.setPackageName(this.mPackageName);
         this.mClearDefaultsPreference.setAppEntry(this.mAppEntry);
         return true;
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         boolean booleanValue = ((Boolean) obj).booleanValue();
-        IntentPickerUtils.logd("onPreferenceChange: " + ((Object) preference.getTitle()) + " isChecked: " + booleanValue);
+        IntentPickerUtils.logd("onPreferenceChange: " + preference.getTitle() + " isChecked: " + booleanValue);
         if (!(preference instanceof LeftSideCheckBoxPreference) || booleanValue) {
             return true;
         }
@@ -104,8 +109,7 @@ public class AppLaunchSettings extends AppInfoBase implements Preference.OnPrefe
         return true;
     }
 
-    @Override // com.android.settingslib.widget.OnMainSwitchChangeListener
-    public void onSwitchChanged(Switch r2, boolean z) {
+    public void onSwitchChanged(Switch switchR, boolean z) {
         IntentPickerUtils.logd("onSwitchChanged: isChecked=" + z);
         MainSwitchPreference mainSwitchPreference = this.mMainSwitchPreference;
         if (mainSwitchPreference != null) {
@@ -136,7 +140,7 @@ public class AppLaunchSettings extends AppInfoBase implements Preference.OnPrefe
             return;
         }
         FragmentActivity activity = getActivity();
-        getPreferenceScreen().addPreference(EntityHeaderController.newInstance(activity, this, null).setRecyclerView(getListView(), getSettingsLifecycle()).setIcon(Utils.getBadgedIcon(this.mContext, this.mPackageInfo.applicationInfo)).setLabel(this.mPackageInfo.applicationInfo.loadLabel(this.mPm)).setSummary(activity.getString(R.string.app_launch_top_intro_message)).setIsInstantApp(AppUtils.isInstant(this.mPackageInfo.applicationInfo)).setPackageName(this.mPackageName).setUid(this.mPackageInfo.applicationInfo.uid).setHasAppInfoLink(true).setButtonActions(0, 0).done(activity, getPrefContext()));
+        getPreferenceScreen().addPreference(EntityHeaderController.newInstance(activity, this, (View) null).setRecyclerView(getListView(), getSettingsLifecycle()).setIcon(Utils.getBadgedIcon(this.mContext, this.mPackageInfo.applicationInfo)).setLabel(this.mPackageInfo.applicationInfo.loadLabel(this.mPm)).setSummary((CharSequence) activity.getString(R$string.app_launch_top_intro_message)).setIsInstantApp(AppUtils.isInstant(this.mPackageInfo.applicationInfo)).setPackageName(this.mPackageName).setUid(this.mPackageInfo.applicationInfo.uid).setHasAppInfoLink(true).setButtonActions(0, 0).done((Activity) activity, getPrefContext()));
     }
 
     private void initUIComponents() {
@@ -171,14 +175,9 @@ public class AppLaunchSettings extends AppInfoBase implements Preference.OnPrefe
 
     private void initVerifiedLinksPreference() {
         VerifiedLinksPreference verifiedLinksPreference = (VerifiedLinksPreference) this.mMainPreferenceCategory.findPreference("open_by_default_verified_links");
-        verifiedLinksPreference.setWidgetFrameClickListener(new View.OnClickListener() { // from class: com.android.settings.applications.intentpicker.AppLaunchSettings$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                AppLaunchSettings.this.lambda$initVerifiedLinksPreference$0(view);
-            }
-        });
+        verifiedLinksPreference.setWidgetFrameClickListener(new AppLaunchSettings$$ExternalSyntheticLambda0(this));
         int linksNumber = getLinksNumber(2);
-        verifiedLinksPreference.setTitle(getVerifiedLinksTitle(linksNumber));
+        verifiedLinksPreference.setTitle((CharSequence) getVerifiedLinksTitle(linksNumber));
         boolean z = true;
         verifiedLinksPreference.setCheckBoxVisible(linksNumber > 0);
         if (linksNumber <= 0) {
@@ -187,44 +186,43 @@ public class AppLaunchSettings extends AppInfoBase implements Preference.OnPrefe
         verifiedLinksPreference.setEnabled(z);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$initVerifiedLinksPreference$0(View view) {
         showVerifiedLinksDialog();
     }
 
     private void showVerifiedLinksDialog() {
-        if (getLinksNumber(2) == 0) {
-            return;
+        if (getLinksNumber(2) != 0) {
+            showDialogInner(1, 0);
         }
-        showDialogInner(1, 0);
     }
 
     private AlertDialog createVerifiedLinksDialog() {
         int linksNumber = getLinksNumber(2);
-        View inflate = LayoutInflater.from(this.mContext).inflate(R.layout.app_launch_verified_links_title, (ViewGroup) null);
-        ((TextView) inflate.findViewById(R.id.dialog_title)).setText(getVerifiedLinksTitle(linksNumber));
-        ((TextView) inflate.findViewById(R.id.dialog_message)).setText(getVerifiedLinksMessage(linksNumber));
-        return new AlertDialog.Builder(this.mContext).setCustomTitle(inflate).setCancelable(true).setItems((CharSequence[]) IntentPickerUtils.getLinksList(this.mDomainVerificationManager, this.mPackageName, 2).toArray(new String[0]), null).setPositiveButton(R.string.app_launch_dialog_ok, (DialogInterface.OnClickListener) null).create();
+        View inflate = LayoutInflater.from(this.mContext).inflate(R$layout.app_launch_verified_links_title, (ViewGroup) null);
+        ((TextView) inflate.findViewById(R$id.dialog_title)).setText(getVerifiedLinksTitle(linksNumber));
+        ((TextView) inflate.findViewById(R$id.dialog_message)).setText(getVerifiedLinksMessage(linksNumber));
+        return new AlertDialog.Builder(this.mContext).setCustomTitle(inflate).setCancelable(true).setItems((CharSequence[]) IntentPickerUtils.getLinksList(this.mDomainVerificationManager, this.mPackageName, 2).toArray(new String[0]), (DialogInterface.OnClickListener) null).setPositiveButton(R$string.app_launch_dialog_ok, (DialogInterface.OnClickListener) null).create();
     }
 
-    String getVerifiedLinksTitle(int i) {
-        return getResources().getQuantityString(R.plurals.app_launch_verified_links_title, i, Integer.valueOf(i));
+    /* access modifiers changed from: package-private */
+    public String getVerifiedLinksTitle(int i) {
+        return getResources().getQuantityString(R$plurals.app_launch_verified_links_title, i, new Object[]{Integer.valueOf(i)});
     }
 
     private String getVerifiedLinksMessage(int i) {
-        return getResources().getQuantityString(R.plurals.app_launch_verified_links_message, i, Integer.valueOf(i));
+        return getResources().getQuantityString(R$plurals.app_launch_verified_links_message, i, new Object[]{Integer.valueOf(i)});
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void addSelectedLinksPreference() {
-        if (getLinksNumber(1) == 0) {
-            return;
+        if (getLinksNumber(1) != 0) {
+            this.mSelectedLinksPreferenceCategory.removeAll();
+            for (String generateCheckBoxPreference : IntentPickerUtils.getLinksList(this.mDomainVerificationManager, this.mPackageName, 1)) {
+                generateCheckBoxPreference(this.mSelectedLinksPreferenceCategory, generateCheckBoxPreference);
+            }
+            this.mAddLinkPreference.setEnabled(isAddLinksNotEmpty());
         }
-        this.mSelectedLinksPreferenceCategory.removeAll();
-        for (String str : IntentPickerUtils.getLinksList(this.mDomainVerificationManager, this.mPackageName, 1)) {
-            generateCheckBoxPreference(this.mSelectedLinksPreferenceCategory, str);
-        }
-        this.mAddLinkPreference.setEnabled(isAddLinksNotEmpty());
     }
 
     private void initAddLinkPreference() {
@@ -232,24 +230,17 @@ public class AppLaunchSettings extends AppInfoBase implements Preference.OnPrefe
         this.mAddLinkPreference = findPreference;
         findPreference.setVisible(isAddLinksShown());
         this.mAddLinkPreference.setEnabled(isAddLinksNotEmpty());
-        this.mAddLinkPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() { // from class: com.android.settings.applications.intentpicker.AppLaunchSettings$$ExternalSyntheticLambda2
-            @Override // androidx.preference.Preference.OnPreferenceClickListener
-            public final boolean onPreferenceClick(Preference preference) {
-                boolean lambda$initAddLinkPreference$1;
-                lambda$initAddLinkPreference$1 = AppLaunchSettings.this.lambda$initAddLinkPreference$1(preference);
-                return lambda$initAddLinkPreference$1;
-            }
-        });
+        this.mAddLinkPreference.setOnPreferenceClickListener(new AppLaunchSettings$$ExternalSyntheticLambda2(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ boolean lambda$initAddLinkPreference$1(Preference preference) {
         int linksNumber = getLinksNumber(0);
         IntentPickerUtils.logd("The number of the state none links: " + linksNumber);
-        if (linksNumber > 0) {
-            showProgressDialogFragment();
+        if (linksNumber <= 0) {
             return true;
         }
+        showProgressDialogFragment();
         return true;
     }
 
@@ -284,25 +275,24 @@ public class AppLaunchSettings extends AppInfoBase implements Preference.OnPrefe
     }
 
     private void initFooter() {
-        CharSequence text = this.mContext.getText(R.string.app_launch_footer);
+        CharSequence text = this.mContext.getText(R$string.app_launch_footer);
         FooterPreference footerPreference = (FooterPreference) findPreference("open_by_default_footer");
         footerPreference.setTitle(text);
-        footerPreference.setLearnMoreAction(new View.OnClickListener() { // from class: com.android.settings.applications.intentpicker.AppLaunchSettings$$ExternalSyntheticLambda1
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                AppLaunchSettings.this.lambda$initFooter$2(view);
-            }
-        });
-        footerPreference.setLearnMoreContentDescription(this.mContext.getString(R.string.footer_learn_more_content_description, getLabelName()));
+        footerPreference.setLearnMoreAction(new AppLaunchSettings$$ExternalSyntheticLambda1(this));
+        footerPreference.setLearnMoreText(this.mContext.getString(R$string.footer_learn_more_content_description, new Object[]{getLabelName()}));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$initFooter$2(View view) {
-        this.mContext.startActivity(new Intent("android.intent.action.VIEW", Uri.parse("https://developer.android.com/training/app-links/verify-site-associations")));
+        try {
+            this.mContext.startActivity(new Intent("android.intent.action.VIEW", Uri.parse("https://developer.android.com/training/app-links/verify-site-associations")));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private String getLabelName() {
-        return this.mContext.getString(R.string.launch_by_default);
+        return this.mContext.getString(R$string.launch_by_default);
     }
 
     private boolean isClearDefaultsEnabled() {
@@ -310,7 +300,10 @@ public class AppLaunchSettings extends AppInfoBase implements Preference.OnPrefe
         boolean z = AppUtils.hasPreferredActivities(this.mPm, this.mPackageName) || AppUtils.isDefaultBrowser(this.mContext, this.mPackageName) || AppUtils.hasUsbDefaults(this.mUsbManager, this.mPackageName);
         IntentPickerUtils.logd("isClearDefaultsEnabled hasBindAppWidgetPermission : " + hasBindAppWidgetPermission);
         IntentPickerUtils.logd("isClearDefaultsEnabled isAutoLaunchEnabled : " + z);
-        return z || hasBindAppWidgetPermission;
+        if (z || hasBindAppWidgetPermission) {
+            return true;
+        }
+        return false;
     }
 
     private void setDomainVerificationUserSelection(UUID uuid, Set<String> set, boolean z) {
@@ -323,7 +316,7 @@ public class AppLaunchSettings extends AppInfoBase implements Preference.OnPrefe
 
     private void generateCheckBoxPreference(PreferenceCategory preferenceCategory, String str) {
         LeftSideCheckBoxPreference leftSideCheckBoxPreference = new LeftSideCheckBoxPreference(preferenceCategory.getContext(), true);
-        leftSideCheckBoxPreference.setTitle(str);
+        leftSideCheckBoxPreference.setTitle((CharSequence) str);
         leftSideCheckBoxPreference.setOnPreferenceChangeListener(this);
         leftSideCheckBoxPreference.setKey(UUID.randomUUID().toString());
         preferenceCategory.addPreference(leftSideCheckBoxPreference);

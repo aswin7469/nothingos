@@ -8,10 +8,7 @@ import android.telephony.CarrierConfigManager;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyDisplayInfo;
 import com.android.settingslib.R$bool;
-import com.android.settingslib.SignalIcon$MobileIconGroup;
-import java.util.HashMap;
-import java.util.Map;
-/* loaded from: classes.dex */
+
 public class MobileMappings {
     public static String getIconKey(TelephonyDisplayInfo telephonyDisplayInfo) {
         if (telephonyDisplayInfo.getOverrideNetworkType() == 0) {
@@ -39,141 +36,211 @@ public class MobileMappings {
         }
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:13:0x00cb  */
-    /* JADX WARN: Removed duplicated region for block: B:20:0x00ea  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static Map<String, SignalIcon$MobileIconGroup> mapIconSets(Config config) {
-        SignalIcon$MobileIconGroup signalIcon$MobileIconGroup;
-        HashMap hashMap = new HashMap();
-        String iconKey = toIconKey(5);
-        SignalIcon$MobileIconGroup signalIcon$MobileIconGroup2 = TelephonyIcons.THREE_G;
-        hashMap.put(iconKey, signalIcon$MobileIconGroup2);
-        hashMap.put(toIconKey(6), signalIcon$MobileIconGroup2);
-        hashMap.put(toIconKey(12), signalIcon$MobileIconGroup2);
-        hashMap.put(toIconKey(14), signalIcon$MobileIconGroup2);
-        if (config.show4gFor3g) {
-            hashMap.put(toIconKey(3), TelephonyIcons.FOUR_G);
-        } else {
-            hashMap.put(toIconKey(3), signalIcon$MobileIconGroup2);
-        }
-        hashMap.put(toIconKey(17), signalIcon$MobileIconGroup2);
-        if (!config.showAtLeast3G) {
-            hashMap.put(toIconKey(0), TelephonyIcons.UNKNOWN);
-            hashMap.put(toIconKey(2), TelephonyIcons.E);
-            String iconKey2 = toIconKey(4);
-            SignalIcon$MobileIconGroup signalIcon$MobileIconGroup3 = TelephonyIcons.ONE_X;
-            hashMap.put(iconKey2, signalIcon$MobileIconGroup3);
-            hashMap.put(toIconKey(7), signalIcon$MobileIconGroup3);
-        } else {
-            hashMap.put(toIconKey(0), signalIcon$MobileIconGroup2);
-            hashMap.put(toIconKey(2), signalIcon$MobileIconGroup2);
-            hashMap.put(toIconKey(4), signalIcon$MobileIconGroup2);
-            hashMap.put(toIconKey(7), signalIcon$MobileIconGroup2);
-        }
-        if (config.show4gFor3g) {
-            signalIcon$MobileIconGroup2 = TelephonyIcons.FOUR_G;
-        } else if (config.hspaDataDistinguishable) {
-            signalIcon$MobileIconGroup2 = TelephonyIcons.H;
-            signalIcon$MobileIconGroup = TelephonyIcons.H_PLUS;
-            hashMap.put(toIconKey(8), signalIcon$MobileIconGroup2);
-            hashMap.put(toIconKey(9), signalIcon$MobileIconGroup2);
-            hashMap.put(toIconKey(10), signalIcon$MobileIconGroup2);
-            hashMap.put(toIconKey(15), signalIcon$MobileIconGroup);
-            if (!config.show4gForLte) {
-                String iconKey3 = toIconKey(13);
-                SignalIcon$MobileIconGroup signalIcon$MobileIconGroup4 = TelephonyIcons.FOUR_G;
-                hashMap.put(iconKey3, signalIcon$MobileIconGroup4);
-                if (config.hideLtePlus) {
-                    hashMap.put(toDisplayIconKey(1), signalIcon$MobileIconGroup4);
-                } else {
-                    hashMap.put(toDisplayIconKey(1), TelephonyIcons.FOUR_G_PLUS);
-                }
-            } else {
-                String iconKey4 = toIconKey(13);
-                SignalIcon$MobileIconGroup signalIcon$MobileIconGroup5 = TelephonyIcons.LTE;
-                hashMap.put(iconKey4, signalIcon$MobileIconGroup5);
-                if (config.hideLtePlus) {
-                    hashMap.put(toDisplayIconKey(1), signalIcon$MobileIconGroup5);
-                } else {
-                    hashMap.put(toDisplayIconKey(1), TelephonyIcons.LTE_PLUS);
-                }
-            }
-            hashMap.put(toIconKey(18), TelephonyIcons.WFC);
-            hashMap.put(toDisplayIconKey(2), TelephonyIcons.LTE_CA_5G_E);
-            String displayIconKey = toDisplayIconKey(3);
-            SignalIcon$MobileIconGroup signalIcon$MobileIconGroup6 = TelephonyIcons.NR_5G;
-            hashMap.put(displayIconKey, signalIcon$MobileIconGroup6);
-            hashMap.put(toDisplayIconKey(5), TelephonyIcons.NR_5G_PLUS);
-            hashMap.put(toIconKey(20), signalIcon$MobileIconGroup6);
-            return hashMap;
-        }
-        signalIcon$MobileIconGroup = signalIcon$MobileIconGroup2;
-        hashMap.put(toIconKey(8), signalIcon$MobileIconGroup2);
-        hashMap.put(toIconKey(9), signalIcon$MobileIconGroup2);
-        hashMap.put(toIconKey(10), signalIcon$MobileIconGroup2);
-        hashMap.put(toIconKey(15), signalIcon$MobileIconGroup);
-        if (!config.show4gForLte) {
-        }
-        hashMap.put(toIconKey(18), TelephonyIcons.WFC);
-        hashMap.put(toDisplayIconKey(2), TelephonyIcons.LTE_CA_5G_E);
-        String displayIconKey2 = toDisplayIconKey(3);
-        SignalIcon$MobileIconGroup signalIcon$MobileIconGroup62 = TelephonyIcons.NR_5G;
-        hashMap.put(displayIconKey2, signalIcon$MobileIconGroup62);
-        hashMap.put(toDisplayIconKey(5), TelephonyIcons.NR_5G_PLUS);
-        hashMap.put(toIconKey(20), signalIcon$MobileIconGroup62);
-        return hashMap;
+    /* JADX WARNING: Removed duplicated region for block: B:17:0x00db  */
+    /* JADX WARNING: Removed duplicated region for block: B:21:0x00fa  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public static java.util.Map<java.lang.String, com.android.settingslib.SignalIcon$MobileIconGroup> mapIconSets(com.android.settingslib.mobile.MobileMappings.Config r10) {
+        /*
+            java.util.HashMap r0 = new java.util.HashMap
+            r0.<init>()
+            r1 = 5
+            java.lang.String r2 = toIconKey(r1)
+            com.android.settingslib.SignalIcon$MobileIconGroup r3 = com.android.settingslib.mobile.TelephonyIcons.THREE_G
+            r0.put(r2, r3)
+            r2 = 6
+            java.lang.String r2 = toIconKey(r2)
+            r0.put(r2, r3)
+            r2 = 12
+            java.lang.String r2 = toIconKey(r2)
+            r0.put(r2, r3)
+            r2 = 14
+            java.lang.String r2 = toIconKey(r2)
+            r0.put(r2, r3)
+            boolean r2 = r10.show4gFor3g
+            r4 = 3
+            if (r2 == 0) goto L_0x0038
+            java.lang.String r2 = toIconKey(r4)
+            com.android.settingslib.SignalIcon$MobileIconGroup r5 = com.android.settingslib.mobile.TelephonyIcons.FOUR_G
+            r0.put(r2, r5)
+            goto L_0x003f
+        L_0x0038:
+            java.lang.String r2 = toIconKey(r4)
+            r0.put(r2, r3)
+        L_0x003f:
+            r2 = 17
+            java.lang.String r2 = toIconKey(r2)
+            r0.put(r2, r3)
+            boolean r2 = r10.showAtLeast3G
+            r5 = 7
+            r6 = 4
+            r7 = 0
+            r8 = 2
+            r9 = 1
+            if (r2 != 0) goto L_0x007d
+            java.lang.String r2 = toIconKey(r7)
+            com.android.settingslib.SignalIcon$MobileIconGroup r7 = com.android.settingslib.mobile.TelephonyIcons.UNKNOWN
+            r0.put(r2, r7)
+            java.lang.String r2 = toIconKey(r8)
+            com.android.settingslib.SignalIcon$MobileIconGroup r7 = com.android.settingslib.mobile.TelephonyIcons.f232E
+            r0.put(r2, r7)
+            java.lang.String r2 = toIconKey(r9)
+            com.android.settingslib.SignalIcon$MobileIconGroup r7 = com.android.settingslib.mobile.TelephonyIcons.f233G
+            r0.put(r2, r7)
+            java.lang.String r2 = toIconKey(r6)
+            com.android.settingslib.SignalIcon$MobileIconGroup r6 = com.android.settingslib.mobile.TelephonyIcons.ONE_X
+            r0.put(r2, r6)
+            java.lang.String r2 = toIconKey(r5)
+            r0.put(r2, r6)
+            goto L_0x00a0
+        L_0x007d:
+            java.lang.String r2 = toIconKey(r7)
+            r0.put(r2, r3)
+            java.lang.String r2 = toIconKey(r8)
+            r0.put(r2, r3)
+            java.lang.String r2 = toIconKey(r9)
+            r0.put(r2, r3)
+            java.lang.String r2 = toIconKey(r6)
+            r0.put(r2, r3)
+            java.lang.String r2 = toIconKey(r5)
+            r0.put(r2, r3)
+        L_0x00a0:
+            boolean r2 = r10.show4gFor3g
+            if (r2 == 0) goto L_0x00a7
+            com.android.settingslib.SignalIcon$MobileIconGroup r3 = com.android.settingslib.mobile.TelephonyIcons.FOUR_G
+            goto L_0x00b0
+        L_0x00a7:
+            boolean r2 = r10.hspaDataDistinguishable
+            if (r2 == 0) goto L_0x00b0
+            com.android.settingslib.SignalIcon$MobileIconGroup r3 = com.android.settingslib.mobile.TelephonyIcons.f234H
+            com.android.settingslib.SignalIcon$MobileIconGroup r2 = com.android.settingslib.mobile.TelephonyIcons.H_PLUS
+            goto L_0x00b1
+        L_0x00b0:
+            r2 = r3
+        L_0x00b1:
+            r5 = 8
+            java.lang.String r5 = toIconKey(r5)
+            r0.put(r5, r3)
+            r5 = 9
+            java.lang.String r5 = toIconKey(r5)
+            r0.put(r5, r3)
+            r5 = 10
+            java.lang.String r5 = toIconKey(r5)
+            r0.put(r5, r3)
+            r3 = 15
+            java.lang.String r3 = toIconKey(r3)
+            r0.put(r3, r2)
+            boolean r2 = r10.show4gForLte
+            r3 = 13
+            if (r2 == 0) goto L_0x00fa
+            java.lang.String r2 = toIconKey(r3)
+            com.android.settingslib.SignalIcon$MobileIconGroup r3 = com.android.settingslib.mobile.TelephonyIcons.FOUR_G
+            r0.put(r2, r3)
+            boolean r10 = r10.hideLtePlus
+            if (r10 == 0) goto L_0x00f0
+            java.lang.String r10 = toDisplayIconKey(r9)
+            r0.put(r10, r3)
+            goto L_0x013b
+        L_0x00f0:
+            java.lang.String r10 = toDisplayIconKey(r9)
+            com.android.settingslib.SignalIcon$MobileIconGroup r2 = com.android.settingslib.mobile.TelephonyIcons.FOUR_G_PLUS
+            r0.put(r10, r2)
+            goto L_0x013b
+        L_0x00fa:
+            boolean r2 = r10.show4glteForLte
+            if (r2 == 0) goto L_0x011d
+            java.lang.String r2 = toIconKey(r3)
+            com.android.settingslib.SignalIcon$MobileIconGroup r3 = com.android.settingslib.mobile.TelephonyIcons.FOUR_G_LTE
+            r0.put(r2, r3)
+            boolean r10 = r10.hideLtePlus
+            if (r10 == 0) goto L_0x0113
+            java.lang.String r10 = toDisplayIconKey(r9)
+            r0.put(r10, r3)
+            goto L_0x013b
+        L_0x0113:
+            java.lang.String r10 = toDisplayIconKey(r9)
+            com.android.settingslib.SignalIcon$MobileIconGroup r2 = com.android.settingslib.mobile.TelephonyIcons.FOUR_G_LTE_PLUS
+            r0.put(r10, r2)
+            goto L_0x013b
+        L_0x011d:
+            java.lang.String r2 = toIconKey(r3)
+            com.android.settingslib.SignalIcon$MobileIconGroup r3 = com.android.settingslib.mobile.TelephonyIcons.LTE
+            r0.put(r2, r3)
+            boolean r10 = r10.hideLtePlus
+            if (r10 == 0) goto L_0x0132
+            java.lang.String r10 = toDisplayIconKey(r9)
+            r0.put(r10, r3)
+            goto L_0x013b
+        L_0x0132:
+            java.lang.String r10 = toDisplayIconKey(r9)
+            com.android.settingslib.SignalIcon$MobileIconGroup r2 = com.android.settingslib.mobile.TelephonyIcons.LTE_PLUS
+            r0.put(r10, r2)
+        L_0x013b:
+            r10 = 18
+            java.lang.String r10 = toIconKey(r10)
+            com.android.settingslib.SignalIcon$MobileIconGroup r2 = com.android.settingslib.mobile.TelephonyIcons.WFC
+            r0.put(r10, r2)
+            java.lang.String r10 = toDisplayIconKey(r8)
+            com.android.settingslib.SignalIcon$MobileIconGroup r2 = com.android.settingslib.mobile.TelephonyIcons.LTE_CA_5G_E
+            r0.put(r10, r2)
+            java.lang.String r10 = toDisplayIconKey(r4)
+            com.android.settingslib.SignalIcon$MobileIconGroup r2 = com.android.settingslib.mobile.TelephonyIcons.NR_5G
+            r0.put(r10, r2)
+            java.lang.String r10 = toDisplayIconKey(r1)
+            com.android.settingslib.SignalIcon$MobileIconGroup r1 = com.android.settingslib.mobile.TelephonyIcons.NR_5G_PLUS
+            r0.put(r10, r1)
+            r10 = 20
+            java.lang.String r10 = toIconKey(r10)
+            r0.put(r10, r2)
+            return r0
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settingslib.mobile.MobileMappings.mapIconSets(com.android.settingslib.mobile.MobileMappings$Config):java.util.Map");
     }
 
-    /* loaded from: classes.dex */
     public static class Config {
-        public boolean hspaDataDistinguishable;
-        public boolean showAtLeast3G = false;
-        public boolean show4gFor3g = false;
         public boolean alwaysShowCdmaRssi = false;
-        public boolean show4gForLte = false;
-        public boolean hideLtePlus = false;
         public boolean alwaysShowDataRatIcon = false;
-        public boolean showRsrpSignalLevelforLTE = false;
-        public boolean hideNoInternetState = false;
-        public boolean showVolteIcon = false;
         public boolean alwaysShowNetworkTypeIcon = false;
-        public boolean enableRatIconEnhancement = false;
-        public boolean showVowifiIcon = false;
         public boolean enableDdsRatIconEnhancement = false;
+        public boolean enableRatIconEnhancement = false;
+        public boolean hideLtePlus = false;
+        public boolean hideNoInternetState = false;
+        public boolean hspaDataDistinguishable;
+        public boolean show4gFor3g = false;
+        public boolean show4gForLte = false;
+        public boolean show4glteForLte = false;
+        public boolean showAtLeast3G = false;
+        public boolean showRsrpSignalLevelforLTE = false;
+        public boolean showVolteIcon = false;
+        public boolean showVowifiIcon = false;
+        public boolean signalSmooth = true;
 
         public static Config readConfig(Context context) {
             Config config = new Config();
             Resources resources = context.getResources();
             config.showAtLeast3G = resources.getBoolean(R$bool.config_showMin3G);
-            config.alwaysShowCdmaRssi = resources.getBoolean(17891363);
+            config.alwaysShowCdmaRssi = resources.getBoolean(17891366);
             config.hspaDataDistinguishable = resources.getBoolean(R$bool.config_hspa_data_distinguishable);
             SubscriptionManager.from(context);
             PersistableBundle configForSubId = ((CarrierConfigManager) context.getSystemService("carrier_config")).getConfigForSubId(SubscriptionManager.getDefaultDataSubscriptionId());
             if (configForSubId != null) {
                 config.alwaysShowDataRatIcon = configForSubId.getBoolean("always_show_data_rat_icon_bool");
                 config.show4gForLte = configForSubId.getBoolean("show_4g_for_lte_data_icon_bool");
+                config.show4glteForLte = configForSubId.getBoolean("show_4glte_for_lte_data_icon_bool");
                 config.show4gFor3g = configForSubId.getBoolean("show_4g_for_3g_data_icon_bool");
                 config.hideLtePlus = configForSubId.getBoolean("hide_lte_plus_data_icon_bool");
-                config.hspaDataDistinguishable = configForSubId.getBoolean("show_hspa_data_icon_bool");
             }
             config.alwaysShowNetworkTypeIcon = resources.getBoolean(R$bool.config_alwaysShowTypeIcon);
             config.showRsrpSignalLevelforLTE = resources.getBoolean(R$bool.config_showRsrpSignalLevelforLTE);
             config.hideNoInternetState = resources.getBoolean(R$bool.config_hideNoInternetState);
             config.showVolteIcon = resources.getBoolean(R$bool.config_display_volte);
             config.showVowifiIcon = resources.getBoolean(R$bool.config_display_vowifi);
-            if (config.showVolteIcon && configForSubId != null) {
-                config.showVolteIcon = configForSubId.getBoolean("show_ims_registration_status_bool");
-            }
-            if (config.showVowifiIcon && configForSubId != null) {
-                config.showVowifiIcon = configForSubId.getBoolean("show_vowifi_status_bar_icon_bool");
-            }
+            config.signalSmooth = resources.getBoolean(R$bool.config_signal_smooth);
             if (config.alwaysShowNetworkTypeIcon) {
                 config.hideLtePlus = false;
             }
             config.enableRatIconEnhancement = SystemProperties.getBoolean("persist.sysui.rat_icon_enhancement", false);
             config.enableDdsRatIconEnhancement = SystemProperties.getBoolean("persist.sysui.dds_rat_icon_enhancement", false);
+            config.showVowifiIcon |= SystemProperties.getBoolean("persist.sysui.enable_vowifi_icon", false);
             return config;
         }
     }

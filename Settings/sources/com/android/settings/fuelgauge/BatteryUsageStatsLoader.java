@@ -6,13 +6,12 @@ import android.os.BatteryUsageStats;
 import android.os.BatteryUsageStatsQuery;
 import android.util.Log;
 import com.android.settingslib.utils.AsyncLoaderCompat;
-/* loaded from: classes.dex */
+
 public class BatteryUsageStatsLoader extends AsyncLoaderCompat<BatteryUsageStats> {
     private final BatteryStatsManager mBatteryStatsManager;
     private final boolean mIncludeBatteryHistory;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.utils.AsyncLoaderCompat
+    /* access modifiers changed from: protected */
     public void onDiscardResult(BatteryUsageStats batteryUsageStats) {
     }
 
@@ -22,9 +21,7 @@ public class BatteryUsageStatsLoader extends AsyncLoaderCompat<BatteryUsageStats
         this.mIncludeBatteryHistory = z;
     }
 
-    @Override // androidx.loader.content.AsyncTaskLoader
-    /* renamed from: loadInBackground */
-    public BatteryUsageStats mo611loadInBackground() {
+    public BatteryUsageStats loadInBackground() {
         BatteryUsageStatsQuery.Builder builder = new BatteryUsageStatsQuery.Builder();
         if (this.mIncludeBatteryHistory) {
             builder.includeBatteryHistory();
@@ -33,7 +30,7 @@ public class BatteryUsageStatsLoader extends AsyncLoaderCompat<BatteryUsageStats
             return this.mBatteryStatsManager.getBatteryUsageStats(builder.build());
         } catch (RuntimeException e) {
             Log.e("BatteryUsageStatsLoader", "loadInBackground() for getBatteryUsageStats()", e);
-            return new BatteryUsageStats.Builder(new String[0], false).build();
+            return new BatteryUsageStats.Builder(new String[0]).build();
         }
     }
 }

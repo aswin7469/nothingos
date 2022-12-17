@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content">
+<LinearLayout xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:layout_width="match_parent" android:layout_height="wrap_content">
     <LinearLayout android:orientation="vertical" android:id="@+id/volume_item_container" android:paddingLeft="24dp" android:paddingRight="60dp" android:paddingBottom="8dp" android:layout_width="match_parent" android:layout_height="@dimen/mr_controller_volume_group_list_item_height" android:paddingStart="24dp" android:paddingEnd="60dp">
         <TextView android:textAppearance="@style/TextAppearance.MediaRouter.SecondaryText" android:gravity="start" android:id="@+id/mr_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="true" android:textAlignment="viewStart"/>
         <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">

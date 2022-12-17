@@ -7,9 +7,8 @@ import androidx.preference.Preference;
 import androidx.preference.SwitchPreference;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.core.AbstractPreferenceController;
-/* loaded from: classes.dex */
+
 public class LiftToWakePreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin, Preference.OnPreferenceChangeListener {
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "lift_to_wake";
     }
@@ -18,23 +17,16 @@ public class LiftToWakePreferenceController extends AbstractPreferenceController
         super(context);
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         SensorManager sensorManager = (SensorManager) this.mContext.getSystemService("sensor");
-        if (sensorManager != null) {
-            sensorManager.getDefaultSensor(23);
-            return false;
-        }
-        return false;
+        return (sensorManager == null || sensorManager.getDefaultSensor(23) == null) ? false : true;
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         Settings.Secure.putInt(this.mContext.getContentResolver(), "wake_gesture_enabled", ((Boolean) obj).booleanValue() ? 1 : 0);
         return true;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         boolean z = false;
         SwitchPreference switchPreference = (SwitchPreference) preference;

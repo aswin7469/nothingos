@@ -2,46 +2,75 @@ package com.android.settings.notification.app;
 
 import android.app.people.IPeopleManager;
 import android.content.Context;
+import android.os.Bundle;
 import android.os.ServiceManager;
-import android.util.Log;
-import com.android.settings.R;
+import com.android.settings.R$xml;
 import com.android.settings.dashboard.DashboardFragment;
 import com.android.settings.notification.NotificationBackend;
 import com.android.settingslib.core.AbstractPreferenceController;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class ConversationListSettings extends DashboardFragment {
-    private static final boolean DEBUG = Log.isLoggable("ConvoListSettings", 3);
+    private AllConversationsPreferenceController mAllConversationsController;
     NotificationBackend mBackend = new NotificationBackend();
     protected List<AbstractPreferenceController> mControllers = new ArrayList();
+    private NoConversationsPreferenceController mNoConversationsController;
+    private PriorityConversationsPreferenceController mPriorityConversationsController;
     IPeopleManager mPs = IPeopleManager.Stub.asInterface(ServiceManager.getService("people"));
+    private RecentConversationsPreferenceController mRecentConversationsController;
+    private boolean mUpdatedInOnCreate = false;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "ConvoListSettings";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1834;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.conversation_list_settings;
+        return R$xml.conversation_list_settings;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment
-    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
-        ArrayList arrayList = new ArrayList();
-        this.mControllers = arrayList;
-        arrayList.add(new NoConversationsPreferenceController(context, this.mBackend, this.mPs));
-        this.mControllers.add(new PriorityConversationsPreferenceController(context, this.mBackend));
-        this.mControllers.add(new AllConversationsPreferenceController(context, this.mBackend));
-        this.mControllers.add(new RecentConversationsPreferenceController(context, this.mBackend, this.mPs));
+    /* access modifiers changed from: protected */
+    public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+        this.mControllers = new ArrayList();
+        NoConversationsPreferenceController noConversationsPreferenceController = new NoConversationsPreferenceController(context);
+        this.mNoConversationsController = noConversationsPreferenceController;
+        this.mControllers.add(noConversationsPreferenceController);
+        PriorityConversationsPreferenceController priorityConversationsPreferenceController = new PriorityConversationsPreferenceController(context, this.mBackend);
+        this.mPriorityConversationsController = priorityConversationsPreferenceController;
+        this.mControllers.add(priorityConversationsPreferenceController);
+        AllConversationsPreferenceController allConversationsPreferenceController = new AllConversationsPreferenceController(context, this.mBackend);
+        this.mAllConversationsController = allConversationsPreferenceController;
+        this.mControllers.add(allConversationsPreferenceController);
+        RecentConversationsPreferenceController recentConversationsPreferenceController = new RecentConversationsPreferenceController(context, this.mBackend, this.mPs);
+        this.mRecentConversationsController = recentConversationsPreferenceController;
+        this.mControllers.add(recentConversationsPreferenceController);
         return new ArrayList(this.mControllers);
+    }
+
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        update();
+        this.mUpdatedInOnCreate = true;
+    }
+
+    public void onStart() {
+        super.onStart();
+        if (this.mUpdatedInOnCreate) {
+            this.mUpdatedInOnCreate = false;
+        } else {
+            update();
+        }
+    }
+
+    private void update() {
+        List list = this.mBackend.getConversations(false).getList();
+        this.mNoConversationsController.setAvailable(!(this.mAllConversationsController.updateList(list) | this.mPriorityConversationsController.updateList(list) | this.mRecentConversationsController.updateList()));
+        this.mNoConversationsController.displayPreference(getPreferenceScreen());
     }
 }

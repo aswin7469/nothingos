@@ -8,54 +8,68 @@ import java.security.PrivilegedExceptionAction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import sun.misc.Unsafe;
-/* loaded from: classes2.dex */
+
 final class UnsafeUtil {
+    private static final long BOOLEAN_ARRAY_BASE_OFFSET;
+    private static final long BOOLEAN_ARRAY_INDEX_SCALE;
+    private static final long BUFFER_ADDRESS_OFFSET = fieldOffset(bufferAddressField());
     private static final int BYTE_ARRAY_ALIGNMENT;
     static final long BYTE_ARRAY_BASE_OFFSET;
-    static final boolean IS_BIG_ENDIAN;
-    private static final Logger logger = Logger.getLogger(UnsafeUtil.class.getName());
-    private static final Unsafe UNSAFE = getUnsafe();
-    private static final MemoryAccessor MEMORY_ACCESSOR = getMemoryAccessor();
-    private static final boolean HAS_UNSAFE_BYTEBUFFER_OPERATIONS = supportsUnsafeByteBufferOperations();
+    private static final long DOUBLE_ARRAY_BASE_OFFSET;
+    private static final long DOUBLE_ARRAY_INDEX_SCALE;
+    private static final long FLOAT_ARRAY_BASE_OFFSET;
+    private static final long FLOAT_ARRAY_INDEX_SCALE;
     private static final boolean HAS_UNSAFE_ARRAY_OPERATIONS = supportsUnsafeArrayOperations();
-    private static final long BOOLEAN_ARRAY_BASE_OFFSET = arrayBaseOffset(boolean[].class);
-    private static final long BOOLEAN_ARRAY_INDEX_SCALE = arrayIndexScale(boolean[].class);
-    private static final long INT_ARRAY_BASE_OFFSET = arrayBaseOffset(int[].class);
-    private static final long INT_ARRAY_INDEX_SCALE = arrayIndexScale(int[].class);
-    private static final long LONG_ARRAY_BASE_OFFSET = arrayBaseOffset(long[].class);
-    private static final long LONG_ARRAY_INDEX_SCALE = arrayIndexScale(long[].class);
-    private static final long FLOAT_ARRAY_BASE_OFFSET = arrayBaseOffset(float[].class);
-    private static final long FLOAT_ARRAY_INDEX_SCALE = arrayIndexScale(float[].class);
-    private static final long DOUBLE_ARRAY_BASE_OFFSET = arrayBaseOffset(double[].class);
-    private static final long DOUBLE_ARRAY_INDEX_SCALE = arrayIndexScale(double[].class);
-    private static final long OBJECT_ARRAY_BASE_OFFSET = arrayBaseOffset(Object[].class);
-    private static final long OBJECT_ARRAY_INDEX_SCALE = arrayIndexScale(Object[].class);
-    private static final long BUFFER_ADDRESS_OFFSET = fieldOffset(bufferAddressField());
+    private static final boolean HAS_UNSAFE_BYTEBUFFER_OPERATIONS = supportsUnsafeByteBufferOperations();
+    private static final long INT_ARRAY_BASE_OFFSET;
+    private static final long INT_ARRAY_INDEX_SCALE;
+    static final boolean IS_BIG_ENDIAN = (ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN);
+    private static final long LONG_ARRAY_BASE_OFFSET;
+    private static final long LONG_ARRAY_INDEX_SCALE;
+    private static final MemoryAccessor MEMORY_ACCESSOR = getMemoryAccessor();
+    private static final long OBJECT_ARRAY_BASE_OFFSET;
+    private static final long OBJECT_ARRAY_INDEX_SCALE;
+    private static final Unsafe UNSAFE = getUnsafe();
+    private static final Logger logger = Logger.getLogger(UnsafeUtil.class.getName());
 
     static {
-        long arrayBaseOffset = arrayBaseOffset(byte[].class);
+        Class<Object[]> cls = Object[].class;
+        Class<double[]> cls2 = double[].class;
+        Class<float[]> cls3 = float[].class;
+        Class<long[]> cls4 = long[].class;
+        Class<int[]> cls5 = int[].class;
+        Class<boolean[]> cls6 = boolean[].class;
+        long arrayBaseOffset = (long) arrayBaseOffset(byte[].class);
         BYTE_ARRAY_BASE_OFFSET = arrayBaseOffset;
+        BOOLEAN_ARRAY_BASE_OFFSET = (long) arrayBaseOffset(cls6);
+        BOOLEAN_ARRAY_INDEX_SCALE = (long) arrayIndexScale(cls6);
+        INT_ARRAY_BASE_OFFSET = (long) arrayBaseOffset(cls5);
+        INT_ARRAY_INDEX_SCALE = (long) arrayIndexScale(cls5);
+        LONG_ARRAY_BASE_OFFSET = (long) arrayBaseOffset(cls4);
+        LONG_ARRAY_INDEX_SCALE = (long) arrayIndexScale(cls4);
+        FLOAT_ARRAY_BASE_OFFSET = (long) arrayBaseOffset(cls3);
+        FLOAT_ARRAY_INDEX_SCALE = (long) arrayIndexScale(cls3);
+        DOUBLE_ARRAY_BASE_OFFSET = (long) arrayBaseOffset(cls2);
+        DOUBLE_ARRAY_INDEX_SCALE = (long) arrayIndexScale(cls2);
+        OBJECT_ARRAY_BASE_OFFSET = (long) arrayBaseOffset(cls);
+        OBJECT_ARRAY_INDEX_SCALE = (long) arrayIndexScale(cls);
         BYTE_ARRAY_ALIGNMENT = (int) (7 & arrayBaseOffset);
-        IS_BIG_ENDIAN = ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN;
     }
 
     private UnsafeUtil() {
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static boolean hasUnsafeArrayOperations() {
+    static boolean hasUnsafeArrayOperations() {
         return HAS_UNSAFE_ARRAY_OPERATIONS;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static boolean hasUnsafeByteBufferOperations() {
+    static boolean hasUnsafeByteBufferOperations() {
         return HAS_UNSAFE_BYTEBUFFER_OPERATIONS;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static <T> T allocateInstance(Class<T> cls) {
+    static <T> T allocateInstance(Class<T> cls) {
         try {
-            return (T) UNSAFE.allocateInstance(cls);
+            return UNSAFE.allocateInstance(cls);
         } catch (InstantiationException e) {
             throw new IllegalStateException(e);
         }
@@ -75,88 +89,72 @@ final class UnsafeUtil {
         return -1;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static int getInt(Object obj, long j) {
+    static int getInt(Object obj, long j) {
         return MEMORY_ACCESSOR.getInt(obj, j);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static void putInt(Object obj, long j, int i) {
+    static void putInt(Object obj, long j, int i) {
         MEMORY_ACCESSOR.putInt(obj, j, i);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static long getLong(Object obj, long j) {
+    static long getLong(Object obj, long j) {
         return MEMORY_ACCESSOR.getLong(obj, j);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static void putLong(Object obj, long j, long j2) {
+    static void putLong(Object obj, long j, long j2) {
         MEMORY_ACCESSOR.putLong(obj, j, j2);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static boolean getBoolean(Object obj, long j) {
+    static boolean getBoolean(Object obj, long j) {
         return MEMORY_ACCESSOR.getBoolean(obj, j);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static void putBoolean(Object obj, long j, boolean z) {
+    static void putBoolean(Object obj, long j, boolean z) {
         MEMORY_ACCESSOR.putBoolean(obj, j, z);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static float getFloat(Object obj, long j) {
+    static float getFloat(Object obj, long j) {
         return MEMORY_ACCESSOR.getFloat(obj, j);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static void putFloat(Object obj, long j, float f) {
+    static void putFloat(Object obj, long j, float f) {
         MEMORY_ACCESSOR.putFloat(obj, j, f);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static double getDouble(Object obj, long j) {
+    static double getDouble(Object obj, long j) {
         return MEMORY_ACCESSOR.getDouble(obj, j);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static void putDouble(Object obj, long j, double d) {
+    static void putDouble(Object obj, long j, double d) {
         MEMORY_ACCESSOR.putDouble(obj, j, d);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static Object getObject(Object obj, long j) {
+    static Object getObject(Object obj, long j) {
         return MEMORY_ACCESSOR.getObject(obj, j);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static void putObject(Object obj, long j, Object obj2) {
+    static void putObject(Object obj, long j, Object obj2) {
         MEMORY_ACCESSOR.putObject(obj, j, obj2);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static byte getByte(byte[] bArr, long j) {
+    static byte getByte(byte[] bArr, long j) {
         return MEMORY_ACCESSOR.getByte(bArr, BYTE_ARRAY_BASE_OFFSET + j);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static void putByte(byte[] bArr, long j, byte b) {
+    static void putByte(byte[] bArr, long j, byte b) {
         MEMORY_ACCESSOR.putByte(bArr, BYTE_ARRAY_BASE_OFFSET + j, b);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static Unsafe getUnsafe() {
+    static Unsafe getUnsafe() {
         try {
-            return (Unsafe) AccessController.doPrivileged(new PrivilegedExceptionAction<Unsafe>() { // from class: com.google.protobuf.UnsafeUtil.1
-                @Override // java.security.PrivilegedExceptionAction
+            return (Unsafe) AccessController.doPrivileged(new PrivilegedExceptionAction<Unsafe>() {
                 public Unsafe run() throws Exception {
-                    Field[] declaredFields;
-                    for (Field field : Unsafe.class.getDeclaredFields()) {
+                    Class<Unsafe> cls = Unsafe.class;
+                    for (Field field : cls.getDeclaredFields()) {
                         field.setAccessible(true);
-                        Object obj = field.get(null);
-                        if (Unsafe.class.isInstance(obj)) {
-                            return (Unsafe) Unsafe.class.cast(obj);
+                        Object obj = field.get((Object) null);
+                        if (cls.isInstance(obj)) {
+                            return cls.cast(obj);
                         }
                     }
                     return null;
@@ -176,30 +174,31 @@ final class UnsafeUtil {
     }
 
     private static boolean supportsUnsafeArrayOperations() {
+        Class<Object> cls = Object.class;
         Unsafe unsafe = UNSAFE;
         if (unsafe == null) {
             return false;
         }
         try {
-            Class<?> cls = unsafe.getClass();
-            cls.getMethod("objectFieldOffset", Field.class);
-            cls.getMethod("arrayBaseOffset", Class.class);
-            cls.getMethod("arrayIndexScale", Class.class);
-            Class<?> cls2 = Long.TYPE;
-            cls.getMethod("getInt", Object.class, cls2);
-            cls.getMethod("putInt", Object.class, cls2, Integer.TYPE);
-            cls.getMethod("getLong", Object.class, cls2);
-            cls.getMethod("putLong", Object.class, cls2, cls2);
-            cls.getMethod("getObject", Object.class, cls2);
-            cls.getMethod("putObject", Object.class, cls2, Object.class);
-            cls.getMethod("getByte", Object.class, cls2);
-            cls.getMethod("putByte", Object.class, cls2, Byte.TYPE);
-            cls.getMethod("getBoolean", Object.class, cls2);
-            cls.getMethod("putBoolean", Object.class, cls2, Boolean.TYPE);
-            cls.getMethod("getFloat", Object.class, cls2);
-            cls.getMethod("putFloat", Object.class, cls2, Float.TYPE);
-            cls.getMethod("getDouble", Object.class, cls2);
-            cls.getMethod("putDouble", Object.class, cls2, Double.TYPE);
+            Class<?> cls2 = unsafe.getClass();
+            cls2.getMethod("objectFieldOffset", new Class[]{Field.class});
+            cls2.getMethod("arrayBaseOffset", new Class[]{Class.class});
+            cls2.getMethod("arrayIndexScale", new Class[]{Class.class});
+            Class cls3 = Long.TYPE;
+            cls2.getMethod("getInt", new Class[]{cls, cls3});
+            cls2.getMethod("putInt", new Class[]{cls, cls3, Integer.TYPE});
+            cls2.getMethod("getLong", new Class[]{cls, cls3});
+            cls2.getMethod("putLong", new Class[]{cls, cls3, cls3});
+            cls2.getMethod("getObject", new Class[]{cls, cls3});
+            cls2.getMethod("putObject", new Class[]{cls, cls3, cls});
+            cls2.getMethod("getByte", new Class[]{cls, cls3});
+            cls2.getMethod("putByte", new Class[]{cls, cls3, Byte.TYPE});
+            cls2.getMethod("getBoolean", new Class[]{cls, cls3});
+            cls2.getMethod("putBoolean", new Class[]{cls, cls3, Boolean.TYPE});
+            cls2.getMethod("getFloat", new Class[]{cls, cls3});
+            cls2.getMethod("putFloat", new Class[]{cls, cls3, Float.TYPE});
+            cls2.getMethod("getDouble", new Class[]{cls, cls3});
+            cls2.getMethod("putDouble", new Class[]{cls, cls3, Double.TYPE});
             return true;
         } catch (Throwable th) {
             Logger logger2 = logger;
@@ -210,26 +209,27 @@ final class UnsafeUtil {
     }
 
     private static boolean supportsUnsafeByteBufferOperations() {
+        Class<Object> cls = Object.class;
         Unsafe unsafe = UNSAFE;
         if (unsafe == null) {
             return false;
         }
         try {
-            Class<?> cls = unsafe.getClass();
-            cls.getMethod("objectFieldOffset", Field.class);
-            Class<?> cls2 = Long.TYPE;
-            cls.getMethod("getLong", Object.class, cls2);
+            Class<?> cls2 = unsafe.getClass();
+            cls2.getMethod("objectFieldOffset", new Class[]{Field.class});
+            Class cls3 = Long.TYPE;
+            cls2.getMethod("getLong", new Class[]{cls, cls3});
             if (bufferAddressField() == null) {
                 return false;
             }
-            cls.getMethod("getByte", cls2);
-            cls.getMethod("putByte", cls2, Byte.TYPE);
-            cls.getMethod("getInt", cls2);
-            cls.getMethod("putInt", cls2, Integer.TYPE);
-            cls.getMethod("getLong", cls2);
-            cls.getMethod("putLong", cls2, cls2);
-            cls.getMethod("copyMemory", cls2, cls2, cls2);
-            cls.getMethod("copyMemory", Object.class, cls2, Object.class, cls2, cls2);
+            cls2.getMethod("getByte", new Class[]{cls3});
+            cls2.getMethod("putByte", new Class[]{cls3, Byte.TYPE});
+            cls2.getMethod("getInt", new Class[]{cls3});
+            cls2.getMethod("putInt", new Class[]{cls3, Integer.TYPE});
+            cls2.getMethod("getLong", new Class[]{cls3});
+            cls2.getMethod("putLong", new Class[]{cls3, cls3});
+            cls2.getMethod("copyMemory", new Class[]{cls3, cls3, cls3});
+            cls2.getMethod("copyMemory", new Class[]{cls, cls3, cls, cls3, cls3});
             return true;
         } catch (Throwable th) {
             Logger logger2 = logger;
@@ -250,7 +250,7 @@ final class UnsafeUtil {
     private static long fieldOffset(Field field) {
         MemoryAccessor memoryAccessor;
         if (field == null || (memoryAccessor = MEMORY_ACCESSOR) == null) {
-            return -1L;
+            return -1;
         }
         return memoryAccessor.objectFieldOffset(field);
     }
@@ -263,9 +263,7 @@ final class UnsafeUtil {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static abstract class MemoryAccessor {
+    private static abstract class MemoryAccessor {
         Unsafe unsafe;
 
         public abstract boolean getBoolean(Object obj, long j);
@@ -284,8 +282,8 @@ final class UnsafeUtil {
 
         public abstract void putFloat(Object obj, long j, float f);
 
-        MemoryAccessor(Unsafe unsafe) {
-            this.unsafe = unsafe;
+        MemoryAccessor(Unsafe unsafe2) {
+            this.unsafe = unsafe2;
         }
 
         public final long objectFieldOffset(Field field) {
@@ -325,49 +323,39 @@ final class UnsafeUtil {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static final class JvmMemoryAccessor extends MemoryAccessor {
+    private static final class JvmMemoryAccessor extends MemoryAccessor {
         JvmMemoryAccessor(Unsafe unsafe) {
             super(unsafe);
         }
 
-        @Override // com.google.protobuf.UnsafeUtil.MemoryAccessor
         public byte getByte(Object obj, long j) {
             return this.unsafe.getByte(obj, j);
         }
 
-        @Override // com.google.protobuf.UnsafeUtil.MemoryAccessor
         public void putByte(Object obj, long j, byte b) {
             this.unsafe.putByte(obj, j, b);
         }
 
-        @Override // com.google.protobuf.UnsafeUtil.MemoryAccessor
         public boolean getBoolean(Object obj, long j) {
             return this.unsafe.getBoolean(obj, j);
         }
 
-        @Override // com.google.protobuf.UnsafeUtil.MemoryAccessor
         public void putBoolean(Object obj, long j, boolean z) {
             this.unsafe.putBoolean(obj, j, z);
         }
 
-        @Override // com.google.protobuf.UnsafeUtil.MemoryAccessor
         public float getFloat(Object obj, long j) {
             return this.unsafe.getFloat(obj, j);
         }
 
-        @Override // com.google.protobuf.UnsafeUtil.MemoryAccessor
         public void putFloat(Object obj, long j, float f) {
             this.unsafe.putFloat(obj, j, f);
         }
 
-        @Override // com.google.protobuf.UnsafeUtil.MemoryAccessor
         public double getDouble(Object obj, long j) {
             return this.unsafe.getDouble(obj, j);
         }
 
-        @Override // com.google.protobuf.UnsafeUtil.MemoryAccessor
         public void putDouble(Object obj, long j, double d) {
             this.unsafe.putDouble(obj, j, d);
         }

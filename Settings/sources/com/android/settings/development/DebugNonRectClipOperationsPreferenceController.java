@@ -5,34 +5,31 @@ import android.os.SystemProperties;
 import android.text.TextUtils;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$array;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.development.DeveloperOptionsPreferenceController;
 import com.android.settingslib.development.SystemPropPoker;
-/* loaded from: classes.dex */
+
 public class DebugNonRectClipOperationsPreferenceController extends DeveloperOptionsPreferenceController implements Preference.OnPreferenceChangeListener, PreferenceControllerMixin {
     private final String[] mListSummaries;
     private final String[] mListValues;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "show_non_rect_clip";
     }
 
     public DebugNonRectClipOperationsPreferenceController(Context context) {
         super(context);
-        this.mListValues = context.getResources().getStringArray(R.array.show_non_rect_clip_values);
-        this.mListSummaries = context.getResources().getStringArray(R.array.show_non_rect_clip_entries);
+        this.mListValues = context.getResources().getStringArray(R$array.show_non_rect_clip_values);
+        this.mListSummaries = context.getResources().getStringArray(R$array.show_non_rect_clip_entries);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         writeShowNonRectClipOptions(obj);
         updateShowNonRectClipOptions();
         return true;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         updateShowNonRectClipOptions();
     }

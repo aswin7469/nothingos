@@ -2,32 +2,31 @@ package com.google.zxing.oned.rss.expanded;
 
 import com.google.zxing.oned.rss.DataCharacter;
 import com.google.zxing.oned.rss.FinderPattern;
-/* loaded from: classes2.dex */
+
 final class ExpandedPair {
     private final FinderPattern finderPattern;
     private final DataCharacter leftChar;
     private final boolean mayBeLast;
     private final DataCharacter rightChar;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public ExpandedPair(DataCharacter dataCharacter, DataCharacter dataCharacter2, FinderPattern finderPattern, boolean z) {
+    ExpandedPair(DataCharacter dataCharacter, DataCharacter dataCharacter2, FinderPattern finderPattern2, boolean z) {
         this.leftChar = dataCharacter;
         this.rightChar = dataCharacter2;
-        this.finderPattern = finderPattern;
+        this.finderPattern = finderPattern2;
         this.mayBeLast = z;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public DataCharacter getLeftChar() {
         return this.leftChar;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public DataCharacter getRightChar() {
         return this.rightChar;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public FinderPattern getFinderPattern() {
         return this.finderPattern;
     }
@@ -43,8 +42,8 @@ final class ExpandedPair {
         sb.append(" , ");
         sb.append(this.rightChar);
         sb.append(" : ");
-        FinderPattern finderPattern = this.finderPattern;
-        sb.append(finderPattern == null ? "null" : Integer.valueOf(finderPattern.getValue()));
+        FinderPattern finderPattern2 = this.finderPattern;
+        sb.append(finderPattern2 == null ? "null" : Integer.valueOf(finderPattern2.getValue()));
         sb.append(" ]");
         return sb.toString();
     }
@@ -54,7 +53,10 @@ final class ExpandedPair {
             return false;
         }
         ExpandedPair expandedPair = (ExpandedPair) obj;
-        return equalsOrNull(this.leftChar, expandedPair.leftChar) && equalsOrNull(this.rightChar, expandedPair.rightChar) && equalsOrNull(this.finderPattern, expandedPair.finderPattern);
+        if (!equalsOrNull(this.leftChar, expandedPair.leftChar) || !equalsOrNull(this.rightChar, expandedPair.rightChar) || !equalsOrNull(this.finderPattern, expandedPair.finderPattern)) {
+            return false;
+        }
+        return true;
     }
 
     private static boolean equalsOrNull(Object obj, Object obj2) {

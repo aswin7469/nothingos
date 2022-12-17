@@ -7,24 +7,21 @@ import android.os.UserManager;
 import android.text.TextUtils;
 import com.android.settingslib.enterprise.ActionDisabledLearnMoreButtonLauncher;
 import java.util.Objects;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public final class ManagedDeviceActionDisabledByAdminController extends BaseActionDisabledByAdminController {
-    public static final ForegroundUserChecker DEFAULT_FOREGROUND_USER_CHECKER = ManagedDeviceActionDisabledByAdminController$$ExternalSyntheticLambda0.INSTANCE;
+
+final class ManagedDeviceActionDisabledByAdminController extends BaseActionDisabledByAdminController {
+    public static final ForegroundUserChecker DEFAULT_FOREGROUND_USER_CHECKER = new C1567xa747935c();
     private final ForegroundUserChecker mForegroundUserChecker;
     private final UserHandle mPreferredUserHandle;
     private final ActionDisabledLearnMoreButtonLauncher.ResolveActivityChecker mResolveActivityChecker;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public interface ForegroundUserChecker {
+    interface ForegroundUserChecker {
         boolean isUserForeground(Context context, UserHandle userHandle);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public ManagedDeviceActionDisabledByAdminController(DeviceAdminStringProvider deviceAdminStringProvider, UserHandle userHandle, ForegroundUserChecker foregroundUserChecker, ActionDisabledLearnMoreButtonLauncher.ResolveActivityChecker resolveActivityChecker) {
+    ManagedDeviceActionDisabledByAdminController(DeviceAdminStringProvider deviceAdminStringProvider, UserHandle userHandle, ForegroundUserChecker foregroundUserChecker, ActionDisabledLearnMoreButtonLauncher.ResolveActivityChecker resolveActivityChecker) {
         super(deviceAdminStringProvider);
         Objects.requireNonNull(userHandle);
+        UserHandle userHandle2 = userHandle;
         this.mPreferredUserHandle = userHandle;
         Objects.requireNonNull(foregroundUserChecker);
         this.mForegroundUserChecker = foregroundUserChecker;
@@ -32,14 +29,13 @@ public final class ManagedDeviceActionDisabledByAdminController extends BaseActi
         this.mResolveActivityChecker = resolveActivityChecker;
     }
 
-    @Override // com.android.settingslib.enterprise.ActionDisabledByAdminController
     public void setupLearnMoreButton(Context context) {
         assertInitialized();
         String learnMoreHelpPageUrl = this.mStringProvider.getLearnMoreHelpPageUrl();
-        if (!TextUtils.isEmpty(learnMoreHelpPageUrl) && canLaunchHelpPageInPreferredOrCurrentUser(context, learnMoreHelpPageUrl, this.mPreferredUserHandle)) {
-            setupLearnMoreButtonToLaunchHelpPage(context, learnMoreHelpPageUrl, this.mPreferredUserHandle);
-        } else {
+        if (TextUtils.isEmpty(learnMoreHelpPageUrl) || !canLaunchHelpPageInPreferredOrCurrentUser(context, learnMoreHelpPageUrl, this.mPreferredUserHandle)) {
             this.mLauncher.setupLearnMoreButtonToShowAdminPolicies(context, this.mEnforcementAdminUserId, this.mEnforcedAdmin);
+        } else {
+            setupLearnMoreButtonToLaunchHelpPage(context, learnMoreHelpPageUrl, this.mPreferredUserHandle);
         }
     }
 
@@ -61,12 +57,11 @@ public final class ManagedDeviceActionDisabledByAdminController extends BaseActi
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static boolean isUserForeground(Context context, UserHandle userHandle) {
         return ((UserManager) context.createContextAsUser(userHandle, 0).getSystemService(UserManager.class)).isUserForeground();
     }
 
-    @Override // com.android.settingslib.enterprise.ActionDisabledByAdminController
     public String getAdminSupportTitle(String str) {
         if (str == null) {
             return this.mStringProvider.getDefaultDisabledByPolicyTitle();
@@ -128,7 +123,6 @@ public final class ManagedDeviceActionDisabledByAdminController extends BaseActi
         }
     }
 
-    @Override // com.android.settingslib.enterprise.ActionDisabledByAdminController
     public CharSequence getAdminSupportContentString(Context context, CharSequence charSequence) {
         return charSequence != null ? charSequence : this.mStringProvider.getDefaultDisabledByPolicyContent();
     }

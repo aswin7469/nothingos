@@ -1,20 +1,17 @@
 package com.google.zxing.aztec.encoder;
 
 import com.google.zxing.common.BitArray;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes2.dex */
-public final class BinaryShiftToken extends Token {
+
+final class BinaryShiftToken extends Token {
     private final short binaryShiftByteCount;
     private final short binaryShiftStart;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public BinaryShiftToken(Token token, int i, int i2) {
+    BinaryShiftToken(Token token, int i, int i2) {
         super(token);
         this.binaryShiftStart = (short) i;
         this.binaryShiftByteCount = (short) i2;
     }
 
-    @Override // com.google.zxing.aztec.encoder.Token
     public void appendTo(BitArray bitArray, byte[] bArr) {
         int i = 0;
         while (true) {
@@ -26,7 +23,7 @@ public final class BinaryShiftToken extends Token {
                     if (s2 > 62) {
                         bitArray.appendBits(s2 - 31, 16);
                     } else if (i == 0) {
-                        bitArray.appendBits(Math.min((int) s2, 31), 5);
+                        bitArray.appendBits(Math.min(s2, 31), 5);
                     } else {
                         bitArray.appendBits(s2 - 31, 5);
                     }
@@ -42,7 +39,7 @@ public final class BinaryShiftToken extends Token {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("<");
-        sb.append((int) this.binaryShiftStart);
+        sb.append(this.binaryShiftStart);
         sb.append("::");
         sb.append((this.binaryShiftStart + this.binaryShiftByteCount) - 1);
         sb.append('>');

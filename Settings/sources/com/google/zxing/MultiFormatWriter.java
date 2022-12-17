@@ -13,104 +13,142 @@ import com.google.zxing.oned.UPCAWriter;
 import com.google.zxing.pdf417.PDF417Writer;
 import com.google.zxing.qrcode.QRCodeWriter;
 import java.util.Map;
-/* loaded from: classes2.dex */
+
 public final class MultiFormatWriter implements Writer {
 
-    /* renamed from: com.google.zxing.MultiFormatWriter$1  reason: invalid class name */
-    /* loaded from: classes2.dex */
-    static /* synthetic */ class AnonymousClass1 {
+    /* renamed from: com.google.zxing.MultiFormatWriter$1 */
+    static /* synthetic */ class C19181 {
         static final /* synthetic */ int[] $SwitchMap$com$google$zxing$BarcodeFormat;
 
+        /* JADX WARNING: Can't wrap try/catch for region: R(22:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|(3:21|22|24)) */
+        /* JADX WARNING: Can't wrap try/catch for region: R(24:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|24) */
+        /* JADX WARNING: Failed to process nested try/catch */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:11:0x003e */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:13:0x0049 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:15:0x0054 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:17:0x0060 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:19:0x006c */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:21:0x0078 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0012 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001d */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:7:0x0028 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:9:0x0033 */
         static {
-            int[] iArr = new int[BarcodeFormat.values().length];
-            $SwitchMap$com$google$zxing$BarcodeFormat = iArr;
-            try {
-                iArr[BarcodeFormat.EAN_8.ordinal()] = 1;
-            } catch (NoSuchFieldError unused) {
-            }
-            try {
-                $SwitchMap$com$google$zxing$BarcodeFormat[BarcodeFormat.EAN_13.ordinal()] = 2;
-            } catch (NoSuchFieldError unused2) {
-            }
-            try {
-                $SwitchMap$com$google$zxing$BarcodeFormat[BarcodeFormat.UPC_A.ordinal()] = 3;
-            } catch (NoSuchFieldError unused3) {
-            }
-            try {
-                $SwitchMap$com$google$zxing$BarcodeFormat[BarcodeFormat.QR_CODE.ordinal()] = 4;
-            } catch (NoSuchFieldError unused4) {
-            }
-            try {
-                $SwitchMap$com$google$zxing$BarcodeFormat[BarcodeFormat.CODE_39.ordinal()] = 5;
-            } catch (NoSuchFieldError unused5) {
-            }
-            try {
-                $SwitchMap$com$google$zxing$BarcodeFormat[BarcodeFormat.CODE_128.ordinal()] = 6;
-            } catch (NoSuchFieldError unused6) {
-            }
-            try {
-                $SwitchMap$com$google$zxing$BarcodeFormat[BarcodeFormat.ITF.ordinal()] = 7;
-            } catch (NoSuchFieldError unused7) {
-            }
-            try {
-                $SwitchMap$com$google$zxing$BarcodeFormat[BarcodeFormat.PDF_417.ordinal()] = 8;
-            } catch (NoSuchFieldError unused8) {
-            }
-            try {
-                $SwitchMap$com$google$zxing$BarcodeFormat[BarcodeFormat.CODABAR.ordinal()] = 9;
-            } catch (NoSuchFieldError unused9) {
-            }
-            try {
-                $SwitchMap$com$google$zxing$BarcodeFormat[BarcodeFormat.DATA_MATRIX.ordinal()] = 10;
-            } catch (NoSuchFieldError unused10) {
-            }
-            try {
-                $SwitchMap$com$google$zxing$BarcodeFormat[BarcodeFormat.AZTEC.ordinal()] = 11;
-            } catch (NoSuchFieldError unused11) {
-            }
+            /*
+                com.google.zxing.BarcodeFormat[] r0 = com.google.zxing.BarcodeFormat.values()
+                int r0 = r0.length
+                int[] r0 = new int[r0]
+                $SwitchMap$com$google$zxing$BarcodeFormat = r0
+                com.google.zxing.BarcodeFormat r1 = com.google.zxing.BarcodeFormat.EAN_8     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
+                r2 = 1
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                int[] r0 = $SwitchMap$com$google$zxing$BarcodeFormat     // Catch:{ NoSuchFieldError -> 0x001d }
+                com.google.zxing.BarcodeFormat r1 = com.google.zxing.BarcodeFormat.EAN_13     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
+                r2 = 2
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                int[] r0 = $SwitchMap$com$google$zxing$BarcodeFormat     // Catch:{ NoSuchFieldError -> 0x0028 }
+                com.google.zxing.BarcodeFormat r1 = com.google.zxing.BarcodeFormat.UPC_A     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
+                r2 = 3
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
+            L_0x0028:
+                int[] r0 = $SwitchMap$com$google$zxing$BarcodeFormat     // Catch:{ NoSuchFieldError -> 0x0033 }
+                com.google.zxing.BarcodeFormat r1 = com.google.zxing.BarcodeFormat.QR_CODE     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
+                r2 = 4
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0033 }
+            L_0x0033:
+                int[] r0 = $SwitchMap$com$google$zxing$BarcodeFormat     // Catch:{ NoSuchFieldError -> 0x003e }
+                com.google.zxing.BarcodeFormat r1 = com.google.zxing.BarcodeFormat.CODE_39     // Catch:{ NoSuchFieldError -> 0x003e }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x003e }
+                r2 = 5
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x003e }
+            L_0x003e:
+                int[] r0 = $SwitchMap$com$google$zxing$BarcodeFormat     // Catch:{ NoSuchFieldError -> 0x0049 }
+                com.google.zxing.BarcodeFormat r1 = com.google.zxing.BarcodeFormat.CODE_128     // Catch:{ NoSuchFieldError -> 0x0049 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0049 }
+                r2 = 6
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0049 }
+            L_0x0049:
+                int[] r0 = $SwitchMap$com$google$zxing$BarcodeFormat     // Catch:{ NoSuchFieldError -> 0x0054 }
+                com.google.zxing.BarcodeFormat r1 = com.google.zxing.BarcodeFormat.ITF     // Catch:{ NoSuchFieldError -> 0x0054 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0054 }
+                r2 = 7
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0054 }
+            L_0x0054:
+                int[] r0 = $SwitchMap$com$google$zxing$BarcodeFormat     // Catch:{ NoSuchFieldError -> 0x0060 }
+                com.google.zxing.BarcodeFormat r1 = com.google.zxing.BarcodeFormat.PDF_417     // Catch:{ NoSuchFieldError -> 0x0060 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0060 }
+                r2 = 8
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0060 }
+            L_0x0060:
+                int[] r0 = $SwitchMap$com$google$zxing$BarcodeFormat     // Catch:{ NoSuchFieldError -> 0x006c }
+                com.google.zxing.BarcodeFormat r1 = com.google.zxing.BarcodeFormat.CODABAR     // Catch:{ NoSuchFieldError -> 0x006c }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x006c }
+                r2 = 9
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x006c }
+            L_0x006c:
+                int[] r0 = $SwitchMap$com$google$zxing$BarcodeFormat     // Catch:{ NoSuchFieldError -> 0x0078 }
+                com.google.zxing.BarcodeFormat r1 = com.google.zxing.BarcodeFormat.DATA_MATRIX     // Catch:{ NoSuchFieldError -> 0x0078 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0078 }
+                r2 = 10
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0078 }
+            L_0x0078:
+                int[] r0 = $SwitchMap$com$google$zxing$BarcodeFormat     // Catch:{ NoSuchFieldError -> 0x0084 }
+                com.google.zxing.BarcodeFormat r1 = com.google.zxing.BarcodeFormat.AZTEC     // Catch:{ NoSuchFieldError -> 0x0084 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0084 }
+                r2 = 11
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0084 }
+            L_0x0084:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.MultiFormatWriter.C19181.<clinit>():void");
         }
     }
 
-    @Override // com.google.zxing.Writer
     public BitMatrix encode(String str, BarcodeFormat barcodeFormat, int i, int i2, Map<EncodeHintType, ?> map) throws WriterException {
-        Writer eAN8Writer;
-        switch (AnonymousClass1.$SwitchMap$com$google$zxing$BarcodeFormat[barcodeFormat.ordinal()]) {
+        Writer writer;
+        switch (C19181.$SwitchMap$com$google$zxing$BarcodeFormat[barcodeFormat.ordinal()]) {
             case 1:
-                eAN8Writer = new EAN8Writer();
+                writer = new EAN8Writer();
                 break;
             case 2:
-                eAN8Writer = new EAN13Writer();
+                writer = new EAN13Writer();
                 break;
             case 3:
-                eAN8Writer = new UPCAWriter();
+                writer = new UPCAWriter();
                 break;
             case 4:
-                eAN8Writer = new QRCodeWriter();
+                writer = new QRCodeWriter();
                 break;
             case 5:
-                eAN8Writer = new Code39Writer();
+                writer = new Code39Writer();
                 break;
             case 6:
-                eAN8Writer = new Code128Writer();
+                writer = new Code128Writer();
                 break;
             case 7:
-                eAN8Writer = new ITFWriter();
+                writer = new ITFWriter();
                 break;
             case 8:
-                eAN8Writer = new PDF417Writer();
+                writer = new PDF417Writer();
                 break;
             case 9:
-                eAN8Writer = new CodaBarWriter();
+                writer = new CodaBarWriter();
                 break;
             case 10:
-                eAN8Writer = new DataMatrixWriter();
+                writer = new DataMatrixWriter();
                 break;
             case 11:
-                eAN8Writer = new AztecWriter();
+                writer = new AztecWriter();
                 break;
             default:
                 throw new IllegalArgumentException("No encoder available for format " + barcodeFormat);
         }
-        return eAN8Writer.encode(str, barcodeFormat, i, i2, map);
+        return writer.encode(str, barcodeFormat, i, i2, map);
     }
 }

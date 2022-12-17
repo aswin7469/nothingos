@@ -2,8 +2,8 @@ package kotlin.ranges;
 
 import java.util.NoSuchElementException;
 import kotlin.collections.IntIterator;
+
 /* compiled from: ProgressionIterators.kt */
-/* loaded from: classes2.dex */
 public final class IntProgressionIterator extends IntIterator {
     private final int finalElement;
     private boolean hasNext;
@@ -21,21 +21,18 @@ public final class IntProgressionIterator extends IntIterator {
         this.next = !z ? i2 : i;
     }
 
-    @Override // java.util.Iterator
     public boolean hasNext() {
         return this.hasNext;
     }
 
-    @Override // kotlin.collections.IntIterator
     public int nextInt() {
         int i = this.next;
-        if (i == this.finalElement) {
-            if (!this.hasNext) {
-                throw new NoSuchElementException();
-            }
+        if (i != this.finalElement) {
+            this.next = this.step + i;
+        } else if (this.hasNext) {
             this.hasNext = false;
         } else {
-            this.next = this.step + i;
+            throw new NoSuchElementException();
         }
         return i;
     }

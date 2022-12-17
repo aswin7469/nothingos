@@ -1,17 +1,22 @@
 package com.android.wifitrackerlib;
 
-import java.util.function.Predicate;
-/* loaded from: classes.dex */
-public final /* synthetic */ class WifiPickerTracker$$ExternalSyntheticLambda24 implements Predicate {
-    public static final /* synthetic */ WifiPickerTracker$$ExternalSyntheticLambda24 INSTANCE = new WifiPickerTracker$$ExternalSyntheticLambda24();
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Consumer;
 
-    private /* synthetic */ WifiPickerTracker$$ExternalSyntheticLambda24() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class WifiPickerTracker$$ExternalSyntheticLambda24 implements Consumer {
+    public final /* synthetic */ Set f$0;
+    public final /* synthetic */ Map f$1;
+    public final /* synthetic */ Set f$2;
+
+    public /* synthetic */ WifiPickerTracker$$ExternalSyntheticLambda24(Set set, Map map, Set set2) {
+        this.f$0 = set;
+        this.f$1 = map;
+        this.f$2 = set2;
     }
 
-    @Override // java.util.function.Predicate
-    public final boolean test(Object obj) {
-        boolean lambda$updateWifiEntries$0;
-        lambda$updateWifiEntries$0 = WifiPickerTracker.lambda$updateWifiEntries$0((StandardWifiEntry) obj);
-        return lambda$updateWifiEntries$0;
+    public final void accept(Object obj) {
+        WifiPickerTracker.lambda$updateSuggestedWifiEntryScans$13(this.f$0, this.f$1, this.f$2, (StandardWifiEntry) obj);
     }
 }

@@ -7,6 +7,7 @@ import android.content.pm.UserInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CancellationSignal;
 import android.os.UserHandle;
 import android.os.UserManager;
 import android.provider.MediaStore;
@@ -18,7 +19,7 @@ import com.android.settingslib.utils.AsyncLoaderCompat;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class StorageAsyncLoader extends AsyncLoaderCompat<SparseArray<StorageResult>> {
     private PackageManager mPackageManager;
     private ArraySet<String> mSeenPackages;
@@ -26,12 +27,10 @@ public class StorageAsyncLoader extends AsyncLoaderCompat<SparseArray<StorageRes
     private UserManager mUserManager;
     private String mUuid;
 
-    /* loaded from: classes.dex */
     public interface ResultHandler {
         void handleResult(SparseArray<StorageResult> sparseArray);
     }
 
-    /* loaded from: classes.dex */
     public static class StorageResult {
         public long allAppsExceptGamesSize;
         public long audioSize;
@@ -44,8 +43,7 @@ public class StorageAsyncLoader extends AsyncLoaderCompat<SparseArray<StorageRes
         public long videosSize;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.utils.AsyncLoaderCompat
+    /* access modifiers changed from: protected */
     public void onDiscardResult(SparseArray<StorageResult> sparseArray) {
     }
 
@@ -57,9 +55,7 @@ public class StorageAsyncLoader extends AsyncLoaderCompat<SparseArray<StorageRes
         this.mPackageManager = packageManager;
     }
 
-    @Override // androidx.loader.content.AsyncTaskLoader
-    /* renamed from: loadInBackground */
-    public SparseArray<StorageResult> mo611loadInBackground() {
+    public SparseArray<StorageResult> loadInBackground() {
         return getStorageResultsForUsers();
     }
 
@@ -67,12 +63,12 @@ public class StorageAsyncLoader extends AsyncLoaderCompat<SparseArray<StorageRes
         this.mSeenPackages = new ArraySet<>();
         SparseArray<StorageResult> sparseArray = new SparseArray<>();
         List<UserInfo> users = this.mUserManager.getUsers();
-        Collections.sort(users, StorageAsyncLoader$$ExternalSyntheticLambda0.INSTANCE);
+        Collections.sort(users, new StorageAsyncLoader$$ExternalSyntheticLambda0());
         for (UserInfo userInfo : users) {
             StorageResult appsAndGamesSize = getAppsAndGamesSize(userInfo.id);
-            appsAndGamesSize.imagesSize = getFilesSize(userInfo.id, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null);
-            appsAndGamesSize.videosSize = getFilesSize(userInfo.id, MediaStore.Video.Media.EXTERNAL_CONTENT_URI, null);
-            appsAndGamesSize.audioSize = getFilesSize(userInfo.id, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null);
+            appsAndGamesSize.imagesSize = getFilesSize(userInfo.id, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, (Bundle) null);
+            appsAndGamesSize.videosSize = getFilesSize(userInfo.id, MediaStore.Video.Media.EXTERNAL_CONTENT_URI, (Bundle) null);
+            appsAndGamesSize.audioSize = getFilesSize(userInfo.id, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, (Bundle) null);
             Bundle bundle = new Bundle();
             bundle.putString("android:query-arg-sql-selection", "media_type!=1 AND media_type!=3 AND media_type!=2 AND mime_type IS NOT NULL");
             appsAndGamesSize.documentsAndOtherSize = getFilesSize(userInfo.id, MediaStore.Files.getContentUri("external"), bundle);
@@ -84,20 +80,15 @@ public class StorageAsyncLoader extends AsyncLoaderCompat<SparseArray<StorageRes
         return sparseArray;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ int lambda$getStorageResultsForUsers$0(UserInfo userInfo, UserInfo userInfo2) {
-        return Integer.compare(userInfo.id, userInfo2.id);
-    }
-
     private long getFilesSize(int i, Uri uri, Bundle bundle) {
         long j = 0;
         try {
-            Cursor query = getContext().createPackageContextAsUser(getContext().getApplicationContext().getPackageName(), 0, UserHandle.of(i)).getContentResolver().query(uri, new String[]{"sum(_size)"}, bundle, null);
+            Cursor query = getContext().createPackageContextAsUser(getContext().getApplicationContext().getPackageName(), 0, UserHandle.of(i)).getContentResolver().query(uri, new String[]{"sum(_size)"}, bundle, (CancellationSignal) null);
             if (query == null) {
                 if (query != null) {
                     query.close();
                 }
-                return 0L;
+                return 0;
             }
             try {
                 if (query.moveToFirst()) {
@@ -106,16 +97,12 @@ public class StorageAsyncLoader extends AsyncLoaderCompat<SparseArray<StorageRes
                 query.close();
                 return j;
             } catch (Throwable th) {
-                try {
-                    query.close();
-                } catch (Throwable th2) {
-                    th.addSuppressed(th2);
-                }
-                throw th;
+                th.addSuppressed(th);
             }
+            throw th;
         } catch (PackageManager.NameNotFoundException unused) {
             Log.e("StorageAsyncLoader", "Not able to get Context for user ID " + i);
-            return 0L;
+            return 0;
         }
     }
 

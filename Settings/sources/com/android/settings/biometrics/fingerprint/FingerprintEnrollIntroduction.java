@@ -1,7 +1,9 @@
 package com.android.settings.biometrics.fingerprint;
 
+import android.app.admin.DevicePolicyManager;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.hardware.fingerprint.FingerprintManager;
 import android.hardware.fingerprint.FingerprintSensorPropertiesInternal;
@@ -11,7 +13,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.settings.R;
+import com.android.internal.annotations.VisibleForTesting;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+import com.android.settings.R$string;
+import com.android.settings.R$style;
 import com.android.settings.Utils;
 import com.android.settings.biometrics.BiometricEnrollIntroduction;
 import com.android.settings.biometrics.BiometricUtils;
@@ -21,29 +27,28 @@ import com.google.android.setupcompat.template.FooterBarMixin;
 import com.google.android.setupcompat.template.FooterButton;
 import com.google.android.setupdesign.span.LinkSpan;
 import java.util.Objects;
-/* loaded from: classes.dex */
+
 public class FingerprintEnrollIntroduction extends BiometricEnrollIntroduction {
+    private DevicePolicyManager mDevicePolicyManager;
+    @VisibleForTesting
     private FingerprintManager mFingerprintManager;
     private FooterButton mPrimaryFooterButton;
     private FooterButton mSecondaryFooterButton;
 
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction
-    protected String getExtraKeyForBiometric() {
+    /* access modifiers changed from: protected */
+    public String getExtraKeyForBiometric() {
         return "for_fingerprint";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 243;
     }
 
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction
     public int getModality() {
         return 2;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction, com.android.settings.biometrics.BiometricEnrollBase, com.android.settings.core.InstrumentedActivity, com.android.settingslib.core.lifecycle.ObservableActivity, androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         FingerprintManager fingerprintManagerOrNull = Utils.getFingerprintManagerOrNull(this);
         this.mFingerprintManager = fingerprintManagerOrNull;
@@ -53,28 +58,30 @@ public class FingerprintEnrollIntroduction extends BiometricEnrollIntroduction {
             return;
         }
         super.onCreate(bundle);
-        ((ImageView) findViewById(R.id.icon_fingerprint)).getDrawable().setColorFilter(getIconColorFilter());
-        ((ImageView) findViewById(R.id.icon_device_locked)).getDrawable().setColorFilter(getIconColorFilter());
-        ((ImageView) findViewById(R.id.icon_trash_can)).getDrawable().setColorFilter(getIconColorFilter());
-        ((ImageView) findViewById(R.id.icon_info)).getDrawable().setColorFilter(getIconColorFilter());
-        ((ImageView) findViewById(R.id.icon_link)).getDrawable().setColorFilter(getIconColorFilter());
-        ((TextView) findViewById(R.id.footer_message_2)).setText(getFooterMessage2());
-        ((TextView) findViewById(R.id.footer_message_3)).setText(getFooterMessage3());
-        ((TextView) findViewById(R.id.footer_message_4)).setText(getFooterMessage4());
-        ((TextView) findViewById(R.id.footer_message_5)).setText(getFooterMessage5());
-        ((TextView) findViewById(R.id.footer_title_1)).setText(getFooterTitle1());
-        ((TextView) findViewById(R.id.footer_title_2)).setText(getFooterTitle2());
+        this.mDevicePolicyManager = (DevicePolicyManager) getSystemService(DevicePolicyManager.class);
+        ((ImageView) findViewById(R$id.icon_fingerprint)).getDrawable().setColorFilter(getIconColorFilter());
+        ((ImageView) findViewById(R$id.icon_device_locked)).getDrawable().setColorFilter(getIconColorFilter());
+        ((ImageView) findViewById(R$id.icon_trash_can)).getDrawable().setColorFilter(getIconColorFilter());
+        ((ImageView) findViewById(R$id.icon_info)).getDrawable().setColorFilter(getIconColorFilter());
+        ((ImageView) findViewById(R$id.icon_link)).getDrawable().setColorFilter(getIconColorFilter());
+        ((TextView) findViewById(R$id.footer_message_2)).setText(getFooterMessage2());
+        ((TextView) findViewById(R$id.footer_message_3)).setText(getFooterMessage3());
+        ((TextView) findViewById(R$id.footer_message_4)).setText(getFooterMessage4());
+        ((TextView) findViewById(R$id.footer_message_5)).setText(getFooterMessage5());
+        ((TextView) findViewById(R$id.footer_message_6)).setText(getFooterMessage6());
+        ((TextView) findViewById(R$id.footer_title_1)).setText(getFooterTitle1());
+        ((TextView) findViewById(R$id.footer_title_2)).setText(getFooterTitle2());
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
         getActionBar().setDisplayShowTitleEnabled(false);
         getActionBar().setBackgroundDrawable(new ColorDrawable(0));
-        findViewById(R.id.sud_layout_header).setVisibility(8);
-        findViewById(R.id.sud_content_frame).setVisibility(8);
-        findViewById(R.id.setup_wizard_layout).setBackgroundColor(getBackgroundColor());
+        findViewById(R$id.sud_layout_header).setVisibility(8);
+        findViewById(R$id.sud_content_frame).setVisibility(8);
+        findViewById(R$id.setup_wizard_layout).setBackgroundColor(getBackgroundColor());
+        ((TextView) findViewById(R$id.introduction_title)).setTypeface(Typeface.create("NDot57", 0));
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction, androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onActivityResult(int i, int i2, Intent intent) {
         boolean z = false;
         boolean z2 = i == 2 || i == 6;
@@ -87,71 +94,83 @@ public class FingerprintEnrollIntroduction extends BiometricEnrollIntroduction {
         super.onActivityResult(i, i2, intent);
     }
 
-    protected void onCancelButtonClick(View view) {
+    /* access modifiers changed from: protected */
+    public void onCancelButtonClick(View view) {
         setResult(2, setSkipPendingEnroll(new Intent()));
         finish();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction
+    /* access modifiers changed from: protected */
     public void onSkipButtonClick(View view) {
         onCancelButtonClick(view);
     }
 
-    int getNegativeButtonTextId() {
-        return R.string.nt_skip;
+    /* access modifiers changed from: package-private */
+    public int getNegativeButtonTextId() {
+        return R$string.nt_skip;
     }
 
-    protected int getFooterTitle1() {
-        return R.string.security_settings_fingerprint_enroll_introduction_footer_title_1;
+    /* access modifiers changed from: protected */
+    public int getFooterTitle1() {
+        return R$string.security_settings_fingerprint_enroll_introduction_footer_title_1;
     }
 
-    protected int getFooterTitle2() {
-        return R.string.security_settings_fingerprint_enroll_introduction_footer_title_2;
+    /* access modifiers changed from: protected */
+    public int getFooterTitle2() {
+        return R$string.security_settings_fingerprint_enroll_introduction_footer_title_2;
     }
 
-    protected int getFooterMessage2() {
-        return R.string.security_settings_fingerprint_v2_enroll_introduction_footer_message_2;
+    /* access modifiers changed from: protected */
+    public int getFooterMessage2() {
+        return R$string.f159xdb87ba0d;
     }
 
-    protected int getFooterMessage3() {
-        return R.string.security_settings_fingerprint_v2_enroll_introduction_footer_message_3;
+    /* access modifiers changed from: protected */
+    public int getFooterMessage3() {
+        return R$string.f160xdb87ba0e;
     }
 
-    protected int getFooterMessage4() {
-        return R.string.security_settings_fingerprint_v2_enroll_introduction_footer_message_4;
+    /* access modifiers changed from: protected */
+    public int getFooterMessage4() {
+        return R$string.f161xdb87ba0f;
     }
 
-    protected int getFooterMessage5() {
-        return R.string.security_settings_fingerprint_v2_enroll_introduction_footer_message_5;
+    /* access modifiers changed from: protected */
+    public int getFooterMessage5() {
+        return R$string.f162xdb87ba10;
     }
 
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction
-    protected boolean isDisabledByAdmin() {
+    /* access modifiers changed from: protected */
+    public int getFooterMessage6() {
+        return R$string.f163xdb87ba11;
+    }
+
+    /* access modifiers changed from: protected */
+    public boolean isDisabledByAdmin() {
         return RestrictedLockUtilsInternal.checkIfKeyguardFeaturesDisabled(this, 32, this.mUserId) != null;
     }
 
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction
-    protected int getLayoutResource() {
-        return R.layout.fingerprint_enroll_introduction;
+    /* access modifiers changed from: protected */
+    public int getLayoutResource() {
+        return R$layout.fingerprint_enroll_introduction;
     }
 
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction
-    protected int getHeaderResDisabledByAdmin() {
-        return R.string.security_settings_fingerprint_enroll_introduction_title_unlock_disabled;
+    /* access modifiers changed from: protected */
+    public int getHeaderResDisabledByAdmin() {
+        return R$string.f158x2980692c;
     }
 
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction
-    protected int getHeaderResDefault() {
-        return R.string.security_settings_fingerprint_enroll_introduction_title;
+    /* access modifiers changed from: protected */
+    public int getHeaderResDefault() {
+        return R$string.security_settings_fingerprint_enroll_introduction_title;
     }
 
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction
-    protected int getDescriptionResDisabledByAdmin() {
-        return R.string.security_settings_fingerprint_enroll_introduction_message_unlock_disabled;
+    /* access modifiers changed from: protected */
+    public String getDescriptionDisabledByAdmin() {
+        return getResources().getString(R$string.f157x4ab1f9db);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public FooterButton getCancelButton() {
         FooterBarMixin footerBarMixin = this.mFooterBarMixin;
         if (footerBarMixin != null) {
@@ -160,8 +179,7 @@ public class FingerprintEnrollIntroduction extends BiometricEnrollIntroduction {
         return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.biometrics.BiometricEnrollBase
+    /* access modifiers changed from: protected */
     public FooterButton getNextButton() {
         FooterBarMixin footerBarMixin = this.mFooterBarMixin;
         if (footerBarMixin != null) {
@@ -170,42 +188,38 @@ public class FingerprintEnrollIntroduction extends BiometricEnrollIntroduction {
         return null;
     }
 
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction
-    protected TextView getErrorTextView() {
-        return (TextView) findViewById(R.id.error_text);
+    /* access modifiers changed from: protected */
+    public TextView getErrorTextView() {
+        return (TextView) findViewById(R$id.error_text);
     }
 
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction
-    protected int checkMaxEnrolled() {
+    /* access modifiers changed from: protected */
+    public int checkMaxEnrolled() {
         FingerprintManager fingerprintManager = this.mFingerprintManager;
-        if (fingerprintManager != null) {
-            if (this.mFingerprintManager.getEnrolledFingerprints(this.mUserId).size() < ((FingerprintSensorPropertiesInternal) fingerprintManager.getSensorPropertiesInternal().get(0)).maxEnrollmentsPerUser) {
-                return 0;
-            }
-            return R.string.fingerprint_intro_error_max;
+        if (fingerprintManager == null) {
+            return R$string.fingerprint_intro_error_unknown;
         }
-        return R.string.fingerprint_intro_error_unknown;
+        if (this.mFingerprintManager.getEnrolledFingerprints(this.mUserId).size() >= ((FingerprintSensorPropertiesInternal) fingerprintManager.getSensorPropertiesInternal().get(0)).maxEnrollmentsPerUser) {
+            return R$string.fingerprint_intro_error_max;
+        }
+        return 0;
     }
 
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction
-    protected void getChallenge(final BiometricEnrollIntroduction.GenerateChallengeCallback generateChallengeCallback) {
+    /* access modifiers changed from: protected */
+    public void getChallenge(BiometricEnrollIntroduction.GenerateChallengeCallback generateChallengeCallback) {
         FingerprintManager fingerprintManagerOrNull = Utils.getFingerprintManagerOrNull(this);
         this.mFingerprintManager = fingerprintManagerOrNull;
         if (fingerprintManagerOrNull == null) {
-            generateChallengeCallback.onChallengeGenerated(0, 0, 0L);
+            generateChallengeCallback.onChallengeGenerated(0, 0, 0);
             return;
         }
         int i = this.mUserId;
         Objects.requireNonNull(generateChallengeCallback);
-        fingerprintManagerOrNull.generateChallenge(i, new FingerprintManager.GenerateChallengeCallback() { // from class: com.android.settings.biometrics.fingerprint.FingerprintEnrollIntroduction$$ExternalSyntheticLambda0
-            public final void onChallengeGenerated(int i2, int i3, long j) {
-                BiometricEnrollIntroduction.GenerateChallengeCallback.this.onChallengeGenerated(i2, i3, j);
-            }
-        });
+        fingerprintManagerOrNull.generateChallenge(i, new FingerprintEnrollIntroduction$$ExternalSyntheticLambda1(generateChallengeCallback));
     }
 
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction
-    protected Intent getEnrollingIntent() {
+    /* access modifiers changed from: protected */
+    public Intent getEnrollingIntent() {
         Intent intent = new Intent(this, FingerprintEnrollFindSensor.class);
         if (BiometricUtils.containsGatekeeperPasswordHandle(getIntent())) {
             intent.putExtra("gk_pw_handle", BiometricUtils.getGatekeeperPasswordHandle(getIntent()));
@@ -213,15 +227,14 @@ public class FingerprintEnrollIntroduction extends BiometricEnrollIntroduction {
         return intent;
     }
 
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction
-    protected int getConfirmLockTitleResId() {
-        return R.string.security_settings_fingerprint_preference_title;
+    /* access modifiers changed from: protected */
+    public int getConfirmLockTitleResId() {
+        return R$string.security_settings_fingerprint_preference_title;
     }
 
-    @Override // com.google.android.setupdesign.span.LinkSpan.OnClickListener
     public void onClick(LinkSpan linkSpan) {
         if ("url".equals(linkSpan.getId())) {
-            Intent helpIntent = HelpUtils.getHelpIntent(this, getString(R.string.help_url_fingerprint), getClass().getName());
+            Intent helpIntent = HelpUtils.getHelpIntent(this, getString(R$string.help_url_fingerprint), getClass().getName());
             if (helpIntent == null) {
                 Log.w("FingerprintIntro", "Null help intent.");
                 return;
@@ -234,44 +247,33 @@ public class FingerprintEnrollIntroduction extends BiometricEnrollIntroduction {
         }
     }
 
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction
-    protected FooterButton getPrimaryFooterButton() {
+    /* access modifiers changed from: protected */
+    public FooterButton getPrimaryFooterButton() {
         if (this.mPrimaryFooterButton == null) {
-            this.mPrimaryFooterButton = new FooterButton.Builder(this).setText(R.string.nt_setup).setListener(new View.OnClickListener() { // from class: com.android.settings.biometrics.fingerprint.FingerprintEnrollIntroduction$$ExternalSyntheticLambda2
-                @Override // android.view.View.OnClickListener
-                public final void onClick(View view) {
-                    FingerprintEnrollIntroduction.this.onNextButtonClick(view);
-                }
-            }).setButtonType(6).setTheme(R.style.SudGlifButton_NtPrimary).build();
+            this.mPrimaryFooterButton = new FooterButton.Builder(this).setText(R$string.nt_setup).setListener(new FingerprintEnrollIntroduction$$ExternalSyntheticLambda0(this)).setButtonType(6).setTheme(R$style.SudGlifButton_PrimaryButton).build();
         }
         return this.mPrimaryFooterButton;
     }
 
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction
-    protected FooterButton getSecondaryFooterButton() {
+    /* access modifiers changed from: protected */
+    public FooterButton getSecondaryFooterButton() {
         if (this.mSecondaryFooterButton == null) {
-            this.mSecondaryFooterButton = new FooterButton.Builder(this).setText(getNegativeButtonTextId()).setListener(new View.OnClickListener() { // from class: com.android.settings.biometrics.fingerprint.FingerprintEnrollIntroduction$$ExternalSyntheticLambda1
-                @Override // android.view.View.OnClickListener
-                public final void onClick(View view) {
-                    FingerprintEnrollIntroduction.this.onSkipButtonClick(view);
-                }
-            }).setButtonType(5).setTheme(R.style.SudGlifButton_NtSecondary).build();
+            this.mSecondaryFooterButton = new FooterButton.Builder(this).setText(getNegativeButtonTextId()).setListener(new FingerprintEnrollIntroduction$$ExternalSyntheticLambda2(this)).setButtonType(5).setTheme(R$style.SudGlifButton_SecondaryButton).build();
         }
         return this.mSecondaryFooterButton;
     }
 
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction
-    protected int getAgreeButtonTextRes() {
-        return R.string.nt_setup;
+    /* access modifiers changed from: protected */
+    public int getAgreeButtonTextRes() {
+        return R$string.nt_setup;
     }
 
-    @Override // com.android.settings.biometrics.BiometricEnrollIntroduction
-    protected int getMoreButtonTextRes() {
-        return R.string.security_settings_face_enroll_introduction_more;
+    /* access modifiers changed from: protected */
+    public int getMoreButtonTextRes() {
+        return R$string.security_settings_face_enroll_introduction_more;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public static Intent setSkipPendingEnroll(Intent intent) {
+    protected static Intent setSkipPendingEnroll(Intent intent) {
         if (intent == null) {
             intent = new Intent();
         }
@@ -279,12 +281,11 @@ public class FingerprintEnrollIntroduction extends BiometricEnrollIntroduction {
         return intent;
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableActivity, android.app.Activity
     public boolean onOptionsItemSelected(MenuItem menuItem) {
-        if (menuItem.getItemId() == 16908332) {
-            finish();
-            return true;
+        if (menuItem.getItemId() != 16908332) {
+            return super.onOptionsItemSelected(menuItem);
         }
-        return super.onOptionsItemSelected(menuItem);
+        finish();
+        return true;
     }
 }

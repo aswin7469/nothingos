@@ -7,21 +7,16 @@ import android.os.PersistableBundle;
 import android.telephony.CarrierConfigManager;
 import android.telephony.SubscriptionManager;
 import com.android.settings.core.BasePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
 import java.util.concurrent.atomic.AtomicInteger;
-/* loaded from: classes.dex */
+
 public abstract class TelephonyBasePreferenceController extends BasePreferenceController implements TelephonyAvailabilityCallback, TelephonyAvailabilityHandler {
     private AtomicInteger mAvailabilityStatus = new AtomicInteger(0);
     private AtomicInteger mSetSessionCount = new AtomicInteger(0);
     protected int mSubId = -1;
 
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
     public abstract /* synthetic */ int getAvailabilityStatus(int i);
 
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
@@ -29,12 +24,12 @@ public abstract class TelephonyBasePreferenceController extends BasePreferenceCo
         return super.getIntentFilter();
     }
 
-    public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
-        return super.hasAsyncUpdate();
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
     }
 
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
+    public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
+        return super.hasAsyncUpdate();
     }
 
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
@@ -53,26 +48,18 @@ public abstract class TelephonyBasePreferenceController extends BasePreferenceCo
         super(context, str);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         if (this.mSetSessionCount.get() <= 0) {
-            this.mAvailabilityStatus.set(MobileNetworkUtils.getAvailability(this.mContext, this.mSubId, new TelephonyAvailabilityCallback() { // from class: com.android.settings.network.telephony.TelephonyBasePreferenceController$$ExternalSyntheticLambda0
-                @Override // com.android.settings.network.telephony.TelephonyAvailabilityCallback
-                public final int getAvailabilityStatus(int i) {
-                    return TelephonyBasePreferenceController.this.getAvailabilityStatus(i);
-                }
-            }));
+            this.mAvailabilityStatus.set(MobileNetworkUtils.getAvailability(this.mContext, this.mSubId, new TelephonyBasePreferenceController$$ExternalSyntheticLambda0(this)));
         }
         return this.mAvailabilityStatus.get();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyAvailabilityHandler
     public void setAvailabilityStatus(int i) {
         this.mAvailabilityStatus.set(i);
         this.mSetSessionCount.getAndIncrement();
     }
 
-    @Override // com.android.settings.network.telephony.TelephonyAvailabilityHandler
     public void unsetAvailabilityStatus() {
         this.mSetSessionCount.getAndDecrement();
     }

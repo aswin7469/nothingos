@@ -7,7 +7,7 @@ import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.contentcapture.ContentCaptureManager;
-/* loaded from: classes.dex */
+
 public final class ContentCaptureUtils {
     private static final int MY_USER_ID = UserHandle.myUserId();
     private static final String TAG = "ContentCaptureUtils";

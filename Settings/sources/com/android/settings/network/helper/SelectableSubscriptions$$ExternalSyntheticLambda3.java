@@ -1,18 +1,19 @@
 package com.android.settings.network.helper;
 
-import java.util.List;
-import java.util.function.Function;
-/* loaded from: classes.dex */
-public final /* synthetic */ class SelectableSubscriptions$$ExternalSyntheticLambda3 implements Function {
-    public static final /* synthetic */ SelectableSubscriptions$$ExternalSyntheticLambda3 INSTANCE = new SelectableSubscriptions$$ExternalSyntheticLambda3();
+import android.content.Context;
+import java.util.function.Supplier;
 
-    private /* synthetic */ SelectableSubscriptions$$ExternalSyntheticLambda3() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class SelectableSubscriptions$$ExternalSyntheticLambda3 implements Supplier {
+    public final /* synthetic */ SelectableSubscriptions f$0;
+    public final /* synthetic */ Context f$1;
+
+    public /* synthetic */ SelectableSubscriptions$$ExternalSyntheticLambda3(SelectableSubscriptions selectableSubscriptions, Context context) {
+        this.f$0 = selectableSubscriptions;
+        this.f$1 = context;
     }
 
-    @Override // java.util.function.Function
-    public final Object apply(Object obj) {
-        List lambda$new$4;
-        lambda$new$4 = SelectableSubscriptions.lambda$new$4((List) obj);
-        return lambda$new$4;
+    public final Object get() {
+        return this.f$0.lambda$new$0(this.f$1);
     }
 }

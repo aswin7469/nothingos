@@ -1,27 +1,28 @@
 package com.android.settings.notification.app;
 
+import android.app.NotificationChannel;
+import android.app.NotificationChannelGroup;
 import android.content.Context;
+import android.content.pm.ShortcutInfo;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.Log;
-import com.android.settings.R;
+import com.android.settings.R$xml;
 import com.android.settings.notification.NotificationBackend;
 import com.android.settingslib.core.AbstractPreferenceController;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class AppChannelsBypassingDndSettings extends NotificationSettings {
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment
+    /* access modifiers changed from: protected */
     public String getLogTag() {
         return "AppChannelsBypassingDndSettings";
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1840;
     }
 
-    @Override // com.android.settings.notification.app.NotificationSettings, com.android.settings.dashboard.DashboardFragment, com.android.settings.SettingsPreferenceFragment, com.android.settings.core.InstrumentedPreferenceFragment, com.android.settingslib.core.lifecycle.ObservablePreferenceFragment, androidx.fragment.app.Fragment
     public void onResume() {
         super.onResume();
         if (this.mUid < 0 || TextUtils.isEmpty(this.mPkg) || this.mPkgInfo == null) {
@@ -29,25 +30,24 @@ public class AppChannelsBypassingDndSettings extends NotificationSettings {
             finish();
             return;
         }
-        for (NotificationPreferenceController notificationPreferenceController : ((NotificationSettings) this).mControllers) {
-            notificationPreferenceController.onResume(this.mAppRow, null, null, null, null, this.mSuspendedAppsAdmin, null);
-            notificationPreferenceController.displayPreference(getPreferenceScreen());
+        for (NotificationPreferenceController next : this.mControllers) {
+            next.onResume(this.mAppRow, (NotificationChannel) null, (NotificationChannelGroup) null, (Drawable) null, (ShortcutInfo) null, this.mSuspendedAppsAdmin, (List<String>) null);
+            next.displayPreference(getPreferenceScreen());
         }
         updatePreferenceStates();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settings.dashboard.DashboardFragment, com.android.settings.core.InstrumentedPreferenceFragment
+    /* access modifiers changed from: protected */
     public int getPreferenceScreenResId() {
-        return R.xml.app_channels_bypassing_dnd_settings;
+        return R$xml.app_channels_bypassing_dnd_settings;
     }
 
-    @Override // com.android.settings.dashboard.DashboardFragment
-    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+    /* access modifiers changed from: protected */
+    public List<AbstractPreferenceController> createPreferenceControllers(Context context) {
         ArrayList arrayList = new ArrayList();
-        ((NotificationSettings) this).mControllers = arrayList;
+        this.mControllers = arrayList;
         arrayList.add(new HeaderPreferenceController(context, this));
-        ((NotificationSettings) this).mControllers.add(new AppChannelsBypassingDndPreferenceController(context, new NotificationBackend()));
-        return new ArrayList(((NotificationSettings) this).mControllers);
+        this.mControllers.add(new AppChannelsBypassingDndPreferenceController(context, new NotificationBackend()));
+        return new ArrayList(this.mControllers);
     }
 }

@@ -1,7 +1,7 @@
 package com.google.zxing.datamatrix.encoder;
 
 import java.util.Arrays;
-/* loaded from: classes2.dex */
+
 public class DefaultPlacement {
     private final byte[] bits;
     private final String codewords;
@@ -12,7 +12,7 @@ public class DefaultPlacement {
         this.codewords = str;
         this.numcols = i;
         this.numrows = i2;
-        byte[] bArr = new byte[i * i2];
+        byte[] bArr = new byte[(i * i2)];
         this.bits = bArr;
         Arrays.fill(bArr, (byte) -1);
     }
@@ -21,11 +21,13 @@ public class DefaultPlacement {
         return this.bits[(i2 * this.numcols) + i] == 1;
     }
 
-    final void setBit(int i, int i2, boolean z) {
-        this.bits[(i2 * this.numcols) + i] = z ? (byte) 1 : (byte) 0;
+    /* access modifiers changed from: package-private */
+    public final void setBit(int i, int i2, boolean z) {
+        this.bits[(i2 * this.numcols) + i] = z ? (byte) 1 : 0;
     }
 
-    final boolean hasBit(int i, int i2) {
+    /* access modifiers changed from: package-private */
+    public final boolean hasBit(int i, int i2) {
         return this.bits[(i2 * this.numcols) + i] >= 0;
     }
 
@@ -59,26 +61,32 @@ public class DefaultPlacement {
                 }
                 i5 -= 2;
                 i3 += 2;
-                if (i5 < 0) {
-                    break;
+                if (i5 < 0 || i3 >= this.numcols) {
+                    int i6 = i5 + 1;
+                    int i7 = i3 + 3;
                 }
-            } while (i3 < this.numcols);
-            int i6 = i5 + 1;
-            int i7 = i3 + 3;
+                utah(i5, i3, i4);
+                i4++;
+                i5 -= 2;
+                i3 += 2;
+                break;
+            } while (i3 >= this.numcols);
+            int i62 = i5 + 1;
+            int i72 = i3 + 3;
             do {
-                if (i6 >= 0 && i7 < this.numcols && !hasBit(i7, i6)) {
-                    utah(i6, i7, i4);
+                if (i62 >= 0 && i72 < this.numcols && !hasBit(i72, i62)) {
+                    utah(i62, i72, i4);
                     i4++;
                 }
-                i6 += 2;
-                i7 -= 2;
+                i62 += 2;
+                i72 -= 2;
                 i = this.numrows;
-                if (i6 >= i) {
+                if (i62 >= i) {
                     break;
                 }
-            } while (i7 >= 0);
-            i5 = i6 + 3;
-            i3 = i7 + 1;
+            } while (i72 >= 0);
+            i5 = i62 + 3;
+            i3 = i72 + 1;
             if (i5 >= i && i3 >= (i2 = this.numcols)) {
                 break;
             }

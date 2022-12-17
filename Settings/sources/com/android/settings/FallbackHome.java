@@ -20,18 +20,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import java.util.Objects;
-/* loaded from: classes.dex */
+
 public class FallbackHome extends Activity {
-    private boolean mProvisioned;
-    private WallpaperManager mWallManager;
-    private final Runnable mProgressTimeoutRunnable = new Runnable() { // from class: com.android.settings.FallbackHome$$ExternalSyntheticLambda0
-        @Override // java.lang.Runnable
-        public final void run() {
-            FallbackHome.this.lambda$new$0();
-        }
-    };
-    private final WallpaperManager.OnColorsChangedListener mColorsChangedListener = new WallpaperManager.OnColorsChangedListener() { // from class: com.android.settings.FallbackHome.1
-        @Override // android.app.WallpaperManager.OnColorsChangedListener
+    /* access modifiers changed from: private */
+    public final WallpaperManager.OnColorsChangedListener mColorsChangedListener = new WallpaperManager.OnColorsChangedListener() {
         public void onColorsChanged(WallpaperColors wallpaperColors, int i) {
             if (wallpaperColors != null) {
                 View decorView = FallbackHome.this.getWindow().getDecorView();
@@ -40,39 +32,47 @@ public class FallbackHome extends Activity {
             }
         }
     };
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() { // from class: com.android.settings.FallbackHome.2
-        @Override // android.content.BroadcastReceiver
-        public void onReceive(Context context, Intent intent) {
-            FallbackHome.this.maybeFinish();
-        }
-    };
-    private Handler mHandler = new Handler() { // from class: com.android.settings.FallbackHome.4
-        @Override // android.os.Handler
+    private Handler mHandler = new Handler() {
         public void handleMessage(Message message) {
             FallbackHome.this.maybeFinish();
         }
     };
+    private int mProgressTimeout;
+    private final Runnable mProgressTimeoutRunnable = new FallbackHome$$ExternalSyntheticLambda0(this);
+    private boolean mProvisioned;
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            FallbackHome.this.maybeFinish();
+        }
+    };
+    /* access modifiers changed from: private */
+    public WallpaperManager mWallManager;
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$new$0() {
-        View inflate = getLayoutInflater().inflate(R.layout.fallback_home_finishing_boot, (ViewGroup) null);
+        View inflate = getLayoutInflater().inflate(R$layout.fallback_home_finishing_boot, (ViewGroup) null);
         setContentView(inflate);
         inflate.setAlpha(0.0f);
-        inflate.animate().alpha(1.0f).setDuration(500L).setInterpolator(AnimationUtils.loadInterpolator(this, 17563661)).start();
+        inflate.animate().alpha(1.0f).setDuration(500).setInterpolator(AnimationUtils.loadInterpolator(this, 17563661)).start();
         getWindow().addFlags(128);
     }
 
-    @Override // android.app.Activity
-    protected void onCreate(Bundle bundle) {
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
         int i;
         super.onCreate(bundle);
+        int integer = getResources().getInteger(17694912);
+        this.mProgressTimeout = integer;
         boolean z = false;
+        if (integer <= 0) {
+            this.mProgressTimeout = 0;
+        }
         if (Settings.Global.getInt(getContentResolver(), "device_provisioned", 0) != 0) {
             z = true;
         }
         this.mProvisioned = z;
         if (!z) {
-            setTheme(R.style.FallbackHome_SetupWizard);
+            setTheme(R$style.FallbackHome_SetupWizard);
             i = 4102;
         } else {
             i = 1536;
@@ -89,22 +89,22 @@ public class FallbackHome extends Activity {
         maybeFinish();
     }
 
-    @Override // android.app.Activity
-    protected void onResume() {
+    /* access modifiers changed from: protected */
+    public void onResume() {
         super.onResume();
         if (this.mProvisioned) {
-            this.mHandler.postDelayed(this.mProgressTimeoutRunnable, 2000L);
+            this.mHandler.postDelayed(this.mProgressTimeoutRunnable, (long) this.mProgressTimeout);
         }
     }
 
-    @Override // android.app.Activity
-    protected void onPause() {
+    /* access modifiers changed from: protected */
+    public void onPause() {
         super.onPause();
         this.mHandler.removeCallbacks(this.mProgressTimeoutRunnable);
     }
 
-    @Override // android.app.Activity
-    protected void onDestroy() {
+    /* access modifiers changed from: protected */
+    public void onDestroy() {
         super.onDestroy();
         unregisterReceiver(this.mReceiver);
         WallpaperManager wallpaperManager = this.mWallManager;
@@ -114,37 +114,32 @@ public class FallbackHome extends Activity {
     }
 
     private void loadWallpaperColors(final int i) {
-        new AsyncTask<Object, Void, Integer>() { // from class: com.android.settings.FallbackHome.3
-            /* JADX INFO: Access modifiers changed from: protected */
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.AsyncTask
-            /* renamed from: doInBackground */
-            public Integer mo197doInBackground(Object... objArr) {
+        new AsyncTask<Object, Void, Integer>() {
+            /* access modifiers changed from: protected */
+            public Integer doInBackground(Object... objArr) {
                 WallpaperColors wallpaperColors = FallbackHome.this.mWallManager.getWallpaperColors(1);
-                if (wallpaperColors == null) {
-                    FallbackHome.this.mWallManager.addOnColorsChangedListener(FallbackHome.this.mColorsChangedListener, null);
-                    return null;
+                if (wallpaperColors != null) {
+                    return Integer.valueOf(FallbackHome.this.updateVisibilityFlagsFromColors(wallpaperColors, i));
                 }
-                return Integer.valueOf(FallbackHome.this.updateVisibilityFlagsFromColors(wallpaperColors, i));
+                FallbackHome.this.mWallManager.addOnColorsChangedListener(FallbackHome.this.mColorsChangedListener, (Handler) null);
+                return null;
             }
 
-            /* JADX INFO: Access modifiers changed from: protected */
-            @Override // android.os.AsyncTask
+            /* access modifiers changed from: protected */
             public void onPostExecute(Integer num) {
-                if (num == null) {
-                    return;
+                if (num != null) {
+                    FallbackHome.this.getWindow().getDecorView().setSystemUiVisibility(num.intValue());
                 }
-                FallbackHome.this.getWindow().getDecorView().setSystemUiVisibility(num.intValue());
             }
         }.execute(new Object[0]);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void maybeFinish() {
         if (((UserManager) getSystemService(UserManager.class)).isUserUnlocked()) {
             if (Objects.equals(getPackageName(), getPackageManager().resolveActivity(new Intent("android.intent.action.MAIN").addCategory("android.intent.category.HOME"), 0).activityInfo.packageName)) {
                 Log.d("FallbackHome", "User unlocked but no home; let's hope someone enables one soon?");
-                this.mHandler.sendEmptyMessageDelayed(0, 500L);
+                this.mHandler.sendEmptyMessageDelayed(0, 500);
                 return;
             }
             Log.d("FallbackHome", "User unlocked and real home found; let's go!");
@@ -153,8 +148,8 @@ public class FallbackHome extends Activity {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public int updateVisibilityFlagsFromColors(WallpaperColors wallpaperColors, int i) {
-        return (wallpaperColors.getColorHints() & 1) != 0 ? i | 8192 | 16 : i & (-8193) & (-17);
+        return (wallpaperColors.getColorHints() & 1) != 0 ? i | 8192 | 16 : i & -8193 & -17;
     }
 }

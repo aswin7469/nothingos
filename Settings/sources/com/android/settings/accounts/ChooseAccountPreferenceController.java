@@ -10,13 +10,11 @@ import android.content.IntentFilter;
 import android.content.SyncAdapterType;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.UserHandle;
 import android.util.Log;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import com.android.settings.core.BasePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.RestrictedLockUtilsInternal;
 import com.google.android.collect.Maps;
@@ -27,7 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public class ChooseAccountPreferenceController extends BasePreferenceController {
     private static final String TAG = "ChooseAccountPrefCtrler";
     private Map<String, List<String>> mAccountTypeToAuthorities;
@@ -35,52 +33,39 @@ public class ChooseAccountPreferenceController extends BasePreferenceController 
     private Activity mActivity;
     private AuthenticatorDescription[] mAuthDescs;
     private String[] mAuthorities;
-    private PreferenceScreen mScreen;
-    private UserHandle mUserHandle;
     private final List<ProviderEntry> mProviderList = new ArrayList();
+    private PreferenceScreen mScreen;
     private final Map<String, AuthenticatorDescription> mTypeToAuthDescription = new HashMap();
+    private UserHandle mUserHandle;
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return 0;
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -95,20 +80,18 @@ public class ChooseAccountPreferenceController extends BasePreferenceController 
         this.mUserHandle = userHandle;
         if (strArr2 != null) {
             this.mAccountTypesFilter = new HashSet();
-            for (String str : strArr2) {
-                this.mAccountTypesFilter.add(str);
+            for (String add : strArr2) {
+                this.mAccountTypesFilter.add(add);
             }
         }
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mScreen = preferenceScreen;
         updateAuthDescriptions();
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
         if (!(preference instanceof ProviderPreference)) {
             return false;
@@ -127,7 +110,9 @@ public class ChooseAccountPreferenceController extends BasePreferenceController 
         while (true) {
             AuthenticatorDescription[] authenticatorDescriptionArr = this.mAuthDescs;
             if (i < authenticatorDescriptionArr.length) {
-                this.mTypeToAuthDescription.put(authenticatorDescriptionArr[i].type, authenticatorDescriptionArr[i]);
+                Map<String, AuthenticatorDescription> map = this.mTypeToAuthDescription;
+                AuthenticatorDescription authenticatorDescription = authenticatorDescriptionArr[i];
+                map.put(authenticatorDescription.type, authenticatorDescription);
                 i++;
             } else {
                 onAuthDescriptionsUpdated();
@@ -147,33 +132,29 @@ public class ChooseAccountPreferenceController extends BasePreferenceController 
             }
             String str = authenticatorDescriptionArr[i].type;
             CharSequence labelForType = getLabelForType(str);
-            if (labelForType == null) {
-                Log.w(TAG, "@_@ ------ provider name is null for " + str);
-            } else {
-                List<String> authoritiesForAccountType = getAuthoritiesForAccountType(str);
-                String[] strArr = this.mAuthorities;
-                if (strArr != null && strArr.length > 0 && authoritiesForAccountType != null) {
-                    int i2 = 0;
-                    while (true) {
-                        String[] strArr2 = this.mAuthorities;
-                        if (i2 >= strArr2.length) {
-                            z = false;
-                            break;
-                        } else if (authoritiesForAccountType.contains(strArr2[i2])) {
-                            break;
-                        } else {
-                            i2++;
-                        }
+            List<String> authoritiesForAccountType = getAuthoritiesForAccountType(str);
+            String[] strArr = this.mAuthorities;
+            if (strArr != null && strArr.length > 0 && authoritiesForAccountType != null) {
+                int i2 = 0;
+                while (true) {
+                    String[] strArr2 = this.mAuthorities;
+                    if (i2 >= strArr2.length) {
+                        z = false;
+                        break;
+                    } else if (authoritiesForAccountType.contains(strArr2[i2])) {
+                        break;
+                    } else {
+                        i2++;
                     }
                 }
-                if (z && (set = this.mAccountTypesFilter) != null && !set.contains(str)) {
-                    z = false;
-                }
-                if (z) {
-                    this.mProviderList.add(new ProviderEntry(labelForType, str));
-                } else if (Log.isLoggable(TAG, 2)) {
-                    Log.v(TAG, "Skipped pref " + ((Object) labelForType) + ": has no authority we need");
-                }
+            }
+            if (z && (set = this.mAccountTypesFilter) != null && !set.contains(str)) {
+                z = false;
+            }
+            if (z) {
+                this.mProviderList.add(new ProviderEntry(labelForType, str));
+            } else if (Log.isLoggable(TAG, 2)) {
+                Log.v(TAG, "Skipped pref " + labelForType + ": has no authority we need");
             }
             i++;
         }
@@ -188,20 +169,20 @@ public class ChooseAccountPreferenceController extends BasePreferenceController 
             finishWithAccountType(this.mProviderList.get(0).getType());
         } else if (this.mProviderList.size() > 0) {
             Collections.sort(this.mProviderList);
-            for (ProviderEntry providerEntry : this.mProviderList) {
-                ProviderPreference providerPreference = new ProviderPreference(context, providerEntry.getType(), getDrawableForType(providerEntry.getType()), providerEntry.getName());
-                providerPreference.setKey(providerEntry.getType().toString());
+            for (ProviderEntry next : this.mProviderList) {
+                ProviderPreference providerPreference = new ProviderPreference(context, next.getType(), getDrawableForType(next.getType()), next.getName());
+                providerPreference.setKey(next.getType().toString());
                 providerPreference.checkAccountManagementAndSetDisabled(this.mUserHandle.getIdentifier());
                 this.mScreen.addPreference(providerPreference);
             }
         } else {
             if (Log.isLoggable(TAG, 2)) {
                 StringBuilder sb = new StringBuilder();
-                for (String str2 : this.mAuthorities) {
-                    sb.append(str2);
+                for (String append : this.mAuthorities) {
+                    sb.append(append);
                     sb.append(' ');
                 }
-                Log.v(TAG, "No providers found for authorities: " + ((Object) sb));
+                Log.v(TAG, "No providers found for authorities: " + sb);
             }
             this.mActivity.setResult(0);
             this.mActivity.finish();
@@ -209,13 +190,12 @@ public class ChooseAccountPreferenceController extends BasePreferenceController 
     }
 
     private List<String> getAuthoritiesForAccountType(String str) {
-        SyncAdapterType[] syncAdapterTypesAsUser;
         if (this.mAccountTypeToAuthorities == null) {
             this.mAccountTypeToAuthorities = Maps.newHashMap();
             for (SyncAdapterType syncAdapterType : ContentResolver.getSyncAdapterTypesAsUser(this.mUserHandle.getIdentifier())) {
-                List<String> list = this.mAccountTypeToAuthorities.get(syncAdapterType.accountType);
+                List list = this.mAccountTypeToAuthorities.get(syncAdapterType.accountType);
                 if (list == null) {
-                    list = new ArrayList<>();
+                    list = new ArrayList();
                     this.mAccountTypeToAuthorities.put(syncAdapterType.accountType, list);
                 }
                 if (Log.isLoggable(TAG, 2)) {
@@ -227,30 +207,65 @@ public class ChooseAccountPreferenceController extends BasePreferenceController 
         return this.mAccountTypeToAuthorities.get(str);
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:5:0x005c A[RETURN] */
-    /* JADX WARN: Removed duplicated region for block: B:7:0x005d  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    Drawable getDrawableForType(String str) {
-        Drawable userBadgedIcon;
-        if (this.mTypeToAuthDescription.containsKey(str)) {
-            try {
-                AuthenticatorDescription authenticatorDescription = this.mTypeToAuthDescription.get(str);
-                userBadgedIcon = this.mContext.getPackageManager().getUserBadgedIcon(this.mActivity.createPackageContextAsUser(authenticatorDescription.packageName, 0, this.mUserHandle).getDrawable(authenticatorDescription.iconId), this.mUserHandle);
-            } catch (PackageManager.NameNotFoundException unused) {
-                Log.w(TAG, "No icon name for account type " + str);
-            } catch (Resources.NotFoundException unused2) {
-                Log.w(TAG, "No icon resource for account type " + str);
-            }
-            return userBadgedIcon == null ? userBadgedIcon : this.mContext.getPackageManager().getDefaultActivityIcon();
-        }
-        userBadgedIcon = null;
-        if (userBadgedIcon == null) {
-        }
+    /* access modifiers changed from: package-private */
+    /* JADX WARNING: Removed duplicated region for block: B:10:0x005c A[RETURN] */
+    /* JADX WARNING: Removed duplicated region for block: B:11:0x005d  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public android.graphics.drawable.Drawable getDrawableForType(java.lang.String r7) {
+        /*
+            r6 = this;
+            java.lang.String r0 = "ChooseAccountPrefCtrler"
+            java.util.Map<java.lang.String, android.accounts.AuthenticatorDescription> r1 = r6.mTypeToAuthDescription
+            boolean r1 = r1.containsKey(r7)
+            if (r1 == 0) goto L_0x0059
+            java.util.Map<java.lang.String, android.accounts.AuthenticatorDescription> r1 = r6.mTypeToAuthDescription     // Catch:{ NameNotFoundException -> 0x0045, NotFoundException -> 0x0030 }
+            java.lang.Object r1 = r1.get(r7)     // Catch:{ NameNotFoundException -> 0x0045, NotFoundException -> 0x0030 }
+            android.accounts.AuthenticatorDescription r1 = (android.accounts.AuthenticatorDescription) r1     // Catch:{ NameNotFoundException -> 0x0045, NotFoundException -> 0x0030 }
+            android.app.Activity r2 = r6.mActivity     // Catch:{ NameNotFoundException -> 0x0045, NotFoundException -> 0x0030 }
+            java.lang.String r3 = r1.packageName     // Catch:{ NameNotFoundException -> 0x0045, NotFoundException -> 0x0030 }
+            r4 = 0
+            android.os.UserHandle r5 = r6.mUserHandle     // Catch:{ NameNotFoundException -> 0x0045, NotFoundException -> 0x0030 }
+            android.content.Context r2 = r2.createPackageContextAsUser(r3, r4, r5)     // Catch:{ NameNotFoundException -> 0x0045, NotFoundException -> 0x0030 }
+            android.content.Context r3 = r6.mContext     // Catch:{ NameNotFoundException -> 0x0045, NotFoundException -> 0x0030 }
+            android.content.pm.PackageManager r3 = r3.getPackageManager()     // Catch:{ NameNotFoundException -> 0x0045, NotFoundException -> 0x0030 }
+            int r1 = r1.iconId     // Catch:{ NameNotFoundException -> 0x0045, NotFoundException -> 0x0030 }
+            android.graphics.drawable.Drawable r1 = r2.getDrawable(r1)     // Catch:{ NameNotFoundException -> 0x0045, NotFoundException -> 0x0030 }
+            android.os.UserHandle r2 = r6.mUserHandle     // Catch:{ NameNotFoundException -> 0x0045, NotFoundException -> 0x0030 }
+            android.graphics.drawable.Drawable r7 = r3.getUserBadgedIcon(r1, r2)     // Catch:{ NameNotFoundException -> 0x0045, NotFoundException -> 0x0030 }
+            goto L_0x005a
+        L_0x0030:
+            java.lang.StringBuilder r1 = new java.lang.StringBuilder
+            r1.<init>()
+            java.lang.String r2 = "No icon resource for account type "
+            r1.append(r2)
+            r1.append(r7)
+            java.lang.String r7 = r1.toString()
+            android.util.Log.w(r0, r7)
+            goto L_0x0059
+        L_0x0045:
+            java.lang.StringBuilder r1 = new java.lang.StringBuilder
+            r1.<init>()
+            java.lang.String r2 = "No icon name for account type "
+            r1.append(r2)
+            r1.append(r7)
+            java.lang.String r7 = r1.toString()
+            android.util.Log.w(r0, r7)
+        L_0x0059:
+            r7 = 0
+        L_0x005a:
+            if (r7 == 0) goto L_0x005d
+            return r7
+        L_0x005d:
+            android.content.Context r6 = r6.mContext
+            android.content.pm.PackageManager r6 = r6.getPackageManager()
+            android.graphics.drawable.Drawable r6 = r6.getDefaultActivityIcon()
+            return r6
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.accounts.ChooseAccountPreferenceController.getDrawableForType(java.lang.String):android.graphics.drawable.Drawable");
     }
 
-    CharSequence getLabelForType(String str) {
+    /* access modifiers changed from: package-private */
+    public CharSequence getLabelForType(String str) {
         if (this.mTypeToAuthDescription.containsKey(str)) {
             try {
                 AuthenticatorDescription authenticatorDescription = this.mTypeToAuthDescription.get(str);

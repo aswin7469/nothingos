@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:persistent="false" android:title="@string/nt_glyphs_music_visualisation_title" android:key="key_main_screen" app:searchable="false">
+    <com.nothing.settings.glyphs.widget.GlyphsAnimPreviewPreference android:key="key_preview_image" app:anim_dark_url="MusicVisualisation_Light.json" app:anim_light_url="MusicVisualisation_Dark.json"/>
+    <com.nothing.p006ui.support.NtCustSwitchPreference android:title="@string/glyphs_activate_switch_title" android:key="glyphs_switch"/>
+    <com.android.settingslib.widget.FooterPreference android:selectable="false" android:key="key_features"/>
+</PreferenceScreen>

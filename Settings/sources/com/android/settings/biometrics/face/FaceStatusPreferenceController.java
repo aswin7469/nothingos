@@ -9,69 +9,61 @@ import androidx.lifecycle.OnLifecycleEvent;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.Settings;
 import com.android.settings.Utils;
 import com.android.settings.biometrics.BiometricStatusPreferenceController;
-import com.android.settings.biometrics.ParentalControlsUtils;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.RestrictedPreference;
-import com.nt.settings.face.NtCreateFaceActivity;
-import com.nt.settings.face.NtFaceUtil;
-/* loaded from: classes.dex */
+import com.nothing.settings.face.FaceRecognitionActivity;
+import com.nothing.settings.face.FaceUtils;
+
 public class FaceStatusPreferenceController extends BiometricStatusPreferenceController implements LifecycleObserver {
     public static final String KEY_FACE_SETTINGS = "face_settings";
     protected final FaceManager mFaceManager;
+    private final FaceStatusUtils mFaceStatusUtils;
     @VisibleForTesting
     RestrictedPreference mPreference;
 
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController, com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController, com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
+    /* access modifiers changed from: protected */
+    public boolean isDeviceSupported() {
+        return true;
     }
 
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController, com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
 
     public FaceStatusPreferenceController(Context context) {
-        this(context, KEY_FACE_SETTINGS, null);
+        this(context, KEY_FACE_SETTINGS, (Lifecycle) null);
     }
 
     public FaceStatusPreferenceController(Context context, String str) {
-        this(context, str, null);
+        this(context, str, (Lifecycle) null);
     }
 
     public FaceStatusPreferenceController(Context context, Lifecycle lifecycle) {
@@ -80,7 +72,9 @@ public class FaceStatusPreferenceController extends BiometricStatusPreferenceCon
 
     public FaceStatusPreferenceController(Context context, String str, Lifecycle lifecycle) {
         super(context, str);
-        this.mFaceManager = Utils.getFaceManagerOrNull(context);
+        FaceManager faceManagerOrNull = Utils.getFaceManagerOrNull(context);
+        this.mFaceManager = faceManagerOrNull;
+        this.mFaceStatusUtils = new FaceStatusUtils(context, faceManagerOrNull, getUserId());
         if (lifecycle != null) {
             lifecycle.addObserver(this);
         }
@@ -91,57 +85,51 @@ public class FaceStatusPreferenceController extends BiometricStatusPreferenceCon
         updateStateInternal();
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = (RestrictedPreference) preferenceScreen.findPreference(this.mPreferenceKey);
     }
 
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController
-    protected boolean isDeviceSupported() {
-        return this.mContext.getPackageManager().hasSystemFeature("nt.face.facerecognition");
+    /* access modifiers changed from: protected */
+    public boolean hasEnrolledBiometrics() {
+        return FaceUtils.isFaceDataExist(this.mContext);
     }
 
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController
-    protected boolean hasEnrolledBiometrics() {
-        return NtFaceUtil.isFaceDataExist(this.mContext);
-    }
-
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
         updateStateInternal();
     }
 
     private void updateStateInternal() {
-        updateStateInternal(ParentalControlsUtils.parentConsentRequired(this.mContext, 8));
+        updateStateInternal(this.mFaceStatusUtils.getDisablingAdmin());
     }
 
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    void updateStateInternal(RestrictedLockUtils.EnforcedAdmin enforcedAdmin) {
+    public void updateStateInternal(RestrictedLockUtils.EnforcedAdmin enforcedAdmin) {
         RestrictedPreference restrictedPreference = this.mPreference;
         if (restrictedPreference != null) {
             restrictedPreference.setDisabledByAdmin(enforcedAdmin);
         }
     }
 
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController
-    protected String getSummaryTextEnrolled() {
-        return this.mContext.getResources().getString(R.string.security_settings_face_preference_summary);
+    /* access modifiers changed from: protected */
+    public String getSummaryTextEnrolled() {
+        return this.mContext.getResources().getString(R$string.security_settings_face_preference_summary);
     }
 
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController
-    protected String getSummaryTextNoneEnrolled() {
-        return this.mContext.getResources().getString(R.string.security_settings_face_preference_summary_none);
+    /* access modifiers changed from: protected */
+    public String getSummaryTextNoneEnrolled() {
+        return this.mContext.getResources().getString(R$string.nt_security_settings_face_preference_summary_none);
     }
 
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController
-    protected String getSettingsClassName() {
+    /* access modifiers changed from: protected */
+    public String getSettingsClassName() {
         return Settings.FaceSettingsActivity.class.getName();
     }
 
-    @Override // com.android.settings.biometrics.BiometricStatusPreferenceController
-    protected String getEnrollClassName() {
-        return NtCreateFaceActivity.class.getName();
+    /* access modifiers changed from: protected */
+    public String getEnrollClassName() {
+        return FaceRecognitionActivity.class.getName();
     }
 }

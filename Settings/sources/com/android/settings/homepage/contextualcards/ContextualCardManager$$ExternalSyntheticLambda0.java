@@ -1,17 +1,16 @@
 package com.android.settings.homepage.contextualcards;
 
-import java.util.Comparator;
-/* loaded from: classes.dex */
-public final /* synthetic */ class ContextualCardManager$$ExternalSyntheticLambda0 implements Comparator {
-    public static final /* synthetic */ ContextualCardManager$$ExternalSyntheticLambda0 INSTANCE = new ContextualCardManager$$ExternalSyntheticLambda0();
+import java.util.function.Predicate;
 
-    private /* synthetic */ ContextualCardManager$$ExternalSyntheticLambda0() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class ContextualCardManager$$ExternalSyntheticLambda0 implements Predicate {
+    public final /* synthetic */ ContextualCardManager f$0;
+
+    public /* synthetic */ ContextualCardManager$$ExternalSyntheticLambda0(ContextualCardManager contextualCardManager) {
+        this.f$0 = contextualCardManager;
     }
 
-    @Override // java.util.Comparator
-    public final int compare(Object obj, Object obj2) {
-        int lambda$sortCards$0;
-        lambda$sortCards$0 = ContextualCardManager.lambda$sortCards$0((ContextualCard) obj, (ContextualCard) obj2);
-        return lambda$sortCards$0;
+    public final boolean test(Object obj) {
+        return this.f$0.lambda$getCardsToKeep$4((ContextualCard) obj);
     }
 }

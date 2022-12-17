@@ -6,17 +6,17 @@ import androidx.core.graphics.drawable.IconCompat;
 import androidx.fragment.app.FragmentActivity;
 import com.android.settingslib.core.instrumentation.Instrumentable;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public interface PanelContent extends Instrumentable {
-    default CharSequence getCustomizedButtonTitle() {
+    CharSequence getCustomizedButtonTitle() {
         return null;
     }
 
-    default Intent getHeaderIconIntent() {
+    Intent getHeaderIconIntent() {
         return null;
     }
 
-    default IconCompat getIcon() {
+    IconCompat getIcon() {
         return null;
     }
 
@@ -24,27 +24,27 @@ public interface PanelContent extends Instrumentable {
 
     List<Uri> getSlices();
 
-    default CharSequence getSubTitle() {
+    CharSequence getSubTitle() {
         return null;
     }
 
     CharSequence getTitle();
 
-    default int getViewType() {
+    int getViewType() {
         return 0;
     }
 
-    default boolean isCustomizedButtonUsed() {
+    boolean isCustomizedButtonUsed() {
         return false;
     }
 
-    default boolean isProgressBarVisible() {
+    boolean isProgressBarVisible() {
         return false;
     }
 
-    default void onClickCustomizedButton(FragmentActivity fragmentActivity) {
+    void onClickCustomizedButton(FragmentActivity fragmentActivity) {
     }
 
-    default void registerCallback(PanelContentCallback panelContentCallback) {
+    void registerCallback(PanelContentCallback panelContentCallback) {
     }
 }

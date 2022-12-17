@@ -6,42 +6,38 @@ import android.content.Context;
 import android.os.RemoteException;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$array;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.development.DeveloperOptionsPreferenceController;
-/* loaded from: classes.dex */
+
 public class BackgroundProcessLimitPreferenceController extends DeveloperOptionsPreferenceController implements Preference.OnPreferenceChangeListener, PreferenceControllerMixin {
     private final String[] mListSummaries;
     private final String[] mListValues;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "app_process_limit";
     }
 
     public BackgroundProcessLimitPreferenceController(Context context) {
         super(context);
-        this.mListValues = context.getResources().getStringArray(R.array.app_process_limit_values);
-        this.mListSummaries = context.getResources().getStringArray(R.array.app_process_limit_entries);
+        this.mListValues = context.getResources().getStringArray(R$array.app_process_limit_values);
+        this.mListSummaries = context.getResources().getStringArray(R$array.app_process_limit_entries);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         writeAppProcessLimitOptions(obj);
         updateAppProcessLimitOptions();
         return true;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         updateAppProcessLimitOptions();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController
+    /* access modifiers changed from: protected */
     public void onDeveloperOptionsSwitchDisabled() {
         super.onDeveloperOptionsSwitchDisabled();
-        writeAppProcessLimitOptions(null);
+        writeAppProcessLimitOptions((Object) null);
     }
 
     private void updateAppProcessLimitOptions() {
@@ -68,21 +64,22 @@ public class BackgroundProcessLimitPreferenceController extends DeveloperOptions
     }
 
     private void writeAppProcessLimitOptions(Object obj) {
-        int parseInt;
+        int i;
         if (obj != null) {
             try {
-                parseInt = Integer.parseInt(obj.toString());
+                i = Integer.parseInt(obj.toString());
             } catch (RemoteException unused) {
                 return;
             }
         } else {
-            parseInt = -1;
+            i = -1;
         }
-        getActivityManagerService().setProcessLimit(parseInt);
+        getActivityManagerService().setProcessLimit(i);
         updateAppProcessLimitOptions();
     }
 
-    IActivityManager getActivityManagerService() {
+    /* access modifiers changed from: package-private */
+    public IActivityManager getActivityManagerService() {
         return ActivityManager.getService();
     }
 }

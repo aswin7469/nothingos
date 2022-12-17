@@ -12,21 +12,21 @@ import android.text.TextUtils;
 import android.util.Pair;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
-import com.android.settings.R;
+import com.android.settings.R$string;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settings.overlay.FeatureFactory;
+import com.android.settingslib.applications.RecentAppOpsAccess;
 import com.android.settingslib.core.AbstractPreferenceController;
 import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-/* loaded from: classes.dex */
+
 public class ThemePreferenceController extends AbstractPreferenceController implements PreferenceControllerMixin, Preference.OnPreferenceChangeListener {
     private final MetricsFeatureProvider mMetricsFeatureProvider;
     private final IOverlayManager mOverlayService;
     private final PackageManager mPackageManager;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "theme";
     }
@@ -42,15 +42,13 @@ public class ThemePreferenceController extends AbstractPreferenceController impl
         this.mMetricsFeatureProvider = FeatureFactory.getFactory(context).getMetricsFeatureProvider();
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
         if ("theme".equals(preference.getKey())) {
-            this.mMetricsFeatureProvider.action(this.mContext, 816, new Pair[0]);
+            this.mMetricsFeatureProvider.action(this.mContext, 816, (Pair<Integer, Object>[]) new Pair[0]);
         }
         return false;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         ListPreference listPreference = (ListPreference) preference;
         int i = 0;
@@ -66,25 +64,24 @@ public class ThemePreferenceController extends AbstractPreferenceController impl
         listPreference.setEntries(charSequenceArr);
         listPreference.setEntryValues(availableThemes);
         String currentTheme = getCurrentTheme();
-        String str = null;
+        CharSequence charSequence = null;
         while (true) {
             if (i >= availableThemes.length) {
                 break;
             } else if (TextUtils.equals(availableThemes[i], currentTheme)) {
-                str = charSequenceArr[i];
+                charSequence = charSequenceArr[i];
                 break;
             } else {
                 i++;
             }
         }
-        if (TextUtils.isEmpty(str)) {
-            str = this.mContext.getString(R.string.default_theme);
+        if (TextUtils.isEmpty(charSequence)) {
+            charSequence = this.mContext.getString(R$string.default_theme);
         }
-        listPreference.setSummary(str);
+        listPreference.setSummary(charSequence);
         listPreference.setValue(currentTheme);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         if (Objects.equals(obj, getCurrentTheme())) {
             return true;
@@ -103,22 +100,25 @@ public class ThemePreferenceController extends AbstractPreferenceController impl
         }
         try {
             PackageInfo packageInfo = this.mPackageManager.getPackageInfo(overlayInfo.packageName, 0);
-            if (packageInfo == null) {
+            if (packageInfo == null || packageInfo.isStaticOverlayPackage()) {
                 return false;
             }
-            return !packageInfo.isStaticOverlayPackage();
+            return true;
         } catch (PackageManager.NameNotFoundException unused) {
             return false;
         }
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         String[] availableThemes;
-        return (this.mOverlayService == null || (availableThemes = getAvailableThemes(false)) == null || availableThemes.length <= 1) ? false : true;
+        if (this.mOverlayService == null || (availableThemes = getAvailableThemes(false)) == null || availableThemes.length <= 1) {
+            return false;
+        }
+        return true;
     }
 
-    String getCurrentTheme() {
+    /* access modifiers changed from: package-private */
+    public String getCurrentTheme() {
         String[] availableThemes = getAvailableThemes(true);
         if (availableThemes.length < 1) {
             return null;
@@ -126,20 +126,25 @@ public class ThemePreferenceController extends AbstractPreferenceController impl
         return availableThemes[0];
     }
 
-    String[] getAvailableThemes(boolean z) {
+    /* access modifiers changed from: package-private */
+    public String[] getAvailableThemes(boolean z) {
         try {
-            List overlayInfosForTarget = this.mOverlayService.getOverlayInfosForTarget("android", UserHandle.myUserId());
+            List overlayInfosForTarget = this.mOverlayService.getOverlayInfosForTarget(RecentAppOpsAccess.ANDROID_SYSTEM_PACKAGE_NAME, UserHandle.myUserId());
             ArrayList arrayList = new ArrayList(overlayInfosForTarget.size());
             int size = overlayInfosForTarget.size();
             for (int i = 0; i < size; i++) {
                 if (isTheme((OverlayInfo) overlayInfosForTarget.get(i))) {
-                    if (((OverlayInfo) overlayInfosForTarget.get(i)).isEnabled() && z) {
+                    if (!((OverlayInfo) overlayInfosForTarget.get(i)).isEnabled() || !z) {
+                        arrayList.add(((OverlayInfo) overlayInfosForTarget.get(i)).packageName);
+                    } else {
                         return new String[]{((OverlayInfo) overlayInfosForTarget.get(i)).packageName};
                     }
-                    arrayList.add(((OverlayInfo) overlayInfosForTarget.get(i)).packageName);
                 }
             }
-            return z ? new String[0] : (String[]) arrayList.toArray(new String[arrayList.size()]);
+            if (z) {
+                return new String[0];
+            }
+            return (String[]) arrayList.toArray(new String[arrayList.size()]);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }

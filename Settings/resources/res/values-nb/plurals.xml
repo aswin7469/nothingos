@@ -5,8 +5,8 @@
         <item quantity="other">For %d dager siden</item>
     </plurals>
     <plurals name="abc_slice_duration_min">
-        <item quantity="one">For %d min. siden</item>
-        <item quantity="other">For %d min. siden</item>
+        <item quantity="one">For %d min siden</item>
+        <item quantity="other">For %d min siden</item>
     </plurals>
     <plurals name="abc_slice_duration_years">
         <item quantity="one">For %d år siden</item>
@@ -85,8 +85,8 @@
         <item quantity="other">%d dager igjen</item>
     </plurals>
     <plurals name="data_saver_unrestricted_summary">
-        <item quantity="one">1 app kan bruke ubegrenset med data når Datasparing er på</item>
-        <item quantity="other">%1$d apper kan bruke ubegrenset med data når Datasparing er på</item>
+        <item quantity="one">1 app kan bruke ubegrenset data når datasparing er på</item>
+        <item quantity="other">%1$d apper kan bruke ubegrenset data når datasparing er på</item>
     </plurals>
     <plurals name="default_camera_app_title">
         <item quantity="one">Kamera-app</item>
@@ -234,11 +234,11 @@
     </plurals>
     <plurals name="notifications_sent_daily">
         <item quantity="one">~%d varsel per dag</item>
-        <item quantity="other">~%d varsler per dag</item>
+        <item quantity="other">~%,d varsler per dag</item>
     </plurals>
     <plurals name="notifications_sent_weekly">
-        <item quantity="one">~%d varsel per uke</item>
-        <item quantity="other">~%d varsler per uke</item>
+        <item quantity="one">ca. %d varsel per uke</item>
+        <item quantity="other">ca. %,d varsler per uke</item>
     </plurals>
     <plurals name="number_of_device_admins">
         <item quantity="one">%d aktiv app</item>
@@ -320,14 +320,6 @@
         <item quantity="one">Stol på eller fjern sertifikatet</item>
         <item quantity="other">Stol på eller fjern sertifikatene</item>
     </plurals>
-    <plurals name="ssl_ca_cert_info_message">
-        <item quantity="one">%s har installert en sertifiseringsinstans for jobbprofilen din. Dette kan gi denne instansen tillatelse til å overvåke nettverksaktiviteten på jobben, inkludert e-poster, apper og sikre nettsteder.\n\nKontakt administratoren din hvis du vil ha mer informasjon om dette sertifikatet.</item>
-        <item quantity="other">%s har installert sertifiseringsinstanser for jobbprofilen din. Dette kan gi disse instansene tillatelse til å overvåke nettverksaktiviteten på jobben, inkludert e-poster, apper og sikre nettsteder.\n\nKontakt administratoren din hvis du vil ha mer informasjon om disse sertifikatene.</item>
-    </plurals>
-    <plurals name="ssl_ca_cert_info_message_device_owner">
-        <item quantity="one">%s har installert en sertifiseringsinstans på enheten din. Dette kan gi denne instansen tillatelse til å overvåke nettverksaktiviteten på enheten, inkludert e-poster, apper og sikre nettsteder.\n\nKontakt administratoren din hvis du vil ha mer informasjon om dette sertifikatet.</item>
-        <item quantity="other">%s har installert sertifiseringsinstanser på enheten din. Dette kan gi disse instansene tillatelse til å overvåke nettverksaktiviteten på enheten, inkludert e-poster, apper og sikre nettsteder.\n\nKontakt administratoren din hvis du vil ha mer informasjon om disse sertifikatene.</item>
-    </plurals>
     <plurals name="ssl_ca_cert_settings_button">
         <item quantity="one">Sjekk sertifikatet</item>
         <item quantity="other">Sjekk sertifikatene</item>
@@ -359,10 +351,6 @@
     <plurals name="wifi_saved_passpoint_access_points_summary">
         <item quantity="one">1 abonnement</item>
         <item quantity="other">%d abonnementer</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d enhet er tilkoblet</item>
-        <item quantity="other">%1$d enheter er tilkoblet</item>
     </plurals>
     <plurals name="wrong_pin_code">
         <item quantity="one">Feil PIN-kode for SIM-kortet. Du har %d forsøk igjen før du må kontakte operatøren din for å låse opp enheten.</item>

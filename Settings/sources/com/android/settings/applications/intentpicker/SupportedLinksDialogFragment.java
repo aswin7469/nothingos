@@ -13,43 +13,36 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
-import com.android.settings.R;
+import com.android.settings.R$plurals;
+import com.android.settings.R$string;
 import com.android.settings.core.instrumentation.InstrumentedDialogFragment;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-/* loaded from: classes.dex */
+
 public class SupportedLinksDialogFragment extends InstrumentedDialogFragment {
     private String mPackage;
     private List<SupportedLinkWrapper> mSupportedLinkWrapperList;
     private SupportedLinkViewModel mViewModel;
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 0;
     }
 
-    @Override // com.android.settingslib.core.lifecycle.ObservableDialogFragment, androidx.fragment.app.DialogFragment, androidx.fragment.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         this.mPackage = getArguments().getString("app_package");
-        SupportedLinkViewModel supportedLinkViewModel = (SupportedLinkViewModel) ViewModelProviders.of(getActivity()).get(SupportedLinkViewModel.class);
+        SupportedLinkViewModel supportedLinkViewModel = (SupportedLinkViewModel) ViewModelProviders.m7of(getActivity()).get(SupportedLinkViewModel.class);
         this.mViewModel = supportedLinkViewModel;
         this.mSupportedLinkWrapperList = supportedLinkViewModel.getSupportedLinkWrapperList();
     }
 
-    @Override // androidx.fragment.app.DialogFragment
     public Dialog onCreateDialog(Bundle bundle) {
         FragmentActivity activity = getActivity();
-        return new AlertDialog.Builder(activity).setTitle(IntentPickerUtils.getCentralizedDialogTitle(getSupportedLinksTitle())).setAdapter(new SupportedLinksAdapter(activity, this.mSupportedLinkWrapperList), null).setCancelable(true).setPositiveButton(R.string.app_launch_supported_links_add, new DialogInterface.OnClickListener() { // from class: com.android.settings.applications.intentpicker.SupportedLinksDialogFragment$$ExternalSyntheticLambda0
-            @Override // android.content.DialogInterface.OnClickListener
-            public final void onClick(DialogInterface dialogInterface, int i) {
-                SupportedLinksDialogFragment.this.lambda$onCreateDialog$0(dialogInterface, i);
-            }
-        }).setNegativeButton(R.string.app_launch_dialog_cancel, (DialogInterface.OnClickListener) null).create();
+        return new AlertDialog.Builder(activity).setTitle((CharSequence) IntentPickerUtils.getCentralizedDialogTitle(getSupportedLinksTitle())).setAdapter(new SupportedLinksAdapter(activity, this.mSupportedLinkWrapperList), (DialogInterface.OnClickListener) null).setCancelable(true).setPositiveButton(R$string.app_launch_supported_links_add, (DialogInterface.OnClickListener) new SupportedLinksDialogFragment$$ExternalSyntheticLambda0(this)).setNegativeButton(R$string.app_launch_dialog_cancel, (DialogInterface.OnClickListener) null).create();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onCreateDialog$0(DialogInterface dialogInterface, int i) {
         doSelectedAction();
     }
@@ -59,29 +52,24 @@ public class SupportedLinksDialogFragment extends InstrumentedDialogFragment {
     }
 
     private String getSupportedLinksTitle() {
-        List<SupportedLinkWrapper> list = this.mSupportedLinkWrapperList;
-        if (list == null) {
-            return "";
-        }
-        int size = list.size();
-        return getResources().getQuantityString(R.plurals.app_launch_supported_links_title, size, Integer.valueOf(size));
+        int size = this.mSupportedLinkWrapperList.size();
+        return getResources().getQuantityString(R$plurals.app_launch_supported_links_title, size, new Object[]{Integer.valueOf(size)});
     }
 
     private void doSelectedAction() {
         DomainVerificationManager domainVerificationManager = (DomainVerificationManager) getActivity().getSystemService(DomainVerificationManager.class);
         DomainVerificationUserState domainVerificationUserState = IntentPickerUtils.getDomainVerificationUserState(domainVerificationManager, this.mPackage);
-        if (domainVerificationUserState == null || this.mSupportedLinkWrapperList == null) {
-            return;
+        if (domainVerificationUserState != null && this.mSupportedLinkWrapperList != null) {
+            updateUserSelection(domainVerificationManager, domainVerificationUserState);
+            displaySelectedItem();
         }
-        updateUserSelection(domainVerificationManager, domainVerificationUserState);
-        displaySelectedItem();
     }
 
     private void updateUserSelection(DomainVerificationManager domainVerificationManager, DomainVerificationUserState domainVerificationUserState) {
         ArraySet arraySet = new ArraySet();
-        for (SupportedLinkWrapper supportedLinkWrapper : this.mSupportedLinkWrapperList) {
-            if (supportedLinkWrapper.isChecked()) {
-                arraySet.add(supportedLinkWrapper.getHost());
+        for (SupportedLinkWrapper next : this.mSupportedLinkWrapperList) {
+            if (next.isChecked()) {
+                arraySet.add(next.getHost());
             }
         }
         if (arraySet.size() > 0) {
@@ -98,9 +86,9 @@ public class SupportedLinksDialogFragment extends InstrumentedDialogFragment {
     }
 
     private void displaySelectedItem() {
-        for (Fragment fragment : getActivity().getSupportFragmentManager().getFragments()) {
-            if (fragment instanceof AppLaunchSettings) {
-                ((AppLaunchSettings) fragment).addSelectedLinksPreference();
+        for (Fragment next : getActivity().getSupportFragmentManager().getFragments()) {
+            if (next instanceof AppLaunchSettings) {
+                ((AppLaunchSettings) next).addSelectedLinksPreference();
             }
         }
     }

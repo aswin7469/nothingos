@@ -13,12 +13,15 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.customview.widget.ExploreByTouchHelper;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class LabeledSeekBar extends SeekBar {
     private final ExploreByTouchHelper mAccessHelper;
-    private String[] mLabels;
-    private int mLastProgress;
-    private SeekBar.OnSeekBarChangeListener mOnSeekBarChangeListener;
+    /* access modifiers changed from: private */
+    public String[] mLabels;
+    /* access modifiers changed from: private */
+    public int mLastProgress;
+    /* access modifiers changed from: private */
+    public SeekBar.OnSeekBarChangeListener mOnSeekBarChangeListener;
     private final SeekBar.OnSeekBarChangeListener mProxySeekBarListener;
 
     public LabeledSeekBar(Context context, AttributeSet attributeSet) {
@@ -32,41 +35,37 @@ public class LabeledSeekBar extends SeekBar {
     public LabeledSeekBar(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
         this.mLastProgress = -1;
-        SeekBar.OnSeekBarChangeListener onSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() { // from class: com.android.settings.widget.LabeledSeekBar.1
-            @Override // android.widget.SeekBar.OnSeekBarChangeListener
+        C14291 r1 = new SeekBar.OnSeekBarChangeListener() {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (LabeledSeekBar.this.mOnSeekBarChangeListener != null) {
                     LabeledSeekBar.this.mOnSeekBarChangeListener.onStopTrackingTouch(seekBar);
                 }
             }
 
-            @Override // android.widget.SeekBar.OnSeekBarChangeListener
             public void onStartTrackingTouch(SeekBar seekBar) {
                 if (LabeledSeekBar.this.mOnSeekBarChangeListener != null) {
                     LabeledSeekBar.this.mOnSeekBarChangeListener.onStartTrackingTouch(seekBar);
                 }
             }
 
-            @Override // android.widget.SeekBar.OnSeekBarChangeListener
-            public void onProgressChanged(SeekBar seekBar, int i3, boolean z) {
+            public void onProgressChanged(SeekBar seekBar, int i, boolean z) {
                 if (LabeledSeekBar.this.mOnSeekBarChangeListener != null) {
-                    LabeledSeekBar.this.mOnSeekBarChangeListener.onProgressChanged(seekBar, i3, z);
-                    LabeledSeekBar.this.sendClickEventForAccessibility(i3);
+                    LabeledSeekBar.this.mOnSeekBarChangeListener.onProgressChanged(seekBar, i, z);
+                    LabeledSeekBar.this.sendClickEventForAccessibility(i);
                 }
-                if (i3 != LabeledSeekBar.this.mLastProgress) {
+                if (i != LabeledSeekBar.this.mLastProgress) {
                     seekBar.performHapticFeedback(4);
-                    LabeledSeekBar.this.mLastProgress = i3;
+                    LabeledSeekBar.this.mLastProgress = i;
                 }
             }
         };
-        this.mProxySeekBarListener = onSeekBarChangeListener;
+        this.mProxySeekBarListener = r1;
         LabeledSeekBarExploreByTouchHelper labeledSeekBarExploreByTouchHelper = new LabeledSeekBarExploreByTouchHelper(this);
         this.mAccessHelper = labeledSeekBarExploreByTouchHelper;
         ViewCompat.setAccessibilityDelegate(this, labeledSeekBarExploreByTouchHelper);
-        super.setOnSeekBarChangeListener(onSeekBarChangeListener);
+        super.setOnSeekBarChangeListener(r1);
     }
 
-    @Override // android.widget.ProgressBar
     public synchronized void setProgress(int i) {
         ExploreByTouchHelper exploreByTouchHelper = this.mAccessHelper;
         if (exploreByTouchHelper != null) {
@@ -79,23 +78,21 @@ public class LabeledSeekBar extends SeekBar {
         this.mLabels = strArr;
     }
 
-    @Override // android.widget.SeekBar
     public void setOnSeekBarChangeListener(SeekBar.OnSeekBarChangeListener onSeekBarChangeListener) {
         this.mOnSeekBarChangeListener = onSeekBarChangeListener;
     }
 
-    @Override // android.view.View
-    protected boolean dispatchHoverEvent(MotionEvent motionEvent) {
+    /* access modifiers changed from: protected */
+    public boolean dispatchHoverEvent(MotionEvent motionEvent) {
         return this.mAccessHelper.dispatchHoverEvent(motionEvent) || super.dispatchHoverEvent(motionEvent);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void sendClickEventForAccessibility(int i) {
         this.mAccessHelper.invalidateRoot();
         this.mAccessHelper.sendEventForVirtualView(i, 1);
     }
 
-    /* loaded from: classes.dex */
     private class LabeledSeekBarExploreByTouchHelper extends ExploreByTouchHelper {
         private boolean mIsLayoutRtl;
 
@@ -104,31 +101,31 @@ public class LabeledSeekBar extends SeekBar {
             this.mIsLayoutRtl = labeledSeekBar.getResources().getConfiguration().getLayoutDirection() != 1 ? false : true;
         }
 
-        @Override // androidx.customview.widget.ExploreByTouchHelper
-        protected int getVirtualViewAt(float f, float f2) {
+        /* access modifiers changed from: protected */
+        public int getVirtualViewAt(float f, float f2) {
             return getVirtualViewIdIndexFromX(f);
         }
 
-        @Override // androidx.customview.widget.ExploreByTouchHelper
-        protected void getVisibleVirtualViews(List<Integer> list) {
+        /* access modifiers changed from: protected */
+        public void getVisibleVirtualViews(List<Integer> list) {
             int max = LabeledSeekBar.this.getMax();
             for (int i = 0; i <= max; i++) {
                 list.add(Integer.valueOf(i));
             }
         }
 
-        @Override // androidx.customview.widget.ExploreByTouchHelper
-        protected boolean onPerformActionForVirtualView(int i, int i2, Bundle bundle) {
-            if (i != -1 && i2 == 16) {
-                LabeledSeekBar.this.setProgress(i);
-                sendEventForVirtualView(i, 1);
-                return true;
+        /* access modifiers changed from: protected */
+        public boolean onPerformActionForVirtualView(int i, int i2, Bundle bundle) {
+            if (i == -1 || i2 != 16) {
+                return false;
             }
-            return false;
+            LabeledSeekBar.this.setProgress(i);
+            sendEventForVirtualView(i, 1);
+            return true;
         }
 
-        @Override // androidx.customview.widget.ExploreByTouchHelper
-        protected void onPopulateNodeForVirtualView(int i, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
+        /* access modifiers changed from: protected */
+        public void onPopulateNodeForVirtualView(int i, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
             accessibilityNodeInfoCompat.setClassName(RadioButton.class.getName());
             accessibilityNodeInfoCompat.setBoundsInParent(getBoundsInParentFromVirtualViewId(i));
             accessibilityNodeInfoCompat.addAction(16);
@@ -142,20 +139,20 @@ public class LabeledSeekBar extends SeekBar {
             accessibilityNodeInfoCompat.setChecked(z);
         }
 
-        @Override // androidx.customview.widget.ExploreByTouchHelper
-        protected void onPopulateEventForVirtualView(int i, AccessibilityEvent accessibilityEvent) {
+        /* access modifiers changed from: protected */
+        public void onPopulateEventForVirtualView(int i, AccessibilityEvent accessibilityEvent) {
             accessibilityEvent.setClassName(RadioButton.class.getName());
             accessibilityEvent.setContentDescription(LabeledSeekBar.this.mLabels[i]);
             accessibilityEvent.setChecked(i == LabeledSeekBar.this.getProgress());
         }
 
-        @Override // androidx.customview.widget.ExploreByTouchHelper
-        protected void onPopulateNodeForHost(AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
+        /* access modifiers changed from: protected */
+        public void onPopulateNodeForHost(AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
             accessibilityNodeInfoCompat.setClassName(RadioGroup.class.getName());
         }
 
-        @Override // androidx.customview.widget.ExploreByTouchHelper
-        protected void onPopulateEventForHost(AccessibilityEvent accessibilityEvent) {
+        /* access modifiers changed from: protected */
+        public void onPopulateEventForHost(AccessibilityEvent accessibilityEvent) {
             accessibilityEvent.setClassName(RadioGroup.class.getName());
         }
 

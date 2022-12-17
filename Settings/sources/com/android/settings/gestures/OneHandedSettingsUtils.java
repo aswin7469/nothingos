@@ -11,23 +11,22 @@ import android.os.UserHandle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import com.android.internal.accessibility.AccessibilityShortcutController;
-/* loaded from: classes.dex */
+
 public class OneHandedSettingsUtils {
-    private static int sCurrentUserId;
-    private final Context mContext;
-    private final SettingsObserver mSettingsObserver = new SettingsObserver(new Handler(Looper.getMainLooper()));
-    static final String ONE_HANDED_MODE_TARGET_NAME = AccessibilityShortcutController.ONE_HANDED_COMPONENT_NAME.getShortClassName();
+    static final Uri HARDWARE_SHORTCUT_ENABLED_URI = Settings.Secure.getUriFor("accessibility_shortcut_target_service");
     static final Uri ONE_HANDED_MODE_ENABLED_URI = Settings.Secure.getUriFor("one_handed_mode_enabled");
+    static final String ONE_HANDED_MODE_TARGET_NAME = AccessibilityShortcutController.ONE_HANDED_COMPONENT_NAME.getShortClassName();
     static final Uri SHOW_NOTIFICATION_ENABLED_URI = Settings.Secure.getUriFor("swipe_bottom_to_notification_enabled");
     static final Uri SOFTWARE_SHORTCUT_ENABLED_URI = Settings.Secure.getUriFor("accessibility_button_targets");
-    static final Uri HARDWARE_SHORTCUT_ENABLED_URI = Settings.Secure.getUriFor("accessibility_shortcut_target_service");
+    private static int sCurrentUserId;
+    /* access modifiers changed from: private */
+    public final Context mContext;
+    private final SettingsObserver mSettingsObserver = new SettingsObserver(new Handler(Looper.getMainLooper()));
 
-    /* loaded from: classes.dex */
     public interface TogglesCallback {
         void onChange(Uri uri);
     }
 
-    /* loaded from: classes.dex */
     public enum OneHandedTimeout {
         NEVER(0),
         SHORT(4),
@@ -36,7 +35,7 @@ public class OneHandedSettingsUtils {
         
         private final int mValue;
 
-        OneHandedTimeout(int i) {
+        private OneHandedTimeout(int i) {
             this.mValue = i;
         }
 
@@ -45,8 +44,7 @@ public class OneHandedSettingsUtils {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public OneHandedSettingsUtils(Context context) {
+    OneHandedSettingsUtils(Context context) {
         this.mContext = context;
         sCurrentUserId = UserHandle.myUserId();
     }
@@ -97,9 +95,12 @@ public class OneHandedSettingsUtils {
 
     public static boolean getShortcutEnabled(Context context) {
         String stringForUser = Settings.Secure.getStringForUser(context.getContentResolver(), "accessibility_button_targets", sCurrentUserId);
-        if (TextUtils.isEmpty(stringForUser) || !stringForUser.contains(ONE_HANDED_MODE_TARGET_NAME)) {
-            String stringForUser2 = Settings.Secure.getStringForUser(context.getContentResolver(), "accessibility_shortcut_target_service", sCurrentUserId);
-            return !TextUtils.isEmpty(stringForUser2) && stringForUser2.contains(ONE_HANDED_MODE_TARGET_NAME);
+        if (!TextUtils.isEmpty(stringForUser) && stringForUser.contains(ONE_HANDED_MODE_TARGET_NAME)) {
+            return true;
+        }
+        String stringForUser2 = Settings.Secure.getStringForUser(context.getContentResolver(), "accessibility_shortcut_target_service", sCurrentUserId);
+        if (TextUtils.isEmpty(stringForUser2) || !stringForUser2.contains(ONE_HANDED_MODE_TARGET_NAME)) {
+            return false;
         }
         return true;
     }
@@ -117,7 +118,6 @@ public class OneHandedSettingsUtils {
         this.mContext.getContentResolver().unregisterContentObserver(this.mSettingsObserver);
     }
 
-    /* loaded from: classes.dex */
     private final class SettingsObserver extends ContentObserver {
         private TogglesCallback mCallback;
 
@@ -125,7 +125,7 @@ public class OneHandedSettingsUtils {
             super(handler);
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public void setCallback(TogglesCallback togglesCallback) {
             this.mCallback = togglesCallback;
         }
@@ -138,7 +138,6 @@ public class OneHandedSettingsUtils {
             contentResolver.registerContentObserver(OneHandedSettingsUtils.HARDWARE_SHORTCUT_ENABLED_URI, true, this);
         }
 
-        @Override // android.database.ContentObserver
         public void onChange(boolean z, Uri uri) {
             TogglesCallback togglesCallback = this.mCallback;
             if (togglesCallback != null) {

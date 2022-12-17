@@ -16,7 +16,7 @@ import com.android.settingslib.R$drawable;
 import com.android.settingslib.R$id;
 import com.android.settingslib.R$layout;
 import com.android.settingslib.Utils;
-/* loaded from: classes.dex */
+
 public class ConversationPriorityPreference extends Preference {
     private View mAlertButton;
     private Context mContext;
@@ -68,8 +68,7 @@ public class ConversationPriorityPreference extends Preference {
         this.mOriginalImportance = i;
     }
 
-    @Override // androidx.preference.Preference
-    public void onBindViewHolder(final PreferenceViewHolder preferenceViewHolder) {
+    public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         preferenceViewHolder.itemView.setClickable(false);
         this.mSilenceButton = preferenceViewHolder.findViewById(R$id.silence);
@@ -81,40 +80,25 @@ public class ConversationPriorityPreference extends Preference {
             this.mPriorityButton.setEnabled(false);
         }
         updateToggles((ViewGroup) preferenceViewHolder.itemView, this.mImportance, this.mPriorityConversation, false);
-        this.mSilenceButton.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.notification.app.ConversationPriorityPreference$$ExternalSyntheticLambda1
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                ConversationPriorityPreference.this.lambda$onBindViewHolder$0(preferenceViewHolder, view);
-            }
-        });
-        this.mAlertButton.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.notification.app.ConversationPriorityPreference$$ExternalSyntheticLambda2
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                ConversationPriorityPreference.this.lambda$onBindViewHolder$1(preferenceViewHolder, view);
-            }
-        });
-        this.mPriorityButton.setOnClickListener(new View.OnClickListener() { // from class: com.android.settings.notification.app.ConversationPriorityPreference$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                ConversationPriorityPreference.this.lambda$onBindViewHolder$2(preferenceViewHolder, view);
-            }
-        });
+        this.mSilenceButton.setOnClickListener(new ConversationPriorityPreference$$ExternalSyntheticLambda0(this, preferenceViewHolder));
+        this.mAlertButton.setOnClickListener(new ConversationPriorityPreference$$ExternalSyntheticLambda1(this, preferenceViewHolder));
+        this.mPriorityButton.setOnClickListener(new ConversationPriorityPreference$$ExternalSyntheticLambda2(this, preferenceViewHolder));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onBindViewHolder$0(PreferenceViewHolder preferenceViewHolder, View view) {
         callChangeListener(new Pair(2, Boolean.FALSE));
         updateToggles((ViewGroup) preferenceViewHolder.itemView, 2, false, true);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onBindViewHolder$1(PreferenceViewHolder preferenceViewHolder, View view) {
         int max = Math.max(this.mOriginalImportance, 3);
         callChangeListener(new Pair(Integer.valueOf(max), Boolean.FALSE));
         updateToggles((ViewGroup) preferenceViewHolder.itemView, max, false, true);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$onBindViewHolder$2(PreferenceViewHolder preferenceViewHolder, View view) {
         int max = Math.max(this.mOriginalImportance, 3);
         callChangeListener(new Pair(Integer.valueOf(max), Boolean.TRUE));
@@ -129,10 +113,11 @@ public class ConversationPriorityPreference extends Preference {
         return Utils.getColorAttr(getContext(), 16842806);
     }
 
-    void updateToggles(ViewGroup viewGroup, int i, boolean z, boolean z2) {
+    /* access modifiers changed from: package-private */
+    public void updateToggles(ViewGroup viewGroup, int i, boolean z, boolean z2) {
         if (z2) {
             AutoTransition autoTransition = new AutoTransition();
-            autoTransition.setDuration(100L);
+            autoTransition.setDuration(100);
             TransitionManager.beginDelayedTransition(viewGroup, autoTransition);
         }
         if (i <= 2 && i > -1000) {
@@ -150,7 +135,8 @@ public class ConversationPriorityPreference extends Preference {
         }
     }
 
-    void setSelected(final View view, final boolean z) {
+    /* access modifiers changed from: package-private */
+    public void setSelected(View view, boolean z) {
         int i;
         ColorStateList accentTint = getAccentTint();
         ColorStateList regularTint = getRegularTint();
@@ -170,11 +156,6 @@ public class ConversationPriorityPreference extends Preference {
             i = R$drawable.button_border_unselected;
         }
         view.setBackground(context.getDrawable(i));
-        view.post(new Runnable() { // from class: com.android.settings.notification.app.ConversationPriorityPreference$$ExternalSyntheticLambda3
-            @Override // java.lang.Runnable
-            public final void run() {
-                view.setSelected(z);
-            }
-        });
+        view.post(new ConversationPriorityPreference$$ExternalSyntheticLambda3(view, z));
     }
 }

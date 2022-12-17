@@ -4,7 +4,7 @@ import android.annotation.TargetApi;
 import android.os.PersistableBundle;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-/* loaded from: classes2.dex */
+
 public class FooterBarMixinMetrics {
     public static final String EXTRA_PRIMARY_BUTTON_VISIBILITY = "PrimaryButtonVisibility";
     public static final String EXTRA_SECONDARY_BUTTON_VISIBILITY = "SecondaryButtonVisibility";
@@ -12,7 +12,6 @@ public class FooterBarMixinMetrics {
     String secondaryButtonVisibility = "Unknown";
 
     @Retention(RetentionPolicy.SOURCE)
-    /* loaded from: classes2.dex */
     public @interface FooterButtonVisibility {
     }
 
@@ -46,10 +45,19 @@ public class FooterBarMixinMetrics {
     }
 
     static String updateButtonVisibilityState(String str, boolean z) {
-        if ("VisibleUsingXml".equals(str) || "Visible".equals(str) || "Invisible".equals(str)) {
-            return (!z || !"Invisible".equals(str)) ? !z ? "VisibleUsingXml".equals(str) ? "VisibleUsingXml_to_Invisible" : "Visible".equals(str) ? "Visible_to_Invisible" : str : str : "Invisible_to_Visible";
+        if (!"VisibleUsingXml".equals(str) && !"Visible".equals(str) && !"Invisible".equals(str)) {
+            throw new IllegalStateException("Illegal visibility state: " + str);
+        } else if (z && "Invisible".equals(str)) {
+            return "Invisible_to_Visible";
+        } else {
+            if (z) {
+                return str;
+            }
+            if ("VisibleUsingXml".equals(str)) {
+                return "VisibleUsingXml_to_Invisible";
+            }
+            return "Visible".equals(str) ? "Visible_to_Invisible" : str;
         }
-        throw new IllegalStateException("Illegal visibility state: " + str);
     }
 
     @TargetApi(29)

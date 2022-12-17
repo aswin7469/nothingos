@@ -8,9 +8,10 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.Gravity;
-import androidx.appcompat.R$styleable;
 import androidx.appcompat.widget.LinearLayoutCompat;
-/* loaded from: classes2.dex */
+import androidx.window.C0447R;
+import com.google.android.material.R$styleable;
+
 public class ForegroundLinearLayout extends LinearLayoutCompat {
     private Drawable foreground;
     boolean foregroundBoundsChanged;
@@ -20,7 +21,7 @@ public class ForegroundLinearLayout extends LinearLayoutCompat {
     private final Rect selfBounds;
 
     public ForegroundLinearLayout(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public ForegroundLinearLayout(Context context, AttributeSet attributeSet) {
@@ -31,31 +32,29 @@ public class ForegroundLinearLayout extends LinearLayoutCompat {
         super(context, attributeSet, i);
         this.selfBounds = new Rect();
         this.overlayBounds = new Rect();
-        this.foregroundGravity = R$styleable.AppCompatTheme_windowActionModeOverlay;
+        this.foregroundGravity = 119;
         this.mForegroundInPadding = true;
         this.foregroundBoundsChanged = false;
-        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context, attributeSet, com.google.android.material.R$styleable.ForegroundLinearLayout, i, 0, new int[0]);
-        this.foregroundGravity = obtainStyledAttributes.getInt(com.google.android.material.R$styleable.ForegroundLinearLayout_android_foregroundGravity, this.foregroundGravity);
-        Drawable drawable = obtainStyledAttributes.getDrawable(com.google.android.material.R$styleable.ForegroundLinearLayout_android_foreground);
+        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context, attributeSet, R$styleable.ForegroundLinearLayout, i, 0, new int[0]);
+        this.foregroundGravity = obtainStyledAttributes.getInt(R$styleable.ForegroundLinearLayout_android_foregroundGravity, this.foregroundGravity);
+        Drawable drawable = obtainStyledAttributes.getDrawable(R$styleable.ForegroundLinearLayout_android_foreground);
         if (drawable != null) {
             setForeground(drawable);
         }
-        this.mForegroundInPadding = obtainStyledAttributes.getBoolean(com.google.android.material.R$styleable.ForegroundLinearLayout_foregroundInsidePadding, true);
+        this.mForegroundInPadding = obtainStyledAttributes.getBoolean(R$styleable.ForegroundLinearLayout_foregroundInsidePadding, true);
         obtainStyledAttributes.recycle();
     }
 
-    @Override // android.view.View
     public int getForegroundGravity() {
         return this.foregroundGravity;
     }
 
-    @Override // android.view.View
     public void setForegroundGravity(int i) {
         if (this.foregroundGravity != i) {
             if ((8388615 & i) == 0) {
                 i |= 8388611;
             }
-            if ((i & 112) == 0) {
+            if ((i & C0447R.styleable.AppCompatTheme_toolbarNavigationButtonStyle) == 0) {
                 i |= 48;
             }
             this.foregroundGravity = i;
@@ -66,12 +65,11 @@ public class ForegroundLinearLayout extends LinearLayoutCompat {
         }
     }
 
-    @Override // android.view.View
-    protected boolean verifyDrawable(Drawable drawable) {
+    /* access modifiers changed from: protected */
+    public boolean verifyDrawable(Drawable drawable) {
         return super.verifyDrawable(drawable) || drawable == this.foreground;
     }
 
-    @Override // android.view.ViewGroup, android.view.View
     public void jumpDrawablesToCurrentState() {
         super.jumpDrawablesToCurrentState();
         Drawable drawable = this.foreground;
@@ -80,22 +78,20 @@ public class ForegroundLinearLayout extends LinearLayoutCompat {
         }
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void drawableStateChanged() {
+    /* access modifiers changed from: protected */
+    public void drawableStateChanged() {
         super.drawableStateChanged();
         Drawable drawable = this.foreground;
-        if (drawable == null || !drawable.isStateful()) {
-            return;
+        if (drawable != null && drawable.isStateful()) {
+            this.foreground.setState(getDrawableState());
         }
-        this.foreground.setState(getDrawableState());
     }
 
-    @Override // android.view.View
     public void setForeground(Drawable drawable) {
         Drawable drawable2 = this.foreground;
         if (drawable2 != drawable) {
             if (drawable2 != null) {
-                drawable2.setCallback(null);
+                drawable2.setCallback((Drawable.Callback) null);
                 unscheduleDrawable(this.foreground);
             }
             this.foreground = drawable;
@@ -116,25 +112,22 @@ public class ForegroundLinearLayout extends LinearLayoutCompat {
         }
     }
 
-    @Override // android.view.View
     public Drawable getForeground() {
         return this.foreground;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.appcompat.widget.LinearLayoutCompat, android.view.ViewGroup, android.view.View
+    /* access modifiers changed from: protected */
     public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
         this.foregroundBoundsChanged = z | this.foregroundBoundsChanged;
     }
 
-    @Override // android.view.View
-    protected void onSizeChanged(int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: protected */
+    public void onSizeChanged(int i, int i2, int i3, int i4) {
         super.onSizeChanged(i, i2, i3, i4);
         this.foregroundBoundsChanged = true;
     }
 
-    @Override // android.view.View
     public void draw(Canvas canvas) {
         super.draw(canvas);
         Drawable drawable = this.foreground;
@@ -157,7 +150,6 @@ public class ForegroundLinearLayout extends LinearLayoutCompat {
         }
     }
 
-    @Override // android.view.View
     @TargetApi(21)
     public void drawableHotspotChanged(float f, float f2) {
         super.drawableHotspotChanged(f, f2);

@@ -9,31 +9,29 @@ import androidx.preference.PreferenceScreen;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.applications.appinfo.AppInfoDashboardFragment;
 import com.android.settings.core.BasePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
-/* loaded from: classes.dex */
+import com.android.settingslib.applications.ApplicationsState;
+
 public abstract class AppInfoPreferenceControllerBase extends BasePreferenceController implements AppInfoDashboardFragment.Callback {
+    protected ApplicationsState.AppEntry mAppEntry;
     private final Class<? extends SettingsPreferenceFragment> mDetailFragmentClass = getDetailFragmentClass();
     protected AppInfoDashboardFragment mParent;
     protected Preference mPreference;
 
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    protected Bundle getArguments() {
+    /* access modifiers changed from: protected */
+    public Bundle getArguments() {
         return null;
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
         return 0;
     }
 
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    protected Class<? extends SettingsPreferenceFragment> getDetailFragmentClass() {
+    /* access modifiers changed from: protected */
+    public Class<? extends SettingsPreferenceFragment> getDetailFragmentClass() {
         return null;
     }
 
@@ -41,12 +39,12 @@ public abstract class AppInfoPreferenceControllerBase extends BasePreferenceCont
         return super.getIntentFilter();
     }
 
-    public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
-        return super.hasAsyncUpdate();
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
     }
 
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
+    public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
+        return super.hasAsyncUpdate();
     }
 
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
@@ -65,13 +63,11 @@ public abstract class AppInfoPreferenceControllerBase extends BasePreferenceCont
         super(context, str);
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = preferenceScreen.findPreference(getPreferenceKey());
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean handlePreferenceTreeClick(Preference preference) {
         Class<? extends SettingsPreferenceFragment> cls;
         if (!TextUtils.equals(preference.getKey(), this.mPreferenceKey) || (cls = this.mDetailFragmentClass) == null) {
@@ -83,7 +79,6 @@ public abstract class AppInfoPreferenceControllerBase extends BasePreferenceCont
         return true;
     }
 
-    @Override // com.android.settings.applications.appinfo.AppInfoDashboardFragment.Callback
     public void refreshUi() {
         updateState(this.mPreference);
     }
@@ -91,5 +86,6 @@ public abstract class AppInfoPreferenceControllerBase extends BasePreferenceCont
     public void setParentFragment(AppInfoDashboardFragment appInfoDashboardFragment) {
         this.mParent = appInfoDashboardFragment;
         appInfoDashboardFragment.addToCallbackList(this);
+        this.mAppEntry = this.mParent.getAppEntry();
     }
 }

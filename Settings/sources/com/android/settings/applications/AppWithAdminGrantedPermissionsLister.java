@@ -5,7 +5,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageManager;
 import android.content.pm.PackageManager;
 import android.os.UserManager;
-/* loaded from: classes.dex */
+
 public abstract class AppWithAdminGrantedPermissionsLister extends AppLister {
     private final DevicePolicyManager mDevicePolicyManager;
     private final IPackageManager mPackageManagerService;
@@ -18,8 +18,8 @@ public abstract class AppWithAdminGrantedPermissionsLister extends AppLister {
         this.mDevicePolicyManager = devicePolicyManager;
     }
 
-    @Override // com.android.settings.applications.AppLister
-    protected boolean includeInCount(ApplicationInfo applicationInfo) {
+    /* access modifiers changed from: protected */
+    public boolean includeInCount(ApplicationInfo applicationInfo) {
         return AppWithAdminGrantedPermissionsCounter.includeInCount(this.mPermissions, this.mDevicePolicyManager, this.mPm, this.mPackageManagerService, applicationInfo);
     }
 }

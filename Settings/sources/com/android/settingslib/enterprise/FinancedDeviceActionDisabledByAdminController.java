@@ -1,26 +1,21 @@
 package com.android.settingslib.enterprise;
 
 import android.content.Context;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public final class FinancedDeviceActionDisabledByAdminController extends BaseActionDisabledByAdminController {
-    @Override // com.android.settingslib.enterprise.ActionDisabledByAdminController
+
+final class FinancedDeviceActionDisabledByAdminController extends BaseActionDisabledByAdminController {
     public CharSequence getAdminSupportContentString(Context context, CharSequence charSequence) {
         return charSequence;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public FinancedDeviceActionDisabledByAdminController(DeviceAdminStringProvider deviceAdminStringProvider) {
+    FinancedDeviceActionDisabledByAdminController(DeviceAdminStringProvider deviceAdminStringProvider) {
         super(deviceAdminStringProvider);
     }
 
-    @Override // com.android.settingslib.enterprise.ActionDisabledByAdminController
     public void setupLearnMoreButton(Context context) {
         assertInitialized();
         this.mLauncher.setupLearnMoreButtonToShowAdminPolicies(context, this.mEnforcementAdminUserId, this.mEnforcedAdmin);
     }
 
-    @Override // com.android.settingslib.enterprise.ActionDisabledByAdminController
     public String getAdminSupportTitle(String str) {
         return this.mStringProvider.getDisabledByPolicyTitleForFinancedDevice();
     }

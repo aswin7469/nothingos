@@ -12,7 +12,7 @@ import android.util.ArraySet;
 import android.util.Log;
 import com.android.internal.telephony.SmsApplication;
 import com.android.internal.util.ArrayUtils;
-/* loaded from: classes.dex */
+
 public class PowerAllowlistBackend {
     private static PowerAllowlistBackend sInstance;
     private final ArraySet<String> mAllowlistedApps;
@@ -39,19 +39,25 @@ public class PowerAllowlistBackend {
     }
 
     public boolean isAllowlisted(String str) {
-        return this.mAllowlistedApps.contains(str) || isDefaultActiveApp(str);
+        if (!this.mAllowlistedApps.contains(str) && !isDefaultActiveApp(str)) {
+            return false;
+        }
+        return true;
     }
 
     public boolean isDefaultActiveApp(String str) {
-        return this.mDefaultActiveApps.contains(str) || ((DevicePolicyManager) this.mAppContext.getSystemService(DevicePolicyManager.class)).packageHasActiveAdmins(str);
+        if (!this.mDefaultActiveApps.contains(str) && !((DevicePolicyManager) this.mAppContext.getSystemService(DevicePolicyManager.class)).packageHasActiveAdmins(str)) {
+            return false;
+        }
+        return true;
     }
 
     public boolean isAllowlisted(String[] strArr) {
         if (ArrayUtils.isEmpty(strArr)) {
             return false;
         }
-        for (String str : strArr) {
-            if (isAllowlisted(str)) {
+        for (String isAllowlisted : strArr) {
+            if (isAllowlisted(isAllowlisted)) {
                 return true;
             }
         }
@@ -81,31 +87,28 @@ public class PowerAllowlistBackend {
         this.mAllowlistedApps.clear();
         this.mDefaultActiveApps.clear();
         IDeviceIdleController iDeviceIdleController = this.mDeviceIdleService;
-        if (iDeviceIdleController == null) {
-            return;
-        }
-        try {
-            for (String str : iDeviceIdleController.getFullPowerWhitelist()) {
-                this.mAllowlistedApps.add(str);
+        if (iDeviceIdleController != null) {
+            try {
+                for (String add : iDeviceIdleController.getFullPowerWhitelist()) {
+                    this.mAllowlistedApps.add(add);
+                }
+                for (String add2 : this.mDeviceIdleService.getSystemPowerWhitelist()) {
+                    this.mSysAllowlistedApps.add(add2);
+                }
+                boolean hasSystemFeature = this.mAppContext.getPackageManager().hasSystemFeature("android.hardware.telephony");
+                ComponentName defaultSmsApplication = SmsApplication.getDefaultSmsApplication(this.mAppContext, true);
+                String defaultDialerApplication = DefaultDialerManager.getDefaultDialerApplication(this.mAppContext);
+                if (hasSystemFeature) {
+                    if (defaultSmsApplication != null) {
+                        this.mDefaultActiveApps.add(defaultSmsApplication.getPackageName());
+                    }
+                    if (!TextUtils.isEmpty(defaultDialerApplication)) {
+                        this.mDefaultActiveApps.add(defaultDialerApplication);
+                    }
+                }
+            } catch (RemoteException e) {
+                Log.w("PowerAllowlistBackend", "Unable to reach IDeviceIdleController", e);
             }
-            for (String str2 : this.mDeviceIdleService.getSystemPowerWhitelist()) {
-                this.mSysAllowlistedApps.add(str2);
-            }
-            boolean hasSystemFeature = this.mAppContext.getPackageManager().hasSystemFeature("android.hardware.telephony");
-            ComponentName defaultSmsApplication = SmsApplication.getDefaultSmsApplication(this.mAppContext, true);
-            String defaultDialerApplication = DefaultDialerManager.getDefaultDialerApplication(this.mAppContext);
-            if (!hasSystemFeature) {
-                return;
-            }
-            if (defaultSmsApplication != null) {
-                this.mDefaultActiveApps.add(defaultSmsApplication.getPackageName());
-            }
-            if (TextUtils.isEmpty(defaultDialerApplication)) {
-                return;
-            }
-            this.mDefaultActiveApps.add(defaultDialerApplication);
-        } catch (RemoteException e) {
-            Log.w("PowerAllowlistBackend", "Unable to reach IDeviceIdleController", e);
         }
     }
 

@@ -4,13 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageButton;
+
 @SuppressLint({"AppCompatCustomView"})
-/* loaded from: classes2.dex */
 public class VisibilityAwareImageButton extends ImageButton {
     private int userSetVisibility;
 
     public VisibilityAwareImageButton(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public VisibilityAwareImageButton(Context context, AttributeSet attributeSet) {
@@ -22,7 +22,6 @@ public class VisibilityAwareImageButton extends ImageButton {
         this.userSetVisibility = getVisibility();
     }
 
-    @Override // android.widget.ImageView, android.view.View
     public void setVisibility(int i) {
         internalSetVisibility(i, true);
     }

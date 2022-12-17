@@ -1,17 +1,19 @@
 package com.android.settings.dashboard;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Predicate;
-/* loaded from: classes.dex */
-public final /* synthetic */ class DashboardFragment$$ExternalSyntheticLambda12 implements Predicate {
-    public static final /* synthetic */ DashboardFragment$$ExternalSyntheticLambda12 INSTANCE = new DashboardFragment$$ExternalSyntheticLambda12();
+import android.content.ContentResolver;
+import java.util.function.Consumer;
 
-    private /* synthetic */ DashboardFragment$$ExternalSyntheticLambda12() {
+/* compiled from: R8$$SyntheticClass */
+public final /* synthetic */ class DashboardFragment$$ExternalSyntheticLambda12 implements Consumer {
+    public final /* synthetic */ DashboardFragment f$0;
+    public final /* synthetic */ ContentResolver f$1;
+
+    public /* synthetic */ DashboardFragment$$ExternalSyntheticLambda12(DashboardFragment dashboardFragment, ContentResolver contentResolver) {
+        this.f$0 = dashboardFragment;
+        this.f$1 = contentResolver;
     }
 
-    @Override // java.util.function.Predicate
-    public final boolean test(Object obj) {
-        return Objects.nonNull((List) obj);
+    public final void accept(Object obj) {
+        this.f$0.lambda$registerDynamicDataObservers$11(this.f$1, (DynamicDataObserver) obj);
     }
 }

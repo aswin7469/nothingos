@@ -11,69 +11,55 @@ import android.provider.Settings;
 import android.text.SpannedString;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
-import com.android.settings.R;
+import com.android.settings.R$bool;
 import com.android.settings.Utils;
 import com.android.settings.bluetooth.BluetoothLengthDeviceNameFilter;
 import com.android.settings.core.BasePreferenceController;
-import com.android.settings.slices.SliceBackgroundWorker;
 import com.android.settings.widget.ValidatedEditTextPreference;
 import com.android.settings.wifi.tether.WifiDeviceNameTextValidator;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnCreate;
 import com.android.settingslib.core.lifecycle.events.OnSaveInstanceState;
-/* loaded from: classes.dex */
+
 public class DeviceNamePreferenceController extends BasePreferenceController implements ValidatedEditTextPreference.Validator, Preference.OnPreferenceChangeListener, LifecycleObserver, OnSaveInstanceState, OnCreate {
     private static final String KEY_PENDING_DEVICE_NAME = "key_pending_device_name";
-    static final int RES_SHOW_DEVICE_NAME_BOOL = R.bool.config_show_device_name;
+    static final int RES_SHOW_DEVICE_NAME_BOOL = R$bool.config_show_device_name;
+    private final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     private String mDeviceName;
     private DeviceNamePreferenceHost mHost;
     private String mPendingDeviceName;
     private ValidatedEditTextPreference mPreference;
-    protected WifiManager mWifiManager;
     private final WifiDeviceNameTextValidator mWifiDeviceNameTextValidator = new WifiDeviceNameTextValidator();
-    private final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    protected WifiManager mWifiManager;
 
-    /* loaded from: classes.dex */
     public interface DeviceNamePreferenceHost {
         void showDeviceNameWarningDialog(String str);
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ void copy() {
-        super.copy();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ Class<? extends SliceBackgroundWorker> getBackgroundWorkerClass() {
+    public /* bridge */ /* synthetic */ Class getBackgroundWorkerClass() {
         return super.getBackgroundWorkerClass();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ IntentFilter getIntentFilter() {
         return super.getIntentFilter();
     }
 
-    @Override // com.android.settings.slices.Sliceable
+    public /* bridge */ /* synthetic */ int getSliceHighlightMenuRes() {
+        return super.getSliceHighlightMenuRes();
+    }
+
     public /* bridge */ /* synthetic */ boolean hasAsyncUpdate() {
         return super.hasAsyncUpdate();
     }
 
-    @Override // com.android.settings.slices.Sliceable
-    public /* bridge */ /* synthetic */ boolean isCopyableSlice() {
-        return super.isCopyableSlice();
-    }
-
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isPublicSlice() {
         return super.isPublicSlice();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean isSliceable() {
         return super.isSliceable();
     }
 
-    @Override // com.android.settings.slices.Sliceable
     public /* bridge */ /* synthetic */ boolean useDynamicSliceSummary() {
         return super.useDynamicSliceSummary();
     }
@@ -84,13 +70,12 @@ public class DeviceNamePreferenceController extends BasePreferenceController imp
         initializeDeviceName();
     }
 
-    @Override // com.android.settings.core.BasePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPreference = (ValidatedEditTextPreference) preferenceScreen.findPreference(getPreferenceKey());
-        CharSequence mo485getSummary = mo485getSummary();
-        this.mPreference.setSummary(mo485getSummary);
-        this.mPreference.setText(mo485getSummary.toString());
+        CharSequence summary = getSummary();
+        this.mPreference.setSummary(summary);
+        this.mPreference.setText(summary.toString());
         this.mPreference.setValidator(this);
     }
 
@@ -104,40 +89,35 @@ public class DeviceNamePreferenceController extends BasePreferenceController imp
         }
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
-    /* renamed from: getSummary */
-    public CharSequence mo485getSummary() {
+    public CharSequence getSummary() {
         return this.mDeviceName;
     }
 
-    @Override // com.android.settings.core.BasePreferenceController
     public int getAvailabilityStatus() {
-        return this.mContext.getResources().getBoolean(R.bool.config_show_device_name) ? 0 : 3;
+        return this.mContext.getResources().getBoolean(R$bool.config_show_device_name) ? 0 : 3;
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         String str = (String) obj;
         this.mPendingDeviceName = str;
         DeviceNamePreferenceHost deviceNamePreferenceHost = this.mHost;
-        if (deviceNamePreferenceHost != null) {
-            deviceNamePreferenceHost.showDeviceNameWarningDialog(str);
+        if (deviceNamePreferenceHost == null) {
             return true;
         }
+        deviceNamePreferenceHost.showDeviceNameWarningDialog(str);
         return true;
     }
 
-    @Override // com.android.settings.widget.ValidatedEditTextPreference.Validator
     public boolean isTextValid(String str) {
         return this.mWifiDeviceNameTextValidator.isTextValid(str);
     }
 
     public void updateDeviceName(boolean z) {
         String str;
-        if (z && (str = this.mPendingDeviceName) != null) {
-            setDeviceName(str);
+        if (!z || (str = this.mPendingDeviceName) == null) {
+            this.mPreference.setText(getSummary().toString());
         } else {
-            this.mPreference.setText(mo485getSummary().toString());
+            setDeviceName(str);
         }
     }
 
@@ -150,7 +130,7 @@ public class DeviceNamePreferenceController extends BasePreferenceController imp
         setSettingsGlobalDeviceName(str);
         setBluetoothDeviceName(str);
         setTetherSsidName(str);
-        this.mPreference.setSummary(mo485getSummary());
+        this.mPreference.setSummary(getSummary());
     }
 
     private void setSettingsGlobalDeviceName(String str) {
@@ -169,21 +149,22 @@ public class DeviceNamePreferenceController extends BasePreferenceController imp
 
     private static final String getFilteredBluetoothString(String str) {
         CharSequence filter = new BluetoothLengthDeviceNameFilter().filter(str, 0, str.length(), new SpannedString(""), 0, 0);
-        return filter == null ? str : filter.toString();
+        if (filter == null) {
+            return str;
+        }
+        return filter.toString();
     }
 
     private void setTetherSsidName(String str) {
         this.mWifiManager.setSoftApConfiguration(new SoftApConfiguration.Builder(this.mWifiManager.getSoftApConfiguration()).setSsid(str).build());
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnCreate
     public void onCreate(Bundle bundle) {
         if (bundle != null) {
-            this.mPendingDeviceName = bundle.getString(KEY_PENDING_DEVICE_NAME, null);
+            this.mPendingDeviceName = bundle.getString(KEY_PENDING_DEVICE_NAME, (String) null);
         }
     }
 
-    @Override // com.android.settingslib.core.lifecycle.events.OnSaveInstanceState
     public void onSaveInstanceState(Bundle bundle) {
         bundle.putString(KEY_PENDING_DEVICE_NAME, this.mPendingDeviceName);
     }

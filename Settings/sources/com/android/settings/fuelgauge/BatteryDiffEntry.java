@@ -4,40 +4,37 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.os.UserHandle;
 import android.os.UserManager;
 import android.util.Log;
+import com.android.settings.R$bool;
 import com.android.settings.fuelgauge.BatteryEntry;
 import com.android.settingslib.utils.StringUtil;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public class BatteryDiffEntry {
+    public static final Comparator<BatteryDiffEntry> COMPARATOR = new BatteryDiffEntry$$ExternalSyntheticLambda0();
     static Locale sCurrentLocale;
+    static final Map<String, BatteryEntry.NameAndIcon> sResourceCache = new HashMap();
+    public static final Map<String, Boolean> sValidForRestriction = new HashMap();
+    Drawable mAppIcon = null;
     int mAppIconId;
+    String mAppLabel = null;
     public long mBackgroundUsageTimeInMs;
     public final BatteryHistEntry mBatteryHistEntry;
     public double mConsumePower;
     private Context mContext;
+    private String mDefaultPackageName = null;
     public long mForegroundUsageTimeInMs;
+    boolean mIsLoaded = false;
     private double mPercentOfTotal;
     private double mTotalConsumePower;
     private UserManager mUserManager;
-    static final Map<String, BatteryEntry.NameAndIcon> sResourceCache = new HashMap();
-    static final Map<String, Boolean> sValidForRestriction = new HashMap();
-    public static final Comparator<BatteryDiffEntry> COMPARATOR = BatteryDiffEntry$$ExternalSyntheticLambda0.INSTANCE;
-    private String mDefaultPackageName = null;
-    String mAppLabel = null;
-    Drawable mAppIcon = null;
-    boolean mIsLoaded = false;
     boolean mValidForRestriction = true;
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ int lambda$static$0(BatteryDiffEntry batteryDiffEntry, BatteryDiffEntry batteryDiffEntry2) {
-        return Double.compare(batteryDiffEntry2.getPercentOfTotal(), batteryDiffEntry.getPercentOfTotal());
-    }
 
     public BatteryDiffEntry(Context context, long j, long j2, double d, BatteryHistEntry batteryHistEntry) {
         this.mContext = context;
@@ -61,8 +58,7 @@ public class BatteryDiffEntry {
         return this.mPercentOfTotal;
     }
 
-    /* renamed from: clone */
-    public BatteryDiffEntry m341clone() {
+    public BatteryDiffEntry clone() {
         return new BatteryDiffEntry(this.mContext, this.mForegroundUsageTimeInMs, this.mBackgroundUsageTimeInMs, this.mConsumePower, this.mBatteryHistEntry);
     }
 
@@ -77,7 +73,11 @@ public class BatteryDiffEntry {
 
     public Drawable getAppIcon() {
         loadLabelAndIcon();
-        return this.mAppIcon;
+        Drawable drawable = this.mAppIcon;
+        if (drawable == null || drawable.getConstantState() == null) {
+            return null;
+        }
+        return this.mAppIcon.getConstantState().newDrawable();
     }
 
     public int getAppIconId() {
@@ -85,13 +85,34 @@ public class BatteryDiffEntry {
         return this.mAppIconId;
     }
 
-    public String getPackageName() {
-        String[] split;
-        String str = this.mDefaultPackageName;
-        if (str == null) {
-            str = this.mBatteryHistEntry.mPackageName;
-        }
-        return (str == null || (split = str.split(":")) == null || split.length <= 0) ? str : split[0];
+    /* JADX WARNING: Code restructure failed: missing block: B:5:0x000c, code lost:
+        r2 = r0.split(":");
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public java.lang.String getPackageName() {
+        /*
+            r2 = this;
+            java.lang.String r0 = r2.mDefaultPackageName
+            if (r0 == 0) goto L_0x0005
+            goto L_0x0009
+        L_0x0005:
+            com.android.settings.fuelgauge.BatteryHistEntry r2 = r2.mBatteryHistEntry
+            java.lang.String r0 = r2.mPackageName
+        L_0x0009:
+            if (r0 != 0) goto L_0x000c
+            return r0
+        L_0x000c:
+            java.lang.String r2 = ":"
+            java.lang.String[] r2 = r0.split(r2)
+            if (r2 == 0) goto L_0x001a
+            int r1 = r2.length
+            if (r1 <= 0) goto L_0x001a
+            r0 = 0
+            r0 = r2[r0]
+        L_0x001a:
+            return r0
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settings.fuelgauge.BatteryDiffEntry.getPackageName():java.lang.String");
     }
 
     public boolean validForRestriction() {
@@ -102,83 +123,89 @@ public class BatteryDiffEntry {
     public boolean isSystemEntry() {
         BatteryHistEntry batteryHistEntry = this.mBatteryHistEntry;
         int i = batteryHistEntry.mConsumerType;
-        return i != 1 ? i == 2 || i == 3 : isSystemUid((int) batteryHistEntry.mUid) || this.mBatteryHistEntry.mIsHidden;
+        if (i != 1) {
+            return i == 2 || i == 3;
+        }
+        int i2 = (int) batteryHistEntry.mUid;
+        if (batteryHistEntry.mIsHidden || i2 == -4 || i2 == -5) {
+            return true;
+        }
+        if (!this.mContext.getResources().getBoolean(R$bool.config_battery_combine_system_components) || !isSystemUid(i2)) {
+            return false;
+        }
+        return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void loadLabelAndIcon() {
         BatteryEntry.NameAndIcon nameAndIconFromPowerComponent;
-        if (this.mIsLoaded) {
-            return;
-        }
-        BatteryEntry.NameAndIcon cache = getCache();
-        if (cache != null) {
-            this.mAppLabel = cache.name;
-            this.mAppIcon = cache.icon;
-            this.mAppIconId = cache.iconId;
-        }
-        Map<String, Boolean> map = sValidForRestriction;
-        Boolean bool = map.get(getKey());
-        if (bool != null) {
-            this.mValidForRestriction = bool.booleanValue();
-        }
-        if (cache != null && bool != null) {
-            return;
-        }
-        this.mIsLoaded = true;
-        updateRestrictionFlagState();
-        map.put(getKey(), Boolean.valueOf(this.mValidForRestriction));
-        BatteryHistEntry batteryHistEntry = this.mBatteryHistEntry;
-        int i = batteryHistEntry.mConsumerType;
-        if (i == 1) {
-            loadNameAndIconForUid();
-            if (this.mAppIcon == null) {
-                this.mAppIcon = this.mContext.getPackageManager().getDefaultActivityIcon();
+        if (!this.mIsLoaded) {
+            BatteryEntry.NameAndIcon cache = getCache();
+            if (cache != null) {
+                this.mAppLabel = cache.mName;
+                this.mAppIcon = cache.mIcon;
+                this.mAppIconId = cache.mIconId;
             }
-            Drawable badgeIconForUser = getBadgeIconForUser(this.mAppIcon);
-            this.mAppIcon = badgeIconForUser;
-            if (this.mAppLabel == null && badgeIconForUser == null) {
-                return;
+            Map<String, Boolean> map = sValidForRestriction;
+            Boolean bool = map.get(getKey());
+            if (bool != null) {
+                this.mValidForRestriction = bool.booleanValue();
             }
-            sResourceCache.put(getKey(), new BatteryEntry.NameAndIcon(this.mAppLabel, this.mAppIcon, 0));
-        } else if (i == 2) {
-            BatteryEntry.NameAndIcon nameAndIconFromUserId = BatteryEntry.getNameAndIconFromUserId(this.mContext, (int) batteryHistEntry.mUserId);
-            if (nameAndIconFromUserId == null) {
-                return;
+            if (cache == null || bool == null) {
+                this.mIsLoaded = true;
+                updateRestrictionFlagState();
+                map.put(getKey(), Boolean.valueOf(this.mValidForRestriction));
+                BatteryHistEntry batteryHistEntry = this.mBatteryHistEntry;
+                int i = batteryHistEntry.mConsumerType;
+                if (i == 1) {
+                    loadNameAndIconForUid();
+                    if (this.mAppIcon == null) {
+                        this.mAppIcon = this.mContext.getPackageManager().getDefaultActivityIcon();
+                    }
+                    Drawable badgeIconForUser = getBadgeIconForUser(this.mAppIcon);
+                    this.mAppIcon = badgeIconForUser;
+                    if (this.mAppLabel != null || badgeIconForUser != null) {
+                        sResourceCache.put(getKey(), new BatteryEntry.NameAndIcon(this.mAppLabel, this.mAppIcon, 0));
+                    }
+                } else if (i == 2) {
+                    BatteryEntry.NameAndIcon nameAndIconFromUserId = BatteryEntry.getNameAndIconFromUserId(this.mContext, (int) batteryHistEntry.mUserId);
+                    if (nameAndIconFromUserId != null) {
+                        this.mAppIcon = nameAndIconFromUserId.mIcon;
+                        this.mAppLabel = nameAndIconFromUserId.mName;
+                        sResourceCache.put(getKey(), new BatteryEntry.NameAndIcon(this.mAppLabel, this.mAppIcon, 0));
+                    }
+                } else if (i == 3 && (nameAndIconFromPowerComponent = BatteryEntry.getNameAndIconFromPowerComponent(this.mContext, batteryHistEntry.mDrainType)) != null) {
+                    this.mAppLabel = nameAndIconFromPowerComponent.mName;
+                    int i2 = nameAndIconFromPowerComponent.mIconId;
+                    if (i2 != 0) {
+                        this.mAppIconId = i2;
+                        this.mAppIcon = this.mContext.getDrawable(i2);
+                    }
+                    sResourceCache.put(getKey(), new BatteryEntry.NameAndIcon(this.mAppLabel, this.mAppIcon, this.mAppIconId));
+                }
             }
-            this.mAppIcon = nameAndIconFromUserId.icon;
-            this.mAppLabel = nameAndIconFromUserId.name;
-            sResourceCache.put(getKey(), new BatteryEntry.NameAndIcon(this.mAppLabel, this.mAppIcon, 0));
-        } else if (i != 3 || (nameAndIconFromPowerComponent = BatteryEntry.getNameAndIconFromPowerComponent(this.mContext, batteryHistEntry.mDrainType)) == null) {
-        } else {
-            this.mAppLabel = nameAndIconFromPowerComponent.name;
-            int i2 = nameAndIconFromPowerComponent.iconId;
-            if (i2 != 0) {
-                this.mAppIconId = i2;
-                this.mAppIcon = this.mContext.getDrawable(i2);
-            }
-            sResourceCache.put(getKey(), new BatteryEntry.NameAndIcon(this.mAppLabel, this.mAppIcon, this.mAppIconId));
         }
     }
 
-    String getKey() {
+    /* access modifiers changed from: package-private */
+    public String getKey() {
         return this.mBatteryHistEntry.getKey();
     }
 
-    void updateRestrictionFlagState() {
+    /* access modifiers changed from: package-private */
+    public void updateRestrictionFlagState() {
         this.mValidForRestriction = true;
-        if (!this.mBatteryHistEntry.isAppEntry()) {
-            return;
-        }
-        if (!(BatteryUtils.getInstance(this.mContext).getPackageUid(getPackageName()) != -1)) {
-            this.mValidForRestriction = false;
-            return;
-        }
-        try {
-            this.mValidForRestriction = this.mContext.getPackageManager().getPackageInfo(getPackageName(), 4198976) != null;
-        } catch (Exception e) {
-            Log.e("BatteryDiffEntry", String.format("getPackageInfo() error %s for package=%s", e.getCause(), getPackageName()));
-            this.mValidForRestriction = false;
+        if (this.mBatteryHistEntry.isAppEntry()) {
+            if (!(BatteryUtils.getInstance(this.mContext).getPackageUid(getPackageName()) != -1)) {
+                this.mValidForRestriction = false;
+                return;
+            }
+            try {
+                this.mValidForRestriction = this.mContext.getPackageManager().getPackageInfo(getPackageName(), 4198976) != null;
+            } catch (Exception e) {
+                Log.e("BatteryDiffEntry", String.format("getPackageInfo() error %s for package=%s", new Object[]{e.getCause(), getPackageName()}));
+                this.mValidForRestriction = false;
+            }
         }
     }
 
@@ -186,7 +213,7 @@ public class BatteryDiffEntry {
         Locale locale = Locale.getDefault();
         Locale locale2 = sCurrentLocale;
         if (locale2 != locale) {
-            Log.d("BatteryDiffEntry", String.format("clearCache() locale is changed from %s to %s", locale2, locale));
+            Log.d("BatteryDiffEntry", String.format("clearCache() locale is changed from %s to %s", new Object[]{locale2, locale}));
             sCurrentLocale = locale;
             clearCache();
         }
@@ -196,7 +223,7 @@ public class BatteryDiffEntry {
     private void loadNameAndIconForUid() {
         String packageName = getPackageName();
         PackageManager packageManager = this.mContext.getPackageManager();
-        if (packageName != null && packageName.length() != 0) {
+        if (!(packageName == null || packageName.length() == 0)) {
             try {
                 ApplicationInfo applicationInfo = packageManager.getApplicationInfo(packageName, 0);
                 if (applicationInfo != null) {
@@ -213,37 +240,35 @@ public class BatteryDiffEntry {
             String[] packagesForUid = packageManager.getPackagesForUid(i);
             if (packagesForUid == null || packagesForUid.length == 0) {
                 BatteryEntry.NameAndIcon nameAndIconFromUid = BatteryEntry.getNameAndIconFromUid(this.mContext, this.mAppLabel, i);
-                this.mAppLabel = nameAndIconFromUid.name;
-                this.mAppIcon = nameAndIconFromUid.icon;
+                this.mAppLabel = nameAndIconFromUid.mName;
+                this.mAppIcon = nameAndIconFromUid.mIcon;
             }
-            BatteryEntry.NameAndIcon loadNameAndIcon = BatteryEntry.loadNameAndIcon(this.mContext, i, null, null, packageName, this.mAppLabel, this.mAppIcon);
+            BatteryEntry.NameAndIcon loadNameAndIcon = BatteryEntry.loadNameAndIcon(this.mContext, i, (Handler) null, (BatteryEntry) null, packageName, this.mAppLabel, this.mAppIcon);
             BatteryEntry.clearUidCache();
-            if (loadNameAndIcon == null) {
-                return;
+            if (loadNameAndIcon != null) {
+                this.mAppLabel = loadNameAndIcon.mName;
+                this.mAppIcon = loadNameAndIcon.mIcon;
+                String str = loadNameAndIcon.mPackageName;
+                this.mDefaultPackageName = str;
+                if (str != null && !str.equals(str)) {
+                    Log.w("BatteryDiffEntry", String.format("found different package: %s | %s", new Object[]{this.mDefaultPackageName, loadNameAndIcon.mPackageName}));
+                }
             }
-            this.mAppLabel = loadNameAndIcon.name;
-            this.mAppIcon = loadNameAndIcon.icon;
-            String str = loadNameAndIcon.packageName;
-            this.mDefaultPackageName = str;
-            if (str == null || str.equals(str)) {
-                return;
-            }
-            Log.w("BatteryDiffEntry", String.format("found different package: %s | %s", this.mDefaultPackageName, loadNameAndIcon.packageName));
         }
     }
 
     public String toString() {
-        return "BatteryDiffEntry{" + String.format("\n\tname=%s restrictable=%b", this.mAppLabel, Boolean.valueOf(this.mValidForRestriction)) + String.format("\n\tconsume=%.2f%% %f/%f", Double.valueOf(this.mPercentOfTotal), Double.valueOf(this.mConsumePower), Double.valueOf(this.mTotalConsumePower)) + String.format("\n\tforeground:%s background:%s", StringUtil.formatElapsedTime(this.mContext, this.mForegroundUsageTimeInMs, true, false), StringUtil.formatElapsedTime(this.mContext, this.mBackgroundUsageTimeInMs, true, false)) + String.format("\n\tpackage:%s|%s uid:%d userId:%d", this.mBatteryHistEntry.mPackageName, getPackageName(), Long.valueOf(this.mBatteryHistEntry.mUid), Long.valueOf(this.mBatteryHistEntry.mUserId));
+        return "BatteryDiffEntry{" + String.format("\n\tname=%s restrictable=%b", new Object[]{this.mAppLabel, Boolean.valueOf(this.mValidForRestriction)}) + String.format("\n\tconsume=%.2f%% %f/%f", new Object[]{Double.valueOf(this.mPercentOfTotal), Double.valueOf(this.mConsumePower), Double.valueOf(this.mTotalConsumePower)}) + String.format("\n\tforeground:%s background:%s", new Object[]{StringUtil.formatElapsedTime(this.mContext, (double) this.mForegroundUsageTimeInMs, true, false), StringUtil.formatElapsedTime(this.mContext, (double) this.mBackgroundUsageTimeInMs, true, false)}) + String.format("\n\tpackage:%s|%s uid:%d userId:%d", new Object[]{this.mBatteryHistEntry.mPackageName, getPackageName(), Long.valueOf(this.mBatteryHistEntry.mUid), Long.valueOf(this.mBatteryHistEntry.mUserId)});
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
     public static void clearCache() {
         sResourceCache.clear();
         sValidForRestriction.clear();
     }
 
     private Drawable getBadgeIconForUser(Drawable drawable) {
-        return this.mUserManager.getBadgedIconForUser(drawable, new UserHandle(UserHandle.getUserId((int) this.mBatteryHistEntry.mUid)));
+        int userId = UserHandle.getUserId((int) this.mBatteryHistEntry.mUid);
+        return userId == 0 ? drawable : this.mUserManager.getBadgedIconForUser(drawable, new UserHandle(userId));
     }
 
     private static boolean isSystemUid(int i) {

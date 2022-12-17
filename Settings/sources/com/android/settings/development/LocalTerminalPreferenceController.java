@@ -8,13 +8,12 @@ import androidx.preference.PreferenceScreen;
 import androidx.preference.SwitchPreference;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.development.DeveloperOptionsPreferenceController;
-/* loaded from: classes.dex */
+
 public class LocalTerminalPreferenceController extends DeveloperOptionsPreferenceController implements Preference.OnPreferenceChangeListener, PreferenceControllerMixin {
     static final String TERMINAL_APP_PACKAGE = "com.android.terminal";
     private PackageManager mPackageManager;
     private UserManager mUserManager;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "enable_terminal";
     }
@@ -24,28 +23,23 @@ public class LocalTerminalPreferenceController extends DeveloperOptionsPreferenc
         this.mUserManager = (UserManager) context.getSystemService("user");
     }
 
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return isPackageInstalled(TERMINAL_APP_PACKAGE);
     }
 
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
         this.mPackageManager = getPackageManager();
-        if (!isAvailable() || isEnabled()) {
-            return;
+        if (isAvailable() && !isEnabled()) {
+            this.mPreference.setEnabled(false);
         }
-        this.mPreference.setEnabled(false);
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         this.mPackageManager.setApplicationEnabledSetting(TERMINAL_APP_PACKAGE, ((Boolean) obj).booleanValue() ? 1 : 0, 0);
         return true;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         boolean z = true;
         if (this.mPackageManager.getApplicationEnabledSetting(TERMINAL_APP_PACKAGE) != 1) {
@@ -54,23 +48,22 @@ public class LocalTerminalPreferenceController extends DeveloperOptionsPreferenc
         ((SwitchPreference) this.mPreference).setChecked(z);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController
+    /* access modifiers changed from: protected */
     public void onDeveloperOptionsSwitchEnabled() {
         if (isEnabled()) {
             this.mPreference.setEnabled(true);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController
+    /* access modifiers changed from: protected */
     public void onDeveloperOptionsSwitchDisabled() {
         super.onDeveloperOptionsSwitchDisabled();
         this.mPackageManager.setApplicationEnabledSetting(TERMINAL_APP_PACKAGE, 0, 0);
         ((SwitchPreference) this.mPreference).setChecked(false);
     }
 
-    PackageManager getPackageManager() {
+    /* access modifiers changed from: package-private */
+    public PackageManager getPackageManager() {
         return this.mContext.getPackageManager();
     }
 

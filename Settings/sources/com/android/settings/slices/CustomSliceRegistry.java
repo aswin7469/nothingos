@@ -21,36 +21,36 @@ import com.android.settings.nfc.NfcPreferenceController;
 import com.android.settings.wifi.slice.ContextualWifiSlice;
 import com.android.settings.wifi.slice.WifiSlice;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public class CustomSliceRegistry {
     public static final Uri ALWAYS_ON_SLICE_URI;
     public static final Uri BATTERY_FIX_SLICE_URI;
     public static final Uri BLUETOOTH_DEVICES_SLICE_URI;
+    public static final Uri BLUETOOTH_URI = new Uri.Builder().scheme("content").authority("android.settings.slices").appendPath("action").appendPath("bluetooth").build();
     public static final Uri CONTEXTUAL_ADAPTIVE_SLEEP_URI;
     public static final Uri CONTEXTUAL_WIFI_SLICE_URI;
     public static final Uri DARK_THEME_SLICE_URI;
+    public static final Uri ENHANCED_4G_SLICE_URI = new Uri.Builder().scheme("content").authority("com.android.settings.slices").appendPath("action").appendPath("enhanced_4g_lte").build();
     public static final Uri FACE_ENROLL_SLICE_URI;
     public static final Uri FLASHLIGHT_SLICE_URI;
     public static final Uri LOCATION_SLICE_URI;
     public static final Uri LOW_STORAGE_SLICE_URI;
+    public static Uri MEDIA_OUTPUT_INDICATOR_SLICE_URI = new Uri.Builder().scheme("content").authority("com.android.settings.slices").appendPath("intent").appendPath("media_output_indicator").build();
     public static final Uri MOBILE_DATA_SLICE_URI;
-    public static final Uri PROVIDER_MODEL_SLICE_URI;
-    public static final Uri WIFI_SLICE_URI;
-    static final Map<Uri, Class<? extends CustomSliceable>> sUriToSlice;
-    public static final Uri BLUETOOTH_URI = new Uri.Builder().scheme("content").authority("android.settings.slices").appendPath("action").appendPath("bluetooth").build();
-    public static final Uri ENHANCED_4G_SLICE_URI = new Uri.Builder().scheme("content").authority("com.android.settings.slices").appendPath("action").appendPath("enhanced_4g_lte").build();
     public static final Uri NFC_SLICE_URI = new Uri.Builder().scheme("content").authority("com.android.settings.slices").appendPath("action").appendPath(NfcPreferenceController.KEY_TOGGLE_NFC).build();
+    public static final Uri PROVIDER_MODEL_SLICE_URI;
+    public static Uri REMOTE_MEDIA_SLICE_URI = new Uri.Builder().scheme("content").authority("com.android.settings.slices").appendPath("action").appendPath("remote_media").build();
+    public static final Uri TURN_ON_WIFI_SLICE_URI = new Uri.Builder().scheme("content").authority("com.android.settings.slices").appendPath("action").appendPath("turn_on_wifi").build();
     public static final Uri VOLUME_ALARM_URI = new Uri.Builder().scheme("content").authority("com.android.settings.slices").appendPath("action").appendPath("alarm_volume").build();
     public static final Uri VOLUME_CALL_URI = new Uri.Builder().scheme("content").authority("com.android.settings.slices").appendPath("action").appendPath("call_volume").build();
     public static final Uri VOLUME_MEDIA_URI = new Uri.Builder().scheme("content").authority("com.android.settings.slices").appendPath("action").appendPath("media_volume").build();
     public static final Uri VOLUME_RINGER_URI = new Uri.Builder().scheme("content").authority("com.android.settings.slices").appendPath("action").appendPath("ring_volume").build();
     public static final Uri VOLUME_SLICES_URI = new Uri.Builder().scheme("content").authority("com.android.settings.slices").appendPath("action").appendPath("volume_slices").build();
-    public static final Uri WIFI_CALLING_URI = new Uri.Builder().scheme("content").authority("com.android.settings.slices").appendPath("intent").appendPath("wifi_calling").build();
     public static final Uri WIFI_CALLING_PREFERENCE_URI = new Uri.Builder().scheme("content").authority("com.android.settings.slices").appendPath("action").appendPath("wifi_calling_preference").build();
+    public static final Uri WIFI_CALLING_URI = new Uri.Builder().scheme("content").authority("com.android.settings.slices").appendPath("intent").appendPath("wifi_calling").build();
+    public static final Uri WIFI_SLICE_URI;
     public static final Uri ZEN_MODE_SLICE_URI = new Uri.Builder().scheme("content").authority("com.android.settings.slices").appendPath("action").appendPath("zen_mode_toggle").build();
-    public static Uri MEDIA_OUTPUT_INDICATOR_SLICE_URI = new Uri.Builder().scheme("content").authority("com.android.settings.slices").appendPath("intent").appendPath("media_output_indicator").build();
-    public static Uri REMOTE_MEDIA_SLICE_URI = new Uri.Builder().scheme("content").authority("com.android.settings.slices").appendPath("action").appendPath("remote_media").build();
-    public static final Uri TURN_ON_WIFI_SLICE_URI = new Uri.Builder().scheme("content").authority("com.android.settings.slices").appendPath("action").appendPath("turn_on_wifi").build();
+    static final Map<Uri, Class<? extends CustomSliceable>> sUriToSlice;
 
     static {
         Uri build = new Uri.Builder().scheme("content").authority("com.android.settings.slices").appendPath("intent").appendPath(ScreenTimeoutPreferenceController.PREF_NAME).build();
@@ -73,6 +73,7 @@ public class CustomSliceRegistry {
         MOBILE_DATA_SLICE_URI = build9;
         Uri build10 = new Uri.Builder().scheme("content").authority("com.android.settings.slices").appendEncodedPath("action").appendPath("provider_model").build();
         PROVIDER_MODEL_SLICE_URI = build10;
+        Uri uri = build10;
         Uri build11 = new Uri.Builder().scheme("content").authority("android.settings.slices").appendPath("action").appendPath("wifi").build();
         WIFI_SLICE_URI = build11;
         Uri build12 = new Uri.Builder().scheme("content").authority("com.android.settings.slices").appendPath("action").appendPath("dark_theme").build();
@@ -91,7 +92,7 @@ public class CustomSliceRegistry {
         arrayMap.put(build8, LowStorageSlice.class);
         arrayMap.put(MEDIA_OUTPUT_INDICATOR_SLICE_URI, MediaOutputIndicatorSlice.class);
         arrayMap.put(build9, MobileDataSlice.class);
-        arrayMap.put(build10, ProviderModelSlice.class);
+        arrayMap.put(uri, ProviderModelSlice.class);
         arrayMap.put(build11, WifiSlice.class);
         arrayMap.put(build12, DarkThemeSlice.class);
         arrayMap.put(REMOTE_MEDIA_SLICE_URI, RemoteMediaSlice.class);

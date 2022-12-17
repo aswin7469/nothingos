@@ -2,60 +2,55 @@ package com.android.settings.notification.zen;
 
 import android.app.AutomaticZenRule;
 import android.content.Context;
+import android.service.notification.ZenPolicy;
 import android.util.Pair;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import com.android.settingslib.core.lifecycle.Lifecycle;
-import com.android.settingslib.widget.RadioButtonPreference;
-/* loaded from: classes.dex */
-public class ZenRuleDefaultPolicyPreferenceController extends AbstractZenCustomRulePreferenceController {
-    private RadioButtonPreference mPreference;
+import com.android.settingslib.widget.SelectorWithWidgetPreference;
 
-    @Override // com.android.settings.notification.zen.AbstractZenCustomRulePreferenceController, com.android.settingslib.core.AbstractPreferenceController
+public class ZenRuleDefaultPolicyPreferenceController extends AbstractZenCustomRulePreferenceController {
+    private SelectorWithWidgetPreference mPreference;
+
     public /* bridge */ /* synthetic */ boolean isAvailable() {
         return super.isAvailable();
     }
 
-    @Override // com.android.settings.notification.zen.AbstractZenCustomRulePreferenceController
-    public /* bridge */ /* synthetic */ void onResume(AutomaticZenRule automaticZenRule, String str) {
-        super.onResume(automaticZenRule, str);
+    public /* bridge */ /* synthetic */ void onResume() {
+        super.onResume();
+    }
+
+    public /* bridge */ /* synthetic */ void setIdAndRule(String str, AutomaticZenRule automaticZenRule) {
+        super.setIdAndRule(str, automaticZenRule);
     }
 
     public ZenRuleDefaultPolicyPreferenceController(Context context, Lifecycle lifecycle, String str) {
         super(context, str, lifecycle);
     }
 
-    @Override // com.android.settings.notification.zen.AbstractZenModePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void displayPreference(PreferenceScreen preferenceScreen) {
         super.displayPreference(preferenceScreen);
-        RadioButtonPreference radioButtonPreference = (RadioButtonPreference) preferenceScreen.findPreference(getPreferenceKey());
-        this.mPreference = radioButtonPreference;
-        radioButtonPreference.setOnClickListener(new RadioButtonPreference.OnClickListener() { // from class: com.android.settings.notification.zen.ZenRuleDefaultPolicyPreferenceController$$ExternalSyntheticLambda0
-            @Override // com.android.settingslib.widget.RadioButtonPreference.OnClickListener
-            public final void onRadioButtonClicked(RadioButtonPreference radioButtonPreference2) {
-                ZenRuleDefaultPolicyPreferenceController.this.lambda$displayPreference$0(radioButtonPreference2);
-            }
-        });
+        SelectorWithWidgetPreference selectorWithWidgetPreference = (SelectorWithWidgetPreference) preferenceScreen.findPreference(getPreferenceKey());
+        this.mPreference = selectorWithWidgetPreference;
+        selectorWithWidgetPreference.setOnClickListener(new C1239xe3f1befa(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$displayPreference$0(RadioButtonPreference radioButtonPreference) {
-        this.mRule.setZenPolicy(null);
+    /* access modifiers changed from: private */
+    public /* synthetic */ void lambda$displayPreference$0(SelectorWithWidgetPreference selectorWithWidgetPreference) {
+        this.mRule.setZenPolicy((ZenPolicy) null);
         this.mBackend.updateZenRule(this.mId, this.mRule);
     }
 
-    @Override // com.android.settings.notification.zen.AbstractZenCustomRulePreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         super.updateState(preference);
-        if (this.mId == null || this.mRule == null) {
-            return;
+        if (this.mId != null && this.mRule != null) {
+            boolean z = true;
+            this.mMetricsFeatureProvider.action(this.mContext, 1606, (Pair<Integer, Object>[]) new Pair[]{Pair.create(1603, this.mId)});
+            SelectorWithWidgetPreference selectorWithWidgetPreference = this.mPreference;
+            if (this.mRule.getZenPolicy() != null) {
+                z = false;
+            }
+            selectorWithWidgetPreference.setChecked(z);
         }
-        boolean z = true;
-        this.mMetricsFeatureProvider.action(this.mContext, 1606, Pair.create(1603, this.mId));
-        RadioButtonPreference radioButtonPreference = this.mPreference;
-        if (this.mRule.getZenPolicy() != null) {
-            z = false;
-        }
-        radioButtonPreference.setChecked(z);
     }
 }

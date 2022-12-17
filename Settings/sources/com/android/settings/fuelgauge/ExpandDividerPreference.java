@@ -6,8 +6,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
-import com.android.settings.R;
-/* loaded from: classes.dex */
+import com.android.settings.R$drawable;
+import com.android.settings.R$id;
+import com.android.settings.R$layout;
+
 public class ExpandDividerPreference extends Preference {
     static final String PREFERENCE_KEY = "expandable_divider";
     ImageView mImageView;
@@ -16,82 +18,68 @@ public class ExpandDividerPreference extends Preference {
     TextView mTextView;
     private String mTitleContent;
 
-    /* loaded from: classes.dex */
     public interface OnExpandListener {
         void onExpand(boolean z);
     }
 
     public ExpandDividerPreference(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public ExpandDividerPreference(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         this.mIsExpanded = false;
         this.mTitleContent = null;
-        setLayoutResource(R.layout.preference_expand_divider);
+        setLayoutResource(R$layout.preference_expand_divider);
         setKey(PREFERENCE_KEY);
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
-        this.mTextView = (TextView) preferenceViewHolder.findViewById(R.id.expand_title);
-        this.mImageView = (ImageView) preferenceViewHolder.findViewById(R.id.expand_icon);
+        this.mTextView = (TextView) preferenceViewHolder.findViewById(R$id.expand_title);
+        this.mImageView = (ImageView) preferenceViewHolder.findViewById(R$id.expand_icon);
         refreshState();
     }
 
-    @Override // androidx.preference.Preference
     public void onClick() {
-        this.mIsExpanded = !this.mIsExpanded;
-        refreshState();
+        setIsExpanded(!this.mIsExpanded);
         OnExpandListener onExpandListener = this.mOnExpandListener;
         if (onExpandListener != null) {
             onExpandListener.onExpand(this.mIsExpanded);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void setTitle(final String str) {
+    /* access modifiers changed from: package-private */
+    public void setTitle(String str) {
         this.mTitleContent = str;
-        TextView textView = this.mTextView;
-        if (textView != null) {
-            textView.postDelayed(new Runnable() { // from class: com.android.settings.fuelgauge.ExpandDividerPreference$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    ExpandDividerPreference.this.lambda$setTitle$0(str);
-                }
-            }, 50L);
-        }
+        refreshState();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$setTitle$0(String str) {
-        this.mTextView.setText(str);
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setIsExpanded(boolean z) {
         this.mIsExpanded = z;
         refreshState();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setOnExpandListener(OnExpandListener onExpandListener) {
         this.mOnExpandListener = onExpandListener;
     }
 
     private void refreshState() {
         int i;
-        if (this.mIsExpanded) {
-            i = R.drawable.ic_settings_expand_less;
-        } else {
-            i = R.drawable.ic_settings_expand_more;
-        }
         ImageView imageView = this.mImageView;
         if (imageView != null) {
+            if (this.mIsExpanded) {
+                i = R$drawable.ic_settings_expand_less;
+            } else {
+                i = R$drawable.ic_settings_expand_more;
+            }
             imageView.setImageResource(i);
         }
-        setTitle(this.mTitleContent);
+        TextView textView = this.mTextView;
+        if (textView != null) {
+            textView.setText(this.mTitleContent);
+        }
     }
 }

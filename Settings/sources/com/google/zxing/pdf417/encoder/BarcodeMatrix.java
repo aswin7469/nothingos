@@ -1,15 +1,14 @@
 package com.google.zxing.pdf417.encoder;
 
 import java.lang.reflect.Array;
-/* loaded from: classes2.dex */
+
 public final class BarcodeMatrix {
     private int currentRow;
     private final int height;
     private final BarcodeRow[] matrix;
     private final int width;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public BarcodeMatrix(int i, int i2) {
+    BarcodeMatrix(int i, int i2) {
         BarcodeRow[] barcodeRowArr = new BarcodeRow[i];
         this.matrix = barcodeRowArr;
         int length = barcodeRowArr.length;
@@ -21,18 +20,21 @@ public final class BarcodeMatrix {
         this.currentRow = -1;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void startRow() {
         this.currentRow++;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public BarcodeRow getCurrentRow() {
         return this.matrix[this.currentRow];
     }
 
     public byte[][] getScaledMatrix(int i, int i2) {
-        byte[][] bArr = (byte[][]) Array.newInstance(byte.class, this.height * i2, this.width * i);
+        int[] iArr = new int[2];
+        iArr[1] = this.width * i;
+        iArr[0] = this.height * i2;
+        byte[][] bArr = (byte[][]) Array.newInstance(byte.class, iArr);
         int i3 = this.height * i2;
         for (int i4 = 0; i4 < i3; i4++) {
             bArr[(i3 - i4) - 1] = this.matrix[i4 / i2].getScaledRow(i);

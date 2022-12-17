@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-/* loaded from: classes.dex */
+
 public class UiBlockerController {
     private boolean mBlockerFinished;
     private CountDownLatch mCountDownLatch;
@@ -15,7 +15,7 @@ public class UiBlockerController {
     private long mTimeoutMillis;
 
     public UiBlockerController(List<String> list) {
-        this(list, 500L);
+        this(list, 300);
     }
 
     public UiBlockerController(List<String> list, long j) {
@@ -25,20 +25,15 @@ public class UiBlockerController {
         this.mTimeoutMillis = j;
     }
 
-    public boolean start(final Runnable runnable) {
+    public boolean start(Runnable runnable) {
         if (this.mKeys.isEmpty()) {
             return false;
         }
-        ThreadUtils.postOnBackgroundThread(new Runnable() { // from class: com.android.settings.dashboard.UiBlockerController$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                UiBlockerController.this.lambda$start$0(runnable);
-            }
-        });
+        ThreadUtils.postOnBackgroundThread((Runnable) new UiBlockerController$$ExternalSyntheticLambda0(this, runnable));
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public /* synthetic */ void lambda$start$0(Runnable runnable) {
         try {
             this.mCountDownLatch.await(this.mTimeoutMillis, TimeUnit.MILLISECONDS);
@@ -54,10 +49,10 @@ public class UiBlockerController {
     }
 
     public boolean countDown(String str) {
-        if (this.mKeys.remove(str)) {
-            this.mCountDownLatch.countDown();
-            return true;
+        if (!this.mKeys.remove(str)) {
+            return false;
         }
-        return false;
+        this.mCountDownLatch.countDown();
+        return true;
     }
 }

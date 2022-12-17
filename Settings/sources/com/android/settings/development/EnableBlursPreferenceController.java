@@ -7,11 +7,10 @@ import androidx.preference.Preference;
 import androidx.preference.SwitchPreference;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settingslib.development.DeveloperOptionsPreferenceController;
-/* loaded from: classes.dex */
+
 public final class EnableBlursPreferenceController extends DeveloperOptionsPreferenceController implements Preference.OnPreferenceChangeListener, PreferenceControllerMixin {
     private final boolean mBlurSupported;
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public String getPreferenceKey() {
         return "enable_blurs_on_windows";
     }
@@ -25,18 +24,15 @@ public final class EnableBlursPreferenceController extends DeveloperOptionsPrefe
         this.mBlurSupported = z;
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
-        Settings.Global.putInt(this.mContext.getContentResolver(), "disable_window_blurs", !((Boolean) obj).booleanValue());
+        Settings.Global.putInt(this.mContext.getContentResolver(), "disable_window_blurs", ((Boolean) obj).booleanValue() ^ true ? 1 : 0);
         return true;
     }
 
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController, com.android.settingslib.core.AbstractPreferenceController
     public boolean isAvailable() {
         return this.mBlurSupported;
     }
 
-    @Override // com.android.settingslib.core.AbstractPreferenceController
     public void updateState(Preference preference) {
         boolean z = false;
         if (Settings.Global.getInt(this.mContext.getContentResolver(), "disable_window_blurs", 0) == 0) {
@@ -45,11 +41,10 @@ public final class EnableBlursPreferenceController extends DeveloperOptionsPrefe
         ((SwitchPreference) this.mPreference).setChecked(z);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.settingslib.development.DeveloperOptionsPreferenceController
+    /* access modifiers changed from: protected */
     public void onDeveloperOptionsSwitchDisabled() {
         super.onDeveloperOptionsSwitchDisabled();
         Settings.Global.putInt(this.mContext.getContentResolver(), "disable_window_blurs", 0);
-        updateState(null);
+        updateState((Preference) null);
     }
 }

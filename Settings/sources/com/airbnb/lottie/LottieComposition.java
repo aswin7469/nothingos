@@ -11,7 +11,7 @@ import com.airbnb.lottie.utils.Logger;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public class LottieComposition {
     private Rect bounds;
     private SparseArrayCompat<FontCharacter> characters;
@@ -23,11 +23,11 @@ public class LottieComposition {
     private LongSparseArray<Layer> layerMap;
     private List<Layer> layers;
     private List<Marker> markers;
+    private int maskAndMatteCount = 0;
+    private final PerformanceTracker performanceTracker = new PerformanceTracker();
     private Map<String, List<Layer>> precomps;
     private float startFrame;
-    private final PerformanceTracker performanceTracker = new PerformanceTracker();
     private final HashSet<String> warnings = new HashSet<>();
-    private int maskAndMatteCount = 0;
 
     public void init(Rect rect, float f, float f2, float f3, List<Layer> list, LongSparseArray<Layer> longSparseArray, Map<String, List<Layer>> map, Map<String, LottieImageAsset> map2, SparseArrayCompat<FontCharacter> sparseArrayCompat, Map<String, Font> map3, List<Marker> list2) {
         this.bounds = rect;
@@ -81,7 +81,7 @@ public class LottieComposition {
     }
 
     public float getDuration() {
-        return (getDurationFrames() / this.frameRate) * 1000.0f;
+        return (float) ((long) ((getDurationFrames() / this.frameRate) * 1000.0f));
     }
 
     public float getStartFrame() {

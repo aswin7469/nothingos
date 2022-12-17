@@ -5,32 +5,33 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.view.View;
 import android.view.ViewGroup;
-/* loaded from: classes2.dex */
+
 public final class FadeThroughProvider implements VisibilityAnimatorProvider {
     private float progressThreshold = 0.35f;
 
-    @Override // com.google.android.material.transition.platform.VisibilityAnimatorProvider
     public Animator createAppear(ViewGroup viewGroup, View view) {
         float alpha = view.getAlpha() == 0.0f ? 1.0f : view.getAlpha();
         return createFadeThroughAnimator(view, 0.0f, alpha, this.progressThreshold, 1.0f, alpha);
     }
 
-    @Override // com.google.android.material.transition.platform.VisibilityAnimatorProvider
     public Animator createDisappear(ViewGroup viewGroup, View view) {
         float alpha = view.getAlpha() == 0.0f ? 1.0f : view.getAlpha();
         return createFadeThroughAnimator(view, alpha, 0.0f, 0.0f, this.progressThreshold, alpha);
     }
 
-    private static Animator createFadeThroughAnimator(final View view, final float f, final float f2, final float f3, final float f4, final float f5) {
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(0.0f, 1.0f);
-        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.google.android.material.transition.platform.FadeThroughProvider.1
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
+    private static Animator createFadeThroughAnimator(final View view, float f, float f2, float f3, float f4, final float f5) {
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        final View view2 = view;
+        final float f6 = f;
+        final float f7 = f2;
+        final float f8 = f3;
+        final float f9 = f4;
+        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                view.setAlpha(TransitionUtils.lerp(f, f2, f3, f4, ((Float) valueAnimator.getAnimatedValue()).floatValue()));
+                view2.setAlpha(TransitionUtils.lerp(f6, f7, f8, f9, ((Float) valueAnimator.getAnimatedValue()).floatValue()));
             }
         });
-        ofFloat.addListener(new AnimatorListenerAdapter() { // from class: com.google.android.material.transition.platform.FadeThroughProvider.2
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
+        ofFloat.addListener(new AnimatorListenerAdapter() {
             public void onAnimationEnd(Animator animator) {
                 view.setAlpha(f5);
             }

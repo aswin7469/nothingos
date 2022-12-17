@@ -3,7 +3,7 @@ package androidx.mediarouter.media;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
-/* loaded from: classes.dex */
+
 class MediaRouterActiveScanThrottlingHelper {
     private boolean mActiveScan;
     private long mCurrentTime;
@@ -11,28 +11,25 @@ class MediaRouterActiveScanThrottlingHelper {
     private long mSuppressActiveScanTimeout;
     private final Runnable mUpdateDiscoveryRequestRunnable;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public MediaRouterActiveScanThrottlingHelper(Runnable updateDiscoveryRequestRunnable) {
-        this.mUpdateDiscoveryRequestRunnable = updateDiscoveryRequestRunnable;
+    MediaRouterActiveScanThrottlingHelper(Runnable runnable) {
+        this.mUpdateDiscoveryRequestRunnable = runnable;
     }
 
     public void reset() {
-        this.mSuppressActiveScanTimeout = 0L;
+        this.mSuppressActiveScanTimeout = 0;
         this.mActiveScan = false;
         this.mCurrentTime = SystemClock.elapsedRealtime();
         this.mHandler.removeCallbacks(this.mUpdateDiscoveryRequestRunnable);
     }
 
-    public void requestActiveScan(boolean activeScanAsRequested, long requestTimestamp) {
-        if (!activeScanAsRequested) {
-            return;
+    public void requestActiveScan(boolean z, long j) {
+        if (z) {
+            long j2 = this.mCurrentTime;
+            if (j2 - j < 30000) {
+                this.mSuppressActiveScanTimeout = Math.max(this.mSuppressActiveScanTimeout, (j + 30000) - j2);
+                this.mActiveScan = true;
+            }
         }
-        long j = this.mCurrentTime;
-        if (j - requestTimestamp >= 30000) {
-            return;
-        }
-        this.mSuppressActiveScanTimeout = Math.max(this.mSuppressActiveScanTimeout, (requestTimestamp + 30000) - j);
-        this.mActiveScan = true;
     }
 
     public boolean finalizeActiveScanAndScheduleSuppressActiveScanRunnable() {

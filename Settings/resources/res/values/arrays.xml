@@ -59,9 +59,6 @@
         <item>@string/accessibility_timeout_1min</item>
         <item>@string/accessibility_timeout_2mins</item>
     </array>
-    <array name="allowlist_hide_entry_in_battery_usage">
-        <item>com.google.android.gms.persistent</item>
-    </array>
     <array name="allowlist_hide_summary_in_battery_usage">
     </array>
     <array name="animator_duration_scale_entries">
@@ -295,6 +292,10 @@
         <item>60</item>
         <item>90</item>
     </array>
+    <array name="avatar_image_descriptions">
+    </array>
+    <array name="avatar_images">
+    </array>
     <array name="background_style1">
         <item>@drawable/rounded_ripple</item>
     </array>
@@ -346,7 +347,7 @@
         <item>100</item>
     </array>
     <array name="batterymeter_color_values">
-        <item>?android:attr/colorError</item>
+        <item>?unknown_attr_ref: 1010543</item>
         <item>@android:color/white</item>
     </array>
     <array name="batterymeter_plus_points">
@@ -550,6 +551,7 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive audio</item>
         <item>Qualcomm® aptX™ TWS+ audio</item>
+        <item>LC3</item>
         <item>Savitech LHDC V1</item>
         <item>Savitech LHDC V2</item>
         <item>Savitech LHDC V3</item>
@@ -564,6 +566,7 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive audio</item>
         <item>Qualcomm® aptX™ TWS+ audio</item>
+        <item>LC3</item>
         <item>Savitech LHDC V1</item>
         <item>Savitech LHDC V2</item>
         <item>Savitech LHDC V3</item>
@@ -667,6 +670,10 @@
         <item>snoopheadersfiltered</item>
         <item>mediapktsfiltered</item>
     </array>
+    <array name="bt_hci_snoop_log_values_enhanced">
+        <item>snoopheadersfiltered</item>
+        <item>mediapktsfiltered</item>
+    </array>
     <array name="bt_icon_bg_colors">
         <item>@color/bt_color_bg_1</item>
         <item>@color/bt_color_bg_2</item>
@@ -686,8 +693,8 @@
         <item>@color/bt_color_icon_7</item>
     </array>
     <array name="bytes_picker_sizes">
-        <item>@android:string/notification_channel_network_available</item>
-        <item>@android:string/immersive_cling_positive</item>
+        <item>@android:string/time_picker_decrement_hour_button</item>
+        <item>@android:string/autofill_card_number_re</item>
     </array>
     <array name="cached_apps_freezer_entries">
         <item>@string/cached_apps_freezer_device_default</item>
@@ -711,71 +718,71 @@
         <item>@string/color_magenta</item>
     </array>
     <array name="captioning_color_selector_values">
-        <item>0xffffff</item>
-        <item>0xffffffff</item>
-        <item>0xff000000</item>
-        <item>0xffff0000</item>
-        <item>0xffffff00</item>
-        <item>0xff00ff00</item>
-        <item>0xff00ffff</item>
-        <item>0xff0000ff</item>
-        <item>0xffff00ff</item>
-        <item>0xff000055</item>
-        <item>0xff0000aa</item>
-        <item>0xff005500</item>
-        <item>0xff005555</item>
-        <item>0xff0055aa</item>
-        <item>0xff0055ff</item>
-        <item>0xff00aa00</item>
-        <item>0xff00aa55</item>
-        <item>0xff00aaaa</item>
-        <item>0xff00aaff</item>
-        <item>0xff00ff55</item>
-        <item>0xff00ffaa</item>
-        <item>0xff550000</item>
-        <item>0xff550055</item>
-        <item>0xff5500aa</item>
-        <item>0xff5500ff</item>
-        <item>0xff555500</item>
-        <item>0xff555555</item>
-        <item>0xff5555aa</item>
-        <item>0xff5555ff</item>
-        <item>0xff55aa00</item>
-        <item>0xff55aa55</item>
-        <item>0xff55aaaa</item>
-        <item>0xff55aaff</item>
-        <item>0xff55ff00</item>
-        <item>0xff55ff55</item>
-        <item>0xff55ffaa</item>
-        <item>0xff55ffff</item>
-        <item>0xffaa0000</item>
-        <item>0xffaa0055</item>
-        <item>0xffaa00aa</item>
-        <item>0xffaa00ff</item>
-        <item>0xffaa5500</item>
-        <item>0xffaa5555</item>
-        <item>0xffaa55aa</item>
-        <item>0xffaa55ff</item>
-        <item>0xffaaaa00</item>
-        <item>0xffaaaa55</item>
-        <item>0xffaaaaaa</item>
-        <item>0xffaaaaff</item>
-        <item>0xffaaff00</item>
-        <item>0xffaaff55</item>
-        <item>0xffaaffaa</item>
-        <item>0xffaaffff</item>
-        <item>0xffff0055</item>
-        <item>0xffff00aa</item>
-        <item>0xffff5500</item>
-        <item>0xffff5555</item>
-        <item>0xffff55aa</item>
-        <item>0xffff55ff</item>
-        <item>0xffffaa00</item>
-        <item>0xffffaa55</item>
-        <item>0xffffaaaa</item>
-        <item>0xffffaaff</item>
-        <item>0xffffff55</item>
-        <item>0xffffffaa</item>
+        <item>ffffff</item>
+        <item>ffffffff</item>
+        <item>ff000000</item>
+        <item>ffff0000</item>
+        <item>ffffff00</item>
+        <item>ff00ff00</item>
+        <item>ff00ffff</item>
+        <item>ff0000ff</item>
+        <item>ffff00ff</item>
+        <item>ff000055</item>
+        <item>ff0000aa</item>
+        <item>ff005500</item>
+        <item>ff005555</item>
+        <item>ff0055aa</item>
+        <item>ff0055ff</item>
+        <item>ff00aa00</item>
+        <item>ff00aa55</item>
+        <item>ff00aaaa</item>
+        <item>ff00aaff</item>
+        <item>ff00ff55</item>
+        <item>ff00ffaa</item>
+        <item>ff550000</item>
+        <item>ff550055</item>
+        <item>ff5500aa</item>
+        <item>ff5500ff</item>
+        <item>ff555500</item>
+        <item>ff555555</item>
+        <item>ff5555aa</item>
+        <item>ff5555ff</item>
+        <item>ff55aa00</item>
+        <item>ff55aa55</item>
+        <item>ff55aaaa</item>
+        <item>ff55aaff</item>
+        <item>ff55ff00</item>
+        <item>ff55ff55</item>
+        <item>ff55ffaa</item>
+        <item>ff55ffff</item>
+        <item>ffaa0000</item>
+        <item>ffaa0055</item>
+        <item>ffaa00aa</item>
+        <item>ffaa00ff</item>
+        <item>ffaa5500</item>
+        <item>ffaa5555</item>
+        <item>ffaa55aa</item>
+        <item>ffaa55ff</item>
+        <item>ffaaaa00</item>
+        <item>ffaaaa55</item>
+        <item>ffaaaaaa</item>
+        <item>ffaaaaff</item>
+        <item>ffaaff00</item>
+        <item>ffaaff55</item>
+        <item>ffaaffaa</item>
+        <item>ffaaffff</item>
+        <item>ffff0055</item>
+        <item>ffff00aa</item>
+        <item>ffff5500</item>
+        <item>ffff5555</item>
+        <item>ffff55aa</item>
+        <item>ffff55ff</item>
+        <item>ffffaa00</item>
+        <item>ffffaa55</item>
+        <item>ffffaaaa</item>
+        <item>ffffaaff</item>
+        <item>ffffff55</item>
+        <item>ffffffaa</item>
     </array>
     <array name="captioning_edge_type_selector_titles">
         <item>Default</item>
@@ -793,17 +800,10 @@
         <item>3</item>
         <item>4</item>
     </array>
-    <array name="captioning_font_size_selector_summaries">
-        <item>Very small text size</item>
-        <item>Small text size</item>
-        <item>Default text size</item>
-        <item>Large text size</item>
-        <item>Very large text size</item>
-    </array>
     <array name="captioning_font_size_selector_titles">
         <item>Very small</item>
         <item>Small</item>
-        <item>Default</item>
+        <item>Medium</item>
         <item>Large</item>
         <item>Very large</item>
     </array>
@@ -821,10 +821,10 @@
         <item>100%</item>
     </array>
     <array name="captioning_opacity_selector_values">
-        <item>0x40ffffff</item>
-        <item>0x80ffffff</item>
-        <item>0xc0ffffff</item>
-        <item>0xffffffff</item>
+        <item>40ffffff</item>
+        <item>80ffffff</item>
+        <item>c0ffffff</item>
+        <item>ffffffff</item>
     </array>
     <array name="captioning_preset_selector_titles">
         <item>Set by app</item>
@@ -880,6 +880,35 @@
         <item>@null</item>
         <item>2</item>
     </array>
+    <array name="china_broadcast_ids">
+        <item>46015</item>
+        <item>46060</item>
+        <item>46061</item>
+    </array>
+    <array name="china_mobile_ids">
+        <item>46000</item>
+        <item>46002</item>
+        <item>46004</item>
+        <item>46007</item>
+        <item>46008</item>
+        <item>46020</item>
+        <item>46021</item>
+        <item>46022</item>
+    </array>
+    <array name="china_telecom_ids">
+        <item>46003</item>
+        <item>46005</item>
+        <item>46011</item>
+        <item>46050</item>
+        <item>46051</item>
+    </array>
+    <array name="china_union_ids">
+        <item>46001</item>
+        <item>46006</item>
+        <item>46009</item>
+        <item>46031</item>
+        <item>46032</item>
+    </array>
     <array name="color_mode_descriptions">
         <item>Enhanced colors</item>
         <item>Natural colors as seen by the eye</item>
@@ -915,6 +944,10 @@
         <item>2</item>
         <item>3</item>
     </array>
+    <array name="config_disallowed_app_localeChange_packages">
+    </array>
+    <array name="config_google_mandatory_packages">
+    </array>
     <array name="config_order_audio_services">
     </array>
     <array name="config_order_captions_services">
@@ -941,6 +974,16 @@
     <array name="config_preinstalled_screen_reader_services">
         <item>com.google.android.marvin.talkback/com.google.android.marvin.talkback.TalkBackService</item>
         <item>com.google.android.marvin.talkback/com.google.android.accessibility.selecttospeak.SelectToSpeakService</item>
+    </array>
+    <array name="config_screen_resolution_options_strings">
+        <item>@string/screen_resolution_option_high</item>
+        <item>@string/screen_resolution_option_highest</item>
+    </array>
+    <array name="config_screen_resolution_summaries_strings">
+        <item>@string/screen_resolution_summary_high</item>
+        <item>@string/screen_resolution_summary_highest</item>
+    </array>
+    <array name="config_settableAutoRotationDeviceStatesDescriptions">
     </array>
     <array name="config_settings_slices_accessibility_components">
     </array>
@@ -982,6 +1025,12 @@
         <item>@string/dark_ui_auto_mode_custom</item>
         <item>@string/dark_ui_auto_mode_auto</item>
     </array>
+    <array name="dark_ui_scheduler_with_bedtime_preference_titles">
+        <item>@string/dark_ui_auto_mode_never</item>
+        <item>@string/dark_ui_auto_mode_custom</item>
+        <item>@string/dark_ui_auto_mode_auto</item>
+        <item>@string/dark_ui_auto_mode_custom_bedtime</item>
+    </array>
     <array name="data_usage_data_range">
         <item>Last 30 days</item>
         <item>Set usage cycle...</item>
@@ -995,6 +1044,16 @@
         <item>false</item>
         <item>show</item>
         <item>show_deuteranomaly</item>
+    </array>
+    <array name="domestic_roaming_mplmns">
+        <item>46050</item>
+        <item>46051</item>
+        <item>46021</item>
+        <item>46022</item>
+        <item>46031</item>
+        <item>46032</item>
+        <item>46060</item>
+        <item>46061</item>
     </array>
     <array name="dream_timeout_entries">
         <item>Never</item>
@@ -1160,6 +1219,22 @@
         <item>drm-only</item>
         <item>always</item>
     </array>
+    <array name="ingress_rate_limit_entries">
+        <item>@string/ingress_rate_limit_no_limit_entry</item>
+        <item>128kbps</item>
+        <item>256kbps</item>
+        <item>1Mbps</item>
+        <item>5Mbps</item>
+        <item>15Mbps</item>
+    </array>
+    <array name="ingress_rate_limit_values">
+        <item>-1</item>
+        <item>16000</item>
+        <item>32000</item>
+        <item>125000</item>
+        <item>625000</item>
+        <item>1875000</item>
+    </array>
     <array name="input_method_selector_titles">
         <item>@string/input_method_selector_show_automatically_title</item>
         <item>@string/input_method_selector_always_show_title</item>
@@ -1235,6 +1310,14 @@
         <item>gid</item>
         <item>iccid</item>
     </array>
+    <array name="nfc_payment_favor">
+        <item>Always</item>
+        <item>Except when another payment app is open</item>
+    </array>
+    <array name="nfc_payment_favor_values">
+        <item>@null</item>
+        <item>1</item>
+    </array>
     <array name="notif_types_titles">
         <item>@string/notif_type_ongoing</item>
         <item>@string/notif_type_conversation</item>
@@ -1247,33 +1330,39 @@
         <item>2</item>
         <item>4</item>
     </array>
-    <array name="res_0x7f0300b1_nt_preferred_network_mode_choices">
+    <array name="nt-preferred_network_mode_choices">
         <item>3G</item>
         <item>4G</item>
         <item>5G</item>
     </array>
-    <array name="res_0x7f0300b2_nt_preferred_network_mode_values">
+    <array name="nt-preferred_network_mode_values">
         <item>21</item>
         <item>22</item>
         <item>33</item>
     </array>
-    <array name="nt_logcat_reject_level_entries">
-        <item>@string/nt_logcat_reject_level_prevent_none</item>
-        <item>@string/nt_logcat_reject_level_prevent_part</item>
-        <item>@string/nt_logcat_reject_level_prevent_all</item>
+    <array name="nt_button_nav_keys">
+        <item>nt_button_nav_left</item>
+        <item>nt_button_nav_right</item>
     </array>
-    <array name="nt_logcat_reject_level_values">
+    <array name="nt_button_nav_values">
         <item>@null</item>
-        <item>3</item>
-        <item>100</item>
+        <item>1</item>
     </array>
-    <array name="nt_sim_color_light">
-        <item>@color/SIM_color_cyan</item>
-        <item>@color/SIM_color_blue800</item>
-        <item>@color/SIM_color_green800</item>
-        <item>@color/SIM_color_purple800</item>
-        <item>@color/SIM_color_pink800</item>
-        <item>@color/SIM_color_orange</item>
+    <array name="nt_config_color_mode_options_summary">
+        <item>@string/color_mode_option_alive</item>
+        <item>@string/color_mode_option_standard</item>
+    </array>
+    <array name="nt_config_color_mode_options_values">
+        <item>260</item>
+        <item>@null</item>
+    </array>
+    <array name="nt_notifacation_display_keys">
+        <item>nt_notifacation_display_default</item>
+        <item>nt_notifacation_display_minimal</item>
+    </array>
+    <array name="nt_notifacation_display_values">
+        <item>@null</item>
+        <item>1</item>
     </array>
     <array name="one_handed_timeout_values">
         <item>@null</item>
@@ -1310,16 +1399,6 @@
         <item>1920x1080/320|3840x2160/640</item>
         <item>1920x1080/320|3840x2160/640,secure</item>
         <item>1280x720/213;1920x1080/320</item>
-    </array>
-    <array name="preferred_5g_network_mode_choices">
-        <item>NSA Mode</item>
-        <item>SA Mode</item>
-        <item>NSA + SA Mode</item>
-    </array>
-    <array name="preferred_5g_network_mode_values">
-        <item>1</item>
-        <item>2</item>
-        <item>@null</item>
     </array>
     <array name="preferred_network_mode_choices">
         <item>GSM/WCDMA preferred</item>
@@ -1576,6 +1655,71 @@
         <item>1</item>
         <item>@null</item>
     </array>
+    <array name="switch_to_user_zero_when_docked_timeout_entries">
+        <item>Never</item>
+        <item>After 1 minute</item>
+        <item>After 5 minutes</item>
+    </array>
+    <array name="switch_to_user_zero_when_docked_timeout_values">
+        <item>@null</item>
+        <item>60000</item>
+        <item>300000</item>
+    </array>
+    <array name="tare_alarm_manager_actions">
+        <item>@string/tare_wakeup_exact_idle</item>
+        <item>@string/tare_wakeup_inexact_idle</item>
+        <item>@string/tare_wakeup_exact</item>
+        <item>@string/tare_wakeup_inexact</item>
+        <item>@string/tare_nonwakeup_exact_idle</item>
+        <item>@string/tare_nonwakeup_exact</item>
+        <item>@string/tare_nonwakeup_inexact_idle</item>
+        <item>@string/tare_nonwakeup_inexact</item>
+        <item>@string/tare_alarm_clock</item>
+    </array>
+    <array name="tare_app_balance_subfactors">
+        <item>@string/tare_max_satiated_balance</item>
+        <item>@string/tare_min_balance_exempted</item>
+        <item>@string/tare_min_balance_headless_app</item>
+        <item>@string/tare_min_balance_other_app</item>
+    </array>
+    <array name="tare_consumption_limit_subfactors">
+        <item>@string/tare_initial_consumption_limit</item>
+        <item>@string/tare_hard_consumption_limit</item>
+    </array>
+    <array name="tare_job_scheduler_actions">
+        <item>@string/tare_job_max_start</item>
+        <item>@string/tare_job_max_running</item>
+        <item>@string/tare_job_high_start</item>
+        <item>@string/tare_job_high_running</item>
+        <item>@string/tare_job_default_start</item>
+        <item>@string/tare_job_default_running</item>
+        <item>@string/tare_job_low_start</item>
+        <item>@string/tare_job_low_running</item>
+        <item>@string/tare_job_min_start</item>
+        <item>@string/tare_job_min_running</item>
+        <item>@string/tare_job_timeout_penalty</item>
+    </array>
+    <array name="tare_modifiers_subfactors">
+        <item>Charging</item>
+        <item>Doze</item>
+        <item>Power Save Mode</item>
+        <item>Process State</item>
+    </array>
+    <array name="tare_policies">
+        <item>@string/tare_alarmmanager</item>
+        <item>@string/tare_jobscheduler</item>
+    </array>
+    <array name="tare_rewards_subfactors">
+        <item>@string/tare_top_activity</item>
+        <item>@string/tare_notification_seen</item>
+        <item>@string/tare_notification_interaction</item>
+        <item>@string/tare_widget_interaction</item>
+        <item>@string/tare_other_interaction</item>
+    </array>
+    <array name="tare_units">
+        <item>ARC</item>
+        <item>Cake</item>
+    </array>
     <array name="timezone_filters">
         <item>America</item>
         <item>Europe</item>
@@ -1747,13 +1891,11 @@
         <item>@string/screensaver_settings_summary_sleep</item>
         <item>@string/screensaver_settings_summary_dock</item>
         <item>@string/screensaver_settings_summary_either_long</item>
-        <item>@string/screensaver_settings_summary_never</item>
     </array>
     <array name="when_to_start_screensaver_values">
         <item>while_charging_only</item>
         <item>while_docked_only</item>
         <item>either_charging_or_docked</item>
-        <item>never</item>
     </array>
     <array name="wifi_ap_band">
         <item>1</item>
@@ -1768,9 +1910,9 @@
         <item>@string/wifi_ap_prefer_5G</item>
     </array>
     <array name="wifi_calling_mode_choices">
-        <item>?unknown_ref: 10408d3</item>
-        <item>?unknown_ref: 10408d0</item>
-        <item>?unknown_ref: 10408d2</item>
+        <item>?unknown_ref: 104094c</item>
+        <item>?unknown_ref: 1040949</item>
+        <item>?unknown_ref: 104094b</item>
     </array>
     <array name="wifi_calling_mode_choices_v2">
         <item>Wi-Fi</item>
@@ -1793,19 +1935,19 @@
         <item>Mobile</item>
     </array>
     <array name="wifi_calling_mode_choices_with_ims_preferred">
-        <item>?unknown_ref: 10408d1</item>
-        <item>?unknown_ref: 10408d3</item>
-        <item>?unknown_ref: 10408d0</item>
-        <item>?unknown_ref: 10408d2</item>
+        <item>?unknown_ref: 104094a</item>
+        <item>?unknown_ref: 104094c</item>
+        <item>?unknown_ref: 1040949</item>
+        <item>?unknown_ref: 104094b</item>
     </array>
     <array name="wifi_calling_mode_choices_without_wifi_only">
-        <item>?unknown_ref: 10408d3</item>
-        <item>?unknown_ref: 10408d0</item>
+        <item>?unknown_ref: 104094c</item>
+        <item>?unknown_ref: 1040949</item>
     </array>
     <array name="wifi_calling_mode_choices_without_wifi_only_with_ims_preferred">
-        <item>?unknown_ref: 10408d1</item>
-        <item>?unknown_ref: 10408d3</item>
-        <item>?unknown_ref: 10408d0</item>
+        <item>?unknown_ref: 104094a</item>
+        <item>?unknown_ref: 104094c</item>
+        <item>?unknown_ref: 1040949</item>
     </array>
     <array name="wifi_calling_mode_summaries">
         <item>@string/wifi_calling_mode_wifi_preferred_summary</item>
@@ -1869,6 +2011,10 @@
         <item>AKA prime</item>
     </array>
     <array name="wifi_hidden_entries">
+        <item>No</item>
+        <item>Yes</item>
+    </array>
+    <array name="wifi_hidden_gbk_entries">
         <item>No</item>
         <item>Yes</item>
     </array>

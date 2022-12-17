@@ -12,15 +12,13 @@ import com.google.zxing.datamatrix.encoder.SymbolInfo;
 import com.google.zxing.datamatrix.encoder.SymbolShapeHint;
 import com.google.zxing.qrcode.encoder.ByteMatrix;
 import java.util.Map;
-/* loaded from: classes2.dex */
+
 public final class DataMatrixWriter implements Writer {
-    @Override // com.google.zxing.Writer
     public BitMatrix encode(String str, BarcodeFormat barcodeFormat, int i, int i2, Map<EncodeHintType, ?> map) {
         Dimension dimension;
         if (str.isEmpty()) {
             throw new IllegalArgumentException("Found empty contents");
-        }
-        if (barcodeFormat != BarcodeFormat.DATA_MATRIX) {
+        } else if (barcodeFormat != BarcodeFormat.DATA_MATRIX) {
             throw new IllegalArgumentException("Can only encode DATA_MATRIX, but got " + barcodeFormat);
         } else if (i < 0 || i2 < 0) {
             throw new IllegalArgumentException("Requested dimensions are too small: " + i + 'x' + i2);

@@ -4,10 +4,9 @@ import android.hardware.fingerprint.FingerprintManager;
 import android.os.CancellationSignal;
 import android.os.Handler;
 import com.android.settings.core.InstrumentedFragment;
-/* loaded from: classes.dex */
+
 public class FingerprintAuthenticateSidecar extends InstrumentedFragment {
-    private FingerprintManager.AuthenticationCallback mAuthenticationCallback = new FingerprintManager.AuthenticationCallback() { // from class: com.android.settings.biometrics.fingerprint.FingerprintAuthenticateSidecar.1
-        @Override // android.hardware.fingerprint.FingerprintManager.AuthenticationCallback
+    private FingerprintManager.AuthenticationCallback mAuthenticationCallback = new FingerprintManager.AuthenticationCallback() {
         public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult authenticationResult) {
             FingerprintAuthenticateSidecar.this.mCancellationSignal = null;
             if (FingerprintAuthenticateSidecar.this.mListener != null) {
@@ -18,14 +17,12 @@ public class FingerprintAuthenticateSidecar extends InstrumentedFragment {
             FingerprintAuthenticateSidecar.this.mAuthenticationError = null;
         }
 
-        @Override // android.hardware.fingerprint.FingerprintManager.AuthenticationCallback
         public void onAuthenticationFailed() {
             if (FingerprintAuthenticateSidecar.this.mListener != null) {
                 FingerprintAuthenticateSidecar.this.mListener.onAuthenticationFailed();
             }
         }
 
-        @Override // android.hardware.fingerprint.FingerprintManager.AuthenticationCallback
         public void onAuthenticationError(int i, CharSequence charSequence) {
             FingerprintAuthenticateSidecar.this.mCancellationSignal = null;
             if (FingerprintAuthenticateSidecar.this.mListener != null) {
@@ -37,20 +34,22 @@ public class FingerprintAuthenticateSidecar extends InstrumentedFragment {
             FingerprintAuthenticateSidecar.this.mAuthenticationResult = null;
         }
 
-        @Override // android.hardware.fingerprint.FingerprintManager.AuthenticationCallback
         public void onAuthenticationHelp(int i, CharSequence charSequence) {
             if (FingerprintAuthenticateSidecar.this.mListener != null) {
                 FingerprintAuthenticateSidecar.this.mListener.onAuthenticationHelp(i, charSequence);
             }
         }
     };
-    private AuthenticationError mAuthenticationError;
-    private FingerprintManager.AuthenticationResult mAuthenticationResult;
-    private CancellationSignal mCancellationSignal;
+    /* access modifiers changed from: private */
+    public AuthenticationError mAuthenticationError;
+    /* access modifiers changed from: private */
+    public FingerprintManager.AuthenticationResult mAuthenticationResult;
+    /* access modifiers changed from: private */
+    public CancellationSignal mCancellationSignal;
     private FingerprintManager mFingerprintManager;
-    private Listener mListener;
+    /* access modifiers changed from: private */
+    public Listener mListener;
 
-    /* loaded from: classes.dex */
     public interface Listener {
         void onAuthenticationError(int i, CharSequence charSequence);
 
@@ -61,12 +60,10 @@ public class FingerprintAuthenticateSidecar extends InstrumentedFragment {
         void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult authenticationResult);
     }
 
-    @Override // com.android.settingslib.core.instrumentation.Instrumentable
     public int getMetricsCategory() {
         return 1221;
     }
 
-    /* loaded from: classes.dex */
     private class AuthenticationError {
         int error;
         CharSequence errorString;
@@ -104,7 +101,7 @@ public class FingerprintAuthenticateSidecar extends InstrumentedFragment {
                 this.mAuthenticationResult = null;
             }
             AuthenticationError authenticationError = this.mAuthenticationError;
-            if (authenticationError != null && (i = authenticationError.error) != 5) {
+            if (!(authenticationError == null || (i = authenticationError.error) == 5)) {
                 listener.onAuthenticationError(i, authenticationError.errorString);
                 this.mAuthenticationError = null;
             }

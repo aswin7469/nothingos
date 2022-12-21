@@ -1,0 +1,34 @@
+package com.google.android.material.timepicker;
+
+import android.text.InputFilter;
+import android.text.Spanned;
+import okhttp3.HttpUrl;
+
+class MaxInputValidator implements InputFilter {
+    private int max;
+
+    public MaxInputValidator(int i) {
+        this.max = i;
+    }
+
+    public void setMax(int i) {
+        this.max = i;
+    }
+
+    public int getMax() {
+        return this.max;
+    }
+
+    public CharSequence filter(CharSequence charSequence, int i, int i2, Spanned spanned, int i3, int i4) {
+        try {
+            StringBuilder sb = new StringBuilder(spanned);
+            sb.replace(i3, i4, charSequence.subSequence(i, i2).toString());
+            if (Integer.parseInt(sb.toString()) <= this.max) {
+                return null;
+            }
+            return HttpUrl.FRAGMENT_ENCODE_SET;
+        } catch (NumberFormatException unused) {
+            return HttpUrl.FRAGMENT_ENCODE_SET;
+        }
+    }
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:sharedUserId="android.uid.system" android:versionCode="600" android:versionName="13" android:compileSdkVersion="32" android:compileSdkVersionCodename="12" coreApp="true" package="com.nothing.experience" platformBuildVersionCode="32" platformBuildVersionName="12">
+    <uses-sdk android:minSdkVersion="23" android:targetSdkVersion="32"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.LOCAL_MAC_ADDRESS"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <permission android:name="com.nothing.experience.PERMISSION" android:protectionLevel="normal|signature"/>
+    <application android:label="@string/app_name" android:name="com.nothing.experience.App" android:persistent="true" android:allowBackup="true" android:extractNativeLibs="false" android:roundIcon="@mipmap/ic_launcher_round" android:appComponentFactory="androidx.core.app.CoreComponentFactory">
+        <provider android:name="com.nothing.experience.datas.EventProvider" android:exported="true" android:multiprocess="false" android:authorities="com.nothing.experience" android:initOrder="3" android:singleUser="true"/>
+        <provider android:name="androidx.startup.InitializationProvider" android:exported="false" android:authorities="com.nothing.experience.androidx-startup">
+            <meta-data android:name="androidx.emoji2.text.EmojiCompatInitializer" android:value="androidx.startup"/>
+            <meta-data android:name="androidx.lifecycle.ProcessLifecycleInitializer" android:value="androidx.startup"/>
+        </provider>
+    </application>
+</manifest>
